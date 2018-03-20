@@ -6,6 +6,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="MaxTunnel-Web" />
           <element id="module-output" name="MaxTunnel-Common-Biz" />
+          <element id="module-output" name="MaxTunnel-Dao" />
+          <element id="module-output" name="MaxTunnel-Service" />
+          <element id="module-output" name="MaxTunnel-Service-Normal" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.1.7.RELEASE" />

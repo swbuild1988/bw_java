@@ -5,10 +5,11 @@ import com.bandweaver.tunnel.common.biz.ref.UserService;
 import com.bandweaver.tunnel.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Scope
+@Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;

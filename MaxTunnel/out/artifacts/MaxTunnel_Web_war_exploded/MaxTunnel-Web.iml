@@ -40,5 +40,8 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.1.7.RELEASE" level="project" />
     <orderEntry type="module" module-name="MaxTunnel-Common-Biz" />
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.1.7.RELEASE" level="project" />
+    <orderEntry type="module" module-name="MaxTunnel-Dao" />
+    <orderEntry type="module" module-name="MaxTunnel-Service" />
+    <orderEntry type="module" module-name="MaxTunnel-Service-Normal" />
   </component>
 </module>
