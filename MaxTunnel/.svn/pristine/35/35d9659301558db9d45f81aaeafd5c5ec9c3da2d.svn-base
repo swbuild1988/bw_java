@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="MaxTunnel-Common-Biz" />
+        <module name="MaxTunnel-Common-Platform" />
+        <module name="MaxTunnel-Dao" />
+        <module name="MaxTunnel-Service-MAM" />
+        <module name="MaxTunnel-Service-Normal" />
+        <module name="MaxTunnel-Service-OAM" />
+        <module name="MaxTunnel-Service-OP" />
+        <module name="MaxTunnel-Web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="9">
+      <module name="MaxTunnel-Common" target="9" />
+      <module name="MaxTunnel-Common-Biz" target="9" />
+      <module name="MaxTunnel-Common-Platform" target="9" />
+      <module name="MaxTunnel-Dao" target="9" />
+      <module name="MaxTunnel-Lib" target="9" />
+      <module name="MaxTunnel-Service" target="9" />
+      <module name="MaxTunnel-Service-MAM" target="9" />
+      <module name="MaxTunnel-Service-Normal" target="9" />
+      <module name="MaxTunnel-Service-OAM" target="9" />
+      <module name="MaxTunnel-Service-OP" target="9" />
+      <module name="MaxTunnel-Web" target="9" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

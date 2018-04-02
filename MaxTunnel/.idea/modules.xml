@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Common/MaxTunnel-Common-Biz/MaxTunnel-Common-Biz.iml" filepath="$PROJECT_DIR$/MaxTunnel-Common/MaxTunnel-Common-Biz/MaxTunnel-Common-Biz.iml" />
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Common/MaxTunnel-Common-Platform/MaxTunnel-Common-Platform.iml" filepath="$PROJECT_DIR$/MaxTunnel-Common/MaxTunnel-Common-Platform/MaxTunnel-Common-Platform.iml" />
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Dao/MaxTunnel-Dao.iml" filepath="$PROJECT_DIR$/MaxTunnel-Dao/MaxTunnel-Dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Install/MaxTunnel-Install.iml" filepath="$PROJECT_DIR$/MaxTunnel-Install/MaxTunnel-Install.iml" />
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Lib/MaxTunnel-Lib.iml" filepath="$PROJECT_DIR$/MaxTunnel-Lib/MaxTunnel-Lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Service/MaxTunnel-Service.iml" filepath="$PROJECT_DIR$/MaxTunnel-Service/MaxTunnel-Service.iml" />
       <module fileurl="file://$PROJECT_DIR$/MaxTunnel-Service/MaxTunnel-Service-MAM/MaxTunnel-Service-MAM.iml" filepath="$PROJECT_DIR$/MaxTunnel-Service/MaxTunnel-Service-MAM/MaxTunnel-Service-MAM.iml" />
