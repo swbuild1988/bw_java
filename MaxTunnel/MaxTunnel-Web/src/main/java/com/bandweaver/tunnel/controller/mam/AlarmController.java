@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
@@ -65,6 +66,8 @@ public class AlarmController {
 		alarm.setAlarmLevel(measAlarm.getAlarmSeverity());
 		alarm.setTunnelId(measObj.getTunnelId());
 		alarm.setObjectId(measAlarm.getObjectId());
+		alarm.setObjectName(measObj.getName());
+		alarm.setIsDistribute(DataType.getEnum(measObj.getDatatypeId()) == DataType.DISTRIBUTE ? true : false );
 		alarm.setAlarmSource(measAlarm.getAlarmSource());
 		alarm.setDescription(measAlarm.getAdditionalText());
 		
@@ -83,18 +86,7 @@ public class AlarmController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
-	/**清除告警 
-	 * @param id 主键ID
-	 * @param description 描述
-	 * @return   
-	 * @author shaosen
-	 * @Date 2018年10月16日
-	 */
-//	@RequestMapping(value = "alarms/{id}/description/{description}", method = RequestMethod.GET)
-//	public JSONObject cleanAlarm(@PathVariable("id") Integer id, @PathVariable("description") String description) {
-//		alarmService.cleanAlarm(id,description);
-//		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-//	}
+
 	
 	/**清除告警 
 	 * @param alarm

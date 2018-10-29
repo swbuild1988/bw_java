@@ -9,6 +9,8 @@
     <result column="ALARM_LEVEL" jdbcType="DECIMAL" property="alarmLevel" />
     <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId" />
     <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="OBJECT_name" jdbcType="VARCHAR" property="objectName" />
+    <result column="is_distribute" jdbcType="DECIMAL" property="isDistribute" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     <result column="cleaned" jdbcType="DECIMAL" property="cleaned" />
     <result column="cleaned_DATE" jdbcType="TIMESTAMP" property="cleanedDate" />
@@ -24,6 +26,8 @@
     <result column="ALARM_LEVEL" jdbcType="DECIMAL" property="alarmLevel" />
     <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId" />
     <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="OBJECT_name" jdbcType="VARCHAR" property="objectName" />
+    <result column="is_distribute" jdbcType="DECIMAL" property="isDistribute" />
     <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
     <result column="cleaned" jdbcType="DECIMAL" property="cleaned" />
     <result column="cleaned_DATE" jdbcType="TIMESTAMP" property="cleanedDate" />
@@ -35,7 +39,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, ALARM_DATE,alarm_name, ALARM_LEVEL, TUNNEL_ID, OBJECT_ID, DESCRIPTION, cleaned, cleaned_DATE,alarm_source,longitude,latitude
+    ID, ALARM_DATE,alarm_name, ALARM_LEVEL, TUNNEL_ID, OBJECT_ID, object_name,is_distribute,DESCRIPTION, cleaned, cleaned_DATE,alarm_source,longitude,latitude
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -53,10 +57,10 @@
             SELECT MAM_ALARM_SEQUENCE.currval from DUAL
         </selectKey>
     insert into T_MAM_ALARM (ID, ALARM_DATE, alarm_name,ALARM_LEVEL, 
-      TUNNEL_ID, OBJECT_ID, DESCRIPTION, 
+      TUNNEL_ID, OBJECT_ID,object_name,is_distribute, DESCRIPTION, 
       cleaned, cleaned_DATE,alarm_source,longitude,latitude)
     values (#{id,jdbcType=DECIMAL}, #{alarmDate,jdbcType=TIMESTAMP}, #{alarmName,jdbcType=VARCHAR}, #{alarmLevel,jdbcType=DECIMAL}, 
-      #{tunnelId,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
+      #{tunnelId,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL},  #{objectName,jdbcType=VARCHAR}, #{isDistribute,jdbcType=DECIMAL},#{description,jdbcType=VARCHAR}, 
       #{cleaned,jdbcType=DECIMAL}, #{cleanedDate,jdbcType=TIMESTAMP},
       #{alarmSource,jdbcType=VARCHAR},#{longitude,jdbcType=VARCHAR},#{latitude,jdbcType=VARCHAR})
   </insert>
@@ -83,6 +87,12 @@
       </if>
       <if test="objectId != null">
         OBJECT_ID,
+      </if>
+      <if test="objectName != null">
+        OBJECT_name,
+      </if>
+      <if test="isDistribute != null">
+        is_distribute,
       </if>
       <if test="description != null">
         DESCRIPTION,
@@ -122,6 +132,12 @@
       <if test="objectId != null">
         #{objectId,jdbcType=DECIMAL},
       </if>
+      <if test="objectName != null">
+        #{objectName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDistribute != null">
+        #{isDistribute,jdbcType=DECIMAL},
+      </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
       </if>
@@ -160,6 +176,12 @@
       <if test="objectId != null">
         OBJECT_ID = #{objectId,jdbcType=DECIMAL},
       </if>
+      <if test="objectName != null">
+        object_name = #{objectName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDistribute != null">
+        is_distribute = #{isDistribute,jdbcType=DECIMAL},
+      </if>
       <if test="description != null">
         DESCRIPTION = #{description,jdbcType=VARCHAR},
       </if>
@@ -188,6 +210,8 @@
       ALARM_LEVEL = #{alarmLevel,jdbcType=DECIMAL},
       TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
       OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      OBJECT_name = #{objectName,jdbcType=VARCHAR},
+      is_distribute = #{isDistribute,jdbcType=DECIMAL},
       DESCRIPTION = #{description,jdbcType=VARCHAR},
       cleaned = #{cleaned,jdbcType=DECIMAL},
       cleaned_DATE = #{cleanedDate,jdbcType=TIMESTAMP},
@@ -203,7 +227,7 @@
   
   <insert id="addBatch" useGeneratedKeys="false">
     insert into T_MAM_ALARM
-    (ID, alarm_date,alarm_name,alarm_level,tunnel_id,object_id,description,cleaned,cleaned_date,alarm_source,longitude,latitude)
+    (ID, alarm_date,alarm_name,alarm_level,tunnel_id,object_id,object_name,is_distribute,description,cleaned,cleaned_date,alarm_source,longitude,latitude)
     select MAM_ALARM_SEQUENCE.nextval,a.* from (
     <foreach collection="list" item="item" index="index" close=")"
              open="(" separator="union">
@@ -213,6 +237,8 @@
         #{item.alarmLevel},
         #{item.tunnelId},
         #{item.objectId},
+        #{item.objectName},
+        #{item.isDistribute},
         #{item.description},
         #{item.cleaned},
         #{item.cleanedDate},
@@ -248,6 +274,9 @@
   		</if>
   		<if test="cleaned != null">
   			and cleaned = #{cleaned}
+  		</if>
+  		<if test="isDistribute != null">
+  			and is_distribute = #{isDistribute}
   		</if>
   	</where>
   	order by alarm_date desc

@@ -51,7 +51,7 @@
 <script>
   import { personnelPositionService } from '../../../../services/personnelPositions'
   import SmViewer from "../../../../components/Common/3D/3DViewer"
-  import { URL_CONFIG } from '../../../../../static/3DMap/js/3DMapConfig'
+//   import { URL_CONFIG } from '../../../../../static/3DMap/js/3DMapConfig'
   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
 
   export default {
@@ -134,13 +134,13 @@
                  queryParam=_this.VMConfig.queryParam;
 
             var provider_mec = new Cesium.SuperMapImageryProvider({
-                url : URL_CONFIG.IMG_MAP//墨卡托投影地图服务
+                url : this.SuperMapConfig.IMG_MAP//墨卡托投影地图服务
             });
              imagery_mec = imageryLayers.addImageryProvider(provider_mec);
 
             try{
               //打开所发布三维服务下的所有图层
-              var promise = scene.open(URL_CONFIG.BIM_SCP);
+              var promise = scene.open(this.SuperMapConfig.BIM_SCP);
 
               Cesium.when(promise,function(layer){
 
@@ -154,7 +154,7 @@
                       } else {
                           // 设置查找参数
                           element.setQueryParameter({
-                              url: URL_CONFIG.BIM_DATA,
+                              url: this.SuperMapConfig.BIM_DATA,
                               dataSourceName: queryParam.dataSourceName,
                               dataSetName: queryParam.dataSetName,
                               keyWord: "moId"
@@ -167,7 +167,7 @@
                       console.log('pickEvent',feater)
                   });
 
-                   doSqlQuery.call(_this,viewer,'MOTYPEID=7',URL_CONFIG.BIM_DATA,addBillboard,processFailed,'videoType','videos') //查询全部相机
+                   doSqlQuery.call(_this,viewer,'MOTYPEID=7',this.SuperMapConfig.BIM_DATA,addBillboard,processFailed,'videoType','videos') //查询全部相机
 
               },function(e){
                 if (widget._showRenderLoopErrors) {

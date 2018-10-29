@@ -1,4 +1,4 @@
-import { URL_CONFIG } from '../../static/3DMap/js/3DMapConfig'
+
 import Vue from 'vue'
 import axios from 'axios'
 

@@ -186,4 +186,16 @@
 		order by crt_time desc
 	</select>
 	
+	<select id="getDtoListByDay" resultMap="DtoResultMap">
+		select * from T_OAM_event
+		<where>
+			<if test="startTime != null">
+				and start_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and start_time &lt;= #{endTime}
+			</if>
+		</where>
+		order by crt_time desc
+	</select>
 </mapper>

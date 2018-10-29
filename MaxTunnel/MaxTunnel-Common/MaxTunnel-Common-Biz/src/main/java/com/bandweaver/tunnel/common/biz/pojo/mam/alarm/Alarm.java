@@ -24,6 +24,10 @@ public class Alarm implements Serializable {
     private Integer tunnelId;
 
     private Integer objectId;
+    
+    private String objectName;
+    
+    private Boolean isDistribute;
 
     private String description;
 
@@ -83,7 +87,23 @@ public class Alarm implements Serializable {
         this.objectId = objectId;
     }
 
-    public String getDescription() {
+    public String getObjectName() {
+		return objectName;
+	}
+
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+
+	public Boolean getIsDistribute() {
+		return isDistribute;
+	}
+
+	public void setIsDistribute(Boolean isDistribute) {
+		this.isDistribute = isDistribute;
+	}
+
+	public String getDescription() {
         return description;
     }
 
@@ -136,9 +156,10 @@ public class Alarm implements Serializable {
 	@Override
 	public String toString() {
 		return "Alarm [id=" + id + ", alarmDate=" + alarmDate + ", alarmName=" + alarmName + ", alarmLevel="
-				+ alarmLevel + ", tunnelId=" + tunnelId + ", objectId=" + objectId + ", description=" + description
-				+ ", cleaned=" + cleaned + ", cleanedDate=" + cleanedDate + ", alarmSource=" + alarmSource
-				+ ", longitude=" + longitude + ", latitude=" + latitude + "]";
+				+ alarmLevel + ", tunnelId=" + tunnelId + ", objectId=" + objectId + ", objectName=" + objectName
+				+ ", isDistribute=" + isDistribute + ", description=" + description + ", cleaned=" + cleaned
+				+ ", cleanedDate=" + cleanedDate + ", alarmSource=" + alarmSource + ", longitude=" + longitude
+				+ ", latitude=" + latitude + "]";
 	}
 
 	

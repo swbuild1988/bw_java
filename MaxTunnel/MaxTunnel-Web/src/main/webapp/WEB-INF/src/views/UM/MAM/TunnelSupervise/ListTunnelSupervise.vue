@@ -223,7 +223,7 @@
     processFailed
   } from "../../../../scripts/commonFun.js";
   import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
-  import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig";
+  // import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
   import axios from "axios"
 
@@ -376,13 +376,13 @@
           imagery_mec;
         this.scene = scene;
         var provider_mec = new Cesium.SuperMapImageryProvider({
-          url: URL_CONFIG.IMG_MAP //墨卡托投影地图服务
+          url: this.SuperMapConfig.IMG_MAP //墨卡托投影地图服务
         });
         imagery_mec = imageryLayers.addImageryProvider(provider_mec);
 
         try {
           //打开所发布三维服务下的所有图层
-          var promise = scene.open(URL_CONFIG.BIM_SCP);
+          var promise = scene.open(this.SuperMapConfig.BIM_SCP);
 
           promise.then(function (layer) {
             // 将东西设置成不可选择
@@ -393,7 +393,7 @@
               } else {
                 // 设置查找参数
                 element.setQueryParameter({
-                  url: URL_CONFIG.BIM_DATA,
+                  url: this.SuperMapConfig.BIM_DATA,
                   dataSourceName: "tunnel",
                   dataSetName: "结构框架",
                   keyWord: "SmID"
@@ -437,7 +437,7 @@
             viewer,
             500,
             doSqlQuery,
-            URL_CONFIG.BIM_DATA,
+            this.SuperMapConfig.BIM_DATA,
             labelSqlCompleted,
             processFailed,
             getSection
@@ -887,7 +887,7 @@
               b.clickStatus = clickStatus;
               this.Log.info("click " + b.id);
               SuperMapSqlQuery(
-                URL_CONFIG.BIM_DATA,
+                this,SuperMapConfig.BIM_DATA,
                 this.VMConfig.queryParam,
                 "moid = " + b.id
               )

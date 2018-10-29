@@ -150,7 +150,7 @@ CREATE TABLE T_OAM_EVENT  (
    NAME              varchar2(100)               NOT NULL,
    STAFF_ID          NUMBER                      NOT NULL,
    RANGE             NUMBER                      NOT NULL,
-   LEVEL             NUMBER(1)                   NOT NULL,
+   EVENT_LEVEL       NUMBER(1)                   NOT NULL,
    Longitude         VARCHAR2(50),
    Latitude          VARCHAR2(50),
    START_TIME        DATE,

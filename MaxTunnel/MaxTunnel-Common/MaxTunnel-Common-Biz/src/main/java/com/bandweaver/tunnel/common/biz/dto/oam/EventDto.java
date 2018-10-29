@@ -7,6 +7,7 @@ import com.bandweaver.tunnel.common.biz.pojo.oam.Event;
 public class EventDto extends Event {
 	
 	private Staff staff;
+	private String staffName;
 	
 	private String levelName;
 
@@ -24,6 +25,14 @@ public class EventDto extends Event {
 
 	public void setLevelName(String levelName) {
 		this.levelName = levelName;
+	}
+
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
 	}
 	
 	

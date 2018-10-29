@@ -233,6 +233,8 @@ create table T_MAM_ALARM
   alarm_level  NUMBER(1) not null,
   tunnel_id    number not null,
   object_id    NUMBER not null,
+  object_name  varchar2(100) not null,
+  is_distribute number(1) not null,
   alarm_source varchar2(100),
   longitude    varchar2(50),
   latitude     varchar2(50),

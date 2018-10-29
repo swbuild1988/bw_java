@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.controller.oam;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,5 +107,24 @@ public class EventController {
 	public JSONObject deleteByPrimaryKey(@PathVariable("id")Integer id) {
 		eventService.deleteByPrimaryKey(id);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	@RequestMapping(value="events/day/{count}", method=RequestMethod.GET)
+	public JSONObject getDtoByDay(@PathVariable("count")Integer count) {
+		// 获取时间段
+		Date startTime = new Date();
+		Date endTime = new Date();
+		endTime.setDate(startTime.getDate() + count);
+		
+		// 封装
+		EventVo vo = new EventVo();
+		vo.setStartTime(startTime);
+		vo.setEndTime(endTime);
+		
+		List<EventDto> list = eventService.getDtoListByDay(vo);
+		for(EventDto dto :list) {
+			dto.setStaffName(dto.getStaff().getName());
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 }

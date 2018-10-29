@@ -59,4 +59,9 @@ public class EventServiceImpl implements EventService {
 		eventMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public List<EventDto> getDtoListByDay(EventVo vo) {
+		return eventMapper.getDtoListByDay(vo);
+	}
+
 }

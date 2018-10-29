@@ -21,4 +21,6 @@ public interface EventMapper {
 	List<EventDto> getDtoListByCondition(EventVo vo);
 	
 	void deleteByPrimaryKey(Integer id);
+	
+	List<EventDto> getDtoListByDay(EventVo vo);
 }

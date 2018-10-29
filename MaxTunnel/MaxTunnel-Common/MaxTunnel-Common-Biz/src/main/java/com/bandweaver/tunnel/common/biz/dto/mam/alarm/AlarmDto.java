@@ -30,6 +30,10 @@ public class AlarmDto implements Serializable {
     private TunnelSimpleDto tunnel;
     
     private Integer objectId;
+    
+    private String objectName;
+    
+    private Boolean isDistribute;
 
     private String description;
 
@@ -89,7 +93,23 @@ public class AlarmDto implements Serializable {
         this.objectId = objectId;
     }
 
-    public String getDescription() {
+    public String getObjectName() {
+		return objectName;
+	}
+
+	public void setObjectName(String objectName) {
+		this.objectName = objectName;
+	}
+
+	public Boolean getIsDistribute() {
+		return isDistribute;
+	}
+
+	public void setIsDistribute(Boolean isDistribute) {
+		this.isDistribute = isDistribute;
+	}
+
+	public String getDescription() {
         return description;
     }
 
@@ -159,9 +179,9 @@ public class AlarmDto implements Serializable {
 	public String toString() {
 		return "AlarmDto [id=" + id + ", alarmDate=" + alarmDate + ", alarmName=" + alarmName + ", alarmLevel="
 				+ alarmLevel + ", alarmLevelName=" + alarmLevelName + ", tunnelId=" + tunnelId + ", tunnel=" + tunnel
-				+ ", objectId=" + objectId + ", description=" + description + ", cleaned=" + cleaned + ", cleanedDate="
-				+ cleanedDate + ", alarmSource=" + alarmSource + ", longitude=" + longitude + ", latitude=" + latitude
-				+ "]";
+				+ ", objectId=" + objectId + ", objectName=" + objectName + ", isDistribute=" + isDistribute
+				+ ", description=" + description + ", cleaned=" + cleaned + ", cleanedDate=" + cleanedDate
+				+ ", alarmSource=" + alarmSource + ", longitude=" + longitude + ", latitude=" + latitude + "]";
 	}
 
 	

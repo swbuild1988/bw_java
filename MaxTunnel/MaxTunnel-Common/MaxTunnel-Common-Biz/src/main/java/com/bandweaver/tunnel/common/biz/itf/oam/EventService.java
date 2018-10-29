@@ -22,4 +22,6 @@ public interface EventService {
 	PageInfo<EventDto> dataGrid(EventVo vo);
 	
 	void deleteByPrimaryKey(Integer id);
+	
+	List<EventDto> getDtoListByDay(EventVo vo);
 }
