@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.bandweaver.tunnel.dao.omm.CheckingPointMapper">
+	<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.omm.CheckingPoint">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="POSITION" jdbcType="VARCHAR"
+			property="position" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL"
+			property="tunnelId" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, NAME, POSITION, TUNNEL_ID, CRT_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_OMM_CHECKINGPOINT
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey">
+		delete from T_OMM_CHECKINGPOINT
+		where ID =
+		#{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.CheckingPoint">
+		insert into T_OMM_CHECKINGPOINT (ID, NAME, POSITION,
+		TUNNEL_ID, CRT_TIME)
+		values (#{id,jdbcType=DECIMAL},
+		#{name,jdbcType=VARCHAR},
+		#{position,jdbcType=VARCHAR},
+		#{tunnelId,jdbcType=DECIMAL}, #{crtTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.CheckingPoint">
+		insert into T_OMM_CHECKINGPOINT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="position != null">
+				POSITION,
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				#{position,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				#{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.CheckingPoint">
+		update T_OMM_CHECKINGPOINT
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				POSITION = #{position,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.CheckingPoint">
+		update T_OMM_CHECKINGPOINT
+		set NAME =
+		#{name,jdbcType=VARCHAR},
+		POSITION = #{position,jdbcType=VARCHAR},
+		TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+		CRT_TIME =
+		#{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<select id="getCheckingPointListByConditon"
+		resultType="com.bandweaver.tunnel.common.biz.dto.omm.CheckingPointDto">
+		select c.id,c.name,c.position,c.tunnel_id,t.name as
+		tunnelName,c.crt_time from
+		T_OMM_CHECKINGPOINT c
+		left join
+		T_COMMON_TUNNEL t on c.tunnel_id = t.id
+		<where>
+			<if test="id != null">
+				and c.id = #{id}
+			</if>
+			<if test="name != null and name.trim() != ''">
+				and instr(c.name,#{name,jdbcType=VARCHAR})>0
+			</if>
+			<if test="tunnelId != null">
+				and c.tunnel_id = #{tunnelId}
+			</if>
+			<if test="startTime != null">
+				and c.crt_time <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null">
+				and c.crt_time <![CDATA[<=]]>
+				#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="getCheckingPointById"
+		resultType="com.bandweaver.tunnel.common.biz.dto.omm.CheckingPointDto">
+		select c.id,c.name,c.position,c.tunnel_id,t.name as
+		tunnelName,c.crt_time
+		from
+		T_OMM_CHECKINGPOINT c
+		left join
+		T_COMMON_TUNNEL t on c.tunnel_id =
+		t.id
+		where c.id = #{id}
+	</select>
+	<insert id="addCheckingPointBatch" useGeneratedKeys="false"> 
+		insert into T_OMM_CHECKINGPOINT
+		(id,name,position,tunnel_id,crt_time)
+		select OMM_CHECKINGPOINT_SEQUENCE.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.name},
+			#{item.position},
+			#{item.tunnelId},
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	
+</mapper>

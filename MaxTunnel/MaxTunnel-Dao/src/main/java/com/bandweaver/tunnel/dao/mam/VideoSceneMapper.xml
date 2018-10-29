@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.VideoSceneMapper">
+
+    <insert id="insertVideoScene" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene">
+        INSERT INTO T_MAM_Video_Scene (name, tunnel_id, is_Loop, loop_Index)
+        VALUES (#{name}, #{tunnelId}, #{isLoop}, #{loopIndex})
+    </insert>
+
+    <select id="getAllVideoScenes" resultMap="VideoSceneMap">
+        SELECT * FROM T_MAM_Video_Scene
+    </select>
+
+    <select id="getVideoScenesByTunnel" resultMap="VideoSceneMap">
+        SELECT * FROM T_MAM_Video_Scene
+        WHERE tunnel_id = #{tunnelId}
+    </select>
+
+    <select id="getVideoSceneDtosByTunnel" resultMap="VideoSceneDtoMap">
+        SELECT * FROM T_MAM_Video_Scene
+        WHERE tunnel_id = #{tunnelId}
+    </select>
+
+    <resultMap id="VideoSceneMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="tunnel_id" property="tunnelId" />
+        <result column="is_loop" property="isLoop" />
+        <result column="loop_index" property="loopIndex" />
+    </resultMap>
+
+    <resultMap id="VideoSceneDtoMap" type="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="tunnel_id" property="tunnelId" />
+        <result column="is_loop" property="isLoop" />
+        <result column="loop_index" property="loopIndex" />
+        <collection property="videos"
+                    ofType="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto"
+                    column="id"
+                    select="com.bandweaver.tunnel.dao.mam.VideoMapper.getVideoDtosByScene">
+        </collection>
+    </resultMap>
+
+</mapper>

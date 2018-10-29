@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.EquipmentMapper">
+    <cache/>
+
+    <resultMap id="DtoResultMap"
+               type="com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="asset_no" property="assetNo"/>
+        <result column="type" property="type"/>
+        <result column="crt_time" property="crtTime"/>
+        <result column="service_life" property="serviceLife"/>
+        <result column="status" property="status"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="obj_id" property="objId"/>
+        <result column="img_url" property="imgUrl"/>
+        <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+                     column="tunnel_id"
+                     select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+        <association property="model" javaType="EquipmentModel" column="model_id"
+                     select="com.bandweaver.tunnel.dao.omm.EquipmentModelMapper.selectByPrimaryKey"/>
+        <association property="vender" javaType="EquipmentVender" column="vender_id"
+                     select="com.bandweaver.tunnel.dao.omm.EquipmentVenderMapper.selectByPrimaryKey"/>
+    </resultMap>
+
+    <select id="getEquipmentByAssetNo" resultMap="equipmentMap">
+        SELECT *
+        FROM t_omm_equipment
+        WHERE
+            asset_no = #{assetNo}
+    </select>
+
+    <insert id="addEquipment"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Equipment">
+        INSERT INTO t_omm_equipment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="crtTime != null">
+                crt_time,
+            </if>
+            <if test="serviceLife != null">
+                service_life,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="assetNo != null and assetNo.trim() != ''">
+                asset_no,
+            </if>
+            <if test="objId != null">
+                obj_id,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="venderId != null">
+                vender_id,
+            </if>
+            <if test="modelId != null">
+                model_id,
+            </if>
+            <if test="imgUrl != null and imgUrl.trim() != ''">
+                img_url,
+            </if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                #{name},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime},
+            </if>
+            <if test="serviceLife != null">
+                #{serviceLife},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="assetNo != null and assetNo.trim() != ''">
+                #{assetNo},
+            </if>
+            <if test="objId != null">
+                #{objId},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId},
+            </if>
+            <if test="venderId != null">
+                #{venderId},
+            </if>
+            <if test="modelId != null">
+                #{modelId},
+            </if>
+            <if test="imgUrl != null and imgUrl.trim() != ''">
+                #{imgUrl},
+            </if>
+         </trim>
+        
+    </insert>
+
+    <update id="updateEquipment"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Equipment">
+        UPDATE t_omm_equipment
+        SET t_omm_equipment.name         =
+        #{name},
+            t_omm_equipment.type         = #{type},
+            t_omm_equipment.crt_time     =
+            #{crtTime},
+            t_omm_equipment.service_life = #{serviceLife},
+            t_omm_equipment.status       = #{status},
+            t_omm_equipment.tunnel_id    =
+            #{tunnelId},
+            t_omm_equipment.vender_id    = #{venderId},
+            t_omm_equipment.model_id     = #{modelId},
+            t_omm_equipment.img_url      =
+            #{imgUrl}
+    </update>
+
+    <select id="getList" resultMap="equipmentMap">
+        SELECT *
+        FROM t_omm_equipment
+    </select>
+
+
+    <select id="getListByType" resultMap="equipmentMap">
+        SELECT *
+        FROM t_omm_equipment
+        WHERE type =
+              #{typeId}
+    </select>
+
+    <resultMap id="equipmentMap"
+               type="com.bandweaver.tunnel.common.biz.pojo.omm.Equipment">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="asset_no" property="assetNo"/>
+        <result column="type" property="type"/>
+        <result column="crt_time" property="crtTime"/>
+        <result column="service_life" property="serviceLife"/>
+        <result column="status" property="status"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="model_id" property="modelId"/>
+        <result column="obj_id" property="objId"/>
+        <result column="img_url" property="imgUrl"/>
+    </resultMap>
+
+    <select id="getEquipmentListByCondition" resultMap="DtoResultMap">
+        select e.* from t_omm_equipment e
+        <where>
+            <if test="name != null and name.trim() != ''">
+                instr(e.name,#{name})>0
+            </if>
+            <if test="tunnelId != null">
+                and e.tunnel_id = #{tunnelId}
+            </if>
+            <if test="type != null">
+                and e.type = #{type}
+            </if>
+            <if test="status != null">
+                and e.status = #{status}
+            </if>
+            <if test="assetNo != null">
+                and e.asset_no = #{assetNo}
+            </if>
+            <if test="modelId != null">
+                and e.model_id = #{modelId}
+            </if>
+            <if test="venderId != null">
+                and e.vender_id = #{venderId}
+            </if>
+            <if test="startTime != null">
+                and e.crt_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and e.crt_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+        </where>
+        order by e.crt_time desc
+    </select>
+
+    <update id="updateEquipmentById">
+        UPDATE t_omm_equipment t
+        <set>
+            <if test="name != null and name.trim() != ''">
+                t.name = #{name},
+            </if>
+            <if test="assetNo != null and assetNo.trim() != ''">
+                t.asset_no = #{assetNo},
+            </if>
+            <if test="type != null">
+                t.type = #{type},
+            </if>
+            <if test="crtTime != null">
+                t.crt_time = #{crtTime},
+            </if>
+            <if test="serviceLife != null">
+                t.service_life = #{serviceLife},
+            </if>
+            <if test="status != null">
+                t.status = #{status},
+            </if>
+            <if test="tunnelId != null">
+                t.tunnel_id = #{tunnelId},
+            </if>
+            <if test="venderId != null">
+                t.vender_id = #{venderId},
+            </if>
+            <if test="objId != null">
+                t.obj_id = #{objId},
+            </if>
+            <if test="modelId != null">
+                t.model_id = #{modelId},
+            </if>
+            <if test="imgUrl != null">
+                t.img_url = #{imgUrl}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getEquipmentById"
+            resultMap="DtoResultMap">
+        SELECT *
+        FROM t_omm_equipment
+        WHERE id = #{id}
+    </select>
+
+    <insert id="addEquipmentBatch" useGeneratedKeys="false">
+        insert into t_omm_equipment
+        (id,name,type,crt_time,service_life,status,asset_no,tunnel_id,vender_id,model_id,img_url)
+        select OMM_EQUIPMENT_SEQUENCE.nextval,a.* from (
+        <foreach collection="list" item="item" index="index" close=")"
+                 open="(" separator="union">
+            select
+            #{item.name},
+            #{item.type},
+            #{item.crtTime},
+            #{item.serviceLife},
+            #{item.status},
+            #{item.assetNo},
+            #{item.tunnelId},
+            #{item.venderId},
+            #{item.modelId},
+            #{item.imgUrl}
+            from dual
+        </foreach>
+        )a
+    </insert>
+
+    <update id="updateEquipmentByModelId">
+        update t_omm_equipment t
+        <set>
+            <if test="name != null and name.trim() != ''">
+                t.name = #{name},
+            </if>
+            <if test="type != null">
+                t.type = #{type},
+            </if>
+            <if test="crtTime != null">
+                t.crt_time = #{crtTime},
+            </if>
+            <if test="serviceLife != null">
+                t.service_life = #{serviceLife},
+            </if>
+            <if test="status != null">
+                t.status = #{status},
+            </if>
+            <if test="tunnelId != null">
+                t.tunnel_id = #{tunnelId},
+            </if>
+            <if test="venderId != null">
+                t.vender_id = #{venderId},
+            </if>
+            <if test="objId != null">
+                t.obj_id = #{objId},
+            </if>
+            <if test="imgUrl != null">
+                t.img_url = #{imgUrl}
+            </if>
+        </set>
+        where t.model_id = #{modelId}
+    </update>
+    
+    <update id="updateEquipmentOfObj" >
+    	UPDATE t_omm_equipment
+        SET
+            status     = #{status},
+            obj_id     = null
+    	WHERE id = #{id}
+    </update>
+
+    <select id="getCountByCondition" resultType="Integer">
+        select count(1) from t_omm_equipment
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="tunnelId != null">
+                and tunnel_id = #{tunnelId}
+            </if>
+        </where>
+
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM t_omm_equipment
+        WHERE id = #{id}
+    </delete>
+    
+    <select id="getEquipmentListByObj" resultMap="DtoResultMap" >
+    	SELECT *
+        FROM t_omm_equipment
+        WHERE
+            obj_id = #{objId}
+    </select>
+</mapper>

@@ -1,0 +1,3 @@
+1.安装oracle
+2.通过Oracle下Database Configuration Assistant来新建数据库实例，名称为MaxTunnelDB
+3.运行DBScript下的CreateDeltaDB.bat(linux下运行.sh）创建用户名，表，表数据等

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.StaffMapper">
+<cache/>
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Staff">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
+    <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
+    <result column="account_id" jdbcType="DECIMAL" property="accountId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.StaffDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
+    <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
+     <result column="account_id" jdbcType="DECIMAL" property="accountId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <association property="dept" javaType="Department" column="dept_id"
+    	select="com.bandweaver.tunnel.dao.common.DepartmentMapper.selectByPrimaryKey"/>
+    <association property="position" javaType="Position" column="position_id"
+    	select="com.bandweaver.tunnel.dao.common.PositionMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    ID, NAME, DEPT_ID, POSITION_ID, account_id,CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COMMON_STAFF
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_COMMON_STAFF
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+    insert into T_COMMON_STAFF (ID, NAME, DEPT_ID, 
+      POSITION_ID, account_id,CRT_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{deptId,jdbcType=DECIMAL}, 
+      #{positionId,jdbcType=DECIMAL}, #{accountId},#{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+    update T_COMMON_STAFF
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        DEPT_ID = #{deptId,jdbcType=DECIMAL},
+      </if>
+      <if test="positionId != null">
+        POSITION_ID = #{positionId,jdbcType=DECIMAL},
+      </if>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+    update T_COMMON_STAFF
+    set NAME = #{name,jdbcType=VARCHAR},
+      DEPT_ID = #{deptId,jdbcType=DECIMAL},
+      POSITION_ID = #{positionId,jdbcType=DECIMAL},
+      account_id = #{accountId,jdbcType=DECIMAL},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getDtoById" resultMap="DtoResultMap">
+  	select * from T_COMMON_STAFF where id = #{id}
+  </select>
+  
+  
+  <select id="getDtoListByCondition" resultMap="DtoResultMap">
+  	select * from T_COMMON_STAFF
+  	<where>
+  		<if test="id != null">
+		and id = #{id}  		
+  		</if>
+  		<if test="name != null and name.trim() != ''">
+  		and instr(name,#{name})>0
+  		</if>
+  		<if test="deptId != null">
+  		and dept_id = #{deptId}
+  		</if>
+  		<if test="positionId != null">
+  		and position_id = #{positionId}
+  		</if>
+  		<if test="accountId != null">
+  		and account_id = #{accountId}
+  		</if>
+  		<if test="startTime != null">
+  		and crt_time &gt;= #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  		and crt_time &lt;= #{endTime}
+  		</if>
+  	</where>
+  	order by crt_time desc
+  </select>
+  
+  <select id="getStaffsByCompanyIdAndDeptId" resultMap="DtoResultMap">
+  	select t.* from T_COMMON_staff t 
+	left join T_COMMON_DEPT d on d.id = t.dept_id
+	left join T_COMMON_company_dept cd on d.id = cd.dept_id
+	left join T_COMMON_company c on c.id = cd.company_id
+	where d.id = #{deptId} and c.id = #{companyId}
+  </select>
+  
+   <delete id="deleteBatch">
+		delete from T_COMMON_STAFF where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</delete>
+  
+</mapper>

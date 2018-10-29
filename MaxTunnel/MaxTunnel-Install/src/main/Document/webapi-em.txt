@@ -1,0 +1,152 @@
+应急管理：
+
+相关单位：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	添加：
+		url:relatedunits
+		method:post
+		params:
+		{
+			"name":"上海市第一人民医院",
+			"contact":"王梦飞",
+			"tel":"13702569817",
+			"unitType":1,
+			"address":"徐汇区人民路001号",
+			"sectionIds":"[1],[2],[3],[4]"  注意：前端传过来的值的格式必须符合这种要求，并且由于一个单位可能处于多个管廊的交叉口，因此添加的时候该项应该是多选框。
+		}
+		return:成功
+	
+	删除：
+		url:relatedunits/{id}
+		method:delete
+		params:id
+		return:成功
+
+
+	修改
+		url:relatedunits
+		method:put
+		params:
+		{	
+			"id":1,
+			"name":"上海市第一人民医院",
+			"contact":"王梦飞",
+			"tel":"13702569817",
+			"unitType":1,
+			"address":"徐汇区人民路001号",
+			"sectionIds":"[1],[2],[3],[4]"  注意：前端传过来的值的格式必须符合这种要求，并且由于一个单位可能处于多个管廊的交叉口，因此添加的时候该项应该是多选框。
+		}
+
+		return:成功
+
+	分页查询：
+		url:relatedunits/datagrid
+		method:post
+		params:
+		 * 参数：
+		 * 	sectionIds:使用三级联动，从管廊开始选仓，从仓在选择section
+		 * 	name:单位名称，支持模糊查询
+		 * 	contact：联系人，支持模糊查询
+		 * 	unitType:单位类别：枚举，参考webapi-em接口
+		 * 	startTime:
+		 * 	endTime:
+		 * 	pageNum：必须
+		 * 	pageSize: 必须
+		return：
+		{
+		    "msg":"请求成功",
+		    "code":"200",
+		    "data":{
+			"total":7,
+			"list":[
+			    {
+				"id":2,
+				"name":"上海市第一人民医院",
+				"contact":"王梦飞",
+				"tel":"13702569817",
+				"unitType":1,
+				"unitTypeName":"医院",
+				"address":"徐汇区人民路001号",
+				"sectionIds":"[1],[2],[3],[4],[5]",
+				"crtTime":1531105196000
+			    },
+			   ...
+			],
+			"pageNum":1,
+			"pageSize":5,
+			"size":5,
+			"startRow":1,
+			"endRow":5,
+			"pages":2,
+			"prePage":0,
+			"nextPage":2,
+			"isFirstPage":true,
+			"isLastPage":false,
+			"hasPreviousPage":false,
+			"hasNextPage":true,
+			"navigatePages":8,
+			"navigatepageNums":[
+			    1,
+			    2
+			],
+			"navigateFirstPage":1,
+			"navigateLastPage":2,
+			"firstPage":1,
+			"lastPage":2
+		    }
+		}
+
+	根据id查询单位信息:
+		url:relatedunits/{id}
+		method:get
+		params:id
+		return:
+		{
+		    "msg":"请求成功",
+		    "code":"200",
+		    "data":{
+			"id":2,
+			"name":"上海市第一人民医院",
+			"contact":"王梦飞",
+			"tel":"13702569817",
+			"unitType":1,
+			"unitTypeName":"医院",
+			"address":"徐汇区人民路001号",
+			"sectionIds":"[1],[2],[3],[4],[5]",
+			"crtTime":1531105196000
+		    }
+		}
+
+	根据sectionId查询单位列表:
+		url:sections/{id}/relatedunits
+		method:get
+		params:sectionId
+		return:
+		{
+		    "msg":"请求成功",
+		    "code":"200",
+		    "data":[
+			{
+			    "id":2,
+			    "name":"上海市第一人民医院",
+			    "contact":"王梦飞",
+			    "tel":"13702569817",
+			    "unitType":1,
+			    "unitTypeName":"医院",
+			    "address":"徐汇区人民路001号",
+			    "sectionIds":"[1],[2],[3],[4],[5]",
+			    "crtTime":1531105196000
+			},
+			{
+			    "id":3,
+			    "name":"上海市浦东中学",
+			    "contact":"张大烛",
+			    "tel":"13702569017",
+			    "unitType":2,
+			    "unitTypeName":"学校",
+			    "address":"浦东新区张恒路988号",
+			    "sectionIds":"[1]",
+			    "crtTime":1531113224000
+			},
+			...
+		    ]
+		}

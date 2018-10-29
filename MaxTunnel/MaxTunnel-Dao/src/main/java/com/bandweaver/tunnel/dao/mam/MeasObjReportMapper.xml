@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjReportMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="OBJECT_TYPE" jdbcType="DECIMAL" property="objectType" />
+    <result column="time_type" jdbcType="DECIMAL" property="timeType" />
+    <result column="S_TIME" jdbcType="TIMESTAMP" property="sTime" />
+    <result column="E_TIME" jdbcType="TIMESTAMP" property="eTime" />
+    <result column="MAX_VALUE" jdbcType="DECIMAL" property="maxValue" />
+    <result column="MIN_VALUE" jdbcType="DECIMAL" property="minValue" />
+    <result column="AVG_VALUE" jdbcType="DECIMAL" property="avgValue" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="OBJECT_TYPE" jdbcType="DECIMAL" property="objectType" />
+    <result column="time_type" jdbcType="DECIMAL" property="timeType" />
+    <result column="S_TIME" jdbcType="TIMESTAMP" property="sTime" />
+    <result column="E_TIME" jdbcType="TIMESTAMP" property="eTime" />
+    <result column="MAX_VALUE" jdbcType="DECIMAL" property="maxValue" />
+    <result column="MIN_VALUE" jdbcType="DECIMAL" property="minValue" />
+    <result column="AVG_VALUE" jdbcType="DECIMAL" property="avgValue" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, OBJECT_ID, OBJECT_TYPE,time_type, S_TIME, E_TIME, MAX_VALUE, MIN_VALUE, AVG_VALUE
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_MAM_MEASOBJ_REPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_MAM_MEASOBJ_REPORT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
+    insert into T_MAM_MEASOBJ_REPORT (ID, OBJECT_ID, OBJECT_TYPE, time_type,
+      S_TIME, E_TIME, MAX_VALUE, 
+      MIN_VALUE, AVG_VALUE)
+    values (#{id,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{objectType,jdbcType=DECIMAL},  #{timeType,jdbcType=DECIMAL}, 
+      #{sTime,jdbcType=TIMESTAMP}, #{eTime,jdbcType=TIMESTAMP}, #{maxValue,jdbcType=DECIMAL}, 
+      #{minValue,jdbcType=DECIMAL}, #{avgValue,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
+    insert into T_MAM_MEASOBJ_REPORT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="objectId != null">
+        OBJECT_ID,
+      </if>
+      <if test="objectType != null">
+        OBJECT_TYPE,
+      </if>
+      <if test="timeType != null">
+        time_type,
+      </if>
+      <if test="sTime != null">
+        S_TIME,
+      </if>
+      <if test="eTime != null">
+        E_TIME,
+      </if>
+      <if test="maxValue != null">
+        MAX_VALUE,
+      </if>
+      <if test="minValue != null">
+        MIN_VALUE,
+      </if>
+      <if test="avgValue != null">
+        AVG_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="objectType != null">
+        #{objectType,jdbcType=DECIMAL},
+      </if>
+      <if test="timeType != null">
+        #{timeType,jdbcType=DECIMAL},
+      </if>
+      <if test="sTime != null">
+        #{sTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eTime != null">
+        #{eTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxValue != null">
+        #{maxValue,jdbcType=DECIMAL},
+      </if>
+      <if test="minValue != null">
+        #{minValue,jdbcType=DECIMAL},
+      </if>
+      <if test="avgValue != null">
+        #{avgValue,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
+    update T_MAM_MEASOBJ_REPORT
+    <set>
+      <if test="objectId != null">
+        OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="objectType != null">
+        OBJECT_TYPE = #{objectType,jdbcType=DECIMAL},
+      </if>
+      <if test="timeType != null">
+        time_type = #{timeType,jdbcType=DECIMAL},
+      </if>
+      <if test="sTime != null">
+        S_TIME = #{sTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eTime != null">
+        E_TIME = #{eTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="maxValue != null">
+        MAX_VALUE = #{maxValue,jdbcType=DECIMAL},
+      </if>
+      <if test="minValue != null">
+        MIN_VALUE = #{minValue,jdbcType=DECIMAL},
+      </if>
+      <if test="avgValue != null">
+        AVG_VALUE = #{avgValue,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
+    update T_MAM_MEASOBJ_REPORT
+    set OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      OBJECT_TYPE = #{objectType,jdbcType=DECIMAL},
+      time_type = #{timeType,jdbcType=DECIMAL},
+      S_TIME = #{sTime,jdbcType=TIMESTAMP},
+      E_TIME = #{eTime,jdbcType=TIMESTAMP},
+      MAX_VALUE = #{maxValue,jdbcType=DECIMAL},
+      MIN_VALUE = #{minValue,jdbcType=DECIMAL},
+      AVG_VALUE = #{avgValue,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getByObjectIdAndStartTime" resultMap="BaseResultMap">
+  	select * from T_MAM_MEASOBJ_REPORT where object_id = #{objectId} and s_time = #{startTime}
+  </select>
+  
+  <select id="getByCondition" resultMap="DtoResultMap">
+  	select * from T_MAM_MEASOBJ_REPORT
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="objectId != null">
+  			and object_id = #{objectId}
+  		</if>
+  		<if test="timeType != null">
+  			and time_type = #{timeType}
+  		</if>
+  		<if test="startTime != null">
+  			and s_time &gt; = #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and e_time &lt; = #{endTime}
+  		</if>
+  	</where>
+  	order by s_time desc
+  </select>
+  
+  <delete id="deleteBatch">
+		delete from T_MAM_MEASOBJ_REPORT where e_time &lt;= #{time}
+  </delete>
+</mapper>

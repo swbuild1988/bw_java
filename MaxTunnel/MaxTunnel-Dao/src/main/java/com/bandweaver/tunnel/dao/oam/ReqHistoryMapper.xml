@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.ReqHistoryMapper">
+    <cache/>
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId"/>
+        <result column="APPROVER_ID" jdbcType="DECIMAL" property="approverId"/>
+        <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="ACTION" jdbcType="DECIMAL" property="action"/>
+        <result column="PRE_TIME" jdbcType="TIMESTAMP" property="preTime"/>
+        <result column="ENTER_TIME" jdbcType="TIMESTAMP" property="enterTime"/>
+        <result column="EXIT_TIME" jdbcType="TIMESTAMP" property="exitTime"/>
+        <result column="VISITOR_NUMBER" jdbcType="DECIMAL" property="visitorNumber"/>
+        <result column="VISITOR_COMPANY" jdbcType="DECIMAL" property="visitorCompany"/>
+        <result column="VISITOR_INFO" jdbcType="VARCHAR" property="visitorInfo"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="process_type" jdbcType="DECIMAL" property="processType"/>
+        <result column="process_status" jdbcType="VARCHAR" property="processStatus"/>
+        <result column="process_instance_id" jdbcType="VARCHAR" property="processInstanceId"/>
+        <result column="is_finished" jdbcType="DECIMAL" property="isFinished"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId"/>
+        <result column="APPROVER_ID" jdbcType="DECIMAL" property="approverId"/>
+        <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="ACTION" jdbcType="DECIMAL" property="action"/>
+        <result column="PRE_TIME" jdbcType="TIMESTAMP" property="preTime"/>
+        <result column="ENTER_TIME" jdbcType="TIMESTAMP" property="enterTime"/>
+        <result column="EXIT_TIME" jdbcType="TIMESTAMP" property="exitTime"/>
+        <result column="VISITOR_NUMBER" jdbcType="DECIMAL" property="visitorNumber"/>
+        <result column="VISITOR_COMPANY" jdbcType="DECIMAL" property="visitorCompany"/>
+        <result column="VISITOR_INFO" jdbcType="VARCHAR" property="visitorInfo"/>
+
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="process_type" jdbcType="DECIMAL" property="processType"/>
+        <result column="process_status" jdbcType="VARCHAR" property="processStatus"/>
+        <result column="process_instance_id" jdbcType="VARCHAR" property="processInstanceId"/>
+        <result column="is_finished" jdbcType="DECIMAL" property="isFinished"/>
+
+        <association property="staff" javaType="Staff" column="staff_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+        <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+                     column="tunnel_id" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+        <association property="company" javaType="Company" column="VISITOR_COMPANY"
+                     select="com.bandweaver.tunnel.dao.common.CompanyMapper.selectByPrimaryKey"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, STAFF_ID, APPROVER_ID, TUNNEL_ID, ACTION, PRE_TIME, ENTER_TIME, EXIT_TIME, VISITOR_NUMBER,
+        VISITOR_COMPANY, VISITOR_INFO, process_type, process_status, process_instance_id, is_finished
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_OAM_REQ_HISTORY
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <select id="selectByProcessDefinition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_OAM_REQ_HISTORY
+        where PROCESS_DEFINITION_ID = #{processDefinitionId,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM T_OAM_REQ_HISTORY
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory">
+        INSERT INTO T_OAM_REQ_HISTORY (ID, STAFF_ID, APPROVER_ID, TUNNEL_ID,
+                                       ACTION, PRE_TIME,
+                                       ENTER_TIME, EXIT_TIME, VISITOR_NUMBER,
+                                       VISITOR_COMPANY, VISITOR_INFO, create_time, process_type, process_status, process_instance_id, is_finished)
+        VALUES (#{id,jdbcType=DECIMAL},
+            #{staffId,jdbcType=DECIMAL},
+            #{approverId,jdbcType=DECIMAL},
+            #{tunnelId,jdbcType=DECIMAL},
+            #{action,jdbcType=DECIMAL},
+            #{preTime,jdbcType=TIMESTAMP},
+            #{enterTime,jdbcType=TIMESTAMP},
+            #{exitTime,jdbcType=TIMESTAMP},
+            #{visitorNumber,jdbcType=DECIMAL},
+            #{visitorCompany,jdbcType=DECIMAL},
+            #{visitorInfo,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP},
+                #{processType,jdbcType=DECIMAL},
+                #{processStatus,jdbcType=VARCHAR},
+                #{processInstanceId,jdbcType=VARCHAR},
+                #{isFinished,jdbcType=DECIMAL}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory">
+        insert into T_OAM_REQ_HISTORY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="staffId != null">
+                STAFF_ID,
+            </if>
+            <if test="approverId != null">
+                APPROVER_ID,
+            </if>
+            <if test="tunnelId != null">
+                TUNNEL_ID,
+            </if>
+            <if test="action != null">
+                ACTION,
+            </if>
+            <if test="preTime != null">
+                PRE_TIME,
+            </if>
+            <if test="enterTime != null">
+                ENTER_TIME,
+            </if>
+            <if test="exitTime != null">
+                EXIT_TIME,
+            </if>
+            <if test="visitorNumber != null">
+                VISITOR_NUMBER,
+            </if>
+            <if test="visitorCompany != null">
+                VISITOR_COMPANY,
+            </if>
+            <if test="visitorInfo != null">
+                VISITOR_INFO,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="processType != null">
+                process_type,
+            </if>
+            <if test="processStatus != null">
+                process_status,
+            </if>
+            <if test="processInstanceId != null">
+                process_instance_id,
+            </if>
+            <if test="isFinished != null">
+                is_finished,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="staffId != null">
+                #{staffId,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null">
+                #{approverId,jdbcType=DECIMAL},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="action != null">
+                #{action,jdbcType=DECIMAL},
+            </if>
+            <if test="preTime != null">
+                #{preTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enterTime != null">
+                #{enterTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exitTime != null">
+                #{exitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="visitorNumber != null">
+                #{visitorNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="visitorCompany != null">
+                #{visitorCompany,jdbcType=DECIMAL},
+            </if>
+            <if test="visitorInfo != null">
+                #{visitorInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="processType != null">
+                #{processType},
+            </if>
+            <if test="processStatus != null">
+                #{processStatus},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                #{isFinished}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory">
+        update T_OAM_REQ_HISTORY
+        <set>
+            <if test="staffId != null">
+                STAFF_ID = #{staffId,jdbcType=DECIMAL},
+            </if>
+            <if test="approverId != null">
+                APPROVER_ID = #{approverId,jdbcType=DECIMAL},
+            </if>
+            <if test="tunnelId != null">
+                TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="action != null">
+                ACTION = #{action,jdbcType=DECIMAL},
+            </if>
+            <if test="preTime != null">
+                PRE_TIME = #{preTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enterTime != null">
+                ENTER_TIME = #{enterTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="exitTime != null">
+                EXIT_TIME = #{exitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="visitorNumber != null">
+                VISITOR_NUMBER = #{visitorNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="visitorCompany != null">
+                VISITOR_COMPANY = #{visitorCompany,jdbcType=DECIMAL},
+            </if>
+            <if test="visitorInfo != null">
+                VISITOR_INFO = #{visitorInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="processType != null">
+                process_type = #{processType},
+            </if>
+            <if test="processStatus != null">
+                process_status = #{processStatus},
+            </if>
+            <if test="processInstanceId != null">
+                process_instance_id = #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                is_finished = #{isFinished}
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory">
+        UPDATE T_OAM_REQ_HISTORY
+        SET STAFF_ID            = #{staffId,jdbcType=DECIMAL},
+            APPROVER_ID         = #{approverId,jdbcType=DECIMAL},
+            TUNNEL_ID           = #{tunnelId,jdbcType=DECIMAL},
+            ACTION              = #{action,jdbcType=DECIMAL},
+            PRE_TIME            = #{preTime,jdbcType=TIMESTAMP},
+            ENTER_TIME          = #{enterTime,jdbcType=TIMESTAMP},
+            EXIT_TIME           = #{exitTime,jdbcType=TIMESTAMP},
+            VISITOR_NUMBER      = #{visitorNumber,jdbcType=DECIMAL},
+            VISITOR_COMPANY     = #{visitorCompany,jdbcType=DECIMAL},
+            VISITOR_INFO        = #{visitorInfo,jdbcType=VARCHAR},
+            create_time         = #{createTime},
+            process_type        = #{processType},
+            process_status      = #{processStatus},
+            process_instance_id = #{processInstanceId},
+            is_finished         = #{isFinished}
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <insert id="addBatch" useGeneratedKeys="false">
+        insert into T_OAM_REQ_HISTORY
+        ( ID, STAFF_ID, APPROVER_ID, TUNNEL_ID, ACTION, PRE_TIME, ENTER_TIME, EXIT_TIME, VISITOR_NUMBER,
+        VISITOR_COMPANY, VISITOR_INFO,create_time,process_type,process_status,process_instance_id,is_finished)
+        select OAM_REQ_HISTORY_SEQUENCE.nextval,a.* from (
+        <foreach collection="list" item="item" index="index" close=")"
+                 open="(" separator="union">
+            select
+            #{item.staffId},
+            #{item.approverId},
+            #{item.tunnelId},
+            #{item.action},
+            #{item.preTime},
+            #{item.enterTime},
+            #{item.exitTime},
+            #{item.visitorNumber},
+            #{item.visitorCompany},
+            #{item.visitorInfo},
+            #{item.createTime},
+            #{item.processType},
+            #{item.processStatus},
+            #{item.processInstanceId},
+            #{item.isFinished}
+            from dual
+        </foreach>
+        )a
+    </insert>
+
+
+    <select id="getDtoById" resultMap="DtoResultMap">
+        SELECT *
+        FROM T_OAM_REQ_HISTORY
+        WHERE id = #{id}
+    </select>
+
+    <select id="getDtoListByCondition" resultMap="DtoResultMap">
+        select * from T_OAM_REQ_HISTORY
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+            <if test="approverId != null">
+                and approver_id = #{approverId}
+            </if>
+            <if test="tunnelId != null">
+                and tunnel_id = #{tunnelId}
+            </if>
+            <if test="action != null">
+                and action = #{action}
+            </if>
+            <if test="startTime != null">
+                and pre_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and pre_time &lt;= #{endTime}
+            </if>
+            <if test="visitorCompany != null">
+                and visitor_company = #{visitorCompany}
+            </if>
+            <if test="processInstanceId != null">
+                and process_instance_id = #{processInstanceId}
+            </if>
+            <if test="isFinished != null">
+                and is_finished = #{isFinished}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <select id="getReqHistoryByProcessInstanceId" resultMap="BaseResultMap">
+        SELECT *
+        FROM T_OAM_REQ_HISTORY
+        WHERE process_instance_id = #{processInstanceId}
+    </select>
+    
+    <select id="getReqHistoryDtoByProcessInstanceId" resultMap="DtoResultMap">
+        SELECT *
+        FROM T_OAM_REQ_HISTORY
+        WHERE process_instance_id = #{processInstanceId}
+    </select>
+
+</mapper>

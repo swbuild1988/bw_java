@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.VideoPresetMapper">
+
+    <insert id="insertVideoPreset" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset">
+        INSERT INTO t_mam_video_preset (video_id, preset_name, longitude, latitude, height, pitch, roll, heading)
+        VALUES (#{videoId}, #{presetName}, #{longitude}, #{latitude}, #{height}, #{pitch}, #{roll}, #{heading})
+    </insert>
+
+    <update id="updateVideoPreset" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset">
+        UPDATE t_mam_video_preset
+        SET longitude = #{longitude},
+            latitude  = #{latitude},
+            height    = #{height},
+            pitch     = #{pitch},
+            roll      = #{roll},
+            heading   = #{heading}
+        WHERE video_id = #{videoId} AND preset_name = #{presetName}
+    </update>
+
+    <delete id="deleteVideoPreset">
+        DELETE FROM t_mam_video_preset
+        WHERE video_id = #{videoId} AND preset_name = #{presetName}
+    </delete>
+
+    <select id="getVideoPresets">
+        SELECT *
+        FROM t_mam_video_preset
+        WHERE video_id = #{videoId}
+    </select>
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjMapMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="INPUT_VALUE" jdbcType="DECIMAL" property="inputValue" />
+    <result column="OBJECT_ID2" jdbcType="DECIMAL" property="objectId2" />
+    <result column="OUTPUT_VALUE" jdbcType="DECIMAL" property="outputValue" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, OBJECT_ID, INPUT_VALUE, OBJECT_ID2, OUTPUT_VALUE
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_MAM_MEASOBJ_MAP
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_MAM_MEASOBJ_MAP
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
+    insert into T_MAM_MEASOBJ_MAP (ID, OBJECT_ID, INPUT_VALUE, 
+      OBJECT_ID2, OUTPUT_VALUE)
+    values (#{id,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{inputValue,jdbcType=DECIMAL}, 
+      #{objectId2,jdbcType=DECIMAL}, #{outputValue,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
+    insert into T_MAM_MEASOBJ_MAP
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="objectId != null">
+        OBJECT_ID,
+      </if>
+      <if test="inputValue != null">
+        INPUT_VALUE,
+      </if>
+      <if test="objectId2 != null">
+        OBJECT_ID2,
+      </if>
+      <if test="outputValue != null">
+        OUTPUT_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="inputValue != null">
+        #{inputValue,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId2 != null">
+        #{objectId2,jdbcType=DECIMAL},
+      </if>
+      <if test="outputValue != null">
+        #{outputValue,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
+    update T_MAM_MEASOBJ_MAP
+    <set>
+      <if test="objectId != null">
+        OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="inputValue != null">
+        INPUT_VALUE = #{inputValue,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId2 != null">
+        OBJECT_ID2 = #{objectId2,jdbcType=DECIMAL},
+      </if>
+      <if test="outputValue != null">
+        OUTPUT_VALUE = #{outputValue,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
+    update T_MAM_MEASOBJ_MAP
+    set OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      INPUT_VALUE = #{inputValue,jdbcType=DECIMAL},
+      OBJECT_ID2 = #{objectId2,jdbcType=DECIMAL},
+      OUTPUT_VALUE = #{outputValue,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getByObjectIdAndInputValue" resultMap="BaseResultMap">
+  	select * from T_MAM_MEASOBJ_MAP where object_id = #{objectId} and input_value = #{inputValue}
+  </select>
+  
+  <delete id="deleteBatch">
+		delete from T_MAM_MEASOBJ_MAP where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjDistributeMapper">
+
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute">
+        INSERT INTO T_MAM_MEASOBJ_DISTRIBUTE (ID, REFRESH_TIME, SPACE_PRECISION,dcv)
+        VALUES (#{id}, #{refreshTime}, #{spacePrecision},#{dcv})
+    </insert>
+    
+    <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute">
+        INSERT INTO T_MAM_MEASOBJ_SI
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+        		id,
+        	</if>
+        	<if test="refreshTime != null">
+        		REFRESH_TIME,
+        	</if>
+        	<if test="spacePrecision != null">
+        		SPACE_PRECISION,
+        	</if>
+        	<if test="dcv != null">
+        		dcv,
+        	</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+        		#{id,jdbcType=DECIMAL},
+        	</if>
+        	<if test="refreshTime != null">
+        		#{refreshTime,jdbcType=TIMESTAMP},
+        	</if>
+        	<if test="spacePrecision != null">
+        		#{spacePrecision},
+        	</if>
+        	<if test="dcv != null">
+        		#{dcv},
+        	</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute">
+        UPDATE T_MAM_MEASOBJ_DISTRIBUTE
+        SET REFRESH_TIME = #{refreshTime}, SPACE_PRECISION = #{spacePrecision},dcv = #{dcv}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getMeasObjDistribute" resultMap="MeasObjDistributeMap">
+        select a.*, b.*
+        from T_MAM_MEASOBJ_DISTRIBUTE a
+        LEFT JOIN t_mam_measobj b ON a.id = b.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getAllMeasObjDistributes" resultMap="MeasObjDistributeMap">
+        select a.*, b.*
+        from T_MAM_MEASOBJ_DISTRIBUTE a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+    </select>
+
+    <resultMap id="MeasObjDistributeMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+        <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
+        <result column="SPACE_PRECISION" jdbcType="VARCHAR" property="spacePrecision"/>
+        <result column="dcv" jdbcType="VARCHAR" property="dcv"/>
+    </resultMap>
+
+</mapper>

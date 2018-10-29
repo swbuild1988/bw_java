@@ -1,0 +1,40 @@
+枚举接口：
+说明：调用方式皆为 GET 方式
+
+付款方式枚举：	
+		url:paytype-enums 
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"月付"},{"val":2,"key":"季付"},{"val":3,"key":"年付"}]}
+
+行为枚举:	
+		url:action-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"参观"},{"val":2,"key":"维护"},{"val":3,"key":"安装"}]}
+
+
+申请状态枚举:
+		url:reqstatus-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"审核中"},{"val":2,"key":"通过"},{"val":3,"key":"拒绝"},{"val":4,"key":"结束"}]}
+
+设备状态枚举:
+		url:equipmentstatus-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"},{"val":3,"key":"备品"}]}
+
+
+设备类型枚举:
+		url:equipmenttype-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"安全防范"},{"val":2,"key":"视频监控"},{"val":3,"key":"环境监测"},{"val":4,"key":"电缆本体"},{"val":5,"key":"火灾报警"},{"val":6,"key":"隧道通信"}]}
+单位类别枚举：
+		url:unittype-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"医院"},{"val":2,"key":"学校"},{"val":3,"key":"机关单位"},{"val":4,"key":"商场"},{"val":5,"key":"银行"},{"val":6,"key":"景点"},{"val":7,"key":"火车站/机场"},{"val":8,"key":"其他"}]}
+监测对象类型枚举:
+		url:datatype-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":0,"key":"无"},{"val":1,"key":"模拟量输入"},{"val":2,"key":"开关量"},{"val":4,"key":"状态量"},{"val":5,"key":"分布式"},{"val":7,"key":"视频"},{"val":103,"key":"频谱"}]}
+流程类型枚举:
+		url:processtype-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"巡检计划"},{"val":2,"key":"入廊申请"}]}
+objType枚举：	url:objecttype-enums
+		return；{"msg":"请求成功","code":"200","data":[{"val":0,"key":"无"},{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":7,"key":"视频"},{"val":8,"key":"分布式温度"},{"val":9,"key":"机器人"},{"val":10,"key":"风机"},{"val":11,"key":"灯"}]}
+管仓类型枚举：	url:storetype-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"综合仓"},{"val":2,"key":"电力仓"},{"val":3,"key":"燃气仓"}]}
+管线运行状态枚举:
+		url:cablestatus-enums
+		return:{"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"}]}

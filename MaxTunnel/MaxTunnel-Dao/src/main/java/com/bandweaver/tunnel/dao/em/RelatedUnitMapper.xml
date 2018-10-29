@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.em.RelatedUnitMapper">
+<!-- 开启二级缓存 -->
+<cache/>
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="UNIT_TYPE" jdbcType="DECIMAL" property="unitType" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="SECTION_IDS" jdbcType="VARCHAR" property="sectionIds" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.em.RelatedUnitDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="UNIT_TYPE" jdbcType="DECIMAL" property="unitType" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="SECTION_IDS" jdbcType="VARCHAR" property="sectionIds" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, NAME, CONTACT, TEL, UNIT_TYPE, ADDRESS,longitude,latitude, SECTION_IDS, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_EM_RELATED_UNIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_EM_RELATED_UNIT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
+    insert into T_EM_RELATED_UNIT (ID, NAME, CONTACT, 
+      TEL, UNIT_TYPE, ADDRESS, longitude,latitude,
+      SECTION_IDS, CRT_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{unitType,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, 
+       #{longitude,jdbcType=VARCHAR},  #{latitude,jdbcType=VARCHAR}, 
+      #{sectionIds,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
+    insert into T_EM_RELATED_UNIT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="contact != null">
+        CONTACT,
+      </if>
+      <if test="tel != null">
+        TEL,
+      </if>
+      <if test="unitType != null">
+        UNIT_TYPE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="sectionIds != null">
+        SECTION_IDS,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="unitType != null">
+        #{unitType,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionIds != null">
+        #{sectionIds,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
+    update T_EM_RELATED_UNIT
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        CONTACT = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="unitType != null">
+        UNIT_TYPE = #{unitType,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        ADDRESS = #{longitude,jdbcType=VARCHAR},
+      </if>
+      <if test="latitude != null">
+        ADDRESS = #{latitude,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionIds != null">
+        SECTION_IDS = #{sectionIds,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
+    update T_EM_RELATED_UNIT
+    set NAME = #{name,jdbcType=VARCHAR},
+      CONTACT = #{contact,jdbcType=VARCHAR},
+      TEL = #{tel,jdbcType=VARCHAR},
+      UNIT_TYPE = #{unitType,jdbcType=DECIMAL},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      SECTION_IDS = #{sectionIds,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getDtoById" resultMap="DtoResultMap">
+  	select * from T_EM_RELATED_UNIT where id = #{id}
+  </select>
+  
+  <select id="getDtoListByCondition" resultMap="DtoResultMap">
+  	select * from T_EM_RELATED_UNIT
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="name != null and name.trim() != ''">
+  			and instr(name,#{name})>0
+  		</if>
+  		<if test="contact != null and contact.trim() != ''">
+  			and instr(contact,#{contact})>0
+  		</if>
+  		<if test="unitType != null">
+  			and unit_type = #{unitType}
+  		</if>
+  		<if test="sectionIds != null and sectionIds.trim() != ''">
+  			and instr(section_ids,#{sectionIds})>0
+  		</if>
+  		<if test="startTime != null">
+  			and crt_time &gt;= #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and crt_time &lt;= #{endTime}
+  		</if>
+  	</where>
+  	order by crt_time desc
+  </select>
+</mapper>

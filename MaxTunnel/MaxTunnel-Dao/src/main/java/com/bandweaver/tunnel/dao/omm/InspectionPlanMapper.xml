@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionPlanMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT OMM_inspection_plan_SEQUENCE.currval from DUAL
+        </selectKey>
+        INSERT INTO t_omm_inspection_plan
+        (plan_id, name, request_staff_id, approver_id, tunnel_id, group_id, inspect_time, remark,
+         create_time, process_type, process_status, process_instance_id, is_finished)
+        VALUES
+            (#{planId}, #{name}, #{requestStaffId}, #{approverId}, #{tunnelId}, #{groupId},
+                        #{inspectTime}, #{remark},
+                        #{createTime}, #{processType}, #{processStatus}, #{processInstanceId}, #{isFinished})
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan">
+        UPDATE t_omm_inspection_plan
+        <set>
+            <if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="requestStaffId != null">
+                request_staff_id = #{requestStaffId},
+            </if>
+            <if test="approverId != null">
+                approver_id = #{approverId},
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id = #{tunnelId},
+            </if>
+            <if test="groupId != null">
+                group_id = #{groupId},
+            </if>
+            <if test="inspectTime != null">
+                inspect_time = #{inspectTime},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                process_instance_id = #{processInstanceId},
+            </if>
+            <if test="remark != null and remark.trim() != ''">
+                remark = #{remark},
+            </if>
+            <if test="processStatus != null">
+                process_status = #{processStatus},
+            </if>
+            <if test="isFinished != null">
+                is_finished = #{isFinished},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getInspectionPlans" resultMap="inspectionPlanSimpleDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS group_name
+        FROM t_omm_inspection_plan a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_omm_inspection_group c ON a.group_id = c.id
+    </select>
+
+    <select id="getInspectionPlansByTunnel" resultMap="inspectionPlanSimpleDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS group_name
+        FROM t_omm_inspection_plan a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_omm_inspection_group c ON a.group_id = c.id
+        WHERE tunnel_id = #{tunnelId}
+    </select>
+
+    <select id="getInspectionPlansByVo" resultMap="inspectionPlanSimpleDtoMap">
+        SELECT a.*, b.name as tunnel_name, c.name as group_name from t_omm_inspection_plan a
+        LEFT JOIN t_common_tunnel b on a.tunnel_id = b.id
+        LEFT JOIN t_omm_inspection_group c on a.group_id = c.id
+        <where>
+            <if test=" id != null ">
+                and a.id = #{id}
+            </if>
+            <if test="name != null and name.trim()!=''">
+                and instr(a.name,#{name,jdbcType=VARCHAR})>0
+            </if>
+            <if test="requestStaffId != null">
+                and a.request_staff_id = #{requestStaffId}
+            </if>
+            <if test="approverId != null">
+                and a.approver_id = #{approverId}
+            </if>
+            <if test="requestStatus != null">
+                and a.request_status = #{requestStatus}
+            </if>
+            <if test="tunnelId != null">
+                and a.tunnel_id = #{tunnelId}
+            </if>
+            <if test="groupId != null">
+                and a.group_id = #{groupId}
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                and a.process_instance_id = #{processInstanceId}
+            </if>
+            <if test="startTime != null">
+                and a.inspect_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.inspect_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+            <if test="isFinished != null">
+                a.is_finished = #{isFinished}
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="getInspectionPlanDto" resultMap="inspectionPlanDtoMap">
+        SELECT
+            a.*,
+            b.name AS group_name,
+            d.name AS tunnel_name,
+            c.id   AS task_id,
+            c.inspect_man_id,
+            c.is_finished AS finished,
+            e.name AS inspect_man_name,
+            c.task_time,
+            c.inspect_time,
+            c.process_status AS task_process_status
+        FROM t_omm_inspection_plan a
+            LEFT JOIN t_omm_inspection_group b ON a.group_id = b.id
+            LEFT JOIN t_omm_inspection_task c ON a.plan_id = c.plan_id
+            LEFT JOIN t_common_tunnel d ON a.tunnel_id = d.id
+            LEFT JOIN t_security_user e ON e.id = c.inspect_man_id
+        WHERE a.plan_id = #{planId}
+    </select>
+
+    <select id="getInspectionDtoByProcessInstanceId" resultMap="inspectionPlanDtoMap">
+        SELECT
+            a.*,
+            b.name           AS group_name,
+            d.name           AS tunnel_name,
+            c.id             AS task_id,
+            c.inspect_man_id,
+            e.name           AS inspect_man_name,
+            c.task_time,
+            c.inspect_time,
+            c.process_status AS task_process_status
+        FROM t_omm_inspection_plan a
+            LEFT JOIN t_omm_inspection_group b ON a.group_id = b.id
+            LEFT JOIN t_omm_inspection_task c ON a.plan_id = c.plan_id
+            LEFT JOIN t_common_tunnel d ON a.tunnel_id = d.id
+            LEFT JOIN t_security_user e ON e.id = c.inspect_man_id
+        WHERE a.process_instance_id = #{processInstanceId}
+    </select>
+
+    <select id="getInspectionPlanByProcessInstanceId" resultMap="inspectionPlanMap">
+        SELECT *
+        FROM t_omm_inspection_plan
+        WHERE process_instance_id = #{processInstanceId}
+    </select>
+
+    <resultMap id="inspectionPlanMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan">
+        <id column="id" property="id"/>
+        <result column="plan_id" property="planId"/>
+        <result column="name" property="name"/>
+        <result column="request_staff_id" property="requestStaffId"/>
+        <result column="approver_id" property="approverId"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="group_id" property="groupId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="inspect_time" property="inspectTime"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="remark" property="remark"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+    </resultMap>
+
+    <resultMap id="inspectionPlanDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto">
+        <id column="id" property="id"/>
+        <result column="plan_id" property="planId"/>
+        <result column="name" property="name"/>
+        <result column="request_staff_id" property="requestStaffId"/>
+        <result column="approver_id" property="approverId"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="tunnel_name" property="tunnelName"/>
+        <result column="group_id" property="groupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="inspect_time" property="inspectTime"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="remark" property="remark"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+        <association property="inspectionGroup" javaType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto"
+                     column="group_id"
+                     select="com.bandweaver.tunnel.dao.omm.InspectionGroupMapper.getInspectionGroupDto"/>
+        <collection property="tasks" ofType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto">
+            <id column="task_id" property="id"/>
+            <result column="inspect_man_id" property="inspectManId"/>
+            <result column="inspect_man_name" property="inspectManName"/>
+            <result column="task_time" property="taskTime"/>
+            <result column="inspect_time" property="inspectTime"/>
+            <result column="finished" property="isFinished"/>
+            <result column="task_process_status" property="processStatus"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="inspectionPlanSimpleDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="request_staff_id" property="requestStaffId"/>
+        <result column="approver_id" property="approverId"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="tunnel_name" property="tunnelName"/>
+        <result column="group_id" property="groupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="inspect_time" property="inspectTime"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="remark" property="remark"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+        <association property="staff" javaType="Staff" column="request_staff_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+    </resultMap>
+    
+    <select id="getInspectionPlanSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	SELECT COUNT(1)
+    	FROM t_omm_inspection_plan
+    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
+    </select>
+    
+    <select id="getInspectionPlanSumByMonth" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	SELECT COUNT(1)
+    	FROM t_omm_inspection_plan
+    	WHERE create_time <![CDATA[ >= ]]> TRUNC(#{createTime}, 'MM') and create_time <![CDATA[ <= ]]> last_day(#{createTime})
+    </select>
+    
+    <select id="getAllInspectionPlan" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
+    	SELECT id,name
+    	FROM t_omm_inspection_plan 
+    	ORDER BY create_time DESC
+    </select>
+    
+    <select id="getTunnelCountByTunnelId" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
+		SELECT a.groupId,b.name
+		FROM (SELECT tunnel_id tunnelId,count(1) groupId
+		    FROM t_omm_inspection_plan
+		    GROUP BY tunnel_id) a
+		RIGHT JOIN t_common_tunnel b ON a.tunnelId = b.id
+	</select>
+	
+	
+    
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.bandweaver.tunnel.dao.mam.MeasValueDASSpectrumMapper">
+<cache/>
+	<insert id="addMeasValueDAS"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDASSpectrum">
+		insert into T_MAM_MEASVALUE_DASSPECTRUM
+		(TIME, OBJECT_ID, ZONE_ID,
+		CHANNEL_COUNT, CHANNEL_ID, SAMPLERATE,
+		FFT_SIZE)
+		values (#{time,jdbcType=TIMESTAMP}, #{objectId,jdbcType=DECIMAL},
+		#{zoneId,jdbcType=DECIMAL},
+		#{channelCount,jdbcType=DECIMAL}, #{channelId,jdbcType=DECIMAL}, #{samplerate,jdbcType=DECIMAL},
+		#{fftSize,jdbcType=DECIMAL})
+	</insert>
+
+	<select id="getListByObjectIdAndTime"
+		resultMap="measValueDASSpectrumMap">
+		SELECT * FROM T_MAM_MEASVALUE_DASSpectrum
+		<where>
+			<if test="objectId!=-1">
+				and OBJECT_ID = #{objectId}
+			</if>
+			<if test="startTime!=null">
+				and time <![CDATA[>=]]>#{startTime}
+			</if>
+			<if test="endTime!=null">
+				and time <![CDATA[<=]]>#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<resultMap id="measValueDASSpectrumMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDASSpectrum">
+		<result column="TIME" jdbcType="TIMESTAMP" property="time" />
+		<result column="OBJECT_ID" jdbcType="DECIMAL"
+			property="objectId" />
+		<result column="ZONE_ID" jdbcType="DECIMAL" property="zoneId" />
+		<result column="CHANNEL_COUNT" jdbcType="DECIMAL"
+			property="channelCount" />
+		<result column="CHANNEL_ID" jdbcType="DECIMAL"
+			property="channelId" />
+		<result column="SAMPLERATE" jdbcType="DECIMAL"
+			property="samplerate" />
+		<result column="FFT_SIZE" jdbcType="DECIMAL" property="fftSize" />
+	</resultMap>
+
+
+	<insert id="addMeasValueDASBatch" useGeneratedKeys="false">
+		insert into T_MAM_MEASVALUE_DASSpectrum (TIME, OBJECT_ID, ZONE_ID,
+		CHANNEL_COUNT, CHANNEL_ID, SAMPLERATE,
+		FFT_SIZE)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.time,jdbcType=TIMESTAMP},
+			#{item.objectId,jdbcType=DECIMAL}, #{item.zoneId,jdbcType=DECIMAL},
+			#{item.channelCount,jdbcType=DECIMAL}, #{item.channelId,jdbcType=DECIMAL},
+			#{item.samplerate,jdbcType=DECIMAL},
+			#{item.fftSize,jdbcType=DECIMAL}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<delete id="deleteBatch">
+		delete from T_MAM_MEASVALUE_DASSpectrum where time &lt;= #{time}
+	</delete>
+</mapper>

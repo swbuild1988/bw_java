@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionGroupMapper">
+<cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup">
+        insert into t_omm_inspection_group (name, leader_id, leader_name)
+                VALUES (#{name}, #{leaderId}, #{leaderName})
+    </insert>
+
+    <insert id="addRelation">
+        insert into t_omm_inspection_group_user (group_id, user_id)
+                values (#{groupId}, #{userId})
+    </insert>
+
+    <select id="getInspectionGroupDto" parameterType="int" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto" resultMap="inspectionGroupDtoMap">
+        select g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name, u.password as u_password, u.crt_time as u_crtTime
+        from t_omm_inspection_group g
+        LEFT JOIN t_omm_inspection_group_user gu ON g.id = gu.group_id
+        LEFT JOIN t_security_user u on u.id = gu.user_id
+        where g.id = #{id}
+    </select>
+
+    <select id="getAllInspectionGroups" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup" resultMap="inspectionGroupMap">
+        select * from T_OMM_INSPECTION_GROUP
+    </select>
+
+
+    <select id="getAllInspectionGroupDtos" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto" resultMap="inspectionGroupDtoMap">
+        select  g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name, u.password as u_password, u.crt_time as u_crtTime
+        from T_OMM_INSPECTION_GROUP g
+        LEFT JOIN t_omm_inspection_group_user gu ON g.id = gu.group_id
+        LEFT JOIN t_security_user u on u.id = gu.user_id
+    </select>
+
+    <resultMap id="inspectionGroupDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="leader_id" property="leaderId" />
+        <result column="leader_name" property="leaderName" />
+        <association property="leader" javaType="com.bandweaver.tunnel.common.biz.pojo.User" column="leader_id"
+                     select="com.bandweaver.tunnel.dao.common.UserMapper.selectByPrimaryKey" />
+        <collection property="members" ofType="com.bandweaver.tunnel.common.biz.pojo.User">
+            <id column="u_id" property="id" />
+            <result column="u_name" property="name" />
+            <result column="u_password" property="password" />
+            <result column="u_crtTime" property="crtTime" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="inspectionGroupMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="leader_id" property="leaderId" />
+        <result column="leader_name" property="leaderName" />
+    </resultMap>
+
+</mapper>

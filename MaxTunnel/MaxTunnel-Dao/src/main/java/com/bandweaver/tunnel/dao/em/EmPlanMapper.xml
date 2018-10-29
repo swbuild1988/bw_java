@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.em.EmPlanMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PROCESS_KEY" jdbcType="VARCHAR" property="processKey" />
+    <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
+    <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
+    <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
+    <result column="TARGET_VALUE" jdbcType="DECIMAL" property="targetValue" />
+    <result column="ACTION_KEY" jdbcType="DECIMAL" property="actionKey" />
+    <result column="ACTION_VALUE" jdbcType="DECIMAL" property="actionValue" />
+    <result column="FINISH_KEY" jdbcType="DECIMAL" property="finishKey" />
+    <result column="FINISH_VALUE" jdbcType="DECIMAL" property="finishValue" />
+    <result column="is_finished" jdbcType="DECIMAL" property="isFinished" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PROCESS_KEY" jdbcType="VARCHAR" property="processKey" />
+    <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
+    <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
+    <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
+    <result column="TARGET_VALUE" jdbcType="DECIMAL" property="targetValue" />
+    <result column="ACTION_KEY" jdbcType="DECIMAL" property="actionKey" />
+    <result column="ACTION_VALUE" jdbcType="DECIMAL" property="actionValue" />
+    <result column="FINISH_KEY" jdbcType="DECIMAL" property="finishKey" />
+    <result column="FINISH_VALUE" jdbcType="DECIMAL" property="finishValue" />
+    <result column="is_finished" jdbcType="DECIMAL" property="isFinished" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, PROCESS_KEY, TASK_KEY,task_name, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, 
+    FINISH_VALUE, is_finished,CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_EM_PLAN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_EM_PLAN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
+    insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY,task_name, 
+      TARGET_KEY, TARGET_VALUE, ACTION_KEY, 
+      ACTION_VALUE, FINISH_KEY, FINISH_VALUE, is_finished
+      CRT_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{processKey,jdbcType=VARCHAR}, #{taskKey,jdbcType=VARCHAR},  #{taskName,jdbcType=VARCHAR}, 
+      #{targetKey,jdbcType=DECIMAL}, #{targetValue,jdbcType=DECIMAL}, #{actionKey,jdbcType=DECIMAL}, 
+      #{actionValue,jdbcType=DECIMAL}, #{finishKey,jdbcType=DECIMAL}, #{finishValue,jdbcType=DECIMAL}, #{isFinished,jdbcType=DECIMAL}, 
+      #{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
+    insert into T_EM_PLAN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="processKey != null">
+        PROCESS_KEY,
+      </if>
+      <if test="taskKey != null">
+        TASK_KEY,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="targetKey != null">
+        TARGET_KEY,
+      </if>
+      <if test="targetValue != null">
+        TARGET_VALUE,
+      </if>
+      <if test="actionKey != null">
+        ACTION_KEY,
+      </if>
+      <if test="actionValue != null">
+        ACTION_VALUE,
+      </if>
+      <if test="finishKey != null">
+        FINISH_KEY,
+      </if>
+      <if test="finishValue != null">
+        FINISH_VALUE,
+      </if>
+      <if test="isFinished != null">
+        is_finished,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="processKey != null">
+        #{processKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskKey != null">
+        #{taskKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetKey != null">
+        #{targetKey,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue != null">
+        #{targetValue,jdbcType=DECIMAL},
+      </if>
+      <if test="actionKey != null">
+        #{actionKey,jdbcType=DECIMAL},
+      </if>
+      <if test="actionValue != null">
+        #{actionValue,jdbcType=DECIMAL},
+      </if>
+      <if test="finishKey != null">
+        #{finishKey,jdbcType=DECIMAL},
+      </if>
+      <if test="finishValue != null">
+        #{finishValue,jdbcType=DECIMAL},
+      </if>
+      <if test="isFinished != null">
+        #{isFinished,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
+    update T_EM_PLAN
+    <set>
+      <if test="processKey != null">
+        PROCESS_KEY = #{processKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskKey != null">
+        TASK_KEY = #{taskKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetKey != null">
+        TARGET_KEY = #{targetKey,jdbcType=DECIMAL},
+      </if>
+      <if test="targetValue != null">
+        TARGET_VALUE = #{targetValue,jdbcType=DECIMAL},
+      </if>
+      <if test="actionKey != null">
+        ACTION_KEY = #{actionKey,jdbcType=DECIMAL},
+      </if>
+      <if test="actionValue != null">
+        ACTION_VALUE = #{actionValue,jdbcType=DECIMAL},
+      </if>
+      <if test="finishKey != null">
+        FINISH_KEY = #{finishKey,jdbcType=DECIMAL},
+      </if>
+      <if test="finishValue != null">
+        FINISH_VALUE = #{finishValue,jdbcType=DECIMAL},
+      </if>
+      <if test="isFinished != null">
+        is_finished = #{isFinished,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
+    update T_EM_PLAN
+    set PROCESS_KEY = #{processKey,jdbcType=VARCHAR},
+      TASK_KEY = #{taskKey,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      TARGET_KEY = #{targetKey,jdbcType=DECIMAL},
+      TARGET_VALUE = #{targetValue,jdbcType=DECIMAL},
+      ACTION_KEY = #{actionKey,jdbcType=DECIMAL},
+      ACTION_VALUE = #{actionValue,jdbcType=DECIMAL},
+      FINISH_KEY = #{finishKey,jdbcType=DECIMAL},
+      FINISH_VALUE = #{finishValue,jdbcType=DECIMAL},
+      is_finished = #{isFinished,jdbcType=DECIMAL},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getEmPlanByProcessKeyAndTaskKey" resultMap="BaseResultMap">
+  	select * from T_EM_PLAN where PROCESS_KEY = #{processKey} and TASK_KEY = #{taskKey}
+  </select>
+  
+  <select id="getById" resultMap="DtoResultMap">
+  	select * from T_EM_PLAN where id = #{id}
+  </select>
+  
+  
+   <delete id="deleteBatch">
+		delete from T_EM_PLAN where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</delete>
+	
+	
+	<select id="getByCondition" resultMap="DtoResultMap">
+		select * from T_EM_PLAN 
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="processKey != null and processKey.trim() != ''">
+				and instr(process_key,#{processKey})>0
+			</if>
+			<if test="taskKey != null and taskKey.trim() != ''">
+				and task_key = #{taskKey}
+			</if>
+			<if test="taskName != null and taskName.trim() != ''">
+				and instr(task_name,#{taskName})>0
+			</if>
+			<if test="targetKey != null">
+				and target_key = #{targetKey}
+			</if>
+			<if test="actionKey != null">
+				and action_key = #{actionKey}
+			</if>
+			<if test="finishKey != null">
+				and finish_key = #{finishKey}
+			</if>
+			<if test="isFinished != null">
+				and is_finished = #{isFinished}
+			</if>
+			<if test="startTime != null">
+				and crt_time &gt; = #{startTime}
+			</if>
+			<if test="endTime != null">
+				and crt_time &lt; = #{endTime}
+			</if>
+		</where>
+		order by crt_time desc
+	</select>
+  
+</mapper>	

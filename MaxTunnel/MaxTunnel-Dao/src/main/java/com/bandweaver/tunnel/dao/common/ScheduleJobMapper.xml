@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.ScheduleJobMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
+    <id column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+    <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
+    <result column="JOB_GROUP" jdbcType="VARCHAR" property="jobGroup" />
+    <result column="JOB_STATUS" jdbcType="DECIMAL" property="jobStatus" />
+    <result column="job_class" jdbcType="VARCHAR" property="jobClass" />
+    <result column="job_method" jdbcType="VARCHAR" property="jobMethod" />
+    <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.ScheduleJobDto">
+    <id column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
+    <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
+    <result column="JOB_GROUP" jdbcType="VARCHAR" property="jobGroup" />
+    <result column="JOB_STATUS" jdbcType="DECIMAL" property="jobStatus" />
+    <result column="job_class" jdbcType="VARCHAR" property="jobClass" />
+    <result column="job_method" jdbcType="VARCHAR" property="jobMethod" />
+    <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, job_class,job_method,CRON_EXPRESSION, DESCRIPTION
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COMMON_SCHEDULE_JOB
+    where JOB_ID = #{jobId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_COMMON_SCHEDULE_JOB
+    where JOB_ID = #{jobId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
+    insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, 
+      JOB_STATUS,job_class,job_method, CRON_EXPRESSION, DESCRIPTION
+      )
+    values (#{jobId,jdbcType=DECIMAL}, #{jobName,jdbcType=VARCHAR}, #{jobGroup,jdbcType=VARCHAR}, 
+      #{jobStatus,jdbcType=DECIMAL},#{jobClass,jdbcType=VARCHAR},#{jobMethod,jdbcType=VARCHAR},
+       #{cronExpression,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
+    insert into T_COMMON_SCHEDULE_JOB
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="jobId != null">
+        JOB_ID,
+      </if>
+      <if test="jobName != null">
+        JOB_NAME,
+      </if>
+      <if test="jobGroup != null">
+        JOB_GROUP,
+      </if>
+      <if test="jobStatus != null">
+        JOB_STATUS,
+      </if>
+      <if test="jobClass != null">
+        job_class,
+      </if>
+      <if test="jobMethod != null">
+        job_method,
+      </if>
+      <if test="cronExpression != null">
+        CRON_EXPRESSION,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="jobId != null">
+        #{jobId,jdbcType=DECIMAL},
+      </if>
+      <if test="jobName != null">
+        #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobGroup != null">
+        #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="jobStatus != null">
+        #{jobStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="jobClass != null">
+        #{jobClass,jdbcType=VARCHAR},
+      </if>
+      <if test="jobMethod != null">
+        #{jobMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="cronExpression != null">
+        #{cronExpression,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
+    update T_COMMON_SCHEDULE_JOB
+    <set>
+      <if test="jobName != null">
+        JOB_NAME = #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="jobGroup != null">
+        JOB_GROUP = #{jobGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="jobStatus != null">
+        JOB_STATUS = #{jobStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="jobClass != null">
+        job_class = #{jobClass,jdbcType=VARCHAR},
+      </if>
+      <if test="jobMethod != null">
+        job_method = #{jobMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="cronExpression != null">
+        CRON_EXPRESSION = #{cronExpression,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where JOB_ID = #{jobId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
+    update T_COMMON_SCHEDULE_JOB
+    set JOB_NAME = #{jobName,jdbcType=VARCHAR},
+      JOB_GROUP = #{jobGroup,jdbcType=VARCHAR},
+      JOB_STATUS = #{jobStatus,jdbcType=DECIMAL},
+      job_class = #{jobClass,jdbcType=VARCHAR},
+      job_method = #{jobMethod,jdbcType=VARCHAR},
+      CRON_EXPRESSION = #{cronExpression,jdbcType=VARCHAR},
+      DESCRIPTION = #{description,jdbcType=VARCHAR}
+    where JOB_ID = #{jobId,jdbcType=DECIMAL}
+  </update>
+  
+  
+  
+  <select id="getDtoListByCondition"  resultMap="DtoResultMap">
+  	select * from T_COMMON_SCHEDULE_JOB
+  	<where>
+  		<if test="jobId != null">
+  			and job_id = #{jobId}
+  		</if>
+  		<if test="jobStatus != null">
+  			and job_status = #{jobStatus}
+  		</if>
+  	</where>
+  </select>
+  
+  <select id="getByJobStatus" resultMap="BaseResultMap">
+  	select * from T_COMMON_SCHEDULE_JOB where job_status = #{jobStatus}
+  </select>
+  
+  <select id="getByJobNameAndJobGroup" resultMap="BaseResultMap">
+  	select * from T_COMMON_SCHEDULE_JOB where job_name = #{jobName} and job_group = #{jobGroup}
+  </select>
+  
+</mapper>

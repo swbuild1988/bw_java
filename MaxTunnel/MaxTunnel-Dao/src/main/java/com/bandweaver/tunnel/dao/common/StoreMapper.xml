@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.StoreMapper">
+	<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.Store">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<id column="name" jdbcType="VARCHAR" property="name" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL"
+			property="tunnelId" />
+		<result column="STORE_TYPE_ID" jdbcType="DECIMAL"
+			property="storeTypeId" />
+		<result column="camera" jdbcType="VARCHAR"
+			property="camera" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+	</resultMap>
+
+	<resultMap id="DtoResultMap"
+		type="com.bandweaver.tunnel.common.biz.dto.StoreDto">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<id column="name" jdbcType="VARCHAR" property="name" />
+		<result column="tunnel_id" property="tunnelId"/>
+		<result column="store_type_id" property="storeTypeId"/>
+		<result column="camera" jdbcType="VARCHAR" property="camera" />
+		<result column="crt_time" property="crtTime"/>
+		<association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto" column="tunnel_id" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+		<association property="storeType" javaType="com.bandweaver.tunnel.common.biz.pojo.StoreType" column="store_type_id" select="com.bandweaver.tunnel.dao.common.StoreTypeMapper.selectByPrimaryKey"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, name,TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_COMMON_STORE
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey">
+		delete from T_COMMON_STORE
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Store">
+		<!-- 新增的时候，返回主键 ,insert前打印一遍pojo，insert之后再打印一遍pojo，会发现id从null变为数据库里的id值-->
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT COMMON_STORE_SEQUENCE.currval from DUAL
+        </selectKey>
+		insert into T_COMMON_STORE (ID,name, TUNNEL_ID,
+		STORE_TYPE_ID,camera, CRT_TIME
+		)
+		values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},#{tunnelId,jdbcType=DECIMAL},
+		#{storeTypeId,jdbcType=DECIMAL},#{camera,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Store">
+		insert into T_COMMON_STORE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID,
+			</if>
+			<if test="storeTypeId != null">
+				STORE_TYPE_ID,
+			</if>
+			<if test="camera != null">
+				camera,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				#{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="storeTypeId != null">
+				#{storeTypeId,jdbcType=DECIMAL},
+			</if>
+			<if test="camera != null">
+				#{camera,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Store">
+		update T_COMMON_STORE
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="storeTypeId != null">
+				STORE_TYPE_ID = #{storeTypeId,jdbcType=DECIMAL},
+			</if>
+			<if test="camera != null">
+				camera = #{camera,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Store">
+		update T_COMMON_STORE
+		set TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+		name = #{name,jdbcType=VARCHAR},
+		STORE_TYPE_ID = #{storeTypeId,jdbcType=DECIMAL},
+		camera = #{camera,jdbcType=VARCHAR},
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<insert id="addBatch" useGeneratedKeys="false">
+		insert into T_COMMON_STORE
+		(id,name,tunnel_id,store_type_id,camera,crt_time)
+		select COMMON_STORE_SEQUENCE.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.name},
+			#{item.tunnelId},
+			#{item.storeTypeId},
+			#{item.camera},
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+	
+
+	<select id="getStoresByCondition" resultMap="DtoResultMap">
+		select s.* from T_COMMON_STORE s
+		<where>
+			<if test="id != null">
+				and s.id = #{id}
+			</if>
+			<if test="name != null and name.trim() !=''">
+				INSTR(name,#{name})>0
+			</if>
+			<if test="tunnelId != null">
+				and s.tunnel_id = #{tunnelId}
+			</if>
+			<if test="storeTypeId != null">
+				and s.store_type_id = #{storeTypeId}
+			</if>
+			<if test="startTime != null">
+				and s.crt_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and s.crt_time &lt;= #{endTime}
+			</if>
+		</where>
+		order by s.crt_time DESC
+	</select>
+	
+	<select id="getDtoById" resultMap="DtoResultMap">
+		select * from T_COMMON_STORE where id = #{id}
+	</select>
+	
+	<delete id="deleteBatch">
+		delete from T_COMMON_STORE where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</delete>
+	
+	
+	<select id="getByName" resultMap="BaseResultMap">
+		select * from T_COMMON_STORE where name = #{name}
+	</select>
+	
+	<select id="getStoresByTunnelId" resultMap="BaseResultMap">
+		select * from T_COMMON_STORE where tunnel_id = #{tunnelId}
+	</select>
+	
+</mapper>

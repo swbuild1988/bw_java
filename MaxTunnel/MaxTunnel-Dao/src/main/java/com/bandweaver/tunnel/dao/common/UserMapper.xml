@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.UserMapper">
+<cache/>
+
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.User">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	</resultMap>
+	
+	<resultMap id="DtoResultMap"
+		type="com.bandweaver.tunnel.common.biz.dto.UserDTO">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+	</resultMap>
+	
+	
+	<sql id="Base_Column_List">
+		ID, NAME, PASSWORD,CRT_TIME
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SECURITY_USER
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" >
+		delete from
+		T_SECURITY_USER
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.User">
+		insert into T_SECURITY_USER (ID, NAME, PASSWORD, CRT_TIME)
+		values (
+		#{id,jdbcType=DECIMAL}, 
+		#{name,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{crtTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.User">
+		insert into T_SECURITY_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="password != null">
+				PASSWORD,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.User">
+		update T_SECURITY_USER
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.User">
+		update T_SECURITY_USER
+		set NAME =
+		#{name,jdbcType=VARCHAR},
+		PASSWORD = #{password,jdbcType=VARCHAR},
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+		where ID =
+		#{id,jdbcType=DECIMAL}
+	</update>
+	<select id="queryByUserName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SECURITY_USER
+		where name = #{userName,jdbcType=VARCHAR}
+	</select>
+	<select id="queryAll" resultMap="DtoResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SECURITY_USER
+	</select>
+	<select id="getRoles" resultType="String">
+		select r.role_code from
+		t_security_user u,t_security_user_role ur
+		,t_security_role r
+		where
+		u.id=ur.user_id
+		and ur.role_id = r.id
+		and
+		u.name=#{userName,jdbcType=VARCHAR}
+	</select>
+	<select id="getPermissions" resultType="String">
+		select p.per_code from
+		t_security_user u,t_security_user_role ur ,t_security_permission
+		p,t_security_role_permission rp
+		where u.id=ur.user_id and ur.role_id=rp.role_id and rp.per_id=p.id
+		and
+		u.name=#{userName,jdbcType=VARCHAR}
+	</select>
+
+    
+    <insert id="addUsers" useGeneratedKeys="false">
+		insert into t_security_user
+		<include refid="Base_Column_List" />
+		select SECURITY_USER_SEQUENCE.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.id}, 
+			#{item.name},
+		    #{item.password}, 
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	
+	<select id = "getListByIds" resultMap="DtoResultMap" >
+		select * from t_security_user where id in 
+		<foreach collection="collection" item="id" open="("  
+            separator="," close=")">  
+            #{id}  
+        </foreach> 
+	</select>
+	
+	<select id="getUserDtoById" resultMap="DtoResultMap">
+		select * from t_security_user where id = #{id}
+	</select>
+</mapper>

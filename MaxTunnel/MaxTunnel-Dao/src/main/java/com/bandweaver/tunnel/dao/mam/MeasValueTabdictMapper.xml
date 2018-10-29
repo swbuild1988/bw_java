@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.bandweaver.tunnel.dao.mam.MeasValueTabdictMapper">
+	<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueTabdict">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="DATATYPE" jdbcType="DECIMAL"
+			property="dataType" />
+		<result column="SEQNO" jdbcType="DECIMAL" property="seqNO" />
+		<result column="HISTABNAME" jdbcType="VARCHAR"
+			property="histabName" />
+		<result column="DAYS" jdbcType="DECIMAL" property="days" />
+		<result column="STARTDATE" jdbcType="TIMESTAMP"
+			property="startDate" />
+		<result column="ENDDATE" jdbcType="TIMESTAMP"
+			property="endDate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, DATATYPE, SEQNO, HISTABNAME, DAYS, STARTDATE, ENDDATE
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Short"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_MAM_MEASVALUE_TABDICT
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+		delete from T_MAM_MEASVALUE_TABDICT
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueTabdict">
+		insert into T_MAM_MEASVALUE_TABDICT (ID, DATATYPE, SEQNO,
+		HISTABNAME, DAYS, STARTDATE,
+		ENDDATE)
+		values (#{id,jdbcType=DECIMAL}, #{dataType,jdbcType=DECIMAL},
+		#{seqNO,jdbcType=DECIMAL},
+		#{histabName,jdbcType=VARCHAR}, #{days,jdbcType=DECIMAL}, #{startDate,jdbcType=TIMESTAMP},
+		#{endDate,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueTabdict">
+		insert into T_MAM_MEASVALUE_TABDICT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="dataType != null">
+				DATATYPE,
+			</if>
+			<if test="seqNO != null">
+				SEQNO,
+			</if>
+			<if test="histabName != null">
+				HISTABNAME,
+			</if>
+			<if test="days != null">
+				DAYS,
+			</if>
+			<if test="startDate != null">
+				STARTDATE,
+			</if>
+			<if test="endDate != null">
+				ENDDATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="dataType != null">
+				#{dataType,jdbcType=DECIMAL},
+			</if>
+			<if test="seqNO != null">
+				#{seqNO,jdbcType=DECIMAL},
+			</if>
+			<if test="histabName != null">
+				#{histabName,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				#{days,jdbcType=DECIMAL},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueTabdict">
+		update T_MAM_MEASVALUE_TABDICT
+		<set>
+			<if test="dataType != null">
+				DATATYPE = #{dataType,jdbcType=DECIMAL},
+			</if>
+			<if test="seqNO != null">
+				SEQNO = #{seqNO,jdbcType=DECIMAL},
+			</if>
+			<if test="histabName != null">
+				HISTABNAME = #{histabName,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				DAYS = #{days,jdbcType=DECIMAL},
+			</if>
+			<if test="startDate != null">
+				STARTDATE = #{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				ENDDATE = #{endDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueTabdict">
+		update T_MAM_MEASVALUE_TABDICT
+		set DATATYPE = #{dataType,jdbcType=DECIMAL},
+		SEQNO = #{seqNO,jdbcType=DECIMAL},
+		HISTABNAME = #{histabName,jdbcType=VARCHAR},
+		DAYS = #{days,jdbcType=DECIMAL},
+		STARTDATE = #{startDate,jdbcType=TIMESTAMP},
+		ENDDATE = #{endDate,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<insert id="addMeasValueTabdictBatch" useGeneratedKeys="false">
+		insert into T_MAM_MEASVALUE_TABDICT (ID, DATATYPE, SEQNO, HISTABNAME,
+		DAYS, STARTDATE, ENDDATE)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.id},
+			#{item.dataType},
+			#{item.seqNO},
+			#{item.histabName},
+			#{item.days},
+			#{item.startDate},
+			#{item.endDate}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<delete id="deleteBatch">
+		delete from T_MAM_MEASVALUE_TABDICT where ENDDATE &lt;= #{time}
+	</delete>
+</mapper>

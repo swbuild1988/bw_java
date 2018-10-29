@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjDIMapper">
+
+    <resultMap id="MeasObjDIMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+        <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
+        <result column="CV" jdbcType="DECIMAL" property="CV"/>
+    </resultMap>
+
+
+	<select id="getAllMeasObjDIs" resultMap="MeasObjDIMap">
+		  SELECT
+            a.*,
+            b.*
+        FROM T_MAM_MEASOBJ_DI a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+	</select>
+	
+	<insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI">
+        INSERT INTO T_MAM_MEASOBJ_DI (ID, REFRESH_TIME, CV)
+        VALUES (#{id}, #{refreshTime}, #{CV})
+    </insert>
+    
+    <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI">
+        INSERT INTO T_MAM_MEASOBJ_SI
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+        		id,
+        	</if>
+        	<if test="refreshTime != null">
+        		REFRESH_TIME,
+        	</if>
+        	<if test="CV != null">
+        		CV,
+        	</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+        		#{id,jdbcType=DECIMAL},
+        	</if>
+        	<if test="refreshTime != null">
+        		#{refreshTime,jdbcType=TIMESTAMP},
+        	</if>
+        	<if test="CV != null">
+        		#{CV,jdbcType=DECIMAL},
+        	</if>
+        </trim>
+    </insert>
+	
+    <insert id="addBatch" useGeneratedKeys="false">
+       insert into T_MAM_MEASOBJ_DI
+       (ID, REFRESH_TIME, CV)
+       select a.* from (
+       <foreach collection="list" item="item" index="index" close=")"
+                open="(" separator="union">
+           select
+           #{item.id},
+           #{item.refreshTime},
+           #{item.CV}
+           from dual
+       </foreach>
+       )a
+    </insert>
+
+	<select id="getMeasObjDI" resultMap="MeasObjDIMap">
+        SELECT
+            a.*,
+            b.*
+        FROM T_MAM_MEASOBJ_DI a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+        WHERE a.id = #{id}
+	</select>
+	
+	<update id="update">
+		update T_MAM_MEASOBJ_DI
+		set refresh_time = #{refreshTime},cv = #{CV} 
+		where id = #{id}
+	</update>
+
+</mapper>

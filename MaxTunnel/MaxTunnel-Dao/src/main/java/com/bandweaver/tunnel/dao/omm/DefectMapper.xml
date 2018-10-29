@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.DefectMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Defect">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT OMM_DEFECT_SEQUENCE.currval from DUAL
+        </selectKey>
+        INSERT INTO t_omm_defect 
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="name != null and name.trim() != ''">
+                name,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="type != null">
+                defect_type,
+            </if>
+            <if test="sectionId != null">
+                section_id,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="level != null">
+                defect_level,
+            </if>
+            <if test="description != null and description.trim() != ''">
+                description,
+            </if>
+            <if test="status != null">
+                defect_status,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                #{name},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="sectionId != null">
+                #{sectionId},
+            </if>
+            <if test="objectId != null">
+                #{objectId},
+            </if>
+            <if test="level != null">
+                #{level},
+            </if>
+            <if test="description != null and description.trim() != ''">
+                #{description},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Defect">
+        UPDATE t_omm_defect
+        <set>
+        	<if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id = #{tunnelId},
+            </if>
+            <if test="type != null">
+                defect_type = #{type},
+            </if>
+            <if test="sectionId != null">
+                section_id = #{sectionId},
+            </if>
+            <if test="objectId != null">
+                object_id = #{objectId},
+            </if>
+            <if test="level != null">
+                defect_level = #{level},
+            </if>
+            <if test="description != null and description.trim() != ''">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                defect_status = #{status},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getDefectByOrder" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.Defect">
+        SELECT *
+        FROM t_omm_defect
+        WHERE ORDER_ID = #{orderId}
+    </select>
+
+    <select id="getDefectDto" resultMap="defectDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS obj_name
+        FROM t_omm_defect a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_mam_measobj c ON a.object_id = c.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getDefectsOfTunnel" resultMap="defectDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS obj_name
+        FROM t_omm_defect a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_mam_measobj c ON a.object_id = c.id
+        WHERE a.tunnel_id = #{tunnelId}
+    </select>
+
+    <select id="getDefectsByCondition" resultMap="defectDtoMap">
+        select a.*, b.name as tunnel_name, c.name as obj_name
+        from t_omm_defect a
+        LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+        LEFT JOIN t_mam_measobj c ON a.object_id = c.id
+        <where>
+            <if test="tunnelId != null">
+                and a.tunnel_id = #{tunnelId}
+            </if>
+            <if test="type != null">
+                and a.defect_type = #{type}
+            </if>
+            <if test="objectId != null">
+                and a.object_id = #{objectId}
+            </if>
+            <if test="level != null">
+                and a.defect_level = #{level}
+            </if>
+            <if test="status != null">
+                and a.defect_status = #{status}
+            </if>
+            <if test="startTime != null">
+                and a.create_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.create_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCountOfDefectByTunnelAndType" resultType="int">
+        SELECT COUNT(1)
+        FROM t_omm_defect
+        WHERE tunnel_id = #{tunnelId} AND defect_type = #{typeValue} AND defect_status = 1
+    </select>
+
+    <resultMap id="defectDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto">
+        <id column="id" property="id"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="defect_level" property="level"/>
+        <result column="defect_type" property="type"/>
+        <result column="defect_status" property="status"/>
+        <result column="tunnel_name" property="tunnelName"/>
+        <result column="defect_type" property="typeName"/>
+        <result column="section_id" property="sectionId"/>
+        <result column="object_id" property="objectId"/>
+        <result column="obj_name" property="objName"/>
+        <result column="defect_level" property="levelName"/>
+        <result column="description" property="description"/>
+        <result column="defect_status" property="statusName"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+    
+    <select id="getDefectCountByTunnelId" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
+		SELECT a.groupId,b.name
+		FROM (SELECT tunnel_id tunnelId,count(1) groupId
+		    FROM t_omm_defect
+		    GROUP BY tunnel_id) a
+		RIGHT JOIN t_common_tunnel b ON a.tunnelId = b.id
+	</select>
+	
+	<select id="getDefects"  resultMap="defectDtoMap">
+		SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS obj_name
+        FROM t_omm_defect a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_mam_measobj c ON a.object_id = c.id
+        <where>
+        	<if test="type != null" >
+        		and a.defect_type = #{type}
+        	</if>
+        	<if test="tunnelId != null" >
+        		and a.tunnel_id = #{tunnelId}
+        	</if>
+        	<if test="status != null" >
+        		and a.defect_status = #{status}
+        	</if>
+        	<if test="level != null" >
+        		and a.defect_level = #{level}
+        	</if>
+        	<if test="startTime != null" >
+        		and a.create_time <![CDATA[>=]]>
+                #{startTime}
+        	</if>
+        	<if test="endTime != null" >
+        		and a.create_time <![CDATA[<=]]>
+                #{endTime}
+        	</if>
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+    
+</mapper>

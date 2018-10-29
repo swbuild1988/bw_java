@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/redis.properties</value>
+				<value>classpath:properties/config.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<import resource="classpath:spring/spring-dao.xml" />
+	<import resource="classpath:spring/spring-tx.xml" />
+	<import resource="classpath:spring/spring-shiro.xml" />
+	<import resource="classpath:spring/spring-rabbitmq.xml" />
+	<!--<import resource="classpath:spring/spring-redis.xml" />-->
+	<import resource="classpath:spring/spring-activiti.xml" />
+	<import resource="classpath:spring/spring-quartz.xml" />
+
+
+	<!-- 扫描service包下所有使用注解的类型 -->
+    <!-- 扫描工程组件,并排除对controller的扫描，因为考虑到springmvc的事务回滚 -->
+    <context:component-scan base-package="com.bandweaver.tunnel.service.**">
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+	<!-- 程序启动时即启动 -->
+	<context:component-scan base-package="com.bandweaver.tunnel.server.init" />
+    <!-- 全局异常处理bean -->
+    <bean class="com.bandweaver.tunnel.common.platform.exception.ExceptionHandler"/>
+    
+    <bean class="com.bandweaver.tunnel.common.platform.util.SpringContextHolder" lazy-init="false"/>
+    <!-- 使用activiti在listner接口中注入service，需要把service实现类在spring中配置，否则为null -->
+	<bean id = "activitiService" class="com.bandweaver.tunnel.service.common.ActivitiServiceImpl"/>
+	<bean id = "reqHistoryService" class="com.bandweaver.tunnel.service.oam.customer.ReqHistoryServiceImpl"/>
+	<bean id = "inspectionPlanService" class="com.bandweaver.tunnel.service.omm.inspection.InspectionPlanServiceImpl"/>
+	<bean id = "firePlanService" class="com.bandweaver.tunnel.service.em.fireplan.FirePlanServiceImpl"/>
+	<bean id = "emPlanService" class="com.bandweaver.tunnel.service.em.EmPlanServiceImpl"/>
+
+	<!-- activitiService配置完了，再引入activiti的配置 -->
+
+</beans>

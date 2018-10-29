@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.bandweaver.tunnel.dao.mam.MeasValueDistributeMapper">
+	<cache />
+
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute">
+		<result column="TIME" jdbcType="TIMESTAMP" property="time" />
+		<result column="OBJECT_ID" jdbcType="DECIMAL"
+			property="objectId" />
+		<result column="SPACE_PRECISION" jdbcType="DECIMAL"
+			property="spacePrecision" />
+		<result column="DCV" jdbcType="VARCHAR" property="dcv" />
+	</resultMap>
+
+
+	<insert id="addMeasValueDis"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute">
+		insert into T_MAM_MEASVALUE_DISTRIBUTE (TIME, OBJECT_ID, SPACE_PRECISION,
+		DCV)
+		values (#{time,jdbcType=TIMESTAMP}, #{objectId,jdbcType=DECIMAL},
+		#{spacePrecision,jdbcType=DECIMAL},
+		#{dcv,jdbcType=VARCHAR})
+	</insert>
+
+
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute">
+		insert into T_MAM_MEASVALUE_DISTRIBUTE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="time != null">
+				TIME,
+			</if>
+			<if test="objectId != null">
+				OBJECT_ID,
+			</if>
+			<if test="spacePrecision != null">
+				SPACE_PRECISION,
+			</if>
+			<if test="dcv != null">
+				DCV,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="time != null">
+				#{time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="objectId != null">
+				#{objectId,jdbcType=DECIMAL},
+			</if>
+			<if test="spacePrecision != null">
+				#{spacePrecision,jdbcType=DECIMAL},
+			</if>
+			<if test="dcv != null">
+				#{dcv,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<select id="getListByObjectIdAndTime" resultMap="BaseResultMap">
+		SELECT * FROM T_MAM_MEASVALUE_DISTRIBUTE
+		<where>
+			<if test="objectId!=-1">
+				and OBJECT_ID = #{objectId}
+			</if>
+			<if test="startTime!=null">
+				and time <![CDATA[>=]]>#{startTime}
+			</if>
+			<if test="endTime!=null">
+				and time <![CDATA[<=]]>#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<insert id="addMeasValueDisBatch" useGeneratedKeys="false">
+		insert into T_MAM_MEASVALUE_DISTRIBUTE
+		(TIME, OBJECT_ID, SPACE_PRECISION, DCV)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.time,jdbcType=TIMESTAMP},
+			#{item.objectId,jdbcType=DECIMAL},
+			#{item.spacePrecision,jdbcType=DECIMAL},
+			#{item.dcv,jdbcType=varchar},
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+	<delete id="deleteBatch">
+		delete from T_MAM_MEASVALUE_DISTRIBUTE where time
+		&lt;= #{time}
+	</delete>
+</mapper>

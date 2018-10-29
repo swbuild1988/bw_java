@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjMapper">
+<cache/>
+
+    <resultMap id="measObjMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+    </resultMap>
+    
+    <resultMap id="dtoMap" type="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        ID,tunnel_id,store_id, SECTION_ID, NAME, DATATYPE_ID, OBJTYPE_ID, ACTIVED,
+        DESCRIPTION, LONGITUDE, LATITUDE,
+        height, deviation
+    </sql>
+    <select id="selectByPrimaryKey"
+            parameterType="java.lang.Integer" resultMap="measObjMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_MAM_MEASOBJ
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey"
+            parameterType="java.lang.Integer">
+        DELETE FROM T_MAM_MEASOBJ
+        WHERE ID =
+              #{id,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
+        INSERT INTO T_MAM_MEASOBJ (ID, tunnel_id,store_id,area_id,SECTION_ID, NAME,
+                                   DATATYPE_ID, OBJTYPE_ID, ACTIVED,
+                                   DESCRIPTION, REFRESH_TIME, LONGITUDE,
+                                   LATITUDE, height, deviation)
+        VALUES (#{id,jdbcType=DECIMAL}, #{tunnelId,jdbcType=DECIMAL},
+								        #{storeId,jdbcType=DECIMAL},
+								        #{areaId,jdbcType=DECIMAL},
+								        #{sectionId,jdbcType=DECIMAL},
+                                        #{name,jdbcType=VARCHAR},
+                                        #{datatypeId,jdbcType=DECIMAL},
+                                        #{objtypeId,jdbcType=DECIMAL}, #{actived,jdbcType=DECIMAL},
+                                        #{description,jdbcType=VARCHAR},
+                                        #{longitude,jdbcType=VARCHAR},
+                                        #{latitude,jdbcType=VARCHAR},
+                                        #{height,jdbcType=VARCHAR},
+                #{deviation,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
+        insert into T_MAM_MEASOBJ
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="areaId != null">
+                area_id,
+            </if>
+            <if test="sectionId != null">
+                SECTION_ID,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="datatypeId != null">
+                DATATYPE_ID,
+            </if>
+            <if test="objtypeId != null">
+                OBJTYPE_ID,
+            </if>
+            <if test="actived != null">
+                ACTIVED,
+            </if>
+            <if test="description != null">
+                DESCRIPTION,
+            </if>
+            <if test="longitude != null">
+                LONGITUDE,
+            </if>
+            <if test="latitude != null">
+                LATITUDE,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+            <if test="deviation != null">
+                deviation,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="sectionId != null">
+                #{sectionId,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="datatypeId != null">
+                #{datatypeId,jdbcType=DECIMAL},
+            </if>
+            <if test="objtypeId != null">
+                #{objtypeId,jdbcType=DECIMAL},
+            </if>
+            <if test="actived != null">
+                #{actived,jdbcType=DECIMAL},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="deviation != null">
+                #{deviation,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
+        update T_MAM_MEASOBJ
+        <set>
+            <if test="tunnelId != null">
+                tunnel_id = #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                store_id = #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                area_id = #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="sectionId != null">
+                SECTION_ID = #{sectionId,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="datatypeId != null">
+                DATATYPE_ID = #{datatypeId,jdbcType=DECIMAL},
+            </if>
+            <if test="objtypeId != null">
+                OBJTYPE_ID = #{objtypeId,jdbcType=DECIMAL},
+            </if>
+            <if test="actived != null">
+                ACTIVED = #{actived,jdbcType=DECIMAL},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null">
+                LONGITUDE = #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                LATITUDE = #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                height = #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="deviation != null">
+                deviation = #{deviation,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
+        UPDATE T_MAM_MEASOBJ
+        SET tunnel_id  = #{tunnelId,jdbcType=DECIMAL},
+        	store_id  = #{storeId,jdbcType=DECIMAL},
+        	area_id  = #{areaId,jdbcType=DECIMAL},
+        	SECTION_ID  = #{sectionId,jdbcType=DECIMAL},
+            NAME         = #{name,jdbcType=VARCHAR},
+            DATATYPE_ID  = #{datatypeId,jdbcType=DECIMAL},
+            OBJTYPE_ID   = #{objtypeId,jdbcType=DECIMAL},
+            ACTIVED      = #{actived,jdbcType=DECIMAL},
+            DESCRIPTION  = #{description,jdbcType=VARCHAR},
+            LONGITUDE    = #{longitude,jdbcType=VARCHAR},
+            LATITUDE     = #{latitude,jdbcType=VARCHAR},
+            height       = #{height,jdbcType=VARCHAR},
+            deviation    = #{deviation,jdbcType=DECIMAL}
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <insert id="addObjBatch" useGeneratedKeys="false">
+        insert into T_MAM_MEASOBJ
+        (ID, tunnel_id,store_id,area_id,SECTION_ID, NAME,
+        DATATYPE_ID,
+        OBJTYPE_ID, ACTIVED,
+        DESCRIPTION,
+        LONGITUDE, LATITUDE, height, deviation)
+        select a.* from (
+        <foreach collection="list" item="item" index="index" close=")"
+                 open="(" separator="union">
+            select
+            #{item.id,jdbcType=DECIMAL},
+            #{item.tunnelId,jdbcType=DECIMAL},
+            #{item.storeId,jdbcType=DECIMAL},
+            #{item.areaId,jdbcType=DECIMAL},
+            #{item.sectionId,jdbcType=DECIMAL},
+            #{item.name,jdbcType=VARCHAR},
+            #{item.datatypeId,jdbcType=DECIMAL},
+            #{item.objtypeId,jdbcType=DECIMAL},
+            #{item.actived,jdbcType=DECIMAL},
+            #{item.description,jdbcType=VARCHAR},
+            #{item.longitude,jdbcType=VARCHAR},
+            #{item.latitude,jdbcType=VARCHAR},
+            #{item.height,jdbcType=VARCHAR},
+            #{item.deviation,jdbcType=DECIMAL}
+            from dual
+        </foreach>
+        )a
+    </insert>
+
+    <select id="getMeasObjByCondition" resultMap="dtoMap">
+        select * from T_MAM_MEASOBJ
+        <where>
+            <if test="id != null">
+                and id = #{id,jdbcType=DECIMAL}
+            </if>
+            <if test="tunnelId != null">
+                and tunnel_id = #{tunnelId,jdbcType=DECIMAL}
+            </if>
+            <if test="storeId != null">
+                and store_id = #{storeId,jdbcType=DECIMAL}
+            </if>
+            <if test="areaId != null">
+                and area_id = #{areaId,jdbcType=DECIMAL}
+            </if>
+            <if test="sectionId != null">
+                and SECTION_ID = #{sectionId,jdbcType=DECIMAL}
+            </if>
+            <if test="name != null and name.trim() != ''">
+               and instr(name,#{name})>0
+            </if>
+            <if test="datatypeId != null">
+                and DATATYPE_ID = #{datatypeId,jdbcType=DECIMAL}
+            </if>
+            <if test="objtypeIds != null">
+             and OBJTYPE_ID in 
+             <foreach collection="objtypeIds" item="item" index="index" close=")"
+                 open="(" separator=",">
+                 #{item}
+             </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getMeasObjByLongitudeAndLatitudeAndHeight" resultMap="measObjMap">
+        select * from T_MAM_MEASOBJ
+        <where>
+            <if test="longitude != null">
+                and LONGITUDE <![CDATA[<=]]> #{longitude,jdbcType=VARCHAR}
+            </if>
+            <if test="latitude != null">
+                and LATITUDE <![CDATA[<=]]> #{latitude,jdbcType=VARCHAR}
+            </if>
+            <if test="height != null">
+                and height <![CDATA[<=]]> #{height,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllMeasObjList" resultMap="measObjMap">
+        SELECT * FROM T_MAM_MEASOBJ
+    </select>
+
+    <select id="getListByIds" resultMap="measObjMap">
+        select * from T_MAM_MEASOBJ where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by id asc
+    </select>
+    
+    <select id="getIdsByTunnelId" resultType="Int">
+    	select id from T_MAM_MEASOBJ where tunnel_id = #{id}
+    </select>
+    
+    <select id="getListBySectionIDAndDataTypeID" resultMap="measObjMap">
+    	select * from T_MAM_MEASOBJ where section_id = #{sectionId} and datatype_id = #{datatypeId}
+    </select>
+</mapper>

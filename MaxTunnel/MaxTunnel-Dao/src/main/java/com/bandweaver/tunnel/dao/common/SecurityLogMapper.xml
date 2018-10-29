@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.bandweaver.tunnel.dao.common.SecurityLogMapper">
+	<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.SecurityLog">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="METHOD" jdbcType="VARCHAR" property="method" />
+		<result column="REQ_USER" jdbcType="VARCHAR" property="reqUser" />
+		<result column="REQ_ROLE" jdbcType="VARCHAR" property="reqRole" />
+		<result column="REQ_PERMISSION" jdbcType="VARCHAR"
+			property="reqPermission" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, METHOD, REQ_USER, REQ_ROLE, REQ_PERMISSION, CRT_TIME
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_SECURITY_LOG
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from T_SECURITY_LOG
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.SecurityLog">
+		insert into T_SECURITY_LOG (ID, METHOD, REQ_USER,
+		REQ_ROLE, REQ_PERMISSION, CRT_TIME
+		)
+		values (#{id,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
+		#{reqUser,jdbcType=VARCHAR},
+		#{reqRole,jdbcType=VARCHAR}, #{reqPermission,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.SecurityLog">
+		insert into T_SECURITY_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="method != null">
+				METHOD,
+			</if>
+			<if test="reqUser != null">
+				REQ_USER,
+			</if>
+			<if test="reqRole != null">
+				REQ_ROLE,
+			</if>
+			<if test="reqPermission != null">
+				REQ_PERMISSION,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				#{method,jdbcType=VARCHAR},
+			</if>
+			<if test="reqUser != null">
+				#{reqUser,jdbcType=VARCHAR},
+			</if>
+			<if test="reqRole != null">
+				#{reqRole,jdbcType=VARCHAR},
+			</if>
+			<if test="reqPermission != null">
+				#{reqPermission,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.SecurityLog">
+		update T_SECURITY_LOG
+		<set>
+			<if test="method != null">
+				METHOD = #{method,jdbcType=VARCHAR},
+			</if>
+			<if test="reqUser != null">
+				REQ_USER = #{reqUser,jdbcType=VARCHAR},
+			</if>
+			<if test="reqRole != null">
+				REQ_ROLE = #{reqRole,jdbcType=VARCHAR},
+			</if>
+			<if test="reqPermission != null">
+				REQ_PERMISSION = #{reqPermission,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.SecurityLog">
+		update T_SECURITY_LOG
+		set METHOD = #{method,jdbcType=VARCHAR},
+		REQ_USER = #{reqUser,jdbcType=VARCHAR},
+		REQ_ROLE = #{reqRole,jdbcType=VARCHAR},
+		REQ_PERMISSION = #{reqPermission,jdbcType=VARCHAR},
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="getSecurityLogList" resultMap="BaseResultMap">
+		select * from T_SECURITY_LOG
+		<where>
+			<if test="reqUser!=null and reqUser.trim()!=''">
+				and instr(req_user,#{reqUser,jdbcType=VARCHAR})>0
+			</if>
+			<if test="startTime!=null  and startTime.trim()!=''">
+				and to_char(crt_time,'yyyyMMdd') <![CDATA[ >= ]]>#{startTime}
+			</if>
+			<if test="endTime!=null  and endTime.trim()!=''">
+				and to_char(crt_time,'yyyyMMdd') <![CDATA[ <= ]]>#{endTime}
+			</if>
+		</where>
+	</select>
+</mapper>

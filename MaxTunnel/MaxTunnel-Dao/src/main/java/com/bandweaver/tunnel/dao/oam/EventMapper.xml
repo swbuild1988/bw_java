@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.EventMapper">
+<cache/>
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.Event">
+    <id column="id" property="id" />
+    <result column="staff_id" property="staffId" />
+    <result column="name" property="name" />
+    <result column="range" property="range" />
+    <result column="event_level" property="level" />
+    <result column="longitude" property="longitude" />
+    <result column="latitude" property="latitude" />
+    <result column="start_time" property="startTime" />
+    <result column="end_time" property="endTime" />
+    <result column="crt_time" property="crtTime" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.EventDto">
+    <id column="id" property="id" />
+    <result column="name" property="name" />
+    <result column="staff_id" property="staffId" />
+    <result column="event_level" property="level" />
+    <!-- <result column="event_level" property="levelName" /> -->
+    <result column="range" property="range" />
+    <result column="longitude" property="longitude" />
+    <result column="latitade" property="latitude" />
+    <result column="start_time" property="startTime" />
+    <result column="end_time" property="endTime" />
+    <result column="crt_time" property="crtTime" />
+    <association property="staff" javaType="Staff" column="staff_id"
+    	select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    ID, staff_id, name, range, event_level, longitde, latitude, start_time, end_time, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_OAM_EVENT
+    where ID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_OAM_EVENT
+    where ID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Event">
+    insert into T_OAM_EVENT (staff_id, name, range, event_level, 
+    		longitude, latitude, start_time, end_time, crt_time
+      )
+    values (#{staffId}, #{name}, #{range}, #{level}, #{longitude}, 
+    		#{latitude}, #{startTime}, #{endTime}, #{crtTime}
+      )
+  </insert>
+  
+  <insert id="addEvent" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Event">
+    insert into T_OAM_EVENT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="staffId != null">
+        staff_id,
+      </if>
+      <if test="name != null and name.trim() != ''">
+        name,
+      </if>
+      <if test="range != null">
+        range,
+      </if>
+      <if test="level != null">
+        event_level,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="crtTime != null">
+        crt_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="staffId != null">
+        #{staffId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        #{name},
+      </if>
+      <if test="range != null">
+        #{range},
+      </if>
+      <if test="level != null">
+        #{level},
+      </if>
+      <if test="longitude != null">
+        #{longitude},
+      </if>
+      <if test="latitude != null">
+        #{latitude},
+      </if>
+      <if test="startTime != null">
+        #{startTime},
+      </if>
+      <if test="endTime != null">
+        #{endTime},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Event">
+    update T_OAM_Event
+    <set>
+      <if test="staffId != null">
+        staff_id = #{staffId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        name = #{name},
+      </if>
+      <if test="range != null">
+        range = #{range},
+      </if>
+      <if test="level != null">
+        event_level = #{level},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime},
+      </if>
+      <if test="crtTime != null">
+        crt_time = #{crtTime},
+      </if>
+    </set>
+    where ID = #{id}
+  </update>
+  
+	<select id="getList" resultMap="DtoResultMap">
+		select * from T_OAM_EVENT
+	</select>
+	
+	<select id="getDtoById" resultMap="DtoResultMap">
+		select * from T_OAM_EVENT where id = #{id}
+	</select>
+	
+	<select id="getDtoListByCondition" resultMap="DtoResultMap">
+		select * from T_OAM_event
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="level != null">
+				and event_level = #{level}
+			</if>
+			<if test="name != null and name.trim() != ''">
+				and instr(name,#{name})>0
+			</if>
+			<if test="startTime != null">
+				and crt_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and crt_time &lt;= #{endTime}
+			</if>
+		</where>
+		order by crt_time desc
+	</select>
+	
+</mapper>

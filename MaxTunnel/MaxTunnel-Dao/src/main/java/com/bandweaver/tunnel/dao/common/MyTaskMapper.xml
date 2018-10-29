@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.MyTaskMapper">
+<cache/>
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.MyTask">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PROCESS_DEFINITION_ID" jdbcType="VARCHAR" property="processDefinitionId" />
+    <result column="REQUEST_STAFF_ID" jdbcType="DECIMAL" property="requestStaffId" />
+    <result column="APPROVER_ID" jdbcType="DECIMAL" property="approverId" />
+    <result column="PROCESS_TYPE" jdbcType="DECIMAL" property="processType" />
+    <result column="status" jdbcType="DECIMAL" property="status" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.MyTaskDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PROCESS_DEFINITION_ID" jdbcType="VARCHAR" property="processDefinitionId" />
+    <result column="REQUEST_STAFF_ID" jdbcType="DECIMAL" property="requestStaffId" />
+    <result column="APPROVER_ID" jdbcType="DECIMAL" property="approverId" />
+    <result column="PROCESS_TYPE" jdbcType="DECIMAL" property="processType" />
+    <result column="status" jdbcType="DECIMAL" property="status" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <association property="staff" javaType="Staff" column="REQUEST_STAFF_ID"
+    	select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+    <association property="approver" javaType="Staff" column="APPROVER_ID"
+    	select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    ID, PROCESS_DEFINITION_ID, REQUEST_STAFF_ID, APPROVER_ID, PROCESS_TYPE,status, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COMMON_MYTASK
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_COMMON_MYTASK
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.MyTask">
+    insert into T_COMMON_MYTASK (ID, PROCESS_DEFINITION_ID, REQUEST_STAFF_ID, 
+      APPROVER_ID, PROCESS_TYPE, status,CRT_TIME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{processDefinitionId,jdbcType=VARCHAR}, #{requestStaffId,jdbcType=DECIMAL}, 
+      #{approverId,jdbcType=DECIMAL}, #{processType,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{crtTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.MyTask">
+    insert into T_COMMON_MYTASK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="processDefinitionId != null">
+        PROCESS_DEFINITION_ID,
+      </if>
+      <if test="requestStaffId != null">
+        REQUEST_STAFF_ID,
+      </if>
+      <if test="approverId != null">
+        APPROVER_ID,
+      </if>
+      <if test="processType != null">
+        PROCESS_TYPE,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="processDefinitionId != null">
+        #{processDefinitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestStaffId != null">
+        #{requestStaffId,jdbcType=DECIMAL},
+      </if>
+      <if test="approverId != null">
+        #{approverId,jdbcType=DECIMAL},
+      </if>
+      <if test="processType != null">
+        #{processType,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.MyTask">
+    update T_COMMON_MYTASK
+    <set>
+      <if test="processDefinitionId != null">
+        PROCESS_DEFINITION_ID = #{processDefinitionId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestStaffId != null">
+        REQUEST_STAFF_ID = #{requestStaffId,jdbcType=DECIMAL},
+      </if>
+      <if test="approverId != null">
+        APPROVER_ID = #{approverId,jdbcType=DECIMAL},
+      </if>
+      <if test="processType != null">
+        PROCESS_TYPE = #{processType,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.MyTask">
+    update T_COMMON_MYTASK
+    set PROCESS_DEFINITION_ID = #{processDefinitionId,jdbcType=VARCHAR},
+      REQUEST_STAFF_ID = #{requestStaffId,jdbcType=DECIMAL},
+      APPROVER_ID = #{approverId,jdbcType=DECIMAL},
+      PROCESS_TYPE = #{processType,jdbcType=DECIMAL},
+      status = #{status,jdbcType=DECIMAL},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getDtoListByCondition" resultMap="DtoResultMap">
+  	select * from t_common_mytask
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="processDefinitionId != null and processDefinitionId.trim() != ''">
+  			and process_definition_id = #{processDefinitionId}
+  		</if>
+  		<if test="requestStaffId != null">
+  			and request_staff_id = #{requestStaffId}
+  		</if>
+  		<if test="approverId != null">
+  			and approver_id = #{approverId}
+  		</if>
+  		<if test="processType != null">
+  			and process_type = #{processType}
+  		</if>
+  		<if test="status != null">
+  			and status = #{status}
+  		</if>
+  		<if test="startTime != null">
+  			and crt_time &gt;= #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and crt_time &lt;= #{endTime}
+  		</if>
+  	</where>
+  	order by crt_time desc
+  </select>
+  
+  <update id="updateStatusByProDefId">
+  	update t_common_mytask set status = #{status} where process_definition_id = #{processDefinitionId}
+  </update>
+  
+  <select id="getMsgCount" resultType="Int">
+  	select count(1) from t_common_mytask where approver_id = #{staffId} and status = #{status}
+  </select>
+</mapper>

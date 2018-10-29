@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.MaintenanceOrderMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT OMM_MAINTENANCE_ORDER_SEQUENCE.currval from DUAL
+        </selectKey>
+        insert into t_omm_maintenance_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="defectId != null">
+                defect_id,
+            </if>
+            <if test="worker != null">
+                worker,
+            </if>
+            <if test="maintenanceTime != null">
+                maintenance_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="processType != null">
+                process_type,
+            </if>
+            <if test="processStatus != null">
+                process_status,
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                process_instance_id,
+            </if>
+            <if test="isFinished != null">
+                is_finished,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId},
+            </if>
+            <if test="defectId != null">
+                #{defectId},
+            </if>
+            <if test="worker != null">
+                #{worker},
+            </if>
+            <if test="maintenanceTime != null">
+                #{maintenanceTime},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="processType != null">
+                #{processType},
+            </if>
+            <if test="processStatus != null">
+                #{processStatus},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                #{isFinished},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder">
+        UPDATE t_omm_maintenance_order
+        <set>
+            <if test="maintenanceTime != null">
+                maintenance_time = #{maintenanceTime},
+            </if>
+            <if test="processStatus != null">
+                process_status = #{processStatus},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                process_instance_id = #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                is_finished = #{isFinished},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="worker != null">
+                worker = #{worker},
+            </if>
+            <if test="describe != null">
+                describe = #{describe}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getOrder" resultMap="maintenanceOrderDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS worker_name,
+            d.name AS defect_name
+        FROM t_omm_maintenance_order a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN T_COMMON_STAFF c ON a.worker = c.id
+            LEFT JOIN t_omm_defect d on a.defect_id = d.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getOrderByInstance" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder">
+        SELECT *
+        FROM t_omm_maintenance_order
+        WHERE process_instance_id = #{processInstanceId}
+    </select>
+
+    <select id="getMaintenanceOrderDtosByTunnel" resultMap="maintenanceOrderDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS worker_name
+        FROM t_omm_maintenance_order a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN T_COMMON_STAFF c ON a.worker = c.id
+        WHERE a.tunnel_id = #{tunnelId}
+    </select>
+
+    <select id="getMaintenanceOrderDtosByCondition" resultMap="maintenanceOrderDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS worker_name,
+            d.name AS defect_name
+        FROM t_omm_maintenance_order a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN T_COMMON_STAFF c ON a.worker = c.id
+            LEFT JOIN t_omm_defect d on a.defect_id = d.id
+        <where>
+        	<if test="tunnelId != null">
+        		and a.tunnel_id = #{tunnelId}
+        	</if>
+        	<if test="maintenanceResult != null">
+        		and a.maintenance_result = #{maintenanceResult}
+        	</if>
+        	<if test="startTime != null">
+                and a.start_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.start_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+        </where>
+    </select>
+
+
+    <resultMap id="maintenanceOrderDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.MaintenanceOrderDto">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="tunnel_name" property="tunnelName"/>
+        <result column="defect_id" property="defectId"/>
+        <result column="defect_name" property="defectName"/>
+        <result column="worker" property="worker"/>
+        <result column="worker_name" property="workerName"/>
+        <result column="maintenance_time" property="maintenanceTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.EnergyMapper">
+<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL"
+			property="tunnelId" />
+		<result column="VALUE" jdbcType="DECIMAL" property="value" />
+		<result column="UNIT_PRICE" jdbcType="DECIMAL"
+			property="unitPrice" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, TUNNEL_ID, VALUE, CRT_TIME,UNIT_PRICE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_OAM_ENERGY
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey">
+		delete from T_OAM_ENERGY
+		where ID
+		= #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
+		insert into T_OAM_ENERGY (ID, TUNNEL_ID, VALUE,
+		unit_price,
+		CRT_TIME)
+		values (#{id,jdbcType=DECIMAL},
+		#{tunnelId,jdbcType=DECIMAL},
+		#{value,jdbcType=DECIMAL},
+		#{unitPrice,jdbcType=DECIMAL},
+		#{crtTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
+		insert into T_OAM_ENERGY
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID,
+			</if>
+			<if test="value != null">
+				VALUE,
+			</if>
+			<if test="unitPrice != null">
+				unit_price,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="tunnelId != null">
+				#{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=DECIMAL},
+			</if>
+			<if test="unitPrice != null">
+				#{unitPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
+		update T_OAM_ENERGY
+		<set>
+			<if test="tunnelId != null">
+				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="value != null">
+				VALUE = #{value,jdbcType=DECIMAL},
+			</if>
+			<if test="unitPrice != null">
+				VALUE = #{unitPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
+		update T_OAM_ENERGY
+		set TUNNEL_ID =
+		#{tunnelId,jdbcType=DECIMAL},
+		VALUE = #{value,jdbcType=DECIMAL},
+		unit_price = #{unitPrice,jdbcType=DECIMAL},
+		CRT_TIME =
+		#{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<select id="getTotalValueByTunnelId" resultType="Double">
+		SELECT
+		SUM(VALUE) FROM T_OAM_ENERGY
+		WHERE TUNNEL_ID = #{id}
+	</select>
+
+
+	<select id="getTotalValueByTunnelIdAndTime" resultType="Double">
+		SELECT SUM(VALUE) FROM T_OAM_ENERGY
+		<where>
+			<if test="tunnelId != null">
+				and tunnel_id = #{tunnelId}
+			</if>
+			<if test="startTime != null">
+				and crt_time <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null">
+				and crt_time <![CDATA[<=]]>
+				#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAllTunnelValue" resultType="Double">
+		select sum(value) from
+		T_OAM_ENERGY
+	</select>
+
+
+	<select id="getSumByTime" resultType="Double">
+		select sum(value) from T_OAM_ENERGY
+		<where>
+			<if test="startTime != null">
+				and crt_time <![CDATA[ >= ]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null">
+				and crt_time <![CDATA[ <= ]]>
+				#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="getTunnelEngergyConsumptionListByTime"
+		resultType="com.bandweaver.tunnel.common.biz.dto.oam.EnergyDto">
+
+		select e.tunnel_id,t.name as tunnelName, sum(e.value) as
+		totalValue,avg(e.unit_price) as
+		avgUnitPrice from T_OAM_ENERGY e
+		left
+		join t_common_tunnel t on e.tunnel_id=t.id
+		<where>
+			<if test="startTime != null">
+				and e.crt_time <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null">
+				and e.crt_time <![CDATA[<=]]>
+				#{endTime}
+			</if>
+		</where>
+		group by e.tunnel_id,t.name
+	</select>
+
+
+	<select id="getEnergyByTunnelIdAndTime" resultType="Double">
+
+		select sum(value) from T_OAM_ENERGY where tunnel_id = #{id}
+		and
+		crt_time <![CDATA[>=]]>
+		#{startTime} and crt_time <![CDATA[<=]]>
+		#{endTime}
+	</select>
+
+	<insert id="addEnergyBatch" useGeneratedKeys="false">
+		insert into T_OAM_ENERGY
+		(id,tunnel_id,value,unit_price,crt_time)
+		select OAM_ENERGY_SEQUENCE.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.tunnelId},
+			#{item.value},
+			#{item.unitPrice},
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+	<select id="getEnergiesByTunnelIdAndTimeCondition"
+		resultType="com.bandweaver.tunnel.common.biz.dto.oam.EnergySimpleDto">
+	
+		select e.*,t.name as tunnelName from T_OAM_ENERGY e
+		left join t_common_tunnel t on e.tunnel_id = t.id
+		<where>
+			<if test="tunnelId != null">
+				and t.id = #{tunnelId}
+			</if>
+			<if test="startTime != null">
+				and e.crt_time <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null">
+				and e.crt_time <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getEnergiesByCondition" resultType="com.bandweaver.tunnel.common.biz.dto.oam.EnergySimpleDto">
+		select e.*,t.name as tunnelName 
+		from T_OAM_ENERGY e 
+		left join t_common_tunnel t on t.id = e.tunnel_id
+		<where>
+			<if test="tunnelId != null">
+				and e.tunnel_id = #{tunnelId}
+			</if>
+			<if test="startTime != null">
+				and e.crt_time <![CDATA[>=]]> #{startTime}
+			</if>
+			<if test="endTime != null">
+				and e.crt_time <![CDATA[<=]]> #{endTime}
+			</if>
+		</where>
+		order by e.crt_time desc
+	</select>
+</mapper>

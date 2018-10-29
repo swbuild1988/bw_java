@@ -1,0 +1,55 @@
+.formTitle{
+    text-align: center;
+    margin-bottom: 20px;
+}
+.allDiv{
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 70px;
+}
+.conditions{
+    height: 60px;
+    line-height: 60px;
+    background: #fff;
+    padding-left: 10px;
+}
+.queryCondition{
+    height: 90px;
+    line-height: 40px;
+    background: #fff;
+    padding-left: 10px;
+}
+.list{
+    background: #fff;
+    margin-top: 10px;
+    padding: 10px;
+}
+/*table字体大小*/
+.ivu-table,.ivu-btn-small,.ivu-form .ivu-form-item-label,.ivu-form-item-content,.ivu-checkbox-wrapper,.ivu-btn,.ivu-dropdown-item,.ivu-select-item,.planDec,.ivu-page,
+.ivu-tabs-nav-container,.ivu-menu-item{
+    font-size: 16px !important;
+}
+.ivu-menu{
+  font-size: 18px !important;
+}
+
+/*disable*/
+.ivu-select-disabled .ivu-select-selection {
+    background-color: #fff;
+    opacity: 1;
+    cursor: not-allowed;
+    color: #495060;
+}
+/*可扩展table的字体大小*/
+td.ivu-table-expanded-cell {
+    padding: 5px 15px;
+    font-size: 13px;
+}
+/*form表单*/
+.ivu-form.ivu-form-label-top{
+    margin-top: 30px;
+}
+/*取消按钮*/
+.ivu-btn-ghost {
+    background-color: #f9f7f7;
+}

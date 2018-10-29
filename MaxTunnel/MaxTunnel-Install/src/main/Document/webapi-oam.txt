@@ -1,0 +1,779 @@
+运营（OAM）
+	
+	根据管廊id获取指定日期内的能耗数据并分页：	
+		url:tunnels/energies/datagrid
+		method:post
+		说明：pageNum和pageSize为分页必传参数，其他参数如果不传，则查询全部管廊数据，并分页
+		说明：结果根据日期降序排列
+		参数:
+			{
+				tunnelId:1
+				startTime:1521338643000
+				endTime:1521338643000
+				pageNum:1 必传
+				pageSize:10 必传
+			}
+		返回:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {
+					"total": 551, //共多少条数据
+					"list": [{	//显示的数据
+						"id": 1001,
+						"tunnelId": 1,
+						"tunnelName": "凤岭北路",
+						"value": 1098.5,
+						"unitPrice": 1.585,
+						"crtTime": 1521338643000
+					},...],
+					"pageNum": 1, //当前页
+					"pageSize": 5,	//每页容量
+					"size": 5,	//实际每页数量
+					"startRow": 1,
+					"endRow": 5,
+					"pages": 111,	//共多少页
+					"prePage": 0,
+					"nextPage": 2,
+					"isFirstPage": true,
+					"isLastPage": false,
+					"hasPreviousPage": false,	//是否有前一页
+					"hasNextPage": true,		//是否有下一页
+					"navigatePages": 8,
+					"navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+					"navigateFirstPage": 1,
+					"navigateLastPage": 8,
+					"firstPage": 1,
+					"lastPage": 8
+				}
+			}
+			
+	根据管廊id获取指定日期内的能耗数据不分页：
+		url:	tunnels/energies/time/condition
+		method:	POST
+		说明：结果根据日期降序排列
+		参数：
+			{
+			tunnelId:1
+			startTime：1528682643000
+			endTime: 1528682643000
+			}
+		返回：	
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": [{
+					"id": 1360,
+					"tunnelId": 3,
+					"tunnelName": "高坡岭路",
+					"value": 887.8,
+					"unitPrice": 1.5,
+					"crtTime": 1528682643000 
+				}, {
+					"id": 1753,
+					"tunnelId": 5,
+					"tunnelName": "佛子岭路",
+					"value": 844.6,
+					"unitPrice": 1.5,
+					"crtTime": 1528682643000
+				}, ... ]
+			}
+
+
+
+
+
+
+
+
+
+	获取管廊一年/一月/一天的能耗数据：	
+		url:/tunnels/{id}/energies/one-year(one-month,ont-day)/{time}
+		method:get
+		参数:
+			管廊id，日期
+		返回:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": [{
+					"id": 803,
+					"tunnelId": 1,			//管廊id
+					"tunnelName": "凤岭北路",	//管廊名称
+					"value": 114.2,			//耗电量
+					"totalValue": 0.0,
+					"unitPrice": 1.611,		//耗电单价
+					"avgUnitPrice": 0.0,
+					"totalPrice": 0.0,
+					"crtTime": 1519092243000	//创建日期
+				},...
+						]
+			}
+			
+	获取所有管廊的总能耗,数组返回：	
+				url:/tunnels/items/energies 
+		 		method:GET
+		 		参数：null
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"val": 12806.92,
+						"key": "凤岭北路"
+					}, {
+						"val": 700.0,
+						"key": "长虹路"
+					}, {
+						"val": 700.0,
+						"key": "高坡岭路"
+					}, {
+						"val": 700.0,
+						"key": "凤凰岭路"
+					}, {
+						"val": 0.0,
+						"key": "佛子岭路"
+					}]
+				}
+	
+	能耗管理：
+		1.添加能耗数据：
+				url:/energies 
+				method:POST
+				说明：id为自增
+				参数：
+				{
+					"tunnelId": 1,	//管廊id
+					"value": 100.00,	//能耗 单位：千瓦时
+					"unitPrice": 1.50,	//耗电单价
+					"crtTime": 1527478740000	//日期
+				}
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": []
+				}
+		 2.管廊能耗统计-饼状图:
+		 		url:/tunnels/items/energies 
+		 		method:GET
+		 		参数：null
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"val": 12806.92,
+						"key": "凤岭北路"
+					}, {
+						"val": 700.0,
+						"key": "长虹路"
+					}, {
+						"val": 700.0,
+						"key": "高坡岭路"
+					}, {
+						"val": 700.0,
+						"key": "凤凰岭路"
+					}, {
+						"val": 0.0,
+						"key": "佛子岭路"
+					}]
+				}
+		
+
+		3.获取历史总能耗，年度能耗，月度能耗,本周能耗
+				url:/tunnels/energies/timetype/{value}
+				method:GET
+				参数：
+					value 可选值为1,2,3,4
+					1:历史总能耗
+					2:年度能耗
+					3:月度能耗
+					4:本周能耗
+
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"val": 14906.92,
+						"key": "历史总能耗"
+						}
+				}
+
+
+		4.根据起止日期条件查询各管廊能耗列表:
+				url:/tunnels/energies/time
+				method:POST
+				说明：参数为时间，非必须参数
+				参数：
+				{
+					"startTime":1527478740000,
+					"endTime":1527478740000
+				}
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"tunnelId": 1
+						"tunnelName": "高坡岭路",	//管廊名称
+						"totalValue": 700.0,	//总耗电量（千瓦时）
+						"avgUnitPrice": 1.5,	//平均耗电单价（元/千瓦时）
+						"totalPrice": 1050.0	//耗电成本（元）
+					}, 
+					...
+					]
+				}
+
+		5.根据周期查询综合管廊耗电量：
+				url:/tunnels/energies/interval/{value}
+				method:GET
+				参数：value ={1,2} 1:周 ,2：月
+				返回：
+				value = 1时
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"val": [{
+							"val": 700.0,
+							"key": "高坡岭路"
+						}, {
+							"val": 700.0,
+							"key": "凤凰岭路"
+						}, {
+							"val": 12806.92,
+							"key": "凤岭北路"
+						}, {
+							"val": 700.0,
+							"key": "长虹路"
+						}],
+						"key": "第22周"
+					}, {
+						"val": [],
+						"key": "第21周"
+					}, {
+						"val": [],
+						"key": "第20周"
+					}, 
+					...
+					 {
+						"val": [],
+						"key": "第1周"
+					}]
+				}
+				
+				value = 2时
+				
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"val": [],
+						"key": "6月"
+					}, {
+						"val": [{
+							"val": 700.0,
+							"key": "高坡岭路"
+						}, {
+							"val": 700.0,
+							"key": "凤凰岭路"
+						}, {
+							"val": 12806.92,
+							"key": "凤岭北路"
+						}, {
+							"val": 700.0,
+							"key": "长虹路"
+						}],
+						"key": "5月"
+					}, 
+					...
+					 {
+						"val": [],
+						"key": "1月"
+					}]
+				}
+		
+		6.获取每条管廊单位长度的总能耗
+				url:tunnel/avg-energies
+				method:GET
+				参数：null
+				返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"val": 303.2482124616956,
+						"key": "凤岭北路"
+					}, {
+						"val": 497.7095631641086,
+						"key": "长虹路"
+					}, {
+						"val": 525.8525258525258,
+						"key": "高坡岭路"
+					}, {
+						"val": 148.171534687019,
+						"key": "凤凰岭路"
+					}, {
+						"val": 41.66897706479144,
+						"key": "佛子岭路"
+					}]
+				}
+
+
+	
+客户管理：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>	
+		添加客户：
+				url:customers
+				method:post
+				params:
+				{
+					companyId：1, 公司id
+					contact:"zhangsan",	联系人
+					tel:"18700001111",	电话
+
+				}
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{ }
+				}
+
+		
+		修改客户信息：
+				url:customers
+				method:put
+				params:
+				{
+					id:1,
+					companyId：1, 公司id
+					contact:"zhangsan",	联系人
+					tel:"18700001111",	电话
+
+				}
+		删除客户：
+				url:customers/{id}
+				method:delete
+				params:id
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{ }
+				}
+
+		根据id获取客户信息(包含公司信息)
+				url:customers/{id}
+				method:get
+				params:id
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"id":2,
+					"company":{
+					    "id":1,
+					    "name":"波汇科技",
+					    "crtTime":1529596800000
+					},
+					"contact":"联系人0",
+					"tel":"13722228880",
+					"crtTime":1529979467000
+				    }
+				}
+
+		客户列表分页查询
+				url:customers/datagrid
+				method:post
+				params:
+				{
+					companyId：1, 公司id
+					contact:"zhangsan",	联系人,支持模糊查询
+					startTime:1529979467000, 开始时间
+					endTime:1529979467000,	结束时间
+					pageNum:1,
+					pageSize:10
+
+				}
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"total":5,
+					"list":[
+					    {
+						"id":7,
+						"company":{
+						    "id":1,
+						    "name":"波汇科技",
+						    "crtTime":1529596800000
+						},
+						"contact":"update",
+						"tel":"1111",
+						"crtTime":1529983023000
+					    },
+					    {
+						"id":2,
+						"company":{
+						    "id":1,
+						    "name":"波汇科技",
+						    "crtTime":1529596800000
+						},
+						"contact":"联系人0",
+						"tel":"13722228880",
+						"crtTime":1529979467000
+					    },
+					   
+					    ...
+					],
+					"pageNum":1,
+					"pageSize":10,
+					"size":5,
+					"startRow":1,
+					"endRow":5,
+					"pages":1,
+					"prePage":0,
+					"nextPage":0,
+					"isFirstPage":true,
+					"isLastPage":true,
+					"hasPreviousPage":false,
+					"hasNextPage":false,
+					"navigatePages":8,
+					"navigatepageNums":[
+					    1
+					],
+					"navigateFirstPage":1,
+					"navigateLastPage":1,
+					"firstPage":1,
+					"lastPage":1
+				    }
+				}
+				
+
+
+
+
+入廊申请记录管理：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	
+	添加入廊申请记录：
+				url:req-historys
+				method:post
+				params:
+				{
+		  			以下字段必填：
+		  			staffId 	员工id
+					approverId	审批人id，也从员工表查询
+		 			tunnelId	管廊id
+		  			action 		行为	 枚举   1：参观；2：维护：3：安装；
+		  			preTime		计划入廊时间
+		  			visitorNumber 	访客总人数 
+		 			visitorCompany	访客所属公司
+		  			visitorInfo		访客详细信息
+				}
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{ }
+				}
+	
+
+	根据id删除:
+				url:req-historys/{id}
+				method:delete
+				params:id
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{ }
+				}
+
+
+	通过id查询入廊申请记录:
+				url:req-historys/{id}
+				method:get
+				params:id
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"id": 2,
+						"staff": {
+							"id": 2,
+							"name": "李四",
+							"deptId": 2,
+							"positionId": 2,
+							"crtTime": 1529942400000
+						},
+						"tunnel": {
+							"id": 1,
+							"name": "凤岭北路",
+							"length": 22.22
+						},
+						"approverId":1,
+						"status": 1,
+						"statusName": "审核中",
+						"action": 3,
+						"actionName": "安装",
+						"preTime": 1529892456000,
+						"enterTime": 1530065256000,
+						"exitTime": 1530065256000,
+						"visitorNumber": 3,
+						"visitorInfo": "姓名：...; 身份证：....; 手机号：...",
+						"company": {
+							"id": 3,
+							"name": "中国石化",
+							"crtTime": 1529596800000
+						}
+					}
+				}
+
+
+
+
+	分页查询：
+				url:req-historys/datagrid
+				method:post
+				params:
+				{
+					以下字段为可选项：
+					staffId
+					tunnelId
+					status 申请状态 枚举 1：审核中；2：通过；3：进行中
+					action:行为	 枚举   1：参观；2：维护：3：安装；
+					startTime: 查询preTime（计划入廊时间）的起始时间
+					endTime: 查询preTime（计划入廊时间）的截止时间
+					vistorCompany 公司id
+					以下字段必传：
+					pageNum
+					pageSize
+				
+				}
+
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"total":10,
+					"list":[
+					    {
+						"id":2,
+						"staff":{
+						    "id":2,
+						    "name":"李四",
+						    "deptId":2,
+						    "positionId":2,
+						    "crtTime":1529942400000
+						},
+						"tunnel":{
+						    "id":1,
+						    "name":"凤岭北路",
+						    "length":22.22
+						},
+						"approverId":1,
+						"status":1,
+						"statusName":"审核中",
+						"action":3,
+						"actionName":"安装",
+						"preTime":1529892456000,
+						"enterTime":1530065256000,
+						"exitTime":1530065256000,
+						"visitorNumber":3,
+						"visitorInfo":"姓名：...; 身份证：....; 手机号：...",
+						"company":{
+						    "id":3,
+						    "name":"中国石化",
+						    "crtTime":1529596800000
+						}
+					    },
+					   ...
+					],
+					"pageNum":1,
+					"pageSize":5,
+					"size":5,
+					"startRow":1,
+					"endRow":5,
+					"pages":2,
+					"prePage":0,
+					"nextPage":2,
+					"isFirstPage":true,
+					"isLastPage":false,
+					"hasPreviousPage":false,
+					"hasNextPage":true,
+					"navigatePages":8,
+					"navigatepageNums":[
+					    1,
+					    2
+					],
+					"navigateFirstPage":1,
+					"navigateLastPage":2,
+					"firstPage":1,
+					"lastPage":2
+				    }
+				}
+
+
+	获取工作流流程图进度png图片
+				url:req-historys/{id}/activiti-png
+				method:get
+				params: 申请记录id
+				return:png图片
+				
+	审批入廊申请
+				url:users/activiti/req-historys/audit
+				method:post
+				params:申请记录id，流程定义id，value={agree,disagree},remark备注
+				return:成功
+	确认出廊
+				url:users/activiti/req-historys/{id}/{processDefinitionId}/{exitTime}
+				method:get
+				parmas:申请记录id，流程定义id,long类型的时间戳
+				return:成功
+
+操作日志管理：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		分页查询：
+				url:operationlogs/datagrid
+				method:post
+				params:
+				
+					查询条件：	moduleType 模块类型
+	  						reqUser		请求人姓名,支持模糊查询
+	  						result 		操作结果 ：成功；失败
+	 						beginTime
+							endTime
+	 				分页必须：
+	 						pageNum
+	 						pageSize
+				return:
+				需要显示的字段：moduleType，reqIp，reqUser，result，desc，crtTime
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"total":5,
+					"list":[
+					    {
+						"id":"5b1d28d60bdc4c87bc91442599e122b1",
+						"moduleType":"用户管理",
+						"reqIp":"0:0:0:0:0:0:0:1",
+						"reqId":0,
+						"reqUser":null,
+						"method":"com.bandweaver.tunnel.controller.common.UserController.addUser",
+						"params":"User [id=null, name=test, password=123456, sex=男, companyId=1, positionId=1, tel=123, crtTime=Mon Jul 02 16:14:47 CST 2018]",
+						"result":"成功",
+						"desc":"用户null在2018/7/2 下午4:14添加了新用户User [id=null, name=test, password=123456, sex=男, companyId=1, positionId=1, tel=123, crtTime=Mon Jul 02 16:14:47 CST 2018]",
+						"crtTime":1530519287000
+					    },
+					...
+					],
+					"pageNum":1,
+					"pageSize":5,
+					"size":5,
+					"startRow":1,
+					"endRow":5,
+					"pages":1,
+					"prePage":0,
+					"nextPage":0,
+					"isFirstPage":true,
+					"isLastPage":true,
+					"hasPreviousPage":false,
+					"hasNextPage":false,
+					"navigatePages":8,
+					"navigatepageNums":[
+					    1
+					],
+					"navigateFirstPage":1,
+					"navigateLastPage":1,
+					"firstPage":1,
+					"lastPage":1
+				    }
+				}
+				
+
+		删除：
+				url:operationlogs/{id}
+				method:delete
+				params:id 字符串类型
+				return：
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+
+				    }
+				}
+
+
+
+空间管理：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		通过sectionId获取管线列表(包含管线所在合同信息):
+				url:tunnels/areas/sections/{id}/cables
+				method:get
+				params:sectionId
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":[
+					{
+					    "id":2,
+					    "cableName":"光纤1",
+					    "cableLength":100,
+					    "cableStatus":1,
+					    "cableStatusName":"运行中",
+					    "cableLocation":"位置xxxxxxxxxx",
+					    "contract":{
+						"id":1,
+						"name":"管线部署合同",
+						"customer":{
+						    "id":3,
+						    "company":{
+							"id":2,
+							"name":"中国移动",
+							"crtTime":1529596800000
+						    },
+						    "contact":"联系人1",
+						    "tel":"13722228881",
+						    "crtTime":1529893067000
+						},
+						"payType":1,
+						"payTypeName":"月付"
+					    },
+					    "crtTime":1532238184000
+					},
+				       ...
+				    ]
+				}
+		
+		获取某个section可用管线数统计:
+				url：tunnels/areas/sections/{id}/cables-count
+				method:get
+				params:id
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":[
+					{
+					    "val":5,
+					    "key":"设计管线数"
+					},
+					{
+					    "val":2,
+					    "key":"已用管线数"
+					},
+					{
+					    "val":3,
+					    "key":"可用管线数"
+					}
+				    ]
+				}

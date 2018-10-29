@@ -1,0 +1,931 @@
+﻿
+运维（OMM）
+	设备管理：
+		添加设备：					url:/equipments
+								method:post
+								参数：
+									{
+									name: 设备名称
+									type: 设备类型
+									crtTime: 创建时间
+									serviceLife: 服务时间
+									assetNo: 资产编号
+									status: 状态
+									tunnelId: 管廊id
+									venderId: 供应商id
+									modelId: 型号id
+									
+									}
+								返回：200json
+					
+			
+			
+			
+		1.获取各种类型设备的数据：			url:/equipments/type/count
+								method:GET
+								参数：null
+								返回：
+								{
+									"msg": "请求成功",
+									"code": "200",
+									"data": [{
+										"val": 3,
+										"key": "安全防范"
+									}, {
+										"val": 2,
+										"key": "视频监控"
+									},
+									...
+									]
+								}
+					
+		2.获取每个种类设备下，各个状态设备的个数	url:/equipments/type/status/count
+								method:GET
+								参数：null
+								返回：
+								{
+									"msg": "请求成功",
+									"code": "200",
+									"data": [{
+										"val": [{
+											"val": 3,
+											"key": "总数"
+										}, {
+											"val": 2,
+											"key": "运行中"
+										}, {
+											"val": 1,
+											"key": "故障"
+										}],
+										"key": "安全防范"
+									}, {
+										"val": [{
+											"val": 2,
+											"key": "总数"
+										}, {
+											"val": 2,
+											"key": "运行中"
+										}, {
+											"val": 0,
+											"key": "故障"
+										}],
+										"key": "视频监控"
+									},
+									...
+									]
+								}
+								
+		*3.分页查询					url:/equipments/datagrid
+								method:POST
+								说明：以下参数均为可选参数
+								参数：
+								{
+									"tunnelId":1,	//管廊id
+									"type":1,	//设备类型（下拉框 枚举：1-安全防范，2-视频监控，3-环境监测，4-电缆本体，5-火灾报警，6-隧道通信）
+									"status":1, //设备状态（下拉框 枚举：1-运行中，2-故障）
+									"assetNo":"sn010", //资产编号
+									"modelId":1,	//设备型号 （下拉框）
+									"venderId":1, //设备供应商（下拉框）
+									"startTime":1527478740000, //开始日期
+									"endTime":1527478740000 //结束日期
+
+									"pageNum":1, //页码
+									"pageSize"10 //每页条数
+								}
+								返回：
+								{
+								    "msg":"请求成功",
+								    "code":"200",
+								    "data":{
+									"total":11,
+									"list":[
+									    {
+										"id":1,
+										"assetNo":"sn003",
+										"name":"安全防范设备3",
+										"type":1,
+										"typeName":"安全防范",
+										"crtTime":1525406400000,
+										"serviceLife":1000,
+										"status":1,
+										"statusName":"运行中",
+										"imgUrl":"\upload\7\8\81180ab71a9c46aa9a8c7dc6b7cf4d38_testimg.jpg",
+										"tunnel":{
+										    "id":1,
+										    "name":"凤岭北路"
+										},
+										"model":{
+										    "id":1,
+										    "name":"model-1",
+										    "crtTime":1529461585000
+										},
+										"vender":{
+										    "id":1,
+										    "name":"张三",
+										    "crtTime":1529461584000
+										}
+									    },
+									    ...
+									    
+									],
+									"pageNum":1,
+									"pageSize":5,
+									"size":5,
+									"startRow":1,
+									"endRow":5,
+									"pages":3,
+									"prePage":0,
+									"nextPage":2,
+									"isFirstPage":true,
+									"isLastPage":false,
+									"hasPreviousPage":false,
+									"hasNextPage":true,
+									"navigatePages":8,
+									"navigatepageNums":[
+									    1,
+									    2,
+									    3
+									],
+									"navigateFirstPage":1,
+									"navigateLastPage":3,
+									"firstPage":1,
+									"lastPage":3
+								    }
+								}
+
+					
+
+
+					
+		4.更新设备：
+								url:/equipements
+								method:PUT
+								参数：
+								{
+									"id":1,
+									"name":"zhangsan",
+									"type":1,
+									....
+								}
+								返回：
+								{
+									"code":200,
+									"msg":"请求成功",
+									"data":{}
+								}
+		根据id删除设备：
+
+								url:equipments/{id}
+								method:delete
+								参数：id 数值类型
+								返回：
+								{
+									"code":200,
+									"msg":"请求成功",
+									"data":{}
+								}
+		5.图片上传：
+								url:/equipments/{id}/file
+								method:POST
+								说明：图片上传到项目根目录webapp/upload目录下，按照设备类型分类，设备类型文件夹下又按照设备型号再分类
+								参数：设备id
+								返回：
+								{
+									"code":200,
+									"msg":"请求成功",
+									"data":[]
+								}
+		*6.获取所有设备列表
+								url:/equipments
+								method:get
+								参数：null
+								返回：
+									{
+									    "msg":"请求成功",
+									    "code":"200",
+									    "data":[
+										{
+										    "id":1,
+										    "assetNo":"sn003",
+										    "name":"安全防范设备3",
+										    "type":1,
+										    "typeName":"安全防范",
+										    "crtTime":1525406400000,
+										    "serviceLife":1000,
+										    "status":1,
+										    "statusName":"运行中",
+										    "imgUrl":"\upload\7\8\81180ab71a9c46aa9a8c7dc6b7cf4d38_testimg.jpg",
+										    "tunnel":{
+											"id":1,
+											"name":"凤岭北路"
+										    },
+										    "model":{
+											"id":1,
+											"name":"model-1",
+											"crtTime":1529461585000
+										    },
+										    "vender":{
+											"id":1,
+											"name":"张三",
+											"crtTime":1529461584000
+										    }
+										},
+									       ...
+									    ]
+									}
+								
+					
+		*7.通过id获取设备信息
+									url:/equipments/{id}
+									method:get
+									参数：id 数值类型
+									返回：
+										{
+										    "msg":"请求成功",
+										    "code":"200",
+										    "data":{
+											"id":1,
+											"assetNo":"sn003",
+											"name":"安全防范设备3",
+											"type":1,
+											"typeName":"安全防范",
+											"crtTime":1525406400000,
+											"serviceLife":1000,
+											"status":1,
+											"statusName":"运行中",
+											"imgUrl":"\upload\7\8\81180ab71a9c46aa9a8c7dc6b7cf4d38_testimg.jpg",
+											"tunnel":{
+											    "id":1,
+											    "name":"凤岭北路"
+											},
+											"model":{
+											    "id":1,
+											    "name":"model-1",
+											    "crtTime":1529461585000
+											},
+											"vender":{
+											    "id":1,
+											    "name":"张三",
+											    "crtTime":1529461584000
+											}
+										    }
+										}
+		8.获取所有供应商列表
+									url:/venders
+									method:get
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": [{
+											"id": 1,
+											"name": "张三",
+											"crtTime": 1528080700000
+										}, {
+											"id": 2,
+											"name": "李四",
+											"crtTime": 1528080700000
+										}, {
+											"id": 3,
+											"name": "王五",
+											"crtTime": 1528080700000
+										}]
+									}
+		9.通过id获取设备供应商
+									url:/venders/{id}
+									method:get
+									参数：id 数值类型
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": {
+											"id": 1,
+											"name": "张三",
+											"crtTime": 1528080700000
+										}
+									}
+		10.获取所有设备型号列表
+									url:/equipment-models
+									method:get
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": [{
+											"id": 1,
+											"name": "model-1",
+											"crtTime": 1528080700000
+										}, {
+											"id": 2,
+											"name": "model-2",
+											"crtTime": 1528080700000
+										}, {
+											"id": 3,
+											"name": "model-3",
+											"crtTime": 1528080700000
+										}]
+									}
+		11.通过id获取设备型号
+									url:/equipment-models/{id}
+									method:get
+									参数：id 数值类型
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": {
+											"id": 1,
+											"name": "model-1",
+											"crtTime": 1528080700000
+										}
+									}
+							
+		以下是数据统计方面的接口：
+		
+		12.获取各种类型设备的数据统计				url:equipments/type/count
+									method:GET
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": [{
+											"val": 25,
+											"key": "安全防范"
+										}, {
+											"val": 36,
+											"key": "视频监控"
+										}, {
+											"val": 41,
+											"key": "环境监测"
+										}, {
+											"val": 35,
+											"key": "电缆本体"
+										}, {
+											"val": 35,
+											"key": "火灾报警"
+										}, {
+											"val": 28,
+											"key": "隧道通信"
+										}]
+									}
+									
+		13. 获取每个类型设备下，各个状态设备的个数		url:equipments/type/status/count
+									method:GET
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": [{
+											"val": [{
+												"val": 25,
+												"key": "总数"
+											}, {
+												"val": 9,
+												"key": "运行中"
+											}, {
+												"val": 16,
+												"key": "故障"
+											}, {
+												"val": 0,
+												"key": "备品"
+											}],
+											"key": "安全防范"
+										}, {
+											"val": [{
+												"val": 36,
+												"key": "总数"
+											}, {
+												"val": 13,
+												"key": "运行中"
+											}, {
+												"val": 23,
+												"key": "故障"
+											}, {
+												"val": 0,
+												"key": "备品"
+											}],
+											"key": "视频监控"
+										}, ...]
+									}
+
+
+
+		14.获取设备状态统计 ： 设备总数，故障设备数，备品数，设备运行总时长
+									url:equipments/status/count
+									method:GET
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": [{
+											"val": 200,
+											"key": "设备总数"
+										}, {
+											"val": 0,
+											"key": "故障设备数"
+										}, {
+											"key": "备品数"
+										}, {
+											"val": 486600,
+											"key": "设备运行总时长"
+										}]
+									}
+
+
+
+		15.每条管廊设备总数，故障数，备品数统计			url:tunnels/equipments/status/count
+									method:GET
+									参数：null
+									返回：
+									{
+										"msg": "请求成功",
+										"code": "200",
+										"data": 
+										[
+											"管廊[ 凤岭北路 ],设备总数[ 42 ],损坏[ 19 ],备品[ 0 ]", 
+											"管廊[ 长虹路 ],设备总数[ 45 ],损坏[ 25 ],备品[ 0 ]",
+											"管廊[ 高坡岭路 ],设备总数[ 43 ],损坏[ 25 ],备品[ 0 ]", 
+											"管廊[ 凤凰岭路 ],设备总数[ 38 ],损坏[ 19 ],备品[ 0 ]", 
+											"管廊[ 佛子岭路 ],设备总数[ 32 ],损坏[ 15 ],备品[ 0 ]"
+										]
+									}
+
+
+		
+
+
+
+
+	巡检模块(InspectionController)
+        获取所有巡检小组                /inspection-groups
+                                      返回所有小组的简单信息，包括id、组名、leader等
+        获得某个小组的详细信息             /inspection-groups/{id}
+                                        返回此小组的详细信息，包括小组所有的成员
+        更新巡检任务的信息（巡检人员上传此次巡检任务的信息）      /inspection-tasks           Http.Put
+
+        *新增巡检计划                      /inspection-plans                               Http.Post
+                                        上传结构为{
+                                                    "id":"MA1000000",
+                                                    "name":"计划1",
+						    "requestStaffId":1, 申请人id
+						    "approverId":1,	审批人id
+                                                    "tunnelId":1,
+                                                    "tunnelName":"凤岭北路",            *可不填
+                                                    "groupId":1,
+                                                    "groupName":"group0",               *可不填
+                                                    "inspectTime":"2018-05-01",
+                                                    "tasks":[{
+                                                        "taskTime":"2018-05-10",
+                                                        "status":"未巡检"              *可不填
+                                                    },{
+                                                        "tasktTime":"2018-05-20",
+                                                        "status":"未巡检"
+                                                    }]
+                                                 }
+        获取某管廊的巡检计划                 /tunnels/{id}/inspection-plans
+                                        返回 [
+                                                  {
+                                                      "id": "MA1000",
+                                                      "name": "计划1",                        *计划名
+                                                      "tunnelId": 1,                        *管廊ID
+                                                      "groupId": 1,                         *负责巡检的小组ID
+                                                      "createTime": 1527478740000,          *创建时间
+                                                      "inspectTime": 1525104000000          *巡检年月信息
+                                                  }
+                                              ]
+
+
+
+       巡检计划分页查询                 url:/inspection-plans/datagrid           
+					method:POST
+					说明：pageNum pageSize必传，其他参数可选项
+                                        参数 {
+                                            tunnelId : 1,
+					    groupId:
+					    name: //支持模糊查询
+                                            startTime:
+                                            endTime:
+					    pageNum:1
+					    pageSize:10
+                                        }
+					返回：
+						{
+							"msg": "请求成功",
+							"code": "200",
+							"data": {
+								"total": 1,
+								"list": [{
+									"id": "MA1000",
+									"name": "计划1",
+									 "requestStaffId":1, 申请人id
+									 "approverId":1,	审批人id
+									 "requestStatus":1, 申请状态枚举：参考webapi-enum接口文档
+									"tunnelId": 1,
+									"groupId": 1,
+									"createTime": 1528080699000,
+									"inspectTime": 1525104000000,
+									"processDefinitionId":"InspectionPlanProcess:1:2504", 流程定义id
+									"groupName": "group1",
+									"tunnelName": "凤岭北路"
+								}],
+								"pageNum": 1,
+								"pageSize": 5,
+								"size": 1,
+								"startRow": 1,
+								"endRow": 1,
+								"pages": 1,
+								"prePage": 0,
+								"nextPage": 0,
+								"isFirstPage": true,
+								"isLastPage": true,
+								"hasPreviousPage": false,
+								"hasNextPage": false,
+								"navigatePages": 8,
+								"navigatepageNums": [1],
+								"navigateFirstPage": 1,
+								"navigateLastPage": 1,
+								"firstPage": 1,
+								"lastPage": 1
+							}
+						}
+
+
+	获取巡检计划流程图png图片：
+				url:inspection-plans/{id}/activiti-png
+				method:get
+				params:巡检计划id String类型
+				return：直接返回png图片
+	
+	
+	审批巡检计划申请：	
+				url:users/activiti/inspection-plans/audit
+				method:post
+				params:巡检计划id，流程定义id，value:枚举：agree，disagree 前端自己定义,remark备注信息
+				return：成功
+
+	
+
+
+
+				
+
+
+
+
+
+        获取某个巡检计划的具体信息           /inspection-plans/{id}
+                                         返回{
+                                                   "id": "MA1000",
+                                                   "name": "计划1",
+						    "requestStaffId":1, 申请人id
+						 "approverId":1,	审批人id
+						 "requestStatus":1, 申请状态枚举：参考webapi-enum接口文档
+                                                   "tunnelId": 1,
+                                                   "tunnelName": "凤岭北路",
+                                                   "groupId": 1,
+                                                   "groupName": "group1",
+                                                   "createTime": 1527478740000,
+                                                   "inspectTime": 1525104000000,
+						   "processDefinitionId":"InspectionPlanProcess:1:2504", 流程定义id
+                                                   "tasks": [
+                                                       {
+                                                           "id": 1,
+                                                           "planId": null,
+                                                           "planName": null,
+                                                           "taskTime": 1525449600000,
+                                                           "inspectTime": 1525104000000,
+                                                           "inspectManId": 5,
+                                                           "inspectManName": "user3",
+                                                           "status": "正常"
+                                                       },…………
+                                                   ]
+                                               }
+
+	 维护维修模块(MaintenanceController)
+        添加/上传缺陷                     /defects            Http.Post
+                                        上传结构为{
+                                            "tunnelId": 1,
+                                            "type":1,               1:本体 2：设备
+                                            "objId":1,              如果type为2，则值为obj的Id，否则0
+                                            "status":1,             1：未处理 2：维护中 3：维护完成  上传的时候都是1
+                                            "level":1,              0：正常 1：隐患 2：严重 10：危险
+                                            "description":"这是管廊xx的xx缺陷"
+                                        }
+
+        添加测试数据                      /defects/testadd                                一般重新安装了数据库后用，平时不用
+
+        获取所有项目的缺陷个数，根据种类，echart用
+                                        /tunnels/defectcount
+                                        返回[
+                                                  {
+                                                      "val": [
+                                                          {
+                                                              "val": 8,
+                                                              "key": "本体"
+                                                          },
+                                                          {
+                                                              "val": 9,
+                                                              "key": "设备"
+                                                          }
+                                                      ],
+                                                      "key": "凤岭北路"
+                                                  },…………
+                                          ]
+
+        获取某个项目的所有缺陷（包括设备）   /tunnels/{tunnelId}/defects
+                                        返回[
+                                                  {
+                                                      "id": 8,
+                                                      "tunnelId": 1,
+                                                      "tunnelName": "凤岭北路",
+                                                      "typeValue": 1,
+                                                      "typeName": "本体",
+                                                      "objId": 0,
+                                                      "objName": "test",
+                                                      "levelValue": 10,
+                                                      "levelName": "危险",
+                                                      "description": "凤岭北路的本体类型缺陷，严重性为危险,这是第1个",
+                                                      "statusValue": 1,
+                                                      "statusName": "未处理",
+                                                      "orderId": null,                                      对应的工单，如果为null，则说明还没有创建工单
+                                                      "createTime": 1527651025000,
+                                                      "editTime": null
+                                                  },……
+                                          ]
+
+        根据条件获取所有缺陷            url:/defects/datagrid                     
+					method:POST
+                                        参数：
+						{
+                                              	"tunnelId":1,                   管廊ID
+                                              	"type":1,                       1:本体 2：设备
+                                              	"objId":0,                      如果type为2，则值为obj的Id，否则可不填
+                                              	"level":10,                     0：正常 1：隐患 2：严重 10：危险
+                                              	"status":1,                     1：未处理 2：维护中 3：维护完成
+                                              	"startTime":1526745600000,      创建范围的起始时间
+                                              	"endTime":1528177600000,       结束时间
+						"pageNum":1,	当前页（必填）
+						"pageSize":10	每页数量（必填）
+						}
+					 结果：
+
+						{
+						"msg": "请求成功",
+						"code": "200",
+						"data": {
+							"total": 83,
+							"list": [{
+								"id": 37,
+								"tunnelId": 3,
+								"tunnelName": "高坡岭路",
+								"typeValue": 1,
+								"typeName": "本体",
+								"objId": 0,
+								"objName": null,
+								"levelValue": 1,
+								"levelName": "隐患",
+								"description": "高坡岭路的本体类型缺陷，严重性为隐患,这是第0个",
+								"statusValue": 1,
+								"statusName": "未处理",
+								"orderId": null,
+								"createTime": 1528447561000,
+								"editTime": null
+							}, ...],
+							"pageNum": 1,
+							"pageSize": 5,
+							"size": 5,
+							"startRow": 1,
+							"endRow": 5,
+							"pages": 17,
+							"prePage": 0,
+							"nextPage": 2,
+							"isFirstPage": true,
+							"isLastPage": false,
+							"hasPreviousPage": false,
+							"hasNextPage": true,
+							"navigatePages": 8,
+							"navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+							"navigateFirstPage": 1,
+							"navigateLastPage": 8,
+							"firstPage": 1,
+							"lastPage": 8
+						}
+					}
+
+
+                                        
+        添加/上传工单                     /orders            Http.Post
+                                        上传结构为{
+                                            "tunnelId": 1,
+                                            "type":1,               1:缺陷维修
+                                            "defectId":1,           是根据哪个缺陷生成的工单
+                                            "workerId":1,           处理人的Id，如果没有指派，则为0或者空    *
+                                            "workTime":null,        处理这个工单的时间
+                                            "status":1              1：未分配 2：维修中 3：维修完成
+                                        }
+
+        添加测试数据                      /orders/testadd                                一般重新安装了数据库后用，平时不用
+
+        获取某个项目的所有工单             /tunnels/{tunnelId}/orders
+                                        返回[
+                                                  {
+                                                      "id": "Order1-10",
+                                                      "tunnelId": 1,
+                                                      "tunnelName": "凤岭北路",
+                                                      "type": "缺陷维修",
+                                                      "defectId": 10,
+                                                      "workerId": 0,
+                                                      "workerName": null,
+                                                      "workTime": null,
+                                                      "status": "未分配"
+                                                  },……
+                                          ]
+
+        根据条件获取所有工单            url:/defects/datagrid                     
+					method:Http.Post
+					说明：pageNum,pageSize为必传参数，其他参数为可选
+                                        body包括{
+                                              	"tunnelId":1,                   管廊ID
+                                              	"type":1,                       1:缺陷维修
+                                              	"defectId":0,                   是根据哪个缺陷生成的工单
+                                              	"workerId":10,                   处理人的Id
+                                              	"status":1,                     1：未分配 2：维修中 3：维修完成
+                                              	"startTime":1526745600000,      处理范围的起始时间
+                                              	"endTime":1528177600000         结束时间
+						"pageNum":1,
+						"pageSize":10
+                                              }
+                                        
+					返回：
+					{
+						"msg": "请求成功",
+						"code": "200",
+						"data": {
+							"total": 41,
+							"list": [{
+								"id": "Order1-10",
+								"tunnelId": 1,
+								"tunnelName": "凤岭北路",
+								"type": "缺陷维修",
+								"defectId": 10,
+								"workerId": 0,
+								"workerName": null,
+								"workTime": null,
+								"status": "未分配"
+							}...],
+							"pageNum": 1,
+							"pageSize": 5,
+							"size": 5,
+							"startRow": 1,
+							"endRow": 5,
+							"pages": 9,
+							"prePage": 0,
+							"nextPage": 2,
+							"isFirstPage": true,
+							"isLastPage": false,
+							"hasPreviousPage": false,
+							"hasNextPage": true,
+							"navigatePages": 8,
+							"navigatepageNums": [1, 2, 3, 4, 5, 6, 7, 8],
+							"navigateFirstPage": 1,
+							"navigateLastPage": 8,
+							"firstPage": 1,
+							"lastPage": 8
+						}
+					}
+
+
+	巡检点管理：
+		1. 添加巡检点：
+					url:/checkingpoints
+					method:POST
+					参数：
+					{
+						"name":"zhangsan",//巡检点名称
+						"position":"位置1",//巡检点位置
+						"tunnelId":1,//所属管廊id
+						"crtTime":1528080700000,//创建时间
+					}
+					返回：
+					{
+						msg: "请求成功"
+						code: "200"
+						data: [0]
+					}
+		2. 分页查询：
+					url:/checkingpoints/datagrid
+					method:POST
+					说明：查询字段，可以为巡检点id，管廊id，时间，巡检点名称（支持模糊查询）
+					参数：
+					{
+						"id":1,	//巡检点id
+						"name":"巡检点2", //巡检点名称
+						"position":"巡检点2",	//巡检点位置
+						"tunnelId":1,	//所属管廊id
+						"startTime":1528080700000,	
+						"endTime":1528080700000,
+						"pageNum":1,//当前页（必传）
+						"pageSize":10//每页显示数据量（必传）
+					}
+					返回：
+
+					{
+						"msg": "请求成功",
+						"code": "200",
+						"data": {
+							"total": 10,
+							"list": [{
+								"id": 1, //巡检点id
+								"name": "巡检点2", //巡检点名称
+								"position": "位置2", //巡检点位置
+								"tunnelId": 1, //所属管廊id
+								"tunnelName": "长虹路", //所属管廊名称
+								"crtTime": 1528080700000 //创建时间
+							}, 
+							...],
+							"pageNum": 1,
+							"pageSize": 5,
+							"size": 5,
+							"startRow": 1,
+							"endRow": 5,
+							"pages": 2,
+							"prePage": 0,
+							"nextPage": 2,
+							"isFirstPage": true,
+							"isLastPage": false,
+							"hasPreviousPage": false,
+							"hasNextPage": true,
+							"navigatePages": 8,
+							"navigatepageNums": [1, 2],
+							"navigateFirstPage": 1,
+							"navigateLastPage": 2,
+							"firstPage": 1,
+							"lastPage": 2
+						}
+					}
+		
+		3.根据主键id删除巡检点
+					url:/checkingpoints/{id}
+					method:DELETE
+					参数：id 数值类型
+					返回：
+					{
+						msg: "请求成功"
+						code: "200"
+						data: [0]
+					}
+		
+		4.获取所有巡检点列表
+					url:/checkingpoints
+					method:GET
+					参数：null
+					返回：
+					{
+						"msg": "请求成功",
+						"code": "200",
+						"data": [{
+							"id": 1, //巡检点id
+							"name": "巡检点2", //巡检点名称
+							"position": "位置2", //巡检点位置
+							"tunnelId": 1, //所属管廊id
+							"tunnelName": "长虹路", //所属管廊名称
+							"crtTime": 1528080700000 //创建时间
+						}, 
+						...
+						]
+					}
+		
+		5.根据主键id查询巡检点
+					url:/checkingpoints/{id}
+					method:GET
+					参数：id 数值类型
+					返回：
+						{
+							"msg": "请求成功",
+							"code": "200",
+							"data": {
+										"id": 2,
+										"name": "巡检点2",
+										"position": "位置2",
+										"tunnelId": 2,
+										"tunnelName": "长虹路",
+										"crtTime": 1528080700000,
+									}
+						}
+								
+								
+		通过管廊id获取所有巡检点列表:
+					url:/tunnels/{id}/checkingpoints
+					method:GET
+					参数：id 数值类型
+					返回：json数组
+								
+								
+		
+		

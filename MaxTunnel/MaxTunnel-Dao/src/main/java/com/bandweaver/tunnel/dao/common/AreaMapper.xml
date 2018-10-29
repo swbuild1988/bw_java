@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.AreaMapper">
+	<cache />
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.Area">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="LOCATION" jdbcType="VARCHAR"
+			property="location" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL"
+			property="tunnelId" />
+		<result column="camera" jdbcType="VARCHAR" property="camera" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+	</resultMap>
+
+	<resultMap id="DtoResultMap"
+		type="com.bandweaver.tunnel.common.biz.dto.AreaDto">
+		<id column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="NAME" jdbcType="VARCHAR" property="name" />
+		<result column="LOCATION" jdbcType="VARCHAR"
+			property="location" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL"
+			property="tunnelId" />
+		<result column="camera" jdbcType="VARCHAR" property="camera" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+		<association property="tunnel"
+			javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+			column="TUNNEL_ID"
+			select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, NAME, LOCATION, TUNNEL_ID, camera,CRT_TIME
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_COMMON_AREA
+		where ID = #{id,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey">
+		delete from T_COMMON_AREA
+		where ID = #{id,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Area">
+		<!-- 新增的时候，返回主键 ,insert前打印一遍pojo，insert之后再打印一遍pojo，会发现id从null变为数据库里的id值 -->
+		<selectKey keyProperty="id" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT COMMON_AREA_SEQUENCE.currval from DUAL
+		</selectKey>
+		insert into T_COMMON_AREA (ID, NAME, LOCATION,
+		TUNNEL_ID,camera, CRT_TIME)
+		values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},
+		#{location,jdbcType=VARCHAR},
+		#{tunnelId,jdbcType=DECIMAL}, #{camera,jdbcType=VARCHAR},#{crtTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Area">
+		<!-- 新增的时候，返回主键 ,insert前打印一遍pojo，insert之后再打印一遍pojo，会发现id从null变为数据库里的id值 -->
+		<selectKey keyProperty="id" resultType="java.lang.Integer"
+			order="AFTER">
+			SELECT COMMON_AREA_SEQUENCE.currval from DUAL
+		</selectKey>
+		insert into T_COMMON_AREA
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="location != null">
+				LOCATION,
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID,
+			</if>
+			<if test="camera != null">
+				camera,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=DECIMAL},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				#{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="camera != null">
+				#{camera,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Area">
+		update T_COMMON_AREA
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				LOCATION = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="camera != null">
+				camera = #{camera,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.Area">
+		update T_COMMON_AREA
+		set NAME = #{name,jdbcType=VARCHAR},
+		LOCATION = #{location,jdbcType=VARCHAR},
+		TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+		camera = #{camera,jdbcType=VARCHAR},
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=DECIMAL}
+	</update>
+
+	<insert id="addAreaBatch" useGeneratedKeys="false">
+		insert into T_COMMON_AREA
+		(id,name,location,tunnel_id,camera,crt_time)
+		select COMMON_AREA_SEQUENCE.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.name},
+			#{item.location},
+			#{item.tunnelId},
+			#{item.camera},
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	<select id="getList" resultMap="DtoResultMap">
+		select * from T_COMMON_AREA
+	</select>
+
+
+	<select id="getAreasByCondition" resultMap="DtoResultMap">
+		select a.* from T_COMMON_AREA a
+		<where>
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+			<if test="name != null">
+				and instr(a.name,#{name})>0
+			</if>
+			<if test="tunnelId != null">
+				and a.tunnel_id = #{tunnelId}
+			</if>
+			<if test="startTime != null">
+				and a.crt_time <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null">
+				and a.crt_time <![CDATA[>=]]>
+				#{endTime}
+			</if>
+		</where>
+		order by a.crt_time desc
+	</select>
+
+	<select id="getAreasById" resultMap="DtoResultMap">
+		select a.*
+		from T_COMMON_AREA a
+		where a.id = #{id}
+	</select>
+
+	<delete id="deleteBatch">
+		delete from T_COMMON_AREA where id in
+		<foreach collection="list" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<select id="getByName" resultMap="BaseResultMap">
+		select * from T_COMMON_AREA where name = #{name}
+	</select>
+	
+	<select id="getAreasByTunnelId" resultMap="BaseResultMap">
+		select * from T_COMMON_AREA where tunnel_id = #{tunnelId}
+	</select>
+</mapper>

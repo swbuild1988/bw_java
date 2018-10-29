@@ -1,0 +1,1274 @@
+登录：>>>>>>>>>>>>>
+		登录 :             
+			url:/login
+			method:Post
+			body中的内容：
+				{
+				"name":"admin",
+                                "password":"123456"
+				}
+			返回该用户的id，角色、权限等信息
+
+用户：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>				
+		所有用户列表：
+			url:users
+			method:get
+			参数：null
+			返回：
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"admin",
+				    "sex":"男",
+				    "tel":"123456",
+				    "crtTime":1529462822000,
+				    "roles":null,
+				    "permissions":null,
+				    "company":{
+					"id":1,
+					"name":"波汇科技",
+					"crtTime":1529596800000
+				    },
+				    "position":{
+					"id":1,
+					"name":"总经理",
+					"crtTime":1529596800000
+				    }
+				},
+				...
+			    ]
+			}
+
+		添加用户：
+			url:users
+			method:post
+			参数：
+			{
+				"name": "test",
+				"password": "123456",
+				"sex": "女",
+				"companyId": 1,
+				"positionId": 1,
+				"tel": "123456",
+				"crtTime": 1528624415000
+			}
+			返回：
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+		通过id获取用户信息
+
+			url:users/{id}
+			method:get
+			参数：id
+			返回：
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":1,
+				"name":"admin",
+				"sex":"男",
+				"tel":"123456",
+				"crtTime":1529462822000,
+				"roles":null,
+				"permissions":null,
+				"company":{
+				    "id":1,
+				    "name":"波汇科技",
+				    "crtTime":1529596800000
+				},
+				"position":{
+				    "id":1,
+				    "name":"总经理",
+				    "crtTime":1529596800000
+				}
+			    }
+			}
+
+		
+
+公司：		
+		获取所有公司列表
+			url:companies
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"波汇科技",
+				    "crtTime":1529596800000
+				},
+				{
+				    "id":2,
+				    "name":"阿里巴巴",
+				    "crtTime":1529596800000
+				},
+				...
+			    ]
+			}
+
+
+
+		通过公司id获取公司信息
+			url:companies/{id}
+			method:get
+			params:公司id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":2,
+				"name":"阿里巴巴",
+				"crtTime":1529596800000
+			    }
+			}
+
+
+		删除：
+			url:companies/{id}
+			method:delete
+			params:id
+			return:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+			
+
+职位：
+		获取所有职位列表
+			url:positions
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"总经理",
+				    "crtTime":1529596800000
+				},
+				{
+				    "id":2,
+				    "name":"产品总监",
+				    "crtTime":1529596800000
+				},
+				...
+			    ]
+			}
+
+		 通过职位id获取职位信息
+			url:positions/{id}
+			method:get
+			params:职位id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":3,
+				"name":"主管",
+				"crtTime":1529596800000
+			    }
+			}
+
+员工：		 根据id查询员工信息（包含职位信息和部门信息）
+			url:staffs/{id}
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":1,
+				"name":"张三",
+				"dept":{
+				    "id":1,
+				    "name":"产品部",
+				    "crtTime":1529942400000
+				},
+				"position":{
+				    "id":1,
+				    "name":"总经理",
+				    "crtTime":1529596800000
+				},
+				"crtTime":1529942400000
+			    }
+			}
+
+		添加员工
+			url:staffs
+			method:post
+			params:
+			{
+				name:"zhangsan",
+				deptId:1, 部门id
+				positionId:1,	职位id
+			}
+			return：
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+		删除
+			url:staffs/{id}
+			method:delete
+			params:id
+			return:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+		修改员工信息
+			url:staffs
+			method:put
+			params:
+			{
+				id:1,
+				name:"zhangsan",
+				deptId:1, 部门id
+				positionId:1,	职位id
+			}
+
+		获取所有员工列表,不分页
+			url:staffs
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"张三",
+				    "dept":{
+					"id":1,
+					"name":"产品部",
+					"crtTime":1529942400000
+				    },
+				    "position":{
+					"id":1,
+					"name":"总经理",
+					"crtTime":1529596800000
+				    },
+				    "crtTime":1529942400000
+				},
+				
+				...
+			    ]
+			}
+
+
+		根据公司id和部门id查询所有员工
+			url:companies/{companyId}/departments/{deptId}/staffs
+			method:get
+			params:公司id，部门id
+			return：
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"张三",
+				    "dept":{
+					"id":1,
+					"name":"产品部",
+					"crtTime":1529942400000
+				    },
+				    "position":{
+					"id":1,
+					"name":"总经理",
+					"crtTime":1529596800000
+				    },
+				    "crtTime":1529942400000
+				},
+				...
+			    ]
+			}
+
+
+部门：
+		添加：
+			url:departments
+			method:post
+			params:
+			{
+				name:"技术部"
+			}
+			return：
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+		根据id查询：
+			url:departments/{id}
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":2,
+				"name":"研发部",
+				"crtTime":1529942400000
+			    }
+			}
+
+		查询所有部门信息:
+			url:departments
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"产品部",
+				    "crtTime":1529942400000
+				},
+				{
+				    "id":4,
+				    "name":"销售部",
+				    "crtTime":1529942400000
+				},
+				...
+			    ]
+			}
+
+		删除:
+			url:departments/{id}
+			method:delete
+			params:id
+			return:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+
+		修改：
+
+			url:departments
+			method:put
+			params:
+			{
+				id:1,
+				name:"技术部"
+			}
+			return：
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": {}
+			}
+
+
+		根据公司id查询部门列表：
+			url:companies/{companyId}/departments
+			method:get
+			params:公司id
+			return：
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "id":1,
+				    "name":"产品部",
+				    "crtTime":1529942400000
+				},
+				{
+				    "id":2,
+				    "name":"研发部",
+				    "crtTime":1529942400000
+				},
+				...
+			    ]
+			}
+
+
+
+
+
+
+
+
+管廊：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		添加管廊:
+			url：tunnels
+			method:post
+			params:
+			{
+			    "name":"test",
+			    "length":1000,		--长度
+			    "responsibilityId":1,	--负责人id，从员工表获取
+			    "constructId":1,		--建筑单位id，从公司表获取
+			    "operationId":1,		--运营单位id，从公司表获取
+			    "camera":"111-222-333"	--相机视角，字符串类型
+			}
+			return :success
+
+
+
+		获取管廊列表(简单列表) :
+			url:/tunnels
+			method:get
+			参数：null
+			返回:
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": [{
+					"id": 1,
+					"name": "凤岭北路"
+					
+				}, {
+					"id": 2,
+					"name": "长虹路"
+					
+				}, ．．．]
+			}
+		通过id获取管廊信息（包含负责人，建筑单位，运营单位信息）:
+			url:tunnels/{id}
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":1,
+				"name":"凤岭北路",
+				"length":100.01,
+				"responsibility":{  //管廊负责人
+				    "id":1,
+				    "name":"张三",
+				    "deptId":1,
+				    "positionId":1,
+				    "crtTime":1529942400000
+				},
+				"construct":{	//建筑单位
+				    "id":5,
+				    "name":"中建一局",
+				    "crtTime":1529596800000
+				},
+				"operation":{	//运营单位
+				    "id":1,
+				    "name":"波汇科技",
+				    "crtTime":1529596800000
+				},
+				"camera":"11111-2222-33333",
+				"crtTime":1530028800000
+			    }
+			}
+
+		获取指定管廊下共有多少管仓
+			url:tunnels/{id}/stores/count
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"val":3,
+				"key":"管仓数"
+			    }
+			}
+		
+		获取指定管廊下共有多少管仓段
+			url:tunnels/{id}/sections/count
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"val":3,
+				"key":"管仓段数"
+			    }
+			}
+
+
+		获取指定管廊下环境监控各数值最大值：
+			url:tunnels/{id}/ai/max-cv
+			method:get
+			params:id
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "val":275.87315332324437,	//值
+				    "location":"燃气仓-燃气仓仓段16",	//仓段位置
+				    "key":"温度"	
+				},
+				{
+				    "val":999.2822141133038,
+				    "location":"综合仓-综合仓仓段12",
+				    "key":"湿度"
+				},
+				{
+				    "val":722.2441328505979,
+				    "location":"综合仓-综合仓仓段16",
+				    "key":"氧气"
+				},
+				...
+			    ]
+			}
+
+		获取具体某个section的各种环境监测对象数值：
+			url:tunnels/stores/sections/{id}/ai/cv
+			method:get
+			params:仓段sectionId
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "objId":21021,
+				    "sectionId":2,
+				    "objTypeName":"温度",
+				    "cv":88.88
+				},
+				{
+				    "objId":21022,
+				    "sectionId":2,
+				    "objTypeName":"温度",
+				    "cv":99.99
+				},
+				...
+			    ]
+			}
+
+
+
+		获取环境监测各指标的最大值（用来显示百分比）:
+				url:sections/ai/standard-cv
+				method:get
+				params:null
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":[
+					{
+					    "val":2000,
+					    "key":"温度"//
+					},
+					{
+					    "val":1000.11,
+					    "key":"湿度"//
+					},
+					{
+					    "val":1000,
+					    "key":"氧气"//
+					},
+					{
+					    "val":1000,
+					    "key":"硫化氢"//
+					},
+					{
+					    "val":1000.99,
+					    "key":"甲烷"//
+					},
+					{
+					    "val":1000,
+					    "key":"一氧化碳"//
+					}
+				    ]
+				}
+
+
+		管廊-管仓-仓段树形结构：
+			url:tunnels/tree
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":[
+				{
+				    "name":"凤岭北路",
+				    "id":1,
+				    "camera":null,
+				    "list":[
+					{
+					    "name":"燃气仓xxxx",
+					    "id":4,
+					    "camera":null,
+					    "list":[
+						{
+						    "name":"燃气仓仓段13",
+						    "id":30,
+						    "camera":null,
+						    "list":null
+						},
+						{
+						    "name":"燃气仓仓段12",
+						    "id":29,
+						    "camera":null,
+						    "list":null
+						},
+						...
+					    ]
+					},
+					{
+					    "name":"电力仓xxxx",
+					    "id":3,
+					    "camera":null,
+					    "list":[
+						{
+						    "name":"电力仓仓段12",
+						    "id":4,
+						    "camera":null,
+						    "list":null
+						},
+					       ...
+					    ]
+					},
+					...
+				    ]
+				},
+				...
+			    ]
+			}
+
+
+
+管廊区域管理：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		添加区域：
+			url:/areas 
+			method:POST
+			说明：id自增长
+			参数：
+				{
+				"name":"区域1",
+				"location":"位置1",
+				"tunnelId":1,	--管廊id
+				"camera":"1111-2222-333"	--相机视角，字符串
+				}
+			返回：
+				{
+					"code":200,
+					"msg":"请求成功",
+					"data":[0]
+				}
+		通过区域id获取单个区域：
+			url:/areas/{id}
+			method:get
+			参数：id
+			返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"id": 2,
+						"name": "区域-1",
+						"location": "位置-1",
+						"tunnel": {
+							id: 2
+							name: "长虹路"
+							},
+						"camera":"1111-2222-333",
+						"crtTime": 1528624415000
+					}
+				}
+		*根据管廊id查询区域列表：
+			url:tunnels/{id}/areas
+			method:get
+			参数：id
+			返回：
+			{
+				"msg": "请求成功",
+				"code": "200",
+				"data": [{
+					"id": 16,
+					"name": "区域-22",
+					"location": "位置-22",
+					"tunnel": {
+						id: 2
+						name: "长虹路"
+						},
+					"camera":"1111-2222-333",
+					"crtTime": 1526810015000
+				}, {
+					"id": 31,
+					"name": "区域-36",
+					"location": "位置-36",
+					"tunnel":{
+						id: 2
+						name: "长虹路"
+					},
+					"camera":"1111-2222-333",
+					"crtTime": 1525600415000
+				}, 
+				...
+				]
+			}
+		区域分页查询：
+			url:/areas/datagrid
+			method:post
+			说明：pageNum，pageSize为必填参数，用来实现分页查询，其余参数为条件查询参数
+			参数：
+				{
+				"id":1,
+				"name":"name1",
+				"tunnelId":1,
+				"startTime":1526810015000,
+				"endTime":1526810015000,
+				"pageNum":1,
+				"pageSize"：5
+				}
+			返回：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"total": 10,
+						"list": [{
+							"id": 48,
+							"name": "区域-6",
+							"location": "位置-6",
+							"tunnel":{
+									id: 2
+									name: "长虹路"
+								},
+							"camera":"1111-2222-333",
+							"crtTime": 1528192415000
+						}, 
+						...],
+						"pageNum": 1,
+						"pageSize": 5,
+						"size": 5,
+						"startRow": 1,
+						"endRow": 5,
+						"pages": 2,
+						"prePage": 0,
+						"nextPage": 2,
+						"isFirstPage": true,
+						"isLastPage": false,
+						"hasPreviousPage": false,
+						"hasNextPage": true,
+						"navigatePages": 8,
+						"navigatepageNums": [1, 2],
+						"navigateFirstPage": 1,
+						"navigateLastPage": 2,
+						"firstPage": 1,
+						"lastPage": 2
+					}
+				}
+
+
+
+管仓：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+		添加管仓：
+				url:tunnels/stores
+				method:post
+				params:
+					{
+					    "name":"test",
+					    "tunnelId":1,
+					    "storeTypeId":1,	--管仓类型id(枚举)
+					    "camera":"1111-222-3333"	--相机视角，字符串
+					}
+				return:success
+		
+
+
+		*根据管廊id查询管仓列表
+				url：tunnels/{id}/stores
+				method:get
+				params: id
+				return：
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"id": 3,
+						"name":"电力仓xxxx",
+						"tunnel": {
+							"id": 1,
+							"name": "凤岭北路"
+						},
+						"storeTypeId": 2,
+						"storeTypeName": "电力仓",
+						"camera":"111-2222-333",
+						"crtTime": 1529465428000
+					}, ...]
+				}
+
+		*根据id查询管仓
+				url:tunnels/stores/{id}
+				method:get
+				params:id
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"id": 2,
+						"name":"综合仓xxxx",
+						"tunnel": {
+							"id": 1,
+							"name": "凤岭北路"
+						},
+						"storeTypeId": 1,
+						"storeTypeName": "综合仓",
+						"camera":"111-2222-333",
+						"crtTime": 1528947028000
+					}
+				}
+
+		*条件查询：参数可为（id,tunnelId,storeTypeId,beginTime,endTime）
+
+				url:tunnels/stores/condition
+				method:post
+				params:
+				{
+					id
+					tunnelId
+					storeTypeId 管仓类型
+					beginTime
+					endTime
+				
+				}
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"id": 3,
+						"name":"电力仓xxxx",
+						"tunnel": {
+							"id": 1,
+							"name": "凤岭北路"
+						},
+						"storeTypeId": 2,
+						"storeTypeName":"电力仓",
+						"camera":"111-2222-333",
+						"crtTime": 1529465428000
+					}, ...]
+				}
+
+管仓段section>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+		添加：
+				url:tunnels/stores/sections
+				method：post
+				params:
+				{
+				    "name":"test",
+				    "storeId":1,	--管舱id
+				    "areaId":1,		--区域id
+				    "totalCableNumber":5,	--设计使用管线总数
+				    "camera":"1111-222-3333"	--相机视角,字符串
+				}
+
+				return:sucess
+
+		*条件查询 参数可为（id,name模糊查询,storeId,areaId，beginTime,endTime,pageNum,pageSize）
+				url:tunnels/stores/sections/condition
+				method:post
+				params:
+				{
+					id,name模糊查询,storeId,areaId，beginTime,endTime
+				}
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"id": 92,
+						"name": "综合仓区间",
+						"camera":"11111-2222-3333",
+						"crtTime": 1529472114000,
+						"store": {
+							"id": 2,
+							"name":"综合仓xxxx",
+							"tunnel": {
+								"id":4,
+								"name":"凤凰岭路"
+							},
+							"storeTypeId": 1,
+							"storeTypeName": "综合仓",
+							"crtTime": 1528947028000
+						},
+						"area": {
+							"id": 20,
+							"name": "凤岭北路-区域-1",
+							"location": "凤岭北路-区域-1-位置",
+							"tunnelId": 1,
+							"crtTime": 1529464713000
+						}
+					},...]
+				}
+
+
+		*通过id获取dto	url:sections/{id}
+				method:get
+				params:id
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": {
+						"id": 2,
+						"name": "综合仓区间",
+						"camera":"11111-2222-3333",
+						"crtTime": 1529212914000,
+						"store": {
+							"id": 2,
+							"name":"综合仓xxxx",
+							"tunnel": {
+								"id":4,
+								"name":"凤凰岭路"
+							},
+							"storeTypeId": 1,
+							"storeTypeName": "综合仓",
+							"crtTime": 1528947028000
+						},
+						"area": {
+							"id": 20,
+							"name": "凤岭北路-区域-1",
+							"location": "凤岭北路-区域-1-位置",
+							"tunnelId": 1,
+							"crtTime": 1529464713000
+						}
+					}
+				}
+
+
+		*通过storeId查询dto列表
+				url:tunnels/stores/{id}/sections
+				method:get
+				params:id
+				return:
+				{
+					"msg": "请求成功",
+					"code": "200",
+					"data": [{
+						"id": 92,
+						"name": "综合仓区间",
+						"camera":"11111-2222-3333",
+						"crtTime": 1529472114000,
+						"store": {
+							"id": 2,
+							"name":"综合仓xxxx",
+							"tunnel": {
+								"id":4,
+								"name":"凤凰岭路"
+							},
+							"storeTypeId": 1,
+							"storeTypeName": "综合仓",
+							"crtTime": 1528947028000
+						},
+						"area": {
+							"id": 20,
+							"name": "凤岭北路-区域-1",
+							"location": "凤岭北路-区域-1-位置",
+							"tunnelId": 1,
+							"crtTime": 1529464713000
+						}
+					},...]
+				}
+
+
+		*通过areaId查询dto列表
+				url:tunnels/areas/{id}/sections
+				method:get
+				params:id
+				return:
+
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":[
+					{
+					    "val":[
+						{
+						    "id":71,
+						    "name":"综合仓仓段4",
+						    "camera":"11111-2222-3333",
+						    "crtTime":1530428236000,
+						    "store":{
+							"id":5,
+							"name":"综合仓xxxx",
+							"tunnel":{
+							    "id":2,
+							    "name":"长虹路"
+							},
+							"storeTypeId":1,
+							"storeTypeName":"综合仓",
+							"crtTime":1529557949000
+						    },
+						    "area":{
+							"id":4,
+							"name":"长虹路-区域-2",
+							"location":"长虹路-区域-2-位置",
+							"tunnelId":2,
+							"crtTime":1529730596000
+						    }
+						}
+					    ],
+					    "key":"综合仓"
+					},
+					{
+					    "val":[
+						{
+						    "id":21,
+						    "name":"电力仓仓段4",
+						    "camera":"11111-2222-3333",
+						    "crtTime":1530428236000,
+						    "store":{
+							"id":6,
+							"name":"综合仓xxxx",
+							"tunnel":{
+							    "id":2,
+							    "name":"长虹路"
+							},
+							"storeTypeId":2,
+							"storeTypeName":"电力仓",
+							"crtTime":1529298749000
+						    },
+						    "area":{
+							"id":4,
+							"name":"长虹路-区域-2",
+							"location":"长虹路-区域-2-位置",
+							"tunnelId":2,
+							"crtTime":1529730596000
+						    }
+						}
+					    ],
+					    "key":"电力仓"
+					},
+					...
+				    ]
+				}
+
+
+
+		
+			
+		根据sectionId查询所在的管廊信息:
+				url:tunnels/sections/{id}
+				method:get
+				params:sectionId
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"id":4,
+					"name":"凤凰岭路"
+				    }
+				}
+
+
+
+		通过ids获取dto列表：
+				url:sections/batch/{ids}
+				method:get
+				params:格式：1,2,3,4,5....
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":[
+					{
+					    "id":2,
+					    "name":"电力仓仓段10",
+					    "camera":"11111-2222-3333",
+					    "totalCableNumber":5,
+					    "crtTime":1529996236000,
+					    "store":{
+						"id":12,
+						"name":"电力仓xxxx",
+						"tunnel":{
+						    "id":4,
+						    "name":"凤凰岭路"
+						},
+						"storeTypeId":2,
+						"storeTypeName":"电力仓",
+						"camera":null,
+						"crtTime":1529298749000
+					    },
+					    "area":{
+						"id":10,
+						"name":"凤凰岭路-区域-3",
+						"location":"凤凰岭路-区域-3-位置",
+						"tunnelId":4,
+						"camera":null,
+						"crtTime":1529644196000
+					    }
+					},
+					...
+				    ]
+				}
+
+
+工作流：>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>	
+
+		登录用户申请分页查询:
+				url:users/activiti/apply/datagrid
+				同下
+
+		登录用户任务分页查询:
+				url:users/activiti/task/datagrid
+				method：post
+				params:
+				{
+					processType 流程类型枚举：参考webapi-enum
+					status 流程状态枚举：参考webapi-enum接口
+					startTime:时间戳
+					endTime:时间戳
+				
+				}
+				return:
+				{
+				    "msg":"请求成功",
+				    "code":"200",
+				    "data":{
+					"total":3,
+					"list":[
+					    {
+						"id":3,
+						"processDefinitionId":"reqProcess:3:26",
+						"staff":{
+						    "id":1,
+						    "name":"张三",
+						    "deptId":1,
+						    "positionId":1,
+						    "accountId":1,
+						    "crtTime":1529942400000
+						},
+						"approver":{
+						    "id":1,
+						    "name":"张三",
+						    "deptId":1,
+						    "positionId":1,
+						    "accountId":1,
+						    "crtTime":1529942400000
+						},
+						"status":1,
+						"statusName":"审核中",
+						"processType":2,
+						"processTypeName":"入廊申请",
+						"crtTime":1531901525000
+					    },
+						....
+					],
+					"pageNum":1,
+					"pageSize":5,
+					"size":3,
+					"startRow":1,
+					"endRow":3,
+					"pages":1,
+					"prePage":0,
+					"nextPage":0,
+					"isFirstPage":true,
+					"isLastPage":true,
+					"hasPreviousPage":false,
+					"hasNextPage":false,
+					"navigatePages":8,
+					"navigatepageNums":[
+					    1
+					],
+					"navigateFirstPage":1,
+					"navigateLastPage":1,
+					"firstPage":1,
+					"lastPage":1
+				    }
+				}
+
+		获取任务详情:
+			url:users/activiti/task/detail/{processDefinitionId}/{processType}
+			method:get
+			params:processDefinitionId ,processType
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"id":2,
+				"approverId":1,
+				"staff":{
+				    "id":1,
+				    "name":"张三",
+				    "deptId":1,
+				    "positionId":1,
+				    "accountId":1,
+				    "crtTime":1529942400000
+				},
+				"tunnel":{
+				    "id":1,
+				    "name":"凤岭北路"
+				},
+				"status":1,
+				"statusName":"审核中",
+				"action":1,
+				"actionName":"参观",
+				"preTime":null,
+				"enterTime":null,
+				"exitTime":null,
+				"crtTime":1531901522000,
+				"visitorNumber":null,
+				"visitorInfo":null,
+				"processDefinitionId":"reqProcess:2:15",
+				"remark":null,
+				"company":{
+				    "id":1,
+				    "name":"波汇科技",
+				    "crtTime":1529596800000
+				}
+			    }
+			}
+
+
+		获取登录用户待处理消息总数：
+			url:users/msg/count
+			method:get
+			params:null
+			return:
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":2
+			}
+
+	

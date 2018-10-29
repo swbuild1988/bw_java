@@ -1,0 +1,275 @@
+
+综合监控（MAM）
+	    获取管廊报警统计情况      /tunnel/alarmcount (get)
+	    
+	    添加报警 /alarm (post)
+	    报警条件查询 /alarm/condition (post)
+	
+	    添加报警类型 /alarmtype （post）
+	    查询所有报警类型 /alarmtype （get）
+	    报警类型条件查询 /alarmtype/condition (post)
+	    
+measobj:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+	添加MeasObj /measobjs (post)
+	根据id查询MeasObj /measobjs/{id} (get)
+	查询所有MeasObj	/measobjs (get)
+
+	根据经纬度高度查询obj:
+	 	url:/measobjs/gps
+	 	method:post
+	 	说明：以下参数均为可选项
+	 	参数：
+			{
+			"longitude":"2.0323372528240794",
+			"latitude":"0.6967261664942759",
+			"height":"0.6967261664942759"
+			}
+	 	返回：obj的json对象
+	
+	根据ids查询measObj集合:
+		url:/measobjs/ids
+		 method:post
+		参数：
+		    {
+			"ids":"1,2,3,4..."
+		    }
+		返回： obj集合
+
+	
+
+	监测对象分页:
+		url:measobjs/datagrid
+		method:post
+		params:
+			tunnelId
+			storeId
+			 sectionId
+			 name 支持模糊查询
+			 datatypeId 枚举：参考webapi-enum接口文档
+			 objtypeId	同上
+			 pageNum 必须
+			 pageSize 必须
+
+		return：
+			
+			{
+			    "msg":"请求成功",
+			    "code":"200",
+			    "data":{
+				"total":86,
+				"list":[
+				    {
+					"id":101,
+					"tunnelId":1,
+					"storeId":1,
+					"sectionId":9,
+					"name":"开关量测试数据",
+					"datatypeId":2,
+					"datatypeName":"开关量",
+					"objtypeId":11,
+					"objtypeName":"灯",
+					"actived":true,
+					"description":"开关量测试数据",
+					"longitude":"0.7349485247452545",
+					"latitude":"0.3940903010513144",
+					"height":"0.5134173228934928",
+					"deviation":0.7880543502777997
+				    },
+				   ...
+				],
+				"pageNum":1,
+				"pageSize":5,
+				"size":5,
+				"startRow":1,
+				"endRow":5,
+				"pages":18,
+				"prePage":0,
+				"nextPage":2,
+				"isFirstPage":true,
+				"isLastPage":false,
+				"hasPreviousPage":false,
+				"hasNextPage":true,
+				"navigatePages":8,
+				"navigatepageNums":[
+				    1,
+				    2,
+				    3,
+				    4,
+				    5,
+				    6,
+				    7,
+				    8
+				],
+				"navigateFirstPage":1,
+				"navigateLastPage":8,
+				"lastPage":8,
+				"firstPage":1
+			    }
+			}
+
+
+
+	 根据measObjId和datatypeId查询cv值:
+		url:measobjs/{ids}/{datatypeId}/cache-cv
+		method:get
+		params:ids(1,2,3,4,5....),datatypeId
+		return:
+		{
+		    "msg":"请求成功",
+		    "code":"200",
+		    "data":[
+			{
+			    "id":1001,
+			    "tunnelId":1,
+			    "storeId":4,
+			    "sectionId":29,
+			    "name":"监测对象1002",
+			    "datatypeId":1,
+			    "objtypeId":1,
+			    "actived":true,
+			    "description":null,
+			    "longitude":"0.003534597099157488",
+			    "latitude":"0.18009738011735688",
+			    "height":"0.5474121265387349",
+			    "deviation":0.4608083267157155,
+			    "refreshTime":1531992210000,
+			    "cv":53.314596083560126
+			},
+			{
+			    "id":1000,
+			    "tunnelId":1,
+			    "storeId":4,
+			    "sectionId":30,
+			    "name":"监测对象1001",
+			    "datatypeId":1,
+			    "objtypeId":5,
+			    "actived":true,
+			    "description":null,
+			    "longitude":"0.9915185932090033",
+			    "latitude":"0.09255357883504856",
+			    "height":"0.8057784926383548",
+			    "deviation":0.10330973845212987,
+			    "refreshTime":1531992210000,
+			    "cv":117.71152117067555
+			},
+		      ...
+		    ]
+		}
+
+ AI:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+	*添加AI	--		url:/measvalue-ai
+				method:post
+				params:
+					{
+						"time":1528447561000,
+						"objectId":1,
+						"CV":2.09
+					}
+				return:
+					{
+						"msg": "请求成功",
+						"code": "200",
+						"data":[0]
+					}
+					
+
+	*批量添加AI--		URL:/measvalue-ai/batch
+				method:post
+				params:
+				[
+					{
+						"time":1528447561000,
+						"objectId":1,
+						"CV":2.09
+					},
+					{
+						"time":1528447561000,
+						"objectId":2,
+						"CV":2.09
+					},
+					{
+						"time":1528447561000,
+						"objectId":3,
+						"CV":2.09
+					},
+					...
+
+				]
+				return:
+					{
+						"msg": "请求成功",
+						"code": "200",
+						"data":[0]
+					}
+
+
+	    批量添加MeasValueAI /measvalue-ai/list （post）
+	    条件查询MeasValueAI /measvalue-ai/condition (post)
+	
+	    添加MeasValueDASSpectrum /measvalue-dasspectrum (post)
+	    条件查询MeasValueDASSpectrum /measvalue-dasspectrum/condition (post)
+	
+	    添加MeasValueDI /measvalue-di (post)
+	    条件查询MeasValueDI /measvalue-di/condition (post)
+	
+	    添加MeasValueDistributeT /measvalue-distributed (post)
+	    条件查询MeasValueDistributeT /measvalue-distributed/condition (post)
+	
+	    添加MeasValueSI /measvalue-si (post)
+	    条件查询MeasValueSI /measvalue-si/condition (post)
+	
+	    添加MeasValueSO /measvalue-so (post)
+	    条件查询MeasValueSO /measvalue-so/condition (post)
+	
+	    添加MeasValueTabdict /measvalue-tabdict (post)
+	    根据id查询MeasValueTabdict /measvalue-tabdict/{id} （get）
+	    条件查询MeasValueTabdict /measvalue-tabdict/condition （post）
+
+
+    视频部分
+        获取某管廊下的视频场景         tunnels/{tunnelId}/video_scenes
+        获取所有的视频场景               video_scenes
+                返回： [
+                           {
+                               "id": 1,
+                               "name": "场景0",
+                               "tunnelId": 1,
+                               "loopIndex": 1,          循环序号（已排好序）
+                               "videos": [
+                                   {
+                                       "id": 3002,
+                                       "sectionId": 1,
+                                       "name": "视频2",
+                                       "datatypeId": 7,
+                                       "objtypeId": 7,
+                                       "actived": true,
+                                       "description": null,
+                                       "longitude": "1",
+                                       "latitude": "1",
+                                       "height": "1",
+                                       "deviation": 1,
+                                       "serverId": 1,
+                                       "videoSceneId": 1,
+                                       "channelNo": 2,
+                                       "videoServer": {
+                                           "id": 1,
+                                           "name": "视频服务1",
+                                           "vendor": 1,
+                                           "vendorVersion": 1,
+                                           "ip": "192.168.7.202",
+                                           "port": 554,
+                                           "username": "admin",
+                                           "password": "bw123456",
+                                           "channelNum": 16
+                                       },
+                                       "url": "rtsp://admin:bw123456@192.168.7.202:554/Streaming/Channels/2"
+                                   },……
+                               ],
+                               loop:true            （是否循环，已经剔除掉false)
+                           }, ……
+                      ]
+
+        获取所有视频              videos
+                返回      同上面的videos

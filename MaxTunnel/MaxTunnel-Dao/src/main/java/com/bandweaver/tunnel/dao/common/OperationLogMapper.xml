@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.bandweaver.tunnel.dao.common.OperationLogMapper">
+	<cache/>
+	<resultMap id="BaseResultMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.OperationLog">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MODULE_TYPE" jdbcType="VARCHAR"
+			property="moduleType" />
+		<result column="REQ_ID" jdbcType="VARCHAR" property="reqId" />
+		<result column="REQ_IP" jdbcType="VARCHAR" property="reqIp" />
+		<result column="REQ_USER" jdbcType="VARCHAR" property="reqUser" />
+		<result column="METHOD" jdbcType="VARCHAR" property="method" />
+		<result column="PARAMS" jdbcType="VARCHAR" property="params" />
+		<result column="result" jdbcType="VARCHAR" property="result" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP"
+			property="crtTime" />
+		<result column="DESCRIPTION" jdbcType="VARCHAR" property="desc" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, MODULE_TYPE, REQ_ID, REQ_IP, REQ_USER, METHOD, PARAMS,result,
+		CRT_TIME,DESCRIPTION
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_OPERATION_LOG
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from T_OPERATION_LOG
+		where ID = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.OperationLog">
+		insert into T_OPERATION_LOG (ID, MODULE_TYPE, REQ_ID,
+		REQ_IP, REQ_USER, METHOD,
+		PARAMS,result, CRT_TIME,DESCRIPTION)
+		values (#{id,jdbcType=VARCHAR}, #{moduleType,jdbcType=VARCHAR},
+		#{reqId,jdbcType=VARCHAR},
+		#{reqIp,jdbcType=VARCHAR}, #{reqUser,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR},
+		#{params,jdbcType=VARCHAR},
+		'成功',
+		#{crtTime,jdbcType=TIMESTAMP},#{desc,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.OperationLog">
+		insert into T_OPERATION_LOG
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="moduleType != null">
+				MODULE_TYPE,
+			</if>
+			<if test="reqId != null">
+				REQ_ID,
+			</if>
+			<if test="reqIp != null">
+				REQ_IP,
+			</if>
+			<if test="reqUser != null">
+				REQ_USER,
+			</if>
+			<if test="method != null">
+				METHOD,
+			</if>
+			<if test="params != null">
+				PARAMS,
+			</if>
+			<if test="result != null">
+				result,
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME,
+			</if>
+			<if test="desc != null">
+				DESCRIPTION,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleType != null">
+				#{moduleType,jdbcType=VARCHAR},
+			</if>
+			<if test="reqId != null">
+				#{reqId,jdbcType=VARCHAR},
+			</if>
+			<if test="reqIp != null">
+				#{reqIp,jdbcType=VARCHAR},
+			</if>
+			<if test="reqUser != null">
+				#{reqUser,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				#{method,jdbcType=VARCHAR},
+			</if>
+			<if test="params != null">
+				#{params,jdbcType=VARCHAR},
+			</if>
+			<if test="result != null">
+				#{result,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="desc != null">
+				#{desc,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.OperationLog">
+		update T_OPERATION_LOG
+		<set>
+			<if test="moduleType != null">
+				URL = #{moduleType,jdbcType=VARCHAR},
+			</if>
+			<if test="reqId != null">
+				REQ_ID = #{reqId,jdbcType=VARCHAR},
+			</if>
+			<if test="reqIp != null">
+				REQ_IP = #{reqIp,jdbcType=VARCHAR},
+			</if>
+			<if test="reqUser != null">
+				REQ_USER = #{reqUser,jdbcType=VARCHAR},
+			</if>
+			<if test="method != null">
+				METHOD = #{method,jdbcType=VARCHAR},
+			</if>
+			<if test="params != null">
+				PARAMS = #{params,jdbcType=VARCHAR},
+			</if>
+			<if test="result != null">
+				result = #{result,jdbcType=VARCHAR},
+			</if>
+			<if test="crtTime != null">
+				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="desc != null">
+				DESCRIPTION = #{desc,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.OperationLog">
+		update T_OPERATION_LOG
+		set MODULE_TYPE = #{moduleType,jdbcType=VARCHAR},
+		REQ_ID = #{reqId,jdbcType=VARCHAR},
+		REQ_IP = #{reqIp,jdbcType=VARCHAR},
+		REQ_USER = #{reqUser,jdbcType=VARCHAR},
+		METHOD = #{method,jdbcType=VARCHAR},
+		PARAMS = #{params,jdbcType=VARCHAR},
+		result = #{result,jdbcType=VARCHAR},
+		DESCRIPTION = #{desc,jdbcType=VARCHAR},
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateById">
+		update T_OPERATION_LOG t set t.result = #{result} where t.id = #{id}
+	</update>
+	
+	<select id="dataGrid" resultMap="BaseResultMap">
+		select * from T_OPERATION_LOG 
+		<where>
+			<if test="moduleType != null and moduleType.trim() != ''">
+				and module_type = #{moduleType}
+			</if>
+			<if test="reqUser !=null and reqUser.trim() != ''">
+				and instr(req_user,#{reqUser})>0
+			</if>
+			<if test="result != null and result.trim() != ''">
+				and result = #{result}
+			</if>
+			<if test="startTime != null ">
+				and crt_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null ">
+				and crt_time &lt;= #{endTime}
+			</if>
+		</where>
+		order by crt_time desc
+	</select>
+
+</mapper>

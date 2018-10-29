@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.VideoMapper">
+
+    <insert id="insertVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
+        INSERT INTO T_MAM_VIDEO (ID, SERVER_ID, VIDEO_SCENE_ID, CHANNEL_NO)
+        VALUES (#{id}, #{serverId}, #{videoSceneId}, #{channelNo})
+    </insert>
+
+    <update id="updateVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
+        UPDATE T_MAM_VIDEO
+        SET SERVER_ID      = #{serverId},
+            VIDEO_SCENE_ID = #{videoSceneId},
+            CHANNEL_NO     = #{channelNo}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getVideoDto" resultMap="VideoDtoMap">
+        SELECT
+            a.*,
+            b.*,
+            c.id as preset_id,
+            c.video_id,
+            c.preset_name,
+            c.longitude as preset_longitude,
+            c.latitude as preset_latitude,
+            c.height as preset_height,
+            c.pitch as preset_pitch,
+            c.roll as preset_roll,
+            c.heading as preset_heading
+        FROM t_mam_video a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+            LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getAllVideos" resultMap="VideoMap">
+        --         select a.SERVER_ID, a.VIDEO_SCENE_ID, a.CHANNEL_NO, b.*
+        SELECT
+            a.*,
+            b.*
+        FROM t_mam_video a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+    </select>
+
+    <select id="getAllVideoDtos" resultMap="VideoDtoMap">
+        SELECT
+            a.*,
+            b.*,
+            c.id as preset_id,
+            c.video_id,
+            c.preset_name,
+            c.longitude as preset_longitude,
+            c.latitude as preset_latitude,
+            c.height as preset_height,
+            c.pitch as preset_pitch,
+            c.roll as preset_roll,
+            c.heading as preset_heading
+        FROM t_mam_video a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+            LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+    </select>
+
+    <select id="getVideoDtosByScene" resultMap="VideoDtoMap">
+        SELECT
+            a.*,
+            b.*,
+            c.id as preset_id,
+            c.video_id,
+            c.preset_name,
+            c.longitude as preset_longitude,
+            c.latitude as preset_latitude,
+            c.height as preset_height,
+            c.pitch as preset_pitch,
+            c.roll as preset_roll,
+            c.heading as preset_heading
+        FROM t_mam_video a
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+            LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+        WHERE a.video_scene_id = #{sceneId}
+    </select>
+
+    <resultMap id="VideoMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+        <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
+        <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
+        <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
+    </resultMap>
+
+    <resultMap id="VideoDtoMap" type="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
+        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
+        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
+        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
+        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+        <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
+        <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
+        <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
+        <association property="videoServer" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer"
+                     column="SERVER_ID" select="com.bandweaver.tunnel.dao.mam.VideoServerMapper.getVideoServer">
+        </association>
+        <collection property="videoPresets" ofType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset">
+            <id column="preset_id" property="id"/>
+            <result column="video_id" property="videoId"/>
+            <result column="preset_name" property="presetName"/>
+            <result column="preset_longitude" property="longitude"/>
+            <result column="preset_latitude" property="latitude"/>
+            <result column="preset_height" property="height"/>
+            <result column="preset_pitch" property="pitch"/>
+            <result column="preset_roll" property="roll"/>
+            <result column="preset_heading" property="heading"/>
+        </collection>
+
+    </resultMap>
+</mapper>

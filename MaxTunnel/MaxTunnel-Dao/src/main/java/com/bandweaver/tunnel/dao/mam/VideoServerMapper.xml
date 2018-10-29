@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.VideoServerMapper">
+
+    <insert id="insertVideoServer" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer">
+        INSERT INTO T_MAM_Video_Server (name, vendor, vendor_version, ip, port, username, password, channel_num)
+        VALUES (#{name}, #{vendor}, #{vendorVersion}, #{ip}, #{port}, #{username}, #{password}, #{channelNum})
+    </insert>
+
+    <select id="getVideoServer" resultMap="VideoServerMapper">
+        SELECT * FROM T_MAM_Video_Server
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAllVideoServers" resultMap="VideoServerMapper">
+        SELECT * FROM T_MAM_Video_Server
+    </select>
+
+    <resultMap id="VideoServerMapper" type="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="vendor" property="vendor" />
+        <result column="vendor_version" property="vendorVersion" />
+        <result column="ip" property="ip" />
+        <result column="port" property="port" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="channel_num" property="channelNum" />
+    </resultMap>
+</mapper>

@@ -1,0 +1,36 @@
+<LogConfig>
+	<!-- 
+	 * {0}:请求用户
+	 * {1}:请求ip
+	 * {2}:请求参数
+	 * {3}：请求方法
+	 * {4}：操作时间
+	 * {5}：模块类型
+	 * {6}：
+	 -->
+	<LogOperationCategory cid="001" cname="安全管理">
+		<Operation oid="00101" oname="登录账号" desc="用户[{0}]登录,IP[{1}]"/>
+		<Operation oid="00102" oname="退出账号" desc="用户退出,IP[{1}]"/>
+	</LogOperationCategory>
+	<LogOperationCategory cid="002" cname="用户管理">
+		<Operation oid="00201" oname="用户" desc="查询用户"></Operation>
+		<Operation oid="00202" oname="用户" desc="用户{0}在{4}添加了新用户{2}"/>
+		<Operation oid="00203" oname="用户" desc="用户{0}在{4}删除了id={2}的用户信息"/>
+		<Operation oid="00204" oname="用户" desc="更新用户"></Operation>
+	</LogOperationCategory>
+	<LogOperationCategory cid="003" cname="运维管理">
+		<Operation oid="00301" oname="设备" desc="添加设备:{2},操作者:{0}"/>
+		<Operation oid="00302" oname="设备" desc="更新设备:{2},操作者:{0}"/>
+		<Operation oid="00303" oname="设备" desc="删除设备:id={2},操作者:{0}"/>
+	</LogOperationCategory>
+	<LogOperationCategory cid="004" cname="运营管理">
+		<Operation oid="00404" oname="客户" desc="添加客户：{2},操作者:{0}"/>
+		<Operation oid="00405" oname="客户" desc="删除客户：id={2},操作者:{0}"/>
+		<Operation oid="00406" oname="客户" desc="修改客户：{2},操作者:{0}"/>
+	</LogOperationCategory>
+	<LogOperationCategory cid="005" cname="文件管理">
+		<Operation oid="00501" oname="文件" desc="文件上传：操作者：{0}"/>
+		<Operation oid="00502" oname="文件" desc="文件下载：操作者：{0}"/>
+		<Operation oid="00503" oname="文件" desc="文件删除：操作者：{0}"/>
+	</LogOperationCategory>
+</LogConfig>

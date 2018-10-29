@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+	<!-- <bean name="myTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<bean class="com.bandweaver.tunnel.controller.quartz.MyTask" />
+		</property>
+		<property name="targetMethod" value="executeJob" />
+		是否并发
+		<property name="concurrent" value="false" />
+	</bean>
+
+
+	<bean id="myCronTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="myTask" />
+		<property name="cronExpression" value="0/5 * * * * ?" />
+	</bean>
+
+	<bean
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="myCronTrigger" />
+			</list>
+		</property>
+	</bean> -->
+	
+	 <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>
+	 
+	 
+</beans>

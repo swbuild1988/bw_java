@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionTaskMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT OMM_INSPECTION_TASK_SEQUENCE.currval from DUAL
+        </selectKey>
+        insert into t_omm_inspection_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planId != null">
+                plan_id,
+            </if>
+            <if test="taskTime != null">
+                task_time,
+            </if>
+            <if test="inspectTime != null">
+                inspect_time,
+            </if>
+            <if test="inspectManId != null">
+                inspect_man_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="processType != null">
+                process_type,
+            </if>
+            <if test="processStatus != null">
+                process_status,
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                process_instance_id,
+            </if>
+            <if test="isFinished != null">
+                is_finished,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planId != null">
+                #{planId},
+            </if>
+            <if test="taskTime != null">
+                #{taskTime},
+            </if>
+            <if test="inspectTime != null">
+                #{inspectTime},
+            </if>
+            <if test="inspectManId != null">
+                #{inspectManId},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="processType != null">
+                #{processType},
+            </if>
+            <if test="processStatus != null">
+                #{processStatus},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                #{isFinished},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 这段代码有问题，记得改 -->
+    <insert id="addWithBulk" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT All
+        <foreach collection="list" item="item" index="index" separator=" ">
+            insert into t_omm_inspection_task
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="planId != null">
+                    plan_id,
+                </if>
+                <if test="taskTime != null">
+                    task_time,
+                </if>
+                <if test="inspectTime != null">
+                    inspect_time,
+                </if>
+                <if test="inspectManId != null">
+                    inspect_man_id,
+                </if>
+                <if test="status != null">
+                    status,
+                </if>
+                <if test="isFinished != null">
+                    is_finished,
+                </if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="planId != null">
+                    #{planId},
+                </if>
+                <if test="taskTime != null">
+                    #{taskTime},
+                </if>
+                <if test="inspectTime != null">
+                    #{inspectTime},
+                </if>
+                <if test="inspectManId != null">
+                    #{inspectManId},
+                </if>
+                <if test="status != null">
+                    #{status},
+                </if>
+                <if test="isFinished != null">
+                    #{isFinished},
+                </if>
+            </trim>
+        </foreach>
+        SELECT 1 FROM dual
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask">
+        UPDATE t_omm_inspection_task
+        <set>
+            <if test="inspectTime != null">
+                inspect_time = #{inspectTime},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="describe != null and describe.trim() != ''">
+                describe = #{describe},
+            </if>
+            <if test="processStatus != null">
+                process_status = #{processStatus},
+            </if>
+            <if test="processInstanceId != null and processInstanceId.trim() != ''">
+                process_instance_id = #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                is_finished = #{isFinished}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getTask" resultMap="inspectionTaskMap">
+        SELECT *
+        FROM t_omm_inspection_task
+        WHERE id = #{taskId}
+    </select>
+
+    <select id="getTaskDto" resultMap="inspectionTaskDtoMap">
+        SELECT
+            a.*,
+            b.name        AS plan_name,
+            b.tunnel_id,
+            c.name        AS inspect_man_name,
+            d.id          AS record_id,
+            d.task_id,
+            d.create_time AS record_create_time,
+            d.record_time,
+            d.content     AS record_content,
+            d.defect_id,
+            d.section_id
+        FROM t_omm_inspection_task a
+            LEFT JOIN t_omm_inspection_plan b ON a.plan_id = b.plan_id
+            LEFT JOIN t_security_user c ON a.inspect_man_id = c.id
+            LEFT JOIN t_omm_inspection_record d ON a.id = d.task_id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getTaskByProcessInstance" resultMap="inspectionTaskMap">
+        SELECT *
+        FROM t_omm_inspection_task
+        WHERE process_instance_id = #{processInstanceId}
+    </select>
+
+
+    <select id="getTasksByInspectionPlan" resultMap="inspectionTaskMap">
+        SELECT a.*
+        FROM t_omm_inspection_task a, t_omm_inspection_plan b
+        WHERE a.plan_id = b.plan_id AND b.id = #{inspectionPlanId}
+    </select>
+
+    <select id="getTasksByInspectionPlan2" resultMap="inspectionTaskMap">
+        SELECT *
+        FROM t_omm_inspection_task
+        WHERE plan_id = #{planId}
+    </select>
+
+
+    <resultMap id="inspectionTaskMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask">
+        <id column="id" property="id"/>
+        <result column="plan_id" property="planId"/>
+        <result column="task_name" property="taskTime"/>
+        <result column="inspect_time" property="inspectTime"/>
+        <result column="inspect_man_id" property="inspectManId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+    </resultMap>
+
+
+    <resultMap id="inspectionTaskDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto">
+        <id column="id" property="id"/>
+        <result column="plan_id" property="planId"/>
+        <result column="plan_name" property="planName"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="task_name" property="taskTime"/>
+        <result column="inspect_time" property="inspectTime"/>
+        <result column="inspect_man_id" property="inspectManId"/>
+        <result column="inspect_man_name" property="inspectManName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="describe" property="describe"/>
+        <result column="process_instance_id" property="processInstanceId"/>
+        <result column="process_type" property="processType"/>
+        <result column="process_status" property="processStatus"/>
+        <result column="is_finished" property="isFinished"/>
+        <collection property="records" ofType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto">
+            <id column="record_id" property="id"/>
+            <result column="record_create_time" property="createTime"/>
+            <result column="record_time" property="recordTime"/>
+            <result column="task_id" property="taskId"/>
+            <result column="record_content" property="content"/>
+            <result column="defect_id" property="defectId"/>
+            <result column="section_id" property="sectionId"/>
+            <association property="defect" javaType="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto"
+                         column="defect_id"
+                         select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>
+        </collection>
+    </resultMap>
+    
+    <select id="getFinishedInspectionTaskSumByMonth" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	SELECT COUNT(1)
+    	FROM t_omm_inspection_task
+    	WHERE (create_time <![CDATA[ >= ]]> TRUNC(#{createTime}, 'MM') and create_time <![CDATA[ <= ]]> last_day(#{createTime}))
+    	AND is_finished = #{requestStatus}
+    </select>
+    
+    <select id="getInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	SELECT COUNT(1)
+    	FROM t_omm_inspection_task
+    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
+    </select>
+    
+	<select id="getFinishedInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+		SELECT COUNT(1)
+    	FROM t_omm_inspection_task
+    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
+    	AND is_finished = #{requestStatus}
+	</select>
+	
+	<select id="getInspectionTasksByVo" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto" >
+		SELECT
+			a.id,
+			b.name				AS planName,
+			b.tunnel_id			AS tunnelId,
+			c.name				AS inspectManName,
+			a.task_time 		AS taskTime,
+			a.start_time 		AS startTime,
+			a.end_time			AS endTime,
+			a.describe			AS describe,
+			a.process_status	AS processStatus,
+			a.is_finished		AS isFinished
+		FROM T_OMM_INSPECTION_TASK a
+		LEFT JOIN T_OMM_INSPECTION_PLAN b ON a.plan_id = b.plan_id
+		LEFT JOIN T_SECURITY_USER c ON a.inspect_man_id = c.id
+		<where>
+			<if test="tunnelId != null">
+	        	and b.tunnel_id = #{tunnelId}
+	        </if>
+	        <if test="name != null and name.trim() != ''">
+	        	and instr(c.name , #{name} )>0
+	        </if>
+	        <if test="isFinished != null">
+	        	and a.is_finished = #{isFinished}
+	        </if>
+	        <if test="startTime != null">
+                and a.start_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.start_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+        </where>
+        ORDER BY a.create_time DESC
+	</select>
+	
+	<select id="getInspectionTasksByTaskTime" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto" >
+		SELECT
+			a.id,
+			c.name				AS inspectManName,
+			a.task_time 		AS taskTime,
+			a.process_status	AS processStatus,
+			a.is_finished		AS isFinished
+		FROM T_OMM_INSPECTION_TASK a
+		LEFT JOIN T_SECURITY_USER c ON a.inspect_man_id = c.id
+		<where>
+	        <if test="startTime != null">
+                and a.task_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.task_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+        </where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.bandweaver.tunnel.dao.mam.MeasValueSIMapper">
+<cache/>
+	<insert id="addMeasValueSI"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI">
+		INSERT INTO T_MAM_MEASVALUE_SI
+		(time, Object_ID, cv)
+		VALUES (#{time}, #{objectId}, #{CV})
+	</insert>
+
+	<select id="getListByObjectIdAndTime" resultMap="measValueSIMap">
+		SELECT * FROM T_MAM_MEASVALUE_SI
+		<where>
+			<if test="objectId!=-1">
+				and OBJECT_ID = #{objectId}
+			</if>
+			<if test="startTime!=null">
+				and time <![CDATA[>=]]>#{startTime}
+			</if>
+			<if test="endTime!=null">
+				and time <![CDATA[<=]]>#{endTime}
+			</if>
+		</where>
+	</select>
+
+	<resultMap id="measValueSIMap"
+		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI">
+		<result column="time" property="time" />
+		<result column="object_id" property="objectId" />
+		<result column="cv" property="CV" />
+	</resultMap>
+
+
+	<insert id="addMeasValueSIBatch" useGeneratedKeys="false">
+		insert into T_MAM_MEASVALUE_SI (time, Object_ID, cv,status,statusc)
+		select a.*,0,0 from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.time},
+			#{item.objectId},
+			#{item.CV}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<select id="getByObjectId" resultMap="measValueSIMap">
+		select * from T_MAM_MEASVALUE_SI where object_id = #{objectId} order by time desc
+	</select>
+	
+	<delete id="deleteBatch">
+		delete from T_MAM_MEASVALUE_SI where time &lt;= #{time}
+	</delete>
+</mapper>

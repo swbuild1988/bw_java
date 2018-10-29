@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionRecordMapper">
+    <cache/>
+
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT OMM_INSPECTION_RECORD_SEQUENCE.currval from DUAL
+        </selectKey>
+        insert into t_omm_inspection_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="defectId != null">
+                defect_id,
+            </if>
+            <if test="taskId != null">
+                task_id,
+            </if>
+            <if test="sectionId != null">
+                section_id,
+            </if>
+            <if test="recordTime != null">
+                record_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="defectId != null">
+                #{defectId},
+            </if>
+            <if test="taskId != null">
+                #{taskId},
+            </if>
+            <if test="sectionId != null">
+                #{sectionId},
+            </if>
+            <if test="recordTime != null">
+                #{recordTime},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
+        UPDATE t_omm_inspection_record
+        <set>
+            <if test="taskId != null">
+                task_id = #{taskId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="defectId != null">
+                defect_id = #{defectId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="get" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
+        SELECT *
+        FROM t_omm_inspection_record
+        WHERE id = #{id}
+    </select>
+
+    <select id="getRecords" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
+        SELECT *
+        FROM t_omm_inspection_record
+        WHERE taskId = #{taskId}
+    </select>
+
+
+</mapper>

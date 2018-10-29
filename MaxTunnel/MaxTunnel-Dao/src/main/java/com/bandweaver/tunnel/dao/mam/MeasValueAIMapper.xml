@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.mam.MeasValueAIMapper">
+<cache/>
+    <insert id="addMeasValueAI" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI">
+        INSERT INTO T_MAM_MEASVALUE_AI
+        (time, Object_ID, cv)
+        VALUES (#{time}, #{objectId}, #{CV})
+    </insert>
+
+    <insert id="addMeasValueAIBatch" useGeneratedKeys="false">
+        insert into t_mam_measvalue_ai 
+        (time, object_id, CV)
+        select a.* from (
+        <foreach collection="list" item="item" index="index" close=")"
+                 open="(" separator="union">
+            select
+            #{item.time},
+            #{item.objectId},
+            #{item.CV}
+            from dual
+        </foreach>
+        )a
+    </insert>
+
+    <select id="getListByObjectIdAndTime" resultMap="measValueAIMap">
+        SELECT * FROM T_MAM_MEASVALUE_AI
+        <where>
+        	<if test="objectId != null">
+        		and OBJECT_ID = #{objectId}
+        	</if>
+        	<if test="startTime != null">
+				and time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and time &lt;= #{endTime}
+			</if>
+        </where>
+        order by time DESC
+    </select>
+    
+    <resultMap id="measValueAIMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI">
+        <result column="time" property="time" />
+        <result column="object_id" property="objectId" />
+        <result column="cv" property="CV" />
+    </resultMap>
+    
+    <select id="getByObjectId" resultMap="measValueAIMap">
+    	select * from T_MAM_MEASVALUE_AI where object_id = #{objectId} order by time DESC
+    </select>
+    
+    <delete id="deleteBatch">
+		delete from T_MAM_MEASVALUE_AI where time &lt;= #{time}
+	</delete>
+</mapper>

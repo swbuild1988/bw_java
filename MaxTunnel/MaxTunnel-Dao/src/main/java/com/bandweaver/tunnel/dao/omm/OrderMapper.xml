@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.OrderMapper">
+<cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Order">
+        INSERT INTO t_omm_order (
+            id,
+            tunnel_id,
+            type,
+            defect_id,
+            worker_id,
+            work_time,
+            status
+        )
+        VALUES (
+            #{id, jdbcType=VARCHAR},
+            #{tunnelId, jdbcType=NUMERIC},
+            #{type, jdbcType=NUMERIC},
+            #{defectId, jdbcType=NUMERIC},
+            #{workerId, jdbcType=NUMERIC},
+            #{workTime, jdbcType=TIMESTAMP},
+            #{status, jdbcType=NUMERIC}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Order">
+
+    </update>
+
+    <select id="getOrderDtosByTunnel" resultMap="orderDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS worker_name
+        FROM t_omm_order a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN t_security_user c ON a.worker_id = c.id
+        WHERE a.tunnel_id = #{tunnelId}
+    </select>
+
+    <select id="getOrderDtosByCondition" resultMap="orderDtoMap">
+        select a.*,
+        b.name AS tunnel_name,
+        c.name AS worker_name
+        from t_omm_order a
+        LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+        LEFT JOIN t_security_user c ON a.worker_id = c.id
+        <where>
+            <if test="tunnelId != null">
+                and a.tunnel_id = #{tunnelId}
+            </if>
+            <if test="type != null">
+                and a.type = #{type}
+            </if>
+            <if test="defectId != null">
+                and a.defect_id = #{defectId}
+            </if>
+            <if test="workerId != null">
+                and a.worker_id = #{workerId}
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and a.work_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.work_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="orderDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.OrderDto">
+        <id column="id" property="id"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="tunnel_name" property="tunnelName"/>
+        <result column="type" property="type"/>
+        <result column="defect_id" property="defectId"/>
+        <result column="worker_id" property="workerId"/>
+        <result column="worker_name" property="workerName"/>
+        <result column="work_time" property="workTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+</mapper>

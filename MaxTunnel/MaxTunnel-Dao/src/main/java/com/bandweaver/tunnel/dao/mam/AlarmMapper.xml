@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.mam.AlarmMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ALARM_DATE" jdbcType="TIMESTAMP" property="alarmDate" />
+    <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
+    <result column="ALARM_LEVEL" jdbcType="DECIMAL" property="alarmLevel" />
+    <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId" />
+    <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="cleaned" jdbcType="DECIMAL" property="cleaned" />
+    <result column="cleaned_DATE" jdbcType="TIMESTAMP" property="cleanedDate" />
+    <result column="alarm_source" jdbcType="VARCHAR" property="alarmSource" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ALARM_DATE" jdbcType="TIMESTAMP" property="alarmDate" />
+     <result column="alarm_name" jdbcType="VARCHAR" property="alarmName" />
+    <result column="ALARM_LEVEL" jdbcType="DECIMAL" property="alarmLevel" />
+    <result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId" />
+    <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="cleaned" jdbcType="DECIMAL" property="cleaned" />
+    <result column="cleaned_DATE" jdbcType="TIMESTAMP" property="cleanedDate" />
+    <result column="alarm_source" jdbcType="VARCHAR" property="alarmSource" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+    	column="TUNNEL_ID" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, ALARM_DATE,alarm_name, ALARM_LEVEL, TUNNEL_ID, OBJECT_ID, DESCRIPTION, cleaned, cleaned_DATE,alarm_source,longitude,latitude
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_MAM_ALARM
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_MAM_ALARM
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm">
+  		<!-- 新增的时候，返回主键 ,insert前打印一遍pojo，insert之后再打印一遍pojo，会发现id从null变为数据库里的id值-->
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT MAM_ALARM_SEQUENCE.currval from DUAL
+        </selectKey>
+    insert into T_MAM_ALARM (ID, ALARM_DATE, alarm_name,ALARM_LEVEL, 
+      TUNNEL_ID, OBJECT_ID, DESCRIPTION, 
+      cleaned, cleaned_DATE,alarm_source,longitude,latitude)
+    values (#{id,jdbcType=DECIMAL}, #{alarmDate,jdbcType=TIMESTAMP}, #{alarmName,jdbcType=VARCHAR}, #{alarmLevel,jdbcType=DECIMAL}, 
+      #{tunnelId,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
+      #{cleaned,jdbcType=DECIMAL}, #{cleanedDate,jdbcType=TIMESTAMP},
+      #{alarmSource,jdbcType=VARCHAR},#{longitude,jdbcType=VARCHAR},#{latitude,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm">
+  		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT MAM_ALARM_SEQUENCE.currval from DUAL
+        </selectKey>
+    insert into T_MAM_ALARM
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="alarmDate != null">
+        ALARM_DATE,
+      </if>
+      <if test="alarmName != null">
+        ALARM_name,
+      </if>
+      <if test="alarmLevel != null">
+        ALARM_LEVEL,
+      </if>
+      <if test="tunnelId != null">
+        TUNNEL_ID,
+      </if>
+      <if test="objectId != null">
+        OBJECT_ID,
+      </if>
+      <if test="description != null">
+        DESCRIPTION,
+      </if>
+      <if test="cleaned != null">
+        cleaned,
+      </if>
+      <if test="cleanedDate != null">
+        cleaned_DATE,
+      </if>
+      <if test="alarmSource != null">
+        alarm_source,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="alarmDate != null">
+        #{alarmDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmName != null">
+        #{alarmName,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmLevel != null">
+        #{alarmLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="tunnelId != null">
+        #{tunnelId,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cleaned != null">
+        #{cleaned,jdbcType=DECIMAL},
+      </if>
+      <if test="cleanedDate != null">
+        #{cleanedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmSource != null">
+         #{alarmSource},
+      </if>
+      <if test="longitude != null">
+        #{longitude},
+      </if>
+      <if test="latitude != null">
+        #{latitude},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm">
+    update T_MAM_ALARM
+    <set>
+      <if test="alarmDate != null">
+        ALARM_DATE = #{alarmDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmName != null">
+        ALARM_name = #{alarmName,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmLevel != null">
+        ALARM_LEVEL = #{alarmLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="tunnelId != null">
+        TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+      </if>
+      <if test="objectId != null">
+        OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null">
+        DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cleaned != null">
+        cleaned = #{cleaned,jdbcType=DECIMAL},
+      </if>
+      <if test="cleanedDate != null">
+        cleaned_DATE = #{cleanedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="alarmSource != null">
+        alarm_source = #{alarmSource},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm">
+    update T_MAM_ALARM
+    set ALARM_DATE = #{alarmDate,jdbcType=TIMESTAMP},
+      ALARM_name = #{alarmName,jdbcType=VARCHAR},
+      ALARM_LEVEL = #{alarmLevel,jdbcType=DECIMAL},
+      TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
+      OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      DESCRIPTION = #{description,jdbcType=VARCHAR},
+      cleaned = #{cleaned,jdbcType=DECIMAL},
+      cleaned_DATE = #{cleanedDate,jdbcType=TIMESTAMP},
+      alarm_source = #{alarmSource},
+      longitude = #{longitude},
+      latitude = #{latitude}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getCountByTunnelAndLevel" resultType="Int">
+  	select count(1) from T_MAM_ALARM where tunnel_id = #{tunnelId} and alarm_level = #{level}
+  </select>
+  
+  <insert id="addBatch" useGeneratedKeys="false">
+    insert into T_MAM_ALARM
+    (ID, alarm_date,alarm_name,alarm_level,tunnel_id,object_id,description,cleaned,cleaned_date,alarm_source,longitude,latitude)
+    select MAM_ALARM_SEQUENCE.nextval,a.* from (
+    <foreach collection="list" item="item" index="index" close=")"
+             open="(" separator="union">
+        select
+        #{item.alarmDate},
+        #{item.alarmName},
+        #{item.alarmLevel},
+        #{item.tunnelId},
+        #{item.objectId},
+        #{item.description},
+        #{item.cleaned},
+        #{item.cleanedDate},
+        #{item.alarmSource},
+        #{item.longitude},
+        #{item.latitude}
+        from dual
+    </foreach>
+    )a
+   </insert>
+  
+  
+  <select id="getByCondition" resultMap="DtoResultMap">
+  	select * from T_MAM_ALARM
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="startTime != null">
+  			and alarm_date &gt; #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and alarm_date &lt; #{endTime}
+  		</if>
+  		<if test="alarmLevel != null">
+  			and alarm_level = #{alarmLevel}
+  		</if>
+  		<if test="tunnelId != null">
+  			and tunnel_id = #{tunnelId}
+  		</if>
+  		<if test="objectId != null">
+  			and object_id = #{objectId}
+  		</if>
+  		<if test="cleaned != null">
+  			and cleaned = #{cleaned}
+  		</if>
+  	</where>
+  	order by alarm_date desc
+  </select>
+  
+  <select id="getAllAlarm" resultMap="BaseResultMap">
+  	select * from T_MAM_ALARM
+  </select>
+  
+</mapper> 

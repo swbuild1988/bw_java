@@ -1,0 +1,6 @@
+{
+    "ApiUrl": "http://localhost:8080/",
+    "RouterBase": "/MaxTunnel-Web/",
+    "MQServerAddress": "ws://192.168.0.41:15674/ws",
+    "isRealData": "true"
+}

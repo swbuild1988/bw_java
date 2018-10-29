@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.CableMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.Cable">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CABLE_NAME" jdbcType="VARCHAR" property="cableName" />
+    <result column="CABLE_LENGTH" jdbcType="DECIMAL" property="cableLength" />
+    <result column="CABLE_STATUS" jdbcType="DECIMAL" property="cableStatus" />
+    <result column="CABLE_LOCATION" jdbcType="VARCHAR" property="cableLocation" />
+    <result column="CONTRACT_ID" jdbcType="VARCHAR" property="contractId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.CableDto">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CABLE_NAME" jdbcType="VARCHAR" property="cableName" />
+    <result column="CABLE_LENGTH" jdbcType="DECIMAL" property="cableLength" />
+    <result column="CABLE_STATUS" jdbcType="DECIMAL" property="cableStatus" />
+    <result column="CABLE_LOCATION" jdbcType="VARCHAR" property="cableLocation" />
+    <result column="CONTRACT_ID" jdbcType="VARCHAR" property="contractId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <association property="contract" javaType="com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto" column="CONTRACT_ID"
+    	select="com.bandweaver.tunnel.dao.oam.CableContractMapper.getDtoById"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, CABLE_NAME, CABLE_LENGTH, CABLE_STATUS, CABLE_LOCATION, CONTRACT_ID, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_OAM_CABLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_OAM_CABLE
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Cable">
+    insert into T_OAM_CABLE (ID, CABLE_NAME, CABLE_LENGTH, 
+      CABLE_STATUS, CABLE_LOCATION, CONTRACT_ID, 
+      CRT_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{cableName,jdbcType=VARCHAR}, #{cableLength,jdbcType=DECIMAL}, 
+      #{cableStatus,jdbcType=DECIMAL}, #{cableLocation,jdbcType=VARCHAR}, #{contractId,jdbcType=VARCHAR}, 
+      #{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Cable">
+    insert into T_OAM_CABLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="cableName != null">
+        CABLE_NAME,
+      </if>
+      <if test="cableLength != null">
+        CABLE_LENGTH,
+      </if>
+      <if test="cableStatus != null">
+        CABLE_STATUS,
+      </if>
+      <if test="cableLocation != null">
+        CABLE_LOCATION,
+      </if>
+      <if test="contractId != null">
+        CONTRACT_ID,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cableName != null">
+        #{cableName,jdbcType=VARCHAR},
+      </if>
+      <if test="cableLength != null">
+        #{cableLength,jdbcType=DECIMAL},
+      </if>
+      <if test="cableStatus != null">
+        #{cableStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="cableLocation != null">
+        #{cableLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null">
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Cable">
+    update T_OAM_CABLE
+    <set>
+      <if test="cableName != null">
+        CABLE_NAME = #{cableName,jdbcType=VARCHAR},
+      </if>
+      <if test="cableLength != null">
+        CABLE_LENGTH = #{cableLength,jdbcType=DECIMAL},
+      </if>
+      <if test="cableStatus != null">
+        CABLE_STATUS = #{cableStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="cableLocation != null">
+        CABLE_LOCATION = #{cableLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null">
+        CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Cable">
+    update T_OAM_CABLE
+    set CABLE_NAME = #{cableName,jdbcType=VARCHAR},
+      CABLE_LENGTH = #{cableLength,jdbcType=DECIMAL},
+      CABLE_STATUS = #{cableStatus,jdbcType=DECIMAL},
+      CABLE_LOCATION = #{cableLocation,jdbcType=VARCHAR},
+      CONTRACT_ID = #{contractId,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="getCableDtoListBySectionId" resultMap="DtoResultMap">
+  	select t.* from t_oam_cable t 
+	left join t_oam_cable_section a on t.id = a.cable_id
+	left join t_common_section b on a.section_id = b.id
+	where b.id = #{id}
+  </select>
+  
+   <insert id="addBatch" useGeneratedKeys="false">
+		insert into t_oam_cable
+		(id,cable_name,cable_length,cable_status,cable_location,contract_id,crt_time)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.id},
+			#{item.cableName},
+			#{item.cableLength},
+			#{item.cableStatus},
+			#{item.cableLocation},
+			#{item.contractId},
+			#{item.crtTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<select id="getCableDetByContractId" resultMap="DtoResultMap">
+		select * from t_oam_cable where contract_id = #{id}
+	</select>
+	
+	<delete id="deleteByContractId">
+		delete from t_oam_cable where contract_id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SysParas>
+    <Category name="lang">
+        <Para name="lang" value="zh_CN" />
+    </Category>
+    <Category name="supermap">
+        <Para name="ip" value="192.168.0.41" />
+        <Para name="port" value="8090" />
+    </Category>
+    <Category name="rabbitmq">
+        <Para name="isused" value="false" />
+    </Category>
+</SysParas>

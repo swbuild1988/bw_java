@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.TunnelMapper">
+<cache/>
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="LENGTH" jdbcType="DECIMAL" property="length" />
+    <result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+    <result column="CONSTRUCT_ID" jdbcType="DECIMAL" property="constructId" />
+    <result column="OPERATION_ID" jdbcType="DECIMAL" property="operationId" />
+    <result column="camera" jdbcType="VARCHAR" property="camera" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.TunnelDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="LENGTH" jdbcType="DECIMAL" property="length" />
+    <result column="RESPONSIBILITY_ID" jdbcType="DECIMAL" property="responsibilityId" />
+    <result column="CONSTRUCT_ID" jdbcType="DECIMAL" property="constructId" />
+    <result column="OPERATION_ID" jdbcType="DECIMAL" property="operationId" />
+    <result column="camera" jdbcType="VARCHAR" property="camera" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <association property="responsibility" javaType="Staff" column="RESPONSIBILITY_ID" 
+    	select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+    <association property="construct" javaType="Company" column="CONSTRUCT_ID"
+    	select="com.bandweaver.tunnel.dao.common.CompanyMapper.selectByPrimaryKey"/>
+    <association property="operation" javaType="Company" column="OPERATION_ID"
+    	select="com.bandweaver.tunnel.dao.common.CompanyMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+   <resultMap id="SimpleDtoMap" type="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
+    
+    
+  <sql id="Base_Column_List">
+    ID, NAME, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID,camera, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COMMON_TUNNEL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_COMMON_TUNNEL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
+    insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, 
+      RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, camera,
+      CRT_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{length,jdbcType=DECIMAL}, 
+      #{responsibilityId,jdbcType=DECIMAL}, #{constructId,jdbcType=DECIMAL}, #{operationId,jdbcType=DECIMAL},  #{camera,jdbcType=VARCHAR},
+      #{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
+    <!-- 新增的时候，返回主键 -->
+    <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+      SELECT COMMON_TUNNEL_SEQUENCE.currval from DUAL
+    </selectKey>
+    insert into T_COMMON_TUNNEL
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="length != null">
+        LENGTH,
+      </if>
+      <if test="responsibilityId != null">
+        RESPONSIBILITY_ID,
+      </if>
+      <if test="constructId != null">
+        CONSTRUCT_ID,
+      </if>
+      <if test="operationId != null">
+        OPERATION_ID,
+      </if>
+      <if test="camera != null">
+        camera,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="responsibilityId != null">
+        #{responsibilityId,jdbcType=DECIMAL},
+      </if>
+      <if test="constructId != null">
+        #{constructId,jdbcType=DECIMAL},
+      </if>
+      <if test="operationId != null">
+        #{operationId,jdbcType=DECIMAL},
+      </if>
+      <if test="camera != null">
+        #{camera,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
+    update T_COMMON_TUNNEL
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null">
+        LENGTH = #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="responsibilityId != null">
+        RESPONSIBILITY_ID = #{responsibilityId,jdbcType=DECIMAL},
+      </if>
+      <if test="constructId != null">
+        CONSTRUCT_ID = #{constructId,jdbcType=DECIMAL},
+      </if>
+      <if test="operationId != null">
+        OPERATION_ID = #{operationId,jdbcType=DECIMAL},
+      </if>
+      <if test="camera != null">
+        camera = #{camera,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
+    update T_COMMON_TUNNEL
+    set NAME = #{name,jdbcType=VARCHAR},
+      LENGTH = #{length,jdbcType=DECIMAL},
+      RESPONSIBILITY_ID = #{responsibilityId,jdbcType=DECIMAL},
+      CONSTRUCT_ID = #{constructId,jdbcType=DECIMAL},
+      OPERATION_ID = #{operationId,jdbcType=DECIMAL},
+      camera = #{camera,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+<cache />
+    <select id="getList" resultMap="SimpleDtoMap">
+        SELECT id,name from t_common_tunnel
+    </select>
+
+    
+    <select id="getTunnelById" resultMap="SimpleDtoMap">
+    	select id,name from t_common_tunnel where id = #{id}
+    </select>
+
+	<select id="getNameById" resultType="String">
+		select name from t_common_tunnel where id = #{id}
+	</select>
+	
+	
+	<select id="getDtoById" resultMap="DtoResultMap">
+		select * from t_common_tunnel where id = #{id}
+	</select>
+	
+	<select id="getDtoList" resultMap="DtoResultMap">
+		select * from t_common_tunnel
+	</select>
+	
+	
+	<select id="getByCondition" resultMap="DtoResultMap">
+		select * from t_common_tunnel
+		<where>
+			<if test="id != null">
+				and = #{id}
+			</if>
+			<if test="name != null and name.trim() != ''">
+				and instr(name,#{name})>0
+			</if>
+			<if test="responsibilityId != null">
+				and RESPONSIBILITY_ID = #{responsibilityId}
+			</if>
+			<if test="constructId != null">
+				and CONSTRUCT_ID = #{constructId}
+			</if>
+			<if test="operationId != null">
+				and OPERATION_ID = #{operationId}
+			</if>
+		</where>
+		order by crt_time DESC
+	</select>
+	
+	<delete id="deleteBatch">
+		delete from t_common_tunnel where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</delete>
+	
+	<select id="getByName" resultMap="BaseResultMap">
+		select * from t_common_tunnel where name = #{name}
+	</select>
+	
+</mapper>	

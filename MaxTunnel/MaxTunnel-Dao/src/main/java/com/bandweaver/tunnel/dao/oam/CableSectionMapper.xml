@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.CableSectionMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.CableSection">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="CABLE_ID" jdbcType="VARCHAR" property="cableId" />
+    <result column="SECTION_ID" jdbcType="DECIMAL" property="sectionId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, CABLE_ID, SECTION_ID
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_OAM_CABLE_SECTION
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_OAM_CABLE_SECTION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableSection">
+    insert into T_OAM_CABLE_SECTION (ID, CABLE_ID, SECTION_ID
+      )
+    values (#{id,jdbcType=DECIMAL}, #{cableId,jdbcType=VARCHAR}, #{sectionId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableSection">
+    insert into T_OAM_CABLE_SECTION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="cableId != null">
+        CABLE_ID,
+      </if>
+      <if test="sectionId != null">
+        SECTION_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="cableId != null">
+        #{cableId,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionId != null">
+        #{sectionId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableSection">
+    update T_OAM_CABLE_SECTION
+    <set>
+      <if test="cableId != null">
+        CABLE_ID = #{cableId,jdbcType=VARCHAR},
+      </if>
+      <if test="sectionId != null">
+        SECTION_ID = #{sectionId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableSection">
+    update T_OAM_CABLE_SECTION
+    set CABLE_ID = #{cableId,jdbcType=VARCHAR},
+      SECTION_ID = #{sectionId,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+    <insert id="addBatch" useGeneratedKeys="false">
+		insert into T_OAM_CABLE_SECTION
+		(id,cable_id,section_id)
+		select OAM_CABLE_SECTION_SQ.nextval,a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.cableId},
+			#{item.sectionId}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<select id="getCountBySectionId" resultType="Int">
+		select count(1) from T_OAM_CABLE_SECTION where section_id = #{id}
+	</select>
+	
+	<select id="getSectionIdsByCableId" resultType="Int">
+		select section_id from T_OAM_CABLE_SECTION where  cable_id = #{cableId}
+	</select>
+	
+	<delete id="deleteByCableId">
+		delete from T_OAM_CABLE_SECTION where cable_id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,58 @@
+package com.bandweaver.tunnel.common.biz.itf.mam.alarm;
+
+import java.util.List;
+
+import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
+import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
+import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
+import com.github.pagehelper.PageInfo;
+
+public interface AlarmService {
+
+	void add(Alarm alarm);
+
+	/**根据管廊id和告警等级查询统计 
+	 * @param tunnelId 管廊id
+	 * @param level 等级id
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年8月14日
+	 */
+	int getCountByTunnelAndLevel(Integer tunnelId, int level);
+
+	/**批量添加 
+	 * @param list   
+	 * @author shaosen
+	 * @Date 2018年8月14日
+	 */
+	void addBatch(List<Alarm> list);
+
+	/**分页查询 
+	 * @param vo
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年8月14日
+	 */
+	PageInfo<AlarmDto> dataGrid(AlarmVo vo);
+
+	/**清除告警 
+	 * @param id
+	 * @param description   
+	 * @author shaosen
+	 * @Date 2018年10月16日
+	 */
+	void cleanAlarm(Integer id, String description);
+
+	/**查询所有未清除的告警 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年10月16日
+	 */
+	List<Alarm> getAllNonCleanedAlarm();
+
+	Alarm getById(Integer id);
+
+	void cleanAlarm(Alarm alarm);
+
+
+}
