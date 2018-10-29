@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="MaxTunnel-Web:war">
-    <output-path>$PROJECT_DIR$/MaxTunnel-Web/target</output-path>
-    <root id="archive" name="MaxTunnel-Web.war">
-      <element id="artifact" artifact-name="MaxTunnel-Web:war exploded" />
-    </root>
-  </artifact>
-</component>
