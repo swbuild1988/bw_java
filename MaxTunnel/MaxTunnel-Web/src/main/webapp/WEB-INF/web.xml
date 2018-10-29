@@ -3,8 +3,68 @@
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1" metadata-complete="true">
   <welcome-file-list>
-    <welcome-file>/WEB-INF/html/hello.html</welcome-file>
+
+    <welcome-file>./index.html</welcome-file>
   </welcome-file-list>
+
+  <!-- shiro过滤器定义 -->
+  <filter>
+  <!-- 这里的 filter-name 要和 spring 的 applicationContext.xml 里的 org.apache.shiro.spring.web.ShiroFilterFactoryBean
+			的 bean name 相同 -->
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Spring配置文件 -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:context/applicationContext.xml</param-value>
+  </context-param>
+
+  <!-- 编码过滤器 -->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- 跨域过滤器 -->
+  <filter>
+    <filter-name>cors</filter-name>
+    <filter-class>com.bandweaver.tunnel.common.platform.cors.CorsFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>cors</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Spring监听器，加了shiro之后必须要有 -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- 添加对springmvc的支持 -->
+  <!-- 因为加了shiro的缘故，所以要将spring加载项和springmvc的分开，
+       不然ContextLoaderListener会和DispatchServlet会重复加载，
+       从而导致程序错误。
+   -->
+
   <!-- 配置DispatcherServlet -->
   <servlet>
     <servlet-name>tunnel-manager</servlet-name>
@@ -15,8 +75,9 @@
      -->
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:spring/spring-*.xml</param-value>
+      <param-value>classpath:spring/spring-controller.xml</param-value>
     </init-param>
+
   </servlet>
 
   <servlet-mapping>
@@ -24,4 +85,17 @@
     <!-- 默认匹配所有的请求 -->
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+   <!--错误跳转页面-->
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/index.html</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/index.html</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/index.html</location>
+  </error-page>
 </web-app>

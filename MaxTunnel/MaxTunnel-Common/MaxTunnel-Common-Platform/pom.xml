@@ -11,5 +11,11 @@
 
     <artifactId>MaxTunnel-Common-Platform</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.bandweaver</groupId>
+            <artifactId>MaxTunnel-Common-Biz</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>

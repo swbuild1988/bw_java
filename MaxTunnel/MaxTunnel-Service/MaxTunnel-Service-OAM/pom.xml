@@ -11,5 +11,28 @@
 
     <artifactId>MaxTunnel-Service-OAM</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.bandweaver</groupId>
+            <artifactId>MaxTunnel-Service-Common</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bandweaver</groupId>
+            <artifactId>MaxTunnel-Common-Biz</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bandweaver</groupId>
+            <artifactId>MaxTunnel-Common-Platform</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bandweaver</groupId>
+            <artifactId>MaxTunnel-Dao</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

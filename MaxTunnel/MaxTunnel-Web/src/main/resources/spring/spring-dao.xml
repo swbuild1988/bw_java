@@ -8,7 +8,7 @@
     http://www.springframework.org/schema/context/spring-context.xsd">
     <!-- 配置整合mybatis过程 -->
     <!-- 1.配置数据库相关参数properties的属性：${url} -->
-    <context:property-placeholder location="classpath:properties/jdbc.properties" />
+    <!--<context:property-placeholder location="classpath:properties/jdbc.properties" />-->
 
     <!-- 2.数据库连接池 -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -29,6 +29,7 @@
         <property name="acquireRetryAttempts" value="2" />
     </bean>
 
+
     <!-- 3.配置SqlSessionFactory对象 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 注入数据库连接池 -->
@@ -38,7 +39,8 @@
         <!-- 扫描pojo包 使用别名 -->
         <property name="typeAliasesPackage" value="com.bandweaver.tunnel.common.biz.pojo" />
         <!-- 扫描sql配置文件:mapper需要的xml文件 -->
-        <property name="mapperLocations" value="classpath:com/bandweaver/tunnel/dao/*.xml" />
+       <!--<property name="mapperLocations" value="classpath:mybatis/mapper/**/*.xml" /> -->
+         <property name="mapperLocations" value="classpath:com/bandweaver/tunnel/dao/**/*.xml" />
     </bean>
 
     <!-- 4.配置扫描Dao接口包，动态实现Dao接口，注入到spring容器中 -->
@@ -46,6 +48,6 @@
         <!-- 注入sqlSessionFactory -->
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
         <!-- 给出需要扫描Dao接口包 -->
-        <property name="basePackage" value="com.bandweaver.tunnel.dao" />
+        <property name="basePackage" value="com.bandweaver.tunnel.dao.**" />
     </bean>
 </beans>
