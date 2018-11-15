@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.common.biz.vo.mam.report;
 
 import java.util.Date;
+import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
@@ -13,8 +14,15 @@ public class MeasObjReportVo extends BaseVo{
 	private Integer id;
 
     private Integer objectId;
+    
+    private String name;
+    
+    private Integer tunnelId;
 
     private Integer objectType;
+    
+    /**接收objtypeId集合*/
+    private List<Integer> objtypeIds;
 
     private Integer timeType;
     
@@ -44,7 +52,23 @@ public class MeasObjReportVo extends BaseVo{
         this.objectId = objectId;
     }
 
-    public Integer getObjectType() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
+
+	public Integer getObjectType() {
         return objectType;
     }
 
@@ -99,4 +123,14 @@ public class MeasObjReportVo extends BaseVo{
     public void setAvgValue(Double avgValue) {
         this.avgValue = avgValue;
     }
+
+	public List<Integer> getObjtypeIds() {
+		return objtypeIds;
+	}
+
+	public void setObjtypeIds(List<Integer> objtypeIds) {
+		this.objtypeIds = objtypeIds;
+	}
+    
+    
 }

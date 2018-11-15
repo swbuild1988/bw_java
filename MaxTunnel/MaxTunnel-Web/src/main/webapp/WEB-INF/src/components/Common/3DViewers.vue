@@ -254,7 +254,7 @@ export default {
                 infoBox:_this.infoBox
 
             });
-            console.log('11')
+
             _this.scene = _this.viewer.scene;
 
             if (_this.undergroundMode.enable) {

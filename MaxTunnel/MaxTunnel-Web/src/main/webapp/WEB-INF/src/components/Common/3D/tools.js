@@ -26,10 +26,30 @@ export default {
         }
     },
     methods:{
+        //设置相机视角
+        setViewAngle(){
+            let { scene,cameraPosition } = this;
+
+            if(Cesium.defined(scene)){
+                scene.camera.setView({
+                    destination : new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude,cameraPosition.latitude,cameraPosition.height),
+                    orientation : {
+                        heading : cameraPosition.heading,
+                        pitch : cameraPosition.pitch,
+                        roll : cameraPosition.roll
+                    }
+                });
+            }
+        },
+        //隐藏所有实体
+        hideAllEntitys(){
+            let {　viewer　} = this;
+
+            viewer.entities._entities._array.forEach(entitie => entitie._show = true);
+        },
         showDesModel(){
             this.model.show.state = true;
         },
-
         removeByEntityId(entity){
             let { viewer } = this;
 
@@ -37,10 +57,11 @@ export default {
             viewer.entities.remove(entity);
         },
         eventNotie(){
-            let _this = this
+            let _this = this;
+            let day = Vue.prototype.VMConfig.searchEventsDay;
 
-            getJson(`events`).then(data => {
-
+            getJson(`events/day/${ day }`).then(data => {
+                console.log('data',data);
                 data.forEach( event => {
                     _this.addEventEntitys(event); //添加事件实体
                     Vue.prototype.IM.addInformation('events',event);
@@ -48,22 +69,23 @@ export default {
 
             })
         },
-        addEventEntitys(eventObj){
+        addEventEntitys(event){
             let { viewer } = this;
-            let color = 'red';
+            let height = Vue.prototype.VMConfig.entityHeight;
+            let color = event.level == 1 ? '#57a3f3' :( event.level == 2 ? '#f90' : '#ed4014' );
 
             viewer.entities.add( {
-                id:eventObj.id,
-                _moId:eventObj.id,
+                id:event.id,
+                _moId:event.id,
                 messageType:'events',
-                position : Cesium.Cartesian3.fromDegrees( parseFloat(eventObj.longitude), parseFloat(eventObj.latitude), 0 ),
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( event.longitude ), parseFloat( event.latitude ), parseFloat( height ) ),
                 ellipse : {
-                    semiMinorAxis :700000.0 ,
-                    semiMajorAxis : 700000.0,
-                    height : 0.0,
+                    semiMinorAxis :7.0 ,
+                    semiMajorAxis : 7.0,
+                    height : height,
                     outline : true,
-                    outlineColor : Cesium.Color.fromAlpha( Cesium.Color.fromCssColorString( color ), .4 ),
-                    material : Cesium.Color.fromAlpha( Cesium.Color.fromCssColorString( color ), .3 )
+                    outlineColor : Cesium.Color.fromAlpha( Cesium.Color.fromCssColorString( color ), .8 ),
+                    material : Cesium.Color.fromAlpha( Cesium.Color.fromCssColorString( color ), .6 )
                 }
             } );
         }

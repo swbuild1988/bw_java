@@ -44,8 +44,8 @@
 	<bean id = "activitiService" class="com.bandweaver.tunnel.service.common.ActivitiServiceImpl"/>
 	<bean id = "reqHistoryService" class="com.bandweaver.tunnel.service.oam.customer.ReqHistoryServiceImpl"/>
 	<bean id = "inspectionPlanService" class="com.bandweaver.tunnel.service.omm.inspection.InspectionPlanServiceImpl"/>
-	<bean id = "firePlanService" class="com.bandweaver.tunnel.service.em.fireplan.FirePlanServiceImpl"/>
 	<bean id = "emPlanService" class="com.bandweaver.tunnel.service.em.EmPlanServiceImpl"/>
+	<bean id = "taskEntrance" class="com.bandweaver.tunnel.controller.quartz.TaskEntrance"/>
 
 	<!-- activitiService配置完了，再引入activiti的配置 -->
 

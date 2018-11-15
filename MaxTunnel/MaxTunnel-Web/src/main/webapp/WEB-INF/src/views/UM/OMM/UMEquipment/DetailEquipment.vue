@@ -118,8 +118,8 @@
   import SmViewer from '../../../../components/Common/3D/3DViewer'
   import {URL_CONFIG} from '../../../../../static/3DMap/js/3DMapConfig'
   import equipmentIMg from "../../../../assets/UM/equipment.png"
-  import { TunnelService } from '../../../../services/tunnels'
-  import { EquipmentService } from '../../../../services/equipments'
+  import { TunnelService } from '../../../../services/tunnelService'
+  import { EquipmentService } from '../../../../services/equipmentService'
 
   export default {
     data() {

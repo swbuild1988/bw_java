@@ -56,7 +56,8 @@
 </template>
 
 <script>
-// import BG from '../../assets/UM/BG.jpg'
+import { EnterGalleryService } from '../../../services/enterGalleryService'
+import { CustomerService } from '../../../services/customerService'
 export default {
   name: "customerChoose",
   props: {
@@ -101,23 +102,27 @@ export default {
   },
   methods: {
     getCompany(){
-      this.axios.get('/companies').then(res=>{
-          let{ code,data } = res.data
-          if(code==200){
-              this.company = data;
-          }
-      })
+      let _this = this
+      EnterGalleryService.getCompanys().then(
+        result=>{
+          _this.company = result
+        },
+        error=>{
+          _this.Log.info(error)
+        })
     },
     queryList() {
-          this.axios.post('customers/datagrid',(this.params)).then( response => {
-              let { code,data } = response.data;
-              if(code==200){
-                  for( let index in data.list ){
-                      data.list[index].crtTime = new Date( data.list[index].crtTime ).format( "yyyy-MM-dd hh:mm:s" )
-                  }
-                  this.customers = data.list;
-                  this.page.pageTotal = data.total
-              }
+        let _this = this
+        CustomerService.customerDatagrid(this.params).then(
+          result=>{
+            for( let index in result.list ){
+                result.list[index].crtTime = new Date( result.list[index].crtTime ).format( "yyyy-MM-dd hh:mm:s" )
+            }
+            _this.customers = result.list
+            _this.page.pageTotal = result.total
+          },
+          error=>{
+            _this.Log.info(error)
           })
       },
     handlePage(value) {

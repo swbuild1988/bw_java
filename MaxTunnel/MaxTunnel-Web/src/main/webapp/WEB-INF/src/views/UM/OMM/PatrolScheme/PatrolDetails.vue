@@ -85,9 +85,9 @@ import types from "../../../../../static/Enum.json";
 import SmViewer from "../../../../components/Common/3D/3DViewer";
 import { URL_CONFIG } from "../../../../../static/3DMap/js/3DMapConfig";
 import { setViewAngle } from "../../../../scripts/commonFun";
-import { TunnelService } from '../../../../services/tunnels';
-import { PatrolService } from '../../../../services/patrols';
-import { EnumsService } from '../../../../services/enums';
+import { TunnelService } from '../../../../services/tunnelService';
+import { PatrolService } from '../../../../services/patrolService';
+import { EnumsService } from '../../../../services/enumsService';
 export default {
   name: "plans",
   data() {

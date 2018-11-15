@@ -24,10 +24,9 @@
     margin-top: 10px;
     padding: 10px;
 }
-/*table字体大小*/
-.ivu-table,.ivu-btn-small,.ivu-form .ivu-form-item-label,.ivu-form-item-content,.ivu-checkbox-wrapper,.ivu-btn,.ivu-dropdown-item,.ivu-select-item,.planDec,.ivu-page,
-.ivu-tabs-nav-container,.ivu-menu-item{
-    font-size: 16px !important;
+.containerBox{
+    min-height: 100%;
+    position: relative;
 }
 .ivu-menu{
   font-size: 18px !important;

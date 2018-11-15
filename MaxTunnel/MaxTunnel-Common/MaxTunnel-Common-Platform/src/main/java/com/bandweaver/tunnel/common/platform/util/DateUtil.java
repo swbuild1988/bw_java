@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 
 public class DateUtil {
 	
@@ -543,6 +547,11 @@ public class DateUtil {
         return formatter.format(d);
     }
     
+    public static String getDate2YYYYMMdd(Date d){
+    	DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    	return formatter.format(d);
+    }
+    
     
     
     /**获取前n个小时的时间 
@@ -600,4 +609,107 @@ public class DateUtil {
   		c.set(Calendar.MILLISECOND, 999);
   		return c.getTime();
   	}
+    
+    
+    
+
+	/**按照周期分别查找 
+	 * @param em TimeEnum枚举
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年11月6日
+	 */
+	public static List<Map<String, Date>> getStartTimeAndEndTimeByIntervalvalue(TimeEnum em) {
+		List<Map<String, Date>> list = new ArrayList<>();
+		if (em == TimeEnum.WEEK) {
+			Date beginDayOfWeek = DateUtil.getBeginDayOfWeek();// 获取本周的开始时间
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", beginDayOfWeek);
+			map.put("endDay", new Date());
+			list.add(map);
+			list = getStartTimeAndEndTimeByWeek(beginDayOfWeek, list);
+		} else if (em == TimeEnum.MONTH) {
+			Date beginDayOfMonth = DateUtil.getBeginDayOfMonth();
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", beginDayOfMonth);
+			map.put("endDay", new Date());
+			list.add(map);
+			list = getStartTimeAndEndTimeByMonth(beginDayOfMonth, list);
+		} else if (em == TimeEnum.DAY) {
+			Date dayBegin = DateUtil.getDayBegin();
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", dayBegin);
+			map.put("endDay", new Date());
+			list.add(map);
+			list = getStartTimeAndEndTimeByDay(dayBegin, list);
+		}
+
+		return list;
+	}
+	
+	
+	private static List<Map<String, Date>> getStartTimeAndEndTimeByDay(Date date, List<Map<String, Date>> list) {
+		Date endDay = DateUtil.getFrontDay(date, 1);// 返回某个日期前几天的日期
+		Date startDay = DateUtil.getDayStartTime(endDay);
+
+		if (startDay.after(DateUtil.getBeginDayOfYear())) {
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", startDay);
+			map.put("endDay", date);
+			list.add(map);
+			getStartTimeAndEndTimeByDay(startDay, list);
+		} else {
+			Map<String, Date> lastMap = new HashMap<>();
+			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
+			lastMap.put("endDay", date);
+			list.add(lastMap);
+		}
+		return list;
+	}
+	
+	
+	private static List<Map<String, Date>> getStartTimeAndEndTimeByMonth(Date date, List<Map<String, Date>> list) {
+
+		Date endDay = DateUtil.getFrontDay(date, 1);// 返回某个日期前几天的日期
+		Date startDay = DateUtil.getBeginDayOfMonth(endDay);
+
+		if (startDay.after(DateUtil.getBeginDayOfYear())) {
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", startDay);
+			map.put("endDay", date);
+			list.add(map);
+			// 继续找上月开始时间和结束时间
+			getStartTimeAndEndTimeByMonth(startDay, list);
+		} else {
+			// 获取本年第一月开始日期和结束日期
+			Map<String, Date> lastMap = new HashMap<>();
+			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
+			lastMap.put("endDay", date);
+			list.add(lastMap);
+		}
+		return list;
+	}
+	
+	
+	private static List<Map<String, Date>> getStartTimeAndEndTimeByWeek(Date date, List<Map<String, Date>> list) {
+
+		Date endDay = DateUtil.getFrontDay(date, 1);// 返回某个日期前几天的日期
+		Date startDay = DateUtil.getBeginDayOfWeek(endDay);
+
+		if (startDay.after(DateUtil.getBeginDayOfYear())) {
+			Map<String, Date> map = new HashMap<>();
+			map.put("startDay", startDay);
+			map.put("endDay", date);
+			list.add(map);
+			// 继续找上周开始时间和结束时间
+			getStartTimeAndEndTimeByWeek(startDay, list);
+		} else {
+			// 获取本年第一周开始日期和结束日期
+			Map<String, Date> lastMap = new HashMap<>();
+			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
+			lastMap.put("endDay", date);
+			list.add(lastMap);
+		}
+		return list;
+	}
 }

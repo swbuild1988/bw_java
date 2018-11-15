@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnels'
+import { TunnelService } from '../../../../services/tunnelService'
 import wheelRobot from '../../../../assets/UM/wheelRobot.jpg'
 import snakeRobot from '../../../../assets/UM/snakeRobot.jpg'
 import tractRobot from '../../../../assets/UM/tractRobot.png'

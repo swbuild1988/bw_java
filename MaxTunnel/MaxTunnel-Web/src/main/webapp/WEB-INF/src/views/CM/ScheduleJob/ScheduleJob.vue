@@ -4,7 +4,7 @@
         <h1 style="text-align:center;margin-bottom:20px;margin-top:10px;">定时任务管理</h1>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-                <span>任务筛选</span>
+                <span>任务筛选：</span>
                 <!-- <Input v-model="researchInfo.id" placeholder="输入要查询的任务编号" class="inputWidth"/> -->
                 <Select v-model="researchInfo.status" class="inputWidth">
                     <Option v-for="item in statusSelect" :value="item.val" :key="item.key">{{item.key}}</Option>

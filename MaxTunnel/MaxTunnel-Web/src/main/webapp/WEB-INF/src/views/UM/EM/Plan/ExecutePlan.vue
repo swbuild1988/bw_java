@@ -53,6 +53,7 @@ import video from '../../../../components/Common/Video/VideoComponent'
         curModal:{
           isShow:false,
           instanceId:null,
+          objectId:null
         },
         curVideo:{
           id:"executePlanVideo",
@@ -110,7 +111,8 @@ import video from '../../../../components/Common/Video/VideoComponent'
                   b.statusStr="进行中"
                   if(a.node=="值班人员确认"){
                     _this.curModal.isShow=true;
-                    _this.curModal.instanceId=_this.planData.processInstanceId;
+                    _this.curModal.instanceId= _this.planData.processInstanceId;
+                    _this.curModal.objectId= _this.planData.objectId;
                   }
                 }
                 else{

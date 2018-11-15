@@ -45,7 +45,7 @@
     </div>
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnels'
+import { TunnelService } from '../../../../services/tunnelService'
 export default {
     data(){
         return{

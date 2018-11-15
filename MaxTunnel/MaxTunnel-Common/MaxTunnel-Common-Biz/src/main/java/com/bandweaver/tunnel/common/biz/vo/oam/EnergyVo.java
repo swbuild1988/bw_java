@@ -15,6 +15,9 @@ public class EnergyVo extends BaseVo{
     private Integer id;
     /**管廊id*/
     private Integer tunnelId;
+    
+    private Integer objectType;
+    
     /**能耗 单位：千瓦时*/
     private Double value;
     /**耗电单价*/
@@ -32,6 +35,13 @@ public class EnergyVo extends BaseVo{
 	}
 	public void setTunnelId(Integer tunnelId) {
 		this.tunnelId = tunnelId;
+	}
+	
+	public Integer getObjectType() {
+		return objectType;
+	}
+	public void setObjectType(Integer objectType) {
+		this.objectType = objectType;
 	}
 	public Double getValue() {
 		return value;

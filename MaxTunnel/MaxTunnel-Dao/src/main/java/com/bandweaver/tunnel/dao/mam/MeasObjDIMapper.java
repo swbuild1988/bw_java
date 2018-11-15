@@ -19,6 +19,8 @@ public interface MeasObjDIMapper {
 
 	void update(MeasObjDI measObjDI);
 
+	void deleteByPrimaryKey(Integer id);
+
 
 
 }

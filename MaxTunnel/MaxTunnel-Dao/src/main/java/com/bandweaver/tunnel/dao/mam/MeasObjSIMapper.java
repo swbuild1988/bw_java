@@ -19,4 +19,6 @@ public interface MeasObjSIMapper {
 
 	void addBatch(List<MeasObjSI> SIList);
 
+	void deleteByPrimaryKey(Integer id);
+
 }

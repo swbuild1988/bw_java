@@ -4,22 +4,22 @@
         <div class="allDiv">
             <Row class="conditions">
                 <Col span="6">
-                    <span>任务进程：</span>
+                    <span class="conditionTitle">任务进程：</span>
                     <Select v-model="conditions.finished" style="width: 60%" @on-change="queryConditions()">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in patrolResult" :key="index" :value="item.val">{{item.key}}</Option>
                     </Select>
                 </Col>
                 <Col span="6">
-                    <span>巡检人：</span>
+                    <span class="conditionTitle">巡检人：</span>
                     <Input type="text" style="width: 60%" v-model="conditions.name" @on-keyup="queryConditions()"></Input>
                 </Col>
                 <Col span="6">
-                    <span>开始时间：</span>
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
                 </Col>
                 <Col span="6">
-                    <span>结束时间：</span>
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
                 </Col>
             </Row>

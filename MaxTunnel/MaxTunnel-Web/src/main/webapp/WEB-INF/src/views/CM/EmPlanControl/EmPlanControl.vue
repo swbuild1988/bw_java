@@ -5,7 +5,7 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <div>
-                    <span>预案名：</span>
+                    <span class="word63">预案名</span><span>：</span>
                     <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in planEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -14,13 +14,13 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span>流程节点值：</span>
+                    <span class="word65">流程节点值</span><span>：</span>
                     <Input v-model="researchInfo.taskKey" placeholder="支持模糊查询" class="inputWidth"/>
                 </div>
             </Col>
             <Col span="6">
                 <div>
-                    <span style="marginLeft:24px;">流程节点名：</span>
+                    <span class="word65">流程节点名</span><span>：</span>
                     <Input v-model="researchInfo.taskName" placeholder="支持模糊查询" class="inputWidth"/>
                 </div>
             </Col>
@@ -34,7 +34,7 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <div>
-                    <span>应急目标-值：</span>
+                    <span>应急目标—值</span><span>：</span>
                     <Select v-model="researchInfo.targetKey" placeholder="请选择应急目标值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in targetEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -43,7 +43,7 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span>应急行为-值：</span>
+                    <span>应急行为—值</span><span>：</span>
                     <Select v-model="researchInfo.actionKey" placeholder="请选择应急行为值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in actionEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -52,7 +52,7 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span>应急结束-值：</span>
+                    <span>应急结束—值</span><span>：</span>
                     <Select v-model="researchInfo.finishKey" placeholder="请选择应急结束值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in finishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -69,14 +69,14 @@
                 </div>
             </Col>
         </Row>
-        <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
+        <Row  style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-                <span style="marginLeft:24px;">开始时间：</span>
+                <span class="word64">开始时间</span><span>：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
                 </DatePicker>
                 </Col>
             <Col span="6">
-                <span>结束时间：</span>
+                <span class="word64">结束时间</span><span>：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
                 </DatePicker>
             </Col>   
@@ -392,6 +392,18 @@ export default {
     text-align: right;
     margin-top: 100px;
     margin-right: 10px;
+}
+.word63{
+    letter-spacing: 1.5em;
+    margin-right: -1.5em
+}
+.word64{
+    letter-spacing: 0.67em;
+    margin-right: -0.67em;
+}
+.word65{
+    letter-spacing: 0.25em;
+    margin-right: -0.25em;
 }
 </style>
 

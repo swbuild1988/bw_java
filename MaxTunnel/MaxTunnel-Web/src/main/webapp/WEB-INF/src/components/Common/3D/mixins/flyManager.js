@@ -1,24 +1,28 @@
-
 export const flyManagerMinix = {
-    data(){
-        return{
+    data() {
+        return {
 
-            flyManagerAttr:{
-                flyManager:null,
+            flyManagerAttr: {
+                flyManager: null,
             },
             // 飞行文件
             flyFilePath: this.ServerConfig + "/VM/font/flytest.fpf"
         }
     },
-    methods:{
+    methods: {
         // 飞行管理
         flyManager() {
             if (!global.Cesium) return;
 
-            let {scene, viewer, flyManagerAttr} = this;
+            let {
+                scene,
+                viewer,
+                flyManagerAttr
+            } = this;
             let routes = new Cesium.RouteCollection();
             //添加fpf飞行文件，fpf由SuperMap iDesktop生成
             routes.fromFile(this.flyFilePath);
+            // this.Log.info(routes.routes)
 
             //初始化飞行管理
             flyManagerAttr.flyManager = new Cesium.FlyManager({
@@ -36,7 +40,9 @@ export const flyManagerMinix = {
         },
         //开始飞行
         playFly() {
-            let {flyManagerAttr} = this;
+            let {
+                flyManagerAttr
+            } = this;
 
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
@@ -44,7 +50,9 @@ export const flyManagerMinix = {
         },
         // 暂停飞行
         pauseFly() {
-            let {flyManagerAttr} = this;
+            let {
+                flyManagerAttr
+            } = this;
 
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.pause();
@@ -52,7 +60,9 @@ export const flyManagerMinix = {
         },
         //停止飞行
         stopFly() {
-            let {flyManagerAttr} = this;
+            let {
+                flyManagerAttr
+            } = this;
 
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.stop();
@@ -76,5 +86,30 @@ export const flyManagerMinix = {
                 if (flyManager.playRate > 0.5) flyManager.playRate -= 0.1;
             }
         },
+        // 获取飞行路径和站点
+        getRoutesAndStops() {
+            let flyManager = this.flyManagerAttr.flyManager
+            let data = {
+                routes: [],
+                allStops: []
+            }
+            flyManager.readyPromise.then(() => {
+                let routesCollections = flyManager.routes.routes
+                routesCollections.forEach(route => {
+                    let temp = {}
+                    temp.routeName = route.routeName
+                    temp.stopCollection = []
+                    route.stopCollection.forEach(stop => {
+                        let temp1 = {}
+                        temp1.id = stop.index
+                        temp1.stopName = stop.stopName
+                        temp.stopCollection.push(temp1)
+                        data.allStops.push(temp1)
+                    })
+                    data.routes.push(temp)
+                })
+            })
+            return data
+        }
     },
 }

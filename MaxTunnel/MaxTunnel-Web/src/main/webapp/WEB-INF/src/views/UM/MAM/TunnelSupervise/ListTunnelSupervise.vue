@@ -210,9 +210,9 @@
   import SmViewer from "../../../../components/Common/3D/3DViewer";
   import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
   import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-  import { TunnelService } from '../../../../services/tunnels'
-  import { EnumsService } from '../../../../services/enums'
-  import { MonitorDataService } from '../../../../services/monitorData'
+  import { TunnelService } from '../../../../services/tunnelService'
+  import { EnumsService } from '../../../../services/enumsService'
+  import { MonitorDataService } from '../../../../services/monitorDataService'
   import {
     setViewAngle,
     bubble,

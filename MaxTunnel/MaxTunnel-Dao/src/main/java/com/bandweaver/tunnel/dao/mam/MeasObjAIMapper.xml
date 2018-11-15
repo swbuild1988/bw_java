@@ -87,5 +87,9 @@
         </foreach>
         )a
     </insert>
+    
+    <delete id="deleteByPrimaryKey">
+    	delete from T_MAM_MEASOBJ_AI where id = #{id}
+    </delete>
 
 </mapper>

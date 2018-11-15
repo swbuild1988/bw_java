@@ -83,9 +83,9 @@
 </div>    
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnels'
-import { EnumsService } from '../../../../services/enums'
-import { EnterGalleryService } from '../../../../services/enterGallerys'
+import { TunnelService } from '../../../../services/tunnelService'
+import { EnumsService } from '../../../../services/enumsService'
+import { EnterGalleryService } from '../../../../services/enterGalleryService'
 
 export default {
     data(){ 

@@ -48,7 +48,7 @@
                         </div>
                         <div class="option">
                             <Button type="primary" size="small" @click="edit(index)">编辑</Button>
-                            <Button type="error" size="small" @click="del(index)">删除</Button>
+                            <Button type="error" size="small" @click="instance(index)">删除</Button>
                         </div>
                     </div>
                 </Col>
@@ -59,8 +59,8 @@
     </div>
 </template>
 <script>
-import { EnterGalleryService } from '../../../../services/enterGallerys' 
-import { CustomerService } from '../../../../services/customers' 
+import { EnterGalleryService } from '../../../../services/enterGalleryService' 
+import { CustomerService } from '../../../../services/customerService' 
 import types from '../../../../../static/Enum.json'
 export default {
     data(){
@@ -110,13 +110,7 @@ export default {
         }
     },
     mounted(){
-        //获取所有的付款方式
-        // this.axios.get('/paytype-enums').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.payType = data;
-        //     }
-        // });
+        this.queryList()
         //获取所有的公司
         let _this = this
         EnterGalleryService.getCompanys().then(
@@ -126,13 +120,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/companies').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.company = data;
-        //     }
-        // })
-        this.queryList()
     },
     methods:{
         queryList: function(){
@@ -148,16 +135,6 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
-            // this.axios.post('customers/datagrid',(this.params)).then( response => {
-            //     let { code,data } = response.data;
-            //     if(code==200){
-            //         for( let index in data.list ){
-            //             data.list[index].crtTime = new Date( data.list[index].crtTime ).format( "yyyy-MM-dd hh:mm:s" )
-            //         }
-            //         this.customerList = data.list;
-            //         this.page.pageTotal = data.total
-            //     }
-            // })
         },
         goToMoudle: function (path) {
             this.$router.push(path);
@@ -177,20 +154,24 @@ export default {
         ok () {
             this.delIt = true;
         },
-        del(index) {
-            let _this = this
-            CustomerService.deleteCustomer(_this.customerList[index].id).then(
-                (result)=>{
-                    _this.customerList.splice(_this.customerList[index].id, 1);
-                    _this.queryList()
+        instance(index) {
+            this.$Modal.confirm({
+                title: '客户信息',
+                content: '<p>是否删除这条客户信息</p>',
+                onOk: () => {
+                    let _this = this
+                    CustomerService.deleteCustomer(_this.customerList[index].id).then(
+                        (result)=>{
+                            _this.customerList.splice(_this.customerList[index].id, 1);
+                            _this.queryList()
+                        },
+                        (error)=>{
+                            _this.Log.info(error)
+                    })
                 },
-                (error)=>{
-                    _this.Log.info(error)
-                })
-            // this.axios.delete("/customers/" + this.customerList[index].id).then(response => {
-            //     this.customerList.splice(this.customerList[index].id, 1);
-            //     this.queryList()
-            // });
+                onCancel: () => {
+                }
+            });
         },
         handlePage(value) {
             this.queryList()

@@ -38,9 +38,9 @@
 <script>
 import types from '../../../../../static/Enum.json'
 import showDefect from '../../../../components/UM/OMM/show-defect.vue';
-import { TunnelService } from '../../../../services/tunnels'
-import { PatrolService } from '../../../../services/patrols'
-import { EnumsService } from '../../../../services/enums'
+import { TunnelService } from '../../../../services/tunnelService'
+import { PatrolService } from '../../../../services/patrolService'
+import { EnumsService } from '../../../../services/enumsService'
 export default {
     components: { showDefect },
     data(){
@@ -149,7 +149,7 @@ export default {
     mounted(){
         this.task.id =  this.$route.params.id;
         let _this = this
-        TunnelService.TunnelService().then(
+        TunnelService.getTunnels().then(
             (result)=>{
                 _this.tunnel = result
             },

@@ -1,16 +1,25 @@
 package com.bandweaver.tunnel.common.biz.itf.mam.video;
 
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
-import org.apache.ibatis.annotations.Param;
+import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
 public interface VideoServerService {
 
     int addVideoServer(VideoServer videoServer);
+    
+    int updateVideoServer(VideoServer videoServer);
+    
+    VideoServerDto getVideoServer(int id);
 
-    List<VideoServer> getAllVideoServers();
+    List<VideoServerDto> getAllVideoServers();
 
-    List<VideoServer> getVideoServersByVendorAndVersion(Integer vendor, Integer version);
-
+    List<VideoServerDto> getVideoServersByCondition(VideoServerVo vo);
+    
+    PageInfo<VideoServerDto> dataGrid(VideoServerVo vo);
+    
+    int deleteVideoServer(Integer id);
 }

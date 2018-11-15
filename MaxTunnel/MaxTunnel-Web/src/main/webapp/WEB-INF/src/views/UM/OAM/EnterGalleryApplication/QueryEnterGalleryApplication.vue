@@ -48,9 +48,9 @@
 </template>
 <script>
 import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
-import { TunnelService } from '../../../../services/tunnels'
-import { EnumsService } from '../../../../services/enums'
-import { EnterGalleryService } from '../../../../services/enterGallerys'
+import { TunnelService } from '../../../../services/tunnelService'
+import { EnumsService } from '../../../../services/enumsService'
+import { EnterGalleryService } from '../../../../services/enterGalleryService'
 
 export default {
   components: {
@@ -418,15 +418,24 @@ export default {
       this.queryRecords();
     },
     del(id) {
-      let _this = this
-      EnterGalleryService.deleteEnterGallery(id).then(
-        (result)=>{
-          _this.applicationRecordList.splice(id, 1);
-          _this.queryRecords();
+      this.$Modal.confirm({
+        title: '入廊申请',
+        content: '<p>是否删除这条入廊申请</p>',
+        onOk: () => {
+          let _this = this
+          EnterGalleryService.deleteEnterGallery(id).then(
+            (result)=>{
+              _this.applicationRecordList.splice(id, 1);
+              _this.queryRecords();
+            },
+            (error)=>{
+              _this.Log.info(error)
+            })
         },
-        (error)=>{
-          _this.Log.info(error)
-        })
+        onCancel: () => {
+
+        }
+      })
       // this.axios.delete("/req-historys/" + id).then(response => {
       //   this.applicationRecordList.splice(id, 1);
       //   this.queryRecords();

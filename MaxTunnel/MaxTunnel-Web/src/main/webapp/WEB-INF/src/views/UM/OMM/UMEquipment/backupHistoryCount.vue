@@ -109,207 +109,273 @@
 </template>
 
 <script>
-  import SimplePieChart from '../../../../components/Common/Chart/SimplePieChart.vue'
-  import SimpleBarChart from '../../../../components/Common/Chart/SimpleBarChart.vue'
-  export default {
+import SimplePieChart from "../../../../components/Common/Chart/SimplePieChart.vue";
+import SimpleBarChart from "../../../../components/Common/Chart/SimpleBarChart.vue";
+export default {
     name: "backup-history-count",
     data() {
-      return {
-        backupTakeData: [{
-          key: "甲烷探测器",
-          value: 43,
-        },
-          {
-            key: "氧气探测器",
-            value: 40,
-          },
-          {
-            key: "湿度计",
-            value: 37,
-          },
-          {
-            key: "温度计",
-            value: 33,
-          }], 
-        takeUserData: [
-          {user: "张三", count: "70", id: 1},
-          {user: "王建", count: "60", id: 2,},
-          {user: "王城", count: "50", id: 3,},
-          {user: "Jisin", count: "30", id: 4,}],
-        countTakeData: {
-          id:"loanDetail",
-          requestUrl:"getCountLendData",
-          title:{text:"取用备品设备比例",x:'left'},
-          intervalTime:5000,
-        },
-        countStoreBackupData:{
-          id:"BreakDetail",
-          requestUrl:"getCountBreakData",
-          title:{text:"库存备品比例",x:'left'},
-          intervalTime:5000,
-        },
-        backupDetailData:{
-          id:" toolDetail",
-          requestUrl:"getToolDetail",
-          title:"备品备件明细",
-          color:"#1affc9",
-          intervalTime:5000,
-        },
-        toolColumns: [
-          {
-            title: '备品名称',
-            key: 'name'
-          },
-          {
-            title: '工具类型',
-            key: 'type'
-          },
-          {
-            title: '取用时间',
-            key: 'time'
-          },
-          {
-            title: '取用人',
-            key: 'user',
-          },
-          {
-            title: '备品状态',
-            key: 'status',
-          },
-          {
-            title: '操作',
-            key: 'action',
-            width: 150,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'info',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.show(params.index)
+        return {
+            backupTakeData: [
+                {
+                    key: "甲烷探测器",
+                    value: 43
+                },
+                {
+                    key: "氧气探测器",
+                    value: 40
+                },
+                {
+                    key: "湿度计",
+                    value: 37
+                },
+                {
+                    key: "温度计",
+                    value: 33
+                }
+            ],
+            takeUserData: [
+                { user: "张三", count: "70", id: 1 },
+                { user: "王建", count: "60", id: 2 },
+                { user: "王城", count: "50", id: 3 },
+                { user: "Jisin", count: "30", id: 4 }
+            ],
+            countTakeData: {
+                id: "loanDetail",
+                requestUrl: "getCountLendData",
+                title: { text: "取用备品设备比例", x: "left" },
+                intervalTime: 5000
+            },
+            countStoreBackupData: {
+                id: "BreakDetail",
+                requestUrl: "getCountBreakData",
+                title: { text: "库存备品比例", x: "left" },
+                intervalTime: 5000
+            },
+            backupDetailData: {
+                id: " toolDetail",
+                requestUrl: "getToolDetail",
+                parameters: {
+                    title: "备品备件明细",
+                    color: "#1affc9",
+                    intervalTime: 5000
+                }
+            },
+            toolColumns: [
+                {
+                    title: "备品名称",
+                    key: "name"
+                },
+                {
+                    title: "工具类型",
+                    key: "type"
+                },
+                {
+                    title: "取用时间",
+                    key: "time"
+                },
+                {
+                    title: "取用人",
+                    key: "user"
+                },
+                {
+                    title: "备品状态",
+                    key: "status"
+                },
+                {
+                    title: "操作",
+                    key: "action",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info",
+                                        size: "default"
+                                    },
+                                    style: {
+                                        marginRight: "5px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index);
+                                        }
+                                    }
+                                },
+                                "查看详情"
+                            )
+                        ]);
                     }
-                  }
-                }, '查看详情')
-              ]);
+                }
+            ],
+            toolData: [
+                {
+                    name: "风2机",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机3",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机1",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机4",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机5",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机6",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                },
+                {
+                    name: "风机9",
+                    type: "管廊设备",
+                    time: "2018-1-12",
+                    user: "张三"
+                }
+            ],
+            equipmentTypes: [
+                { key: 1, value: "电压表" },
+                { key: 2, value: "温度计" },
+                { key: 3, value: "湿度计" },
+                { key: 8, value: "应力计" },
+                { key: 4, value: "有害气体监测器" },
+                { key: 5, value: "万能表" },
+                { key: 6, value: "螺丝刀" },
+                { key: 7, value: "扳手" }
+            ],
+            condition: {
+                tunnel: {
+                    name: ""
+                },
+                type: null,
+                status: null,
+                user: "",
+                startEquipmentTime: null,
+                endEquipmentTime: null
+            },
+            userData: [
+                "Steve Jobs",
+                "Stephen Gary Wozniak",
+                "Jonathan Paul Ive",
+                "张三",
+                "李四",
+                "小雨",
+                "大哥",
+                "董很累"
+            ],
+            page: {
+                pageNum: 1,
+                pageSize: 8,
+                pageTotal: 0
+            },
+            pageStyle: {
+                position: "absolute",
+                bottom: "20px",
+                right: "15px"
             }
-          }
-        ],
-        toolData: [{name: "风2机", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机3", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机1", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机4", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机5", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机6", type: "管廊设备", time: "2018-1-12", user: "张三"},
-          {name: "风机9", type: "管廊设备", time: "2018-1-12", user: "张三"}],
-        equipmentTypes: [{key:1,value:"电压表"},{key:2,value:"温度计"},
-          {key:3,value:"湿度计"},{key:8,value:"应力计"},
-          {key:4,value:"有害气体监测器"},{key:5,value:"万能表"},
-          {key:6,value:"螺丝刀"},{key:7,value:"扳手"}],
-        condition: {
-          tunnel: {
-            name: '',
-          },
-          type: null,
-          status: null,
-          user:'',
-          startEquipmentTime: null,
-          endEquipmentTime: null
-        },
-        userData:['Steve Jobs', 'Stephen Gary Wozniak', 'Jonathan Paul Ive','张三','李四','小雨','大哥','董很累'],
-        page: {
-          pageNum: 1,
-          pageSize: 8,
-          pageTotal: 0,
-        },
-        pageStyle: {
-          position: 'absolute',
-          bottom: '20px',
-          right: '15px'
-        },
-      }
+        };
     },
     components: {
-      SimplePieChart,
-      SimpleBarChart
+        SimplePieChart,
+        SimpleBarChart
     },
     methods: {
-      //用户AutoComplete
-      filterMethod (value, option) {
-        return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
-      },
-      //查询表格数据
-      queryTable(){
-        let prams={};
-        prams.type=this.condition.type;
-        prams.status=this.condition.status;
-        this.axios.post("").then(result=>{
-          let {code, data} = response.data;
-          if(code==200){
-            this.backupTakeData=data;
-          }
-        })
-      },
+        //用户AutoComplete
+        filterMethod(value, option) {
+            return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
+        },
+        //查询表格数据
+        queryTable() {
+            let prams = {};
+            prams.type = this.condition.type;
+            prams.status = this.condition.status;
+            this.axios.post("").then(result => {
+                let { code, data } = response.data;
+                if (code == 200) {
+                    this.backupTakeData = data;
+                }
+            });
+        },
 
-      showTable() {
-        let _this = this
-        EquipmentService.equipmentDatagird(this.params).then(
-          (result)=>{
-            for (let index in result.list) {
-              result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd");
-              if (result.list[index].imgUrl != null) {
-                result.list[index].imgUrl = "http://192.168.3.6:8080/MaxTunnel-Web/" + result.list[index].imgUrl.replace(/\\/g, "/")
-              }
-            }
-            _this.equipments = result.list;
-            _this.page.pageTotal = result.total;
-          },
-          (error)=>{
-            _this.Log.info(error)
-          })
-        // this.axios.post("/equipments/datagrid", (this.params)).then(result => {
-        //   let {code, data} = result.data;
-        //   if (code == 200) {
-        //     for (let index in data.list) {
-        //       data.list[index].crtTime = new Date(data.list[index].crtTime).format("yyyy-MM-dd");
-        //       if (data.list[index].imgUrl != null) {
-        //         //   console.log(data.list[index].imgUrl)
-        //         data.list[index].imgUrl = "http://192.168.3.6:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
-        //         // data.list[index].imgUrl = "http://192.168.0.41:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
-        //       }
-        //     }
-        //     this.equipments = data.list;
-        //     this.page.pageTotal = data.total;
-        //   }
-        // });
-      },
+        showTable() {
+            let _this = this;
+            EquipmentService.equipmentDatagird(this.params).then(
+                result => {
+                    for (let index in result.list) {
+                        result.list[index].crtTime = new Date(
+                            result.list[index].crtTime
+                        ).format("yyyy-MM-dd");
+                        if (result.list[index].imgUrl != null) {
+                            result.list[index].imgUrl =
+                                "http://192.168.3.6:8080/MaxTunnel-Web/" +
+                                result.list[index].imgUrl.replace(/\\/g, "/");
+                        }
+                    }
+                    _this.equipments = result.list;
+                    _this.page.pageTotal = result.total;
+                },
+                error => {
+                    _this.Log.info(error);
+                }
+            );
+            // this.axios.post("/equipments/datagrid", (this.params)).then(result => {
+            //   let {code, data} = result.data;
+            //   if (code == 200) {
+            //     for (let index in data.list) {
+            //       data.list[index].crtTime = new Date(data.list[index].crtTime).format("yyyy-MM-dd");
+            //       if (data.list[index].imgUrl != null) {
+            //         //   console.log(data.list[index].imgUrl)
+            //         data.list[index].imgUrl = "http://192.168.3.6:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
+            //         // data.list[index].imgUrl = "http://192.168.0.41:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
+            //       }
+            //     }
+            //     this.equipments = data.list;
+            //     this.page.pageTotal = data.total;
+            //   }
+            // });
+        },
 
-      handlePage(value) {
-        this.page.pageNum = value
-        this.showTable()
-      },
-      handlePageSize(value) {
-        this.page.pageSize = value;
-        this.showTable()
-      },
+        handlePage(value) {
+            this.page.pageNum = value;
+            this.showTable();
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value;
+            this.showTable();
+        }
     }
-  }
+};
 </script>
 
 <style scoped>
-  .datapanle{
-    box-shadow: 0 1px  6px  rgba(0,0,0,.2);
+.datapanle {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     border-color: #eee;
-    width:98%;height: 30vh;
+    width: 98%;
+    height: 30vh;
     margin-right: 10px;
     padding: 18px;
-  }
-
+}
 </style>
 

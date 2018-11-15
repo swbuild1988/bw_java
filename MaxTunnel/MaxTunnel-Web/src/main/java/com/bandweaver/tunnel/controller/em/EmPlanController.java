@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
+import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.ActionEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
@@ -30,7 +32,6 @@ import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
-import com.bandweaver.tunnel.common.biz.itf.em.FirePlanService;
 import com.bandweaver.tunnel.common.biz.pojo.PageBean;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -72,7 +73,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 		
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(value);
 		activitiService.deploy((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()), 
-				(String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),processTypeEnum.getName());
+				(String)PropertiesUtil.getValue(processTypeEnum.getPngPath()),processTypeEnum.getName());
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
@@ -81,13 +82,14 @@ public class EmPlanController extends BaseController<EmPlan>{
 	/**启动预案 
 	 * @param sectionId 
 	 * @param processValue
-	 * @return   MQ Receive message : {"processInstanceId":"10001","process":[{"node":"开启声光报警","status":"完成"},{"node":"调用摄像头","status":"完成"},{"node":"值班人员确认","status":"进行中"}],"processName":"消防预案","isFinished":true}
+	 * @return    {"processInstanceId":"12501","process":[{"node":"开启声光报警","time":1542164713911,"id":1,"status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"调用摄像头","time":1542164713911,"id":1,"status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"值班人员确认","time":1542164713911,"id":1,"status":2,"desc":"启动或打开了ID为[1]的设备"}],"processName":"消防预案","processKey":"FirePlanProcess","range":50.0,"objectId":1}
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
 	@RequestMapping(value = "emplans/start/sections/{sectionId}/process-type/{processValue}", method = RequestMethod.GET)
 	public JSONObject start(@PathVariable("sectionId")Integer sectionId, @PathVariable("processValue") Integer processValue) {
-		emPlanService.start(sectionId,processValue);
+		Integer objectId = 1;//TODO
+		emPlanService.start(sectionId,processValue,objectId);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 
 	}
@@ -98,12 +100,15 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 * 手动确认
 	 * @param iid 流程实例id processInstanceId
 	 * @param result yes or no
+	 * @param objectId 监测对象id
 	 * @return
 	 * @author shaosen
 	 * @Date 2018年10月10日
 	 */
-	@RequestMapping(value = "emplans/confirm/processInstanceId/{processInstanceId}/result/{result}", method = RequestMethod.GET)
-	public JSONObject manualConfirm(@PathVariable("processInstanceId") String processInstanceId, @PathVariable("result") String result) {
+	@RequestMapping(value = "emplans/confirm/processInstanceId/{processInstanceId}/result/{result}/objectId/{objectId}", method = RequestMethod.GET)
+	public JSONObject manualConfirm(@PathVariable("processInstanceId") String processInstanceId, 
+			@PathVariable("result") String result,
+			@PathVariable("objectId") Integer objectId) {
 		Task task = activitiService.getActiveTaskByProcessIntance(processInstanceId);
 		if (task == null) {
 			throw new RuntimeException("Error: Task is null!");
@@ -114,12 +119,12 @@ public class EmPlanController extends BaseController<EmPlan>{
 		activitiService.completeTask(task.getId(), variables);
 		
 		if(result.equalsIgnoreCase("yes")) {
-			emPlanService.nextTask(processInstanceId);
+			emPlanService.nextTask(processInstanceId,objectId);
 		}
 		
 		//最后再查一次
 		EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-		emPlanService.sendMsg(emPlan,processInstanceId,true);
+		emPlanService.sendMsg(emPlan,processInstanceId,true,objectId);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 
@@ -196,6 +201,34 @@ public class EmPlanController extends BaseController<EmPlan>{
 	public JSONObject getById(@PathVariable Integer id){
 		EmPlanDto dto = emPlanService.getById(id);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,dto);
+	}
+	
+	/**通过processKey获取流程节点列表 
+	 * @param processKey
+	 * @return   {"msg":"请求成功","code":"200","data":{"processName":"消防预案","planStatus":[{"statusStr":"待完成","statusVal":3,"stepName":"开启声光报警"},{"statusStr":"待完成","statusVal":3,"stepName":"调用摄像头"},{"statusStr":"待完成","statusVal":3,"stepName":"值班人员确认"},{"statusStr":"待完成","statusVal":3,"stepName":"打开风机"},{"statusStr":"待完成","statusVal":3,"stepName":"打开风阀"},{"statusStr":"待完成","statusVal":3,"stepName":"打开百叶"},{"statusStr":"待完成","statusVal":3,"stepName":"启动干粉灭火"},{"statusStr":"待完成","statusVal":3,"stepName":"通知相关单位"}]}}
+	 * @author shaosen
+	 * @Date 2018年11月12日
+	 */
+	@RequestMapping(value="emplans/process-key/{processKey}",method=RequestMethod.GET)
+	public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
+		List<EmPlanDto> list = emPlanService.getNodeListByProcessKey(processKey);
+		
+		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processKey);
+		
+		JSONObject result = new JSONObject();
+		result.put("processName", processTypeEnum.getName());
+		
+		List<JSONObject> nodeList = new ArrayList<>();
+		for (EmPlanDto emPlanDto : list) {
+			JSONObject j = new JSONObject();
+			j.put("stepName", emPlanDto.getTaskName());
+			j.put("statusStr", NodeStatusEnum.WAITING.getName());
+			j.put("statusVal", NodeStatusEnum.WAITING.getValue());
+			nodeList.add(j);
+		}
+		result.put("planStatus", nodeList);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
+		
 	}
 	
 	

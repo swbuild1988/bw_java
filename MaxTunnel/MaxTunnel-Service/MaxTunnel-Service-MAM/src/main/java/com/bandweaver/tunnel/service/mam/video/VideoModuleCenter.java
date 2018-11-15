@@ -5,6 +5,7 @@ import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.ModuleCenterInterface;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -169,7 +170,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public void startMove(int id, PtzDirectionEnum direction) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             h5streamService.startMove(id, direction);
         } else {
             onvifService.startMove(id, direction);
@@ -184,7 +185,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public void stopMove(int id) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             h5streamService.stopMove(id);
         } else {
             onvifService.stopMove(id);
@@ -200,7 +201,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public List<String> getPresets(int id) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             return h5streamService.getPresets(id);
         } else {
             return onvifService.getPresets(id);
@@ -217,7 +218,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public boolean addPreset(int id, String presetName) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             return h5streamService.addPreset(id, presetName);
         } else {
             return onvifService.addPreset(id, presetName);
@@ -234,7 +235,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public boolean delPreset(int id, String presetName) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             return h5streamService.delPreset(id, presetName);
         } else {
             return onvifService.delPreset(id, presetName);
@@ -251,7 +252,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public boolean updatePreset(int id, String presetName) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             return h5streamService.updatePreset(id, presetName);
         } else {
             return onvifService.updatePreset(id, presetName);
@@ -267,7 +268,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     public void gotoPreset(int id, String presetName) {
         VideoDto videoDto = videoDtoHashMap.get(id);
 
-        if (videoDto.getVideoServer().getVendor() == VideoVendor.H5STREAM.getValue()) {
+        if (videoDto.getVideoServerDto().getVendor() == VideoVendor.H5STREAM.getValue()) {
             h5streamService.gotoPreset(id, presetName);
         } else {
             onvifService.gotoPreset(id, presetName);
@@ -281,7 +282,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
             VideoDto video = (VideoDto) videoDtoHashMap.get(key);
 
             // 如果不是h5stream的话，则通过onvif控制ptz
-            if (video.getVideoServer().getVendor() != VideoVendor.H5STREAM.getValue()) {
+            if (video.getVideoServerDto().getVendor() != VideoVendor.H5STREAM.getValue()) {
                 // 将ptz控制和权限加入缓存
                 PtzDevices ptzDevices = onvifService.getPtzDevices(video);
                 String profileToken = onvifService.getProfileToken(video);
@@ -301,7 +302,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
                     LogUtil.info("getSession:" + session);
                     server.setSession(session);
                 }
-                video.setVideoServer(server);
+                video.setVideoServerDto((VideoServerDto)server);
                 video.setPtzOperationsSupported(true);
                 videoDtoHashMap.put(video.getId(), video);
             }
@@ -310,7 +311,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     }
 
     private void initData() {
-        List<VideoServer> videoServers = videoServerMapper.getAllVideoServers();
+        List<VideoServerDto> videoServers = videoServerMapper.getAllVideoServers();
         for (VideoServer server : videoServers) {
             LogUtil.info("server:" + server);
             videoServerHashMap.put(server.getId(), server);

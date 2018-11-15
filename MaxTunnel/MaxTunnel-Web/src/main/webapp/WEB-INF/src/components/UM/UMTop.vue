@@ -4,12 +4,12 @@
       <Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
         <div class="layout-logo"></div>
         <div class="layout-title">
-          <h1>{{title}}</h1>
+          <h1><a  class="mainTitle" @click="goToMoudle({ path: '/UMMain'})">{{title}}</a></h1>
         </div>
         <div class="layout-nav">
           <div style="position: fixed;right: 20px;">
             <MenuItem v-for="(module,index) in modules" :key="module.name" :name="module.name">
-              <Dropdown placement="bottom-start" @on-visible-change="addIframe(module.id,index)">
+              <Dropdown placement="bottom-start">
                 <Button type="primary">
                   <Icon :type="module.frontIcon"></Icon>
                   {{module.name}}
@@ -48,7 +48,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { LogoutService } from '../../services/logoutService'
+import { UserService } from '../../services/userService'
 
   export default {
     name: "UMTop",
@@ -134,22 +135,22 @@ import axios from "axios";
                 name: '管线本体监测',
                 url: '/UM/PipelineSupervise'
               },
-              {
-                name: '消防系统',
-                url: ''
-              },
-              {
-                name: '通信系统',
-                url: ''
-              },
+              // {
+              //   name: '消防系统',
+              //   url: ''
+              // },
+              // {
+              //   name: '通信系统',
+              //   url: ''
+              // },
               {
                 name: '数据分析',
                 url: '/UM/DataAnalysis/QueryData'
               },
-              {
-                name: '机器人监控系统',
-                url: '/UM/RobotMonitoring/query'
-              },
+              // {
+              //   name: '机器人监控系统',
+              //   url: '/UM/RobotMonitoring/query'
+              // },
               {
                 name: '视频监控系统',
                 url: '/UM/VideoMonitoring/details/1'
@@ -174,10 +175,10 @@ import axios from "axios";
                 name: '预案管理',
                 url: '/UM/plans/detial/processKey'
               },
-              {
-                name: '调度管理',
-                url: ''
-              },
+              // {
+              //   name: '调度管理',
+              //   url: ''
+              // },
               {
                 name: '灾害管理',
                 url: '/UM/disaster/query'
@@ -215,15 +216,23 @@ import axios from "axios";
           title: '注销',
           content: '<p>确认退出吗?</p>',
           onOk: () => {
-            this.axios.get('/logout').then(result => {
-              let {msg, code, data} = result.data;
-              if (code !== "200") {
-                this.$Message.error(msg);
-              } else {
+            LogoutService.UMLogout().then(
+              result=>{
                 sessionStorage.removeItem('user');
                 _this.$router.push('/UMlogin');
-              }
-            });
+              },
+              error=>{
+                this.$Message.error(msg);
+              })
+            // this.axios.get('/logout').then(result => {
+            //   let {msg, code, data} = result.data;
+            //   if (code !== "200") {
+            //     this.$Message.error(msg);
+            //   } else {
+            //     sessionStorage.removeItem('user');
+            //     _this.$router.push('/UMlogin');
+            //   }
+            // });
           },
           onCancel: () => {
           }
@@ -233,13 +242,21 @@ import axios from "axios";
         this.$router.push(path)
       },
       getCountInfoNum(){
-        axios.get('/users/msg/count').then(response=>{
-          let{ code,data } = response.data
-          if(code==200){
-            this.countNum = data
+        let _this = this
+        UserService.getMessageCount().then(
+          result=>{
+            _this.countNum = result
+          },
+          error=>{
+            _this.Log.info(error)
+          })
+        // axios.get('/users/msg/count').then(response=>{
+        //   let{ code,data } = response.data
+        //   if(code==200){
+        //     this.countNum = data
 
-          }
-        })
+        //   }
+        // })
       },
       getSessionUserName:function () {
         if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
@@ -247,12 +264,6 @@ import axios from "axios";
           this.getUserName = str.substring(0,1).toUpperCase()
         }
       },
-      addIframe(id,index) {
-        let length = this.modules[index].children.length
-        if($('#iframe'+id).length == 0){
-          $('#'+id).append('<iframe src="about:blank" frameborder="0" marginheight="0" marginwidth="0" id="iframe'+id+'" style="position:absolute;visibility:inherit;top:0;left:0;width:100%;height:'+length * 45+'px;z-Index:-1;filter:alpha(opacity=0)"/>')
-        }
-      }
     }
   }
 </script>
@@ -290,5 +301,12 @@ import axios from "axios";
   .ivu-menu-horizontal {
     height: 64px;
     line-height: 64px;
+  }
+
+  .mainTitle{
+    color: #fff;
+  }
+  .mainTitle:hover{
+    color: #66ccee;
   }
 </style>

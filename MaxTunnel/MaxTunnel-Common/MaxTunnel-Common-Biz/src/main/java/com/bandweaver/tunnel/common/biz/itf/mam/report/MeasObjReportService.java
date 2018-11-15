@@ -20,5 +20,8 @@ public interface MeasObjReportService {
 	PageInfo<MeasObjReportDto> dataGrid(MeasObjReportVo vo);
 	
 	int deleteBatch(Date time);
+	
+	List<MeasObjReportDto> getByCondition(MeasObjReportVo vo);
 
+	void updateByPrimaryKeySelective(MeasObjReport report);
 }

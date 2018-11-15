@@ -2,6 +2,14 @@
   <div class="layout">
     <Layout class="coment">
       <Sider :width="screenWidth*0.14+1" collapsible :collapsed-width="78" v-model="isCollapsed" :style="{background: '#1D5F87'}">
+        <transition  name="fade">
+        <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
+            <ButtonGroup style="width: 90%;margin-left: 5%">
+              <Button type="primary" shape="circle" style="width:50%"  @click="goBack"><Icon type="chevron-left" ></Icon></Button>
+              <Button type="primary" shape="circle" style="width:50%;float:right"  @click="goForward"><Icon type="chevron-right" ></Icon></Button>
+            </ButtonGroup>
+        </div>
+        </transition>
         <Menu active-name="1-1" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
           <Submenu name="1">
             <template slot="title">
@@ -30,11 +38,10 @@
         </Menu>
       </Sider>
       <Layout>
-         <Content :style="{ backgroundSize: 'cover', paddingBottom: '0px'   }"
-                 style="overflow-y: auto;overflow-x: hidden;height: 200px;background: #f8f8f8">
+         <Content
+                 style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ffff;">
           <router-view></router-view>
         </Content>
-        <!--<Button @click="warning">告警提示</Button>-->
         <Collapse v-model="showalarm" @on-change="changestatu">
             <Panel name="alarm">
               <alarm v-bind="alarmModal"></alarm>
@@ -65,8 +72,8 @@
                   </div>
                   <div class="option">
                     <div style="position: relative;float: right">
-                      <Button size=small type="primary" @click="showAlarmDetial(index)">详情</Button>
-                      <Button size=small type="error" @click="confirmAlarm(index)">确定</Button>
+                      <Button  type="primary" size=small  @click="showAlarmDetial(index)">详情</Button>
+                      <Button type="error"  size=small @click="confirmAlarm(index)">确定</Button>
                     </div>
                     <div class="crtTime">
                       <span><Icon type="android-time"></Icon>{{item.alatmTime}}</span>
@@ -88,6 +95,8 @@
 
 <script>
    import  alarm from '../Common/AlarmDetial'
+   import  UMCustom from '../../styles/UMCustom.css'
+
 
 export default {
   name: "mudulePage",
@@ -148,6 +157,11 @@ export default {
       page:{
         total:20,
         current:1,
+      },
+      backStyle:{
+        backgroundImage: "url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
+        height: '100%',
+        position: 'relative',
       }
     };
   },
@@ -177,6 +191,15 @@ export default {
     }
   },
   methods: {
+
+    goBack()
+    {
+      this.$router.back(-1);
+    },
+    goForward()
+    {
+      this.$router.forward();
+    },
     showPlanTip() {
       var _this=this;
       this.$Modal.warning({
@@ -441,7 +464,7 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 
 .ivu-menu-light >>> .ivu-menu-submenu-title:hover {
   color: #1c5d85 !important;
-background-color: #fff;
+  background-color: #fff;
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
@@ -451,11 +474,5 @@ background-color: #fff;
 .ivu-collapse{
   border: none;
 }
-/*选中时的样式*/
-/* .itemActive{
-  background: #fff;
-  color: #1d5f87 !important;
-  box-shadow:0px 0px 15px 7px rgb(121, 170, 220) inset;
-} */
 </style>
 

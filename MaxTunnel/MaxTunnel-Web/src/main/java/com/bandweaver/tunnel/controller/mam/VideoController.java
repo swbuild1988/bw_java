@@ -11,7 +11,6 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import javafx.geometry.Point2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +19,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoSceneService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
+import com.github.pagehelper.PageInfo;
 
 @Controller
 @ResponseBody
@@ -97,6 +99,106 @@ public class VideoController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /**
+     * 添加视频服务
+     * @param videoServer
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers", method = RequestMethod.POST)
+    public JSONObject insertVideoServer(@RequestBody VideoServer videoServer) {
+    	videoServerService.addVideoServer(videoServer);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改视频服务
+     * @param videoServer
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers", method = RequestMethod.PUT)
+    public JSONObject updateVideoServer(@RequestBody VideoServer videoServer) {
+    	videoServerService.updateVideoServer(videoServer);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取所有视频服务，不分页
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers", method = RequestMethod.GET)
+    public JSONObject getAllVideoServers() {
+    	List<VideoServerDto> list = videoServerService.getAllVideoServers();
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 通过id获取视频服务
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers/{id}", method = RequestMethod.GET)
+    public JSONObject getVideoServer(@PathVariable("id") Integer id) {
+    	VideoServerDto videoServer = videoServerService.getVideoServer(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoServer);
+    }
+    
+    /**
+     * 获取符合条件的视频服务，不分页
+     * @param name 支持模糊查询
+     * @param vendor 供应商
+     * @param vendorVersion 版本号
+     * @param ip ip地址
+     * @param port 端口号
+     * @param username 用户名
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers/condition", method = RequestMethod.POST)
+    public JSONObject getVideoServers(@RequestBody VideoServerVo vo) {
+    	List<VideoServerDto> list = videoServerService.getVideoServersByCondition(vo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 分页获取视频服务
+     * @param name 支持模糊查询
+     * @param vendor 供应商
+     * @param vendorVersion 版本号
+     * @param ip ip地址
+     * @param port 端口号
+     * @param username 用户名
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers/datagrid", method = RequestMethod.POST)
+    public JSONObject dataGrid(@RequestBody VideoServerVo vo) {
+    	PageInfo<VideoServerDto> pageInfo = videoServerService.dataGrid(vo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+    }
+    
+    /**
+     * 删除视频服务
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月7日
+     */
+    @RequestMapping(value = "video_servers/{id}", method = RequestMethod.DELETE)
+    public JSONObject deleteVideoServer(@PathVariable("id") Integer id) {
+    	videoServerService.deleteVideoServer(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
     @RequestMapping(value = "tunnels/{tunnelId}/video_scenes")
     public JSONObject getScenesByTunnel(@PathVariable("tunnelId") int tunnelId) {
         List<VideoSceneDto> videoSceneDtos = videoModuleCenter.getVideoSceneDtosByTunnel(tunnelId);
@@ -140,7 +242,10 @@ public class VideoController {
     /**
      * 条件查询视频列表
      *
-     * @param object
+     * @param tunnelI	管廊id
+     * @param storeId	管仓id
+     * @param areaId	区段id
+     * @param sectionId	仓段id
      * @return
      * @author liuya
      * @Date 2018年9月7日

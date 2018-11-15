@@ -23,7 +23,7 @@
 	<!-- 	<setting name="logImpl" value="STDOUT_LOGGING" /> -->
 		
 		<!-- mybatis二级缓存全局开关，默认false，true是开启 -->
-		<setting name="cacheEnabled" value="true"/>
+		<setting name="cacheEnabled" value="false"/>
     </settings>
 	
     <typeHandlers>

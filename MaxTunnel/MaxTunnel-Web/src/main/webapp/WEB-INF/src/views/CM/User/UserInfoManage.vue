@@ -1,22 +1,22 @@
 <template>
     <div>
-        <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">用户信息管理</h1>
+        <h1 style="margin-left: 20px;margin-top:10px">用户信息管理</h1>
         <div style="margin:20px">
-            <Row :gutter="32">
-                <Col span="4">
-                    <Input v-model="searchValue" placeholder="输入要查询的用户名"/>
+            <Row>
+                <Col span="6">
+                    <span>用户名：</span>
+                    <Input v-model="searchValue" placeholder="输入要查询的用户名" style="width: 60%"/>
                 </Col>
-                <Col span="2">
+                <!-- <Col span="2">
                     <Button type="primary" icon="ios-search" size="small">查询</Button>
+                </Col> -->
+                <Col span="6">
+                    <span style="display: inline-block;vertical-align: middle;">性别：</span>
+                    <Cascader :data="highResearch" change-on-select placeholder="条件查询" style="width: 60%;display: inline-block;"></Cascader>
                 </Col>
-                <Col span="4">
-                    <Cascader :data="highResearch" change-on-select placeholder="条件查询"></Cascader>
-                </Col>
-                <Col span="1">
-                    <Button type="primary" icon="ios-search" size="small">筛选</Button>
-                </Col>
-                <Col span="2"  offset="11">
-                    <Button type="error" @click="addNewUser()">新增用户</Button>
+                <Col span="6">
+                    <Button type="primary" icon="ios-search" size="small">查询</Button>
+                    <Button type="error" size="small" @click="addNewUser()">新增用户</Button>
                 </Col>
             </Row>
         </div>
@@ -277,7 +277,6 @@ import UserModal from '../../../views/CM/User/UserModal'
             },
             //点击确认后才会更改表格显示
             saveChange(){
-                console.log("111");
                 this.data6[this._index] = this.changeInfo.userInfo;
             }
         },

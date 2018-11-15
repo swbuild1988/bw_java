@@ -15,139 +15,16 @@
 
 <script>
 
-const stateQuantity = '状态量';
-let viewerComponent = null; //当前组件实例对象
-/**
- * 信息统一管理类
- *
- * 用于视屏信息，单位信息，人员信息，缺陷信息，告警信息的增删改查
- *
- *  videos : 视屏信息队列
- *  units : 单位信息队列
- *  personnel : 人员信息队列
- *  flaw : 缺陷信息队列
- *  alarm : 告警信息队列
- *  events : 重大时间队列
- */
-class InformationManagement {
-
-    constructor(){
-        this.videos = [];
-        this.units = [];
-        this.personnel = [];
-        this.flaw = [];
-        this.alarm = [];
-        this.events = [];
-    }
-    getInformation(informationType){
-        if(typeof informationType != 'string') return
-
-        return this[informationType];
-    };
-    addInformation(informationType,information){
-
-        if(Array.isArray(this.getInformation(informationType))){
-            this.getInformation(informationType).push(information);
-        }
-        return this;
-    }
-    deleteInformation(newInformations,informationType,id){
-        if(!Array.isArray(newInformations))return
-
-        newInformations.forEach((details)=>{
-            this.getInformation(informationType).forEach((information,index,messageType)=>{
-
-                if(typeof information=='object' &&　typeof details=='object'){
-                    information[id] == details[id] &&　messageType.splice(index,1);
-                }
-            })
-
-        });
-        return this;
-    }
-    searchInformation(entity,modelProp){
-
-        if(['videos'].indexOf(entity._messageType) != -1){ //当为视屏实体时，隐藏弹框
-            modelProp.show.state = false;
-            return;
-        }
-        modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) != -1 ? true : false; //用于切换footer插槽
-
-        let informations=this.getInformation(entity._messageType);
-
-        if(informations.length != 0 &&　Array.isArray(informations)){
-
-            informations.forEach(information=>{
-
-                if( this._getEntityMoId(information,entity._messageType) == entity._moId ){
-
-                    modelProp.data.splice(0);
-                    modelProp.show.state = true;
-                    modelProp.showModelFooter &&　viewerComponent.$store.commit('changeAlarm',{'entity':entity,'object':information});//缓存鼠标获取最后一个告警
-
-                    for(let details in information){
-                        if(information.hasOwnProperty(details)){
-
-                            let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'],details,information);
-
-                            processObj && modelProp.data.push({key:processObj.key,val:processObj.val});
-                        }
-                    }
-                }
-            })
-        }
-
-        return this;
-    }
-    _getEntityMoId(information,messageType){
-        return (messageType == 'flaw' && information.type == 2) || (messageType == 'alarm')  ? information.objectId : information.id;
-    };
-    _processInformation(messageFields,details,infromation){
-        if(!messageFields) return false;
-
-        let managInfromation = null,
-            obj = {};
-
-        for( let i = 0; i < messageFields.length ; i++ ){
-
-            if( messageFields[i].key == details ) {
-
-                managInfromation  = this._isString(messageFields[i].val) ? messageFields[i].val : messageFields[i];
-
-                let dealInfromation = this._isString(managInfromation.val) ? {
-                    key : managInfromation.key,
-                    val : managInfromation.val(infromation[details])
-                }:{
-                    key : managInfromation.val,
-                    val : infromation[details]
-                };
-
-                return Object.assign(obj, dealInfromation);
-
-            }
-        }
-    };
-    _isString(param){
-        return Object.prototype.toString.call( param ) == '[object Object]' || Object.prototype.toString.call( param ) == '[object Function]';
-    }
-
-}
-
-Vue.prototype.IM = new InformationManagement();
+const stateQuantity = '状态量输入';
 
 import Cesium from "Cesium";
 import zlib from "zlib";
 import Vue from 'vue'
 import  showModel from '../Modal/ShowMapDataModal'
 import  describeModel  from '../../VM/AlarmManage/DescAlarmModel'
-import { URL_CONFIG } from "../../../../static/3DMap/js/3DMapConfig";
-import { infromationManagDetails } from "./infromationManagChart";
 import {
     addEntity,
-    addLabel,
-    getSection,
     doSqlQuery,
-    labelSqlCompleted,
     processFailed,
     getEntitySet,
     addBillboard,
@@ -155,13 +32,15 @@ import {
     switchShowEntity
 } from "../../../scripts/commonFun.js";
 import { flyManagerMinix } from './mixins/flyManager'
+import { addBarnLabel } from "./mixins/addBarnLabel";
 import tools from './tools'
 
+
 export default {
-    mixins:[ flyManagerMinix,tools ],
+    mixins:[ flyManagerMinix,tools,addBarnLabel ],
     props: {
         id: {
-            type: String
+            type: String,
         },
         infoBox: {
             type: Boolean,
@@ -178,6 +57,10 @@ export default {
         openVideoLinkage:{
             type: Boolean,
             default: false
+        },
+        openDoubleClickView:{
+            type: Boolean,
+            default: true
         },
         unitsPosition:{
             default: ()=>{
@@ -261,13 +144,7 @@ export default {
             scene: null,
             handler:null,
             prePosition: null,
-            timer:{
-                timeoutId:null,
-                intervalId:null,
-                sectionId:null, //保留上次section
-                personnelPositionTimerId:null,
-            },
-
+            personnelPositionTimerId:null
         };
     },
     watch:{
@@ -287,7 +164,7 @@ export default {
             })
             this.personnelPosition.isShow ?
                 this.refreshPersonnelPosition() :
-                clearInterval(this.timer.personnelPositionTimerId);
+                clearInterval(this.personnelPositionTimerId);
         },
         'defectPosition.isShow'(){
             switchShowEntity.call(this,{
@@ -295,7 +172,8 @@ export default {
             })
         },
         'eventsPosition.openPosition'(){
-            let { viewer } =this;
+            let { viewer } = this;
+
             let events = Vue.prototype.IM.getInformation('events');
 
             if( this.eventsPosition.openPosition ){
@@ -315,7 +193,7 @@ export default {
         describeModel
     },
     beforeMount(){
-        viewerComponent = this;
+        Vue.prototype.$viewerComponent = this; // 把当前组件挂载到Vue原型$viewerComponent上
     },
     mounted() {
         this.init();
@@ -324,15 +202,19 @@ export default {
         // 初始化
         init() {
             var _this = this;
-
             // 初始化viewer部件
             _this.viewer = new Cesium.Viewer(_this.id,{
                 navigation:_this.navigation,
-                infoBox:_this.infoBox
+                infoBox:_this.infoBox,
 
             });
-
+            if( this.id == 'mapViewer' ) Vue.prototype.$viewer = _this.viewer; // 把当前viewer实例挂载到Vue原型$viewer上
             _this.scene = _this.viewer.scene;
+
+            if(_this.openDoubleClickView){
+                //设置是否开始双击视角
+                _this.viewer.screenSpaceEventHandler.setInputAction(function(){},Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+            }
 
             if (_this.undergroundMode.enable) {
                 // 设置是否开启地下场景
@@ -346,14 +228,14 @@ export default {
             if(_this.openImageryProvider){
                 //开启地图服务
                 let provider_mec = new Cesium.SuperMapImageryProvider({
-                    url : URL_CONFIG.IMG_MAP//墨卡托投影地图服务
+                    url : this.SuperMapConfig.IMG_MAP//墨卡托投影地图服务
                 });
                 _this.viewer.imageryLayers.addImageryProvider(provider_mec);
             }
 
             if(_this.searchCamera.openSearch){
                 //查询全部相机
-                doSqlQuery.call(_this,_this.viewer,'MOTYPEID=7',URL_CONFIG.BIM_DATA,addBillboard,processFailed,'videoType','videos',_this.searchCamera.isShow)
+                doSqlQuery.call(_this,_this.viewer,'MOTYPEID=7',this.SuperMapConfig.BIM_DATA,addBillboard,processFailed,'videoType','videos',_this.searchCamera.isShow)
             }
 
             if(_this.unitsPosition.openPosition){
@@ -375,7 +257,7 @@ export default {
                     typeMode:'flawType',
                     messageType:'flaw',
                     show:_this.defectPosition.isShow,
-                    dataUrl:URL_CONFIG.BIM_DATA,
+                    dataUrl:this.SuperMapConfig.BIM_DATA,
                     onQueryComplete:addBillboard,
                     processFailed:processFailed
                     })
@@ -391,29 +273,11 @@ export default {
                 getEntityProperty.call(_this,_this.scene,Cesium,_this.modelProp,'model-content')
             }
             //设置鼠标左键单击回调事件
-            _this.viewer.selectedEntityChanged.addEventListener(feater=>{
-                if(feater != undefined){
-
-                    if(feater._dataTypeName == stateQuantity){
-
-                        let [ updateLabel ]=_this.viewer.entities._entities._array.filter(label=>label._id == feater._id); //获取当前更新的实体
-                        var image = !feater.cv ? 'open' :'close';
-
-                        updateLabel.billboard.image =require('../../../assets/VM/'+ image +'.png'); //修改告警图片
-                        updateLabel._cv = !feater.cv; //修改cv值
-                        return;
-                    }
-                    if(feater._messageType == 'videos' && _this.openVideoLinkage){
-
-                        _this.$store.commit('closeVideoLoop');   //开启视屏监控轮播模式
-                        _this.$emit('replaceVideoUrl',feater._moId);
-                    }
-                }
-            })
+            _this.viewer.selectedEntityChanged.addEventListener(this.operationEntity);
 
             try {
                 //打开所发布三维服务下的所有图层
-                var promise = _this.scene.open(URL_CONFIG.BIM_SCP);
+                var promise = _this.scene.open(this.SuperMapConfig.BIM_SCP);
 
                 Cesium.when(
                     promise,
@@ -440,38 +304,31 @@ export default {
                 }
             }
             _this.flyManager();
-
             //滚轮滑动，获得当前窗口的经纬度，偏移角
             _this.handler = new Cesium.ScreenSpaceEventHandler(
                 _this.scene.canvas
             );
             _this.handler.setInputAction(e => {
-                addLabel.call(
-                    _this,
-                    _this.scene,
-                    _this.viewer,
-                    500,
-                    doSqlQuery,
-                    URL_CONFIG.BIM_DATA,
-                    labelSqlCompleted,
-                    processFailed,
-                    getSection
-                );
+                this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
             }, Cesium.ScreenSpaceEventType.WHEEL);
             //鼠标左键松开，获得当前窗口的经纬度，偏移角
             _this.handler.setInputAction(e=>{
-                addLabel.call(
-                    _this,
-                    _this.scene,
-                    _this.viewer,
-                    500,
-                    doSqlQuery,
-                    URL_CONFIG.BIM_DATA,
-                    labelSqlCompleted,
-                    processFailed,
-                    getSection
-                );
+                this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
             },Cesium.ScreenSpaceEventType.LEFT_UP)
+
+                // _this.handler.setInputAction(e=>{
+                //     var position=_this.scene.pickPosition(e.position)
+                //     var camera=_this.viewer.scene.camera;
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
         },
         // 开始相机位置刷新
         startCameraPositionRefresh() {
@@ -536,52 +393,36 @@ export default {
                 _this.cameraPositionRefresh();
             }, _this.refreshCameraPosition.interval);
         },
-        //设置相机视角
-        setViewAngle(){
-            let { scene,cameraPosition } = this;
-
-            if(Cesium.defined(scene)){
-                scene.camera.setView({
-                    destination : new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude,cameraPosition.latitude,cameraPosition.height),
-                    orientation : {
-                        heading : cameraPosition.heading,
-                        pitch : cameraPosition.pitch,
-                        roll : cameraPosition.roll
-                    }
-                });
-            }
-        },
-        //隐藏所有实体
-        hideAllEntitys(){
-            let {　viewer　} = this;
-            viewer.entities._entities._array.forEach(entitie=>entitie._show = true);
-        },
         //添加告警实体
         addAlarmEntity(obj){
             let {　viewer　}　= this;
 
-            // doSqlQuery.call(this,viewer,'MOID in ('+ obj.objectId.toString() +')',URL_CONFIG.BIM_DATA,addBillboard,processFailed,'alarmType','alarm',true);
+            if( obj.isDistribute ){  //isDistribute 为true时为分布式,false为非分布式
 
-            addEntity({
-                viewer:viewer,
-                X:obj.longitude,
-                Y:obj.latitude,
-                moId:obj.objectId,
-                show:true,
-                messageType:'alarm',
-                billboard:{
-                    image:'alarm2',
-                    height:30,
-                    scaleByDistance:new Cesium.NearFarScalar(0,1,3500,0.8),
-                    verticalOrigin : Cesium.VerticalOrigin.BOTTOM,
-                }
-            })
+                addEntity({
+                    viewer:viewer,
+                    X:obj.longitude,
+                    Y:obj.latitude,
+                    Z:Vue.prototype.VMConfig.entityHeight,
+                    moId:obj.objectId,
+                    show:true,
+                    messageType:'alarm',
+                    billboard:{
+                        image:'alarm-close',
+                        height:30,
+                        scaleByDistance:new Cesium.NearFarScalar(0,1,3500,0.8),
+                        verticalOrigin : Cesium.VerticalOrigin.BOTTOM,
+                    },
+                })
+            }else {
+                doSqlQuery.call(this,viewer,'MOID in ('+ obj.objectId.toString() +')',this.SuperMapConfig.BIM_DATA,addBillboard,processFailed,'alarmType','alarm',true);
+            }
         },
         //人员定位
         refreshPersonnelPosition(){
-            let { personnelPosition,viewer,timer } = this;
+            let { personnelPosition,viewer } = this;
             if(Cesium.defined(viewer)){
-                timer.personnelPositionTimerId = setInterval(()=>{
+                this.personnelPositionTimerId = setInterval(()=>{
                     getEntitySet.call(
                         this,
                         {
@@ -609,16 +450,66 @@ export default {
                 range
             );
         },
+        //展示巡检点
+        showCheckPointEntity(){
+            let { viewer } = this;
+            getEntitySet.call(this,{
+                viewer: viewer,
+                url: "actived-locators",
+                show: true,
+                typeMode: "checkPointType",
+                messageType: 'checkPoint'
+            })
+        },
+        //操作实体集
+        operationEntity(feater){
+            let _this = this;
+            let { viewer } = this;
+
+            if(feater != undefined){
+                if( feater._dataTypeName == stateQuantity ){
+
+                    let [ updateLabel ] = viewer.entities._entities._array.filter( label => label._id == feater._id ); //获取当前更新的实体
+                    var image = !feater.cv ? 'open' :'close';
+
+                    updateLabel.billboard.image = require('../../../assets/VM/'+ image +'.png'); //修改告警图片
+                    updateLabel._cv = !feater.cv; //修改cv值
+
+                    return;
+                }
+                if(feater._messageType == 'videos' && _this.openVideoLinkage){
+
+                    _this.$store.commit('closeVideoLoop');   //关闭视屏监控轮播模式
+                    _this.$emit('replaceVideoUrl',feater._moId);
+                }
+            }
+        },
+        //销毁viewer
+        destoryViewer(){
+            var layers = this.viewer.scene.layers;
+            for(var i=0; i<layers._layers.length;i++){
+                layers.findByIndex(i).destroy()
+                layers.findByIndex(i).ignoreNormal = true
+                layers.findByIndex(i).clearMemoryImmediately = true
+            }
+            this.viewer.destroy()
+        },
 
     },
     beforeDestroy() {
-        let { handler,refreshCameraPosition,timer } = this;
+        let { handler,refreshCameraPosition,viewer,timer } = this;
 
         refreshCameraPosition.enable = false;
-        clearInterval(timer.personnelPositionTimerId);
+        clearInterval(this.personnelPositionTimerId);
         clearInterval(timer.timeoutId);
         clearInterval(timer.intervalId);
-        handler.destroy();
+
+        if(handler != null &&　handler.isDestroyed()){
+            handler.destroy();
+        }
+        viewer.selectedEntityChanged.removeEventListener( this.operationEntity );
+
+        this.destoryViewer()
     },
 };
 

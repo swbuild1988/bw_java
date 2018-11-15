@@ -72,8 +72,12 @@ public class CustomerController extends BaseController<Customer> {
 	/**
 	 * 添加客户
 	 * @param  companyId 公司id
-	 * @param  contact 联系人名称
-	 * @param  tel 电话
+	 * @param  contact 联系人名称 必须
+	 * @param  tel 电话 必须
+	 * @param  contact2 联系人名称2 可选
+	 * @param  tel2 电话2 可选
+	 * @param  contact3 联系人名称3 可选
+	 * @param  tel3 电话3 可选
 	 * @return {"msg":"请求成功","code":"200","data":{}}  
 	 * @throws
 	 * @author shaosen

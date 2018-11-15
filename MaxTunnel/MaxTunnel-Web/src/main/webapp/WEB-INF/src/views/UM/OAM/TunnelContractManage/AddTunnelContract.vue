@@ -94,9 +94,9 @@
   </div>
 </template>
 <script>
-import { EnumsService } from '../../../../services/enums'
-import { TunnelService } from '../../../../services/tunnels'
-import { ContractService } from '../../../../services/contracts'
+import { EnumsService } from '../../../../services/enumsService'
+import { TunnelService } from '../../../../services/tunnelService'
+import { ContractService } from '../../../../services/contractService'
 import types from '../../../../../static/Enum.json'
 import CustomerChoose from '../../../../components/UM/OAM/CustomerChoose'
 export default {

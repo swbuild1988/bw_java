@@ -19,7 +19,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void nextTask(String processInstanceId);
+	void nextTask(String processInstanceId,Integer objectId);
 
 	/**发送消息到mq队列 
 	 * @param emPlan
@@ -28,7 +28,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void sendMsg(EmPlan emPlan, String processInstanceId ,Boolean isFinished);
+	void sendMsg(EmPlan emPlan, String processInstanceId ,Boolean isFinished,Integer objectId);
 
 	/**启动预案 
 	 * @param sectionId
@@ -36,7 +36,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月17日
 	 */
-	void start(Integer sectionId, Integer processValue);
+	void start(Integer sectionId, Integer processValue,Integer objectId);
 
 	void add(EmPlan record);
 
@@ -49,6 +49,8 @@ public interface EmPlanService {
 	void deleteBatch(List<Integer> list);
 
 	PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
+
+	List<EmPlanDto> getNodeListByProcessKey(String processKey);
 
 
 }

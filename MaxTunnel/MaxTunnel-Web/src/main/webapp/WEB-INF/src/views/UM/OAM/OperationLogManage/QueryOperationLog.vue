@@ -37,7 +37,7 @@
     </div>
 </template>
 <script>
-import { OperationLogService } from '../../../../services/operationLog'
+import { OperationLogService } from '../../../../services/operationLogService'
 
 export default {
     data(){
@@ -168,15 +168,22 @@ export default {
             this.queryOperationLog()
         },
         del(id) {
-            let _this = this
-            OperationLogService.deleteLog(id).then(
-                (result)=>{
-                    _this.operationLog.splice(id, 1);
+            this.$Modal.confirm({
+                title: '操作日志',
+                content: '<p>是否删除这条操作记录</p>',
+                onOk: () => {
+                    let _this = this
+                    OperationLogService.deleteLog(id).then(
+                        (result)=>{
+                            _this.operationLog.splice(id, 1);
+                        },
+                        (error)=>{
+                            _this.Log.info(error)
+                        })
+                    this.queryOperationLog()
                 },
-                (error)=>{
-                    _this.Log.info(error)
-                })
-            this.queryOperationLog()
+                onCancel: () => {}
+            })
         },
     }
 }

@@ -21,6 +21,7 @@
     <rabbit:queue name="queueAlarm" durable="true" auto-delete="false" exclusive="false" />
     <rabbit:queue name="queueData" durable="true" auto-delete="false" exclusive="false" />
     <rabbit:queue name="queuePlan" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:queue name="queueBigScreen" durable="true" auto-delete="false" exclusive="false" />
 
     <!-- 定义topic exchange，绑定queueTest -->
     <rabbit:topic-exchange name="${mq.exchange}" durable="true" auto-delete="false">
@@ -28,6 +29,7 @@
             <rabbit:binding queue="queueAlarm" pattern="*.alarm" />
             <rabbit:binding queue="queueData" pattern="*.data" />
             <rabbit:binding queue="queuePlan" pattern="*.plan" />
+            <rabbit:binding queue="queueBigScreen" pattern="*.bigscreen" />
         </rabbit:bindings>
     </rabbit:topic-exchange>
 
@@ -39,10 +41,10 @@
     <!-- queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象-->
     <rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory">
        
-        <rabbit:listener queues="queueData" ref="DataConsumer" />
         <!-- 关闭后台消费者，由前端消费 -->
+       <!--  <rabbit:listener queues="queueData" ref="DataConsumer" /> -->
        <!-- <rabbit:listener queues="queueAlarm" ref="AlarmConsumer"/> -->
-       <!--  <rabbit:listener queues="queuePlan" ref="firePlanConsumer" /> -->
+     <!--   <rabbit:listener queues="queuePlan" ref="firePlanConsumer" /> -->
     </rabbit:listener-container>
 
 </beans>

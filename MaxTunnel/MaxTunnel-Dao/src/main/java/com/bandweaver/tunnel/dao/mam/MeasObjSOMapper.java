@@ -19,5 +19,7 @@ public interface MeasObjSOMapper {
 
 	void addBatch(List<MeasObjSO> aiList);
 
+	void deleteByPrimaryKey(Integer id);
+
 
 }

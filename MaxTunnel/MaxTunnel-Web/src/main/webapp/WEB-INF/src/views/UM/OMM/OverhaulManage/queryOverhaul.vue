@@ -3,11 +3,14 @@
         <Row class="conditions">
             <Col span="6">
                 <span class="conditionTitle">开始时间：</span>
-                <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="getList()"></DatePicker>
+                <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
             </Col>
             <Col span="6">
                 <span class="conditionTitle">结束时间：</span>
-                <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="getList()"></DatePicker>
+                <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+            </Col>
+            <Col span="6">
+                <Button type="primary" icon="ios-search" @click="getList()">查询</Button>
             </Col>
         </Row>
         <div class="list">
@@ -19,8 +22,8 @@
 </template>
 <script>
 import Enum from '../../../../../static/Enum.json'
-import { TunnelService } from '../../../../services/tunnels'
-import { OverhaulService } from '../../../../services/overhauls'
+import { TunnelService } from '../../../../services/tunnelService'
+import { OverhaulService } from '../../../../services/overhaulService'
 export default {
     data(){
         return{

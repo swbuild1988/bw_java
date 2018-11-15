@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import { EnumsService } from '../../../../services/enums'
-import { FileService } from '../../../../services/files'
+import { EnumsService } from '../../../../services/enumsService'
+import { FileService } from '../../../../services/fileService'
 import types from '../../../../../static/Enum.json'
 import $ from 'jquery'
 export default {

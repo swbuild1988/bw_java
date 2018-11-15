@@ -29,6 +29,14 @@ public class CustomerDto implements Serializable{
     private String contact;
 
     private String tel;
+    
+    private String contact2;
+    
+    private String tel2;
+    
+    private String contact3;
+    
+    private String tel3;
 
     private Date crtTime;
 
@@ -65,7 +73,39 @@ public class CustomerDto implements Serializable{
         this.tel = tel == null ? null : tel.trim();
     }
 
-    public Date getCrtTime() {
+    public String getContact2() {
+		return contact2;
+	}
+
+	public void setContact2(String contact2) {
+		this.contact2 = contact2;
+	}
+
+	public String getTel2() {
+		return tel2;
+	}
+
+	public void setTel2(String tel2) {
+		this.tel2 = tel2;
+	}
+
+	public String getContact3() {
+		return contact3;
+	}
+
+	public void setContact3(String contact3) {
+		this.contact3 = contact3;
+	}
+
+	public String getTel3() {
+		return tel3;
+	}
+
+	public void setTel3(String tel3) {
+		this.tel3 = tel3;
+	}
+
+	public Date getCrtTime() {
         return crtTime;
     }
 
@@ -81,6 +121,12 @@ public class CustomerDto implements Serializable{
 		this.company = company;
 	}
 
+	@Override
+	public String toString() {
+		return "CustomerDto [id=" + id + ", companyId=" + companyId + ", company=" + company + ", contact=" + contact
+				+ ", tel=" + tel + ", contact2=" + contact2 + ", tel2=" + tel2 + ", contact3=" + contact3 + ", tel3="
+				+ tel3 + ", crtTime=" + crtTime + "]";
+	}
 
     
     

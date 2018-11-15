@@ -15,9 +15,11 @@
 <script>
     import VmTitle from '../VMTitle'
     import { converArrayFun } from '../../../scripts/commonFun'
+    import { TunnelService } from "../../../services/tunnelService";
+
     export default {
         name:'Monitoring',
-        props:['stackedBarid','requestUrl'],
+        props:['stackedBarid'],
         data() {
             return {
                 title:'报警监控统计',
@@ -34,7 +36,7 @@
         methods:{
             init(){
                 this.drawBar();
-                this.fetchData(this.requestUrl);
+                this.fetchData();
                 this.refreshData();
             },
             drawBar(){
@@ -78,34 +80,35 @@
                 _this.myChart.setOption(option);
                 window.addEventListener("resize", this.myChart.resize);
             },
-            fetchData(requestUrl){
+            fetchData(){
                 let _this=this;
 
-                _this.axios.get(requestUrl).then(result=>{
-                    let { code, data } = result.data;
+                TunnelService.getTunnelAlarmCount().then( data => {
 
-                    if(code==200){
+                    let  filterData=converArrayFun(data,[],[],'总量');
 
-                        let  filterData=converArrayFun(data,[],[],'总量');
+                    if(JSON.stringify(filterData.yData)!=JSON.stringify(_this.yData)
+                        ||JSON.stringify(filterData.initObj)!=JSON.stringify(_this.series)){
 
-                        if(JSON.stringify(filterData.yData)!=JSON.stringify(_this.yData)
-                            ||JSON.stringify(filterData.initObj)!=JSON.stringify(_this.series)){
-                            _this.yData=filterData.yData;
-                            _this.series=filterData.series;
-                            _this.myChart.setOption({
-                                yAxis:{data:_this.yData},
-                                series:_this.series
-                            })
-                        }
+                        _this.yData=filterData.yData;
+                        _this.series=filterData.series;
+                        _this.myChart.setOption({
+                            yAxis:{data:_this.yData},
+                            series:_this.series
+                        })
+
                     }
 
-                })
+                } )
             },
             refreshData(){
                 let _this=this;
                 setInterval(()=>_this.fetchData(_this.requestUrl),50000)
 
             },
+        },
+        beforeDestroy(){
+            window.removeEventListener("resize", this.myChart.resize);
         }
     }
 

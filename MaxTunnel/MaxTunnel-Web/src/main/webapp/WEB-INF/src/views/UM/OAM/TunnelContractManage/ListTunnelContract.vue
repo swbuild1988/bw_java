@@ -12,7 +12,7 @@
                 </Col>
                 <Col span="6">
                     <span>付款方式：</span>
-                    <Select v-model="conditions.payment" style="width: 60%" class="payment">
+                    <Select v-model="conditions.payment" style="width: 60%" id="payment">
                         <Option value="null">所有</Option>
                         <Option v-for="(item,index) in selectList.payType" :key="index" :value="item.val">{{item.key}}</Option>
                     </Select>
@@ -37,7 +37,7 @@
                  <Col span="6">
                     <Poptip placement="bottom" width="1000">
                        <span>客户名称：</span>
-                       <Input v-model="customerName" placeholder="请选择客户" class="cusInput"></Input>
+                       <Input v-model="customerName" placeholder="请选择客户" id="cusInput"></Input>
                        <div class="pop" slot="content">
                         <customer-choose @selectCustomer="getCustomerId" v-bind:customerId="conditions.customerId"></customer-choose>
                         </div>
@@ -52,48 +52,47 @@
             <Row>
                 <Col span="6" v-for="(item,index) in contractList" :key="index">
                     <div class="contracts">
-                        <div class="contractName">
+                        <!-- <div class="tags"></div> -->
+                        <div class="contractName" @click="edit(index)">
                             <span>{{item.name}}</span>
                         </div>
-                        <div class="second">
-                        <div class="crtTime">
-                            <Icon type="android-time"></Icon>
-                            <span>{{item.crtTime}}</span>
-                        </div>
-                        <span class="companyName">{{ item.companyName }}</span>
-                        </div>
                         <div class="contactInfo">
-                            <div class="person">
-                                <Icon type="android-person"></Icon>
-                                <span>{{item.contact}}</span>
+                            <div class="item">
+                                <div class="title">公司：</div>
+                                <div class="info">{{ item.companyName }}</div>
                             </div>
-                            <div class="payAndStatus">
-                               <!--  <Icon type="android-call"></Icon>
-                                <span>{{item.tel}}</span> -->
-                                <Icon type="ios-calendar"></Icon>
-                                <span>{{ item.payType }}</span>
-                                <span :class="[{'red': item.contractStatus === '过期'},'status']">{{ item.contractStatus }}</span>
+                            <div class="item">
+                                <div class="title">联系人：</div>
+                                <div class="info">{{ item.contact }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="title">合同状态：</div>
+                                <div :class="['info',{'red': item.contractStatus === '过期'}]">{{ item.contractStatus }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="title">创建时间：</div>
+                                <div class="info">{{ item.crtTime }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="title">付款方式：</div>
+                                <div class="info">{{ item.payType }}</div>
                             </div>
                         </div>
-                        <!-- <div class="cable">
-                            <span class="cableInfo">{{ item.cable.cableName }}</span>
-                            <span class="cableInfo">{{ item.cable.length }}</span>
-                            <span class="cableInfo">{{ item.cable.cableStatus }}</span>
-                        </div> -->
-                        <div class="times">
-                            <span>{{ item.contractStartTime + ' 至 ' + item.contractEndTime}}</span>
-                        </div>
-                        <div class="option">
+                        <!-- <div class="option">
                             <Tooltip content="详情">
-                                <Button type="primary" size="small" @click="read(index)" icon="android-list"></Button>
+                                <div class="buttons">
+                                    <Icon type="android-list" @click="read(index)" size="26" color="rgb(198,206,230)"></Icon>
+                                </div>
                             </Tooltip>
                             <Tooltip content="编辑">
-                                <Button type="primary" size="small" icon="edit" @click="edit(index)"></Button>
+                                <div class="buttons">
+                                    <Icon type="edit" @click="edit(index)" size="26" color="rgb(198,206,230)"></Icon>
+                                </div>
                             </Tooltip>
-                            <Tooltip content="删除" class="del">
-                                <Button type="error" size="small" @click="del(index)" icon="trash-a"></Button>
-                            </Tooltip>
-                        </div>
+                        </div> -->
+                        <Tooltip content="删除" class="del">
+                            <Icon type="trash-a" @click="del(index)" size="26" color="rgb(162, 77, 72)"></Icon>
+                        </Tooltip>
                     </div>
                 </Col>
             </Row>
@@ -104,11 +103,10 @@
 </template>
 
 <script>
-    import { EnumsService } from '../../../../services/enums'
-    import { ContractService } from '../../../../services/contracts'
+    import { EnumsService } from '../../../../services/enumsService'
+    import { ContractService } from '../../../../services/contractService'
     import types from '../../../../../static/Enum.json'
     import CustomerChoose from '../../../../components/UM/OAM/CustomerChoose'
-    import $ from 'jquery'
     export default {
         data(){
             return{
@@ -174,12 +172,12 @@
             this.initData()
             this.search()
             setTimeout(function(){
-                let width = $('.payment').width()
-                $('.cusInput').css('width',width+'px')
+                let width = document.getElementById('payment').offsetWidth
+                document.getElementById('cusInput').style.width = width + 'px'
             },300)
             window.onresize = function(){
-                let width = $('.payment').width()
-                $('.cusInput').css('width',width+'px')
+                let width = document.getElementById('payment').offsetWidth
+                document.getElementById('cusInput').style.width = width + 'px'
             }
         },
         methods:{
@@ -204,7 +202,7 @@
                 if(!this.customerName && this.conditions.customerId){
                     this.conditions.customerId = null;
                 }
-                // console.log(this.conditions.contractId)
+
                 let _this = this
                 ContractService.contractDatagrid(_this.params).then(
                     (result)=>{
@@ -301,89 +299,45 @@
 </script>
 
 <style scoped>
-.contact,.tel{
-    padding-left: 10px;
-    display: inline-block;
-    line-height: 45px;
-}
-.crtTime{
-    padding: 0px 0px 0px 6px;
-    display: inline-block;
-    font-size: 14px;
-}
 .list{
     margin-top: 10px;
     background-color: white;
     padding: 20px 0 24px 0;
-}
-.ivu-icon {
-    margin-right: 2px;
-    color: #ff9b00;
 }
 .pop{
     max-height:300px;
     overflow-y: auto;
 }
 .contracts{
-    border: 1px solid #dddfe1;
-    width: 80%;
-    /* height: 120px;*/
+   /* border: 1px solid #dddfe1;*/
+    width: 90%;
+    /*height: 30vh;*/
     margin: 10px auto; 
     border-radius: 4px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
     position: relative;
-    /*background-color: rgba(94,147,165,0.6);*/
-    background-image: url('../../../../assets/UM/contract2.jpg');
+    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69)); 
+    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69)); 
+    background: -moz-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
+    background: linear-gradient(to bottom right, rgb(91,95,148) , rgb(31,37,69)); */
+    background-image: url('../../../../assets/UM/border2.png');
     background-size: 100% 100%;
 }
 .option{
-    padding: 10px 0px 0px 4px;
+    position: absolute;
+    top: 14px;
+    right: 14px;
 }
 .contractName{
     text-align: center;
-    padding: 10px;
+    padding: 20px 0 10px 0;
     font-size: 20px;
     font-weight: bold;
-    /*color: #fff;*/
-}
-.second{
-	height: 24px;
-}
-/*@media screen and (max-width:1592px){
-    .second{
-   		height: 40px;
-    }
-}*/
-.companyName{
-    font-size: 16px;
-    float: right;
-    margin-right: 10px;
-    font-weight: bold;
+    color: rgb(252,252,255);
+    cursor: pointer;
 }
 .contactInfo{ 
-	width: 100%;
-	height: 30px;
-	margin-top: 10px;
+    padding-bottom: 30px;
 }
-.person{
-	padding-left: 6px;
-    display: inline-block;
-    vertical-align: middle;
-}
-.payAndStatus{
-    float: right;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-.times{
-    text-align: center;
-    font-size: 18px;
-    padding: 4px;
-   /* background-color: rgb(245,245,245);*/
-}
-/*.status{
-    margin-left: 10px;
-}*/
 .red{
     color:rgb(255, 102, 0);;
 }
@@ -398,10 +352,50 @@
 .ivu-poptip{
     width: 100%;
 }
-.cusInput{
+#cusInput{
     width: 60%;
 }
 .del{
-    float: right;
+    position: absolute;
+    bottom: 18px;
+    right: 22px;
+    cursor: pointer;
 }
+.buttons{
+   /* width: 26px;
+    height: 26px;
+    background-color: rgb(86,149,185);
+    border-radius: 50%;
+    text-align: center;
+    padding: 4px;*/
+    cursor: pointer;
+}
+.item{
+    margin: 10px;
+}
+.title{
+    color: rgb(223,223,241);
+    display: inline-block;
+    font-size: 16px;
+    width: 38%;
+    text-align: right;
+}
+.info{
+    display: inline-block;
+    color: rgb(234,234,243);
+    font-size: 16px;
+    width: 60%;
+}
+.tags{
+    width: 4px;
+    height: 80px;
+    position: absolute;
+    top: 6px;
+    left: 0;
+    background: -webkit-linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
+    background: -o-linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
+    background: -moz-linear-gradient(rgb(40,203,245) , rgb(21,240,182));
+    background: linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
+}
+
 </style>

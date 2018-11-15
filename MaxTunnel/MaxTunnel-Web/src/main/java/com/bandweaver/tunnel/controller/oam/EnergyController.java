@@ -65,15 +65,12 @@ public class EnergyController {
     private MeasObjModuleCenter measObjModuleCenter;
     
     
-	/**获取指定时间段内各类能耗总和
-	 * @param id 管廊id，必须
-	 * @param startTime 开始时间（时间戳）可选
-	 * @param endTime 结束时间（时间戳） 可选
-	 * @return   {"msg":"请求成功","code":"200","data":{"val":18.83,"key":"总能耗"}}
-	 * @author shaosen
-	 * @Date 2018年8月17日
-	 */
-	@RequestMapping(value="tunnels/energies-det/total",method=RequestMethod.POST)
+    //*************************************************************************************
+    //*********能耗管理-类别详情-start***********************************************************
+    //*************************************************************************************
+    
+	
+	/*@RequestMapping(value="tunnels/energies-det/total",method=RequestMethod.POST)
 	public JSONObject getTunnelDetTotal(@RequestBody Map<String, Object> map ) {
 		List<Map<String, Object>> list = getObjSub(map);
 		
@@ -87,19 +84,41 @@ public class EnergyController {
 		result.put("val", total);
 		
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
-	}
-
-	
-	
-	/**获取指定时间段内各类能耗占比
+	}*/
+    
+    
+	/**获取指定时间段内各类能耗总和--new
 	 * @param id 管廊id，必须
 	 * @param startTime 开始时间（时间戳）可选
 	 * @param endTime 结束时间（时间戳） 可选
-	 * @return   {"msg":"请求成功","code":"200","data":[{"val":0.0,"key":"风机类电表"},{"val":15.83,"key":"灯类电表"},{"val":3.0,"key":"水泵类电表"},{"val":0,"key":"其他类电表"}]}
+	 * @return   {"msg":"请求成功","code":"200","data":{"val":18.83,"key":"总能耗"}}
 	 * @author shaosen
-	 * @Date 2018年8月17日
+	 * @Date 2018-11-7
 	 */
-	@RequestMapping(value="tunnels/energies-det/ratio",method=RequestMethod.POST)
+    @RequestMapping(value="tunnels/energies-det/total",method=RequestMethod.POST)
+    public JSONObject getTunnelDetTotal(@RequestBody Map<String, Object> map ) {
+    	
+    	Date startTime = DataTypeUtil.toDateFromTimestamp(map.get("startTime"));
+		Date endTime = DataTypeUtil.toDateFromTimestamp(map.get("endTime"));
+		Integer tunnelId = DataTypeUtil.toInteger(map.get("id"));
+    	
+		List<EnergySimpleDto> list = energyService.getEnergiesByTunnelIdAndTimeCondition(tunnelId, startTime, endTime);
+		
+		double sum = 0.0;
+		for (EnergySimpleDto energySimpleDto : list) {
+			sum = MathUtil.add(sum, energySimpleDto.getValue());
+		}
+    	
+    	JSONObject result = new JSONObject();
+    	result.put("key", "总能耗");
+    	result.put("val", sum);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+    }
+
+    
+   
+	/*@RequestMapping(value="tunnels/energies-det/ratio",method=RequestMethod.POST)
 	public JSONObject getTunnelDetRatio(@RequestBody Map<String, Object> map ) {
 		
 		List<Map<String, Object>> list = getObjSub(map);
@@ -130,7 +149,189 @@ public class EnergyController {
 			
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+	}*/
+	
+	
+	
+	/**获取指定时间段内各类能耗占比--new
+	 * @param id 管廊id，必须
+	 * @param startTime 开始时间（时间戳）可选
+	 * @param endTime 结束时间（时间戳） 可选
+	 * @return   {"msg":"请求成功","code":"200","data":[{"val":0.0,"key":"风机类电表"},{"val":15.83,"key":"灯类电表"},{"val":3.0,"key":"水泵类电表"},{"val":0,"key":"其他类电表"}]}
+	 * @author shaosen
+	 * @Date 2018年11月7日
+	 */
+	@RequestMapping(value="tunnels/energies-det/ratio",method=RequestMethod.POST)
+	public JSONObject getTunnelDetRatio(@RequestBody Map<String, Object> map ) {
+		
+		Date startTime = DataTypeUtil.toDateFromTimestamp(map.get("startTime"));
+		Date endTime = DataTypeUtil.toDateFromTimestamp(map.get("endTime"));
+		Integer tunnelId = DataTypeUtil.toInteger(map.get("id"));
+		
+		List<JSONObject> result = new ArrayList<>();
+		
+		for(ObjectType em : ObjectType.getArr()) {
+			JSONObject j = new JSONObject();
+			j.put("key", em.getName());
+			
+			EnergyVo vo = new EnergyVo();
+			vo.setTunnelId(tunnelId);
+			vo.setStartTime(startTime);
+			vo.setEndTime(endTime);
+			vo.setObjectType(em.getValue());
+			List<EnergySimpleDto> list = energyService.getEnergiesByCondition(vo);
+			
+			double sum = 0.0;
+			for (EnergySimpleDto energySimpleDto : list) {
+				sum = MathUtil.add(sum, energySimpleDto.getValue());
+			}
+			
+			j.put("val", sum );
+			result.add(j);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
 	}
+    
+	
+	
+	
+	/*@RequestMapping(value="tunnels/{id}/energies-det/{value}",method=RequestMethod.GET)
+	public JSONObject getTunnelDet(@PathVariable("id")Integer id,@PathVariable("value")Integer value) {
+		
+		TimeEnum tem = TimeEnum.getEnum(value);
+		
+		//时间集合
+		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(tem);
+		
+		//数据过滤
+		List<Integer> objIdList = new ArrayList<>();
+		List<MeasObjAI> aiList = measObjModuleCenter.getMeasObjAIs();
+		for (MeasObjAI measObjAI : aiList) {
+			boolean boo = Arrays.asList(ObjectType.getArr()).contains(ObjectType.getEnum(measObjAI.getObjtypeId()));
+			if(boo) { 
+				if(measObjAI.getTunnelId() == id) {
+					LogUtil.info(" get MO by tunnelID , objID  :" + measObjAI.getId());
+					objIdList.add(measObjAI.getId());
+				}
+			}
+		}
+		
+		List<JSONObject> result = new ArrayList<>();
+		
+		for(ObjectType em : ObjectType.getArr()) {
+			JSONObject json = new JSONObject();
+			json.put("key", em.getName());
+			LogUtil.info("key : " + em.getName());
+			
+			List<Integer> idList = new ArrayList<>();
+			for (Integer objId : objIdList) {
+				MeasObj measObj = measObjModuleCenter.getMeasObj(objId);
+				if(em == ObjectType.getEnum(measObj.getObjtypeId())) {
+					idList.add(objId);
+					LogUtil.info(" add mo : " + measObj);
+				}
+			}
+			
+			List<JSONObject> vList = new ArrayList<>();
+			for (int i = 0; i < list.size(); i++) {
+				JSONObject jsonObj = new JSONObject();
+				Date startTime = list.get(list.size() - 1 - i).get("startDay");
+				Date endTime = list.get(list.size() - 1 - i).get("endDay");
+
+				if (tem == TimeEnum.WEEK) {
+					jsonObj.put("key", "第" + DateUtil.getNowWeek(startTime) + "周");
+				} else if (tem == TimeEnum.MONTH) {
+					jsonObj.put("key", DateUtil.getNowMonth(startTime) + "月");
+				} else if (tem == TimeEnum.DAY) {
+					jsonObj.put("key", DateUtil.getDate2YYYYMMdd(startTime) + "日");
+				}
+				
+				//get val
+				Double total = new Double(0.00);
+				for (Integer objId : idList) {
+					List<MeasValueAI> valList = measValueAIService.getListByObjectAndTime(objId, startTime, endTime);
+					if(valList != null && valList.size() > 0 ) {
+						MeasValueAI newAi = valList.get(0);
+						MeasValueAI oldAi = valList.get(valList.size() - 1);
+						Double sub = MathUtil.sub(newAi.getCV(), oldAi.getCV());
+						total = MathUtil.add(sub, total);
+					}
+				}
+				jsonObj.put("val", total);
+				vList.add(jsonObj);
+			}
+			json.put("val", vList);
+			result.add(json);
+		}
+		
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+	}*/
+	
+	
+	/** 按照指定周期显示各类能耗使用曲线图--new
+	 * @param id 管廊id
+	 * @param value 日期枚举
+	 * @return   {"msg":"请求成功","code":"200","data":[{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":12744.9,"key":"8月"}],"key":"风机类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":5469.3,"key":"8月"}],"key":"灯类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":1816.2,"key":"8月"}],"key":"水泵类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":7280.1,"key":"8月"}],"key":"其他类电表"}]}
+	 * @author shaosen
+	 * @Date 2018年11月7日
+	 */
+	@RequestMapping(value="tunnels/{id}/energies-det/{value}",method=RequestMethod.GET)
+	public JSONObject getTunnelDet(@PathVariable("id")Integer id,@PathVariable("value")Integer value) {
+		
+		TimeEnum tem = TimeEnum.getEnum(value);
+		//时间集合
+		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(tem);
+			
+		List<JSONObject> result = new ArrayList<>();
+		
+		for(ObjectType em : ObjectType.getArr()) {
+			
+			JSONObject json = new JSONObject();
+			json.put("key", em.getName());
+			
+			List<JSONObject> vList = new ArrayList<>();
+			for (int i = 0; i < list.size(); i++) {
+				JSONObject jsonObj = new JSONObject();
+				Date startTime = list.get(list.size() - 1 - i).get("startDay");
+				Date endTime = list.get(list.size() - 1 - i).get("endDay");
+
+				if (tem == TimeEnum.WEEK) {
+					jsonObj.put("key", "第" + DateUtil.getNowWeek(startTime) + "周");
+				} else if (tem == TimeEnum.MONTH) {
+					jsonObj.put("key", DateUtil.getNowMonth(startTime) + "月");
+				} else if (tem == TimeEnum.DAY) {
+					jsonObj.put("key", DateUtil.getDate2YYYYMMdd(startTime) + "日");
+				}
+				
+				EnergyVo vo = new EnergyVo();
+				vo.setTunnelId(id);
+				vo.setStartTime(startTime);
+				vo.setEndTime(endTime);
+				vo.setObjectType(em.getValue());
+				List<EnergySimpleDto> ls = energyService.getEnergiesByCondition(vo);
+				double sum = 0.0;
+				for (EnergySimpleDto energySimpleDto : ls) {
+					sum = MathUtil.add(sum, energySimpleDto.getValue());
+				}
+				jsonObj.put("val", sum);
+				vList.add(jsonObj);
+			}
+			
+			json.put("val", vList);
+			result.add(json);
+		}
+		
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+	}
+	
+	
+	
+    //*************************************************************************************
+    //*********能耗管理-类别详情-end***********************************************************
+    //*************************************************************************************
+    
+	
+	
 
 	/**
 	 * 获取指定时间段内，各管廊下的各类能耗总和与占比
@@ -186,86 +387,14 @@ public class EnergyController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,ls);
 	}
 	
-	/** 按照指定周期显示各类能耗使用曲线图
-	 * @param id 管廊id
-	 * @param value 日期枚举
-	 * @return   {"msg":"请求成功","code":"200","data":[{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":12744.9,"key":"8月"}],"key":"风机类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":5469.3,"key":"8月"}],"key":"灯类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":1816.2,"key":"8月"}],"key":"水泵类电表"},{"val":[{"val":0.0,"key":"1月"},{"val":0.0,"key":"2月"},{"val":0.0,"key":"3月"},{"val":0.0,"key":"4月"},{"val":0.0,"key":"5月"},{"val":0.0,"key":"6月"},{"val":0.0,"key":"7月"},{"val":7280.1,"key":"8月"}],"key":"其他类电表"}]}
+	
+	
+	/**通过objId和开始结束时间查找缓存中的电表监测对象并计算电量消耗
+	 * @param map
+	 * @return   
 	 * @author shaosen
-	 * @Date 2018年8月22日
+	 * @Date 2018年11月6日
 	 */
-	@RequestMapping(value="tunnels/{id}/energies-det/{value}",method=RequestMethod.GET)
-	public JSONObject getTunnelDet(@PathVariable("id")Integer id,@PathVariable("value")Integer value) {
-		
-		TimeEnum tem = TimeEnum.getEnum(value);
-		
-		//时间集合
-		List<Map<String, Date>> list = getStartTimeAndEndTimeByIntervalvalue(tem);
-		
-		//数据过滤
-		List<Integer> objIdList = new ArrayList<>();
-		List<MeasObjAI> aiList = measObjModuleCenter.getMeasObjAIs();
-		for (MeasObjAI measObjAI : aiList) {
-			boolean boo = Arrays.asList(ObjectType.getArr()).contains(ObjectType.getEnum(measObjAI.getObjtypeId()));
-			if(boo) { 
-				if(measObjAI.getTunnelId() == id) {
-					LogUtil.info(" get MO by tunnelID , objID  :" + measObjAI.getId());
-					objIdList.add(measObjAI.getId());
-				}
-			}
-		}
-		
-		List<JSONObject> result = new ArrayList<>();
-		
-		for(ObjectType em : ObjectType.getArr()) {
-			JSONObject json = new JSONObject();
-			json.put("key", em.getName());
-			LogUtil.info("key : " + em.getName());
-			
-			List<Integer> idList = new ArrayList<>();
-			for (Integer objId : objIdList) {
-				MeasObj measObj = measObjModuleCenter.getMeasObj(objId);
-				if(em == ObjectType.getEnum(measObj.getObjtypeId())) {
-					idList.add(objId);
-					LogUtil.info(" add mo : " + measObj);
-				}
-			}
-			
-			List<JSONObject> vList = new ArrayList<>();
-			for (int i = 0; i < list.size(); i++) {
-				JSONObject jsonObj = new JSONObject();
-				Date startTime = list.get(list.size() - 1 - i).get("startDay");
-				Date endTime = list.get(list.size() - 1 - i).get("endDay");
-
-				if (tem == TimeEnum.WEEK) {
-					jsonObj.put("key", "第" + DateUtil.getNowWeek(startTime) + "周");
-				} else if (tem == TimeEnum.MONTH) {
-					jsonObj.put("key", DateUtil.getNowMonth(startTime) + "月");
-				} else if (tem == TimeEnum.DAY) {
-				}
-				
-				//get val
-				Double total = new Double(0.00);
-				for (Integer objId : idList) {
-					List<MeasValueAI> valList = measValueAIService.getListByObjectAndTime(objId, startTime, endTime);
-					if(valList != null && valList.size() > 0 ) {
-						MeasValueAI newAi = valList.get(0);
-						MeasValueAI oldAi = valList.get(valList.size() - 1);
-						Double sub = MathUtil.sub(newAi.getCV(), oldAi.getCV());
-						total = MathUtil.add(sub, total);
-					}
-				}
-				jsonObj.put("val", total);
-				vList.add(jsonObj);
-			}
-			json.put("val", vList);
-			result.add(json);
-		}
-		
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
-	}
-	
-	
-	
 	private List<Map<String, Object>> getObjSub(Map<String, Object> map) {
 		
 		Date startTime = DataTypeUtil.toDateFromTimestamp(map.get("startTime"));
@@ -324,31 +453,7 @@ public class EnergyController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 
-	/**
-	 * @Description: 添加测试数据
-	 * @param @return
-	 * @return JSONObject
-	 * @throws @author shaosen
-	 * @date 2018年6月8日
-	 */
-/*	@RequestMapping(value = "/energies/batch", method = RequestMethod.GET)
-	public JSONObject addTestData() {
 
-		List<Energy> list = new ArrayList<>();
-		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-		for (int i = 0; i < 200; i++) {
-			for (TunnelSimpleDto tunnel : tunnelList) {
-				Energy energy = new Energy();
-				energy.setTunnelId(tunnel.getId());
-				energy.setUnitPrice(1.5 + (double) i / 1000);
-				energy.setValue((double) Math.round(Math.random() * 10000 + 1000) / 10);
-				energy.setCrtTime(DateUtil.getFrontDay(new Date(), i));
-				list.add(energy);
-			}
-		}
-		energyService.addEnergyBatch(list);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}*/
 
 	/**
 	 * @Description: 管廊能耗统计-饼状图
@@ -402,43 +507,7 @@ public class EnergyController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 
-	/**
-	 * @Description: 获取历史总能耗，年度能耗，月度能耗
-	 * @param @return
-	 * @return JSONObject
-	 * @throws @author shaosen
-	 * @date 2018年5月31日
-	 *//*
-	@Deprecated
-	@RequestMapping(value = "/tunnels/time/energies", method = RequestMethod.GET)
-	public JSONObject getTunnelEnergyConsumption() {
 
-		JSONObject historyJson = new JSONObject();
-		JSONObject yearJson = new JSONObject();
-		JSONObject monthJson = new JSONObject();
-
-		// 获取所有管廊历史总能耗
-		Double historyTotalValue = energyService.getSumByTime(null, null);
-		historyJson.put("key", "历史总能耗");
-		historyJson.put("val", historyTotalValue == null ? 0.00 : historyTotalValue);
-
-		// 获取本年度能耗
-		Double yearValue = energyService.getSumByTime(DateUtil.getBeginDayOfYear(), new Date());
-		yearJson.put("key", "本年度能耗");
-		yearJson.put("val", yearValue == null ? 0.00 : yearValue);
-
-		// 获取本月度能耗
-		Double monthValue = energyService.getSumByTime(DateUtil.getBeginDayOfMonth(), new Date());
-		monthJson.put("key", "本月度能耗");
-		monthJson.put("val", monthValue == null ? 0.00 : monthValue);
-
-		List<JSONObject> list = new ArrayList<>();
-		list.add(historyJson);
-		list.add(yearJson);
-		list.add(monthJson);
-
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
-	}*/
 
 	/**
 	 * @Description: 获取历史总能耗，年度能耗，月度能耗，本周能耗
@@ -542,7 +611,7 @@ public class EnergyController {
 			tunnelJson.put("key", tunnel.getName());
 
 			List<JSONObject> objList = new ArrayList<>();
-			List<Map<String, Date>> list = getStartTimeAndEndTimeByIntervalvalue(em);
+			List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(em);
 			for (int i = 0; i < list.size(); i++) {
 
 				JSONObject jsonObj = new JSONObject();
@@ -554,7 +623,7 @@ public class EnergyController {
 				} else if (em == TimeEnum.MONTH) {
 					jsonObj.put("key", DateUtil.getNowMonth(startTime) + "月");
 				} else if (em == TimeEnum.DAY) {
-					//TODO
+					jsonObj.put("key", DateUtil.getDate2YYYYMMdd(startTime)+"日");
 				}
 				Double totalValue = energyService.getEnergyByTunnelIdAndTime(tunnel.getId(), startTime, endTime);
 				jsonObj.put("val", totalValue == null ? 0.00 : totalValue);
@@ -569,99 +638,6 @@ public class EnergyController {
 		
 	}
 
-	/**
-	 * @Description: 按照周期分别查找
-	 * @param @param value
-	 * @param @return
-	 * @return List<Map<String,String>>
-	 * @throws @author shaosen
-	 * @date 2018年6月1日
-	 */
-	private List<Map<String, Date>> getStartTimeAndEndTimeByIntervalvalue(TimeEnum em) {
-		List<Map<String, Date>> list = new ArrayList<>();
-		if (em == TimeEnum.WEEK) {
-			Date beginDayOfWeek = DateUtil.getBeginDayOfWeek();// 获取本周的开始时间
-			Map<String, Date> map = new HashMap<>();
-			map.put("startDay", beginDayOfWeek);
-			map.put("endDay", new Date());
-			list.add(map);
-			list = getStartTimeAndEndTimeByWeek(beginDayOfWeek, list);
-		} else if (em == TimeEnum.MONTH) {
-			Date beginDayOfMonth = DateUtil.getBeginDayOfMonth();
-			Map<String, Date> map = new HashMap<>();
-			map.put("startDay", beginDayOfMonth);
-			map.put("endDay", new Date());
-			list.add(map);
-			list = getStartTimeAndEndTimeByMonth(beginDayOfMonth, list);
-		} else if (em == TimeEnum.DAY) {
-			// TODO
-		}
-
-		return list;
-	}
-
-	/**
-	 * @Description: 按月查找
-	 * @param @param beginDayOfMonth
-	 * @param @param list
-	 * @param @return
-	 * @return List<Map<String,String>>
-	 * @throws @author shaosen
-	 * @date 2018年6月1日
-	 */
-	private List<Map<String, Date>> getStartTimeAndEndTimeByMonth(Date date, List<Map<String, Date>> list) {
-
-		Date endDay = DateUtil.getFrontDay(date, 1);// 返回某个日期前几天的日期
-		Date startDay = DateUtil.getBeginDayOfMonth(endDay);
-
-		if (startDay.after(DateUtil.getBeginDayOfYear())) {
-			Map<String, Date> map = new HashMap<>();
-			map.put("startDay", startDay);
-			map.put("endDay", date);
-			list.add(map);
-			// 继续找上月开始时间和结束时间
-			getStartTimeAndEndTimeByMonth(startDay, list);
-		} else {
-			// 获取本年第一月开始日期和结束日期
-			Map<String, Date> lastMap = new HashMap<>();
-			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
-			lastMap.put("endDay", date);
-			list.add(lastMap);
-		}
-		return list;
-	}
-
-	/**
-	 * @Description: 按周查找
-	 * @param @param date
-	 * @param @param list
-	 * @param @return
-	 * @return List<Map<String,String>>
-	 * @throws @author shaosen
-	 * @date 2018年6月1日
-	 */
-	private List<Map<String, Date>> getStartTimeAndEndTimeByWeek(Date date, List<Map<String, Date>> list) {
-
-		Date endDay = DateUtil.getFrontDay(date, 1);// 返回某个日期前几天的日期
-		Date startDay = DateUtil.getBeginDayOfWeek(endDay);
-
-		if (startDay.after(DateUtil.getBeginDayOfYear())) {
-			Map<String, Date> map = new HashMap<>();
-			map.put("startDay", startDay);
-			map.put("endDay", date);
-			list.add(map);
-			// 继续找上周开始时间和结束时间
-			getStartTimeAndEndTimeByWeek(startDay, list);
-		} else {
-			// 获取本年第一周开始日期和结束日期
-			Map<String, Date> lastMap = new HashMap<>();
-			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
-			lastMap.put("endDay", date);
-			list.add(lastMap);
-		}
-		return list;
-	}
-	
 	
 	
 	/**

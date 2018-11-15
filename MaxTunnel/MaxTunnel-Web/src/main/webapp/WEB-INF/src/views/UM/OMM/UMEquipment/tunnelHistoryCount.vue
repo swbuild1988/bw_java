@@ -48,8 +48,8 @@
   import ComparisonBarChart from '../../../../components/Common/Chart/ComparisonBarChart'
   import ComplexBarChart from '../../../../components/Common/Chart/ComplexBarChart.vue'
   import types from '../../../../../static/Enum.json'
-  import { TunnelService } from '../../../../services/tunnels'
-  import { EquipmentService } from '../../../../services/equipments'
+  import { TunnelService } from '../../../../services/tunnelService'
+  import { EquipmentService } from '../../../../services/equipmentService'
 
   export default {
     name: "tunnel-history-count",

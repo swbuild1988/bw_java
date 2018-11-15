@@ -1,4 +1,5 @@
-﻿declare 
+﻿
+declare 
       num   number; 
 begin       
    num := 0;
@@ -484,7 +485,6 @@ create table T_COMMON_TUNNEL
   operation_id      number  not null,
   camera            varchar2(200),
   crt_time          date
-  
 );
 alter table T_COMMON_TUNNEL
   add constraint PK_T_COMMON_TUNNEL_ID primary key (ID);
@@ -519,7 +519,6 @@ create table T_COMMON_area
   tunnel_id NUMBER not null,
   camera    varchar2(200),
   crt_Time        DATE not null
-  
 );
 alter table T_COMMON_area
   add constraint common_area_ID primary key (ID);
@@ -571,7 +570,7 @@ alter table T_SECURITY_LOG
 /*==============================================================*/
 /* Table: T_OPERATION_LOG                                       */
 /*==============================================================*/
--- Create table
+-- Create table 
 create table T_OPERATION_LOG
 (
   id          VARCHAR2(50 CHAR) not null,
@@ -583,43 +582,9 @@ create table T_OPERATION_LOG
   params      VARCHAR2(200 CHAR),
   result      VARCHAR2(10 CHAR) ,
   crt_time    DATE,
-  description VARCHAR2(200)
-)
-tablespace USERS
-  pctfree 10
-  initrans 1
-  maxtrans 255;
--- Add comments to the table 
-comment on table T_OPERATION_LOG
-  is '操作日志表';
--- Add comments to the columns 
-comment on column T_OPERATION_LOG.id
-  is '唯一标识';
-comment on column T_OPERATION_LOG.module_type
-  is '模块类型';
-comment on column T_OPERATION_LOG.req_id
-  is '请求人id';
-comment on column T_OPERATION_LOG.req_ip
-  is '请求ip';
-comment on column T_OPERATION_LOG.req_user
-  is '请求用户';
-comment on column T_OPERATION_LOG.method
-  is '类方法';
-comment on column T_OPERATION_LOG.params
-  is '方法参数';
-comment on column T_OPERATION_LOG.crt_time
-  is '创建日期';
-comment on column T_OPERATION_LOG.description
-  is '描述';
--- Create/Recreate primary, unique and foreign key constraints 
-alter table T_OPERATION_LOG
-  add constraint PK_T_OPERATION_LOG primary key (ID)
-  using index 
-  tablespace USERS
-  pctfree 10
-  initrans 2
-  maxtrans 255;
-
+  description VARCHAR2(200),
+  CONSTRAINT PK_T_OPERATION_LOG PRIMARY KEY ("ID")
+);
 
 
 --shiro table below...
@@ -837,10 +802,10 @@ CREATE TABLE T_COMMON_SECTION  (
    tunnel_id            number,
    store_id          NUMBER               NOT NULL,
    area_id          NUMBER               NOT NULL,
-   total_cable_number number       ,--设计可用管线数
-   camera             varchar2(200),--相机视角,
-   start_point        varchar(100),--开始坐标
-   end_point          varchar2(100),--结束坐标
+   total_cable_number number,
+   camera             varchar2(200),
+   start_point        varchar2(100),
+   end_point          varchar2(100),
    crt_time          DATE,
    CONSTRAINT PK_T_COMMON_SECTION PRIMARY KEY ("ID")
 );
@@ -919,7 +884,6 @@ CREATE TABLE T_COMMON_DEPT(
 	id                NUMBER               NOT NULL,
 	NAME		VARCHAR2(20),
 	crt_time	date,
-	
    CONSTRAINT PK_T_COMMON_DEPT PRIMARY KEY ("ID")
 );
 
@@ -947,7 +911,6 @@ CREATE TABLE T_COMMON_COMPANY_DEPT(
 	id                NUMBER               NOT NULL,
 	company_id	 NUMBER               NOT NULL,
 	dept_id		 NUMBER               NOT NULL,
-	
    CONSTRAINT PK_T_COMMON_COMPANY_DEPT PRIMARY KEY ("ID")
 );
 
@@ -978,7 +941,6 @@ CREATE TABLE T_COMMON_STAFF(
   position_id  NUMBER               NOT NULL,
   account_id  NUMBER               NOT NULL,
   crt_time  date,
-  
    CONSTRAINT PK_T_COMMON_STAFF PRIMARY KEY ("ID")
 );
 
@@ -1009,7 +971,6 @@ CREATE TABLE T_COMMON_MYTASK(
   process_type    number(1)    not null,--流程类型：入廊；巡检；....
   status          number(1)    not null,--流程状态：审核中，通过，拒绝...
   crt_time  date,--申请时间
-  
    CONSTRAINT PK_T_COMMON_MYTASK PRIMARY KEY ("ID")
 );
 

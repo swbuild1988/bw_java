@@ -24,16 +24,17 @@
             </Col>
         </Row>
         <Row class="storeInfo" v-if="init">
-            <!--  <img class="bgImage" src="../../../../assets/VM/MaxviewLogo.png" /> -->
             <Col span="12" v-for="(store,index) in stores" :key="index">
-                <div class="storeCard" :style="store.typeId == 1 ?　bg.integrate : (store.typeId == 2 ? bg.power : bg.gas)">
-                    <div class="storeName">
-                        <Icon type="cube"></Icon>
-                        <span>{{store.name}}</span>
-                    </div>
-                    <div class="storeLineCount">
-                        <p v-for="(line,i) in store.value" :key="i" class="lines">{{ line.key }}:{{ line.val }}</p>
-                        <Progress :percent="(store.value[1].val / store.value[2].val * 100).toFixed(0)" class="progress"></Progress>
+                <div class="storeCard">
+                    <div class="innerCard">
+                        <div class="storeName">
+                            <Icon type="cube"></Icon>
+                            <span>{{store.name}}</span>
+                        </div>
+                        <div class="storeLineCount">
+                            <p v-for="(line,i) in store.value" :key="i" class="lines">{{ line.key }}:{{ line.val }}</p>
+                            <!-- <Progress :percent="parseInt(store.value[1].val / store.value[2].val * 100)" class="progress"></Progress> -->
+                        </div>
                     </div>
                 </div>
             </Col>
@@ -84,8 +85,8 @@
                 </Row>
             </Col>
             <Col span="8" offset="1" class="bim">
-                <!-- <v_3DViewer :id="mapId" @onload="onload">
-                </v_3DViewer> -->
+                <v_3DViewer :id="mapId" @onload="onload">
+                </v_3DViewer>
             </Col>
         </Row>
         <Row>
@@ -97,10 +98,11 @@
     </div>
 </template>
 <script>
-import axios from "axios";
+import { TunnelService } from '../../../../services/tunnelService'
+import { SpaceService } from '../../../../services/spaceService'
 import Enum from "../../../../../static/Enum.json";
 import Vue from 'vue';
-// import v_3DViewer from '../../../../components/Common/3DViewers'
+import v_3DViewer from '../../../../components/Common/3DViewers'
 import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig"
  import {
     setViewAngle,
@@ -139,22 +141,11 @@ export default {
                 textAlign: 'right',
                 padding: '10px'
             },
-            bg: {
-                gas: {
-                    // backgroundImage: 'url('+ require('../../../../assets/UM/spaceBg.jpg')+')'
-                },
-                power: {
-                    // backgroundImage: 'url('+ require('../../../../assets/UM/spaceBg.jpg')+')'
-                },
-                integrate: {
-                    // backgroundImage: 'url('+ require('../../../../assets/UM/spaceBg.jpg')+')'
-                }
-            },
             mapId: "tunnnelMap",
             isShow: false
         }
     },
-    // components: { v_3DViewer },
+    components: { v_3DViewer },
     mounted() {
       this.tunnelId = this.$route.params.id;
       this.initData();
@@ -251,60 +242,72 @@ export default {
         bubble.call(_this, Cesium, scene, viewer, 'model-content') //调用气泡
       },
         initData() {
-            this.axios.get('tunnels/' + this.tunnelId + '/stores').then(response => {
-              let {code, data} = response.data;
-              if (code == 200) {
-                // this.stores = data;
-                // console.log(data);
-                this.query.storeId = data[0].id;
-                data.forEach(a=>{
+            let _this = this
+            Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId)])
+            .then(result=>{
+                let store = result[0]
+                _this.query.storeId = store[0].id;
+                store.forEach(a=>{
                     let temp = {};
                     temp.id = a.id;
                     temp.name = a.name;
                     temp.typeId = a.storeTypeId;
-                    // temp.value = [{
-                    //     key: '设计管线数',
-                    //     val: 20
-                    // },{
-                    //     key: '已用管线数',
-                    //     val: 4
-                    // },{
-                    //     key: '可用管线数',
-                    //     val: 16
-                    // }];
                     temp.value = [];
-                    this.stores.push(temp);
+                    _this.stores.push(temp);
                 })
-              }
-            })
-
-            this.axios.get('tunnels/' + this.tunnelId + '/stores/cables-count').then(response => {
-                let {code,data} = response.data;
-                if(code == 200){
-                    // console.log(data)
-                    this.stores.forEach(store=>{
-                        data.forEach(name => {
-                            if(store.name == name.key){
-                              for(let item in name){
-                                if(item != 'key'){
-                                    let temp = {};
-                                    temp.key = item.slice(0,5);
-                                    temp.val = name[item];
-                                    store.value.push(temp)
-                                }
-                              }
+                _this.stores.forEach(store=>{
+                    result[1].forEach(name => {
+                        if(store.name == name.key){
+                          for(let item in name){
+                            if(item != 'key'){
+                                let temp = {};
+                                temp.key = item.slice(0,5);
+                                temp.val = name[item];
+                                store.value.push(temp)
                             }
-                        })
+                          }
+                        }
                     })
-                }
+                })
+            },
+            error=>{
+                _this.Log.info(error)
             })
-            this.axios.get('tunnels/'+ this.tunnelId + '/areas').then(response =>{
-                let {code,data} = response.data;
-                if(code == 200){
-                    this.areas = data;
-                }
-            })
+            // this.axios.get('tunnels/' + this.tunnelId + '/stores').then(response => {
+            //   let {code, data} = response.data;
+            //   if (code == 200) {
+            //     // this.stores = data;
+            //     // console.log(data);
+            //     this.query.storeId = data[0].id;
+            //     data.forEach(a=>{
+            //         let temp = {};
+            //         temp.id = a.id;
+            //         temp.name = a.name;
+            //         temp.typeId = a.storeTypeId;
+            //         // temp.value = [{
+            //         //     key: '设计管线数',
+            //         //     val: 20
+            //         // },{
+            //         //     key: '已用管线数',
+            //         //     val: 4
+            //         // },{
+            //         //     key: '可用管线数',
+            //         //     val: 16
+            //         // }];
+            //         temp.value = [];
+            //         this.stores.push(temp);
+            //         console.log(this.stores)
+            //     })
+            //   }
+            // })
 
+            TunnelService.getAreasByTunnelId(this.tunnelId).then(
+                result=>{
+                    _this.areas = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         },
         // changeQuery() {
         //     let params = {
@@ -330,16 +333,13 @@ export default {
                 pageSize: this.page.pageSize,
                 name:''
             };
-            this.axios.post('sections/datagrid',params).then(res =>{
-                let {code,data} = res.data;
-                this.page.pageTotal = data.total;
-                let _this = this;
-                // console.log(data.list);
-                if(code == 200){
+            let _this = this
+            SpaceService.sectionsDatagrid(params).then(
+                result=>{
                     _this.init = false;
                     _this.cables = [];
                     _this.ids = [];
-                    data.list.forEach(a=>{
+                    result.list.forEach(a=>{
                          _this.ids.push(a.id);
                          let temp={};
                          temp.name=a.store.name+a.area.name;
@@ -348,29 +348,70 @@ export default {
                          temp.lines=null;
                          _this.cables.push(temp);
                     })
-                    this.axios.get('tunnels/areas/sections/batch/' + _this.ids+ '/cables-count').then(response =>{
-                        let {code,data} = response.data;
-                        if(code == 200){
-                            data.forEach(a=>{
+                    SpaceService.getCableCountBysectionIds(_this.ids).then(
+                        result=>{
+                            result.forEach(a=>{
                                 _this.cables.forEach(b=>{
                                     if(b.id==a.id){
                                         b.value=a.val;
                                     }
                                 })
                             })
-                            console.log(_this.cables[0].value['1'].val)
-                        }
-                    })
-                    _this.cables.forEach(a=>{
-                        this.axios.get('tunnels/areas/sections/' +a.id + '/cables').then(res =>{
-                          let {code,data} = res.data;
-                          if(code == 200){
-                            a.lines = data;
-                          }
+                        },
+                        error=>{
+                            _this.Log.info(error)
                         })
+                    
+                    _this.cables.forEach(a=>{
+                        SpaceService.getCableInfo(a.id).then(
+                            result=>{
+                                a.lines = result;
+                            },
+                            error=>{
+                                _this.Log.info(error)
+                            })
                     })
-                }
-            })
+                })
+            // this.axios.post('sections/datagrid',params).then(res =>{
+            //     let {code,data} = res.data;
+            //     this.page.pageTotal = data.total;
+            //     let _this = this;
+            //     if(code == 200){
+            //         _this.init = false;
+            //         _this.cables = [];
+            //         _this.ids = [];
+            //         data.list.forEach(a=>{
+            //              _this.ids.push(a.id);
+            //              let temp={};
+            //              temp.name=a.store.name+a.area.name;
+            //              temp.id=a.id;
+            //              temp.value=null;
+            //              temp.lines=null;
+            //              _this.cables.push(temp);
+            //         })
+            //         this.axios.get('tunnels/areas/sections/batch/' + _this.ids+ '/cables-count').then(response =>{
+            //             let {code,data} = response.data;
+            //             if(code == 200){
+            //                 data.forEach(a=>{
+            //                     _this.cables.forEach(b=>{
+            //                         if(b.id==a.id){
+            //                             b.value=a.val;
+            //                         }
+            //                     })
+            //                 })
+            //                 console.log(_this.cables[0].value['1'].val)
+            //             }
+            //         })
+            //         _this.cables.forEach(a=>{
+            //             this.axios.get('tunnels/areas/sections/' +a.id + '/cables').then(res =>{
+            //               let {code,data} = res.data;
+            //               if(code == 200){
+            //                 a.lines = data;
+            //               }
+            //             })
+            //         })
+            //     }
+            // })
         },
          handlePage(value) {
             this.page.pageNum = value;
@@ -384,11 +425,6 @@ export default {
             this.curDetailId = id;
             this.curDetailIndex = index;
         }
-        // details(index){
-        //      this.$router.push({
-        //        path: '/UM/OperatingSpace/details/' + this.cables[index].id
-        //     });
-        // }
     }
 }
 </script>
@@ -438,18 +474,26 @@ export default {
 }
 .storeName{
     font-size: 30px;
-    margin-top: 10vh;
-    margin-left: 66px;
+    position: absolute;
     font-weight: bold;
-    display: inline-block;
+    top: 36%;
+    left: 14%;
 }
 .storeCard{
-    margin: 10px;
+    margin: 10px 7%;
     height: 28vh;
-    background-color: rgb(244,217,164);
-    border: 1px solid #fff;
-    border-radius: 8px;
-    color: #1d5f87;
+    width: 86%;
+    /*background-color: rgb(244,217,164);*/
+   /* border: 1px solid #fff;
+    border-radius: 8px;*/
+    color: #c6cdd2;
+}
+.innerCard{
+    background: url('../../../../assets/UM/bodyI.png') no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 .green{
    /* color:rgb(25,190,107);*/
@@ -489,19 +533,12 @@ export default {
     cursor: pointer;
 }
 .storeLineCount{
-    margin:-100px 60px;
-    padding:20px;
+    position: absolute;
+    top: 22%;
+    right: 22%;
     font-size: 17px;
     text-align: center;
     
-}
-.bgImage{
-    position: absolute;
-    width: 60vw;
-    height: 40vh;
-    top: 10vh;
-    left: 10vw;
-    opacity: 0.1;
 }
 .progress{
     width: 60%;

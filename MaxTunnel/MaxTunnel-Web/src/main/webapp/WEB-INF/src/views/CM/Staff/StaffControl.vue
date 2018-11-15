@@ -1,51 +1,43 @@
 <template>
     <div>
         <!-- 员工管理 -->
-        <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">员工管理</h1>
-        <Row style="marginLeft:25px;marginBottom:10px;">
+        <h1 style="margin-left: 20px;margin-top:10px">员工管理</h1>
+        <Row style="margin: 20px;">
             <Col span="6">
-            <div>
                 <span>员工姓名：</span>
                 <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
-            </div>
             </Col>
             <Col span="6">
-            <div>
                 <span>个人账号：</span>
                 <Input v-model="researchInfo.accountId" placeholder="支持模糊查询" class="inputWidth" />
-            </div>
             </Col> 
             <Col span="6">
-            <div>
                 <span>所属部门：</span>
                 <Select v-model="researchInfo.deptId" placeholder="请选择所属部门" class="inputWidth">
                     <Option value="null">不限</Option>
                     <Option v-for="item in departments" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
-            </div>
             </Col>
             <Col span="6">
-            <div>
                 <span>担任职位：</span>
                 <Select v-model="researchInfo.positionId" placeholder="请选择担任职位" class="inputWidth">
                     <Option value="null">不限</Option>
                     <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
-            </div>
             </Col> 
         </Row>
-        <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
+        <Row style="margin-left:20px;marginBottom:10px;">
             <Col span="6">
                 <span>开始时间：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
                 </DatePicker>
-                </Col>
+            </Col>
             <Col span="6">
                 <span>结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
                 </DatePicker>
             </Col>  
-            <Col span="10">
+            <Col span="12">
                 <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
                 <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 

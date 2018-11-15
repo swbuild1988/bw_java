@@ -108,8 +108,8 @@
     </div>
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnels'
-import { EquipmentService } from '../../../../services/equipments'
+import { TunnelService } from '../../../../services/tunnelService'
+import { EquipmentService } from '../../../../services/equipmentService'
 import types from "../../../../../static/Enum.json";
 import SmViewer from '../../../../components/Common/3D/3DViewer'
 import { URL_CONFIG } from '../../../../../static/3DMap/js/3DMapConfig'

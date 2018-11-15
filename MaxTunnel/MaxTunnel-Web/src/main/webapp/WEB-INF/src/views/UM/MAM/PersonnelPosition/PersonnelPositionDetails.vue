@@ -26,7 +26,7 @@
         <Row class="list">
             <Col span="15" class="view">
                 <!-- <sm-viewer id="personnelPositionSMViewer" ref="smViewer"></sm-viewer> -->
-                <sm-viewer id="personnelPositionSMViewer" @onload="onload">
+                <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
                 </sm-viewer>
             </Col>
             <Col span="8" offset="1">
@@ -49,7 +49,7 @@
     </div>
 </template>
 <script>
-  import { personnelPositionService } from '../../../../services/personnelPositions'
+  import { personnelPositionService } from '../../../../services/personnelPositionService'
   import SmViewer from "../../../../components/Common/3D/3DViewer"
 //   import { URL_CONFIG } from '../../../../../static/3DMap/js/3DMapConfig'
   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
@@ -68,49 +68,51 @@
             },
             curPerson: '1',
             personnelInfo: [
-              {
-                id: '1',
-                name: '章散',
-                figure: '../../../../assets/UM/用户.png',
-                phoneNum: 13678263529,
-                idCard: 223911199208102238
-              },
-              {
-                id: '2',
-                name: '里斯',
-                figure: '../../../../assets/UM/用户.png',
-                phoneNum: 13678263525,
-                idCard: 213811199203102238
-              },
-              {
-                id: '3',
-                name: '王武',
-                figure: '../../../../assets/UM/用户.png',
-                phoneNum: 13978263529,
-                idCard: 223911199208102641
-              },
-              {
-                id: '4',
-                name: '朱柳',
-                figure: '../../../../assets/UM/用户.png',
-                phoneNum: 18378263525,
-                idCard: 213811199203107264
-              }
-            ]
+              // {
+              //   id: '1',
+              //   name: '章散',
+              //   figure: '../../../../assets/UM/用户.png',
+              //   phoneNum: 13678263529,
+              //   idCard: 223911199208102238
+              // },
+              // {
+              //   id: '2',
+              //   name: '里斯',
+              //   figure: '../../../../assets/UM/用户.png',
+              //   phoneNum: 13678263525,
+              //   idCard: 213811199203102238
+              // },
+              // {
+              //   id: '3',
+              //   name: '王武',
+              //   figure: '../../../../assets/UM/用户.png',
+              //   phoneNum: 13978263529,
+              //   idCard: 223911199208102641
+              // },
+              // {
+              //   id: '4',
+              //   name: '朱柳',
+              //   figure: '../../../../assets/UM/用户.png',
+              //   phoneNum: 18378263525,
+              //   idCard: 213811199203107264
+              // }
+            ],
+            personnelPosition:{
+                openPosition:true,
+                isShow:true,
+            },
         }
     },
     components: { SmViewer },
     watch: {
         '$route': function () {
           this.tunnelId = this.$route.params.id
-          this.initData()
           this.getVisitors()
         }
     },
     mounted() {
         this.tunnelId = this.$route.params.id
         // this.$refs.smViewer.startCameraPositionRefresh()
-        this.initData()
         this.getVisitors()
     },
     methods: {
@@ -196,20 +198,6 @@
 
             bubble.call(_this,Cesium,scene,viewer,'model-content') //调用气泡
             getEntitySet.call(this,{viewer:viewer,url:'actived-locators',show:true,typeMode:'personnelType',messageType:'personnel'}) //人员定位
-      },
-      initData() {
-          // this.axios.get('tunnels/' + this.tunnelId + '/stores').then(res => {
-          //     let {code, data} = res.data
-          //     if (code == 200) {
-          //       this.selectList.stores = data
-          //     }
-          // })
-          // this.axios.get('tunnels/'+ this.tunnelId + '/areas').then(res =>{
-          //     let {code,data} = res.data
-          //     if(code == 200){
-          //         this.selectList.areas = data
-          //     }
-          // })
       },
       getVisitors() {
           let _this = this

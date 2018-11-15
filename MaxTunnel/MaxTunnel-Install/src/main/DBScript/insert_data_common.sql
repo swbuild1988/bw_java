@@ -1159,23 +1159,27 @@ commit;
 
 --schedule_job表
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (2, 'job2', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'reportMeasObjHour', '0 1 0/1 * * ?', '统计上个小时最大最小平均值');
+values (2, 'job2', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjHour', '0 1 0/1 * * ?', '统计上个小时最大最小平均值');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (3, 'job3', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'reportMeasObjDay', '0 0 9 * * ?', '统计昨天最大最小平均值');
+values (3, 'job3', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjDay', '0 0 9 * * ?', '统计昨天最大最小平均值');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (4, 'job4', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'reportMeasObjWeek', '0 0 9 ? * MON', '统计上周最大最小平均值');
+values (4, 'job4', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjWeek', '0 0 9 ? * MON', '统计上周最大最小平均值');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (5, 'job5', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'reportMeasObjMonth', '0 0 9 1 * ?', '统计上月最大最小平均值');
+values (5, 'job5', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjMonth', '0 0 9 1 * ?', '统计上月最大最小平均值');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (6, 'job6', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'reportMeasObjYear', '0 0 9 1 1 ? *', '统计上年最大最小平均值');
+values (6, 'job6', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjYear', '0 0 9 1 1 ? *', '统计上年最大最小平均值');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1, 'job1', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'saveDataScheduleBatch', '0 0/1 * * * ?', '监测对象数据定时保存');
+values (1, 'job1', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'saveDataScheduleBatch', '0 0/1 * * * ?', '监测对象数据定时保存');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (7, 'job7', 'group1', 1, 'com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter', 'deleteDataSchedule', '0 0 9 * * ?', '监测对象数据定时删除');
+values (7, 'job7', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'deleteDataSchedule', '0 0 9 * * ?', '监测对象数据定时删除');
+
+insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
+values (1000, 'job8', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'save2EnergyTable', '0 15 9 * * ?', '定时任务统计每条管廊每天能耗并保存到能耗表中');
+
 commit;

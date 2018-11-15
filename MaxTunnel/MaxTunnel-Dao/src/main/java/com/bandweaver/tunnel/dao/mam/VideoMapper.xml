@@ -119,7 +119,7 @@
         <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
         <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
         <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
-        <association property="videoServer" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer"
+        <association property="videoServerDto" javaType="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto"
                      column="SERVER_ID" select="com.bandweaver.tunnel.dao.mam.VideoServerMapper.getVideoServer">
         </association>
         <collection property="videoPresets" ofType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset">

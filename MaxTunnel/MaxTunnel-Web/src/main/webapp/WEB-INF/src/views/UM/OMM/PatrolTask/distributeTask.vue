@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-import { PatrolService } from '../../../../services/patrols'
+import { PatrolService } from '../../../../services/patrolService'
 export default {
     data(){
         return{

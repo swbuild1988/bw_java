@@ -3,6 +3,8 @@ package com.bandweaver.tunnel.common.biz.dto.oam;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+
 /**
  * ClassName: EnergyDto
  * @Description: 能耗dto
@@ -20,6 +22,7 @@ public class EnergyDto implements Serializable{
     private Integer tunnelId;
     /**管廊名称*/
     private String tunnelName;
+    
     /**能耗 单位：千瓦时*/
     private Double value;
     /**总能耗 单位：千瓦时*/
@@ -45,6 +48,7 @@ public class EnergyDto implements Serializable{
 	public void setTunnelId(Integer tunnelId) {
 		this.tunnelId = tunnelId;
 	}
+	
 	public String getTunnelName() {
 		return tunnelName;
 	}

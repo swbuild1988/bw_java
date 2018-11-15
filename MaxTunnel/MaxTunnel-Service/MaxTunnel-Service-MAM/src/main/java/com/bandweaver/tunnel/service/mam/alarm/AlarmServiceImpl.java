@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
+import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
@@ -26,11 +27,10 @@ public class AlarmServiceImpl implements AlarmService {
 	@Autowired
 	private AlarmMapper alarmMapper;
 	@Autowired
-    private AmqpTemplate amqpTemplate;
-	@Autowired
 	private AlarmModuleCenter alarmModuleCenter;
+	@Autowired
+	private MqService mqService;
 	
-	private static final String ROUTING_KEY = "mq.queue.alarm";
 
 	@Override
 	public void add(Alarm alarm) {
@@ -42,14 +42,9 @@ public class AlarmServiceImpl implements AlarmService {
 		//save to Cache
 		alarmModuleCenter.insert(alarm);
 		//send to MQ
-		sendMsg(alarm);
+		mqService.send2AlarmQueue(alarm);
 	}
 
-	private void sendMsg(Alarm alarm) {
-		LogUtil.info("Send to MQ:" + JSON.toJSONString(alarm) );
-		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(ROUTING_KEY), JSON.toJSONString(alarm));
-		
-	}
 
 	@Override
 	public int getCountByTunnelAndLevel(Integer tunnelId, int level) {

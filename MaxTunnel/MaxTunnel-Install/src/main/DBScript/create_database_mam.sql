@@ -303,6 +303,7 @@ create table T_MAM_MEASVALUE_AI
   Object_ID        NUMBER not null,
   CV              NUMBER not null
 );
+Create Index ai_time on T_MAM_MEASVALUE_AI(time,Object_ID);
 
 -- prompt Creating T_MAM_MEASVALUE_DI
 create table T_MAM_MEASVALUE_DI
@@ -311,6 +312,7 @@ create table T_MAM_MEASVALUE_DI
   Object_ID         NUMBER not null,
   CV               NUMBER not null
 );
+Create Index di_time on T_MAM_MEASVALUE_DI(time,Object_ID);
 
 -- prompt Creating T_MAM_MEASVALUE_SI
 create table T_MAM_MEASVALUE_SI
@@ -319,6 +321,7 @@ create table T_MAM_MEASVALUE_SI
   Object_ID         NUMBER not null,
   CV               NUMBER not null
 );
+Create Index si_time on T_MAM_MEASVALUE_SI(time,Object_ID);
 
 -- prompt Creating T_MAM_MEASVALUE_SO
 create table T_MAM_MEASVALUE_SO
@@ -327,6 +330,7 @@ create table T_MAM_MEASVALUE_SO
   Object_ID         NUMBER not null,
   CV               VARCHAR2(4000)
 );
+Create Index so_time on T_MAM_MEASVALUE_SO(time,Object_ID);
 
 -- prompt Creating T_MAM_MEASVALUE_DASSPECTRUM
 create table T_MAM_MEASVALUE_DASSPECTRUM
@@ -340,16 +344,16 @@ create table T_MAM_MEASVALUE_DASSPECTRUM
   Fft_Size                NUMBER,
   Data                   BLOB
 );
+Create Index da_time on T_MAM_MEASVALUE_DASSPECTRUM(time,Object_ID);
 
 -- prompt Creating T_MAM_MEASVALUE_DISTRIBUTE
 create table T_MAM_MEASVALUE_DISTRIBUTE(
-
   time              DATE NOT NULL,
   Object_ID         NUMBER NOT NULL,
   space_precision   number not null,
   dcv               varchar2(4000)
-
 );
+Create Index dis_time on T_MAM_MEASVALUE_DISTRIBUTE(time,Object_ID);
 
 -- creating T_MAM_MEASOBJ
 CREATE TABLE T_MAM_MEASOBJ(
@@ -530,7 +534,9 @@ alter table T_MAM_Video add constraint MAM_Video_ID primary key (ID);
 --measObj周期统计表
 CREATE TABLE T_MAM_MEASOBJ_REPORT(
    id   number  not null,
+   name         varchar2(50),
    object_id  number  not null,
+   tunnel_id  number  not null,
    object_type  number  not null,
    time_type  number  not null,
    s_time date  not null,

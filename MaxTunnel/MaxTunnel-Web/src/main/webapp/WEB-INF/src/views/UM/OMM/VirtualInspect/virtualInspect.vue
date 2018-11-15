@@ -5,19 +5,15 @@
         <!--<TabPane label="手动巡检" name="manual">-->
         <div class="coolBox" style="height: 60px;padding: 12px;color: #fff;font-size: 16px;">
             <Row>
-                <Col span="6"> 所属管廊：
-                <Select v-model="conditions.tunnelId" style="width: 60%" @on-change="getTunnel()">
-                    <Option v-for="(item,index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
+                <Col span="9"> 飞行路径：
+                <Select v-model="conditions.routeIndex" style="width: 60%" @on-change="getStopsList"> 
+                    <Option value="00">全部</Option> 
+                    <Option v-for="(item,index) in list.routes" :key="index" :value="index">{{item.routeName}}</Option>
                 </Select>
                 </Col>
-                <Col span="6"> 所属区段：
-                <Select v-model="conditions.areaId" style="width: 60%">
-                    <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
-                </Select>
-                </Col>
-                <Col span="6"> 所属管仓：
-                <Select v-model="conditions.storeId" style="width: 60%">
-                    <Option v-for="(item,index) in stores" :key="index" :value="item.id">{{item.name}}</Option>
+                <Col span="9"> 站点：
+                <Select v-model="conditions.stopId" style="width: 60%">
+                    <Option v-for="(item,index) in list.stops" :key="index" :value="item.id">{{item.stopName}}</Option>
                 </Select>
                 </Col>
                 <Col span="6" style="text-align: right">
@@ -25,7 +21,9 @@
                 <!--<span slot="open">手动</span>-->
                 <!--<span slot="close">自动</span>-->
                 <!--</i-Switch>-->
-                <Button type="primary" icon="ios-search">查询</Button>
+                <!-- <Button type="primary" icon="ios-search">查询</Button> -->
+                <Button type="primary" @click="isManual = false">手动</Button>
+                <Button type="primary" @click="isManual = true">自动</Button>
                 <Button type="primary" icon="compose" @click="edit">编辑</Button>
                 </Col>
             </Row>
@@ -33,7 +31,7 @@
         <Row :gutter="20" class="mainInfo">
             <Col span="12">
             <div class="manualShowInspect coolBox">
-                <div class="options">
+                <div class="options" v-if="isManual">
                     <Button type="primary" class="buttons" icon="ios-rewind" @click="speedDown"></Button>
                     <Button type="primary" class="buttons" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="play"></Button>
                     <Button type="primary" class="buttons" icon="stop" @click="stop"></Button>
@@ -59,14 +57,15 @@
 <script>
 import SmViewer from "../../../../components/Common/3D/3DViewer";
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
+import { VideoService } from "../../../../services/VideoService";
+import { TunnelService } from "../../../../services/tunnelService";
 
 export default {
     data() {
         return {
             conditions: {
-                tunnelId: null,
-                areaId: null,
-                atoreId: null
+                routeIndex: '00',
+                stopId: null
             },
             SmSetting: {
                 flyManagerAttr: {
@@ -80,9 +79,11 @@ export default {
                 defaultAddress: null
             },
             curPerset: null,
-            tunnels: [],
-            areas: [],
-            stores: [],
+            list: {
+                routes: null,
+                stops: [],
+            },
+            allStops: [],
             cameraPosition: null,
             playOrPause: {
                 isPlay: false,
@@ -91,11 +92,15 @@ export default {
             bottomView: {
                 isShow: true,
                 data: null
-            }
+            },
+            isManual: false
         };
     },
     mounted() {
-        this.init();
+        let data = this.$refs.smViewer.getRoutesAndStops()
+        this.list.routes = data.routes
+        this.allStops = data.allStops
+        this.getStopsList()
         this.Log.info("初始化调用刷新");
         this.$refs.smViewer.startCameraPositionRefresh();
     },
@@ -108,97 +113,137 @@ export default {
         VideoComponent
     },
     methods: {
-        init() {
-            this.axios.get("/tunnels ").then(response => {
-                let { code, data } = response.data;
-                if (code == 200) {
-                    this.tunnels = data;
-                    this.getAreas();
-                    this.getStores();
-                }
-            });
-        },
-
-        //获取所属区域
-        getAreas() {
-            this.axios
-                .get("/tunnels/" + this.conditions.tunnelId + "/areas")
-                .then(response => {
-                    let { code, data } = response.data;
-                    if (code == 200) {
-                        this.areas = data;
-                    }
-                });
-        },
-
-        //获取所属仓段
-        getStores() {
-            this.axios
-                .get("tunnels/" + this.conditions.tunnelId + "/stores")
-                .then(response => {
-                    let { code, data } = response.data;
-                    if (code == 200) {
-                        this.stores = data;
-                    }
-                });
+        getStopsList() {
+            if(this.conditions.routeIndex == '00'){
+                this.list.stops = this.allStops
+            } else {
+                this.list.stops = this.list.routes[this.conditions.routeIndex].stopCollection
+            }
         },
 
         // 3D相机位置刷新
         refreshCameraPosition(position) {
             this.cameraPosition = position;
             this.Log.info("get position:", this.cameraPosition);
-            this.axios
-                .post("virual-inspection/video", this.cameraPosition)
-                .then(res => {
-                    let { code, data } = res.data;
-                    if (code == 200) {
-                        this.Log.info("get camera", data.video);
-                        this.Log.info("get preset", data.preset);
-                        if (data.video) {
-                            // 如果是不同相机，则预置位更新并走到对应预置位
-                            if (this.curVideo.id != data.video.id) {
-                                this.curVideo = data.video;
-                                this.curPerset = data.preset;
-                                if (this.curPerset != null) {
-                                    this.axios
-                                        .get(
-                                            "videos/" +
-                                                this.curVideo.id +
-                                                "/presets/" +
-                                                this.curPerset +
-                                                "/goto"
-                                        )
-                                        .then(res => {
-                                            this.Log.info(
-                                                "goto" + this.curPerset
-                                            );
-                                        });
-                                }
-                            } else {
-                                // 如果是同一个相机，并且预置位变了
-                                if (
-                                    this.curPerset != data.preset &&
-                                    data.preset != null
-                                ) {
-                                    this.curPerset = data.preset;
-                                    this.axios
-                                        .get(
-                                            "videos/" +
-                                                this.curVideo.id +
-                                                "/presets/" +
-                                                this.curPerset +
-                                                "/goto"
-                                        )
-                                        .then(res => {
-                                            this.Log.info(
-                                                "goto" + this.curPerset
-                                            );
-                                        });
-                                }
+            let _this = this
+            VideoService.getVICameras(this.cameraPosition).then(
+                result=>{
+                    this.Log.info("get camera", result.video);
+                    this.Log.info("get preset", result.preset);
+                    if (result.video) {
+                        // 如果是不同相机，则预置位更新并走到对应预置位
+                        if (this.curVideo.id != result.video.id) {
+                            this.curVideo = result.video;
+                            this.curPerset = result.preset;
+                            if (this.curPerset != null) {
+                                VideoService.goToPreset(_this.curVideo.id,_this.curPerset).then(
+                                    result=>{
+                                        _this.Log.info(
+                                            "goto" + _this.curPerset
+                                        );
+                                    },
+                                    error=>{
+                                        _this.Log.info(error)
+                                    })
+                                // this.axios
+                                //     .get(
+                                //         "videos/" +
+                                //             this.curVideo.id +
+                                //             "/presets/" +
+                                //             this.curPerset +
+                                //             "/goto"
+                                //     )
+                                //     .then(res => {
+                                //         this.Log.info(
+                                //             "goto" + this.curPerset
+                                //         );
+                                //     });
+                            }
+                        } else {
+                            // 如果是同一个相机，并且预置位变了
+                            if (
+                                this.curPerset != result.preset &&
+                                result.preset != null
+                            ) {
+                                this.curPerset = result.preset;
+                                VideoService.goToPreset(_this.curVideo.id,_this.curPerset).then(
+                                    result=>{
+                                        _this.Log.info(
+                                            "goto" + _this.curPerset
+                                        );
+                                    },
+                                    error=>{
+                                        _this.Log.info(error)
+                                    })
+                                // this.axios
+                                //     .get(
+                                //         "videos/" +
+                                //             this.curVideo.id +
+                                //             "/presets/" +
+                                //             this.curPerset +
+                                //             "/goto"
+                                //     )
+                                //     .then(res => {
+                                //         this.Log.info(
+                                //             "goto" + this.curPerset
+                                //         );
+                                //     });
                             }
                         }
                     }
-                });
+                })
+            // this.axios
+            //     .post("virual-inspection/video", this.cameraPosition)
+            //     .then(res => {
+            //         let { code, data } = res.data;
+            //         if (code == 200) {
+            //             this.Log.info("get camera", data.video);
+            //             this.Log.info("get preset", data.preset);
+            //             if (data.video) {
+            //                 // 如果是不同相机，则预置位更新并走到对应预置位
+            //                 if (this.curVideo.id != data.video.id) {
+            //                     this.curVideo = data.video;
+            //                     this.curPerset = data.preset;
+            //                     if (this.curPerset != null) {
+            //                         this.axios
+            //                             .get(
+            //                                 "videos/" +
+            //                                     this.curVideo.id +
+            //                                     "/presets/" +
+            //                                     this.curPerset +
+            //                                     "/goto"
+            //                             )
+            //                             .then(res => {
+            //                                 this.Log.info(
+            //                                     "goto" + this.curPerset
+            //                                 );
+            //                             });
+            //                     }
+            //                 } else {
+            //                     // 如果是同一个相机，并且预置位变了
+            //                     if (
+            //                         this.curPerset != data.preset &&
+            //                         data.preset != null
+            //                     ) {
+            //                         this.curPerset = data.preset;
+            //                         this.axios
+            //                             .get(
+            //                                 "videos/" +
+            //                                     this.curVideo.id +
+            //                                     "/presets/" +
+            //                                     this.curPerset +
+            //                                     "/goto"
+            //                             )
+            //                             .then(res => {
+            //                                 this.Log.info(
+            //                                     "goto" + this.curPerset
+            //                                 );
+            //                             });
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     });
         },
 
         edit() {

@@ -111,7 +111,7 @@
 <script>
   import SimplePieChart from '../../../../components/Common/Chart/SimplePieChart.vue'
   import SimpleBarChart from '../../../../components/Common/Chart/SimpleBarChart.vue'
-  import { EquipmentService } from '../../../../services/equipments'
+  import { EquipmentService } from '../../../../services/equipmentService'
   export default {
     name: "tool-history-count",
     data() {

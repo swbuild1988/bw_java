@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.oam.ConsumeMapper">
+<cache/>
+	
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Consume">
+		insert into T_OAM_CONSUME
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="tunnelId != null">
+				TUNNEL_ID,
+			</if>
+			<if test="storeId != null">
+				STORE_ID,
+			</if>
+			<if test="areaId != null">
+				AREA_ID,
+			</if>
+			<if test="objectType != null">
+				object_type,
+			</if>
+			<if test="energyType != null">
+				ENERGY_TYPE,
+			</if>
+			<if test="objectId != null">
+				OBJECT_ID,
+			</if>
+			<if test="compute != null">
+				COMPUTE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="tunnelId != null">
+				#{tunnelId},
+			</if>
+			<if test="storeId != null">
+				#{storeId},
+			</if>
+			<if test="areaId != null">
+				#{areaId},
+			</if>
+			<if test="objectType != null">
+				#{objectType},
+			</if>
+			<if test="energyType != null">
+				#{energyType},
+			</if>
+			<if test="objectId != null">
+				#{objectId},
+			</if>
+			<if test="compute != null">
+				#{compute},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Consume">
+		update T_OAM_CONSUME
+		<set>
+			<if test="tunnelId != null">
+				TUNNEL_ID = #{tunnelId},
+			</if>
+			<if test="storeId != null">
+				STORE_ID = #{storeId},
+			</if>
+			<if test="areaId != null">
+				AREA_ID = #{areaId},
+			</if>
+			<if test="objectType != null">
+				OBJECT_TYPE = #{objectType},
+			</if>
+			<if test="energyType != null">
+				ENERGY_TYPE = #{energyType},
+			</if>
+			<if test="objectId != null">
+				OBJECT_ID = #{objectId},
+			</if>
+			<if test="compute != null">
+				COMPUTE = #{compute},
+			</if>
+		</set>
+		where ID = #{id}
+	</update>
+
+	<insert id="addBatch" useGeneratedKeys="false">
+		insert into T_OAM_CONSUME
+		(TUNNEL_ID,STORE_ID,AREA_ID,OBJECT_TYPE,ENERGY_TYPE)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.tunnelId},
+			#{item.storeId},
+			#{item.areaId},
+			#{item.objectType},
+			#{item.energyType}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+	<select id="getConsumeById" resultMap="ConsumeMap">
+	select * from T_OAM_CONSUME where id = #{id}
+	</select>
+	
+	<select id="getConsumeDtoById" resultMap="ConsumeDtoMap">
+	select * from T_OAM_CONSUME where id = #{id}
+	</select>
+	
+	<select id="getConsumesByCondition" resultMap="ConsumeDtoMap">
+	select * from T_OAM_CONSUME
+	<where>
+		<if test="id != null">
+			and ID = #{id}
+		</if>
+		<if test="tunnelId != null">
+			and TUNNEL_ID = #{tunnelId}
+		</if>
+		<if test="storeId != null">
+			and STORE_ID = #{storeId}
+		</if>
+		<if test="areaId != null">
+			and AREA_ID = #{areaId}
+		</if>
+		<if test="objectType != null">
+			and OBJECT_TYPE = #{objectType}
+		</if>
+		<if test="energyType != null">
+			and ENERGY_TYPE = #{energyType}
+		</if>
+		<if test="objectId != null">
+			and OBJECT_ID = #{objectId}
+		</if>
+		<if test="compute != null">
+			and COMPUTE = #{compute}
+		</if>
+	</where>
+	</select>
+	
+	<delete id="delete">
+	DELETE FROM T_OAM_CONSUME WHERE ID = #{id}
+	</delete>
+	
+	<resultMap id="ConsumeMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.Consume">
+		<id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="object_type" jdbcType="DECIMAL" property="objectType"/>
+        <result column="object_id" jdbcType="DECIMAL" property="objectId"/>
+        <result column="energy_type" jdbcType="DECIMAL" property="energyType"/>
+        <result column="compute" jdbcType="VARCHAR" property="compute"/>
+	</resultMap>
+	<resultMap id="ConsumeDtoMap" type="com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto">
+		<id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="object_type" jdbcType="DECIMAL" property="objectType"/>
+        <result column="object_id" jdbcType="DECIMAL" property="objectId"/>
+        <result column="energy_type" jdbcType="DECIMAL" property="energyType"/>
+        <result column="compute" jdbcType="VARCHAR" property="compute"/>
+        <association property="areaDto" javaType="com.bandweaver.tunnel.common.biz.dto.AreaDto"
+                     column="area_id" select="com.bandweaver.tunnel.dao.common.AreaMapper.getAreasById">
+        </association>
+        <association property="storeDto" javaType="com.bandweaver.tunnel.common.biz.dto.StoreDto"
+                     column="store_id" select="com.bandweaver.tunnel.dao.common.StoreMapper.getDtoById">
+        </association>
+	</resultMap>
+</mapper>

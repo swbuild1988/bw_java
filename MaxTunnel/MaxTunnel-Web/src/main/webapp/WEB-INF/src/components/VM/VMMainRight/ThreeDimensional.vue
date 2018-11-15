@@ -54,8 +54,6 @@
 <script>
     import VmTitle from '../VMTitle'
     import SmViewer from '../../Common/3D/3DViewer'
-    // import "../../../scripts/RibbitMQManage";
-    // import {InitMQ} from "../../../scripts/RibbitMQManage";
     import Vue from 'vue'
 
     export default {
@@ -81,6 +79,10 @@
                 showArea:false,
                 defaultAreaVal:1,
                 switchType:false,
+                unitsPosition:{
+                    openPosition:true,
+                    isShow:true,
+                },
             }
         },
         components:{
@@ -121,7 +123,6 @@
         },
         methods:{
             init(){
-                // Vue.prototype.MQ.openMQ(this.MQCallback)  ;
                 this.fetchData();
                 this.changeStatus(this.defaultAreaVal);
             },
@@ -270,31 +271,61 @@
 
             },
             sendAlarms(){
-                this.axios.post('/alarms',
-                    {
-                        alarmDate:+new Date(),
-                        alarmLevel:1,
-                        tunnelId:1002,
-                        objectId:7001,
-                        latitude: "37.706119",
-                        longitude: "112.494080",
-                        description:'sad'
-                    })
-                    .then()
+
+                setTimeout(()=>{
+                    this.axios.post('/alarms',
+                        {
+                            alarmDate:+new Date(),
+                            alarmLevel:1,
+                            tunnelId:1002,
+                            objectId:7001,
+                            latitude: "112.49408263714506",
+                            longitude: "37.70642444695577",
+                            description:'sad',
+                            isDistribute:true
+                        })
+                        .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                },1000)
+                // setTimeout(()=>{
+                //     this.axios.post('/alarms',
+                //         {
+                //             alarmDate:+new Date(),
+                //             alarmLevel:1,
+                //             tunnelId:1002,
+                //             objectId:7002,
+                //             latitude: "37.70718914626341",
+                //             longitude: "112.4940169552599",
+                //             description:'sad'
+                //         })
+                //         .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                // },1000)
+                // setTimeout(()=>{
+                //     this.axios.post('/alarms',
+                //         {
+                //             alarmDate:+new Date(),
+                //             alarmLevel:1,
+                //             tunnelId:1002,
+                //             objectId:7003,
+                //             latitude: "37.70614188197423",
+                //             longitude: "112.4940660989837",
+                //             description:'sad'
+                //         })
+                //         .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                // },1000)
+                // setTimeout(()=>{
+                //     this.axios.post('/alarms',
+                //         {
+                //             alarmDate:+new Date(),
+                //             alarmLevel:1,
+                //             tunnelId:1002,
+                //             objectId:7004,
+                //             latitude: "37.707189145668366",
+                //             longitude: "112.49406611961243",
+                //             description:'sad'
+                //         })
+                //         .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                // },1000)
             },
-            MQCallback(message){
-                let result = JSON.parse(message.body);
-
-                if(result){
-
-                    this.$Notice.warning({
-                        title: '接收到一条新告警',
-                        duration: 3
-                    });
-                    Vue.prototype.IM.addInformation('alarm',result);
-                    this.$refs.smViewer.addAlarmEntity(result.objectId);
-                }
-            }
 
         }
     }

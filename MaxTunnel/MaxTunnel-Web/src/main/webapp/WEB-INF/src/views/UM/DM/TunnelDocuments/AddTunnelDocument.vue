@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { EnumsService } from '../../../../services/enums'
+import { EnumsService } from '../../../../services/enumsService'
 import types from '../../../../../static/Enum.json'
 export default {
     data(){

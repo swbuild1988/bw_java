@@ -6,3 +6,6 @@ com.bandweaver.tunnel.controller.mam
 com.bandweaver.tunnel.controller.oam
 com.bandweaver.tunnel.controller.omm
 com.bandweaver.tunnel.controller.quartz
+com.bandweaver.tunnel.service.em
+com.bandweaver.tunnel.service.em.fireplan
+com.bandweaver.tunnel.service.em.windplan

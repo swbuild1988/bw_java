@@ -28,4 +28,6 @@ public interface EmPlanMapper {
 	void deleteBatch(List<Integer> list);
 
 	List<EmPlanDto> getByCondition(EmPlanVo vo);
+
+	List<EmPlanDto> getNodeListByProcessKey(String processKey);
 }

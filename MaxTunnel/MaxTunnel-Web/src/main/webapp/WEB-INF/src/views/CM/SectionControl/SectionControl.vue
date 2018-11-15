@@ -21,7 +21,7 @@
             <Col span="6">
                 <Poptip placement="bottom" width="1000">
                     <span>所属管仓：</span>
-                    <Input v-model="barnNameShow" placeholder="请选择管仓类型" class="inputWidth" />
+                    <Input v-model="barnNameShow" placeholder="请选择管仓类型" style="width: 60%"/>
                     <div class="pop" slot="content">
                         <barn-choose v-on:listenToBarnChoose="getBarn"></barn-choose>
                     </div>
@@ -37,7 +37,7 @@
             </div>
             </Col>
         </Row>
-        <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
+        <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span>开始时间：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
@@ -420,7 +420,7 @@ export default {
         margin-top: 100px;
         margin-right: 10px;
     }
-    .ivu-poptip{
+    .ivu-poptip,.ivu-poptip-rel{
         width: 100%;
     }
 </style>

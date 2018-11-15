@@ -75,5 +75,7 @@
         <result column="SPACE_PRECISION" jdbcType="VARCHAR" property="spacePrecision"/>
         <result column="dcv" jdbcType="VARCHAR" property="dcv"/>
     </resultMap>
-
+<delete id="deleteByPrimaryKey">
+	delete from T_MAM_MEASOBJ_DISTRIBUTE where id = #{id}
+</delete>
 </mapper>

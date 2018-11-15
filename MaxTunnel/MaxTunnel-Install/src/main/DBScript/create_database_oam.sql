@@ -137,14 +137,79 @@ begin
           execute immediate 'drop table T_OAM_EVENT'; 
       end   if;
       
+-- prompt dropping sequence
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OAM_CONSUME_SQ';
+      if num > 0 then
+         execute immediate 'DROP SEQUENCE OAM_CONSUME_SQ';
+      end if;
+-- prompt dropping trigger
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OAM_CONSUME_TG';
+      if num > 0 then
+         execute immediate 'DROP TRIGGER OAM_CONSUME_TG';
+      end if;
+-- prompt dropping table
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OAM_CONSUME';
+      if num > 0 then
+         execute immediate 'DROP TABLE T_OAM_CONSUME';
+      end if;
+-- prompt Dropping T_OAM_CONSUME_DATA
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OAM_CONSUME_DATA';
+      if   num=1   then 
+          execute immediate 'drop table T_OAM_CONSUME_DATA'; 
+      end   if; 
 end;
 /
-
 -----------------------------------------------------------
 ---------------------TABLE---------------------------------
 -----------------------------------------------------------
 
---事件表
+-- 能耗表
+create table T_OAM_CONSUME
+(
+  ID         NUMBER NOT NULL,
+  TUNNEL_ID  NUMBER NOT NULL,
+  STORE_ID   NUMBER NOT NULL,
+  AREA_ID    NUMBER NOT NULL,
+  OBJECT_TYPE NUMBER NOT NULL,
+  ENERGY_TYPE NUMBER NOT NULL,
+  OBJECT_ID  NUMBER,
+  COMPUTE    VARCHAR2(50)
+);
+alter table T_OAM_CONSUME add constraint OAM_CONSUME_ID primary key(ID);
+
+-- create OAM_CONSUME_SQ
+create sequence OAM_CONSUME_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OAM_CONSUME_TG
+CREATE OR REPLACE TRIGGER OAM_CONSUME_TG
+  BEFORE INSERT ON T_OAM_CONSUME
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OAM_CONSUME_SQ.nextval into :new.id from dual;
+end OAM_CONSUME_TG;
+/
+alter trigger OAM_CONSUME_TG enable;
+
+-- prompt create T_OAM_CONSUME_DATA
+CREATE TABLE T_OAM_CONSUME_DATA
+(
+  ID         NUMBER NOT NULL,
+  OBVIOUS    NUMBER,
+  ABSTRACT   NUMBER,
+  TIME       DATE
+);
+
+--重大事件表
 CREATE TABLE T_OAM_EVENT  (
    ID                NUMBER                      NOT NULL,
    NAME              varchar2(100)               NOT NULL,
@@ -182,6 +247,7 @@ end OAM_EVENT_TG;
 CREATE TABLE T_OAM_ENERGY  (
    "ID"                 NUMBER                          NOT NULL,
    "TUNNEL_ID"              NUMBER               NOT NULL,
+   object_type              number               not null,
    "VALUE"                  NUMBER,
    "UNIT_PRICE"             NUMBER              NOT NULL,
    "CRT_TIME"           DATE,
@@ -209,12 +275,16 @@ end OAM_ENERGY_TG;
 
 --客户表
 CREATE TABLE T_OAM_CUSTOMER(
-  id                NUMBER               NOT NULL,
- COMPANY_ID         NUMBER               NOT NULL,--公司信息
-  contact     varchar2(50),--联系人
-  tel     varchar2(20),--电话
-  crt_time          DATE,
-   CONSTRAINT PK_T_OAM_CUSTOMER PRIMARY KEY ("ID")
+  id                 NUMBER               NOT NULL,
+  COMPANY_ID         NUMBER               NOT NULL,
+  contact            varchar2(50)         not null,
+  tel                varchar2(20)         not null,
+  contact2           varchar2(50),
+  tel2               varchar2(20),
+  contact3           varchar2(50),
+  tel3               varchar2(20),
+  crt_time           DATE,
+  CONSTRAINT PK_T_OAM_CUSTOMER PRIMARY KEY ("ID")
 );
 
 

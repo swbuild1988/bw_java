@@ -241,4 +241,9 @@
 		order by crt_time desc
 	</select>
   
+  
+  <select id="getNodeListByProcessKey" resultMap="DtoResultMap">
+  	select * from T_EM_PLAN where process_key = #{processKey} order by id asc
+  </select>
+  
 </mapper>	

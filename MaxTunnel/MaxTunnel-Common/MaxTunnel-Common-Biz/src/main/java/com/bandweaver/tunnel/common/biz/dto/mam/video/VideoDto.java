@@ -11,16 +11,16 @@ import java.util.List;
 
 public class VideoDto extends Video {
 
-    private VideoServer videoServer;
+    private VideoServerDto videoServerDto;
     private boolean ptzOperationsSupported;
     private List<VideoPreset> videoPresets;
 
-    public VideoServer getVideoServer() {
-        return videoServer;
+    public VideoServerDto getVideoServerDto() {
+        return videoServerDto;
     }
 
-    public void setVideoServer(VideoServer videoServer) {
-        this.videoServer = videoServer;
+    public void setVideoServerDto(VideoServerDto videoServerDto) {
+        this.videoServerDto = videoServerDto;
     }
 
     public boolean isPtzOperationsSupported() {
@@ -41,29 +41,29 @@ public class VideoDto extends Video {
 
     public String getUrl() {
         String url = "";
-        VideoVendor vendor = VideoVendor.getEnum(this.videoServer.getVendor());
+        VideoVendor vendor = VideoVendor.getEnum(this.videoServerDto.getVendor());
 
         switch (vendor) {
             case DaKang:
-                url = "rtsp://" + this.videoServer.getUsername() + ":" + this.videoServer.getPassword() +
-                        "@" + this.videoServer.getIp() + ":" + this.videoServer.getPort() +
+                url = "rtsp://" + this.videoServerDto.getUsername() + ":" + this.videoServerDto.getPassword() +
+                        "@" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
                         "/Streaming/Channels/" + super.getChannelNo();
                 break;
 
             case HoneyWell_HISD:
-                url = "rtsp://" + this.videoServer.getUsername() + ":" + this.videoServer.getPassword() +
-                        "@" + this.videoServer.getIp() + ":" + this.videoServer.getPort() +
+                url = "rtsp://" + this.videoServerDto.getUsername() + ":" + this.videoServerDto.getPassword() +
+                        "@" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
                         "/h264/ch" + super.getChannelNo() + "/main/av_stream";
                 break;
 
             case HoneyWell_HICC:
-                url = "rtsp://" + this.videoServer.getUsername() + ":" + this.videoServer.getPassword() +
-                        "@" + this.videoServer.getIp() + ":" + this.videoServer.getPort() +
+                url = "rtsp://" + this.videoServerDto.getUsername() + ":" + this.videoServerDto.getPassword() +
+                        "@" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
                         "/media?stream=0";
                 break;
 
             case H5STREAM:
-                url = this.videoServer.getIp() + ":" + this.videoServer.getPort();
+                url = this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort();
                 break;
 
             default:
@@ -75,7 +75,7 @@ public class VideoDto extends Video {
     @Override
     public String toString() {
         return "VideoDto{" +
-                "videoServer=" + videoServer +
+                "videoServerDto=" + videoServerDto +
                 ", ptzOperationsSupported=" + ptzOperationsSupported +
                 ", videoPresets=" + videoPresets +
                 "} " + super.toString();

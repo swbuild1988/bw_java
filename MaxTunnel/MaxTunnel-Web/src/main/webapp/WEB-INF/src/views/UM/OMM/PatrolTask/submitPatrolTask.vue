@@ -43,7 +43,7 @@
             <table class="addRecords" v-for="(item,index) in addRecords" :key="index" v-if="item.status==1">
                 <thead>
                     <tr style="border-top: 2px solid #4a6b9d;">
-                        <th>#</th>
+                        <!-- <th>#</th> -->
                         <th>巡检所属仓段</th>
                         <th>巡检所属区域</th>
                         <th>巡检记录时间</th>
@@ -53,7 +53,7 @@
                     </tr>
                 </thead>
                 <tr>
-                    <td>{{index+1}}</td>
+                    <!-- <td v-if="item.status==1">{{index+1}}</td> -->
                     <td>
                         <Select v-model="item.area.id">
                             <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
@@ -131,9 +131,9 @@
 <script>
 import types from '../../../../../static/Enum.json'
 import expandRow from '../../../../components/UM/OMM/table-expand.vue';
-import { TunnelService } from '../../../../services/tunnels'
-import { PatrolService } from '../../../../services/patrols'
-import { EnumsService } from '../../../../services/enums'
+import { TunnelService } from '../../../../services/tunnelService'
+import { PatrolService } from '../../../../services/patrolService'
+import { EnumsService } from '../../../../services/enumsService'
 export default {
     components: { expandRow },
     data(){
@@ -183,11 +183,13 @@ export default {
                     width: 50,
                     align: 'center',
                     render: (h, params) => {
-                        return h(expandRow, {
-                            props: {
-                                row: params.row,
-                            },
-                        })
+                        if(params.row.hasDefect!=false){
+                            return h(expandRow, {
+                                props: {
+                                    row: params.row,
+                                },
+                            })
+                        }
                     }
                 },
                 {
@@ -237,13 +239,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
         })
-        // this.axios.get('/tunnels').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.tunnel = data
-        //     }
-        // })
-
         // 获取任务
         PatrolService.getTDetailByPlanId(this.task.id).then(
             (result)=>{
@@ -257,16 +252,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/inspection-tasks/'+this.task.id).then(response => {
-        //     let {code, data} = response.data;
-        //     this.task = data; 
-        //     if(data.startTime!=null&&data.endTime!=null){
-        //         this.task.startTime = new Date(data.startTime).format('yyyy-MM-dd hh:mm:s')
-        //         this.task.endTime = new Date(data.endTime).format('yyyy-MM-dd hh:mm:s')
-        //     }
-        //     this.defectTunnelId = this.task.tunnelId
-        // })
-
         //获取所属区域
         TunnelService.getAreasByTunnelId(this.defectTunnelId).then(
             (result)=>{
@@ -275,13 +260,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/tunnels/'+this.defectTunnelId+'/areas').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.areas=data
-        //     }
-        // })
-
         //获取所属仓段
         TunnelService.getStoresByTunnelId(this.defectTunnelId).then(
             (result)=>{
@@ -290,13 +268,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('tunnels/'+this.defectTunnelId+'/stores').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.stores = data
-        //     }
-        // })
-
         //危险等级
         EnumsService.getDefectLevel().then(
             (result)=>{
@@ -305,13 +276,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get("/defectLevel/enum").then(response=>{
-        //     let { code,data } = response.data
-        //     if(code==200){
-        //         this.defectLevel = data
-        //     }
-        // })
-
         //缺陷类型
         EnumsService.getDefectType().then(
             (result)=>{
@@ -320,13 +284,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get("/defectType/enum").then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.type = data
-        //     }
-        // })
-
     },
     methods: {
         //modal 添加巡检记录 内部+add
@@ -414,41 +371,45 @@ export default {
         },
         ok(){
             this.addRecords.forEach(b=>{
-                this.areas.forEach(a=>{
-                    if( a.id == b.area.id){
-                        b.area.name = a.name
-                        if(b.hasDefect){
-                            b.defect.area.name = a.name
+                var arr = []
+                if(b.status==1){
+                    this.areas.forEach(a=>{
+                        if( a.id == b.area.id){
+                            b.area.name = a.name
+                            if(b.hasDefect){
+                                b.defect.area.name = a.name
+                            }
                         }
+                    }) 
+                    this.stores.forEach(c=>{
+                        if(c.id == b.store.id){
+                            b.store.name = c.name
+                            if(b.hasDefect){
+                                b.defect.store.name = c.name
+                            }
+                        }
+                    })
+                    if(b.hasDefect){               
+                        this.type.forEach(d=>{
+                            if(d.val == b.defect.type){
+                                b.defect.typeName = d.key
+                            }
+                        })  
+                        this.defectLevel.forEach(e=>{
+                            if(e.val == b.defect.level){
+                                b.defect.levelName = e.key
+                            }
+                        })  
+                        this.objs.forEach(f=>{
+                            if(f.key == b.defect.objectId){
+                                b.defect.objName = f.val
+                            }
+                        })                                                                                                 
                     }
-                }) 
-                this.stores.forEach(c=>{
-                    if(c.id == b.store.id){
-                        b.store.name = c.name
-                        if(b.hasDefect){
-                            b.defect.store.name = c.name
-                        }
-                    }
-                })
-                if(b.hasDefect){
-                    this.type.forEach(d=>{
-                        if(d.val == b.defect.type){
-                            b.defect.typeName = d.key
-                        }
-                    })  
-                    this.defectLevel.forEach(e=>{
-                        if(e.val == b.defect.level){
-                            b.defect.levelName = e.key
-                        }
-                    })  
-                    this.objs.forEach(f=>{
-                        if(f.key == b.defect.objectId){
-                            b.defect.objName = f.val
-                        }
-                    })                                                                                                 
+                    arr.push(b)
                 }
+                    this.task.records=arr.concat(this.task.records)
             })
-            this.task.records=this.addRecords.concat(this.task.records)
         },
         //提交巡检任务执行结果
         submitTask(){

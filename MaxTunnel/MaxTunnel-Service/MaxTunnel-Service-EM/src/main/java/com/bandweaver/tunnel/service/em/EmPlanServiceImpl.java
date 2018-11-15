@@ -17,12 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.ActionEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
+import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
@@ -52,7 +54,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 	@Autowired
 	private MeasObjMapService measObjMapService;
 	@Autowired
-	private AmqpTemplate amqpTemplate;
+	private MqService mqService;
 
 	@Override
 	public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
@@ -66,6 +68,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
 		LogUtil.info("Get variables:" + variables);
 		Integer sectionId = DataTypeUtil.toInteger(variables.get("sectionId"));
+		Integer objectId = DataTypeUtil.toInteger(variables.get("objectId"));
 
 		EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
 		LogUtil.info("Get emPlan from DB:" + emPlan);
@@ -126,7 +129,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 	
 	@Override
-	public void nextTask(String processInstanceId) {
+	public void nextTask(String processInstanceId,Integer objectId) {
 		
 		boolean isFinished = false;
 		while(!isFinished) {
@@ -149,25 +152,25 @@ public class EmPlanServiceImpl implements EmPlanService {
 			
 			case AUTO:
 				LogUtil.info("自动结束");
-				sendMsg(emPlan,processInstanceId,isSuccess);
+				sendMsg(emPlan,processInstanceId,isSuccess,objectId);
 				activitiService.completeTaskByProcessIntance(processInstanceId);
 				continue;
 				
 			case SEMI_AUTO:
 				LogUtil.info("半自动结束，需要确认执行结果");
 				if(isSuccess) {
-					sendMsg(emPlan,processInstanceId,isSuccess);
+					sendMsg(emPlan,processInstanceId,isSuccess,objectId);
 					activitiService.completeTaskByProcessIntance(processInstanceId);
 				}else {
 					LogUtil.info("节点任务执行失败，流程暂停");
 					isFinished = true;
-					sendMsg(emPlan,processInstanceId,isSuccess);
+					sendMsg(emPlan,processInstanceId,isSuccess,objectId);
 				}
 				continue;
 				
 			case MANUAL:
 				LogUtil.info("手动结束,需要确认,processInstanceId :" + processInstanceId);
-				sendMsg(emPlan, processInstanceId,isSuccess);
+				sendMsg(emPlan, processInstanceId,isSuccess,objectId);
 				continue;
 				
 			default:
@@ -181,14 +184,18 @@ public class EmPlanServiceImpl implements EmPlanService {
 	/*
 	 * 发送消息到MQ队列
 	 */
-	public void sendMsg(EmPlan emPlan, String processInstanceId, Boolean isFinished) {
+	public void sendMsg(EmPlan emPlan, String processInstanceId, Boolean isFinished,Integer objectId) {
 		// 通过流程实例id获取历史任务节点
 		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
 		List<JSONObject> result = new ArrayList<>();
 		for (HistoricTaskInstance historicTaskInstance : list) {
 			JSONObject json = new JSONObject();
 			json.put("node", historicTaskInstance.getName());
-			json.put("status", historicTaskInstance.getEndTime() == null ? "进行中" : "完成");
+//			json.put("status", historicTaskInstance.getEndTime() == null ? "进行中" : "完成");
+			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
+			json.put("time", DateUtil.getCurrentDate());
+			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
+			json.put("id", emPlan.getTargetValue());
 			result.add(json);
 		}
 		
@@ -196,12 +203,14 @@ public class EmPlanServiceImpl implements EmPlanService {
 		
 		JSONObject json = new JSONObject();
 		json.put("processName", processTypeEnum.getName());
+		json.put("processKey", emPlan.getProcessKey());
 		json.put("process", result);
 		json.put("processInstanceId", processInstanceId);
+		json.put("objectId", objectId);
+		json.put("range", processTypeEnum.getRange());
 		
-		LogUtil.info("Send to MQ：" + json.toString() );
-		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(processTypeEnum.getQueue()), json.toString());
-		
+		mqService.send2PlanQueue((String)PropertiesUtil.getValue(processTypeEnum.getQueue()),json.toString());
+		mqService.send2BigScreenQueue(json.toString());//发送到大屏
 	}
 
 
@@ -212,19 +221,20 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 
 	@Override
-	public void start(Integer sectionId, Integer processValue) {
+	public void start(Integer sectionId, Integer processValue,Integer objectId) {
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
 		LogUtil.info("开始启动【" + processTypeEnum.getName() + "】");
 		
 		Map<String, Object> variables = new HashMap<>();
 		variables.put("sectionId", sectionId);
+		variables.put("objectId", objectId);
 
 		LogUtil.info("启动流程");
-		ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition((String) PropertiesUtil.getValue(ProcessTypeEnum.FIRE_PLAN.getBpmnPath()));
+		ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
 		ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(),variables);
 		LogUtil.debug("Get processInstance:" + processInstance);
 		
-		nextTask(processInstance.getId());
+		nextTask(processInstance.getId(),objectId);
 		
 	}
 
@@ -277,6 +287,17 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 	private List<EmPlanDto> getByCondition(EmPlanVo vo) {
 		List<EmPlanDto> list = emPlanMapper.getByCondition(vo);
+		if(list == null || list.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return list;
+	}
+
+
+
+	@Override
+	public List<EmPlanDto> getNodeListByProcessKey(String processKey) {
+		List<EmPlanDto> list = emPlanMapper.getNodeListByProcessKey(processKey);
 		if(list == null || list.isEmpty()) {
 			return Collections.emptyList();
 		}

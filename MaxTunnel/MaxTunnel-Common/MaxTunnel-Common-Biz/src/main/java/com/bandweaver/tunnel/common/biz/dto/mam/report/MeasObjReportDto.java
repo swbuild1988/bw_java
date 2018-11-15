@@ -16,6 +16,10 @@ public class MeasObjReportDto implements Serializable {
 	private Integer id;
 
     private Integer objectId;
+    
+    private String name;
+    
+    private Integer tunnelId;
 
     @JsonIgnore
     private Integer objectType;
@@ -51,7 +55,23 @@ public class MeasObjReportDto implements Serializable {
         this.objectId = objectId;
     }
 
-    public Integer getObjectType() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
+
+	public Integer getObjectType() {
         return objectType;
     }
 

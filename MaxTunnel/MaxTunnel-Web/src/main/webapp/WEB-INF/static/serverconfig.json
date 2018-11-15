@@ -1,11 +1,106 @@
 {
-	"ApiUrl": "http://192.168.6.156:8090/MaxTunnel-Web/",
-	"RouterBase": "/MaxTunnel-Web/",
-	"MQServerAddress": "ws://192.168.0.41:15674/ws",
-	"isRealData": "true",
-	"SuperMapConfig":{
-		"BIM_SCP": "http://192.168.0.41:8090/iserver/services/3D-taiyuan_tunnel1/rest/realspace",
-		"BIM_DATA": "http://192.168.0.41:8090/iserver/services/data-taiyuan_tunnel/rest/data",      
-		"IMG_MAP": "http://192.168.0.41:8090/iserver/services/map-ugcv5-taiyuanmap/rest/maps/taiyuan_map"
-	  }
+    "ApiUrl": "http://192.168.6.156:8090/MaxTunnel-Web/",
+    "RouterBase": "/MaxTunnel-Web/",
+    "MQServerAddress": "ws://192.168.6.156:15674/ws",
+    "isRealData": "true",
+    "SuperMapConfig": {
+        "BIM_SCP": "http://192.168.0.41:8090/iserver/services/3D-taiyuan_tunnel1/rest/realspace",
+        "BIM_DATA": "http://192.168.0.41:8090/iserver/services/data-taiyuan_tunnel/rest/data",
+        "IMG_MAP": "http://192.168.0.41:8090/iserver/services/map-ugcv5-taiyuanmap/rest/maps/taiyuan_map"
+    },
+    "VMWebConfig": {
+        "WebConfig": {
+            "data": [{
+                    "id": 1,
+                    "title": "入廊信息",
+                    "url": "",
+                    "matchChartTypes": [900],
+                    "parameters": {}
+                },
+                {
+                    "id": 2,
+                    "title": "设备数量",
+                    "url": "equipments/type/count",
+                    "matchChartTypes": [100, 200, 300, 500],
+                    "parameters": {}
+                },
+                {
+                    "id": 3,
+                    "title": "故障数量对比",
+                    "url": "equipments/type/status/count",
+                    "matchChartTypes": [201, 501],
+                    "parameters": {}
+                },
+                {
+                    "id": 4,
+                    "title": "管廊年度总耗电量",
+                    "url": "tunnels/items/energies",
+                    "matchChartTypes": [100, 200, 300, 500],
+                    "parameters": {}
+                },
+                {
+                    "id": 5,
+                    "title": "{tunnelName}耗电量",
+                    "url": "tunnels/{tunnelId}/energies/one-year",
+                    "matchChartTypes": [100, 200],
+                    "parameters": {
+                        "format": {
+                            "tunnelId": 1,
+                            "tunnelName": "古城大街"
+                        }
+                    }
+                },
+                {
+                    "id": 6,
+                    "title": "未处理缺陷",
+                    "url": "tunnels/defectcount",
+                    "matchChartTypes": [201, 501],
+                    "parameters": {}
+                },
+                {
+                    "id": 7,
+                    "title": "报警监控统计",
+                    "url": "tunnel/alarmcount",
+                    "matchChartTypes": [202],
+                    "parameters": {}
+                }
+            ],
+            "deployCharts": [{
+                    "modelId": "vmModel1",
+                    "dataId": 1,
+                    "chartType": 900
+                },
+                {
+                    "modelId": "vmModel2",
+                    "dataId": 2,
+                    "chartType": 200
+                },
+                {
+                    "modelId": "vmModel3",
+                    "dataId": 3,
+                    "chartType": 501
+                },
+                {
+                    "modelId": "vmModel4",
+                    "dataId": 4,
+                    "chartType": 300
+                },
+                {
+                    "modelId": "vmModel5",
+                    "dataId": 5,
+                    "chartType": 100
+                },
+                {
+                    "modelId": "vmModel6",
+                    "dataId": 6,
+                    "chartType": 201
+                },
+                {
+                    "modelId": "vmModel7",
+                    "dataId": 7,
+                    "chartType": 202
+                }
+            ]
+        }
+    }
 }

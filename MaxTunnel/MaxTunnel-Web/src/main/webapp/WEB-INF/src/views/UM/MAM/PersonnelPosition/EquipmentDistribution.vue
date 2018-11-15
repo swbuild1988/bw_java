@@ -21,51 +21,51 @@
     </div>
 </template>
 <script>
-import { personnelPositionService } from '../../../../services/personnelPositions'
+import { personnelPositionService } from '../../../../services/personnelPositionService'
 
 export default {
     data() {
         return {
             addEquipment: [],
             distributionList: [
-                {
-                    username: "章散",
-                    equipmentId: null
-                },
-                {
-                    username: "里斯",
-                    equipmentId: 1,
-                    equipmentName: "设备1"
-                },
-                {
-                    username: "王武",
-                    equipmentId: 3,
-                    equipmentName: "设备3"
-                },
-                {
-                    username: "李柳",
-                    equipmentId: 2,
-                    equipmentName: "设备2"
-                }
+                // {
+                //     username: "章散",
+                //     equipmentId: null
+                // },
+                // {
+                //     username: "里斯",
+                //     equipmentId: 1,
+                //     equipmentName: "设备1"
+                // },
+                // {
+                //     username: "王武",
+                //     equipmentId: 3,
+                //     equipmentName: "设备3"
+                // },
+                // {
+                //     username: "李柳",
+                //     equipmentId: 2,
+                //     equipmentName: "设备2"
+                // }
             ],
             visitorList: [],
             equipmentList: [
-                {
-                    id: 1,
-                    name: "设备1"
-                },
-                {
-                    id: 2,
-                    name: "设备2"
-                },
-                {
-                    id: 3,
-                    name: "设备3"
-                },
-                {
-                    id: 4,
-                    name: "设备4"
-                }
+                // {
+                //     id: 1,
+                //     name: "设备1"
+                // },
+                // {
+                //     id: 2,
+                //     name: "设备2"
+                // },
+                // {
+                //     id: 3,
+                //     name: "设备3"
+                // },
+                // {
+                //     id: 4,
+                //     name: "设备4"
+                // }
             ],
             query: {
                 staffName: null,

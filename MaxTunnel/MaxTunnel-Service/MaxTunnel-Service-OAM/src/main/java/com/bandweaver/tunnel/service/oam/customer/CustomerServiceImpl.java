@@ -29,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public void add(Customer customer) {
 		customer.setCrtTime(new Date());
-		customerMapper.insert(customer);
+		customerMapper.insertSelective(customer);
 	}
 
 	@Override

@@ -1,14 +1,11 @@
 package com.bandweaver.tunnel.service.mam.video;
 
-import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
-import com.bandweaver.tunnel.common.biz.dto.H5StreamHttpResponseDto;
-import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
-import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.HttpUtil;
-import de.onvif.soap.devices.PtzDevices;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,11 +13,20 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
+import com.bandweaver.tunnel.common.biz.dto.H5StreamHttpResponseDto;
+import com.bandweaver.tunnel.common.biz.dto.HttpResponsePresetDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
+import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
+import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.HttpUtil;
+
+import de.onvif.soap.devices.PtzDevices;
 
 @Service("H5StreamServiceImpl")
 public class H5StreamServiceImpl implements OnvifService {
@@ -139,14 +145,14 @@ public class H5StreamServiceImpl implements OnvifService {
         }
 
         VideoDto videoDto = videoModuleCenter.getVideoDto(id);
-        VideoServer videoServer = videoDto.getVideoServer();
+        VideoServerDto videoServer = videoDto.getVideoServerDto();
 
         String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
         String url = "/api/v1/Ptz";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
         querys.put("token", "onvif_" + videoDto.getId());
-        querys.put("speed", "0.5");
+        querys.put("speed", "0.3");
         querys.put("action", action);
         querys.put("session", videoServer.getSession());
 
@@ -177,9 +183,17 @@ public class H5StreamServiceImpl implements OnvifService {
     @Override
     public List<String> getPresets(int id) {
         List<String> result = new ArrayList<>();
+        List<JSONObject> list = getPresetByKey(id);
+        for (JSONObject jsonObject : list) {
+        	result.add(jsonObject.getString("presetName"));
+		}
+        return result;
+    }
 
-        VideoDto videoDto = videoModuleCenter.getVideoDto(id);
-        VideoServer videoServer = videoDto.getVideoServer();
+	public List<JSONObject> getPresetByKey(int id) {
+		List<JSONObject> result = new ArrayList<>();
+		VideoDto videoDto = videoModuleCenter.getVideoDto(id);
+		VideoServerDto videoServer = videoDto.getVideoServerDto();
 
         String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
         String url = "/api/v1/GetPresets";
@@ -191,16 +205,24 @@ public class H5StreamServiceImpl implements OnvifService {
         try {
             HttpResponse response = HttpUtil.doGet(server, url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                return result;
-            } else {
-                return result;
+	        	String str = EntityUtils.toString(response.getEntity(), "utf-8");
+	        	List<HttpResponsePresetDto> list = JSONObject.parseObject(str, H5StreamHttpResponseDto.class).getPreset();
+	        	
+	        	if(list == null || list.isEmpty()) {
+	        		return Collections.emptyList();
+	        	}
+	        	for (HttpResponsePresetDto httpResponsePresetDto : list) {
+	        		JSONObject json = new JSONObject();
+	        		json.put("presetName", httpResponsePresetDto.getStrName());
+	        		json.put("presetToken", httpResponsePresetDto.getStrToken());
+	        		result.add(json);
+				}
             }
-
         } catch (Exception e) {
-
-            return result;
+        	LogUtil.error("获取预置位失败：" + e.toString() );
         }
-    }
+        return result;
+	}
 
     /**
      * 添加预置位
@@ -213,7 +235,7 @@ public class H5StreamServiceImpl implements OnvifService {
     public boolean addPreset(int id, String presetName) {
 
         VideoDto videoDto = videoModuleCenter.getVideoDto(id);
-        VideoServer videoServer = videoDto.getVideoServer();
+        VideoServerDto videoServer = videoDto.getVideoServerDto();
 
         String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
         String url = "/api/v1/SetPreset";
@@ -227,18 +249,19 @@ public class H5StreamServiceImpl implements OnvifService {
         try {
             HttpResponse response = HttpUtil.doGet(server, url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                return true;
-            } else {
-                return false;
-            }
+            	String str = EntityUtils.toString(response.getEntity(), "utf-8");
+                return JSONObject.parseObject(str, H5StreamHttpResponseDto.class).isbStatus();
+            } 
 
         } catch (Exception e) {
-
-            return false;
+        	LogUtil.error("添加预置位失败：" + e.toString() );
         }
+        return false;
     }
 
-    /**
+   
+
+	/**
      * 删除预置位
      *
      * @param id
@@ -248,32 +271,66 @@ public class H5StreamServiceImpl implements OnvifService {
     @Override
     public boolean delPreset(int id, String presetName) {
 
+    	String presetToken = getProsetTokenByPresetName(id,presetName);
+    	if(presetToken == null)
+    		throw new RuntimeException("预置位不存在");
+    	
         VideoDto videoDto = videoModuleCenter.getVideoDto(id);
-        VideoServer videoServer = videoDto.getVideoServer();
+        VideoServerDto videoServer = videoDto.getVideoServerDto();
 
         String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
         String url = "/api/v1/DelPreset";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
         querys.put("token", "onvif_" + videoDto.getId());
-        querys.put("presettoken", presetName);
+        querys.put("presettoken", presetToken);
         querys.put("session", videoServer.getSession());
 
         try {
             HttpResponse response = HttpUtil.doGet(server, url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                return true;
-            } else {
-                return false;
-            }
+            	String str = EntityUtils.toString(response.getEntity(), "utf-8");
+                return JSONObject.parseObject(str, H5StreamHttpResponseDto.class).isbStatus();
+            } 
 
         } catch (Exception e) {
-
-            return false;
+        	LogUtil.error("删除预置位失败：" + e.toString() );
         }
+        return false;
     }
 
+    /**通过预置位名称获取token 
+     * @param id
+     * @param presetName
+     * @return   
+     * @author shaosen
+     * @Date 2018年10月31日
+     */
+    private String getProsetTokenByPresetName(int id, String presetName) {
+    	List<JSONObject> list = getPresetByKey(id);
+    	for (JSONObject jsonObject : list) {
+    		String preset_name = (String) jsonObject.get("presetName");
+    		if(preset_name.equals(presetName))
+    			return (String) jsonObject.get("presetToken");
+		}
+		return null;
+	}
+    
+    
     /**
+     * 检查预置位是否存在 
+     * @param id
+     * @param presetName
+     * @return   
+     * @author shaosen
+     * @Date 2018年10月31日
+     */
+    private boolean checkPresetExsit(int id, String presetName) {
+		String token = getProsetTokenByPresetName(id, presetName);
+		return token == null ? true : false ;
+	}
+
+	/**
      * 更新预置位
      *
      * @param id
@@ -282,7 +339,7 @@ public class H5StreamServiceImpl implements OnvifService {
      */
     @Override
     public boolean updatePreset(int id, String presetName) {
-        return addPreset(id, presetName);
+    	return addPreset(id, presetName);
     }
 
     /**
@@ -295,7 +352,7 @@ public class H5StreamServiceImpl implements OnvifService {
     public void gotoPreset(int id, String presetName) {
 
         VideoDto videoDto = videoModuleCenter.getVideoDto(id);
-        VideoServer videoServer = videoDto.getVideoServer();
+        VideoServerDto videoServer = videoDto.getVideoServerDto();
 
         String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
         String url = "/api/v1/Ptz";

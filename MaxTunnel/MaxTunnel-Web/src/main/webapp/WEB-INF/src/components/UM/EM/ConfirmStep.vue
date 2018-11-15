@@ -15,7 +15,7 @@
       curModal: {
         type: Object,
         default: function () {
-          return {isShow: false, instanceId: ""};
+          return {isShow: false, instanceId: "",objectId:""};
         }
       },
     },
@@ -26,7 +26,7 @@
     },
     methods: {
       ok() {
-        PlanService.ConfirmStep(this.curModal.instanceId, "yes").then()
+        PlanService.ConfirmStep(this.curModal.instanceId,this.curModal.objectId, "yes").then()
       },
     }
   }

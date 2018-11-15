@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { TunnelService } from '../../../../services/tunnels'
+import { TunnelService } from '../../../../services/tunnelService'
 import ModulePage from '../../../../components/Common/ModulePage'
 export default {
   name: "UM_main",

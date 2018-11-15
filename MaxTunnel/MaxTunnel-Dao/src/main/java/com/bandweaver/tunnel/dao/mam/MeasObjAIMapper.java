@@ -17,6 +17,7 @@ public interface MeasObjAIMapper {
     List<MeasObjAI> getAllMeasObjAIs();
 
 	void addBatch(List<MeasObjAI> aiList);
+	void deleteByPrimaryKey(Integer id);
 
 
 }

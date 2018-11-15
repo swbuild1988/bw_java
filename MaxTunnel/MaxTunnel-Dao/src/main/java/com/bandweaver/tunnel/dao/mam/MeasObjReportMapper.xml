@@ -4,7 +4,9 @@
 
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
     <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
     <result column="OBJECT_TYPE" jdbcType="DECIMAL" property="objectType" />
     <result column="time_type" jdbcType="DECIMAL" property="timeType" />
     <result column="S_TIME" jdbcType="TIMESTAMP" property="sTime" />
@@ -16,7 +18,9 @@
   
   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto">
     <id column="ID" jdbcType="DECIMAL" property="id" />
+     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="OBJECT_ID" jdbcType="DECIMAL" property="objectId" />
+    <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
     <result column="OBJECT_TYPE" jdbcType="DECIMAL" property="objectType" />
     <result column="time_type" jdbcType="DECIMAL" property="timeType" />
     <result column="S_TIME" jdbcType="TIMESTAMP" property="sTime" />
@@ -27,7 +31,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, OBJECT_ID, OBJECT_TYPE,time_type, S_TIME, E_TIME, MAX_VALUE, MIN_VALUE, AVG_VALUE
+    ID, name,OBJECT_ID,tunnel_id, OBJECT_TYPE,time_type, S_TIME, E_TIME, MAX_VALUE, MIN_VALUE, AVG_VALUE
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -40,10 +44,10 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
-    insert into T_MAM_MEASOBJ_REPORT (ID, OBJECT_ID, OBJECT_TYPE, time_type,
+    insert into T_MAM_MEASOBJ_REPORT (ID,name, OBJECT_ID, tunnel_id,OBJECT_TYPE, time_type,
       S_TIME, E_TIME, MAX_VALUE, 
       MIN_VALUE, AVG_VALUE)
-    values (#{id,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{objectType,jdbcType=DECIMAL},  #{timeType,jdbcType=DECIMAL}, 
+    values (#{id,jdbcType=DECIMAL},#{name,jdbcType=VARCHAR}, #{objectId,jdbcType=DECIMAL},  #{tunnelId,jdbcType=DECIMAL}, #{objectType,jdbcType=DECIMAL},  #{timeType,jdbcType=DECIMAL}, 
       #{sTime,jdbcType=TIMESTAMP}, #{eTime,jdbcType=TIMESTAMP}, #{maxValue,jdbcType=DECIMAL}, 
       #{minValue,jdbcType=DECIMAL}, #{avgValue,jdbcType=DECIMAL})
   </insert>
@@ -53,8 +57,14 @@
       <if test="id != null">
         ID,
       </if>
+      <if test="name != null">
+        name,
+      </if>
       <if test="objectId != null">
         OBJECT_ID,
+      </if>
+      <if test="tunnelId != null">
+        tunnel_id,
       </if>
       <if test="objectType != null">
         OBJECT_TYPE,
@@ -82,8 +92,14 @@
       <if test="id != null">
         #{id,jdbcType=DECIMAL},
       </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
       <if test="objectId != null">
         #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="tunnelId != null">
+        #{tunnelId,jdbcType=DECIMAL},
       </if>
       <if test="objectType != null">
         #{objectType,jdbcType=DECIMAL},
@@ -111,8 +127,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
     update T_MAM_MEASOBJ_REPORT
     <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
       <if test="objectId != null">
         OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+      </if>
+      <if test="tunnelId != null">
+        tunnel_id = #{tunnelId,jdbcType=DECIMAL},
       </if>
       <if test="objectType != null">
         OBJECT_TYPE = #{objectType,jdbcType=DECIMAL},
@@ -140,7 +162,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport">
     update T_MAM_MEASOBJ_REPORT
-    set OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+    set name = #{name,jdbcType=VARCHAR},
+     OBJECT_ID = #{objectId,jdbcType=DECIMAL},
+    tunnel_id = #{tunnelId,jdbcType=DECIMAL},
       OBJECT_TYPE = #{objectType,jdbcType=DECIMAL},
       time_type = #{timeType,jdbcType=DECIMAL},
       S_TIME = #{sTime,jdbcType=TIMESTAMP},
@@ -161,9 +185,25 @@
   		<if test="id != null">
   			and id = #{id}
   		</if>
+  		<if test="name != null and name.trim() != ''">
+  			and instr(name,#{name})>0
+  		</if>
   		<if test="objectId != null">
   			and object_id = #{objectId}
   		</if>
+  		<if test="tunnelId != null">
+  			and tunnel_id = #{tunnelId}
+  		</if>
+  		<if test="objectType != null">
+  			and object_type = #{objectType}
+  		</if>
+	    <if test="objtypeIds != null">
+          and object_type in 
+          <foreach collection="objtypeIds" item="item" index="index" close=")"
+              open="(" separator=",">
+              #{item}
+          </foreach>
+         </if>
   		<if test="timeType != null">
   			and time_type = #{timeType}
   		</if>

@@ -30,7 +30,13 @@ public class MeasObjVo extends BaseVo implements Serializable {
     private Double deviation;
     /**接收objtypeId集合*/
     private List<Integer> objtypeIds;
-
+    /**接收tunnelId集合*/
+    private List<Integer> tunnelIds;
+    /**接收storeId集合*/
+    private List<Integer> storeIds;
+    /**接收sectionId集合*/
+    private List<Integer> sectionIds;
+    
     public Integer getId() {
         return id;
     }
@@ -149,6 +155,30 @@ public class MeasObjVo extends BaseVo implements Serializable {
 
 	public void setObjtypeIds(List<Integer> objtypeIds) {
 		this.objtypeIds = objtypeIds;
+	}
+
+	public List<Integer> getTunnelIds() {
+		return tunnelIds;
+	}
+
+	public void setTunnelIds(List<Integer> tunnelIds) {
+		this.tunnelIds = tunnelIds;
+	}
+
+	public List<Integer> getStoreIds() {
+		return storeIds;
+	}
+
+	public void setStoreIds(List<Integer> storeIds) {
+		this.storeIds = storeIds;
+	}
+
+	public List<Integer> getSectionIds() {
+		return sectionIds;
+	}
+
+	public void setSectionIds(List<Integer> sectionIds) {
+		this.sectionIds = sectionIds;
 	}
 
 	@Override

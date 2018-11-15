@@ -74,8 +74,8 @@
 </template>
 <script>
 import Enum from "../../../../../static/Enum.json";
-import { TunnelService } from '../../../../services/tunnels';
-import { PatrolService } from '../../../../services/patrols';
+import { TunnelService } from '../../../../services/tunnelService';
+import { PatrolService } from '../../../../services/patrolService';
 
 export default {
   data() {

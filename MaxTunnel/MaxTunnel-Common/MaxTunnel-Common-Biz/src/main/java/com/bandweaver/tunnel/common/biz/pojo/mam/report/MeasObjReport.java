@@ -12,6 +12,10 @@ public class MeasObjReport implements Serializable {
 	private Integer id;
 
     private Integer objectId;
+    
+    private String name;
+    
+    private Integer tunnelId;
 
     private Integer objectType;
     
@@ -43,7 +47,23 @@ public class MeasObjReport implements Serializable {
         this.objectId = objectId;
     }
 
-    public Integer getObjectType() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
+
+	public Integer getObjectType() {
         return objectType;
     }
 
@@ -101,9 +121,9 @@ public class MeasObjReport implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MeasObjReport [id=" + id + ", objectId=" + objectId + ", objectType=" + objectType + ", timeType="
-				+ timeType + ", sTime=" + sTime + ", eTime=" + eTime + ", maxValue=" + maxValue + ", minValue="
-				+ minValue + ", avgValue=" + avgValue + "]";
+		return "MeasObjReport [id=" + id + ", objectId=" + objectId + ", name=" + name + ", tunnelId=" + tunnelId
+				+ ", objectType=" + objectType + ", timeType=" + timeType + ", sTime=" + sTime + ", eTime=" + eTime
+				+ ", maxValue=" + maxValue + ", minValue=" + minValue + ", avgValue=" + avgValue + "]";
 	}
     
     

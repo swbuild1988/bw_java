@@ -1,0 +1,15 @@
+
+SQL*Plus: Release 11.2.0.1.0 Production on 星期二 11月 6 15:15:00 2018
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+
+连接到: 
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL>   2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24  
+PL/SQL 过程已成功完成。
+
+SQL> 从 Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options 断开

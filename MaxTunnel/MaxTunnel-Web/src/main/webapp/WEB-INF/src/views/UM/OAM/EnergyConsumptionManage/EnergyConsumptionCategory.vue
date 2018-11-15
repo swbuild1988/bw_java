@@ -4,11 +4,14 @@
       <Row class="chart">
         <Col span="12">
           <Row>
-            <Col span="10">
+            <Col span="6">
               <h1 class="total">{{ total }} 千瓦时</h1>
             </Col>
-            <Col span="10">
-              <DatePicker type="datetimerange" placeholder="请选择日期和时间" format="yyyy-MM-dd HH:mm" class="searchTime" v-model="timerange"></DatePicker>
+            <Col span="7">
+              <DatePicker type="datetime" placeholder="请选择开始日期和时间" format="yyyy-MM-dd HH:mm" class="searchTime" v-model="query.startTime"></DatePicker>
+            </Col>
+            <Col span="7">
+              <DatePicker type="datetime" placeholder="请选择结束日期和时间" format="yyyy-MM-dd HH:mm" class="searchTime" v-model="query.endTime"></DatePicker>
             </Col>
             <Col span="4">
               <Button type="primary" @click="queryData" icon="ios-search">查询</Button>
@@ -47,8 +50,8 @@ import DataBox2 from '../../../../components/Common/Box/DataBox2'
 // import PieChart from '../../../../components/Common/Chart/SimplePieChart'
 // import LineChart from '../../../../components/Common/Chart/LineChart'
 import EnergyIcon from '../../../../assets/UM/TunnelEnergy.png'
-import { EnumsService } from '../../../../services/enums'
-import { energyConsumptionService } from '../../../../services/energyConsumption'
+import { EnumsService } from '../../../../services/enumsService'
+import { energyConsumptionService } from '../../../../services/energyConsumptionService'
 export default {
   name: "eneryCategory",
   data() {
@@ -58,7 +61,6 @@ export default {
           startTime: null,
           endTime: null
         },
-        timerange: null,
         page: {
           pageNum: 1,
           pageSize: 10,
@@ -192,6 +194,7 @@ export default {
       this.query.id = parseInt(this.$route.params.id)
       this.initTime()
       this.queryData()
+      this.fetchData()
     }
   },
   methods: {
@@ -199,31 +202,37 @@ export default {
       let _this = this
       EnumsService.getTimeCycle().then(
         (result)=>{
-          _this.periodList = result
+          _this.periodList = result.slice(2,4)
         },
         (error)=>{
           console.log(error)
         })
     },
     queryData() {
-      if(this.timerange[0] && this.timerange[1]){
-        this.query.startTime = new Date(this.timerange[0]).getTime()
-        this.query.endTime = new Date(this.timerange[1]).getTime()
-      }else{
-        this.query.startTime = new Date().getTime()-24*60*60*1000*30
-        this.query.endTime = new Date().getTime()
-        this.timerange[0] = this.query.startTime
-        this.timerange[1] = this.query.endTime
+      let params = {}
+      params.id = this.query.id
+      if(this.query.startTime && this.query.endTime){
+        params.startTime = new Date(this.query.startTime).getTime()
+        params.endTime = new Date(this.query.endTime).getTime()
+      } else {
+        if(this.query.startTime){
+          params.startTime = new Date(this.query.startTime).getTime()
+        }else{
+          if(this.query.endTime){
+            params.endTime = new Date(this.query.endTime).getTime()
+          }
+        }
       }
+      
       let _this = this
-      energyConsumptionService.getECTotal(_this.query).then(
+      energyConsumptionService.getECTotal(params).then(
         (result)=>{
           _this.total = result.val
         },
         (error)=>{
           _this.Log.info(error)
         })
-      energyConsumptionService.getECCategory(_this.query).then(
+      energyConsumptionService.getECCategory(params).then(
         (result)=>{
           var tempCount = 0
           result.filter(function (item) {
@@ -338,7 +347,10 @@ export default {
           },
           xAxis: {
             type: 'category',
-            data: this.XCategory
+            data: this.XCategory,
+            // axisLabel :{
+            //   rotate: 90
+            // }
           },
           yAxis: {
             type: 'value'
@@ -410,7 +422,7 @@ export default {
     margin-right: 6px;
   }
   .searchTime{
-    width: 80%;
+    width: 90%;
   }
   .dataContainer1{
    /* background-color: white;*/

@@ -16,6 +16,7 @@ import com.bandweaver.tunnel.common.biz.constant.DocTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.FileTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.JobStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
@@ -25,8 +26,11 @@ import com.bandweaver.tunnel.common.biz.constant.em.UnitTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
+import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendorVersion;
 import com.bandweaver.tunnel.common.biz.constant.oam.CableStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.oam.ContractStatusEnum;
+import com.bandweaver.tunnel.common.biz.constant.oam.EnergyType;
 import com.bandweaver.tunnel.common.biz.constant.oam.EventLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.oam.PayTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.omm.DefectLevel;
@@ -216,7 +220,7 @@ public class EnumController {
 
 	/**
 	 * 流程类型枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"巡检计划"},{"val":2,"key":"入廊申请"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"key":"其他"},{"val":1001,"key":"巡检计划申请"},{"val":1002,"key":"巡检任务"},{"val":1003,"key":"维修工单"},{"val":2001,"key":"入廊申请"},{"val":4001,"key":"消防预案"},{"val":4003,"key":"通风预案"},{"val":4002,"key":"排水预案"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -294,7 +298,7 @@ public class EnumController {
 	
 	/**应急预案流程枚举 
 	 * @return  
-	 * {"msg":"请求成功","code":"200","data":[{"val":1004,"processKey":"FirePlanProcess","key":"消防预案"},{"val":1005,"processKey":"WaterPlanProcess","key":"排水预案"}]}  
+	 * {"msg":"请求成功","code":"200","data":[{"val":4001,"processKey":"FirePlanProcess","key":"消防预案"},{"val":4003,"processKey":"WindPlanProcess","key":"通风预案"},{"val":4002,"processKey":"WaterPlanProcess","key":"排水预案"}]}  
 	 * @author shaosen
 	 * @Date 2018年8月9日
 	 */
@@ -549,7 +553,75 @@ public class EnumController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
+	/**
+	 * 获取视频供应商枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月7日
+	 */
+	@RequestMapping(value="video/vendor-enums",method=RequestMethod.GET)
+	public JSONObject getVideoVendorEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (VideoVendor e : VideoVendor.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 获取视频版本枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月7日
+	 */
+	@RequestMapping(value="video/vendor/version-enums",method=RequestMethod.GET)
+	public JSONObject getVideoVendorVersionEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (VideoVendorVersion e : VideoVendorVersion.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 	
 	
-
+	/**获取流程节点状态列表 
+	 * @return  {"msg":"请求成功","code":"200","data":[{"val":1,"key":"已完成"},{"val":2,"key":"进行中"},{"val":3,"key":"待完成"}]} 
+	 * @author shaosen
+	 * @Date 2018年11月14日
+	 */
+	@RequestMapping(value="nodestatus-enums",method=RequestMethod.GET)
+	public JSONObject getNodeStatusEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (NodeStatusEnum e : NodeStatusEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/** 获取能耗类型枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月14日
+	 */
+	@RequestMapping(value = "energyType-enums", method = RequestMethod.GET)
+	public JSONObject getEnergyTypeEnumList() {
+		List<EnergyType> list = new ArrayList<>();
+		for(EnergyType et : EnergyType.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", et.getName());
+			obj.put("val", et.getValue());
+			list.add(et);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
 }

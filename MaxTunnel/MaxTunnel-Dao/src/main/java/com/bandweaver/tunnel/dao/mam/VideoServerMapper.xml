@@ -4,20 +4,136 @@
 <mapper namespace="com.bandweaver.tunnel.dao.mam.VideoServerMapper">
 
     <insert id="insertVideoServer" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer">
-        INSERT INTO T_MAM_Video_Server (name, vendor, vendor_version, ip, port, username, password, channel_num)
-        VALUES (#{name}, #{vendor}, #{vendorVersion}, #{ip}, #{port}, #{username}, #{password}, #{channelNum})
+        INSERT INTO T_MAM_Video_Server
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="name != null and name.trim() != ''">
+        		name,
+        	</if>
+        	<if test="vendor != null">
+        		vendor,
+        	</if>
+        	<if test="vendorVersion != null">
+        		vendor_version,
+        	</if>
+        	<if test="ip != null">
+        		ip,
+        	</if>
+        	<if test="port != null">
+        		port,
+        	</if>
+        	<if test="username != null">
+        		username,
+        	</if>
+        	<if test="password != null">
+        		password,
+        	</if>
+        	<if test="channelNum != null">
+        		channel_num,
+        	</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="name != null and name.trim() != ''">
+        		#{name},
+        	</if>
+        	<if test="vendor != null">
+        		#{vendor},
+        	</if>
+        	<if test="vendorVersion != null">
+        		#{vendorVersion},
+        	</if>
+        	<if test="ip != null">
+        		#{ip},
+        	</if>
+        	<if test="port != null">
+        		#{port},
+        	</if>
+        	<if test="username != null">
+        		#{username},
+        	</if>
+        	<if test="password != null">
+        		#{password},
+        	</if>
+        	<if test="channelNum != null">
+        		#{channelNum},
+        	</if>
+        </trim>
     </insert>
+    
+    <update id="updateVideoServer" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer">
+    	UPDATE T_MAM_Video_Server
+    	<set>
+    		<if test="name != null and name.trim() != ''">
+        		name = #{name},
+        	</if>
+        	<if test="vendor != null">
+        		vendor = #{vendor},
+        	</if>
+        	<if test="vendorVersion != null">
+        		vendor_version = #{vendorVersion},
+        	</if>
+        	<if test="ip != null">
+        		ip = #{ip},
+        	</if>
+        	<if test="port != null">
+        		port = #{port},
+        	</if>
+        	<if test="username != null">
+        		username = #{username},
+        	</if>
+        	<if test="password != null">
+        		password = #{password},
+        	</if>
+        	<if test="channelNum != null">
+        		channel_num = #{channelNum},
+        	</if>
+    	</set>
+    	WHERE id = #{id}
+    </update>
 
-    <select id="getVideoServer" resultMap="VideoServerMapper">
+    <select id="getVideoServer" resultMap="VideoServerDto">
         SELECT * FROM T_MAM_Video_Server
         WHERE id = #{id}
     </select>
 
-    <select id="getAllVideoServers" resultMap="VideoServerMapper">
+    <select id="getAllVideoServers" resultMap="VideoServerDto">
         SELECT * FROM T_MAM_Video_Server
     </select>
+    
+    <select id="getVideoServersByCondition" resultMap="VideoServerDto">
+    	SELECT * FROM T_MAM_Video_Server
+    	<where>
+    		<if test="name != null and name.trim() != ''">
+        		and instr(name,#{name})>0
+        	</if>
+        	<if test="vendor != null">
+        		and vendor = #{vendor}
+        	</if>
+        	<if test="vendorVersion != null">
+        		and vendor_version = #{vendorVersion}
+        	</if>
+        	<if test="ip != null">
+        		and ip = #{ip}
+        	</if>
+        	<if test="port != null">
+        		and port = #{port}
+        	</if>
+        	<if test="username != null">
+        		and username = #{username}
+        	</if>
+        	<if test="password != null">
+        		and password = #{password}
+        	</if>
+        	<if test="channelNum != null">
+        		and channel_num = #{channelNum}
+        	</if>
+    	</where>
+    </select>
+    
+    <delete id="deleteVideoServer">
+    DELETE FROM T_MAM_Video_Server WHERE id = #{id}
+    </delete>
 
-    <resultMap id="VideoServerMapper" type="com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer">
+    <resultMap id="VideoServerDto" type="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="vendor" property="vendor" />

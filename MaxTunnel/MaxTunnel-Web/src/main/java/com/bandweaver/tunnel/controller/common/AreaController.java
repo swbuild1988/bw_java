@@ -148,11 +148,7 @@ public class AreaController extends BaseController<Area>{
 	@Override
 	@RequestMapping(value="areas/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
-		List<Integer> list = new ArrayList<>();
-		String[] arr = ids.split(",");
-		for (String str : arr) {
-			list.add(DataTypeUtil.toInteger(str));
-		}		
+		List<Integer> list = convertStringToList(ids);	
 		areaService.deleteBatch(list);
 		return success();
 	}

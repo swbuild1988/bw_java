@@ -2,6 +2,38 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+/**
+ * 判断浏览器版本中是否存在
+ * requestAnimationFrame : 开始动画
+ * cancelAnimationFrame : 结束动画
+ */
+(function() {
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||    // Webkit中此取消方法的名字变了
+            window[vendors[x] + 'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
+            var id = window.setTimeout(function() {
+                callback(currTime + timeToCall);
+            }, timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+    }
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    }
+}());
+
 //由[{key:xx,val:[{key:xx,val:xx},{key:xx,val:xx}]},{key:xx,val:[{key:xx,val:xx},{key:xx,val:xx}]},{key:xx,val:[{key:xx,val:xx},{key:xx,val:xx}]}]
 //转成{xx:[{name:xx,data:[1,2,3]},{name:xx,data:[1,2,3]}],xx:[xx,xx,xx]}
 export function converArrayFun(data,series=[],yData=[],stack=null,type='bar'){
@@ -104,7 +136,7 @@ export const getJson = function(url,param){
 
                     })
             }catch (err){
-                reject(err)
+                reject('err'+err)
             }
         }
 
@@ -167,10 +199,8 @@ export function addBillboard(viewer,typeMode,messageTypes,showEntity){
             entiyParam=null;
 
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures,messageTypes,'ID');
-        console.log('selectedFeatures',selectedFeatures)
-        for(var i=0;i<selectedFeatures.length;i++){
 
-            // let [ image ]=_this.VMConfig[typeMode].filter(type=> type.val ==_getFieldValues(selectedFeatures[i],'MOTYPEID'));
+        for(var i=0;i<selectedFeatures.length;i++){
 
             let [ image ]=_this.VMConfig[typeMode].filter( type => {
                 let moTypeId = _getFieldValues(selectedFeatures[i],'MOTYPEID');
@@ -204,20 +234,20 @@ export function addEntity(entiyParam){
 
     if(typeof entiyParam != 'object')return;
 
-    // entiyParam.image = entiyParam.image || 'location';
     let width = entiyParam.billboard.width || 30,
         height = entiyParam.billboard.height || 40,
         moId = entiyParam.moId || '0',
-        Z = entiyParam.Z || '10',
+        Z = entiyParam.Z || Vue.prototype.VMConfig.entityHeight,
         show = entiyParam.show || false;
 
     let billboard = entiyParam.billboard != undefined ? {
-            image : ['alarm'].indexOf(entiyParam.messageType) == -1? require('../assets/VM/'+ entiyParam.billboard.image +'.png') : require('../assets/VM/'+ entiyParam.billboard.image +'.gif'),
+            image : require('../assets/VM/'+ entiyParam.billboard.image +'.png'),
             width:width,
             height:height,
             verticalOrigin : entiyParam.billboard.verticalOrigin != undefined ? entiyParam.billboard.verticalOrigin : Cesium.VerticalOrigin.BUTTON,
             horizontalOrigin:Cesium.HorizontalOrigin.CENTER,
             scaleByDistance: entiyParam.billboard.scaleByDistance != undefined ? entiyParam.billboard.scaleByDistance : new Cesium.NearFarScalar(0,1,25,0),
+
         } : undefined,
         label = entiyParam.label != undefined ? {
             text:entiyParam.label.text,
@@ -251,7 +281,7 @@ export function getEntitySet(setParam){
         .then(result=>{
             let { code, data } = result.data;
             if(code == 200){
-
+                console.log(setParam.messageType,data)
                 let IM= Vue.prototype.IM,
                     sqlQueryBIMId = [];//sqlQueryBIMId;
 
@@ -260,7 +290,7 @@ export function getEntitySet(setParam){
 
                     for(let i=0;i<data.length;i++){
                         if(data[i].latitude == null || data[i].longitude　== null)continue;
-                        console.log(data[i])
+
                         let [ type ]=_this.VMConfig[setParam.typeMode].filter(type=>{
                             let moTypeId = _getTypeValue(setParam.typeMode,data[i]);
 
@@ -320,7 +350,7 @@ export function switchShowEntity(swtichParam){
 
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj,"MOID")
             : IM._getEntityMoId(currObj,swtichParam.messageType);
-        let entities =_this.viewer.entities._entities._array.filter(entitie=>entitie._moId==moId);
+        let entities =_this.viewer.entities._entities._array.filter(entitie=>entitie._moId == moId);
 
         if(entities){
 
@@ -336,7 +366,7 @@ export function switchShowEntity(swtichParam){
 export function doSqlQuery(){
     let args=[].slice.call(arguments); //类数组转换成数组
     let [ viewer,SQL ,dataUrl,onQueryComplete,processFailed,startLocation,endLocation,labels ]=args; //解析数组内容,startLocation,endLocation主要用于section中label location计算
-    if(typeof onQueryComplete !='function' ||　typeof processFailed !='function'){　return　}
+    if(typeof onQueryComplete != 'function' ||　typeof processFailed != 'function'){　return　}
 
 
     let _this=this,queryParam=_this.VMConfig.queryParam,getFeatureParam, getFeatureBySQLService, getFeatureBySQLParams;
@@ -462,7 +492,7 @@ export function getEntityProperty(){
             let entity = pickedObject.id;
 
             IM.searchInformation(entity,modelProp);
-            // _monitor(scene,Cesium,scenePosition,dom); //注册监听函数
+            _monitor(scene,Cesium,scenePosition,dom); //注册监听函数
         }
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 }
@@ -528,9 +558,9 @@ export function addLabel() {
     let args=[].slice.call(arguments); //类数组转换成数组
     let [ scene,viewer,wait,sqlQuery,dataUrl,onQueryComplete,processFailed,callback ]=args; //解析数组内容
     let _this= this;
-    let labels=[];//缓存当前所有展示label
-    let lablesID=[];//缓存当前labelsID
-    let detectionObj=_this.VMConfig.detectionObj;
+    let labels = [];
+    let lablesID = [];//缓存当前labelsID
+    let detectionObj = _this.VMConfig.detectionObj;
 
     clearTimeout(_this.timer.timeoutId);
     clearInterval(_this.timer.intervalId);//清除定时更新label集
@@ -540,9 +570,9 @@ export function addLabel() {
 
                 if(result.moInfo){
 
-                    labels.splice(0);//清空当前所有展示label
                     lablesID.splice(0);//清空当前所有展示labelID
-                    viewer.entities.removeAll();//清空当前的label实体
+                    labels.forEach(currEvent => viewer.entities.removeById( currEvent.id ));
+                    labels.splice(0);//清空当前所有展示label
 
                     result.moInfo.forEach(label=>{labels.push(label);lablesID.push(label.id)});
 
@@ -623,7 +653,7 @@ export function getSection(scene ,viewer) {
                     &&_this.timer.sectionId!==data.sectionInfo.id
                 ){
                     //缓存sectionId用于判断下次取到section是否一致
-                    _this.timer.sectionId=data.sectionInfo.id;
+                    _this.timer.sectionId = data.sectionInfo.id;
 
                     resolve(data)
                 }
@@ -690,9 +720,9 @@ export function labelSqlCompleted(viewer,startLocation,endLocation,labels){
 
 }
 /**
- * 内部函数 得到数据集中的值
+ * 得到数据集中的值
  */
-function _getFieldValues(selectedFeatures,fieldName){
+export function _getFieldValues(selectedFeatures,fieldName){
 
     return Array.isArray(selectedFeatures.fieldNames)?
         selectedFeatures.fieldValues[selectedFeatures.fieldNames.indexOf(fieldName)]:

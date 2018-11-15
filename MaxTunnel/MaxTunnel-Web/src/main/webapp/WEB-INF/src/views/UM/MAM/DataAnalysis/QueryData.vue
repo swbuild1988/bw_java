@@ -1,55 +1,89 @@
 <!--数据查询-->
 <template>
   <div>
-    <Row class="top">
-      <Col span="6">
+    <Row class="top" style="margin-bottom: 0px;">
+      <Col span="6" class="col">
       <span class="planDec">对象类型:</span>
       <Select v-model="queryPrams.objectType" style="width:65%">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
+          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+        </OptionGroup>
       </Select>
       </Col>
-      <Col span="6">
+      <Col span="6" class="col">
       <span class="planDec">监测区域:</span>
-      <Select v-model="queryPrams.queryZone" style="width:65%">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
+      <treeselect :options="zoneList" placeholder="请选择" v-model="queryPrams.queryZone"
+                  style="width: 60%;float: left;left: 8px"/>
       </Col>
-      <Col span="6">
+      <Col span="6" class="col">
       <span class="planDec">数据类型:</span>
-      <Select v-model="queryPrams.dataType" style="width:65%">
-        <Option v-for="item in dataTypeEnum" :value="item.key" :key="item.key">{{ item.value }}</Option>
+      <Select v-model="queryPrams.dataType" style="width:65%" @on-change="changeDataType">
+        <Option v-for="item in dataTypeEnum" :value="item.val" :key="item.val">{{ item.key }}</Option>
       </Select>
       </Col>
-      <Col span="1" offset="5" style="position: relative;float: right;right: 20px;top:25px;">
-      <span class="planDec"> <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData">查询</Button></span>
+    </Row>
+
+    <Row class="top" style="margin-top: 0px;">
+      <Col span="6" class=" col">
+      <span class="planDec">监测对象:
+      </span>
+      <Input v-model="queryPrams.monitorObject" readonly style="width: 65%;">
+      <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
+      </Input>
       </Col>
-      <Col span="6">
-      <span class="planDec">监测对象:</span>
-      <Select v-model="queryPrams.monitorObject" style="width:65%">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
+      <transition name="slide-fade" mode="in-out">
+        <div v-if="queryPrams.dataType==1">
+          <Col span="10" class="col">
+          <span class="planDec">取整范围:</span>
+          最小值
+          <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
+          最大值
+          <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
+          </Col>
+        </div>
+      </transition>
+      <transition name="slide-fade" mode="in-out">
+        <div v-if="queryPrams.dataType==2">
+          <Col span="10" class="col">
+          <span class="planDec">开关状态:</span>
+          <CheckboxGroup v-model="queryPrams.dataRangeGroup" style="position: relative;float: left;left:8px;top:6px;"
+                         size="large">
+            <Checkbox label="1">开</Checkbox>
+            <Checkbox label="2">关</Checkbox>
+          </CheckboxGroup>
+          </Col>
+        </div>
+      </transition>
+      <transition name="slide-fade" mode="in-out">
+        <div v-if="queryPrams.dataType==4||queryPrams.dataType==5">
+          <Col span="10" class="col">
+          <span class="planDec">监测位置:</span>
+          <Input v-model="queryPrams.pleace" style="width: 120px;margin-left: 8px;  "></Input>
+          （米）
+          </Col>
+        </div>
+      </transition>
+      <Col span="1" style="position: relative;float: right;right: 10px;top:-20px;">
+      <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData" title="查询" size="large"></Button>
       </Col>
-      <Col span="10" class="planDec">
-      <span>取整范围:</span>
-      最小值
-      <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-      最大值
-      <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
-      </Col>
+      <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
     </Row>
     <transition name="slide-fade" mode="in-out">
       <div v-if="!viewHistory">
         <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
           <Col span="24">
-          <div style="position:relative; line-height: 50px;background-color: #e5eae99c;">
-            <Button type="primary" @click="queryTableData" style="margin-left: 4px;">查看历史数据</Button>
+          <Table height="620" stripe border :columns="tableColumn" :data="tableData" ref="selection"
+                 @on-selection-change="selectionClick"></Table>
+          <div style="position:relative; line-height: 50px;background-color:#f1f1f1;">
+            <Button type="primary" shape="circle" icon="forward" size="large" title="查看历史数据"
+                    @click="queryHistoryData"></Button>
+            <Button type="primary" shape="circle" icon="ios-cloud-download" size="large" title="导出"
+                    @click="exportData"></Button>
             <Page class="nextPage" @on-change="changePage" @on-page-size-change="handlePageSize"
                   :total="queryPrams.total"
                   show-total show-elevator
                   :page-size="queryPrams.pageSize"></Page>
           </div>
-          <Table height="620" stripe border :columns="tableColumn" :data="tableData" ref="selection"
-                 @on-selection-change="selectionClick"></Table>
           </Col>
         </Row>
       </div>
@@ -59,18 +93,22 @@
         <Row style="padding: 9px;padding-top: 0px">
           <Col span="24">
           <div style="position:relative;" class="queryHis">
-            <Select v-model="historyPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;">
+            <Select v-model="historyPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
+                    @on-change="changeAlarmType">
               <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
             </Select>
             <span>开始时间:</span>
-            <DatePicker v-model="historyPrams.startTime" type="datetime" placeholder="选择开始时间"
-                        style="width: 180px;margin-right: 4px;"></DatePicker>
+            <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
+                        style="width: 220px;margin-right: 4px;"></DatePicker>
             <span>结束时间:</span>
-            <DatePicker v-model="historyPrams.endTIme" type="datetime" placeholder="选择结束时间"
-                        style="width: 180px;margin-right: 4px;"></DatePicker>
-            <Button type="primary" shape="circle" icon="ios-search"></Button>
-            <Button type="primary" shape="circle" icon="ios-cloud-download"></Button>
-            <Button class="nextPage" type="primary" @click="queryTableData" style="margin-top: 7px;">返回</Button>
+            <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
+                        style="width:220px;margin-right: 14px;"></DatePicker>
+            <div style="float: right;right: 20px;">
+              <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询历史数据"></Button>
+
+              <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
+                      title="返回"></Button>
+            </div>
             <div style="">
               <SimplelineChart v-band="curlineChart" style="width: 100%;height: 620px;"></SimplelineChart>
             </div>
@@ -83,13 +121,19 @@
 </template>
 
 <script>
+  import Treeselect from '@riophae/vue-treeselect'
+  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+  import {EnumsService} from '../../../../services/enumsService.js'
   import SimplelineChart from '../../../../components/Common/Chart/SimpleLineChart.vue'
+  import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
 
   export default {
     name: "query-data",
     data() {
       return {
         viewHistory: false,
+        isReady: true,
+        zoneList: [],
         curlineChart: {
           id: "historyDataChart",
           requestUrl: 'lineChart',
@@ -101,50 +145,33 @@
         queryPrams: {
           monitorObject: "",
           objectType: '',
-          queryZone: "",
-          dataType: "",
+          queryZone: null,
+          dataType: 1,
           maxVal: 100,
           minVal: 0,
+          dataRangeGroup: [],
+          pleace: 0,
           total: 100,
           pageSize: 20,
         },
         historyPrams: {
           startTime: "",
-          endTIme: "",
+          endTime: "",
           dateType: 1,
         },
-        historyDateType: [{key: 1, value: "自定义"}, {key: 2, value: "最近一天"}, {key: 3, value: "最近一周"}],
-        dataTypeEnum: [{key: 1, value: "模拟量输入"}, {key: 2, value: "开关量输入"}, {key: 3, value: "状态量输入"}, {
+        dataObjectSelect: {
+          show: {state: false},
+          selectObjects: {},
+          selectData: {idList: ""},
+        },
+        historyDateType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {
           key: 4,
-          value: "分布式数据"
-        }, {key: 5, value: "频谱数据"}],
+          value: "自定义"
+        },],
+        queryZoneList: [{key: 1, value: "自定义"}, {key: 2, value: "最近一天"}, {key: 3, value: "最近一周"}],
+        dataTypeEnum: [],
         selectSelection: null,
-        cityList: [
-          {
-            value: 'New York',
-            label: 'New York'
-          },
-          {
-            value: 'London',
-            label: 'London'
-          },
-          {
-            value: 'Sydney',
-            label: 'Sydney'
-          },
-          {
-            value: 'Ottawa',
-            label: 'Ottawa'
-          },
-          {
-            value: 'Paris',
-            label: 'Paris'
-          },
-          {
-            value: 'Canberra',
-            label: 'Canberra'
-          }
-        ],
+        objectList: [],
         tableColumn: [
           {
             type: 'selection',
@@ -178,48 +205,115 @@
         ],
         tableData: [
           {
-            name: 'John Brown',
-            age: 18,
-            address: 'New York No. 1 Lake Park',
-            province: 'America',
-            city: 'New York',
-            zip: 100000
+            name: '电力仓',
+            age: 1012,
+            address: '15',
+            province: '温度1',
+            city: '模拟量',
+            zip: "2018-6-7 12:23:00"
           },
           {
-            name: 'Jim Green',
-            age: 24,
-            address: 'Washington, D.C. No. 1 Lake Park',
-            province: 'America',
-            city: 'Washington, D.C.',
-            zip: 100000
+            name: '电力仓',
+            age: 1012,
+            address: '15',
+            province: '温度1',
+            city: '模拟量',
+            zip: "2018-6-7 12:23:00"
           },
           {
-            name: 'Joe Black',
-            age: 30,
-            address: 'Sydney No. 1 Lake Park',
-            province: 'Australian',
-            city: 'Sydney',
-            zip: 100000
+            name: '电力仓',
+            age: 1012,
+            address: '15',
+            province: '温度1',
+            city: '模拟量',
+            zip: "2018-6-7 12:23:00"
           },
           {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            province: 'Canada',
-            city: 'Ottawa',
-            zip: 100000
+            name: '电力仓',
+            age: 1012,
+            address: '15',
+            province: '温度1',
+            city: '模拟量',
+            zip: "2018-6-7 12:23:00"
           }
         ],
       }
     },
     methods: {
+      //查询监测对象
+      queryObject() {
+        let _this = this;
+        _this.dataObjectSelect.show.state = !_this.dataObjectSelect.show.state;
+      },
+
+      //初始化查询条件下拉列表数据
+      inItData() {
+        var _this = this;
+        EnumsService.getMonitorType().then((result) => {
+          _this.objectList = result;
+        });
+        EnumsService.getDataType().then((result) => {
+          _this.dataTypeEnum = result;
+        });
+        EnumsService.getMonitorZone().then((result) => {
+          var _this = this;
+          if (result) {
+            result.forEach(a => {
+              var temp = {};
+              temp.id = a.id;
+              temp.label = a.name;
+              temp.children = [];
+              _this.zoneList.push(temp);
+              if (a.list.length > 0) {
+                a.list.forEach(b => {
+                  var child = {};
+                  child.id = a.id + "_" + b.id;
+                  child.label = b.name;
+                  child.children = [];
+                  temp.children.push(child);
+                  if (b.list.length > 0) {
+                    b.list.forEach(c => {
+                      var child2 = {};
+                      child2.id = a.id + "_" + b.id + "_" + c.id;
+                      child2.label = c.name;
+                      child.children.push(child2);
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      },
+
+      //导出数据
+      exportData() {
+        console.log(this.$refs.selection);
+        this.$refs.selection.exportCsv({
+          filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "导出数据",
+          original: false
+        });
+      },
+
       queryTableData() {
+        var _this = this;
+      },
+
+      queryHistoryData() {
+        var _this = this;
+        _this.viewHistory = !_this.viewHistory;
+        _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
+        _this.changeAlarmType(_this.historyPrams.dateType);
+      },
+      backToCurPage() {
         var _this = this;
         _this.viewHistory = !_this.viewHistory;
       },
+
       selectionClick(arr) {
         this.selectSelection = arr;
-      },
+      }
+      ,
       //切换页面
       changePage(index) {
         let _this = this;
@@ -227,20 +321,73 @@
         _this.queryTableData();
       }
       ,
+
       //切换页码数
       handlePageSize(value) {
         this.queryPrams.pageSize = value;
         this.queryTableData();
       }
+      ,
+
+      //切换数据类型
+      changeDataType(index) {
+      }
+      ,
+
+      //更改告警时间类型
+      changeAlarmType(index) {
+        var _this = this;
+        var date = new Date();
+        if (index == 1) {
+          date.setTime(date.getTime() - 3600 * 1000 * 24);
+          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+          _this.isReady = true;
+        }
+        else if (index == 2) {
+          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+          _this.isReady = true;
+        }
+        else if (index == 3) {
+          date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+          _this.isReady = true;
+        }
+        else {
+          _this.isReady = false;
+          _this.historyPrams.startTime = "";
+          _this.historyPrams.endTime = "";
+        }
+      }
+      ,
     },
-    components: {SimplelineChart},
+    components: {
+      SimplelineChart, ShowMonitorObjectSelect, Treeselect
+    },
+    mounted() {
+      this.inItData();
+    },
+    watch: {
+      "dataObjectSelect.selectData.idList": function () {
+        this.queryPrams.monitorObject = this.dataObjectSelect.selectData.idList;
+      }
+    },
   }
 </script>
 
 <style scoped>
+  .col {
+    height: 60px;
+    padding-top: 10px;
+  }
+
   .planDec {
-    padding-right: 5px;
+    padding: 4px;
     font-size: 14px;
+    float: left;
   }
 
   .queryHis {
@@ -258,9 +405,7 @@
 
   .top {
     margin: 10px;
-    height: 120px;
-    line-height: 60px;
-    background: #fff;
+    background-color: #f1f1f1;
     padding-left: 10px;
   }
 

@@ -10,7 +10,7 @@
             <Input type="text" v-model="addRelatedUnitsInfo.contact"></Input>
         </FormItem>
         <FormItem label="联系方式：" prop="tel"> 
-            <Input type="text" v-model="addRelatedUnitsInfo.tel"></Input>
+            <Input type="text" v-model="addRelatedUnitsInfo.tel" placeholder="XXXXXXXXXXX或者000-0000000或者0000-0000000"></Input>
         </FormItem>
         <FormItem label="单位类别：" prop="unitType">
             <Select v-model="addRelatedUnitsInfo.unitType">
@@ -35,9 +35,9 @@
 </template>
 <script>
 import axios from "axios";
-import { TunnelService } from '../../../../services/tunnels'
-import { EnumsService } from '../../../../services/enums'
-import { RelatedUnitService } from '../../../../services/relatedUnits'
+import { TunnelService } from '../../../../services/tunnelService'
+import { EnumsService } from '../../../../services/enumsService'
+import { RelatedUnitService } from '../../../../services/relatedUnitService'
 import types from '../../../../../static/Enum.json'
 export default {
     data(){
@@ -70,7 +70,8 @@ export default {
                     { required: true, message: '请填写联系方式', trigger: 'blur' },
                     { validator(rule,value,callback,source,options) {
                         var errors = []
-                        if(!(/^1(3|4|5|7|8)\d{9}$/).test(value)){
+                        if(!(/^((0\d{2,3}-\d{7,8})|(1[358496]\d{9}))$/).test(value)){
+                        // if(!(/^1(3|4|5|7|8)\d{9}$/).test(value)||!(/0\d{2,3}-\d{7,8}/).test(value)){
                             callback("请输入正确的联系方式")
                         }
                         callback(errors)
@@ -145,7 +146,7 @@ export default {
             function(error){
                 console.log(error)
         })
-        // axios.get('tunnels/tree').then(response=>{
+        // this.axios.get('tunnels/tree').then(response=>{
         //     let{ code,data } = response.data
         //     if(code==200){
         //         data.forEach(element => {
@@ -194,7 +195,7 @@ export default {
         RelatedUnitService.getRelatedUnitInfoById(_this.$route.params.id).then(
             function(result1){
                 _this.addRelatedUnitsInfo = result1
-                TunnelServer.getSectionsByIds(_this.addRelatedUnitsInfo.sectionIds).then(
+                TunnelService.getSectionsByIds(_this.addRelatedUnitsInfo.sectionIds).then(
                         function(result2){
                             _this.sections = result2
                             var str = ''
@@ -273,7 +274,7 @@ export default {
                 this.choiceAll()
                 this.$refs[name].validate((valid)=>{
                     if(valid&&this.validateSectionName==false){
-                        axios.post('/relatedunits',this.addRelatedUnitsInfo).then(response=>{
+                        this.axios.post('/relatedunits',this.addRelatedUnitsInfo).then(response=>{
                             this.$router.push("/UM/relatedUnits/query");
                         })
                     }

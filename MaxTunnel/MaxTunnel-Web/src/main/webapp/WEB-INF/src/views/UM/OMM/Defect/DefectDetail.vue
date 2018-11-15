@@ -59,6 +59,7 @@
 </template>
 <script>
 import types from '../../../../../static/Enum.json'
+import { TunnelService } from '../../../../services/tunnelService'
 export default {
     data(){
         return {

@@ -89,4 +89,7 @@
 		where id = #{id}
 	</update>
 
+<delete id="deleteByPrimaryKey">
+	delete from T_MAM_MEASOBJ_DI where id = #{id}
+</delete>
 </mapper>

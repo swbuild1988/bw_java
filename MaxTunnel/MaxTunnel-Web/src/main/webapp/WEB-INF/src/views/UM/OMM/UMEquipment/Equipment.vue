@@ -21,7 +21,14 @@
     },
     created() {
       this.equipemnt.leftTree = [];
-      this.equipemnt.leftTree = [{
+      this.equipemnt.leftTree = [
+        {
+          id: 0,
+          name: '设备管理总览',
+          url: '/UM/equipment/homePage',
+          // childNode: [{}]
+        },
+        {
         id: 1, name: "管廊设备", childNode: [
           {
             id: 11,

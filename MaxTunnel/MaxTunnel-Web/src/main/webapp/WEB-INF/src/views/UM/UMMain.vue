@@ -27,7 +27,7 @@
             <div :style="{fontSize:mySize}">巡检管理</div>
           </div>
         </Button>
-        <Button type="warning ywGuanli" @click="goToMoudle({ path:'/UM/overhaul/query'})"
+        <Button type="warning" class="ywGuanli" @click="goToMoudle({ path:'/UM/overhaul/query'})"
         >
           <div><img :width="imgWidth" src="../../assets/UM/检修.png">
             <div :style="{fontSize:mySize}">检修管理</div>
@@ -92,12 +92,12 @@
         </Col>
         <Col span="6">
         <Button type="error" style="width:24.2vw;"
-                class="moudleImg yjGuanLi">
+                class="yjGuanLi">
           <div><img src="../../assets/UM/消防.png">
             <div :style="{fontSize:smSize}">消防系统</div>
           </div>
         </Button>
-        <Button type="success" class="moudleImg yjGuanLi" @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
+        <Button type="success" class="yjGuanLi" @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
           <div><img src="../../assets/UM/数据.png">
             <div :style="{fontSize:smSize}">数据分析</div>
           </div>
@@ -129,7 +129,7 @@
             <div :style="{fontSize:mySize}">灾害管理</div>
           </div>
         </Button>
-        <Button class="yjGuanLi" type="warning" @click="goToMoudle({ path:'/UM/plans/detial/processKey'})">
+        <Button  type="warning" class="yjGuanLi" @click="goToMoudle({ path:'/UM/plans/detial/processKey'})">
           <div><img :width="imgWidth" src="../../assets/UM/检修.png">
             <div :style="{fontSize:mySize}">预案管理</div>
           </div>
@@ -143,6 +143,7 @@
 
 <script>
   import {getFormatTime} from '../../scripts/DateFormat.js';
+  import { LogoutService } from '../../services/logoutService';
 
   export default {
     name: "UmMain",
@@ -166,15 +167,23 @@
           title: '注销',
           content: '<p>确认退出吗?</p>',
           onOk: () => {
-            this.axios.get('/logout').then(result => {
-              let {msg, code, data} = result.data;
-              if (code !== "200") {
-                this.$Message.error(msg);
-              } else {
+            LogoutService.UMLogout().then(
+              result=>{
                 sessionStorage.removeItem('UMUser');
                 _this.$router.push('/UMlogin');
-              }
-            });
+              },
+              error=>{
+                _this.$Message.error(msg);
+              })
+            // this.axios.get('/logout').then(result => {
+            //   let {msg, code, data} = result.data;
+            //   if (code !== "200") {
+            //     this.$Message.error(msg);
+            //   } else {
+            //     sessionStorage.removeItem('UMUser');
+            //     _this.$router.push('/UMlogin');
+            //   }
+            // });
           },
           onCancel: () => {
             // this.$Message.info('Clicked cancel');

@@ -7,6 +7,10 @@
     <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
     <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
     <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="CONTACT2" jdbcType="VARCHAR" property="contact2" />
+    <result column="TEL2" jdbcType="VARCHAR" property="tel2" />
+    <result column="CONTACT3" jdbcType="VARCHAR" property="contact3" />
+    <result column="TEL3" jdbcType="VARCHAR" property="tel3" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   
@@ -15,6 +19,10 @@
     <result column="COMPANY_ID" jdbcType="DECIMAL" property="companyId" />
     <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
     <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="CONTACT2" jdbcType="VARCHAR" property="contact2" />
+    <result column="TEL2" jdbcType="VARCHAR" property="tel2" />
+    <result column="CONTACT3" jdbcType="VARCHAR" property="contact3" />
+    <result column="TEL3" jdbcType="VARCHAR" property="tel3" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
     <association property="company" javaType="Company" column="company_id"
     	select="com.bandweaver.tunnel.dao.common.CompanyMapper.selectByPrimaryKey"/>
@@ -22,7 +30,7 @@
   
   
   <sql id="Base_Column_List">
-    ID, COMPANY_ID, CONTACT, TEL, CRT_TIME
+    ID, COMPANY_ID, CONTACT, TEL, CONTACT2, TEL2,CONTACT3, TEL3,CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -36,10 +44,13 @@
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Customer">
     insert into T_OAM_CUSTOMER (ID, COMPANY_ID, 
-      CONTACT, TEL, CRT_TIME
+      CONTACT, TEL, CONTACT2, TEL2,CONTACT3, TEL3,CRT_TIME
       )
     values (#{id,jdbcType=DECIMAL}, #{companyId,jdbcType=DECIMAL},  
-      #{contact,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+      #{contact,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{contact2,jdbcType=VARCHAR}, #{tel2,jdbcType=VARCHAR}, 
+      #{contact3,jdbcType=VARCHAR}, #{tel3,jdbcType=VARCHAR}, 
+      #{crtTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Customer">
@@ -56,6 +67,18 @@
       </if>
       <if test="tel != null">
         TEL,
+      </if>
+      <if test="contact2 != null">
+        CONTACT2,
+      </if>
+      <if test="tel2 != null">
+        TEL2,
+      </if>
+      <if test="contact3 != null">
+        CONTACT3,
+      </if>
+      <if test="tel3 != null">
+        TEL3,
       </if>
       <if test="crtTime != null">
         CRT_TIME,
@@ -74,6 +97,18 @@
       <if test="tel != null">
         #{tel,jdbcType=VARCHAR},
       </if>
+      <if test="contact2 != null">
+        #{contact2,jdbcType=VARCHAR},
+      </if>
+      <if test="tel2 != null">
+        #{tel2,jdbcType=VARCHAR},
+      </if>
+      <if test="contact3 != null">
+        #{contact3,jdbcType=VARCHAR},
+      </if>
+      <if test="tel3 != null">
+        #{tel3,jdbcType=VARCHAR},
+      </if>
       <if test="crtTime != null">
         #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -91,6 +126,18 @@
       <if test="tel != null">
         TEL = #{tel,jdbcType=VARCHAR},
       </if>
+      <if test="contact2 != null">
+        CONTACT2 = #{contact2,jdbcType=VARCHAR},
+      </if>
+      <if test="tel2 != null">
+        TEL2 = #{tel2,jdbcType=VARCHAR},
+      </if>
+      <if test="contact3 != null">
+        CONTACT3 = #{contact3,jdbcType=VARCHAR},
+      </if>
+      <if test="tel3 != null">
+        TEL3 = #{tel3,jdbcType=VARCHAR},
+      </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -102,13 +149,17 @@
     set COMPANY_ID = #{companyId,jdbcType=DECIMAL},
       CONTACT = #{contact,jdbcType=VARCHAR},
       TEL = #{tel,jdbcType=VARCHAR},
+      CONTACT2 = #{contact2,jdbcType=VARCHAR},
+      TEL2 = #{tel2,jdbcType=VARCHAR},
+      CONTACT3 = #{contact3,jdbcType=VARCHAR},
+      TEL3 = #{tel3,jdbcType=VARCHAR},
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   
   <insert id="addBatch" useGeneratedKeys="false">
 		insert into T_OAM_CUSTOMER
-		(id,company_id,contact,tel,crt_time)
+		(id,company_id,contact,tel,contact2,tel2,contact3,tel3,crt_time)
 		select OAM_CUSTOMER_SEQUENCE.nextval,a.* from (
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
@@ -116,6 +167,10 @@
 			#{item.companyId},
 			#{item.contact},
 			#{item.tel},
+			#{item.contact2},
+			#{item.tel2},
+			#{item.contact3},
+			#{item.tel3},
 			#{item.crtTime}
 			from dual
 		</foreach>

@@ -74,7 +74,8 @@ export default {
             },
             tunnel: [],
             typeKey: null,
-            isDisable: false
+            isDisable: false,
+            tip: null
         }    
     },
     mounted(){
@@ -87,6 +88,7 @@ export default {
                 this.tunnel = data
             }
         })
+        this.tip = this.$route.params.tip
         // this.getSessionUserName()
         //获取缺陷详情
         this.axios.get('/orders/'+this.overhaulData.id+'/defect').then(response=>{
@@ -125,7 +127,12 @@ export default {
                     describe: this.submitOverhaulDate.describe
                 }
                 this.axios.put('/orders',formInfo).then(response=>{
-                    this.$router.push("/UM/myNews/queryMyTask");
+                    if(this.tip=='tasks'){
+                        this.$router.push("/UM/myTasks/query");
+                    }
+                    if(this.tip=="news"){
+                        this.$router.push("/UM/myNews/queryMyTask");
+                    }
                 })
                 .catch(function(error){
                     console.log(error)

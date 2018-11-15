@@ -228,6 +228,8 @@ export default {
             .catch(function(error) {
               console.log(error);
             });
+          }else{
+            this.$Message.error("请填写正确的巡检计划信息")
           }
         })
       },2000)

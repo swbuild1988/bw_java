@@ -11,18 +11,18 @@ public enum DataType {
     None("无", 0),
     /**模拟量输入AnologInput*/
     AI("模拟量输入", 1),
-    /**开关量DigitalInput*/
-    DI("开关量", 2),
-    /**状态量*/
-    SI("状态量", 3),
+    /**开关量输入DigitalInput*/
+    DI("开关量输入", 2),
+    /**状态量输入*/
+    SI("状态量输入", 3),
     /**分布式Distribute*/
-    DISTRIBUTE("分布式", 5),
+    DISTRIBUTE("分布式数据", 5),
     /**视频*/
     VIDEO("视频", 7),
     /**StructureObject**/
     SO("结构化对象", 97),
-    /**频谱*/
-    DAS("频谱", 103);
+    /**频谱数据*/
+    DAS("频谱数据", 103);
 
     DataType() {
     }

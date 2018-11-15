@@ -391,7 +391,7 @@
     watch: {
       '$route': function () {
         // $route发生变化时再次赋值
-        this.queryPram.processKey = this.$route.params.processKey;
+        this.queryPram = this.$route.params.processKey;
       },
     },
   }

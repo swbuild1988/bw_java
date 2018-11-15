@@ -7,7 +7,7 @@
 </style>
 <script>
   import ModulePage from '../../../../components/Common/ModulePage'
-  import { TunnelService } from '../../../../services/tunnels'
+  import { TunnelService } from '../../../../services/tunnelService'
   
   export default {
     name:"OperatingSpaceMain",

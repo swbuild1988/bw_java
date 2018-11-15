@@ -55,7 +55,7 @@
                     <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
         </Row>
-        <div>
+        <div style="margin: 20px;">
             <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete"></Table>
             <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
                     @on-change="handlePage" show-elevator :style="pageStyle"></Page>

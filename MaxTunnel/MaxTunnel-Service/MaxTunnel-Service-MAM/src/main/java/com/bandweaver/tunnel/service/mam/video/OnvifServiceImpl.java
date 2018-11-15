@@ -237,9 +237,9 @@ public class OnvifServiceImpl implements OnvifService {
      * @return
      */
     private OnvifDevice getDevice(VideoDto video) {
-        String hostIp = video.getVideoServer().getIp();
-        String username = video.getVideoServer().getUsername();
-        String password = video.getVideoServer().getPassword();
+        String hostIp = video.getVideoServerDto().getIp();
+        String username = video.getVideoServerDto().getUsername();
+        String password = video.getVideoServerDto().getPassword();
 
         if (hostIp == null || username == null || password == null) return null;
 

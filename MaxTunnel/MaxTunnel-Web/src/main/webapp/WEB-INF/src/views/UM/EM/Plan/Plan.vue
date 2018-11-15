@@ -16,7 +16,8 @@
           moduleName: "预案管理",
           leftTree: [],
         },
-        treeNodeJumpUrl: "/UM/plans/detial/processKey",
+        // treeNodeJumpUrl: "/UM/plans/detial/processKey",
+        treeNodeJumpUrl: "/UM/plans/detial/",
         executeNodeUrl: "/UM/plans/execute/processKey",
       };
     },

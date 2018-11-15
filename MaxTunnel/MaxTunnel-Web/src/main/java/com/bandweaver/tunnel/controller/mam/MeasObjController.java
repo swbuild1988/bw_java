@@ -150,22 +150,36 @@ public class MeasObjController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-    /**************************************************************************************************/
-    /**************************************************************************************************/
-    /**************************************************************************************************/
-
-    /**添加obj
-     * @param   obj
+   
+    //*************************************************************************************
+    //***********后台管理系统接口-start TODO
+    //*************************************************************************************
+    
+    /**添加measObj
+     * @param   id 
+     * @param   name 名称 String
+     * @param   tunnelId 所在管廊
+     * @param   storeId 所在管仓
+     * @param   areaId 所在区域
+     * @param   datatypeId
+     * @param   objtypeId
+     * @param   actived
+     * @param   description 描述
+     * @param   longitude 经度 String
+     * @param   latitude 纬度 String
+     * @param   height 高度 String
+     * @param   deviation 偏移量 String
      * @return 
      * @author shaosen
      * @date 2018年5月28日
      */
     @RequestMapping(value = "measobjs", method = RequestMethod.POST)
     public JSONObject addObj(@RequestBody MeasObj obj) {
+    	
         measObjModuleCenter.insertMeasObj(obj);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-
+    
     /**批量添加
      * @param   list
      * @return JSONObject
@@ -179,8 +193,7 @@ public class MeasObjController {
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-
-
+    
     /**更新obj 
      * @param obj
      * @return   
@@ -192,26 +205,8 @@ public class MeasObjController {
         measObjModuleCenter.updateMeasObj(obj);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-
-    /** 批量修改
-     * @param   list
-     * @return JSONObject
-     * @author shaosen
-     * @date 2018年5月30日
-     */
-    @RequestMapping(value = "measobjs/list", method = RequestMethod.PUT)
-    public JSONObject editObjBatch(@RequestBody List<MeasObj> list) {
-        List<MeasObj> result = new ArrayList<>();
-        for (MeasObj obj : list) {
-            measObjModuleCenter.updateMeasObj(obj);
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-
-    }
-
-
- 
+    
+    
     /**根据id查询obj 
      * @param id objID
      * @return   
@@ -223,6 +218,70 @@ public class MeasObjController {
         MeasObj measObj = measObjModuleCenter.getMeasObj(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObj);
     }
+    
+    
+    /**删除MeasObj 
+     * @param id
+     * @return   
+     * @author shaosen
+     * @Date 2018年11月8日
+     */
+    @RequestMapping(value = "measobjs/{id}" ,method = RequestMethod.DELETE)
+    public JSONObject deleteObj(@PathVariable Integer id) {
+    	measObjModuleCenter.deleteObj(id);
+    	  return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    
+    /**批量删除 
+     * @param ids
+     * @return   
+     * @author shaosen
+     * @Date 2018年11月8日
+     */
+    @RequestMapping(value = "measobjs/batch/{ids}" ,method = RequestMethod.DELETE)
+    public JSONObject deleteObjBatch(@PathVariable String ids) {
+    	
+		String[] arr = ids.split(",");
+		for (String str : arr) {
+			measObjModuleCenter.deleteObj(DataTypeUtil.toInteger(str));
+		}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**监测对象分页查询
+     * @param storeId 	管舱id
+     * @param areaId	区域id
+     * @param tunnelId	管廊id
+     * @param name		监测对象名称（支持模糊查询）
+     * @param datatypeId 	枚举
+     * @param objtypeIds	list，格式：[1,2,3,4...]
+     * @param pageNum 必须
+     * @param pageSize 必须
+     * @return {"msg":"请求成功","code":"200","data":{"total":103,"list":[{"id":1001,"tunnelId":1,"storeId":1,"areaId":1,"sectionId":1,"name":"温度监测仪1","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.003534597099157488","latitude":"0.18009738011735688","height":"0.5474121265387349","deviation":0.460808326715716,"cv":51.3145960835601},{"id":1002,"tunnelId":1,"storeId":3,"areaId":1,"sectionId":45,"name":"温度监测仪2","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.4386016987524316","latitude":"0.48531866384309663","height":"0.6030770379809333","deviation":0.28828624319183,"cv":52.3145960835601}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":52,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6,7,8],"navigateFirstPage":1,"navigateLastPage":8,"firstPage":1,"lastPage":8}}
+     * @author shaosen
+     * @date 2018年7月18日
+     */
+    @RequestMapping(value = "measobjs/datagrid", method = RequestMethod.POST)
+    public JSONObject measObjDataGrid(@RequestBody MeasObjVo vo) {
+        PageInfo<MeasObjDto> pageInfo = measObjService.dataGrid(vo);
+        
+        //get CV
+        List<MeasObjDto> objDtoList = pageInfo.getList();
+        for (MeasObjDto measObjDto : objDtoList) {
+        	double cv = measObjService.getMeasObjCVByIdAndDataType(measObjDto.getId(), measObjDto.getDatatypeId());
+        	measObjDto.setCv(cv);
+		}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+    }
+    
+    
+    
+    //*************************************************************************************
+    //***********后台管理系统接口-end TODO
+    //*************************************************************************************
+    
+ 
 
     /**根据id集合获取list
      * @param   ids
@@ -295,35 +354,6 @@ public class MeasObjController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultList);
 
     }
-
-
-    /**监测对象分页查询
-     * @param sectionId 管舱段id
-     * @param storeId 	管舱id
-     * @param areaId	区域id
-     * @param tunnelId	管廊id
-     * @param name		监测对象名称（支持模糊查询）
-     * @param datatypeId 	枚举
-     * @param objtypeIds	list，格式：[1,2,3,4...]
-     * @param pageNum 必须
-     * @param pageSize 必须
-     * @return {"msg":"请求成功","code":"200","data":{"total":103,"list":[{"id":1001,"tunnelId":1,"storeId":1,"areaId":1,"sectionId":1,"name":"温度监测仪1","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.003534597099157488","latitude":"0.18009738011735688","height":"0.5474121265387349","deviation":0.460808326715716,"cv":51.3145960835601},{"id":1002,"tunnelId":1,"storeId":3,"areaId":1,"sectionId":45,"name":"温度监测仪2","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.4386016987524316","latitude":"0.48531866384309663","height":"0.6030770379809333","deviation":0.28828624319183,"cv":52.3145960835601}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":52,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6,7,8],"navigateFirstPage":1,"navigateLastPage":8,"firstPage":1,"lastPage":8}}
-     * @author shaosen
-     * @date 2018年7月18日
-     */
-    @RequestMapping(value = "measobjs/datagrid", method = RequestMethod.POST)
-    public JSONObject measObjDataGrid(@RequestBody MeasObjVo vo) {
-        PageInfo<MeasObjDto> pageInfo = measObjService.dataGrid(vo);
-        
-        //get CV
-        List<MeasObjDto> objDtoList = pageInfo.getList();
-        for (MeasObjDto measObjDto : objDtoList) {
-        	double cv = measObjService.getMeasObjCVByIdAndDataType(measObjDto.getId(), measObjDto.getDatatypeId());
-        	measObjDto.setCv(cv);
-		}
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
-    }
-    
     
 
     /**根据measObjId和datatypeId查询cv值
@@ -388,6 +418,24 @@ public class MeasObjController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
     }
 
+    /**监测对象查询
+     * @param sectionIds 管舱段id集合
+     * @param storeIds 	管舱id集合
+     * @param tunnelIds	管廊id集合
+     * @param id		监测对象主键
+     * @param datatypeId 	枚举
+     * @return	list
+     * @author ya.liu
+     * @Date 2018年10月31日
+     */
+    @RequestMapping(value = "measobjs/condition",method = RequestMethod.POST)
+    public JSONObject getMeasObjByCondition(@RequestBody(required = false) MeasObjVo vo) {
+    	if(null == vo) {
+    		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,null);
+    	}
+    	List<MeasObjDto> list = measObjService.getMeasObjByCondition(vo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    }
 }
 
 

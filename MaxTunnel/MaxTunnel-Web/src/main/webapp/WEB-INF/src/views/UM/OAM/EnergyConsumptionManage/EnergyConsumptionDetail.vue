@@ -35,8 +35,8 @@
 </template>
 
 <script>
-  import { TunnelService } from '../../../../services/tunnels'
-  import { energyConsumptionService } from '../../../../services/energyConsumption'
+  import { TunnelService } from '../../../../services/tunnelService'
+  import { energyConsumptionService } from '../../../../services/energyConsumptionService'
   export default {
     name: "energy-consumption-detail",
     data() {
@@ -49,6 +49,10 @@
           {
             title: '管廊名称',
             key: 'tunnelName'
+          },
+          {
+            title: '电表类型',
+            key: 'objectTypeName'
           },
           {
             title: '耗电单价（元/千瓦时）',
@@ -133,13 +137,16 @@
           pageSize: _this.page.pageSize,
           tunnelId: _this.tunnelId
         };
-        if (_this.startTime && _this.endTime) {
+        if (_this.startTime) {
           queryParams.startTime = _this.startTime.getTime();
+        }
+        if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
         energyConsumptionService.getECDatagrid(queryParams).then(
           (result)=>{
-            _this.page.pageTotal = result.pages;
+            _this.page.pageTotal = result.total;
+            console.log(result);
             result.list.forEach(a => {
               let temp = a;
               temp.value = temp.value.toFixed(2);
@@ -157,7 +164,6 @@
 
       drawLine(titleName,titleColor) {
         let _this = this;
-
         _this.myChart = _this.$echarts.init(document.getElementById(_this.line.Id));
         _this.myChart.showLoading();
         let option = {
@@ -175,6 +181,7 @@
           },
           tooltip: {
             trigger: 'axis',
+            formatter: '{b0}<br />{a}:{c}(千瓦时)',
             position: function (pt) {
               return [pt[0], '10%'];
             }
@@ -238,6 +245,8 @@
         _this.myChart.setOption(option);
         window.addEventListener("resize", this.myChart.resize);
       },
+
+      //刷新图表
       fetchData(requestUrl) {
         let _this = this;
         let queryParams = {
@@ -245,8 +254,10 @@
           endTime: null,
           tunnelId: _this.tunnelId
         };
-        if (_this.startTime && _this.endTime) {
+        if (_this.startTime ) {
           queryParams.startTime = _this.startTime.getTime();
+        }
+        if ( _this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
         energyConsumptionService.getECInfo(queryParams).then(

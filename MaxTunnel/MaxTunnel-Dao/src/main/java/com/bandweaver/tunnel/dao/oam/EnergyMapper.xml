@@ -7,6 +7,8 @@
 		<id column="ID" jdbcType="DECIMAL" property="id" />
 		<result column="TUNNEL_ID" jdbcType="DECIMAL"
 			property="tunnelId" />
+		<result column="object_type" jdbcType="DECIMAL"
+			property="objectType" />
 		<result column="VALUE" jdbcType="DECIMAL" property="value" />
 		<result column="UNIT_PRICE" jdbcType="DECIMAL"
 			property="unitPrice" />
@@ -14,7 +16,7 @@
 			property="crtTime" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		ID, TUNNEL_ID, VALUE, CRT_TIME,UNIT_PRICE
+		ID, TUNNEL_ID, object_type,VALUE, CRT_TIME,UNIT_PRICE
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
@@ -29,11 +31,12 @@
 	</delete>
 	<insert id="insert"
 		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
-		insert into T_OAM_ENERGY (ID, TUNNEL_ID, VALUE,
+		insert into T_OAM_ENERGY (ID, TUNNEL_ID, object_type,VALUE,
 		unit_price,
 		CRT_TIME)
 		values (#{id,jdbcType=DECIMAL},
 		#{tunnelId,jdbcType=DECIMAL},
+		#{objectType,jdbcType=DECIMAL},
 		#{value,jdbcType=DECIMAL},
 		#{unitPrice,jdbcType=DECIMAL},
 		#{crtTime,jdbcType=TIMESTAMP})
@@ -47,6 +50,9 @@
 			</if>
 			<if test="tunnelId != null">
 				TUNNEL_ID,
+			</if>
+			<if test="objectType != null">
+				object_type,
 			</if>
 			<if test="value != null">
 				VALUE,
@@ -64,6 +70,9 @@
 			</if>
 			<if test="tunnelId != null">
 				#{tunnelId,jdbcType=DECIMAL},
+			</if>
+			<if test="objectType != null">
+				#{objectType,jdbcType=DECIMAL},
 			</if>
 			<if test="value != null">
 				#{value,jdbcType=DECIMAL},
@@ -83,6 +92,9 @@
 			<if test="tunnelId != null">
 				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
 			</if>
+			<if test="objectType != null">
+				object_type = #{objectType,jdbcType=DECIMAL},
+			</if>
 			<if test="value != null">
 				VALUE = #{value,jdbcType=DECIMAL},
 			</if>
@@ -98,12 +110,12 @@
 	<update id="updateByPrimaryKey"
 		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.Energy">
 		update T_OAM_ENERGY
-		set TUNNEL_ID =
-		#{tunnelId,jdbcType=DECIMAL},
+		set 
+		TUNNEL_ID =#{tunnelId,jdbcType=DECIMAL},
+		object_type =#{objectType,jdbcType=DECIMAL},
 		VALUE = #{value,jdbcType=DECIMAL},
 		unit_price = #{unitPrice,jdbcType=DECIMAL},
-		CRT_TIME =
-		#{crtTime,jdbcType=TIMESTAMP}
+		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
 		where ID = #{id,jdbcType=DECIMAL}
 	</update>
 
@@ -154,7 +166,7 @@
 	<select id="getTunnelEngergyConsumptionListByTime"
 		resultType="com.bandweaver.tunnel.common.biz.dto.oam.EnergyDto">
 
-		select e.tunnel_id,t.name as tunnelName, sum(e.value) as
+		select e.tunnel_id ,t.name as tunnelName, sum(e.value) as
 		totalValue,avg(e.unit_price) as
 		avgUnitPrice from T_OAM_ENERGY e
 		left
@@ -184,12 +196,13 @@
 
 	<insert id="addEnergyBatch" useGeneratedKeys="false">
 		insert into T_OAM_ENERGY
-		(id,tunnel_id,value,unit_price,crt_time)
+		(id,tunnel_id,object_type,value,unit_price,crt_time)
 		select OAM_ENERGY_SEQUENCE.nextval,a.* from (
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
 			select
 			#{item.tunnelId},
+			#{item.objectType},
 			#{item.value},
 			#{item.unitPrice},
 			#{item.crtTime}
@@ -214,6 +227,7 @@
 				and e.crt_time <![CDATA[<=]]> #{endTime}
 			</if>
 		</where>
+		order by e.crt_time desc
 	</select>
 	
 	<select id="getEnergiesByCondition" resultType="com.bandweaver.tunnel.common.biz.dto.oam.EnergySimpleDto">
@@ -223,6 +237,9 @@
 		<where>
 			<if test="tunnelId != null">
 				and e.tunnel_id = #{tunnelId}
+			</if>
+			<if test="objectType != null">
+				and e.object_type = #{objectType}
 			</if>
 			<if test="startTime != null">
 				and e.crt_time <![CDATA[>=]]> #{startTime}

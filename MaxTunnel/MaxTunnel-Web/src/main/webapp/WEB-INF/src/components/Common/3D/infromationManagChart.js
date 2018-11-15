@@ -40,6 +40,7 @@ export const infromationManagDetails =
                          }
                  },
                  {key:'alarmName',val:'告警名称'},
+                 {key:'objectName',val:'对象名称'}
             ],
         eventsInfromations:
             [

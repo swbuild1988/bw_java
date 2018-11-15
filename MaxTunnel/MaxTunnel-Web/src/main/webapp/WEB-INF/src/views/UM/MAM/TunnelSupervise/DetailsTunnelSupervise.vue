@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-  import { TunnelService } from '../../../../services/tunnels'
+  import { TunnelService } from '../../../../services/tunnelService'
   import superviseTop from '../../../../assets/UM/superviseTop.png'
   import superviseBottom from '../../../../assets/UM/superviseBottom.png'
   export default {

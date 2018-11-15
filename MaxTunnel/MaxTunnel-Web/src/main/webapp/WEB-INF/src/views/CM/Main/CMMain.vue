@@ -23,6 +23,7 @@
         {
           id:1,
           name: "人员管理",
+          typeName: 'android-people',
           childNode:[
             {
               id:11,
@@ -39,6 +40,7 @@
         {
           id:2,
           name:"管廊管理",
+          typeName: 'drag',
           childNode:[
             {
               id:21,
@@ -70,6 +72,7 @@
         {
           id:3,
           name: "权限管理",
+          typeName:'android-lock',
           childNode:[
             {
               id:31,
@@ -80,17 +83,27 @@
         {
           id:4,
           name: "配置管理",
+          typeName: 'android-settings',
           childNode:[
             {
               id:41,
               name: "管廊配置",
               url: "/CMMain/config"
+            },{
+              id: 42,
+              name: '视频服务配置',
+              url: '/CMMain/queryVideoService'
+            },{
+              id: 43,
+              name: '视频配置',
+              url: '/CMMain/queryVideo'
             }
           ]
         },
         {
           id:5,
           name: "定时任务管理",
+          typeName: 'clipboard',
           childNode:[
             {
               id:51,
@@ -102,6 +115,7 @@
         {
           id:6,
           name: "应急管理",
+          typeName:'medkit',
           childNode:[
             {
               id:61,

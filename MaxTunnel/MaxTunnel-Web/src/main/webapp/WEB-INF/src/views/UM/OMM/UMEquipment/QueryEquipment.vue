@@ -87,8 +87,8 @@
 
 <script>
   import types from '../../../../../static/Enum.json'
-  import { TunnelService } from '../../../../services/tunnels'
-  import { EquipmentService } from '../../../../services/equipments'
+  import { TunnelService } from '../../../../services/tunnelService'
+  import { EquipmentService } from '../../../../services/equipmentService'
   export default {
     name: "queryEquipment",
     data() {
@@ -160,7 +160,7 @@
           (error)=>{
               _this.Log.info(error)
       })
-      
+
       this.equipmentTypes = types.equipmentType;
       this.showTable()
     },
@@ -182,7 +182,7 @@
             for (let index in result.list) {
               result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd");
               if (result.list[index].imgUrl != null) {
-                 result.list[index].imgUrl = "http://192.168.3.12:8080/MaxTunnel-Web/" + result.list[index].imgUrl.replace(/\\/g, "/")
+                 result.list[index].imgUrl = _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/")
               }
             }
             _this.equipments = result.list;
@@ -216,7 +216,7 @@
           (error)=>{
             _this.Log.info(error)
           })
-      
+
         this.$Modal.confirm({
           title: '删除',
           content: '<p>确认删除吗?</p>',

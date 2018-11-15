@@ -133,7 +133,8 @@ export default {
                         pathParams.name = 'UWDetailsOverhaul'
                         pathParams.params = {
                             id: task.id,
-                            type: 4
+                            type: 4,
+                            tip: 'news'
                         }
                     }
                 break;

@@ -3,22 +3,22 @@
         <Row class="queryCondition">
             <Row>
             <Col span="6">
-                <span>缺陷类型：</span>
-                <Select v-model="conditions.type" style="width: 60%" @on-change="queryCondition()">
+                <span class="conditionTitle">缺陷类型：</span>
+                <Select v-model="conditions.type" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectType" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
             <Col span="6">    
-                <span>缺陷状态：</span>
-                <Select v-model="conditions.status" style="width: 60%" @on-change="queryCondition()">
+                <span class="conditionTitle">缺陷状态：</span>
+                <Select v-model="conditions.status" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectStatus" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
             <Col span="6">    
-                <span>危险等级：</span>
-                <Select v-model="conditions.level" style="width: 60%" @on-change="queryCondition()">
+                <span class="conditionTitle">危险等级：</span>
+                <Select v-model="conditions.level" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectLevel" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
@@ -26,12 +26,15 @@
             </Row>
             <Row>
             <Col span="6">
-                <span>开始时间：</span>
-                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="queryCondition()"></DatePicker>
+                <span class="conditionTitle">开始时间：</span>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                <span>结束时间：</span>
-                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="queryCondition()"></DatePicker>
+                <span class="conditionTitle">结束时间：</span>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+            </Col>
+            <Col span="6">
+                <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
             </Col>
             </Row>
         </Row>
@@ -46,9 +49,9 @@
 </template>
 
 <script>
-import { TunnelService } from '../../../../services/tunnels'
-import { DefectService } from '../../../../services/defects'
-import { EnumsService } from '../../../../services/enums'    
+import { TunnelService } from '../../../../services/tunnelService'
+import { DefectService } from '../../../../services/defectService'
+import { EnumsService } from '../../../../services/enumsService'    
 import Enum from '../../../../../static/Enum.json'
 export default {
     name:"queryDefect",
@@ -292,14 +295,8 @@ export default {
                 },
                 (error)=>{
                     _this.Log.info(error)
-                })
-            // this.axios.post('/defects/datagrid',(this.params)).then(response=>{
-            //     let { code,data } = response.data
-            //     if(code==200){
-            //         this.defects=data.list
-            //         this.page.pageTotal = data.total
-            //     }
-            // })
+                }
+            )
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -330,9 +327,6 @@ export default {
         enterOrder(index){
             this.goToMoudle2(index, Enum.pageType.Read);
         },
-        // edit(index){
-        //     this.goToMoudle2(index, Enum.pageType.Edit)
-        // },
         queryDetails(index){
             this.goToModule(index,Enum.pageType.Read)
         }

@@ -62,7 +62,7 @@
 <script>
   import StackBar from '../../../../../components/Common/Chart/StackChart'
   import SimplelineChart from '../../../../../components/Common/Chart/SimpleLineChart'
-  import { TunnelService } from '../../../../../services/tunnels'
+  import { TunnelService } from '../../../../../services/tunnelService'
 export default {
     components: {
       StackBar, SimplelineChart

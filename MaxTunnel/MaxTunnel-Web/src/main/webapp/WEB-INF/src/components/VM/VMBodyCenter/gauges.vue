@@ -90,7 +90,7 @@
                     gaugeId: 'gaugeTemp',
                     requestUrl: 'tunnels/items/energies',
                     titleName: '温度',
-                    startColor: '#7f13ff',
+                    startColor: '#DBF131',
                     endColor: '#3ec8ff',
                     startDynamicStyle:true,
                 },

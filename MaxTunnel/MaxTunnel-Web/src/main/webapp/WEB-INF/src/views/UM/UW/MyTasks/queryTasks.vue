@@ -158,7 +158,8 @@ export default {
                         pathParams.params = {
                             id: task.id,
                             isFinished: task.isFinished,
-                            type: 4
+                            type: 4,
+                            tip: 'tasks'
                         }
                     }
                 break;

@@ -506,5 +506,41 @@ public class TunnelController extends BaseController<Tunnel> {
 
 	}
 
+	@RequestMapping(value = "tunnels/trees", method = RequestMethod.GET)
+	public JSONObject getTrees() {
+
+		List<TunnelDto> dtoList = tunnelService.getDtoList();
+		List<JSONObject> listOne = new ArrayList<>();
+		for (TunnelDto dto : dtoList) {
+			JSONObject jsonOne = new JSONObject();
+			jsonOne.put("name", dto.getName());
+			jsonOne.put("id", dto.getId());
+			// 查询下面有多少仓
+			List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
+			List<JSONObject> listTwo = new ArrayList<>();
+			for (StoreDto storeDto : storeList) {
+				JSONObject jsonTwo = new JSONObject();
+				jsonTwo.put("name", storeDto.getName());
+				jsonTwo.put("id", storeDto.getId());
+				// 查询下面有多少仓段
+				List<SectionDto> sectionList = sectionService.getSectionsByStoreId(storeDto.getId());
+				List<JSONObject> listThree = new ArrayList<>();
+				for (SectionDto sectionDto : sectionList) {
+					JSONObject jsonThree = new JSONObject();
+					jsonThree.put("name", sectionDto.getName());
+					jsonThree.put("id", sectionDto.getId());
+					listThree.add(jsonThree);
+				}
+
+				jsonTwo.put("list", listThree);
+				listTwo.add(jsonTwo);
+			}
+			jsonOne.put("list", listTwo);
+			listOne.add(jsonOne);
+		}
+
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, listOne);
+
+	}
 	
 }

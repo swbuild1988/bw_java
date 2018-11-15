@@ -130,7 +130,18 @@ import QueryData from '../views/UM/MAM/DataAnalysis/QueryData'
 
 //CM后台管理系统
 import CMMain from '../views/CM/Main/CMMain.vue'
-import AddUser from '../views/CM/User/AddUser'
+import UserInfoManage from '../views/CM/User/UserInfoManage'
+import BarnManage from '../views/CM/Store/BarnManage'
+import PipeManage from '../views/CM/Tunnel/PipeManage'
+import MaxViewConfig from '../views/CM/Config/MaxViewConfig'
+import ScheduleJob from '../views/CM/ScheduleJob/ScheduleJob'
+import StoreType from '../views/CM/StoreTypeControl/StoreTypeControl'
+import SectionControl from '../views/CM/SectionControl/SectionControl'
+import AreaController from '../views/CM/AreaControl/AreaController'
+import StaffControl from '../views/CM/Staff/StaffControl'
+import EmPlanControl from '../views/CM/EmPlanControl/EmPlanControl'
+import QueryVideoService from '../views/CM/Video/QueryVideoService'
+import QueryVideo from '../views/CM/Video/QueryVideo'
 let routes = [{
   path: '/UMLogin',
   component: UMLogin,
@@ -143,15 +154,73 @@ let routes = [{
   path: '/CMLogin',
   component: CMLogin,
   name: '后台管理登录',
-}, {
+},
+ {
   path: '/CMMain',
   component: CMMain,
-  children: [{
-    path: 'add',
-    component: AddUser,
-    name: '添加人员'
-  }],
   name: '后台管理主页',
+  children: [
+    {
+      path: 'user',
+      component: UserInfoManage,
+      name: '用户信息管理'
+    },
+    {
+      path: 'store',
+      component: BarnManage,
+      name: '管仓管理'
+    },
+    {
+      path: 'storeType',
+      component: StoreType,
+      name: '管仓类型管理'
+    },
+    {
+      path: 'section',
+      component: SectionControl,
+      name: '区段管理'
+    },
+    {
+      path: 'pipe',
+      component: PipeManage,
+      name: '管廊管理'
+    },
+    {
+      path: 'config',
+      component: MaxViewConfig,
+      name: '配置管理'
+    },
+    {
+      path: 'schedulejob',
+      component: ScheduleJob,
+      name: '定时任务调度管理'
+    },
+    {
+      path: 'area',
+      component: AreaController,
+      name: '区域管理'
+    },
+    { 
+      path: 'staff',
+      component: StaffControl,
+      name: '员工管理'
+    },
+    {
+      path: 'EmPlan',
+      component: EmPlanControl,
+      name: '应急管理'
+    },
+    {
+      path: 'queryVideoService',
+      component: QueryVideoService,
+      name: '视频服务查询'
+    },
+    {
+      path: 'queryVideo',
+      component: QueryVideo,
+      name: '视频查询'
+    }
+  ],
 }, {
   path: '/404',
   component: NotFound,
@@ -183,8 +252,8 @@ let routes = [{
       name: '巡检管理',
       children: [{
         path: 'query/:id',
+        name: 'UMQueryPlan',
         component: UMQueryPlan,
-        name: 'UMQueryPlan'
       }, {
         path: 'add',
         component: UMAddPlan,
@@ -200,7 +269,7 @@ let routes = [{
       }, {
         path: 'homePage',
         component: UMPatrolHomePage,
-        name: 'UMPatrolHomePage'
+        name: 'UMPatrolHomePage',
       }]
     }, {
       path: 'patrolTask',

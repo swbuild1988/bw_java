@@ -88,4 +88,7 @@
         )a
     </insert>
 
+<delete id="deleteByPrimaryKey">
+	delete from T_MAM_MEASOBJ_SO where id = #{id}
+</delete>
 </mapper>

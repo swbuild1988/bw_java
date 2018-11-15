@@ -66,9 +66,9 @@
     </div>
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnels'
-import { DefectService } from '../../../../services/defects'
-import { EnumsService } from '../../../../services/enums'    
+import { TunnelService } from '../../../../services/tunnelService'
+import { DefectService } from '../../../../services/defectService'
+import { EnumsService } from '../../../../services/enumsService'    
 import types from '../../../../../static/Enum.json'
 export default {
     data(){

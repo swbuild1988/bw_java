@@ -18,6 +18,8 @@ public interface MeasObjDistributeMapper {
 
     List<MeasObjDistribute> getAllMeasObjDistributes();
 
+	void deleteByPrimaryKey(Integer id);
+
 	
 
 }

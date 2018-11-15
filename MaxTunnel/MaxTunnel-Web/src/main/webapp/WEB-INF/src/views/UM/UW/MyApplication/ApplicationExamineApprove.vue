@@ -49,8 +49,8 @@
   </Form>
 </template>
 <script>
-import axios from "axios";
 import types from "../../../../../static/Enum.json";
+import { EnterGalleryService } from '../../../../services/enterGalleryService';
 export default {
   data() {
     return {
@@ -135,18 +135,18 @@ export default {
   mounted() {
     //用户-查看审批结果
     this.examineStatus = this.$route.params.type;
-    axios.get("/req-historys/" + this.$route.params.id).then(response => {
-        let { code, data } = response.data;
-        if ((code = 200)) {
-          this.addEnterGalleryApplication = data;
-          if(data.enterTime!=null&&data.exitTime!=null){
-            this.addEnterGalleryApplication.enterTime = new Date(data.enterTime).format('yyyy-MM-dd hh:mm:s')
-            this.addEnterGalleryApplication.exitTime = new Date(data.exitTime).format('yyyy-MM-dd hh:mm:s')
+    let _this = this
+    EnterGalleryService.getDetailsById(this.$route.params.id).then(
+      result=>{
+          _this.addEnterGalleryApplication = result;
+          if(result.enterTime!=null&&result.exitTime!=null){
+            _this.addEnterGalleryApplication.enterTime = new Date(result.enterTime).format('yyyy-MM-dd hh:mm:s')
+            _this.addEnterGalleryApplication.exitTime = new Date(result.exitTime).format('yyyy-MM-dd hh:mm:s')
           }
-          this.getAgree()
+          _this.getAgree()
           var arr = new Array();
-          for (let index in response.data.data.visitorInfo.split(",")) {
-            var str = response.data.data.visitorInfo.split(",")[index];
+          for (let index in result.visitorInfo.split(",")) {
+            var str = result.visitorInfo.split(",")[index];
             arr.push(str);
           }
           var arr2 = new Array();
@@ -158,29 +158,69 @@ export default {
             };
             arr2.push(obj);
           }
-          this.addEnterGalleryApplication.visitorInfo = arr2;
-          this.addEnterGalleryApplication.preTime = new Date(
-            this.addEnterGalleryApplication.preTime
+          _this.addEnterGalleryApplication.visitorInfo = arr2;
+          _this.addEnterGalleryApplication.preTime = new Date(
+            _this.addEnterGalleryApplication.preTime
           ).format("yyyy-MM-dd hh:mm:s");
-        }
-      });
+      })
+    // axios.get("/req-historys/" + this.$route.params.id).then(response => {
+    //     let { code, data } = response.data;
+    //     if ((code = 200)) {
+    //       this.addEnterGalleryApplication = data;
+    //       if(data.enterTime!=null&&data.exitTime!=null){
+    //         this.addEnterGalleryApplication.enterTime = new Date(data.enterTime).format('yyyy-MM-dd hh:mm:s')
+    //         this.addEnterGalleryApplication.exitTime = new Date(data.exitTime).format('yyyy-MM-dd hh:mm:s')
+    //       }
+    //       this.getAgree()
+    //       var arr = new Array();
+    //       for (let index in response.data.data.visitorInfo.split(",")) {
+    //         var str = response.data.data.visitorInfo.split(",")[index];
+    //         arr.push(str);
+    //       }
+    //       var arr2 = new Array();
+    //       for (let k in arr) {
+    //         var obj = {
+    //           name: arr[k].split("-")[0],
+    //           idCard: arr[k].split("-")[1],
+    //           tel: arr[k].split("-")[2]
+    //         };
+    //         arr2.push(obj);
+    //       }
+    //       this.addEnterGalleryApplication.visitorInfo = arr2;
+    //       this.addEnterGalleryApplication.preTime = new Date(
+    //         this.addEnterGalleryApplication.preTime
+    //       ).format("yyyy-MM-dd hh:mm:s");
+    //     }
+    //   });
   },
   methods: {
     submitExitTime(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          axios
-            .put("users/out/req-historys", this.params)
-            .then(response => {
-              let { code, data } = response.data;
-              if (code == 200) {
-                if(this.$route.params.isFinished==null){
-                  this.$router.push("/UM/myNews/queryMyTask");
+          let _this = this
+          EnterGalleryService.putExitTime(this.params).then(
+            result=>{
+              if(_this.$route.params.isFinished==null){
+                  _this.$router.push("/UM/myNews/queryMyTask");
                 }else{
-                  this.$router.push("/UM/myTasks/query");
+                  _this.$router.push("/UM/myTasks/query");
                 }
-              }
-            });
+            },
+            error=>{
+              _this.Log.info(error)
+            })
+          // axios
+          //   .put("users/out/req-historys", this.params)
+          //   .then(response => {
+          //     let { code, data } = response.data;
+          //     if (code == 200) {
+          //       if(this.$route.params.isFinished==null){
+          //         this.$router.push("/UM/myNews/queryMyTask");
+          //       }else{
+          //         this.$router.push("/UM/myTasks/query");
+          //       }
+          //     }
+          //   });
         } else {
           this.$Message.error("请输入正确的申请信息");
         }
