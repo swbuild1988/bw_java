@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :style="backStyle">
     <Form ref="addRelatedUnitsInfo" :model="addRelatedUnitsInfo" :label-width="120" :rules="ruleValidate">
         <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加相关单位</h2>
         <h2 class="formTitle" v-show="pageType==pageTypes.Edit">更新相关单位信息</h2>
@@ -85,6 +85,15 @@ export default {
                 ],
             },
             validateSectionName: false,
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                height: '100%',
+                position: 'relative',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%',
+                paddingTop: '40px'
+            }
         }
     },
     created() {
@@ -306,7 +315,7 @@ export default {
 <style scoped>
 .ivu-form.ivu-form-label-right{
     width: 680px;
-    margin: 10px auto;
+    margin: 0px auto;
     background: #fff;
     padding: 10px 20px;
 }

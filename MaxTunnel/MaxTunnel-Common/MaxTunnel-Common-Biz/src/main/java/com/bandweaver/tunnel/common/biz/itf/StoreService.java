@@ -19,6 +19,11 @@ public interface StoreService {
 	 */
 	void addBatch(List<Store> list);
 
+	/*
+	* 获得所有仓
+	* */
+	List<Store> getList();
+
 	/**
 	 * @Description: 条件查询
 	 * @param @param vo
@@ -62,5 +67,7 @@ public interface StoreService {
 	void deleteBatch(List<Integer> id_list);
 
 	Store getByName(String name);
+
+	Store getStoreByTunnelAndSn(Integer tunnelId, String sn);
 
 }

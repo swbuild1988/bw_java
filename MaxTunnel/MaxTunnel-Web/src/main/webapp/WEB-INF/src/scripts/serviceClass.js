@@ -55,15 +55,15 @@ class InformationManagement {
     }
     searchInformation(entity,modelProp){
 
-        if(['videos'].indexOf(entity._messageType) != -1){ //当为视屏实体时，隐藏弹框
+        if(['videos'].indexOf(entity._messageType) !== -1){ //当为视屏实体时，隐藏弹框
             modelProp.show.state = false;
             return;
         }
-        modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) != -1 ? true : false; //用于切换footer插槽
+        modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
         let informations=this.getInformation(entity._messageType);
 
-        if(informations.length != 0 &&　Array.isArray(informations)){
+        if(informations !== undefined && informations.length !== 0 &&　Array.isArray(informations)){
 
             informations.forEach(information=>{
 
@@ -278,7 +278,7 @@ class MQ {
     //初始化MQ
     _InitMQ(){
         let args=[].slice.call(arguments); //类数组转换成数组
-
+console.log('MQServerAddress',MQServerAddress)
         if ('WebSocket' in window) {
             this.ws = new WebSocket(MQServerAddress);
             // ws = new SockJS('http://192.168.0.41:15670/stomp');

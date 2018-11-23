@@ -9,14 +9,39 @@ import java.io.Serializable;
 public class Consume implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 能耗id
+	 */
 	private Integer id;
+	/**
+	 * 管廊id
+	 */
 	private Integer tunnelId;
+	/**
+	 * 管舱id
+	 */
 	private Integer storeId;
+	/**
+	 * 区段id
+	 */
 	private Integer areaId;
+	/**
+	 * 对象类型
+	 */
 	private Integer objectType;
+	/**
+	 * 能耗类型
+	 */
 	private Integer energyType;
+	/**
+	 * 对象id
+	 */
 	private Integer objectId;
+	/**
+	 * 计算式
+	 */
 	private String compute;
+	
 	public Integer getId() {
 		return id;
 	}

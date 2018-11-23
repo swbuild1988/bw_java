@@ -5,7 +5,7 @@
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
                 <FormItem label="预案名" prop="processKey">
                     <Select v-model="formValidate.processKey" placeholder="请选择预案名" class="InputWidth">
-                        <Option v-for="item in planEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                        <Option v-for="item in planEnums" :value="item.processKey" :key="item.key">{{item.key}}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="流程节点值" prop="taskKey">

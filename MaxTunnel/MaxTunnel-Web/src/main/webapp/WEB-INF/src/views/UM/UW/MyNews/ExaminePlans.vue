@@ -1,48 +1,50 @@
 <template>
-    <Form :model="plans" :label-width="140" @submit.native.prevent>
-        <h2 class="formTitle">审批巡检计划</h2>    
-        <FormItem label="计划编号：">
-            <Input v-model="plans.id" readonly></Input>
-        </FormItem>
-        <FormItem label="计划名称：">
-            <Input v-model="plans.name" readonly></Input>
-        </FormItem>
-        <FormItem label="申请人：">
-            <Input v-model="plans.requestStaffId" readonly></Input>
-        </FormItem>
-        <FormItem label="审批人：">
-            <Input v-model="plans.approverId" readonly></Input>
-        </FormItem>
-        <FormItem label="所属管廊：">
-            <Input v-model="plans.tunnelName" readonly></Input>
-        </FormItem>
-        <FormItem label="责任班组：">
-            <Input v-model="plans.groupName" readonly></Input>
-        </FormItem>
-        <FormItem label="创建时间：">
-            <Input v-model="plans.createTime" readonly></Input>
-        </FormItem>
-        <FormItem label="巡检计划描述：">
-            <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
-        </FormItem>
-        <FormItem label="巡检时间：">
-            <Input v-model="plans.inspectTime" readonly></Input>
-        </FormItem>
-        <FormItem label="巡检计划：">
-            <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
-        </FormItem>
-        <FormItem label="备注：">
-            <Input type="textarea" v-model="plans.comment" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注" :readonly="this.plans.result!=null"></Input>
-        </FormItem>
-        <FormItem label="申请状态：" v-show="this.plans.result==null">
-            <Button type="success" @click="agree(1)">同意</Button>
-            <Button type="error" style="margin-left: 8px" @click="agree(0)">不同意</Button>
-        </FormItem>
-        <FormItem label="申请状态：" v-show="this.plans.result!=null">
-            <Button type="success" v-show="this.plans.result=='agree'">同意</Button>
-            <Button type="error" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
-        </FormItem>
-    </Form>
+    <div :style="backStyle">
+        <Form :model="plans" :label-width="140" @submit.native.prevent>
+            <h2 class="formTitle">审批巡检计划</h2>    
+            <FormItem label="计划编号：">
+                <Input v-model="plans.id" readonly></Input>
+            </FormItem>
+            <FormItem label="计划名称：">
+                <Input v-model="plans.name" readonly></Input>
+            </FormItem>
+            <FormItem label="申请人：">
+                <Input v-model="plans.requestStaffId" readonly></Input>
+            </FormItem>
+            <FormItem label="审批人：">
+                <Input v-model="plans.approverId" readonly></Input>
+            </FormItem>
+            <FormItem label="所属管廊：">
+                <Input v-model="plans.tunnelName" readonly></Input>
+            </FormItem>
+            <FormItem label="责任班组：">
+                <Input v-model="plans.groupName" readonly></Input>
+            </FormItem>
+            <FormItem label="创建时间：">
+                <Input v-model="plans.createTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检计划描述：">
+                <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
+            </FormItem>
+            <FormItem label="巡检时间：">
+                <Input v-model="plans.inspectTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检计划：">
+                <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
+            </FormItem>
+            <FormItem label="备注：">
+                <Input type="textarea" v-model="plans.comment" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注" :readonly="this.plans.result!=null"></Input>
+            </FormItem>
+            <FormItem label="申请状态：" v-show="this.plans.result==null">
+                <Button type="success" @click="agree(1)">同意</Button>
+                <Button type="error" style="margin-left: 8px" @click="agree(0)">不同意</Button>
+            </FormItem>
+            <FormItem label="申请状态：" v-show="this.plans.result!=null">
+                <Button type="success" v-show="this.plans.result=='agree'">同意</Button>
+                <Button type="error" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
+            </FormItem>
+        </Form>
+    </div>
 </template>
 <script>
 import axios from "axios";
@@ -85,6 +87,15 @@ export default {
                     align: 'center'
                 },   
             ],
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
+            }
         }
     },
     computed:{
@@ -143,8 +154,8 @@ export default {
 <style scoped>
 .ivu-form.ivu-form-label-right{
     width: 700px;
-    margin: 20px auto;
     background: #fff;
     padding: 10px 20px;
+    margin: 0 auto;
 }
 </style>

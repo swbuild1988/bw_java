@@ -213,6 +213,8 @@ ul li{
 .weekdays div{
     padding: 10px;
     float: left;
+    background: #fff;
+    border: 1px solid #eee;
 }
 .weekdays div:hover{
     background: #f1efef;
@@ -223,9 +225,11 @@ ul li{
 }
 .days li{
     border: 1px solid #eee;
-    height: 100px;
+    height: 11vh;
     font-size: 18px;
     padding: 5px;
+    background: #Fff;
+    text-align: right;
 }
 /*其他月份日期*/
 .other-month{
@@ -253,5 +257,12 @@ ul li{
 } */
 .explanationShow{
     text-align: center;
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0px 2px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="backStyle">
     <Form ref="addContractInfo" :model="addContractInfo"  :rules="ruleValidate" :label-width="140">
         <h2 v-if="pageType!=pageTypes.Edit && pageType!=pageTypes.Read">添加合同信息</h2>
         <h2 v-if="pageType==pageTypes.Edit">修改合同信息</h2>
@@ -61,7 +61,7 @@
         </FormItem> -->
         <FormItem label="管线位置：">
             <Col span="8">
-                <Select v-model="addContractInfo.tunnelId" v-show="!read">
+                <Select v-model="addContractInfo.tunnelId" v-show="!read" @on-change="tunnelChange">
                   <!--   <Option disabled value="0">管廊</Option> -->
                     <Option v-for="item in cableLocation.tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
@@ -83,13 +83,13 @@
                 <div class="ivu-form-item-error-tip" v-if="checkCable.area">请选择区域</div>
             </Col>
         </FormItem>
+        <div style="text-align: center">
+        <Button type="primary" @click="submitAddContractInfo('addContractInfo')" v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read" :disabled="isDisable">提交</Button>
+        <Button type="primary" @click="submitEditContractInfo('addContractInfo')" v-if="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
+        <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="pageType != pageTypes.Read">取消</Button>
+        <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="read">返回</Button>
+        </div>
     </Form>
-    <div style="text-align: center">
-      <Button type="primary" @click="submitAddContractInfo('addContractInfo')" v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read" :disabled="isDisable">提交</Button>
-      <Button type="primary" @click="submitEditContractInfo('addContractInfo')" v-if="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
-      <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="pageType != pageTypes.Read">取消</Button>
-      <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="read">返回</Button>
-    </div>
 
   </div>
 </template>
@@ -102,6 +102,13 @@ import CustomerChoose from '../../../../components/UM/OAM/CustomerChoose'
 export default {
     data(){
         return{
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                height: '100%'
+            },
             pageType: 3,
             pageTypes: types.pageType,
             addContractInfo:{
@@ -197,29 +204,9 @@ export default {
             this.checkCable.area = false;
             this.read = false;
         },
-        'addContractInfo.tunnelId': function(){
-            if(!this.addContractInfo.tunnelId){
-                this.checkCable.tunnel = false;
-            }else{
-                let _this = this
-                TunnelService.getStoresByTunnelId(_this.addContractInfo.tunnelId).then(
-                    (result)=>{
-                        _this.cableLocation.stores = result
-                    },
-                    (error)=>{
-                        _this.Log.info(error)
-                    }
-                )
-                TunnelService.getAreasByTunnelId(_this.addContractInfo.tunnelId).then(
-                    (result)=>{
-                        _this.cableLocation.areas = result
-                    },
-                    (error)=>{
-                        _this.Log.info(error)
-                    }
-                )
-            }
-        }
+        // 'addContractInfo.tunnelId': function(){
+            
+        // }
     },
     methods:{
         getInitData() {
@@ -289,13 +276,14 @@ export default {
                         _this.addContractInfo.cableName = result.cableDto.cableName;
                         _this.addContractInfo.cableLength = result.cableDto.cableLength.toString();
                         // _this.addContractInfo.sectionIds = result.sectionIds;
-                        _this.addContractInfo.areaIds = result.areaIds;
-                        _this.addContractInfo.storeId = result.storeId;
                         _this.customerName = result.cableDto.contract.customer.contact.toString();
                         _this.addContractInfo.cableStatus = result.cableDto.cableStatus.toString();
                         _this.addContractInfo.contractStatus = result.cableDto.contract.contractStatus.toString();
                         _this.addContractInfo.cableId = result.cableDto.id;
                         _this.addContractInfo.tunnelId = result.tunnelId;
+                        _this.getStoreAndAreas()
+                        _this.addContractInfo.areaIds = result.areaIds;
+                        _this.addContractInfo.storeId = result.storeId;
                     },
                     (error)=>{
                         _this.Log.info(error)
@@ -341,24 +329,59 @@ export default {
             if(type == 'store'){
                 if(!this.addContractInfo.storeId){
                     this.checkCable.store = true
+                }else{
+                    this.checkCable.store = false
                 }
             }else if(type == 'area'){
                 if(!this.addContractInfo.storeId){
                     this.checkCable.store = true
+                }else{
+                    this.checkCable.store = false
                 }
                 if(!this.addContractInfo.areaIds[0]){
                     this.checkCable.area = true
+                }else{
+                    this.checkCable.area = false
                 }
             }
+        },
+        tunnelChange(){
+            if(!this.addContractInfo.tunnelId){
+                this.checkCable.tunnel = false;
+            }else{
+                this.addContractInfo.storeId = null
+                this.addContractInfo.areaIds = null
+                this.getStoreAndAreas()
+            }   
+        },
+        getStoreAndAreas(){
+            let _this = this
+            TunnelService.getStoresByTunnelId(_this.addContractInfo.tunnelId).then(
+                (result)=>{
+                    _this.cableLocation.stores = result
+                },
+                (error)=>{
+                    _this.Log.info(error)
+                }
+            )
+            TunnelService.getAreasByTunnelId(_this.addContractInfo.tunnelId).then(
+                (result)=>{
+                    _this.cableLocation.areas = result
+                },
+                (error)=>{
+                    _this.Log.info(error)
+                }
+            )
         }
-
     }
 }
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 600px;
-    margin: 20px auto;
+    width: 640px;
+    margin: 10px auto;
+    background: #fff;
+    padding: 10px 20px;
 }
 h2{
     text-align: center;

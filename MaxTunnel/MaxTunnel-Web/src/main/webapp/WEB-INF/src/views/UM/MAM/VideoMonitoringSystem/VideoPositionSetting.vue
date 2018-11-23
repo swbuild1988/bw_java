@@ -62,7 +62,7 @@
 
 <script>
 import VideoControl from '../../../../components/UM/MAM/videoControls/VideoControl'
-import { VideoService } from '../../../../services/VideoService'
+import { VideoService } from '../../../../services/videoService'
 import VideoComponent from "../../../../components/Common/Video/VideoComponent"
 
 export default {

@@ -1,6 +1,5 @@
 <template>
     <div :style="backStyle">
-      <div class="backImgStyle">
       <Form ref="uploadPlan" :model="uploadPlan"  label-position="top" :rules="ruleValidate" @submit.native.prevent>
         <h2 class="formTitle" style="color: white">制定巡检计划</h2>
         <Row>
@@ -27,7 +26,8 @@
                 <div class="inputStyle">{{requestStaffName}}</div>
               </FormItem>
               <FormItem label="审批人：">
-                <Input v-model="uploadPlan.approverId" readonly></Input>
+                <Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
+                <Input v-model="approver.name" readonly></Input>
               </FormItem>
               <FormItem label="计划描述：" prop="remark">
                   <Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}"
@@ -65,12 +65,11 @@
             </div>  
           </Col>
         </Row>
-        <FormItem style="text-align: center">
+        <FormItem style="text-align: center;margin-bottom: 0px">
             <Button type="primary" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</Button>
             <Button type="ghost"  style="margin-left: 8px" @click="handleReset('uploadPlan')">取消</Button>
         </FormItem>
       </Form> 
-      </div> 
     </div>
 </template>  
 
@@ -90,6 +89,7 @@ export default {
       currMonth: '',
       currYear: '',
       requestStaffName: '',
+      approver:{},
       uploadPlan:{
         planId: new Date().getTime(),
         name: "",
@@ -172,8 +172,11 @@ export default {
       },
       backStyle:{
           backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-          height: '100%',
-          position: 'relative'
+          position: 'relative',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+          minHeight: '100%',
+          paddingTop: '10px'
       }
     };
   },
@@ -212,7 +215,13 @@ export default {
     });
     this.getChooseMonth()
     this.getSessionUserName()
-
+    this.axios.get('roles/users').then(res=>{
+        let{ code,data } = res.data
+        if(code==200){
+            this.approver = data[0]
+            this.uploadPlan.approverId = data[0].id
+        }
+    })
   },
   methods: {
     submitPlan(name) {
@@ -274,11 +283,9 @@ export default {
       if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
         this.uploadPlan.requestStaffId = sessionStorage.UMUerId
         this.requestStaffName = sessionStorage.UMUerName.substring(1,sessionStorage.UMUerName.length-1)
+        console.log("sessionStorage.UMUerName",sessionStorage.UMUerName)
       }
     },
-    getHeight(){
-      var h = document.getElementsByClassName('')
-    }
   }
 }
 </script>
@@ -338,13 +345,5 @@ input[type='number']{
     position: relative;
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
-}
-.backImgStyle{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background:rgba(255,255,255,0.5);
 }
 </style>

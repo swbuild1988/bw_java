@@ -30,19 +30,20 @@
         </div>
         <Row :gutter="20" class="mainInfo">
             <Col span="12">
-            <div class="manualShowInspect coolBox">
+            <div class="manualShowInspect coolBox" id="GISbox">
                 <div class="options" v-if="isManual">
                     <Button type="primary" class="buttons" icon="ios-rewind" @click="speedDown"></Button>
                     <Button type="primary" class="buttons" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="play"></Button>
                     <Button type="primary" class="buttons" icon="stop" @click="stop"></Button>
                     <Button type="primary" class="buttons" icon="ios-fastforward" @click="speedUp"></Button>
                 </div>
-                <sm-viewer id="virtualSmViewer" @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer>
+                <!-- <sm-viewer id="virtualSmViewer" @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer> -->
+                <TestSmViewer @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></TestSmViewer>
             </div>
             </Col>
             <Col span="12">
             <div class="manualShowInspect coolBox" style="color: #fff">
-                <video-component v-bind:video="curVideo" v-bind:id="'vitrulInspect'"></video-component>
+                <!-- <video-component v-bind:video="curVideo" v-bind:id="'vitrulInspect'"></video-component> -->
             </div>
             </Col>
         </Row>
@@ -55,11 +56,12 @@
 </template>
 
 <script>
-import SmViewer from "../../../../components/Common/3D/3DViewer";
+// import SmViewer from "../../../../components/Common/3D/3DViewer";
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
-import { VideoService } from "../../../../services/VideoService";
+import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
-
+import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
+import { _getFieldValues } from '../../../../scripts/commonFun';
 export default {
     data() {
         return {
@@ -96,6 +98,19 @@ export default {
             isManual: false
         };
     },
+    beforeRouteLeave(to,from,next){
+        if(to.name == '人员定位详情' || to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '管廊安防监控列表'){
+            from.meta.keepAlive = true
+            to.meta.keepAlive = true
+            this.$destroy()
+            next()
+        }else{
+            from.meta.keepAlive = false
+            to.meta.keepAlive = false
+            this.$destroy()
+            next()
+        }
+    },
     mounted() {
         let data = this.$refs.smViewer.getRoutesAndStops()
         this.list.routes = data.routes
@@ -103,16 +118,28 @@ export default {
         this.getStopsList()
         this.Log.info("初始化调用刷新");
         this.$refs.smViewer.startCameraPositionRefresh();
+        this.setGIS()
     },
     beforeDestroy() {
         this.Log.info("停止刷新");
         this.$refs.smViewer.stopCameraPositionRefresh();
     },
     components: {
-        SmViewer,
+        // SmViewer,
+        TestSmViewer,
         VideoComponent
     },
     methods: {
+        setGIS(){
+            var gis = document.getElementById("newID");
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '6px';
+            gis.style.height = '99%';
+            gis.style.width = '97%'    
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
+        },
         getStopsList() {
             if(this.conditions.routeIndex == '00'){
                 this.list.stops = this.allStops
@@ -273,6 +300,12 @@ export default {
             this.Log.info("减速");
             this.$refs.smViewer.speedDown();
         }
+    },
+    beforeDestroy() {
+        var gis = document.getElementById("newID");
+        gis.style.display = "none";
+        document.getElementById("GISbox").removeChild(gis)
+        document.body.appendChild(gis)
     }
 };
 </script>

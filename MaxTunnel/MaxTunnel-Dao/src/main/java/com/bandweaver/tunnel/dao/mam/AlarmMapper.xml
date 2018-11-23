@@ -38,6 +38,11 @@
     	column="TUNNEL_ID" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
   </resultMap>
   
+  <resultMap id="CountResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.CountResult">
+    <result column="object_id" jdbcType="DECIMAL" property="objectId" />
+    <result column="count_num" jdbcType="DECIMAL" property="countNum" />
+  </resultMap>
+  
   <sql id="Base_Column_List">
     ID, ALARM_DATE,alarm_name, ALARM_LEVEL, TUNNEL_ID, OBJECT_ID, object_name,is_distribute,DESCRIPTION, cleaned, cleaned_DATE,alarm_source,longitude,latitude
   </sql>
@@ -284,6 +289,53 @@
   
   <select id="getAllAlarm" resultMap="BaseResultMap">
   	select * from T_MAM_ALARM
+  </select>
+  
+  
+  <select id="getObjCountByTimeOrderByDesc" resultMap="CountResultMap">
+  	select t.object_id,count(t.object_id) as count_num from T_MAM_ALARM t
+  	where t.alarm_date &gt;= #{startTime} and t.alarm_date &lt;=#{endTime}
+  	group by t.object_id order by count_num desc
+  </select>
+  
+  <select id="getCountByObjectIds" resultType="Int">
+    select count(1) from T_MAM_ALARM
+	  <where>
+	  	<if test="startTime != null">
+	  		and alarm_date &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and alarm_date &lt; = #{endTime}
+	  	</if>
+	  	<if test="list != null">
+	  		and object_id in 
+	  		 <foreach collection="list" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	  	</if>
+	  </where>
+  </select>
+  
+  <select id="startPage" resultMap="DtoResultMap">
+	  select * from (select a.* , ROWNUM  rn from 
+	  (select * from T_MAM_ALARM
+	  	<where>
+	  		<if test="startTime != null">
+	  		and alarm_date &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and alarm_date &lt; = #{endTime}
+	  	</if>
+	 	<if test="list != null">
+	  		and object_id in 
+	  		 <foreach collection="list" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	  	</if>
+	  	</where>
+	  	order by alarm_date DESC
+	  ) a 
+	  where ROWNUM &lt; #{end}) where rn &gt; #{start}
   </select>
   
 </mapper> 

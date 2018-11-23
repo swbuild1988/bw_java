@@ -57,7 +57,37 @@ export default {
                         }
                     }
                 ],
-                series: []
+                series: [
+                    {
+                        type: "bar",
+                        itemStyle: {
+                            normal: {
+                                color: new this.$echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                        { offset: 0, color: "#346699" },
+                                        { offset: 1, color: "#70ABE8" }
+                                    ]
+                                )
+                            },
+                            emphasis: {
+                                color: new this.$echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                        { offset: 0, color: "#70ABE8" },
+                                        { offset: 1, color: "#346699" }
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                ]
             }
         };
     },
@@ -104,6 +134,7 @@ export default {
                                     : [].concat(init.yData, item.val)
                         };
                     }, {});
+                    console.log("simple bar data", newData);
                     if (
                         JSON.stringify(newData.xData) !=
                             JSON.stringify(_this.xData) ||

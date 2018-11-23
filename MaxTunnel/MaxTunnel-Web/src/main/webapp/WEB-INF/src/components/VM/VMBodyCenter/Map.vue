@@ -38,7 +38,7 @@
             </Dropdown>
             </Col>
             <Col span="1" offset="1">
-            <Dropdown divided @click.native="logout">
+            <Dropdown divided @click.native="sendPlan">
               <a> <img src="../../../assets/VM/emergencies.png" height="100%" width="100%"></a>
             </Dropdown>
             </Col>
@@ -63,6 +63,12 @@
               :leave-active-class="leaveClass">
           <alarm-count v-show="show.showNonCleanedCount"></alarm-count>
       </transition>
+      <transition
+              :enter-active-class="enterClass"
+              :leave-active-class="leaveClass">
+          <plan-process v-show="show.showPlan" @showPlan="showPlan"></plan-process>
+      </transition>
+
 
       <sm-viewer
               id="mapViewer"
@@ -73,6 +79,7 @@
               :defectPosition="defectPosition"
               :searchCamera="searchCamera"
               :eventsPosition="eventsPosition"
+              :openPlanPosition="openPlanPosition"
               :openVideoLinkage="true"
               :infoBox="false"
               :navigation="false"
@@ -111,39 +118,44 @@ import MapGauges from "./gauges";
 import AlarmCount from "../AlarmManage/NonCleanedCount";
 import Vue from "vue";
 import mapViewer from "../../Common/3DViewers";
+import PlanProcess from "./PlanProcess";
 
 export default {
     data() {
-        return {
-            msg: "地图",
-            id: "cesiumContainer",
-            show: {
-                ges: false,
-                showNonCleanedCount: false
-            },
-            enterClass: "animated bounceInDown",
-            leaveClass: "animated zoomOut",
-            allVideos: [],
-            searchCamera: {
-                openSearch: true,
-                isShow: false
-            },
-            unitsPosition: {
-                openPosition: true,
-                isShow: true
-            },
-            personnelPosition: {
-                openPosition: false,
-                isShow: true
-            },
-            defectPosition: {
-                openPosition: true,
-                isShow: true
-            },
-            eventsPosition: {
-                openPosition: false
-            }
-        };
+      return {
+          msg: '地图',
+          id: 'cesiumContainer',
+          show:{
+              ges:false,
+              showNonCleanedCount : false,
+              showPlan : false
+          },
+          enterClass:'animated bounceInDown',
+          leaveClass:'animated zoomOut',
+          allVideos:[],
+          searchCamera:{
+              openSearch:true,
+              isShow:false,
+          },
+          unitsPosition:{
+              openPosition:false,
+              isShow:true,
+          },
+          personnelPosition:{
+              openPosition:false,
+              isShow:true,
+          },
+          defectPosition:{
+              openPosition:false,
+              isShow:true,
+          },
+          eventsPosition:{
+              openPosition:true,
+          },
+          openPlanPosition:{
+              openPosition:true,
+          }
+      }
     },
     computed: {
         camera() {
@@ -155,7 +167,8 @@ export default {
         Temperature,
         MapGauges,
         AlarmCount,
-        mapViewer
+        mapViewer,
+        PlanProcess
     },
     mounted() {
         this.init();
@@ -215,11 +228,25 @@ export default {
                     title: "接收到一条新告警",
                     duration: 3
                 });
-                console.log("result", result);
+
                 Vue.prototype.IM.addInformation("alarm", result);
                 Vue.prototype.AM.addAlarm(result);
                 this.$refs.smViewer.addAlarmEntity(result);
             }
+        },
+        sendPlan() {
+            this.axios
+                .get("/emplans/start/sections/10/process-type/4001")
+                .then(result => {
+                    let { msg, code, data } = result.data;
+                    if (code == 200) {
+                    }
+                });
+        },
+        showPlan(status){
+            let { show } = this;
+
+            show.showPlan = status;
         }
     }
 };

@@ -7,9 +7,10 @@
     <result column="INPUT_VALUE" jdbcType="DECIMAL" property="inputValue" />
     <result column="OBJECT_ID2" jdbcType="DECIMAL" property="objectId2" />
     <result column="OUTPUT_VALUE" jdbcType="DECIMAL" property="outputValue" />
+    <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, OBJECT_ID, INPUT_VALUE, OBJECT_ID2, OUTPUT_VALUE
+    ID, OBJECT_ID, INPUT_VALUE, OBJECT_ID2, OUTPUT_VALUE,crt_time
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -23,9 +24,9 @@
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
     insert into T_MAM_MEASOBJ_MAP (ID, OBJECT_ID, INPUT_VALUE, 
-      OBJECT_ID2, OUTPUT_VALUE)
+      OBJECT_ID2, OUTPUT_VALUE,crt_time)
     values (#{id,jdbcType=DECIMAL}, #{objectId,jdbcType=DECIMAL}, #{inputValue,jdbcType=DECIMAL}, 
-      #{objectId2,jdbcType=DECIMAL}, #{outputValue,jdbcType=DECIMAL})
+      #{objectId2,jdbcType=DECIMAL}, #{outputValue,jdbcType=DECIMAL}, #{crtTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap">
     insert into T_MAM_MEASOBJ_MAP
@@ -45,6 +46,9 @@
       <if test="outputValue != null">
         OUTPUT_VALUE,
       </if>
+      <if test="crtTime != null">
+        crt_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -61,6 +65,9 @@
       </if>
       <if test="outputValue != null">
         #{outputValue,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -79,6 +86,9 @@
       <if test="outputValue != null">
         OUTPUT_VALUE = #{outputValue,jdbcType=DECIMAL},
       </if>
+      <if test="crtTime != null">
+        crt_time = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -87,7 +97,8 @@
     set OBJECT_ID = #{objectId,jdbcType=DECIMAL},
       INPUT_VALUE = #{inputValue,jdbcType=DECIMAL},
       OBJECT_ID2 = #{objectId2,jdbcType=DECIMAL},
-      OUTPUT_VALUE = #{outputValue,jdbcType=DECIMAL}
+      OUTPUT_VALUE = #{outputValue,jdbcType=DECIMAL},
+      crt_time = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   
@@ -101,4 +112,26 @@
             #{item}
         </foreach>
 	</delete>
+	
+	<select id="getByCondition" resultMap="BaseResultMap">
+		select * from T_MAM_MEASOBJ_MAP
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="objectId != null">
+				and object_id = #{objectId}
+			</if>
+			<if test="objectId2 != null">
+				and object_id2 = #{objectId2}
+			</if>
+			<if test="startTime != null">
+				and crt_time &gt; = #{startTime}
+			</if>
+			<if test="endTime != null">
+				and crt_time &lt; = #{endTime}
+			</if>
+		</where>
+		order by crt_time desc
+	</select>
 </mapper>

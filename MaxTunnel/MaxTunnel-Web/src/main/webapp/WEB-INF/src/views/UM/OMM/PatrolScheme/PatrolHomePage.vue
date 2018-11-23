@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div style="padding-left: 10px;">
       <h1>巡检计划信息总览</h1>
       <Row>
         <Col span="16">
           <Row>
             <Col span="24">
-              <div class="GISbox" id="GISbox">
+              <div class="GISbox" id="GISbox" ref="gisBox">
                 <!--<div class="GISTitle">地图显示所有的管廊位置GIS</div>-->
                 <!-- <sm-viewer v-bind="SMViewer" ref="smviewer" v-show="true">
                 </sm-viewer> -->
@@ -142,15 +142,24 @@ export default {
             equipmentChart: {
                 id: "equipmentChartId",
                 requestUrl: "/inspection-plans/tunnelCount",
-                title: "各管廊巡检计划数"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "各管廊巡检计划数"
+                        }
+                    }
+                }
             },
             equipmentChartDoubleColor: {
                 id: "equipmentCharDoubleColortId",
                 requestUrl: "/tunnel/defect-count",
-                title: {
-                    text: "各管廊缺陷占比"
-                },
-                TitleName: "各管廊缺陷占比"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "各管廊缺陷占比"
+                        }
+                    }
+                }
             },
             //本月计划占比
             currMonthRatio: 10,
@@ -186,6 +195,22 @@ export default {
             ],
             listHeight: 0
         };
+    },
+    beforeRouteLeave(to,from,next){
+        if(to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监测列表'
+            || from.name == '虚拟巡检' || from.name == '人员定位详情' || from.name == '设备管理主页' || from.name == '管廊安防监控详情' || from.name == '管廊安防监控列表'
+            || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'
+        ){
+            from.meta.keepAlive = true;
+            to.meta.keepAlive = true
+            this.$destroy()
+            next()
+        }else{
+            from.meta.keepAlive = false
+            to.meta.keepAlive = false
+            this.$destroy()
+            next()
+        }
     },
     components: {
         DataBox,
@@ -246,7 +271,7 @@ export default {
             }
         );
 
-        // this.$refs.smviewer.showCheckPointEntity();
+        this.$refs.TestSmViewer.showCheckPointEntity();
     },
     methods: {
         goToMoudle: function(path) {
@@ -274,22 +299,13 @@ export default {
         },
         setGIS() {
             var gis = document.getElementById("newID");
-            setTimeout(function() {
-                gis.style.display = "block";
-                gis.style.position = "absolute";
-                var leftW =
-                    document.getElementsByClassName("ivu-layout-sider")[0]
-                        .offsetWidth + "px";
-
-                gis.style.left = leftW;
-                gis.style.top = "110px";
-                var GISboxW =
-                    document.getElementById("GISbox").offsetWidth + "px";
-                var GISboxH =
-                    document.getElementById("GISbox").offsetHeight + "px";
-                gis.style.width = GISboxW;
-                gis.style.height = GISboxH;
-            }, 2000);
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '0px';
+            gis.style.height = '100%';
+            gis.style.width = '100%'    
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
             // 加载视角
             this.$refs.TestSmViewer.setViewAngAngle({
                 longitude: 112.49446991184571,
@@ -299,11 +315,16 @@ export default {
                 pitch: -0.7220718086739968,
                 heading: 5.868990772801154
             });
+        },
+        destory3D(){
+            var gis = document.getElementById("newID");
+            gis.style.display = "none";
+            document.getElementById("GISbox").removeChild(gis)
+            document.body.appendChild(gis)
         }
     },
     beforeDestroy() {
-        var gis = document.getElementById("newID");
-        gis.style.display = "none";
+        this.destory3D()
     }
 };
 </script>

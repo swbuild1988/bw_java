@@ -78,5 +78,5 @@ public interface MeasObjMapper {
 
 	List<Integer> getIdsByTunnelId(Integer id);
 
-	List<MeasObj> getListBySectionIDAndDataTypeID(@Param("sectionId")Integer sectionId, @Param("datatypeId")Integer datatypeId);
+	List<MeasObj> getListBySectionIDAndObjectTypeID(@Param("sectionId")Integer sectionId, @Param("objectTypeId")Integer objectTypeId);
 }

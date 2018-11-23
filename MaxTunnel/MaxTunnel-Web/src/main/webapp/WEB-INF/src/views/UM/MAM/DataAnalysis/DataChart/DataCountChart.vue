@@ -75,207 +75,236 @@
 </template>
 
 <script>
-  import ComplexBar from '../../../../../components/Common/Chart/ComplexBarChart'
-  import SimplelineChart from '../../../../../components/Common/Chart/SimpleLineChart'
+import ComplexBar from "../../../../../components/Common/Chart/ComplexBarChart";
+import SimplelineChart from "../../../../../components/Common/Chart/SimpleLineChart";
 
-  export default {
+export default {
     name: "data-count-chart",
     data() {
-      return {
-        totalheight: document.documentElement.clientHeight,
-        queryCondition: {
-          total: 0,
-          pageSize: 10,
-          cycleType: null,
-          time: null,
-          objs: [],
-          locations: [],
-          objType: null,
-          readonly: false,
-          pageNum: 0,
-        },
-        lineChart: {
-          id: 'lineChart',
-          requestUrl: 'lineChart',
-          titleName: '23',
-          title: "11",
-          titleColor: '#030303',
-          intervalTime: 1000,
-        },
-        barChart: {
-          id: 'barChart',
-          requestUrl: 'barChart',
-          titleName: '',
-          title: "22",
-          titleColor: '#030303',
-          intervalTime: 1000,
-
-        },
-        column: [
-          {
-            title: '时间',
-            key: 'time'
-          },
-          {
-            title: '对象名称',
-            key: 'name'
-          },
-          {
-            title: '位置',
-            key: 'location'
-          },
-          {
-            title: '数值',
-            key: 'value'
-          }
-        ],
-        tableData: [
-          {
-            name: 'John Brown',
-            value: 18,
-            location: "古城大街电力仓区段1",
-            time: '2016-10-03'
-          },
-          {
-            name: ' 小明',
-            value: 13,
-            location: "古城大街污水仓区段1",
-            time: '2016-10-02'
-          }, {
-            name: 'John Brown',
-            value: 18,
-            location: "古城大街电力仓区段1",
-            time: '2016-10-03'
-          },
-          {
-            name: ' 小明',
-            value: 13,
-            location: "古城大街污水仓区段1",
-            time: '2016-10-02'
-          }, {
-            name: 'John Brown',
-            value: 18,
-            location: "古城大街电力仓区段1",
-            time: '2016-10-03'
-          },
-          {
-            name: ' 小明',
-            value: 13,
-            location: "古城大街污水仓区段1",
-            time: '2016-10-02'
-          }, {
-            name: 'John Brown',
-            value: 18,
-            location: "古城大街电力仓区段1",
-            time: '2016-10-03'
-          },
-          {
-            name: ' 小明',
-            value: 13,
-            location: "古城大街污水仓区段1",
-            time: '2016-10-02'
-          }
-        ],
-        sycles: [
-          {key: 1, val: "最近一天"},
-          {key: 2, val: "最近一周"},
-          {key: 3, val: "最近一月"},
-          {key: 4, val: "最近一年"},
-          {key: 5, val: "自定义"}],
-        dataType: [
-          {key: 1, val: "视频流"},
-          {key: 2, val: "温度"},
-          {key: 3, val: "湿度"},
-          {key: 4, val: "甲烷浓度"},
-          {key: 5, val: "应力"},
-          {key: 6, val: "氧气"},
-        ]
-      }
+        return {
+            totalheight: document.documentElement.clientHeight,
+            queryCondition: {
+                total: 0,
+                pageSize: 10,
+                cycleType: null,
+                time: null,
+                objs: [],
+                locations: [],
+                objType: null,
+                readonly: false,
+                pageNum: 0
+            },
+            lineChart: {
+                id: "lineChart",
+                requestUrl: "lineChart",
+                parameters: {
+                    option: {
+                        title: {
+                            text: "11",
+                            textStyle: {
+                                color: "#030303"
+                            }
+                        }
+                    },
+                    timer: {
+                        interval: 10000
+                    }
+                }
+            },
+            barChart: {
+                id: "barChart",
+                requestUrl: "barChart",
+                titleName: "",
+                title: "22",
+                titleColor: "#030303",
+                intervalTime: 1000
+            },
+            column: [
+                {
+                    title: "时间",
+                    key: "time"
+                },
+                {
+                    title: "对象名称",
+                    key: "name"
+                },
+                {
+                    title: "位置",
+                    key: "location"
+                },
+                {
+                    title: "数值",
+                    key: "value"
+                }
+            ],
+            tableData: [
+                {
+                    name: "John Brown",
+                    value: 18,
+                    location: "古城大街电力仓区段1",
+                    time: "2016-10-03"
+                },
+                {
+                    name: " 小明",
+                    value: 13,
+                    location: "古城大街污水仓区段1",
+                    time: "2016-10-02"
+                },
+                {
+                    name: "John Brown",
+                    value: 18,
+                    location: "古城大街电力仓区段1",
+                    time: "2016-10-03"
+                },
+                {
+                    name: " 小明",
+                    value: 13,
+                    location: "古城大街污水仓区段1",
+                    time: "2016-10-02"
+                },
+                {
+                    name: "John Brown",
+                    value: 18,
+                    location: "古城大街电力仓区段1",
+                    time: "2016-10-03"
+                },
+                {
+                    name: " 小明",
+                    value: 13,
+                    location: "古城大街污水仓区段1",
+                    time: "2016-10-02"
+                },
+                {
+                    name: "John Brown",
+                    value: 18,
+                    location: "古城大街电力仓区段1",
+                    time: "2016-10-03"
+                },
+                {
+                    name: " 小明",
+                    value: 13,
+                    location: "古城大街污水仓区段1",
+                    time: "2016-10-02"
+                }
+            ],
+            sycles: [
+                { key: 1, val: "最近一天" },
+                { key: 2, val: "最近一周" },
+                { key: 3, val: "最近一月" },
+                { key: 4, val: "最近一年" },
+                { key: 5, val: "自定义" }
+            ],
+            dataType: [
+                { key: 1, val: "视频流" },
+                { key: 2, val: "温度" },
+                { key: 3, val: "湿度" },
+                { key: 4, val: "甲烷浓度" },
+                { key: 5, val: "应力" },
+                { key: 6, val: "氧气" }
+            ]
+        };
     },
     mounted() {
-      this.resize();
-      window.addEventListener('resize', this.resize);
+        this.resize();
+        window.addEventListener("resize", this.resize);
     },
     components: {
-      ComplexBar, SimplelineChart
+        ComplexBar,
+        SimplelineChart
     },
     methods: {
-      changeCycle(index) {
-        const date = new Date();
-        switch (index) {
-          case 1: {
-            this.queryCondition.readonly = true;
-            let endTime = new Date(date.valueOf() - 1 * 24 * 60 * 60 * 1000);
-            let result = date.format("yyyy-MM-dd hh:mm:ss") + " - " + endTime.format("yyyy-MM-dd hh:mm:ss");
-            this.queryCondition.time = result;
-            break;
-          }
-          case 2: {
-            this.queryCondition.readonly = true;
-            let endTime = new Date(date.valueOf() - 7 * 24 * 60 * 60 * 1000);
-            let result = date.format("yyyy-MM-dd hh:mm:ss") + " - " + endTime.format("yyyy-MM-dd hh:mm:ss");
-            this.queryCondition.time = result;
-            break;
-          }
-          case 3: {
-            this.queryCondition.readonly = true;
-            let endTime = new Date(date.valueOf() - 30 * 24 * 60 * 60 * 1000);
-            let result = date.format("yyyy-MM-dd hh:mm:ss") + " - " + endTime.format("yyyy-MM-dd hh:mm:ss");
-            this.queryCondition.time = result;
-            break;
-          }
-          case 4: {
-            this.queryCondition.readonly = true;
-            let endTime = new Date(date.valueOf() - 365 * 24 * 60 * 60 * 1000);
-            let result = date.format("yyyy-MM-dd hh:mm:ss") + " - " + endTime.format("yyyy-MM-dd hh:mm:ss");
-            this.queryCondition.time = result;
-            break;
-          }
-          case 5: {
-            this.queryCondition.readonly = false;
-            this.queryCondition.time = null;
-            break;
-          }
+        changeCycle(index) {
+            const date = new Date();
+            switch (index) {
+                case 1: {
+                    this.queryCondition.readonly = true;
+                    let endTime = new Date(
+                        date.valueOf() - 1 * 24 * 60 * 60 * 1000
+                    );
+                    let result =
+                        date.format("yyyy-MM-dd hh:mm:ss") +
+                        " - " +
+                        endTime.format("yyyy-MM-dd hh:mm:ss");
+                    this.queryCondition.time = result;
+                    break;
+                }
+                case 2: {
+                    this.queryCondition.readonly = true;
+                    let endTime = new Date(
+                        date.valueOf() - 7 * 24 * 60 * 60 * 1000
+                    );
+                    let result =
+                        date.format("yyyy-MM-dd hh:mm:ss") +
+                        " - " +
+                        endTime.format("yyyy-MM-dd hh:mm:ss");
+                    this.queryCondition.time = result;
+                    break;
+                }
+                case 3: {
+                    this.queryCondition.readonly = true;
+                    let endTime = new Date(
+                        date.valueOf() - 30 * 24 * 60 * 60 * 1000
+                    );
+                    let result =
+                        date.format("yyyy-MM-dd hh:mm:ss") +
+                        " - " +
+                        endTime.format("yyyy-MM-dd hh:mm:ss");
+                    this.queryCondition.time = result;
+                    break;
+                }
+                case 4: {
+                    this.queryCondition.readonly = true;
+                    let endTime = new Date(
+                        date.valueOf() - 365 * 24 * 60 * 60 * 1000
+                    );
+                    let result =
+                        date.format("yyyy-MM-dd hh:mm:ss") +
+                        " - " +
+                        endTime.format("yyyy-MM-dd hh:mm:ss");
+                    this.queryCondition.time = result;
+                    break;
+                }
+                case 5: {
+                    this.queryCondition.readonly = false;
+                    this.queryCondition.time = null;
+                    break;
+                }
+            }
+        },
+
+        resize() {
+            this.totalheight = document.documentElement.clientHeight;
+        },
+
+        changePage(index) {
+            let _this = this;
+            _this.queryCondition.pageNum = index;
+            _this.queryData();
+        },
+
+        queryData() {
+            let _this = this;
+            let pram = {};
+            pram.pageNum = _this.queryCondition.pageNum;
+            _this.axios.post("", pram).then(response => {
+                let { code, data } = response.data;
+                if (code == 200) {
+                }
+            });
         }
-      },
-
-      resize() {
-        this.totalheight = document.documentElement.clientHeight;
-      },
-
-
-
-
-      changePage(index) {
-        let _this = this;
-        _this.queryCondition.pageNum = index;
-        _this.queryData();
-      },
-
-      queryData() {
-        let _this = this;
-        let pram = {};
-        pram.pageNum = _this.queryCondition.pageNum;
-        _this.axios.post("", (pram)).then(response => {
-          let {code, data} = response.data;
-          if (code == 200) {
-
-          }
-        })
-      },
     }
-  }
+};
 </script>
 
 <style scoped>
-  .query {
+.query {
     padding: 10px;
     margin-top: 4px;
     height: 90px;
     background-color: #fff;
-  }
+}
 
-  .queryLabel {
+.queryLabel {
     margin-right: 10px;
-  }
+}
 </style>

@@ -19,6 +19,7 @@ import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
@@ -56,6 +57,24 @@ public class EnumController {
 	
 	@Autowired
 	private StoreTypeService storeTypeService;
+	
+	
+	/**开关枚举 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年11月22日
+	 */
+	@RequestMapping(value="switch-enums",method=RequestMethod.GET)
+	public JSONObject getSwitchEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (SwitchEnum e : SwitchEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 	
 	
 	/**
@@ -180,8 +199,8 @@ public class EnumController {
 	
 
 	/**
-	 * 监测对象类型枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"key":"无"},{"val":1,"key":"模拟量输入"},{"val":2,"key":"开关量"},{"val":3,"key":"状态量"},{"val":5,"key":"分布式"},{"val":7,"key":"视频"},{"val":103,"key":"频谱"}]}  
+	 *dataType枚举
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"list":[{"val":0,"key":"无"}],"key":"无"},{"val":1,"list":[{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":8,"key":"分布式温度"},{"val":21,"key":"液位仪"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"}],"key":"模拟量输入"},{"val":2,"list":[],"key":"开关量输入"},{"val":3,"list":[{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":41,"key":"声光报警"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"},{"val":58,"key":"百叶"},{"val":59,"key":"水泵"}],"key":"状态量输入"},{"val":5,"list":[],"key":"分布式数据"},{"val":7,"list":[{"val":7,"key":"视频"}],"key":"视频"},{"val":97,"list":[{"val":9,"key":"机器人"},{"val":20,"key":"定位设备"},{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"}],"key":"结构化对象"},{"val":103,"list":[],"key":"频谱数据"}]}  
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -193,6 +212,17 @@ public class EnumController {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
+			
+			List<JSONObject> joList = new ArrayList<>();
+			List<ObjectType> objTypeList = ObjectType.getEnumByDataType(e.getValue());
+			for (ObjectType objectType : objTypeList) {
+				JSONObject jo = new JSONObject();
+				jo.put("key", objectType.getName());
+				jo.put("val", objectType.getValue());
+				joList.add(jo);
+			}
+			obj.put("list", joList);
+			
 			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
@@ -210,6 +240,9 @@ public class EnumController {
 	public JSONObject getObjectTypeEnumList() {
 		List<JSONObject> list = new ArrayList<>();
 		for (ObjectType e : ObjectType.values()) {
+			if(e==ObjectType.NONE) {
+				continue;
+			}
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());

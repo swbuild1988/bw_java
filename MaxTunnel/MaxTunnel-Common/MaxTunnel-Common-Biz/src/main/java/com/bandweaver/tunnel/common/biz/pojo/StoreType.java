@@ -19,6 +19,8 @@ public class StoreType implements Serializable{
 
     private String name;
 
+    private String sn;
+
     private Date crtTime;
 
     public Integer getId() {
@@ -37,11 +39,29 @@ public class StoreType implements Serializable{
         this.name = name == null ? null : name.trim();
     }
 
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
     public Date getCrtTime() {
         return crtTime;
     }
 
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
+    }
+
+    @Override
+    public String toString() {
+        return "StoreType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
+                ", crtTime=" + crtTime +
+                '}';
     }
 }

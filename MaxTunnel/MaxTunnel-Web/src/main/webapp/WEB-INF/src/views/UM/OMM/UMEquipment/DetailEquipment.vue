@@ -104,18 +104,20 @@
         </Form>
       </div>
       </Col>
-      <Col span="12" style="height:86vh">
-      <sm-viewer
+      <Col span="12" style="height:86vh;" id="GISbox" ref="gisBox">
+      <!-- <sm-viewer
         :id="id"
         ref="smViewer">
-      </sm-viewer>
+      </sm-viewer> -->
+        <TestSmViewer ref="smViewer"></TestSmViewer>
       </Col>
     </Row>
   </div>
 </template>
 <script>
   import types from "../../../../../static/Enum.json";
-  import SmViewer from '../../../../components/Common/3D/3DViewer'
+  // import SmViewer from '../../../../components/Common/3D/3DViewer'
+  import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
   import {URL_CONFIG} from '../../../../../static/3DMap/js/3DMapConfig'
   import equipmentIMg from "../../../../assets/UM/equipment.png"
   import { TunnelService } from '../../../../services/tunnelService'
@@ -124,7 +126,7 @@
   export default {
     data() {
       return {
-        id: 'detailsEquipmentGIS',
+        // id: 'detailsEquipmentGIS',
         // 页面类型 1：查看 2：编辑 3：新增
         pageType: 1,
         pageTypes: types.pageType,
@@ -172,13 +174,29 @@
         ]
       };
     },
+    beforeRouteLeave (to, from, next) {
+      if(to.name == '设备管理主页' || to.name == 'UMPatrolHomePage' || to.name == '虚拟巡检' || to.name == '人员定位详情' 
+      || to.name == '管廊安防监控详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监测列表'){
+        from.meta.keepAlive = false;
+        to.meta.keepAlive = false;
+        this.$destroy()
+        next()
+      }else{
+        to.meta.keepAlive = false
+        from.meta.keepAlive = false
+        this.$destroy()
+        next()
+      }
+    },
     components: {
-      SmViewer
+      // SmViewer
+      TestSmViewer
     },
     mounted() {
       this.equipment.id = this.$route.params.id;
       this.pageType = this.$route.params.type;
       this.init();
+      this.setGIS()
     },
     methods: {
       init: function () {
@@ -196,16 +214,6 @@
             (error)=>{
                _this.Log.info(error)
             })
-          // this.axios.get("/equipments/" + this.equipment.id).then(response => {
-          //   let {code, data} = response.data;
-          //   if (code == "200") {
-          //     this.equipment.tunnelId = data.tunnel.id
-          //     this.equipment = data;
-          //     this.equipment.crtTime = new Date(data.crtTime).format(
-          //       "yyyy-MM-dd"
-          //     );
-          //   }
-          // });
         }
 
         // 获取所有的管廊
@@ -235,53 +243,25 @@
           _this.Log.info(error)
         })
       },
-      onload(parent) {
-        let Cesium = parent.Cesium;
-
-        // 初始化viewer部件
-        var viewer = new Cesium.Viewer(this.id, {
-          navigation: false //关闭导航控件
-        });
-        var scene = viewer.scene,
-          widget = viewer.cesiumWidget,
-          imageryLayers = viewer.imageryLayers,
-          imagery_mec;
-
-        var provider_mec = new Cesium.SuperMapImageryProvider({
-          url: URL_CONFIG.IMG_MAP//墨卡托投影地图服务
-        });
-        imagery_mec = imageryLayers.addImageryProvider(provider_mec);
-
-
-        try {
-          //打开所发布三维服务下的所有图层
-          var promise = scene.open(URL_CONFIG.BIM_SCP);
-          Cesium.when(promise, function (layer) {
-
-            var overGroundLayer = scene.layers._layerQueue[0];
-            //设置相机位置、视角，便于观察场景
-            scene.camera.setView({
-              destination: new Cesium.Cartesian3.fromDegrees(116.43709465365579, 39.91793569836651, 1245.5482069457155),
-              orientation: {
-                heading: 1.5735504792701676,
-                pitch: -0.9120242487858476,
-                roll: 6.281841926729911
-              }
-            });
-          }, function (e) {
-            if (widget._showRenderLoopErrors) {
-              var title = '加载SCP失败，请检查网络连接状态或者url地址是否正确？';
-              widget.showErrorPanel(title, undefined, e);
-            }
-          });
-        }
-        catch (e) {
-          if (widget._showRenderLoopErrors) {
-            var title = '渲染时发生错误，已停止渲染。';
-            widget.showErrorPanel(title, undefined, e);
-          }
-        }
+      setGIS(){
+        var gis = document.getElementById('newID')
+        gis.style.display = "block";
+        gis.style.position = 'absolute';
+        gis.style.top = '0px';
+        gis.style.height = '100%';
+        gis.style.width = '100%'    
+        document.body.removeChild(gis)
+        document.getElementById("GISbox").appendChild(gis)
       },
+      destoryGis(){
+        var gis = document.getElementById("newID");
+        gis.style.display = "none";
+        document.getElementById("GISbox").removeChild(gis)
+        document.body.appendChild(gis)
+      }
+    },
+    beforeDestroy(){
+      this.destoryGis()
     }
   };
 </script>

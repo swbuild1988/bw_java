@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="backStyle">
         <Form :model="task" :label-width="140">
             <h2 class="formTitle" v-show="this.pageType==4">提交任务执行结果</h2>
             <h2 class="formTitle" v-show="this.pageType==1">巡检任务详情</h2>
@@ -144,6 +144,15 @@ export default {
             ],
             areas:[],
             stores:[],
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                height: '100%',
+                position: 'relative',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%',
+                paddingTop: '30px'
+            }
         }    
     },
     mounted(){

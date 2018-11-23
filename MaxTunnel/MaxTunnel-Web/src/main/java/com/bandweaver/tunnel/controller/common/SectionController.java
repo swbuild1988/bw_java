@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.bandweaver.tunnel.common.biz.pojo.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,12 +83,44 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @date 2018年7月25日
      */
+    @Deprecated
     @RequestMapping(value = "sections", method = RequestMethod.POST)
     public JSONObject add(@RequestBody Section section) {
         sectionService.add(section);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 
     }
+
+    @RequestMapping(value = "sections/create", method = RequestMethod.GET)
+    public JSONObject create() {
+        List<Store> stores = storeService.getList();
+        List<AreaDto> areas = areaService.getList();
+
+        for (Store store : stores){
+            for (AreaDto area: areas) {
+                SectionVo vo = new SectionVo();
+                if (sectionService.getSectionByStoreAndArea(store.getId(),area.getId())!=null) continue;
+
+                // 新加section
+                Section section = new Section();
+                section.setStoreId(store.getId());
+                section.setAreaId(area.getId());
+                section.setTotalCableNumber(10);
+                section.setStartPoint("");
+                section.setEndPoint("");
+                section.setName(area.getName() + "-" + store.getName());
+                section.setCamera("");
+                section.setCrtTime(new Date());
+                section.setTunnelId(area.getTunnelId());
+
+                sectionService.add(section);
+            }
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+
+
     
     /**检查名称是否重复 
      * @param name
@@ -95,6 +128,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @Date 2018年10月9日
      */
+    @Deprecated
     @RequestMapping(value="sections/ajax/{name}",method=RequestMethod.GET)
     public JSONObject checkName(@PathVariable String name) {
     	Section section = sectionService.getByName(name);

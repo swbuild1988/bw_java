@@ -34,7 +34,7 @@
                     <Input v-model="conditions.username" style="width: 60%"></Input>
                 </Col>
                 <Col span="6">
-                    <Button type="primary" size="small" @click="addVideoService=true">添加视频服务</Button>
+                    <Button type="primary" size="small" @click="addVideoService1()">添加视频服务</Button>
                     <Button type="primary" size="small" @click="queryList()">查询</Button>
                 </Col>
             </Row>
@@ -49,7 +49,7 @@
             v-model="addVideoService" 
             width='520' 
             style="padding-left: 20px;padding-right: 20px;"
-            title="添加视频服务">
+            :title=modalTile>
             <Form ref="videoService" :model="videoService" :rules="ruleValidate" :label-width="70">
                 <FormItem label="用户名" prop="name">
                     <Input v-model="videoService.name" placeholder="请输入视频名称"></Input>
@@ -81,20 +81,29 @@
                 </FormItem>
             </Form> 
             <div slot="footer">
-                <Button type="primary" @click="submitForm('videoService')">提交</Button>
+                <Button type="primary" @click="submitForm('videoService')" v-if="isAdd">提交</Button>
+                <Button type="primary" @click="updateForm('videoService')" v-if="isEdit">更新</Button>
                 <Button type="default" @click="cancel('videoService')">取消</Button>
             </div>  
         </Modal>
     </div>    
 </template>
 <script>
-// import crypto from 'crypto'
-// import { CryptoService } from '../../../services/cryptoService.js'
 import { CMVideoService } from '../../../services/cmVideoService.js'
 export default {
     data(){
         return{
+            editVideoService: false,
+            isAdd: false,
+            isEdit: false,
+            modalTile: '',
+            isEdit: false,
             columns1:[
+                {
+                    type: 'index',
+                    align: 'center',
+                    width: 60
+                },
                 {
                     title: '视频名称',
                     key: 'name',
@@ -102,13 +111,14 @@ export default {
                 },
                 {
                     title: '供应商',
-                    key: 'vendor',
+                    key: 'vendorName',
                     align: 'center'
                 },
                 {
                     title: '版本',
-                    key: 'vendorVersion',
-                    align: 'center'
+                    key: 'vendorVersionName',
+                    align: 'center',
+                    width: 100
                 },
                 {
                     title: 'IP',
@@ -118,12 +128,14 @@ export default {
                 {
                     title: '端口',
                     key: 'port',
-                    align: 'center'
+                    align: 'center',
+                    width: 100
                 },
                 {
                     title: '用户名',
                     key: 'username',
-                    align: 'center'
+                    align: 'center',
+                    width: 100
                 },
                 {
                     title: '密码',
@@ -133,11 +145,45 @@ export default {
                 {
                     title: '通道数',
                     key: 'channelNum',
-                    align: 'center'
+                    align: 'center',
+                    width: 100
                 },
+                {
+                    title: '操作',
+                    align: 'center',
+                    render: (h,params) => {
+                        return h('div',[
+                            h('Button',{
+                                props:{
+                                    type: "primary",
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: "5px"
+                                },
+                                on: {
+                                    click: () => {
+                                        this.edit(params.row.id);
+                                    }
+                                }
+                            },'编辑'),
+                            h('Button',{
+                                props:{
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.del(params.row.id)
+                                    }
+                                }
+                            },'删除')
+                        ])
+                    }
+                }
             ],
             data1:[
-                {id:1,name:'门口监控',supplier:'视频厂商',version:'2.6',port:'8080',userName:'admin',password:'123456',channelNumber:'12'}
+                {}
             ],
             page: {
                 pageNum: 1,
@@ -151,6 +197,7 @@ export default {
             },
             addVideoService: false,
             videoService:{
+                id: null,
                 name: null,
                 vendor: null,
                 vendorVersion: null,
@@ -167,7 +214,7 @@ export default {
                     { required: true, message: '视频名称不能为空', trigger: 'blur' }
                 ],
                 vendor: [
-                    { type: 'number', required: true, message: '供应商不能为空', trigger: 'change' }
+                    { type: 'number', required: true, message: '供应商不能为空', trigger: 'blur' }
                 ],
                 vendorVersion: [
                     { type: 'number', required: true, message: '版本不能为空', trigger: 'blur' }
@@ -245,11 +292,16 @@ export default {
                 }
             )
         },
+        addVideoService1(){
+            this.addVideoService = true
+            this.modalTile = '添加视频服务'
+            this.isAdd = true
+            this.isEdit = false
+        },
         submitForm(name){
             this.$refs[name].validate((valid)=>{
                 if(valid){                   
                     var formInfo = {
-                        // id: null,
                         name: this.videoService.name,
                         vendor: this.videoService.vendor,
                         vendorVersion: this.videoService.vendorVersion,
@@ -280,6 +332,62 @@ export default {
             this.page.pageSize = value;
             this.queryList()
         },
+        edit(id){
+            this.isAdd = false
+            this.isEdit = true
+            this.modalTile = '编辑视频服务'
+            CMVideoService.getVideoServiceById(id).then(
+                (result)=>{
+                    this.videoService = result
+                    this.addVideoService = true
+                },
+                (error)=>{
+                    this.Log.info(error)
+                }
+            )
+        },
+        updateForm(name){
+            this.$refs[name].validate((valid)=>{
+                if(valid){
+                    var formInfo = {
+                        id: this.videoService.id,
+                        name: this.videoService.name,
+                        vendor: this.videoService.vendor,
+                        vendorVersion: this.videoService.vendorVersion,
+                        ip: this.videoService.ip,
+                        port: this.videoService.port,
+                        username: this.videoService.username,
+                        password: this.videoService.password,
+                        channelNum: this.videoService.channelNum
+                    }
+                    CMVideoService.editVideoService(formInfo).then(
+                        (result)=>{
+                            this.addVideoService = false
+                        },
+                        (error) => {
+                            this.Log.info(error)
+                        }
+                    )
+                }
+            })
+        },
+        del(id){
+            this.$Modal.confirm({
+                title: '视频服务',
+                content: '<p>是否删除这条视频服务信息</p>',
+                onOk: () => {
+                    CMVideoService.delVideoService(id).then(
+                        (result) => {
+                            this.data1.splice(id,1)
+                            this.queryList()
+                        },
+                        (error) => {
+                            this.Log.info(error)
+                        }
+                    )
+                }
+            })
+        }
     }
 }
 </script>

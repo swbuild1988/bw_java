@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="backStyle">
         <Form :model="distributeTask" :label-width="100">
             <h2 class="formTitle">分配巡检任务</h2>
             <FormItem label="所属计划：">
@@ -23,7 +23,7 @@
                 <Button type="primary" @click="submitTask">提交</Button>
                 <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
-        </Form>    
+        </Form>  
     </div>
 </template>
 <script>
@@ -40,7 +40,16 @@ export default {
                 accountId: 1,
                 remark: ''
             },
-            liable:[]
+            liable:[],
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
+            }
         }
     },
     mounted(){

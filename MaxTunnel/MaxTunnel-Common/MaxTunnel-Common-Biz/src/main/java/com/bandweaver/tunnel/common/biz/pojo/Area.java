@@ -19,6 +19,8 @@ public class Area implements Serializable{
 
     private String name;
 
+    private String sn;
+
     private String location;
 
     private Integer tunnelId;
@@ -41,6 +43,14 @@ public class Area implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getLocation() {
@@ -80,6 +90,7 @@ public class Area implements Serializable{
         return "Area{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
                 ", location='" + location + '\'' +
                 ", tunnelId=" + tunnelId +
                 ", camera='" + camera + '\'' +

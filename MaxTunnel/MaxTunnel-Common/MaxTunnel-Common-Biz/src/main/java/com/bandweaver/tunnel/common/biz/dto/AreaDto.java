@@ -22,6 +22,8 @@ public class AreaDto implements Serializable{
 
     private String name;
 
+    private String sn;
+
     private String location;
 
     @JsonIgnore
@@ -46,6 +48,14 @@ public class AreaDto implements Serializable{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getLocation() {
@@ -87,5 +97,19 @@ public class AreaDto implements Serializable{
 
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
+    }
+
+    @Override
+    public String toString() {
+        return "AreaDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
+                ", location='" + location + '\'' +
+                ", tunnelId=" + tunnelId +
+                ", tunnel=" + tunnel +
+                ", camera='" + camera + '\'' +
+                ", crtTime=" + crtTime +
+                '}';
     }
 }

@@ -480,10 +480,12 @@ create table T_COMMON_TUNNEL
   id    NUMBER not null,
   name  VARCHAR2(30) not null,
   length NUMBER,
+  sn     VARCHAR2(20) not null,
   responsibility_id number  not null,
   construct_id      number  not null,
   operation_id      number  not null,
   camera            varchar2(200),
+  maxview_config_id number  not null,
   crt_time          date
 );
 alter table T_COMMON_TUNNEL
@@ -515,6 +517,7 @@ create table T_COMMON_area
 (
   id    NUMBER not null,
   name  VARCHAR2(30) not null,
+  sn    varchar2(20) not null,
   location  VARCHAR2(500),
   tunnel_id NUMBER not null,
   camera    varchar2(200),
@@ -746,7 +749,8 @@ ALTER TABLE "T_SECURITY_USER_ROLE"
 --管廊仓类型表
 CREATE TABLE T_COMMON_STORE_TYPE  (
    "ID"                 NUMBER               NOT NULL,
-   NAME			VARCHAR2(50),
+   NAME			VARCHAR2(50) not null,
+   SN       varchar2(20) not null,
    "CRT_TIME"           DATE,
    CONSTRAINT PK_T_COMMON_STORE_TYPE PRIMARY KEY ("ID")
 );
@@ -772,8 +776,9 @@ end COMMON_STORE_TYPE_TG;
 CREATE TABLE T_COMMON_STORE  (
    "ID"                 NUMBER               NOT NULL,
    name                 varchar2(100),
+   sn                   varchar2(20) not null,
    "TUNNEL_ID"          NUMBER               NOT NULL,
-   store_type_id	    NUMBER(1)		           NOT NULL,
+   store_type_id	    NUMBER		           NOT NULL,
    camera             varchar2(200),
    "CRT_TIME"           DATE,
    CONSTRAINT PK_T_COMMON_STORE PRIMARY KEY ("ID")

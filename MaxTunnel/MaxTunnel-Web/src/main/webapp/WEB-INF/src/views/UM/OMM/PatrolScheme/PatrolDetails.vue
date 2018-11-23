@@ -7,51 +7,51 @@
           <Form :model="plan" :label-width="100" @submit.native.prevent>
             <Col span="12">
               <FormItem label="计划编号：">
-                <Input v-model='plan.planId' :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model='plan.planId' disabled></Input>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="计划名称：">
-                <Input v-model='plan.name' :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model='plan.name' disabled></Input>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="所属管廊：">
-                <Select v-model='plan.tunnelId' :disabled='pageType==pageTypes.Read'>
+                <Select v-model='plan.tunnelId' disabled>
                   <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="计划状态：">
-                <Input type="text" v-model="plan.processStatus" :disabled="pageType==pageTypes.Read&&pageType==pageTypes.Edit"></Input>
+                <Input type="text" v-model="plan.processStatus" disabled></Input>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="责任班组：">
-                <Select v-model='plan.groupId' :disabled='pageType==pageTypes.Read'>
+                <Select v-model='plan.groupId' disabled>
                   <Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="责任人：">
-                <Input v-model="plan.inspectionGroup.leader.name" :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model="plan.inspectionGroup.leader.name" disabled></Input>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="巡检日期：">
-                <Input v-model="plan.inspectTime" :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model="plan.inspectTime" disabled></Input>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="执行天数：">
-                <Input v-model="plan.tasks.length" :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model="plan.tasks.length" disabled></Input>
               </FormItem>
             </Col>
             <Col span="24">
               <FormItem label="计划描述：">
-                <Input v-model="plan.remark" type="textarea" :rows="4" placeholder="请输入描述..." :disabled='pageType==pageTypes.Read'></Input>
+                <Input v-model="plan.remark" type="textarea" :rows="4" placeholder="请输入描述..." disabled></Input>
               </FormItem>
             </Col>
           </Form>
@@ -338,5 +338,9 @@ h3 {
     height: 14px;
     border-radius: 4px;
     margin-right: 5px;
+}
+.ivu-input[disabled], fieldset[disabled] .ivu-input{
+    background-color: #ffffff !important;
+    color: #495060 !important;
 }
 </style>

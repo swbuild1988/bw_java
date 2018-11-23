@@ -1,5 +1,11 @@
 import axios from 'axios'
 
+var reqUrls = {
+	simplePieChart: {
+		energyComsumption: 'tunnels/items/energies'
+	}
+}
+
 var ChartService = {
 	// Charts
 	getChartData: function(reqUrl) {
@@ -25,5 +31,6 @@ var ChartService = {
 }
 
 export {
-	ChartService
+	ChartService,
+	reqUrls
 }

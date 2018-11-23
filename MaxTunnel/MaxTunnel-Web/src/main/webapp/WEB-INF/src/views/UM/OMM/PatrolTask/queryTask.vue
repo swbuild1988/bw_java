@@ -45,8 +45,6 @@ export default {
     data(){
         return{
             SCalender:{
-                // currentMonth: 9,
-                // currentYear: 2018,
                 tasks:[]
             },
             conditions:{
@@ -70,7 +68,7 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '20px',
+                bottom: '0px',
                 right: '15px'
             },
             columns:[

@@ -6,9 +6,9 @@
                 <FormItem label="定时任务名" prop="jobName">
                     <Input v-model="formValidate.jobName" disabled class="inputWidth"></Input>
                 </FormItem>
-                <FormItem label="定时任务组" prop="jobGroup">
+                <!-- <FormItem label="定时任务组" prop="jobGroup">
                     <Input v-model="formValidate.jobGroup" disabled class="inputWidth"></Input>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="定时任务周期" prop="cronExpression">
                     <Input v-model="formValidate.cronExpression" class="inputWidth"></Input>
                 </FormItem>

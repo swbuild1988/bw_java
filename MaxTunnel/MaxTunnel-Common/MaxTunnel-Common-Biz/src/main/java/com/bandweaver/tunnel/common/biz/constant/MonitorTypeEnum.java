@@ -10,7 +10,9 @@ public enum MonitorTypeEnum {
 	/**结构监测*/
 	structure("结构监测",2),
 	/**安防监测*/
-	Security("安防监测",3);
+	Security("安防监测",3),
+	/**其他监测*/
+	Others("其他监测",4);
 	
 	private String name;
 	private int value;

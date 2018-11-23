@@ -12,9 +12,12 @@
                     </Select>
                 </FormItem>
                 <FormItem label="管仓类型" prop="storeTypeId">
-                    <Select v-model="formValidate.storeTypeId" placeholder="请选择管仓类型" class="InputWidth">
+                    <Select v-model="formValidate.storeTypeId" placeholder="请选择管仓类型" class="InputWidth" @on-change="storeTypeChange">
                         <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
+                </FormItem>
+                <FormItem label="编号" prop="sn">
+                    <Input v-model="formValidate.sn" class="InputWidth"></Input>
                 </FormItem>
                 <FormItem label="经度" prop="longitude">
                     <Input v-model="longitude" placeholder="请输入经度" class="InputWidth"></Input>
@@ -36,93 +39,111 @@
 
 <script>
 export default {
-    name: 'store-add',
+    name: "store-add",
     data() {
         return {
-            tunnels:[],
-            types:[],
-            flag:true,
-            formValidate:{
-                name:'',
-                tunnelId:'',
-                storeTypeId:'',
-                camera:''
+            tunnels: [],
+            types: [],
+            flag: true,
+            formValidate: {
+                name: "",
+                sn: "",
+                tunnelId: "",
+                storeTypeId: "",
+                camera: ""
             },
-            longitude:0,
-            latitude:0,
-            highness:0,
-            ruleValidate:{
-                name:[
-                    { required:true, message:'管仓名不能为空', trigger:'blur'}
+            longitude: 0,
+            latitude: 0,
+            highness: 0,
+            ruleValidate: {
+                name: [
+                    {
+                        required: true,
+                        message: "管仓名不能为空",
+                        trigger: "blur"
+                    }
                 ]
             }
-        }
+        };
     },
-    props:{
-        show:{
-            state:{
+    props: {
+        show: {
+            state: {
                 default: false
             }
         },
-        addInfo:{}
+        addInfo: {}
     },
-    watch:{
-        'show.state':function(newValue,oldValue){
+    watch: {
+        "show.state": function(newValue, oldValue) {
             this.cleanFormValidate();
         },
-        'formValidate.name':function(newValue,oldValue){
-            if(newValue != null){
+        "formValidate.name": function(newValue, oldValue) {
+            if (newValue != null) {
                 this.checkName(newValue);
             }
         }
     },
-    mounted(){
+    mounted() {
         this.getTunnelList();
         this.getStoreTypeList();
     },
-    methods:{
-        getTunnelList(){        //获取所有管廊的简单列表
-            this.axios.get('/tunnels').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
+    methods: {
+        storeTypeChange() {
+            console.log("types", this.types);
+            let store = this.types.find(
+                a => a.id === this.formValidate.storeTypeId
+            );
+            console.log("storeTypeChange:", store);
+            if (this.formValidate.name == "")
+                this.formValidate.name = store.name;
+            this.formValidate.sn = store.sn;
+        },
+        getTunnelList() {
+            //获取所有管廊的简单列表
+            this.axios.get("/tunnels").then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
                     this.tunnels = data;
                 }
-            })
+            });
         },
-        getStoreTypeList(){
-            this.axios.get('/store-type/list').then(res =>{
-                let {code,data} = res.data;
+        getStoreTypeList() {
+            this.axios.get("/store-type/list").then(res => {
+                let { code, data } = res.data;
                 let _types = [];
-                if(code == 200){
-                    for(let i=0;i<data.length;i++){
+                if (code == 200) {
+                    for (let i = 0; i < data.length; i++) {
                         let type = {};
                         type.id = data[i].id;
                         type.name = data[i].name;
+                        type.sn = data[i].sn;
                         _types.push(type);
                     }
                     this.types = _types;
                 }
-            })
+            });
         },
-        sendMsg: function(data){
-            this.formValidate.camera = this.longitude + ',' + this.latitude + ',' + this.highness;
-            this.$refs[data].validate((valid) => {
-                if(valid){
-                    this.$emit("listenToAdd",this.formValidate);
-                }else{
-                    this.$Message.error('添加失败')
+        sendMsg: function(data) {
+            this.formValidate.camera =
+                this.longitude + "," + this.latitude + "," + this.highness;
+            this.$refs[data].validate(valid => {
+                if (valid) {
+                    this.$emit("listenToAdd", this.formValidate);
+                } else {
+                    this.$Message.error("添加失败");
                 }
-            })
+            });
         },
-        checkName(name){
-            this.axios.get('/stores/ajax/' + name).then(res =>{
-                let{code,data} = res.data;
-                if(code == 200){
+        checkName(name) {
+            this.axios.get("/stores/ajax/" + name).then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
                     this.flag = data;
                 }
-            })
+            });
         },
-        cleanFormValidate(){
+        cleanFormValidate() {
             this.formValidate.name = null;
             this.formValidate.tunnelId = null;
             this.formValidate.storeTypeId = null;
@@ -132,14 +153,14 @@ export default {
             this.flag = true;
         }
     }
-}
+};
 </script>
 
 <style scoped>
-.InputWidth{
+.InputWidth {
     width: 85%;
 }
-.errorStyle{
+.errorStyle {
     position: absolute;
     font-size: 16px;
     color: #ed3f14;

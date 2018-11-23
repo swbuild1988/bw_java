@@ -24,4 +24,5 @@ public interface StoreTypeService {
 
 	StoreType getByName(String name);
 
+	StoreType getBySN(String sn);
 }

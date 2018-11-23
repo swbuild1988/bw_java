@@ -1,6 +1,5 @@
 <template>
     <div :style="backStyle">
-        <div class="backImgStyle">
         <Form ref="defectDetails" :model="defectDetails" :rules="validateRules" :label-width="120" @submit.native.prevent>
             <h2 class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</h2>
             <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
@@ -54,8 +53,7 @@
                 <Button type="ghost" style="margin-left: 8px" @click="handleReset('defectDetails')">取消 </Button>
             </FormItem>
         </Form> 
-        </div>   
-    </div>
+    </div>   
 </template>
 <script>
 import types from '../../../../../static/Enum.json'
@@ -132,8 +130,12 @@ export default {
             },
             backStyle:{
                 backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                height: '100%',
-                position: 'relative'
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
             }
         }    
     },
@@ -288,14 +290,6 @@ export default {
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
-}
-.backImgStyle{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background:rgba(255,255,255,0.5);
 }
 </style>
 

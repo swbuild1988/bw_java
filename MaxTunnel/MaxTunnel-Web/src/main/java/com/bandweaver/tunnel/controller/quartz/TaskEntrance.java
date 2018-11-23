@@ -2,18 +2,25 @@ package com.bandweaver.tunnel.controller.quartz;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
+import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.MaxviewConfigService;
 import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
+import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
+import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
 import com.bandweaver.tunnel.common.biz.itf.oam.EnergyService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
@@ -26,8 +33,11 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport;
+import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
+import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Energy;
 import com.bandweaver.tunnel.common.biz.vo.mam.report.MeasObjReportVo;
+import com.bandweaver.tunnel.common.biz.vo.oam.ConsumeDataVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
@@ -96,6 +106,31 @@ public class TaskEntrance {
     private MeasValueTabdictMapper measValueTabdictMapper;
     @Autowired
     private MeasObjReportMapper measObjReportMapper;
+    @Autowired
+    private MaxviewConfigService maxviewConfigService;
+    @Autowired
+    private ConsumeService consumeService;
+    @Autowired
+    private ConsumeDataService consumeDataService;
+    
+    
+    
+    /**登录maxview终端之后，持续发送心跳 
+     * @author shaosen
+     * @Date 2018年11月16日
+     */
+    public void heartBeat() {
+    	Set<Integer> set = new HashSet<>();
+    	List<TunnelDto> list = tunnelService.getDtoList();
+    	for (TunnelDto tunnelDto : list) {
+			set.add(tunnelDto.getMaxviewConfigId());
+		}
+    	
+    	for (Integer configId : set) {
+    		maxviewConfigService.heartBeat(configId);
+		}
+    	
+    }
 	
 	
 	
@@ -111,8 +146,36 @@ public class TaskEntrance {
     	saveSOSchedule();
     }
     
-  
-    public void saveAISchedule() {
+//------------------------------适配器发送数据之后删除该段代码-----------------------
+	private static double [] count = new double[48];
+    static {
+    	for(int i=0;i<48;i++) {
+    		count[i] = 0.0;
+    	}
+    }
+//-------------------------------------------------------------------------
+	public void saveAISchedule() {
+//------------------------------适配器发送数据之后删除该段代码-----------------------
+		// TODO
+    	List<MeasValueAI> list = new ArrayList<>();
+    	List<ConsumeDto> consumes = consumeService.getConsumesByCondition(new ConsumeDataVo());
+    	for(int i=0;i<48;i++) {
+    		double d = MathUtil.div((double)((int)(Math.random()*100)), 100.0);
+    		count[i] = MathUtil.add(count[i], d);
+    	}
+    	for(ConsumeDto dto : consumes) {
+    		if(dto.getObjectId() == null) continue;
+    		MeasValueAI ai = new MeasValueAI();
+    		ai.setObjectId(dto.getObjectId());
+    		ai.setTime(new Date());
+    		ai.setCV(count[dto.getObjectId() - 1001]);
+    		list.add(ai);
+    	}
+    	for (MeasValueAI measValueAI : list) {
+            measObjModuleCenter.updateMeasObjAIValue(measValueAI);
+        }
+    	LogUtil.info("缓存成功");
+//---------------------------------------------------------------------------
     	 //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
         List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
         for (MeasObjAI measObjAI : measObjAIs) {
@@ -486,45 +549,49 @@ public class TaskEntrance {
     
     
     
-	/**定时任务统计每条管廊每天能耗并保存到能耗表中 
-	 * @author shaosen
-	 * @Date 2018年11月8日
+	/**定时任务统计每天的能耗并保存到ConsumeData表中 
+	 * @author ya.liu
+	 * @Date 2018年11月22日
 	 */
-	public void save2EnergyTable() {
+	public void saveToConsumeData() {
 		
-		//获取昨天开始结束日期
+		// 获取昨天开始时间
 		Date startTime = DateUtil.getDayStartTime(DateUtil.getFrontDay(new Date(),1));
-    	Date endTime = DateUtil.getDayEndTime(DateUtil.getFrontDay(new Date(),1));
-    	
-    	//获取电表类型
-    	List<Integer> ids = new ArrayList<>();
-    	ObjectType[] types = ObjectType.getArr();
-    	for (ObjectType objectType : types) {
-    		ids.add(objectType.getValue());
-		}
-    	
-		//获取每条管廊下有哪些电表
-    	List<TunnelSimpleDto> list = tunnelService.getList();
-    	for (TunnelSimpleDto tunnelSimpleDto : list) {
-    		MeasObjReportVo vo = new MeasObjReportVo();
-    		vo.setTunnelId(tunnelSimpleDto.getId());
-    		vo.setStartTime(startTime);
-    		vo.setEndTime(endTime);
-    		vo.setObjtypeIds(ids);
-    		vo.setTimeType(TimeEnum.DAY.getValue());
-    		List<MeasObjReportDto> dtoList = measObjReportMapper.getByCondition(vo);
-    		
-    		for (MeasObjReportDto measObjReportDto : dtoList) {
-    			
-        		Energy energy = new Energy();
-    			energy.setTunnelId(tunnelSimpleDto.getId());
-    			energy.setObjectType(measObjReportDto.getObjectType());
-    			energy.setValue( MathUtil.sub(measObjReportDto.getMaxValue(), measObjReportDto.getMinValue()));
-    			energy.setUnitPrice(1.5);//TODO
-    			energy.setCrtTime(endTime);
-    			energyService.addEnergy(energy);
-			}
-		}
+    	// 获取今天的开始时间
+		Date endTime = DateUtil.getDayBegin();
+		
+		// 获取consume表所有电表(包括不存在的电表)
+    	List<ConsumeDto> consumes = consumeService.getConsumes();
+    	// for循环插入数据
+    	for(ConsumeDto dto : consumes) {
+    		ConsumeData data = new ConsumeData();
+    		data.setId(dto.getId());
+    		data.setTime(startTime);
+    		Double sum = 0.0;
+    		// 判断是否存在电表
+    		if(dto.getObjectId() != null) {
+    			List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(dto.getObjectId(), startTime, endTime);
+    			//统计aiValue表中某一电表一天内的能耗
+    			if(ais.size() > 0)
+    				sum = MathUtil.sub(ais.get(0).getCV(), ais.get(ais.size() - 1).getCV());
+    			data.setDirect(sum);
+    		}
+    		else if(dto.getCompute() != null) {
+    			String [] s = dto.getCompute().split(",");
+    			//统计没有电表时一天内的合计能耗
+    			for(String ss : s) {
+    				List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(Integer.valueOf(ss), startTime, endTime);
+    				//统计aiValue表中某一电表一天内的能耗
+    				if(ais.size() > 0) {
+    					Double sum1 = MathUtil.sub(ais.get(0).getCV(), ais.get(ais.size() - 1).getCV());
+    					sum = MathUtil.add(sum, sum1);
+    				}
+    			}
+    			data.setIndirect(sum);
+    		}
+    		//添加
+    		consumeDataService.insert(data);
+    	}
 	}
     
     

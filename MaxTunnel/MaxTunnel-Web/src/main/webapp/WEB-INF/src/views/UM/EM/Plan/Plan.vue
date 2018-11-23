@@ -6,6 +6,7 @@
 
 <script>
   import ModulePage from "../../../../components/Common/ModulePage";
+  import { EnumsService } from '../../../../services/enumsService';
   import SockJS from 'sockjs-client'; // 'sockjs-client' 必须与package.json文件当中dependencies 当中的一模一样
   export default {
     name: "UM_plan",
@@ -25,38 +26,40 @@
     },
     created() {
       this.plans.leftTree = [];
-      this.axios.get("/plan-enums").then(result => {
-        let {code, data} = result.data;
-        if (code == 200) {
-          data.forEach(a => {
+      let _this = this
+      EnumsService.getPlanType().then(
+        result=>{
+            result.forEach(a => {
             let temp = {};
             temp.name = a.key;
             temp.id = a.val;
             temp.processKey = a.processKey;
-            temp.url = this.treeNodeJumpUrl + a.processKey;
+            temp.url = _this.treeNodeJumpUrl + a.processKey;
             temp.childNode = [
               {
                 id: 11,
                 name: "预案详情",
-                url: this.treeNodeJumpUrl + a.processKey,
+                url: _this.treeNodeJumpUrl + a.processKey,
               },
               {
                 id: 12,
                 name: "执行预案",
-                url: this.executeNodeUrl + a.processKey,
+                url: _this.executeNodeUrl + a.processKey,
               }
             ]
-            this.plans.leftTree.push(temp);
+            _this.plans.leftTree.push(temp);
           });
           //添加零时测试页面
-          this.plans.leftTree.push({
+          _this.plans.leftTree.push({
             name: "测试预案页面",
             id: 31,
             processKey: "textPlan",
             url: "/UM/plans/textPage/processKey"
           });
-        }
-      })
+        },
+        error=>{
+          _this.Log.info(error)
+        })
     },
     methods: {
       goToMoudle(path) {

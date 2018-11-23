@@ -23,4 +23,6 @@ public interface RelatedUnitService {
 
 	List<RelatedUnitDto> getDtoListBySectionId(Integer id);
 
+	List<RelatedUnitDto> getDtoListBySecionIdAndUnitType(Integer id, Integer unitType);
+
 }

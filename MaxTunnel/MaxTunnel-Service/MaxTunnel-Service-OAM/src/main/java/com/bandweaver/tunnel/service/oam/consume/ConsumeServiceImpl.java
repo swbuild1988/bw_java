@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
+import com.bandweaver.tunnel.common.biz.vo.oam.ConsumeDataVo;
 import com.bandweaver.tunnel.dao.oam.ConsumeMapper;
 
 @Service
@@ -35,6 +36,16 @@ public class ConsumeServiceImpl implements ConsumeService {
 	public int addBatch(List<Consume> list) {
 		return consumeMapper.addBatch(list);
 	}
+	
+	@Override
+	public int addBatchWithObjectId(List<Consume> list) {
+		return consumeMapper.addBatchWithObjectId(list);
+	}
+
+	@Override
+	public int deleteBatch(List<Integer> list) {
+		return consumeMapper.deleteBatch(list);
+	}
 
 	@Override
 	public Consume getConsumeById(Integer id) {
@@ -47,8 +58,13 @@ public class ConsumeServiceImpl implements ConsumeService {
 	}
 
 	@Override
-	public List<ConsumeDto> getConsumesByCondition(Consume consume) {
-		return consumeMapper.getConsumesByCondition(consume);
+	public List<ConsumeDto> getConsumesByCondition(ConsumeDataVo vo) {
+		return consumeMapper.getConsumesByCondition(vo);
+	}
+
+	@Override
+	public List<ConsumeDto> getConsumes() {
+		return consumeMapper.getConsumeDtos();
 	}
 
 }

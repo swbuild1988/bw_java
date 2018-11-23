@@ -5,7 +5,8 @@
 	<resultMap id="BaseResultMap"
 		type="com.bandweaver.tunnel.common.biz.pojo.Store">
 		<id column="ID" jdbcType="DECIMAL" property="id" />
-		<id column="name" jdbcType="VARCHAR" property="name" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="sn" jdbcType="VARCHAR" property="sn" />
 		<result column="TUNNEL_ID" jdbcType="DECIMAL"
 			property="tunnelId" />
 		<result column="STORE_TYPE_ID" jdbcType="DECIMAL"
@@ -19,7 +20,8 @@
 	<resultMap id="DtoResultMap"
 		type="com.bandweaver.tunnel.common.biz.dto.StoreDto">
 		<id column="ID" jdbcType="DECIMAL" property="id" />
-		<id column="name" jdbcType="VARCHAR" property="name" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="sn" jdbcType="VARCHAR" property="sn" />
 		<result column="tunnel_id" property="tunnelId"/>
 		<result column="store_type_id" property="storeTypeId"/>
 		<result column="camera" jdbcType="VARCHAR" property="camera" />
@@ -29,7 +31,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		ID, name,TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME
+		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
@@ -47,10 +49,10 @@
 		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
             SELECT COMMON_STORE_SEQUENCE.currval from DUAL
         </selectKey>
-		insert into T_COMMON_STORE (ID,name, TUNNEL_ID,
+		insert into T_COMMON_STORE (ID,name, sn, TUNNEL_ID,
 		STORE_TYPE_ID,camera, CRT_TIME
 		)
-		values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},#{tunnelId,jdbcType=DECIMAL},
+		values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{sn,jdbcType=VARCHAR}, #{tunnelId,jdbcType=DECIMAL},
 		#{storeTypeId,jdbcType=DECIMAL},#{camera,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
 		)
 	</insert>
@@ -63,6 +65,9 @@
 			</if>
 			<if test="name != null">
 				name,
+			</if>
+			<if test="sn != null">
+				sn,
 			</if>
 			<if test="tunnelId != null">
 				TUNNEL_ID,
@@ -83,6 +88,9 @@
 			</if>
 			<if test="name != null">
 				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sn != null">
+				#{sn,jdbcType=VARCHAR},
 			</if>
 			<if test="tunnelId != null">
 				#{tunnelId,jdbcType=DECIMAL},
@@ -105,6 +113,9 @@
 			<if test="name != null">
 				name = #{name,jdbcType=VARCHAR},
 			</if>
+			<if test="sn != null">
+				sn = #{sn,jdbcType=VARCHAR},
+			</if>
 			<if test="tunnelId != null">
 				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
 			</if>
@@ -125,6 +136,7 @@
 		update T_COMMON_STORE
 		set TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
 		name = #{name,jdbcType=VARCHAR},
+			sn = #{sn,jdbcType=VARCHAR},
 		STORE_TYPE_ID = #{storeTypeId,jdbcType=DECIMAL},
 		camera = #{camera,jdbcType=VARCHAR},
 		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
@@ -133,12 +145,13 @@
 
 	<insert id="addBatch" useGeneratedKeys="false">
 		insert into T_COMMON_STORE
-		(id,name,tunnel_id,store_type_id,camera,crt_time)
+		(id,name, sn, tunnel_id,store_type_id,camera,crt_time)
 		select COMMON_STORE_SEQUENCE.nextval,a.* from (
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
 			select
 			#{item.name},
+			#{item.sn},
 			#{item.tunnelId},
 			#{item.storeTypeId},
 			#{item.camera},
@@ -148,7 +161,9 @@
 		)a
 	</insert>
 
-	
+	<select id="getList" resultMap="BaseResultMap">
+		select * from t_common_store
+	</select>
 
 	<select id="getStoresByCondition" resultMap="DtoResultMap">
 		select s.* from T_COMMON_STORE s
@@ -158,6 +173,9 @@
 			</if>
 			<if test="name != null and name.trim() !=''">
 				INSTR(name,#{name})>0
+			</if>
+			<if test="sn != null and sn.trim() !=''">
+				INSTR(sn,#{sn})>0
 			</if>
 			<if test="tunnelId != null">
 				and s.tunnel_id = #{tunnelId}
@@ -190,7 +208,11 @@
 	<select id="getByName" resultMap="BaseResultMap">
 		select * from T_COMMON_STORE where name = #{name}
 	</select>
-	
+
+	<select id="getStoreByTunnelAndSN" resultMap="BaseResultMap">
+		select * from T_COMMON_STORE where tunnel_id = #{tunnelId} and sn = #{sn}
+	</select>
+
 	<select id="getStoresByTunnelId" resultMap="BaseResultMap">
 		select * from T_COMMON_STORE where tunnel_id = #{tunnelId}
 	</select>

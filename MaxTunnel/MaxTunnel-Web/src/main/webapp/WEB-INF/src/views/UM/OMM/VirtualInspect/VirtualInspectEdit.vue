@@ -58,7 +58,7 @@
 import VideoControl from "../../../../components/UM/MAM/videoControls/VideoControl";
 import SmViewer from "../../../../components/Common/3D/3DViewer";
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
-import { VideoService } from "../../../../services/VideoService";
+import { VideoService } from "../../../../services/videoService";
 
 export default {
     name: "VirtualInspectEdit",

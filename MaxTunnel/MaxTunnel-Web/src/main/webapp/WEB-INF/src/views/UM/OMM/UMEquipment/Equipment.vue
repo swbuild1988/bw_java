@@ -71,26 +71,11 @@
           ]
         },
       ];
-
-      // this.axios.get("/tunnels").then(result => {
-      //   let { code, data } = result.data;
-      //   // this.equipemnt.leftTree = [];
-      //   var _this = this;
-      //   if (code == 200) {
-      //     data.forEach(a=>{
-      //       let temp={};
-      //       temp.id=a.id;
-      //       temp.name=a.name;
-      //       temp.url='/UM/equipment/query/'+a.id;
-      //       _this.equipemnt.leftTree.push(temp);
-      //     })
-      //   }
-      // });
-      // let element = {};
-      //   element.id = 1;
-      //   element.name = '制定',
-      //   element.url= '/UM/equipment/add'
-      //   this.equipemnt.leftTree.push(element)
     },
+    beforeRouteUpdate (to, from, next) {
+      // console.log("equipment to",to)
+      // console.log("equipment from",from)
+      next()
+    },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
   };
 </script>

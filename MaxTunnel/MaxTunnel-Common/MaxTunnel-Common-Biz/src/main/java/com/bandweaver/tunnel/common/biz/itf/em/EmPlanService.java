@@ -5,6 +5,7 @@ import java.util.List;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
@@ -28,7 +29,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void sendMsg(EmPlan emPlan, String processInstanceId ,Boolean isFinished,Integer objectId);
+	void sendMsg(EmPlan emPlan, String processInstanceId ,Integer objectId);
 
 	/**启动预案 
 	 * @param sectionId
@@ -50,7 +51,7 @@ public interface EmPlanService {
 
 	PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
 
-	List<EmPlanDto> getNodeListByProcessKey(String processKey);
+	List<JSONObject> getNodeListByProcessKey(String processKey);
 
 
 }

@@ -6,6 +6,7 @@ import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class MeasValueAIServiceImpl implements MeasValueAIService {
 
     @Override
     public List<MeasValueAI> getListByObjectAndTime(Integer objectId, Date startTime, Date endTime) {
-        return measValueAIMapper.getListByObjectIdAndTime(objectId, startTime, endTime);
+        List<MeasValueAI> list = measValueAIMapper.getListByObjectIdAndTime(objectId, startTime, endTime);
+        return list == null ? Collections.EMPTY_LIST : list;
     }
 }

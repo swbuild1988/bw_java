@@ -62,97 +62,10 @@ public class MeasObjController {
     @Autowired
     private StoreService storeService;
 
-    /**
-     * 添加测试数据
-     */
-    @RequestMapping(value = "measobjs/addbatch", method = RequestMethod.GET)
-    public JSONObject addTestData() {
-
-        List<MeasObj> objList = new ArrayList<>();
-        List<MeasObjAI> aiList = new ArrayList<>();
-        List<MeasValueAI> aiValList = new ArrayList<>();
-        List<MeasObjDI> diList = new ArrayList<>();
-        List<MeasObjSO> soList = new ArrayList<>();
-
-        int i = 2000;
-
-        List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-        for (TunnelSimpleDto tunnelSimpleDto : tunnelList) {
-            List<StoreDto> storeList = storeService.getStoresByTunnelId(tunnelSimpleDto.getId());
-            for (StoreDto storeDto : storeList) {
-                List<SectionDto> sectionList = sectionService.getSectionsByStoreId(storeDto.getId());
-                for (SectionDto sectionDto : sectionList) {
-
-                    MeasObj obj = new MeasObj();
-                    obj.setId(i++);
-                    obj.setTunnelId(tunnelSimpleDto.getId());
-                    obj.setStoreId(storeDto.getId());
-                    obj.setSectionId(sectionDto.getId());
-//                    obj.setDatatypeId((int) (Math.random() * 2) + 1);
-                    obj.setDatatypeId(1);
-                    if (obj.getDatatypeId() == DataType.AI.getValue()) {
-//                    	obj.setObjtypeId((int) (Math.random() * 6) + 1);
-                        obj.setObjtypeId((int) (Math.random() * 4) + 31);
-
-                        MeasObjAI measObjAI = new MeasObjAI();
-                        measObjAI.setId(obj.getId());
-                        measObjAI.setRefreshTime(new Date());
-                        measObjAI.setCV((double) (Math.random() * 200));
-                        aiList.add(measObjAI);
-                        
-                        //valueai
-                        for (int j = 1; j <= 10 ; j++) {
-                        	 MeasValueAI valueAI = new MeasValueAI();
-                             valueAI.setObjectId(obj.getId());
-                             valueAI.setTime(DateUtil.getFrontDay(new Date(),j));
-                             valueAI.setCV(i*(10-j)*0.1);
-                             aiValList.add(valueAI);
-						}
-                       
-                        
-                    } else if (obj.getDatatypeId() == DataType.DI.getValue()) {
-                        obj.setObjtypeId((int) (Math.random() * 2) + 10);
-
-                        MeasObjDI measObjDI = new MeasObjDI();
-                        measObjDI.setId(obj.getId());
-                        measObjDI.setRefreshTime(new Date());
-                        measObjDI.setCV((int) (Math.random() * 2) == 0 ? false : true);
-                        diList.add(measObjDI);
-
-                    } else if (obj.getDatatypeId() == DataType.SO.getValue()) {
-                        obj.setObjtypeId(20);
-
-                        MeasObjSO measObjSO = new MeasObjSO();
-                        measObjSO.setId(obj.getId());
-                        measObjSO.setRefreshTime(new Date());
-                        measObjSO.setCV(" ");
-                        soList.add(measObjSO);
-                    }
-                    obj.setName("监测对象" + i);
-                    obj.setActived(true);
-                    obj.setDescription("");
-                    obj.setLongitude((double) Math.random() + "");
-                    obj.setLatitude((double) Math.random() + "");
-                    obj.setHeight((double) Math.random() + "");
-                    obj.setDeviation((double) Math.random());
-                    objList.add(obj);
-
-                }
-
-            }
-        }
-
-        LogUtil.info("objList : " + objList.size());
-        LogUtil.info("aiList : " + aiList.size());
-        LogUtil.info("diList : " + diList.size());
-        LogUtil.info("aiValList : " + aiValList.size());
-        measObjService.addTestData(objList, aiList, diList,aiValList);
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-    }
 
    
     //*************************************************************************************
-    //***********后台管理系统接口-start TODO
+    //***********后台管理系统接口-start-TODO
     //*************************************************************************************
     
     /**添加measObj
@@ -175,10 +88,24 @@ public class MeasObjController {
      */
     @RequestMapping(value = "measobjs", method = RequestMethod.POST)
     public JSONObject addObj(@RequestBody MeasObj obj) {
-    	
         measObjModuleCenter.insertMeasObj(obj);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
+    
+    
+    /**ajax检验监测对象ID是否重复
+     * @param id
+     * @return   
+     * @author shaosen
+     * @Date 2018年11月21日
+     */
+    @RequestMapping(value="measobjs/{id}/ajax",method=RequestMethod.GET)
+    public JSONObject ajax(@PathVariable Integer id) {
+    	MeasObj measObj = measObjModuleCenter.getMeasObj(id);
+    	boolean result = measObj == null ? true : false;
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
+    }
+    
     
     /**批量添加
      * @param   list
@@ -258,7 +185,7 @@ public class MeasObjController {
      * @param objtypeIds	list，格式：[1,2,3,4...]
      * @param pageNum 必须
      * @param pageSize 必须
-     * @return {"msg":"请求成功","code":"200","data":{"total":103,"list":[{"id":1001,"tunnelId":1,"storeId":1,"areaId":1,"sectionId":1,"name":"温度监测仪1","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.003534597099157488","latitude":"0.18009738011735688","height":"0.5474121265387349","deviation":0.460808326715716,"cv":51.3145960835601},{"id":1002,"tunnelId":1,"storeId":3,"areaId":1,"sectionId":45,"name":"温度监测仪2","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":1,"objtypeName":"温度","actived":true,"description":null,"longitude":"0.4386016987524316","latitude":"0.48531866384309663","height":"0.6030770379809333","deviation":0.28828624319183,"cv":52.3145960835601}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":52,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6,7,8],"navigateFirstPage":1,"navigateLastPage":8,"firstPage":1,"lastPage":8}}
+     * @return {"msg":"请求成功","code":"200","data":{"total":1,"list":[{"id":8009,"tunnelId":3,"storeId":3,"areaId":1,"sectionId":42,"name":"风机类电表","datatypeId":1,"datatypeName":"模拟量输入","objtypeId":31,"objtypeName":"风机类电表","actived":true,"description":null,"longitude":"0.4386016987524316","latitude":"0.48531866384309663","height":"0.6030770379809333","deviation":0.28828624319183,"cv":101.476279675469,"valueAIList":null,"section":{"id":42,"name":"20区-污水仓","tunnelId":null,"totalCableNumber":5,"camera":null,"startPoint":null,"endPoint":null,"crtTime":1535611491000,"store":{"id":4,"name":"污水仓","tunnel":{"id":1,"name":"古城大街"},"storeType":{"id":4,"name":"污水仓","crtTime":1535611490000},"camera":null,"crtTime":1535611490000},"area":{"id":20,"name":"20区","location":"1","tunnelId":1,"camera":null,"crtTime":1535611490000}}}],"pageNum":1,"pageSize":5,"size":1,"startRow":1,"endRow":1,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"lastPage":1,"firstPage":1}}
      * @author shaosen
      * @date 2018年7月18日
      */
@@ -278,7 +205,7 @@ public class MeasObjController {
     
     
     //*************************************************************************************
-    //***********后台管理系统接口-end TODO
+    //***********后台管理系统接口-end-TODO
     //*************************************************************************************
     
  

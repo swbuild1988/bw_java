@@ -102,11 +102,11 @@ import video from '../../../../components/Common/Video/VideoComponent'
           _this.planData.process.forEach(a => {
             _this.stepList.forEach(b => {
               if(b.stepName==a.node){
-                if(a.status=="完成"){
+                if(a.status== 1){
                   b.statusVal=1;
                   b.statusStr="已完成"
                 }
-                else if(a.status=="进行中"){
+                else if(a.status== 2){
                   b.statusVal=2;
                   b.statusStr="进行中"
                   if(a.node=="值班人员确认"){

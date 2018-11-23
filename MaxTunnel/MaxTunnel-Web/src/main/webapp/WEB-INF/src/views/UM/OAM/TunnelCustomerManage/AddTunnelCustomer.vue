@@ -1,6 +1,5 @@
 <template>
 <div :style="backStyle">
-    <div class="backImgStyle">
     <Form ref="addCustomerInfo" :model="addCustomerInfo"  :rules="ruleValidate" :label-width="120">
         <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加客户信息</h2>
         <h2 class="formTitle" v-show="pageType==pageTypes.Edit">修改客户信息</h2>
@@ -21,7 +20,6 @@
             <Button type="ghost"  @click="handleReset('addCustomerInfo')" style="margin-left: 8px">取消</Button>
         </FormItem>
     </Form>
-    </div>
 </div>
 </template>
 <script>
@@ -58,11 +56,15 @@ export default {
                 ]
             },
         //   validateTelRules: true,
-          isDisable:false,
+            isDisable:false,
             backStyle:{
                 backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
                 height: '100%',
-                position: 'relative'
+                position: 'relative',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%',
+                paddingTop: '40px'
             }
         }
     },
@@ -133,17 +135,9 @@ export default {
 <style scoped>
 .ivu-form.ivu-form-label-right{
     width: 540px;
-    margin: 30px auto;
     background: #fff;
     padding: 10px 20px;
     border-radius: 4px;
-}
-.backImgStyle{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background:rgba(255,255,255,0.5);
+    margin: 0 auto;
 }
 </style>

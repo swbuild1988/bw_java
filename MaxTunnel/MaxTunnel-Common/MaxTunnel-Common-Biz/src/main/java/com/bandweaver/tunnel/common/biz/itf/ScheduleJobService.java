@@ -57,7 +57,7 @@ public interface ScheduleJobService {
 	 */
 	public void updateJobStatus(Integer id, Integer jobstatus) throws SchedulerException, ClassNotFoundException;
 
-	public ScheduleJob getByJobNameAndJobGroup(String jobName, String jobGroup);
+	public ScheduleJob getByJobNameAndJobGroup(String jobName);
 
 	public void delete(Integer id) throws SchedulerException;
 }

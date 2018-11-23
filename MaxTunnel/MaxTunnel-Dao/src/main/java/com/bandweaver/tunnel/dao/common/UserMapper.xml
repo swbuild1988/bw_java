@@ -162,4 +162,11 @@
 	<select id="getUserDtoById" resultMap="DtoResultMap">
 		select * from t_security_user where id = #{id}
 	</select>
+	
+	<select id="getUsersByRoleDesc" resultMap="BaseResultMap">
+		select u.id,u.name 
+		from t_security_user u,t_security_role r,t_security_user_role ur 
+		where u.id = ur.user_id and r.id = ur.role_id 
+		and r.role_desc = #{roleDesc}
+	</select>
 </mapper>

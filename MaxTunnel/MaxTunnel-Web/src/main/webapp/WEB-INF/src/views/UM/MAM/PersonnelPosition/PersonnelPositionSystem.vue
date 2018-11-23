@@ -51,6 +51,9 @@
       // });
 
     },
+    beforeRouteUpdate (to, from, next) {
+      next()
+    }, 
     mounted() {
     },
     methods: {

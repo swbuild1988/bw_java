@@ -105,9 +105,9 @@ public interface MeasObjService {
 	 */
 	double getMeasObjCVByIdAndDataType(Integer objId, Integer datatypeId);
 
-	List<MeasObj> getMeasObjByTargetVal(Integer targetValue);
+	List<MeasObj> getMeasObjByTargetVal(String targetValue);
 
-	List<MeasObj> getMeasObjsByTargetValAndVars(Integer targetValue,Integer sectionId);
+	List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue,Integer sectionId);
 	
 
 	

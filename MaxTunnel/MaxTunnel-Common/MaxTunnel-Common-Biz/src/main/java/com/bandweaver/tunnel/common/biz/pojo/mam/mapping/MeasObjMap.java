@@ -1,7 +1,15 @@
 package com.bandweaver.tunnel.common.biz.pojo.mam.mapping;
 
-public class MeasObjMap {
-    private Integer id;
+import java.io.Serializable;
+import java.util.Date;
+
+public class MeasObjMap implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private Integer objectId;
 
@@ -10,6 +18,8 @@ public class MeasObjMap {
     private Integer objectId2;
 
     private Integer outputValue;
+    
+    private Date crtTime;
 
     public Integer getId() {
         return id;
@@ -50,4 +60,19 @@ public class MeasObjMap {
     public void setOutputValue(Integer outputValue) {
         this.outputValue = outputValue;
     }
+
+	public Date getCrtTime() {
+		return crtTime;
+	}
+
+	public void setCrtTime(Date crtTime) {
+		this.crtTime = crtTime;
+	}
+
+	@Override
+	public String toString() {
+		return "MeasObjMap [id=" + id + ", objectId=" + objectId + ", inputValue=" + inputValue + ", objectId2="
+				+ objectId2 + ", outputValue=" + outputValue + ", crtTime=" + crtTime + "]";
+	}
+    
 }

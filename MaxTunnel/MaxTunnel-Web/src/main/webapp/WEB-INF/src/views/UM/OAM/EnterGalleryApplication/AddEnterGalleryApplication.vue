@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :style="backStyle">
     <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="160" :rules="ruleValidate" @submit.native.prevent>
         <h2 class="formTitle">添加入廊申请</h2>
         <FormItem label="申请人所属公司：" prop="staffCompany">
@@ -19,7 +19,8 @@
             <!-- <Input type="text" v-model="addEnterGalleryApplication.staffId" readonly></Input> -->
         </FormItem>
         <FormItem label="审批人：" prop="approverId" class="ivu-form-item-required">
-            <Input v-model="addEnterGalleryApplication.approverId" readonly></Input>
+            <Input v-model="addEnterGalleryApplication.approverId" readonly style="display: none"></Input>
+            <Input v-model="approver.name" readonly></Input>
         </FormItem>
         <FormItem label="管廊：" prop="tunnelId">
             <Select v-model="addEnterGalleryApplication.tunnelId">
@@ -90,6 +91,16 @@ import { EnterGalleryService } from '../../../../services/enterGalleryService'
 export default {
     data(){ 
         return{
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
+            },
+            approver:{},
             addEnterGalleryApplication:{
                 staffCompany: null,
                 positionId: null,
@@ -100,7 +111,7 @@ export default {
                 visitorNumber: 1,
                 visitorCompany: null,
                 visitorInfo: null,
-                approverId: 1,  
+                approverId: null,  
                 remark: ''
             },
             ruleValidate:{
@@ -181,6 +192,13 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
+        this.axios.get('roles/users').then(res=>{
+            let{ code,data } = res.data
+            if(code==200){
+                this.approver = data[0]
+                this.addEnterGalleryApplication.approverId = data[0].id
+            }
+        })
     },
     methods:{
         handleAdd () {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="backStyle">
         <Form :model="overhaulData" :label-width="140">
             <h2 class="formTitle" v-show="this.pageType==4">提交维修结果</h2>
             <h2 class="formTitle" v-show="this.pageType==1">维修工单详情</h2>
@@ -75,7 +75,16 @@ export default {
             tunnel: [],
             typeKey: null,
             isDisable: false,
-            tip: null
+            tip: null,
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '30px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
+            }
         }    
     },
     mounted(){
@@ -145,7 +154,7 @@ export default {
 <style scoped>
 .ivu-form.ivu-form-label-right{
     width: 700px;
-    margin: 10px auto;
+    margin: 0px auto;
     background: #fff;
     padding: 10px 20px;
 }

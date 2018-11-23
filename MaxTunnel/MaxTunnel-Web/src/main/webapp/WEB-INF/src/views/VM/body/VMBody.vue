@@ -38,17 +38,9 @@
 </template>
 
 <script>
-import GalleryMessage from "../../../components/VM/VMBodyLeft/GalleryMessageChart";
-import Equipment from "../../../components/VM/VMBodyLeft/EquipmentChart";
-import Fault from "../../../components/VM/VMBodyLeft/FaultChart";
 import VmMap from "../../../components/VM/VMBodyCenter/Map";
-import AnnualPipe from "../../../components/VM/VMBodyCenter/AnnualPipeChart";
-import BuddhaRidge from "../../../components/VM/VMBodyCenter/BuddhaRidgeChart";
-import Untreated from "../../../components/VM/VMBodyCenter/UntreatedChart";
-import AlarmMonitor from "../../../components/VM/VMBodyCenter/AlarmMonitorChart";
 import VmVideo from "../../../components/VM/VMMainRight/Video";
 import ThreeDimensional from "../../../components/VM/VMMainRight/ThreeDimensional";
-
 import VmDataModel from "../../../components/VM/VMDataModel";
 
 export default {
@@ -60,45 +52,11 @@ export default {
             ModelData4: null,
             ModelData5: null,
             ModelData6: null,
-            ModelData7: null,
-            equipment: {
-                barSimpleid: "equipment",
-                requestUrl: "equipments/type/count"
-            },
-            fault: {
-                radarChartid: "fault",
-                requestUrl: "equipments/type/status/count"
-            },
-            pipeRack: {
-                pieChartid: "pipeRack",
-                requestUrl: "tunnels/items/energies"
-            },
-            buddhaRidge: {
-                timeSeriesid: "buddhaRidge",
-                requestUrl: "tunnels/3/energies/one-year/1530255046"
-            },
-            stackedBar: {
-                timeSeriesid: "stackedBar",
-                requestUrl: ""
-            },
-            monitor: {
-                stackedBarid: "monitor"
-            },
-            untreated: {
-                basiColumnid: "untreated",
-                requestUrl: "tunnels/defectcount"
-            }
+            ModelData7: null
         };
     },
     components: {
-        GalleryMessage,
-        Fault,
-        Equipment,
         VmMap,
-        AnnualPipe,
-        BuddhaRidge,
-        Untreated,
-        AlarmMonitor,
         VmVideo,
         ThreeDimensional,
         VmDataModel
@@ -121,180 +79,131 @@ export default {
         },
         initModelData2() {
             this.ModelData2 = this.getModelData("vmModel2");
-            this.ModelData2.parameters.option = {
-                textStyle: {
-                    color: "rgba(255, 255, 255, 0.3)"
-                },
-                color: ["#61a0a8"],
-                tooltip: {},
-                xAxis: {
-                    axisLabel: {
-                        interval: 0,
-                        rotate: 40,
-                        textStyle: {
-                            color: "#F1F2F3"
-                        }
-                    }
-                },
-                yAxis: {
-                    axisLabel: {
-                        interval: 1,
-                        textStyle: {
-                            color: "#F1F2F3"
-                        }
-                    }
-                },
-                series: [
-                    {
-                        type: "bar",
-                        barMaxWith: "100",
-                        itemStyle: {
-                            normal: {
-                                color: new this.$echarts.graphic.LinearGradient(
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    [
-                                        { offset: 0, color: "#346699" },
-                                        { offset: 1, color: "#70ABE8" }
-                                    ]
-                                )
-                            },
-                            emphasis: {
-                                color: new this.$echarts.graphic.LinearGradient(
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    [
-                                        { offset: 0, color: "#70ABE8" },
-                                        { offset: 1, color: "#346699" }
-                                    ]
-                                )
-                            }
-                        }
-                    }
-                ]
-            };
             console.log("vmModelData2", this.ModelData2);
         },
         initModelData3() {
             this.ModelData3 = this.getModelData("vmModel3");
-            this.ModelData3.parameters.option = {
-                title: {},
-                tooltip: {},
-                legend: {
-                    data: []
-                },
-                radar: {
-                    name: {
-                        formatter: `{value}`,
-                        textStyle: {}
-                    },
-                    splitArea: {
-                        areaStyle: {
-                            color: ["#001A27"]
-                        }
-                    }
-                },
-                series: [
-                    {
-                        type: "radar"
-                    }
-                ]
-            };
+            // this.ModelData3.parameters.option = {
+            //     title: {},
+            //     tooltip: {},
+            //     legend: {
+            //         data: []
+            //     },
+            //     radar: {
+            //         name: {
+            //             formatter: `{value}`,
+            //             textStyle: {}
+            //         },
+            //         splitArea: {
+            //             areaStyle: {
+            //                 color: ["#001A27"]
+            //             }
+            //         }
+            //     },
+            //     series: [
+            //         {
+            //             type: "radar"
+            //         }
+            //     ]
+            // };
             console.log("vmModelData3", this.ModelData3);
         },
         initModelData4() {
             this.ModelData4 = this.getModelData("vmModel4");
-            this.ModelData4.parameters.option = {
-                title: {},
-                tooltip: {
-                    trigger: "item",
-                    formatter: params =>
-                        `${
-                            params.name
-                        } : <span style="font-weight: bold;color:${
-                            params.color
-                        } ;">${params.value}</span> kwh`
-                },
-                series: [
-                    {
-                        type: "pie",
-                        radius: [40, 100],
-                        center: ["50%", "50%"],
-                        label: {
-                            normal: {
-                                show: false,
-                                position: "center",
-                                textStyle: {}
-                            },
-                            emphasis: {
-                                show: true,
-                                textStyle: {
-                                    fontSize: "10",
-                                    fontWeight: "bold"
-                                }
-                            }
-                        },
-                        labelLine: {
-                            normal: {
-                                show: false,
-                                lineStyle: {
-                                    color: "rgba(255, 255, 255, 0.3)"
-                                },
-                                smooth: 0.2,
-                                length: 10,
-                                length2: 20
-                            }
-                        },
-                        animationType: "scale",
-                        animationEasing: "elasticOut"
-                    }
-                ]
-            };
+            // this.ModelData4.parameters.option = {
+            //     title: {},
+            //     tooltip: {
+            //         trigger: "item",
+            //         formatter: params =>
+            //             `${
+            //                 params.name
+            //             } : <span style="font-weight: bold;color:${
+            //                 params.color
+            //             } ;">${params.value}</span> kwh`
+            //     },
+            //     series: [
+            //         {
+            //             type: "pie",
+            //             radius: [40, 100],
+            //             center: ["50%", "50%"],
+            //             label: {
+            //                 normal: {
+            //                     show: false,
+            //                     position: "center",
+            //                     textStyle: {}
+            //                 },
+            //                 emphasis: {
+            //                     show: true,
+            //                     textStyle: {
+            //                         fontSize: "10",
+            //                         fontWeight: "bold"
+            //                     }
+            //                 }
+            //             },
+            //             labelLine: {
+            //                 normal: {
+            //                     show: false,
+            //                     lineStyle: {
+            //                         color: "rgba(255, 255, 255, 0.3)"
+            //                     },
+            //                     smooth: 0.2,
+            //                     length: 10,
+            //                     length2: 20
+            //                 }
+            //             },
+            //             animationType: "scale",
+            //             animationEasing: "elasticOut"
+            //         }
+            //     ]
+            // };
             console.log("vmModelData4", this.ModelData4);
         },
         initModelData5() {
             this.ModelData5 = this.getModelData("vmModel5");
-            this.ModelData5.parameters.option = {
-                series: [
-                    {
-                        type: "line",
-                        areaStyle: {
-                            normal: {
-                                color: new this.$echarts.graphic.LinearGradient(
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    [
-                                        {
-                                            offset: 0,
-                                            color: "#699DCE"
-                                        },
-                                        {
-                                            offset: 1,
-                                            color: "#05202E"
-                                        }
-                                    ]
-                                )
-                            }
-                        }
-                    }
-                ]
-            };
+            // this.ModelData5.parameters.option = {
+            //     series: [
+            //         {
+            //             type: "line",
+            //             areaStyle: {
+            //                 normal: {
+            //                     color: new this.$echarts.graphic.LinearGradient(
+            //                         0,
+            //                         0,
+            //                         0,
+            //                         1,
+            //                         [
+            //                             {
+            //                                 offset: 0,
+            //                                 color: "#699DCE"
+            //                             },
+            //                             {
+            //                                 offset: 1,
+            //                                 color: "#05202E"
+            //                             }
+            //                         ]
+            //                     )
+            //                 }
+            //             }
+            //         }
+            //     ]
+            // };
             console.log("vmModelData5", this.ModelData5);
         },
         initModelData6() {
             this.ModelData6 = this.getModelData("vmModel6");
-            this.ModelData6.parameters.option = {};
+            // this.ModelData6.parameters.option = {
+            //     xAxis: {
+            //         axisLabel: {
+            //             interval: 0,
+            //             rotate: 40
+            //         }
+            //     }
+            // };
             console.log("vmModelData6", this.ModelData6);
         },
         initModelData7() {
             this.ModelData7 = this.getModelData("vmModel7");
-            this.ModelData7.parameters.option = {};
+            // this.ModelData7.parameters.option = {};
             console.log("vmModelData7", this.ModelData7);
         },
         getModelData(id) {
@@ -332,8 +241,6 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    background: url("../../../assets/VM/bg_image.png") no-repeat;
-    background-size: 100% 100%;
 }
 #main .MainLeft {
     padding-left: 0.7%;
@@ -387,7 +294,7 @@ export default {
 #mainCentreBottom >>> .VmModel7 {
     position: relative;
     height: 100%;
-    width: 24.5%;
+    width: 24%;
     display: inline-block;
     vertical-align: top;
 }

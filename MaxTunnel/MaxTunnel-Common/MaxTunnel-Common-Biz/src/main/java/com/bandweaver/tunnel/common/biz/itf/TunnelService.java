@@ -73,4 +73,6 @@ public interface TunnelService {
 	void deleteBatch(List<Integer> id_list);
 
 	Tunnel getByName(String name);
+
+	Tunnel getBySN(String sn);
 }

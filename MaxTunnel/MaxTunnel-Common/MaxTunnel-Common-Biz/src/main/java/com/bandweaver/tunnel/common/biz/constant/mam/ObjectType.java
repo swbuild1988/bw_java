@@ -14,17 +14,22 @@ public enum ObjectType {
     CO("一氧化碳", 6, 1, 1),
     VIDEO("视频", 7, 3, 7),
     DISTRIBUTET("分布式温度", 8, 1, 1),
-    ROBOT("机器人", 9, 3, 97),
-    FAN("风机", 10, 3, 3),
-    LIGHT("灯", 11, 3, 3),
-    POSITION("定位设备", 20, 3, 97),
+    ROBOT("机器人", 9, 4, 97),
+    FAN("风机", 10, 1, 3),
+    LIGHT("灯", 11, 4, 3),
+    POSITION("定位设备", 20, 4, 97),
     LIQUID("液位仪", 21, 1, 1),
 
-
-    ELECTRICITY_METER1("风机类电表", 31, 1, 1),
-    ELECTRICITY_METER2("灯类电表", 32, 1, 1),
-    ELECTRICITY_METER3("水泵类电表", 33, 1, 1),
-    ELECTRICITY_METER4("其他类电表", 34, 1, 1),
+    //普通类电表
+    ELECTRICITY_METER1("风机类电表", 31, 4, 1),
+    ELECTRICITY_METER2("照明类电表", 32, 4, 1),
+    ELECTRICITY_METER3("水泵类电表", 33, 4, 1),
+    ELECTRICITY_METER4("百叶类电表", 34, 4, 1),
+    ELECTRICITY_METER5("井盖类电表", 35, 4, 1),
+    //应急类电表
+    ELECTRICITY_METER6("应急照明类电表", 36, 4, 1),
+    //其他类电表
+    ELECTRICITY_METER7("其他类电表", 37, 4, 1),
 
     ALTEROR("声光报警", 41, 3, 3),
 
@@ -36,8 +41,8 @@ public enum ObjectType {
     ENTRANCE_GUARD("门禁", 55, 3, 3),
     ELECTRONIC_COVERS("电子井盖", 56, 3, 3),
     INFRARED("红外", 57, 3, 3),
-    BLINDS("百叶", 58, 3, 3),
-    PUMP("水泵", 59, 3, 3);
+    BLINDS("百叶", 58, 1, 3),
+    PUMP("水泵", 59, 1, 3);
 
     private String name;
     private int value;
@@ -67,7 +72,40 @@ public enum ObjectType {
                 ELECTRICITY_METER1,
                 ELECTRICITY_METER2,
                 ELECTRICITY_METER3,
-                ELECTRICITY_METER4
+                ELECTRICITY_METER4,
+                ELECTRICITY_METER5,
+                ELECTRICITY_METER6,
+                ELECTRICITY_METER7
+        };
+    }
+    
+    /**
+     * 返回能耗类型是普通的对象类型数组
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月19日
+     */
+    public static ObjectType[] getCommon() {
+        return new ObjectType[]{
+                ELECTRICITY_METER1,
+                ELECTRICITY_METER2,
+                ELECTRICITY_METER3,
+                ELECTRICITY_METER4,
+                ELECTRICITY_METER5,
+                ELECTRICITY_METER7
+        };
+    }
+    
+    /**
+     * 返回能耗类型为应急的对象类型数组
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月19日
+     */
+    public static ObjectType[] getEmergency() {
+        return new ObjectType[]{
+                ELECTRICITY_METER6,
+                ELECTRICITY_METER7
         };
     }
 
@@ -115,7 +153,7 @@ public enum ObjectType {
         for (ObjectType dl : ObjectType.values()) {
             if (dl.getValue() == value) return dl;
         }
-        return NONE;
+        return null;
     }
 
     public static List<ObjectType> getEnumByMonitorType(int monitorType) {

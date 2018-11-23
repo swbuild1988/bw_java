@@ -59,5 +59,5 @@ public interface UserService {
 	 */
 	void deleteById(Integer id);
 
-
+	List<User> getUserByRoleDesc(String roleDesc);
 }

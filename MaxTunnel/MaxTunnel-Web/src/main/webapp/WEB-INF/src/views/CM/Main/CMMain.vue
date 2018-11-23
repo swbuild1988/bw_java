@@ -87,7 +87,7 @@
           childNode:[
             {
               id:41,
-              name: "管廊配置",
+              name: "MaxView终端配置",
               url: "/CMMain/config"
             },{
               id: 42,
@@ -97,6 +97,10 @@
               id: 43,
               name: '视频配置',
               url: '/CMMain/queryVideo'
+            },{
+              id: 44,
+              name: '监测对象配置',
+              url: '/CMMain/MeasObj'
             }
           ]
         },

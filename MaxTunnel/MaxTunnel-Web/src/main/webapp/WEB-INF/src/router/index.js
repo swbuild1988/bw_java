@@ -22,6 +22,7 @@ import UMDetailEquipment from '../views/UM/OMM/UMEquipment/DetailEquipment.vue'
 import ToolHistoryCount from '../views/UM/OMM/UMEquipment/toolHistoryCount.vue'
 import BackupHistoryCount from '../views/UM/OMM/UMEquipment/BackupHistoryCount.vue'
 import TunnelHistoryCount from '../views/UM/OMM/UMEquipment/TunnelHistoryCount.vue'
+import UMAddBackUp from '../views/UM/OMM/UMEquipment/AddBackUp.vue'
 //能耗管理
 import TunnelEnergyHomePage from '../views/UM/OAM/EnergyConsumptionManage/TunnelEnergyHomePage'
 import TunnelEnergyDetial from '../views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetail'
@@ -76,8 +77,8 @@ import UMAddRelatedUnits from '../views/UM/EM/RelatedUnits/AddRelatedUnits'
 /*预案管理*/
 import UMPlans from '../views/UM/EM/Plan/Plan'
 import DetialPlan from '../views/UM/EM/Plan/DetialPlan'
-import  ExecutePlan from  '../views/UM/EM/Plan/ExecutePlan'
-import  textPlan from '../views/UM/EM/Plan/TextPlan'
+import ExecutePlan from '../views/UM/EM/Plan/ExecutePlan'
+import textPlan from '../views/UM/EM/Plan/TextPlan'
 /*灾害管理*/
 import UMDisaster from '../views/UM/EM/Disaster/Disaster'
 /*巡检任务 */
@@ -125,6 +126,17 @@ import DataPatrolTask from '../views/UM/MAM/DataAnalysis/DataChart/patrolTaskDat
 import EnergyConsumptionReport from '../views/UM/MAM/DataAnalysis/DataChart/energyConsumptionReport'
 import QueryAlarmData from '../views/UM/MAM/DataAnalysis/QueryAlarmData'
 import QueryData from '../views/UM/MAM/DataAnalysis/QueryData'
+import DataCompare from '../views/UM/MAM/DataAnalysis/DataCompare'
+
+// 管廊环境监测
+import UMListTunnelEnvironment from '../views/UM/MAM/TunnelEnvironment/ListTunnelEnvironment'
+import UMTunnelEnvironment from '../views/UM/MAM/TunnelEnvironment/TunnelEnvironment'
+import UMDetailsTunnelEnvironment from '../views/UM/MAM/TunnelEnvironment/DetailsTunnelEnvironment'
+
+// 管廊安防监测
+import UMListTunnelSafety from '../views/UM/MAM/TunnelSafety/ListTunnelSafety'
+import UMTunnelSafety from '../views/UM/MAM/TunnelSafety/TunnelSafety'
+import UMDetailsTunnelSafety from '../views/UM/MAM/TunnelSafety/DetailsTunnelSafety'
 
 
 
@@ -142,6 +154,7 @@ import StaffControl from '../views/CM/Staff/StaffControl'
 import EmPlanControl from '../views/CM/EmPlanControl/EmPlanControl'
 import QueryVideoService from '../views/CM/Video/QueryVideoService'
 import QueryVideo from '../views/CM/Video/QueryVideo'
+import MeasObj from '../views/CM/MeasObj/MeasObj'
 let routes = [{
   path: '/UMLogin',
   component: UMLogin,
@@ -154,73 +167,63 @@ let routes = [{
   path: '/CMLogin',
   component: CMLogin,
   name: '后台管理登录',
-},
- {
+}, {
   path: '/CMMain',
   component: CMMain,
   name: '后台管理主页',
-  children: [
-    {
-      path: 'user',
-      component: UserInfoManage,
-      name: '用户信息管理'
-    },
-    {
-      path: 'store',
-      component: BarnManage,
-      name: '管仓管理'
-    },
-    {
-      path: 'storeType',
-      component: StoreType,
-      name: '管仓类型管理'
-    },
-    {
-      path: 'section',
-      component: SectionControl,
-      name: '区段管理'
-    },
-    {
-      path: 'pipe',
-      component: PipeManage,
-      name: '管廊管理'
-    },
-    {
-      path: 'config',
-      component: MaxViewConfig,
-      name: '配置管理'
-    },
-    {
-      path: 'schedulejob',
-      component: ScheduleJob,
-      name: '定时任务调度管理'
-    },
-    {
-      path: 'area',
-      component: AreaController,
-      name: '区域管理'
-    },
-    { 
-      path: 'staff',
-      component: StaffControl,
-      name: '员工管理'
-    },
-    {
-      path: 'EmPlan',
-      component: EmPlanControl,
-      name: '应急管理'
-    },
-    {
-      path: 'queryVideoService',
-      component: QueryVideoService,
-      name: '视频服务查询'
-    },
-    {
-      path: 'queryVideo',
-      component: QueryVideo,
-      name: '视频查询'
-    }
-  ],
+  children: [{
+    path: 'user',
+    component: UserInfoManage,
+    name: '用户信息管理'
+  }, {
+    path: 'store',
+    component: BarnManage,
+    name: '管仓管理'
+  }, {
+    path: 'storeType',
+    component: StoreType,
+    name: '管仓类型管理'
+  }, {
+    path: 'section',
+    component: SectionControl,
+    name: '区段管理'
+  }, {
+    path: 'pipe',
+    component: PipeManage,
+    name: '管廊管理'
+  }, {
+    path: 'config',
+    component: MaxViewConfig,
+    name: '配置管理'
+  }, {
+    path: 'schedulejob',
+    component: ScheduleJob,
+    name: '定时任务调度管理'
+  }, {
+    path: 'area',
+    component: AreaController,
+    name: '区域管理'
+  }, {
+    path: 'staff',
+    component: StaffControl,
+    name: '员工管理'
+  }, {
+    path: 'EmPlan',
+    component: EmPlanControl,
+    name: '应急管理'
+  }, {
+    path: 'queryVideoService',
+    component: QueryVideoService,
+    name: '视频服务查询'
+  }, {
+    path: 'queryVideo',
+    component: QueryVideo,
+    name: '视频查询'
+  }, {
+    path: 'MeasObj',
+    component: MeasObj,
+    name: '监测对象'
+  }],
 }, {
   path: '/404',
   component: NotFound,
@@ -270,6 +273,9 @@ let routes = [{
         path: 'homePage',
         component: UMPatrolHomePage,
         name: 'UMPatrolHomePage',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
       }]
     }, {
       path: 'patrolTask',
@@ -303,7 +309,10 @@ let routes = [{
       children: [{
         path: 'homePage',
         component: UMEquipmentHomePage,
-        name: '设备管理主页'
+        name: '设备管理主页',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
       }, {
         path: 'queryequipment',
         component: UMQueryEquipment,
@@ -319,7 +328,10 @@ let routes = [{
       }, {
         path: 'details/:id',
         component: UMDetailEquipment,
-        name: 'UMDetailEquipment'
+        name: 'UMDetailEquipment',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
       }, {
         path: 'add',
         component: UMAddEquipment,
@@ -336,6 +348,10 @@ let routes = [{
         path: 'tunnelHistoryCount',
         component: TunnelHistoryCount,
         name: '管廊设备历史统计'
+      },{
+        path: 'addBackUp',
+        component: UMAddBackUp,
+        name: '添加备品'
       }]
     }, {
       path: 'defect',
@@ -357,7 +373,7 @@ let routes = [{
         path: 'distribute/:id',
         name: 'UMDistributeDefect',
         component: UMDistributeDefect
-      },{
+      }, {
         path: 'details/:id',
         component: UMAddOverhaul,
         name: 'DefectDetailsOverhaul'
@@ -466,6 +482,44 @@ let routes = [{
         name: '管廊本体监控列表'
       }]
     }, {
+      path: 'TunnelEnvironment',
+      name: '管廊环境监控',
+      component: UMTunnelEnvironment,
+      children: [{
+        path: 'list/:id',
+        component: UMListTunnelEnvironment,
+        name: '管廊环境监控列表',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
+      }, {
+        path: 'details/:id',
+        component: UMDetailsTunnelEnvironment,
+        name: '管廊环境监控详情',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
+      }]
+    }, {
+      path: 'TunnelSafety',
+      name: '管廊安防监控',
+      component: UMTunnelSafety,
+      children: [{
+        path: 'list/:id',
+        component: UMListTunnelSafety,
+        name: '管廊安防监控列表',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
+      }, {
+        path: 'details/:id',
+        component: UMDetailsTunnelSafety,
+        name: '管廊安防监控详情',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
+      }]
+    }, {
       path: 'PipelineSupervise',
       name: '管线本体监控',
       component: UMPipelineSupervise,
@@ -521,7 +575,10 @@ let routes = [{
         // path: 'tunnel/:id',
         path: 'tunnel',
         component: UMDetailsPersonnelPosition,
-        name: '人员定位详情'
+        name: '人员定位详情',
+        meta: {
+          keepAlive: true //需要被缓存
+        }
       }, {
         path: 'equipmentDistribution',
         name: '设备分配',
@@ -540,6 +597,9 @@ let routes = [{
       path: 'virtualInspect',
       name: '虚拟巡检',
       component: UMVirtualInspect,
+      meta: {
+        keepAlive: true //需要被缓存
+      }
     }, {
       path: 'virtualInspectEdit',
       name: '编辑虚拟巡检',
@@ -577,14 +637,12 @@ let routes = [{
           path: 'details/:id',
           component: UMAddOverhaul,
           name: 'UWDetailsOverhaul'
-        },
-        {
+        }, {
           //确认出廊
           path: 'applicationApprove/:processInstanceId/:processType',
           component: UMApplicationExamineApprove,
           name: 'newsExamineApprove'
-        },
-        {
+        }, {
           path: 'distribute/:id',
           component: UMDistributeDefect,
           name: 'newsDistributeDefect',
@@ -611,30 +669,25 @@ let routes = [{
       path: 'myTasks',
       name: '我的任务',
       component: UMMyTasks,
-      children: [
-        {
+      children: [{
           path: 'query',
           component: UMQueryMyTaskList,
           name: 'UMQueryMyTaskList'
-        },
-        {
+        }, {
           path: 'queryMyApprove/:processInstanceId',
-          component:UMApplicationExamineApprove,
+          component: UMApplicationExamineApprove,
           name: 'queryMyApprove'
-        },
-        {
+        }, {
           //工单详情 未完结
           path: 'details/:id',
           component: UMAddOverhaul,
           name: 'TaskDetailsOverhaulFalse'
-        },
-        {
+        }, {
           ////工单详情 已完结
           path: 'details/:id',
           component: UMAddOverhaul,
           name: 'TaskDetailsOverhaulTrue'
-        },
-        {
+        }, {
           path: 'examinePlans/:processInstanceId',
           component: UMExaminPlans,
           name: 'TaskExaminPlans'
@@ -657,7 +710,7 @@ let routes = [{
           name: 'taskDistributeDefect',
           component: UMDistributeDefect
         }
-    ]
+      ]
     }, {
       path: 'relatedUnits',
       name: '相关单位',
@@ -683,17 +736,15 @@ let routes = [{
         path: 'detial/:processKey',
         component: DetialPlan,
         name: '预案详请'
-      },
-        {
-          path: 'execute/:processKey',
-          component: ExecutePlan,
-          name: '执行预案'
-        },
-        {
-          path: 'textPage/:processKey',
-          component:textPlan,
-          name: '测试页面'
-        }]
+      }, {
+        path: 'execute/:processKey',
+        component: ExecutePlan,
+        name: '执行预案'
+      }, {
+        path: 'textPage/:processKey',
+        component: textPlan,
+        name: '测试页面'
+      }]
     }, {
       path: 'disaster',
       name: '灾害管理',
@@ -741,17 +792,19 @@ let routes = [{
       path: 'DataAnalysis',
       name: '数据分析',
       component: DataAnalysis,
-      children: [
-        {
-          path: "QueryAlarmData",
-          name: "告警查询",
-          component: QueryAlarmData
-        },
-        {
-          path: "QueryData",
-          name: "数据查询",
-          component: QueryData
-        },{
+      children: [{
+        path: "QueryAlarmData",
+        name: "告警查询",
+        component: QueryAlarmData
+      }, {
+        path: "DataCompare",
+        name: "同比数据分析",
+        component: DataCompare
+      }, {
+        path: "QueryData",
+        name: "数据查询",
+        component: QueryData
+      }, {
         path: "CountChart",
         name: "统计报表",
         component: DataCountChart
@@ -759,8 +812,8 @@ let routes = [{
         path: "energyConsumptionReport",
         name: "能耗报表",
         component: EnergyConsumptionReport
-      },{
-        path:'taskChart',
+      }, {
+        path: 'taskChart',
         name: '巡检报表',
         component: DataPatrolTask
       }],

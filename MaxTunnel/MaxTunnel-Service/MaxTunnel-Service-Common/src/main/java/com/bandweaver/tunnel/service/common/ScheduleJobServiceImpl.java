@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.common;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.quartz.CronScheduleBuilder;
@@ -80,19 +81,17 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	public PageInfo<ScheduleJobDto> dataGrid(ScheduleJobVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
 		List<ScheduleJobDto> list = scheduleJobMapper.getDtoListByCondition(vo);
-		return new PageInfo<>(list);
+		return new PageInfo<>(list == null ? Collections.emptyList() : list );
 	}
 
 	
 	
 	@Override
 	public void init() throws SchedulerException, ClassNotFoundException {
-		LogUtil.info(">>>>>>>>>>>>>>>>>>定时任务初始化START<<<<<<<<<<<<<<<<<<<<< ");
 		List<ScheduleJob> list = scheduleJobMapper.getByJobStatus(JobStatusEnum.ENABLED.getValue());
 		for (ScheduleJob scheduleJob : list) {
 			addJob(scheduleJob,false);
 		}
-		LogUtil.info(">>>>>>>>>>>>>>>>>>定时任务初始化END<<<<<<<<<<<<<<<<<<<<< ");
 	}
 
 	
@@ -146,8 +145,8 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 
 
 	@Override
-	public ScheduleJob getByJobNameAndJobGroup(String jobName, String jobGroup) {
-		return scheduleJobMapper.getByJobNameAndJobGroup(jobName,jobGroup);
+	public ScheduleJob getByJobNameAndJobGroup(String jobName) {
+		return scheduleJobMapper.getByJobNameAndJobGroup(jobName);
 	}
 
 

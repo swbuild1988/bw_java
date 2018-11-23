@@ -66,4 +66,9 @@ public class StoreTypeServiceImpl implements StoreTypeService {
 	public StoreType getByName(String name) {
 		return storeTypeMapper.getByName(name);
 	}
+
+	@Override
+	public StoreType getBySN(String sn) {
+		return storeTypeMapper.getBySN(sn);
+	}
 }

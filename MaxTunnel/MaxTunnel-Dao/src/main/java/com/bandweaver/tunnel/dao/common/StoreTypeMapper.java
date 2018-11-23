@@ -25,4 +25,6 @@ public interface StoreTypeMapper {
 	List<StoreType> getBycondition(StoreTypeVo vo);
 
 	StoreType getByName(String name);
+
+    StoreType getBySN(String sn);
 }

@@ -165,5 +165,51 @@ public class MathUtil {
         return result;
 
     }
+    
+    
+    /**冒泡排序算法    
+     * @param args
+     * @return   
+     * @author shaosen
+     * @Date 2018年11月20日
+     */
+    public static int[] bubbleSort(int[] args){
+        for(int i=0;i<args.length-1;i++){   
+           for(int j=i+1;j<args.length;j++){   
+               if (args[i]>args[j]){   
+                   int temp=args[i];   
+                   args[i]=args[j];   
+                   args[j]=temp;   
+                   }   
+        }  
+       }  
+       return args;  
+    }
+    
+    /**选择排序算法    
+     * @param args
+     * @return   
+     * @author shaosen
+     * @Date 2018年11月20日
+     */
+    public static int[] selectSort(int[] args){
+        for (int i=0;i<args.length-1 ;i++ ){   
+               int min=i;   
+               for (int j=i+1;j<args.length ;j++ ){   
+                 if (args[min]>args[j]){   
+                      min=j;   
+                    }   
+               }   
+             if (min!=i){  
+             int temp=args[i];  
+             args[i]=args[min];  
+             args[min]=temp;          
+             }  
+           }  
+            return args;  
+   }
+    
+    
+    
 
 }

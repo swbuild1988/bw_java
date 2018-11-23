@@ -2,9 +2,12 @@ package com.bandweaver.tunnel.common.biz.dto.mam;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 
 public class MeasObjDto implements Serializable {
     /**
@@ -35,6 +38,10 @@ public class MeasObjDto implements Serializable {
     private Double deviation;
     
     private double cv;
+    
+    private List<MeasValueAI> valueAIList;
+    
+    private SectionDto section;
 
     public Integer getId() {
         return id;
@@ -174,6 +181,24 @@ public class MeasObjDto implements Serializable {
 	public void setCv(double cv) {
 		this.cv = cv;
 	}
+	
+	
+
+	public List<MeasValueAI> getValueAIList() {
+		return valueAIList;
+	}
+
+	public void setValueAIList(List<MeasValueAI> valueAIList) {
+		this.valueAIList = valueAIList;
+	}
+
+	public SectionDto getSection() {
+		return section;
+	}
+
+	public void setSection(SectionDto section) {
+		this.section = section;
+	}
 
 	@Override
 	public String toString() {
@@ -181,6 +206,7 @@ public class MeasObjDto implements Serializable {
 				+ ", sectionId=" + sectionId + ", name=" + name + ", datatypeId=" + datatypeId + ", datatypeName="
 				+ datatypeName + ", objtypeId=" + objtypeId + ", objtypeName=" + objtypeName + ", actived=" + actived
 				+ ", description=" + description + ", longitude=" + longitude + ", latitude=" + latitude + ", height="
-				+ height + ", deviation=" + deviation + "]";
+				+ height + ", deviation=" + deviation + ", cv=" + cv + ", valueAIList=" + valueAIList + ", section="
+				+ section + "]";
 	}
 }

@@ -44,111 +44,121 @@
 </template>
 
 <script>
-import StoreTypeModule from '../../CM/StoreTypeControl/StoreTypeModule.vue'
-import StoreTypeModification from '../../CM/StoreTypeControl/StoreTypeModification.vue'
+import StoreTypeModule from "../../CM/StoreTypeControl/StoreTypeModule.vue";
+import StoreTypeModification from "../../CM/StoreTypeControl/StoreTypeModification.vue";
 export default {
-    name: 'store-type-control',
-    data(){
+    name: "store-type-control",
+    data() {
         return {
-            researchInfo:{
-                name:'',
-                startTime:'',
-                endTime:''
+            researchInfo: {
+                name: "",
+                startTime: "",
+                endTime: ""
             },
-            columns7:[
+            columns7: [
                 {
-                    type: 'selection',
+                    type: "selection",
                     width: 60,
-                    align: 'center'
+                    align: "center"
                 },
                 {
-                    type: 'index',
-                    align: 'center'
+                    type: "index",
+                    align: "center"
                 },
                 {
-                    title: '管仓类型名称',
-                    key: 'name',
-                    align: 'center'
+                    title: "管仓类型名称",
+                    key: "name",
+                    align: "center"
                 },
                 {
-                    title: '创建时间',
-                    key: 'crtTime',
-                    align: 'center'
+                    title: "管仓类型编号",
+                    key: "sn",
+                    align: "center"
                 },
                 {
-                    title: '操作',
-                    key: 'action',
-                    align: 'center',
+                    title: "创建时间",
+                    key: "crtTime",
+                    align: "center"
+                },
+                {
+                    title: "操作",
+                    key: "action",
+                    align: "center",
                     render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginLeft: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.editStoreType(params.index)
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "primary",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginLeft: "5px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.editStoreType(params.index);
+                                        }
                                     }
-                                }
-                            }, '修改')
+                                },
+                                "修改"
+                            )
                         ]);
                     }
                 }
             ],
-            data6:[],
-            types:[],
-            tunnels:[],
-            page:{
+            data6: [],
+            types: [],
+            tunnels: [],
+            page: {
                 pageNum: 1,
                 pageSize: 10,
-                pageTotal: 0,
+                pageTotal: 0
             },
-            formValidate:{
-                name:''
+            formValidate: {
+                name: ""
             },
-            pageStyle:{
-                position: 'absolute',
-                bottom: '35px',
-                right: '40px'
+            pageStyle: {
+                position: "absolute",
+                bottom: "35px",
+                right: "40px"
             },
-            addStoreTypeInfo:{
-                show:{state:false},
-                addInfo:{}
+            addStoreTypeInfo: {
+                show: { state: false },
+                addInfo: {}
             },
-            changeStoreTypeInfo:{
-                show:{state:false},
-                changeInfo:{}
+            changeStoreTypeInfo: {
+                show: { state: false },
+                changeInfo: {}
             },
             deleteShow: false,
-            deleteSelect:[]
-        }
+            deleteSelect: []
+        };
     },
-    mounted(){
+    mounted() {
         this.showTable();
     },
-    computed:{
-        params(){
+    computed: {
+        params() {
             // 查询
             let param = {
                 pageNum: this.page.pageNum,
                 pageSize: this.page.pageSize,
-                name:this.researchInfo.name,
+                name: this.researchInfo.name,
                 startTime: new Date(this.researchInfo.startTime).getTime(),
                 endTime: new Date(this.researchInfo.endTime).getTime()
             };
             return Object.assign({}, param);
         },
-        newparams(){
+        newparams() {
             let param = {
-                name: this.formValidate.name
+                name: this.formValidate.name,
+                sn: this.formValidate.sn
             };
             return Object.assign({}, param);
         },
-        modifications(){
+        modifications() {
             let param = {
                 id: this.formValidate.id,
                 name: this.formValidate.name
@@ -157,109 +167,118 @@ export default {
         }
     },
     methods: {
-        showTable(){
-            this.axios.post('/store-type/datagrid',(this.params)).then(res=>{
-                let {code,data} = res.data;
-                if(code == 200){
+        showTable() {
+            this.axios.post("/store-type/datagrid", this.params).then(res => {
+                let { code, data } = res.data;
+                console.log("storeTypes:", data);
+                if (code == 200) {
                     let allinfo = [];
-                    for( let index in data.list) {
-                        let info={};
+                    for (let index in data.list) {
+                        let info = {};
                         info.id = data.list[index].id;
                         info.name = data.list[index].name;
-                        info.crtTime = new Date(data.list[index].crtTime).format('yyyy-MM-dd hh:mm:s');
+                        info.sn = data.list[index].sn;
+                        info.crtTime = new Date(
+                            data.list[index].crtTime
+                        ).format("yyyy-MM-dd hh:mm:s");
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;
                     this.page.pageTotal = data.total;
                 }
-            })
+            });
         },
         handlePage(value) {
             this.page.pageNum = value;
             this.showTable();
         },
         handlePageSize(value) {
-            this.page.pageSize = value
-            this.showTable()
+            this.page.pageSize = value;
+            this.showTable();
         },
-        addNewStoreType(){
-            this.addStoreTypeInfo.show.state =!this.addStoreTypeInfo.show.state;
+        addNewStoreType() {
+            this.addStoreTypeInfo.show.state = !this.addStoreTypeInfo.show
+                .state;
         },
-        saveNewStoreType(data){
+        saveNewStoreType(data) {
             this.formValidate = data;
-            this.axios.post('/store-type',(this.newparams)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
+            this.axios.post("/store-type", this.newparams).then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
                     this.page.pageTotal = data.total;
                     this.$Message.success("添加成功！");
-                    this.addStoreTypeInfo.show.state = !this.addStoreTypeInfo.show.state;
-                    this.showTable();
-                }
-            })
-        },
-        editStoreType(index){
-            this.changeStoreTypeInfo.changeInfo = this.data6[index];
-            this.formValidate.id = this.data6[index].id;
-            this.changeStoreTypeInfo.show.state = !this.changeStoreTypeInfo.show.state;
-        },
-        saveUpdateStoreType(data){
-            this.formValidate = data;
-            this.axios.put('/store-type',(this.modifications)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.changeStoreTypeInfo.show.state = !this.changeStoreTypeInfo.show.state;
-                    this.$Message.success("修改成功！");
-                }
-            })
-        },
-        startdelete(selection){
-            if(selection.length != 0){
-                this.deleteShow = true;
-                this.deleteSelect = selection;
-            }else{
-                this.deleteShow = false;
-            }
-        },
-        alldelete(){
-            this.$Modal.confirm({
-                title: '删除确认',
-                content: '<p>确认要删除选中的信息吗？</p>',
-                onOk: () => {
-                    let ids=this.deleteSelect[0].id;
-                    for(let i=1;i<this.deleteSelect.length;i++){
-                        ids += "," + this.deleteSelect[i].id;
-                    }
-                    this.axios.delete('/store-type/batch/' + ids).then(res =>{
-                        let {code,data} = res.data;
-                        if (code == 200){
-                            this.$Message.info('已删除');
-                            this.deleteShow = false;
-                            this.showTable();
-                        }
-                    })    
-                },
-                onCancel: () => {
-                    this.$Message.info('已取消操作');
+                    this.addStoreTypeInfo.show.state = !this.addStoreTypeInfo
+                        .show.state;
                     this.showTable();
                 }
             });
         },
-        research(){
+        editStoreType(index) {
+            this.changeStoreTypeInfo.changeInfo = this.data6[index];
+            this.formValidate.id = this.data6[index].id;
+            this.changeStoreTypeInfo.show.state = !this.changeStoreTypeInfo.show
+                .state;
+        },
+        saveUpdateStoreType(data) {
+            this.formValidate = data;
+            this.axios.put("/store-type", this.modifications).then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
+                    this.page.pageTotal = data.total;
+                    this.showTable();
+                    this.changeStoreTypeInfo.show.state = !this
+                        .changeStoreTypeInfo.show.state;
+                    this.$Message.success("修改成功！");
+                }
+            });
+        },
+        startdelete(selection) {
+            if (selection.length != 0) {
+                this.deleteShow = true;
+                this.deleteSelect = selection;
+            } else {
+                this.deleteShow = false;
+            }
+        },
+        alldelete() {
+            this.$Modal.confirm({
+                title: "删除确认",
+                content: "<p>确认要删除选中的信息吗？</p>",
+                onOk: () => {
+                    let ids = this.deleteSelect[0].id;
+                    for (let i = 1; i < this.deleteSelect.length; i++) {
+                        ids += "," + this.deleteSelect[i].id;
+                    }
+                    this.axios.delete("/store-type/batch/" + ids).then(res => {
+                        let { code, data } = res.data;
+                        if (code == 200) {
+                            this.$Message.info("已删除");
+                            this.deleteShow = false;
+                            this.showTable();
+                        }
+                    });
+                },
+                onCancel: () => {
+                    this.$Message.info("已取消操作");
+                    this.showTable();
+                }
+            });
+        },
+        research() {
             this.showTable();
         }
     },
-    components:{
-        StoreTypeModule,StoreTypeModification
+    components: {
+        StoreTypeModule,
+        StoreTypeModification
     }
-}
+};
 </script>
 
 <style scoped>
-    .inputWidth{
-        width: 60%;
-    }
+.inputWidth {
+    width: 60%;
+}
 </style>
 
 

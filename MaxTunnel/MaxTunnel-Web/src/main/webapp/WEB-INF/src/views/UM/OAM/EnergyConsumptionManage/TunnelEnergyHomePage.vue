@@ -118,23 +118,31 @@ export default {
             pieChart: {
                 requestUrl: "tunnels/items/energies ",
                 id: "tunnelEnergyPieChart",
-                title: {
-                    text: "管廊能耗统计",
-                    x: "center",
-                    textStyle: {
-                        fontWeight: "normal",
-                        color: "#030303",
-                        fontSize: "20"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "管廊能耗统计",
+                            x: "center",
+                            textStyle: {
+                                fontWeight: "normal",
+                                color: "#030303",
+                                fontSize: "20"
+                            }
+                        }
                     }
                 }
             },
             radarChart: {
                 requestUrl: "tunnels/avg-energies",
                 id: "tunnelEnergyRadarChart",
-                title: {
-                    text: "能耗(KWh/km)",
-                    x: "right",
-                    color: "#030303"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "能耗(KWh/km)",
+                            x: "right",
+                            color: "#030303"
+                        }
+                    }
                 }
             },
             tableColumn: [
@@ -185,7 +193,7 @@ export default {
         lineChart: function() {
             return {
                 id: "tunnelEnergyLineChart",
-                requestUrl: "tunnels/energies/interval/" + period,
+                requestUrl: "tunnels/energies/interval/" + this.period,
                 parameters: {
                     titleName: "综合管廊耗电量",
                     titleColor: "#030303",

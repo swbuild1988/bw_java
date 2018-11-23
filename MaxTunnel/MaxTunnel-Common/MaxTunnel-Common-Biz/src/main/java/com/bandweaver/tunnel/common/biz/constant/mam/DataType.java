@@ -8,7 +8,6 @@ package com.bandweaver.tunnel.common.biz.constant.mam;
  */
 public enum DataType {
 	
-    None("无", 0),
     /**模拟量输入AnologInput*/
     AI("模拟量输入", 1),
     /**开关量输入DigitalInput*/
@@ -62,6 +61,6 @@ public enum DataType {
         for (DataType dl: DataType.values()) {
             if (dl.getValue() == value) return dl;
         }
-        return None;
+        return null;
     }
 }

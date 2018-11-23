@@ -65,4 +65,13 @@ public interface UserMapper {
 	List<UserDTO> getListByIds(Set<Integer> userIdSet);
 
 	UserDTO getUserDtoById(Integer id);
+	
+	/**
+	 * 通过用户角色获取用户列表
+	 * @param roleDesc
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月17日
+	 */
+	List<User> getUsersByRoleDesc(String roleDesc);
 }

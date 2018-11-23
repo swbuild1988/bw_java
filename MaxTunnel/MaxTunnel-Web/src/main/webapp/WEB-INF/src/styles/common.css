@@ -10,12 +10,15 @@
 .conditions{
     height: 60px;
     line-height: 60px;
-    background: #fff;
+    /* background: #fff; */
     padding-left: 10px;
 }
+/* .conditionTitle{
+    color: #fff;
+} */
 .queryCondition{
     height: 90px;
-    line-height: 40px;
+    line-height: 44px;
     background: #fff;
     padding-left: 10px;
 }
@@ -51,4 +54,14 @@ td.ivu-table-expanded-cell {
 /*取消按钮*/
 .ivu-btn-ghost {
     background-color: #f9f7f7;
+}
+/*给背景色添加白色蒙版*/
+.backImgStyle{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background:rgba(255,255,255,0.5);
+    min-height: 100%;
 }

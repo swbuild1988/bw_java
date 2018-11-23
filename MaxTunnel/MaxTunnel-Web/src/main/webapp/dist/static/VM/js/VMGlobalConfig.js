@@ -1,19 +1,18 @@
 //vm 全局变量
-export const VM_TILTE='管廊统一管理可视化平台'; //vm title
+export const VM_TILTE = '管廊统一管理可视化平台'; //vm title
 
-export const LOGO_IMAGE='MaxviewLogo'; //vm logo image
+export const LOGO_IMAGE = 'MaxviewLogo'; //vm logo image
 
-export default{
-    install:function(Vue,options){
+export default {
+    install: function(Vue, options) {
 
-      Vue.prototype.VMConfig = {
+        Vue.prototype.VMConfig = {
 
           VLC:{//vlc 属性
             VLC_ID:0
         },
           UNDERGROUND_MODE:true,//设置开启地下场景,默认false
           flyManagerProp:{
-              flyUrl:'../static/VM/font/flytest.fpf', //飞行路线文件
               flySpeed:100, //飞行管理速度
               flyUpdateTime:1000 //单位ms
           },
@@ -25,6 +24,8 @@ export default{
             pitch:-0.7220718086739968,
             heading:5.868990772801154
         },
+          entityHeight:10, //实体高度
+          searchEventsDay:'5', //查询几天内时间
           weatherConfig:{
             city:310115, //行政区代码 例如:上海市浦东新区 310115
             key:'4bad9021a959fbc3f4709e9fe2fd51da', //高德地图密钥key
@@ -53,7 +54,7 @@ export default{
             ],
         },
           queryParam:{  //数据集查询参数
-            dataSourceName: "taiyuan_0823",
+            dataSourceName: "taiyuan_0823", //
             dataSetName: "安全设备",
         },
           detectionObj:{
@@ -88,7 +89,7 @@ export default{
         }],
           personnelType:[{ //人员类型
             "val": 0,
-            "key": "personnel-location" //人员定位
+            "key": "personnel-location1" //人员定位
         }],
           flawType:[{ //缺陷类型
             "val": [1,2,4,7],
@@ -104,8 +105,8 @@ export default{
           }],
           alarmType:[{ //告警类型
                   "val": [1,2,4,7],
-                  "key": "alarm2" //告警定位
+                  "key": "alarm-close" //告警定位
               }]
       }
     }
-  }
+}

@@ -1197,5 +1197,26 @@ public class EnergyController {
 		
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, ls);
 	}
+	
+	/**
+	 * 
+	 * @param tunnelId
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月15日
+	 */
+	@RequestMapping(value = "tunnels/{tunnelId}/energies/one-year", method = RequestMethod.GET)
+	public JSONObject getListOfTunnelOneYear(@PathVariable("tunnelId") Integer tunnelId) {
+		//List<TunnelSimpleDto> list = tunnelService.getList();
+		String [] str = {"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"};
+		List<JSONObject> list = new ArrayList<>();
+		for(int i=0;i<str.length;i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", str[i]);
+			obj.put("val", i + tunnelId + 300);
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
 }
 			

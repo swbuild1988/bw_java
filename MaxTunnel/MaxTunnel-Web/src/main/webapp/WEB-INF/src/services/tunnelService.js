@@ -6,7 +6,44 @@ var TunnelService = {
   getTunnels: function() {
     return new Promise((resolve, reject) => {
       if (isRealData) {
-      axios.get("/tunnels").then(res => {
+        axios.get("/tunnels").then(res => {
+            let {
+              code,
+              data,
+              msg
+            } = res.data;
+            if (code == 200) {
+              resolve(data)
+            } else {
+              reject(msg + ",地址:/tunnels")
+            }
+          })
+          .catch(error => {
+            reject(error.response.status + '  ' + error.response.data)
+          })
+      } else {
+        let data = [{
+          id: 1,
+          name: '管廊1'
+        }, {
+          id: 2,
+          name: '管廊2'
+        }, {
+          id: 3,
+          name: '管廊3'
+        }, {
+          id: 4,
+          name: '管廊4'
+        }]
+        resolve(data)
+      }
+    });
+  },
+  // 根据tunnelId获取该管廊内的管舱信息
+  getStoresByTunnelId: function(tunnelId) {
+    return new Promise((resolve, reject) => {
+      if (isRealData) {
+        axios.get('tunnels/' + tunnelId + '/stores').then(res => {
           let {
             code,
             data,
@@ -15,105 +52,68 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels")
+            reject(msg + ",地址:/tunnels" + tunnelId + '/stores')
           }
         })
-        .catch(error => {
-          reject(error.response.status + '  ' + error.response.data)
-        })
       } else {
-      let data = [{
-        id: 1,
-        name: '管廊1'
-      }, {
-        id: 2,
-        name: '管廊2'
-      }, {
-        id: 3,
-        name: '管廊3'
-      }, {
-        id: 4,
-        name: '管廊4'
-      }]
-      resolve(data)
-}
-    });
-  },
-  // 根据tunnelId获取该管廊内的管舱信息
-  getStoresByTunnelId: function(tunnelId) {
-    return new Promise((resolve, reject) => {
-      if (isRealData) {
-      axios.get('tunnels/' + tunnelId + '/stores').then(res => {
-        let {
-          code,
-          data,
-          msg
-        } = res.data;
-        if (code == 200) {
-          resolve(data)
-        } else {
-          reject(msg + ",地址:/tunnels" + tunnelId + '/stores')
-        }
-      })
-      } else {
-      let data = [{
-        camera: null,
-        crtTime: 1535611490000,
-        id: 1,
-        name: "燃气仓",
-        storeType: {
+        let data = [{
+          camera: null,
           crtTime: 1535611490000,
           id: 1,
           name: "燃气仓",
-        },
-        tunnel: {
-          id: 1,
-          name: '管廊1'
-        }
-      }, {
-        camera: null,
-        crtTime: 1535611490000,
-        id: 2,
-        name: "污水仓",
-        storeType: {
+          storeType: {
+            crtTime: 1535611490000,
+            id: 1,
+            name: "燃气仓",
+          },
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }, {
+          camera: null,
           crtTime: 1535611490000,
           id: 2,
           name: "污水仓",
-        },
-        tunnel: {
-          id: 1,
-          name: '管廊1'
-        }
-      }, {
-        camera: null,
-        crtTime: 1535611490000,
-        id: 3,
-        name: "电力仓",
-        storeType: {
+          storeType: {
+            crtTime: 1535611490000,
+            id: 2,
+            name: "污水仓",
+          },
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }, {
+          camera: null,
           crtTime: 1535611490000,
           id: 3,
           name: "电力仓",
-        },
-        tunnel: {
-          id: 1,
-          name: '管廊1'
-        }
-      }, {
-        camera: null,
-        crtTime: 1535611490000,
-        id: 4,
-        name: "综合仓",
-        storeType: {
+          storeType: {
+            crtTime: 1535611490000,
+            id: 3,
+            name: "电力仓",
+          },
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }, {
+          camera: null,
           crtTime: 1535611490000,
           id: 4,
           name: "综合仓",
-        },
-        tunnel: {
-          id: 1,
-          name: '管廊1'
-        }
-      }, ]
-      resolve(data)
+          storeType: {
+            crtTime: 1535611490000,
+            id: 4,
+            name: "综合仓",
+          },
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }, ]
+        resolve(data)
       }
     });
   },
@@ -121,32 +121,32 @@ var TunnelService = {
   getAreasByTunnelId: function(tunnelId) {
     return new Promise((resolve, reject) => {
       if (isRealData) {
-      axios.get('tunnels/' + tunnelId + '/areas').then(res => {
-        let {
-          code,
-          data,
-          msg
-        } = res.data;
-        if (code == 200) {
-          resolve(data)
-        } else {
-          reject(msg + ",地址:/tunnels" + tunnelId + '/areas')
-        }
-      })
+        axios.get('tunnels/' + tunnelId + '/areas').then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/tunnels" + tunnelId + '/areas')
+          }
+        })
       } else {
-      let data = [{
-        camera: null,
-        crtTime: 1535611490000,
-        id: 1,
-        location: "1",
-        name: "1区",
-        tunnel: {
+        let data = [{
+          camera: null,
+          crtTime: 1535611490000,
           id: 1,
-          name: '管廊1'
-        }
-      }]
-      resolve(data)
-}
+          location: "1",
+          name: "1区",
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }]
+        resolve(data)
+      }
     });
   },
   // 获取所有管廊（树形结构）
@@ -251,24 +251,86 @@ var TunnelService = {
       })
     });
   },
-    // 获取管廊告警数量
-    getTunnelAlarmCount() {
-        return new Promise((resolve, reject) => {
-            axios.get("tunnel/alarmcount").then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
-                if (code == 200) {
-                    resolve(data)
-                } else {
-                    reject('msg' + msg)
-                }
-            })
-        });
-    }
-
+  // 获取管廊告警数量
+  getTunnelAlarmCount() {
+    return new Promise((resolve, reject) => {
+      axios.get("tunnel/alarmcount").then(res => {
+        let {
+          code,
+          data,
+          msg
+        } = res.data;
+        if (code == 200) {
+          resolve(data)
+        } else {
+          reject('msg' + msg)
+        }
+      })
+    });
+  },
+  // 区域分页查询
+  areaDatagird: function(params) {
+    return new Promise((resolve, reject) => {
+      axios.post("/areas/datagrid", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/areas/datagrid")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 管舱分页查询
+  storeDatagrid: function(params) {
+    return new Promise((resolve, reject) => {
+      axios.post("/tunnels/stores/datagrid", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/tunnels/stores/datagrid")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 获取管舱类型列表
+  getStoreTypeList: function() {
+    return new Promise((resolve, reject) => {
+      axios.get("/store-type/list")
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/store-type/list")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  }
 };
 export {
   TunnelService

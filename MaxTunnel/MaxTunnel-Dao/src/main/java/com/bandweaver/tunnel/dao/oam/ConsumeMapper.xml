@@ -106,6 +106,24 @@
 		</foreach>
 		)a
 	</insert>
+	
+	<insert id="addBatchWithObjectId" useGeneratedKeys="false">
+		insert into T_OAM_CONSUME
+		(TUNNEL_ID,STORE_ID,AREA_ID,OBJECT_TYPE,ENERGY_TYPE,OBJECT_ID)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.tunnelId},
+			#{item.storeId},
+			#{item.areaId},
+			#{item.objectType},
+			#{item.energyType},
+			#{item.objectId}
+			from dual
+		</foreach>
+		)a
+	</insert>
 
 	<select id="getConsumeById" resultMap="ConsumeMap">
 	select * from T_OAM_CONSUME where id = #{id}
@@ -113,6 +131,10 @@
 	
 	<select id="getConsumeDtoById" resultMap="ConsumeDtoMap">
 	select * from T_OAM_CONSUME where id = #{id}
+	</select>
+	
+	<select id="getConsumeDtos" resultMap="ConsumeDtoMap">
+	select * from T_OAM_CONSUME
 	</select>
 	
 	<select id="getConsumesByCondition" resultMap="ConsumeDtoMap">
@@ -136,17 +158,19 @@
 		<if test="energyType != null">
 			and ENERGY_TYPE = #{energyType}
 		</if>
-		<if test="objectId != null">
-			and OBJECT_ID = #{objectId}
-		</if>
-		<if test="compute != null">
-			and COMPUTE = #{compute}
-		</if>
 	</where>
 	</select>
 	
 	<delete id="delete">
 	DELETE FROM T_OAM_CONSUME WHERE ID = #{id}
+	</delete>
+	
+	<delete id="deleteBatch">
+	DELETE FROM T_OAM_CONSUME
+	WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
 	</delete>
 	
 	<resultMap id="ConsumeMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.Consume">
@@ -168,6 +192,9 @@
         <result column="object_id" jdbcType="DECIMAL" property="objectId"/>
         <result column="energy_type" jdbcType="DECIMAL" property="energyType"/>
         <result column="compute" jdbcType="VARCHAR" property="compute"/>
+        <association property="tunnelSimpleDto" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+                     column="tunnel_id" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById">
+        </association>
         <association property="areaDto" javaType="com.bandweaver.tunnel.common.biz.dto.AreaDto"
                      column="area_id" select="com.bandweaver.tunnel.dao.common.AreaMapper.getAreasById">
         </association>

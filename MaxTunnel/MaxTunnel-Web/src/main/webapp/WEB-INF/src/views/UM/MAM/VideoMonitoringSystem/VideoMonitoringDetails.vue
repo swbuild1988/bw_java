@@ -90,7 +90,7 @@
 </template>
 <script>
 import { TunnelService } from "../../../../services/tunnelService"
-import { VideoService } from "../../../../services/VideoService"
+import { VideoService } from "../../../../services/videoService"
 // import VideoControls from "../../../../components/UM/MAM/VideoControls"
 import VideoControl from "../../../../components/UM/MAM/videoControls/VideoControl"
 import VideoComponent from "../../../../components/Common/Video/VideoComponent"

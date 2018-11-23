@@ -51,7 +51,6 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	
 	/**添加job
 	 * @param jobName job名称
-	 * @param jobGroup  job组
 	 * @param jobClass  任务类 例：com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter
 	 * @param jobMethod  任务方法 例：saveDataScheduleBatch
 	 * @param cronExpression 调度表达式 0/5 * * * * ?
@@ -64,6 +63,7 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	@RequestMapping(value = "schedulejobs", method = RequestMethod.POST)
 	public JSONObject add(@RequestBody ScheduleJob job) throws SchedulerException, ClassNotFoundException {
 		job.setJobStatus(JobStatusEnum.ENABLED.getValue());
+		job.setJobGroup("group1");//页面上只需用户填写jobName即可
 		scheduleJobService.addJob(job,true);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 
@@ -71,15 +71,13 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	
 	/**ajax校验任务是否唯一 
 	 * @param jobName
-	 * @param jobGroup
 	 * @return  true or false
 	 * @author shaosen
 	 * @Date 2018年9月20日
 	 */
-	@RequestMapping(value="schedulejobs/ajax/{jobName}/{jobGroup}",method=RequestMethod.GET)
-	public JSONObject ajaxCheck(@PathVariable("jobName") String jobName,
-			@PathVariable("jobGroup") String jobGroup) {
-		ScheduleJob job = scheduleJobService.getByJobNameAndJobGroup(jobName,jobGroup);
+	@RequestMapping(value="schedulejobs/ajax/{jobName}",method=RequestMethod.GET)
+	public JSONObject ajaxCheck(@PathVariable("jobName") String jobName) {
+		ScheduleJob job = scheduleJobService.getByJobNameAndJobGroup(jobName);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,job == null ? true : false );
 	}
 	

@@ -10,7 +10,6 @@
         <describe-model v-bind="model"
                         @removeByEntityId="removeByEntityId">
         </describe-model>
-        <button v-on:click="onClickMe">like!</button>
     </div>
 </template>
 
@@ -204,6 +203,8 @@ export default {
                     getSection
                 );
             }, Cesium.ScreenSpaceEventType.LEFT_UP);
+            _this.setViewAngAngle()
+            
         },
         //设置相机视角
         setViewAngAngle(camera) {
@@ -290,7 +291,7 @@ export default {
                     };
                     if (!cameraPosition.equals(_this.prePosition)) {
                         _this.prePosition = cameraPosition;
-                        console.log("now position", _this.prePosition);
+                        // console.log("now position", _this.prePosition);
                         _this.$emit("refreshCameraPosition", cameraPosition);
                     }
                 } catch (error) {
@@ -307,7 +308,7 @@ export default {
         },
         // 停止人员定位刷新
         stopPersonnelPosition() {
-            if (!this.refreshPersonnelPosition.intervalId)
+            if (this.refreshPersonnelPosition.intervalId)
                 clearInterval(this.refreshPersonnelPosition.intervalId);
             this.refreshPersonnelPosition.enable = false;
         },
@@ -316,7 +317,7 @@ export default {
             if (Cesium.defined(this.viewer)) {
                 this.refreshPersonnelPosition.intervalId = setInterval(() => {
                     getEntitySet.call(this, {
-                        viewer: this.viewerviewer,
+                        viewer: this.viewer,
                         url: "actived-locators",
                         show: this.refreshPersonnelPosition.enable,
                         typeMode: "personnelType",
@@ -325,10 +326,10 @@ export default {
                 }, this.refreshPersonnelPosition.interval);
             }
         },
-        LookAt(obj, heading, pitch, range) {
+        LookAt1(obj, heading, pitch, range) {
             let target = Cesium.Cartesian3.fromDegrees(
                 obj.longitude,
-                obj.latitude
+                obj.latitude,
                 // obj.height
             );
             lookAt(
@@ -350,9 +351,6 @@ export default {
                 messageType: "checkPoint"
             });
         },
-        onClickMe() {
-            this.$emit("child-say", this.id);
-        }
     },
     beforeDestroy() {
         let { handler, refreshCameraPosition, timer } = this;

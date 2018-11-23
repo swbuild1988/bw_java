@@ -1,16 +1,21 @@
 package com.bandweaver.tunnel.controller.mam;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueAIService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
+import com.github.pagehelper.PageInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +32,8 @@ public class MeasValueAIController {
     private MeasValueAIService measValueAIService;
     @Autowired
     private MeasObjModuleCenter measObjModuleCenter;
+    @Autowired
+    private MeasObjService measObjService;
 
     
     /**接收MaxView发送过来的数据 
@@ -58,7 +65,6 @@ public class MeasValueAIController {
         List<MeasObjAI> l = measObjModuleCenter.getMeasObjAIs();
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, l);
     }
-
 
 
 }

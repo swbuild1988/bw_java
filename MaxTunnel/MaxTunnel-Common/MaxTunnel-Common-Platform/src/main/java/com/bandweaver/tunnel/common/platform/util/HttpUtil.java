@@ -115,6 +115,7 @@ public class HttpUtil {
     	HttpClient httpClient = wrapClient(host);
 
     	HttpPost request = new HttpPost(buildUrl(host, path, querys));
+    	request.addHeader("Content-Type", "application/json");
         for (Map.Entry<String, String> e : headers.entrySet()) {
         	request.addHeader(e.getKey(), e.getValue());
         }

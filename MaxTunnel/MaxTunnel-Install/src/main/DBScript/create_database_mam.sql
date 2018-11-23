@@ -221,6 +221,24 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_MAM_MEASOBJ_MAP'; 
       end   if; 
+-- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'MAM_MAXVIEW_CONFIG_SEQUENCE'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  MAM_MAXVIEW_CONFIG_SEQUENCE';   
+      end if;
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'MAM_MAXVIEW_CONFIG_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  MAM_MAXVIEW_CONFIG_TG';   
+      end if;
+-- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_MAM_MAXVIEW_CONFIG';
+      if   num=1   then 
+          execute immediate 'drop table T_MAM_MAXVIEW_CONFIG'; 
+      end   if; 
 end;
 /
 
@@ -573,6 +591,7 @@ CREATE TABLE T_MAM_MEASOBJ_MAP(
    input_value  number  not null,
    object_id2 number  not null,
    output_value number  not null,
+   crt_time     date    not null,
    CONSTRAINT PK_T_MAM_MEASOBJ_MAP PRIMARY KEY ("ID")
 );
 
@@ -594,4 +613,34 @@ begin
 end MAM_MEASOBJ_MAP_TG;
 /
 
+--maxview≈‰÷√±Ì
+CREATE TABLE T_MAM_MAXVIEW_CONFIG(
+  id                NUMBER               NOT NULL,
+  name    varchar2(50)  not null,
+  ip    varchar2(50)  not null,
+  port    varchar2(10)  not null,
+  username  varchar2(50)  not null,
+  password  varchar2(100) not null,
+  crt_time  date,
+  
+   CONSTRAINT PK_T_MAM_MAXVIEW_CONFIG PRIMARY KEY ("ID")
+);
+
+
+--create sequence
+create sequence MAM_MAXVIEW_CONFIG_SEQUENCE
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+-- create trigger
+CREATE OR REPLACE TRIGGER MAM_MAXVIEW_CONFIG_TG
+  BEFORE INSERT ON T_MAM_MAXVIEW_CONFIG
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select MAM_MAXVIEW_CONFIG_SEQUENCE.nextval into :new.id from dual;
+end MAM_MAXVIEW_CONFIG_TG;
+/
  

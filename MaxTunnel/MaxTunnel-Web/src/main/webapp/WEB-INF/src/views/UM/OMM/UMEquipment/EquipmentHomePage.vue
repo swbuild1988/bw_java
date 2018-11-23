@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div style="padding-left: 10px;">
     <h1>设备信息总览</h1>
     <Row>
       <Col span="18">
       <Col span="6">
-      <data-box v-bind="equimentTotalNum"></data-box>
+      <data-box v-bind="equimentTotalNum" ref="dataBox"></data-box>
       </Col>
       <Col span="6">
       <data-box v-bind="equimentRunNum"></data-box>
@@ -16,7 +16,7 @@
       <data-box v-bind="duration"></data-box>
       </Col>
       <Col span="24">
-      <div class="GISbox">
+      <div class="GISbox" id="GISbox" ref="gisBox">
         <!-- <sm-viewer
           :id="id"
           ref="smViewer"
@@ -186,25 +186,39 @@ export default {
             equipmentChart: {
                 id: "equipmentChartId",
                 requestUrl: "/equipments/type/count",
-                parameter: {
-                    title: "设备类别"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "设备类别"
+                        }
+                    }
                 }
             },
             equipmentChartDoubleColor: {
                 id: "equipmentCharDoubleColortId",
                 requestUrl: "/equipments/type/count",
-                title: {
-                    text: "管廊故障设备统计",
-                    x: "left",
-                    textStyle: {
-                        color: "#2e739b"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "管廊故障设备统计",
+                            x: "left",
+                            textStyle: {
+                                color: "#2e739b"
+                            }
+                        }
                     }
                 }
             },
             equimentPie: {
                 id: "equipmentPieId",
                 requestUrl: "/equipments/type/count",
-                title: "各类型故障占比"
+                parameters: {
+                    option: {
+                        title: {
+                            text: "各类型故障占比"
+                        }
+                    }
+                }
             },
             spare: {
                 id: "spare",
@@ -225,7 +239,9 @@ export default {
                 timeoutId: null,
                 intervalId: null,
                 sectionId: null //保留上次section
-            }
+            },
+            // isDestory: false,
+            // path: this.$router.currentRoute.path
         };
     },
     components: {
@@ -235,6 +251,22 @@ export default {
         ProcessRing,
         // SmViewer
         TestSmViewer
+    },
+    beforeRouteLeave(to,from,next){
+        if(to.name == 'UMPatrolHomePage' || to.name == 'UMDetailEquipment' || to.name == '虚拟巡检' || to.name == '人员定位详情' 
+            || to.name == '管廊安防监控详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表'
+            || from.name == '人员定位详情' || from.name == '虚拟巡检' || from.name == 'UMDetailEquipment' || from.name == 'UMPatrolHomePage' 
+            || from.name == '管廊安防监控详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'){
+            from.meta.keepAlive = true;
+            to.meta.keepAlive = true
+            this.$destroy()
+            next()
+        }else{
+            from.meta.keepAlive = false
+            to.meta.keepAlive = false
+            this.$destroy()
+            next()
+        }
     },
     mounted() {
         this.getEquipmentType();
@@ -262,29 +294,25 @@ export default {
         },
         setGIS() {
             var gis = document.getElementById("newID");
-            setTimeout(function() {
-                gis.style.display = "block";
-                gis.style.position = "absolute";
-                var leftW =
-                    document.getElementsByClassName("ivu-layout-sider")[0]
-                        .offsetWidth + "px";
-
-                gis.style.left = leftW;
-                gis.style.top = "110px";
-                var GISboxW =
-                    document.getElementById("GISbox").offsetWidth + "px";
-                var GISboxH =
-                    document.getElementById("GISbox").offsetHeight + "px";
-                gis.style.width = GISboxW;
-                gis.style.height = GISboxH;
-            }, 2000);
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '20px';
+            gis.style.height = '100%';
+            gis.style.width = '99%'    
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
             // 加载视角
             this.$refs.TestSmViewer.setViewAngAngle();
+        },
+        destory3D(){
+            var gis = document.getElementById("newID");
+            gis.style.display = "none";
+            document.getElementById("GISbox").removeChild(gis)
+            document.body.appendChild(gis)
         }
     },
     beforeDestroy() {
-        var gis = document.getElementById("newID");
-        gis.style.display = "none";
+        this.destory3D()
     }
 };
 </script>
@@ -301,6 +329,8 @@ h1,
     bottom: 2px;
     right: 13px;
     text-align: left;
+    z-index: 2;
+    color: #fff;
 }
 
 .tunnelProfile div {

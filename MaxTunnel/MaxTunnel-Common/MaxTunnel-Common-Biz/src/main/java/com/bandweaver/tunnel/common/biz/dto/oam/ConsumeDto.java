@@ -4,11 +4,12 @@ import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.constant.oam.EnergyType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 
 public class ConsumeDto extends Consume{
 	
-	
+	private TunnelSimpleDto tunnelSimpleDto;
 	private StoreDto storeDto;
 	private AreaDto areaDto;
 	//对象类型名
@@ -16,6 +17,12 @@ public class ConsumeDto extends Consume{
 	//能耗类型名
 	private String energyTypeName;
 	
+	public TunnelSimpleDto getTunnelSimpleDto() {
+		return tunnelSimpleDto;
+	}
+	public void setTunnelSimpleDto(TunnelSimpleDto tunnelSimpleDto) {
+		this.tunnelSimpleDto = tunnelSimpleDto;
+	}
 	public StoreDto getStoreDto() {
 		return storeDto;
 	}

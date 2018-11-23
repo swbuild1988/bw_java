@@ -91,11 +91,12 @@
                 </Form>
             </Col>
             <Col span="12">
-                <div class="equipmentTypeImg">
-                    <!-- <sm-viewer
+                <div class="equipmentTypeImg" id="GISbox">
+                    <sm-viewer
                       :id="id"
                       ref="smViewer">
-                    </sm-viewer> -->
+                    </sm-viewer>
+                    <TestSmViewer ref="smViewer"></TestSmViewer>
                 </div>
                 <div class="BIM">
                     BIM
@@ -112,92 +113,75 @@ import { TunnelService } from '../../../../services/tunnelService'
 import { EquipmentService } from '../../../../services/equipmentService'
 import types from "../../../../../static/Enum.json";
 import SmViewer from '../../../../components/Common/3D/3DViewer'
+// import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
 import { URL_CONFIG } from '../../../../../static/3DMap/js/3DMapConfig'
 export default {
-  data() {
-    return {
-      id: 'GISID',
-      // 待编辑的设备
-      equipment: {
-        id: null,
-        assetNo: "NO1",
-        name: "设备1",
-        modelId: null,
-        venderId:null,
-        type: null,
-        tunnelId: null,
-        startTime: new Date(),
-        status: null
-      },
-      // 设备型号
-      equipmentModels: [
-
-      ],
-      // 供应商
-      venders: [
-
-      ],
-      // 管廊
-      tunnels: [],
-      // 设备类型
-      equipmentTypes: types.equipmentType,
-      // 设备状态
-      equipmentStatus: types.equipmentStatus
-    };
-  },
-  components:{
-    SmViewer
-  },
-  mounted() {
-    // 获取所有的管廊
-      let _this = this
-      TunnelService.getTunnels().then(
-          (result)=>{
-              _this.tunnels = result;
-          },
-          (error)=>{
-              _this.Log.info(error)
-      }) 
-      // axios.get("/tunnels ").then(response => {
-      //     let { code, data } = response.data;
-      //     if (code == 200) {
-      //         this.tunnels = data;
-      //     }
-      // });
-
-      // 获取所有的供应商
-      EquipmentService.getVenders().then(
-        (result)=>{
-          _this.venders = result
+    data() {
+        return {
+        //   id: 'GISID',
+        // 待编辑的设备
+        equipment: {
+            id: null,
+            assetNo: "NO1",
+            name: "设备1",
+            modelId: null,
+            venderId:null,
+            type: null,
+            tunnelId: null,
+            startTime: new Date(),
+            status: null
         },
-        (error)=>{
-          _this.Log.info(error)
-        })
-      // axios.get("/venders").then(response => {
-      //     let { code, data } = response.data;
-      //     if (code == 200) {
-      //         this.venders = data;
-      //     }
-      // });
+        // 设备型号
+        equipmentModels: [
 
-      // 获取所有的型号
-      EquipmentService.getEquipmentModels().then(
-        (result)=>{
-          _this.equipmentModels = result;
-        },
-        (error)=>{
-          _this.Log.info(error)
-        })
-      // axios.get("/equipment-models").then(response => {
-      //     let { code, data } = response.data;
-      //     if (code == 200) {
-      //         this.equipmentModels = data;
-      //     }
-      // });
-  },
-  methods: {
-      submitEquipment(){
-          setTimeout(()=>{
+        ],
+        // 供应商
+        venders: [
+
+        ],
+        // 管廊
+        tunnels: [],
+        // 设备类型
+        equipmentTypes: types.equipmentType,
+        // 设备状态
+        equipmentStatus: types.equipmentStatus
+        };
+    },
+    components:{
+        SmViewer
+        // TestSmViewer
+    },
+    mounted() {
+        // 获取所有的管廊
+        let _this = this
+        TunnelService.getTunnels().then(
+            (result)=>{
+                _this.tunnels = result;
+            },
+            (error)=>{
+                _this.Log.info(error)
+        }) 
+        // 获取所有的供应商
+        EquipmentService.getVenders().then(
+            (result)=>{
+            _this.venders = result
+            },
+            (error)=>{
+            _this.Log.info(error)
+            })
+        // 获取所有的型号
+        EquipmentService.getEquipmentModels().then(
+            (result)=>{
+            _this.equipmentModels = result;
+            },
+            (error)=>{
+            _this.Log.info(error)
+            })
+            // this.setGIS()
+    },
+    methods: {
+        submitEquipment(){
+            setTimeout(()=>{
                 let _this = this
                 EquipmentService.addEquipment(this.equipment).then(
                     (result)=>{
@@ -206,58 +190,25 @@ export default {
                     (error)=>{
                     _this.Log.info(error)
                     })
-          },2000)
-          // axios.post('/equipments',this.equipment).then(response=>{
-          // })
-      },
-      onload(parent) {
-      let Cesium = parent.Cesium;
-
-      // 初始化viewer部件
-      var viewer = new Cesium.Viewer(this.id,{
-        navigation:false //关闭导航控件
-      });
-      var scene = viewer.scene,
-        widget = viewer.cesiumWidget,
-        imageryLayers = viewer.imageryLayers,
-        imagery_mec;
-
-      var provider_mec = new Cesium.SuperMapImageryProvider({
-        url : URL_CONFIG.IMG_MAP//墨卡托投影地图服务
-      });
-      imagery_mec = imageryLayers.addImageryProvider(provider_mec);
-
-
-      try{
-        //打开所发布三维服务下的所有图层
-        var promise = scene.open(URL_CONFIG.BIM_SCP);
-        Cesium.when(promise,function(layer){
-
-          var overGroundLayer = scene.layers._layerQueue[0];
-          //设置相机位置、视角，便于观察场景
-          scene.camera.setView({
-            destination : new Cesium.Cartesian3.fromDegrees(116.43709465365579,39.91793569836651,1245.5482069457155),
-            orientation : {
-              heading : 1.5735504792701676,
-              pitch : -0.9120242487858476,
-              roll : 6.281841926729911
-            }
-          });
-        },function(e){
-          if (widget._showRenderLoopErrors) {
-            var title = '加载SCP失败，请检查网络连接状态或者url地址是否正确？';
-            widget.showErrorPanel(title, undefined, e);
-          }
-        });
-      }
-      catch(e){
-        if (widget._showRenderLoopErrors) {
-          var title = '渲染时发生错误，已停止渲染。';
-          widget.showErrorPanel(title, undefined, e);
+            },2000)
+        },
+        setGIS(){
+            var gis = document.getElementById('newID')
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '0px';
+            gis.style.height = '100%';
+            gis.style.width = '100%'    
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
         }
-      }
     },
-  }
+    // beforeDestroy(){
+    //     var gis = document.getElementById("newID");
+    //     gis.style.display = "none";
+    //     document.getElementById("GISbox").removeChild(gis)
+    //     document.body.appendChild(gis)
+    // }
 };
 </script>
 <style scoped>
@@ -282,7 +233,6 @@ export default {
 }
 .equipmentTypeImg,.BIM{
   height: 31vh;
-  width: 98%;
 }
 .BIM{
     background: #F2F2F2;

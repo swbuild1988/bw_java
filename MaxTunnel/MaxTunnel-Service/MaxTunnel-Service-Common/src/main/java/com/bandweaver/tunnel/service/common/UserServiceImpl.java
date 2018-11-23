@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
 		userMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public List<User> getUserByRoleDesc(String roleDesc) {
+		return userMapper.getUsersByRoleDesc(roleDesc);
+	}
+
 
 
 }

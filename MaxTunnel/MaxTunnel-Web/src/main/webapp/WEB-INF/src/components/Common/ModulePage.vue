@@ -3,12 +3,12 @@
     <Layout class="coment">
       <Sider :width="screenWidth*0.14+1" collapsible :collapsed-width="78" v-model="isCollapsed" :style="{background: '#1D5F87'}">
         <transition  name="fade">
-        <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
+        <!-- <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
             <ButtonGroup style="width: 90%;margin-left: 5%">
               <Button type="primary" shape="circle" style="width:50%"  @click="goBack"><Icon type="chevron-left" ></Icon></Button>
               <Button type="primary" shape="circle" style="width:50%;float:right"  @click="goForward"><Icon type="chevron-right" ></Icon></Button>
             </ButtonGroup>
-        </div>
+        </div> -->
         </transition>
         <Menu active-name="1-1" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
           <Submenu name="1">
@@ -39,7 +39,7 @@
       </Sider>
       <Layout>
          <Content
-                 style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ffff;">
+                 style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;">
           <router-view></router-view>
         </Content>
         <Collapse v-model="showalarm" @on-change="changestatu">
@@ -191,7 +191,6 @@ export default {
     }
   },
   methods: {
-
     goBack()
     {
       this.$router.back(-1);

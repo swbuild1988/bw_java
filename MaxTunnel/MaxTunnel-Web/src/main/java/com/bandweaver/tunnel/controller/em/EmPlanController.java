@@ -124,7 +124,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 		
 		//最后再查一次
 		EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-		emPlanService.sendMsg(emPlan,processInstanceId,true,objectId);
+		emPlanService.sendMsg(emPlan,processInstanceId,objectId);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 
@@ -205,28 +205,17 @@ public class EmPlanController extends BaseController<EmPlan>{
 	
 	/**通过processKey获取流程节点列表 
 	 * @param processKey
-	 * @return   {"msg":"请求成功","code":"200","data":{"processName":"消防预案","planStatus":[{"statusStr":"待完成","statusVal":3,"stepName":"开启声光报警"},{"statusStr":"待完成","statusVal":3,"stepName":"调用摄像头"},{"statusStr":"待完成","statusVal":3,"stepName":"值班人员确认"},{"statusStr":"待完成","statusVal":3,"stepName":"打开风机"},{"statusStr":"待完成","statusVal":3,"stepName":"打开风阀"},{"statusStr":"待完成","statusVal":3,"stepName":"打开百叶"},{"statusStr":"待完成","statusVal":3,"stepName":"启动干粉灭火"},{"statusStr":"待完成","statusVal":3,"stepName":"通知相关单位"}]}}
+	 * @return   {"msg":"请求成功","code":"200","data":{"processName":"消防预案","planStatus":[{"finishName":"半自动","finishValue":1,"targetName":"类型","statusStr":"待完成","statusVal":3,"stepName":"开启声光报警","actionValue":1,"targetValue":41,"actionName":"联动输出类型"},{"finishName":"半自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"调用摄像头","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"手动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"值班人员确认","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开风机","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开风阀","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开百叶","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"启动干粉灭火","actionValue":1,"targetValue":1,"actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"通知相关单位","actionValue":1,"targetValue":1,"actionName":"提示信息类"}]}}
 	 * @author shaosen
 	 * @Date 2018年11月12日
 	 */
 	@RequestMapping(value="emplans/process-key/{processKey}",method=RequestMethod.GET)
 	public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
-		List<EmPlanDto> list = emPlanService.getNodeListByProcessKey(processKey);
 		
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processKey);
-		
 		JSONObject result = new JSONObject();
 		result.put("processName", processTypeEnum.getName());
-		
-		List<JSONObject> nodeList = new ArrayList<>();
-		for (EmPlanDto emPlanDto : list) {
-			JSONObject j = new JSONObject();
-			j.put("stepName", emPlanDto.getTaskName());
-			j.put("statusStr", NodeStatusEnum.WAITING.getName());
-			j.put("statusVal", NodeStatusEnum.WAITING.getValue());
-			nodeList.add(j);
-		}
-		result.put("planStatus", nodeList);
+		result.put("planStatus", emPlanService.getNodeListByProcessKey(processKey));
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
 		
 	}
@@ -280,7 +269,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 		
 		//开始分页
 		PageBean<HistoricProcessInstance> page = new PageBean<>(vo.getPageNum(), vo.getPageSize(), query.list().size());
-		page.setList(query.listPage(page.getStart(vo.getPageNum()), vo.getPageSize()));
+		page.setList(query.listPage(page.getStart(), vo.getPageSize()));
 		
 		LogUtil.info(" page : " + page);
 		

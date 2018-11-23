@@ -69,6 +69,57 @@ var EnumsService = {
 			})
 		})
 	},
+	//获取数据类型
+	getDataType: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('datatype-enums').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data;
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ":地址:/datatype-enums");
+				}
+			})
+		})
+	},
+	// 获取监测对象类型
+	getObjType: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('objecttype-enums').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data;
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ":地址:objecttype-enums");
+				}
+			})
+		})
+	},
+	//获取监测区域（树型数据）
+	getMonitorZone: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('tunnels/tree ').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data;
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ":地址:/tunnels/tree ");
+				}
+			})
+		})
+	},
 	// 获取时间周期
 	getTimeCycle: function() {
 		return new Promise((resolve, reject) => {
@@ -220,6 +271,37 @@ var EnumsService = {
 					reject(msg + ",地址:/reqstatus-enums")
 				}
 			})
+		})
+	},
+	// 预案枚举
+	getPlanType: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('/plan-enums').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ",地址:/plan-enums")
+				}
+			})
+			// let data = [{
+			// 	key: "消防预案",
+			// 	processKey: "FirePlanProcess",
+			// 	val: 4001
+			// }, {
+			// 	key: "通风预案",
+			// 	processKey: "WindPlanProcess",
+			// 	val: 4003
+			// }, {
+			// 	key: "排水预案",
+			// 	processKey: "WaterPlanProcess",
+			// 	val: 4002
+			// }]
+			// resolve(data)
 		})
 	}
 }

@@ -51,6 +51,17 @@ public class AreaController extends BaseController<Area>{
 		areaService.addArea(area);
 		return success();
 	}
+
+	/**添加区域
+	 */
+	@RequestMapping(value="areas/multi",method=RequestMethod.POST)
+	public JSONObject addMulti(@RequestBody List<Area> areas) {
+		for (Area area : areas) {
+			area.setCrtTime(new Date());
+		}
+		areaService.addAreaBatch(areas);
+		return success();
+	}
 	
 	/**检查名称是否重复 
 	 * @param name

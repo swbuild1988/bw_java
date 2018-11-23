@@ -8,7 +8,7 @@ package com.bandweaver.tunnel.common.biz.constant.oam;
 public enum EnergyType {
 	
 	/** 总计 */
-	None("总计", 0),
+	NONE("总计", 0),
     /** 普通 */
     COMMON("普通", 1),
     /** 应急 */
@@ -21,8 +21,10 @@ public enum EnergyType {
 		this.name = name;
 		this.value = value;
 	}
+	
 	private String name;
     private int value;
+    
 	public String getName() {
 		return name;
 	}

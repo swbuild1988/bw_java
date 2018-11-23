@@ -93,7 +93,18 @@ public class UserController extends BaseController<User>{
 		return null;
 	}
 
-
+	/**
+	 * 获取超级管理员信息
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月17日
+	 */
+	@RequestMapping(value = "roles/users", method = RequestMethod.GET)
+	public JSONObject getUsersByRoleDesc() {
+		String roleDesc = "超级管理员";
+		List<User> list = userService.getUserByRoleDesc(roleDesc);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
 
 
 }

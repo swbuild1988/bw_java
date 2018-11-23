@@ -99,4 +99,9 @@ public class TunnelServiceImpl implements TunnelService {
 	public Tunnel getByName(String name) {
 		return tunnelMapper.getByName(name);
 	}
+
+	@Override
+	public Tunnel getBySN(String sn) {
+		return tunnelMapper.getBySN(sn);
+	}
 }

@@ -42,9 +42,4 @@ public class MeasObjDistribute extends MeasObj {
         this.dcv = dcv;
     }
 
-    @Override
-	public String toString() {
-		return "MeasObjDistribute [refreshTime=" + refreshTime + ", spacePrecision=" + spacePrecision + ", dcv=" + dcv
-				+ "]";
-	}
 }

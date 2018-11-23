@@ -13,6 +13,8 @@ public class AreaVo extends BaseVo{
 
     private String name;
 
+    private String sn;
+
     private String location;
 
     private Integer tunnelId;
@@ -35,6 +37,14 @@ public class AreaVo extends BaseVo{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public String getLocation() {
@@ -69,11 +79,18 @@ public class AreaVo extends BaseVo{
         this.crtTime = crtTime;
     }
 
-	@Override
-	public String toString() {
-		return "AreaVo [id=" + id + ", name=" + name + ", location=" + location + ", tunnelId=" + tunnelId + ", camera="
-				+ camera + ", crtTime=" + crtTime + "]";
-	}
-    
-    
+    @Override
+    public String toString() {
+        return "AreaVo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
+                ", location='" + location + '\'' +
+                ", tunnelId=" + tunnelId +
+                ", camera='" + camera + '\'' +
+                ", crtTime=" + crtTime +
+                "} " + super.toString();
+    }
+
+
 }

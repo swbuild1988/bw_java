@@ -12,6 +12,7 @@
         curModule: {
           moduleName: "数据分析",
           leftTree: [{id: 1,name: "数据查询", url: "/UM/DataAnalysis/QueryData"}, {id: 2,name: "告警查询", url: "/UM/DataAnalysis/QueryAlarmData"},
+          // {id: 4,name: "同比数据对比", url: "/UM/DataAnalysis/DataCompare"},
             {id: 3,name: "统计报表",childNode: [
                 {
                   id: 21,

@@ -19,6 +19,8 @@ public class StoreTypeVo extends BaseVo{
 
     private String name;
 
+    private String sn;
+
     private Date crtTime;
 
     public Integer getId() {
@@ -35,6 +37,14 @@ public class StoreTypeVo extends BaseVo{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public Date getCrtTime() {

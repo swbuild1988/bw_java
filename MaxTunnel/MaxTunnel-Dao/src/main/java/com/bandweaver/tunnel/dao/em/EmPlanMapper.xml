@@ -7,9 +7,9 @@
     <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
     <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
     <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
-    <result column="TARGET_VALUE" jdbcType="DECIMAL" property="targetValue" />
+    <result column="TARGET_VALUE" jdbcType="VARCHAR" property="targetValue" />
     <result column="ACTION_KEY" jdbcType="DECIMAL" property="actionKey" />
-    <result column="ACTION_VALUE" jdbcType="DECIMAL" property="actionValue" />
+    <result column="ACTION_VALUE" jdbcType="VARCHAR" property="actionValue" />
     <result column="FINISH_KEY" jdbcType="DECIMAL" property="finishKey" />
     <result column="FINISH_VALUE" jdbcType="DECIMAL" property="finishValue" />
     <result column="is_finished" jdbcType="DECIMAL" property="isFinished" />
@@ -21,9 +21,9 @@
     <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
     <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
     <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
-    <result column="TARGET_VALUE" jdbcType="DECIMAL" property="targetValue" />
+    <result column="TARGET_VALUE" jdbcType="VARCHAR" property="targetValue" />
     <result column="ACTION_KEY" jdbcType="DECIMAL" property="actionKey" />
-    <result column="ACTION_VALUE" jdbcType="DECIMAL" property="actionValue" />
+    <result column="ACTION_VALUE" jdbcType="VARCHAR" property="actionValue" />
     <result column="FINISH_KEY" jdbcType="DECIMAL" property="finishKey" />
     <result column="FINISH_VALUE" jdbcType="DECIMAL" property="finishValue" />
     <result column="is_finished" jdbcType="DECIMAL" property="isFinished" />
@@ -49,8 +49,8 @@
       ACTION_VALUE, FINISH_KEY, FINISH_VALUE, is_finished
       CRT_TIME)
     values (#{id,jdbcType=DECIMAL}, #{processKey,jdbcType=VARCHAR}, #{taskKey,jdbcType=VARCHAR},  #{taskName,jdbcType=VARCHAR}, 
-      #{targetKey,jdbcType=DECIMAL}, #{targetValue,jdbcType=DECIMAL}, #{actionKey,jdbcType=DECIMAL}, 
-      #{actionValue,jdbcType=DECIMAL}, #{finishKey,jdbcType=DECIMAL}, #{finishValue,jdbcType=DECIMAL}, #{isFinished,jdbcType=DECIMAL}, 
+      #{targetKey,jdbcType=DECIMAL}, #{targetValue,jdbcType=VARCHAR}, #{actionKey,jdbcType=DECIMAL}, 
+      #{actionValue,jdbcType=VARCHAR}, #{finishKey,jdbcType=DECIMAL}, #{finishValue,jdbcType=DECIMAL}, #{isFinished,jdbcType=DECIMAL}, 
       #{crtTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
@@ -110,13 +110,13 @@
         #{targetKey,jdbcType=DECIMAL},
       </if>
       <if test="targetValue != null">
-        #{targetValue,jdbcType=DECIMAL},
+        #{targetValue,jdbcType=VARCHAR},
       </if>
       <if test="actionKey != null">
         #{actionKey,jdbcType=DECIMAL},
       </if>
       <if test="actionValue != null">
-        #{actionValue,jdbcType=DECIMAL},
+        #{actionValue,jdbcType=VARCHAR},
       </if>
       <if test="finishKey != null">
         #{finishKey,jdbcType=DECIMAL},
@@ -148,13 +148,13 @@
         TARGET_KEY = #{targetKey,jdbcType=DECIMAL},
       </if>
       <if test="targetValue != null">
-        TARGET_VALUE = #{targetValue,jdbcType=DECIMAL},
+        TARGET_VALUE = #{targetValue,jdbcType=VARCHAR},
       </if>
       <if test="actionKey != null">
         ACTION_KEY = #{actionKey,jdbcType=DECIMAL},
       </if>
       <if test="actionValue != null">
-        ACTION_VALUE = #{actionValue,jdbcType=DECIMAL},
+        ACTION_VALUE = #{actionValue,jdbcType=VARCHAR},
       </if>
       <if test="finishKey != null">
         FINISH_KEY = #{finishKey,jdbcType=DECIMAL},
@@ -177,9 +177,9 @@
       TASK_KEY = #{taskKey,jdbcType=VARCHAR},
       task_name = #{taskName,jdbcType=VARCHAR},
       TARGET_KEY = #{targetKey,jdbcType=DECIMAL},
-      TARGET_VALUE = #{targetValue,jdbcType=DECIMAL},
+      TARGET_VALUE = #{targetValue,jdbcType=VARCHAR},
       ACTION_KEY = #{actionKey,jdbcType=DECIMAL},
-      ACTION_VALUE = #{actionValue,jdbcType=DECIMAL},
+      ACTION_VALUE = #{actionValue,jdbcType=VARCHAR},
       FINISH_KEY = #{finishKey,jdbcType=DECIMAL},
       FINISH_VALUE = #{finishValue,jdbcType=DECIMAL},
       is_finished = #{isFinished,jdbcType=DECIMAL},

@@ -14,6 +14,8 @@ public interface StoreMapper {
     int insertSelective(Store record);
 
     Store selectByPrimaryKey(Integer id);
+
+    List<Store> getList();
     
     StoreDto getDtoById(Integer id);
 
@@ -45,6 +47,8 @@ public interface StoreMapper {
 	void deleteBatch(List<Integer> list);
 
 	Store getByName(String name);
+
+	Store getStoreByTunnelAndSN(Integer tunnelId, String sn);
 
 	List<Store> getStoresByTunnelId(Integer tunnelId);
 }

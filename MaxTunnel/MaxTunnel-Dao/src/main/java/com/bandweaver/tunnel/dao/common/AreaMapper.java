@@ -29,7 +29,7 @@ public interface AreaMapper {
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
-	void addAreaBatch(List<Object> list);
+	void addAreaBatch(List<Area> list);
 
 	/**
 	 * @Description: 获取所有区域列表
@@ -68,6 +68,8 @@ public interface AreaMapper {
 	void deleteBatch(List<Integer> list);
 
 	Area getByName(String name);
+
+	Area getAreaByTunnelAndSN(Integer tunnelId, String sn);
 
 	List<Area> getAreasByTunnelId(Integer tunnelId);
 }

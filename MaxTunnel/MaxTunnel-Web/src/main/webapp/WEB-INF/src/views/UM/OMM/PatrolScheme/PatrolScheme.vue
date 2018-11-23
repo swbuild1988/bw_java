@@ -51,5 +51,8 @@ export default {
               _this.Log.info(error)
       })
   },
+  beforeRouteUpdate (to, from, next) {
+    next()
+  },
 };
 </script>

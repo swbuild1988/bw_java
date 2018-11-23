@@ -27,16 +27,6 @@ export default {
     mounted() {
         this.Log.info("rtmp start1!");
         this.Log.info(this.video);
-        this.axios.get("videos/" + this.video.id + "/convert").then(result => {
-            this.Log.info(this.video.id + "开启转换");
-        });
-    },
-    beforeDestroy() {
-        this.axios
-            .get("videos/" + this.video.id + "/stop-convert")
-            .then(result => {
-                this.Log.info(this.video.id + "停止转换");
-            });
     },
     methods: {},
     computed: {
@@ -45,19 +35,20 @@ export default {
         },
         playerOptions() {
             return {
+                // height: 300,
                 autoplay: true,
                 controls: true,
                 techOrder: ["flash"],
                 sourceOrder: true,
                 fluid: true,
-                flash: {
-                    hls: { withCredentials: false },
-                    swf: this.ServerConfig + "/media/video-js.swf"
-                },
+                // flash: {
+                //     hls: { withCredentials: false },
+                //     swf: this.ServerConfig + '/media/video-js.swf'
+                // },
                 sources: [
                     {
                         type: "rtmp/mp4",
-                        // src: this.video.url
+                        // src: "rtmp://192.168.3.22:1935/live/" + this.video.id
                         src:
                             "rtmp://184.72.239.149/vod/&mp4:BigBuckBunny_115k.mov"
                     }

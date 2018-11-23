@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.service.em;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +45,8 @@ public class RelatedUnitServiceImpl implements RelatedUnitService {
 
 	@Override
 	public List<RelatedUnitDto> getDtoListByCondition(RelatedUnitVo vo) {
-		return relatedUnitMapper.getDtoListByCondition(vo);
+		List<RelatedUnitDto> list = relatedUnitMapper.getDtoListByCondition(vo);
+		return list == null ? Collections.emptyList() : list ;
 	}
 
 	@Override
@@ -90,7 +92,27 @@ public class RelatedUnitServiceImpl implements RelatedUnitService {
 		//如果id拼接方式为1,2,3,15 进行模糊查询的时候，如果如果传入参数id=1，那么15也会查询出来，为了避免这种情况发生
 		//把每个id用[]包装，即[1],[2],[3],[15],参数用[ 和 ]包装，即查询出唯一结果
 		vo.setSectionIds("[" + String.valueOf(id.intValue()) + "]");
-		List<RelatedUnitDto> list = relatedUnitMapper.getDtoListByCondition(vo);
+		List<RelatedUnitDto> list = getDtoListByCondition(vo);
+		
+		//对sectionIds做处理
+		if(list != null && list.size()>0) {
+			for (RelatedUnitDto relatedUnitDto : list) {
+				String ids = relatedUnitDto.getSectionIds().replaceAll("\\[", "");
+				ids = ids.replaceAll("\\]", "");
+				relatedUnitDto.setSectionIds(ids);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<RelatedUnitDto> getDtoListBySecionIdAndUnitType(Integer id, Integer unitType) {
+		RelatedUnitVo vo = new RelatedUnitVo();
+		//如果id拼接方式为1,2,3,15 进行模糊查询的时候，如果如果传入参数id=1，那么15也会查询出来，为了避免这种情况发生
+		//把每个id用[]包装，即[1],[2],[3],[15],参数用[ 和 ]包装，即查询出唯一结果
+		vo.setSectionIds("[" + String.valueOf(id.intValue()) + "]");
+		vo.setUnitType(unitType);
+		List<RelatedUnitDto> list = getDtoListByCondition(vo);
 		
 		//对sectionIds做处理
 		if(list != null && list.size()>0) {

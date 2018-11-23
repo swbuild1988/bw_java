@@ -73,19 +73,19 @@
     <div style="height: 50px;margin:9px;background-color: #98c1ab;position: absolute;width: 99%">
       <div style="position:absolute;height: 100%;">
         <div style="margin-left:8px;float: left;height: 100%">
-          <div class="alarmCircle" style="background-color: #2fa7ee;">提示</div>
+          <div class="alarmCircle" style="background-color: #0066ff;">提示</div>
           <span class="alarmCircleText">{{alarmLevelCount[0]}}</span>
         </div>
         <div style="margin-left:80px;    float: left;">
-          <div class="alarmCircle" style="background-color: #eed00f; ">一般</div>
+          <div class="alarmCircle" style="background-color: #ffff00; ">一般</div>
           <span class="alarmCircleText">{{alarmLevelCount[1]}}</span>
         </div>
         <div style="margin-left:80px;    float: left;">
-          <div class="alarmCircle" style="background-color: #ee6907; ">严重</div>
+          <div class="alarmCircle" style="background-color: #ffae00; ">严重</div>
           <span class="alarmCircleText">{{alarmLevelCount[2]}}</span>
         </div>
         <div style="margin-left:80px; float: left;">
-          <div class="alarmCircle" style="background-color: #ee082d;">危急</div>
+          <div class="alarmCircle" style="background-color: #ff0000;">危急</div>
           <span class="alarmCircleText">{{alarmLevelCount[3]}}</span>
         </div>
       </div>
@@ -101,7 +101,7 @@
 
   import Treeselect from '@riophae/vue-treeselect'
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-  import {EnumsService} from '../../../../services/enums.js'
+  import {EnumsService} from '../../../../services/enumsService.js'
   import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
 
   export default {
@@ -462,9 +462,12 @@
   .alarmCircle {
     width: 35px;
     height: 35px;
-    color: #fff;
+    color: #a79d9d;
     border-radius: 100%;
     display: flex;
+    -moz-box-shadow: 2px 3px 12px #5DA0AD;
+    -webkit-box-shadow: 2px 3px 12px #5DA0AD;
+    box-shadow: 2px 3px 12px #5DA0AD;
     justify-content: center;
     align-items: Center;
     margin-top: 10px;

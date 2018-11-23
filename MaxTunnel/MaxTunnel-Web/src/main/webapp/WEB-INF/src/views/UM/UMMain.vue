@@ -47,43 +47,73 @@
         </Button>
         </Col>
         <Col span="6">
-        <Button type="info" class="zhJiankon"
-                @click="goToMoudle({ path:'/UM/TunnelSupervise'})">
-          <div><img src="../../assets/UM/巡检.png">
-            <div :style="{fontSize:mySize}">管廊本体监测</div>
-          </div>
-        </Button>
-        <Button class=" btn-guanxian zhJiankon"
-                @click="goToMoudle({ path:'/UM/PipelineSupervise'})">
-          <div><img src="../../assets/UM/管线.png">
-            <div :style="{fontSize:mySize}">管线本体监测</div>
-          </div>
-        </Button>
+         <!--<Button type="info" class="ywGuanli"-->
+                <!--@click="goToMoudle({ path:'/UM/TunnelSupervise'})">-->
+          <!--<div><img src="../../assets/UM/巡检.png">-->
+            <!--<div :style="{fontSize:mySize}">管廊本体监测</div>-->
+          <!--</div>-->
+        <!--</Button>-->
+        <Row>
+          <Col span="12">
+          <!--<Button class=" btn-guanxian renYuandinwei"-->
+                  <!--@click="goToMoudle({ path:'/UM/PipelineSupervise'})">-->
+            <!--<div><img src="../../assets/UM/管线.png">-->
+              <!--<div :style="{fontSize:mySize}">管线本体监测</div>-->
+            <!--</div>-->
+          <!--</Button>-->
+          <Button class=" btn-guanxian renYuandinwei"
+                  @click="goToMoudle({ path:'/UM/TunnelEnvironment'})">
+            <div><img src="../../assets/UM/巡检.png">
+              <div :style="{fontSize:mySize}">管廊环境监测</div>
+            </div>
+          </Button>
+          </Col>
+          <Col span="12">
+          <Button type="info" class="renYuandinwei"
+                  @click="goToMoudle({ path:'/UM/TunnelSafety'})">
+            <div><img src="../../assets/UM/巡检.png">
+              <div :style="{fontSize:mySize}">管廊安防监测</div>
+            </div>
+          </Button>
+          </Col>
+        </Row>
         </Col>
         <Col span="3">
-        <Button class=" btn-xunjian zhJiankon" @click="goToMoudle({ path:'/UM/relatedUnits/query'})">
-          <div><img src="../../assets/UM/巡检.png">
-            <div :style="{fontSize:mySize}">基础信息管理</div>
+        <Button class="btn-quexian renYuandinwei" @click="goToMoudle({path:'/UM/tunnelDocuments/list'})">
+          <div><img :width="imgWidth" src="../../assets/UM/缺陷管理.png">
+            <div :style="{fontSize:mySize}">资料管理</div>
           </div>
         </Button>
         </Col>
       </Row>
       <Row type="flex" justify="center" align="top" class="code-row-bg">
         <Col span="6">
-        <Button class=" btn-yonhu yyGuanLi"
-                @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
-          <div><img src="../../assets/UM/用户.png">
-            <div :style="{fontSize:mySize}">管廊客户管理</div>
-          </div>
-        </Button>
-        <Button class=" btn-nenghao yyGuanLi"
-                style="margin-top: 0.5vh;"
+        <Button class=" btn-nenghao yjGuanLi"
+                style="width:24.2vw;"
                 @click="goToMoudle({ path:'/UM/TunnelEnergy/homepage'})">
           <div><img src="../../assets/UM/能耗.png">
             <div :style="{fontSize:mySize}">管廊能耗管理</div>
           </div>
         </Button>
-        <Button type="info" class="yyGuanLi" style="margin-top: 0.5vh;"
+        <Button class=" btn-tonxing ywGuanli"
+                @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
+          <div><img src="../../assets/UM/用户.png">
+            <div :style="{fontSize:mySize}">管廊客户管理</div>
+          </div>
+        </Button>
+        <Button class="btn-jiqiren  ywGuanli"
+                @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
+          <div><img src="../../assets/UM/用户.png">
+            <div :style="{fontSize:mySize}">入廊申请管理</div>
+          </div>
+        </Button>
+        <Button class=" btn-yonhu ywGuanli"
+                @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
+          <div><img src="../../assets/UM/用户.png">
+            <div :style="{fontSize:mySize}">管廊合同管理</div>
+          </div>
+        </Button>
+        <Button type="info" class="ywGuanli"
                 @click="goToMoudle({path: '/UM/OperatingSpace/tunnel/1'})">
           <div><img src="../../assets/UM/空间.png">
             <div :style="{fontSize:mySize}">管廊空间管理</div>
@@ -91,47 +121,57 @@
         </Button>
         </Col>
         <Col span="6">
-        <Button type="error" style="width:24.2vw;"
-                class="yjGuanLi">
-          <div><img src="../../assets/UM/消防.png">
-            <div :style="{fontSize:smSize}">消防系统</div>
-          </div>
-        </Button>
-        <Button type="success" class="yjGuanLi" @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
+        <Button  type="success"  style="width:24.2vw;"
+                class="yjGuanLi"  @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
           <div><img src="../../assets/UM/数据.png">
             <div :style="{fontSize:smSize}">数据分析</div>
           </div>
         </Button>
-        <Button class=" btn-guanxian  yjGuanLi">
-          <div><img src="../../assets/UM/通信.png">
-            <div :style="{fontSize:smSize}">通信系统</div>
-          </div>
+        <!--<Button  type="error" class="yjGuanLi">-->
+          <!--<div><img src="../../assets/UM/消防.png">-->
+            <!--<div :style="{fontSize:smSize}">消防系统</div>-->
+          <!--</div>-->
+        <!--</Button>-->
+        <Button  type="error" class="renYuandinwei" @click="goToMoudle({ path:'/UM/PersonnelPosition/tunnel'})">
+        <div><img src="../../assets/UM/消防.png">
+        <div :style="{fontSize:smSize}">人员定位</div>
+        </div>
         </Button>
-        <Button class=" btn-jiqiren yjGuanLi" @click="goToMoudle({ path:'/UM/RobotMonitoring/query'})">
-          <div><img class="img" src="../../assets/UM/机器人.png">
-            <div :style="{fontSize:mySize}">机器人监控系统</div>
-          </div>
-        </Button>
-        <Button class="yjGuanLi btn-shiping" @click="goToMoudle({path: '/UM/VideoMonitoring/details/1'})">
+        <!--<Button class=" btn-guanxian  yjGuanLi">-->
+          <!--<div><img src="../../assets/UM/通信.png">-->
+            <!--<div :style="{fontSize:smSize}">通信系统</div>-->
+          <!--</div>-->
+        <!--</Button>-->
+        <!--<Button class=" btn-jiqiren yjGuanLi" @click="goToMoudle({ path:'/UM/RobotMonitoring/query'})">-->
+          <!--<div><img class="img" src="../../assets/UM/机器人.png">-->
+            <!--<div :style="{fontSize:mySize}">机器人监控系统</div>-->
+          <!--</div>-->
+        <!--</Button>-->
+        <Button class="renYuandinwei btn-shiping" @click="goToMoudle({path: '/UM/VideoMonitoring/details/1'})">
           <div><img class="img" src="../../assets/UM/摄像机.png">
             <div :style="{fontSize:mySize}">视频监控系统</div>
           </div>
         </Button>
         </Col>
         <Col span="3">
-        <Button class="btn-quexian yjGuanLi">
-          <div><img :width="imgWidth" src="../../assets/UM/缺陷管理.png">
-            <div :style="{fontSize:mySize}">调度管理</div>
+        <Button class=" btn-xunjian yjGuanLi" @click="goToMoudle({ path:'/UM/relatedUnits/query'})">
+          <div><img src="../../assets/UM/巡检.png">
+            <div :style="{fontSize:mySize}">基础信息管理</div>
           </div>
         </Button>
-        <Button class="yjGuanLi" type="primary">
-          <div><img :width="imgWidth" src="../../assets/UM/设备台账.png">
-            <div :style="{fontSize:mySize}">灾害管理</div>
-          </div>
-        </Button>
-        <Button  type="warning" class="yjGuanLi" @click="goToMoudle({ path:'/UM/plans/detial/processKey'})">
+        <Button  type="warning" class="ywGuanli " @click="goToMoudle({ path:'/UM/plans/detial/FirePlanProcess'})">
           <div><img :width="imgWidth" src="../../assets/UM/检修.png">
             <div :style="{fontSize:mySize}">预案管理</div>
+          </div>
+        </Button>
+        <!--<Button class="ywGuanli " type="primary">-->
+          <!--<div><img :width="imgWidth" src="../../assets/UM/设备台账.png">-->
+            <!--<div :style="{fontSize:mySize}">灾害管理</div>-->
+          <!--</div>-->
+        <!--</Button>-->
+        <Button class="ywGuanli " type="primary"  @click="goToMoudle({path:'/UM/operationLog/query'})">
+          <div><img :width="imgWidth" src="../../assets/UM/设备台账.png">
+            <div :style="{fontSize:mySize}">日志管理</div>
           </div>
         </Button>
         </Col>
@@ -225,13 +265,19 @@
 <style scoped>
   .ywGuanli {
     width: 12vw;
-    height: 13.4vh;
+    height: 13.8vh;
+    margin-top: 0.5vh;
+    box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
+  }
+  .renYuandinwei {
+    height: 28vh;
+    width: 12vw;
     margin-top: 0.5vh;
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
   }
 
   .zhJiankon {
-    height: 28vh;
+    height: 27.2vh;
     width: 12vw;
     margin-top: 0.5vh;
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
@@ -247,7 +293,7 @@
   .yjGuanLi {
     width: 12vw;
     height: 14vh;
-    margin-top: 0.5vh;
+    margin-top: 1.5vh;
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
   }
 

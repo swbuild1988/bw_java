@@ -25,5 +25,5 @@ public interface ScheduleJobMapper {
 
 	List<ScheduleJob> getByJobStatus(int jobStatus);
 
-	ScheduleJob getByJobNameAndJobGroup(@Param("jobName")String jobName, @Param("jobGroup")String jobGroup);
+	ScheduleJob getByJobNameAndJobGroup(@Param("jobName")String jobName);
 }

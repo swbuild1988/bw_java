@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="backStyle">
         <Form :model="defectDetails" ref="defectDetails" :label-width="100" :rules="ruleValidate" @submit.native.prevent>
             <h2 class="formTitle">指派维修工单</h2>
             <FormItem label="所属管廊：">
@@ -111,7 +111,16 @@ export default {
             stores:[],
             objs:[],
             processInstanceId: null,
-            typeKey: null
+            typeKey: null,
+            backStyle:{
+                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+                position: 'relative',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                backgroundAttachment: 'fixed',
+                backgroundSize: 'cover',
+                minHeight: '100%'
+            }
         }    
     },
     watch:{

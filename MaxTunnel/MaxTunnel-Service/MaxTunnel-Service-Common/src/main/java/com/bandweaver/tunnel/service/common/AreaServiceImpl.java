@@ -39,6 +39,7 @@ public class AreaServiceImpl implements AreaService {
 		
 		String area_name = area.getName();
 		List<Store> store_list = storeMapper.getStoresByTunnelId(area.getTunnelId());
+		if(store_list == null) return;
 		for (Store store : store_list) {
 			String section_name = area_name + "-" + store.getName();
 			
@@ -56,7 +57,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public void addAreaBatch(List<Object> list) {
+	public void addAreaBatch(List<Area> list) {
 		areaMapper.addAreaBatch(list);
 	}
 
@@ -109,5 +110,8 @@ public class AreaServiceImpl implements AreaService {
 		return areaMapper.getByName(name);
 	}
 
-	
+	@Override
+	public Area getByTunnelAndSN(Integer tunnelId, String sn) {
+		return areaMapper.getAreaByTunnelAndSN(tunnelId, sn);
+	}
 }

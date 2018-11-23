@@ -5,10 +5,11 @@
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.StoreType">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="Sb" jdbcType="VARCHAR" property="sn" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, NAME, CRT_TIME
+    ID, NAME, SN, CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -21,9 +22,9 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.StoreType">
-    insert into T_COMMON_STORE_TYPE (ID, NAME, CRT_TIME
+    insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME
       )
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},  #{sn,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.StoreType">
@@ -35,6 +36,9 @@
       <if test="name != null">
         NAME,
       </if>
+        <if test="sn != null">
+            sn,
+        </if>
       <if test="crtTime != null">
         CRT_TIME,
       </if>
@@ -46,6 +50,9 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
+        <if test="sn != null">
+            #{sn,jdbcType=VARCHAR},
+        </if>
       <if test="crtTime != null">
         #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -57,6 +64,9 @@
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
+        <if test="sn != null">
+            SN = #{sn, jdbcType=VARCHAR},
+        </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -66,6 +76,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.StoreType">
     update T_COMMON_STORE_TYPE
     set NAME = #{name,jdbcType=VARCHAR},
+        SN = #{sn,jdbcType=VARCHAR},
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -91,6 +102,9 @@
   		<if test="name != null and name.trim() != ''">
   			and instr(name,#{name})>0
   		</if>
+        <if test="sn != null and sn.trim() != ''">
+            and instr(sn,#{sn})>0
+        </if>
   		<if test="startTime != null">
   			and crt_time &gt;= #{startTime}
   		</if>
@@ -105,4 +119,10 @@
   <select id="getByName" resultMap="BaseResultMap">
   	select * from T_COMMON_STORE_TYPE where name = #{name}
   </select>
+
+
+    <select id="getBySN" resultMap="BaseResultMap">
+        select * from T_COMMON_STORE_TYPE where sn = #{sn}
+    </select>
+
 </mapper>

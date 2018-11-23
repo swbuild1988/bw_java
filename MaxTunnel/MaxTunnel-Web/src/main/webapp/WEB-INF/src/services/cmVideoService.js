@@ -53,7 +53,59 @@ var CMVideoService = {
                 }
             })
         })
+    },
+    //编辑视频服务
+    editVideoService: function(editDate){
+        return new Promise((resolve, reject) => {
+            axios.put('video_servers',editDate).then(res=>{
+                let{ code,data,msg } = res.data
+                if(code==200){
+                    resolve(data)
+                }else{
+                    reject(msg + ',地址： video_servers')
+                }
+            })
+        })
+    },
+    //通过id获取视频服务
+    getVideoServiceById: function(id){
+        return new Promise((resolve, reject) => {
+            axios.get("video_servers/"+id).then(res=>{
+                let{ code,data,msg } = res.data
+                if(code==200){
+                    resolve(data)
+                }else{
+                    reject(msg + ',地址:video_servers/"+id')
+                }
+            })
+        })
+    },
+    //删除
+    delVideoService: function(id){
+        return new Promise((resolve, reject) => {
+            axios.delete("video_servers/"+id).then(res=>{
+                let{ code,data,msg } = res.data
+                if(code==200){
+                    resolve(data)
+                }else{
+                    reject(msg + ',地址：video_servers/id ')
+                }
+            })
+        })
+    },
+    getAllVideoService(){
+        return new Promise((resolve, reject) => {
+            axios.get("videos").then(res=>{
+                let{ code,data,msg } = res.data
+                if(code==200){
+                    resolve(data)
+                }else{
+                    reject(msg)
+                }
+            })
+        })
     }
+
 }
 export {
 	CMVideoService

@@ -1,0 +1,231 @@
+{
+    "VMWebConfig": {
+        "WebConfig": {
+            "data": [{
+                    "id": 1,
+                    "title": "入廊信息",
+                    "url": "",
+                    "matchChartTypes": [900],
+                    "parameters": {}
+                },
+                {
+                    "id": 2,
+                    "title": "设备数量",
+                    "url": "equipments/type/count",
+                    "matchChartTypes": [100, 200, 300, 500],
+                    "parameters": {
+                        "option": {
+                            "textStyle": {
+                                "color": "rgba(255, 255, 255, 0.3)"
+                            },
+                            "color": ["#61a0a8"],
+                            "tooltip": {},
+                            "xAxis": {
+                                "axisLabel": {
+                                    "interval": 0,
+                                    "rotate": 40,
+                                    "textStyle": {
+                                        "color": "#F1F2F3"
+                                    }
+                                }
+                            },
+                            "yAxis": {
+                                "axisLabel": {
+                                    "interval": 1,
+                                    "textStyle": {
+                                        "color": "#F1F2F3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 3,
+                    "title": "故障数量对比",
+                    "url": "equipments/type/status/count",
+                    "matchChartTypes": [201, 501],
+                    "parameters": {
+                        "option": {
+                            "title": {},
+                            "tooltip": {},
+                            "legend": {
+                                "data": []
+                            },
+                            "radar": {
+                                "name": {
+                                    "formatter": "{value}",
+                                    "textStyle": {}
+                                },
+                                "splitArea": {
+                                    "areaStyle": {
+                                        "color": ["#001A27"]
+                                    }
+                                }
+                            },
+                            "series": [{
+                                "type": "radar"
+                            }]
+                        }
+                    }
+                },
+                {
+                    "id": 4,
+                    "title": "管廊年度总耗电量",
+                    "url": "tunnels/items/energies",
+                    "matchChartTypes": [100, 200, 300, 500],
+                    "parameters": {
+                        "option": {
+                            "title": {},
+                            "series": [{
+                                "type": "pie",
+                                "radius": [40, 100],
+                                "center": ["50%", "50%"],
+                                "label": {
+                                    "normal": {
+                                        "show": false,
+                                        "position": "center",
+                                        "textStyle": {}
+                                    },
+                                    "emphasis": {
+                                        "show": true,
+                                        "textStyle": {
+                                            "fontSize": "10",
+                                            "fontWeight": "bold"
+                                        }
+                                    }
+                                },
+                                "labelLine": {
+                                    "normal": {
+                                        "show": false,
+                                        "lineStyle": {
+                                            "color": "rgba(255, 255, 255, 0.3)"
+                                        },
+                                        "smooth": 0.2,
+                                        "length": 10,
+                                        "length2": 20
+                                    }
+                                },
+                                "animationType": "scale",
+                                "animationEasing": "elasticOut"
+                            }]
+                        }
+                    }
+                },
+                {
+                    "id": 5,
+                    "title": "{tunnelName}耗电量",
+                    "url": "tunnels/{tunnelId}/energies/one-year",
+                    "matchChartTypes": [100, 200],
+                    "parameters": {
+                        "format": {
+                            "tunnelId": 1,
+                            "tunnelName": "古城大街"
+                        },
+                        "option": {
+                            "series": [{
+                                "type": "line",
+                                "areaStyle": {
+                                    "normal": {
+                                        "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
+                                    }
+                                }
+                            }]
+                        }
+                    }
+                },
+                {
+                    "id": 6,
+                    "title": "未处理缺陷",
+                    "url": "tunnels/defectcount",
+                    "matchChartTypes": [201, 501],
+                    "parameters": {
+                        "option": {
+                            "xAxis": {
+                                "axisLabel": {
+                                    "interval": 0,
+                                    "rotate": 40
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 7,
+                    "title": "报警监控统计",
+                    "url": "tunnel/alarmcount",
+                    "matchChartTypes": [202],
+                    "parameters": {}
+                }
+            ],
+            "deployCharts": [{
+                    "modelId": "vmModel1",
+                    "dataId": 1,
+                    "chartType": 900
+                },
+                {
+                    "modelId": "vmModel2",
+                    "dataId": 2,
+                    "chartType": 200
+                },
+                {
+                    "modelId": "vmModel3",
+                    "dataId": 3,
+                    "chartType": 501
+                },
+                {
+                    "modelId": "vmModel4",
+                    "dataId": 4,
+                    "chartType": 300
+                },
+                {
+                    "modelId": "vmModel5",
+                    "dataId": 5,
+                    "chartType": 100
+                },
+                {
+                    "modelId": "vmModel6",
+                    "dataId": 6,
+                    "chartType": 201
+                },
+                {
+                    "modelId": "vmModel7",
+                    "dataId": 7,
+                    "chartType": 202
+                }
+            ]
+        }
+    },
+    "VMExtendStyle":{
+        "VMContextExtend1":
+        {
+            "className":"模块1",
+            "extendStyle":
+            {
+                "width":"100%",
+                "left":"0"
+            },
+            "isShow":true
+        },
+        "VMContextExtend2":
+        {
+            "className":"模块2",
+            "extendStyle":
+            {
+                "width":"10%",
+                "left":"60%"
+            },
+            "isShow":true
+        },
+        "VMContextExtend3":
+        {
+            "className":"模块3",
+            "extendStyle":
+            {
+                "width":"10%",
+                "left":"70%"
+            },
+            "isShow":true
+        }
+    }
+}

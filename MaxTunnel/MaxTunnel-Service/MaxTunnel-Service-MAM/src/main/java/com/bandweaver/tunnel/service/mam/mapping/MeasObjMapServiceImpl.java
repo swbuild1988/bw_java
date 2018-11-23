@@ -1,9 +1,8 @@
 package com.bandweaver.tunnel.service.mam.mapping;
 
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
-import org.apache.shiro.authc.LogoutAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,12 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
-import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjMapVo;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.mam.MeasObjMapMapper;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 @Service
 public class MeasObjMapServiceImpl implements MeasObjMapService {
 
@@ -27,7 +27,7 @@ public class MeasObjMapServiceImpl implements MeasObjMapService {
 	private MeasObjModuleCenter measObjModuleCenter;
 
 	@Override
-	public List<MeasObjMap> getByObjectIdAndInputValue(Integer objectId, Integer inputValue) {
+	public MeasObjMap getByObjectIdAndInputValue(Integer objectId, Integer inputValue) {
 		return measObjMapMapper.getByObjectIdAndInputValue(objectId,inputValue);
 	}
 
@@ -38,6 +38,7 @@ public class MeasObjMapServiceImpl implements MeasObjMapService {
 
 	@Override
 	public void add(MeasObjMap measObjMap) {
+		measObjMap.setCrtTime(DateUtil.getCurrentDate());
 		measObjMapMapper.insertSelective(measObjMap);
 	}
 
@@ -57,34 +58,42 @@ public class MeasObjMapServiceImpl implements MeasObjMapService {
 	}
 
 	@Override
-	public void doAction(Integer objectId, Integer inputValue) {
+	public MeasObjMap getMaxViewMeasObj(Integer objectId, Integer inputValue) {
 		//1.根据objectId获取obj对象并更新cv值
 		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
 		if(measObj == null) { 
-			return;
+			return null;
 		}
 		
 		DataType dataType = DataType.getEnum(measObj.getDatatypeId());
 		if(DataType.DI == dataType) {
 			MeasObjDI measObjDI = measObjModuleCenter.getMeasObjDI(objectId);
+			if(measObjDI == null) measObjDI = new MeasObjDI();
 			measObjDI.setCV(inputValue == 1 ? true : false);
-			measObjDI.setRefreshTime(new Date());
+			measObjDI.setRefreshTime(DateUtil.getCurrentDate());
 		}else if(DataType.SI == dataType) {
 			MeasObjSI measObjSI = measObjModuleCenter.getMeasObjSI(objectId);
+			if(measObjSI == null) measObjSI = new MeasObjSI();
 			measObjSI.setCV(inputValue);
-			measObjSI.setRefreshTime(new Date());
+			measObjSI.setRefreshTime(DateUtil.getCurrentDate());
 		}
 		
 		//2.根据objectId和inputValue去映射表里查找映射到的objectId2
-		List<MeasObjMap> list = getByObjectIdAndInputValue(objectId,inputValue);
+		MeasObjMap result = getByObjectIdAndInputValue(objectId,inputValue);
+		return result;
 		
-		//3.执行相应动作
-		for (MeasObjMap measObjMap : list) {
-			Integer objectId2 = measObjMap.getObjectId2();
-			Integer outputValue = measObjMap.getOutputValue();
-			LogUtil.info("objectId : " + objectId + "映射objectId2：" + objectId2 + ",动作为：" + outputValue);
-		}
-		
+	}
+
+	@Override
+	public PageInfo<MeasObjMap> dataGrid(MeasObjMapVo vo) {
+		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+		List<MeasObjMap> list = getByCondition(vo);
+		return new PageInfo<>(list);
+	}
+
+	private List<MeasObjMap> getByCondition(MeasObjMapVo vo) {
+		List<MeasObjMap> list = measObjMapMapper.getByCondition(vo);
+		return list == null ? Collections.emptyList() : list ;
 	}
 	
 	

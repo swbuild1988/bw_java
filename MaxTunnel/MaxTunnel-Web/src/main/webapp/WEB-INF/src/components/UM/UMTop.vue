@@ -127,14 +127,22 @@ import { UserService } from '../../services/userService'
             frontIcon: 'ios-analytics',
             endIcon: 'arrow-down-b',
             children: [
+              // {
+              //   name: '管廊本体监测',
+              //   url: '/UM/TunnelSupervise'
+              // },
               {
-                name: '管廊本体监测',
-                url: '/UM/TunnelSupervise'
+                name: '管廊环境监测',
+                url: '/UM/TunnelEnvironment'
               },
               {
-                name: '管线本体监测',
-                url: '/UM/PipelineSupervise'
+                name: '管廊安防监测',
+                url: '/UM/TunnelSafety'
               },
+              // {
+              //   name: '管线本体监测',
+              //   url: '/UM/PipelineSupervise'
+              // },
               // {
               //   name: '消防系统',
               //   url: ''
@@ -173,16 +181,16 @@ import { UserService } from '../../services/userService'
               },
               {
                 name: '预案管理',
-                url: '/UM/plans/detial/processKey'
+                url: '/UM/plans/detial/FirePlanProcess'
               },
               // {
               //   name: '调度管理',
               //   url: ''
               // },
-              {
-                name: '灾害管理',
-                url: '/UM/disaster/query'
-              },
+              // {
+              //   name: '灾害管理',
+              //   url: '/UM/disaster/query'
+              // },
             ]
           },
           {

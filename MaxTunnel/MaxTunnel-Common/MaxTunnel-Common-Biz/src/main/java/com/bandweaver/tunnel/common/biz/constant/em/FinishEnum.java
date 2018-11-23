@@ -8,8 +8,7 @@ public enum FinishEnum {
 
 	
 	AUTO("自动",1),
-	SEMI_AUTO("半自动",2),
-	MANUAL("手动",3);
+	MANUAL("手动",2);
 	
 	private String name;
 	private int value;

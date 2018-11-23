@@ -370,6 +370,9 @@ insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1002, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 22.3145960835601);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1003, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 22.3145960835601);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (4001, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 13.3145960835601);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
@@ -387,13 +390,28 @@ insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1000, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.711521170676);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1004, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 22.3145960835601);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1005, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1006, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1007, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1008, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1009, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 68.8569314597337);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1010, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 54.5508316145362);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1011, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1012, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 35.6427223473923);
@@ -414,10 +432,16 @@ insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1017, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 18.0863953276937);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1018, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1019, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 7.12441006932147);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1020, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 196.560244888402);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1021, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1022, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 1.11049185098537);
@@ -429,16 +453,41 @@ insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1024, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 36.0327398107407);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1025, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 37.7997101552757);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1026, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 38.8649238304278);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1027, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 38.8649238304278);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1028, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 38.8649238304278);
+
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1029, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 55.7708095091385);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1030, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 38.8649238304278);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1031, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 77.8928501878927);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1032, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 38.8649238304278);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1033, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1034, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1035, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1036, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1037, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 170.55414645243);
@@ -447,10 +496,16 @@ insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1038, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 32.771875222652);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1039, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1040, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 151.533039430129);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1041, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 184.066989914023);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1042, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 117.712671442443);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1043, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 152.003918181956);
@@ -460,6 +515,15 @@ values (1044, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 198.33222
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1045, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 127.500851490391);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1046, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 127.500851490391);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1047, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 127.500851490391);
+
+insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
+values (1048, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 127.500851490391);
 
 insert into t_mam_measobj_ai (ID, REFRESH_TIME, CV)
 values (1049, to_date('19-07-2018 17:23:30', 'dd-mm-yyyy hh24:mi:ss'), 2.55412817443996);
@@ -1524,4 +1588,9 @@ values (to_date('11-01-2018', 'dd-mm-yyyy'), 8020, 10);
 
 insert into T_MAM_MEASVALUE_AI (TIME, OBJECT_ID, CV)
 values (to_date('11-01-2018 16:00:00', 'dd-mm-yyyy hh24:mi:ss'), 8020, 56);
+commit;
+
+--maxview≈‰÷√±Ì
+insert into T_MAM_MAXVIEW_CONFIG (ID, NAME, IP, PORT, USERNAME, PASSWORD, CRT_TIME)
+values (1, '÷’∂À1', '192.168.6.14', '80', 'admin', '14e24dc8cf60446f56eb163a7b85bce8a53d3f766badf15e86a1af857d9a9012', to_date('15-11-2018', 'dd-mm-yyyy'));
 commit;

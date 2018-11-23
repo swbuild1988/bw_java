@@ -2,7 +2,7 @@
     <!-- 管廊管理的修改管廊 -->
     <div>
        <Modal v-model="show.state" title="修改管廊">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
                 <FormItem label="管廊名" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入新管廊名" class="InputWidth"></Input>
                 </FormItem>
@@ -32,6 +32,11 @@
                         <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
+                <FormItem label="MaxView终端">
+                    <Select v-model="formValidate.maxviewConfigId" placeholder="请选择运营单位" class="InputWidth">
+                        <Option v-for="item in terminals" :value="item.id" :key="item.id">{{item.name}}</Option>
+                    </Select>
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button type="primary" size="large" v-on:click="sendMsgtoManage('formValidate')">保存</Button>
@@ -47,6 +52,7 @@ export default {
         return {
             staffs:[],
             companies:[],
+            terminals: [],
             formValidate: {
                 name:'',
                 length:0,
@@ -55,7 +61,8 @@ export default {
                 operationId:'',
                 longitude:0,
                 latitude:0,
-                highness:0
+                highness:0,
+                maxviewConfigId: null
             },
             ruleValidate: {
                 name: [
@@ -78,8 +85,7 @@ export default {
         changeInfo:{}
     },
     mounted(){
-        this.getStaffs();
-        this.getCompanies();
+        this.init();
     },
     methods:{
         sendMsgtoManage: function(name){
@@ -91,7 +97,7 @@ export default {
                 }
             })
         },
-        getStaffs(){
+        init(){
             this.axios.get('/staffs').then(res =>{
                 let {code,data} = res.data;
                 let _staff = [];
@@ -105,8 +111,6 @@ export default {
                     this.staffs = _staff;
                 }
             });
-        },
-        getCompanies(){
             this.axios.get('/companies').then(res =>{
                 let {code,data} = res.data;
                 let _company = [];
@@ -120,6 +124,10 @@ export default {
                 }
                 this.companies = _company;
             });
+            this.axios.get('maxview/list').then(res =>{
+                let {code,data} = res.data
+                this.terminals = data
+            })
         },
     }
 }

@@ -9,6 +9,7 @@ import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,15 @@ public class LocatorServiceImpl implements LocatorService {
 
         Locator locator = new Locator();
         locator.setOwner(user);
+//--------------绑定人员定位的经纬度，以便定位人员信息，后期删除该代码----------------
+        Point3D p = new Point3D();
+        int a = (int)(Math.random()*100);
+        Double lon = MathUtil.add(112.4940279, a*0.0001);
+        Double lat = MathUtil.add(37.7062123, a*0.0001);
+        p.setLng(lon);
+        p.setLat(lat);
+        locator.setPosition(p);
+//---------------------------------------------------------------------
         measObjSO.setCV(JSONObject.toJSONString(locator));
 
         // 更新状态（actived)

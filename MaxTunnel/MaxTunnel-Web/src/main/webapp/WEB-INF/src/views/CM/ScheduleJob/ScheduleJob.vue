@@ -81,10 +81,10 @@ export default {
                     title: '任务名称',
                     key: 'jobName'
                 },
-                {
-                    title: '任务组',
-                    key: 'jobGroup'
-                },
+                // {
+                //     title: '任务组',
+                //     key: 'jobGroup'
+                // },
                 {
                     title: '任务描述',
                     key: 'description'
@@ -109,11 +109,11 @@ export default {
                            props: {
                                type: 'primary',
                                size: 'large',
-                               value: this.data6[params.index].jobStatus === 1      //1则启用，0则禁用
+                               value: this.data6[params.index].jobStatusName === '启用'     //1则启用，0则禁用
                            },
                            on:{
                                'on-change':(value) => {
-                                   this.switch(params.index)
+                                   this.switch(params.row)
                                }
                            }
                         })
@@ -201,8 +201,10 @@ export default {
         }
     },
     methods:{
-        switch(index){
-            this.axios.get('/schedulejobs/'+ this.data6[index].jobId +'/jobstatus/'+ (1-this.data6[index].jobStatus)).then(res =>{
+        switch(job){
+            this.Log.info(job)
+            let jobStatus = job.jobStatusName == '禁用' ? 0 : 1
+            this.axios.get('/schedulejobs/'+ job.jobId +'/jobstatus/'+ (1-jobStatus)).then(res =>{
                 let{code,data} = res.data;
                 if(code == 200){
                     this.showTable();
@@ -224,7 +226,6 @@ export default {
                         info.cronExpression = data.list[index].cronExpression;
                         info.description = data.list[index].description;
                         info.jobStatusName = data.list[index].jobStatusName;
-                        info.jobStatus = data.list[index].jobStatus;
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;
@@ -305,7 +306,6 @@ export default {
                         info.cronExpression = data.list[index].cronExpression;
                         info.description = data.list[index].description;
                         info.jobStatusName = data.list[index].jobStatusName;
-                        info.jobStatus = data.list[index].jobStatus;
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;

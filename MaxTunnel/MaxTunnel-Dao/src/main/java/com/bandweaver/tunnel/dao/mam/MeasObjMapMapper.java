@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjMapVo;
 
 public interface MeasObjMapMapper {
     int deleteByPrimaryKey(Integer id);
@@ -19,7 +20,9 @@ public interface MeasObjMapMapper {
 
     int updateByPrimaryKey(MeasObjMap record);
 
-	List<MeasObjMap> getByObjectIdAndInputValue(@Param("objectId")Integer objectId, @Param("inputValue")Integer inputValue);
+    MeasObjMap getByObjectIdAndInputValue(@Param("objectId")Integer objectId, @Param("inputValue")Integer inputValue);
 
 	void deleteBatch(List<Integer> list);
+
+	List<MeasObjMap> getByCondition(MeasObjMapVo vo);
 }

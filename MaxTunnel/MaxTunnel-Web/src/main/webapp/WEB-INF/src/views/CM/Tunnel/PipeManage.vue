@@ -70,96 +70,110 @@
 </template>
 
 <script>
-import PipeModule from '../../CM/Tunnel/PipeModule.vue'
-import PipeModification from '../../CM/Tunnel/PipeModification.vue'
+import PipeModule from "../../CM/Tunnel/PipeModule.vue";
+import PipeModification from "../../CM/Tunnel/PipeModification.vue";
 export default {
-    name: 'pipe-manage',
-    data(){
+    name: "pipe-manage",
+    data() {
         return {
             columns7: [
                 {
-                    type: 'selection',
+                    type: "selection",
                     width: 60,
-                    align: 'center'
+                    align: "center"
                 },
                 {
-                    type: 'index',
-                    align: 'center'
+                    type: "index",
+                    align: "center"
                 },
                 {
-                    title: '管廊名',
-                    key: 'name',
-                    align: 'center'
+                    title: "管廊名",
+                    key: "name",
+                    align: "center"
                 },
                 {
-                    title: '管廊长度',
-                    key: 'length',
-                    align: 'center'
+                    title: "编号",
+                    key: "sn",
+                    align: "center"
                 },
                 {
-                    title: '负责人',
-                    key: 'responsibility',
-                    align: 'center'
+                    title: "管廊长度",
+                    key: "length",
+                    align: "center"
                 },
                 {
-                    title: '建筑单位',
-                    key: 'construct',
-                    align: 'center'
+                    title: "负责人",
+                    key: "responsibility",
+                    align: "center"
                 },
                 {
-                    title: '运营单位',
-                    key: 'operation',
-                    align: 'center'
+                    title: "建筑单位",
+                    key: "construct",
+                    align: "center"
                 },
                 {
-                    title: '经度',
-                    key: 'longitude',
-                    align: 'center'
+                    title: "运营单位",
+                    key: "operation",
+                    align: "center"
                 },
                 {
-                    title: '纬度',
-                    key: 'latitude',
-                    align: 'center'
+                    title: "MaxView终端",
+                    key: "maxviewConfigName",
+                    align: "center"
                 },
                 {
-                    title: '高度',
-                    key: 'highness',
-                    align: 'center'
+                    title: "经度",
+                    key: "longitude",
+                    align: "center"
                 },
                 {
-                        title: '操作',
-                        key: 'action',
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
+                    title: "纬度",
+                    key: "latitude",
+                    align: "center"
+                },
+                {
+                    title: "高度",
+                    key: "highness",
+                    align: "center"
+                },
+                {
+                    title: "操作",
+                    key: "action",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
                                     props: {
-                                        type: 'primary',
-                                        size: 'small'
+                                        type: "primary",
+                                        size: "small"
                                     },
                                     style: {
-                                        marginLeft: '5px'
+                                        marginLeft: "5px"
                                     },
                                     on: {
                                         click: () => {
-                                            this.changeBarn(params.index)
+                                            this.changeBarn(params.index);
                                         }
                                     }
-                                }, '修改')
-                            ]);
-                        }
+                                },
+                                "修改"
+                            )
+                        ]);
                     }
+                }
             ],
-            data6:[],
-            staffs:[],
-            companies:[],
-            researchInfo:{
-                name:'',
-                startTime:'',
-                endTime:'',
-                responsibilityId:null,
-                constructId:null,
-                operationId:null
+            data6: [],
+            staffs: [],
+            companies: [],
+            researchInfo: {
+                name: "",
+                startTime: "",
+                endTime: "",
+                responsibilityId: null,
+                constructId: null,
+                operationId: null
             },
             page: {
                 pageNum: 1,
@@ -167,40 +181,40 @@ export default {
                 pageTotal: 0
             },
             pageStyle: {
-                position: 'absolute',
-                bottom: '20px',
-                right: '15px'
+                position: "absolute",
+                bottom: "20px",
+                right: "15px"
             },
             formValidate: {
-                id:0,
-                name:'',
-                length:0,
-                responsibilityId:'',
-                constructId:'',
-                operationId:'',
-                longitude:0,
-                latitude:0,
-                highness:0
+                id: 0,
+                name: "",
+                length: 0,
+                responsibilityId: "",
+                constructId: "",
+                operationId: "",
+                longitude: 0,
+                latitude: 0,
+                highness: 0
             },
-            addPipeInfo:{
-                show: {state: false},
-                addInfo:{}
+            addPipeInfo: {
+                show: { state: false },
+                addInfo: {}
             },
-            changePipeInfo:{
-                show: {state: false},
-                changeInfo:{}
+            changePipeInfo: {
+                show: { state: false },
+                changeInfo: {}
             },
             deleteShow: false,
-            deleteSelect:[]
-        }
+            deleteSelect: []
+        };
     },
-    mounted(){
+    mounted() {
         this.showTable();
         this.getStaffs();
         this.getCompanies();
     },
-    computed:{
-        researches(){
+    computed: {
+        researches() {
             // 查询
             let param = {
                 pageNum: this.page.pageNum,
@@ -222,7 +236,13 @@ export default {
                 responsibilityId: this.formValidate.responsibilityId,
                 constructId: this.formValidate.constructId,
                 operationId: this.formValidate.operationId,
-                camera: this.formValidate.longitude + ',' + this.formValidate.latitude + ',' +this.formValidate.highness
+                camera:
+                    this.formValidate.longitude +
+                    "," +
+                    this.formValidate.latitude +
+                    "," +
+                    this.formValidate.highness,
+                maxviewConfigId: this.formValidate.maxviewConfigId
             };
             return Object.assign({}, param);
         },
@@ -237,74 +257,90 @@ export default {
                 responsibilityId: this.formValidate.responsibilityId,
                 constructId: this.formValidate.constructId,
                 operationId: this.formValidate.operationId,
-                camera: this.formValidate.longitude + ',' + this.formValidate.latitude + ',' +this.formValidate.highness
+                camera:
+                    this.formValidate.longitude +
+                    "," +
+                    this.formValidate.latitude +
+                    "," +
+                    this.formValidate.highness,
+                maxviewConfigId: this.formValidate.maxviewConfigId
             };
             return Object.assign({}, modification);
         }
     },
-    methods:{
-        showTable(){
-            this.axios.post('/tunnels/datagrid',(this.researches)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
+    methods: {
+        showTable() {
+            this.axios.post("/tunnels/datagrid", this.researches).then(res => {
+                let { code, data } = res.data;
+                // console.log("get tunnels:", data);
+                if (code == 200) {
                     let allinfo = [];
-                    for( let index in data.list) {
+                    for (let index in data.list) {
                         let info = {};
                         info.id = data.list[index].id;
                         info.name = data.list[index].name;
                         info.length = data.list[index].length;
-                        if(data.list[index].responsibility != null){
-                            info.responsibility = data.list[index].responsibility.name;
-                            info.responsibilityId = data.list[index].responsibility.id;
+                        info.sn = data.list[index].sn;
+                        if (data.list[index].responsibility != null) {
+                            info.responsibility =
+                                data.list[index].responsibility.name;
+                            info.responsibilityId =
+                                data.list[index].responsibility.id;
                         }
-                        if(data.list[index].construct != null){
+                        if (data.list[index].construct != null) {
                             info.construct = data.list[index].construct.name;
                             info.constructId = data.list[index].construct.id;
                         }
-                        if(data.list[index].operation != null){
-                            info.operation = data.list[index].operation.name;                            
+                        if (data.list[index].operation != null) {
+                            info.operation = data.list[index].operation.name;
                             info.operationId = data.list[index].operation.id;
                         }
+                        if (data.list[index].maxviewConfig) {
+                            info.maxviewConfigName =
+                                data.list[index].maxviewConfig.name;
+                            info.maxviewConfigId =
+                                data.list[index].maxviewConfig.id;
+                        }
                         // console.log(data.list[index].camera);
-                        if(data.list[index].camera != null){
-                            let str = data.list[index].camera.split(',');
-                            info.longitude = str[0];
-                            info.latitude = str[1];
-                            info.highness = str[2];
+                        if (data.list[index].camera != null) {
+                            let str = data.list[index].camera.split(",");
+                            info.longitude = str[0] == "null" ? "" : str[0];
+                            info.latitude = str[1] == "null" ? "" : str[1];
+                            info.highness = str[2] == "null" ? "" : str[2];
                         }
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;
                     this.page.pageTotal = data.total;
                 }
-            })
+            });
         },
-        addNewPipe(){
+        addNewPipe() {
             this.addPipeInfo.show.state = !this.addPipeInfo.show.state;
         },
-        savePipe(_data){
+        savePipe(_data) {
             // 保存新管廊，插入到后端中
             this.formValidate = _data;
-            this.axios.post('/tunnels',(this.params)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
+            this.axios.post("/tunnels", this.params).then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
                     this.page.pageTotal = data.total;
-                    this.$Message.success('添加成功!');
+                    this.$Message.success("添加成功!");
                     this.addPipeInfo.show.state = !this.addPipeInfo.show.state;
                     this.showTable();
                 }
-            })
+            });
         },
-        research(){
+        research() {
             this.showTable();
         },
-        getStaffs(){
-            this.axios.get('/staffs').then(res =>{
-                let {code,data} = res.data;
+        getStaffs() {
+            this.axios.get("/staffs").then(res => {
+                let { code, data } = res.data;
                 let _staff = [];
-                if(code == 200){
-                    for(let i=0;i<data.length;i++){
-                        let staff={};
+                if (code == 200) {
+                    for (let i = 0; i < data.length; i++) {
+                        let staff = {};
                         staff.value = data[i].id;
                         staff.label = data[i].name;
                         _staff.push(staff);
@@ -313,13 +349,13 @@ export default {
                 }
             });
         },
-        getCompanies(){
-            this.axios.get('/companies').then(res =>{
-                let {code,data} = res.data;
+        getCompanies() {
+            this.axios.get("/companies").then(res => {
+                let { code, data } = res.data;
                 let _company = [];
-                if(code == 200){
-                    for(let i=0;i<data.length;i++){
-                        let company={};
+                if (code == 200) {
+                    for (let i = 0; i < data.length; i++) {
+                        let company = {};
                         company.value = data[i].id;
                         company.label = data[i].name;
                         _company.push(company);
@@ -333,71 +369,73 @@ export default {
             this.showTable();
         },
         handlePageSize(value) {
-            this.page.pageSize = value
-            this.showTable()
+            this.page.pageSize = value;
+            this.showTable();
         },
-        changeBarn(index){
+        changeBarn(index) {
             this.changePipeInfo.changeInfo = this.data6[index];
             this.formValidate.id = this.data6[index].id;
-            this.changePipeInfo.show.state =!this.changePipeInfo.show.state;
+            this.changePipeInfo.show.state = !this.changePipeInfo.show.state;
         },
-        saveChangePipe(data){
+        saveChangePipe(data) {
             // 保存修改，插入到后端中
             this.formValidate = data;
-            this.axios.put('/tunnels',(this.modifications)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
+            this.axios.put("/tunnels", this.modifications).then(res => {
+                let { code, data } = res.data;
+                if (code == 200) {
                     this.page.pageTotal = data.total;
                     this.showTable();
-                    this.changePipeInfo.show.state = !this.changePipeInfo.show.state;
-                    this.$Message.success('修改成功!');
+                    this.changePipeInfo.show.state = !this.changePipeInfo.show
+                        .state;
+                    this.$Message.success("修改成功!");
                 }
-            })
+            });
         },
-        handleSelectionChange(val){
+        handleSelectionChange(val) {
             this.deleteSelect = val;
         },
-        startdelete(selection){
-            if(selection.length != 0){
+        startdelete(selection) {
+            if (selection.length != 0) {
                 this.deleteShow = true;
                 this.deleteSelect = selection;
-            }else{
+            } else {
                 this.deleteShow = false;
             }
         },
-        alldelete(){
+        alldelete() {
             this.$Modal.confirm({
-                title: '删除确认',
-                content: '<p>确认要删除选中的信息吗？</p>',
+                title: "删除确认",
+                content: "<p>确认要删除选中的信息吗？</p>",
                 onOk: () => {
-                    let ids=this.deleteSelect[0].id;
-                    for(let i=1;i<this.deleteSelect.length;i++){
+                    let ids = this.deleteSelect[0].id;
+                    for (let i = 1; i < this.deleteSelect.length; i++) {
                         ids += "," + this.deleteSelect[i].id;
                     }
-                    this.axios.delete('/tunnels/batch/' + ids).then(res =>{
-                        let {code,data} = res.data;
-                        if (code == 200){
-                            this.$Message.info('已删除');
+                    this.axios.delete("/tunnels/batch/" + ids).then(res => {
+                        let { code, data } = res.data;
+                        if (code == 200) {
+                            this.$Message.info("已删除");
                             this.deleteShow = false;
                             this.showTable();
                         }
-                    })    
+                    });
                 },
                 onCancel: () => {
-                    this.$Message.info('已取消操作');
+                    this.$Message.info("已取消操作");
                     this.showTable();
                 }
             });
-        },        
+        }
     },
-    components:{
-        PipeModule,PipeModification
+    components: {
+        PipeModule,
+        PipeModification
     }
-}
+};
 </script>
 
 <style scoped>
-.inputWidth{
+.inputWidth {
     width: 60%;
 }
 </style>

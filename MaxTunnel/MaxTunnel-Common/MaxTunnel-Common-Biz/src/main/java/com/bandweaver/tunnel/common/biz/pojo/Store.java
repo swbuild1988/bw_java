@@ -22,6 +22,8 @@ public class Store implements Serializable{
 	private Integer id;
 
 	private String name;
+
+	private String sn;
 	
     private Integer tunnelId;
 
@@ -48,7 +50,15 @@ public class Store implements Serializable{
 		this.name = name;
 	}
 
-	public Integer getTunnelId() {
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
+    public Integer getTunnelId() {
         return tunnelId;
     }
 
@@ -85,6 +95,7 @@ public class Store implements Serializable{
         return "Store{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
                 ", tunnelId=" + tunnelId +
                 ", storeTypeId=" + storeTypeId +
                 ", camera='" + camera + '\'' +

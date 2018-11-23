@@ -37,12 +37,10 @@
 
 <style scoped>
   .top{
-    width: 100%;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    background-color: #031324;
   }
   #top .ImgResponsive{
     width: 14%;

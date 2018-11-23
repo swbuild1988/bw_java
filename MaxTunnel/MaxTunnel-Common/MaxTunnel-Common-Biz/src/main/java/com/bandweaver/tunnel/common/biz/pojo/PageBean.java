@@ -20,6 +20,8 @@ public class PageBean<T> {
 	private int totalCount;
 	// 起始位置
 	private int start;
+	// 结束位置
+	private int end;
 	// 存放数据的list
 	private List<T> list;
 
@@ -75,19 +77,28 @@ public class PageBean<T> {
 	}
 
 	// 获取起始位置
-	public int getStart(int pageNum) {
-		if (pageNum < 1) {
-			pageNum = 1;
-		}
+	public int getStart() {
+//		if (pageNum < 1) {
+//			pageNum = 1;
+//		}
 		start = pageSize * (pageNum - 1);
 
 		return start;
+	}
+	
+
+	public int getEnd() {
+		return pageNum * pageSize + 1;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
 	}
 
 	@Override
 	public String toString() {
 		return "PageBean [pageNum=" + pageNum + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", totalCount="
-				+ totalCount + ", start=" + start + ", list=" + list + "]";
+				+ totalCount + ", start=" + start + ", end=" + end + ", list=" + list + "]";
 	}
 
 }

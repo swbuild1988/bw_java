@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.pojo.Company;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MaxviewConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class TunnelDto implements Serializable{
@@ -16,6 +17,8 @@ public class TunnelDto implements Serializable{
 	private Integer id;
 
     private String name;
+
+    private String sn;
 
     private Double length;
     @JsonIgnore
@@ -31,6 +34,10 @@ public class TunnelDto implements Serializable{
     private Company operation;
 
     private String camera;
+    
+    @JsonIgnore
+    private Integer maxviewConfigId;
+    private MaxviewConfig maxviewConfig;
     
     private Date crtTime;
 
@@ -48,6 +55,14 @@ public class TunnelDto implements Serializable{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public Double getLength() {
@@ -121,6 +136,40 @@ public class TunnelDto implements Serializable{
 	public void setOperation(Company operation) {
 		this.operation = operation;
 	}
-    
-    
+
+	public Integer getMaxviewConfigId() {
+		return maxviewConfigId;
+	}
+
+	public void setMaxviewConfigId(Integer maxviewConfigId) {
+		this.maxviewConfigId = maxviewConfigId;
+	}
+
+	public MaxviewConfig getMaxviewConfig() {
+		return maxviewConfig;
+	}
+
+	public void setMaxviewConfig(MaxviewConfig maxviewConfig) {
+		this.maxviewConfig = maxviewConfig;
+	}
+
+    @Override
+    public String toString() {
+        return "TunnelDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
+                ", length=" + length +
+                ", responsibilityId=" + responsibilityId +
+                ", responsibility=" + responsibility +
+                ", constructId=" + constructId +
+                ", construct=" + construct +
+                ", operationId=" + operationId +
+                ", operation=" + operation +
+                ", camera='" + camera + '\'' +
+                ", maxviewConfigId=" + maxviewConfigId +
+                ", maxviewConfig=" + maxviewConfig +
+                ", crtTime=" + crtTime +
+                '}';
+    }
 }

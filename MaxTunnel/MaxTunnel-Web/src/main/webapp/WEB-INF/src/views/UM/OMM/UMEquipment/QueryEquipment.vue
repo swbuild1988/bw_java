@@ -123,6 +123,15 @@
         },
       }
     },
+    beforeRouteLeave(to,from,next){
+      if(to.name=='UMDetailEquipment'){
+        to.meta.keepAlive = false;
+        next()
+      }else{
+        from.meta.keepAlive = false;
+        next()
+      }
+    },
     watch: {
       '$route': function () {
         //2. $route发生变化时再次赋值planId

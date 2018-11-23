@@ -17,10 +17,6 @@ import "animate.css/animate.min.css";
 import Stomp from "stompjs";
 import "./styles/common.css";
 import VMConfig from "../static/VM/js/VMGlobalConfig";
-// import VueVideoPlayer from 'vue-video-player'
-// import 'video.js/dist/video-js.css'
-// import 'vue-video-player/src/custom-theme.css'
-// import 'videojs-flash'
 import './scripts/serviceClass'
 // 加载字符格式转换
 import './scripts/StringFormat'
@@ -29,15 +25,16 @@ import global_ from './components/Global'
 // const ApiUrl = require('../static/serverconfig').ApiUrl;
 const RouterBase = require("../static/serverconfig").RouterBase;
 const SuperMapConfig = require("../static/serverconfig").SuperMapConfig;
-const VMWebConfig = require("../static/serverconfig").VMWebConfig;
+const VMWebConfig = require("../static/VM/js/VMWebConfig").VMWebConfig;
 
 Vue.prototype.$echarts = echarts;
+
+Vue.prototype.GLOBAL = global_
 
 Vue.use(VMConfig);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(iView);
-// Vue.use(VueVideoPlayer)
 Vue.prototype.RouterBase = RouterBase;
 
 var axios_instance = axios.create({
@@ -51,6 +48,7 @@ if (process.env.NODE_ENV == "development") {
     Vue.prototype.ServerConfig = "/static";
     Vue.prototype.SuperMapConfig = SuperMapConfig;
     Vue.prototype.VMWebConfig = VMWebConfig;
+    console.log("VMWebConfig", VMWebConfig);
     Vue.prototype.ApiUrl = require('../static/serverconfig').ApiUrl;
 } else {
     Vue.prototype.ServerConfig = RouterBase + "dist/static";
@@ -61,8 +59,16 @@ if (process.env.NODE_ENV == "development") {
             //在main.js中定义一个全局函数
             Vue.prototype.ApiUrl = result.data.ApiUrl;
             Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
-            Vue.prototype.VMWebConfig = result.data.VMWebConfig;
             axios.defaults.baseURL = Vue.prototype.ApiUrl;
+        })
+        .catch(error => {
+            // console.log(error)
+        });
+    // 获取VM的配置页
+    axios
+        .get("../" + Vue.prototype.ServerConfig + "/VM/js/VMWebConfig.json")
+        .then(result => {
+            Vue.prototype.VMWebConfig = result.data.VMWebConfig;
         })
         .catch(error => {
             // console.log(error)

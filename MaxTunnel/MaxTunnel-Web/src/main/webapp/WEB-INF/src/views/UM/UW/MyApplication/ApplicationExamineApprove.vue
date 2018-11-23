@@ -1,52 +1,54 @@
 <template>
-  <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="140" :rules="ruleValidate" @submit.native.prevent>
-    <h2 class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</h2>
-    <h2 class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</h2>
-    <h2 class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</h2>  
-    <FormItem label="申请人：">
-      <Input v-model="addEnterGalleryApplication.staff.name" readonly></Input>
-    </FormItem>
-    <FormItem label="管廊：">
-      <Input v-model="addEnterGalleryApplication.tunnel.name" readonly></Input>
-    </FormItem>
-    <FormItem label="入廊目的：">
-      <Input v-model="addEnterGalleryApplication.actionName" readonly></Input>
-    </FormItem>
-    <FormItem label="计划入廊时间：">
-      <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" readonly style="width: 560px"></DatePicker>
-    </FormItem>
-    <FormItem label="访客总人数：">
-      <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 560px;"></InputNumber>
-    </FormItem>
-    <FormItem label="访客所属公司">
-      <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
-    </FormItem>
-    <FormItem label="访客详细信息：">
-      <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
-    </FormItem>
-    <FormItem label="备注：">
-      <Input type="textarea" v-model="addEnterGalleryApplication.comment" :autosize="{minRows: 2,maxRows: 5}" readonly></Input>
-    </FormItem>
-    <FormItem label="审批意见：">
-      <!-- <Button type="success"  class="btn" v-show="">同意</Button> -->
-      <Button type="success"  class="btn" v-show="this.addEnterGalleryApplication.result=='agree'">同意</Button>
-      <Button type="error"  class="btn" v-show="this.addEnterGalleryApplication.result!='agree'">不同意</Button>
-    </FormItem>
-    <FormItem label="进入管廊时间：" prop="enterTime" v-show="this.addEnterGalleryApplication.result=='agree'">
-      <DatePicker type="datetime" placeholder="请选择进入管廊时间" v-model="addEnterGalleryApplication.enterTime" style="width: 560px" :readonly="this.$route.params.isFinished==true"></DatePicker>
-    </FormItem>  
-    <FormItem label="出廊时间："  prop="exitTime" v-show="this.addEnterGalleryApplication.result=='agree'">
-      <DatePicker type="datetime" placeholder="请选择出廊时间" v-model="addEnterGalleryApplication.exitTime" style="width: 560px" :readonly="this.$route.params.isFinished==true"></DatePicker>
-    </FormItem>
-    <FormItem style="text-align: center" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.result=='agree'">
-      <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
-      <Button type="default">取消</Button>
-    </FormItem>
-    <FormItem style="text-align: center" v-show="this.$route.params.isFinished==null">
-      <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
-      <Button type="default">取消</Button>
-    </FormItem>   
-  </Form>
+    <div :style="backStyle">
+        <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="140" :rules="ruleValidate" @submit.native.prevent>
+          <h2 class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</h2>
+          <h2 class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</h2>
+          <h2 class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</h2>  
+          <FormItem label="申请人：">
+            <Input v-model="addEnterGalleryApplication.staff.name" readonly></Input>
+          </FormItem>
+          <FormItem label="管廊：">
+            <Input v-model="addEnterGalleryApplication.tunnel.name" readonly></Input>
+          </FormItem>
+          <FormItem label="入廊目的：">
+            <Input v-model="addEnterGalleryApplication.actionName" readonly></Input>
+          </FormItem>
+          <FormItem label="计划入廊时间：">
+            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" readonly style="width: 560px"></DatePicker>
+          </FormItem>
+          <FormItem label="访客总人数：">
+            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 560px;"></InputNumber>
+          </FormItem>
+          <FormItem label="访客所属公司">
+            <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
+          </FormItem>
+          <FormItem label="访客详细信息：">
+            <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
+          </FormItem>
+          <FormItem label="备注：">
+            <Input type="textarea" v-model="addEnterGalleryApplication.comment" :autosize="{minRows: 2,maxRows: 5}" readonly></Input>
+          </FormItem>
+          <FormItem label="审批意见：">
+            <!-- <Button type="success"  class="btn" v-show="">同意</Button> -->
+            <Button type="success"  class="btn" v-show="this.addEnterGalleryApplication.result=='agree'">同意</Button>
+            <Button type="error"  class="btn" v-show="this.addEnterGalleryApplication.result!='agree'">不同意</Button>
+          </FormItem>
+          <FormItem label="进入管廊时间：" prop="enterTime" v-show="this.addEnterGalleryApplication.result=='agree'">
+            <DatePicker type="datetime" placeholder="请选择进入管廊时间" v-model="addEnterGalleryApplication.enterTime" style="width: 560px" :readonly="this.$route.params.isFinished==true"></DatePicker>
+          </FormItem>  
+          <FormItem label="出廊时间："  prop="exitTime" v-show="this.addEnterGalleryApplication.result=='agree'">
+            <DatePicker type="datetime" placeholder="请选择出廊时间" v-model="addEnterGalleryApplication.exitTime" style="width: 560px" :readonly="this.$route.params.isFinished==true"></DatePicker>
+          </FormItem>
+          <FormItem style="text-align: center" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.result=='agree'">
+            <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
+            <Button type="default">取消</Button>
+          </FormItem>
+          <FormItem style="text-align: center" v-show="this.$route.params.isFinished==null">
+            <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
+            <Button type="default">取消</Button>
+          </FormItem>   
+        </Form>
+    </div>  
 </template>
 <script>
 import types from "../../../../../static/Enum.json";
@@ -54,6 +56,15 @@ import { EnterGalleryService } from '../../../../services/enterGalleryService';
 export default {
   data() {
     return {
+      backStyle:{
+        backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+        position: 'relative',
+        paddingTop: '20px',
+        paddingBottom: '20px',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+        minHeight: '100%'
+      },
       addEnterGalleryApplication: {
         id: null,
         staff: {

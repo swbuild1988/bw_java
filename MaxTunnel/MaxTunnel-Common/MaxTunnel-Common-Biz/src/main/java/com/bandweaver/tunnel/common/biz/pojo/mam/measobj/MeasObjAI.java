@@ -32,11 +32,4 @@ public class MeasObjAI extends MeasObj {
         this.refreshTime = refreshTime;
     }
 
-    @Override
-    public String toString() {
-        return "MeasObjAI{" +
-                "refreshTime=" + refreshTime +
-                ", CV=" + CV +
-                "} " + super.toString();
-    }
 }

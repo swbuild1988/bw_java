@@ -14,6 +14,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
 import com.bandweaver.tunnel.dao.mam.*;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
@@ -336,14 +337,19 @@ public class VideoModuleCenter implements ModuleCenterInterface {
 
     @Override
     public void start() {
+    	long beginTime = System.currentTimeMillis();
         videoDtoHashMap = new HashMap<>();
         videoSceneOfTunnelHashMap = new HashMap<>();
         videoServerHashMap = new HashMap<>();
         videoProfileTokenHashMap = new HashMap<>();
         videoPtzDeviceHashMap = new HashMap<>();
-
-        LogUtil.info("init video");
         initData();
+        long endTime = System.currentTimeMillis();
+        
+		LogUtil.info(	"*********************************\n"
+						+ "描述：加载视频信息到缓存\n"
+						+ "耗时：" + (endTime - beginTime) + "ms\n"
+						+ "*********************************" 	);
     }
 
     @Override

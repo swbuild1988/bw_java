@@ -25,6 +25,8 @@ public class StoreDto implements Serializable {
 	
 	private String name;
 
+	private String sn;
+
 	@JsonIgnore
     private Integer tunnelId;
     private TunnelSimpleDto tunnel;
@@ -60,6 +62,14 @@ public class StoreDto implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSn() {
+		return sn;
+	}
+
+	public void setSn(String sn) {
+		this.sn = sn;
 	}
 
 	public Integer getTunnelId() {
@@ -103,10 +113,18 @@ public class StoreDto implements Serializable {
 	}
 
 
-    @Override
+	@Override
 	public String toString() {
-		return "StoreDto [id=" + id + ", name=" + name + ", tunnelId=" + tunnelId + ", tunnel=" + tunnel
-				+ ", storeTypeId=" + storeTypeId + ", storeType=" + storeType + ", camera=" + camera + ", crtTime="
-				+ crtTime + "]";
+		return "StoreDto{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", sn='" + sn + '\'' +
+				", tunnelId=" + tunnelId +
+				", tunnel=" + tunnel +
+				", storeTypeId=" + storeTypeId +
+				", storeType=" + storeType +
+				", camera='" + camera + '\'' +
+				", crtTime=" + crtTime +
+				'}';
 	}
 }

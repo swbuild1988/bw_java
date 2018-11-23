@@ -6,9 +6,9 @@
                 <FormItem label="定时任务名" prop="jobName">
                     <Input v-model="formValidate.jobName" placeholder="请输入定时任务名" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="定时任务组" prop="jobGroup">
+                <!-- <FormItem label="定时任务组" prop="jobGroup">
                     <Input v-model="formValidate.jobGroup" placeholder="请输入定时任务组" class="InputWidth"></Input>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="定时任务周期" prop="cronExpression">
                     <Input v-model="formValidate.cronExpression" placeholder="请输入定时任务周期" class="InputWidth"></Input>
                 </FormItem>
@@ -21,7 +21,7 @@
                 <FormItem label="定时任务描述" prop="description">
                     <Input v-model="formValidate.description" type="textarea" placeholder="请输入定时任务描述" class="InputWidth"></Input>
                 </FormItem>
-                <span v-show="!flag" class="errorStyle">任务名和任务组需唯一</span>
+                <span v-show="!flag" class="errorStyle">任务名需唯一</span>
             </Form>
             <div slot="footer" v-show="flag">
                 <Button type="primary" size="large" v-on:click="sendMsg('formValidate')">保存</Button>
@@ -51,9 +51,9 @@ export default {
                 jobName: [
                     { required: true, message: '定时任务名不能为空', trigger: 'blur' }
                 ],
-                jobGroup: [
-                    { required: true, message: '定时任务组不能为空', trigger: 'blur' }
-                ],
+                // jobGroup: [
+                //     { required: true, message: '定时任务组不能为空', trigger: 'blur' }
+                // ],
                 cronExpression: [
                     { required: true, message: '定时任务周期不能为空', trigger: 'blur' }
                 ],
@@ -79,8 +79,8 @@ export default {
     },
     watch:{
         'formValidate.jobName':function(value,oldvalue){
-            if(value != null && this.formValidate.jobGroup != null){
-                this.axios.get('/schedulejobs/ajax/' + value + '/' + this.formValidate.jobGroup).then(res =>{
+            if(value != null){
+                this.axios.get('/schedulejobs/ajax/' + value).then(res =>{
                     let {code,data} = res.data;
                     if(code == 200){
                         this.flag = data;
@@ -88,25 +88,25 @@ export default {
                 })
             }
         },
-        'formValidate.jobGroup':function(value,oldvalue){
-            if(value != null && this.formValidate.jobName != null){
-                this.axios.get('/schedulejobs/ajax/' + this.formValidate.jobName + '/' + value).then(res =>{
-                    let {code,data} = res.data;
-                    if(code == 200){
-                        this.flag = data;
-                    }
-                })
-            }
-        }
+        // 'formValidate.jobGroup':function(value,oldvalue){
+        //     if(value != null && this.formValidate.jobName != null){
+        //         this.axios.get('/schedulejobs/ajax/' + this.formValidate.jobName + '/' + value).then(res =>{
+        //             let {code,data} = res.data;
+        //             if(code == 200){
+        //                 this.flag = data;
+        //             }
+        //         })
+        //     }
+        // }
     },
     methods:{
         sendMsg: function(name){
             this.$refs[name].validate((valid) => {
                 if (valid) {
-                    if(!this.flag){
+                    if(this.flag){
                         this.$emit("listenToAdd",this.formValidate);
                     }else{
-                        this.$Message.error("任务名与任务组需唯一");
+                        this.$Message.error("任务名需唯一");
                     }
                 }else{
                     this.$Message.error("添加失败!");
@@ -123,7 +123,7 @@ export default {
     position: absolute;
     font-size: 16px;
     color: #ed3f14;
-    top: 163px;
+    top: 100px;
     left: 136px;
 }
 .InputWidth{

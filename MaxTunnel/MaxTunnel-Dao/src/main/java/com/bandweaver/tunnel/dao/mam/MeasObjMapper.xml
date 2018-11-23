@@ -38,6 +38,8 @@
         <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
         <result column="height" jdbcType="VARCHAR" property="height"/>
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
+        <association property="section" javaType="com.bandweaver.tunnel.common.biz.dto.SectionDto" column="section_id"
+        	select="com.bandweaver.tunnel.dao.common.SectionMapper.getDtoById"/>
     </resultMap>
     
     <sql id="Base_Column_List">
@@ -317,6 +319,7 @@
              </foreach>
             </if>
         </where>
+        order by id desc
     </select>
 
     <select id="getMeasObjByLongitudeAndLatitudeAndHeight" resultMap="measObjMap">
@@ -350,7 +353,7 @@
     	select id from T_MAM_MEASOBJ where tunnel_id = #{id}
     </select>
     
-    <select id="getListBySectionIDAndDataTypeID" resultMap="measObjMap">
-    	select * from T_MAM_MEASOBJ where section_id = #{sectionId} and datatype_id = #{datatypeId}
+    <select id="getListBySectionIDAndObjectTypeID" resultMap="measObjMap">
+    	select * from T_MAM_MEASOBJ where section_id = #{sectionId} and objtype_id = #{objectTypeId}
     </select>
 </mapper>

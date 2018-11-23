@@ -1,4 +1,6 @@
 <template>
+<div :style="backStyle">
+  <div class="backImgStyle">
   <Form :label-width="140" @submit.native.prevent>
     <h2 class="formTitle" v-show="this.$route.params.isFinished!=false">审批入廊申请</h2>
     <h2 class="formTitle" v-show="this.$route.params.isFinished==false">入廊申请审批中</h2>
@@ -35,12 +37,23 @@
       <Button type="info"  class="btn" v-show="this.$route.params.isFinished==false">审核中</Button>
     </FormItem>
   </Form>
+  </div>
+</div>
 </template>
 <script>
   import axios from "axios";
   export default {
     data(){
       return{
+        backStyle:{
+            backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+            position: 'relative',
+            paddingTop: '20px',
+            paddingBottom: '20px',
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            minHeight: '100%'
+        },
         addEnterGalleryApplication:{
           staff:{
             name: null

@@ -32,8 +32,8 @@
         备品列表</Col>
         <Col span="4" offset="15">
         <div style="position: relative;float: right">
-          <Button type="success" @click="add({path: '/UM/equipment/add'})" icon="forward">增加入库</Button>
-          <Button type="success" icon="reply" @click="outStroage">批量出库
+          <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">增加入库</Button>
+          <Button type="error" icon="reply" @click="outStroage">批量出库
           </Button>
           <OutStorage v-bind="OutStorageModel"></OutStorage>
         </div>

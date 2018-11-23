@@ -77,7 +77,8 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObjDto> getMeasObjByCondition(MeasObjVo vo) {
-        return measObjMapper.getMeasObjByCondition(vo);
+         List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
+         return list == null ? Collections.emptyList() : list ;
     }
 
     @Override
@@ -129,11 +130,13 @@ public class MeasObjServiceImpl implements MeasObjService {
         DataType dataType = DataType.getEnum(datatypeId);
         switch (dataType) {
             case AI:
-                return measObjModuleCenter.getMeasObjAI(objId).getCV();
+                Double cv = measObjModuleCenter.getMeasObjAI(objId).getCV();
+            	return cv == null ? 0 : cv;
             case DI:
                 return measObjModuleCenter.getMeasObjDI(objId).getCV() ? 1 : 0;
             case SI:
-                return measObjModuleCenter.getMeasObjSI(objId).getCV();
+                Integer cv2 = measObjModuleCenter.getMeasObjSI(objId).getCV();
+                return cv2 == null ? 0: cv2;
             default:
                 break;
         }
@@ -141,23 +144,27 @@ public class MeasObjServiceImpl implements MeasObjService {
     }
 
 	@Override
-	public List<MeasObj> getMeasObjByTargetVal(Integer targetValue) {
-		MeasObj measObj = measObjModuleCenter.getMeasObj(targetValue);
-		if(measObj == null) {
-			return Collections.emptyList();
-		}
+	public List<MeasObj> getMeasObjByTargetVal(String targetValue) {
 		ArrayList<MeasObj> list = new ArrayList<>();
-		list.add(measObj);
+		String[] strArr = targetValue.split(",");
+		for (String objId : strArr) {
+			MeasObj measObj = measObjModuleCenter.getMeasObj(DataTypeUtil.toInteger(objId));
+			if(measObj == null) continue;
+			list.add(measObj);
+		}
+		LogUtil.info("获取指定目标对象：" + list );
 		return list;
 	}
 
 	@Override
-	public List<MeasObj> getMeasObjsByTargetValAndVars(Integer targetValue, Integer sectionId) {
-		DataType dataType = DataType.getEnum(targetValue);
-		if(dataType == null) {
-			throw new RuntimeException("Error:枚举值"+ targetValue +"不存在");
-		}
-		List<MeasObj> list = measObjMapper.getListBySectionIDAndDataTypeID(sectionId,targetValue);
+	public List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue, Integer sectionId) {
+		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
+		List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(sectionId,objectTypeId);
+		
+		LogUtil.info("所在区段:" + sectionId + "\n"
+				+ "检测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
+				+ "结果列表：" + list );
+		
 		if(list == null || list.isEmpty()) {
 			return Collections.emptyList();
 		}

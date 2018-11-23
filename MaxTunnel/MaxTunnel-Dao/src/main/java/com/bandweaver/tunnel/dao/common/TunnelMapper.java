@@ -34,4 +34,6 @@ public interface TunnelMapper {
 	void deleteBatch(List<Integer> list);
 
 	Tunnel getByName(String name);
+
+	Tunnel getBySN(String sn);
 }

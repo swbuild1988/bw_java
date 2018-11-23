@@ -18,11 +18,13 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjMapVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
+import com.github.pagehelper.PageInfo;
 
 /**开关量状态量映射管理
  * @author shaosen
@@ -44,11 +46,11 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 	 * @Date 2018年9月17日
 	 */
 	@RequestMapping(value="measobjs-map/{objectId}/inputvalue/{inputvalue}",method=RequestMethod.GET)
-	public JSONObject doAction(@PathVariable("objectId") Integer objectId,
+	public JSONObject getMaxViewMeasObj(@PathVariable("objectId") Integer objectId,
 			@PathVariable("inputvalue") Integer inputValue) {
 		
-		measObjMapService.doAction(objectId,inputValue);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+		MeasObjMap result = measObjMapService.getMaxViewMeasObj(objectId,inputValue);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
 	}
 	
 	
@@ -120,5 +122,22 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
+	
+	/**分页查询 
+	 * @param pageNum 必须
+	 * @param pageSize 必须
+	 * @param startTime 可选
+	 * @param endTime 可选
+	 * @param objectId 可选 监测对象id
+	 * @param objectId2 可选 对应的maxview的监测对象id
+	 * @return   {"msg":"请求成功","code":"200","data":{"total":2,"list":[{"id":1,"objectId":400,"inputValue":1,"objectId2":401,"outputValue":1,"crtTime":1542297600000},{"id":2,"objectId":400,"inputValue":0,"objectId2":401,"outputValue":0,"crtTime":1542297600000}],"pageNum":1,"pageSize":5,"size":2,"startRow":1,"endRow":2,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"lastPage":1,"firstPage":1}}
+	 * @author shaosen
+	 * @Date 2018年11月16日
+	 */
+	@RequestMapping(value="measobj-map/datagrid",method=RequestMethod.POST)
+	public JSONObject dataGrid(@RequestBody MeasObjMapVo vo) {
+		PageInfo<MeasObjMap> pageInfo = measObjMapService.dataGrid(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+	}
 	
 }

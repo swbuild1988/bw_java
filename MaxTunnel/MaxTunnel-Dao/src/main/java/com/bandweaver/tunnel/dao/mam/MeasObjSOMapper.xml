@@ -9,7 +9,7 @@
     </insert>
     
     <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO">
-        INSERT INTO T_MAM_MEASOBJ_SI
+        INSERT INTO T_MAM_MEASOBJ_SO
         <trim prefix="(" suffix=")" suffixOverrides=",">
         	<if test="id != null">
         		id,

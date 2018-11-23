@@ -72,9 +72,9 @@
       <div v-if="!viewHistory">
         <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
           <Col span="24">
-          <Table height="620" stripe border :columns="tableColumn" :data="tableData" ref="selection"
+          <Table class="tablesize" stripe border :columns="tableColumn" :data="tableData" ref="selection"
                  @on-selection-change="selectionClick"></Table>
-          <div style="position:relative; line-height: 50px;background-color:#f1f1f1;">
+          <div style="position:relative; line-height: 40px;background-color:#f1f1f1;">
             <Button type="primary" shape="circle" icon="forward" size="large" title="查看历史数据"
                     @click="queryHistoryData"></Button>
             <Button type="primary" shape="circle" icon="ios-cloud-download" size="large" title="导出"
@@ -93,24 +93,43 @@
         <Row style="padding: 9px;padding-top: 0px">
           <Col span="24">
           <div style="position:relative;" class="queryHis">
-            <Select v-model="historyPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
-                    @on-change="changeAlarmType">
-              <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
-            </Select>
-            <span>开始时间:</span>
-            <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
-                        style="width: 220px;margin-right: 4px;"></DatePicker>
-            <span>结束时间:</span>
-            <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
-                        style="width:220px;margin-right: 14px;"></DatePicker>
-            <div style="float: right;right: 20px;">
-              <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询历史数据"></Button>
-
-              <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
-                      title="返回"></Button>
+              <div class="chartSize">
+              <SimplelineChart style="width: 100%;" v-bind="curlineChart"></SimplelineChart>
             </div>
-            <div style="">
-              <SimplelineChart v-band="curlineChart" style="width: 100%;height: 620px;"></SimplelineChart>
+            <div style="height: 50px;">
+              <div style="position: relative;float: left;">
+                <!--<span>图表类型:</span>-->
+                <!--<Select v-model="historyPrams.chartType" style="width:250px;margin-right: 4px;margin-left: 4px;"-->
+                        <!--@on-change="changeAlarmType" placement="top">-->
+                  <!--<Option v-for="item in chartOptions" :value="item.key" :key="item.key">{{ item.value }}</Option>-->
+                <!--</Select>-->
+                <span>时间周期:</span>
+                <Select v-model="historyPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
+                        @on-change="changeAlarmType" placement="top">
+                  <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
+                </Select>
+              </div>
+              <div style="position: relative;float: left; ">
+                <span>开始时间:</span>
+                <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
+                            style="width: 220px;margin-right: 4px;"></DatePicker>
+                <span>结束时间:</span>
+                <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
+                            style="width:220px;margin-right: 14px;"></DatePicker>
+              </div>
+              <!--<div v-else style="position: relative;float: left;">-->
+                <!--<span>时间周期1:</span>-->
+                <!--<DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"-->
+                            <!--style="width: 220px;margin-right: 4px;"></DatePicker>-->
+                <!--<span>时间周期2:</span>-->
+                <!--<DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"-->
+                            <!--style="width:220px;margin-right: 14px;"></DatePicker>-->
+              <!--</div>-->
+              <div style="position:relative;float: right;right: 20px;">
+                <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询历史数据"></Button>
+                <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
+                        title="返回"></Button>
+              </div>
             </div>
           </div>
           </Col>
@@ -121,319 +140,351 @@
 </template>
 
 <script>
-  import Treeselect from '@riophae/vue-treeselect'
-  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-  import {EnumsService} from '../../../../services/enumsService.js'
-  import SimplelineChart from '../../../../components/Common/Chart/SimpleLineChart.vue'
-  import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { EnumsService } from "../../../../services/enumsService.js";
+import SimplelineChart from "../../../../components/Common/Chart/SimpleLineChart.vue";
+import ShowMonitorObjectSelect from "../../../../components/Common/Modal/ShowMonitorObjectSelect";
 
-  export default {
+export default {
     name: "query-data",
     data() {
-      return {
-        viewHistory: false,
-        isReady: true,
-        zoneList: [],
-        curlineChart: {
-          id: "historyDataChart",
-          requestUrl: 'lineChart',
-          titleName: '23',
-          title: "历史数据",
-          titleColor: '#030303',
-          intervalTime: 1000,
-        },
-        queryPrams: {
-          monitorObject: "",
-          objectType: '',
-          queryZone: null,
-          dataType: 1,
-          maxVal: 100,
-          minVal: 0,
-          dataRangeGroup: [],
-          pleace: 0,
-          total: 100,
-          pageSize: 20,
-        },
-        historyPrams: {
-          startTime: "",
-          endTime: "",
-          dateType: 1,
-        },
-        dataObjectSelect: {
-          show: {state: false},
-          selectObjects: {},
-          selectData: {idList: ""},
-        },
-        historyDateType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {
-          key: 4,
-          value: "自定义"
-        },],
-        queryZoneList: [{key: 1, value: "自定义"}, {key: 2, value: "最近一天"}, {key: 3, value: "最近一周"}],
-        dataTypeEnum: [],
-        selectSelection: null,
-        objectList: [],
-        tableColumn: [
-          {
-            type: 'selection',
-            width: 70,
-            align: 'center'
-          },
-          {
-            title: '对象编号',
-            key: 'age',
-          },
-          {
-            title: '监测区域',
-            key: 'name',
-          },
-          {
-            title: '对象名称',
-            key: 'province',
-          },
-          {
-            title: '对象类型',
-            key: 'city',
-          },
-          {
-            title: '监测值',
-            key: 'address',
-          },
-          {
-            title: '采集时间',
-            key: 'zip',
-          }
-        ],
-        tableData: [
-          {
-            name: '电力仓',
-            age: 1012,
-            address: '15',
-            province: '温度1',
-            city: '模拟量',
-            zip: "2018-6-7 12:23:00"
-          },
-          {
-            name: '电力仓',
-            age: 1012,
-            address: '15',
-            province: '温度1',
-            city: '模拟量',
-            zip: "2018-6-7 12:23:00"
-          },
-          {
-            name: '电力仓',
-            age: 1012,
-            address: '15',
-            province: '温度1',
-            city: '模拟量',
-            zip: "2018-6-7 12:23:00"
-          },
-          {
-            name: '电力仓',
-            age: 1012,
-            address: '15',
-            province: '温度1',
-            city: '模拟量',
-            zip: "2018-6-7 12:23:00"
-          }
-        ],
-      }
+        return {
+            viewHistory: false,
+            isReady: true,
+            zoneList: [],
+            curlineChart: {
+                id: "historyDataChart",
+                requestUrl: "lineChart",
+                parameters: {
+                    option: {
+                        title: {
+                            text: "历史数据",
+                            textStyle: {
+                                color: "#030303"
+                            }
+                        }
+                    },
+                    timer: {
+                        interval: 10000
+                    }
+                }
+            },
+            queryPrams: {
+                monitorObject: "",
+                objectType: "",
+                queryZone: null,
+                dataType: 1,
+                maxVal: 100,
+                minVal: 0,
+                dataRangeGroup: [],
+                pleace: 0,
+                total: 100,
+                pageSize: 20
+            },
+            historyPrams: {
+                startTime: "",
+                endTime: "",
+                dateType: 1
+            },
+            dataObjectSelect: {
+                show: { state: false },
+                selectObjects: {},
+                selectData: { idList: "" }
+            },
+            historyDateType: [
+                { key: 1, value: "最近一天" },
+                { key: 2, value: "最近一周" },
+                { key: 3, value: "最近一月" },
+                {
+                    key: 4,
+                    value: "自定义"
+                }
+            ],
+            queryZoneList: [
+                { key: 1, value: "自定义" },
+                { key: 2, value: "最近一天" },
+                { key: 3, value: "最近一周" }
+            ],
+            dataTypeEnum: [],
+            selectSelection: null,
+            objectList: [],
+            tableColumn: [
+                {
+                    type: "selection",
+                    width: 70,
+                    align: "center"
+                },
+                {
+                    title: "对象编号",
+                    key: "age"
+                },
+                {
+                    title: "监测区域",
+                    key: "name"
+                },
+                {
+                    title: "对象名称",
+                    key: "province"
+                },
+                {
+                    title: "对象类型",
+                    key: "city"
+                },
+                {
+                    title: "监测值",
+                    key: "address"
+                },
+                {
+                    title: "采集时间",
+                    key: "zip"
+                }
+            ],
+            tableData: [
+                {
+                    name: "电力仓",
+                    age: 1012,
+                    address: "15",
+                    province: "温度1",
+                    city: "模拟量",
+                    zip: "2018-6-7 12:23:00"
+                },
+                {
+                    name: "电力仓",
+                    age: 1012,
+                    address: "15",
+                    province: "温度1",
+                    city: "模拟量",
+                    zip: "2018-6-7 12:23:00"
+                },
+                {
+                    name: "电力仓",
+                    age: 1012,
+                    address: "15",
+                    province: "温度1",
+                    city: "模拟量",
+                    zip: "2018-6-7 12:23:00"
+                },
+                {
+                    name: "电力仓",
+                    age: 1012,
+                    address: "15",
+                    province: "温度1",
+                    city: "模拟量",
+                    zip: "2018-6-7 12:23:00"
+                }
+            ]
+        };
     },
     methods: {
-      //查询监测对象
-      queryObject() {
-        let _this = this;
-        _this.dataObjectSelect.show.state = !_this.dataObjectSelect.show.state;
-      },
+        //查询监测对象
+        queryObject() {
+            let _this = this;
+            _this.dataObjectSelect.show.state = !_this.dataObjectSelect.show
+                .state;
+        },
 
-      //初始化查询条件下拉列表数据
-      inItData() {
-        var _this = this;
-        EnumsService.getMonitorType().then((result) => {
-          _this.objectList = result;
-        });
-        EnumsService.getDataType().then((result) => {
-          _this.dataTypeEnum = result;
-        });
-        EnumsService.getMonitorZone().then((result) => {
-          var _this = this;
-          if (result) {
-            result.forEach(a => {
-              var temp = {};
-              temp.id = a.id;
-              temp.label = a.name;
-              temp.children = [];
-              _this.zoneList.push(temp);
-              if (a.list.length > 0) {
-                a.list.forEach(b => {
-                  var child = {};
-                  child.id = a.id + "_" + b.id;
-                  child.label = b.name;
-                  child.children = [];
-                  temp.children.push(child);
-                  if (b.list.length > 0) {
-                    b.list.forEach(c => {
-                      var child2 = {};
-                      child2.id = a.id + "_" + b.id + "_" + c.id;
-                      child2.label = c.name;
-                      child.children.push(child2);
-                    })
-                  }
-                })
-              }
-            })
-          }
-        })
-      },
+        //初始化查询条件下拉列表数据
+        inItData() {
+            var _this = this;
+            EnumsService.getMonitorType().then(result => {
+                _this.objectList = result;
+            });
+            EnumsService.getDataType().then(result => {
+                _this.dataTypeEnum = result;
+            });
+            EnumsService.getMonitorZone().then(result => {
+                var _this = this;
+                if (result) {
+                    result.forEach(a => {
+                        var temp = {};
+                        temp.id = a.id;
+                        temp.label = a.name;
+                        temp.children = [];
+                        _this.zoneList.push(temp);
+                        if (a.list.length > 0) {
+                            a.list.forEach(b => {
+                                var child = {};
+                                child.id = a.id + "_" + b.id;
+                                child.label = b.name;
+                                child.children = [];
+                                temp.children.push(child);
+                                if (b.list.length > 0) {
+                                    b.list.forEach(c => {
+                                        var child2 = {};
+                                        child2.id =
+                                            a.id + "_" + b.id + "_" + c.id;
+                                        child2.label = c.name;
+                                        child.children.push(child2);
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        },
 
-      //导出数据
-      exportData() {
-        console.log(this.$refs.selection);
-        this.$refs.selection.exportCsv({
-          filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "导出数据",
-          original: false
-        });
-      },
+        //导出数据
+        exportData() {
+            console.log(this.$refs.selection);
+            this.$refs.selection.exportCsv({
+                filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "导出数据",
+                original: false
+            });
+        },
 
-      queryTableData() {
-        var _this = this;
-      },
+        queryTableData() {
+            var _this = this;
+        },
 
-      queryHistoryData() {
-        var _this = this;
-        _this.viewHistory = !_this.viewHistory;
-        _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
-        _this.changeAlarmType(_this.historyPrams.dateType);
-      },
-      backToCurPage() {
-        var _this = this;
-        _this.viewHistory = !_this.viewHistory;
-      },
+        queryHistoryData() {
+            var _this = this;
+            _this.viewHistory = !_this.viewHistory;
+            _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
+            _this.changeAlarmType(_this.historyPrams.dateType);
+        },
+        backToCurPage() {
+            var _this = this;
+            _this.viewHistory = !_this.viewHistory;
+        },
 
-      selectionClick(arr) {
-        this.selectSelection = arr;
-      }
-      ,
-      //切换页面
-      changePage(index) {
-        let _this = this;
-        _this.queryPrams.pageNum = index;
-        _this.queryTableData();
-      }
-      ,
-
-      //切换页码数
-      handlePageSize(value) {
-        this.queryPrams.pageSize = value;
-        this.queryTableData();
-      }
-      ,
-
-      //切换数据类型
-      changeDataType(index) {
-      }
-      ,
-
-      //更改告警时间类型
-      changeAlarmType(index) {
-        var _this = this;
-        var date = new Date();
-        if (index == 1) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24);
-          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
+        selectionClick(arr) {
+            this.selectSelection = arr;
+        },
+        //切换页面
+        changePage(index) {
+            let _this = this;
+            _this.queryPrams.pageNum = index;
+            _this.queryTableData();
+        },
+        //切换页码数
+        handlePageSize(value) {
+            this.queryPrams.pageSize = value;
+            this.queryTableData();
+        },
+        //切换数据类型
+        changeDataType(index) {},
+        //更改告警时间类型
+        changeAlarmType(index) {
+            var _this = this;
+            var date = new Date();
+            if (index == 1) {
+                date.setTime(date.getTime() - 3600 * 1000 * 24);
+                _this.historyPrams.startTime = date.format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.historyPrams.endTime = new Date().format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.isReady = true;
+            } else if (index == 2) {
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                _this.historyPrams.startTime = date.format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.historyPrams.endTime = new Date().format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.isReady = true;
+            } else if (index == 3) {
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+                _this.historyPrams.startTime = date.format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.historyPrams.endTime = new Date().format(
+                    "yyyy-MM-dd hh:mm:ss"
+                );
+                _this.isReady = true;
+            } else {
+                _this.isReady = false;
+                _this.historyPrams.startTime = "";
+                _this.historyPrams.endTime = "";
+            }
         }
-        else if (index == 2) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
-        }
-        else if (index == 3) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-          _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
-        }
-        else {
-          _this.isReady = false;
-          _this.historyPrams.startTime = "";
-          _this.historyPrams.endTime = "";
-        }
-      }
-      ,
     },
     components: {
-      SimplelineChart, ShowMonitorObjectSelect, Treeselect
+        SimplelineChart,
+        ShowMonitorObjectSelect,
+        Treeselect
     },
     mounted() {
-      this.inItData();
+        this.inItData();
     },
     watch: {
-      "dataObjectSelect.selectData.idList": function () {
-        this.queryPrams.monitorObject = this.dataObjectSelect.selectData.idList;
-      }
-    },
-  }
+        "dataObjectSelect.selectData.idList": function() {
+            this.queryPrams.monitorObject = this.dataObjectSelect.selectData.idList;
+        }
+    }
+};
 </script>
 
 <style scoped>
-  .col {
+.col {
     height: 60px;
     padding-top: 10px;
-  }
+}
 
-  .planDec {
+.planDec {
     padding: 4px;
     font-size: 14px;
     float: left;
-  }
+}
 
-  .queryHis {
+.queryHis {
     padding-right: 5px;
     background-color: #e5eae99c;
     line-height: 50px;
     font-size: 16px;
-  }
+}
 
-  .queryEquipment {
+.queryEquipment {
     position: relative;
     min-height: 100%;
     padding-bottom: 50px;
-  }
+}
 
-  .top {
+.top {
     margin: 10px;
     background-color: #f1f1f1;
     padding-left: 10px;
-  }
+}
 
-  .nextPage {
+.nextPage {
     position: relative;
     bottom: 0px;
     right: 7px;
     float: right;
-  }
+}
 
-  .slide-fade-enter-active {
-    transition: all .5s ease;
-  }
+.slide-fade-enter-active {
+    transition: all 0.5s ease;
+}
 
-  .slide-fade-leave-active {
-    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
+.slide-fade-leave-active {
+    transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
 
-  .slide-fade-enter, .slide-fade-leave-to {
+.slide-fade-enter,
+.slide-fade-leave-to {
     transform: translateX(10px);
     opacity: 0;
+}
+
+.ivu-select-single > .ivu-select-selection > .ivu-select-selected-value {
+    font-size: 16px;
+}
+
+.ivu-select-single > .ivu-select-selection > .ivu-select-placeholder {
+    font-size: 16px;
+}
+.tablesize {
+    height: calc(95vh - 255px);
+    width: 100%;
   }
 
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 16px;
-  }
-
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 16px;
+  .chartSize {
+    height: calc(95vh - 265px);
+    width: 100%;
   }
 </style>

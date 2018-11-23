@@ -10,7 +10,11 @@ const VMstate = {
         alarm: {
             alarmEntity: null,
             alarmObject: [],
-        }
+        },
+        planLinkageVideos:{ //预案视屏联动集合
+            videoIds : null,
+            processInstanceId : null,
+        },
     },
     mutations: {
         // 视频轮询
@@ -24,8 +28,16 @@ const VMstate = {
             stateAlarm.alarmObject.push(alarm.object);
 
             stateAlarm.alarmEntity = alarm.entity;
+        },
+        //预案视屏联动
+        addPlanLinkageVideos:({ planLinkageVideos }, { id,processInstanceId }) => {
+            planLinkageVideos.videoIds = id;
+            planLinkageVideos.processInstanceId = processInstanceId;
+        },
+        removePlanLinkageVideos: ({ planLinkageVideos }) => {
+            planLinkageVideos.videoIds = null ;
+            planLinkageVideos.processInstanceId = null;
         }
-
     }
 }
 

@@ -34,7 +34,7 @@
     </insert>
     
     <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI">
-        INSERT INTO T_MAM_MEASOBJ_SI
+        INSERT INTO T_MAM_MEASOBJ_DI
         <trim prefix="(" suffix=")" suffixOverrides=",">
         	<if test="id != null">
         		id,

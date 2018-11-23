@@ -1,7 +1,7 @@
 <template>
-    <div style="margin-top: 10px">
+    <div :style="backStyle">
       <Form :model="uploadPlan"  label-position="top" @submit.native.prevent>
-        <h2 class="formTitle">修改巡检计划</h2>
+        <h2 class="formTitle" style="color: #fff">修改巡检计划</h2>
         <Row>
           <Col span="12"> 
             <div class="planContainer leftContainer">   
@@ -26,7 +26,8 @@
                 <div class="inputStyle">{{requestStaffName}}</div>
               </FormItem>
               <FormItem label="审批人：">
-                <Input v-model="uploadPlan.approverId" readonly></Input>
+                <Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
+                <Input v-model="approver.name" readonly></Input>
               </FormItem>
               <FormItem label="计划描述：">
                   <Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}"
@@ -64,11 +65,11 @@
           </div>  
         </Col>
         </Row>
-        <FormItem style="text-align: center">
+        <FormItem style="text-align: center;margin-bottom: 0px">
             <Button type="primary">更新</Button>
             <Button type="ghost"  style="margin-left: 8px">取消</Button>
         </FormItem>
-      </Form>  
+      </Form> 
     </div>
 </template>  
 
@@ -90,6 +91,7 @@ export default {
       currMonth: '',
       currYear: '',
       requestStaffName: '',
+      approver:{},
       uploadPlan:{
         planId: new Date().getTime(),
         name: "",
@@ -148,7 +150,15 @@ export default {
         endDay: 31,
         interval: 3
       },
-      inspectTimeContainer:[]
+      inspectTimeContainer:[],
+      backStyle:{
+          backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
+          position: 'relative',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+          minHeight: '100%',
+          paddingTop: '30px'
+      }
     };
   },
   watch: {
@@ -178,13 +188,8 @@ export default {
       },
       (error)=>{
         _this.Log.info(error)
-      })
-    // this.axios.get("/tunnels ").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.tunnels = data;
-    //   }
-    // });
+      }
+    )
     //从数据库读取责任班组select的option选项
     PatrolService.getGroups().then(
       (result)=>{
@@ -192,13 +197,8 @@ export default {
       },
       (error)=>{
         _this.Log.info(error)
-      })
-    // this.axios.get("/inspection-groups").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.groups = data;
-    //   }
-    // });
+      }
+    )
     this.getChooseMonth()
     this.getSessionUserName()
     PatrolService.getPDetailByPlanId(this.uploadPlan.planId).then(
@@ -212,19 +212,15 @@ export default {
       },
       (error)=>{
         _this.Log.info(error)
-      })
-    // this.axios.get('inspection-plans/'+this.uploadPlan.planId).then(response => {
-    //     let { code, data} = response.data
-    //     if(code == 200 ){
-    //       this.uploadPlan = data;
-    //       this.uploadPlan.inspectTime = new Date(data.inspectTime).format('yyyy-MM')
-    //       this.uploadPlan.tasks.forEach(a=>{
-    //         this.inspectTimeContainer.push(new Date(a.inspectTime).format('yyyy-MM-dd'))
-    //       })
-    //       this.shwoDate()
-    //     }
-    // });
-
+      }
+    )
+    this.axios.get('roles/users').then(res=>{
+        let{ code,data } = res.data
+        if(code==200){
+            this.approver = data[0]
+            this.uploadPlan.approverId = data[0].id
+        }
+    })
   },
   methods: {
 
@@ -315,7 +311,7 @@ input[type='number']{
   padding: 4px 7px; 
 }
 .ivu-form.ivu-form-label-right{
-    margin: 10px auto;
+    margin: 0px auto;
     background: #fff;
     padding: 10px 20px;
 }
@@ -347,5 +343,11 @@ input[type='number']{
     position: relative;
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+}
+.ivu-input[disabled]{
+    background-color: #ffffff !important;
+    opacity: 1;
+    cursor: not-allowed;
+    color: #495060 !important;
 }
 </style>

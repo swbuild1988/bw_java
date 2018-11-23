@@ -176,4 +176,18 @@ public class RelatedUnitController {
 		return  CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
+	/**根据sectionId和单位类型查询单位列表 
+	 * @param id
+	 * @param unitType
+	 * @return   {"msg":"请求成功","code":"200","data":[{"id":2,"name":"上海市第一人民医院","contact":"王梦飞","tel":"13702569817","unitType":1,"unitTypeName":"医院","address":"徐汇区人民路001号","longitude":"112.49326617606197","latitude":"37.70596780087469","sectionIds":"1,2,3,4,5","sectionList":null,"crtTime":1531105196000}]}
+	 * @author shaosen
+	 * @Date 2018年11月23日
+	 */
+	@RequestMapping(value="sections/{id}/relatedunits/unitType/{unitType}",method=RequestMethod.GET)
+	public JSONObject getDtoListBySecionIdAndUnitType(@PathVariable("id") Integer id,
+			@PathVariable("unitType")Integer unitType) {
+		List<RelatedUnitDto> list = relatedUnitService.getDtoListBySecionIdAndUnitType(id,unitType);
+		return  CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
 }

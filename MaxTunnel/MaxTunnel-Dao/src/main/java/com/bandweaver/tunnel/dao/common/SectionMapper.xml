@@ -255,4 +255,8 @@
 	<select id="getByName" resultMap="BaseResultMap">
 		select * from t_common_section where name = #{name}
 	</select>
+	
+	<select id="getDtoById" resultMap="DtoResultMap">
+		select * from t_common_section where id = #{id}
+	</select>
 </mapper>

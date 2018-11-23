@@ -44,11 +44,7 @@ public class SectionServiceImpl implements SectionService {
 
 	@Override
 	public SectionDto getSectionById(Integer id) {
-		
-		SectionVo vo = new SectionVo();
-		vo.setId(id);
-		List<SectionDto> list = sectionMapper.getSectionsByCondition(vo);
-		return list.isEmpty() ? null : list.get(0);
+		return sectionMapper.getDtoById(id);
 	}
 
 	@Override

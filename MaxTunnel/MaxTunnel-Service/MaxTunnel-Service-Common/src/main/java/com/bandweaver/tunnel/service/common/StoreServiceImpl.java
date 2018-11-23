@@ -37,6 +37,11 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
+	public List<Store> getList() {
+		return storeMapper.getList();
+	}
+
+	@Override
 	public List<StoreDto> getStoresByCondition(StoreVo vo) {
 		return storeMapper.getStoresByCondition(vo);
 	}
@@ -66,6 +71,7 @@ public class StoreServiceImpl implements StoreService {
 		
 		String store_name = store.getName();
 		List<Area> area_list = areaMapper.getAreasByTunnelId(store.getTunnelId());
+		if(area_list == null) return;
 		for (Area area : area_list) {
 			String section_name = area.getName() + "-" + store_name ;
 			//添加区段信息
@@ -106,5 +112,10 @@ public class StoreServiceImpl implements StoreService {
 	@Override
 	public Store getByName(String name) {
 		return storeMapper.getByName(name);
+	}
+
+	@Override
+	public Store getStoreByTunnelAndSn(Integer tunnelId, String sn) {
+		return storeMapper.getStoreByTunnelAndSN(tunnelId, sn);
 	}
 }

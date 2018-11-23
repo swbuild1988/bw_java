@@ -59,4 +59,6 @@ public interface SectionMapper {
 	void deleteBatch(List<Integer> list);
 
 	Section getByName(String name);
+
+	SectionDto getDtoById(Integer id);
 }

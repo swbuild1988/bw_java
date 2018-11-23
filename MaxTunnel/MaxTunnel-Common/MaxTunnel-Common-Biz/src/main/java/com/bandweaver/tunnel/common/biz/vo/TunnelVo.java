@@ -13,6 +13,8 @@ public class TunnelVo extends BaseVo implements Serializable{
 
     private String name;
 
+    private String sn;
+
     private Double length;
 
     private Integer responsibilityId;
@@ -22,6 +24,8 @@ public class TunnelVo extends BaseVo implements Serializable{
     private Integer operationId;
     
     private String camera;
+    
+    private Integer maxviewConfigId;
 
     private Date crtTime;
 
@@ -39,6 +43,14 @@ public class TunnelVo extends BaseVo implements Serializable{
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getSn() {
+        return sn;
+    }
+
+    public void setSn(String sn) {
+        this.sn = sn;
     }
 
     public Double getLength() {
@@ -88,4 +100,13 @@ public class TunnelVo extends BaseVo implements Serializable{
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
     }
+
+	public Integer getMaxviewConfigId() {
+		return maxviewConfigId;
+	}
+
+	public void setMaxviewConfigId(Integer maxviewConfigId) {
+		this.maxviewConfigId = maxviewConfigId;
+	}
+    
 }

@@ -21,11 +21,11 @@ public class EmPlanVo extends BaseVo {
 
 	private Integer targetKey;
 
-	private Integer targetValue;
+	private String targetValue;
 
 	private Integer actionKey;
 
-	private Integer actionValue;
+	private String actionValue;
 
 	private Integer finishKey;
 
@@ -75,11 +75,11 @@ public class EmPlanVo extends BaseVo {
 		this.targetKey = targetKey;
 	}
 
-	public Integer getTargetValue() {
+	public String getTargetValue() {
 		return targetValue;
 	}
 
-	public void setTargetValue(Integer targetValue) {
+	public void setTargetValue(String targetValue) {
 		this.targetValue = targetValue;
 	}
 
@@ -91,11 +91,11 @@ public class EmPlanVo extends BaseVo {
 		this.actionKey = actionKey;
 	}
 
-	public Integer getActionValue() {
+	public String getActionValue() {
 		return actionValue;
 	}
 
-	public void setActionValue(Integer actionValue) {
+	public void setActionValue(String actionValue) {
 		this.actionValue = actionValue;
 	}
 

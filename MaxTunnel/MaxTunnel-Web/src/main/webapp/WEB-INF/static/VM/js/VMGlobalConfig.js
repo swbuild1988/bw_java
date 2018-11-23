@@ -89,7 +89,7 @@ export default {
         }],
           personnelType:[{ //人员类型
             "val": 0,
-            "key": "personnel-location" //人员定位
+            "key": "personnel-location1" //人员定位
         }],
           flawType:[{ //缺陷类型
             "val": [1,2,4,7],

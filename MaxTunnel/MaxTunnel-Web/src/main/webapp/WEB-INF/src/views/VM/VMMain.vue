@@ -1,40 +1,96 @@
 <template>
-  <div id="main">
-      <VMHead></VMHead>
-      <VMBody></VMBody>
+  <div id="VMMain">
+      <div class="MainContent">
+          <div
+              v-for="item in VMMainContext"
+              :class="item.className"
+              :style="item.extendStyle"
+              v-if="item.isShow"
+      >
+          <VMHead v-if="item.className === 'VMExtend-1'"></VMHead>
+          <VMBody v-if="item.className === 'VMExtend-1'"></VMBody>
+      </div>
+      </div>
+
+
   </div>
 </template>
 
 <script>
     import VMHead from './header/VMHead'
     import VMBody from './body/VMBody'
+
+    let  { VMExtendStyle } = require('../../../static/VM/js/VMWebConfig');
+
     export default {
         data() {
             return {
+                VMMainContext:[],
+                classNameConfig:[],
+                extendTemplateNumber:5,
             }
         },
         watch:{
               '$route'(to,from){
-                console.log(to)
-                console.log(from)
+              },
 
-              }
         },
-      components:{
-        VMHead,
-        VMBody
-      },
+        components:{
+           VMHead,
+           VMBody,
+        },
+        created(){
+            for(let i=1; i <= this.extendTemplateNumber;i++)
+                this.classNameConfig.push({ key:`模块${ i }`,val:`VMExtend-${i}` })
+        },
         mounted(){
             this.init();
         },
         methods:{
             init(){
-            }
+                this.VMMainContext.splice(0);
+
+                for (let item in VMExtendStyle){
+                    if( VMExtendStyle.hasOwnProperty( item ) ){
+                        this.classNameConfig.forEach( obj => (obj.key === VMExtendStyle[item].className) && (VMExtendStyle[item].className = obj.val ));
+
+                        this.VMMainContext.push(VMExtendStyle[item]);
+                    }
+                }
+            },
         }
     }
 
 </script>
-
+<style scoped>
+    .MainContent {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background: url('../../assets/VM/bg_image.png') no-repeat;
+        background-size: 100% 100%;
+        background-color: #031324;
+    }
+    .MainContent .VMExtend-1,
+    .MainContent .VMExtend-2,
+    .MainContent .VMExtend-3,
+    .MainContent .VMExtend-4,
+    .MainContent .VMExtend-5{
+        position: absolute;
+        height: 100%;
+    }
+    .MainContent .VMExtend-2,
+    .MainContent .VMExtend-3,
+    .MainContent .VMExtend-4,
+    .MainContent .VMExtend-5{
+        border:1px solid red;
+        padding-right: 0.7%;
+        height: 94%;
+        top: 6%;
+    }
+</style>
 <style>
   /*通用*/
   *{
@@ -54,7 +110,7 @@
   .clear  {clear:both;}
 
   /*整体布局*/
-  #top,#man{
+  #top{
     width: 100%;
     margin: 0 auto;
   }
@@ -91,9 +147,6 @@
   .ivu-notice-with-warning:after {
       background: transparent;
   }
-  /*.ivu-notice-notice .ivu-notice-notice-close {*/
-      /*display: none;*/
-  /*}*/
   .ivu-notice-icon {
       margin-top: 1px;
   }

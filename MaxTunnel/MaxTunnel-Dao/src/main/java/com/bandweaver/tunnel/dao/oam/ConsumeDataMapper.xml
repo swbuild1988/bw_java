@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.oam.ConsumeDataMapper">
+<cache/>
+	
+	<insert id="insert"
+		parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData">
+		insert into T_OAM_CONSUME_DATA
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="direct != null">
+				DIRECT,
+			</if>
+			<if test="indirect != null">
+				INDIRECT,
+			</if>
+			<if test="time != null">
+				TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="direct != null">
+				#{direct},
+			</if>
+			<if test="indirect != null">
+				#{indirect},
+			</if>
+			<if test="time != null">
+				#{time},
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="addBatch" useGeneratedKeys="false">
+		insert into T_OAM_CONSUME_DATA
+		(ID,DIRECT,INDIRECT,TIME)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.id},
+			#{item.direct},
+			#{item.indirect},
+			#{item.time}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<select id="getListByIdAndTime" resultMap="ConsumeDataMap">
+        SELECT * FROM T_OAM_CONSUME_DATA
+        <where>
+        	<if test="id != null">
+        		and ID = #{id}
+        	</if>
+        	<if test="startTime != null">
+				and time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and time &lt;= #{endTime}
+			</if>
+        </where>
+        order by time DESC
+    </select>
+	
+	<delete id="deleteBatch">
+		DELETE FROM T_OAM_CONSUME_DATA WHERE TIME &lt;= #{time}
+	</delete>
+	
+	<resultMap id="ConsumeDataMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData">
+        <result column="id" property="id"/>
+        <result column="direct" property="direct"/>
+        <result column="indirect" property="indirect"/>
+        <result column="time" property="time"/>
+	</resultMap>
+</mapper>

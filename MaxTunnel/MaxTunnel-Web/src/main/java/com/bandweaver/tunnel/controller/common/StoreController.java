@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,7 +67,25 @@ public class StoreController extends BaseController<Store> {
 		storeService.add(store);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
-	
+
+	/** 添加管舱
+	 * @param  name 管舱名称
+	 * @param  tunnelId 管廊id
+	 * @param  storeTypeId 管舱类型id
+	 * @param  camera 相机视角（字符串）
+	 * @return {"msg":"请求成功","code":"200","data":{}}
+	 * @author shaosenD
+	 * @date 2018年7月25日
+	 */
+	@RequestMapping(value="stores/multi",method=RequestMethod.POST)
+	public JSONObject addMulti(@RequestBody List<Store> stores) {
+		for (Store store : stores) {
+			store.setCrtTime(new Date());
+		}
+		storeService.addBatch(stores);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+
 	/**检查名称是否重复 
 	 * @param name
 	 * @return   true:可添加 false:不可添加
