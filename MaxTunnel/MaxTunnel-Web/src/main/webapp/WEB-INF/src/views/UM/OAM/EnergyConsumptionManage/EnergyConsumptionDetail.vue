@@ -3,30 +3,37 @@
     <Row>
       <Col span="24">
       <div class="top-div">
-        <Row style="margin-bottom: 10px">
-          <Col span="19">
+        <Row class="top">
+          <Col span="6">
           <span class="planDec">开始时间</span>
-          <DatePicker type="date" v-model="startTime" placeholder="Select date" style="width: 170px"></DatePicker>
-          &nbsp;
-          <span class="planDec">结束时间</span>
-          <DatePicker type="date" v-model="endTime" placeholder="Select date" style="width: 170px"></DatePicker>
+          <DatePicker type="date" size="large" v-model="startTime" placeholder="选择时间" style="width: 60%"></DatePicker>
           </Col>
-          <Col span="5" align="right">
-          <Button class="btn" @click="queryTable">查询</Button>
-          <Button class="btn" @click="exportData">导出</Button>
+          <Col span="6">
+          <span class="planDec">结束时间</span>
+          <DatePicker type="date" size="large" v-model="endTime" placeholder="选择时间" style="width: 60%"></DatePicker>
+          </Col>
+          <Col span="2" offset="10">
+          <div style="position: relative;float: right;right: 5px;">
+            <Button type="primary" shape="circle" icon="ios-search" title="查询" @click="queryTable"
+                    size="large"></Button>
+            <Button type="primary" shape="circle" icon="ios-download-outline" title="导出" @click="exportData"
+                    size="large"></Button>
+          </div>
           </Col>
         </Row>
-        <hr>
-        <div class="bottom-div">
-          <Table size="small" ref="table" border stripe height="313" :columns="columns" :data="tableData"></Table>
-          <Page :total="page.pageTotal" @on-change="changePage" :page-size="page.pageSize" show-total show-elevator
+        <div>
+          <Table  ref="table" border stripe   :height="tableHeight" :columns="columns" :data="tableData"></Table>
+          <Page :total="page.pageTotal" @on-change="changePage" :page-size="page.pageSize"
+                show-total show-elevator
+                :current="page.curPageNum"
+                show-total show-elevator show-sizer placement="top"
                 style="float: right"></Page>
         </div>
       </div>
       </Col>
       <Col span="24">
-      <div style="margin-top: 10px;height: 41vh;">
-        <div :id="line.Id" :style="{width:'100%',height:'41vh'}"></div>
+      <div style="height: calc(42vh - 60px);">
+        <div :id="line.Id" style="width: 100%; height: 100%"></div>
       </div>
       </Col>
     </Row>
@@ -35,12 +42,14 @@
 </template>
 
 <script>
-  import { TunnelService } from '../../../../services/tunnelService'
-  import { energyConsumptionService } from '../../../../services/energyConsumptionService'
+  import {TunnelService} from '../../../../services/tunnelService'
+  import {energyConsumptionService} from '../../../../services/energyConsumptionService'
+
   export default {
     name: "energy-consumption-detail",
     data() {
       return {
+        tableHeight:450,
         tunnelId: '',
         tunnelList: [],
         curName: "",
@@ -75,8 +84,8 @@
         endTime: '',
         line: {
           Id: 'singleLine',
-          titleColor:"#000000",
-          requestUrl:"tunnels/energies/time/condition",
+          titleColor: "#000000",
+          requestUrl: "tunnels/energies/time/condition",
         },
         requestUrl: '/tunnels/energies/datagrid',
         myChart: {},
@@ -103,28 +112,29 @@
       }
     },
     mounted() {
+      this.tableHeight= window.innerHeight*0.42-60;
       this.tunnelId = this.$route.params.id;
       // 获取所有的管廊
       let _this = this
       TunnelService.getTunnels().then(
-          (result)=>{
-              _this.tunnelList = result;
-              _this.tunnelList.forEach(a => {
-                if (a.id == _this.tunnelId) {
-                  _this.curName = a.name;
-                  _this.init();
-                }
-              });
-          },
-          (error)=>{
-              console.log(error)
-      })
+        (result) => {
+          _this.tunnelList = result;
+          _this.tunnelList.forEach(a => {
+            if (a.id == _this.tunnelId) {
+              _this.curName = a.name;
+              _this.init();
+            }
+          });
+        },
+        (error) => {
+          console.log(error)
+        })
       this.queryTable();
 
     },
     methods: {
       init() {
-        this.drawLine(this.curName,this.line.titleColor);
+        this.drawLine(this.curName, this.line.titleColor);
         this.fetchData(this.line.requestUrl);
       },
       queryTable() {
@@ -144,9 +154,8 @@
           queryParams.endTime = _this.endTime.getTime();
         }
         energyConsumptionService.getECDatagrid(queryParams).then(
-          (result)=>{
+          (result) => {
             _this.page.pageTotal = result.total;
-            console.log(result);
             result.list.forEach(a => {
               let temp = a;
               temp.value = temp.value.toFixed(2);
@@ -156,13 +165,13 @@
               _this.tableData.push(temp);
             })
           },
-          (error)=>{
+          (error) => {
             _this.$Message.error(error);
           })
         this.fetchData(this.line.requestUrl);
       },
 
-      drawLine(titleName,titleColor) {
+      drawLine(titleName, titleColor) {
         let _this = this;
         _this.myChart = _this.$echarts.init(document.getElementById(_this.line.Id));
         _this.myChart.showLoading();
@@ -170,9 +179,6 @@
           title: {
             text: titleName + "能耗统计",
             trigger: 'axis',
-            position: function (pt) {
-              return [pt[0], '10%'];
-            },
             textStyle: {
               fontWeight: 'normal',
               color: titleColor,
@@ -254,14 +260,14 @@
           endTime: null,
           tunnelId: _this.tunnelId
         };
-        if (_this.startTime ) {
+        if (_this.startTime) {
           queryParams.startTime = _this.startTime.getTime();
         }
-        if ( _this.endTime) {
+        if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
         energyConsumptionService.getECInfo(queryParams).then(
-          (result)=>{
+          (result) => {
             _this.data = [];
             _this.date = [];
             result.filter(item => {
@@ -281,7 +287,7 @@
               })
             }
           },
-          (error=>{
+          (error => {
             _this.Log.info(error)
           }))
       },
@@ -305,5 +311,18 @@
 <style scoped>
   .bottom-div {
     margin-top: 10px;
+  }
+
+  .top {
+    padding-top: 8px;
+    height: 50px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .planDec {
+    padding: 4px;
+    font-size: 14px;
   }
 </style>

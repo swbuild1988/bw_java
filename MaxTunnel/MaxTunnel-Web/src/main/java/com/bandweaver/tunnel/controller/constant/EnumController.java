@@ -38,7 +38,7 @@ import com.bandweaver.tunnel.common.biz.constant.omm.DefectLevel;
 import com.bandweaver.tunnel.common.biz.constant.omm.DefectStatus;
 import com.bandweaver.tunnel.common.biz.constant.omm.DefectType;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.omm.SpareWhitherEnum;
 import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
@@ -57,6 +57,27 @@ public class EnumController {
 	
 	@Autowired
 	private StoreTypeService storeTypeService;
+	
+	
+	
+	
+	/**应急预案列表
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":4001,"processKey":"FirePlanProcess","key":"消防预案"},{"val":4003,"processKey":"WindPlanProcess","key":"通风预案"},{"val":4002,"processKey":"WaterPlanProcess","key":"排水预案"}]} 
+	 * @author shaosen
+	 * @Date 2018年11月22日
+	 */
+	@RequestMapping(value="plan-enums",method=RequestMethod.GET)
+	public JSONObject getPlanEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (ProcessTypeEnum e : ProcessTypeEnum.getEmPlanList()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			obj.put("processKey", e.getProcessKey());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 	
 	
 	/**开关枚举 
@@ -155,28 +176,6 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-
-	/**
-	 * 设备类型枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"安全防范"},{"val":2,"key":"视频监控"},{"val":3,"key":"环境监测"},{"val":4,"key":"电缆本体"},{"val":5,"key":"火灾报警"},{"val":6,"key":"隧道通信"}]}  
-	 * @throws
-	 * @author shaosen
-	 * @date 2018年7月26日
-	 */
-	@RequestMapping(value="equipmenttype-enums",method=RequestMethod.GET)
-	public JSONObject getEquipmentTypeEnumList() {
-		List<JSONObject> list = new ArrayList<>();
-		for (EquipmentTypeEnum e : EquipmentTypeEnum.values()) {
-			JSONObject obj = new JSONObject();
-			obj.put("key", e.getName());
-			obj.put("val", e.getValue());
-			list.add(obj);
-		}
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
-	}
-	
 
 	/**
 	 * 单位类别枚举
@@ -329,24 +328,7 @@ public class EnumController {
 	}
 	
 	
-	/**应急预案流程枚举 
-	 * @return  
-	 * {"msg":"请求成功","code":"200","data":[{"val":4001,"processKey":"FirePlanProcess","key":"消防预案"},{"val":4003,"processKey":"WindPlanProcess","key":"通风预案"},{"val":4002,"processKey":"WaterPlanProcess","key":"排水预案"}]}  
-	 * @author shaosen
-	 * @Date 2018年8月9日
-	 */
-	@RequestMapping(value="plan-enums",method=RequestMethod.GET)
-	public JSONObject getPlanEnumList() {
-		List<JSONObject> list = new ArrayList<>();
-		for (ProcessTypeEnum e : ProcessTypeEnum.getProcessTypeList()) {
-			JSONObject obj = new JSONObject();
-			obj.put("key", e.getName());
-			obj.put("val", e.getValue());
-			obj.put("processKey", e.getProcessKey());
-			list.add(obj);
-		}
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
-	}
+	
 	
 	/**告警等级枚举 
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"提示"},{"val":2,"key":"一般"},{"val":3,"key":"严重"},{"val":4,"key":"致命"}]}
@@ -645,16 +627,33 @@ public class EnumController {
 	 * @author ya.liu
 	 * @Date 2018年11月14日
 	 */
-	@RequestMapping(value = "energyType-enums", method = RequestMethod.GET)
+	@RequestMapping(value = "energytype-enums", method = RequestMethod.GET)
 	public JSONObject getEnergyTypeEnumList() {
-		List<EnergyType> list = new ArrayList<>();
+		List<JSONObject> list = new ArrayList<>();
 		for(EnergyType et : EnergyType.values()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", et.getName());
 			obj.put("val", et.getValue());
-			list.add(et);
+			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
+	/**
+	 * 获取备品去向枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月30日
+	 */
+	@RequestMapping(value = "sparewhither-enums", method = RequestMethod.GET)
+	public JSONObject getSpareWhitherEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for(SpareWhitherEnum s : SpareWhitherEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", s.getName());
+			obj.put("val", s.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 }

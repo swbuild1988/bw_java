@@ -41,13 +41,13 @@
     </div>
     <Row :gutter="16">
       <Col span="12">
-      <div style="width:42vw; height: 74vh;margin-left: 10px;" id="GISbox">
+      <div class="map" id="GISbox">
         <!-- <sm-viewer :id="detialMapId" ref="smViewer1">
         </sm-viewer> -->
         <TestSmViewer ref="smViewer1"></TestSmViewer>
       </div>
       </Col>
-      <Col span="12" style="height: 66vh;">
+      <Col span="12":class="!queryCondition.showSwitch? 'data':'smallData' ">
       <Row :gutter="16" style="margin-right: 2px;">
         <Col span="12" v-for="item in Obj" :value="item.ObjName" :key="item.id">
         <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
@@ -145,21 +145,6 @@
         }
       };
     },
-    beforeRouteLeave (to, from, next) {
-      if(to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表'
-        || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == 'UMDetailEquipment' || from.name == '虚拟巡检' 
-        || from.name == '人员定位详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'){
-          from.meta.keepAlive = true
-          to.meta.keepAlive = true
-          this.$destroy()
-          next()
-      }else{
-        from.meta.keepAlive = false
-        to.meta.keepAlive = false
-        this.$destroy()
-        next()
-      }
-    },
     watch: {
       $route: function () {
         // $route发生变化时再次赋值
@@ -182,6 +167,20 @@
       EnvironmentShow,
       // SmViewer
       TestSmViewer
+    },
+    beforeRouteLeave (to, from, next) {
+      if (to.name == '设备管理主页' || to.name == 'UMPatrolHomePage' || to.name == '虚拟巡检' || to.name == '人员定位详情'
+      || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表') {
+        from.meta.keepAlive = true;
+        to.meta.keepAlive = true;
+        this.$destroy()
+        next()
+      } else {
+        to.meta.keepAlive = false
+        from.meta.keepAlive = false
+        this.$destroy()
+        next()
+      }
     },
     mounted() {
       this.fentchData();
@@ -423,28 +422,6 @@
             (error)=>{
               console.log(error)
             })
-          // this.axios
-          //   .get(
-          //     "tunnels/stores/sections/" + this.curSotre.id + "/ai/cv"
-          //   )
-          //   .then(response => {
-          //     let {code, data} = response.data;
-          //     if (code == 200) {
-          //       this.curEnvData = [];
-          //       data.forEach(a => {
-          //         let temp = {};
-          //         temp.name = a.objTypeName;
-          //         temp.value = new Number(a.cv).toFixed(2);
-          //         temp.status =
-          //           new Number(temp.value) /
-          //           this.tunnelPropsMax.filter(
-          //             a => a.key == temp.name
-          //           )[0].val *
-          //           100;
-          //         this.curSecurityData.push(temp);
-          //       });
-          //     }
-          //   });
         }
       },
       //总开关控制
@@ -495,9 +472,7 @@
           pageSize: _this.queryCondition.pageSize
         };
         MonitorDataService.objDetailDatagrid(Params).then(
-          (result)=>{
-            let ids = "";
-            let datatypeId = null;
+          (result) => {
             _this.Obj = [];
             result.list.forEach(a => {
               let temp = {};
@@ -508,8 +483,13 @@
               temp.ObjVal = false;
               temp.objtypeIds = _this.queryCondition.objDataType;
               temp.datatypeId = a.datatypeId;
-              ids += a.id + ",";
-              datatypeId = a.datatypeId;
+              if (a.datatypeId == 1) {
+                temp.ObjVal = a.cv.toFixed(2);
+                _this.queryCondition.showSwitch = false;
+              } else {
+                temp.ObjVal = a.cv;
+                _this.queryCondition.showSwitch = true;
+              }
               temp.objtypeName =
                 _this.curName +
                 _this.curSotre.name +
@@ -519,30 +499,8 @@
             });
             _this.queryCondition.total = result.total;
             _this.queryCondition.pageNum = result.pageNum;
-            ids = ids.slice(0, ids.length - 1);
-            if (result.list != null && result.list.length > 0) {
-              MonitorDataService.getDataByIdsAndDataType(ids,datatypeId).then(
-                (result1)=>{
-                  _this.Obj.forEach(a => {
-                    result1.filter(b => {
-                      if (a.id == b.id) {
-                        if (datatypeId == 1) {
-                          a.ObjVal = b.cv.toFixed(2);
-                          this.queryCondition.showSwitch = false;
-                        } else {
-                          a.ObjVal = b.cv;
-                          this.queryCondition.showSwitch = true;
-                        }
-                      }
-                    });
-                  });
-                },
-                (error)=>{
-                  console.log(error)
-                })
-            }
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
       },
@@ -558,23 +516,23 @@
         this.getObjDetialData();
       },
       setGIS() {
-          var gis = document.getElementById("newID");
-          gis.style.display = "block";
-          gis.style.position = 'absolute';
-          gis.style.top = '0px';
-          gis.style.height = '96%';
-          gis.style.width = '96%'    
-          document.body.removeChild(gis)
-          document.getElementById("GISbox").appendChild(gis)
-          // 加载视角
-          // this.$refs.TestSmViewer.setViewAngAngle();
-      },
-      destory3D(){
-          var gis = document.getElementById("newID");
-          gis.style.display = "none";
-          document.getElementById("GISbox").removeChild(gis)
-          document.body.appendChild(gis)
-      }
+            var gis = document.getElementById("newID");
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '0px';
+            gis.style.height = '100%';
+            gis.style.width = '98%'
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
+            // 加载视角
+            this.$refs.smViewer1.setViewAngAngle();
+        },
+        destory3D(){
+            var gis = document.getElementById("newID");
+            gis.style.display = "none";
+            document.getElementById("GISbox").removeChild(gis)
+            document.body.appendChild(gis)
+        }
     },
     beforeDestroy(){
       this.destory3D()
@@ -583,6 +541,17 @@
 </script>
 
 <style scoped>
+  .map{
+    width:42vw;
+    height: calc( 85vh - 100px - 20px);
+    margin-left: 10px;
+  }
+  .data{
+    height: calc( 85vh - 100px - 20px - 40px);
+  }
+  .smallData {
+    height: calc(85vh - 100px - 20px - 40px - 40px);
+  }
   .top {
     margin: 10px;
     line-height: 50px;
@@ -606,24 +575,6 @@
     color: #fff;
   }
 
-  .gis,
-  .details {
-    display: inline-block;
-    border: 1px solid #b3b0b0;
-    height: 74vh;
-    vertical-align: top;
-  }
-
-  .gis {
-    position: relative;
-    width: 59vw;
-  }
-
-  .details {
-    border: 1px solid #b3b0b0;
-    overflow-y: auto;
-    width: 24.3vw;
-  }
 
   .Section #pageBox {
     border: 1px solid #b3b0b0;

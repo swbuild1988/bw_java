@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.omm.EquipmentTypeMapper">
+    <cache/>
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select * from T_OMM_EQUIPMENT_TYPE
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM T_OMM_EQUIPMENT_TYPE
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+    
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType">
+    	insert into T_OMM_EQUIPMENT_TYPE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                NAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+	  <select id="getAllEquipmentTypeList" resultMap="BaseResultMap">
+	  	select * from T_OMM_EQUIPMENT_TYPE
+	  </select>
+</mapper>

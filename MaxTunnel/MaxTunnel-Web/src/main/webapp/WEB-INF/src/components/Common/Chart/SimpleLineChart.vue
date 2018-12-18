@@ -75,10 +75,10 @@ export default {
     },
     methods: {
         init() {
-            this.drawComplexBar();
+            this.drawSimpleLine();
             this.fetchData(this.requestUrl);
         },
-        drawComplexBar() {
+        drawSimpleLine() {
             let _this = this;
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)

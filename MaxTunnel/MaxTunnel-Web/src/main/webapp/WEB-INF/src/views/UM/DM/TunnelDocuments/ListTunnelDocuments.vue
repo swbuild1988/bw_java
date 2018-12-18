@@ -40,6 +40,7 @@
         		<Col span="6" v-for="file in documents" :key="file.id" class="files">
         			<input v-if="showCheckBox" type="checkbox" class="checkbox" :value="file.id" v-model="ids">
         			<div class="fileItem">
+                        <div style="display: table-cell;vertical-align: middle;text-align: center;">
         				<div class="name">
         					<Icon :type="file.fileTypeName == '文档' ? 'document' : (file.fileTypeName == '视频' ? 'ios-videocam' : 'image')" size="20"></Icon>
         					<span>{{ file.name }}</span>
@@ -52,10 +53,8 @@
 	        				<Icon type="android-time"></Icon>
 	                        <span>{{ new Date(file.crtTime).format('yyyy-MM-dd') }}</span>
                         </div>
+                        </div>
                         <div class="operations">
-                        	<!-- <Tooltip content="预览">
-                        		<a :href="'/api/files/download/' + file.id"><Icon type="ios-eye" color="#3399ff" size="28"></Icon></a>
-                        	</Tooltip> -->
                         	<Tooltip content="下载">
                                 <!-- Chrome -->
                         		<a :href="'/'+ApiUrl.split('/')[3]+'/files/download/' + file.id" :download="file.name" v-if="!IEbrowser"><Icon type="android-download" color="#3399ff" size="25"></Icon></a>
@@ -67,27 +66,6 @@
         		</Col>
         	</Row>
         </div>
-<!--         预览
- -->        <!-- <Modal :title="view.title" v-model="visible">
-	        <img v-if="view.type == '图片'" :src="view.src" width="480" height="300">
-	        <div v-if="view.type == '视频'">
-		        <object type='application/x-vlc-plugin' pluginspage="http://www.videolan.org/" events='true' height="300" width="480" id='vlc'>
-	                <param name='mrl' :value="view.src" />
-	                <param name='volume' value='50' />
-	                <param name='autoplay' value='true' />
-	                <param name='loop' value='false' />
-	                <param name='fullscreen' value='false' />
-	                <param name='controls' value='false' />
-	            </object>
-        	</div>
-        	<div v-if="view.type == '文档'" class="text">
-        		<span>{{ text }}</span>
-        		<Spin fix v-if="isLoading">
-	                <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-	                <div>Loading</div>
-	            </Spin>
-        	</div>
-	    </Modal> -->
 	    <Button v-if="!showCheckBox" type="error" @click="showCheckBox = true" class="delete">删除</Button>
 	    <div class="confirm" v-if="showCheckBox">
 	    	<Button type="primary" @click="del">确认</Button>
@@ -127,12 +105,6 @@ export default {
                 position: 'absolute',
                 bottom: '20px',
                 right: '15px'
-            },
-            visible: false,
-            view: {
-            	title: null,
-            	src: null,
-            	type: null
             },
             showCheckBox: false,
             ids: [],
@@ -227,23 +199,6 @@ export default {
             this.page.pageSize = value
             this.search()
         },
-        handleView(name,id,type) {
-        	this.visible = true
-        	this.view.title = name
-        	this.view.src = '/api/files/download/' + id
-        	this.view.type = type
-        	if(type == '文档'){
-        		axios.get('files/download/' + id).then(res=>{
-        			// this.text = res.data
-        			this.isLoading = true
-        			let _this = this
-        			setTimeout(function(){
-        				_this.isLoading = false
-        				_this.text = res.data
-        			},1000)
-        		})
-        	}
-        },
         cancel() {
         	this.showCheckBox = false
         	this.ids = []
@@ -284,13 +239,15 @@ export default {
     border-radius: 4px;
     /*box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);*/
     position: relative;
-    height: 200px;
+    height: 20vh;
     overflow: hidden;
    /* background-color: rgba(94,147,165,0.6);*/
-   background-image: url('../../../../assets/UM/documents.jpg')
+   background-image: url('../../../../assets/UM/documents.jpg');
+   background-size: 100% 100%;
+   display: table;
 }
 .name{
-    margin-top: 56px;
+    /*margin-top: 56px;*/
 	text-align: center;
 	font-size: 20px;
     font-weight: bold;
@@ -311,8 +268,8 @@ export default {
 }
 .operations{
 	position: absolute;
-	bottom: 2px;
-	right: 10px;
+	bottom: 2%;
+	right: 4%;
 }
 .delete{
 	position: absolute;
@@ -323,7 +280,7 @@ export default {
 	display: inline-block;
 	margin-left: 6px;
     font-size: 16px;
-    padding: 10px 12px;
+    padding: 4% 4%;
 }
 .files{
 	position: relative;

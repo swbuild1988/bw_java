@@ -290,6 +290,9 @@
             <if test="datatypeId != null">
                 and DATATYPE_ID = #{datatypeId,jdbcType=DECIMAL}
             </if>
+            <if test="objtypeId!= null">
+            	and OBJTYPE_ID = #{objtypeId,jdbcType=DECIMAL}
+            </if>
             <if test="objtypeIds != null">
              and OBJTYPE_ID in 
              <foreach collection="objtypeIds" item="item" index="index" close=")"
@@ -319,7 +322,7 @@
              </foreach>
             </if>
         </where>
-        order by id desc
+        order by area_id,objtype_id ASC
     </select>
 
     <select id="getMeasObjByLongitudeAndLatitudeAndHeight" resultMap="measObjMap">
@@ -355,5 +358,9 @@
     
     <select id="getListBySectionIDAndObjectTypeID" resultMap="measObjMap">
     	select * from T_MAM_MEASOBJ where section_id = #{sectionId} and objtype_id = #{objectTypeId}
+    </select>
+    
+    <select id="getDtoById" resultMap="dtoMap">
+    	select * from T_MAM_MEASOBJ where id = #{id}
     </select>
 </mapper>

@@ -2,7 +2,6 @@
   <div  @click="locationEquimpent">
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
       <p slot="title">{{Obj.objtypeName}}</p>
-
       <div style="background-color:#7D8481;height: 100px; ">
         <span style="float:left;color: #ffffff;margin-top: 3.2vh;width:40%;font-size: 18px; ">{{Obj.ObjName}}</span>
         <div style="float:left;position: fixed;margin-left: 120px;margin-top:20px;">
@@ -11,9 +10,9 @@
             <span slot="close" style="font-size: 20px;top:15px;position: absolute;left: 48px;">OFF</span>
           </i-switch>
         </div>
-        <!-- 风机 -->
-        <div v-if="Obj.objtypeId==10" style="float:right;margin-left: 5px;">
-          <Fans :switchData="Obj.ObjVal"></Fans>
+        <!-- 风机,百叶，水泵，井盖 -->
+        <div v-if="Obj.objtypeId==10 || 58 || 59 || 56" style="float:right;margin-left: 5px;">
+          <Fans :switchData="Obj.ObjVal" :objId="Obj.objtypeId"></Fans>
         </div>
         <!-- 灯 -->
         <div v-if="Obj.objtypeId==11" style="float:right;margin-left: 5px;">

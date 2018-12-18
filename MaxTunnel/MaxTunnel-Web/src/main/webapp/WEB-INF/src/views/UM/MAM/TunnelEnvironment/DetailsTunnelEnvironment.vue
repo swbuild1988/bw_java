@@ -41,13 +41,11 @@
     </div>
     <Row :gutter="16">
       <Col span="12">
-        <div style="width:42vw; height: 74vh;margin-left: 10px;" id="GISbox">
-          <!-- <sm-viewer :id="detialMapId" ref="smViewer1">
-          </sm-viewer> -->
-          <TestSmViewer ref="smViewer1"></TestSmViewer>
-        </div>
+      <div class="map" id="GISbox">
+        <TestSmViewer ref="smViewer1"></TestSmViewer>
+      </div>
       </Col>
-      <Col span="12" style="height: 70vh;">
+      <Col span="12" :class="!queryCondition.showSwitch? 'data':'smallData' ">
       <Row :gutter="16" style="margin-right: 2px;">
         <Col span="12" v-for="item in Obj" :value="item.ObjName" :key="item.id">
         <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
@@ -64,6 +62,7 @@
 </template>
 <script>
   import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
+
   // import SmViewer from "../../../../components/Common/3D/3DViewer";
   import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
   import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
@@ -78,6 +77,8 @@
     name: "detail-tunnel-environment",
     data() {
       return {
+        // curHeight:450,
+        dataInterval:null,
         checkAll: false,
         indeterminate: false,
         Obj: [],
@@ -88,7 +89,7 @@
           storeId: null, //监测区段ID
           sectionId: null,
           objDataType: [], //监测数据类型
-          monitorType: 1, //监测内容类型
+          monitorType: 1, //监测内容类型,1为环境
           pageNum: 1,
           pageSize: 6,
           total: 0,
@@ -128,20 +129,6 @@
         }
       };
     },
-    beforeRouteLeave (to, from, next) {
-      if(to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表' 
-        || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == 'UMDetailEquipment' || from.name == '虚拟巡检' || from.name == '人员定位详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' || from.name == '管廊安防监控详情'){
-          from.meta.keepAlive = true
-          to.meta.keepAlive = true
-          this.$destroy()
-          next()
-      }else{
-        from.meta.keepAlive = false
-        to.meta.keepAlive = false
-        this.$destroy()
-        next()
-      }
-    },
     watch: {
       $route: function () {
         this.tunnelId = this.$route.params.id;
@@ -156,6 +143,20 @@
         this.checkAllGroupChange();
       }
     },
+    beforeRouteLeave(to, from, next) {
+      if (to.name == '设备管理主页' || to.name == 'UMPatrolHomePage' || to.name == '虚拟巡检' || to.name == '人员定位详情'
+        || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表') {
+        from.meta.keepAlive = true;
+        to.meta.keepAlive = true;
+        this.$destroy()
+        next()
+      } else {
+        to.meta.keepAlive = false
+        from.meta.keepAlive = false
+        this.$destroy()
+        next()
+      }
+    },
     components: {
       // v_3DViewer,
       SimulatedData,
@@ -164,14 +165,22 @@
       EnvironmentShow,
       // SmViewer
       TestSmViewer
-
     },
     mounted() {
       this.fentchData();
       this.handleCheckAll();
       this.setGIS()
+      this.intervalData()
+    },
+    beforeDestroy(){
+      this.dataInterval=null;
     },
     methods: {
+      intervalData(){
+        let _this=this;
+        _this.dataInterval=setInterval(function(){_this.getObjDetialData()},1000);
+        _this.dataInterval();
+      },
       //勾选全选
       handleCheckAll() {
         if (this.indeterminate) {
@@ -242,22 +251,6 @@
         this.getSectionsMonitorData();
         this.checkAllGroupChange();
       },
-      //变更监测内容
-      changeQueryTypeList(index) {
-          this.queryCondition.monitorType = index;
-          this.queryTypeList.forEach(a => {
-            if (a.val == index) {
-              this.curDataTypeList = a.objectTypeList;
-              let temp = [];
-              this.curDataTypeList.forEach(a => {
-                temp.push(a.val);
-              });
-              this.queryCondition.objDataType = temp;
-            }
-          });
-          this.fentchData();
-          this.getObjDetialData();
-      },
       //获取数据
       fentchData() {
         this.tunnelId = this.$route.params.id;
@@ -312,7 +305,6 @@
           (error) => {
             console.log(error)
           })
-        this.getMonitorData();
         //获取指定管廊下共有多少管仓
         TunnelService.getStoresCountByTunnelId(_this.tunnelId).then(
           (result) => {
@@ -333,7 +325,6 @@
 
       //根据监测类型获取数据
       getMonitorData() {
-        if (this.queryCondition.monitorType == 1) {
           let _this = this;
           Promise.all([MonitorDataService.getMaxMonitorData(_this.tunnelId, _this.queryCondition.monitorType),
             MonitorDataService.getMonitorData()]).then(
@@ -359,7 +350,6 @@
               console.log(error)
             }
           )
-        }
       },
       //变更模型视角
       changeArea(area) {
@@ -383,7 +373,6 @@
       },
       //获取监测仓具体区段的监测数据
       getSectionsMonitorData() {
-        if (this.queryCondition.monitorType == 1) {
           let _this = this
           MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
             (result) => {
@@ -404,7 +393,6 @@
             (error) => {
               console.log(error)
             })
-        }
       },
       //总开关控制
       allControl(value) {
@@ -456,8 +444,6 @@
         };
         MonitorDataService.objDetailDatagrid(Params).then(
           (result) => {
-            let ids = "";
-            let datatypeId = null;
             _this.Obj = [];
             result.list.forEach(a => {
               let temp = {};
@@ -468,8 +454,13 @@
               temp.ObjVal = false;
               temp.objtypeIds = _this.queryCondition.objDataType;
               temp.datatypeId = a.datatypeId;
-              ids += a.id + ",";
-              datatypeId = a.datatypeId;
+              if (a.datatypeId == 1) {
+                temp.ObjVal = a.cv.toFixed(2);
+                _this.queryCondition.showSwitch = false;
+              } else {
+                temp.ObjVal = a.cv;
+                _this.queryCondition.showSwitch = true;
+              }
               temp.objtypeName =
                 _this.curName +
                 _this.curSotre.name +
@@ -479,28 +470,6 @@
             });
             _this.queryCondition.total = result.total;
             _this.queryCondition.pageNum = result.pageNum;
-            ids = ids.slice(0, ids.length - 1);
-            if (result.list != null && result.list.length > 0) {
-              MonitorDataService.getDataByIdsAndDataType(ids, datatypeId).then(
-                (result1) => {
-                  _this.Obj.forEach(a => {
-                    result1.filter(b => {
-                      if (a.id == b.id) {
-                        if (datatypeId == 1) {
-                          a.ObjVal = b.cv.toFixed(2);
-                          this.queryCondition.showSwitch = false;
-                        } else {
-                          a.ObjVal = b.cv;
-                          this.queryCondition.showSwitch = true;
-                        }
-                      }
-                    });
-                  });
-                },
-                (error) => {
-                  console.log(error)
-                })
-            }
           },
           (error) => {
             console.log(error)
@@ -511,33 +480,34 @@
         let _this = this;
         _this.queryCondition.pageNum = index;
         _this.getObjDetialData();
-      }
-      ,
+      },
       //切换页码数
       handlePageSize(value) {
         this.queryCondition.pageSize = value;
         this.getObjDetialData();
       },
+
       setGIS() {
-          var gis = document.getElementById("newID");
-          gis.style.display = "block";
-          gis.style.position = 'absolute';
-          gis.style.top = '0px';
-          gis.style.height = '96%';
-          gis.style.width = '96%'    
-          document.body.removeChild(gis)
-          document.getElementById("GISbox").appendChild(gis)
-          // 加载视角
-          // this.$refs.TestSmViewer.setViewAngAngle();
+        var gis = document.getElementById("newID");
+        gis.style.display = "block";
+        gis.style.position = 'absolute';
+        gis.style.top = '0px';
+        gis.style.height = '100%';
+        gis.style.width = '98%'
+        document.body.removeChild(gis)
+        document.getElementById("GISbox").appendChild(gis)
+        // 加载视角
+        this.$refs.smViewer1.setViewAngAngle();
       },
-      destory3D(){
-          var gis = document.getElementById("newID");
-          gis.style.display = "none";
-          document.getElementById("GISbox").removeChild(gis)
-          document.body.appendChild(gis)
+
+      destory3D() {
+        var gis = document.getElementById("newID");
+        gis.style.display = "none";
+        document.getElementById("GISbox").removeChild(gis)
+        document.body.appendChild(gis)
       }
     },
-    beforeDestroy(){
+    beforeDestroy() {
       this.destory3D()
     }
   }
@@ -545,6 +515,20 @@
 
 
 <style scoped>
+  .map {
+    width: 42vw;
+    height: calc(85vh - 100px - 20px);
+    margin-left: 10px;
+  }
+
+  .data {
+    height: calc(85vh - 100px - 20px - 40px);
+  }
+
+  .smallData {
+    height: calc(85vh - 100px - 20px - 40px - 40px);
+  }
+
   .top {
     margin: 10px;
     line-height: 50px;
@@ -566,25 +550,6 @@
   .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
     background: #adb3e2;
     color: #fff;
-  }
-
-  .gis,
-  .details {
-    display: inline-block;
-    border: 1px solid #b3b0b0;
-    height: 74vh;
-    vertical-align: top;
-  }
-
-  .gis {
-    position: relative;
-    width: 59vw;
-  }
-
-  .details {
-    border: 1px solid #b3b0b0;
-    overflow-y: auto;
-    width: 24.3vw;
   }
 
   .Section #pageBox {

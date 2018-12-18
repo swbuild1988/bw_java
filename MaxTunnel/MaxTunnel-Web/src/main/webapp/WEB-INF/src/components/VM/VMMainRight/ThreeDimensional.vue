@@ -4,6 +4,8 @@
                 id="threeDViewer"
                 ref="smViewer"
                 :camera="camera"
+                :openFlyLoop="true"
+                :openImageryProvider="false"
         ></sm-viewer>
         <vm-title :title-text="title" @click.native="sendAlarms"></vm-title>
         <select class="cd-select" id="list-dropdown" ></select>
@@ -62,12 +64,12 @@
                 title:'三维系统',
                 id:'threeDimensional',
                 camera:{
-                    longitude:112.49446991184571,
-                    latitude:37.70536834041335,
-                    height:121.73914318253694,
-                    roll:6.28318530714758,
-                    pitch:-0.7220718086739968,
-                    heading:5.868990772801154
+                    longitude:112.49397907438006,
+                    latitude:37.710661662983384,
+                    height:-1.7297007316681086,
+                    roll:2.5845992013273644e-12,
+                    pitch:-0.30235107580130394,
+                    heading:1.7164865602395531
                 },
                 labelsID:[],
                 addLabels:[],
@@ -271,21 +273,22 @@
 
             },
             sendAlarms(){
-
-                setTimeout(()=>{
-                    this.axios.post('/alarms',
-                        {
-                            alarmDate:+new Date(),
-                            alarmLevel:1,
-                            tunnelId:1002,
-                            objectId:7001,
-                            latitude: "112.49408263714506",
-                            longitude: "37.70642444695577",
-                            description:'sad',
-                            isDistribute:true
-                        })
-                        .then(err=>console.log(err)).catch(err=>console.log('err2',err))
-                },1000)
+                console.log('sendAlarms')
+                this.$refs.smViewer.playFly();
+                // setTimeout(()=>{
+                //     this.axios.post('/alarms',
+                //         {
+                //             alarmDate:+new Date(),
+                //             alarmLevel:1,
+                //             tunnelId:1002,
+                //             objectId:7001,
+                //             latitude: "112.49408263714506",
+                //             longitude: "37.70642444695577",
+                //             description:'sad',
+                //             isDistribute:true
+                //         })
+                //         .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                // },1000)
                 // setTimeout(()=>{
                 //     this.axios.post('/alarms',
                 //         {

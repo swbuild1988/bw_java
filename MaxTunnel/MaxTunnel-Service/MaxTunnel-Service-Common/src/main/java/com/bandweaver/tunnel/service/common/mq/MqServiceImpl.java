@@ -20,7 +20,7 @@ public class MqServiceImpl implements MqService {
 
 	@Override
 	public void send2AlarmQueue(Alarm alarm) {
-		LogUtil.info("发送到[告警]队列:" + JSON.toJSONString(alarm) );
+//		LogUtil.info("发送到[告警]队列:" + JSON.toJSONString(alarm) );
 		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(ALARM_QUEUE), JSON.toJSONString(alarm));
 	}
 

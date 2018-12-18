@@ -1,67 +1,97 @@
-.formTitle{
+.formTitle {
     text-align: center;
     margin-bottom: 20px;
 }
-.allDiv{
+
+.allDiv {
     min-height: 100%;
     position: relative;
     padding-bottom: 70px;
 }
-.conditions{
-    height: 60px;
-    line-height: 60px;
-    /* background: #fff; */
-    padding-left: 10px;
-}
-/* .conditionTitle{
-    color: #fff;
-} */
-.queryCondition{
-    height: 90px;
-    line-height: 44px;
+
+.conditions {
+    height: 5vh;
+    line-height: 5vh;
     background: #fff;
     padding-left: 10px;
 }
-.list{
+
+
+/* .conditionTitle{
+    color: #fff;
+} */
+
+.queryCondition {
+    height: 9vh;
+    line-height: 4.5vh;
+    background: #fff;
+    padding-left: 10px;
+}
+
+.list {
     background: #fff;
     margin-top: 10px;
     padding: 10px;
 }
-.containerBox{
+
+.containerBox {
     min-height: 100%;
     position: relative;
 }
-.ivu-menu{
-  font-size: 18px !important;
+
+.ivu-menu {
+    font-size: 18px !important;
 }
 
+
 /*disable*/
+
 .ivu-select-disabled .ivu-select-selection {
     background-color: #fff;
     opacity: 1;
     cursor: not-allowed;
     color: #495060;
 }
+
+
 /*可扩展table的字体大小*/
+
 td.ivu-table-expanded-cell {
     padding: 5px 15px;
     font-size: 13px;
 }
+
+
 /*form表单*/
-.ivu-form.ivu-form-label-top{
-    margin-top: 30px;
+
+.ivu-form.ivu-form-label-top {
+    margin-top: 20px;
 }
+
+
 /*取消按钮*/
+
 .ivu-btn-ghost {
     background-color: #f9f7f7;
 }
+
+
 /*给背景色添加白色蒙版*/
-.backImgStyle{
+
+.backImgStyle {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    background:rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     min-height: 100%;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
 }

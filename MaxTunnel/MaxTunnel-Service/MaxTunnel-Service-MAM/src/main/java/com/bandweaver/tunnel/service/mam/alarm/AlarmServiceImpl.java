@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bandweaver.tunnel.common.biz.dto.mam.CountResult;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
@@ -36,7 +35,7 @@ public class AlarmServiceImpl implements AlarmService {
 		//save to DB
 		alarm.setCleaned(false);
 		alarmMapper.insertSelective(alarm);
-		LogUtil.info("返回主键ID：" + alarm.getId() );
+//		LogUtil.info("返回主键ID：" + alarm.getId() );
 		//save to Cache
 //		alarmModuleCenter.insert(alarm);
 		//send to MQ
@@ -91,14 +90,14 @@ public class AlarmServiceImpl implements AlarmService {
 	public void cleanAlarm(Alarm alarm) {
 //		Alarm alm = alarmModuleCenter.getAlarm(alarm.getId());
 		Alarm alm = alarmMapper.selectByPrimaryKey(alarm.getId());
-		if(alm == null) {
+		if(alm == null || alm.getCleaned()) {
 			return;
 		}
-		
+		String desc = alm.getDescription() == null ? "" : alm.getDescription();
 		if(alarm.getDescription() != null && alarm.getDescription().trim().length() != 0) 
-			alm.setDescription(alm.getDescription() + "|" + alarm.getDescription());
+			alm.setDescription(desc + " - " + alarm.getDescription());
 		else
-			alm.setDescription(alm.getDescription());
+			alm.setDescription(desc);
 	
 		alm.setCleaned(true);
 		alm.setCleanedDate(DateUtil.getCurrentDate());
@@ -109,11 +108,17 @@ public class AlarmServiceImpl implements AlarmService {
 		
 	}
 
-
+	
 	@Override
-	public List<CountResult> getObjCountByTimeOrderByDesc(Date startTime, Date endTime) {
-		List<CountResult> list = alarmMapper.getObjCountByTimeOrderByDesc(startTime,endTime);
-		return list == null ? Collections.emptyList() : list ;
+	public void cleanAlarmBatch(AlarmVo vo) {
+		List<Integer> ids = vo.getIds();
+		for (Integer id : ids) {
+			Alarm alarm = new Alarm();
+			alarm.setId(id);
+			alarm.setDescription(vo.getDescription());
+			cleanAlarm(alarm);
+		}
+		
 	}
 
 
@@ -128,4 +133,14 @@ public class AlarmServiceImpl implements AlarmService {
 		List<AlarmDto> list = alarmMapper.startPage(start,end,objectIdList,startTime,endTime);
 		return list == null ? Collections.emptyList() : list ;
 	}
+
+
+	@Override
+	public int getCountByLevel(int level) {
+		return alarmMapper.getCountByLevel(level);
+		
+	}
+
+
+
 }

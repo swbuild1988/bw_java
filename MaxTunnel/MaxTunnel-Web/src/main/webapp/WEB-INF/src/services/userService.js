@@ -21,6 +21,27 @@ var UserService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
+	},
+	//请求入廊信息
+	reqHistorysInfo(requestUrl){
+		return new Promise((resolve, reject) => {
+			axios.get(requestUrl)
+				.then(res => {
+					let {
+						msg,
+						data,
+						code
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + requestUrl)
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
 	}
 
 }

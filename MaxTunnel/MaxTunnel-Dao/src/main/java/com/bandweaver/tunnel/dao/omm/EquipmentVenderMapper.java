@@ -9,13 +9,7 @@ public interface EquipmentVenderMapper {
 
     int insert(EquipmentVender record);
 
-    int insertSelective(EquipmentVender record);
-
     EquipmentVender selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(EquipmentVender record);
-
-    int updateByPrimaryKey(EquipmentVender record);
 
 	/**
 	 * @Description: 获取所有供应商列表

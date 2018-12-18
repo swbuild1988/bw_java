@@ -1,30 +1,17 @@
 package com.bandweaver.tunnel.dao.common;
 
-import java.util.List;
-
-import com.bandweaver.tunnel.common.biz.pojo.Role;
+import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 
 public interface RoleMapper {
-    int deleteByPrimaryKey(Short id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Role record);
 
     int insertSelective(Role record);
 
-    Role selectByPrimaryKey(Short id);
+    Role selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
-
-	/**
-	 * @Description: 查询所有角色列表
-	 * @param @return   
-	 * @return List<Role>  
-	 * @throws
-	 * @author shaosen
-	 * @date 2018年5月22日
-	 */
-	List<Role> getAllRoles();
-
 }

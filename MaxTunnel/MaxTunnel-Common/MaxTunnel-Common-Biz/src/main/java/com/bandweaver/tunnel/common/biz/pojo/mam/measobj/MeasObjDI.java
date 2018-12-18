@@ -18,7 +18,7 @@ public class MeasObjDI extends MeasObj {
     private String datatypeName;
     private String objtypeName;
     private Date refreshTime;
-    private boolean CV;
+    private boolean cv;
     
     
 	public Date getRefreshTime() {
@@ -28,11 +28,11 @@ public class MeasObjDI extends MeasObj {
 		this.refreshTime = refreshTime;
 	}
 	
-	public boolean getCV() {
-		return CV;
+	public boolean getCv() {
+		return cv;
 	}
-	public void setCV(boolean CV) {
-		this.CV = CV;
+	public void setCv(boolean CV) {
+		this.cv = CV;
 	}
 	public String getDatatypeName() {
 		return DataType.getEnum(this.getDatatypeId()).getName();

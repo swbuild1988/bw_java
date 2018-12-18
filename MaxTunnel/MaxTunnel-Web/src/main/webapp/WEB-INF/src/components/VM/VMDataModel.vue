@@ -19,10 +19,10 @@
             <div class="ChartModel" v-else-if = "modelData.chartType === echartsType.Pie.key">
                 <pie-chart v-if="chartData" v-bind="chartData"></pie-chart>
             </div>
-            <div class="ChartModel" v-else-if = "modelData.chartType === echartsType.Radar.key">
+            <div class="ChartModel4" v-else-if = "modelData.chartType === echartsType.Radar.key">
                 <radar-chart v-if="chartData" v-bind="chartData"></radar-chart>
             </div>
-            <div class="ChartModel" v-else-if = "modelData.chartType === echartsType.MultiRadar.key">
+            <div class="ChartModel4" v-else-if = "modelData.chartType === echartsType.MultiRadar.key">
                 <multi-radar-chart v-if="chartData" v-bind="chartData"></multi-radar-chart>
             </div>
             <div class="ChartModel" v-else-if = "modelData.chartType === echartsType.Grid.key">
@@ -42,12 +42,37 @@
     width: 100%;
     height: 85%;
 }
-
 .ChartModel2 {
     position: relative;
-    top: 0%;
     width: 100%;
-    height: 100%;
+}
+.ChartModel3 {
+    position: relative;
+    top: 20%;
+    width: 100%;
+    height: 70%;
+}
+.ChartModel4 {
+    position: relative;
+    width: 100%;
+}
+/* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .ChartModel2 {
+        top: 0%;
+        height: 100%;
+    }
+    .ChartModel4{
+        top: 16%;
+        height: 80%;
+    }
+}
+    /* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    .ChartModel2 {
+        top: 3%;
+        height: 97%;
+    }
 }
 </style>
 

@@ -8,20 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
-import com.bandweaver.tunnel.common.biz.itf.ProcessBaseService;
-import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
-import com.bandweaver.tunnel.common.biz.vo.MyTaskVo;
-import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
@@ -48,14 +40,19 @@ import org.activiti.image.ProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
+import com.bandweaver.tunnel.common.biz.itf.ProcessBaseService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
-import com.bandweaver.tunnel.common.biz.pojo.User;
+import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.bandweaver.tunnel.common.biz.vo.MyTaskVo;
 import com.bandweaver.tunnel.common.biz.vo.StaffVo;
 import com.bandweaver.tunnel.common.biz.vo.em.PlanPageVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 
 @Service
 public class ActivitiServiceImpl implements ActivitiService {
@@ -86,14 +83,10 @@ public class ActivitiServiceImpl implements ActivitiService {
                 .deploy();
         LogUtil.info("发布的编号：" + deployment.getId());
         LogUtil.info("发布的名称：" + deployment.getName());
-        LogUtil.info("发布的时间：" + deployment.getDeploymentTime());
 
         // 流程定义
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(deployment.getId()).singleResult();
-        LogUtil.info("流程定义编号：" + processDefinition.getId());
-        LogUtil.info("流程定义KEY：" + processDefinition.getKey());
-        LogUtil.info("流程定义名称：" + processDefinition.getName());
 
         return processDefinition.getId();
     }

@@ -1,6 +1,9 @@
 package com.bandweaver.tunnel.dao.mam;
 
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjSIDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjSIVo;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,5 +23,7 @@ public interface MeasObjSIMapper {
 	void addBatch(List<MeasObjSI> SIList);
 
 	void deleteByPrimaryKey(Integer id);
+
+	List<MeasObjSIDto> dataGrid(MeasObjSIVo siVo);
 
 }

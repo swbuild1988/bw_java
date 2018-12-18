@@ -36,6 +36,7 @@
                 <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>    
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
     </div>
 </template>
 <script>
@@ -148,6 +149,10 @@ export default {
                 })
             },2000)
         },
+        //返回
+        goBack(){
+            this.$router.back(-1);
+        }
     }
 }
 </script>
@@ -157,6 +162,11 @@ export default {
     margin: 0px auto;
     background: #fff;
     padding: 10px 20px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>
 

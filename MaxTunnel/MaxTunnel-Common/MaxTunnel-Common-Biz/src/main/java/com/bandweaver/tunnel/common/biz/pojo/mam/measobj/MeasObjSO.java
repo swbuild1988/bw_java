@@ -14,14 +14,14 @@ public class MeasObjSO extends MeasObj {
     }
 
     private Date refreshTime;
-    private String CV;
+    private String cv;
 
-    public String getCV() {
-        return CV;
+    public String getCv() {
+        return cv;
     }
 
-    public void setCV(String CV) {
-        this.CV = CV;
+    public void setCv(String CV) {
+        this.cv = CV;
     }
 
     public Date getRefreshTime() {
@@ -36,7 +36,7 @@ public class MeasObjSO extends MeasObj {
     public String toString() {
         return "MeasObjSO{" +
                 "refreshTime=" + refreshTime +
-                ", CV=" + CV +
+                ", CV=" + cv +
                 "} " + super.toString();
     }
 }

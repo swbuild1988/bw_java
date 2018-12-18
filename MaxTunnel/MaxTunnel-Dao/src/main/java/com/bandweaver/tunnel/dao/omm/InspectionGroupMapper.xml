@@ -40,9 +40,9 @@
         <result column="name" property="name"/>
         <result column="leader_id" property="leaderId" />
         <result column="leader_name" property="leaderName" />
-        <association property="leader" javaType="com.bandweaver.tunnel.common.biz.pojo.User" column="leader_id"
+        <association property="leader" javaType="com.bandweaver.tunnel.common.biz.pojo.common.User" column="leader_id"
                      select="com.bandweaver.tunnel.dao.common.UserMapper.selectByPrimaryKey" />
-        <collection property="members" ofType="com.bandweaver.tunnel.common.biz.pojo.User">
+        <collection property="members" ofType="com.bandweaver.tunnel.common.biz.pojo.common.User">
             <id column="u_id" property="id" />
             <result column="u_name" property="name" />
             <result column="u_password" property="password" />

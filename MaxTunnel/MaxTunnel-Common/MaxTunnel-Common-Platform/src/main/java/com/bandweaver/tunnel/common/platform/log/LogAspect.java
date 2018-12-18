@@ -3,12 +3,9 @@ package com.bandweaver.tunnel.common.platform.log;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -27,20 +24,14 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.xml.sax.SAXException;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.dto.UserDTO;
 import com.bandweaver.tunnel.common.biz.itf.OperationLogService;
 import com.bandweaver.tunnel.common.biz.itf.SecurityLogService;
-import com.bandweaver.tunnel.common.biz.itf.UserService;
+import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.OperationLog;
-import com.bandweaver.tunnel.common.biz.pojo.SecurityLog;
-import com.bandweaver.tunnel.common.biz.pojo.User;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
-import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-
-import sun.util.logging.resources.logging;
 
 /**
  * ClassName: LogAspect

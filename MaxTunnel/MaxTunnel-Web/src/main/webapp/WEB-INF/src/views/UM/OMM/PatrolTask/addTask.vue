@@ -33,6 +33,7 @@
                 <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -165,12 +166,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/tunnels').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.tunnel = data
-        //     }
-        // })
 
         // 获取任务
         PatrolService.getTDetailByPlanId(this.task.id).then(
@@ -184,14 +179,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/inspection-tasks/'+this.task.id).then(response => {    
-        //     let {code, data} = response.data;
-        //     this.task = data;
-        //     if(data.startTime!=null&&data.endTime!=null){
-        //         this.task.startTime = new Date(data.startTime).format('yyyy-MM-dd hh:mm:s')
-        //         this.task.endTime = new Date(data.endTime).format('yyyy-MM-dd hh:mm:s')
-        //     }
-        // })
 
         //危险等级
         EnumsService.getDefectLevel().then(
@@ -201,12 +188,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get("/defectLevel/enum").then(response=>{
-        //     let { code,data } = response.data
-        //     if(code==200){
-        //         this.level = data
-        //     }
-        // })
 
         //缺陷类型
         EnumsService.getDefectType().then(
@@ -216,12 +197,6 @@ export default {
             (error)=>{
                 _this.Log.info = error
             })
-        // this.axios.get("/defectType/enum").then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.type = data
-        //     }
-        // })
 
         //获取所属区域
         // this.axios.get('/tunnels/'+this.defectTunnelId+'/areas').then(response=>{
@@ -240,6 +215,10 @@ export default {
         // })
     },
     methods: {
+        //返回
+        goBack(){
+            this.$router.back(-1);
+        }
         //modal 添加巡检记录
         // handleAdd(){
         //     this.addRecords.push({
@@ -336,5 +315,10 @@ export default {
 }
 .addRecords{
     margin: 5px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

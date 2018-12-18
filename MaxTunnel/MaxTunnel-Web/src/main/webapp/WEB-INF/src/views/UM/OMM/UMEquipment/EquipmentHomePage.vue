@@ -1,90 +1,88 @@
 <template>
   <div style="padding-left: 10px;">
-    <h1>设备信息总览</h1>
+    <h1 style="line-height: 4vh">设备信息总览</h1>
     <Row>
-      <Col span="18">
-      <Col span="6">
-      <data-box v-bind="equimentTotalNum" ref="dataBox"></data-box>
-      </Col>
-      <Col span="6">
-      <data-box v-bind="equimentRunNum"></data-box>
-      </Col>
-      <Col span="6">
-      <data-box v-bind="spareAFew"></data-box>
-      </Col>
-      <Col span="6">
-      <data-box v-bind="duration"></data-box>
-      </Col>
-      <Col span="24">
-      <div class="GISbox" id="GISbox" ref="gisBox">
-        <!-- <sm-viewer
-          :id="id"
-          ref="smViewer"
-        >
-        </sm-viewer> -->
-        <TestSmViewer ref="TestSmViewer"></TestSmViewer>
-        <div class="tunnelProfile">
-          <div>管廊设备概况</div>
-          <div>统计:185</div>
-          <div>风岭北路:40</div>
-          <div>长虹路:30</div>
-          <div>高坡岭路:50</div>
-          <div>凤凰岭路:45</div>
-          <div>佛子岭路:20</div>
-        </div>
-      </div>
-      </Col>
-      </Col>
-      <Col span="6" class="chartBox">
-      <Col span="24" style="height: 49%;">
-      <!-- <Button class="equimentChartBtn" @click.native="goToMoudle({ path:'/UM/equipment/query'})">更多</Button> -->
-      <div style="width: 21.4vw; height:100%;" class="equipmentChartBox">
-        <simple-bar v-bind="equipmentChart"></simple-bar>
-      </div>
-      </Col>
-      <Col span="24" style="height: 49%;">
-      <!-- <Button class="equimentChartBtn" @click.native="goToMoudle({ path:'/UM/equipment/query'})">更多</Button> -->
-      <div style="width: 21.4vw; height:100%;" class="equipmentChartDoubleColor">
-        <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
-      </div>
-      </Col>
-      </Col>
+        <Col span="18">
+            <Col span="6">
+                <data-box v-bind="equimentTotalNum" ref="dataBox"></data-box>
+            </Col>
+            <Col span="6">
+                <data-box v-bind="equimentRunNum"></data-box>
+            </Col>
+            <Col span="6">
+                <data-box v-bind="spareAFew"></data-box>
+            </Col>
+            <Col span="6">
+                <data-box v-bind="duration"></data-box>
+            </Col>
+            <Col span="24" style="margin-top:1vh">
+                <div class="GISbox" id="GISbox" ref="gisBox">
+                    <!-- <sm-viewer
+                    :id="id"
+                    ref="smViewer"
+                    >
+                        </sm-viewer>-->
+                    <TestSmViewer ref="TestSmViewer"></TestSmViewer>
+                        <div class="tunnelProfile">
+                        <div>管廊设备概况</div>
+                        <div>统计:185</div>
+                        <div>风岭北路:40</div>
+                        <div>长虹路:30</div>
+                        <div>高坡岭路:50</div>
+                        <div>凤凰岭路:45</div>
+                        <div>佛子岭路:20</div>
+                        </div>
+                </div>
+            </Col>
+        </Col>
+        <Col span="6" class="chartBox">
+            <Col span="24" style="height: 49%;">
+            <div style="width: 21.4vw; height:100%;" class="equipmentChartBox">
+                    <simple-bar v-bind="equipmentChart"></simple-bar>
+            </div>
+            </Col>
+            <Col span="24" style="height: 49%;">
+            <div style="width: 21.4vw; height:100%;" class="equipmentChartDoubleColor">
+                    <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
+            </div>
+            </Col>
+        </Col>
     </Row>
     <Row style="margin-top:2vh;">
-      <Col span="5">
-      <div class="circleBox" style="background: #b189a357">
-        <process-ring v-bind="spare">
-          <p>{{spare.explain}}</p>
-          <p>{{spare.percent}}%</p>
-        </process-ring>
-      </div>
-      </Col>
-      <Col span="5">
-      <div class="circleBox" style="background: #6e6ec761">
-        <process-ring v-bind="breakDown">
-          <p>{{breakDown.explain}}</p>
-          <p>{{breakDown.percent}}%</p>
-        </process-ring>
-      </div>
-      </Col>
-      <Col span="7" style="margin-top: 5px">
-      <Card style="width: 98%">
-        <p slot="title">管廊设备明细</p>
-        <div style="height: 80px;">
-          <Row :gutter="16">
-            <Col span="10" offset="2" v-for="(item,index) in tunnelInfoList" :key="index">
-            {{item.key}}:{{item.val}}
-            </Col>
-          </Row>
-        </div>
-      </Card>
-      </Col>
-      <Col span="7" style="margin-top: 5px">
-      <Card style="width: 98%">
-        <p slot="title">最近一条故障信息</p>
-        <Table stripe border :columns="breakColumns"  height="80" :data="breakData"></Table>
-      </Card>
-      </Col>
+        <Col span="5">
+            <div class="circleBox" style="background: #b189a357">
+                <process-ring v-bind="spare">
+                    <p>{{spare.explain}}</p>
+                    <p>{{spare.percent}}%</p>
+                </process-ring>
+            </div>
+        </Col>
+        <Col span="5">
+            <div class="circleBox" style="background: #6e6ec761">
+                <process-ring v-bind="breakDown">
+                    <p>{{breakDown.explain}}</p>
+                    <p>{{breakDown.percent}}%</p>
+                </process-ring>
+            </div>
+        </Col>
+        <Col span="7">
+            <Card style="width: 98%">
+                <p slot="title">备品备件明细</p>
+                <div style="height: 3vh">
+                    <Row :gutter="16">
+                        <Col span="10" offset="2" v-for="item in spareDetails" :key="item.id" style="line-height: 4vh;">
+                            {{item.name}}：{{item.val}}
+                        </Col>
+                    </Row>
+                </div>
+            </Card>
+        </Col>
+        <Col span="7">
+            <Card style="width: 98%">
+                <p slot="title">最近一条故障信息</p>
+                <Table stripe border :columns="breakColumns" height="100" :data="breakData"></Table>
+            </Card>
+        </Col>
     </Row>
   </div>
 </template>
@@ -96,152 +94,184 @@ import SimplePie from "../../../../components/Common/Chart/SimplePieChart";
 // import SmViewer from "../../../../components/Common/3D/3DViewer";
 import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
 import ProcessRing from "../../../../components/Common/ProcessRing";
-import { URL_CONFIG } from "../../../../../static/3DMap/js/3DMapConfig";
-import {
-    setViewAngle,
-    bubble,
-    addLabel,
-    getSection,
-    doSqlQuery,
-    labelSqlCompleted,
-    processFailed
-} from "../../../../scripts/commonFun.js";
 import equimentTotalNum from "../../../../assets/UM/equimentTotalNum.png";
-import spareAFew from "../../../../assets/UM/spareAFew.png";
-import duration from "../../../../assets/UM/duration.png";
-import equimentRunNum from "../../../../assets/UM/equimentRunNum.png";
+import instrumentTool from "../../../../assets/UM/instrumentTool.png";
+import faultyEquipment from "../../../../assets/UM/faultyEquipment.png";
+import spareEquipment from "../../../../assets/UM/spareEquipment.png";
 import { EquipmentService } from "../../../../services/equipmentService";
+import Enum from '../../../../../static/Enum.json'
 
 export default {
     name: "equipmentMain",
     data() {
         return {
-            id: "GIS_ID",
-            breakColumns: [
-                {
-                    title: "设备名称",
-                    key: "name"
-                },
-                {
-                    title: "设备类型",
-                    key: "type"
-                },
-                {
-                    title: "故障时间",
-                    key: "time"
-                },
-                {
-                    title: "报告人",
-                    key: "user"
-                }
-            ],
-            breakData: [
-                {
-                    name: "风机",
-                    type: "管廊设备",
-                    time: "2018-1-12",
-                    user: "张三"
-                }
-            ],
-            camera: {
-                longitude: 116.43709465365579,
-                latitude: 39.91793569836651,
-                height: 1245.5482069457155,
-                roll: 6.281841926729911,
-                pitch: -0.9120242487858476,
-                heading: 1.5735504792701676
+        id: "GIS_ID",
+        breakColumns: [
+            {
+                title: '缺陷名称',
+                align: 'center',
+                key: 'name'
             },
-            equimentTotalNum: {
-                label: "故障设备",
-                value: 10,
-                imgSrc: equimentTotalNum,
-                imgBac: "#CCCCFF",
-                valBackground: "#e4bdeb",
-                labelBackground: "#CC99CC"
-            },
-            equimentRunNum: {
-                label: "运行中的设备",
-                value: 87,
-                imgSrc: equimentRunNum,
-                imgBac: "#999999",
-                valBackground: "#cccccc",
-                labelBackground: "#336666"
-            },
-            spareAFew: {
-                label: "设备总计",
-                value: "500",
-                imgSrc: spareAFew,
-                imgBac: "#466b91",
-                valBackground: "#98ccc2",
-                labelBackground: "#b6a8db"
-            },
-            duration: {
-                label: "设备运行总时长",
-                value: "158h",
-                imgSrc: duration,
-                imgBac: "#aaccd2",
-                valBackground: "#eaba0a",
-                labelBackground: "#554d6b"
-            },
-            equipmentChart: {
-                id: "equipmentChartId",
-                requestUrl: "/equipments/type/count",
-                parameters: {
-                    option: {
-                        title: {
-                            text: "设备类别"
-                        }
-                    }
+            {
+                title:"发现时间",
+                key:"createTime",
+                align: 'center',
+                width: 120,
+                render: (h, params) => {
+                    return h(
+                    "div",
+                    new Date(params.row.createTime).format("yyyy-MM-dd hh:mm:s")
+                    );
                 }
             },
-            equipmentChartDoubleColor: {
-                id: "equipmentCharDoubleColortId",
-                requestUrl: "/equipments/type/count",
-                parameters: {
-                    option: {
-                        title: {
-                            text: "管廊故障设备统计",
-                            x: "left",
-                            textStyle: {
-                                color: "#2e739b"
+            {
+                title:"危险等级",
+                key:"levelName",
+                align: 'center',
+                render: (h,params) => {
+                    return h(
+                        'div',
+                        {
+                            style:{
+                                color:
+                                    params.row.level==0 ? 'green'
+                                    :  params.row.level==1 ? 'blue'
+                                    :  params.row.level==2 ? 'orange'
+                                    :  'red' 
+                                
+                            }
+                        },params.row.levelName
+                    )
+                }
+            },
+            {
+                title:"操作",
+                key:"action",
+                align: 'center',
+                render:(h, params) => {
+                    return  h('Button', {
+                        props: {
+                            type: 'primary',
+                            size: 'small'
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                this.enterOrder(params.row.id)
                             }
                         }
-                    }
+                    }, '查看')
                 }
-            },
-            equimentPie: {
-                id: "equipmentPieId",
-                requestUrl: "/equipments/type/count",
-                parameters: {
-                    option: {
-                        title: {
-                            text: "各类型故障占比"
-                        }
-                    }
+            }        
+        ],
+        breakData: [
+            {
+                id: 1,
+                name: "风机",
+                createTime: 1529596800000,
+                levelName: '危险',
+                level: 2
+            }
+        ],
+        equimentTotalNum: {
+            label: "管廊设备总计",
+            value: 10,
+            imgSrc: equimentTotalNum,
+            imgBac: "#CCCCFF",
+            valBackground: "#e4bdeb",
+            labelBackground: "#CC99CC"
+        },
+        equimentRunNum: {
+            label: "备品设备总计",
+            value: 87,
+            imgSrc: spareEquipment,
+            imgBac: "#999999",
+            imgWidth: '90',
+            valBackground: "#cccccc",
+            labelBackground: "#336666"
+        },
+        spareAFew: {
+            label: "仪表工具总计",
+            value: "500",
+            imgSrc: instrumentTool,
+            imgBac: "#466b91",
+            valBackground: "#98ccc2",
+            labelBackground: "#b6a8db"
+        },
+        duration: {
+            label: "故障设备总计",
+            value: "158",
+            imgSrc: faultyEquipment,
+            imgBac: "#aaccd2",
+            imgWidth: '90',
+            valBackground: "#eaba0a",
+            labelBackground: "#554d6b"
+        },
+        equipmentChart: {
+            id: "equipmentChartId",
+            requestUrl: "/equipments/type/count",
+            parameters: {
+            option: {
+                title: {
+                    text: "设备类别"
                 }
-            },
-            spare: {
-                id: "spare",
-                explain: "备品占比",
-                percent: 85,
-                strokeWidth: 10,
-                radius: 60
-            },
-            breakDown: {
-                id: "breakDown",
-                explain: "故障占比",
-                percent: 45,
-                strokeWidth: 10,
-                radius: 60
-            },
-            tunnelInfoList: [],
-            timer: {
-                timeoutId: null,
-                intervalId: null,
-                sectionId: null //保留上次section
-            },
-            // isDestory: false,
-            // path: this.$router.currentRoute.path
+            }
+            }
+        },
+        equipmentChartDoubleColor: {
+            id: "equipmentCharDoubleColortId",
+            requestUrl: "/equipments/type/count",
+            parameters: {
+            option: {
+                title: {
+                text: "管廊故障设备统计",
+                x: "left",
+                textStyle: {
+                    color: "#2e739b"
+                }
+                }
+            }
+            }
+        },
+        equimentPie: {
+            id: "equipmentPieId",
+            requestUrl: "/equipments/type/count",
+            parameters: {
+            option: {
+                title: {
+                    text: "各类型故障占比"
+                }
+            }
+            }
+        },
+        spare: {
+            id: "spare",
+            explain: "管廊设备占比",
+            percent: 85,
+            strokeWidth: 8,
+            radius: window.innerHeight * 0.07,
+        },
+        breakDown: {
+            id: "breakDown",
+            explain: "仪表工具占比",
+            percent: 40,
+            strokeWidth: 8,
+            radius: window.innerHeight * 0.07,
+        },
+        tunnelInfoList: [],
+        timer: {
+            timeoutId: null,
+            intervalId: null,
+            sectionId: null //保留上次section
+        },
+        //备品备件明细
+        spareDetails: [
+            { id: 1, name: '出库至管廊设备数', val: 102 },
+            { id: 2, name: '出库至仪表工具数', val: 23 },
+            { id: 3, name: '备品备件当前在库数', val: 156 }
+        ]
         };
     },
     components: {
@@ -252,20 +282,30 @@ export default {
         // SmViewer
         TestSmViewer
     },
-    beforeRouteLeave(to,from,next){
-        if(to.name == 'UMPatrolHomePage' || to.name == 'UMDetailEquipment' || to.name == '虚拟巡检' || to.name == '人员定位详情' 
-            || to.name == '管廊安防监控详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表'
-            || from.name == '人员定位详情' || from.name == '虚拟巡检' || from.name == 'UMDetailEquipment' || from.name == 'UMPatrolHomePage' 
-            || from.name == '管廊安防监控详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'){
+    beforeRouteLeave(to, from, next) {
+        if (
+            to.name == "UMPatrolHomePage" ||
+            to.name == "UMDetailEquipment" ||
+            to.name == "虚拟巡检" ||
+            to.name == "人员定位详情" ||
+            to.name == "管廊安防监控列表" ||
+            to.name == "管廊环境监控列表" ||
+            from.name == "人员定位详情" ||
+            from.name == "虚拟巡检" ||
+            from.name == "UMDetailEquipment" ||
+            from.name == "UMPatrolHomePage" ||
+            from.name == "管廊安防监控列表" ||
+            from.name == "管廊环境监控列表"
+        ) {
             from.meta.keepAlive = true;
-            to.meta.keepAlive = true
-            this.$destroy()
-            next()
-        }else{
-            from.meta.keepAlive = false
-            to.meta.keepAlive = false
-            this.$destroy()
-            next()
+            to.meta.keepAlive = true;
+            this.$destroy();
+            next();
+        } else {
+            from.meta.keepAlive = false;
+            to.meta.keepAlive = false;
+            this.$destroy();
+            next();
         }
     },
     mounted() {
@@ -278,41 +318,47 @@ export default {
             let _this = this;
             EquipmentService.getEquTypeAndCount().then(
                 result => {
-                    _this.tunnelInfoList = result;
+                _this.tunnelInfoList = result;
                 },
                 error => {
-                    _this.Log.info(error);
+                _this.Log.info(error);
                 }
             );
         },
-
-        goToMoudle: function(path) {
-            this.$router.push(path);
+        //跳转缺陷详情
+        goToMoudle2: function(id, type) {
+            this.$router.push({
+                name: "UMDetailDefect",
+                params: {
+                    id: id,
+                    type: type
+                }
+            });
         },
-        onload(parent) {
-            var _this = this;
+        enterOrder(index){
+            this.goToMoudle2(index, Enum.pageType.Read);
         },
         setGIS() {
             var gis = document.getElementById("newID");
             gis.style.display = "block";
-            gis.style.position = 'absolute';
-            gis.style.top = '20px';
-            gis.style.height = '100%';
-            gis.style.width = '99%'    
-            document.body.removeChild(gis)
-            document.getElementById("GISbox").appendChild(gis)
+            gis.style.position = "absolute";
+            gis.style.top = "0px";
+            gis.style.height = "100%";
+            gis.style.width = "99%";
+            document.body.removeChild(gis);
+            document.getElementById("GISbox").appendChild(gis);
             // 加载视角
             this.$refs.TestSmViewer.setViewAngAngle();
         },
-        destory3D(){
+        destory3D() {
             var gis = document.getElementById("newID");
             gis.style.display = "none";
-            document.getElementById("GISbox").removeChild(gis)
-            document.body.appendChild(gis)
+            document.getElementById("GISbox").removeChild(gis);
+            document.body.appendChild(gis);
         }
     },
     beforeDestroy() {
-        this.destory3D()
+        this.destory3D();
     }
 };
 </script>
@@ -363,10 +409,10 @@ h1,
 
 .GISbox {
     width: 99%;
-    height: 45vh;
+    height: 44vh;
     border: 1px solid #dddee1;
     border-radius: 4px;
-    margin-top: 20px;
+    margin-top: 1vh;
 }
 
 ul {
@@ -388,20 +434,21 @@ ul li {
 
 .circleBox {
     text-align: center;
-    height: 18vh;
+    height: 21vh;
     width: 98%;
     display: inline-block;
     vertical-align: middle;
     border: 1px solid #dddee1;
     border-radius: 4px;
-    margin-top: 5px;
-    padding-top: 10px;
 }
 
-.ivu-card > .ivu-card-body {
-    height: 12.5vh;
+.ivu-card >>> .ivu-card-body {
+    height: 16vh;
     overflow-y: auto;
 }
+/* .ivu-card >>> .ivu-card-head{
+    line-height: 2vh;
+} */
 </style>
 
 

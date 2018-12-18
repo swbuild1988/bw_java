@@ -10,7 +10,7 @@
             </FormItem>
             <FormItem label="文件类型：">
                 <Select v-model="addDocument.fileType">
-                    <Option v-for="type in selectList.fileTypes" :value="type.val" :key="type.val">{{ type.key }}<span class="tip">&nbsp;&nbsp;&nbsp;支持{{ type.type }}</span></Option>
+                    <Option v-for="type in selectList.fileTypes" :value="type.val" :key="type.val">{{ type.key  +'  支持'+ type.type}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="文件：">
@@ -63,15 +63,15 @@ export default {
         //     duration: 10
         // })
     },
-    watch: {
-      '$route': function () {
-            this.pageType = 3;
-            this.addDocument = {
-                name: null,
-                type: null
-            }
-        }
-    },
+    // watch: {
+    //   '$route': function () {
+    //         this.pageType = 3;
+    //         this.addDocument = {
+    //             fileType: null,
+    //             docType: null
+    //         }
+    //     }
+    // },
     methods:{
         getParams() {
             let _this = this;

@@ -1,24 +1,19 @@
 <template>
 
-  <div v-bind:style="{backgroundColor: backGroundColor, minWidth:minWidth +'px', maxWidth:maxWidth+'px'}">
-
+  <div v-bind:style="{height:'11vh',backgroundColor: backGroundColor, width:'100%'}">
     <div style="position: relative; float: right; margin: 2px;">
       <Icon type="ios-arrow-thin-up" size="70" color="#fff"></Icon>
     </div>
-
     <div style="position: relative; float: right;color: #fff;margin: 7px;">
       <ul style="list-style-type:none; text-align: right;">
         <li style="font-size: x-large">{{value}}</li>
         <li style="width:'10%'">{{unit}}</li>
       </ul>
     </div>
-
     <div>
-      <img :src="imgSrc" style="width:20%; height:50%;padding-left:10px;top:5px;"/>
+      <img :src="imgSrc" style="height: 7vh; padding-left:10px;top:5px; "/>
     </div>
-
-    <Tag :style="{background:tagColor}">{{label}}</Tag>
-
+    <Tag :style="{background:tagColor,height:'3vh',width:'15%',minWidth:'80px'}">{{label}}</Tag>
   </div>
 
 </template>

@@ -166,7 +166,14 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 	}
 
 	public void insertMeasObj(MeasObj measObj) {
-		
+
+		measObj.setDeviation(0.0);
+		measObj.setLatitude("");
+		measObj.setLongitude("");
+		measObj.setActived(true);
+		measObj.setDescription("");
+		measObj.setHeight("");
+
 		ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
 		measObj.setDatatypeId(objectType.getDataType());
 		
@@ -219,7 +226,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
 		if (ai.getRefreshTime() != null && ai.getRefreshTime().getTime() >= measValueAI.getTime().getTime())
 			return;
-		ai.setCV(measValueAI.getCV());
+		ai.setCv(measValueAI.getCv());
 		ai.setRefreshTime(measValueAI.getTime());
 	}
 
@@ -238,7 +245,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		MeasObjDI di = measObjDIHashMap.get(measValueDI.getObjectId());
 		if (di.getRefreshTime() != null && di.getRefreshTime().getTime() >= measValueDI.getTime().getTime())
 			return;
-		di.setCV(measValueDI.getCV());
+		di.setCv(measValueDI.getCv());
 		di.setRefreshTime(measValueDI.getTime());
 	}
 
@@ -257,7 +264,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		MeasObjSI si = measObjSIHashMap.get(measValueSI.getObjectId());
 		if (si.getRefreshTime() != null && si.getRefreshTime().getTime() >= measValueSI.getTime().getTime())
 			return;
-		si.setCV(measValueSI.getCV());
+		si.setCv(measValueSI.getCv());
 		si.setRefreshTime(measValueSI.getTime());
 	}
 
@@ -304,7 +311,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 			locatorService.update(tmp, measValueSO);
 		} else {
 			tmp.setRefreshTime(measValueSO.getTime());
-			tmp.setCV(measValueSO.getCV());
+			tmp.setCv(measValueSO.getCv());
 		}
 	}
 
@@ -317,7 +324,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 			return;
 
 		tmp.setRefreshTime(measValueSO.getTime());
-		tmp.setCV(measValueSO.getCV());
+		tmp.setCv(measValueSO.getCv());
 		measObjSOMapper.update(tmp);
 		measValueSOMapper.addMeasValueSO(measValueSO);
 		// LogUtil.info("after insert MeasObjSO : " + tmp);
@@ -398,7 +405,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		case VIDEO:
 			Video video = Video.fromMeasObj(measObj);
 			video.setServerId(1);
-			video.setVideoSceneId(1);
+			video.setVideoSceneId(0);
+			video.setVideoExtendSceneId(0);
 			video.setChannelNo(1);
 			videoModuleCenter.insertVideo2DB(video);
 			break;
@@ -439,7 +447,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		case VIDEO:
 			Video video = Video.fromMeasObj(measObj);
 			video.setServerId(1);
-			video.setVideoSceneId(1);
+			video.setVideoSceneId(0);
+			video.setVideoExtendSceneId(0);
 			video.setChannelNo(1);
 			videoModuleCenter.insertVideo2HashMap(video);
 			break;

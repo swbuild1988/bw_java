@@ -5,7 +5,7 @@
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.StoreType">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="Sb" jdbcType="VARCHAR" property="sn" />
+    <result column="SN" jdbcType="VARCHAR" property="sn" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">

@@ -1,7 +1,10 @@
 package com.bandweaver.tunnel.dao.mam;
 
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDistributeDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjDistributeVo;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,6 +22,8 @@ public interface MeasObjDistributeMapper {
     List<MeasObjDistribute> getAllMeasObjDistributes();
 
 	void deleteByPrimaryKey(Integer id);
+
+	List<MeasObjDistributeDto> dataGrid(MeasObjDistributeVo disVo);
 
 	
 

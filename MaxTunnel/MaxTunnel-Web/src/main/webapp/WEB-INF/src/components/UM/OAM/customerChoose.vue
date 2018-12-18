@@ -26,8 +26,8 @@
     <div class="list">
     <Row>
         <Col span="6" v-for="(item,index) in customers" :key="index">
-            <div class="infoList">
-                <input type="radio" class="radio" name="customers" :checked="item.id == customerId" @change="getCustomerId(item.id,item.contact)">
+            <div class="infoList" @click="getCustomerId(item.id,item.contact)">
+                <!-- <input type="radio" class="radio" name="customers" :checked="item.id == customerId" @change="getCustomerId(item.id,item.contact)"> -->
                 <div class="company">
                     <Icon type="star"></Icon>
                     <span>{{item.company.name}}</span>
@@ -46,11 +46,14 @@
                     <Icon type="android-time"></Icon>
                     <span>{{item.crtTime}}</span>
                 </div>
+                <div class="checkBox">
+                  <Checkbox :value="item.id == customerId"></Checkbox>
+                </div>
             </div>
         </Col>
     </Row>
-     <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
-            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="text-align: right;margin-top: 20px;"></Page>
+     <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total
+            placement="top" @on-change="handlePage" show-elevator style="text-align: right;margin-top: 20px;"></Page>
   </div>
 </div>
 </template>
@@ -77,7 +80,7 @@ export default {
       },
       page: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 8,
         pageTotal: 0
       },
       customers:[],
@@ -158,6 +161,7 @@ export default {
     border-radius: 4px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
     position: relative;
+    cursor: pointer;
 }
 .company{
     padding-left: 10px;
@@ -180,6 +184,11 @@ export default {
 .ivu-icon {
     margin-right: 5px;
     color: #ff9b00;
+}
+.checkBox{
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
 }
 </style>
 

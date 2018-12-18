@@ -67,9 +67,10 @@
         </Row>
         <FormItem style="text-align: center;margin-bottom: 0px">
             <Button type="primary">更新</Button>
-            <Button type="ghost"  style="margin-left: 8px">取消</Button>
+            <Button type="ghost"  style="margin-left: 8px" @click="cancel()">取消</Button>
         </FormItem>
       </Form> 
+      <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
     </div>
 </template>  
 
@@ -90,6 +91,7 @@ export default {
       pageTypes: types.pageType,
       currMonth: '',
       currYear: '',
+      current: '',
       requestStaffName: '',
       approver:{},
       uploadPlan:{
@@ -157,7 +159,7 @@ export default {
           backgroundAttachment: 'fixed',
           backgroundSize: 'cover',
           minHeight: '100%',
-          paddingTop: '30px'
+          paddingTop: '20px'
       }
     };
   },
@@ -199,48 +201,18 @@ export default {
         _this.Log.info(error)
       }
     )
-    this.getChooseMonth()
     this.getSessionUserName()
-    PatrolService.getPDetailByPlanId(this.uploadPlan.planId).then(
-      (result)=>{
-          _this.uploadPlan = result;
-          _this.uploadPlan.inspectTime = new Date(result.inspectTime).format('yyyy-MM')
-          _this.uploadPlan.tasks.forEach(a=>{
-            _this.inspectTimeContainer.push(new Date(a.inspectTime).format('yyyy-MM-dd'))
-          })
-          _this.shwoDate()
-      },
-      (error)=>{
-        _this.Log.info(error)
-      }
-    )
     this.axios.get('roles/users').then(res=>{
-        let{ code,data } = res.data
+      let{ code,data } = res.data
         if(code==200){
-            this.approver = data[0]
+          this.approver = data[0]
             this.uploadPlan.approverId = data[0].id
         }
     })
+    this.EditPlan()
+    // this.getChooseMonth()
   },
   methods: {
-
-    submitPlan() {
-      //提交数据
-      let _this = this
-      PatrolService.addPatrolPlan(this.uploadPlan).then(
-        (result)=>{
-          _this.$router.push("/UM/patrol/query/"+_this.tunnelId);
-        },
-        (error)=>{
-          _this.Log.info(error)
-        })
-      // this.axios.post("/inspection-plans", this.uploadPlan).then(response => {
-      //   this.$router.push("/UM/patrol/query/"+this.tunnelId);
-      // })
-      // .catch(function(error) {
-      //   console.log(error);
-      // });
-    },
     getChooseMonth(){
       if(this.currMonth==undefined||this.currMonth==null||this.currMonth==''||this.currYear==undefined||this.currYear==null||this.currYear==''){
         this.currMonth=new Date().getMonth()+1
@@ -271,7 +243,7 @@ export default {
     getActiveText(childValue){
       this.uploadPlan.tasks=[];
       for(var i=0;i<childValue.length;i++){
-          this.uploadPlan.tasks.push({taskTime:childValue[i]})
+        this.uploadPlan.tasks.push({taskTime:childValue[i]})
       }
     },
     getSessionUserName:function () {
@@ -283,6 +255,50 @@ export default {
     shwoDate(){
       this.$refs.calender.shwoActiveDate(this.inspectTimeContainer)
       this.$refs.calender.outputHeighLight();
+    },
+    EditPlan(){
+      // PatrolService.getPDetailByPlanId(this.uploadPlan.planId).then(
+      //   (result)=>{
+      //     this.isCur = true
+      //       this.uploadPlan = result;
+      //       this.uploadPlan.inspectTime = new Date(result.inspectTime).format('yyyy-MM')
+      //       this.uploadPlan.tasks.forEach(a=>{
+      //         this.inspectTimeContainer.push(new Date(a.taskTime).format('yyyy-MM-dd'))
+      //       })
+      //       this.getChooseMonth()
+      //       this.shwoDate()
+      //   },
+      //   (error)=>{
+      //     this.Log.info(error)
+      //   }
+      // )
+      new Promise((resolve, reject) => {
+        this.axios.get('inspection-plans/' + this.uploadPlan.planId).then(res => {
+          let {code,data,msg} = res.data
+          if (code == 200) {
+            resolve(data)
+          } 
+          // else {
+          //   reject(msg + '地址:inspection-plans/' + planId)
+          // }
+        })
+      }).then((result) => {
+        this.uploadPlan = result;
+        this.uploadPlan.inspectTime = new Date(result.inspectTime).format('yyyy-MM')
+        this.uploadPlan.tasks.forEach(a=>{
+          this.inspectTimeContainer.push(new Date(a.taskTime).format('yyyy-MM-dd'))
+        })
+        this.currYear = this.uploadPlan.inspectTime.substr(0,4)
+        this.currMonth = this.uploadPlan.inspectTime.substr(5,2)
+        this.shwoDate()
+      })
+    },
+    cancel(){
+      this.EditPlan()
+    },
+    //返回
+    goBack(){
+      this.$router.back(-1);
     }
   }
 }
@@ -349,5 +365,10 @@ input[type='number']{
     opacity: 1;
     cursor: not-allowed;
     color: #495060 !important;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

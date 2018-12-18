@@ -1,32 +1,29 @@
 package com.bandweaver.tunnel.dao.common;
 
 import java.util.List;
+import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
-
-import com.bandweaver.tunnel.common.biz.pojo.Permission;
+import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
+import com.bandweaver.tunnel.common.biz.vo.common.PermissionVo;
 
 public interface PermissionMapper {
-    int deleteByPrimaryKey(Short id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Permission record);
 
     int insertSelective(Permission record);
 
-    Permission selectByPrimaryKey(Short id);
+    Permission selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Permission record);
 
     int updateByPrimaryKey(Permission record);
 
-	/**
-	 * @Description: 查询角色对应的权限列表
-	 * @param @param id
-	 * @param @return   
-	 * @return List<Permission>  
-	 * @throws
-	 * @author shaosen
-	 * @date 2018年5月22日
-	 */
-	List<Permission> getPermissionsByRoleId(@Param("id")int id);
+	Set<String> getAllMenu();
+
+	Set<String> getAllPermission();
+
+	void deleteBatch(List<Integer> list);
+
+	List<Permission> getByCondition(PermissionVo vo);
 }

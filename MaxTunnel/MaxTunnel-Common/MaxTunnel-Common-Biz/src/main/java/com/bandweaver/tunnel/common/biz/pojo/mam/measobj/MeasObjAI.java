@@ -14,14 +14,14 @@ public class MeasObjAI extends MeasObj {
     }
 
     private Date refreshTime;
-    private Double CV;
+    private Double cv;
 
-    public Double getCV() {
-        return CV;
+    public Double getCv() {
+        return cv;
     }
 
-    public void setCV(Double CV) {
-        this.CV = CV;
+    public void setCv(Double CV) {
+        this.cv = CV;
     }
 
     public Date getRefreshTime() {
@@ -31,5 +31,12 @@ public class MeasObjAI extends MeasObj {
     public void setRefreshTime(Date refreshTime) {
         this.refreshTime = refreshTime;
     }
+
+	@Override
+	public String toString() {
+		return "MeasObjAI [refreshTime=" + refreshTime + ", CV=" + cv + "]";
+	}
+    
+    
 
 }

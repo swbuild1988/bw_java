@@ -1,6 +1,6 @@
 <template>
-    <div class="dataBoxModul" v-bind:style="{width: boxWidth+'%', height: boxHeight+'px'}">
-        <div class="imageModul" :style="{background: imgBac,display: 'flex',textAlign: 'center'}"><img :style="{width: '100%',height: 'auto',margin: 'auto'}" :src="imgSrc"/></div>
+    <div class="dataBoxModul" v-bind:style="{width: boxWidth+'%', height: boxHeight+'vh'}">
+        <div class="imageModul" :style="{background: imgBac,display: 'flex',textAlign: 'center'}"><img :style="{width: imgWidth+'%',height: 'auto',margin: 'auto'}" :src="imgSrc"/></div>
         <div class="valueModul" :style='{background: valBackground,color: valColor}'><p>{{value}}</p></div>
         <div class="labelModul" :style='{background: labelBackground,color: labelColor}'><p>{{label}}</p></div>
     </div>
@@ -14,7 +14,7 @@ export default {
             default: 90
         },
         boxHeight:{
-            default: 140
+            default: 12
         },
         value: {
             default: 0.0
@@ -27,6 +27,9 @@ export default {
         },
         imgBac:{
             default: '#fff'
+        },
+        imgWidth: {
+            default: 100
         },
         imgBorderLeftTopRadius:{
             default: 10
@@ -67,8 +70,8 @@ export default {
     {
         float: left;
         width: 60%;
-        height: 70px;
-        line-height: 70px;
+        height: 6vh;
+        line-height: 6vh;
         display: table-cell;
         text-align: center;
         vertical-align: middle;
@@ -80,8 +83,8 @@ export default {
     {
         float: left;
         width: 60%;
-        height: 70px;
-        line-height: 70px;
+        height: 6vh;
+        line-height: 6vh;
         display: table-cell;
         text-align: center;
         vertical-align: middle;

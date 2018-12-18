@@ -77,6 +77,7 @@
        </div>
        </Col>
     </Row>
+    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回"></Icon>
   </div>
 </template>
 
@@ -127,8 +128,7 @@ export default {
       patrolRecords: [],
       columns1: [
         {
-          title: "编号",
-          key: "id",
+          type: 'index',
           width: 70,
           align: "center"
         },
@@ -297,6 +297,10 @@ export default {
         this.patrolRecords[day - 1].taskType = a.isFinished ? 2 : 1;
       });
     },
+    //返回
+    goBack(){
+      this.$router.back(-1);
+    }
   }
 };
 </script>
@@ -305,16 +309,17 @@ export default {
 .patrolRecordUl li {
   list-style: none;
   display: inline-block;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   border: 1px solid #eeeeee;
   text-align: center;
-  line-height: 25px;
+  line-height: 24px;
 }
 .leftContainer,
 .rightContainer {
   background: #fff;
   padding: 20px;
+  min-height: 40vh;
 }
 h3 {
   line-height: 45px;
@@ -342,5 +347,10 @@ h3 {
 .ivu-input[disabled], fieldset[disabled] .ivu-input{
     background-color: #ffffff !important;
     color: #495060 !important;
+}
+.goBack{
+    position: absolute;
+    bottom: 7vh;
+    right: 3vw;
 }
 </style>

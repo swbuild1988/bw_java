@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.UserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.UserRole">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="U_ID" jdbcType="DECIMAL" property="uId" />
+    <result column="R_ID" jdbcType="DECIMAL" property="rId" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, U_ID, R_ID, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SECURITY_USER_ROLE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_SECURITY_USER_ROLE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.UserRole">
+    insert into T_SECURITY_USER_ROLE (ID, U_ID, R_ID, 
+      CRT_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{uId,jdbcType=DECIMAL}, #{rId,jdbcType=DECIMAL}, 
+      #{crtTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.UserRole">
+    insert into T_SECURITY_USER_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="uId != null">
+        U_ID,
+      </if>
+      <if test="rId != null">
+        R_ID,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="uId != null">
+        #{uId,jdbcType=DECIMAL},
+      </if>
+      <if test="rId != null">
+        #{rId,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.UserRole">
+    update T_SECURITY_USER_ROLE
+    <set>
+      <if test="uId != null">
+        U_ID = #{uId,jdbcType=DECIMAL},
+      </if>
+      <if test="rId != null">
+        R_ID = #{rId,jdbcType=DECIMAL},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.UserRole">
+    update T_SECURITY_USER_ROLE
+    set U_ID = #{uId,jdbcType=DECIMAL},
+      R_ID = #{rId,jdbcType=DECIMAL},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -251,18 +251,6 @@ export default {
     margin-top: 100px;
     margin-right: 10px;
 }
-.word63{
-    letter-spacing: 1.5em;
-    margin-right: -1.5em
-}
-.word64{
-    letter-spacing: 0.67em;
-    margin-right: -0.67em;
-}
-.word65{
-    letter-spacing: 0.25em;
-    margin-right: -0.25em;
-}
 </style>
 
 

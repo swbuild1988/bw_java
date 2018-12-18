@@ -7,7 +7,6 @@
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
     <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
-    <result column="account_id" jdbcType="DECIMAL" property="accountId" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   
@@ -16,7 +15,6 @@
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
     <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
-     <result column="account_id" jdbcType="DECIMAL" property="accountId" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
     <association property="dept" javaType="Department" column="dept_id"
     	select="com.bandweaver.tunnel.dao.common.DepartmentMapper.selectByPrimaryKey"/>
@@ -26,7 +24,7 @@
   
   
   <sql id="Base_Column_List">
-    ID, NAME, DEPT_ID, POSITION_ID, account_id,CRT_TIME
+    ID, NAME, DEPT_ID, POSITION_ID,CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -39,10 +37,13 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+   	<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT COMMON_STAFF_SEQUENCE.currval from DUAL
+        </selectKey>
     insert into T_COMMON_STAFF (ID, NAME, DEPT_ID, 
-      POSITION_ID, account_id,CRT_TIME)
+      POSITION_ID,CRT_TIME)
     values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{deptId,jdbcType=DECIMAL}, 
-      #{positionId,jdbcType=DECIMAL}, #{accountId},#{crtTime,jdbcType=TIMESTAMP})
+      #{positionId,jdbcType=DECIMAL},#{crtTime,jdbcType=TIMESTAMP})
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
@@ -57,9 +58,6 @@
       <if test="positionId != null">
         POSITION_ID = #{positionId,jdbcType=DECIMAL},
       </if>
-      <if test="accountId != null">
-        account_id = #{accountId,jdbcType=DECIMAL},
-      </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -71,7 +69,6 @@
     set NAME = #{name,jdbcType=VARCHAR},
       DEPT_ID = #{deptId,jdbcType=DECIMAL},
       POSITION_ID = #{positionId,jdbcType=DECIMAL},
-      account_id = #{accountId,jdbcType=DECIMAL},
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -95,9 +92,6 @@
   		</if>
   		<if test="positionId != null">
   		and position_id = #{positionId}
-  		</if>
-  		<if test="accountId != null">
-  		and account_id = #{accountId}
   		</if>
   		<if test="startTime != null">
   		and crt_time &gt;= #{startTime}
@@ -124,4 +118,8 @@
         </foreach>
 	</delete>
   
+  
+  <select id="getByName" resultMap="BaseResultMap">
+  	select * from T_COMMON_STAFF where name = #{name}
+  </select>
 </mapper>

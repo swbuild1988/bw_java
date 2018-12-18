@@ -81,6 +81,7 @@
             <Button type="ghost"  style="margin-left: 8px" @click="handleReset('addEnterGalleryApplication')">取消</Button>
         </div>
     </Form>
+    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
 </div>    
 </template>
 <script>
@@ -344,6 +345,10 @@ export default {
                 }
             }
         },
+        //返回
+        goBack(){
+            this.$router.back(-1);
+        }
     }
 }
 </script>
@@ -356,5 +361,10 @@ export default {
 }
 ul li{
     list-style: none;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

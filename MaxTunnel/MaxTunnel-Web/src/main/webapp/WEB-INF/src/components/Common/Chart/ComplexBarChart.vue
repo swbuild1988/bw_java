@@ -36,7 +36,7 @@
             text: 'title',
             fontSize: 25,
           },
-          backgroundColor: 'rgba(225,225,225,0.8)',
+          backgroundColor: '#fff',
           tooltip: {
             trigger: 'axis',
             fontSize: 16,
@@ -106,7 +106,7 @@
         _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
         _this.option.title.text = _this.title;
         _this.myChart.setOption(_this.option);
-        window.addEventListener('resize', this.myChart.resize);
+        window.addEventListener('resize', _this.myChart.resize);
       },
 
       fetchData(requestUrl) {

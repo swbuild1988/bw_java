@@ -12,17 +12,18 @@
         curModule: {
           moduleName: "数据分析",
           leftTree: [{id: 1,name: "数据查询", url: "/UM/DataAnalysis/QueryData"}, {id: 2,name: "告警查询", url: "/UM/DataAnalysis/QueryAlarmData"},
-          // {id: 4,name: "同比数据对比", url: "/UM/DataAnalysis/DataCompare"},
-            {id: 3,name: "统计报表",childNode: [
+
+ // {id: 4,name: "同比数据对比", url: "/UM/DataAnalysis/DataCompare"},
+                    {id: 3,name: "统计报表",childNode: [
+                {
+                  id: 22,
+                  name: "最多告警TopN统计报表",
+                  url: "/UM/DataAnalysis/AlarmTop10Chart",
+                },
                 {
                   id: 21,
                   name: "综合监控报表",
                   url: "/UM/DataAnalysis/CountChart",
-                },
-                {
-                  id: 22,
-                  name: "设备安全状况报表",
-                  url: "",
                 },
                 {
                   id: 24,

@@ -10,7 +10,7 @@ var MonitorDataService = {
 					data,
 					msg
 				} = res.data
-				if (code == 200) {
+        if (code == 200) {
 					resolve(data)
 				} else {
 					reject(msg + '地址：tunnels/' + tunnelId + "/" + monitorType + '/max-cv')

@@ -130,12 +130,12 @@ public class MeasObjServiceImpl implements MeasObjService {
         DataType dataType = DataType.getEnum(datatypeId);
         switch (dataType) {
             case AI:
-                Double cv = measObjModuleCenter.getMeasObjAI(objId).getCV();
+                Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv();
             	return cv == null ? 0 : cv;
             case DI:
-                return measObjModuleCenter.getMeasObjDI(objId).getCV() ? 1 : 0;
+                return measObjModuleCenter.getMeasObjDI(objId).getCv() ? 1 : 0;
             case SI:
-                Integer cv2 = measObjModuleCenter.getMeasObjSI(objId).getCV();
+                Integer cv2 = measObjModuleCenter.getMeasObjSI(objId).getCv();
                 return cv2 == null ? 0: cv2;
             default:
                 break;

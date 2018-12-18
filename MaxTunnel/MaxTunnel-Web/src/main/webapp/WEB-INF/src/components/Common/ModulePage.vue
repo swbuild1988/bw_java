@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <Layout class="coment">
-      <Sider :width="screenWidth*0.14+1" collapsible :collapsed-width="78" v-model="isCollapsed" :style="{background: '#1D5F87'}">
+      <Sider  :width="screenWidth" collapsible :collapsed-width="minScreenWidth" v-model="isCollapsed" style="background-color: #1D5F87">
         <transition  name="fade">
         <!-- <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
             <ButtonGroup style="width: 90%;margin-left: 5%">
@@ -10,7 +10,7 @@
             </ButtonGroup>
         </div> -->
         </transition>
-        <Menu active-name="1-1" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
+        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate"></Icon>
@@ -18,18 +18,18 @@
             </template>
             <div v-for="(item,index) in leftTree" :key="item.key">
               <div v-if="item.childNode && item.childNode.length>0">
-                <Submenu :name="item.id" >
+                <Submenu :name="'1-'+ index" >
                   <template slot="title">
                     <Icon type="ios-paper"></Icon>
                     <span>{{ item.name}}</span>
                   </template>
-                  <MenuItem v-for="(child,childIndex) in item.childNode" :key="child.id" :name="child.id" @click.native="goToMoudle({ path:child.url},index,childIndex)" :class="{itemActive:(index==selectedActive[0] &&　childIndex == selectedActive[1])}">
+                  <MenuItem v-for="(child,childIndex) in item.childNode" :key="child.id" :name="'1-'+index+'-'+ childIndex" @click.native="goToMoudle({ path:child.url},index,childIndex)" :class="{itemActive:(index==selectedActive[0] &&　childIndex == selectedActive[1])}">
                     <span> {{child.name}}</span>
                   </MenuItem>
                 </Submenu>
               </div>
               <div v-else>
-                <MenuItem name="item.id" @click.native="goToMoudle({ path:item.url},index,-1)" :class="{itemActive:index==selectedActive[0]}">
+                <MenuItem :name="'1-'+ index" @click.native="goToMoudle({ path:item.url},index,-1)" :class="{itemActive:index==selectedActive[0]}">
                   <span> {{item.name}}</span>
                 </MenuItem>
               </div>
@@ -144,7 +144,8 @@ export default {
         show:{state:false},
         alarmData:null,
       },
-      screenWidth: 1200,
+      screenWidth: 300,
+      minScreenWidth: 300,
       screenHeight: 900,
       childValue: '',
       showalarm: '1',
@@ -162,17 +163,41 @@ export default {
         backgroundImage: "url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
         height: '100%',
         position: 'relative',
-      }
+      },
+      selectedName: null
     };
   },
   mounted() {
-    this.screenWidth = document.body.clientWidth ;
+      this.screenWidth=window.innerWidth*0.14;//就是将14vh转为数字
+      this.minScreenWidth = window.innerWidth*0.03
+      if(this.leftTree.length > 0){
+        if(this.leftTree[0].childNode && this.leftTree[0].childNode.length > 0){
+          this.selectedName = '1-0-0'
+        } else {
+          this.selectedName = '1-0'
+        }
+      }
     // this.openMQ();
     // this.startMQ();
     // this.acceptPlanData();
   },
   beforeDestroy() {
     // this.closedMQ();
+  },
+  watch:{
+    'leftTree': function(newValue,oldValue){
+      if(newValue.length > 0){
+        if(newValue[0].childNode && newValue[0].childNode.length > 0){
+          this.$nextTick(()=>{
+            this.selectedName = '1-0-0'
+          })
+        } else {
+          this.$nextTick(()=>{
+            this.selectedName = '1-0'
+          })
+        }
+      }
+    }
   },
   computed: {
     menuitemClasses: function () {
@@ -379,10 +404,11 @@ export default {
   position: relative;
   border-radius: 2px;
   overflow: hidden;
+  height: 100%;
 }
 
 .coment{
-  height:  calc(100vh - 65px);
+  height:  calc(100vh - 9vh);
 }
 
 .menu-item span {
@@ -419,6 +445,7 @@ export default {
   background: none;
   color: #fff;
   background: #357aa1;
+  height: 5vh;
 }
 
 h1 {
@@ -467,11 +494,19 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
-  color: #ffffff
+  /*color: #ffffff*/
+  background: #fff;
+  color: #1d5f87 !important;
+  box-shadow:0px 0px 15px 7px rgb(121, 170, 220) inset;
 }
 /*去除footer的白边*/
 .ivu-collapse{
   border: none;
 }
+/*.itemActive{
+  background: #fff;
+  color: #1d5f87 !important;
+  box-shadow:0px 0px 15px 7px rgb(121, 170, 220) inset;
+}*/
 </style>
 

@@ -21,6 +21,7 @@ import './scripts/serviceClass'
 // 加载字符格式转换
 import './scripts/StringFormat'
 import global_ from './components/Global'
+import vueXlsxTable from 'vue-xlsx-table'
 
 // const ApiUrl = require('../static/serverconfig').ApiUrl;
 const RouterBase = require("../static/serverconfig").RouterBase;
@@ -35,126 +36,112 @@ Vue.use(VMConfig);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(iView);
+//Browser FileReader API have two methods to read local file readAsBinaryString and readAsArrayBuffer, default rABS false
+Vue.use(vueXlsxTable, {rABS: false})
 Vue.prototype.RouterBase = RouterBase;
 
 var axios_instance = axios.create({
-    headers: {
-        "Content-Type": "application/json;charset=utf-8"
-    }
+  headers: {
+    "Content-Type": "application/json;charset=utf-8"
+  }
 });
 Vue.use(VueAxios, axios_instance);
 if (process.env.NODE_ENV == "development") {
-    axios.defaults.baseURL = "/MaxTunnel-Web/";
-    Vue.prototype.ServerConfig = "/static";
-    Vue.prototype.SuperMapConfig = SuperMapConfig;
-    Vue.prototype.VMWebConfig = VMWebConfig;
-    console.log("VMWebConfig", VMWebConfig);
-    Vue.prototype.ApiUrl = require('../static/serverconfig').ApiUrl;
+  axios.defaults.baseURL = "/MaxTunnel-Web/";
+  Vue.prototype.ServerConfig = "/static";
+  Vue.prototype.SuperMapConfig = SuperMapConfig;
+  Vue.prototype.VMWebConfig = VMWebConfig;
+  console.log("VMWebConfig", VMWebConfig);
+  Vue.prototype.ApiUrl = require('../static/serverconfig').ApiUrl;
 } else {
-    Vue.prototype.ServerConfig = RouterBase + "dist/static";
-    axios
-        .get("../" + Vue.prototype.ServerConfig + "/serverconfig.json")
-        .then(result => {
-            localStorage.setItem("ApiUrl", result.data.ApiUrl);
-            //在main.js中定义一个全局函数
-            Vue.prototype.ApiUrl = result.data.ApiUrl;
-            Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
-            axios.defaults.baseURL = Vue.prototype.ApiUrl;
-        })
-        .catch(error => {
-            // console.log(error)
-        });
-    // 获取VM的配置页
-    axios
-        .get("../" + Vue.prototype.ServerConfig + "/VM/js/VMWebConfig.json")
-        .then(result => {
-            Vue.prototype.VMWebConfig = result.data.VMWebConfig;
-        })
-        .catch(error => {
-            // console.log(error)
-        });
+  Vue.prototype.ServerConfig = RouterBase + "dist/static";
+  axios
+    .get("../" + Vue.prototype.ServerConfig + "/serverconfig.json")
+    .then(result => {
+      localStorage.setItem("ApiUrl", result.data.ApiUrl);
+      //在main.js中定义一个全局函数
+      Vue.prototype.ApiUrl = result.data.ApiUrl;
+      Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
+      axios.defaults.baseURL = Vue.prototype.ApiUrl;
+    })
+    .catch(error => {
+      // console.log(error)
+    });
+  // 获取VM的配置页
+  axios
+    .get("../" + Vue.prototype.ServerConfig + "/VM/js/VMWebConfig.json")
+    .then(result => {
+      Vue.prototype.VMWebConfig = result.data.VMWebConfig;
+    })
+    .catch(error => {
+      // console.log(error)
+    });
 }
 Vue.config.productionTip = false;
 
 // 定义一个全局的日志输出
 Vue.prototype.Log = {
-    info: function() {
-        console.log(arguments);
-    }
+  info: function () {
+    console.log(arguments);
+  }
 };
 
 Vue.prototype.GLOBAL = global_
 
 const router = new VueRouter({
-    mode: "history",
-    base: RouterBase, //服务器地址，不设置时，默认为服务器根目录下
-    routes
-});
-router.beforeEach((to, from, next) => {
-    iView.LoadingBar.start();
-    if (to.matched.some(m => m.meta.auth)) {
-        let users = ["UMUser", "VMUser", "CMUser"];
-        let user = users
-            .filter(item => item.substr(0, 2) == to.path.substr(1, 2))
-            .join("");
-        users.forEach(function(value) {
-            if (value != user) {
-                sessionStorage.removeItem(value);
-            }
-        });
-        if (!to.query.url && from.query.url) {
-            to.query.url = from.query.url;
-        }
-        if (JSON.parse(sessionStorage.getItem(user))) {
-            next();
-        } else {
-            if (to.path.indexOf("UM") > 0) {
-                next({
-                    path: "/UMlogin",
-                    query: {
-                        Rurl: to.fullPath
-                    }
-                });
-                return false;
-            }
-            if (to.path.indexOf("VM") > 0) {
-                next({
-                    path: "/VMlogin",
-                    query: {
-                        Rurl: to.fullPath
-                    }
-                });
-                return false;
-            }
-            if (to.path.indexOf("CM") > 0) {
-                next({
-                    path: "/CMlogin",
-                    query: {
-                        Rurl: to.fullPath
-                    }
-                });
-                return false;
-            } else {
-                next({
-                    path: "/UMlogin",
-                    query: {
-                        Rurl: to.fullPath
-                    }
-                });
-                return false;
-            }
-        }
-    } else {
-        next();
-    }
+  mode: "history",
+  base: RouterBase, //服务器地址，不设置时，默认为服务器根目录下
+  routes
 });
 
-router.afterEach(route => {
-    iView.LoadingBar.finish();
+router.beforeEach((to, from, next) => {
+  let CMUser = sessionStorage.CMUser;
+  let UMUser = sessionStorage.UMUser;
+  if (((to.path.substr(1, 2) == "UM" || to.path.substr(1, 2) == "VM") && UMUser) || (to.path.substr(1, 2) == "CM" && CMUser)) {
+    // if (!store.UMstate.state.permissionList) {
+    //   /* 如果没有permissionList，真正的工作开始了 */
+    //   store.dispatch('setPermissionList', {url: ""}).then(() => {
+    //     next({path: to.path});
+    //   })
+  // else
+    {
+      next();
+    }
+  }
+  else {
+    if (to.path.indexOf("UM") > 0 && to.path.trim().toLowerCase() != "/umlogin") {
+      next({
+        path: "/UMlogin",
+        query: {
+          Rurl: to.fullPath
+        }
+      });
+    }
+    else if (to.path.indexOf("VM") > 0 && to.path.trim().toLowerCase() != "/vmlogin") {
+      next({
+        path: "/VMLogin",
+        query: {
+          Rurl: to.fullPath
+        }
+      });
+    }
+    else if (to.path.indexOf("CM") > 0 && to.path.trim().toLowerCase() != "/cmlogin") {
+      next({
+        path: "/CMlogin",
+        query: {
+          Rurl: to.fullPath
+        }
+      });
+    }
+    else {
+      next();
+    }
+  }
 });
+
 new Vue({
-    el: "#app",
-    router,
-    store,
-    render: h => h(App)
+  el: "#app",
+  router,
+  store,
+  render: h => h(App)
 });

@@ -9,8 +9,8 @@
 	<insert id="addMeasValueSO"
 		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO">
 		INSERT INTO T_MAM_MEASVALUE_SO
-		(TIME, Object_ID, CV)
-		VALUES (#{time}, #{objectId}, #{CV})
+		(TIME, Object_ID, cv)
+		VALUES (#{time}, #{objectId}, #{cv})
 	</insert>
 
 	<select id="getListByObjectIdAndTime" resultMap="measValueSOMap">
@@ -32,19 +32,19 @@
 		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO">
 		<result column="TIME" property="time" />
 		<result column="OBJECT_ID" property="objectId" />
-		<result column="CV" property="CV" />
+		<result column="cv" property="cv" />
 	</resultMap>
 
 
 	<insert id="addMeasValueSOBatch" useGeneratedKeys="false">
-		insert into T_MAM_MEASVALUE_SO (TIME, Object_ID, CV)
+		insert into T_MAM_MEASVALUE_SO (TIME, Object_ID, cv)
 		select a.* from (
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
 			select
 			#{item.time},
 			#{item.objectId},
-			#{item.CV}
+			#{item.cv}
 			from dual
 		</foreach>
 		)a

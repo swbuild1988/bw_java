@@ -95,7 +95,7 @@ public class SectionController extends BaseController<Section>{
     public JSONObject create() {
         List<Store> stores = storeService.getList();
         List<AreaDto> areas = areaService.getList();
-
+        int i = 0;
         for (Store store : stores){
             for (AreaDto area: areas) {
                 SectionVo vo = new SectionVo();
@@ -114,9 +114,10 @@ public class SectionController extends BaseController<Section>{
                 section.setTunnelId(area.getTunnelId());
 
                 sectionService.add(section);
+                i ++;
             }
         }
-
+        LogUtil.info("本次共批量生成[" + i + "]条secion");
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 

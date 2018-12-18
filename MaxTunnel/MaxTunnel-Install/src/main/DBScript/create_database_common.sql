@@ -590,14 +590,13 @@ create table T_OPERATION_LOG
 );
 
 
---shiro table below...
 
-
+--user
 CREATE TABLE "T_SECURITY_USER"  (
-   "ID"                 NUMBER                          NOT NULL,
-   "NAME"               VARCHAR2(50 CHAR)               NOT NULL,
-   "PASSWORD"           VARCHAR2(50 CHAR)               NOT NULL,
-   "CRT_TIME"           DATE,
+   id                 NUMBER                          NOT NULL,
+   name               VARCHAR2(50 CHAR)               NOT NULL,
+   password           VARCHAR2(100 CHAR)              NOT NULL,
+   crt_time           DATE,
    CONSTRAINT PK_T_SECURITY_USER PRIMARY KEY ("ID")
 );
 
@@ -617,12 +616,11 @@ begin
 end SECURITY_USER_TG;
 /
  
-      
+--role   
 CREATE TABLE "T_SECURITY_ROLE"  (
-   "ID"                 NUMBER                          NOT NULL,
-   "ROLE_CODE"               VARCHAR2(50 CHAR)               NOT NULL,
-   "ROLE_DESC"               VARCHAR2(50 CHAR),
-   "CRT_TIME"           DATE,
+   id                 NUMBER                          NOT NULL,
+   role_name          VARCHAR2(50 CHAR)               NOT NULL,
+   crt_time           DATE,
    CONSTRAINT PK_T_SECURITY_ROLE PRIMARY KEY ("ID")
 );
 
@@ -643,12 +641,14 @@ end SECURITY_ROLE_TG;
 /
 
 
-
+--permission
 CREATE TABLE "T_SECURITY_PERMISSION"  (
-   "ID"                 NUMBER                          NOT NULL,
-   "PER_CODE"               VARCHAR2(50 CHAR)               NOT NULL,
-   "PER_DESC"               VARCHAR2(50 CHAR),
-   "CRT_TIME"           DATE,
+   id                 NUMBER                          NOT NULL,
+   menu_code          VARCHAR2(50 CHAR)               not null,
+   menu_name          VARCHAR2(50 CHAR)               not null,
+   permission_code    VARCHAR2(50 CHAR)               not null,
+   permission_name    VARCHAR2(50 CHAR)               not null,
+   crt_time           DATE,
    CONSTRAINT PK_T_SECURITY_PERMISSION PRIMARY KEY ("ID")
 );
 
@@ -671,12 +671,12 @@ end SECURITY_PERMISSION_TG;
 
 
 
---角色权限表
+--role-permission
 CREATE TABLE "T_SECURITY_ROLE_PERMISSION"  (
    ID                   NUMBER                          NOT NULL,
-   "ROLE_ID"            NUMBER,
-   "PER_ID"             NUMBER,
-   "CRT_TIME"           DATE,
+   r_id                  NUMBER                          not null,
+   p_id                  NUMBER                          not null,
+   crt_time             DATE,
    CONSTRAINT PK_T_SECURITY_ROLE_PERMISSION PRIMARY KEY (ID)
 );
 
@@ -699,13 +699,12 @@ end SECURITY_ROLE_PERMISSION_TG;
 
 
 
---用户角色表
-
+--user-role
 CREATE TABLE "T_SECURITY_USER_ROLE"  (
    ID                   NUMBER                          NOT NULL,
-   "USER_ID"            NUMBER,
-   "ROLE_ID"            NUMBER,
-   "CRT_TIME"           DATE,
+   u_id                 NUMBER                          not null,
+   r_id                 NUMBER                          not null,
+   crt_time             DATE,
    CONSTRAINT PK_T_SECURITY_USER_ROLE PRIMARY KEY (ID)
 );
 
@@ -728,7 +727,7 @@ end SECURITY_USER_ROLE_TG;
 
 
 --外键
-ALTER TABLE "T_SECURITY_ROLE_PERMISSION"
+/*ALTER TABLE "T_SECURITY_ROLE_PERMISSION"
    ADD CONSTRAINT FK_T_R_REFERENCE_T_R FOREIGN KEY ("ROLE_ID")
       REFERENCES "T_SECURITY_ROLE" ("ID");
 
@@ -742,7 +741,7 @@ ALTER TABLE "T_SECURITY_USER_ROLE"
 
 ALTER TABLE "T_SECURITY_USER_ROLE"
    ADD CONSTRAINT FK_T_U_REFERENCE_T_R FOREIGN KEY ("ROLE_ID")
-      REFERENCES "T_SECURITY_ROLE" ("ID");
+      REFERENCES "T_SECURITY_ROLE" ("ID");*/
    
    
       
@@ -944,7 +943,6 @@ CREATE TABLE T_COMMON_STAFF(
   NAME    VARCHAR2(20),
   dept_id    NUMBER               NOT NULL,
   position_id  NUMBER               NOT NULL,
-  account_id  NUMBER               NOT NULL,
   crt_time  date,
    CONSTRAINT PK_T_COMMON_STAFF PRIMARY KEY ("ID")
 );

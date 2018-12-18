@@ -44,7 +44,7 @@
         yData: [],
         series:[],
         option: {
-          backgroundColor:'rgba(225,225,225,0.8)',
+          backgroundColor:'#fff',
           grid: {
             left: '3%',
             top: '20%',
@@ -56,6 +56,14 @@
             text: "title",
             textStyle: {
               color: '#3980ff',
+            }
+          },
+          tooltip: {
+            trigger: 'axis',
+            fontSize: 16,
+            // triggerOn: 'mousemove',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
             }
           },
           xAxis: [{
@@ -142,15 +150,6 @@
             label: {
               normal: {
                 show: true,
-                // formatter: function (params) {
-                //   var stuNum = 0;
-                //   data.forEach(function (value, index, array) {
-                //     if (params.dataIndex == index) {
-                //       stuNum = value;
-                //     }
-                //   })
-                //   return stuNum;
-                // },
                 position: 'top',
                 textStyle: {
                   color: function (params) {
@@ -182,7 +181,7 @@
                 normal: {
                   show: true,
                   position: 'inside',
-                  formatter: '{c}%'
+                  formatter: '{c}'
                 }
               },
               barWidth: '25%',
@@ -208,7 +207,7 @@
         _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
         _this.option.title.text = _this.title;
         _this.myChart.setOption(_this.option);
-        window.addEventListener('resize', this.myChart.resize);
+        window.addEventListener('resize', _this.myChart.resize);
       },
 
       fetchData() {

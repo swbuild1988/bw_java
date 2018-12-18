@@ -184,7 +184,7 @@ export default {
 
 <style scoped>
 #superCalendar{
-    margin: 10px auto;
+    margin-top: -2px;
 }
 ul li{
     list-style: none;

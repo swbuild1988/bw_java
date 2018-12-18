@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ModulePage v-bind="patrolScheme"></ModulePage>
+    <ModulePage v-bind="operatingSpace"></ModulePage>
   </div>
 </template>
 <style scoped>
@@ -13,8 +13,8 @@
     name:"OperatingSpaceMain",
     data() {
       return {
-        patrolScheme:{
-          moduleName:"空间管理",
+        operatingSpace:{
+          moduleName:"空间管理", 
           leftTree:[],
           selected:[0,-1]
         },
@@ -23,7 +23,7 @@
     },
     components: {ModulePage},
     created() {
-      this.patrolScheme.leftTree = [];
+      this.operatingSpace.leftTree = [];
       let _this = this;
       TunnelService.getTunnels().then(
           (result)=>{
@@ -32,26 +32,12 @@
                   temp.id=a.id;
                   temp.name=a.name;
                   temp.url=_this.treeNodeJumpUrl+a.id;
-                  _this.patrolScheme.leftTree.push(temp);
+                  _this.operatingSpace.leftTree.push(temp);
               })
           },
           (error)=>{
               _this.Log.info(error)
       })
-      // this.axios.get("/tunnels").then(result => {
-      //   let {code, data} = result.data;
-      //   var _this=this;
-      //   if (code == 200) {
-      //     data.forEach(a=>{
-      //     let temp={};
-      //     temp.id=a.id;
-      //     temp.name=a.name;
-      //     temp.url=_this.treeNodeJumpUrl+a.id;
-      //     _this.patrolScheme.leftTree.push(temp);
-      //   })
-      // }
-      // });
-     
     },
     // mounted() {
     // },

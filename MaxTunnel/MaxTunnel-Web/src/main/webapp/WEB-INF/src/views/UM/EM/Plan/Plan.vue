@@ -22,8 +22,6 @@
         executeNodeUrl: "/UM/plans/execute/processKey",
       };
     },
-    mounted() {
-    },
     created() {
       this.plans.leftTree = [];
       let _this = this
@@ -48,13 +46,6 @@
               }
             ]
             _this.plans.leftTree.push(temp);
-          });
-          //添加零时测试页面
-          _this.plans.leftTree.push({
-            name: "测试预案页面",
-            id: 31,
-            processKey: "textPlan",
-            url: "/UM/plans/textPage/processKey"
           });
         },
         error=>{

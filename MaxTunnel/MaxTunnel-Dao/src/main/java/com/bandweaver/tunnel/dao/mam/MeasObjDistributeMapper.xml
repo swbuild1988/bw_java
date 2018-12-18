@@ -78,4 +78,34 @@
 <delete id="deleteByPrimaryKey">
 	delete from T_MAM_MEASOBJ_DISTRIBUTE where id = #{id}
 </delete>
+
+
+	<resultMap id="dtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDistributeDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
+        <result column="dcv" jdbcType="VARCHAR" property="dcv"/>
+        <result column="SPACE_PRECISION" jdbcType="DECIMAL" property="spacePrecision"/>
+        <association property="obj" javaType="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto" column="id"
+        	select="com.bandweaver.tunnel.dao.mam.MeasObjMapper.getDtoById"/>
+    </resultMap>
+
+	<select id="dataGrid" resultMap="dtoResultMap">
+		select * from T_MAM_MEASOBJ_DISTRIBUTE
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="ids != null">
+				and id in
+				<foreach collection="ids" item="item" index="index"
+					close=")" open="(" separator=",">
+					#{item}
+				</foreach>
+			</if>
+			<if test="dcv != null and dcv.trim() != ''">
+				and dcv = #{dcv}
+			</if>
+		</where>
+		order by refresh_time desc
+	</select>
 </mapper>

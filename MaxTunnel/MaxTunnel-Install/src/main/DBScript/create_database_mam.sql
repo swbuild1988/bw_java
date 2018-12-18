@@ -39,6 +39,8 @@ begin
       if num > 0 then   
          execute immediate 'DROP TRIGGER MAM_VIDEO_SCENE_TG';   
       end if; 
+      
+      
 -- -- -- prompt dropping T_MAM_ALARM
       num := 0;
       select count(1) into num from user_tables where TABLE_NAME = 'T_MAM_ALARM';
@@ -158,6 +160,26 @@ begin
       select count(1) into num from user_tables where TABLE_NAME = 'T_MAM_VIDEO_SCENE';
       if   num=1   then 
           execute immediate 'drop table T_MAM_VIDEO_SCENE'; 
+      end   if; 
+    
+-- -- -- prompt dropping sequence
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'MAM_Extend_SCENE_SEQUENCE'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  MAM_Extend_SCENE_SEQUENCE';   
+      end if;     
+-- -- -- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'MAM_VIDEO_Extend_SCENE_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER MAM_VIDEO_Extend_SCENE_TG';   
+      end if; 
+      
+-- prompt Dropping T_MAM_VIDEO_Extend_SCENE
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_MAM_VIDEO_EXTEND_SCENE';
+      if   num=1   then 
+          execute immediate 'drop table T_MAM_VIDEO_EXTEND_SCENE'; 
       end   if; 
 -- prompt Dropping T_MAM_VIDEO_SERVER
       num := 0;
@@ -474,6 +496,36 @@ end MAM_Video_Scene_TG;
 alter trigger MAM_Video_Scene_TG enable;
 
 
+-- creating T_MAM_Video_Extend_Scene
+CREATE TABLE T_MAM_Video_Extend_Scene(
+  ID                        NUMBER NOT NULL,
+  name                      Varchar2(50),
+  tunnel_id                 number not null,
+  is_Loop                   NUMBER(1) NOT NULL,
+  loop_Index                number
+);
+alter table T_MAM_Video_Extend_Scene add constraint MAM_Video_Extend_Scene_ID primary key (ID);
+
+-- create
+create sequence MAM_Extend_Scene_SEQUENCE
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER MAM_Video_Extend_Scene_TG
+  BEFORE INSERT ON T_MAM_Video_Extend_Scene
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select MAM_Extend_Scene_SEQUENCE.nextval into :new.id from dual;
+end MAM_Video_Extend_Scene_TG;
+/
+alter trigger MAM_Video_Extend_Scene_TG enable;
+
+
 -- creating T_MAM_Video_Server
 CREATE TABLE T_MAM_Video_Server(
   ID                        NUMBER NOT NULL,
@@ -544,7 +596,8 @@ alter trigger mam_video_preset_TG enable;
 create Table t_mam_video(
   ID                           Number not null,
   server_id                    number not null,
-  video_scene_id               number not null,
+  video_scene_id               number,
+  video_extend_scene_id        number,
   channel_no                   number not null
 );
 alter table T_MAM_Video add constraint MAM_Video_ID primary key (ID);
@@ -622,8 +675,7 @@ CREATE TABLE T_MAM_MAXVIEW_CONFIG(
   username  varchar2(50)  not null,
   password  varchar2(100) not null,
   crt_time  date,
-  
-   CONSTRAINT PK_T_MAM_MAXVIEW_CONFIG PRIMARY KEY ("ID")
+  CONSTRAINT PK_T_MAM_MAXVIEW_CONFIG PRIMARY KEY ("ID")
 );
 
 

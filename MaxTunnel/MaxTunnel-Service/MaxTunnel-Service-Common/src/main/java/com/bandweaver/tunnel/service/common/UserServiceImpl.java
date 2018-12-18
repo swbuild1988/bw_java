@@ -1,80 +1,72 @@
 package com.bandweaver.tunnel.service.common;
 
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bandweaver.tunnel.common.biz.dto.StaffDto;
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.UserDTO;
-import com.bandweaver.tunnel.common.biz.itf.UserService;
-import com.bandweaver.tunnel.common.biz.pojo.User;
-import com.bandweaver.tunnel.common.biz.vo.StaffVo;
-import com.bandweaver.tunnel.common.biz.vo.UserVo;
-import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.bandweaver.tunnel.dao.common.StaffMapper;
+import com.bandweaver.tunnel.common.biz.itf.common.UserService;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.bandweaver.tunnel.dao.common.PermissionMapper;
 import com.bandweaver.tunnel.dao.common.UserMapper;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private StaffMapper staffMapper;
-    
 
-    @Override
-    public List<UserDTO> getList() {
-        return userMapper.queryAll();
-    }
-
-    @Override
-    public int addUser(User user) {
-    	user.setCrtTime(new Date());
-        return userMapper.insert(user);
-    }
-
-    @Override
-    public int addUsers(List<User> users) {
-        return userMapper.addUsers(users);
-    }
-
-    @Override
-    public UserDTO getUser(Integer id) {
-    	
-    	return userMapper.getUserDtoById(id);
-    }
-
-    @Override
-    public User getByUserName(String userName) {
-    	return userMapper.queryByUserName(userName);
-    }
-
-    @Override
-    public Set<String> getRoles(String userName) {
-        return userMapper.getRoles(userName);
-    }
-
-    @Override
-    public Set<String> getPermissions(String userName) {
-        return userMapper.getPermissions(userName);
-    }
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private PermissionMapper permissionMapper;
+	
 
 	@Override
-	public void deleteById(Integer id) {
-		userMapper.deleteByPrimaryKey(id);
+	public void updateByPrimaryKeySelective(User user) {
+		userMapper.updateByPrimaryKeySelective(user);
 	}
 
 	@Override
-	public List<User> getUserByRoleDesc(String roleDesc) {
-		return userMapper.getUsersByRoleDesc(roleDesc);
+	public User selectByPrimaryKey(Integer id) {
+		return userMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public UserDTO getUser(Integer id) {
+		return userMapper.getUserDtoById(id);
+	}
+
+	@Override
+	public List<JSONObject> getUsersByRole(String roleName) {
+		return userMapper.getUsersByRole(roleName);
 	}
 
 
+	@Override
+	public JSONObject getPermissions(String name) {
+		JSONObject permissions = userMapper.getPermissions(name);
+		String roleName = permissions.getString("roleName");
+		if("admin".equals(roleName)) {
+			//get allMenu
+			Set<String> menuList = permissionMapper.getAllMenu();
+			//getAllPermissions
+			Set<String> permissionList =permissionMapper.getAllPermission();
+			permissions.put("menuList", menuList);
+			permissions.put("permissionList", permissionList);
+		}
+		
+		return permissions;
+	}
+
+	@Override
+	public User getByUserName(String name) {
+		return userMapper.getByName(name);
+	}
+
+	@Override
+	public void deleteBatch(List<Integer> list) {
+		userMapper.deleteBatch(list);
+		
+	}
 
 }

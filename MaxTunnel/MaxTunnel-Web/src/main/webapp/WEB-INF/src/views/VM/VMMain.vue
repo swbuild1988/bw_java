@@ -7,8 +7,11 @@
               :style="item.extendStyle"
               v-if="item.isShow"
       >
-          <VMHead v-if="item.className === 'VMExtend-1'"></VMHead>
-          <VMBody v-if="item.className === 'VMExtend-1'"></VMBody>
+          <VMHead v-if = "item.className === 'VMExtend-0'"></VMHead>
+          <VMBody v-if = "item.className === 'VMExtend-0'"></VMBody>
+          <!-- <extend-model v-else-if = "item.className === 'VMExtend-1'"></extend-model> -->
+          <!-- <extend-videos v-else-if = "item.className === 'VMExtend-2'"></extend-videos> -->
+
       </div>
       </div>
 
@@ -19,6 +22,10 @@
 <script>
     import VMHead from './header/VMHead'
     import VMBody from './body/VMBody'
+    import extendModel from './extendViews/ExtendViewModal1'
+    import extendModelTow from './extendViews/ExtendViewModal2'
+    import extendModelThree from './extendViews/ExtendViewModal3'
+    import extendVideos from './extendViews/ExtendVideos'
 
     let  { VMExtendStyle } = require('../../../static/VM/js/VMWebConfig');
 
@@ -38,9 +45,13 @@
         components:{
            VMHead,
            VMBody,
+           extendModel,
+           extendVideos,
+           extendModelTow,
+           extendModelThree
         },
         created(){
-            for(let i=1; i <= this.extendTemplateNumber;i++)
+            for(let i=0; i < this.extendTemplateNumber;i++)
                 this.classNameConfig.push({ key:`模块${ i }`,val:`VMExtend-${i}` })
         },
         mounted(){
@@ -73,19 +84,18 @@
         background-size: 100% 100%;
         background-color: #031324;
     }
+    .MainContent .VMExtend-0,
     .MainContent .VMExtend-1,
     .MainContent .VMExtend-2,
     .MainContent .VMExtend-3,
-    .MainContent .VMExtend-4,
-    .MainContent .VMExtend-5{
+    .MainContent .VMExtend-4{
         position: absolute;
         height: 100%;
     }
+    .MainContent .VMExtend-1,
     .MainContent .VMExtend-2,
     .MainContent .VMExtend-3,
-    .MainContent .VMExtend-4,
-    .MainContent .VMExtend-5{
-        border:1px solid red;
+    .MainContent .VMExtend-4{
         padding-right: 0.7%;
         height: 94%;
         top: 6%;

@@ -1,388 +1,1084 @@
 <template>
-  <div class="queryEquipment">
-    <Row class="top">
-      <Col span="6">
-      <span class="planDec">设备类型：</span>
-      <Select v-model="condition.type" @on-change='showTable()' style="width:60%">
-        <Option value=null key="0">所有</Option>
-        <Option v-for="item in equipmentTypes" :value="item.key" :key="item.key">{{ item.value }}</Option>
-      </Select>
-      </Col>
-      <Col span="6">
-      <span class="planDec">设备状态：</span>
-      <Select v-model="condition.status" @on-change='showTable()' style="width:60%">
-        <Option value=null key="0">所有</Option>
-        <Option v-for="item in equipmentStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
-      </Select>
-      </Col>
-      <Col span="6">
-      <span class="planDec">入库时间：</span>
-      <DatePicker type="date" placeholder="选择时间" style="width: 220px" v-model="condition.startEquipmentTime"
-                  @on-change='showTable()'></DatePicker>
-      </Col>
-      <Col span="1" offset="5" >
-      <div style="position: relative;float: right;right: 8px;">
-        <Button type="primary"  icon="ios-search">查询</Button>
-      </div>
-      </Col>
-    </Row>
-    <div class="bottom">
-      <Row>
-        <Col span="5" class="equipmentList">
-        备品列表</Col>
-        <Col span="9" offset="10">
-        <div style="position: relative;float: right">
-          <Button type="success" @click="add({path: '/UM/equipment/add'})"  icon="ios-plus-outline">增加入库</Button>
-          <Button type="success" @click="batchLoanTools()"  icon="reply">批量借出</Button>
-          <Button type="success" @click="batchReturnTools()"  icon="forward">批量归还</Button>
-        </div>
-        </Col>
-        <Col span="24">
-        <Row :gutter="8">
-          <Col span="6" v-for="(item,index) in equipments" :key="index"style="margin-top: 6px;">
-          <div :style="{backgroundImage:'url(' + item.imgUrl + ')'}" class="backGoundBox">
-            <div class="topBox">
-              <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
-              <p class="equipentTitle">{{ item.name }}</p>
-              <div class="imgBox"><img :src="item.imgUrl"></div>
-            </div>
-          </div>
-          <div class="detailsBox">
-            <p>设备状态：{{item.statusName}}</p>
-            <p>设备类型：{{ item.typeName }}</p>
-            <p>入库时间：{{ item.crtTime }}</p>
-          </div>
-          <div class="operation">
-            <Row>
-              <Col span="8" class="operationSee">
-              <Icon type="reply" size=20></Icon>
-              <p @click="show(index)">借出</p>
-              </Col>
-              <Col span="8" class="operationEdit">
-              <Icon type="forward" size=19></Icon>
-              <p @click="edit(index)">归还</p>
-              </Col>
-              <Col span="8" class="operationSee">
-              <Icon type="eye" size=20></Icon>
-              <p @click="show(index)">查看</p>
-              </Col>
-            </Row>
-          </div>
-          </Col>
-          <ToolLoan v-bind="equipmentLoan"></ToolLoan>
-          <ToolReturn v-bind="equipmentReturn"></ToolReturn>
-          <BatchLoan v-bind="equipmentsLoan"></BatchLoan>
-          <BatchReturn v-bind="equipmentsReturn"></BatchReturn>
+    <div class="allDiv">
+        <Row class="queryCondition">
+            <Col span="6">
+                <span>仪表工具类型</span><span>：</span>
+                <Select v-model="toolsConditions.typeId" style="width: 60%">
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span>仪表工具型号</span><span>：</span>
+                <Select v-model="toolsConditions.modelId" style="width: 60%">
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="word64">使用状态</span><span>：</span>
+                <Select v-model="toolsConditions.usingStatusId" style="width: 60%">
+                    <Option value=null key="2">所有</Option>
+                    <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="word63">供应商</span><span>：</span>
+                <Select v-model="toolsConditions.venderId" style="width: 60%">
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="word64">库存状态</span><span>：</span>
+                <Select v-model="toolsConditions.ventoryStatusId" style="width: 60%">
+                    <Option value=null key="2">所有</Option>
+                    <Option v-for="item in inventoryStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                入库开始时间：
+                <DatePicker type="datetime" v-model="toolsConditions.InStorageStartTime" placeholder="请输入入库开始时间" style="width: 60%"></DatePicker>
+            </Col>
+            <Col span="6">
+                入库结束时间：
+                <DatePicker type="datetime" v-model="toolsConditions.InStorageEndTime" placeholder="请输入入库结束时间" style="width: 60%"></DatePicker>
+            </Col>
+            <Col span="6">
+                <Button type="primary" size="small" @click="showTable">确定</Button>
+                <Button type="default" size="small">取消</Button>
+            </Col>
         </Row>
-        </Col>
-      </Row>
+        <div class="list">
+            <div class="toolBtn">
+                <p>仪表工具</p>
+                <Button type="primary" @click="batchReturn()">批量归还</Button>
+                <Button type="error" @click="batchLend()">批量借出</Button>
+                <Button type="success" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
+            </div>
+            <Row :gutter="16">
+                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-bottom: 8px;">
+                    <div class="toolBox">
+                        <h2 class="toolTitle">{{item.name}}</h2>
+                        <div class="toolInfo">
+                            <p>仪表工具类型：{{item.typeName}}</p>
+                            <p>仪表工具型号：{{item.modelName}}</p>
+                            <p>使用状态：{{item.useStatusName}}</p>
+                            <p>库存状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">
+                                            <span v-if="item.status==true">在库</span>
+                                            <span v-if="item.status==false">出库</span>
+                                        </span>
+                            </p>
+                            <p>供应商：{{item.venderName}}</p>
+                            <p>入库时间：{{item.inTime}}</p>
+                        </div>
+                        <div class="operations">
+                            <div class="operation" @click="borrowSubmit(item.id)" v-show="item.status">借出</div>
+                            <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">归还</div>                            
+                            <div class="operation" @click="showHistory(item.id)">历史记录</div>
+                            <div class="operation">删除</div>
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+                :style='pageStyle'></Page>    
+        </div>
+        <!-- 批量借出 -->
+        <Modal
+            v-model="isBatchLend"
+            title="批量借出"
+            width="840"
+        >
+            <Row class="queryConditions">
+                <Col span="8">
+                    <span>仪表名称</span><span>：</span>
+                    <Input v-model="lendModalConditions.name" style="width: 60%" @on-blur="batchLend()"></Input>
+                </Col>
+                <Col span="8">
+                    仪表工具类型：
+                    <Select v-model="lendModalConditions.typeId" style="width: 60%" ref="typeId" @on-change="batchLend()">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    开始时间：
+                    <DatePicker ref="startTime" type="datetime" v-model="lendModalConditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="batchLend()"></DatePicker>
+                </Col>
+                <Col span="8">
+                    <span style="letter-spacing: 0.5em;margin-right: -0.5em;">供应商</span><span>：</span>
+                    <Select ref="venderId" v-model="lendModalConditions.venderId" style="width: 60%" @on-change="batchLend()">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    仪表工具型号：
+                    <Select ref="modelId" v-model="lendModalConditions.modelId" style="width: 60%" @on-change="batchLend()">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    结束时间：
+                    <DatePicker ref="endTime" type="datetime" v-model="lendModalConditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="batchLend()"></DatePicker>
+                </Col>
+            </Row>
+
+            <Table stripe border height="330" ref="selection" :columns="batchLendColums"  :data="batchLendData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
+            
+            <Page :total="batchLendPage.pageTotal" :current="batchLendPage.pageNum" :page-size="batchLendPage.pageSize" show-total show-sizer
+                placement="top" @on-change="handlePageBatchLend" @on-page-size-change='handPageSizeBatchLend' show-elevator style="margin-top: 10px;text-align: right"></Page>
+
+            <Row style="margin-top: 20px;">
+                <Form ref="batchLendSubmitData" :model="batchLendSubmitData" :rules="ruleInline" inline>
+                    <Col span="8">
+                        <FormItem prop="staffId" style="width: 100%" class="borrower">
+                            借用人：
+                            <Select style="width: 60%;" v-model="batchLendSubmitData.staffId">
+                                <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="8">
+                        <FormItem prop="borrowTime" class="borrowTime">
+                            借用时间：
+                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchLendSubmitData.borrowTime"></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="8">
+                        <FormItem>
+                            <span class="purpose">备注：</span>
+                            <Input type="textarea" style="width: 70%;" v-model="batchLendSubmitData.describe"></Input>
+                        </FormItem>
+                    </Col>
+                </Form>    
+            </Row>
+            
+            <div slot="footer">
+                <Button type="text" size="large" @click="cancelBatchLend('batchLendSubmitData')">取消</Button>
+                <Button type="primary" size="large" @click="confirmBatchLend('batchLendSubmitData')" :disabled="isBatchLendSubmit">确定</Button>
+            </div>
+        </Modal>
+        <!-- 批量归还 -->
+        <Modal
+            v-model="isBatchReturn"
+            title="批量归还"
+            width="1240" 
+        >
+            <Row class="queryConditions">
+                <Col span="8">
+                    <span>仪表名称</span><span>：</span>
+                    <Input v-model="returnModalConditions.name" style="width: 60%"></Input>
+                </Col>
+                <Col span="8">
+                    仪表工具类型：
+                    <Select v-model="returnModalConditions.typeId" style="width: 60%" ref="typeId">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    借用开始时间：
+                    <DatePicker ref="startTime" type="datetime" v-model="returnModalConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="8">
+                    <span style="letter-spacing: 0.5em;margin-right: -0.5em;">供应商</span><span>：</span>
+                    <Select ref="venderId" v-model="returnModalConditions.venderId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    仪表工具型号：
+                    <Select ref="modelId" v-model="returnModalConditions.modelId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    借用结束时间：
+                    <DatePicker ref="endTime" type="datetime" v-model="returnModalConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="8">
+                    <span style="letter-spacing: 0.5em;margin-right: -0.5em;">借用人</span><span>：</span>
+                    <Select v-model="returnModalConditions.staffId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8" offset="8">
+                    <Button type="primary" size="small" @click="batchReturn()">确定</Button>
+                    <Button type="default" size="small">取消</Button>
+                </Col>    
+            </Row>
+           <Table stripe border height="330"  ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table> 
+            
+            <Page :total="returnPage.pageTotal" :current="returnPage.pageNum" :page-size="returnPage.pageSize" show-total show-sizer
+                placement="top" @on-change="handlePageBatchReturn" @on-page-size-change='handlePageSizeBatchReturn' show-elevator style="margin-top: 10px;text-align: right"></Page>
+
+            <Row style="margin-top: 20px;">
+                <Form ref="batchReturnSubmitData" :model="batchReturnSubmitData" :rules="returnRuleInline" inline>
+                    <Col span="6">
+                        <FormItem prop="staffId" style="width: 100%">
+                            归还人：
+                            <Select style="width: 60%;" v-model="batchReturnSubmitData.staffId">
+                                <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="6">
+                        <FormItem prop="returnTime">
+                            归还时间：
+                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchReturnSubmitData.returnTime"></DatePicker>
+                        </FormItem>
+                    </Col>
+                    <Col span="6">
+                        <FormItem prop="usingStatus" style="width: 100%">
+                            使用状态：
+                            <Select style="width: 60%;" v-model="batchReturnSubmitData.usingStatus">
+                                <Option v-for="item in returnUsingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
+                            </Select>
+                        </FormItem>
+                    </Col>
+                    <Col span="6">
+                        <FormItem>
+                            <span class="purpose">备注：</span>
+                            <Input type="textarea" style="width: 70%;" v-model="batchReturnSubmitData.describe"></Input>
+                        </FormItem>
+                    </Col>
+                </Form>    
+            </Row>
+
+            <div slot="footer">
+                <Button type="text" size="large" @click="cancelBatchReturn('batchReturnSubmitData')">取消</Button>
+                <Button type="primary" size="large" @click="confirmBatchReturn('batchReturnSubmitData')" :disabled="isBatchReturnSubmit">确定</Button>
+            </div>
+        </Modal>
+        <!-- 借出信息登记 -->
+        <Modal
+            v-model="isBorrow"
+            title="借出信息登记"
+        >
+            <Form ref="borrow" :model="borrow" :rules="borrowRules" :label-width="140">
+                <FormItem label="借用人：" prop="staffId">
+                    <Select v-model="borrow.staffId" style="width: 70%">
+                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>                   
+                </FormItem>
+                <FormItem label="借用时间：" prop="borrowTime">
+                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="borrow.borrowTime"></DatePicker>                  
+                </FormItem>  
+                <FormItem label="借用备注：">
+                    <Input type="textarea" v-model="borrow.Describe" style="width: 70%"></Input>
+                </FormItem>  
+            </Form>
+            <div slot="footer">
+                <Button type="default">取消</Button>
+                <Button type="primary" @click="confirmBorrow('borrow')" :disabled="confirmBorrowBtn">确定</Button>
+            </div>
+        </Modal>
+        <!-- 归还信息登记 -->
+        <Modal
+            v-model="isReturn"
+            title="归还信息登记"
+        >
+            <Form ref="toolReturn" :model="toolReturn" :rules="returnRules" :label-width="140">
+                <FormItem label="归还人：" prop="staffId">
+                    <Select v-model="toolReturn.staffId" style="width: 70%">
+                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>                   
+                </FormItem>
+                <FormItem label="归还时间：" prop="returnTime">
+                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="toolReturn.returnTime"></DatePicker>                  
+                </FormItem> 
+                <FormItem label="使用状态：" prop="usingStatus">
+                    <Select v-model="toolReturn.usingStatus" style="width: 70%">
+                        <Option v-for="item in returnUsingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
+                    </Select>
+                </FormItem> 
+                <FormItem label="借用备注：">
+                    <Input type="textarea" v-model="toolReturn.Describe" style="width: 70%"></Input>
+                </FormItem> 
+            </Form>
+
+            <div slot="footer">
+                <Button type="default">取消</Button>
+                <Button type="primary" @click="confirmReturn('toolReturn')" :disabled="confirmReturnBtn">确定</Button>
+            </div>
+        </Modal>
+        <!-- 历史记录查询 -->
+        <Modal
+            v-model="isSHowHistory"
+            title="历史记录"
+            width = '850'
+        >
+            <Row class="queryCondition">
+                <Col span="8">
+                    借用人：
+                    <Select style="width: 60%;" v-model="historyConditions.borrowerId">
+                        <Option key="0" value=null>所有</Option>
+                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    借用开始时间：
+                    <DatePicker type="datetime"  placeholder="请输入借用开始时间" style="width: 60%" v-model="historyConditions.borrowStartTime"></DatePicker>
+                </Col>
+                <Col span="8">
+                    借用结束时间：
+                    <DatePicker type="datetime"  placeholder="借用结束时间" style="width: 60%" v-model="historyConditions.borrowEndTime"></DatePicker>
+
+                </Col>
+                <Col span="8">
+                    归还人：
+                    <Select v-model="historyConditions.returnId" style="width: 60%">
+                        <Option key="0" value=null>所有</Option>
+                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    归还开始时间：
+                    <DatePicker type="datetime"  placeholder="请输入归还开始时间" style="width: 60%" v-model="historyConditions.returnStartTime"></DatePicker>
+                </Col>
+                <Col span="8">
+                    归还结束时间：
+                    <DatePicker type="datetime"  placeholder="请输入借用归还时间" style="width: 60%" v-model="historyConditions.returnEndTime"></DatePicker>
+
+                </Col>
+            </Row>
+            <Table stripe border height="330"  :columns="historyColums"  :data="historyData"></Table> 
+
+            <Page :total="historyPage.pageTotal" :current="historyPage.pageNum" :page-size="historyPage.pageSize" show-total show-sizer
+                placement="top" @on-change="handlePageHistory" @on-page-size-change='handPageSizeHistory' show-elevator style="margin-top: 10px;text-align: right"></Page>
+        </Modal>
     </div>
-    <Page   :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-            :style='pageStyle'></Page>
-  </div>
 </template>
-
 <script>
-  import types from '../../../../../static/Enum.json'
-  import ToolLoan from '../../../../components/UM/OMM/ToolLoan'
-  import ToolReturn from '../../../../components/UM/OMM/ToolReturn'
-  import BatchLoan from '../../../../components/UM/OMM/BatchLoan'
-  import BatchReturn from '../../../../components/UM/OMM/BatchReturn'
-  import { TunnelService } from '../../../../services/tunnelService'
-  import { EquipmentService } from '../../../../services/equipmentService'
-
-  export default {
-    name: "query-tool",
-    data() {
-      return {
-        showOn: true,
-        equipments: [],
-        equipmentLoan: {       //要出借的单个设备信息
-          show: {state:false},
-          equipmentLoanInfo: [],
-        },
-        equipmentReturn: {    //要归还的单个设备信息
-          show: {state:false},
-          equipmentReturnInfo: [],
-        },
-        equipmentsLoan: {     //批量借
-          show: {state:false},
-          equipmentsLoanInfo: [],
-        },
-        equipmentsReturn: {     //批量还
-          show: {state:false},
-          equipmentsReturnInfo: [],
-        },
-        tunnels: [],
-        tunnelId: 1,
-        equipmentTypes: [],
-        condition: {
-          tunnel: {
-            name: '',
-          },
-          type: null,
-          status: null,
-          fuzzy: null,
-          startEquipmentTime: null,
-          endEquipmentTime: null
-        },
-        equipmentStatus: types.equipmentStatus,
-        pagingList: [],
-        page: {
-          pageNum: 1,
-          pageSize: 8,
-          pageTotal: 0,
-        },
-        pageStyle: {
-          position: 'absolute',
-          bottom: '20px',
-          right: '15px'
-        },
-      }
-    },
-    watch: {
-      '$route': function () {
-        //2. $route发生变化时再次赋值planId
-        this.tunnelId = this.$route.params.id;
-        this.tunnels.forEach(a => {
-          if (a.id == this.tunnelId) {
-            this.showTable();
-          }
-        });
-      }
+import { EquipmentService } from "../../../../services/equipmentService";
+import { TunnelService } from '../../../../services/tunnelService';
+export default {
+    data(){
+        return{
+            isShow: true,
+            toolsType:[],
+            toolsModel:[],
+            venders:[],
+            staffs: [],
+            //仪表工具使用状态
+            usingStatus: [
+                { key: 0, val: '损坏' },
+                { key: 1, val: '正常' }
+            ],
+            //库存状态
+            inventoryStatus: [
+                { key: 0, val: '出库' },
+                { key: 1, val: '在库' }
+            ],
+            toolsConditions: {
+                typeId: null,
+                InStorageStartTime: null,
+                InStorageEndTime: null,
+                modelId: null,
+                usingStatusId: null,
+                venderId: null,
+                ventoryStatusId: null
+            },
+            toolData: [],
+            pageStyle: {
+                position: "absolute",
+                bottom: "20px",
+                right: "15px"
+            },
+            page: {
+                pageTotal: 0,
+                pageNum: 1,
+                pageSize: 12
+            },
+            //批量借出
+            isBatchLend: false,
+            isBatchLendSubmit: false,
+            lendModalConditions: {
+                name: null,
+                typeId: null,
+                modelId: null,
+                venderId: null,
+                startTime: null,
+                endTime: null
+            },
+            batchLendPage: {
+                pageTotal: 0,
+                pageNum: 1,
+                pageSize: 6
+            },
+            batchLendColums: [
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },{
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                },{
+                    title: '备品名称',
+                    key: 'name',
+                    align: 'center'
+                },{
+                    title: '备品类别',
+                    key: 'typeName',
+                    align: 'center'
+                },{
+                    title: '备品型号',
+                    key: 'modelName',
+                    align: 'center'
+                },{
+                    title: '供应商',
+                    key: 'venderName',
+                    align: 'center'
+                },{
+                    title: '入库时间',
+                    key: 'inTime',
+                    align: 'center',
+                    width: 195
+                }
+            ],
+            batchLendData: [],
+            batchLendSubmitData: {
+                staffId: null,
+                borrowTime: null,
+                describe: null,
+                ids: null
+            },
+            ruleInline: {
+                staffId:[
+                    { type: 'number', required: true, message: '请选择借用人', trigger: 'change' }
+                ],
+                borrowTime: [
+                    { type: 'date', required: true, message: '请选择借用时间', trigger: 'change'}
+                ]
+            },
+            //批量归还
+            isBatchReturn: false,
+            isBatchReturnSubmit: false,
+            batchReturnColums:[
+                {
+                    type: 'selection',
+                    width: 60,
+                    align: 'center'
+                },{
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                },{
+                    title: '备品名称',
+                    key: 'name',
+                    align: 'center'
+                },{
+                    title: '备品类别',
+                    key: 'typeName',
+                    align: 'center'
+                },{
+                    title: '备品型号',
+                    key: 'modelName',
+                    align: 'center'
+                },{
+                    title: '供应商',
+                    key: 'venderName',
+                    align: 'center'
+                },{
+                    title: '入库时间',
+                    key: 'inTime',
+                    align: 'center',
+                    width: 195
+                },{
+                    title: '借用人',
+                    key: 'staffName',
+                    align: 'center',
+                },{
+                    title: '借用时间',
+                    key: 'borrowTime',
+                    align: 'center',
+                    width: 195
+                },{
+                    title: '借用备注',
+                    key: 'describe',
+                    align: 'center',
+                    width: 120,
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.describe!=null){
+                            if(param.row.describe.length>10){
+                                temp = param.row.describe.substr(0,10)+'...'
+                            }else{
+                                temp = param.row.describe
+                            }
+                        }
+                        return h('div',temp)
+                    }
+                }
+            ],
+            batchReturnData: [],
+            returnModalConditions: {
+                name: null,
+                typeId: null,
+                modelId: null,
+                venderId: null,
+                staffId: null,
+                startTime: null,
+                endTime: null,
+            },
+            returnPage: {
+                pageNum: 1,
+                pageSize: 6,
+                pageTotal: 0
+            },
+            returnUsingStatus: [
+                { key: '正常', val: 1 },
+                { key: '损坏', val: 0 }
+            ],
+            batchReturnSubmitData:{
+                ids: null,
+                staffId: null,
+                returnTime: null,
+                usingStatus: null,
+                describe: null
+            },
+            returnRuleInline: {
+                staffId: [
+                    { type: 'number', required: true, message: '请选择归还人', trigger: 'change' }
+                ],
+                returnTime: [
+                    { type: 'date', required: true, message: '请选择归还时间', trigger: 'change'}
+                ],
+                usingStatus: [
+                    { type: 'number', required: true, message: '请选择设备使用状态', trigger: 'change' }
+                ]
+            },
+            //单独借出
+            isBorrow: false,
+            confirmBorrowBtn: false,
+            isAloneBorrow: false,
+            borrow:{
+                staffId: null,
+                borrowTime: null,
+                Describe: null
+            },
+            borrowRules: {
+                staffId: [
+                    { type: 'number', required: true, message: '请选择借用人', trigger: 'change' }
+                ],
+                borrowTime: [
+                    { type: 'date', required: true, message: '请选择借出时间', trigger: 'change' }
+                ]
+            },
+            isBorrowId: null,
+            //单出归还
+            isReturn: false,
+            confirmReturnBtn: false,
+            isAloneReturn: false,
+            toolReturn: {
+                staffId: null,
+                returnTime: null,
+                usingStatus: null,
+                Describe: null
+            },
+            returnRules: {
+                staffId: [
+                    { type: 'number', required: true, message: '请选择归还人', trigger: 'change' }
+                ],
+                returnTime: [
+                    { type: 'date', required: true, message: '请选择归还时间', trigger: 'change' }
+                ],
+                usingStatus: [
+                    { type: 'number', required: true, message: '请选择仪表使用状态', trigger: 'change' }
+                ]
+            },
+            isReturnId: null,
+            //历史记录
+            isSHowHistory: false,
+            historyConditions: {
+                borrowerId: null,
+                borrowStartTime: null,
+                borrowEndTime: null,
+                returnId: null,
+                returnStartTime: null,
+                returnEndTime: null
+            },
+            historyColums: [
+                {
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    title: '借用人',
+                    key: 'staffName',
+                    align: 'center'
+                },
+                {
+                    title: '借出时间',
+                    key: 'borrowTime',
+                    align: 'center'
+                },
+                {
+                    title: '借出时备注',
+                    key: 'describe',
+                    align: 'center'
+                },
+                {
+                    title: '归还人',
+                    key: 'returnName',
+                    align: 'center'
+                },
+                {
+                    title: '归还时间',
+                    key: 'returnTime',
+                    align: 'center'
+                },
+                {
+                    title: '归还时备注',
+                    key: 'remark',
+                    align: 'center'
+                }
+            ],
+            historyData: [],
+            historyPage: {
+                pageNum: 1,
+                pageSize: 6,
+                pageTotal: 0
+            }
+        }
     },
     computed: {
-      params() {
-        let param = {
-          pageNum: this.page.pageNum,
-          pageSize: this.page.pageSize,
-          tunnelId: this.tunnelId,
-          type: this.condition.type,
-          status: this.condition.status,
-          startEquipmentTime: new Date(this.condition.startEquipmentTime).getTime(),
-          endEquipmentTime: new Date(this.condition.endEquipmentTime).getTime()
+        params(){
+            let param = {
+                name: this.toolsConditions.name,
+                typeId: this.toolsConditions.typeId,
+                modelId: this.toolsConditions.modelId,
+                venderId: this.toolsConditions.venderId,
+                useStatus: this.toolsConditions.usingStatusId,
+                status: this.toolsConditions.ventoryStatusId,
+                startTime: this.toolsConditions.InStorageStartTime,
+                endTime: this.toolsConditions.InStorageEndTime,
+                pageSize: this.page.pageSize,
+                pageNum: this.page.pageNum
+            }
+            return Object.assign({}, param);
+        },
+        batchLendParams(){
+            let param = {
+                name: this.lendModalConditions.name,
+                typeId: this.lendModalConditions.typeId,
+                modelId: this.lendModalConditions.modelId,
+                startTime: this.lendModalConditions.startTime,
+                endTime: this.lendModalConditions.endTime,
+                venderId: this.lendModalConditions.venderId,
+                useStatus: 1,
+                status: true,
+                pageNum: this.batchLendPage.pageNum,
+                pageSize: this.batchLendPage.pageSize
+            }
+            return Object.assign({}, param)
+        },
+        batchReturnParams(){
+            let param = {
+                name: this.returnModalConditions.name,
+                modelId: this.returnModalConditions.modelId,
+                typeId: this.returnModalConditions.typeId,
+                venderId: this.returnModalConditions.venderId,
+                useStatus: 1,
+                status: false,
+                staffId: this.returnModalConditions.staffId,
+                startTime: this.returnModalConditions.startTime,
+                endTime: this.returnModalConditions.endTime,
+                pageSize: this.returnPage.pageSize,
+                pageNum: this.returnPage.pageNum
+            }
+            return Object.assign({},param)
         }
-        return Object.assign({}, param);
-      },
     },
-    mounted() {
-      //从数据库读取select的option选项
-      let _this = this
-      TunnelService.getTunnels().then(
-          (result)=>{
-              _this.tunnels = result;
-              _this.selectedTunnel = _this.tunnels.length > 0 ? _this.tunnels[0] : {};
-              _this.selectedTunnelName = _this.selectedTunnel.name;
-          },
-          (error)=>{
-              _this.Log.info(error)
-      })
-
-      this.equipmentTypes = types.equipmentType;
-      this.showTable()
-    },
-    components:{
-        ToolLoan,ToolReturn,BatchLoan,BatchReturn
+    mounted(){
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.toolsType = res
+            },
+            error => {
+                this.Log.info(error);
+            },
+        );
+        //获取model
+        EquipmentService.getEquipmentModels().then(
+            res=>{
+                this.toolsModel = res
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
+        //获取供应商
+        EquipmentService.getVenders().then(
+            res=>{
+                this.venders = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
+        //获取借用人列表
+        this.axios.get('staffs').then(res=>{
+            let{ code,data } = res.data
+            if(code==200){
+                this.staffs = data
+            }
+        })
+        this.showTable()
     },
     methods: {
-      // type 1:查看， 2：编辑
-      goToMoudle: function (index, type) {
-        this.$router.push({
-          name: 'UMDetailEquipment',
-          params: {
-            id: this.equipments[index].id,
-            type: type,
-          }
-        });
-      },
-      showTable() {
-        let _this = this
-        EquipmentService.equipmentDatagird(this.params).then(
-          (result)=>{
-            for (let index in result.list) {
-              result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd");
-              if (result.list[index].imgUrl != null) {
-                 result.list[index].imgUrl =_this.ApiUrl  + result.list[index].imgUrl.replace(/\\/g, "/")
-              }
+        add(path){
+            this.$router.push(path)
+        },
+        //首页查询
+        showTable(){
+            EquipmentService.queryTools(this.params).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                        if(result.pagedList[index].status == false){
+                            this.isAloneReturn = true
+                            this.isAloneBorrow = false
+                            this.isColor = 'red'
+                        }else{
+                            this.isAloneBorrow = true
+                            this.isAloneReturn = false
+                            this.isColor = 'green'
+                        }
+                    }
+                    this.toolData = result.pagedList
+                    this.page.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        //首页分页                 
+        handlePage(value) {
+            this.page.pageNum = value;
+            this.showTable();
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value;
+            this.showTable();
+        },
+        //批量借出
+        batchLend(){
+            this.isBatchLend = true
+            EquipmentService.queryTools(this.batchLendParams).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    this.batchLendData = result.pagedList
+                    this.batchLendPage.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        handlePageBatchLend(value){
+            this.batchLendPage.pageNum = value
+            this.batchLend()
+        },
+        handPageSizeBatchLend(value){
+            this.batchLendPage.pageSize = value
+            this.batchLend()
+        },
+        //获取ids
+        checkTable(selection){
+            this.selection = selection;
+            var str = ''
+            this.selection.forEach(element=>{
+                str += element.id+","
+            })
+            this.batchLendSubmitData.ids = str.substr(0,str.length-1)
+            console.log(this.batchLendSubmitData.ids)
+        },
+        //提交
+        confirmBatchLend(name){
+            this.isBatchLendSubmit = true
+            setTimeout(()=>{
+                this.isBatchLendSubmit = false
+                this.$refs[name].validate((valid)=>{
+                    if(valid){
+                        EquipmentService.batchLend(this.batchLendSubmitData.ids,this.batchLendSubmitData).then(
+                            result => {
+                                this.isBatchLend = false
+                                this.showTable()
+                                this.$refs[name].resetFields()
+                                this.batchLendSubmitData.describe = null
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                    }else{
+                        this.$Message.error("请填写正确的批量借出信息")
+                    }
+                })
+            },2000)
+        },
+        //取消
+        cancelBatchLend(name){
+            this.$refs[name].resetFields()
+            this.isBatchLend = false
+        },
+        //批量归还
+        batchReturn(){
+            this.isBatchReturn = true;
+            EquipmentService.queryHisRecord(this.batchReturnParams).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                        result.pagedList[index].borrowTime = new Date(result.pagedList[index].borrowTime).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    this.batchReturnData = result.pagedList
+                    this.returnPage.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        handlePageBatchReturn(value){
+            this.returnPage.pageNum = value
+            this.batchReturn()
+        },
+        handlePageSizeBatchReturn(value){
+            this.returnPage.pageSize = value
+            this.batchReturn()
+        },
+        //获取ids
+        checkReturnTable(selection){
+            this.selection = selection;
+            var str = ''
+            this.selection.forEach(element=>{
+                str += element.id+","
+            })
+            this.batchReturnSubmitData.ids = str.substr(0,str.length-1)
+            console.log(this.batchReturnSubmitData.ids)
+        },
+        //确认
+        confirmBatchReturn(name){
+            this.isBatchReturnSubmit = true
+            setTimeout(()=>{
+                this.isBatchReturnSubmit = false
+                this.$refs[name].validate((valid)=>{
+                    if(valid){
+                        let batchReturnParams={
+                            ids: this.batchReturnSubmitData.ids,
+                            returnId: this.batchReturnSubmitData.staffId,
+                            returnTime: this.batchReturnSubmitData.returnTime,
+                            useStatus: this.batchReturnSubmitData.usingStatus,
+                            remark: this.batchReturnSubmitData.describe
+                        }
+                        EquipmentService.batchReturn(this.batchReturnSubmitData.ids,this.batchReturnSubmitData.usingStatus,batchReturnParams,).then(
+                            result => {
+                                this.isBatchReturn = false
+                                this.showTable()
+                                this.$refs[name].resetFields()
+                                this.batchReturnSubmitData.describe = null
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                    }else{
+                       this.$Message.error("请填写正确的批量归还信息") 
+                    }
+                })
+            },2000)
+        },
+        cancelBatchReturn(name){
+            this.$refs[name].resetFields()
+            this.isBatchReturn = false
+        },
+        //单独借出
+        borrowSubmit(id){
+            this.isBorrow = true
+            this.isBorrowId = id
+        },
+        confirmBorrow(name){
+            this.confirmBorrowBtn = true
+            setTimeout(()=>{
+                this.confirmBorrowBtn = false
+                this.$refs[name].validate((valid) => {
+                    if(valid){
+                        let lendParams={
+                            ids: this.isBorrowId,
+                            staffId: this.borrow.staffId,
+                            borrowTime: this.borrow.borrowTime,
+                            Describe: this.borrow.describe
+                        }
+                        EquipmentService.batchLend(this.isBorrowId,lendParams).then(
+                            result => {
+                                this.isBorrow = false
+                                this.showTable()
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                        this.$refs[name].resetFields()
+                        this.borrow.describe = null
+                    }else{
+                        this.$Message.error("请填写正确的借出信息")
+                    }
+                })
+            },2000)
+        },
+        //单出归还
+        returnSubmit(id){
+            this.isReturn = true
+            this.isReturnId = id
+        },
+        confirmReturn(name){
+            this.confirmReturnBtn = true
+            setTimeout(()=>{
+                this.confirmReturnBtn = false
+                this.$refs[name].validate((valid) => {
+                    if(valid){
+                        let returnParams={
+                            ids: this.isReturnId,
+                            returnId: this.toolReturn.staffId,
+                            returnTime: this.toolReturn.returnTime,
+                            useStatus: this.toolReturn.usingStatus,
+                            remark: this.toolReturn.describe
+                        }
+                        EquipmentService.batchReturn(this.isReturnId,this.toolReturn.usingStatus,returnParams).then(
+                            result => {
+                                this.isReturn = false
+                                this.showTable()
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                    }else{
+                        this.$Message.error("请填写正确的归还信息")
+                    }
+                })
+            },2000)
+        },
+        //历史查询
+        handlePageHistory(value){
+            this.historyPage.pageNum = value
+        },
+        handPageSizeHistory(value){
+            this.historyPage.pageSize = value
+        },
+        showHistory(id){
+            this.isSHowHistory = true
+            let hisParams = {
+                instrumentId: id,
+                staffId: this.historyConditions.borrowerId,
+                startTime: this.historyConditions.borrowStartTime,
+                endTime: this.historyConditions.endTime,
+                returnId: this.historyConditions.returnId,
+                retStaTime: this.historyConditions.returnStartTime,
+                retEndTime: this.historyConditions.returnEndTime
             }
-            _this.equipments = result.list;
-            _this.equipmentsLoan.equipmentsLoanInfo = result.list;
-            _this.page.pageTotal = result.total;
-          },
-          (error)=>{
-            _this.Log.info(error)
-          })
-      },
-      handlePage(value) {
-        this.page.pageNum = value
-        this.showTable()
-      },
-      handlePageSize(value) {
-        this.page.pageSize = value;
-        this.showTable()
-      },
-      show(index) {
-        this.equipmentLoan.show.state =! this.equipmentLoan.show.state;
-        this.OutStorageSimple.show.state=!this.OutStorageSimple.show.state;
-        let _this = this
-        EquipmentService.equipmentDatagird(this.params).then(
-          (result)=>{
-            _this.equipmentLoan.equipmentLoanInfo = result.list[index];
-          },
-          (error)=>{
-            _this.Log.info(error)
-          })
-        // this.axios.post("/equipments/datagrid",(this.params)).then(result => {
-        //   let {code,data} = result.data;
-        //   if(code == 200){
-        //     this.equipmentLoan.equipmentLoanInfo = data.list[index];
-        //   }
-        // });
-        // console.log(index)
-        // this.goToMoudle(index, types.pageType.Read);
-      },
-      edit(index) {
-        this.equipmentReturn.show.state =! this.equipmentReturn.show.state;
-        let _this = this
-        EquipmentService.equipmentDatagird(this.params).then(
-          (result)=>{
-            _this.equipmentReturn.equipmentReturnInfo = result.list[index];
-          },
-          (error)=>{
-            _this.Log.info(error)
-          })
-        // this.axios.post("/equipments/datagrid",(this.params)).then(result => {
-        //   let {code,data} = result.data;
-        //   if(code == 200){
-        //     this.equipmentReturn.equipmentReturnInfo = data.list[index];
-        //   }
-        // });
-        // this.goToMoudle(index, types.pageType.Edit);
-      },
-      add(path) {
-        this.$router.push(path);
-      },
-      pickUp() {
-        this.showOn = !this.showOn;
-      },
-      batchLoanTools(){
-        this.equipmentsLoan.show.state =!this.equipmentsLoan.show.state;
-      },
-      batchReturnTools(){
-        this.equipmentsReturn.show.state =!this.equipmentsReturn.show.state;
-      }
+            EquipmentService.queryHisRecord(hisParams).then(
+                result => {
+                    this.historyData = result.pagedList
+                    this.historyPage.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        }
     }
-  }
+}
 </script>
 <style scoped>
-  .queryEquipment {
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 60px;
-  }
-
-  .top {
-    height: 60px;
-    line-height: 60px;
-    background: #fff;
-    padding-left: 10px;
-  }
-
-  .bottom {
-    background: #fff;
-    margin-top: 10px;
-    padding: 10px;
-  }
-
-  .planDec {
-    margin-right: 5px;
-  }
-
-  .equipmentList {
-    font-size: 17px;
-    font-weight: 700;
-  }
-
-  .addList {
-    border: 1px dashed #dfdfdf;
-    text-align: center;
+.word64{
+    letter-spacing: 0.667em;
+    margin-right: -0.667em;
+}
+.word63{
+    letter-spacing: 1.5em;
+    margin-right: -1.5em;
+}
+.queryConditions{
     line-height: 40px;
-    color: #8b8b8b;
-    margin-top: 20px;
-    border-radius: 10px;
-    background: #fff;
-    z-index: 10001;
-  }
-
-  /*new*/
-  .equipentTitle {
-    color: #fff;
-    font-size: 20px;
-    text-align: center;
+    background: #ffffff;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+.toolBox{
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background: rgba(103, 116, 153, 0.18);
+    color: #3a4646;
+}
+.toolTitle{
     line-height: 50px;
-  }
-
-  .imgBox {
     text-align: center;
-  }
-
-  .table li {
-    list-style: none;
-    width: 80%;
-    margin: 10px auto;
-  }
-
-  .backGoundBox {
-    position: relative;
-    height: 70px;
-    width: 100%;
-  }
-
-  .topBox {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .imgBox img {
-    height: 40px;
-    width: 40px;
-    border-radius: 40px;
-  }
-
-  .detailsBox {
-    border: 1px solid #ebe8e8;
-    PADDING-TOP: 20px;
-    background: #fff;
-  }
-
-  .detailsBox p {
+    background: rgba(103, 116, 153, 0.28);
+}
+.toolInfo{
+    width: 90%;
+    margin: 0 auto;
+}
+.toolInfo p{
     line-height: 35px;
-    padding-left: 20px;
-  }
-
-  .operationSee, .operationEdit, .operationDel {
+}
+.toolBtn{
+    line-height: 45px;
+}
+.toolBtn p{
+    display: inline-block;
+    font-size: 22px;
+    font-weight: 600;
+    color: #357aa1;
+}
+.toolBtn button{
+    display: inline-block;
+    float: right;
+    margin-right: 5px;
+}
+.operations{
+    background: #c0c6d6;
+}
+.operation{
+    display: inline-block;
+    width: 32%;
+    line-height: 50px;
     text-align: center;
-    background: #fff;
-    padding: 5px 0;
-    border-bottom: 1px solid #ebe8e8;
-  }
-
-  .operationDel {
-    border-right: 1px solid #ebe8e8;
-  }
-
-  .operationSee {
-    border-left: 1px solid #ebe8e8;
-  }
-
-  .operationSee p, .operationEdit p, .operationDel p {
     cursor: pointer;
-  }
+    font-size: 14px;
+}
+.operation:hover{
+    color: #357aa1;
+    font-size: 15px;
+}
+.purpose{
+    display: inline-block;
+    vertical-align: top;
+}
+.queryConditions{
+    line-height: 35px;
+}
+/*在库与否*/
+.trueStatus{
+    color: green
+}
+.falseStatus{
+    color: red;
+}
 </style>
-
-

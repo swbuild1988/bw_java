@@ -28,10 +28,9 @@ export default {
             option: {
                 backgroundColor: "#eeeeee",
                 title: {
-                    text: "Radar",
                     x: "right",
                     textStyle: {
-                        color: "#000"
+                        // color: "#000"
                     }
                 },
                 tooltip: {
@@ -57,15 +56,49 @@ export default {
                         { name: "indicator4", max: 100 },
                         { name: "indicator5", max: 100 },
                         { name: "indicator6", max: 100 }
-                    ]
+                    ],
+                  axisLine: {
+                    lineStyle: {
+                      color: '#449cff'
+                    }
+                  },
+                  splitLine: {
+                    lineStyle: {
+                      color: '#449cff'
+                    }
+                  },
                 },
                 series: [
                     {
                         type: "radar",
+                      areaStyle: {
+                        normal: {
+                          color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                              offset: 0,
+                              color: '#44ff86'
+                            }, {
+                              offset: 1,
+                              color: '#0060ff'
+                            }],
+                            globalCoord: false
+                          }
+                        }
+                      },
+                      lineStyle: {
+                        normal: {
+                          color: '#00ffff',
+                          width:2
+                        }
+                      },
                         data: [
                             {
                                 value: [],
-                                name: this.title.text,
                                 label: {
                                     normal: {
                                         show: true
@@ -74,25 +107,6 @@ export default {
                                         show: true
                                     }
                                 },
-                                areaStyle: {
-                                    normal: {
-                                        opacity: 0.9,
-                                        color: {
-                                            // 完成的圆环的颜色
-                                            colorStops: [
-                                                {
-                                                    offset: 0,
-                                                    color:
-                                                        "rgba(160,255,238,0.3)" // 0% 处的颜色
-                                                },
-                                                {
-                                                    offset: 1,
-                                                    color: "rgba(44,255,204,1)" // 100% 处的颜色
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
                             }
                         ]
                     }
@@ -106,7 +120,7 @@ export default {
     },
     methods: {
         init() {
-            this.drawRadar();
+            this.drawRadar()
             this.fetchData(this.requestUrl);
         },
 
@@ -126,41 +140,24 @@ export default {
 
         fetchData(requestUrl) {
             let _this = this;
-
             _this.axios.get(requestUrl).then(result => {
                 let { code, data } = result.data;
                 if (code == 200) {
-                    // var tmpMax = 0;
-                    // let newData = [
-                    //     {
-                    //         name: this.title.text,
-                    //         value: []
-                    //     }
-                    // ];
-                    // let tmpIndicator = [];
+                    var tmpMax = 0;
+                    let newData = [{value: []}];
+                    for (const iterator of data) {
+                        newData[0].value.push(iterator.val.toFixed(2));
+                        if (iterator.val > tmpMax) tmpMax = iterator.val;
+                    }
+                  let tmpIndicator = [];
+                    for (const iterator of data) {
+                        tmpIndicator.push({
+                            name: iterator.key,
+                            // 最大值大个10%
+                            max: tmpMax * 1.1
+                        });
+                    }
 
-                    // for (const iterator of data) {
-                    //     newData[0].value.push(iterator.val);
-                    //     if (iterator.val > tmpMax) tmpMax = iterator.val;
-                    // }
-                    // for (const iterator of data) {
-                    //     tmpIndicator.push({
-                    //         name: iterator.key,
-                    //         // 最大值大个10%
-                    //         max: tmpMax * 1.1
-                    //     });
-                    // }
-
-                    // _this.option.title.text = _this.title.text;
-                    // _this.option.title.textStyle = {
-                    //     fontWeight: "normal",
-                    //     color: _this.title.color,
-                    //     fontSize: "20"
-                    // };
-                    // _this.option.legend = {
-                    //     show: false,
-                    //     data: [this.title.text]
-                    // };
                     _this.option.radar.indicator = tmpIndicator;
                     _this.option.series[0].data = newData;
 
@@ -171,9 +168,9 @@ export default {
         //定时刷新数据
         refreshData() {
             let _this = this;
-            setInterval(() => {
-                _this.fetchData(_this.requestUrl);
-            }, _this.intervalTime);
+            // setInterval(() => {
+            //     _this.fetchData(_this.requestUrl);
+            // }, _this.intervalTime);
         }
     }
 };

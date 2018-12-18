@@ -41,6 +41,7 @@ import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
+import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
@@ -68,6 +69,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 * @author shaosen
 	 * @Date 2018年10月10日
 	 */
+	@Deprecated
 	@RequestMapping(value="emplans/deploy/{value}",method=RequestMethod.GET)
 	public JSONObject deploy(@PathVariable Integer value) {
 		
@@ -77,12 +79,31 @@ public class EmPlanController extends BaseController<EmPlan>{
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
+	
+	/**批量部署 
+	 * @param value "4001,4002,4003"
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年11月29日
+	 */
+	@RequestMapping(value="emplans/deploy/batch/{value}",method=RequestMethod.GET)
+	public JSONObject deploy(@PathVariable String value) {
+		
+		String[] arr = value.split(",");
+		for (String str : arr) {
+			ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(DataTypeUtil.toInteger(str));
+			activitiService.deploy((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()), 
+					(String)PropertiesUtil.getValue(processTypeEnum.getPngPath()),processTypeEnum.getName());
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
 
 	
-	/**启动预案 
+	/**启动预案 （接收到告警之后，用户根据实际情况，选择位置和预案类型，手动触发预案）
 	 * @param sectionId 
 	 * @param processValue
-	 * @return    {"processInstanceId":"12501","process":[{"node":"开启声光报警","time":1542164713911,"id":1,"status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"调用摄像头","time":1542164713911,"id":1,"status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"值班人员确认","time":1542164713911,"id":1,"status":2,"desc":"启动或打开了ID为[1]的设备"}],"processName":"消防预案","processKey":"FirePlanProcess","range":50.0,"objectId":1}
+	 * @return {"processInstanceId":"2517","process":[{"node":"开启声光报警","time":1543474051253,"id":"1","status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"调用摄像头","time":1543474051253,"id":"1","status":1,"desc":"启动或打开了ID为[1]的设备"},{"node":"值班人员确认","time":1543474051253,"id":"1","status":2,"desc":"启动或打开了ID为[1]的设备"}],"processName":"消防预案","processKey":"FirePlanProcess","range":50.0,"nodeList":[{"finishName":"自动","finishValue":1,"targetName":"类型","statusStr":"待完成","statusVal":3,"stepName":"开启声光报警","actionValue":"1","targetValue":"41","actionName":"联动输出类型"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"调用摄像头","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"手动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"值班人员确认","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开风机","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开风阀","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"打开百叶","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"启动干粉灭火","actionValue":"1","targetValue":"1","actionName":"提示信息类"},{"finishName":"自动","finishValue":1,"targetName":"指定对象","statusStr":"待完成","statusVal":3,"stepName":"通知相关单位","actionValue":"1","targetValue":"1","actionName":"提示信息类"}],"objectId":1}
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
@@ -185,7 +206,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 * @Date 2018年10月17日
 	 */
 	@RequestMapping(value = "emplans",method = RequestMethod.PUT)
-	public JSONObject update(EmPlan record){
+	public JSONObject update(@RequestBody EmPlan record){
 		emPlanService.update(record);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}

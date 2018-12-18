@@ -18,43 +18,27 @@ export default {
         requestUrl: {
             type: String
         },
-        titleText: {
-            type: String
-        },
-        legendData: {
-            type: Array
+        parameters: {
+            type: Object
         }
     },
     data() {
         return{
             myChart: {},
             option: {
-                backgroundColor: '#161139',
-                title: {
-                    text: this.titleText,
-                    textStyle: {
-                        color: '#ccc'
-                    }
-                },
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'shadow',
                         label: {
                             show: true,
-                            backgroundColor: '#333'
+                            backgroundColor: '#161139'
                         }
-                    }
-                },
-                legend: {
-                    data: this.legendData,
-                    textStyle: {
-                        color: '#ccc'
                     }
                 },
                 grid: {
                     left: "3%",
-                    right: "4%",
+                    right: "3%",
                     bottom: "3%",
                     containLabel: true
                 },
@@ -72,7 +56,7 @@ export default {
                         axisLabel:{
                             fontsize:2,
                             align:'center',
-                            color:'rgba(255,255,255,0.3)'
+                            color:'#161139'
                         }
                     }
                 ],
@@ -81,7 +65,7 @@ export default {
                     splitLine: {
                         show: true,
                         lineStyle:{
-                            color:'rgba(255,255,255,0.2)'
+                            color:'#161139'
                         }
                     },
                     axisLine:{
@@ -90,7 +74,7 @@ export default {
                     axisLabel:{                    
                         fontWeight:10,
                         fontsize:5,
-                        color:'rgba(255,255,255,0.3)'
+                        color:'#161139'
                     }
                         
                 }],
@@ -110,22 +94,25 @@ export default {
 
         drawRadar() {
             let _this = this;
+            window.addEventListener("resize", _this.myChart.resize);
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
             );
             // 加载默认参数
             _this.myChart.setOption(_this.option);
-            window.addEventListener("resize", _this.myChart.resize);
+            if(_this.parameters.option){
+                _this.myChart.setOption(_this.parameters.option)
+            }
         },
 
         fetchData(requestUrl) {
-            if(requestUrl=='getInventory'){
+            if(requestUrl=='spares/outs/typelala'){
                 var xData = ['温度计','万能表','门禁卡','信号发射器']
                 var yData1 = ['-10','-20','-8','-5','-1']
                 var yData2 = ['20','21','2','5','9']
                 let series = [
                     {
-                        name: this.option.legend.data[0],
+                        name: this.parameters.option.legend.data[0],
                         type: 'bar',
                         stack: '总量',
                         barWidth: 10,
@@ -143,7 +130,7 @@ export default {
                         },
                         data: yData1
                     },{
-                        name: this.option.legend.data[1],
+                        name: this.parameters.option.legend.data[1],
                         type: 'bar',
                         stack: '总量',
                         barWidth: 10,

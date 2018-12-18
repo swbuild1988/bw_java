@@ -18,15 +18,19 @@
         </Col>
       </Row>
     </div>
-        <diV class="gis" id="GISbox">
+    <Row>
+      <Col span="18" style="padding-left: 10px;padding-right: 10px">
+        <div class="gis" id="GISbox" :style="{height:curHeight+'px'}">
           <!-- <sm-viewer :id="mapId" ref="smViewer">
           </sm-viewer> -->
           <TestSmViewer ref="smViewer"></TestSmViewer>
           <modal v-bind="modelProp"></modal>
-        </diV>
+        </div>
+      </Col>
+      <Col span="6" style="padding-left: 10px;padding-right: 10px;">
         <!--切换区段时显示的信息-->
-        <div class="details" :style="{display:showSection}">
-          <div class="tunnelsInfo">
+        <div class="details" :style="{display:showSection,height:curHeight+'px'}">
+          <div class="tunnelsInfo" style="height: calc(30vh - 70px)">
             <div class="title">
               <h3>{{curName+curSotre.name+"概况"}}</h3>
             </div>
@@ -40,8 +44,8 @@
             </div>
           </div>
         </div>
-        <div class="details" v-if="showSection==='none'">
-          <div class="tunnelsInfo">
+        <div class="details" v-if="showSection==='none'" :style="{height:curHeight+'px'}">
+          <div class="tunnelsInfo"style="height: calc(30vh - 70px)">
             <div>
               <h2>
                 {{curName}}
@@ -70,7 +74,7 @@
             </div>
           </div>
           <!-- 根据要监测类型选项切换的模块 -->
-          <div style="padding: 1%; height:51vh; overflow-y: auto;" >
+          <div style="padding: 1%;height:calc(55vh - 40px);  overflow-y: auto;" >
             <div>
               <!--安防-->
               <div class="Security">
@@ -97,6 +101,8 @@
             </div>
           </div>
         </div>
+      </Col>
+    </Row>
   </div>
 </template>
 <script>
@@ -108,15 +114,15 @@
   import { TunnelService } from '../../../../services/tunnelService'
   import { EnumsService } from '../../../../services/enumsService'
   import { MonitorDataService } from '../../../../services/monitorDataService'
-  // import {
-  //   setViewAngle,
-  //   bubble,
-  //   addLabel,
-  //   getSection,
-  //   doSqlQuery,
-  //   labelSqlCompleted,
-  //   processFailed
-  // } from "../../../../scripts/commonFun.js";
+  import {
+    setViewAngle,
+    bubble,
+    addLabel,
+    getSection,
+    doSqlQuery,
+    labelSqlCompleted,
+    processFailed
+  } from "../../../../scripts/commonFun.js";
   import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 
@@ -124,6 +130,7 @@
     name:"list-tunnel-safety",
     data() {
       return {
+        curHeight:450,
         checkAll: true,
         indeterminate: false,
         Obj: [],
@@ -190,22 +197,6 @@
         }
       };
     },
-    beforeRouteLeave (to, from, next) {
-      if(to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控详情' || to.name == '管廊环境监控列表'
-        || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == 'UMDetailEquipment' 
-        || from.name == '虚拟巡检' || from.name == '人员定位详情' || from.name == '管廊安防监控详情' || from.name == '管廊安防监控列表'
-        || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'){
-          from.meta.keepAlive = true
-          to.meta.keepAlive = true
-          this.$destroy()
-          next()
-      }else{
-        from.meta.keepAlive = false
-        to.meta.keepAlive = false
-        this.$destroy()
-        next()
-      }
-    },
     watch: {
       $route: function () {
         // $route发生变化时再次赋值
@@ -227,9 +218,27 @@
       // SmViewer
       TestSmViewer
     },
+    beforeRouteLeave(to,from,next){
+        if(to.name == 'UMPatrolHomePage' || to.name == '管廊安防监控详情' || to.name == '虚拟巡检' || to.name == '人员定位详情'
+            || to.name == '管廊环境监控列表' || to.name == '设备管理主页'
+            || from.name == '人员定位详情' || from.name == '虚拟巡检' || from.name == '设备管理主页' || from.name == 'UMPatrolHomePage'
+            || from.name == '管廊安防监控详情' || from.name == '管廊环境监控列表'){
+            from.meta.keepAlive = true;
+            to.meta.keepAlive = true
+            this.$destroy()
+            next()
+        }else{
+            from.meta.keepAlive = false
+            to.meta.keepAlive = false
+            this.$destroy()
+            next()
+        }
+    },
     mounted() {
       this.fentchData();
       this.setCircleSize();
+      // 设置表格高度
+      this.curHeight = window.innerHeight*0.85-60;//将85vh转为数值
       this.setGIS()
     },
     methods: {
@@ -470,7 +479,6 @@
 
       //获取监测仓具体区段的监测数据
       getSectionsMonitorData() {
-     {
           let _this = this
           MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
             (result)=>{
@@ -513,7 +521,6 @@
           //       });
           //     }
           //   });
-        }
       },
       //总开关控制
       allControl(value) {
@@ -539,7 +546,7 @@
                 .then(res => {
                   this.Log.info("查找成功", res);
                   if (res.length > 0) {
-                    this.$refs.smViewer1.LookAt1(res[0], 50, -10, 5);
+                    this.$refs.smViewer.LookAt1(res[0], 50, -10, 5);
                   }
                 })
                 .then(res => {
@@ -626,21 +633,23 @@
         this.getObjDetialData();
       },
       setGIS() {
-          var gis = document.getElementById("newID");
-          gis.style.display = "block";
-          gis.style.position = 'absolute';
-          gis.style.top = '0px';
-          gis.style.height = '100%';
-          gis.style.width = '100%'    
-          document.body.removeChild(gis)
-          document.getElementById("GISbox").appendChild(gis)
-      },
-      destory3D(){
-          var gis = document.getElementById("newID");
-          gis.style.display = "none";
-          document.getElementById("GISbox").removeChild(gis)
-          document.body.appendChild(gis)
-      }
+            var gis = document.getElementById("newID");
+            gis.style.display = "block";
+            gis.style.position = 'absolute';
+            gis.style.top = '0px';
+            gis.style.height = '100%';
+            gis.style.width = '100%'
+            document.body.removeChild(gis)
+            document.getElementById("GISbox").appendChild(gis)
+            // 加载视角
+            this.$refs.smViewer.setViewAngAngle();
+        },
+        destory3D(){
+            var gis = document.getElementById("newID");
+            gis.style.display = "none";
+            document.getElementById("GISbox").removeChild(gis)
+            document.body.appendChild(gis)
+        }
     },
     beforeDestroy(){
       this.destory3D()
@@ -683,21 +692,19 @@
   .gis,
   .details {
     display: inline-block;
-    margin-left: 10px;
     border: 1px solid #b3b0b0;
-    height: 79vh;
     vertical-align: top;
+    width: 100%;
   }
 
   .gis {
     position: relative;
-    width: 59vw;
   }
 
   .details {
-    border: 1px solid #b3b0b0;
+    position: relative;
+    float: right;
     overflow-y: auto;
-    width: 24.3vw;
   }
 
   .Section #pageBox {

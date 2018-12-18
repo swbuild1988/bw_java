@@ -13,11 +13,11 @@ public class DataTypeUtil {
     }
 
     public static int toInt(Object o, int defaultValue){
-        return o == null ? defaultValue : (int)o;
+        return o == null ? defaultValue : toInteger(toString(o)).intValue();
     }
 
     public static Integer toInteger(Object o) {
-    	return o == null ? null : (int)o;
+    	return o == null ? null : toInteger(toString(o));
     }
     
     

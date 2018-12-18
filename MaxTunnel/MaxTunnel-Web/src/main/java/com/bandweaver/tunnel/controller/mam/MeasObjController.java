@@ -74,7 +74,6 @@ public class MeasObjController {
      * @param   tunnelId 所在管廊
      * @param   storeId 所在管仓
      * @param   areaId 所在区域
-     * @param   datatypeId
      * @param   objtypeId
      * @param   actived
      * @param   description 描述
@@ -115,6 +114,7 @@ public class MeasObjController {
      */
     @RequestMapping(value = "measobjs/batch", method = RequestMethod.POST)
     public JSONObject addObjBatch(@RequestBody List<MeasObj> list) {
+        LogUtil.info(list);
         for (MeasObj obj : list) {
             measObjModuleCenter.insertMeasObj(obj);
         }

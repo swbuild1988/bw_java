@@ -29,6 +29,8 @@ export default {
                 series: [
                     {
                         type: "pie",
+                        radius: '65%',
+                        center: ['50%','50%'],
                         data: []
                     }
                 ]
@@ -52,7 +54,6 @@ export default {
             // 加载默认参数
             _this.myChart.setOption(_this.option);
             // 加载新的参数
-            console.log("_this.parameters.option", _this.parameters.option);
             if (_this.parameters.option) {
                 _this.myChart.setOption(_this.parameters.option);
             }

@@ -4,145 +4,131 @@
 
 
 <script>
+  import {ChartService} from '../../../services/chartService.js'
 
   export default {
     name: "pile-bar-chart",
     props: {
-        id: {
-      		type: String,
-      		request: true,
-        	default: ''
-      	},
-      	xAxisData: {
-	      	type: Array,
-	      	request: true
-      	},
-      	data: {
-      		type: Array,
-      		request: true
-      	}
+      id: {
+        type: String,
+        request: true,
+        default: ''
+      },
+      requestUrl: {
+        default: ''
+      },
+      parameters: {
+        type: Object
+      },
     },
     data() {
       return {
-        barChart: null
-       
+        myChart: {},
+        legendData: [],
+        xData: [],
+        series: [],
+        option: {
+          title: {
+            text: '',
+            fontSize: 25,
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          legend: {
+            data: ["严重", "一般", "提示", "致命", "总数"],
+            // bottom: 10,
+            left: 'right',
+            right: 0,
+            orient: 'vertical',
+
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: [],
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series: [],
+        },
       }
     },
     mounted() {
-    	this.drawPileBar()
-    },
-    watch: {
-    	'data': function(){
-    		this.drawPileBar()
-    	}
+      this.init();
+      this.refreshData();
     },
     methods: {
- 		drawPileBar() {
- 			this.barChart = this.$echarts.init(document.getElementById(this.id))
- 			let seriesData = []
-		    this.data.forEach(cat=>{
-		    	let temp = {}
-		    	temp.name =  cat.tunnelName + cat.category
-		    	temp.type = 'bar',
-		    	temp.barWidth = 10,
-		    	temp.stack = cat.tunnelName
-		    	temp.data = cat.value
-		    	seriesData.push(temp)
-		    })
- 			let  barOption = {
-			    tooltip : {
-			        trigger: 'axis',
-			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-			            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-			        }
-			    },
-			    legend: {
-			        data:['古城大街风机类电表','古城大街灯类电表','古城大街水泵类电表','古城大街其他类电表','实验路灯类电表','实验路风机类电表','实验路水泵类电表','实验路其他类电表']
-			    },
-			    grid: {
-			        left: '3%',
-			        right: '4%',
-			        bottom: '3%',
-			        containLabel: true
-			    },
-			    xAxis : [
-			        {
-			            type : 'category',
-			            // data : ['周一','周二','周三','周四','周五','周六','周日']
-			            data: this.xAxisData
-			        }
-			    ],
-			    yAxis : [
-			        {
-			            type : 'value'
-			        }
-			    ],
-			    series: seriesData,
-			    // series : [
-			    //     {
-			    //         name:'古城大街风机类电表',
-			    //         type:'bar',
-			    //         barWidth : 10,
-			    //         stack: '古城大街',
-			    //         data:[320, 332, 301, 334, 390, 330, 320]
-			    //     },
-			    //     {
-			    //         name:'古城大街灯类电表',
-			    //         type:'bar',
-			    //         stack: '古城大街',
-			    //         data:[320, 432, 301, 334, 490, 330, 410]
-			    //     },
-			    //     {
-			    //         name:'古城大街水泵类电表',
-			    //         type:'bar',
-			    //         stack: '古城大街',
-			    //         data:[220, 182, 191, 234, 290, 330, 310]
-			    //     },
-			    //     {
-			    //         name:'古城大街其他类电表',
-			    //         type:'bar',
-			    //         stack: '古城大街',
-			    //         data:[150, 232, 201, 154, 190, 330, 410]
-			    //     },
-			    //     {
-			    //         name:'实验路风机类电表',
-			    //         type:'bar',
-			    //         barWidth : 10,
-			    //         stack: '实验路',
-			    //         data:[862, 1018, 964, 1026, 1679, 1600, 1570]
-			    //         // markLine : {
-			    //         //     lineStyle: {
-			    //         //         normal: {
-			    //         //             type: 'dashed'
-			    //         //         }
-			    //         //     },
-			    //         //     data : [
-			    //         //         [{type : 'min'}, {type : 'max'}]
-			    //         //     ]
-			    //         // }
-			    //     },
-			    //     {
-			    //         name:'实验路灯类电表',
-			    //         type:'bar',
-			    //         stack: '实验路',
-			    //         data:[620, 732, 701, 734, 1090, 1130, 1120]
-			    //     },
-			    //     {
-			    //         name:'实验路水泵类电表',
-			    //         type:'bar',
-			    //         stack: '实验路',
-			    //         data:[120, 132, 101, 134, 290, 230, 220]
-			    //     },
-			    //     {
-			    //         name:'实验路其他类电表',
-			    //         type:'bar',
-			    //         stack: '实验路',
-			    //         data:[60, 72, 71, 74, 190, 130, 110]
-			    //     }
-			    // ]
-			}
-			this.barChart.setOption(barOption);
- 		}
+      init() {
+        this.drawPileBar();
+        this.fetchData();
+      },
+      drawPileBar() {
+        let _this = this;
+        _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
+        // 加载默认参数
+        _this.myChart.setOption(_this.option);
+        // 加载新的参数
+        if (_this.parameters.option) {
+          _this.myChart.setOption(_this.parameters.option);
+        }
+        window.addEventListener('resize', this.myChart.resize);
+      },
+      fetchData() {
+        let _this = this;
+        let prams = _this.parameters.prams;
+        ChartService.getPileBarChartData(prams).then((result) => {
+          if (result) {
+            _this.serises = [];
+            _this.xData = [];
+            _this.legendData = Object.keys(result[0]);
+            for (var i = 0; i < result.length; i++) {
+              let tempdata=result[i];
+              _this.xData.push(result[i].key);
+              for (var j = 0; j < _this.legendData.length; j++) {
+                if (!_this.serises[j] && _this.legendData[j] != "key") {
+                  _this.serises[j] = {};
+                  _this.serises[j].name = _this.legendData[j];
+                  _this.serises[j].type = 'bar';
+                  _this.serises[j].stack = 'count';
+                  _this.serises[j].data = [];
+                }
+                for (var key in tempdata) {
+                  if (_this.legendData[j] == key && _this.legendData[j] != "key") {
+                     _this.serises[j].data[i] = tempdata[key];
+                  }
+                }
+              }
+            }
+            _this.myChart.setOption({
+              xAxis: {data: _this.xData},
+              legend: {data: _this.legendData},
+              series: _this.serises
+            })
+          }
+        })
+      },
+
+      //定时刷新数据
+      refreshData() {
+        let _this = this;
+        // setInterval(() => {
+        //   _this.fetchData(_this.requestUrl);
+        // }, _this.intervalTime)
+      },
     },
   }
 </script>

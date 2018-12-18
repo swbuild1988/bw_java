@@ -33,4 +33,6 @@ public interface MeasValueDIMapper {
      * 批量删除
      */
     void deleteBatch(Date time);
+
+	int getCountByCondition(@Param("objectId") int objectId, @Param("startTime") Date startTime, @Param("endTime") Date endTime,@Param("cv")Integer cv);
 }

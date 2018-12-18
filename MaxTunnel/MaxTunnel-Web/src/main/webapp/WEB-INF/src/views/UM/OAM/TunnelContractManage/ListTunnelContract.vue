@@ -52,7 +52,7 @@
             <Row>
                 <Col span="6" v-for="(item,index) in contractList" :key="index">
                     <div class="contracts">
-                        <!-- <div class="tags"></div> -->
+                        <div style="display: table-cell;vertical-align: middle;text-align: center;">
                         <div class="contractName" @click="edit(index)">
                             <span>{{item.name}}</span>
                         </div>
@@ -78,21 +78,22 @@
                                 <div class="info">{{ item.payType }}</div>
                             </div>
                         </div>
-                        <!-- <div class="option">
+                        <div class="option">
                             <Tooltip content="详情">
                                 <div class="buttons">
-                                    <Icon type="android-list" @click="read(index)" size="26" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="android-list" @click="read(index)" size="24" color="rgb(198,206,230)"></Icon>
                                 </div>
                             </Tooltip>
                             <Tooltip content="编辑">
                                 <div class="buttons">
-                                    <Icon type="edit" @click="edit(index)" size="26" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="edit" @click="edit(index)" size="24" color="rgb(198,206,230)"></Icon>
                                 </div>
                             </Tooltip>
-                        </div> -->
+                        </div>
                         <Tooltip content="删除" class="del">
                             <Icon type="trash-a" @click="del(index)" size="26" color="rgb(162, 77, 72)"></Icon>
                         </Tooltip>
+                        </div>
                     </div>
                 </Col>
             </Row>
@@ -116,18 +117,18 @@
                     pageTotal: 0
                 },
                 contractList: [
-                    {
-                        id: 0,
-                        name: '测试合同',
-                        companyName: '测试公司',
-                        contact: '测试联系人',
-                        tel: 13942184630,
-                        payType: '月付',
-                        contractStatus: '正常',
-                        contractStartTime: '2018-08-10',
-                        contractEndTime: '2018-10-02',
-                        crtTime: '2018-08-03 10:00:00' 
-                    }
+                    // {
+                    //     id: 0,
+                    //     name: '测试合同',
+                    //     companyName: '测试公司',
+                    //     contact: '测试联系人',
+                    //     tel: 13942184630,
+                    //     payType: '月付',
+                    //     contractStatus: '正常',
+                    //     contractStartTime: '2018-08-10',
+                    //     contractEndTime: '2018-10-02',
+                    //     crtTime: '2018-08-03 10:00:00' 
+                    // }
                 ],
                 conditions:{
                     payment: null,
@@ -218,7 +219,7 @@
                                 contractStatus: a.contractStatusName,
                                 contractStartTime: new Date(a.contractStartTime).format('yyyy-MM-dd'),
                                 contractEndTime: new Date(a.contractEndTime).format('yyyy-MM-dd'),
-                                crtTime: new Date(a.crtTime).format('yyyy-MM-dd hh:mm:s'),
+                                crtTime: new Date(a.crtTime).format('yyyy-MM-dd hh:mm:ss'),
                                 // cable: {
                                 //     cableName: null,
                                 //     cableLength: null,
@@ -311,7 +312,7 @@
 .contracts{
    /* border: 1px solid #dddfe1;*/
     width: 90%;
-    /*height: 30vh;*/
+    height: 30vh;
     margin: 10px auto; 
     border-radius: 4px;
     position: relative;
@@ -321,6 +322,7 @@
     background: linear-gradient(to bottom right, rgb(91,95,148) , rgb(31,37,69)); */
     background-image: url('../../../../assets/UM/border2.png');
     background-size: 100% 100%;
+    display: table;
 }
 .option{
     position: absolute;
@@ -357,8 +359,8 @@
 }
 .del{
     position: absolute;
-    bottom: 18px;
-    right: 22px;
+    bottom: 8%;
+    right: 6%;
     cursor: pointer;
 }
 .buttons{
@@ -386,16 +388,6 @@
     font-size: 16px;
     width: 60%;
 }
-.tags{
-    width: 4px;
-    height: 80px;
-    position: absolute;
-    top: 6px;
-    left: 0;
-    background: -webkit-linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
-    background: -o-linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
-    background: -moz-linear-gradient(rgb(40,203,245) , rgb(21,240,182));
-    background: linear-gradient(rgb(40,203,245) , rgb(21,240,182)); 
-}
+
 
 </style>

@@ -47,9 +47,19 @@
               <a> <img src="../../../assets/VM/address_book.png" height="100%" width="100%"></a>
             </Dropdown>
             </Col>
+            <Col span="1" offset="1">
+            <Dropdown divided @click.native="jumpUMLogin">
+              <a> <img src="../../../assets/VM/pageLinkage.png" height="100%" width="100%"></a>
+            </Dropdown>
+            </Col>
+            <Col span="1" offset="1">
+            <Dropdown divided @click.native="show.showControlPanel = !show.showControlPanel">
+              <a> <img src="../../../assets/VM/controlPanel.png" height="100%" width="100%"></a>
+            </Dropdown>
+            </Col>
           </row>
           <row justify="center" type="flex">
-            <img src="../../../assets/VM/footLine.png" height="8px" width="85%">
+            <img src="../../../assets/VM/footLine.png" height="8px" width="100%">
           </row>
       </div>
       <temperature class=maptemperature></temperature>
@@ -68,8 +78,12 @@
               :leave-active-class="leaveClass">
           <plan-process v-show="show.showPlan" @showPlan="showPlan"></plan-process>
       </transition>
-
-
+      <transition
+              :enter-active-class="enterClass"
+              :leave-active-class="leaveClass">
+          <move-control v-show="show.showControlPanel"></move-control>
+      </transition>
+    
       <sm-viewer
               id="mapViewer"
               ref="smViewer"
@@ -119,6 +133,7 @@ import AlarmCount from "../AlarmManage/NonCleanedCount";
 import Vue from "vue";
 import mapViewer from "../../Common/3DViewers";
 import PlanProcess from "./PlanProcess";
+import MoveControl from "./moveControlPanel"
 
 export default {
     data() {
@@ -128,7 +143,8 @@ export default {
           show:{
               ges:false,
               showNonCleanedCount : false,
-              showPlan : false
+              showPlan : false,
+              showControlPanel : false
           },
           enterClass:'animated bounceInDown',
           leaveClass:'animated zoomOut',
@@ -168,7 +184,8 @@ export default {
         MapGauges,
         AlarmCount,
         mapViewer,
-        PlanProcess
+        PlanProcess,
+        MoveControl
     },
     mounted() {
         this.init();
@@ -184,6 +201,7 @@ export default {
 
             _this.show.ges = false; //隐藏气体状态
             _this.show.showNonCleanedCount = false; //隐藏未清除告警条数
+            _this.show.showControlPanel = false;
             _this.$refs.smViewer.setViewAngle(); //恢复到初始化视角
             _this.$refs.smViewer.hideAllEntitys(); //隐藏所有实体
         },
@@ -247,6 +265,17 @@ export default {
             let { show } = this;
 
             show.showPlan = status;
+        },
+        jumpUMLogin(){
+            let _this =this;
+
+            _this.$router.push({ path: "UMmain" });
+        },
+        playFly(){
+            this.$refs.smViewer.playFly();
+        },
+        stopFly(){
+            this.$refs.smViewer.stopFly();
         }
     }
 };

@@ -1,13 +1,11 @@
 package com.bandweaver.tunnel.common.biz.dto;
 
-import com.bandweaver.tunnel.common.biz.pojo.Company;
-import com.bandweaver.tunnel.common.biz.pojo.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.bandweaver.tunnel.common.biz.pojo.Position;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDTO implements Serializable{
     /**

@@ -1,11 +1,11 @@
 <template>
   <div>
-  	<!-- <Row>
+  	<Row>
   		<Col span="2" offset="22"> 
   			<Button type="ghost" @click="back" class="backBtn" style="background-color: #f0f0f0">返回</Button>
   		</Col>  
-  	</Row> -->
-    <Row style="margin-top: 4vh">
+  	</Row>
+    <Row>
     	<Col span="12" offset="1">
             <div class="cameraList">
                 <span style="font-size: 18px;font-weight: bold;color:#fff;">摄像头：</span>
@@ -130,13 +130,6 @@ export default {
             error=>{
               _this.Log.info(error)
             })
-    	// 	this.axios.get('videos/' + this.id + '/presets').then(res=>{
-	  		// 	let { code,data } = res.data
-	  		// 	if(code == 200){
-	  		// 		this.perPositions = []
-	  		// 		this.perPositions = data
-	  		// 	}
-	  		// })
     	},
   		back() {
   			this.$router.push('/UM/VideoMonitoring/details/' + this.tunnelId)
@@ -150,9 +143,6 @@ export default {
               (error)=>{
                   _this.Log.info(error)
               })
-  			// this.axios.get('videos/' + this.id + '/move/'+ data.direction).then(res=>{
-     //            console.log("move success", res);
-     //        })
   		},
   		stop(data) {
           let _this = this
@@ -163,9 +153,6 @@ export default {
               error=>{
                   _this.Log.info(error)
               })
-  			  // this.axios.get('videos/'+ this.id +'/stop').then(res=>{
-       //          console.log("stop success", res);
-       //    })
   		},
   		indentChange(indent) {
             console.log('Scene '+indent)  
@@ -179,9 +166,6 @@ export default {
               error=>{
                   _this.Log.info(error)
               })
-        	// this.axios.get('videos/'+ this.id +'/presets/' + name +'/goto').then(res=>{
-        	// 	console.log('setted'+res.data)
-        	// })
         },
         del(name) {
         	this.isDel = true
@@ -215,13 +199,6 @@ export default {
               (error)=>{
                 _this.Log.info(error)
               })
-        		// this.axios.post('videos/' + this.id + '/presets',this.addParam).then(res=>{
-        		// 	let { code,data } = res.data
-        		// 	if(code == 200){
-        		// 		this.isAdd = false
-        		// 		this.getPositions()
-        		// 	}
-        		// })
         	}
         },
         cancel()　{
@@ -238,13 +215,6 @@ export default {
               (error)=>{
                 _this.Log.info(error)
               })
-        	// this.axios.put('videos/' + this.id + '/presets',this.param).then(res=>{
-         //    	let {code,data} = res.data
-         //    	if(code == 200){
-         //    		this.isEdit = false
-         //    		this.getPositions()
-         //    	}
-         //    })
         },
         delOk() {
           let _this = this
@@ -255,12 +225,6 @@ export default {
               (error)=>{
                 _this.Log.info(error)
               })
-        	// this.axios.delete('videos/' + this.id + '/presets',{data: this.param}).then(res=>{
-         //    	let {code,data} = res.data
-         //    	if(code == 200){
-         //    		this.getPositions()
-         //    	}
-         //    })
         },
         changVideo()　{
             let curVideoInfo = this.cameraList.find(camera=>{
@@ -280,7 +244,7 @@ export default {
 <style scoped>
 	.camera{
 		margin-top: 30px;
-    padding: 40px;
+    padding: 6%;
     background: url('../../../../assets/UM/videoSettingBody.png') no-repeat;
     background-size: 100% 100%;
     height: 66vh;
@@ -311,7 +275,7 @@ export default {
 		font-size: 16px;
 	}
 	.posContent{
-		margin-top: 10px;
+		margin-top: 5vh;
     margin-bottom: 10px;
 		max-height: 40vh;
 		overflow-y: auto;
@@ -328,13 +292,13 @@ export default {
 	}
 	.add{
 		float: right;
-		margin: 24px 24px 10px 0;
+		margin: 5% 5% 0 0;
 	}
 	.titlePos{
 		margin: 10px;
     font-size: 18px;
     font-weight: bold;
-    background: url('../../../../assets/UM/title.jpg') no-repeat;
+    background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
@@ -354,7 +318,7 @@ export default {
     height: 40px;
     top: -20px;
     left: -10px;
-    background: url('../../../../assets/UM/title.jpg') no-repeat;
+    background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
@@ -382,7 +346,7 @@ export default {
         height: 6vh;
         padding: 12px;
         width: 60%;
-        background: url('../../../../assets/UM/title.jpg') no-repeat;
+        background: url('../../../../assets/UM/title.png') no-repeat;
         background-size: 100% 100%;
         text-align: center;
     }
@@ -400,6 +364,7 @@ export default {
       border-radius: 6px;
       height: 50vh;
       position: relative;
+      overflow: hidden;
     }
     .posTag{
       position: absolute;

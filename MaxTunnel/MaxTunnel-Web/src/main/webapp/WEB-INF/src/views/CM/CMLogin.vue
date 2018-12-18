@@ -23,11 +23,11 @@
       <div class="radiusBox">
         <div class="iconBox">
           <Icon type="ios-locked-outline" color="gray" size="20"></Icon>
-        </div> 
+        </div>
         <div class="inputBox">
           <input type="password" v-model="formValidate.passWord" placeholder="密码" @blur="checkPass()">
-        </div> 
-        <div class="ivu-form-item-error-tip" v-if="isPass" style="margin-left: 30px;">密码不能为空</div>  
+        </div>
+        <div class="ivu-form-item-error-tip" v-if="isPass" style="margin-left: 30px;">密码不能为空</div>
       </div>
     </FormItem>
     <FormItem>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { LoginService } from '../../services/loginService'
 export default {
   components: {},
   name: "CMlogin",
@@ -91,25 +92,49 @@ export default {
           password: _this.formValidate.passWord
         };
 
-        _this.axios.post("/login", loginParams).then(result => {
-          _this.logining = false;
-          let { msg, code, data } = result.data;
-          //存用户名 例：“admin”
-          let sessionUserName = result.data.data.name;
-          let sessionUserId = result.data.data.id;
-          if (code !== "200") {
-            _this.$Message.error(msg);
-            _this.loading = false;
-          } else {
-            sessionStorage.setItem("UMUser", JSON.stringify(data));
+        LoginService.UmLogin(loginParams).then(
+          result=>{
+            _this.logining = false;
+            let sessionUserName = result.name;
+            let roles = result.roles;
+            sessionStorage.setItem("CMUser", JSON.stringify(result));
             sessionStorage.setItem(
-              "UMUerName",
+              "CMUerName",
               JSON.stringify(sessionUserName)
             );
-            sessionStorage.setItem("UMUerId", JSON.stringify(sessionUserId));
+            sessionStorage.setItem(
+              "CMUerName",
+              JSON.stringify(sessionUserName)
+            );
+            sessionStorage.setItem(
+              "UMRoles",
+              JSON.stringify(roles)
+            );
             _this.$router.push({ path: "CMmain" });
-          }
-        });
+          },
+          error=>{
+            _this.$Message.error(msg);
+            _this.loading = false;
+          })
+        // _this.axios.post("/login", loginParams).then(result => {
+        //   _this.logining = false;
+        //   let { msg, code, data } = result.data;
+        //   //存用户名 例：“admin”
+        //   let sessionUserName = result.data.data.name;
+        //   let sessionUserId = result.data.data.id;
+        //   if (code !== "200") {
+        //     _this.$Message.error(msg);
+        //     _this.loading = false;
+        //   } else {
+        //     sessionStorage.setItem("UMUser", JSON.stringify(data));
+        //     sessionStorage.setItem(
+        //       "UMUerName",
+        //       JSON.stringify(sessionUserName)
+        //     );
+        //     sessionStorage.setItem("UMUerId", JSON.stringify(sessionUserId));
+        //     _this.$router.push({ path: "CMmain" });
+        //   }
+        // });
       }
     },
     checkName() {

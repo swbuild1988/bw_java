@@ -320,15 +320,12 @@ CREATE TABLE T_OAM_REQ_HISTORY(
   visitor_number    number,
   visitor_company   number    not null,
   visitor_info    varchar2(500),
-
-  --processbase
   create_time            date,
   process_type           number not null,
   process_status         varchar2(20) not null,
   process_instance_id    varchar2(100),
   is_finished            number ,
-
-   CONSTRAINT PK_T_OAM_REQ_HISTORY PRIMARY KEY ("ID")
+  CONSTRAINT PK_T_OAM_REQ_HISTORY PRIMARY KEY ("ID")
 );
 
 

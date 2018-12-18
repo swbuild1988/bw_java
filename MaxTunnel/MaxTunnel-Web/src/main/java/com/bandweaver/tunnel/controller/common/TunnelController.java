@@ -3,6 +3,10 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bandweaver.tunnel.common.biz.dto.*;
+import com.bandweaver.tunnel.common.biz.itf.*;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,16 +20,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
-import com.bandweaver.tunnel.common.biz.dto.SectionDto;
-import com.bandweaver.tunnel.common.biz.dto.StoreDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
-import com.bandweaver.tunnel.common.biz.itf.SectionService;
-import com.bandweaver.tunnel.common.biz.itf.StoreService;
-import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
@@ -56,6 +52,8 @@ public class TunnelController extends BaseController<Tunnel> {
 	private TunnelService tunnelService;
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private AreaService areaService;
 	@Autowired
 	private SectionService sectionService;
 	@Autowired
@@ -210,8 +208,13 @@ public class TunnelController extends BaseController<Tunnel> {
 			jsonOne.put("name", dto.getName());
 			jsonOne.put("id", dto.getId());
 			jsonOne.put("camera", dto.getCamera());
+			jsonOne.put("sn", dto.getSn());
 			// 查询下面有多少仓
 			List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
+			List<AreaDto> areaList = areaService.getAreasByTunnelId(dto.getId());
+			jsonOne.put("stores", storeList);
+			jsonOne.put("areas", areaList);
+
 			List<JSONObject> listTwo = new ArrayList<>();
 			for (StoreDto storeDto : storeList) {
 				JSONObject jsonTwo = new JSONObject();
@@ -391,9 +394,9 @@ public class TunnelController extends BaseController<Tunnel> {
 				continue;
 			JSONObject jsonobj = new JSONObject();
 			jsonobj.put("key", param.getObjTypeName());
-			jsonobj.put("val", param.getCV());
+			jsonobj.put("val", param.getCv());
 			SectionDto dto = sectionService.getSectionById(param.getSectionId());
-			jsonobj.put("location", dto.getName()); // “电力仓-区域1 ”类似于这种的名字
+			jsonobj.put("location", dto == null ? "" : dto.getName() ); 
 			list.add(jsonobj);
 		}
 		return list;
@@ -401,9 +404,9 @@ public class TunnelController extends BaseController<Tunnel> {
 
 	/** 求最大值 */
 	private MeasObjAIParam getMaxValue(MeasObj measObj, MeasObjAIParam param) {
-		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCV();
-		if (cv.doubleValue() >= param.getCV().doubleValue()) {
-			param.setCV(cv);
+		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCv();
+		if (cv.doubleValue() >= param.getCv().doubleValue()) {
+			param.setCv(cv);
 		}
 		param.setObjId(measObj.getId());
 		param.setSectionId(measObj.getSectionId());
@@ -413,9 +416,9 @@ public class TunnelController extends BaseController<Tunnel> {
 
 	/** 求最小值 */
 	private MeasObjAIParam getMinValue(MeasObj measObj, MeasObjAIParam param) {
-		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCV();
-		if (cv.doubleValue() <= param.getCV().doubleValue()) {
-			param.setCV(cv);
+		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCv();
+		if (cv.doubleValue() <= param.getCv().doubleValue()) {
+			param.setCv(cv);
 		}
 		param.setObjId(measObj.getId());
 		param.setSectionId(measObj.getSectionId());
@@ -473,9 +476,9 @@ public class TunnelController extends BaseController<Tunnel> {
 
 	private List<MeasObjAIParam> getCV(MeasObj measObj, List<MeasObjAIParam> list) {
 		MeasObjAIParam aiParam = new MeasObjAIParam();
-		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCV();
+		Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCv();
 		aiParam.setObjId(measObj.getId());
-		aiParam.setCV(cv);
+		aiParam.setCv(cv);
 		aiParam.setObjTypeName(ObjectType.getEnum(measObj.getObjtypeId()).getName());
 		aiParam.setSectionId(measObj.getSectionId());
 		list.add(aiParam);

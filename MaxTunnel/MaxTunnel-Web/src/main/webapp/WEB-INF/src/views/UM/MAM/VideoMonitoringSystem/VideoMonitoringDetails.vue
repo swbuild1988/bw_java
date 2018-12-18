@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="whole">
         <Row class="query">
             <Col span="9" offset="1">
                 监测仓:
@@ -51,7 +51,7 @@
                     <span class="listTitle">摄像头列表</span>
                     <div class="more">
                         <Poptip placement="left">
-                            <Icon type="navicon-round" size="20" class="button"></Icon>
+                            <Icon type="navicon-round" size="20" class="button" color="#fff"></Icon>
                             <div class="api" slot="content">
                                 <Icon class="screens" type="android-checkbox-outline-blank" size="20" @click.native="handleScreensNum(1)"></Icon>
                                 <Icon class="screens" type="social-windows" size="20" @click.native="handleScreensNum(4)"></Icon>
@@ -59,16 +59,17 @@
                             </div>
                         </Poptip>
                     </div>
-                    <Row style="width: 94%;margin-left: 3%;">
+                    <Row style="width: 94%;margin-left: 3%;margin-top:1vh">
                         <Col span="1" class="slipContent">
                             <Icon type="chevron-left" size="30" :class="['slipLeft',{'enabled': curPage == 1}]" @click.native="pageChange('prev')"></Icon>
                         </Col>
                         <Col span="22">
+                        <div>
                             <h1 v-if="nodata" style="text-align: center;">暂无数据</h1>
-                            <Row>
-                                <Col :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)" v-for="(item,index) in showVideosList" :key="item.id" :class="['monitors',{'active': curVideo && item.id == curVideo.id}]">
+                            <Row class="videos">
+                                <Col :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)" v-for="(item,index) in showVideosList" :key="item.id" :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]">
                                     <div @click="selectScene(item)">
-                                        <div :class="['monitor',{'oneScreen':videoNum == 1}]" v-if="videoStyle.show">    
+                                    <div :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]" v-if="videoStyle.show">    
                                             <video-component v-bind:video="item" v-bind:id="'camera'+item.id"></video-component>
                                         </div>
                                         <div class="options">
@@ -78,6 +79,7 @@
                                     </div>
                                 </Col>
                             </Row>
+                        </div>
                         </Col>
                         <Col span="1"  class="slipContent">
                            <Icon type="chevron-right" size="30"  :class="['slipRight',{'enabled' : curPage == totalPage}]" @click.native="pageChange('next')"></Icon>
@@ -108,27 +110,27 @@ export default {
                 areas: []
             },
             cameraList: [
-                // {
-                //     id: 7001,
-                //     name: "摄像头1",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: true,
-                //     description: "A Camera for tunnel1"
-                // },
-                // {
-                //     id: 7002,
-                //     name: "摄像头2",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: false,
-                //     description: "A Camera for tunnel2"
-                // },
-                // {
-                //     id: 7003,
-                //     name: "摄像头3",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: true,
-                //     description: "A Camera for tunnel3"
-                // }
+                {
+                    id: 7001,
+                    name: "摄像头1",
+                    url: "192.168.6.156:8078",
+                    positionSupport: true,
+                    description: "A Camera for tunnel1"
+                },
+                {
+                    id: 7002,
+                    name: "摄像头2",
+                    url: "192.168.6.156:8078",
+                    positionSupport: false,
+                    description: "A Camera for tunnel2"
+                },
+                {
+                    id: 7003,
+                    name: "摄像头3",
+                    url: "192.168.6.156:8078",
+                    positionSupport: true,
+                    description: "A Camera for tunnel3"
+                }
             ],
             // curVideo: {
             //     id: null
@@ -189,6 +191,7 @@ export default {
     mounted() {
         this.conditions.tunnelId = this.$route.params.id;
         this.initData();
+        // document.getElementsByClassName('whole')[0].style.height = window.innerHeight - window.innerHeight * 16 / 100
     },
     methods: {
         initData() {
@@ -312,10 +315,10 @@ export default {
                     data.direction
                 ).then(
                     result => {
-                        console.log("move success");
+                        _this.Log.info("move success");
                     },
                     error => {
-                        console.log(error);
+                        _this.Log.info(error);
                     }
                 );
             } else {
@@ -330,10 +333,10 @@ export default {
                 let _this = this;
                 VideoService.cameraStop(_this.curVideo.id).then(
                     result => {
-                        console.log("stop success");
+                        _this.Log.info("stop success");
                     },
                     error => {
-                        console.log(error);
+                        _this.Log.info(error);
                     }
                 );
             }
@@ -362,7 +365,7 @@ export default {
           let _this = this
           VideoService.goToPreset(_this.curVideo.id,name).then(
               result=>{
-                  console.log('setted')
+                  _this.Log.info('setted')
               },
               error=>{
                 _this.Log.info(error)
@@ -372,10 +375,17 @@ export default {
 };
 </script>
 <style scoped>
+.whole{
+    background: url('../../../../assets/VM/bg_image.png') no-repeat;
+    background-size: 100% 100%;
+    background-color: rgb(2,23,47);
+    min-height: 100%;
+    position: relative;
+}
 .content {
-    padding: 20px;
-    margin-top: 10px;
-    background-color: white;
+    padding: 20px 20px 0 20px;
+    /* margin-top: 10px;*/
+    /*background-color: white;*/
 }
 .control {
     width: 100%;
@@ -385,7 +395,7 @@ export default {
     padding: 10px;
     background: url('../../../../assets/UM/title4.png') no-repeat;
     background-size: 100% 100%;
-    /*color: #fff;*/
+    color: #fff;
     text-align: center;
 }
 .small {
@@ -398,10 +408,10 @@ export default {
     position: relative;
 }
 .videoName {
-    padding: 20px 10px 0 18px;
+    padding: 6% 10px 0 10%;
 }
 .lists p {
-    margin: 10px 0 10px 18px;
+    margin: 10px 0 10px 10%;
     font-size: 16px;
 }
 .scenesList {
@@ -416,7 +426,8 @@ export default {
 }
 .monitors {
     padding: 14px 6px 6px 6px;
-    margin-top: 10px;
+   /* margin-top: 10px;*/
+    height: 34vh;
 }
 .monitor {
     width: 90%;
@@ -424,9 +435,18 @@ export default {
     height: 28vh;
     cursor: pointer;
 }
+.oneSBody{
+    height: 69vh;
+}
+.nineSBody{
+    height: 23vh;
+}
 .oneScreen {
     height: 62vh;
     margin-top: 10px;
+}
+.nineScreen{
+    height: 16vh;
 }
 .options {
     margin-left: 5%;
@@ -436,15 +456,17 @@ export default {
     background-color: rgba(25, 190, 107, 0.4);
 }
 .query {
-    background-color: white;
-    padding: 10px;
+    /*background-color: rgb(5,25,45);*/
+    padding: 2vh 0;
+    color: #fff;
 }
 .more {
     text-align: right;
     height: 20px;
    /* width: 100%;*/
     position: relative;
-    margin-right: 24px;
+    margin-right: 3%;
+    margin-top: 0.2%;
 }
 .screens {
     padding: 0 10px;
@@ -459,7 +481,8 @@ export default {
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
-    color: rgb(130,199,255);
+    /*color: rgb(130,199,255);*/
+    color: #fff;
     cursor: pointer;
     font-size: 14px;
 }
@@ -468,7 +491,8 @@ export default {
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
-    color: rgb(130,199,255);
+    /*color: rgb(130,199,255);*/
+    color: #fff;
     cursor: pointer;
     font-size: 14px;
 }
@@ -482,15 +506,17 @@ export default {
     top: 46%;
     left: 10px;
     cursor: pointer;
+    color: lightgray;
 }
 .slipRight {
     position: absolute;
     top: 46%;
     right: 10px;
     cursor: pointer;
+    color: lightgray;
 }
 .enabled {
-    color: lightgray;
+    color: #656464;
 }
 .controlContent{
     padding-top: 16px;
@@ -521,11 +547,15 @@ export default {
     font-weight: bold;
     font-size: 16px;
     position: absolute;
-    top: 8px;
+    top: 4px;
     left: 5%;
 }
 .controlBody{
     background: url('../../../../assets/UM/videoListBody.png') no-repeat;
-    background-size: 100% 100%
+    background-size: 100% 100%;
+    color: #fff;
+}
+.videos{
+
 }
 </style>

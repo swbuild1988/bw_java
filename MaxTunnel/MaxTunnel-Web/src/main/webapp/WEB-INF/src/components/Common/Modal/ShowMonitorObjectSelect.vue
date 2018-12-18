@@ -1,68 +1,72 @@
 <!--选择监测对象弹框-->
 <template>
-  <Modal v-model="show.state" width="600px" @on-ok="confirmData">
+  <Modal v-model="show.state" width="700px" @on-ok="confirmData">
     <p slot="header" style="color:#f60;font-size: 18px;">
       选择监测对象
     </p>
     <div style="text-align:center;font-size: 16px;">
       <Row>
         <Col span="20">
-        <span style="float: left;margin-right: 8px;margin-top: 8px;">监测对象ID:</span>
-        <Input v-model="queryPrams.objectId" style="width: 320px;float: left;">
-        <Button slot="append" icon="ios-search" @click="queryMesObjByIds" style="height: 35px;"></Button>
+        <span style="float: left;margin-right: 8px;margin-top: 4px;">对象名称:</span>
+        <Input v-model="queryPrams.name" style="width: 320px;float: left;" placeholder="输入对象名称">
         </Input>
         </Col>
         <Col span="20" style="margin-top: 10px; ">
-        <span style="float: left;margin-right: 8px;margin-top: 2px;">查询类型:</span>
-        <RadioGroup :value="queryPrams.selectType" v-model="queryPrams.selectType"
-                    style="margin-left: 18px;float: left;margin-top: 3px;" size="large" @on-change="changeQueryType">
-          <Radio label=1>对象类型</Radio>
-          <Radio label=2>监测区域</Radio>
-        </RadioGroup>
+        <span style="float: left;margin-right: 8px;margin-top: 4px;">对象类型:</span>
+        <Select v-model="queryPrams.objType" style="width:320px;float: left">
+          <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
+            <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+          </OptionGroup>
+        </Select>
         </Col>
         <Col span="20" style="margin-top: 10px; ">
-        <span style="float: left;margin-right: 8px;margin-top: 2px;">{{curQueryTitle}}:</span>
-        <div v-if="queryPrams.selectType=='1'">
-          <Select v-model="queryPrams.selectItem" style="width:320px;float: left;margin-left: 18px;"
-                  @on-change="queryTable">
-            <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
-              <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
-            </OptionGroup>
-          </Select>
-        </div>
-        <div v-else>
-          <treeselect :options="objectList" placeholder="请选择" v-model="queryPrams.selectItem"
-                      style="width: 60%;float: left;left: 8px"/>
+        <span style="float: left;margin-right: 8px;margin-top: 4px;">所属管廊:</span>
+        <Select v-model="queryPrams.tunnelId" style="width:320px;float: left;">
+          <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+        </Select>
+        </Col>
+        <Col span="2">
+        <div style="float: right;right: 0px;margin-top: 10px;">
+          <Button type="primary" shape="circle" icon="ios-search" @click="queryTable" title="查询" size="large"></Button>
         </div>
         </Col>
         <Col span="24" style="margin-top: 10px;">
         <Table border ref="selection" :columns="columns" :data="tableData" @on-selection-change="setData"
-               height="400"></Table>
+               :height="tableHeight"></Table>
         </Col>
       </Row>
     </div>
+    <Page style="text-align:center;font-size: 16px;margin-top: 10px; " @on-change="changePage"
+          @on-page-size-change="handlePageSize"
+          :total="queryPrams.total"
+          show-total show-elevator
+          :current="queryPrams.pageNum"
+          show-total show-elevator show-sizer placement="top"
+          :page-size="queryPrams.pageSize"></Page>
   </Modal>
 </template>
 
 <script>
-
   import {EnumsService} from '../../../services/enumsService.js'
   import {MeasObjServer} from '../../../services/MeasObjectSerivers.js'
-  import Treeselect from '@riophae/vue-treeselect'
-  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+  import {TunnelService} from '../../../services/tunnelService.js'
 
   export default {
     name: "show-monitor-object-select",
     data() {
       return {
         headTip: "选择监测对象",
+        tableHeight: 400,
         queryPrams: {
-          selectType: "1",
-          objectId: "",
-          selectItem: null,
+          name: "",
+          objType: "",
+          tunnelId: -1,
+          total: 0,
+          pageNum: 1,
+          pageSize: 12,
         },
-        curQueryTitle: "对象类型",
         objectList: [],
+        tunnelList: [],
         columns: [
           {
             type: 'selection',
@@ -70,21 +74,21 @@
             align: 'center'
           },
           {
-            title: '编号',
+            title: 'Id',
             key: 'id'
           },
           {
-            title: '类型',
-            key: 'datatype'
-          },
-          {
-            title: '监测区域',
-            key: 'Zone'
-          },
-          {
-            title: '名称',
+            title: '对象名称',
             key: 'name'
-          }
+          },
+          {
+            title: '对象类型',
+            key: 'objtypeName'
+          },
+          {
+            title: '所属管廊',
+            key: 'tunnelName'
+          },
         ],
         tableData: [],
         curSelectData: [],
@@ -108,61 +112,50 @@
         var _this = this;
         _this.objectList = [];
         //对象类型
-        if (_this.queryPrams.selectType == "1") {
-          EnumsService.getMonitorType().then((result) => {
-            _this.objectList = result;
-          });
-        }
-        else {
-          _this.objectList = [];
-          EnumsService.getMonitorZone().then((result) => {
-            if (result) {
-              result.forEach(a => {
-                var temp = {};
-                temp.id = a.id;
-                temp.label = a.name;
-                temp.children = [];
-                _this.objectList.push(temp);
-                if (a.list.length > 0) {
-                  a.list.forEach(b => {
-                    var child = {};
-                    child.id = a.id + "_" + b.id;
-                    child.label = b.name;
-                    child.children = [];
-                    temp.children.push(child);
-                    if (b.list.length > 0) {
-                      b.list.forEach(c => {
-                        var child2 = {};
-                        child2.id = a.id + "_" + b.id + "_" + c.id;
-                        child2.label = c.name;
-                        child.children.push(child2);
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-      },
+        EnumsService.getMonitorType().then((result) => {
+          _this.objectList = result;
+        });
+        //管廊列表
+        _this.tunnelList = [];
+        TunnelService.getTunnels().then((result) => {
+          _this.tunnelList = [{id: -1, name: "全部"}];
+          result.reduce((a, b) => {
+            _this.tunnelList.push(b);
+          }, _this.tunnelList)
+        });
 
-      changeQueryType(index) {
-        if (index == "1") {
-          this.curQueryTitle = "对象类型";
-        }
-        else {
-          this.curQueryTitle = "监测区域";
-        }
-        this.initData();
       },
 
       queryTable() {
+        let _this = this;
+        let prams = {};
+        prams.name = _this.queryPrams.name;
+        prams.objtypeIds = _this.queryPrams.objType != "" ? [_this.queryPrams.objType] : null;
+        prams.tunnelId = _this.queryPrams.tunnelId >= 0 ? _this.queryPrams.tunnelId : "";
+        prams.total = _this.queryPrams.total
+        prams.pageNum = _this.queryPrams.pageNum
+        prams.pageSize = _this.queryPrams.pageSize
+        MeasObjServer.measObjDataGrid(prams).then((result) => {
+          if (result) {
+            _this.tableData=[];
+            this.queryPrams.total = result.total;
+            result.list.reduce((a, b) => {
+              let temp = {};
+              temp.id = b.id
+              temp.name = b.name
+              temp.objtypeName = b.objtypeName
+               temp.tunnelName=b.section!=null?b.section.tunnel.name:"无";
+              _this.tableData.push(temp);
+            }, _this.tableData);
+          }
+        })
       },
+
       setData(arr) {
         if (arr && arr.length > 0) {
           this.curSelectData = "";
           arr.forEach(a => {
-            this.curSelectData += a.No + ",";
+            this.curSelectData += a.id + ",";
           })
         }
       },
@@ -174,36 +167,29 @@
       confirmData() {
         this.selectData.idList = this.curSelectData;
       },
+      //切换页面
+      changePage(index) {
+        let _this = this;
+        _this.queryPrams.pageNum = index;
+        _this.queryTable();
+      },
 
-      queryMesObjByIds() {
-        var _this = this;
-        if (_this.queryPrams.objectId) {
-          var prams={ids:_this.queryPrams.objectId};
-          MeasObjServer.getObjByIds(prams).then((result) => {
-            if(result&&tableData.length>0){
-              _this.tableData  = [];
-              result.forEach(a=>{
-                var temp={};
-                temp.id=a.id;
-                temp.name=a.name;
-                temp.datatype=a.datatypeId;
-                _this.tableData.push(temp);
-              })
-            }
-
-          })
-        }
+      //切换页码数
+      handlePageSize(value) {
+        this.queryPrams.pageSize = value;
+        this.queryTable();
       },
     },
     mounted() {
+      this.tableHeight = window.innerHeight * 0.4;
       this.initData();
     },
     watch: {
       'show.state': function () {
         this.clearSelect();
-      }
+      },
     },
-    components: {Treeselect},
+    components: {},
   }
 </script>
 

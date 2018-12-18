@@ -10,7 +10,7 @@ public class MeasValueSI implements Serializable{
 	private static final long serialVersionUID = 6043719715178047401L;
 	private Date time;
     private Integer objectId;
-    private Integer CV;
+    private Integer cv;
 
     public Date getTime() {
         return time;
@@ -28,20 +28,16 @@ public class MeasValueSI implements Serializable{
         this.objectId = objectId;
     }
 
-    public Integer getCV() {
-        return CV;
+    public Integer getCv() {
+        return cv;
     }
 
-    public void setCV(Integer CV) {
-        this.CV = CV;
+    public void setCv(Integer CV) {
+        this.cv = CV;
     }
 
     @Override
-    public String toString() {
-        return "MeasValueSI{" +
-                "time=" + time +
-                ", objectId=" + objectId +
-                ", CV=" + CV +
-                '}';
-    }
+	public String toString() {
+		return "MeasValueSI [time=" + time + ", objectId=" + objectId + ", cv=" + cv + "]";
+	}
 }

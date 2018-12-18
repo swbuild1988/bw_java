@@ -4,11 +4,11 @@
       <Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
         <div class="layout-logo"></div>
         <div class="layout-title">
-          <h1><a  class="mainTitle" @click="goToMoudle({ path: '/UMMain'})">{{title}}</a></h1>
+          <h1><a class="mainTitle" @click="goToMoudle({ path: '/UMMain'})">{{title}}</a></h1>
         </div>
         <div class="layout-nav">
-          <div style="position: fixed;right: 20px;">
-            <MenuItem v-for="(module,index) in modules" :key="module.name" :name="module.name">
+          <div style="position: fixed;right: 34px;">
+            <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
               <Dropdown placement="bottom-start">
                 <Button type="primary">
                   <Icon :type="module.frontIcon"></Icon>
@@ -26,21 +26,28 @@
               </Dropdown>
             </MenuItem>
             <!-- 人物圆点 -->
-            <Dropdown>
-              <a href="javascript:void(0)">
-                <Badge :count="countNum">
-                  <Avatar :style="{background:'#f56a00'}">{{getUserName}}</Avatar>
-                </Badge>
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})">我的消息</DropdownItem>
-                <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
-                <DropdownItem @click.native="goToMoudle({ path: '/UM/myTasks/query'})">我的任务</DropdownItem>
-                <DropdownItem divided @click.native="logout">注销</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <div style="position:relative;float: right;margin-left: 100px;">
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  <Badge :count="countNum">
+                    <!--<Avatar style="background-color: #f56a00" shape="circle" icon="person" ></Avatar>-->
+                    <Avatar :style="{background:'#f56a00'}" size="large" shape="circle"
+                            src="https://i.loli.net/2017/08/21/599a521472424.jpg"></Avatar>
+                  </Badge>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})">我的消息</DropdownItem>
+                  <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
+                  <DropdownItem @click.native="goToMoudle({ path: '/UM/myTasks/query'})">我的任务</DropdownItem>
+                  <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
+                  <showAboutUs v-bind="aboutUs"></showAboutUs>
+                  <DropdownItem @click.native="setUserself">个人中心</DropdownItem>
+                  <!--<showUserInfo v-bind="userself"></showUserInfo>-->
+                  <DropdownItem divided @click.native="logout">注销</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           </div>
-
         </div>
       </Menu>
     </Header>
@@ -48,14 +55,31 @@
 </template>
 
 <script>
-import { LogoutService } from '../../services/logoutService'
-import { UserService } from '../../services/userService'
+  import {LoginService} from '../../services/loginService.js'
+  import {UserService} from '../../services/userService'
+  import {EnterGalleryService} from '../../services/enterGalleryService.js'
+  import showAboutUs from '../../components/Common/Modal/ShowAboutUs'
+  // import showUserInfo from '../../components/Common/Modal/ShowUserInfo.vue'
 
   export default {
     name: "UMTop",
     data() {
       return {
         title: '综合管廊统一管理平台',
+        aboutUs: {
+          show: {state: false},
+          company: {
+            version: "MaxTunnel-5.20",
+            name: "上海波汇科技有限公司",
+            email: "Bandweaver@.cn",
+            telephone: "12413321231",
+            address: "上海市浦东新区上科路88号豪威科技园1幢503",
+          }
+        },
+        userself: {
+          show: {state: false},
+          userInfo:{},
+        },
         modules: [
           {
             id: 1,
@@ -166,6 +190,10 @@ import { UserService } from '../../services/userService'
               {
                 name: '人员定位',
                 url: '/UM/PersonnelPosition/tunnel'
+              },
+              {
+                name: '通讯系统',
+                url: '/UM/Communication/answers'
               }
             ]
           },
@@ -210,13 +238,33 @@ import { UserService } from '../../services/userService'
         getUserName: null
       }
     },
-    mounted(){
+    mounted() {
+      this.getUsData();
       this.getCountInfoNum()
       /**.比较浪费带宽 先注释掉 方法可以使用 */
       // setInterval(this.getCountInfoNum,1000)
       this.getSessionUserName()
     },
     methods: {
+      setUserself() {
+        var _this = this;
+
+      },
+      getUsData() {
+        var _this = this;
+        EnterGalleryService.getAboutUsData().then((result => {
+          if (result) {
+            _this.aboutUs.company.version = result.version;
+            _this.aboutUs.company.email = result.email;
+            _this.aboutUs.company.telephone = result.contact;
+             _this.aboutUs.company.address = result.address;
+            _this.aboutUs.company.name = result.company;
+          }
+        }))
+      },
+      showAboutUs() {
+        this.aboutUs.show.state = !this.aboutUs.show.state;
+      },
       //退出登录
       logout: function () {
         var _this = this;
@@ -224,23 +272,14 @@ import { UserService } from '../../services/userService'
           title: '注销',
           content: '<p>确认退出吗?</p>',
           onOk: () => {
-            LogoutService.UMLogout().then(
-              result=>{
+            LoginService.UMLogout().then(
+              result => {
                 sessionStorage.removeItem('user');
                 _this.$router.push('/UMlogin');
               },
-              error=>{
+              error => {
                 this.$Message.error(msg);
               })
-            // this.axios.get('/logout').then(result => {
-            //   let {msg, code, data} = result.data;
-            //   if (code !== "200") {
-            //     this.$Message.error(msg);
-            //   } else {
-            //     sessionStorage.removeItem('user');
-            //     _this.$router.push('/UMlogin');
-            //   }
-            // });
           },
           onCancel: () => {
           }
@@ -249,30 +288,27 @@ import { UserService } from '../../services/userService'
       goToMoudle(path) {
         this.$router.push(path)
       },
-      getCountInfoNum(){
+      getCountInfoNum() {
         let _this = this
         UserService.getMessageCount().then(
-          result=>{
+          result => {
             _this.countNum = result
           },
-          error=>{
+          error => {
             _this.Log.info(error)
           })
-        // axios.get('/users/msg/count').then(response=>{
-        //   let{ code,data } = response.data
-        //   if(code==200){
-        //     this.countNum = data
-
-        //   }
-        // })
       },
-      getSessionUserName:function () {
-        if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
-          var str =sessionStorage.UMUerName.substring(1,2)
-          this.getUserName = str.substring(0,1).toUpperCase()
+      getSessionUserName: function () {
+        if (sessionStorage.UMUerName != null || sessionStorage.UMUerName != undefined || sessionStorage.UMUerName != '') {
+          var str = sessionStorage.UMUerName.substring(1, 2)
+          this.getUserName = str.substring(0, 1).toUpperCase()
         }
       },
-    }
+    },
+    components: {
+      showAboutUs,
+      // showUserInfo
+    },
   }
 </script>
 
@@ -284,11 +320,11 @@ import { UserService } from '../../services/userService'
   }
 
   .layout-logo {
-    width: 60px;
-    height: 60px;
+    height: 8vh;
+    width: 6vw;
     border-radius: 3px;
     position: relative;
-    background-image: url("../../assets/UM/Maxview.png");
+    background: url("../../assets/UM/Maxview.png") no-repeat center;
     float: left;
     top: 0;
   }
@@ -296,25 +332,25 @@ import { UserService } from '../../services/userService'
   .layout-title {
     float: left;
     top: 1vh;
-    margin-left: 2vw;
     color: #fff;
   }
 
   .layout-nav {
-    width: calc(98vw - 360px);
+    width: calc(98vw - 300px);
     position: fixed;
-    top:0;
+    top: 0;
   }
 
   .ivu-menu-horizontal {
-    height: 64px;
-    line-height: 64px;
+    height: 9vh;
+    line-height: 9vh;
   }
 
-  .mainTitle{
+  .mainTitle {
     color: #fff;
   }
-  .mainTitle:hover{
+
+  .mainTitle:hover {
     color: #66ccee;
   }
 </style>

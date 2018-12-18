@@ -44,6 +44,28 @@ public class AlarmController {
 	private MeasObjModuleCenter measObjModuleCenter;
 	
 	
+	/**
+	 * 统计各个级别告警的数目
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":76,"key":"提示"},{"val":87,"key":"一般"},{"val":98,"key":"严重"},{"val":80,"key":"致命"}]}  
+	 * @author shaosen
+	 * @Date 2018年12月8日
+	 */
+	@RequestMapping(value="alarms/count",method=RequestMethod.GET)
+	public JSONObject getAlarmCount() {
+		List<JSONObject> result = new ArrayList<>();
+		AlarmLevelEnum[] values = AlarmLevelEnum.values();
+		for (AlarmLevelEnum alarmLevelEnum : values) {
+			JSONObject js = new JSONObject();
+			js.put("key", alarmLevelEnum.getName());
+			int count = alarmService.getCountByLevel(alarmLevelEnum.getValue());
+			js.put("val", count);
+			result.add(js);
+		}
+		
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
+	}
+	
+	
 	/**接收告警并发送到MQ队列
 	 * @param alarm
 	 * @return   
@@ -53,7 +75,7 @@ public class AlarmController {
 	@RequestMapping(value = "alarms", method = RequestMethod.POST)
 	public JSONObject add(@RequestBody MeasAlarm measAlarm) {
 		
-		LogUtil.info("接收到MaxView发送的告警：" + measAlarm );
+//		LogUtil.info("接收到MaxView发送的告警：" + measAlarm );
 		MeasObj measObj = measObjModuleCenter.getMeasObj(measAlarm.getObjectId());
 		if(measObj == null) {
 			LogUtil.info("监测对象[ " + measAlarm.getObjectId() + "]不存在");
@@ -87,6 +109,21 @@ public class AlarmController {
 	}
 	
 
+	/**
+	 * 批量清除告警 
+	 * @param ids 告警id数组
+	 * @param description 描述
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月8日
+	 */
+	@RequestMapping(value = "alarms/batch/clean",method = RequestMethod.POST)
+	public JSONObject cleanAlarmBatch(@RequestBody AlarmVo vo) {
+		alarmService.cleanAlarmBatch(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	
 	
 	/**清除告警 
 	 * @param alarm
@@ -141,6 +178,7 @@ public class AlarmController {
 	 * @param alarmLevel 告警等级，枚举，参考接口
 	 * @param tunnelId 管廊id
 	 * @param cleaned 告警是否清除 0：没清除 1：已清除
+	 * @param objectIds 监测对象id数组
 	 * @param pageNum 必须
 	 * @param pageSize 必须
 	 * @return  {"msg":"请求成功","code":"200","data":{"total":51,"list":[{"id":51,"alarmDate":1539679719000,"alarmLevelName":"致命","tunnel":{"id":3,"name":"经三路"},"objectId":71,"description":null,"cleaned":false,"cleanedDate":1539679719000},{"id":50,"alarmDate":1539593319000,"alarmLevelName":"致命","tunnel":{"id":2,"name":"实验路"},"objectId":80,"description":null,"cleaned":false,"cleanedDate":1539679719000},{"id":49,"alarmDate":1539506919000,"alarmLevelName":"一般","tunnel":{"id":4,"name":"经二路"},"objectId":94,"description":null,"cleaned":false,"cleanedDate":1539679719000},{"id":48,"alarmDate":1539420519000,"alarmLevelName":"致命","tunnel":{"id":2,"name":"实验路"},"objectId":44,"description":null,"cleaned":false,"cleanedDate":1539679719000},{"id":47,"alarmDate":1539334119000,"alarmLevelName":"一般","tunnel":{"id":3,"name":"经三路"},"objectId":44,"description":null,"cleaned":false,"cleanedDate":1539679719000}],"pageNum":1,"pageSize":5,"size":5,"startRow":1,"endRow":5,"pages":11,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6,7,8],"navigateFirstPage":1,"navigateLastPage":8,"lastPage":8,"firstPage":1}}
@@ -154,17 +192,9 @@ public class AlarmController {
 	}
 	
 	
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	//--------------------------------------------------------------------------------------
-	
 	
 	/**获取管廊内各类缺陷的数目 
-	 * @return   
+	 * @return   {"msg":"请求成功","code":"200","data":[{"val":[{"val":6,"key":"提示"},{"val":0,"key":"一般"},{"val":0,"key":"严重"},{"val":0,"key":"致命"}],"key":"古城大街"},{"val":[{"val":0,"key":"提示"},{"val":0,"key":"一般"},{"val":0,"key":"严重"},{"val":0,"key":"致命"}],"key":"实验路"},{"val":[{"val":0,"key":"提示"},{"val":0,"key":"一般"},{"val":0,"key":"严重"},{"val":0,"key":"致命"}],"key":"经三路"},{"val":[{"val":0,"key":"提示"},{"val":0,"key":"一般"},{"val":0,"key":"严重"},{"val":0,"key":"致命"}],"key":"经二路"},{"val":[{"val":0,"key":"提示"},{"val":0,"key":"一般"},{"val":0,"key":"严重"},{"val":0,"key":"致命"}],"key":"纬三路"}]}
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */

@@ -1,58 +1,56 @@
 <template>
     <div :style="backStyle">
         <Form ref="addBackUp" :model="addBackUp" :rules="validateRules" :label-width="120" @submit.native.prevent>
-            <h1 class="formTitle">添加备品设备</h1>
-            <FormItem label="备品名称：" prop="backUpName">
-                <Input type="text" v-model="addBackUp.backUpName"></Input>
+            <h1 class="formTitle">添加备品备件</h1>
+            <FormItem label="备品名称：" prop="name">
+                <Input type="text" v-model="addBackUp.name"></Input>
             </FormItem>
-            <FormItem label="备品类型：" prop="backUpType">
-                <Select v-model="addBackUp.backUpType">
+            <FormItem label="备品类型：" prop="typeId">
+                <Select v-model="addBackUp.typeId">
                     <Option v-for="item in backUpTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="备品型号：" prop="backUpModelId">
-                <Select v-model="addBackUp.backUpModelId">
+            <FormItem label="备品型号：" prop="modelId">
+                <Select v-model="addBackUp.modelId">
                     <Option v-for="item in backUpModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
+            <FormItem label="供应商：" prop="venderId">
+                <Select v-model="addBackUp.venderId">
+                    <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
+            </FormItem>
             <FormItem label="备品数量：">
-                <InputNumber v-model="addBackUp.number" :min="1" style="width: 540px;"></InputNumber>
+                <InputNumber v-model="addBackUp.count" :min="1" style="width: 540px;"></InputNumber>
             </FormItem>   
-            <FormItem label="入库时间：" prop="interStoreTime">
-                <DatePicker type="datetime" v-model="addBackUp.interStoreTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
+            <FormItem label="入库时间：" prop="inTime">
+                <DatePicker type="datetime" v-model="addBackUp.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
             <FormItem style="text-align: center;">
                 <Button type="primary" @click="submit('addBackUp')" :disabled="isDisable">提交</Button>
                 <Button type="ghost" style="margin-left: 8px" @click="handleReset('addBackUp')">取消 </Button>
             </FormItem>
         </Form>
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
+    import { EquipmentService } from "../../../../services/equipmentService";
     export default{
         data(){
             return{
+                venders: [],
                 addBackUp:{
-                    backUpName: null,
-                    backUpType: null,
-                    backUpModalId: null,
-                    number: 1,
-                    interStoreTime: null
+                    name: null,
+                    typeId: null,
+                    modelId: null,
+                    count: 1,
+                    inTime: new Date(),
+                    status: true,
+                    venderId: null
                 },
-                backUpTypes:[
-                    { id: 1,name: '消防设备' },
-                    { id: 2,name: '通讯设备' },
-                    { id: 3,name: '万能表' },
-                    { id: 4,name: '螺丝刀' },
-                    { id: 5,name: '电脑' },
-                    { id: 6,name: '有害气体检测器' },
-                ],
-                backUpModel:[
-                    { id: 1, name: '001' },
-                    { id: 2, name: '002' },
-                    { id: 3, name: '003' },
-                    { id: 4, name: '004' }
-                ],
+                backUpTypes:[],
+                backUpModel:[],
                 backStyle:{
                     backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
                     position: 'relative',
@@ -64,20 +62,53 @@
                 },
                 isDisable: false,
                 validateRules: {
-                    backUpName: [
+                    name: [
                         { required: true, message: '请输入备品名称', trigger: 'blur'  }
                     ],
-                    backUpType: [
+                    typeId: [
                         { type: 'number', required: true, message: '请选择备品类型', trigger: 'change' }
                     ],
-                    backUpModelId: [
+                    modelId: [
                         { type: 'number', required: true, message: '请选择备品型号', trigger: 'change' }
                     ],
-                    interStoreTime: [
+                    inTime: [
                         { type: 'date', required: true, message: '请选择入库时间', trigger: 'change'}
+                    ],
+                    venderId: [
+                        { type: 'number', required: true, message: '请选择供应商', trigger: 'change' }
                     ]
                 }
             }
+        },
+        mounted(){
+            //获取type
+            EquipmentService.getEquipmentTypes().then(
+                res=>{
+                    this.backUpTypes = res
+                },
+                error => {
+                    this.Log.info(error);
+                },
+            );
+            //获取model
+            EquipmentService.getEquipmentModels().then(
+                res=>{
+                    this.backUpModel = res
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            ),
+            //获取供应商
+            EquipmentService.getVenders().then(
+                res=>{
+                    this.venders = res
+                },
+                error=>{
+                    this.Log.info(error)
+                }
+            )
+
         },
         methods:{
             //提交
@@ -85,9 +116,18 @@
                 this.isDisable = true
                 setTimeout(()=>{
                     this.isDisable = false
-                    this.$refs[name].validate((valid)=>{
+                    this.$refs[name].validate((valid) => {
                         if(valid){
-                            this.$router.push("/UM/equipment/querybackup");
+                            this.axios.post('spares/'+this.addBackUp.count,this.addBackUp).then(res=>{
+                                if(res.data.code==200){
+                                    this.$router.push('/UM/equipment/querybackup')
+                                }
+                            })
+                            .catch(function(error){
+                                console.log(error)
+                            })
+                        }else{
+                            this.$Message.error("请填写正确的备品备件信息")
                         }
                     })
                 },2000)
@@ -95,6 +135,10 @@
             //取消
             handleReset(name){
                 this.$refs[name].resetFields()
+            },
+            //返回
+            goBack(){
+                this.$router.back(-1);
             }
         }
     }
@@ -107,5 +151,10 @@
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div :style="backStyle">
         <Form :model="plans" :label-width="140" @submit.native.prevent>
-            <h2 class="formTitle">审批巡检计划</h2>    
+            <h2 class="formTitle">审批巡检计划</h2>  
             <FormItem label="计划编号：">
                 <Input v-model="plans.id" readonly></Input>
             </FormItem>
@@ -44,6 +44,7 @@
                 <Button type="error" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
             </FormItem>
         </Form>
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -119,7 +120,6 @@ export default {
       } 
     },
     mounted(){
-        console.log("this.$route.params",this.$route.params)
         axios.get('/users/activiti/task/detail/'+this.$route.params.processInstanceId).then(response=>{
             let{ code,data } = response.data
             if(code=200){
@@ -137,7 +137,7 @@ export default {
                 processInstanceId: this.plans.processInstanceId,
                 value: num
             }
-            axios.post('inspection-plans/audit',(this.params)).then(response=>{
+            axios.post('inspection-plans/audit',(param)).then(response=>{
                 let{ code,data } = response.data
                 if(code==200){
                     if(this.$route.params.isFinished==null){
@@ -147,6 +147,10 @@ export default {
                     }
                 }
             })  
+        },
+        //返回
+        goBack(){
+            this.$router.back(-1);
         }
     }
 }
@@ -157,5 +161,10 @@ export default {
     background: #fff;
     padding: 10px 20px;
     margin: 0 auto;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

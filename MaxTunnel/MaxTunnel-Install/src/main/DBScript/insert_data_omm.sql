@@ -101,18 +101,12 @@ insert into T_OMM_EQUIPMENT_STATUS (id, name)
 values (2, '故障');
 commit;
 
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (1, '安全防范');
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (2, '视频监控');
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (3, '环境监测');
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (4, '电缆本体');
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (5, '火灾报警');
-insert into T_OMM_EQUIPMENT_TYPE (id, name)
-values (6, '隧道通信');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('安全防范');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('视频监控');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('环境监测');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('电缆本体');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('火灾报警');
+insert into T_OMM_EQUIPMENT_TYPE (name) values ('隧道通信');
 commit;
 
 -- 添加巡检计划组数据
@@ -139,9 +133,10 @@ commit;
 insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('张三',sysdate);
 insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('李四',sysdate);
 insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('王五',sysdate);
-insert into T_OMM_EQUIPMENT_model (Name,Crt_Time) values ('model-1',sysdate);
-insert into T_OMM_EQUIPMENT_model (Name,Crt_Time) values ('model-2',sysdate);
-insert into T_OMM_EQUIPMENT_model (Name,Crt_Time) values ('model-3',sysdate);
+insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (1,'model-1',sysdate);
+insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (1,'model-2',sysdate);
+insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (2,'model-3',sysdate);
+insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (3,'model-4',sysdate);
 commit;
 
 --添加巡检点数据

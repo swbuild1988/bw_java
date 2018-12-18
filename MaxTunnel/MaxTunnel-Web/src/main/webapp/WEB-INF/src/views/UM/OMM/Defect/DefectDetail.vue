@@ -53,6 +53,7 @@
                 <Button type="ghost" style="margin-left: 8px" @click="handleReset('defectDetails')">取消 </Button>
             </FormItem>
         </Form> 
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>   
 </template>
 <script>
@@ -268,6 +269,10 @@ export default {
         },
         handleReset(name){
             this.$refs[name].resetFields()
+        },
+        //返回
+        goBack(){
+            this.$router.back(-1);
         }
 
         //更新缺陷
@@ -290,6 +295,11 @@ export default {
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>
 

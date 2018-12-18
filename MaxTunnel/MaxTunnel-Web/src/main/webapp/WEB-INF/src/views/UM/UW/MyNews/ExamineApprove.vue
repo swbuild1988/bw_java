@@ -37,6 +37,7 @@
       <Button type="info"  class="btn" v-show="this.$route.params.isFinished==false">审核中</Button>
     </FormItem>
   </Form>
+  <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
   </div>
 </div>
 </template>
@@ -139,6 +140,10 @@
           }
         })
       },
+      //返回
+      goBack(){
+        this.$router.back(-1);
+      }
     }
 };
 </script>
@@ -154,6 +159,11 @@ ul li {
 }
 button {
     width: 80px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>
 

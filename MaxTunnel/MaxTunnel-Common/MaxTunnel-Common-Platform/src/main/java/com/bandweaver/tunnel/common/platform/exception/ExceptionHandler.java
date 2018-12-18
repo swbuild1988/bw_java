@@ -28,10 +28,9 @@ public class ExceptionHandler {
 	@org.springframework.web.bind.annotation.ExceptionHandler(value = Exception.class)
 	@ResponseBody
 	public JSONObject handle(Exception e) {
-		if (e instanceof BandWeaverException) {
-			BandWeaverException bwException = (BandWeaverException) e;
-			return CommonUtil.returnJson(bwException.getCode(), bwException.getMessage(), bwException.getCause());
-			
+		if(e instanceof BandWeaverException) {
+			BandWeaverException bw = (BandWeaverException)e;
+			return CommonUtil.returnJson(bw.getCode(), bw.getMessage(), new JSONObject());
 		} else if (e instanceof IncorrectCredentialsException) {
 			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20007);
 			

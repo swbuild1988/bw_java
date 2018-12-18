@@ -176,8 +176,9 @@ public class ConsumeDataController {
     		vo.setStoreId(dto.getId());
     		Double sum = getSum(vo);
     		JSONObject obj = new JSONObject();
-    		obj.put("key", dto);
+    		obj.put("name", dto.getName());
     		obj.put("val", sum);
+    		obj.put("id", dto.getId());
     		list.add(obj);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
@@ -203,8 +204,9 @@ public class ConsumeDataController {
     		vo.setAreaId(dto.getId());
     		Double sum = getSum(vo);
     		JSONObject obj = new JSONObject();
-    		obj.put("key", dto);
+    		obj.put("name", dto.getName());
     		obj.put("val", sum);
+    		obj.put("id", dto.getId());
     		list.add(obj);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
@@ -237,11 +239,9 @@ public class ConsumeDataController {
     		vo.setObjectType(obj.getValue());
     		Double sum = getSum(vo);
     		JSONObject json = new JSONObject();
-    		JSONObject objMap = new JSONObject();
-    		objMap.put("name", obj.getName());
-    		objMap.put("value", obj.getValue());
-    		json.put("key", objMap);
+    		json.put("name", obj.getName());
     		json.put("val", sum);
+    		json.put("id", obj.getValue());
     		list.add(json);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);

@@ -24,6 +24,7 @@ import com.bandweaver.tunnel.common.biz.dto.FileInfoDto;
 import com.bandweaver.tunnel.common.biz.itf.FileInfoService;
 import com.bandweaver.tunnel.common.biz.pojo.FileInfo;
 import com.bandweaver.tunnel.common.biz.vo.FileInfoVo;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.DescEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -42,7 +43,7 @@ import com.github.pagehelper.PageInfo;
 @ResponseBody
 public class FileInfoController {
 	
-	private static final String FILEPATH = "path.file.upload";
+//	private static final String Constants = "path.file.upload";
 	
 	
 	@Autowired
@@ -74,7 +75,7 @@ public class FileInfoController {
 		String docTypeName = DocTypeEnum.getEnum(docType).getName();
 		
 		//判断存放文件的文件夹是否存在
-		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(FILEPATH));
+		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(Constants.FILE_PATH));
 		if(diskPath == null || diskPath.trim().length()==0) {
 			throw new Exception("文件保存路径未设定！");
 		}
@@ -120,7 +121,7 @@ public class FileInfoController {
 		if(fileInfo == null) {
 			throw new Exception("资源不存在！");
 		}
-		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(FILEPATH));
+		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(Constants.FILE_PATH));
 		String realPath = diskPath + fileInfo.getPath();
 		fileInfoService.download(response, realPath);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
@@ -138,7 +139,7 @@ public class FileInfoController {
 	@RequestMapping(value="files/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteFile(@PathVariable("ids")String ids,HttpServletRequest request) throws Exception {
 		String[] arr = ids.split(",");
-		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(FILEPATH));
+		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(Constants.FILE_PATH));
 		fileInfoService.checkPath(diskPath, false);
 		for (String str : arr) {
 			Integer id = DataTypeUtil.toInteger(str);

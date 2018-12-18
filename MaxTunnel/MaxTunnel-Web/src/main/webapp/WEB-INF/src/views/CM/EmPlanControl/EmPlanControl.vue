@@ -5,7 +5,7 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <div>
-                    <span class="word63">预案名</span><span>：</span>
+                    <span class="word64">预案名</span><span>：</span>
                     <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in planEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -14,18 +14,18 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span class="word65">流程节点值</span><span>：</span>
+                    <span>BPMN节点ID</span><span>：</span>
                     <Input v-model="researchInfo.taskKey" placeholder="支持模糊查询" class="inputWidth"/>
                 </div>
             </Col>
             <Col span="6">
                 <div>
-                    <span class="word65">流程节点名</span><span>：</span>
+                    <span>BPMN节点Name</span><span>：</span>
                     <Input v-model="researchInfo.taskName" placeholder="支持模糊查询" class="inputWidth"/>
                 </div>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="showTable">查询</Button>
                 <Button type="error" size="small" @click="addNewEmPlan()">新增流程节点</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -34,7 +34,7 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <div>
-                    <span>应急目标—值</span><span>：</span>
+                    <span>目标类型</span><span>：</span>
                     <Select v-model="researchInfo.targetKey" placeholder="请选择应急目标值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in targetEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -43,7 +43,7 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span>应急行为—值</span><span>：</span>
+                    <span>应急行为类型</span><span>：</span>
                     <Select v-model="researchInfo.actionKey" placeholder="请选择应急行为值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in actionEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -52,7 +52,7 @@
             </Col>
             <Col span="6">
                 <div>
-                    <span>应急结束—值</span><span>：</span>
+                    <span class="word63">应急结束</span><span>：</span>
                     <Select v-model="researchInfo.finishKey" placeholder="请选择应急结束值" class="inputWidth">
                         <Option value=null>不限</Option>
                         <Option v-for="item in finishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -71,7 +71,7 @@
         </Row>
         <Row  style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-                <span class="word64">开始时间</span><span>：</span>
+                <span>开始时间</span><span>：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
                 </DatePicker>
                 </Col>
@@ -80,6 +80,9 @@
                 <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
                 </DatePicker>
             </Col>   
+            <Col span="3" offset="9">
+                <Button type="primary" size="large" @click="publish.flag = true">部署预案</Button>
+            </Col>
         </Row>
         <div style="margin:20px;">
             <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete"></Table>
@@ -87,13 +90,18 @@
             @on-change="handlePage" show-elevator class="pageStyle"></Page>
         </div>
         <div>
-            <em-plan-module v-bind="addEmPlanInfo" v-on:listenToAdd="saveEmPlan"></em-plan-module>
+            <em-plan-module v-bind="emPlanInfo" v-on:addOrEdit="save"></em-plan-module>
         </div>
+        <Modal title="请选择需要部署的预案" v-model="publish.flag" :mask-closable="false" @on-ok="pubConfirm" @on-cancel="cancel">
+            <Checkbox v-for="(item,index) in publish.list" v-model="item.isChecked" :key="item.key" class="checkbox">{{ item.key }}</Checkbox>
+        </Modal>
     </div>
 </template>
 
 <script>
 import EmPlanModule from '../../CM/EmPlanControl/EmPlanModule.vue'
+import { EnumsService } from '../../../services/enumsService'
+import { PlanService } from '../../../services/planService'
 export default {
     name: "em-plan-controller",
     data(){
@@ -134,42 +142,42 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '流程节点值',
+                    title: 'BPMN节点ID',
                     key: 'taskKey',
                     align: 'center'
                 },
                 {
-                    title: '流程节点名',
+                    title: 'BPMN节点Name',
                     key: 'taskName',
                     align: 'center'
                 },
                 {
-                    title: '应急目标',
+                    title: '目标类型',
                     key: 'targetName',
                     align: 'center'
                 },
                 {
-                    title: '应急目标-值',
-                    key: 'targetKey',
+                    title: '目标对象',
+                    key: 'targetValue',
                     align: 'center'
                 },
                 {
-                    title: '应急行为',
+                    title: '应急行为类型',
                     key: 'actionName',
                     align: 'center'
                 },
                 {
-                    title: '应急行为-值',
-                    key: 'actionKey',
+                    title: '应急行为',
+                    key: 'actionValue',
                     align: 'center'
                 },
                 {
-                    title: '应急结束',
+                    title: '应急结束类型',
                     key: 'finishName',
                     align: 'center'
                 },
                 {
-                    title: '应急结束-值',
+                    title: '应急结束',
                     key: 'finishKey',
                     align: 'center'
                 },
@@ -200,7 +208,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.editEmPlan(params.index)
+                                        this.editEmPlan(params.row.id)
                                     }
                                 }
                             }, '修改')
@@ -228,9 +236,14 @@ export default {
             },
             deleteShow: false,
             deleteSelect:[],
-            addEmPlanInfo:{
+            emPlanInfo:{
                 show:{state: false},
-                addInfo:{}
+                editInfo:{},
+                type: null
+            },
+            publish: {
+                flag: false,
+                list: []
             }
         }
     },
@@ -250,97 +263,122 @@ export default {
                 endTime: new Date(this.researchInfo.endTime).getTime()
             };
             return Object.assign({}, param);
-        },
-        newParams(){
-            // 新增
-            let param = {
-                processKey :this.formValidate.processKey,
-                taskKey: this.formValidate.taskKey,
-                taskName: this.formValidate.taskName,
-                targetKey: this.formValidate.targetKey,
-                targetValue: this.formValidate.targetValue,
-                actionKey: this.formValidate.actionKey,
-                actionValue: this.formValidate.actionValue,
-                finishKey: this.formValidate.finishKey,
-                finishValue: this.formValidate.finishValue,
-                isFinished: this.formValidate.isFinished
-            };
-            return Object.assign({}, param);
         }
     },
     mounted(){
-        this.getTargetEnumList();
-        this.getActionEnumList();
-        this.getFinishEnumList();
-        this.getPlanEnumList();
-        this.showTable();
+        this.init()
+        this.showTable()
     },
     methods:{
         showTable(){
-            this.axios.post('/emplans/datagrid',(this.researches)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.data6 = data.list;
-                    for( let index in data.list){
-                        this.data6[index].crtTime = new Date(data.list[index].crtTime).format('yyyy-MM-dd hh:mm:s');
-                    }
-                    this.page.pageTotal = data.total;
-                }
-            })
+            let _this = this
+            Promise.all([PlanService.emPlansDatagrid(this.researches),EnumsService.getUnitType(),EnumsService.getSwitch()]).then(
+                result=>{
+                    let plans = result[0].list
+                    let unitTypeEnums = result[1]
+                    let switchEnums = result[2]
+                    _this.data6 = plans
+                    _this.data6.forEach(item=>{
+                        item.crtTime = new Date(item.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        if(item.actionKey == 2){
+                            let actionValue = unitTypeEnums.find(a=>{
+                                return a.val == item.actionValue
+                            })
+                            item.actionValue = actionValue.key
+                        } else {
+                            if(item.actionKey == 3){
+                                let actionValue = switchEnums.find(a=>{
+                                    return a.val == item.actionValue
+                                })
+                                item.actionValue = actionValue.key
+                            }
+                        }
+                    })
+                    _this.page.pageTotal = result[0].total;
+                })
         },
-        getTargetEnumList(){      //获取应急目标对象列表
-            this.axios.get('/em/target-enums').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.targetEnums = data;
-                }
-            })
-        },
-        getActionEnumList(){       //获取应急行为
-            this.axios.get('/em/action-enums').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.actionEnums = data;
-                }
-            })
-        },
-        getFinishEnumList(){        //获取应急结束类型
-            this.axios.get('/em/finish-enums').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.finishEnums = data;
-                }
-            })
-        },
-        getPlanEnumList(){
-            this.axios.get('/plan-enums').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.planEnums = data;
-                }
-            })
+        init(){      
+            let _this = this
+            //获取应急目标对象列表
+            EnumsService.getEmTargetObjs().then(
+                result=>{
+                    _this.targetEnums = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            //获取应急行为
+            EnumsService.getEmAction().then(
+                result=>{
+                    _this.actionEnums = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            //获取应急结束类型
+            EnumsService.getEmFinishType().then(
+                result=>{
+                    _this.finishEnums = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            EnumsService.getPlanType().then(
+                result=>{
+                    _this.planEnums = result
+                    _this.planEnums.forEach(plan=>{
+                        let temp = {}
+                        temp.key = plan.key
+                        temp.val = plan.val
+                        temp.isChecked = false
+                        _this.publish.list.push(temp)
+                    })
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         },
         handlePage(value) {
             this.page.pageNum = value;
             this.showTable();
         },
         addNewEmPlan(){
-            this.addEmPlanInfo.show.state = !this.addEmPlanInfo.show.state;
+            this.emPlanInfo.show.state = !this.emPlanInfo.show.state
+            this.emPlanInfo.type = 'add'
         },
-        saveEmPlan(_data){
-            this.formValidate = _data;
-            this.axios.post('/emplans',(this.newParams)).then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.page.pageTotal = data.total;
-                    this.$Message.success('添加成功！');
-                    this.addEmPlanInfo.show.state = !this.addEmPlanInfo.show.state;
-                    this.showTable();
-                }
-            })
+        save(data){
+            let _this = this
+            if(this.emPlanInfo.type == 'add'){
+                PlanService.addEMPlanNode(data).then(
+                result=>{
+                    _this.$Message.success('添加成功！')
+                    _this.emPlanInfo.show.state = !this.emPlanInfo.show.state
+                    _this.showTable()
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            } else {
+                PlanService.updateEMPlanNode(data).then(
+                    result=>{
+                        _this.$Message.success('更新成功！')
+                        _this.emPlanInfo.show.state = !this.emPlanInfo.show.state
+                        _this.showTable()
+                    })
+            }
+            
         },
-        editEmPlan(index){
-
+        editEmPlan(id){
+            let _this = this
+            PlanService.getNodeDetailById(id).then(
+                result=>{
+                    _this.emPlanInfo.editInfo = result
+                    _this.emPlanInfo.show.state = !this.emPlanInfo.show.state
+                    this.emPlanInfo.type = 'edit'
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         },
         startdelete(selection){
             if(selection.length != 0){
@@ -359,14 +397,13 @@ export default {
                     for(let i=1;i<this.deleteSelect.length;i++){
                         ids += "," + this.deleteSelect[i].id;
                     }
-                    this.axios.delete('/emplans/batch/' + ids).then(res =>{
-                        let {code,data} = res.data;
-                        if (code == 200){
-                            this.$Message.info('已删除');
-                            this.deleteShow = false;
-                            this.showTable();
-                        }
-                    })    
+                    let _this = this
+                    PlanService.batchDeletePlans(ids).then(
+                        result=>{
+                            _this.$Message.info('已删除')
+                            _this.deleteShow = false
+                            _this.showTable()
+                        })
                 },
                 onCancel: () => {
                     this.$Message.info('已取消操作');
@@ -374,8 +411,30 @@ export default {
                 }
             });
         },
-        research(){
-            this.showTable();
+        pubConfirm() {
+            let vals = []
+            this.publish.list.forEach(item=>{
+                if(item.isChecked == true){
+                    vals.push(item.val)
+                }
+            })
+            this.Log.info(vals.join(','))
+            let _this = this
+            PlanService.publishPlans(vals.join(',')).then(
+                result=>{
+                    _this.$Message.success('部署成功！')
+                    _this.publish.list.forEach(item=>{
+                        item.isChecked = false
+                    })
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        },
+        cancel() {
+            this.publish.list.forEach(item=>{
+                item.isChecked = false
+            })
         }
     },
     components:{
@@ -394,8 +453,8 @@ export default {
     margin-right: 10px;
 }
 .word63{
-    letter-spacing: 1.5em;
-    margin-right: -1.5em
+    letter-spacing: 1.2em;
+    margin-right: -1.2em
 }
 .word64{
     letter-spacing: 0.67em;
@@ -404,6 +463,9 @@ export default {
 .word65{
     letter-spacing: 0.25em;
     margin-right: -0.25em;
+}
+.checkbox{
+    margin: 10px 20px;
 }
 </style>
 

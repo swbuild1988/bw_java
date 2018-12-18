@@ -59,6 +59,8 @@ export default {
     props:{
         currentMonth: null,
         currentYear: null,
+        isCur: false,
+        cur: ''
     },
     watch:{
         'currentMonth':function(curVal,oldVal){
@@ -72,7 +74,7 @@ export default {
             }
         }
     },
-    created: function() { //在vue初始化时调用
+    mounted: function() { //在vue初始化时调用
         this.initData(null);
     },
     methods: {
@@ -80,7 +82,7 @@ export default {
             var leftcount = 0; //存放剩余数量
             var date;
             if (cur) {
-                date = new Date(cur);
+                date = cur;
             } else {
                 var now = new Date();
                 var d = new Date(this.formatDate(this.currentYear, this.currentMonth-1, 1));
@@ -111,7 +113,6 @@ export default {
             }
         },
         pickYear: function(year, month) {
-            alert(year + "," + month);
         },
 
         // 返回 类似 2016-01-02 格式的字符串
@@ -139,15 +140,17 @@ export default {
 
         //输出所有的高亮显示内容
         outputHeighLight() {
-            var arr = this.$refs.dayLi;
-            let activeText = [];
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i].getAttribute("class") == 'active') {
-                    let HeighLightDay = new Date(this.currentYear, this.currentMonth-1, Number(arr[i].innerText));
-                    activeText.push(HeighLightDay);
+            this.$nextTick(()=>{
+                var arr = this.$refs.dayLi;
+                let activeText = [];
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].getAttribute("class") == 'active') {
+                        let HeighLightDay = new Date(this.currentYear, this.currentMonth-1, Number(arr[i].innerText));
+                        activeText.push(HeighLightDay);
+                    }
                 }
-            }
-            this.$emit('childByValue', activeText)
+                this.$emit('childByValue', activeText)
+            })
         },
 
         //显示当前点击对象
@@ -182,14 +185,17 @@ export default {
         },
         //回显选中的日期
         shwoActiveDate(inspectionTimeCon){
-            var arr = this.$refs.dayLi;
-            for (var i = 0; i < arr.length; i++) {             
-                let t = new Date(this.currentYear, this.currentMonth-1, Number(arr[i].innerText));
-                // 判断当前星期在不在列表中          
-                if (inspectionTimeCon.indexOf(t.getDate()) != -1) {
-                    arr[i].setAttribute("class", "active");
+            this.$nextTick(()=>{
+                var arr = this.$refs.dayLi;          
+                var arrLength = arr.length
+                for (var i = 0; i < arrLength; i++) {
+                    let t = new Date(this.currentYear, this.currentMonth-1, Number(arr[i].innerText));
+                    // 判断当前星期在不在列表中        
+                    if (inspectionTimeCon.indexOf(t.format('yyyy-MM-dd')) != -1) {
+                        arr[i].setAttribute("class", "active");
+                    }
                 }
-            }
+            })
         }
     }
 }

@@ -1,23 +1,29 @@
 package com.bandweaver.tunnel.dao.mam;
 
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIDto;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjAIVo;
 
 public interface MeasObjAIMapper {
 
-    int insert(MeasObjAI record);
-    int insertSelective(MeasObjAI record);
+	int insert(MeasObjAI record);
 
-    int update(MeasObjAI record);
+	int insertSelective(MeasObjAI record);
 
-    MeasObjAI getMeasObjAI(@Param("id") Integer id);
+	int update(MeasObjAI record);
 
-    List<MeasObjAI> getAllMeasObjAIs();
+	MeasObjAI getMeasObjAI(@Param("id") Integer id);
+
+	List<MeasObjAI> getAllMeasObjAIs();
 
 	void addBatch(List<MeasObjAI> aiList);
+
 	void deleteByPrimaryKey(Integer id);
 
+	List<MeasObjAIDto> dataGrid(MeasObjAIVo aiVo);
 
 }

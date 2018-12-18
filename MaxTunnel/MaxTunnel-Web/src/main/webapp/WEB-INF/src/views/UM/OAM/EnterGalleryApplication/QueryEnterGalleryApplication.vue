@@ -34,12 +34,18 @@
                 v-model="modal10"
                 class-name="vertical-center-modal">
                 <Table :columns="columns2" :data="visitorInfo" width="500" :height="300"></Table>
+                <div slot="footer">
+                  <Button type="primary" @click="modal10=false">确定</Button>
+                </div>
             </Modal>
             <Modal
                 title="申请状态"
                 v-model="modal1"
                 class-name="vertical-center-modal">
                 <image-from-url :url="imageUrl"></image-from-url>
+                <div slot="footer">
+                  <Button type="primary" @click="modal1=false">确定</Button>
+                </div>
             </Modal>
             <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
                     placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>

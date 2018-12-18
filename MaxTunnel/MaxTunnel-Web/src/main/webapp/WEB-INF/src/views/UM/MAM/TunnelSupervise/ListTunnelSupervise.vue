@@ -206,7 +206,6 @@
 </template>
 <script>
   import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
-  // import v_3DViewer from "../../../../components/Common/3DViewers";
   import SmViewer from "../../../../components/Common/3D/3DViewer";
   import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
   import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
@@ -223,7 +222,6 @@
     processFailed
   } from "../../../../scripts/commonFun.js";
   import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
-  // import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
   import axios from "axios"
 

@@ -244,7 +244,7 @@ export default {
     border-radius: 50%;
     text-align: center;
     padding: 12% 0;
-    background-color: white;
+    background-color: rgb(2,23,47);
 }
 .stop{
     margin: auto;  

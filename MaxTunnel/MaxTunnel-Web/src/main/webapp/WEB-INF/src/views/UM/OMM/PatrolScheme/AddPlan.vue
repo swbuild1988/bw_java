@@ -57,7 +57,7 @@
                     <Checkbox v-for="(item, index) in weekDay" v-model="item.value" :value='item.value' :key='index' @on-change="getWeek">{{item.name}}</Checkbox>
                   </TabPane>
                   <TabPane label="自定义" name="name3" style="text-align: center">
-                    请选择您需要的时间
+                    请根据您的需求自由选择日期
                   </TabPane>
                 </Tabs>
                 <calender ref="calender" :currentMonth="currMonth"  :currentYear="currYear" v-on:childByValue="getActiveText" style="margin: 10px auto;margin-bottom: 0px;"></calender>
@@ -70,6 +70,7 @@
             <Button type="ghost"  style="margin-left: 8px" @click="handleReset('uploadPlan')">取消</Button>
         </FormItem>
       </Form> 
+      <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>  
 
@@ -283,9 +284,13 @@ export default {
       if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
         this.uploadPlan.requestStaffId = sessionStorage.UMUerId
         this.requestStaffName = sessionStorage.UMUerName.substring(1,sessionStorage.UMUerName.length-1)
-        console.log("sessionStorage.UMUerName",sessionStorage.UMUerName)
+
       }
     },
+    //返回
+    goBack(){
+      this.$router.back(-1);
+    }
   }
 }
 </script>
@@ -345,5 +350,10 @@ input[type='number']{
     position: relative;
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

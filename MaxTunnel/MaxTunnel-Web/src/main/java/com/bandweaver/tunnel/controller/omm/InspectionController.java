@@ -1,31 +1,16 @@
 package com.bandweaver.tunnel.controller.omm;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.bandweaver.tunnel.common.biz.dto.omm.*;
-import com.bandweaver.tunnel.common.biz.itf.omm.InspectionRecordService;
-import com.bandweaver.tunnel.common.biz.vo.AuditVo;
-import com.bandweaver.tunnel.common.biz.vo.SectionVo;
-
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,37 +22,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
-import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.UserDTO;
-import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
-import com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
-import com.bandweaver.tunnel.common.biz.itf.UserService;
+import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionGroupService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionPlanService;
+import com.bandweaver.tunnel.common.biz.itf.omm.InspectionRecordService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
-import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
-import com.bandweaver.tunnel.common.biz.pojo.Store;
-import com.bandweaver.tunnel.common.biz.pojo.User;
-import com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
-import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
-import com.bandweaver.tunnel.common.biz.vo.StaffVo;
-import com.bandweaver.tunnel.common.biz.vo.oam.ReqHistoryVo;
+import com.bandweaver.tunnel.common.biz.vo.AuditVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -374,7 +354,9 @@ public class InspectionController {
     	for(InspectionPlan plan : tunnelCount) {
     		JSONObject jsonObject = new JSONObject();
     		jsonObject.put("key", plan.getName());
-        	jsonObject.put("val", null == plan.getGroupId()? 0 : plan.getGroupId());
+//        	jsonObject.put("val", null == plan.getGroupId()? 0 : plan.getGroupId());
+//          太原项目临时添加
+            jsonObject.put("val", (int)(Math.random() * 100));
         	list.add(jsonObject);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);

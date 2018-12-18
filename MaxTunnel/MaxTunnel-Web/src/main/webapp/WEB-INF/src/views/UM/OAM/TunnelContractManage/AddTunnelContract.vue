@@ -1,6 +1,6 @@
 <template>
   <div :style="backStyle">
-    <Form ref="addContractInfo" :model="addContractInfo"  :rules="ruleValidate" :label-width="140">
+    <Form ref="addContractInfo" :model="addContractInfo"  :rules="ruleValidate" :label-width="140" class="form">
         <h2 v-if="pageType!=pageTypes.Edit && pageType!=pageTypes.Read">添加合同信息</h2>
         <h2 v-if="pageType==pageTypes.Edit">修改合同信息</h2>
         <h2 v-if="pageType==pageTypes.Read">合同信息详情</h2>
@@ -84,8 +84,8 @@
             </Col>
         </FormItem>
         <div style="text-align: center">
-        <Button type="primary" @click="submitAddContractInfo('addContractInfo')" v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read" :disabled="isDisable">提交</Button>
-        <Button type="primary" @click="submitEditContractInfo('addContractInfo')" v-if="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
+        <Button type="primary" @click="submitAddContractInfo('addContractInfo')" v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read">提交</Button>
+        <Button type="primary" @click="submitEditContractInfo('addContractInfo')" v-if="pageType==pageTypes.Edit">更新</Button>
         <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="pageType != pageTypes.Read">取消</Button>
         <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="read">返回</Button>
         </div>
@@ -107,16 +107,18 @@ export default {
                 position: 'relative',
                 paddingTop: '20px',
                 paddingBottom: '20px',
-                height: '100%'
+                height: '100%',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '100% 100%'
             },
             pageType: 3,
             pageTypes: types.pageType,
             addContractInfo:{
                 name: null,
-                contractStartTime: null,
-                contractEndTime: null,
-                payType: null,
-                customerId: null,
+                contractStartTime: new Date(),
+                contractEndTime: new Date(new Date().getTime() + 1000*60*60*24*365).format('yyyy-MM-dd hh:mm:ss'),
+                payType: '1',
+                customerId: 0,
                 cableName: null,
                 cableLength: null,
                 areaIds:[],
@@ -144,7 +146,6 @@ export default {
                 ],
                 customerId: [
                     { required: true, message: '请选择客户'}
-                     // { validator: validateCusIdCheck, trigger: 'blur' }
                 ],
                 cableName: [
                     { required: true, message: '请填写管线名称', trigger: 'blur' }
@@ -189,24 +190,19 @@ export default {
             this.pageType = 3;
             this.addContractInfo = {
                 name: null,
-                contractStartTime: null,
-                contractEndTime: null,
-                payType: ' ',
-                customerId: null,
+                contractStartTime: new Date(),
+                contractEndTime: new Date(new Date().getTime() + 1000*60*60*24*365).format('yyyy-MM-dd hh:mm:ss'),
+                payType: '1',
+                customerId: 0,
                 cableName: null,
                 cableLength: null,
                 areaIds:[],
                 storeId: null,
                 tunnelId: null
             }
-            this.customerName = null;
-            this.checkCable.store = false;
-            this.checkCable.area = false;
+            this.customerName = ' ';
             this.read = false;
-        },
-        // 'addContractInfo.tunnelId': function(){
-            
-        // }
+        }
     },
     methods:{
         getInitData() {
@@ -227,27 +223,26 @@ export default {
                 })
         },
         submitAddContractInfo(name){
-            this.isDisable = true
-            setTimeout(()=>{
-                this.isDisable = false
-                this.$refs[name].validate((valid)=>{
-                  if(valid){
-                    if(this.validateTelRules==true){
-                        let _this = this
-                        ContractService.addContract(_this.addContractInfo).then(
-                            (result)=>{
-                                _this.Log.info('success')
-                            },
-                            (error)=>{
-                                _this.Log.info(error)
-                            })
-                      this.$router.push("/UM/tunnelContract/list");
-                    }
-                  }else{
-                    this.$Message.error("请填写正确的客户信息")
-                  }
-                })
-            },2000)
+            this.$refs[name].validate((valid)=>{
+              if(valid){
+                if(this.validateTelRules==true){
+                    let _this = this
+                    ContractService.addContract(_this.addContractInfo).then(
+                        (result)=>{
+                            _this.Log.info('success')
+                        },
+                        (error)=>{
+                            _this.Log.info(error)
+                        })
+                    _this.$nextTick(()=>{
+                        _this.$router.push("/UM/tunnelContract/list")
+                    })
+                }
+              }else{
+                this.$Message.error("请填写正确的客户信息")
+              }
+            })
+           
 
         },
         getParams(){
@@ -291,9 +286,7 @@ export default {
             }
         },
         submitEditContractInfo(name){
-            this.isDisable = true
-            setTimeout(()=>{
-                this.$refs[name].validate((valid)=>{
+            this.$refs[name].validate((valid)=>{
                 if(valid){
                   if(this.validateTelRules==true){
                     let _this = this
@@ -304,13 +297,14 @@ export default {
                         (error)=>{
                             _this.Log.info(error)
                         })
-                    this.$router.push("/UM/tunnelContract/list");
+                     _this.$nextTick(()=>{
+                        _this.$router.push("/UM/tunnelContract/list")
+                    })
                   }
                 }else{
                   this.$Message.error("请填写正确的客户信息")
                 }
-              })
-            },2000)
+            })
         },
         handleReset(name){
             if(this.read ||　this.pageType == this.pageTypes.Edit){
@@ -326,22 +320,27 @@ export default {
             this.customerName = data.name.toString();
         },
         check(type){
-            if(type == 'store'){
-                if(!this.addContractInfo.storeId){
-                    this.checkCable.store = true
-                }else{
-                    this.checkCable.store = false
-                }
-            }else if(type == 'area'){
-                if(!this.addContractInfo.storeId){
-                    this.checkCable.store = true
-                }else{
-                    this.checkCable.store = false
-                }
-                if(!this.addContractInfo.areaIds[0]){
-                    this.checkCable.area = true
-                }else{
-                    this.checkCable.area = false
+            if(this.addContractInfo.tunnelId == undefined){
+                this.checkCable.store = false
+                this.checkCable.area = false
+            } else{
+                if(type == 'store'){
+                    if(!this.addContractInfo.storeId){
+                        this.checkCable.store = true
+                    }else{
+                        this.checkCable.store = false
+                    }
+                }else if(type == 'area'){
+                    if(!this.addContractInfo.storeId){
+                        this.checkCable.store = true
+                    }else{
+                        this.checkCable.store = false
+                    }
+                    if(!this.addContractInfo.areaIds[0]){
+                        this.checkCable.area = true
+                    }else{
+                        this.checkCable.area = false
+                    }
                 }
             }
         },
@@ -390,5 +389,11 @@ h2{
 .pop{
     max-height:300px;
     overflow-y: auto;
+}
+.form{
+   /* position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);*/
 }
 </style>

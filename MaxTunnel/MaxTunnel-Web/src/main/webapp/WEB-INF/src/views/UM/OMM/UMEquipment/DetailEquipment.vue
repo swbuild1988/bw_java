@@ -1,66 +1,66 @@
 <template>
-  <div style="padding: 8px;background: #fff;">
+  <div style="background: #fff;">
     <Row>
       <Col span="12">
-      <div style="overflow-y:auto;height: 86vh;">
-        <Form :model="equipment" :label-width="110" @submit.native.prevent>
-          <Col span="12">
+      <div style="overflow-y:auto;height: 86vh;padding: 5px;">
+        <Form :model="equipment" :label-width="130" @submit.native.prevent>
+          <!-- <Col span="12">
           <FormItem label="设备编号">
             <Input v-model='equipment.assetNo' :disabled='pageType!=pageTypes.Add'></Input>
           </FormItem>
-          </Col>
+          </Col> -->
           <Col span="12">
-          <FormItem label="设备名称">
+          <FormItem label="设备名称：">
             <Input v-model='equipment.name' :disabled='pageType==pageTypes.Read'></Input>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="所属管廊">
+          <FormItem label="所属管廊：">
             <Select v-model='equipment.tunnel.id' :disabled='pageType==pageTypes.Read'>
               <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="设备类型">
+          <FormItem label="设备类型：">
             <Select v-model='equipment.type' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in equipmentTypes" :value="index" :key="index">{{ item.value }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="投运时间">
+          <FormItem label="投运时间：">
             <Input v-model='equipment.crtTime' :disabled='pageType==pageTypes.Read'></Input>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="设备状态">
+          <FormItem label="设备状态：">
             <Select v-model='equipment.status' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in equipmentStatus" :value="item.key" :key="index">{{ item.value }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="供应商">
+          <FormItem label="供应商：">
             <Select v-model='equipment.vender.id' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="设备型号">
+          <FormItem label="设备型号：">
             <Select v-model='equipment.model.id' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in equipmentModels" :value="item.id" :key="index">{{ item.name }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="设备位置">
+          <FormItem label="设备位置：">
             <Input v-model='equipment.tunnelName' :disabled='pageType==pageTypes.Read'></Input>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="维修记录" v-show="pageType!=pageTypes.Create" style="overflow-y:auto;max-height: 80px; min-height: 40px;">
+          <FormItem label="维修记录：" v-show="pageType!=pageTypes.Create" style="overflow-y:auto;max-height: 80px; min-height: 40px;">
             <ul class="record">
               <li v-for="(item,index) in repairRecord" :key="index" :disabled='pageType==pageTypes.Read'>
                 {{item.id}} : {{item.record}}
@@ -69,31 +69,31 @@
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="报警次数">
+          <FormItem label="报警次数：">
             <Input v-model='equipment.alarmCount' disabled></Input>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="运行时间">
+          <FormItem label="运行时间：">
             <Input v-model='equipment.runTime' disabled style="width: calc(100% - 30px);"></Input>(时)
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="关联检测对象">
+          <FormItem label="关联监测对象：">
             <Select v-model='equipment.venderId' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="12">
-          <FormItem label="对象类型">
+          <FormItem label="对象类型：">
             <Select v-model='equipment.venderId' :disabled='pageType==pageTypes.Read'>
               <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
             </Select>
           </FormItem>
           </Col>
           <Col span="24">
-          <FormItem label="设备图片">
+          <FormItem label="设备图片：">
             <img :src="equipmentIMgSrc" class="equipmentImg">
           </FormItem>
           </Col>
@@ -175,13 +175,13 @@
       };
     },
     beforeRouteLeave (to, from, next) {
-      if(to.name == '设备管理主页' || to.name == 'UMPatrolHomePage' || to.name == '虚拟巡检' || to.name == '人员定位详情' 
-      || to.name == '管廊安防监控详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监测列表'){
+      if (to.name == '设备管理主页' || to.name == 'UMPatrolHomePage' || to.name == '虚拟巡检' || to.name == '人员定位详情' 
+      || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表') {
         from.meta.keepAlive = false;
         to.meta.keepAlive = false;
         this.$destroy()
         next()
-      }else{
+      } else {
         to.meta.keepAlive = false
         from.meta.keepAlive = false
         this.$destroy()
@@ -247,11 +247,13 @@
         var gis = document.getElementById('newID')
         gis.style.display = "block";
         gis.style.position = 'absolute';
-        gis.style.top = '0px';
-        gis.style.height = '100%';
+        gis.style.top = '5px';
+        gis.style.height = '99%';
         gis.style.width = '100%'    
         document.body.removeChild(gis)
         document.getElementById("GISbox").appendChild(gis)
+        // 加载视角
+        this.$refs.smViewer.setViewAngAngle();
       },
       destoryGis(){
         var gis = document.getElementById("newID");

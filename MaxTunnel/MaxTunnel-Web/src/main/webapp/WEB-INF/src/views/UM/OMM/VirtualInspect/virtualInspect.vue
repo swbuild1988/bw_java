@@ -6,14 +6,16 @@
         <div class="coolBox" style="height: 60px;padding: 12px;color: #fff;font-size: 16px;">
             <Row>
                 <Col span="9"> 飞行路径：
-                <Select v-model="conditions.routeIndex" style="width: 60%" @on-change="getStopsList"> 
-                    <Option value="00">全部</Option> 
-                    <Option v-for="(item,index) in list.routes" :key="index" :value="index">{{item.routeName}}</Option>
+                <Select v-model="conditions.routeId" style="width: 60%" @on-change="getStopsList"> 
+                    <Option value="0">全部</Option> 
+                    <Option v-for="item in list.routes" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
                 </Col>
                 <Col span="9"> 站点：
-                <Select v-model="conditions.stopId" style="width: 60%">
-                    <Option v-for="(item,index) in list.stops" :key="index" :value="item.id">{{item.stopName}}</Option>
+                <Select v-model="conditions.stopIndex" style="width: 60%" @on-change="handleStopChanged">
+                    <Option value='1,0' v-if="defaultOptionFlag == 0">飞行路径1 - 站点1</Option>
+                    <Option value='0' v-if="defaultOptionFlag == 1">站点1</Option>
+                    <Option v-for="(item,index) in list.stops" :key="index" :value="item.stopIndex">{{item.stopName}}</Option>
                 </Select>
                 </Col>
                 <Col span="6" style="text-align: right">
@@ -43,7 +45,7 @@
             </Col>
             <Col span="12">
             <div class="manualShowInspect coolBox" style="color: #fff">
-                <!-- <video-component v-bind:video="curVideo" v-bind:id="'vitrulInspect'"></video-component> -->
+                <video-component v-bind:video="curVideo" v-bind:id="'vitrulInspect'"></video-component>
             </div>
             </Col>
         </Row>
@@ -66,8 +68,8 @@ export default {
     data() {
         return {
             conditions: {
-                routeIndex: '00',
-                stopId: null
+                routeId: '0',
+                stopIndex: '1,0'
             },
             SmSetting: {
                 flyManagerAttr: {
@@ -85,7 +87,6 @@ export default {
                 routes: null,
                 stops: [],
             },
-            allStops: [],
             cameraPosition: null,
             playOrPause: {
                 isPlay: false,
@@ -95,11 +96,16 @@ export default {
                 isShow: true,
                 data: null
             },
-            isManual: false
+            isManual: false,
+            defaultOptionFlag: 0 // 0 代表全部，1代表单一
         };
     },
     beforeRouteLeave(to,from,next){
-        if(to.name == '人员定位详情' || to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '管廊安防监控列表'){
+        if(to.name == '人员定位详情' || to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '管廊环境监控列表' 
+            || to.name == '管理安防监控列表'
+            || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == 'UMDetailEquipment' 
+            || from.name == '人员定位详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' 
+            || from.name == '管廊环境监控详情' || from.name == '管廊安防监控详情'){
             from.meta.keepAlive = true
             to.meta.keepAlive = true
             this.$destroy()
@@ -112,17 +118,12 @@ export default {
         }
     },
     mounted() {
-        let data = this.$refs.smViewer.getRoutesAndStops()
-        this.list.routes = data.routes
-        this.allStops = data.allStops
+        let data = this.$refs.smViewer.getRoutes()
+        this.list.routes = data
         this.getStopsList()
         this.Log.info("初始化调用刷新");
         this.$refs.smViewer.startCameraPositionRefresh();
         this.setGIS()
-    },
-    beforeDestroy() {
-        this.Log.info("停止刷新");
-        this.$refs.smViewer.stopCameraPositionRefresh();
     },
     components: {
         // SmViewer,
@@ -139,15 +140,24 @@ export default {
             gis.style.width = '97%'    
             document.body.removeChild(gis)
             document.getElementById("GISbox").appendChild(gis)
+            this.$refs.smViewer.setViewAngAngle();
         },
         getStopsList() {
-            if(this.conditions.routeIndex == '00'){
-                this.list.stops = this.allStops
+            this.list.stops = this.$refs.smViewer.getStopsList(this.conditions.routeId)
+            if(this.conditions.routeId == 0){
+                this.defaultOptionFlag = 0
+                this.conditions.stopIndex = '1,0'
             } else {
-                this.list.stops = this.list.routes[this.conditions.routeIndex].stopCollection
+                this.defaultOptionFlag = 1
+                this.conditions.stopIndex = '0'
+            }
+            this.handleStopChanged()
+        },
+        handleStopChanged(){
+            if(this.conditions.stopIndex != null){
+                this.$refs.smViewer.stopChanged(this.conditions.stopIndex+'')
             }
         },
-
         // 3D相机位置刷新
         refreshCameraPosition(position) {
             this.cameraPosition = position;
@@ -172,19 +182,6 @@ export default {
                                     error=>{
                                         _this.Log.info(error)
                                     })
-                                // this.axios
-                                //     .get(
-                                //         "videos/" +
-                                //             this.curVideo.id +
-                                //             "/presets/" +
-                                //             this.curPerset +
-                                //             "/goto"
-                                //     )
-                                //     .then(res => {
-                                //         this.Log.info(
-                                //             "goto" + this.curPerset
-                                //         );
-                                //     });
                             }
                         } else {
                             // 如果是同一个相机，并且预置位变了
@@ -202,75 +199,14 @@ export default {
                                     error=>{
                                         _this.Log.info(error)
                                     })
-                                // this.axios
-                                //     .get(
-                                //         "videos/" +
-                                //             this.curVideo.id +
-                                //             "/presets/" +
-                                //             this.curPerset +
-                                //             "/goto"
-                                //     )
-                                //     .then(res => {
-                                //         this.Log.info(
-                                //             "goto" + this.curPerset
-                                //         );
-                                //     });
                             }
                         }
                     }
                 })
-            // this.axios
-            //     .post("virual-inspection/video", this.cameraPosition)
-            //     .then(res => {
-            //         let { code, data } = res.data;
-            //         if (code == 200) {
-            //             this.Log.info("get camera", data.video);
-            //             this.Log.info("get preset", data.preset);
-            //             if (data.video) {
-            //                 // 如果是不同相机，则预置位更新并走到对应预置位
-            //                 if (this.curVideo.id != data.video.id) {
-            //                     this.curVideo = data.video;
-            //                     this.curPerset = data.preset;
-            //                     if (this.curPerset != null) {
-            //                         this.axios
-            //                             .get(
-            //                                 "videos/" +
-            //                                     this.curVideo.id +
-            //                                     "/presets/" +
-            //                                     this.curPerset +
-            //                                     "/goto"
-            //                             )
-            //                             .then(res => {
-            //                                 this.Log.info(
-            //                                     "goto" + this.curPerset
-            //                                 );
-            //                             });
-            //                     }
-            //                 } else {
-            //                     // 如果是同一个相机，并且预置位变了
-            //                     if (
-            //                         this.curPerset != data.preset &&
-            //                         data.preset != null
-            //                     ) {
-            //                         this.curPerset = data.preset;
-            //                         this.axios
-            //                             .get(
-            //                                 "videos/" +
-            //                                     this.curVideo.id +
-            //                                     "/presets/" +
-            //                                     this.curPerset +
-            //                                     "/goto"
-            //                             )
-            //                             .then(res => {
-            //                                 this.Log.info(
-            //                                     "goto" + this.curPerset
-            //                                 );
-            //                             });
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     });
+            if(this.$refs.smViewer.getFlyStatus(this.conditions.routeId)){
+                this.playOrPause.isPlay = false;
+            }
+            
         },
 
         edit() {
@@ -299,9 +235,10 @@ export default {
         speedDown() {
             this.Log.info("减速");
             this.$refs.smViewer.speedDown();
-        }
+        },
     },
     beforeDestroy() {
+        this.$refs.smViewer.stopCameraPositionRefresh();
         var gis = document.getElementById("newID");
         gis.style.display = "none";
         document.getElementById("GISbox").removeChild(gis)

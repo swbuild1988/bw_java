@@ -11,12 +11,12 @@ import java.util.Map;
  */
 public enum EquipmentStatusEnum {
 
-	/**运行中*/
-	RUNNING("运行中" , 1),
-	/**故障*/
-	BROKEN("故障" , 2),
-	/**备品*/
-	BACKUP("备品" , 3);
+	/**正常*/
+	NORMAL("正常" , 1),
+	/**损坏*/
+	BROKEN("损坏" , 2),
+	/** 报废 */
+	SCRAP("报废" , 3);
 	
 	private String name;
     private int value;
@@ -46,16 +46,17 @@ public enum EquipmentStatusEnum {
 		this.value = value;
 	}
     
-	public static EquipmentStatusEnum getEnum(String value) {
-        return enumMap.get(value);
+	public static EquipmentStatusEnum getEnum(int value) {
+        for(EquipmentStatusEnum e : EquipmentStatusEnum.values()) {
+        	if(e.getValue() == value) return e;
+        }
+        return null;
     }
 
-	
-    static Map<String,EquipmentStatusEnum> enumMap = new HashMap<String, EquipmentStatusEnum>();
-    static {
-        for(EquipmentStatusEnum en : EquipmentStatusEnum.values()){
-            enumMap.put(en.getValue()+"", en);
+	public static EquipmentStatusEnum getEnum(String name) {
+        for(EquipmentStatusEnum e : EquipmentStatusEnum.values()) {
+        	if(e.getName().equals(name)) return e;
         }
+        return null;
     }
-    
 }

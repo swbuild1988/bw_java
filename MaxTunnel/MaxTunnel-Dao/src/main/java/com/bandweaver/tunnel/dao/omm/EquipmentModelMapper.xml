@@ -4,35 +4,33 @@
 <cache/>
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel">
     <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="TYPE_ID" jdbcType="DECIMAL" property="typeId" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, NAME, CRT_TIME
+    ID, TYPE_ID, NAME, CRT_TIME
   </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from T_OMM_EQUIPMENT_MODEL
     where ID = #{id,jdbcType=DECIMAL}
   </select>
+  
   <delete id="deleteByPrimaryKey" >
     delete from T_OMM_EQUIPMENT_MODEL
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
+  
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel">
-    insert into T_OMM_EQUIPMENT_MODEL (ID, NAME, CRT_TIME
-      )
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel">
     insert into T_OMM_EQUIPMENT_MODEL
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ID,
+      <if test="typeId != null">
+        type_id,
       </if>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         NAME,
       </if>
       <if test="crtTime != null">
@@ -40,10 +38,10 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=DECIMAL},
+      <if test="typeId != null">
+        #{typeId},
       </if>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="crtTime != null">
@@ -51,24 +49,11 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel">
-    update T_OMM_EQUIPMENT_MODEL
-    <set>
-      <if test="name != null">
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel">
-    update T_OMM_EQUIPMENT_MODEL
-    set NAME = #{name,jdbcType=VARCHAR},
-      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
+  
+  <select id="getEquipmentModelByTypeId" resultMap="BaseResultMap">
+  select * from T_OMM_EQUIPMENT_MODEL where type_id = #{typeId}
+  </select>
+  
   <select id="getAllEquipmentModelList" resultMap="BaseResultMap">
   select * from T_OMM_EQUIPMENT_MODEL
   </select>

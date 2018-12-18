@@ -100,14 +100,14 @@ public class LocatorController {
         object.put("id", measObjSO.getId());
         object.put("name", measObjSO.getName());
         object.put("time", measObjSO.getRefreshTime());
-        if (measObjSO.getCV() == null || measObjSO.getCV().equals("")) {
+        if (measObjSO.getCv() == null || measObjSO.getCv().equals("")) {
             object.put("owner", null);
             object.put("type", 0);
             object.put("longitude", 0);
             object.put("latitude", 0);
             object.put("height", 0);
         } else {
-            Locator locator = (Locator) JSONObject.parseObject(measObjSO.getCV(), Locator.class);
+            Locator locator = (Locator) JSONObject.parseObject(measObjSO.getCv(), Locator.class);
             object.put("owner", locator.getOwner());
             object.put("type", 0);
             object.put("longitude", locator.getPosition() == null ? 0 : locator.getPosition().getLng());

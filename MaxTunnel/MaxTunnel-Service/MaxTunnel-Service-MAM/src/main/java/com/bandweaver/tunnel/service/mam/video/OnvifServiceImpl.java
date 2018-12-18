@@ -277,4 +277,16 @@ public class OnvifServiceImpl implements OnvifService {
         }
     }
 
+	@Override
+	public boolean addSrc(String user, String password, String ip, String id, String url) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean delSrc(String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

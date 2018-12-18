@@ -1,9 +1,10 @@
 package com.bandweaver.tunnel.common.biz.itf.mam;
 
-import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
-
 import java.util.Date;
 import java.util.List;
+
+import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 
 public interface MeasValueDIService {
     int addMeasValueDI(MeasValueDI measValueDI);
@@ -19,4 +20,6 @@ public interface MeasValueDIService {
 	 * @date 2018年5月30日
 	 */
 	void addMeasValueDIBatch(List<MeasValueDI> list);
+
+	JSONObject getEchartsData(List<Integer> ids, Date startTime, Date endTime);
 }

@@ -1,97 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.bandweaver.tunnel.dao.common.PermissionMapper">
-	<cache/>
-	<resultMap id="BaseResultMap"
-		type="com.bandweaver.tunnel.common.biz.pojo.Permission">
-		<id column="ID" jdbcType="DECIMAL" property="id" />
-		<result column="PER_CODE" jdbcType="VARCHAR" property="code" />
-		<result column="PER_DESC" jdbcType="VARCHAR" property="desc" />
-		<result column="CRT_TIME" jdbcType="TIMESTAMP"
-			property="crtTime" />
-	</resultMap>
-	<sql id="Base_Column_List">
-		ID, PER_CODE, PER_DESC, CRT_TIME
-	</sql>
-	<select id="selectByPrimaryKey" 
-		resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from T_SECURITY_PERMISSION
-		where ID = #{id,jdbcType=DECIMAL}
-	</select>
-	<delete id="deleteByPrimaryKey" >
-		delete from T_SECURITY_PERMISSION
-		where ID = #{id,jdbcType=DECIMAL}
-	</delete>
-	<insert id="insert"
-		parameterType="com.bandweaver.tunnel.common.biz.pojo.Permission">
-		insert into T_SECURITY_PERMISSION (ID, PER_CODE, PER_DESC,
-		CRT_TIME)
-		values (#{id,jdbcType=DECIMAL}, #{code,jdbcType=VARCHAR},
-		#{desc,jdbcType=VARCHAR},
-		#{crtTime,jdbcType=TIMESTAMP})
-	</insert>
-	<insert id="insertSelective"
-		parameterType="com.bandweaver.tunnel.common.biz.pojo.Permission">
-		insert into T_SECURITY_PERMISSION
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				ID,
-			</if>
-			<if test="code != null">
-				PER_CODE,
-			</if>
-			<if test="desc != null">
-				PER_DESC,
-			</if>
-			<if test="crtTime != null">
-				CRT_TIME,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id,jdbcType=DECIMAL},
-			</if>
-			<if test="code != null">
-				#{code,jdbcType=VARCHAR},
-			</if>
-			<if test="desc != null">
-				#{desc,jdbcType=VARCHAR},
-			</if>
-			<if test="crtTime != null">
-				#{crtTime,jdbcType=TIMESTAMP},
-			</if>
-		</trim>
-	</insert>
-	<update id="updateByPrimaryKeySelective"
-		parameterType="com.bandweaver.tunnel.common.biz.pojo.Permission">
-		update T_SECURITY_PERMISSION
-		<set>
-			<if test="code != null">
-				PER_CODE = #{code,jdbcType=VARCHAR},
-			</if>
-			<if test="desc != null">
-				PER_DESC = #{desc,jdbcType=VARCHAR},
-			</if>
-			<if test="crtTime != null">
-				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
-			</if>
-		</set>
-		where ID = #{id,jdbcType=DECIMAL}
-	</update>
-	<update id="updateByPrimaryKey"
-		parameterType="com.bandweaver.tunnel.common.biz.pojo.Permission">
-		update T_SECURITY_PERMISSION
-		set PER_CODE = #{code,jdbcType=VARCHAR},
-		PER_DESC = #{desc,jdbcType=VARCHAR},
-		CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
-		where ID = #{id,jdbcType=DECIMAL}
-	</update>
-	<select id="getPermissionsByRoleId" resultMap="BaseResultMap">
-		select p.* from t_security_role_permission rp,t_security_permission p
-		where rp.per_id=p.id and rp.role_id=#{id,jdbcType=DECIMAL}
-	</select>
-
+<mapper namespace="com.bandweaver.tunnel.dao.common.PermissionMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.Permission">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="MENU_CODE" jdbcType="VARCHAR" property="menuCode" />
+    <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
+    <result column="PERMISSION_CODE" jdbcType="VARCHAR" property="permissionCode" />
+    <result column="PERMISSION_NAME" jdbcType="VARCHAR" property="permissionName" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, MENU_CODE, MENU_NAME, PERMISSION_CODE, PERMISSION_NAME, CRT_TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_SECURITY_PERMISSION
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_SECURITY_PERMISSION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Permission">
+    insert into T_SECURITY_PERMISSION (ID, MENU_CODE, MENU_NAME, 
+      PERMISSION_CODE, PERMISSION_NAME, CRT_TIME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{menuCode,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, 
+      #{permissionCode,jdbcType=VARCHAR}, #{permissionName,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Permission">
+    insert into T_SECURITY_PERMISSION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="menuCode != null">
+        MENU_CODE,
+      </if>
+      <if test="menuName != null">
+        MENU_NAME,
+      </if>
+      <if test="permissionCode != null">
+        PERMISSION_CODE,
+      </if>
+      <if test="permissionName != null">
+        PERMISSION_NAME,
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="menuCode != null">
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionCode != null">
+        #{permissionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionName != null">
+        #{permissionName,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Permission">
+    update T_SECURITY_PERMISSION
+    <set>
+      <if test="menuCode != null">
+        MENU_CODE = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionCode != null">
+        PERMISSION_CODE = #{permissionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionName != null">
+        PERMISSION_NAME = #{permissionName,jdbcType=VARCHAR},
+      </if>
+      <if test="crtTime != null">
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Permission">
+    update T_SECURITY_PERMISSION
+    set MENU_CODE = #{menuCode,jdbcType=VARCHAR},
+      MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      PERMISSION_CODE = #{permissionCode,jdbcType=VARCHAR},
+      PERMISSION_NAME = #{permissionName,jdbcType=VARCHAR},
+      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getAllMenu" resultType="String">
+  	select menu_code from T_SECURITY_PERMISSION
+  </select>
+  
+  <select id="getAllPermission" resultType="String">
+  	select permission_code from T_SECURITY_PERMISSION
+  </select>
+  
+  <delete id="deleteBatch">
+  	delete from T_SECURITY_PERMISSION where id in 
+  	<foreach collection="list" item="item" separator="," open="(" close=")">
+  		#{item}
+  	</foreach>
+  </delete>
+  
+  <select id="getByCondition" resultMap="BaseResultMap">
+  	select * from T_SECURITY_PERMISSION
+  	<where>
+  		<if test="id != null">
+  			id = #{id}
+  		</if>
+  		<if test="menuCode != null and  menuCode.trim() != ''">
+  			and menu_code = #{menuCode}
+  		</if>
+  		<if test="menuName != null and menuName.trim() != ''">
+  			and menu_name = #{menuName}
+  		</if>
+  		<if test="permissionCode != null and permissionCode.trim() != ''">
+  			and permission_code = #{permissionCode}
+  		</if>
+  		<if test="permissionName != null and permissionName.trim() != ''">
+  			and permission_name = #{permissionName}
+  		</if>
+  		<if test="startTime != null">
+  			and crt_time &gt; = #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and crt_time &lt; = #{endTime}
+  		</if>
+  	</where>
+  		order by crt_time desc
+  </select>
 </mapper>

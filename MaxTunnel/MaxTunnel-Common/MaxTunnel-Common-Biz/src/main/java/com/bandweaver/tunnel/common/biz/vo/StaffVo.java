@@ -17,8 +17,6 @@ public class StaffVo extends BaseVo implements Serializable{
 
     private Integer positionId;
 
-    private Integer accountId;
-    
     private Date crtTime;
     
     
@@ -34,7 +32,6 @@ public class StaffVo extends BaseVo implements Serializable{
 		this.name = name;
 		this.deptId = deptId;
 		this.positionId = positionId;
-		this.accountId = accountId;
 		this.crtTime = crtTime;
 	}
 
@@ -77,13 +74,5 @@ public class StaffVo extends BaseVo implements Serializable{
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
     }
-
-	public Integer getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
     
 }

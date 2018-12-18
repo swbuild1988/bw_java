@@ -1,11 +1,16 @@
 <template>
-    <div class="videoContent">
+    <div class="h5StreamVideo">
         <video :id="id" class="videos" autoplay webkit-playsinline playsinline @dblclick="fullScreen"></video>
+         <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide">
+            <embeded-control v-bind:camera = "video" v-bind:isShow="controlFlag"></embeded-control>
+        </div>
         <!-- <div class="playPause"></div> -->
     </div>
 </template>
 
 <script>
+import embededControl from '../../UM/MAM/videoControls/embededControl'
+
 export default {
     name: "h5-stream-video",
     props: {
@@ -19,17 +24,12 @@ export default {
     },
     data() {
         return {
-            // config: {
-            //     videoid: this.id,
-            //     protocol: window.location.protocol, //http: or https:
-            //     host: this.video.url,
-            //     rootpath: "/", // '/' or window.location.pathname
-            //     token: this.video.id,
-            //     hlsver: "v1", //v1 is for ts, v2 is for fmp4
-            //     session: "c1782caf-b670-42d8-ba90-2244d0b0ee83" //session got from login
-            // },
-            curVideo: null
+            curVideo: null,
+            controlFlag: false
         };
+    },
+    components: {
+        embededControl
     },
     computed: {
         config() {
@@ -94,13 +94,23 @@ export default {
                 });
             }
 
+        },
+        show() {
+            let width = document.getElementsByClassName('h5StreamVideo')[0].offsetWidth
+            let height = document.getElementsByClassName('h5StreamVideo')[0].offsetHeight
+            if(width > 800 && height > 600 && this.video.positionSupport){
+                this.controlFlag = true
+            }
+        },
+        hide() {
+            this.controlFlag = false
         }
     }
 };
 </script>
 
 <style scoped>
-.videoContent {
+.h5StreamVideo {
     position: relative;
     width: 100%;
     height: 100%;
@@ -125,9 +135,46 @@ export default {
     border: 1px solid black;
     background-color: #000000;
     object-fit: fill;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
 }
 .videos::-webkit-media-controls-panel{
     display: none;
+}
+
+/* 全屏显示样式  */
+/*:-webkit-full-screen{ 
+    max-width: 600px !important;
+    max-height: 400px !important;
+    background-color: red;
+}
+*/
+/*:-webkit-full-screen video{ 
+    max-width: 600px;
+    max-height: 400px;
+}*/ 
+:fullscreen { 
+    background-color: rgba(0,0,0,0.1);
+}
+::backdrop { 
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.embedControl{
+    position: absolute;
+    width: 98px;
+    height: 100px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-70%);
+    z-index: 999;
+}
+.trsp{
+    opacity: 0;
 }
 </style>
 

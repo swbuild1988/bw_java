@@ -1,9 +1,9 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
-import com.bandweaver.tunnel.common.biz.pojo.User;
-
 import java.io.Serializable;
 import java.util.List;
+
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
 
 public class InspectionGroupDto implements Serializable{
     /**

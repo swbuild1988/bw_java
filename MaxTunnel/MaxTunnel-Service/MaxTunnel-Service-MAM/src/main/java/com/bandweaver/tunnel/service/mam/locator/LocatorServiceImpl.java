@@ -46,14 +46,14 @@ public class LocatorServiceImpl implements LocatorService {
         p.setLat(lat);
         locator.setPosition(p);
 //---------------------------------------------------------------------
-        measObjSO.setCV(JSONObject.toJSONString(locator));
+        measObjSO.setCv(JSONObject.toJSONString(locator));
 
         // 更新状态（actived)
         measObjModuleCenter.updateMeasObj(measObjSO);
         // 更新值
         MeasValueSO measValueSO = new MeasValueSO();
         measValueSO.setObjectId(measObjSO.getId());
-        measValueSO.setCV(measObjSO.getCV());
+        measValueSO.setCv(measObjSO.getCv());
         measValueSO.setTime(new Date());
         // measObjModuleCenter.updateMeasObjSOValue(measValueSO);
         // 直接将数据塞进数据库
@@ -71,7 +71,7 @@ public class LocatorServiceImpl implements LocatorService {
         measObjSO.setActived(false);
 
         Locator locator = new Locator();
-        measObjSO.setCV(JSONObject.toJSONString(locator));
+        measObjSO.setCv(JSONObject.toJSONString(locator));
 
 
         // 更新状态（actived)
@@ -79,7 +79,7 @@ public class LocatorServiceImpl implements LocatorService {
         // 更新值
         MeasValueSO measValueSO = new MeasValueSO();
         measValueSO.setObjectId(measObjSO.getId());
-        measValueSO.setCV(new JSONObject().toJSONString());
+        measValueSO.setCv(new JSONObject().toJSONString());
         measValueSO.setTime(new Date());
 //        measObjModuleCenter.updateMeasObjSOValue(measValueSO);
         // 直接将数据塞进数据库
@@ -96,24 +96,24 @@ public class LocatorServiceImpl implements LocatorService {
     public void update(MeasObjSO measObjSO, MeasValueSO measValueSO) {
 
 
-        Locator locator = (Locator) JSONObject.parseObject(measValueSO.getCV(), Locator.class);
+        Locator locator = (Locator) JSONObject.parseObject(measValueSO.getCv(), Locator.class);
         LogUtil.info("传来的locator：" + locator);
         // 适配器传过来的
         if (locator == null || locator.getOwner() == null) {
 
             // 获取传过来的3D信息
-            Point3D position = (Point3D) JSONObject.parseObject(measValueSO.getCV(), Point3D.class);
+            Point3D position = (Point3D) JSONObject.parseObject(measValueSO.getCv(), Point3D.class);
             // 获取原来的信息，主要是用户信息
-            locator = (Locator) JSONObject.parseObject(measObjSO.getCV(), Locator.class);
+            locator = (Locator) JSONObject.parseObject(measObjSO.getCv(), Locator.class);
             if (locator == null) locator = new Locator();
             locator.setPosition(position);
 
-            measObjSO.setCV(JSONObject.toJSONString(locator));
+            measObjSO.setCv(JSONObject.toJSONString(locator));
             measObjSO.setRefreshTime(measValueSO.getTime());
 
         } else {
             // 内部传过来的，如start， stop
-            measObjSO.setCV(measValueSO.getCV());
+            measObjSO.setCv(measValueSO.getCv());
             measObjSO.setRefreshTime(measValueSO.getTime());
         }
 

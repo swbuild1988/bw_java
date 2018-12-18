@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import {PlanService} from '../../../services/plan.js'
+  import {PlanService} from '../../../services/planService.js'
 
   export default {
     name: "comfirm-step",

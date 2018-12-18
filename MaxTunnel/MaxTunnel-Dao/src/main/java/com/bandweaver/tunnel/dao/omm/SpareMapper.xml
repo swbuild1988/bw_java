@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.SpareMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Spare">
+        INSERT INTO t_omm_spare
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="name != null and name.trim() != ''">
+                name,
+            </if>
+            <if test="modelId != null">
+                model_id,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+            <if test="venderId != null">
+                vender_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="inTime != null">
+                in_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name.trim() != ''">
+                #{name},
+            </if>
+            <if test="modelId != null">
+                #{modelId},
+            </if>
+            <if test="typeId != null">
+                #{typeId},
+            </if>
+            <if test="venderId != null">
+                #{venderId},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="inTime != null">
+                #{inTime},
+            </if>
+        </trim>
+    </insert>
+    
+    <insert id="addBatch" useGeneratedKeys="false">
+		insert into t_omm_spare
+		(name,model_id,type_id,vender_id,status,in_time)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.name},
+			#{item.modelId},
+			#{item.typeId},
+			#{item.venderId},
+			#{item.status},
+			#{item.inTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Spare">
+        UPDATE t_omm_spare
+        <set>
+        	<if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="modelId != null">
+                model_id = #{modelId},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="venderId != null">
+                vender_id = #{venderId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="inTime != null">
+                in_time = #{inTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getSpareDto" resultMap="spareDtoMap">
+        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_spare a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        WHERE status = 1
+    </select>
+
+	<select id="getSpareDtoByStatus" resultMap="spareDtoMap">
+        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_spare a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        WHERE status = 0
+    </select>
+	
+    <select id="getSpareDtoByCondition" resultMap="spareDtoMap">
+        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_spare a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        <where>
+            <if test="name != null and name.trim() != ''">
+                instr(a.name,#{name})>0
+            </if>
+            <if test="modelId != null">
+                and a.model_id = #{modelId}
+            </if>
+            <if test="typeId != null">
+                and a.type_id = #{typeId}
+            </if>
+            <if test="venderId != null">
+                and a.vender_id = #{venderId}
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and a.in_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.in_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
+
+	<select id="getSpareDtoById" resultMap="spareDtoMap">
+		select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_spare a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        where a.id = #{id}
+	</select>
+	
+	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
+		select a.*,b.name
+	    from (select count(1) as count,type_id as id 
+	      from T_OMM_SPARE
+	      where status = #{status}
+	      group by type_id) a
+	    left join t_Omm_Equipment_Type b on a.id = b.id
+	    order by a.count desc
+	</select>
+	
+    <resultMap id="spareDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.SpareDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="model_id" property="modelId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="vender_name" property="venderName"/>
+        <result column="status" property="status"/>
+        <result column="model_name" property="modelName"/>
+        <result column="type_name" property="typeName"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <delete id="deleteByIds">
+    	delete from t_omm_spare 
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

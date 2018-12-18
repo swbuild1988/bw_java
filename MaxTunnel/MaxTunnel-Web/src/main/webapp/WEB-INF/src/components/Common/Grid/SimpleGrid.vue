@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { UserService } from '../../../services/userService'
+
 export default {
     name: "SimpleGrid",
     props: {
@@ -29,47 +31,11 @@ export default {
     },
     data() {
         return {
-            tableData: [
-                {
-                    data: "12",
-                    name: "电力公司电缆",
-                    unit: "km"
-                },
-                {
-                    data: "3",
-                    name: "自来水公司",
-                    unit: "条"
-                },
-                {
-                    data: "4",
-                    name: "燃气公司",
-                    unit: "条"
-                },
-                {
-                    data: "4",
-                    name: "燃气公司",
-                    unit: "条"
-                },
-                {
-                    data: "4",
-                    name: "燃气公司",
-                    unit: "条"
-                },
-                {
-                    data: "4",
-                    name: "燃气公司",
-                    unit: "条"
-                },
-                {
-                    data: "6",
-                    name: "中国移动",
-                    unit: "条"
-                }
-            ],
+            tableData: [],
             columns: [
                 {
                     key: "name",
-                    width: "130",
+                    width: "230",
                     align: "center",
                     render: (h, params) => {
                         return h("div", [
@@ -93,13 +59,17 @@ export default {
                     }
                 },
                 {
-                    key: "data"
+                    key: "value"
                 },
                 {
                     key: "unit"
                 }
             ],
-            offsetHeight: 0
+            offsetHeight: 0,
+            style:{
+                tableHight : 0,
+                rowHeight : 0
+            }
         };
     },
     components: {},
@@ -113,13 +83,25 @@ export default {
         },
 
         fetchData(requestUrl) {
-            // let _this = this;
-            // _this.axios.get(requestUrl).then(result => {
-            //     let { code, data } = result.data;
-            //     if (code == 200) {
+            let { style,tableData } = this;
+            
+            this.axios.get(requestUrl)
+				.then(res => {
+					let {
+						msg,
+						data,
+						code
+					} = res.data
+					if (code == 200) {
+						tableData.push( ...data );
+					}
+				})
 
-            // });
+
             this.offsetHeight = document.getElementById(this.id).offsetHeight;
+
+            style.rowHeight = this.offsetHeight / 5;
+
             window.onresize = () => {
                 this.$refs.unitTable.handleResize();
             };
@@ -182,5 +164,8 @@ export default {
 }
 .ivu-table-overflowX {
     overflow-x: hidden;
+}
+.rowStyle{
+    font-size: 2rem
 }
 </style>

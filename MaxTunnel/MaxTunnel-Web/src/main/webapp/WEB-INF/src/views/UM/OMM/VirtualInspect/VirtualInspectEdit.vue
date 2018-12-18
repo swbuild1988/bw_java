@@ -126,11 +126,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios
-            //     .get("videos/" + this.curVideo.id + "/move/" + data.direction)
-            //     .then(res => {
-            //         this.Log.info("move success", res);
-            //     });
         },
         stop(data) {
             let _this = this
@@ -141,9 +136,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios.get("videos/" + this.curVideo.id + "/stop").then(res => {
-            //     this.Log.info("stop success", res);
-            // });
         },
         selectCamera(camera) {
             this.Log.info("selected camera", camera);
@@ -460,7 +452,7 @@ export default {
     height: 40px;
     top: -10px;
     left: 0;
-    background: url('../../../../assets/UM/title.jpg') no-repeat;
+    background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
@@ -470,7 +462,7 @@ export default {
     margin: 10px;
     font-size: 18px;
     font-weight: bold;
-    background: url('../../../../assets/UM/title.jpg') no-repeat;
+    background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
@@ -483,7 +475,7 @@ export default {
 }
 .add {
     float: right;
-    margin: 30px 24px 0px 0;
+    margin: 6% 4% 0px 0;
 }
 .posContent {
     max-height: 50vh;

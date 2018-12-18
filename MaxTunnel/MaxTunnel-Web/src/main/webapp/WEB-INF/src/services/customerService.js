@@ -13,7 +13,7 @@ var CustomerService = {
 				if (code == 200) {
 					resolve(data)
 				} else {
-					reject(msg + '地址：/customers')
+          reject(msg + '地址：/customers')
 				}
 			})
 		})

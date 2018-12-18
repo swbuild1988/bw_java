@@ -2,22 +2,27 @@ package com.bandweaver.tunnel.controller.quartz;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.fastjson.JSON;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
-import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
-import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
-import com.bandweaver.tunnel.common.biz.itf.mam.maxview.MaxviewConfigService;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
@@ -27,19 +32,18 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDistribute;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport;
-import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
+import com.bandweaver.tunnel.common.biz.pojo.mam.transform.MeasAlarm;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
-import com.bandweaver.tunnel.common.biz.pojo.oam.Energy;
-import com.bandweaver.tunnel.common.biz.vo.mam.report.MeasObjReportVo;
-import com.bandweaver.tunnel.common.biz.vo.oam.ConsumeDataVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
+import com.bandweaver.tunnel.common.platform.util.HttpUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.dao.mam.MeasObjAIMapper;
 import com.bandweaver.tunnel.dao.mam.MeasObjDIMapper;
@@ -107,11 +111,89 @@ public class TaskEntrance {
     @Autowired
     private MeasObjReportMapper measObjReportMapper;
     @Autowired
-    private MaxviewConfigService maxviewConfigService;
+    private SubSystemService subSystemService;
     @Autowired
     private ConsumeService consumeService;
     @Autowired
     private ConsumeDataService consumeDataService;
+    
+   
+    
+    /**模拟maxview发送告警
+     * @throws Exception   
+     * @author shaosen
+     * @Date 2018年12月8日
+     */
+    public void sendTestAlarm() throws Exception {
+    	int level = (int)(Math.random()*4) + 1;
+    	MeasAlarm measAlarm = new MeasAlarm();
+    	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
+    	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
+    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
+    	measAlarm.setAlarmSeverity(level);
+    	measAlarm.setAdditionalText(null);
+    	measAlarm.setAlarmSource(null);
+    	measAlarm.setLongitude(null);
+    	measAlarm.setLatitude(null);
+    	
+    	String host = "http://localhost:8080/MaxTunnel-Web";
+		String path = "/alarms";
+		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> querys = new HashMap<String, String>();
+		String body = JSON.toJSONString(measAlarm);
+		httpPost(host, path, headers, querys, body);
+    }
+    
+    
+    /**模拟maxview发送AI数据 
+     * @return   
+     * @author shaosen
+     * @throws Exception 
+     * @Date 2018年12月4日
+     */
+    public void sendTestData() throws Exception {
+    	
+    	List<Integer> ai_id_list = new ArrayList<>();
+    	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+    	for (MeasObj measObj : measObjs) {
+			if(measObj.getDatatypeId()==DataType.AI.getValue())
+				ai_id_list.add(measObj.getId());
+		}
+    	List<MeasValueAI> list = new ArrayList<>();
+    	for (Integer objectId : ai_id_list) {
+    		MeasValueAI measValueAI = new MeasValueAI();
+        	measValueAI.setObjectId(objectId);
+        	measValueAI.setTime(DateUtil.getCurrentDate());
+        	
+        	double dd = Math.random()*30;
+        	int i = (int)(dd*100);
+        	double cv = (double) i/100;
+        	measValueAI.setCv(cv);
+        	list.add(measValueAI);
+		}
+    	
+		String host = "http://localhost:8080/MaxTunnel-Web";
+		String path = "/measvalue-ai/batch";
+		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> querys = new HashMap<String, String>();
+		String body = JSON.toJSONString(list);
+	
+		httpPost(host, path, headers, querys, body);
+    }
+
+
+
+	public void httpPost(String host, String path, Map<String, String> headers, Map<String, String> querys,
+			String body) throws Exception {
+		HttpResponse response = HttpUtil.doPost(host, path, "POST", headers, querys, body);
+	    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+	    	String resultJson = EntityUtils.toString(response.getEntity(), "utf-8");
+//	    	LogUtil.info(resultJson);
+	    }else {
+			LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+		}
+		
+	}
     
     
     
@@ -127,7 +209,7 @@ public class TaskEntrance {
 		}
     	
     	for (Integer configId : set) {
-    		maxviewConfigService.heartBeat(configId);
+    		subSystemService.heartBeat(configId);
 		}
     	
     }
@@ -146,65 +228,38 @@ public class TaskEntrance {
     	saveSOSchedule();
     }
     
-//------------------------------适配器发送数据之后删除该段代码-----------------------
-	private static double [] count = new double[48];
-    static {
-    	for(int i=0;i<48;i++) {
-    		count[i] = 0.0;
-    	}
-    }
-//-------------------------------------------------------------------------
+
 	public void saveAISchedule() {
-//------------------------------适配器发送数据之后删除该段代码-----------------------
-		// TODO
-    	List<MeasValueAI> list = new ArrayList<>();
-    	List<ConsumeDto> consumes = consumeService.getConsumesByCondition(new ConsumeDataVo());
-    	for(int i=0;i<48;i++) {
-    		double d = MathUtil.div((double)((int)(Math.random()*100)), 100.0);
-    		count[i] = MathUtil.add(count[i], d);
-    	}
-    	for(ConsumeDto dto : consumes) {
-    		if(dto.getObjectId() == null) continue;
-    		MeasValueAI ai = new MeasValueAI();
-    		ai.setObjectId(dto.getObjectId());
-    		ai.setTime(new Date());
-    		ai.setCV(count[dto.getObjectId() - 1001]);
-    		list.add(ai);
-    	}
-    	for (MeasValueAI measValueAI : list) {
-            measObjModuleCenter.updateMeasObjAIValue(measValueAI);
-        }
-    	LogUtil.info("缓存成功");
-//---------------------------------------------------------------------------
     	 //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
         List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
+        Date time = DateUtil.getCurrentDate();
         for (MeasObjAI measObjAI : measObjAIs) {
         	
         	if(measObjAI.getRefreshTime() == null) {continue;}
         	
-        	//step1:更新对象表
+        	//step1:更新当前cv表
         	MeasObjAI fromDb = measObjAIMapper.getMeasObjAI(measObjAI.getId());
         	if(fromDb.getRefreshTime() != null && fromDb.getRefreshTime().getTime()/1000 >= measObjAI.getRefreshTime().getTime()/1000) {
         		continue;
         	}
-        	fromDb.setRefreshTime(measObjAI.getRefreshTime());
-        	fromDb.setCV(measObjAI.getCV());
+        	fromDb.setRefreshTime(time);
+        	fromDb.setCv(measObjAI.getCv());
         	measObjAIMapper.update(fromDb);
         	
-        	//step2:保存数据到value表中
+        	//step2:保存数据到历史cv表中
         	MeasValueAI measValueAI = new MeasValueAI();
         	measValueAI.setObjectId(measObjAI.getId());
-        	measValueAI.setTime(measObjAI.getRefreshTime());
-        	measValueAI.setCV(measObjAI.getCV());
+        	measValueAI.setTime(time);
+        	measValueAI.setCv(measObjAI.getCv());
         	measValueAIMapper.addMeasValueAI(measValueAI);
     	}
-        LogUtil.info("定时保存缓存中AI数据成功");
     }
     
     
     public void saveDISchedule() {
    	 //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
        List<MeasObjDI> measObjDIs =measObjModuleCenter.getMeasObjDIs();
+       Date time = DateUtil.getCurrentDate();
        for (MeasObjDI measObjDI : measObjDIs) {
     	    if(measObjDI.getRefreshTime() == null) {continue;}
 	       	//step1:更新对象表
@@ -212,23 +267,23 @@ public class TaskEntrance {
 	       	if(fromDb.getRefreshTime() != null && fromDb.getRefreshTime().getTime()/1000 >= measObjDI.getRefreshTime().getTime()/1000) {
 	       		continue;
 	       	}
-	       	fromDb.setRefreshTime(measObjDI.getRefreshTime());
-	       	fromDb.setCV(measObjDI.getCV());
+	       	fromDb.setRefreshTime(time);
+	       	fromDb.setCv(measObjDI.getCv());
 	       	measObjDIMapper.update(fromDb);
 	       	
 	       	//step2:保存数据到value表中
 	       	MeasValueDI measValueDI = new MeasValueDI();
 	       	measValueDI.setObjectId(measObjDI.getId());
-	       	measValueDI.setTime(measObjDI.getRefreshTime());
-	       	measValueDI.setCV(measObjDI.getCV());
+	       	measValueDI.setTime(time);
+	       	measValueDI.setCv(measObjDI.getCv());
 	       	measValueDIMapper.addMeasValueDI(measValueDI);
    	}
-       LogUtil.info("定时保存缓存中DI数据成功");
    }
     
     public void saveSISchedule() {
    	 //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
        List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
+       Date time = DateUtil.getCurrentDate();
        for (MeasObjSI measObjSI : measObjSIs) {
     	if(measObjSI.getRefreshTime() == null) {continue;}
        	//step1:更新对象表
@@ -236,24 +291,24 @@ public class TaskEntrance {
        	if(fromDb.getRefreshTime() != null && fromDb.getRefreshTime().getTime()/1000 >= measObjSI.getRefreshTime().getTime()/1000) {
        		continue;
        	}
-       	fromDb.setRefreshTime(measObjSI.getRefreshTime());
-       	fromDb.setCV(measObjSI.getCV());
+       	fromDb.setRefreshTime(time);
+       	fromDb.setCv(measObjSI.getCv());
        	measObjSIMapper.update(fromDb);
        	
     	//step2:保存数据到value表中
        	MeasValueSI measValueSI = new MeasValueSI();
        	measValueSI.setObjectId(measObjSI.getId());
-       	measValueSI.setTime(measObjSI.getRefreshTime());
-       	measValueSI.setCV(measObjSI.getCV());
+       	measValueSI.setTime(time);
+       	measValueSI.setCv(measObjSI.getCv());
        	measValueSIMapper.addMeasValueSI(measValueSI);
    	}
-       LogUtil.info("定时保存缓存中SI数据成功");
    }
     
     
     public void saveDistributeSchedule() {
    	   //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
        List<MeasObjDistribute> measObjDistributes = measObjModuleCenter.getMeasObjDistribute();
+       Date time = DateUtil.getCurrentDate();
        for (MeasObjDistribute distribute : measObjDistributes) {
     	if(distribute.getRefreshTime() == null) {continue;}
        	//step1:更新对象表
@@ -261,7 +316,7 @@ public class TaskEntrance {
        	if(fromDb.getRefreshTime() != null && fromDb.getRefreshTime().getTime()/1000 >= distribute.getRefreshTime().getTime()/1000) {
        		continue;
        	}
-       	fromDb.setRefreshTime(distribute.getRefreshTime());
+       	fromDb.setRefreshTime(time);
        	fromDb.setDcv(distribute.getDcv());
        	fromDb.setSpacePrecision(distribute.getSpacePrecision());
        	measObjDistributeMapper.update(fromDb);
@@ -269,18 +324,18 @@ public class TaskEntrance {
     	//step2:保存数据到value表中
        	MeasValueDistribute measValueDistribute = new MeasValueDistribute();
        	measValueDistribute.setObjectId(distribute.getId());
-       	measValueDistribute.setTime(distribute.getRefreshTime());
+       	measValueDistribute.setTime(time);
        	measValueDistribute.setDcv(distribute.getDcv());
        	measValueDistribute.setSpacePrecision(distribute.getSpacePrecision());
        	measValueDistributeMapper.addMeasValueDis(measValueDistribute);
    	}
-       LogUtil.info("定时保存缓存中分布式数据成功");
    }
     
     
     public void saveSOSchedule() {
    	 //从缓存中获取数据，然后定时向对象表中更新数据，并同时保存到value表中
        List<MeasObjSO> measObjSOs = measObjModuleCenter.getMeasObjSOs();
+       Date time = DateUtil.getCurrentDate();
        for (MeasObjSO measObjSO : measObjSOs) {
     	   if(measObjSO.getRefreshTime() == null) {continue;}
        	//step1:更新对象表
@@ -288,18 +343,17 @@ public class TaskEntrance {
        	if(fromDb.getRefreshTime() != null && fromDb.getRefreshTime().getTime()/1000 >= measObjSO.getRefreshTime().getTime()/1000) {
        		continue;
        	}
-       	fromDb.setRefreshTime(measObjSO.getRefreshTime());
-       	fromDb.setCV(measObjSO.getCV());
+       	fromDb.setRefreshTime(time);
+       	fromDb.setCv(measObjSO.getCv());
        	measObjSOMapper.update(fromDb);
        	
     	//step2:保存数据到value表中
        	MeasValueSO measValueSO = new MeasValueSO();
        	measValueSO.setObjectId(measObjSO.getId());
-       	measValueSO.setTime(measObjSO.getRefreshTime());
-       	measValueSO.setCV(measObjSO.getCV());
+       	measValueSO.setTime(time);
+       	measValueSO.setCv(measObjSO.getCv());
        	measValueSOMapper.addMeasValueSO(measValueSO);
    	}
-       LogUtil.info("定时保存缓存中SO数据成功");
    }
     
     
@@ -451,7 +505,7 @@ public class TaskEntrance {
 		if(object instanceof MeasValueAI) {
 			for (Object obj : list) {
 				MeasValueAI ai = (MeasValueAI)obj;
-				totalValue = MathUtil.add(ai.getCV(), totalValue);
+				totalValue = MathUtil.add(ai.getCv(), totalValue);
 			}
 		}else if(object instanceof MeasObjReportDto) {
 			for (Object obj : list) {
@@ -472,10 +526,10 @@ public class TaskEntrance {
 		Object object = list.get(0);
 		if(object instanceof MeasValueAI) {
 			MeasValueAI measValueAI = (MeasValueAI)object;
-			double minValue = measValueAI.getCV();
+			double minValue = measValueAI.getCv();
 			for (Object obj : list) {
 				MeasValueAI ai = (MeasValueAI)obj;
-				minValue = MathUtil.sub(ai.getCV(), minValue) < 0 ? ai.getCV() : minValue ;
+				minValue = MathUtil.sub(ai.getCv(), minValue) < 0 ? ai.getCv() : minValue ;
 			}
 			return minValue;
 		}else if(object instanceof MeasObjReportDto) {
@@ -500,10 +554,10 @@ public class TaskEntrance {
 		Object object = list.get(0);
 		if(object instanceof MeasValueAI) {
 			MeasValueAI measValueAI = (MeasValueAI)object;
-			double maxValue = measValueAI.getCV();
+			double maxValue = measValueAI.getCv();
 			for (Object obj : list) {
 				MeasValueAI ai = (MeasValueAI)obj;
-				maxValue = MathUtil.sub(ai.getCV(), maxValue) > 0 ? ai.getCV() : maxValue ;
+				maxValue = MathUtil.sub(ai.getCv(), maxValue) > 0 ? ai.getCv() : maxValue ;
 			}
 			return maxValue;
 		}else if(object instanceof MeasObjReportDto) {
@@ -573,7 +627,7 @@ public class TaskEntrance {
     			List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(dto.getObjectId(), startTime, endTime);
     			//统计aiValue表中某一电表一天内的能耗
     			if(ais.size() > 0)
-    				sum = MathUtil.sub(ais.get(0).getCV(), ais.get(ais.size() - 1).getCV());
+    				sum = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
     			data.setDirect(sum);
     		}
     		else if(dto.getCompute() != null) {
@@ -583,7 +637,7 @@ public class TaskEntrance {
     				List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(Integer.valueOf(ss), startTime, endTime);
     				//统计aiValue表中某一电表一天内的能耗
     				if(ais.size() > 0) {
-    					Double sum1 = MathUtil.sub(ais.get(0).getCV(), ais.get(ais.size() - 1).getCV());
+    					Double sum1 = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
     					sum = MathUtil.add(sum, sum1);
     				}
     			}

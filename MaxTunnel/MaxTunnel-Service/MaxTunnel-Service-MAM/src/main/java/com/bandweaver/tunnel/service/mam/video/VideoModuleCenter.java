@@ -4,15 +4,13 @@ import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.ModuleCenterInterface;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.biz.pojo.mam.video.*;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
@@ -37,6 +35,8 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     @Autowired
     private VideoSceneMapper videoSceneMapper;
     @Autowired
+    private VideoExtendSceneMapper videoExtendSceneMapper;
+    @Autowired
     private VideoPresetMapper videoPresetMapper;
     @Autowired
     private VideoMapper videoMapper;
@@ -50,6 +50,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     private OnvifService h5streamService;
 
     private HashMap<Integer, List<VideoSceneDto>> videoSceneOfTunnelHashMap;
+    private HashMap<Integer, List<VideoExtendSceneDto>> videoExtendSceneOfTunnelHashMap;
     private HashMap<Integer, VideoServer> videoServerHashMap;
     private HashMap<Integer, VideoDto> videoDtoHashMap;
     private HashMap<Integer, PtzDevices> videoPtzDeviceHashMap;
@@ -57,6 +58,10 @@ public class VideoModuleCenter implements ModuleCenterInterface {
 
     public List<VideoSceneDto> getVideoSceneDtosByTunnel(int tunnelId) {
         return videoSceneOfTunnelHashMap.get(tunnelId);
+    }
+
+    public List<VideoExtendSceneDto> getVideoExtendSceneDtosByTunnel(int tunnelId) {
+        return videoExtendSceneOfTunnelHashMap.get(tunnelId);
     }
 
     public List<VideoDto> getVideoDtos() {
@@ -120,6 +125,19 @@ public class VideoModuleCenter implements ModuleCenterInterface {
         videoSceneMapper.insertVideoScene(videoScene);
         List<VideoSceneDto> videoSceneDtos = videoSceneMapper.getVideoSceneDtosByTunnel(videoScene.getTunnelId());
         videoSceneOfTunnelHashMap.put(videoScene.getTunnelId(), videoSceneDtos);
+    }
+
+    public void insertVideoExtendScene(VideoExtendScene videoExtendScene) {
+        // 管廊已经有了场景,查看是否已经有了对应的场景了
+        if (videoExtendSceneOfTunnelHashMap.containsKey(videoExtendScene.getTunnelId())) {
+
+            List<VideoExtendSceneDto> videoExtendSceneDtos = videoExtendSceneOfTunnelHashMap.get(videoExtendScene.getTunnelId());
+            if (videoExtendSceneDtos.stream().filter(a -> a.getId().intValue() == videoExtendScene.getId().intValue()).count() > 0)
+                return;
+        }
+        videoExtendSceneMapper.insertVideoExtendScene(videoExtendScene);
+        List<VideoExtendSceneDto> videoExtendSceneDtos = videoExtendSceneMapper.getVideoExtendSceneDtosByTunnel(videoExtendScene.getTunnelId());
+        videoExtendSceneOfTunnelHashMap.put(videoExtendScene.getTunnelId(), videoExtendSceneDtos);
     }
 
     public void insertVideoServer(VideoServer videoServer) {
@@ -281,6 +299,7 @@ public class VideoModuleCenter implements ModuleCenterInterface {
         for (Object key : videoDtoHashMap.keySet()) {
 
             VideoDto video = (VideoDto) videoDtoHashMap.get(key);
+            if(video.getVideoServerDto() == null) continue;
 
             // 如果不是h5stream的话，则通过onvif控制ptz
             if (video.getVideoServerDto().getVendor() != VideoVendor.H5STREAM.getValue()) {
@@ -297,13 +316,14 @@ public class VideoModuleCenter implements ModuleCenterInterface {
             } else {        // h5stream则获取session
                 VideoServer server = videoServerHashMap.get(video.getServerId());
                 // 如果server的session为空，则登录获取，否则将server赋值给video。server
-                if (server.getSession() == null || server.getSession().equals("")) {
+                if (server.getSession() == null) {
                     // 获取session
                     String session = h5streamService.getSession(server);
+                    if (session == null) session = "";
                     LogUtil.info("getSession:" + session);
                     server.setSession(session);
                 }
-                video.setVideoServerDto((VideoServerDto)server);
+                video.setVideoServerDto((VideoServerDto) server);
                 video.setPtzOperationsSupported(true);
                 videoDtoHashMap.put(video.getId(), video);
             }
@@ -324,6 +344,10 @@ public class VideoModuleCenter implements ModuleCenterInterface {
             List<VideoSceneDto> videoSceneDtos = videoSceneMapper.getVideoSceneDtosByTunnel(tunnel.getId());
             LogUtil.info("videoSceneDtos:" + videoSceneDtos);
             videoSceneOfTunnelHashMap.put(tunnel.getId(), videoSceneDtos);
+
+            List<VideoExtendSceneDto> videoExtendSceneDtos = videoExtendSceneMapper.getVideoExtendSceneDtosByTunnel(tunnel.getId());
+            LogUtil.info("videoExtendSceneDtos:" + videoExtendSceneDtos);
+            videoExtendSceneOfTunnelHashMap.put(tunnel.getId(), videoExtendSceneDtos);
         }
 
         List<VideoDto> videoDtos = videoMapper.getAllVideoDtos();
@@ -337,19 +361,20 @@ public class VideoModuleCenter implements ModuleCenterInterface {
 
     @Override
     public void start() {
-    	long beginTime = System.currentTimeMillis();
+        long beginTime = System.currentTimeMillis();
         videoDtoHashMap = new HashMap<>();
         videoSceneOfTunnelHashMap = new HashMap<>();
+        videoExtendSceneOfTunnelHashMap = new HashMap<>();
         videoServerHashMap = new HashMap<>();
         videoProfileTokenHashMap = new HashMap<>();
         videoPtzDeviceHashMap = new HashMap<>();
         initData();
         long endTime = System.currentTimeMillis();
-        
-		LogUtil.info(	"*********************************\n"
-						+ "描述：加载视频信息到缓存\n"
-						+ "耗时：" + (endTime - beginTime) + "ms\n"
-						+ "*********************************" 	);
+
+        LogUtil.info("*********************************\n"
+                + "描述：加载视频信息到缓存\n"
+                + "耗时：" + (endTime - beginTime) + "ms\n"
+                + "*********************************");
     }
 
     @Override

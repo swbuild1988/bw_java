@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.SpareOutMapper">
+    <cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut">
+        INSERT INTO t_omm_spare_out
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+                id,
+            </if>
+            <if test="staffId != null">
+                staff_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="outTime != null">
+                out_time,
+            </if>
+            <if test="describe != null">
+                describe,
+            </if>
+            <if test="whither != null">
+                whither,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="staffId != null">
+                #{staffId},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="outTime != null">
+                #{outTime},
+            </if>
+            <if test="describe != null">
+                #{describe},
+            </if>
+            <if test="whither != null">
+                #{whither},
+            </if>
+        </trim>
+    </insert>
+    
+    <insert id="addBatch" useGeneratedKeys="false">
+		insert into t_omm_spare_out
+		(id,staff_id,user_id,out_time,whither,describe)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.id},
+			#{item.staffId},
+			#{item.userId},
+			#{item.outTime},
+			#{item.whither},
+			#{item.describe}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut">
+        UPDATE t_omm_spare_out
+        <set>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="outTime != null">
+                out_time = #{outTime},
+            </if>
+            <if test="describe != null">
+                describe = #{describe},
+            </if>
+            <if test="whither != null">
+                whither = #{whither},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getSpareOutDtoByCondition" resultMap="spareOutDtoMap">
+        select a.*,b.name as staff_name,c.name as user_name,
+        	d.name as type_name,e.name as model_name
+        from (
+        	select o.staff_id,o.user_id,o.out_time,o.describe,o.whither,s.*
+        	from t_omm_spare_out o,t_omm_spare s where o.id = s.id
+        	) a
+        left join t_common_staff b on a.staff_id = b.id
+        left join T_SECURITY_USER c on a.user_id = c.id
+        left join T_OMM_EQUIPMENT_TYPE d on a.type_id = d.id
+        left join T_OMM_EQUIPMENT_MODEL e on a.model_id = e.id
+        
+        <where>
+            <if test="name != null and name.trim() != ''">
+                instr(a.name,#{name})>0
+            </if>
+            <if test="modelId != null">
+                and a.model_id = #{modelId}
+            </if>
+            <if test="typeId != null">
+                and a.type_id = #{typeId}
+            </if>
+            <if test="staffId != null">
+                and a.staff_id = #{staffId}
+            </if>
+            <if test="userId != null">
+                and a.user_id = #{userId}
+            </if>
+            <if test="whither != null">
+                and a.whither = #{whither}
+            </if>
+            <if test="startTime != null">
+                and a.out_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.out_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
+
+	<select id="getSpareOutDtoById" resultMap="spareOutDtoMap">
+		select a.*,b.name as staff_name,c.name as user_name,
+        	d.name as type_name,e.name as model_name
+        from (
+        	select o.staff_id,o.user_id,o.out_time,o.describe,o.whither,s.*
+        	from t_omm_spare_out o,t_omm_spare s
+        	where o.id = s.id and o.id = #{id}
+        	) a
+        left join t_common_staff b on a.staff_id = b.id
+        left join T_SECURITY_USER c on a.user_id = c.id
+        left join T_OMM_EQUIPMENT_TYPE d on a.type_id = d.id
+        left join T_OMM_EQUIPMENT_MODEL e on a.model_id = e.id
+	</select>
+    
+    <delete id="deleteByIds">
+    	delete from t_omm_spare_out
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+	<select id="getCountGroupByStaffId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
+		select a.*,b.name 
+		from (select count(1) as count,staff_id as id 
+			from T_OMM_SPARE_OUT group by staff_id) a
+		left join T_common_staff b on a.id = b.id
+		order by a.count desc
+	</select>
+	
+	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
+		select a.*,b.name
+	    from (select count(1) as count,type_id as id 
+	      from T_OMM_SPARE
+	      where status = 0
+	      group by type_id) a
+	    left join t_Omm_Equipment_Type b on a.id = b.id
+	    order by a.count desc
+	</select>
+	
+    <resultMap id="spareOutDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.SpareOutDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="describe" property="describe"/>
+        <result column="whither" property="whither"/>
+        <result column="whitherName" property="whitherName"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="type_id" property="typeId"/>
+        <result column="type_name" property="typeName"/>
+        <result column="status" property="status"/>
+        <result column="staff_id" property="staffId"/>
+        <result column="staff_name" property="staffName"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="in_time" property="inTime"/>
+        <result column="out_time" property="outTime"/>
+    </resultMap>
+</mapper>

@@ -8,10 +8,10 @@
             <Col span="12" >
             <div class="datapanle">
                 <span slot="title" >
-                取用备品设备排行
+                取用备品备件排行
                 </span>
                 <div style="position: relative;float: right;">
-                <a href="#" slot="extra">
+                <a href="#" slot="extra" @click="getBackUpType">
                     <Icon type="ios-loop-strong"></Icon>
                     刷新
                 </a>
@@ -21,9 +21,9 @@
                 <ul v-for="(item,index) in backupTakeData" :key="index">
                     <li style="margin-top: 3px;line-height: 24px;list-style-type:none;">
                         <Icon type="star" color="#ff3c1d"></Icon>
-                        {{item.key}}
+                        {{item.name}}
                         <span style="position: relative;float: right;">
-                            {{item.value}}
+                            {{item.count}}
                             <span class="orderDetails" @click="showTakingDetails(item.id)">&nbsp;&nbsp;详情</span>
                         </span>
                     </li>
@@ -34,10 +34,10 @@
             <Col span="12" >
             <div class="datapanle">
                 <span slot="title" >
-                取用设备人排行
+                备品取用人排行
                 </span>
                 <div style="position: relative;float: right;">
-                    <a href="#" slot="extra">
+                    <a href="#" slot="extra" @click="getBackUpBorrower">
                         <Icon type="ios-loop-strong"></Icon>
                         刷新
                     </a>
@@ -47,7 +47,7 @@
                     <ul v-for="(item,index) in takeUserData" :key="index">
                         <li style="line-height: 24px;list-style-type:none;">
                             <Icon type="reply-all" size="20" color="#15ffe4"></Icon>
-                            {{item.user}}
+                            {{item.name}}
                             <span style="position: relative;float: right;">
                                 {{item.count}}
                                 <span class="orderDetails" @click="showTakingPersonDetails(item.id)">&nbsp;&nbsp;详情</span>
@@ -72,94 +72,117 @@
         </Col>
         <Col span="12" style="margin-top: 1.5vh">
             <div style="width:42vw;height: 52vh;">
-                <SimpleBarChart v-bind="backupDetailData"></SimpleBarChart>
+                <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
             </div>
         </Col>
         <Col span="12" style="margin-top: 1.5vh"  >
-            <Row :gutter="16">
-                <Col span="10">
-                    <span class="planDec">工具类型：</span>
-                    <Select v-model="condition.type" @on-change='showTable()' style="width:60%">
-                        <Option value=null key="0">全部</Option>
-                        <Option v-for="item in equipmentTypes" :value="item.key" :key="item.key">{{ item.value }}</Option>
+            <Row class="queryCondition">
+                <Col span="8">
+                    备品名称：
+                    <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
+                </Col>
+                <Col span="8">
+                    备品类别：
+                    <Select v-model="outStorageConditions.typeId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
-                <Col span="10">
-                    <span class="planDec">取用人：</span>
-                    <AutoComplete
-                        v-model="condition.user"
-                        :data="userData"
-                        :filter-method="filterMethod"
-                        placeholder="输入用户名"
-                        style="width:200px">
-                    </AutoComplete>
+                <Col span="8">
+                    备品型号：
+                    <Select v-model="outStorageConditions.modelId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
                 </Col>
-                <Col span="1" offset="3" >
-                    <div style="position: relative;float: right;right: 0px;z-index: 101;">
-                        <Button type="primary"  icon="ios-search" @click="queryTable">查询</Button>
-                    </div>
+                <Col span="8">
+                    开始时间：
+                    <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="24" style="height: 49vh;">
-                    <Table stripe border :columns="toolColumns"  :style="{height:'90%',zIndex:101,marginTop:'3px'}"  :data="toolData"></Table>
+                <Col span="8">
+                    结束时间：
+                    <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="24">
-                    <div style="position: absolute;margin-bottom: 2px;width: 410px;float: right;right: 0px;height: 2vh;z-index: 103">
-                        <Page  :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-                            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-                            :style='pageStyle'></Page>
-                    </div>
+                <Col span="8" style="text-align: right;padding-right: 43px;">
+                    <Button type="primary" @click="showTable()" size="small">确定</Button>
+                    <Button type="default" size="small">取消</Button>
                 </Col>
             </Row>
+            <Table stripe border :columns="toolColumns"  height="385"  :data="toolData"></Table>
+            <div>
+                <Page  :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+                    :style='pageStyle'></Page>
+            </div>
         </Col>
     </Row>
     <Modal
         v-model="isTaking"
         title="取用备品详情"
-        width="740"
+        width="1100"
+        @on-cancel="resetVal"
     >
         <Row style="margin-bottom: 10px;">
+            <div style="display: none;">
+                typeId:<Input v-model="typeId"></Input>
+            </div> 
             <Col span="14">
                 <span>出库时间：</span>
-                <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
-                <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
+                <DatePicker type="datetime" ref="takingStartTime" v-model="takingSpareModalConditions.startTime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
+                <DatePicker type="datetime" ref="takingEndTime" v-model="takingSpareModalConditions.endTime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
             </Col>
             <Col span="7">
-                <span>取用人：</span>
-                <Input type="text" style="width: 130px"></Input>
+                取用人：
+                <Select clearable ref="staffId" style="width: 60%;" v-model="takingSpareModalConditions.staffId">
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
             </Col>
             <Col span="3" style="text-align: center">
-                <Button type="primary" size="small">查询</Button>
+                <Button type="primary" size="small" @click="showTakingDetails(typeId)">查询</Button>
             </Col>
         </Row>
-        <Table stripe border :columns="takingColums"  :data="takingDate"></Table>
+        <Table stripe border :columns="takingColums"  :data="takingDate"></Table>   
         <div class="pageContainer">
             <Page :total="takingPage.pageTotal" :current="takingPage.pageNum" :page-size="takingPage.pageSize" 
-            show-elevator @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+            show-elevator show-total @on-change="takingSpareHandlePage" @on-page-size-change='takingSpareHandlePageSize'></Page>
+        </div>
+        <div slot="footer">
+            <Button type="text" size="large" @click="resetVal">取消</Button>
+            <Button type="primary" size="large" @click="resetVal">确定</Button>
         </div>
     </Modal>
     <Modal
         v-model="isTakingPerson"
         title="取用备品人详情"
-        width="740"
+        width="870"
+        @on-cancel = "takingPersonReset"
     >
         <Row style="margin-bottom: 10px">
+            <div style="display: none">
+                staffId: <input v-model="staffId">
+            </div>
             <Col span="14">
                 <span>出库时间：</span>
-                <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
-                <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
+                <DatePicker type="datetime" ref="takingPersonStartTime" v-model="takingPersonConditions.startTime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
+                <DatePicker type="datetime" ref="takingPersonEndTime" v-model="takingPersonConditions.endTime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
             </Col>
             <Col span="7">
                 <span>备品名称：</span>
-                <Input type="text" style="width: 130px"></Input>
+                <Input ref="borrowName" type="text" style="width: 130px" v-model="takingPersonConditions.name"></Input>
             </Col>
             <Col span="3" style="text-align: center">
-                <Button type="primary" size="small">查询</Button>
+                <Button type="primary" size="small" @click="showTakingPersonDetails(staffId)">查询</Button>
             </Col>
         </Row>
         <Table stripe border :columns="takingPersonColums"  :data="takingPersonDate"></Table>
         <div class="pageContainer">
             <Page :total="takingPersonPage.pageTotal" :current="takingPersonPage.pageNum" :page-size="takingPersonPage.pageSize" 
-            show-elevator @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+            show-elevator show-total @on-change="takingPersonHandlePage" @on-page-size-change='takingPersonHandlePageSize'></Page>
+        </div>
+        <div slot="footer">
+            <Button type="text" size="large" @click="takingPersonReset">取消</Button>
+            <Button type="primary" size="large" @click="takingPersonReset">确定</Button>
         </div>
     </Modal>
   </div>
@@ -167,382 +190,438 @@
 
 <script>
 import SimplePieChart from "../../../../components/Common/Chart/SimplePieChart.vue";
-import SimpleBarChart from "../../../../components/Common/Chart/SimpleBarChart.vue";
+import MultiBarChart from "../../../../components/Common/Chart/MultiBarChart.vue";
+import { EquipmentService } from "../../../../services/equipmentService";
 export default {
-  name: "backup-history-count",
-  data() {
-    return {
-        backupTakeData: [
-            {
-            key: "甲烷探测器",
-            value: 43,
-            id: 1,
+    name: "backup-history-count",
+    data() {
+        return {
+            backupTakeData: [
+            ],
+            isTaking: false,
+            typeId: null,
+            takingSpareModalConditions:{
+                startTime: null,
+                endTime: null,
+                staffId: null
             },
-            {
-            key: "氧气探测器",
-            value: 40,
-            id: 2
+            takingColums:[
+                    {
+                        type: 'index',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '备品类别',
+                        key: 'typeName',
+                        align: 'center'
+                    },
+                    {
+                        title: '备品型号',
+                        key: 'modelName',
+                        align: 'center'
+                    },
+                    {
+                        title: '备品名称',
+                        key: 'name',
+                        align: 'center'
+                    },
+                    {
+                        title: '入库时间',
+                        key: 'inTime',
+                        align: 'center',
+                        width: 190
+                    },
+                    {
+                        title: '出库时间',
+                        key: 'outTime',
+                        align: 'center',
+                        width: 190
+                    },
+                    {
+                        title: '取用人',
+                        key: 'staffName',
+                        align: 'center'
+                    },
+                    {
+                        title: '备注',
+                        key: 'describe',
+                        align: 'center'
+                    }
+            ],
+            takingDate:[
+                { id: 1, backUpModal: '温度计', backUpName: '温度计1', takingTime: '', takingPersonName: '张三', operation: '管理员' },
+                { id: 2, backUpModal: '温度计', backUpName: '温度计2', takingTime: '', takingPersonName: '张三', operation: '管理员' },
+                { id: 3, backUpModal: '温度计', backUpName: '温度计3', takingTime: '', takingPersonName: '张三', operation: '管理员' }
+            ],
+            takingPage:{
+                pageSize: 3,
+                pageTotal: 100,
+                pageNum: 1
             },
-            {
-            key: "湿度计",
-            value: 37,
-            id: 3
+            staffs: [],
+            isTakingPerson: false,
+            staffId: null,
+            takingPersonConditions: {
+                startTime: null,
+                endTime: null,
+                name: null
             },
-            {
-            key: "温度计",
-            value: 33, 
-            id: 4
-            }
-        ],
-        isTaking: false,
-        takingColums:[
+            takingPersonColums:[
                 {
                     type: 'index',
                     width: 60,
                     align: 'center'
                 },
                 {
+                    title: '取用人',
+                    key: 'staffName',
+                    align: 'center'
+                },
+                {
                     title: '备品名称',
-                    key: 'backUpName',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '备品类别',
+                    key: 'typeName',
+                    align: 'center'
+                },
+                {
+                    title: '备品型号',
+                    key: 'modelName',
+                    align: 'center'
+                },
+                {
+                    title: '入库时间',
+                    key: 'inTime',
+                    align: 'center',
+                    width: 190
+                },
+                {
+                    title: '出库时间',
+                    key: 'outTime',
+                    align: 'center',
+                    width: 190
+                }
+            ],
+            takingPersonDate:[],
+            takingPersonPage:{
+                pageSize: 3,
+                pageTotal: 100,
+                pageNum: 1
+            },
+            takeUserData: [],
+            countTakeData: {
+                id: "loanDetail",
+                requestUrl: "spare-outs/type/key",
+                parameters: {
+                option: {
+                    title: {
+                    text: "取用备品设备比例"
+                    }
+                },
+                timer: {
+                    interval: 5000
+                }
+                }
+            },
+            countStoreBackupData: {
+                id: "BreakDetail",
+                requestUrl: "spares/type/key",
+                parameters: {
+                    option: {
+                        title: {
+                        text: "库存备品比例"
+                        }
+                    },
+                    timer: {
+                        interval: 5000
+                    }
+                }
+            },
+            backupDetailData: {
+                id: " toolDetail",
+                requestUrl: "spares/outs/type",
+                parameters: {
+                    option: {
+                        backgroundColor: '#FCF2EA',
+                        color: ['#CE98AF','#016A9A'],
+                        title: {
+                            text: "备品备件明细",
+                            textStyle: {
+                                color: "#8080C0"
+                            }
+                        }
+                    },
+                    timer: {
+                        interval: 5000
+                    }
+                }
+            },
+            toolColumns: [
+                {
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    title: "备品名称",
+                    key: "name",
+                    align: 'center'
+                },
+                {
+                    title: "备品类别",
+                    key: "typeName",
+                    align: 'center'
+                },
+                {
+                    title: '备品型号',
+                    key: 'modelName',
                     align: 'center'
                 },
                 {
                     title: '出库时间',
-                    key: 'takingTime',
+                    key: 'inTime',
                     align: 'center'
                 },
                 {
                     title: '取用人',
-                    key: 'takingPersonName',
+                    key: 'staffName',
                     align: 'center'
                 },
                 {
-                    title: '操作员',
-                    key: 'operation',
+                    title: '出库时间',
+                    key: 'outTime',
                     align: 'center'
-                }
-        ],
-        takingDate:[
-            { id: 1, backUpName: '温度计', takingTime: '', takingPersonName: '张三', operation: '管理员' },
-            { id: 2, backUpName: '温度计', takingTime: '', takingPersonName: '张三', operation: '管理员' },
-            { id: 3, backUpName: '温度计', takingTime: '', takingPersonName: '张三', operation: '管理员' }
-        ],
-        takingPage:{
-            pageSize: 3,
-            pageTotal: 100,
-            pageNum: 1
-        },
-        isTakingPerson: false,
-        takingPersonColums:[
-            {
-                type: 'index',
-                width: 60,
-                align: 'center'
-            },
-            {
-                title: '取用人',
-                key: 'takingPerson',
-                align: 'center'
-            },
-            {
-                title: '备品名称',
-                key: 'backUpName',
-                align: 'center'
-            },
-            {
-                title: '出库时间',
-                key: 'takingTime',
-                align: 'center'
-            },
-            {
-                title: '取用数量',
-                key: 'takingNum',
-                align: 'center'
-            },
-            {
-                title: '操作员',
-                key: 'operation',
-                align: 'center'
-            }
-        ],
-        takingPersonDate:[
-            { id: 1, takingPerson: '张三', backUpName: '门禁卡', takingTime: '', takingNum: '2', operation: 'admin' },
-            { id: 2, takingPerson: '张三', backUpName: '门禁卡', takingTime: '', takingNum: '2', operation: 'admin' },
-            { id: 3, takingPerson: '张三', backUpName: '门禁卡', takingTime: '', takingNum: '2', operation: 'admin' },
-        ],
-        takingPersonPage:{
-            pageSize: 3,
-            pageTotal: 100,
-            pageNum: 1
-        },
-        takeUserData: [
-            { user: "张三", count: "70", id: 1 },
-            { user: "王建", count: "60", id: 2 },
-            { user: "王城", count: "50", id: 3 },
-            { user: "Jisin", count: "30", id: 4 }
-        ],
-        countTakeData: {
-            id: "loanDetail",
-            requestUrl: "getCountLendData",
-            // title: { text: "取用备品设备比例", x: "left" },
-            // intervalTime: 5000
-            parameters: {
-            option: {
-                title: {
-                text: "取用备品设备比例"
-                }
-            },
-            timer: {
-                interval: 5000
-            }
-            }
-        },
-        countStoreBackupData: {
-            id: "BreakDetail",
-            requestUrl: "getCountBreakData",
-            // title: { text: "库存备品比例", x: "left" },
-            // intervalTime: 5000
-            parameters: {
-            option: {
-                title: {
-                text: "库存备品比例"
-                }
-            },
-            timer: {
-                interval: 5000
-            }
-            }
-        },
-        backupDetailData: {
-            id: " toolDetail",
-            requestUrl: "getToolDetail",
-            parameters: {
-                option: {
-                    title: {
-                        text: "备品备件明细",
-                        textStyle: {
-                            color: "#1affc9"
-                        }
-                    }
                 },
-                // timer: {
-                //     interval: 5000
-                // }
+                {
+                    title: '备注',
+                    key: 'describe',
+                    align: 'center'
+                },
+            ],
+            toolData: [],
+            equipmentTypes: [],
+            equipmentModels: [],
+            page: {
+                pageNum: 1,
+                pageSize: 7,
+                pageTotal: 0
+            },
+            pageStyle: {
+                position: "absolute",
+                bottom: "-46px",
+                right: "15px"
+            },
+            outStorageConditions:{
+                name: null,
+                typeId: null,
+                modelId: null,
+                startTime: null,
+                endTime: null,
+                //批量出库查询是否在库，否
+                status: 0,
+            },
+        };
+    },
+    components: {
+        SimplePieChart,
+        MultiBarChart
+    },
+    watch:{
+        typeId: function(curVal,oldVal){
+            this.showTakingDetails(curVal)
+        }
+    },
+    computed:{
+            outStorageParams() {
+                let param = {
+                    pageNum: this.page.pageNum,
+                    pageSize: this.page.pageSize,
+                    name: this.page.name,
+                    typeId: this.outStorageConditions.typeId,
+                    modelId: this.outStorageConditions.modelId,
+                    startTime: this.outStorageConditions.startTime,
+                    endTime: this.outStorageConditions.endTime,
+                    status: true,
+                };
+                return Object.assign({},param)
+            },
+    },
+    mounted(){
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.equipmentTypes = res
+            },
+            error => {
+                this.Log.info(error);
+            },
+        );
+        //获取model
+        EquipmentService.getEquipmentModels().then(
+            res=>{
+                this.equipmentModels = res
+            },
+            error => {
+                this.Log.info(error)
             }
+        ),
+        //获取取用人列表
+        this.axios.get('staffs').then(res=>{
+            let{ code,data } = res.data
+            if(code==200){
+                this.staffs = data
+            }
+        })
+        
+        this.showTable()
+        this.getBackUpType()
+        this.getBackUpBorrower()
+    },
+    methods: {
+        //用户AutoComplete
+        filterMethod(value, option) {
+        return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
         },
-        toolColumns: [
-            {
-            title: "备品名称",
-            key: "name"
-            },
-            {
-            title: "工具类型",
-            key: "type"
-            },
-            {
-            title: "取用时间",
-            key: "time"
-            },
-            {
-            title: "取用人",
-            key: "user"
-            },
-            {
-            title: "备品状态",
-            key: "status"
-            },
-            {
-            title: "操作",
-            key: "action",
-            width: 150,
-            align: "center",
-            render: (h, params) => {
-                return h("div", [
-                h(
-                    "Button",
-                    {
-                    props: {
-                        type: "info",
-                        size: "default"
-                    },
-                    style: {
-                        marginRight: "5px"
-                    },
-                    on: {
-                        click: () => {
-                        this.show(params.index);
-                        }
+        showTable() {
+            //批量出库查询出库备件
+            EquipmentService.backUpHistory(this.outStorageParams).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                        result.pagedList[index].outTime = new Date(result.pagedList[index].outTime).format("yyyy-MM-dd hh:mm:ss");
                     }
-                    },
-                    "查看详情"
-                )
-                ]);
-            }
-            }
-        ],
-        toolData: [
-            {
-            name: "风2机",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机3",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机1",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机4",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机5",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机6",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            },
-            {
-            name: "风机9",
-            type: "管廊设备",
-            time: "2018-1-12",
-            user: "张三"
-            }
-        ],
-        equipmentTypes: [
-            { key: 1, value: "电压表" },
-            { key: 2, value: "温度计" },
-            { key: 3, value: "湿度计" },
-            { key: 8, value: "应力计" },
-            { key: 4, value: "有害气体监测器" },
-            { key: 5, value: "万能表" },
-            { key: 6, value: "螺丝刀" },
-            { key: 7, value: "扳手" }
-        ],
-        condition: {
-            tunnel: {
-            name: ""
-            },
-            type: null,
-            status: null,
-            user: "",
-            startEquipmentTime: null,
-            endEquipmentTime: null
+                    this.toolData = result.pagedList
+                    this.page.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
         },
-        userData: [
-            "Steve Jobs",
-            "Stephen Gary Wozniak",
-            "Jonathan Paul Ive",
-            "张三",
-            "李四",
-            "小雨",
-            "大哥",
-            "董很累"
-        ],
-        page: {
-            pageNum: 1,
-            pageSize: 8,
-            pageTotal: 0
-        },
-        pageStyle: {
-            position: "absolute",
-            bottom: "20px",
-            right: "15px"
-        }
-    };
-  },
-  components: {
-    SimplePieChart,
-    SimpleBarChart
-  },
-  methods: {
-    //用户AutoComplete
-    filterMethod(value, option) {
-      return option.toUpperCase().indexOf(value.toUpperCase()) !== -1;
-    },
-    //查询表格数据
-    queryTable() {
-      let prams = {};
-      prams.type = this.condition.type;
-      prams.status = this.condition.status;
-      this.axios.post("").then(result => {
-        let { code, data } = response.data;
-        if (code == 200) {
-          this.backupTakeData = data;
-        }
-      });
-    },
 
-    showTable() {
-      let _this = this;
-      EquipmentService.equipmentDatagird(this.params).then(
-        result => {
-          for (let index in result.list) {
-            result.list[index].crtTime = new Date(
-              result.list[index].crtTime
-            ).format("yyyy-MM-dd");
-            if (result.list[index].imgUrl != null) {
-              result.list[index].imgUrl =
-                "http://192.168.3.6:8080/MaxTunnel-Web/" +
-                result.list[index].imgUrl.replace(/\\/g, "/");
-            }
-          }
-          _this.equipments = result.list;
-          _this.page.pageTotal = result.total;
+        handlePage(value) {
+            this.page.pageNum = value;
+            this.showTable();
         },
-        error => {
-          _this.Log.info(error);
-        }
-      );
-      // this.axios.post("/equipments/datagrid", (this.params)).then(result => {
-      //   let {code, data} = result.data;
-      //   if (code == 200) {
-      //     for (let index in data.list) {
-      //       data.list[index].crtTime = new Date(data.list[index].crtTime).format("yyyy-MM-dd");
-      //       if (data.list[index].imgUrl != null) {
-      //         //   console.log(data.list[index].imgUrl)
-      //         data.list[index].imgUrl = "http://192.168.3.6:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
-      //         // data.list[index].imgUrl = "http://192.168.0.41:8080/MaxTunnel-Web/" + data.list[index].imgUrl.replace(/\\/g, "/")
-      //       }
-      //     }
-      //     this.equipments = data.list;
-      //     this.page.pageTotal = data.total;
-      //   }
-      // });
-    },
+        handlePageSize(value) {
+            this.page.pageSize = value;
+            this.showTable();
+        },
+        //获取备品排行
+        getBackUpType(){
+            EquipmentService.getBackUpTypeHisList().then(
+                res => {
+                    this.backupTakeData = res
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        //取出备品排行详情
+        showTakingDetails(id){
+            this.isTaking = true
+            this.typeId = id
+            let param1 = {
+                typeId: id,
+                pageNum: this.takingPage.pageNum,
+                pageSize: this.takingPage.pageSize,
+                startTime: this.takingSpareModalConditions.startTime,
+                endTime: this.takingSpareModalConditions.endTime,
+                staffId: this.takingSpareModalConditions.staffId
+            }
+            EquipmentService.backUpHistory(param1).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                        result.pagedList[index].outTime = new Date(result.pagedList[index].outTime).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    this.takingDate = result.pagedList
+                    this.takingPage.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
 
-    handlePage(value) {
-      this.page.pageNum = value;
-      this.showTable();
-    },
-    handlePageSize(value) {
-      this.page.pageSize = value;
-      this.showTable();
-    },
-    //取出备品排行详情
-    showTakingDetails(id){
-        this.isTaking = true
-    },
-    //取用备品人排行详情
-    showTakingPersonDetails(id){
-        this.isTakingPerson = true
+        resetVal(){
+            this.isTaking = false 
+            this.takingPage.pageNum = 1
+            this.$refs.takingStartTime.handleClear()
+            this.$refs.takingEndTime.handleClear()
+            this.$refs.staffId.clearSingleSelect()
+        },
+
+        takingSpareHandlePage(value){
+            this.takingPage.pageNum = value;
+            this.showTakingDetails(this.typeId)
+        },
+
+        takingSpareHandlePageSize(value){
+            this.takingPage.pageSize = value
+            this.showTakingDetails(this.typeId)
+        },
+
+        //取用备品人排行
+        getBackUpBorrower(){
+            EquipmentService.getBackUpBorrowerHisList().then(
+                res => {
+                    this.takeUserData = res
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+
+        //取用备品人排行详情
+        showTakingPersonDetails(id){
+            this.isTakingPerson = true
+            this.staffId = id
+            let param = {
+                staffId: id,
+                pageNum: this.takingPersonPage.pageNum,
+                pageSize: this.takingPersonPage.pageSize,
+                startTime: this.takingPersonConditions.startTime,
+                endTime: this.takingPersonConditions.endTime,
+                name: this.takingPersonConditions.name
+            }
+            EquipmentService.backUpHistory(param).then(
+                result => {
+                    for(let index in result.pagedList){
+                        result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
+                        result.pagedList[index].outTime = new Date(result.pagedList[index].outTime).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    this.takingPersonDate = result.pagedList
+                    this.takingPersonPage.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+
+        takingPersonReset(){
+            this.isTakingPerson = false
+            this.takingPersonPage.pageNum = 1
+            this.$refs.takingPersonStartTime.handleClear()
+            this.$refs.takingPersonEndTime.handleClear()
+            this.$refs.borrowName.handleClear()
+        },
+        takingPersonHandlePageSize(value){
+            this.takingPersonPage.pageSize = value
+            this.showTakingPersonDetails(this.staffId)
+        },
+        takingPersonHandlePage(value){
+            this.takingPersonPage.pageNum = value
+            this.showTakingPersonDetails(this.staffId)
+        }
     }
-  }
 };
 </script>
 

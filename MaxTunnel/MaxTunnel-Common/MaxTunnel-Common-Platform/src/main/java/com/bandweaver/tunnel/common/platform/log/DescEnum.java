@@ -14,6 +14,8 @@ public enum DescEnum {
 	LOGIN("00101","登录账号"),
 	/**退出账号*/
 	LOGOUT("00102","退出账号"),
+	CHANGE_PW("00103","修改密码"),
+	RESET_PW("00104","重置密码"),
 	
 	
 	QUERY_USER("00201","查询用户"),

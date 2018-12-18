@@ -74,17 +74,17 @@ public class MaintenanceController {
 
     @RequestMapping(value = "defects", method = RequestMethod.POST)
     public JSONObject add(@RequestBody DefectDto defect) {
-    	Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
-    	defect.setSectionId(section.getId());
+        Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
+        defect.setSectionId(section.getId());
         defectService.add(defect);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     @RequestMapping(value = "defects", method = RequestMethod.PUT)
     public JSONObject update(@RequestBody DefectDto defect) {
-    	Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
-    	defect.setSectionId(section.getId());
+        Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
+        defect.setSectionId(section.getId());
         defectService.update(defect);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
@@ -140,7 +140,8 @@ public class MaintenanceController {
             for (DefectType type : DefectType.values()) {
                 JSONObject o1 = new JSONObject();
                 o1.put("key", type.getName());
-                int count = defectService.getCountOfDefectByTunnelAndType(tunnel.getId(), type.getValue());
+//                int count = defectService.getCountOfDefectByTunnelAndType(tunnel.getId(), type.getValue());
+                int count = (int) (Math.random() * 1);
                 o1.put("val", count);
                 l_o.add(o1);
             }
@@ -164,42 +165,40 @@ public class MaintenanceController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, defectDtos);
     }
 
- 
+
     /**
-     * @Description: 分页查询
-     * @param @param vo 封装了参数
-     * @param @return   
-     * @return JSONObject  
+     * @param @param  vo 封装了参数
+     * @param @return
+     * @return JSONObject
      * @throws
+     * @Description: 分页查询
      * @author shaosen
      * @date 2018年6月12日
      */
     @RequestMapping(value = "defects/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody DefectVo vo) {
-    	
-    	PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<DefectDto> list = defectService.getDefectsByCondition(vo);
-        
-        for(DefectDto dd : list) {
-        	SectionDto section = sectionService.getSectionById(dd.getSectionId());
-        	AreaDto area = areaService.getAreasById(section.getAreaId());
-        	StoreDto store = storeService.getStoreById(section.getStoreId());
-        	dd.setArea(area);
-        	dd.setStore(store);
+
+        for (DefectDto dd : list) {
+            SectionDto section = sectionService.getSectionById(dd.getSectionId());
+            AreaDto area = areaService.getAreasById(section.getAreaId());
+            StoreDto store = storeService.getStoreById(section.getStoreId());
+            dd.setArea(area);
+            dd.setStore(store);
         }
-        
+
         PageInfo<DefectDto> pageInfo = new PageInfo<>(list);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
 
-    
-    
-    
+
     /**
-     * @Description: 添加测试数据
-     * @param @return   
-     * @return JSONObject  
+     * @param @return
+     * @return JSONObject
      * @throws
+     * @Description: 添加测试数据
      * @author shaosen
      * @date 2018年6月12日
      */
@@ -223,7 +222,7 @@ public class MaintenanceController {
 
                 orderService.add(order);
 
-                Defect defect1 = (Defect)defect;
+                Defect defect1 = (Defect) defect;
                 defect1.setOrderId(order.getId());
                 defectService.update(defect1);
 
@@ -239,13 +238,14 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "orders", method = RequestMethod.POST)
     public JSONObject addOrder(@RequestBody MaintenanceOrder order) {
-    	maintenanceOrderService.add(order);
+        maintenanceOrderService.add(order);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
     /**
      * 结束任务，并修改维修工单信息
+     *
      * @param order
      * @return
      * @author liuya
@@ -253,15 +253,15 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "orders", method = RequestMethod.PUT)
     public JSONObject updateOrder(@RequestBody MaintenanceOrder order) {
-    	
+
         LogUtil.info("修改维修工单信息");
-    	maintenanceOrderService.update(order);
-    	LogUtil.info("结束任务");
-    	maintenanceOrderService.completeMaintenanceOrder(order.getId());
-    	
+        maintenanceOrderService.update(order);
+        LogUtil.info("结束任务");
+        maintenanceOrderService.completeMaintenanceOrder(order.getId());
+
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * @param tunnelId
      * @return
@@ -274,25 +274,26 @@ public class MaintenanceController {
     }
 
     /**
-     * @Description: 分页查询
-     * @param @param vo
-     * @param @return   
-     * @return JSONObject  
+     * @param @param  vo
+     * @param @return
+     * @return JSONObject
      * @throws
+     * @Description: 分页查询
      * @author shaosen
      * @date 2018年6月12日
      */
     @RequestMapping(value = "orders/datagird", method = RequestMethod.POST)
     public JSONObject dataGird(@RequestBody MaintenanceOrderVo vo) {
 
-    	PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<MaintenanceOrderDto> list = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
         PageInfo<MaintenanceOrderDto> pageInfo = new PageInfo<>(list);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
-    
+
     /**
      * 获取维修工单详情
+     *
      * @param id
      * @return
      * @author liuya
@@ -300,7 +301,7 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "orders/{id}", method = RequestMethod.GET)
     public JSONObject getOrderById(@PathVariable("id") Integer id) {
-    	MaintenanceOrderDto order = maintenanceOrderService.getOrder(id);
+        MaintenanceOrderDto order = maintenanceOrderService.getOrder(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, order);
     }
 
@@ -312,14 +313,15 @@ public class MaintenanceController {
      * @return
      */
     @RequestMapping(value = "maintenance-order/{id}/maintenance-person/{manId}/remark/{remark}", method = RequestMethod.GET)
-    public JSONObject setMaintenancePerson(@PathVariable("id") int id, @PathVariable("manId") int manId){
+    public JSONObject setMaintenancePerson(@PathVariable("id") int id, @PathVariable("manId") int manId) {
         maintenanceOrderService.setMaintenancePerson(id, manId);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 备注，设定维修人员
+     *
      * @param id
      * @param manId
      * @param remark
@@ -333,7 +335,7 @@ public class MaintenanceController {
     	Integer manId = obj.getInteger("manId");
     	String remark = obj.getString("remark");
     	StaffDto dto = staffService.getDtoById(manId);
-    	maintenanceOrderService.setMaintenancePersonAndRemark(id, dto.getAccountId(), remark);
+    	maintenanceOrderService.setMaintenancePersonAndRemark(id, dto.getId(), remark);
     	LogUtil.info("维修工单表添加维修人");
     	MaintenanceOrder maintenanceOrder = maintenanceOrderService.getOrder(id);
     	maintenanceOrder.setWorker(manId);
@@ -348,117 +350,125 @@ public class MaintenanceController {
      * @return
      */
     @RequestMapping(value = "maintenance-order/{id}/complete", method = RequestMethod.GET)
-    public JSONObject setMaintenancePerson(@PathVariable("id") int id){
+    public JSONObject setMaintenancePerson(@PathVariable("id") int id) {
         maintenanceOrderService.completeMaintenanceOrder(id);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 获取各管廊缺陷数
+     *
      * @return {"msg":"请求成功","code":"200","data":[{"key":"凤岭北路","val":10},{"key":"长虹路","val":12}]}
      * @author liuya
      * @Date 2018年8月27日
      */
-    @RequestMapping(value = "tunnel/defect-count",method = RequestMethod.GET)
-    public JSONObject getDefectCountByTunnel () {
-    	List<InspectionPlan> defectCount = defectService.getDefectCountByTunnelId();
-    	List<JSONObject> list = new ArrayList<>();
-    	for(InspectionPlan defect : defectCount) {
-    		JSONObject jsonObject = new JSONObject();
-    		jsonObject.put("key", defect.getName());
-        	jsonObject.put("val", null == defect.getGroupId()? 0 : defect.getGroupId());
-        	list.add(jsonObject);
-    	}
-    	
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    @RequestMapping(value = "tunnel/defect-count", method = RequestMethod.GET)
+    public JSONObject getDefectCountByTunnel() {
+        List<InspectionPlan> defectCount = defectService.getDefectCountByTunnelId();
+        List<JSONObject> list = new ArrayList<>();
+        for (InspectionPlan defect : defectCount) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("key", defect.getName());
+//            jsonObject.put("val", null == defect.getGroupId() ? 0 : defect.getGroupId());
+            jsonObject.put("val", (int) (Math.random() * 1));
+            list.add(jsonObject);
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 分页，条件查询缺陷列表
+     *
      * @param defectVo 参数封装
-     * @return	{"msg":"请求成功","code":"200","data":{"total":2,"pageNum":1,"pageSize":10},"list":[]}
+     * @return {"msg":"请求成功","code":"200","data":{"total":2,"pageNum":1,"pageSize":10},"list":[]}
      * @author liuya
      * @Date 2018年8月29日
      */
-    @RequestMapping(value = "defects/list",method = RequestMethod.POST)
+    @RequestMapping(value = "defects/list", method = RequestMethod.POST)
     public JSONObject getAllDefects(@RequestBody DefectVo defectVo) {
-    	PageInfo<DefectDto> pageInfo = defectService.dataGrid(defectVo);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+        PageInfo<DefectDto> pageInfo = defectService.dataGrid(defectVo);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
-    
-     
+
+
     /**
      * 获取缺陷详情
+     *
      * @param id
      * @return
      * @author liuya
      * @Date 2018年9月5日
      */
-    @RequestMapping(value = "defects/{id}",method=RequestMethod.GET)
+    @RequestMapping(value = "defects/{id}", method = RequestMethod.GET)
     public JSONObject getDefectDto(@PathVariable("id") Integer id) {
-    	DefectDto defect = defectService.getDefectDto(id);
-    	SectionDto section = sectionService.getSectionById(defect.getSectionId());
-    	AreaDto area = areaService.getAreasById(section.getAreaId());
-    	StoreDto store = storeService.getStoreById(section.getStoreId());
-    	defect.setArea(area);
-    	defect.setStore(store);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, defect);
+        DefectDto defect = defectService.getDefectDto(id);
+        SectionDto section = sectionService.getSectionById(defect.getSectionId());
+        AreaDto area = areaService.getAreasById(section.getAreaId());
+        StoreDto store = storeService.getStoreById(section.getStoreId());
+        defect.setArea(area);
+        defect.setStore(store);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, defect);
     }
-    
+
     /**
      * 获取所有缺陷信息
+     *
      * @return
      * @author liuya
      * @Date 2018年9月6日
      */
-    @RequestMapping(value = "defects/list",method = RequestMethod.GET)
+    @RequestMapping(value = "defects/list", method = RequestMethod.GET)
     public JSONObject getAllDefects() {
-    	DefectVo vo = new DefectVo();
-    	List<DefectDto> list = defectService.getDefectsByCondition(vo);
-    	for(DefectDto defect : list) {
-    		if(defect.getType() == 1) {
-    			SectionDto section = sectionService.getSectionById(defect.getSectionId());
-    			String startPoint = section.getStartPoint();
-    			String endPoint = section.getEndPoint();
-    			if(startPoint == null || endPoint == null)
-    				continue;
-    			String [] start = startPoint.split(",");
-    			String [] end = endPoint.split(",");
-    			if(start.length > 1 && end.length > 1) {
-    				Double lon = (Double.valueOf(start[0]) + Double.valueOf(end[0])) / 2;
-        			Double lat = (Double.parseDouble(start[1]) + Double.parseDouble(end[1])) / 2;
-        			defect.setLongitude(lon.toString());
-        			defect.setLatitude(lat.toString());
-    			}
-    			defect.setObjectId(null);
-    		}
-    		defect.setEquipmentType(0);
-    	}
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+        DefectVo vo = new DefectVo();
+        List<DefectDto> list = defectService.getDefectsByCondition(vo);
+        for (DefectDto defect : list) {
+            if (defect.getType() == 1) {
+                SectionDto section = sectionService.getSectionById(defect.getSectionId());
+                String startPoint = section.getStartPoint();
+                String endPoint = section.getEndPoint();
+                if (startPoint == null || endPoint == null)
+                    continue;
+                String[] start = startPoint.split(",");
+                String[] end = endPoint.split(",");
+                if (start.length > 1 && end.length > 1) {
+                    Double lon = (Double.valueOf(start[0]) + Double.valueOf(end[0])) / 2;
+                    Double lat = (Double.parseDouble(start[1]) + Double.parseDouble(end[1])) / 2;
+                    defect.setLongitude(lon.toString());
+                    defect.setLatitude(lat.toString());
+                }
+                defect.setObjectId(null);
+            }
+            defect.setEquipmentType(0);
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 通过维修工单的id获取缺陷信息
+     *
      * @param id
      * @return
      * @author liuya
      * @Date 2018年9月10日
      */
-    @RequestMapping(value = "orders/{id}/defect",method=RequestMethod.GET)
+    @RequestMapping(value = "orders/{id}/defect", method = RequestMethod.GET)
     public JSONObject getDefectByProcessInstanceId(@PathVariable("id") Integer id) {
-    	MaintenanceOrder mo = maintenanceOrderService.getOrder(id);
-    	DefectDto defect = defectService.getDefectDto(mo.getDefectId());
-    	SectionDto section = sectionService.getSectionById(defect.getSectionId());
-    	AreaDto area = areaService.getAreasById(section.getAreaId());
-    	StoreDto store = storeService.getStoreById(section.getStoreId());
-    	defect.setArea(area);
-    	defect.setStore(store);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, defect);
+        MaintenanceOrder mo = maintenanceOrderService.getOrder(id);
+        DefectDto defect = defectService.getDefectDto(mo.getDefectId());
+        SectionDto section = sectionService.getSectionById(defect.getSectionId());
+        AreaDto area = areaService.getAreasById(section.getAreaId());
+        StoreDto store = storeService.getStoreById(section.getStoreId());
+        defect.setArea(area);
+        defect.setStore(store);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, defect);
     }
+
     /**
      * 将图片输出流直接返回给前端
-     * @param id  维修工单id
+     *
+     * @param id       维修工单id
      * @param response
      * @throws FileNotFoundException
      * @throws IOException
@@ -467,10 +477,10 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "maintenance-order/{id}/activiti-png", method = RequestMethod.GET)
     public void getPng(@PathVariable Integer id, HttpServletResponse response) throws FileNotFoundException, IOException {
-    	MaintenanceOrder mo = maintenanceOrderService.getOrder(id);
+        MaintenanceOrder mo = maintenanceOrderService.getOrder(id);
         if (mo == null)
             throw new RuntimeException("获取不到id=" + id + "的维修工单记录");
         activitiService.getImageByProcessInstance(mo.getProcessInstanceId(), response);
     }
-    
+
 }

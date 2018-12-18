@@ -96,7 +96,7 @@ public class HttpUtil {
     }	
 	
 	/**
-	 * Post String
+	 * Post JSON
 	 * 
 	 * @param host
 	 * @param path

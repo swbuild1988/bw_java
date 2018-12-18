@@ -48,21 +48,18 @@
             </FormItem>
             <FormItem label="责任人：" prop="manId">
                 <Select v-model="defectDetails.manId">
-                    <Option v-for="(item,index) in liable" :value="item.accountId.toString()" :key="index">{{item.name}}</Option>
+                    <Option v-for="(item,index) in liable" :value="item.id" :key="index">{{item.name}}{{item.accountId}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="备注：">
                 <Input v-model="defectDetails.remark" type="textarea" :rows="4" placeholder="请输入备注"></Input>
             </FormItem>
             <FormItem style="text-align: center">
-                <Button type="primary" @click="submitForm('defectDetails')">提交</Button>
+                <Button type="primary" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
                 <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
-        </Form>   
-        <!-- <div style="text-align: center">
-            <Button type="primary" @click="submitForm('defectDetails')">提交</Button>
-            <Button type="ghost" style="margin-left: 8px">取消 </Button>
-        </div>  -->
+        </Form>  
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
     </div>
 </template>
 <script>
@@ -95,11 +92,12 @@ export default {
                 status: null,
                 description: null,
                 manId: null,
-                remark: null
+                remark: null,
+                tunnelName: null
             },
             ruleValidate:{
                 manId:[
-                    {required: true, message: '责任人不能为空', trigger: 'change'}
+                    {type: 'number', required: true, message: '责任人不能为空', trigger: 'change'}
                 ],
             },
             tunnel: [],
@@ -120,7 +118,8 @@ export default {
                 backgroundAttachment: 'fixed',
                 backgroundSize: 'cover',
                 minHeight: '100%'
-            }
+            },
+            isSubmit: false
         }    
     },
     watch:{
@@ -135,7 +134,7 @@ export default {
         let _this = this
         TunnelService.getTunnels().then(
             (result)=>{
-                _this.tunnels = result
+                _this.tunnel = result
             },
             (error)=>{
                 _this.Log.info(error)
@@ -148,12 +147,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/staffs').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.liable = data
-        //     }
-        // })
         //缺陷类型
         EnumsService.getDefectType().then(
             (result)=>{
@@ -186,15 +179,6 @@ export default {
                 _this.getAreas()
                 _this.getStores()
             })
-        // this.axios.get('orders/'+this.processInstanceId+'/defect').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.defectDetails = data
-        //         this.defectDetails.createTime = new Date(data.createTime).format('yyyy-MM-dd hh:mm:s')
-        //         this.getAreas()
-        //         this.getStores()
-        //     }
-        // })
     },
     methods: {
         //获取所属区域
@@ -207,12 +191,6 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
-            // this.axios.get('/tunnels/'+this.defectDetails.tunnelId+'/areas').then(response=>{
-            //     let{code,data} = response.data
-            //     if(code==200){
-            //         this.areas=data
-            //     }
-            // })
             this.getObj()
         },
 
@@ -226,12 +204,6 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
-            // this.axios.get('tunnels/'+this.defectDetails.tunnelId+'/stores').then(response=>{
-            //     let{code,data} = response.data
-            //     if(code==200){
-            //         this.stores = data
-            //     }
-            // })
             this.getObj()
         },
 
@@ -250,20 +222,17 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
-            // this.axios.post("/section/measobjs",(mes)).then(response=>{
-            //     let { code,data } = response.data
-            //     if(code==200){
-            //         this.objs = data
-            //     }
-            // })
         },
         //提交事件
         submitForm(name){
-            this.$refs[name].validate(valid=>{
+            this.isSubmit = true
+            setTimeout(()=>{
+                this.isSubmit = false
+                this.$refs[name].validate(valid=>{
                 if(valid){
                     var formInfo = {
-                        id: parseInt(this.defectDetails.id),
-                        manId: parseInt(this.defectDetails.manId),
+                        id: this.defectDetails.id,
+                        manId: this.defectDetails.manId,
                         remark: this.defectDetails.remark
                     }
                     let _this = this
@@ -278,18 +247,13 @@ export default {
                         (error)=>{
                             _this.Log.info(error)
                         })
-                    // this.axios.put('/maintenance-orders',formInfo).then(response=>{
-                    //     if(this.$route.params.isFinished==undefined){
-                    //         this.$router.push('/UM/myNews/queryMyTask');
-                    //     }else{
-                    //         this.$router.push('/UM/myTasks/query');
-                    //     }
-                    // })
-                    // .catch(function(error){
-                    //     console.log(error)
-                    // })
                 }
             })
+            },2000)
+        },
+        //返回
+        goBack(){
+            this.$router.back(-1);
         }
     }
 }
@@ -300,6 +264,11 @@ export default {
     margin: 10px auto;
     background: #fff;
     padding: 10px 20px;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>
 

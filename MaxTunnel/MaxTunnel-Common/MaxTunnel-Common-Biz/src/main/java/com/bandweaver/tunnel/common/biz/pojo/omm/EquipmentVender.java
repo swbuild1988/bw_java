@@ -15,17 +15,17 @@ public class EquipmentVender implements Serializable{
 	 */
 	private static final long serialVersionUID = -7442664194174919319L;
 
-	private Short id;
+	private Integer id;
 
     private String name;
 
     private Date crtTime;
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

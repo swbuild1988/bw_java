@@ -5,7 +5,7 @@
         <Col span="6">
           <span class="planDec">流程状态：</span>
           <Select v-model="conditions.finished"  @on-change='conditionChange()' style="width:60%">
-            <Option value=null key="0">所有</Option>
+            <Option value=null>所有</Option>
             <Option v-for="item in workOrderStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
           </Select>
         </Col>
@@ -57,7 +57,7 @@
                 <span @click="show(index)">详情</span>
               </Col>
               <Col span="6">
-                <span  @click="edit(index)">编辑</span>
+                <span  @click="edit(index)" :disabled="item.isFinished">编辑</span>
               </Col>
               <Col span="12" class="timeContainer">
                 <div>{{item.inspectTime}}</div>
@@ -147,12 +147,6 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/tunnels ").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.tunnels = data;
-    //   }
-    // });
     //从数据库中读取所有的小组option选项
     PatrolService.getGroups().then(
       (result)=>{
@@ -161,12 +155,6 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/inspection-groups").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.Groups = data;
-    //   }
-    // });
     this.conditionChange();
   },
   methods: {
@@ -185,18 +173,6 @@ export default {
         (error)=>{
           _this.Log.info(error)
         })
-      // this.axios.post("inspection-plans/datagrid", (this.params)).then(response => {
-      //     let { code, data } = response.data;
-      //     if (code == 200) {
-      //       for (let index in data.list) {
-      //         data.list[index].inspectTime = new Date(
-      //           data.list[index].inspectTime
-      //         ).format("yyyy-MM");
-      //       }
-      //       this.plans = data.list;
-      //       this.page.pageTotal = data.total;
-      //     }
-      //   });
     },
     goToMoudle: function(path) {
       this.$router.push(path);

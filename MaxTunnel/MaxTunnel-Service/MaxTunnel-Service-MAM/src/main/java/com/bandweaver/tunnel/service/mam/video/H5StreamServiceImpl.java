@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.mam.video;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.HttpUtil;
 
 import de.onvif.soap.devices.PtzDevices;
@@ -372,4 +375,84 @@ public class H5StreamServiceImpl implements OnvifService {
             LogUtil.info("goto preset 出错：" + presetName);
         }
     }
+
+	@Override
+	public boolean addSrc(String user, String password, String ip, String id, String url) throws Exception {
+		boolean addSrcRTSP = addSrcRTSP(user,password,ip,id,url);
+		boolean addSrcONVIF = addSrcONVIF(user,password,ip,id,url);
+		return addSrcRTSP&&addSrcONVIF ? true : false;
+	}
+	
+	
+	@Override
+	public boolean delSrc(String id) throws Exception {
+		VideoDto videoDto = videoModuleCenter.getVideoDto(DataTypeUtil.toInteger(id));
+	    VideoServerDto videoServer = videoDto.getVideoServerDto();
+	    
+	    String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String _url = "/api/v1/DelSrc";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("token",id);
+        querys.put("session", videoServer.getSession());
+        Map<String, String> querys2 = new HashMap<>();
+        querys2.put("token","onvif_" +id);
+        querys2.put("session", videoServer.getSession());
+        
+        boolean delSrcRTSP = httpGet(server, _url, headers, querys);
+        boolean delSrcONVIF = httpGet(server, _url, headers, querys2);
+        return delSrcRTSP&&delSrcONVIF ? true : false ;
+	}
+
+	public boolean httpGet(String server, String _url, Map<String, String> headers, Map<String, String> querys) throws Exception {
+	
+		HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
+		if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+        	String str = EntityUtils.toString(response.getEntity(), "utf-8");
+            return JSONObject.parseObject(str, H5StreamHttpResponseDto.class).isbStatus();
+        }else {
+        	LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+        }
+		return false;
+	}
+
+	private boolean addSrcONVIF(String user, String password, String ip, String id, String url) throws Exception {
+		VideoDto videoDto = videoModuleCenter.getVideoDto(DataTypeUtil.toInteger(id));
+	    VideoServerDto videoServer = videoDto.getVideoServerDto();
+
+		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String _url = "/api/v1/AddSrcONVIF";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("name", "onvif_" + id);
+        querys.put("token","onvif_" +id);
+        querys.put("user", user);
+        querys.put("password", password);
+        querys.put("ip", ip);
+        querys.put("port", String.valueOf(80));
+        querys.put("session", videoServer.getSession());
+        return httpGet(server, _url, headers, querys);
+		
+	}
+	
+	
+
+	private boolean addSrcRTSP(String user, String password, String ip, String id, String url) throws Exception {
+		VideoDto videoDto = videoModuleCenter.getVideoDto(DataTypeUtil.toInteger(id));
+	    VideoServerDto videoServer = videoDto.getVideoServerDto();
+
+		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String _url = "/api/v1/AddSrcRTSP";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("name", id);
+        querys.put("token", id);
+        querys.put("user", user);
+        querys.put("password", password);
+        querys.put("url", url);
+        querys.put("session", videoServer.getSession());
+        return httpGet(server, _url, headers, querys);
+	}
+
+	
 }

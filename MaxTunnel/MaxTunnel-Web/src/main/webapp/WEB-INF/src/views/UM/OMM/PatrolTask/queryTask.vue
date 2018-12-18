@@ -1,39 +1,41 @@
 <template>
-<Tabs value="name1">
-    <TabPane label="表格" name="name1">
-        <div class="allDiv">
-            <Row class="conditions">
-                <Col span="6">
-                    <span class="conditionTitle">任务进程：</span>
-                    <Select v-model="conditions.finished" style="width: 60%" @on-change="queryConditions()">
-                        <Option value=null>所有</Option>
-                        <Option v-for="(item,index) in patrolResult" :key="index" :value="item.val">{{item.key}}</Option>
-                    </Select>
-                </Col>
-                <Col span="6">
-                    <span class="conditionTitle">巡检人：</span>
-                    <Input type="text" style="width: 60%" v-model="conditions.name" @on-keyup="queryConditions()"></Input>
-                </Col>
-                <Col span="6">
-                    <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
-                </Col>
-                <Col span="6">
-                    <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
-                </Col>
-            </Row>
-            <div class="list">           
-                <Table  :columns='columns'  :data="patrolTask"></Table>
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
-            </div>
+<div class="allDiv" style="padding-bottom: 0px;">
+    <div class="navigation">
+        <div @click="showTable()" :class="{'activeTable': isTable}">巡检任务表</div>
+        <div @click="showSuperCalender()" :class="{'activeSuper': isSuperCalender}">巡检任务日历</div>
+    </div>
+    <div v-if="isTable">
+        <Row class="conditions">
+            <Col span="6">
+                <span class="conditionTitle">任务进程：</span>
+                <Select v-model="conditions.finished" style="width: 60%" @on-change="queryConditions()">
+                    <Option value=null>所有</Option>
+                    <Option v-for="(item,index) in patrolResult" :key="index" :value="item.val">{{item.key}}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">巡检人：</span>
+                <Input type="text" style="width: 60%" v-model="conditions.name" @on-keyup="queryConditions()"></Input>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">开始时间：</span>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">结束时间：</span>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
+            </Col>
+        </Row>
+        <div class="list">           
+            <Table  :columns='columns'  :data="patrolTask"></Table>
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
         </div>
-    </TabPane>
-    <TabPane label="超级日历" name="name2">
+    </div>
+    <div v-if="isSuperCalender">
         <superCalender v-bind="SCalender" v-on:listenToChildEvent="queryOneMonth"></superCalender>
-    </TabPane>
-</Tabs>
+    </div>
+</div>
 </template>
 <script>
 import Enum from '../../../../../static/Enum.json'
@@ -68,7 +70,7 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '0px',
+                bottom: '10px',
                 right: '15px'
             },
             columns:[
@@ -186,7 +188,9 @@ export default {
             tunnelId: null,
             tunnels:[],
             firstDay: null,
-            lastDay: null
+            lastDay: null,
+            isTable: true,
+            isSuperCalender: false,
         }
     },
     watch:{
@@ -213,6 +217,14 @@ export default {
         this.queryOneMonth(null)
     },
     methods:{
+        showTable(){
+            this.isTable = true
+            this.isSuperCalender = false
+        },
+        showSuperCalender(){
+            this.isSuperCalender = true
+            this.isTable = false
+        },
         queryConditions(){
                 var info = {
                     pageNum: this.page.pageNum,
@@ -287,3 +299,19 @@ export default {
     }
 }
 </script>
+<style scoped>
+.navigation{
+    line-height: 35px;
+}
+.navigation div{
+    display: inline;
+    line-height: 35px;
+    cursor: pointer;
+    padding: 9px;
+    font-size: 15px;
+}
+.navigation div:hover,.activeTable,.activeSuper{
+    border-bottom: 2px solid #357aa1;
+}
+</style>
+

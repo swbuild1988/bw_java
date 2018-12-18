@@ -17,6 +17,8 @@
         "echarts": "^4.0.4",
         "es6-promise": "^4.2.4",
         "iview": "^2.11.0",
+        "js-md5": "^0.7.3",
+        "js-sha256": "^0.9.0",
         "sockjs-client": "^1.1.5",
         "stompjs": "^2.3.3",
         "videojs-contrib-hls": "^5.14.1",
@@ -28,6 +30,7 @@
         "vue-supermap-cesium": "^0.0.1",
         "vue-video-player": "^5.0.2",
         "vue-waterfall": "^1.0.6",
+        "vue-xlsx-table": "^1.2.8",
         "vuex": "^3.0.1"
     },
     "devDependencies": {

@@ -24,4 +24,16 @@ public class EquipmentVenderServiceImpl implements EquipmentVenderService {
 	public EquipmentVender getEquipmentVenderById(Integer id) {
 		return equipmentVenderMapper.selectByPrimaryKey(id);
 	}
+
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		return equipmentVenderMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int insert(EquipmentVender record) {
+		return equipmentVenderMapper.insert(record);
+	}
+	
+	
 }

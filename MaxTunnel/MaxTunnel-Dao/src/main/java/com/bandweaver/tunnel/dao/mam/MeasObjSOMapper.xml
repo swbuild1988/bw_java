@@ -4,8 +4,8 @@
 <mapper namespace="com.bandweaver.tunnel.dao.mam.MeasObjSOMapper">
 
     <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO">
-        INSERT INTO T_MAM_MEASOBJ_SO (ID, REFRESH_TIME, CV)
-        VALUES (#{id}, #{refreshTime}, #{CV})
+        INSERT INTO T_MAM_MEASOBJ_SO (ID, REFRESH_TIME, cv)
+        VALUES (#{id}, #{refreshTime}, #{cv})
     </insert>
     
     <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO">
@@ -17,8 +17,8 @@
         	<if test="refreshTime != null">
         		REFRESH_TIME,
         	</if>
-        	<if test="CV != null">
-        		CV,
+        	<if test="cv != null">
+        		cv,
         	</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -28,15 +28,15 @@
         	<if test="refreshTime != null">
         		#{refreshTime,jdbcType=TIMESTAMP},
         	</if>
-        	<if test="CV != null">
-        		#{CV,jdbcType=DECIMAL},
+        	<if test="cv != null">
+        		#{cv,jdbcType=DECIMAL},
         	</if>
         </trim>
     </insert>
 
     <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO">
         UPDATE T_MAM_MEASOBJ_SO
-        SET REFRESH_TIME = #{refreshTime}, CV = #{CV}
+        SET REFRESH_TIME = #{refreshTime}, cv = #{cv}
         WHERE id = #{id} 
     </update>
 
@@ -70,19 +70,19 @@
         <result column="height" jdbcType="VARCHAR" property="height"/>
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
-        <result column="CV" jdbcType="VARCHAR" property="CV"/>
+        <result column="cv" jdbcType="VARCHAR" property="cv"/>
     </resultMap>
 
 	 <insert id="addBatch" useGeneratedKeys="false">
         insert into T_MAM_MEASOBJ_SO
-        (ID, REFRESH_TIME, CV)
+        (ID, REFRESH_TIME, cv)
         select a.* from (
         <foreach collection="list" item="item" index="index" close=")"
                  open="(" separator="union">
             select
             #{item.id},
             #{item.refreshTime},
-            #{item.CV}
+            #{item.cv}
             from dual
         </foreach>
         )a

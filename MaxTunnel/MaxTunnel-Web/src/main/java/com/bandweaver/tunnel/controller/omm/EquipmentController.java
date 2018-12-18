@@ -27,16 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentModelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
+import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentVenderService;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
+import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentVender;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
@@ -65,6 +66,8 @@ public class EquipmentController {
     private EquipmentVenderService equipmentVenderService;
     @Autowired
     private EquipmentModelService equipmentModelService;
+    @Autowired
+    private EquipmentTypeService equipmentTypeService;
     
     
     /**
@@ -286,38 +289,142 @@ public class EquipmentController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
-    
-    
-    /**
-           *  获取所有供应商列表
-     * @param    
-     * @return {"msg":"请求成功","code":"200","data":[{"id":1,"name":"张三","crtTime":1531901454000},{"id":2,"name":"李四","crtTime":1531901454000},{"id":3,"name":"王五","crtTime":1531901454000}]}  
-     * @throws
-     * @author shaosen
-     * @date 2018年6月6日
-     */
-    @RequestMapping(value="venders",method=RequestMethod.GET)
-    public JSONObject getAllEquipmentVenderList() {
-    	List<EquipmentVender> list = equipmentVenderService.getAllEquipmentVenderList();
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
-    }
+    /******************************************************************/
+    /*设备供应商模块
+    /******************************************************************/
     
     /**
-         * 通过id获取设备供应商
-     * @param  id 供应商id
-     * @return   {"msg":"请求成功","code":"200","data":{"id":1,"name":"张三","crtTime":1531901454000}}
-     * @throws
-     * @author shaosen
-     * @date 2018年6月6日
-     */
-    @RequestMapping(value="venders/{id}",method=RequestMethod.GET)
-    public JSONObject getEquipmentVenderById(@PathVariable("id")Integer id) {
-    	EquipmentVender vender = equipmentVenderService.getEquipmentVenderById(id);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, vender);
-    }
+	 * 添加设备供应商
+	 * @param name
+	 * @param crtTime
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	@RequestMapping(value = "equipment-venders", method = RequestMethod.POST)
+	public JSONObject insert(@RequestBody EquipmentVender e) {
+		equipmentVenderService.insert(e);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	/**
+	     *  获取所有供应商列表
+	* @param    
+	* @return {"msg":"请求成功","code":"200","data":[{"id":1,"name":"张三","crtTime":1531901454000},{"id":2,"name":"李四","crtTime":1531901454000},{"id":3,"name":"王五","crtTime":1531901454000}]}  
+	* @throws
+	* @author shaosen
+	* @date 2018年6月6日
+	*/
+	@RequestMapping(value="equipment-venders",method=RequestMethod.GET)
+	public JSONObject getAllEquipmentVenderList() {
+		List<EquipmentVender> list = equipmentVenderService.getAllEquipmentVenderList();
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
+	
+	/**
+	   * 通过id获取设备供应商
+	* @param  id 供应商id
+	* @return   {"msg":"请求成功","code":"200","data":{"id":1,"name":"张三","crtTime":1531901454000}}
+	* @throws
+	* @author shaosen
+	* @date 2018年6月6日
+	*/
+	@RequestMapping(value="equipment-venders/{id}",method=RequestMethod.GET)
+	public JSONObject getEquipmentVenderById(@PathVariable("id")Integer id) {
+		EquipmentVender vender = equipmentVenderService.getEquipmentVenderById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, vender);
+	}
+	
+	/**
+	 * 删除设备供应商
+	 * @param id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	@RequestMapping(value = "equipment-venders/{id}", method = RequestMethod.DELETE)
+	public JSONObject deleteVenders(@PathVariable("id") Integer id) {
+		equipmentVenderService.deleteByPrimaryKey(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
     
+	/******************************************************************/
+    /*设备类型模块
+    /******************************************************************/
     
-    /**
+	/**
+	 * 添加设备类型
+	 * @param name
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	@RequestMapping(value = "equipment-types", method = RequestMethod.POST)
+	public JSONObject insert(@RequestBody EquipmentType e) {
+		equipmentTypeService.insert(e);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	/**
+	     *  获取所有设备类型列表
+	* @param    
+	* @return {"msg":"请求成功","code":"200","data":[{"id":1,"name":"安全防范"}]}  
+	* @throws
+	* @author ya.liu
+	* @date 2018年11月27日
+	*/
+	@RequestMapping(value="equipment-types",method=RequestMethod.GET)
+	public JSONObject getAllEquipmentTypeList() {
+		List<EquipmentType> list = equipmentTypeService.getAllEquipmentTypeList();
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
+	
+	/**
+	   * 通过id获取设备类型
+	* @param  id 供应商id
+	* @return   {"msg":"请求成功","code":"200","data":{"id":1,"name":"安全防范"}}
+	* @author ya.liu
+	* @date 2018年11月27日
+	*/
+	@RequestMapping(value="equipment-types/{id}",method=RequestMethod.GET)
+	public JSONObject getEquipmentTypeById(@PathVariable("id")Integer id) {
+		EquipmentType type = equipmentTypeService.selectByPrimaryKey(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, type);
+	}
+	
+	/**
+	 * 删除设备类型
+	 * @param id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	@RequestMapping(value = "equipment-types/{id}", method = RequestMethod.DELETE)
+	public JSONObject deleteTypes(@PathVariable("id") Integer id) {
+		equipmentTypeService.deleteByPrimaryKey(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	/******************************************************************/
+    /*设备型号模块
+    /******************************************************************/
+    
+	/**
+	 * 添加设备型号
+	 * @param typeId
+	 * @param name
+	 * @param crtTime
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	@RequestMapping(value = "equipment-models", method = RequestMethod.POST)
+	public JSONObject insert(@RequestBody EquipmentModel e) {
+		equipmentModelService.insert(e);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+	
+	/**
      * 获取所有设备型号列表
      * @param    
      * @return {"msg":"请求成功","code":"200","data":[{"id":1,"name":"model-1","crtTime":1531901454000},{"id":2,"name":"model-2","crtTime":1531901454000},{"id":3,"name":"model-3","crtTime":1531901454000}]}  
@@ -332,21 +439,45 @@ public class EquipmentController {
     }
     
     /**
-          * 通过id获取设备型号
-     * @param  id  设备型号id
-     * @return {"msg":"请求成功","code":"200","data":{"id":1,"name":"model-1","crtTime":1531901454000}}  
-     * @throws
-     * @author shaosen
-     * @date 2018年6月6日
+	     * 通过id获取设备型号
+	* @param  id  设备型号id
+	* @return {"msg":"请求成功","code":"200","data":{"id":1,"name":"model-1","crtTime":1531901454000}}  
+	* @throws
+	* @author shaosen
+	* @date 2018年6月6日
+	*/
+	@RequestMapping(value="equipment-models/{id}",method=RequestMethod.GET)
+	public JSONObject getEquipmentModelById(@PathVariable("id")Integer id) {
+		EquipmentModel model = equipmentModelService.getEquipmentModelById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, model);
+	}
+    
+    /**
+     * 删除设备型号
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月27日
      */
-    @RequestMapping(value="equipment-models/{id}",method=RequestMethod.GET)
-    public JSONObject getEquipmentModelById(@PathVariable("id")Integer id) {
-    	EquipmentModel model = equipmentModelService.getEquipmentModelById(id);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, model);
+    @RequestMapping(value="equipment-models/{id}",method=RequestMethod.DELETE)
+    public JSONObject delete(@PathVariable("id") Integer id) {
+    	equipmentModelService.deleteByPrimaryKey(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
-
-    
+    /**
+     * 获取某一类型下的设备型号列表
+     * @param typeId
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月29日
+     */
+    @RequestMapping(value="types/{typeId}/equipment-models",method=RequestMethod.GET)
+	public JSONObject getEquipmentModelByTypeId(@PathVariable("typeId")Integer typeId) {
+    	List<EquipmentModel> list = equipmentModelService.getEquipmentModelByTypeId(typeId);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
+	
     /******************************************************************/
     /*以下是管廊设备信息总览
     /******************************************************************/
@@ -362,11 +493,11 @@ public class EquipmentController {
     @RequestMapping(value = "equipments/type/count" ,method = RequestMethod.GET)
     public JSONObject getCountOfType(){
         List<JSONObject> result = new ArrayList<>();
-
-        for (EquipmentTypeEnum equipmentTypeEnum : EquipmentTypeEnum.values()) {
+        List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+        for (EquipmentType equipmentType : equipmentTypes) {
             JSONObject o = new JSONObject();
-            o.put("key", equipmentTypeEnum.getName());
-            o.put("val", equipmentService.getCountByCondition(null, null, equipmentTypeEnum.getValue()));
+            o.put("key", equipmentType.getName());
+            o.put("val", equipmentService.getCountByCondition(null, null, equipmentType.getId()));
             result.add(o);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
@@ -384,19 +515,20 @@ public class EquipmentController {
     @RequestMapping(value = "equipments/type/status/count" ,method = RequestMethod.GET)
     public JSONObject getCountOfTypeAndStatus() {
         List<JSONObject> result = new ArrayList<>();
-        for (EquipmentTypeEnum typeEnum : EquipmentTypeEnum.values()) {
+        List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+        for (EquipmentType equipmentType : equipmentTypes) {
             JSONObject o = new JSONObject();
-            o.put("key", typeEnum.getName());
+            o.put("key", equipmentType.getName());
 
             List<JSONObject> typeVals = new ArrayList<>();
             JSONObject o2 = new JSONObject();
             o2.put("key", "总数");
-            o2.put("val", equipmentService.getCountByCondition(null, null, typeEnum.getValue()));
+            o2.put("val", equipmentService.getCountByCondition(null, null, equipmentType.getId()));
             typeVals.add(o2);
             for (EquipmentStatusEnum statusEnum : EquipmentStatusEnum.values()) {
                 o2 = new JSONObject();
                 o2.put("key", statusEnum.getName());
-                o2.put("val", equipmentService.getCountByCondition(null, statusEnum.getValue(), typeEnum.getValue()));
+                o2.put("val", equipmentService.getCountByCondition(null, statusEnum.getValue(), equipmentType.getId()));
                 typeVals.add(o2);
             }
 
@@ -429,7 +561,7 @@ public class EquipmentController {
     	
     	JSONObject jsonThree = new JSONObject();
     	jsonThree.put("key", "备品数");
-    	jsonThree.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.BACKUP.getValue(),null));
+    	//jsonThree.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.BACKUP.getValue(),null));
     	list.add(jsonThree);
     	
     	//设备运行总时长
@@ -466,7 +598,7 @@ public class EquipmentController {
         		buffer.append("管廊[ " + tunnelService.getNameById(tunnel.getId()) + " ],");
         		buffer.append("设备总数[ " + equipmentService.getCountByCondition(tunnel.getId(), null, null) + " ]台,");
         		buffer.append("损坏[ " + equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BROKEN.getValue(), null) + " ]台,");
-        		buffer.append("备品[ " + equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BACKUP.getValue(), null) + " ]台");
+        		//buffer.append("备品[ " + equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BACKUP.getValue(), null) + " ]台");
         		strList.add(buffer.toString());
 			}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, strList);
@@ -522,10 +654,11 @@ public class EquipmentController {
     	JSONObject json = new JSONObject();
     	for(TunnelSimpleDto tunnel : tunnelList) {
     		List<Map<String,Object>> list = new ArrayList<>();
-    		for(EquipmentTypeEnum type : EquipmentTypeEnum.values()) {
+    		List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+    		for(EquipmentType type : equipmentTypes) {
     			Map<String,Object> map = new HashMap<>();
     			map.put("key",type.getName());
-    			map.put("val",equipmentService.getCountByCondition(tunnel.getId(), null, type.getValue()));
+    			map.put("val",equipmentService.getCountByCondition(tunnel.getId(), null, type.getId()));
     			list.add(map);
     		}
     		json.put(tunnelService.getNameById(tunnel.getId()), list);
@@ -541,7 +674,7 @@ public class EquipmentController {
      * @Date 2018年9月7日
      */
     @RequestMapping(value = "measobjs/{objId}/equipment", method=RequestMethod.GET)
-    public JSONObject getEquipmentListByObj(@PathVariable("objId")Integer objId) {
+    public JSONObject getEquipmentListByObj(@PathVariable("objId") Integer objId) {
     	EquipmentDto equipment = equipmentService.getEquipmentListByObj(objId);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, equipment);
     }

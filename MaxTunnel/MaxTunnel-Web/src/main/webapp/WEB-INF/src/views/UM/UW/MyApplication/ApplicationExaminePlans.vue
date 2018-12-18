@@ -1,43 +1,43 @@
 <template>
     <div>
-    <!-- <Button type="primary" @click="goBack"><Icon type="arrow-left-a" style="margin-right: 10px"></Icon>返回</Button>     -->
-    <Form :model="plans" :label-width="120" @submit.native.prevent>
-        <FormItem label="计划编号：">
-            <Input v-model="plans.id" readonly></Input>
-        </FormItem>
-        <FormItem label="计划名称：">
-            <Input v-model="plans.name" readonly></Input>
-        </FormItem>
-        <FormItem label="申请人：">
-            <Input v-model="plans.requestStaffId" readonly></Input>
-        </FormItem>
-        <FormItem label="审批人：">
-            <Input v-model="plans.approverId" readonly></Input>
-        </FormItem>
-        <FormItem label="所属管廊：">
-            <Input v-model="plans.tunnelName" readonly></Input>
-        </FormItem>
-        <FormItem label="责任班组：">
-            <Input v-model="plans.groupName" readonly></Input>
-        </FormItem>
-        <FormItem label="创建时间：">
-            <Input v-model="plans.createTime" readonly></Input>
-        </FormItem>
-        <FormItem label="巡检时间：">
-            <Input v-model="plans.inspectTime" readonly></Input>
-        </FormItem>
-        <FormItem label="巡检计划：">
-            <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
-        </FormItem>
-        <FormItem label="备注：" v-show="examineStatus==1||examineStatus==2">
-            <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" readonly placeholder="请输入审批备注"></Input>
-        </FormItem>
-        <FormItem label="申请状态：">
-            <Button type="success" class="btn" v-show="examineStatus==1">同意</Button>
-            <Button type="error" class="btn"  v-show="examineStatus==2">不同意</Button>
-            <Button type="info" class="btn" v-show="examineStatus==3">审核中</Button>
-        </FormItem>
-    </Form>
+        <Form :model="plans" :label-width="120" @submit.native.prevent>
+            <FormItem label="计划编号：">
+                <Input v-model="plans.id" readonly></Input>
+            </FormItem>
+            <FormItem label="计划名称：">
+                <Input v-model="plans.name" readonly></Input>
+            </FormItem>
+            <FormItem label="申请人：">
+                <Input v-model="plans.requestStaffId" readonly></Input>
+            </FormItem>
+            <FormItem label="审批人：">
+                <Input v-model="plans.approverId" readonly></Input>
+            </FormItem>
+            <FormItem label="所属管廊：">
+                <Input v-model="plans.tunnelName" readonly></Input>
+            </FormItem>
+            <FormItem label="责任班组：">
+                <Input v-model="plans.groupName" readonly></Input>
+            </FormItem>
+            <FormItem label="创建时间：">
+                <Input v-model="plans.createTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检时间：">
+                <Input v-model="plans.inspectTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检计划：">
+                <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
+            </FormItem>
+            <FormItem label="备注：" v-show="examineStatus==1||examineStatus==2">
+                <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" readonly placeholder="请输入审批备注"></Input>
+            </FormItem>
+            <FormItem label="申请状态：">
+                <Button type="success" class="btn" v-show="examineStatus==1">同意</Button>
+                <Button type="error" class="btn"  v-show="examineStatus==2">不同意</Button>
+                <Button type="info" class="btn" v-show="examineStatus==3">审核中</Button>
+            </FormItem>
+        </Form>
+        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -122,6 +122,10 @@ export default {
         })
     },
     methods:{
+        //返回
+        goBack(){
+            this.$router.back(-1);
+        }
     }
 }
 </script>
@@ -130,7 +134,12 @@ export default {
     width: 780px;
     margin: 20px auto;
 }
- .btn{
+.btn{
     cursor: text;
-  }
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
+}
 </style>

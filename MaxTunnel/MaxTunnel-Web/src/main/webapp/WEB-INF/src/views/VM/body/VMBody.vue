@@ -7,7 +7,7 @@
             <div class="VmModel2 BackgroundImage">
                 <vm-data-model v-if="ModelData2" :modelData = "ModelData2"></vm-data-model>
             </div>
-            <div class="VmModel3 BackgroundImage">
+            <div class="VmModel3 BackgroundImage" >
                 <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model>
             </div>
         </div>
@@ -42,8 +42,10 @@ import VmMap from "../../../components/VM/VMBodyCenter/Map";
 import VmVideo from "../../../components/VM/VMMainRight/Video";
 import ThreeDimensional from "../../../components/VM/VMMainRight/ThreeDimensional";
 import VmDataModel from "../../../components/VM/VMDataModel";
+import { baseView } from '../mixins/BaseView'
 
 export default {
+    mixins:[ baseView ],
     data() {
         return {
             ModelData1: null,
@@ -205,30 +207,6 @@ export default {
             this.ModelData7 = this.getModelData("vmModel7");
             // this.ModelData7.parameters.option = {};
             console.log("vmModelData7", this.ModelData7);
-        },
-        getModelData(id) {
-            let deployCharts = this.VMWebConfig.WebConfig.deployCharts;
-            let deployData = this.VMWebConfig.WebConfig.data;
-            let res;
-            deployCharts.forEach(element => {
-                if (element.modelId == id) {
-                    let tmp = deployData.find(item => {
-                        return item.id == element.dataId;
-                    });
-
-                    if (!tmp) return null;
-
-                    res = {
-                        id: element.modelId,
-                        title: tmp.title,
-                        url: tmp.url,
-                        parameters: tmp.parameters,
-                        chartType: element.chartType
-                    };
-                }
-            });
-
-            return res;
         }
     }
 };
@@ -287,7 +265,7 @@ export default {
     position: relative;
     height: 100%;
     width: 24.5%;
-    margin-right: 0.3%;
+    margin-right: 0.15%;
     display: inline-block;
     vertical-align: top;
 }
@@ -310,7 +288,6 @@ export default {
 }
 #mainRight >>> .ThreeDimensionalContainer {
     position: relative;
-    height: 38%;
 }
 .BackgroundImage {
     padding: 1.3%;
@@ -320,5 +297,18 @@ export default {
 }
 .BodyCenterPadding {
     padding: 0.3%;
+}
+/* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    #mainRight >>> .ThreeDimensionalContainer {
+         height: 38%;
+    }
+}
+/* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    #mainRight >>> .ThreeDimensionalContainer {
+        height: 34.5%;
+        margin-top: 10%;
+    }
 }
 </style>

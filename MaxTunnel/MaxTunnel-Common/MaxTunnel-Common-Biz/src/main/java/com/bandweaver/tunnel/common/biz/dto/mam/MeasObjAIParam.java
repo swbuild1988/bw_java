@@ -6,11 +6,11 @@ public class MeasObjAIParam {
 
 	private Integer objId;
 	private Integer sectionId;
-	private Double CV;
+	private Double cv;
 	private String objTypeName;
 
 	public MeasObjAIParam(double CV) {
-		this.CV = CV;
+		this.cv = CV;
 	}
 
 	public Integer getObjId() {
@@ -33,12 +33,12 @@ public class MeasObjAIParam {
 		this.sectionId = sectionId;
 	}
 
-	public Double getCV() {
-		return CV;
+	public Double getCv() {
+		return cv;
 	}
 
-	public void setCV(Double cV) {
-		CV = cV;
+	public void setCv(Double cV) {
+		cv = cV;
 	}
 
 	
@@ -52,7 +52,7 @@ public class MeasObjAIParam {
 
 	@Override
 	public String toString() {
-		return "MeasObjAIParam [objId=" + objId + ", sectionId=" + sectionId + ", CV=" + CV + ", objTypeName="
+		return "MeasObjAIParam [objId=" + objId + ", sectionId=" + sectionId + ", CV=" + cv + ", objTypeName="
 				+ objTypeName + "]";
 	}
 

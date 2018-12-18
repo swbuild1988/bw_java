@@ -4,14 +4,15 @@
 <mapper namespace="com.bandweaver.tunnel.dao.mam.VideoMapper">
 
     <insert id="insertVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
-        INSERT INTO T_MAM_VIDEO (ID, SERVER_ID, VIDEO_SCENE_ID, CHANNEL_NO)
-        VALUES (#{id}, #{serverId}, #{videoSceneId}, #{channelNo})
+        INSERT INTO T_MAM_VIDEO (ID, SERVER_ID, VIDEO_SCENE_ID, VIDEO_EXTEND_SCENE_ID, CHANNEL_NO)
+        VALUES (#{id}, #{serverId}, #{videoSceneId}, #{videoExtendSceneId}, #{channelNo})
     </insert>
 
     <update id="updateVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
         UPDATE T_MAM_VIDEO
         SET SERVER_ID      = #{serverId},
             VIDEO_SCENE_ID = #{videoSceneId},
+            VIDEO_Extend_SCENE_ID = #{videoExtendSceneId},
             CHANNEL_NO     = #{channelNo}
         WHERE id = #{id}
     </update>
@@ -81,6 +82,25 @@
         WHERE a.video_scene_id = #{sceneId}
     </select>
 
+    <select id="getVideoDtosByExtendScene" resultMap="VideoDtoMap">
+        SELECT
+        a.*,
+        b.*,
+        c.id as preset_id,
+        c.video_id,
+        c.preset_name,
+        c.longitude as preset_longitude,
+        c.latitude as preset_latitude,
+        c.height as preset_height,
+        c.pitch as preset_pitch,
+        c.roll as preset_roll,
+        c.heading as preset_heading
+        FROM t_mam_video a
+        LEFT JOIN t_mam_measobj b ON a.id = b.id
+        LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+        WHERE a.video_extend_scene_id = #{extendSceneId}
+    </select>
+
     <resultMap id="VideoMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
         <id column="ID" jdbcType="DECIMAL" property="id"/>
         <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
@@ -98,6 +118,7 @@
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
         <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
+        <result column="VIDEO_EXTEND_SCENE_ID" jdbcType="VARCHAR" property="videoExtendSceneId"/>
         <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
     </resultMap>
 
@@ -118,6 +139,7 @@
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
         <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
+        <result column="VIDEO_EXTEND_SCENE_ID" jdbcType="VARCHAR" property="videoExtendSceneId"/>
         <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
         <association property="videoServerDto" javaType="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto"
                      column="SERVER_ID" select="com.bandweaver.tunnel.dao.mam.VideoServerMapper.getVideoServer">

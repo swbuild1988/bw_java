@@ -56,4 +56,6 @@ public interface StaffMapper {
 	List<StaffDto> getStaffsByCompanyIdAndDeptId(@Param("companyId")Integer companyId, @Param("deptId")Integer deptId);
 
 	void deleteBatch(List<Integer> list);
+
+	List<Staff> getByName(String name);
 }

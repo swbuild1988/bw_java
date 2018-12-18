@@ -27,4 +27,30 @@ public interface EquipmentModelService {
 	 */
 	EquipmentModel getEquipmentModelById(Integer id);
 
+	/**
+	 * 删除
+	 * @param id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+	int deleteByPrimaryKey(Integer id);
+
+	/**
+	 * 添加
+	 * @param record
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月27日
+	 */
+    int insert(EquipmentModel record);
+    
+    /**
+     * 获取某一类型下的设备型号列表
+     * @param typeId
+     * @return
+     * @author ya.liu
+     * @Date 2018年11月29日
+     */
+    List<EquipmentModel> getEquipmentModelByTypeId(Integer typeId);
 }

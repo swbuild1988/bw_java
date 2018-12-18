@@ -62,6 +62,10 @@ export default {
             type: Boolean,
             default: true
         },
+        openFlyLoop:{
+            type: Boolean,
+            default: false
+        },
         unitsPosition:{
             default: ()=>{
                 return {
@@ -136,12 +140,12 @@ export default {
             type: Object,
             default: ()=> {
                 return {
-                    longitude: 112.49402798396824,
-                    latitude: 37.70621237244105,
-                    height: 6.85193571485006,
-                    roll: 6.283185307178147,
-                    pitch: -0.2724024021381044,
-                    heading: 6.271857201776858
+                    longitude:112.49397907438006,
+                    latitude:37.710661662983384,
+                    height:-1.7297007316681086,
+                    roll:2.5845992013273644e-12,
+                    pitch:-0.30235107580130394,
+                    heading:1.7164865602395531
                 };
             }
         }
@@ -312,11 +316,14 @@ export default {
                     widget.showErrorPanel(title, undefined, e);
                 }
             }
-            _this.flyManager();
+            _this.flyManager(2);
+            _this.addIdentifierViewer();
             //滚轮滑动，获得当前窗口的经纬度，偏移角
             _this.handler = new Cesium.ScreenSpaceEventHandler(
                 _this.scene.canvas
             );
+        
+            
             _this.handler.setInputAction(e => {
                 this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
             }, Cesium.ScreenSpaceEventType.WHEEL);
@@ -324,6 +331,20 @@ export default {
             _this.handler.setInputAction(e=>{
                 this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
             },Cesium.ScreenSpaceEventType.LEFT_UP)
+                //  _this.handler.setInputAction(e=>{
+                //     var position=_this.scene.pickPosition(e.position)
+                //     var camera=_this.viewer.scene.camera;
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+            
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+        
         },
         // 开始相机位置刷新
         startCameraPositionRefresh() {
@@ -478,6 +499,117 @@ export default {
                     _this.$emit('replaceVideoUrl',feater._moId);
                 }
             }
+        },
+        addUnitViewers(){
+            let { viewer } = this;
+            
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.49948864664668' ), parseFloat( '37.71034251365869' ), parseFloat( '5.05671606378695929' ) ),
+                point : {
+                    pixelSize : 5,
+                    color : Cesium.Color.RED,
+                    outlineColor : Cesium.Color.WHITE,
+                    outlineWidth : 1
+                },
+                label : {
+                    text : '监控中心',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    verticalOrigin : Cesium.VerticalOrigin.TOP,
+                    pixelOffset : new Cesium.Cartesian2(0, 5),
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+ 
+                }
+            });
+
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.49924330045259' ), parseFloat( '37.708638928467174' ), parseFloat( '5.038844248357202044' ) ),
+                label : {
+                    text : '实验路',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.49693705573492' ), parseFloat( '37.71165159814374' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '古城大街',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });  
+
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.50394860543004' ), parseFloat( '37.70966052720569' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '古城大街',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.49188181547557' ), parseFloat( '37.705142503854056' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '纬三路',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.50112409246626' ), parseFloat( '37.70230380728933' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '纬三路',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.49158121614832' ), parseFloat( '37.710039943140714' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '经三路',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
+            viewer.entities.add({
+                position : Cesium.Cartesian3.fromDegrees( parseFloat( '112.48802838453332' ), parseFloat( '37.71123556017917' ), parseFloat( '2.016084556743971735' ) ),
+                label : {
+                    text : '经二路',
+                    font : '12pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : 2,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            });
         },
         //销毁viewer
         destoryViewer(){

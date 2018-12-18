@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InstrumentRecordMapper">
+    <cache/>
+    
+    <insert id="addBatch" useGeneratedKeys="false">
+		insert into t_omm_instrument_record
+		(instrument_id, staff_id, borrow_time, describe)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.instrumentId},
+			#{item.staffId},
+			#{item.borrowTime},
+			#{item.describe}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InstrumentRecord">
+        UPDATE t_omm_instrument_record
+        <set>
+        	<if test="instrumentId != null">
+                instrument_id = #{instrumentId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="returnId != null">
+                return_id = #{returnId},
+            </if>
+            <if test="describe != null">
+                describe = #{describe},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="borrowTime != null">
+                borrow_time = #{borrowTime},
+            </if>
+            <if test="returnTime != null">
+                return_time = #{returnTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+	<update id="updateReturnTime">
+		update t_omm_instrument_record
+		set return_id = #{record.returnId},
+			return_time = #{record.returnTime},
+			remark = #{record.remark}
+		where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</update>
+
+    <select id="getInstrumentRecordDtoByCondition" resultMap="instrumentRecordDtoMap">
+        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name, e.name as staff_name, f.name as return_name
+        from (
+        	select i.*, r.id as record_id, r.staff_id, r.borrow_time, r.return_time, r.describe, r.return_id, r.remark
+        	from t_omm_instrument i, t_omm_instrument_record r
+        	where i.id = r.instrument_id
+        	) a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        left join t_common_staff e on a.staff_id = e.id
+        left join t_common_staff f on a.return_id = f.id
+        <where>
+        	<if test="instrumentId != null">
+                and a.id = #{instrumentId}
+            </if>
+        	<if test="isSpare == true">
+                and a.spare_id is not null
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and instr(a.name,#{name})>0
+            </if>
+            <if test="modelId != null">
+                and a.model_id = #{modelId}
+            </if>
+            <if test="typeId != null">
+                and a.type_id = #{typeId}
+            </if>
+            <if test="venderId != null">
+                and a.vender_id = #{venderId}
+            </if>
+            <if test="useStatus != null">
+                and a.use_status = #{useStatus}
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="staffId != null">
+                and a.staff_id = #{staffId}
+            </if>
+            <if test="returnId != null">
+                and a.return_id = #{returnId}
+            </if>
+            <if test="startTime != null">
+                and a.borrow_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.borrow_time <![CDATA[<=]]>#{endTime}
+            </if>
+            <if test="retStaTime != null">
+                and a.return_time <![CDATA[>=]]>#{retStaTime}
+            </if>
+            <if test="retEndTime != null">
+                and a.return_time <![CDATA[<=]]>#{retEndTime}
+            </if>
+        </where>
+    </select>
+
+	<select id="getInstrumentRecordDtoById" resultMap="instrumentRecordDtoMap">
+		select a.*, b.name as model_name, c.name as type_name, d.name as vender_name, e.name as staff_name, f.name as return_name
+        from (
+        	select i.*, r.id as record_id, r.staff_id, r.borrow_time, r.return_time, r.describe, r.return_id, r.remark
+        	from t_omm_instrument i, t_omm_instrument_record r
+        	where i.id = r.instrument_id
+        	) a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        left join t_common_staff e on a.staff_id = e.id
+        left join t_common_staff f on a.return_id = f.id
+        where a.record_id = #{id}
+	</select>
+	
+    <resultMap id="instrumentRecordDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InstrumentRecordDto">
+        <id column="record_id" property="id"/>
+        <result column="id" property="instrumentId"/>
+        <result column="spare_id" property="spareId"/>
+        <result column="name" property="name"/>
+        <result column="model_id" property="modelId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="use_status" property="useStatus"/>
+        <result column="status" property="status"/>
+        <result column="model_name" property="modelName"/>
+        <result column="type_name" property="typeName"/>
+        <result column="vender_name" property="venderName"/>
+        <result column="in_time" property="inTime"/>
+        <result column="staff_id" property="staffId"/>
+        <result column="staff_name" property="staffName"/>
+        <result column="return_id" property="returnId"/>
+        <result column="return_name" property="returnName"/>
+        <result column="borrow_time" property="borrowTime"/>
+        <result column="return_time" property="returnTime"/>
+        <result column="describe" property="describe"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+    
+    <delete id="deleteByIds">
+    	delete from t_omm_instrument_record
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

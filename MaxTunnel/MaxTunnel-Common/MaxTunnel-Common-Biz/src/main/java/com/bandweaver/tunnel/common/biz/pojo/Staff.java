@@ -17,8 +17,6 @@ public class Staff implements Serializable{
 
     private Integer positionId;
     
-    private Integer accountId;
-
     private Date crtTime;
 
     public Integer getId() {
@@ -61,12 +59,10 @@ public class Staff implements Serializable{
         this.crtTime = crtTime;
     }
 
-	public Integer getAccountId() {
-		return accountId;
+	@Override
+	public String toString() {
+		return "Staff [name=" + name + "]";
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
     
 }

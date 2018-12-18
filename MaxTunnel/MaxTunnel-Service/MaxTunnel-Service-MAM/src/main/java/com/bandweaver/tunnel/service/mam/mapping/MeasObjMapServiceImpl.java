@@ -69,12 +69,12 @@ public class MeasObjMapServiceImpl implements MeasObjMapService {
 		if(DataType.DI == dataType) {
 			MeasObjDI measObjDI = measObjModuleCenter.getMeasObjDI(objectId);
 			if(measObjDI == null) measObjDI = new MeasObjDI();
-			measObjDI.setCV(inputValue == 1 ? true : false);
+			measObjDI.setCv(inputValue == 1 ? true : false);
 			measObjDI.setRefreshTime(DateUtil.getCurrentDate());
 		}else if(DataType.SI == dataType) {
 			MeasObjSI measObjSI = measObjModuleCenter.getMeasObjSI(objectId);
 			if(measObjSI == null) measObjSI = new MeasObjSI();
-			measObjSI.setCV(inputValue);
+			measObjSI.setCv(inputValue);
 			measObjSI.setRefreshTime(DateUtil.getCurrentDate());
 		}
 		

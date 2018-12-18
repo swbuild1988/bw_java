@@ -62,8 +62,19 @@
     margin-top: 0.5%;
     margin-bottom: 0.3%;
     color: rgba(200,242,250);
-    font-size: 2rem;
     margin-left: 16%;
     text-shadow: 0 0 6px #1765B3;
   }
+  /* 小屏幕（显示器，小于等于 1920px） */
+    @media (max-width: 1920px) {
+        #top .TopTitle > span {
+          font-size: 2rem;
+        }
+    }
+    /* 大屏幕（显示器，大于等于 1920px） */
+    @media (min-width: 1921px) {
+      #top .TopTitle > span {
+          font-size: 5rem;
+        }
+    }
 </style>

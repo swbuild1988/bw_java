@@ -14,7 +14,7 @@ public class MeasObjSI extends MeasObj {
     }
     
     private Date refreshTime;
-    private Integer CV;
+    private Integer cv;
     
 	public Date getRefreshTime() {
 		return refreshTime;
@@ -22,11 +22,11 @@ public class MeasObjSI extends MeasObj {
 	public void setRefreshTime(Date refreshTime) {
 		this.refreshTime = refreshTime;
 	}
-	public Integer getCV() {
-		return CV;
+	public Integer getCv() {
+		return cv;
 	}
-	public void setCV(Integer cV) {
-		CV = cV;
+	public void setCv(Integer cV) {
+		cv = cV;
 	}
     
     

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.bandweaver.tunnel.common.biz.itf.SecurityLogService;
 import com.bandweaver.tunnel.common.biz.pojo.SecurityLog;
-import com.bandweaver.tunnel.common.platform.util.BSCheckUtil;
 import com.bandweaver.tunnel.dao.common.SecurityLogMapper;
 
 @Service

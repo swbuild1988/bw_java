@@ -34,7 +34,7 @@
             </Col>
         </Row> 
         <div class="list">   
-            <!-- <Row type="flex"   align="top" class="code-row-bg">
+            <Row type="flex"   align="top" class="code-row-bg">
                 <Col span="6"  v-for="(item,index) in unitInfo" :key='index'>
                     <div class="unitBox">
                         <div class="title">
@@ -56,8 +56,8 @@
                             </div>
                             <div class="sections">
                                 <div class="sectionTitle">管仓区段：</div>
-                                <!-- <span v-for="(item,index) in sections" :key="index">{{item.name}}</span> -->
-                                <!--<div class="sectionName">{{item.sectionIds}}</div>
+                                <span class="showSectionsName" v-for="(item,index) in sections" :key="index">{{item.name}}</span>
+                                <div class="sectionName" :title=item.sectionIds>{{item.sectionIds}}</div>
                             </div>    
                         </div>
                         <div class="option">
@@ -69,87 +69,20 @@
                         </div>    
                     </div>
                 </Col>
-            </Row>  -->
-            <waterfall 
-                :line-gap="200" 
-                :watch="unitInfo"
-                :align="align"
-                :min-line-gap="100"
-                :max-line-gap="220"
-                :single-max-width="300"
-                @reflowed="reflowed"
-                ref="waterfall"
-            >
-                <waterfall-slot
-                    v-for="(item,index) in unitInfo"
-                    :width="item.width"
-                    :height="item.height"
-                    :order="index"
-                    :key="item.id"
-                    move-class="item-move"
-                >
-                
-                
-                
-                    <div class="unitBox">
-                        <div class="title">
-                            <span>{{item.name}}&nbsp;/</span>
-                            <span class="unitType">{{item.unitTypeName}}</span>
-                        </div>
-                        <div class="address">
-                            <Icon type="ios-location" size=15></Icon>
-                            {{item.address}}
-                        </div>
-                        <div class="contact">
-                            <div class="contactName">
-                                <span><Icon type="android-person" size=15></Icon></span>
-                                <span>{{item.contact}}</span>
-                            </div>
-                            <div class="contactTel">
-                                <span><Icon type="ios-telephone" size=15></Icon></span>
-                                <span>{{item.tel}}</span>
-                            </div>
-                            <div class="sections">
-                                <div class="sectionTitle">管仓区段1111：</div>
-                                <!-- <span v-for="(item,index) in sections" :key="index">{{item.name}}</span> -->
-                                <div class="sectionName">{{item.sectionIds}}</div>
-                            </div>    
-                        </div>
-                        <div class="option">
-                            <Button size=small type="primary" @click="edit(index)">编辑</Button>
-                            <Button size=small type="error" @click="del(index)">删除</Button>
-                            <div class="crtTime">
-                                <span><Icon type="android-time"></Icon>{{item.crtTime}}</span>
-                            </div>
-                        </div>
-                    </div>
-                
-                </waterfall-slot>
-            </waterfall>
+            </Row>
         </div>            
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>   
     </div>    
 </template>
 <script>
-import axios from "axios";
 import { TunnelService } from '../../../../services/tunnelService'
 import { EnumsService } from '../../../../services/enumsService'
 import { RelatedUnitService } from '../../../../services/relatedUnitService'
 import Enum from "../../../../../static/Enum.json";
 // import oneTree from '../../../../components/UM/EM/oneTree'
-//瀑布流
-// import Waterfall from '../../../../../node_modules/vue-waterfall/lib/waterfall'
-// import WaterfallSlot from '../../../../../node_modules/vue-waterfall/lib/waterfall-slot'
-import Waterfall from 'vue-waterfall/lib/waterfall'
-import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 
 export default {
-    components:{
-        // oneTree
-        Waterfall,
-        WaterfallSlot
-    },
     data(){
         return{
             pageSizeComputed: null,
@@ -179,8 +112,6 @@ export default {
                 right: '15px'
             },
             align: 'center',
-            unitInfo: ItemFactory.get(100),
-            isBusy: false
         }
     },
     watch: {
@@ -351,20 +282,6 @@ export default {
         },
         showTree(){
             this.isShow = true
-        },
-        addItems: function(){
-            if(!this.isBusy && this.unitInfo.length<500){
-                this.isBusy = true
-                this.unitInfo.push.apply(this.unitInfo,ItemFactory.get(50))
-            }
-        },
-        shuffle: function(){
-            this.unitInfo.sort(function(){
-                return Math.random() - 0.5
-            })
-        },
-        reflowed: function(){
-            this.isBusy = false
         }
     }
 }
@@ -429,5 +346,10 @@ export default {
         position: absolute;
         margin-left: 75px;
         border: 1px solid #cccccc;
+    }
+    .sectionName{
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
     }
 </style>

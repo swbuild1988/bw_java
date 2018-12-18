@@ -1,5 +1,5 @@
 <template>
-    <div class="allDiv">
+    <div class="whole">
        <Row class="conditions">
             <Col span="8" offset="3">
             <span>监测仓:</span>
@@ -27,7 +27,7 @@
             <Col span="12" v-for="(store,index) in stores" :key="index">
                 <div class="storeCard">
                     <div class="innerCard">
-                        <div class="storeName">
+                        <div class="storeName" @click="chooseStore(store.id)">
                             <Icon type="cube"></Icon>
                             <span>{{store.name}}</span>
                         </div>
@@ -40,9 +40,9 @@
             </Col>
         </Row>
         <Row v-if="!init">
-            <Col span="15" class="sectionsInfo">
+            <Col span="24" class="sectionsInfo">
                 <Row>
-                    <Col span="12" v-for="(cab,index) in cables" :key="index" class="left">
+                    <Col span="8" v-for="(cab,index) in cables" :key="index" class="left">
                     <div class="card">
                         <div class="title">
                              <Icon type="ios-keypad" size=15 color="#ff9b00"></Icon>
@@ -59,7 +59,6 @@
                             </Tooltip>
                         </div>
                         <div class="lineName">
-                            <!-- <p v-for="(line,j) in cab.lines" :key="j" @mouseover="showDetails(line.id,index)" @mouseout="curDetailId = ''">{{ line.cableName +' '+ line.contract.customer.company.name}}</p> -->
                             <p v-for="(line,j) in cab.lines" :key="j" @click="isShow = true">{{ line.cableName +' '+ line.contract.customer.company.name}}</p>
                         </div>
                     </div>
@@ -84,13 +83,13 @@
                     </Col>
                 </Row>
             </Col>
-            <Col span="8" offset="1" class="bim">
+            <!-- <Col span="8" offset="1" class="bim">
                 <v_3DViewer :id="mapId" @onload="onload">
                 </v_3DViewer>
-            </Col>
+            </Col> -->
         </Row>
         <Row>
-            <Col span="15">
+            <Col span="24">
                 <Page v-if="!init" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
                 </Page>
             </Col>
@@ -122,8 +121,8 @@ export default {
            areas:[],
            sections:[],
            query:{
-            storeId:'',
-            areaId:'',
+            storeId:'null',
+            areaId:'null',
             sectionId:''
            },
            page:{
@@ -139,7 +138,7 @@ export default {
             pageStyle: {
                 backgroundColor: 'white',
                 textAlign: 'right',
-                padding: '10px'
+                padding: '12px'
             },
             mapId: "tunnnelMap",
             isShow: false
@@ -158,7 +157,8 @@ export default {
         this.cables='';
         this.init = true;
         this.stores = [];
-        this.query.areaId = '';
+        this.query.areaId = 'null';
+        this.query.storeId = 'null'
         },
         'page.pageNum': function(){
             this.page.pageNum = 1
@@ -246,61 +246,36 @@ export default {
             Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId)])
             .then(result=>{
                 let store = result[0]
-                _this.query.storeId = store[0].id;
-                store.forEach(a=>{
-                    let temp = {};
-                    temp.id = a.id;
-                    temp.name = a.name;
-                    temp.typeId = a.storeTypeId;
-                    temp.value = [];
-                    _this.stores.push(temp);
-                })
-                _this.stores.forEach(store=>{
-                    result[1].forEach(name => {
-                        if(store.name == name.key){
-                          for(let item in name){
-                            if(item != 'key'){
-                                let temp = {};
-                                temp.key = item.slice(0,5);
-                                temp.val = name[item];
-                                store.value.push(temp)
-                            }
-                          }
-                        }
+                if(store.length > 0){
+                    // _this.query.storeId = store[0].id;
+                    store.forEach(a=>{
+                        let temp = {};
+                        temp.id = a.id;
+                        temp.name = a.name;
+                        temp.typeId = a.storeTypeId;
+                        temp.value = [];
+                        _this.stores.push(temp);
                     })
-                })
+                    _this.stores.forEach(store=>{
+                        result[1].forEach(name => {
+                            if(store.name == name.key){
+                              for(let item in name){
+                                if(item != 'key'){
+                                    let temp = {};
+                                    temp.key = item.slice(0,5);
+                                    temp.val = name[item];
+                                    store.value.push(temp)
+                                }
+                              }
+                            }
+                        })
+                    })
+                }
             },
             error=>{
                 _this.Log.info(error)
             })
-            // this.axios.get('tunnels/' + this.tunnelId + '/stores').then(response => {
-            //   let {code, data} = response.data;
-            //   if (code == 200) {
-            //     // this.stores = data;
-            //     // console.log(data);
-            //     this.query.storeId = data[0].id;
-            //     data.forEach(a=>{
-            //         let temp = {};
-            //         temp.id = a.id;
-            //         temp.name = a.name;
-            //         temp.typeId = a.storeTypeId;
-            //         // temp.value = [{
-            //         //     key: '设计管线数',
-            //         //     val: 20
-            //         // },{
-            //         //     key: '已用管线数',
-            //         //     val: 4
-            //         // },{
-            //         //     key: '可用管线数',
-            //         //     val: 16
-            //         // }];
-            //         temp.value = [];
-            //         this.stores.push(temp);
-            //         console.log(this.stores)
-            //     })
-            //   }
-            // })
-
+           
             TunnelService.getAreasByTunnelId(this.tunnelId).then(
                 result=>{
                     _this.areas = result
@@ -309,18 +284,6 @@ export default {
                     _this.Log.info(error)
                 })
         },
-        // changeQuery() {
-        //     let params = {
-        //          storeId: this.query.storeId,
-        //          areaId: this.query.areaId
-        //     };
-        //     this.axios.post('tunnels/stores/areas/sections/condition',params).then(response =>{
-        //         let {code,data} = response.data;
-        //         if(code == 200){
-        //             this.sections = data;
-        //         }
-        //     })
-        // },
         search(){
             if(!this.query.storeId && !this.query.areaId){
                this.$Message.error("请至少选择一个监测仓或区域");
@@ -339,6 +302,7 @@ export default {
                     _this.init = false;
                     _this.cables = [];
                     _this.ids = [];
+                    _this.page.pageTotal = result.total
                     result.list.forEach(a=>{
                          _this.ids.push(a.id);
                          let temp={};
@@ -357,61 +321,21 @@ export default {
                                     }
                                 })
                             })
+
+                            _this.cables.forEach(a=>{
+                                SpaceService.getCableInfo(a.id).then(
+                                    result=>{
+                                        a.lines = result;
+                                    },
+                                    error=>{
+                                        _this.Log.info(error)
+                                    })
+                            })
                         },
                         error=>{
                             _this.Log.info(error)
                         })
-                    
-                    _this.cables.forEach(a=>{
-                        SpaceService.getCableInfo(a.id).then(
-                            result=>{
-                                a.lines = result;
-                            },
-                            error=>{
-                                _this.Log.info(error)
-                            })
-                    })
                 })
-            // this.axios.post('sections/datagrid',params).then(res =>{
-            //     let {code,data} = res.data;
-            //     this.page.pageTotal = data.total;
-            //     let _this = this;
-            //     if(code == 200){
-            //         _this.init = false;
-            //         _this.cables = [];
-            //         _this.ids = [];
-            //         data.list.forEach(a=>{
-            //              _this.ids.push(a.id);
-            //              let temp={};
-            //              temp.name=a.store.name+a.area.name;
-            //              temp.id=a.id;
-            //              temp.value=null;
-            //              temp.lines=null;
-            //              _this.cables.push(temp);
-            //         })
-            //         this.axios.get('tunnels/areas/sections/batch/' + _this.ids+ '/cables-count').then(response =>{
-            //             let {code,data} = response.data;
-            //             if(code == 200){
-            //                 data.forEach(a=>{
-            //                     _this.cables.forEach(b=>{
-            //                         if(b.id==a.id){
-            //                             b.value=a.val;
-            //                         }
-            //                     })
-            //                 })
-            //                 console.log(_this.cables[0].value['1'].val)
-            //             }
-            //         })
-            //         _this.cables.forEach(a=>{
-            //             this.axios.get('tunnels/areas/sections/' +a.id + '/cables').then(res =>{
-            //               let {code,data} = res.data;
-            //               if(code == 200){
-            //                 a.lines = data;
-            //               }
-            //             })
-            //         })
-            //     }
-            // })
         },
          handlePage(value) {
             this.page.pageNum = value;
@@ -424,16 +348,24 @@ export default {
         showDetails(id,index) {
             this.curDetailId = id;
             this.curDetailIndex = index;
+        },
+        chooseStore(id) {
+            this.query.storeId = id
+            this.search()
         }
     }
 }
 </script>
 <style scoped>
+.whole{
+    min-height: 100%;
+    position: relative;
+}
 .sectionsInfo{
-    padding: 20px 0 24px 0;
-    margin-top: 10px;
+    padding: 2vh 0;
+    margin-top: 2vh;
     background-color: white;
-    height: 66vh;
+    height: 72vh;
     overflow-y: auto;
 }
 .left{
@@ -446,7 +378,7 @@ export default {
     padding: 5px 0px;
     border-radius: 4px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
-    height:200px;
+    height: 20vh;
     overflow:auto;
 }
 .title{
@@ -478,6 +410,7 @@ export default {
     font-weight: bold;
     top: 36%;
     left: 14%;
+    cursor: pointer;
 }
 .storeCard{
     margin: 10px 7%;

@@ -2,33 +2,45 @@ package com.bandweaver.tunnel.controller.mam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
-import com.bandweaver.tunnel.common.biz.dto.SectionDto;
-import com.bandweaver.tunnel.common.biz.itf.SectionService;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.GPSUtil;
-import com.bandweaver.tunnel.common.platform.util.MathUtil;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Obj;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Source;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
-import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoSceneService;
+import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
-import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoScene;
+import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
+import com.bandweaver.tunnel.common.platform.util.FileUtil;
+import com.bandweaver.tunnel.common.platform.util.GPSUtil;
+import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -38,66 +50,119 @@ public class VideoController {
     @Autowired
     private VideoServerService videoServerService;
     @Autowired
-    private VideoSceneService videoSceneService;
-    @Autowired
     private TunnelService tunnelService;
     @Autowired
     private VideoModuleCenter videoModuleCenter;
     @Autowired
     private SectionService sectionService;
-
-    @RequestMapping(value = "videos/testadd", method = RequestMethod.GET)
-    public JSONObject testAdd() {
-
-        // 添加视频服务
-        VideoServer videoServer = new VideoServer();
-        videoServer.setName("视频服务1");
-        videoServer.setVendor(1);
-        videoServer.setVendorVersion(1);
-        videoServer.setIp("192.168.7.202");
-        videoServer.setPort(554);
-        videoServer.setUsername("admin");
-        videoServer.setPassword("bw123456");
-        videoServer.setChannelNum(16);
-        videoServerService.addVideoServer(videoServer);
-
-        // 添加场景
-        for (int i = 0; i < 3; i++) {
-            VideoScene videoScene = new VideoScene();
-            videoScene.setName("场景" + i);
-            videoScene.setTunnelId(1);
-            videoScene.setLoop(true);
-            videoScene.setLoopIndex(i + 1);
-            videoSceneService.addVideoScene(videoScene);
-        }
-
-        // 添加视频
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                Video video = new Video();
-                int index = i * 4 + j + 1;
-                video.setId(3000 + index);
-                video.setTunnelId(3000 + index);
-                video.setStoreId(3000 + index);
-                video.setSectionId(1);
-                video.setName("视频" + index);
-                video.setDatatypeId(7);
-                video.setObjtypeId(7);
-                video.setActived(true);
-                video.setDescription("");
-                video.setLongitude("1");
-                video.setLatitude("1");
-                video.setHeight("1");
-                video.setDeviation(1.0);
-                video.setChannelNo(index);
-                video.setServerId(1);
-                video.setVideoSceneId(i + 1);
-                videoModuleCenter.insertVideo(video);
-            }
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    @Resource(name = "H5StreamServiceImpl")
+    private OnvifService h5streamService;
+    
+    
+    /**通过api添加rtsp和onvif源
+     * @param user 
+     * @param password
+     * @param ip
+     * @param port
+     * @param channelNo
+     * @param id
+     * @param vendor
+     * @return  true or false
+     * @author shaosen
+     * @throws Exception 
+     * @Date 2018年12月4日
+     */
+    @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
+    public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
+    	
+    	for (Map<String, String> map : list) {
+    		String user = map.get("user");
+			String password = map.get("password");
+			String ip = map.get("ip");
+			String port = map.get("port");
+			String channelNo = map.get("channelNo");
+			String id = map.get("id");
+			String vendor = map.get("vendor");
+			String url = "";
+			
+			VideoVendor videoVendor = VideoVendor.getEnum(DataTypeUtil.toInteger(vendor));
+			switch (videoVendor) {
+	    	case DaKang:
+	    		url = "rtsp://" + ip + ":" + port + "/Streaming/Channels/" + channelNo;
+	    		break;
+	    		
+	    	case HoneyWell_HISD:
+	    		url = "rtsp://" + ip + ":" + port + "/h264/ch" + channelNo + "/main/av_stream";
+	    		break;
+	    		
+	    	case HoneyWell_HICC:
+	    		url = "rtsp://" + ip + ":" + port + "/media?stream=0";
+	    		break;
+		
+	    	default:
+	    		break;
+	    	}
+			
+			boolean delFlag = h5streamService.delSrc(id);
+			LogUtil.info("删除结果：" + delFlag );
+			boolean addFlag = h5streamService.addSrc(user,password,ip,id,url);
+			LogUtil.info("相机"+id+"添加结果：" + addFlag);
+		}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
+
+
+    
+	/**批量添加相机配置 
+     * @return   
+     * @author shaosen
+     * @Date 2018年12月3日
+     */
+    @Deprecated
+    @RequestMapping(value="h5/addsrc",method=RequestMethod.POST)
+    public JSONObject addH5Config(@RequestBody List<Map<String, String>> list) {
+    	
+    	String filePath = "D:\\dev\\h5s-r7.0.1012.18-win64-release\\h5s-r7.0.1012.18-win64-release\\conf\\h5ss.conf";
+    	
+    	String content = FileUtil.readContent(filePath);
+		H5Obj h5Obj = JSONObject.parseObject(content,H5Obj.class);
+		H5Source source = h5Obj.getSource();
+    	
+		List<H5Src> src =  new ArrayList<>();
+    	for (Map<String, String> map : list) {
+    		String user = map.get("user");
+			String password = map.get("password");
+			String ip = map.get("ip");
+			String port = map.get("port");
+			String channelNo = map.get("channelNo");
+			String id = map.get("id");
+			String vendor = map.get("vendor");
+			String url = "";
+			
+			//stream
+			H5Src stream = new H5Src();
+			//todo
+	    	//onvif
+	    	H5Src onvif = new H5Src();
+	    	//todo
+			
+	    	src.add(stream);
+	    	src.add(onvif);
+			source.setSrc(src);
+			h5Obj.setSource(source);
+		}
+    	
+		String jsonString = JSONObject.toJSONString(h5Obj);
+		LogUtil.info("jsonString:" + jsonString );
+		
+		//覆盖之前的文件
+		FileUtil.writeContent(filePath, jsonString);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    
+    
+    
 
     /**
      * 添加视频服务
@@ -214,13 +279,29 @@ public class VideoController {
         List<VideoSceneDto> videoSceneDtos = new ArrayList<>();
         for (TunnelSimpleDto t : tunnels) {
             List<VideoSceneDto> tmp = videoModuleCenter.getVideoSceneDtosByTunnel(t.getId());
-            if (tmp.size() > 0) videoSceneDtos.addAll(tmp);
+            if (tmp != null && tmp.size() > 0) videoSceneDtos.addAll(tmp);
         }
         if(videoSceneDtos != null && videoSceneDtos.size() > 0) {
         	 videoSceneDtos.sort((a, b) -> a.getLoopIndex().intValue() - b.getLoopIndex().intValue());
              videoSceneDtos = videoSceneDtos.stream().filter(a -> a.getLoop()).collect(Collectors.toList());
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoSceneDtos);
+    }
+
+
+    @RequestMapping(value = "video_extend_scenes")
+    public JSONObject getAllExtendScenes() {
+        List<TunnelSimpleDto> tunnels = tunnelService.getList();
+        List<VideoExtendSceneDto> videoExtendSceneDtos = new ArrayList<>();
+        for (TunnelSimpleDto t : tunnels) {
+            List<VideoExtendSceneDto> tmp = videoModuleCenter.getVideoExtendSceneDtosByTunnel(t.getId());
+            if (tmp.size() > 0) videoExtendSceneDtos.addAll(tmp);
+        }
+        if(videoExtendSceneDtos != null && videoExtendSceneDtos.size() > 0) {
+            videoExtendSceneDtos.sort((a, b) -> a.getLoopIndex().intValue() - b.getLoopIndex().intValue());
+            videoExtendSceneDtos = videoExtendSceneDtos.stream().filter(a -> a.getLoop()).collect(Collectors.toList());
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoExtendSceneDtos);
     }
 
     @RequestMapping(value = "videos", method = RequestMethod.GET)

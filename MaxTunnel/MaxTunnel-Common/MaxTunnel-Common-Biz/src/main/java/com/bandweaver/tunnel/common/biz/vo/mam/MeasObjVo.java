@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
-public class MeasObjVo extends BaseVo implements Serializable {
+public class MeasObjVo extends BaseVo{
     /**
 	 * 
 	 */
@@ -28,6 +28,8 @@ public class MeasObjVo extends BaseVo implements Serializable {
     private String height;
     /** 偏差 */
     private Double deviation;
+    
+    //额外参数
     /**接收objtypeId集合*/
     private List<Integer> objtypeIds;
     /**接收tunnelId集合*/
@@ -36,6 +38,15 @@ public class MeasObjVo extends BaseVo implements Serializable {
     private List<Integer> storeIds;
     /**接收sectionId集合*/
     private List<Integer> sectionIds;
+    /**接收cv查询条件*/
+    private Double cv;
+    /**measObjId集合*/
+    private List<Integer> ids;
+    
+    /**分布式数据查询参数*/
+    private String dcv;
+    private Double spacePrecision;
+    
     
     public Integer getId() {
         return id;
@@ -179,6 +190,40 @@ public class MeasObjVo extends BaseVo implements Serializable {
 
 	public void setSectionIds(List<Integer> sectionIds) {
 		this.sectionIds = sectionIds;
+	}
+	
+
+	public Double getCv() {
+		return cv;
+	}
+
+	public void setCv(Double cV) {
+		cv = cV;
+	}
+
+	public List<Integer> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
+	}
+
+	
+	public String getDcv() {
+		return dcv;
+	}
+
+	public void setDcv(String dcv) {
+		this.dcv = dcv;
+	}
+
+	public Double getSpacePrecision() {
+		return spacePrecision;
+	}
+
+	public void setSpacePrecision(Double spacePrecision) {
+		this.spacePrecision = spacePrecision;
 	}
 
 	@Override

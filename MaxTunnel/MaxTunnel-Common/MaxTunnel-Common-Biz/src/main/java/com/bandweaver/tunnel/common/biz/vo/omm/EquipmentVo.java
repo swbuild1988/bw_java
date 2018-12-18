@@ -3,7 +3,6 @@ package com.bandweaver.tunnel.common.biz.vo.omm;
 import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentTypeEnum;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
@@ -30,7 +29,7 @@ public class EquipmentDto implements Serializable{
 	private String assetNo;
 	private String name;
 	/**设备类型*/
-	private Integer type;
+	private Integer typeId;
 	private String typeName;
 	private Date crtTime;
 	private Integer serviceLife;
@@ -56,11 +55,11 @@ public class EquipmentDto implements Serializable{
 	private Integer objId;
 	private MeasObj obj;
 	
-	public Integer getType() {
-		return type;
+	public Integer getTypeId() {
+		return typeId;
 	}
-	public void setType(Integer type) {
-		this.type = type;
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
 	}
 	public Integer getStatus() {
 		return status;
@@ -114,8 +113,7 @@ public class EquipmentDto implements Serializable{
 	 * @date 2018年5月31日
 	 */
 	public String getTypeName() {
-		EquipmentTypeEnum en = EquipmentTypeEnum.getEnum(String.valueOf(type));
-		return en == null ? String.valueOf(type) : en.getName();
+		return typeName;
 	}
 	
 	public Date getCrtTime() {

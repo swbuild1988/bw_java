@@ -45,7 +45,7 @@
               <BreadcrumbItem>{{firstFrade}}</BreadcrumbItem>
               <BreadcrumbItem>{{secondGrade}}</BreadcrumbItem>
           </Breadcrumb>
-          <Content :style="{margin: '20px', background: '#fff', minHeight: '220px',padding: '5px;'}">
+          <Content :style="{margin: '10px', background: '#fff', minHeight: '220px',padding: '5px;'}">
             <router-view></router-view>
           </Content>
         </Layout>
@@ -220,7 +220,7 @@
     background: #e0edf12e;
     position: relative;
     border-radius: 4px;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .layout-header-bar {

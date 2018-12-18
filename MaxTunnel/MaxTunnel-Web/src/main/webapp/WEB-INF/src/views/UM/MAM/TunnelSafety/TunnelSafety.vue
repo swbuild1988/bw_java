@@ -11,7 +11,7 @@
     data() {
       return {
         curModule: {
-          moduleName: "管廊环境监控",
+          moduleName: "管廊安防监控",
           leftTree: [],
           selected:[0,-1]
         },

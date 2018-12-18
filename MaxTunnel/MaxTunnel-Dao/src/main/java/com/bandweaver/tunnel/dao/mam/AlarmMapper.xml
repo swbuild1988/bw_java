@@ -38,10 +38,6 @@
     	column="TUNNEL_ID" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
   </resultMap>
   
-  <resultMap id="CountResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.CountResult">
-    <result column="object_id" jdbcType="DECIMAL" property="objectId" />
-    <result column="count_num" jdbcType="DECIMAL" property="countNum" />
-  </resultMap>
   
   <sql id="Base_Column_List">
     ID, ALARM_DATE,alarm_name, ALARM_LEVEL, TUNNEL_ID, OBJECT_ID, object_name,is_distribute,DESCRIPTION, cleaned, cleaned_DATE,alarm_source,longitude,latitude
@@ -230,6 +226,10 @@
   	select count(1) from T_MAM_ALARM where tunnel_id = #{tunnelId} and alarm_level = #{level}
   </select>
   
+  <select id="getCountByLevel" resultType="Int">
+  	select count(1) from T_MAM_ALARM where alarm_level = #{level}
+  </select>
+  
   <insert id="addBatch" useGeneratedKeys="false">
     insert into T_MAM_ALARM
     (ID, alarm_date,alarm_name,alarm_level,tunnel_id,object_id,object_name,is_distribute,description,cleaned,cleaned_date,alarm_source,longitude,latitude)
@@ -277,6 +277,12 @@
   		<if test="objectId != null">
   			and object_id = #{objectId}
   		</if>
+  		<if test="objectIds != null">
+  			and object_id in
+  			<foreach collection="objectIds" item="item" open="(" separator="," close=")">
+            #{item}
+        	</foreach>
+  		</if>
   		<if test="cleaned != null">
   			and cleaned = #{cleaned}
   		</if>
@@ -291,12 +297,6 @@
   	select * from T_MAM_ALARM
   </select>
   
-  
-  <select id="getObjCountByTimeOrderByDesc" resultMap="CountResultMap">
-  	select t.object_id,count(t.object_id) as count_num from T_MAM_ALARM t
-  	where t.alarm_date &gt;= #{startTime} and t.alarm_date &lt;=#{endTime}
-  	group by t.object_id order by count_num desc
-  </select>
   
   <select id="getCountByObjectIds" resultType="Int">
     select count(1) from T_MAM_ALARM

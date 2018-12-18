@@ -17,12 +17,12 @@ export default {
               flyUpdateTime:1000 //单位ms
           },
           CAMERA:{//相机初始化视角
-            longitude:112.49446991184571,
-            latitude:37.70536834041335,
-            height:121.73914318253694,
-            roll:6.28318530714758,
-            pitch:-0.7220718086739968,
-            heading:5.868990772801154
+              longitude:112.49658193083268,
+              latitude:37.70723582609472,
+              height:2150.5826793988153,
+              roll:1.9123609362736715e-9,
+              pitch:-1.5254146937977628,
+              heading:0.360004849679342
         },
           entityHeight:10, //实体高度
           searchEventsDay:'5', //查询几天内时间
@@ -54,7 +54,7 @@ export default {
             ],
         },
           queryParam:{  //数据集查询参数
-            dataSourceName: "taiyuan_0823", //
+            dataSourceName: "古城大街", //
             dataSetName: "安全设备",
         },
           detectionObj:{

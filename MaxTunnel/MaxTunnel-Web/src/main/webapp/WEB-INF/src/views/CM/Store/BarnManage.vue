@@ -1,67 +1,88 @@
 <template>
-    <!--管仓 -->
-    <div>
-        <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">管仓管理</h1>
-        <Row style="marginLeft:25px;marginBottom:10px;">
-            <Col span="6">
-            <div>
-                <span>管仓名称：</span>
-                <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
-            </div>
-            </Col>
-            <Col span="6">
-            <div>
-                <span>所属管廊：</span>
-                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-                    <Option value=null>不限</Option>
-                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
-                </Select>
-            </div>
-            </Col>
-            <Col span="6">
-            <div>
-                <span>管仓类型：</span>
-                <Select v-model="researchInfo.storeTypeId" placeholder="请选择管仓类型" class="inputWidth">
-                    <Option value=null>不限</Option>
-                    <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
-                </Select>
-            </div>
-            </Col>
-        </Row>
-        <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
-            <Col span="6">
-                <span>开始时间：</span>
-                <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
-                </DatePicker>
-                </Col>
-            <Col span="6">
-                <span>结束时间：</span>
-                <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
-                </DatePicker>
-            </Col>
-            <Col span="10">
-                    <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
-                    <Button type="error" size="small" @click="addNewStore()">新增管仓</Button> 
-                    <Button type="info" size="small" @click= "addMultiStores()">批量新增管仓</Button>
-                    <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
-                    <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
-            </Col>    
-        </Row>
-        <div style="margin:20px;">
-            <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete"></Table>
-            <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
-            @on-change="handlePage" show-elevator class="pageStyle"></Page>
-        </div>
+  <!--管仓 -->
+  <div>
+    <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">管仓管理</h1>
+    <Row style="marginLeft:25px;marginBottom:10px;">
+      <Col span="6">
         <div>
-            <barn-module v-bind="addStoreInfo" v-on:listenToAdd="saveStore"></barn-module>
+          <span>管仓名称：</span>
+          <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth"/>
         </div>
+      </Col>
+      <Col span="6">
         <div>
-            <barn-multi-module v-bind="addMultiStoreInfo" v-on:listenToAddMulti="saveMultiStore"></barn-multi-module>
+          <span>所属管廊：</span>
+          <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
+            <Option value="null">不限</Option>
+            <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
+          </Select>
         </div>
+      </Col>
+      <Col span="6">
         <div>
-            <barn-modification v-bind="changeStoreInfo" v-on:listenToChange="saveChangeStore"></barn-modification>
+          <span>管仓类型：</span>
+          <Select v-model="researchInfo.storeTypeId" placeholder="请选择管仓类型" class="inputWidth">
+            <Option value="null">不限</Option>
+            <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
+          </Select>
         </div>
+      </Col>
+    </Row>
+    <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
+      <Col span="6">
+        <span>开始时间：</span>
+        <DatePicker
+          type="datetime"
+          placeholder="请选择开始时间"
+          class="inputWidth"
+          v-model="researchInfo.startTime"
+        ></DatePicker>
+      </Col>
+      <Col span="6">
+        <span>结束时间：</span>
+        <DatePicker
+          type="datetime"
+          placeholder="请选择结束时间"
+          class="inputWidth"
+          v-model="researchInfo.endTime"
+        ></DatePicker>
+      </Col>
+      <Col span="10">
+        <Button type="primary" size="small" icon="ios-search" @click="research()">查询</Button>
+        <Button type="error" size="small" @click="addNewStore()">新增管仓</Button>
+        <Button type="info" size="small" @click="addMultiStores()">批量新增管仓</Button>
+        <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button>
+        <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
+      </Col>
+    </Row>
+    <div style="margin:20px;">
+      <Table
+        border
+        ref="selection"
+        :columns="columns7"
+        :data="data6"
+        @on-selection-change="startdelete"
+      ></Table>
+      <Page
+        :total="page.pageTotal"
+        :current="page.pageNum"
+        show-total
+        placement="top"
+        @on-change="handlePage"
+        show-elevator
+        class="pageStyle"
+      ></Page>
     </div>
+    <div>
+      <barn-module v-bind="addStoreInfo" v-on:listenToAdd="saveStore"></barn-module>
+    </div>
+    <div>
+      <barn-multi-module v-bind="addMultiStoreInfo" v-on:listenToAddMulti="saveMultiStore"></barn-multi-module>
+    </div>
+    <div>
+      <barn-modification v-bind="changeStoreInfo" v-on:listenToChange="saveChangeStore"></barn-modification>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -236,7 +257,8 @@ export default {
                 name: this.formValidate.name,
                 tunnelId: this.formValidate.tunnelId,
                 storeTypeId: this.formValidate.storeTypeId,
-                camera: this.formValidate.camera
+                camera: this.formValidate.camera,
+                sn: this.formValidate.sn
             };
             return Object.assign({}, param);
         },
@@ -304,7 +326,7 @@ export default {
         },
         saveStore(_data) {
             this.formValidate = _data;
-            this.axios.post("/stores", this.newparams).then(res => {
+            this.axios.post("/stores", _data).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;

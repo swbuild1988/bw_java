@@ -9,13 +9,7 @@ public interface EquipmentModelMapper {
 
     int insert(EquipmentModel record);
 
-    int insertSelective(EquipmentModel record);
-
     EquipmentModel selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(EquipmentModel record);
-
-    int updateByPrimaryKey(EquipmentModel record);
 
 	/**
 	 * @Description: 获取所有设备型号列表
@@ -26,4 +20,13 @@ public interface EquipmentModelMapper {
 	 * @date 2018年6月6日
 	 */
 	List<EquipmentModel> getAllEquipmentModelList();
+	
+	/**
+	 * 获取某一类型下的设备型号列表
+	 * @param typeId
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年11月29日
+	 */
+	List<EquipmentModel> getEquipmentModelByTypeId(Integer typeId);
 }

@@ -33,8 +33,6 @@ public class StaffDto implements Serializable{
     
     private Position position;
     
-    private Integer accountId;
-
     private Date crtTime;
 
     public Integer getId() {
@@ -93,13 +91,12 @@ public class StaffDto implements Serializable{
 		this.position = position;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
+	@Override
+	public String toString() {
+		return "StaffDto [id=" + id + ", name=" + name + ", deptId=" + deptId + ", dept=" + dept + ", positionId="
+				+ positionId + ", position=" + position + ", crtTime=" + crtTime + "]";
 	}
 
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
     
     
 }

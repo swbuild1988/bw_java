@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="whole">
         <Row class="conditions">
            <!--  <Col span="8" offset="1">
                 监测仓:
@@ -106,8 +106,10 @@ import { TunnelService } from '../../../../services/tunnelService';
         TestSmViewer 
     },
     beforeRouteLeave(to,from,next){
-        if(to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '人员定位详情' || to.name == '设备分配' || to.name == 'UMDetailEquipment' || to.name == '管廊安防监控列表'
-            || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == '人员定位详情' || from.name == '设备分配' || from.name == '管廊安防监控列表' || from.name == '管廊安防监控详情'
+        if(to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '人员定位详情' || to.name == '设备分配' 
+            || to.name == '管廊安防监控列表' || to.name == '管廊环境监控列表'
+            || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == '人员定位详情' || from.name == '设备分配' 
+            || from.name == '管廊安防监控列表' || from.name == '管廊安防监控详情' || from.name == '管廊环境监控列表'
             || from.name == 'UMDetailEquipment'
         ){
             from.meta.keepAlive = true
@@ -143,90 +145,15 @@ import { TunnelService } from '../../../../services/tunnelService';
             gis.style.width = '100%'    
             document.body.removeChild(gis)
             document.getElementById("GISbox").appendChild(gis)
+            this.$refs.smViewer.setViewAngAngle({
+                longitude:112.49658193083268,
+                latitude:37.70723582609472,
+                height:2150.5826793988153,
+                roll:1.9123609362736715e-9,
+                pitch:-1.5254146937977628,
+                heading:0.360004849679342
+            });
         },
-    //     onload(parent) {
-
-    //         let Cesium = parent.Cesium,
-    //             _this=this;
-    //         // 初始化viewer部件
-    //         var viewer = new Cesium.Viewer('personnelPositionSMViewer',{
-    //             navigation:false, //关闭导航控件
-    //             infoBox:false //禁用信息框
-    //         });
-
-    //         _this.viewer=viewer;
-    //         _this.Cesium=Cesium;
-
-    //         var scene = viewer.scene,
-    //              widget = viewer.cesiumWidget,
-    //              imageryLayers = viewer.imageryLayers,
-    //              imagery_mec,
-    //              queryParam=_this.VMConfig.queryParam;
-
-    //         var provider_mec = new Cesium.SuperMapImageryProvider({
-    //             url : this.SuperMapConfig.IMG_MAP//墨卡托投影地图服务
-    //         });
-    //          imagery_mec = imageryLayers.addImageryProvider(provider_mec);
-
-    //         try{
-    //           //打开所发布三维服务下的所有图层
-    //           var promise = scene.open(this.SuperMapConfig.BIM_SCP);
-
-    //           Cesium.when(promise,function(layer){
-
-    //             //设置相机位置、视角，便于观察场景
-    //               setViewAngle(scene,Cesium,_this.VMConfig.CAMERA)
-
-    //               layer.forEach(element => {
-    //                   // 结构性框架的要查数据，非结构性框架的不用管了，也不能选择
-    //                   if (element.name.indexOf(queryParam.dataSetName) < 0) {
-    //                       element.selectEnabled = false;
-    //                   } else {
-    //                       // 设置查找参数
-    //                       element.setQueryParameter({
-    //                           url: this.SuperMapConfig.BIM_DATA,
-    //                           dataSourceName: queryParam.dataSourceName,
-    //                           dataSetName: queryParam.dataSetName,
-    //                           keyWord: "moId"
-    //                       });
-
-    //                   }
-    //               });
-    //               //点击对象查询对象属性
-    //               viewer.pickEvent.addEventListener(function(feater){
-    //                   console.log('pickEvent',feater)
-    //               });
-
-    //                doSqlQuery.call(_this,viewer,'MOTYPEID=7',this.SuperMapConfig.BIM_DATA,addBillboard,processFailed,'videoType','videos') //查询全部相机
-
-    //           },function(e){
-    //             if (widget._showRenderLoopErrors) {
-    //               var title = '加载SCP失败，请检查网络连接状态或者url地址是否正确？';
-    //               widget.showErrorPanel(title, undefined, e);
-    //             }
-    //           });
-    //         }
-    //         catch(e){
-    //           if (widget._showRenderLoopErrors) {
-    //             var title = '渲染时发生错误，已停止渲染。';
-    //             widget.showErrorPanel(title, undefined, e);
-    //           }
-    //         }
-    //         //设置鼠标左键单击回调事件，进行视屏联动
-    //         viewer.selectedEntityChanged.addEventListener(feater=>{
-    //             if(feater != undefined){
-
-    //                 _this.$store.commit('closeVideoLoop')   //开启视屏监控轮播模式
-    //                 _this.replaceVideoUrl(feater._id)
-    //             }
-    //         })
-
-
-    //         getEntityProperty.call(_this,scene,Cesium,_this.modelProp,'model-content') //鼠标经过实体时,触发事件
-
-    //         bubble.call(_this,Cesium,scene,viewer,'model-content') //调用气泡
-    //         getEntitySet.call(this,{viewer:viewer,url:'actived-locators',show:true,typeMode:'personnelType',messageType:'personnel'}) //人员定位
-    //   },
       getVisitors() {
           let _this = this
           personnelPositionService.getActiveLocators().then(
@@ -260,6 +187,11 @@ import { TunnelService } from '../../../../services/tunnelService';
   }
 </script>
 <style scoped>
+  .whole{
+    min-height: 100%;
+    position: relative;
+    background-color: white;
+  }
   .view{
     border: 1px solid #b3b0b0;
     height: 74vh;

@@ -7,10 +7,10 @@
                 <span>员工姓名：</span>
                 <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
             </Col>
-            <Col span="6">
+            <!-- <Col span="6">
                 <span>个人账号：</span>
                 <Input v-model="researchInfo.accountId" placeholder="支持模糊查询" class="inputWidth" />
-            </Col> 
+            </Col> --> 
             <Col span="6">
                 <span>所属部门：</span>
                 <Select v-model="researchInfo.deptId" placeholder="请选择所属部门" class="inputWidth">
@@ -25,6 +25,12 @@
                     <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
             </Col> 
+            <Col span="6">
+                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
+                <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
+                <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
+                <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
+            </Col> 
         </Row>
         <Row style="margin-left:20px;marginBottom:10px;">
             <Col span="6">
@@ -37,12 +43,6 @@
                 <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
                 </DatePicker>
             </Col>  
-            <Col span="12">
-                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
-                <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
-                <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
-                <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
-            </Col> 
         </Row>
         <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
@@ -78,11 +78,11 @@ export default {
                     key: 'name',
                     align: 'center'
                 },
-                {
-                    title: '个人账号',
-                    key: 'accountId',
-                    align: 'center'
-                },
+                // {
+                //     title: '个人账号',
+                //     key: 'accountId',
+                //     align: 'center'
+                // },
             ],
             data6:[],
             page:{
@@ -130,7 +130,7 @@ export default {
                         info.deptName = data.list[index].dept.name;
                         info.positionId = data.list[index].position.id;
                         info.positionName = data.list[index].position.name;
-                        info.accountId = data.list[index].accountId;
+                        // info.accountId = data.list[index].accountId;
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;

@@ -11,7 +11,8 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="asset_no" property="assetNo"/>
-        <result column="type" property="type"/>
+        <result column="type" property="typeId"/>
+        <result column="type_name" property="typeName"/>
         <result column="crt_time" property="crtTime"/>
         <result column="service_life" property="serviceLife"/>
         <result column="status" property="status"/>
@@ -160,7 +161,8 @@
     </resultMap>
 
     <select id="getEquipmentListByCondition" resultMap="DtoResultMap">
-        select e.* from t_omm_equipment e
+        select e.*,a.name as type_name from t_omm_equipment e
+        left join t_omm_equipment_type a on a.id = e.type
         <where>
             <if test="name != null and name.trim() != ''">
                 instr(e.name,#{name})>0
@@ -237,8 +239,9 @@
 
     <select id="getEquipmentById"
             resultMap="DtoResultMap">
-        SELECT *
-        FROM t_omm_equipment
+        SELECT e.*,a.name as type_name
+        FROM t_omm_equipment e
+        left join t_omm_equipment_type a on a.id = e.type
         WHERE id = #{id}
     </select>
 
@@ -328,8 +331,9 @@
     </delete>
     
     <select id="getEquipmentListByObj" resultMap="DtoResultMap" >
-    	SELECT *
-        FROM t_omm_equipment
+    	SELECT e.*,a.name as type_name
+        FROM t_omm_equipment e
+        left join t_omm_equipment_type a on a.id = e.type
         WHERE
             obj_id = #{objId}
     </select>

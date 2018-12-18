@@ -29,4 +29,12 @@ public interface MeasValueAIMapper {
      * 批量删除
      */
     void deleteBatch(Date time);
+
+	int getCountBymoIdsAndTime(@Param("list")List<Integer> list, @Param("startTime")Date startTime,@Param("endTime") Date endTime);
+
+	List<MeasValueAI> pageQuery(@Param("start")Integer start, @Param("end")Integer end, @Param("list")List<Integer> list, @Param("startTime")Date startTime,@Param("endTime") Date endTime);
+
+	List<MeasValueAI> getListByMoIdsAndTime(@Param("list")List<Integer> list, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+
+	List<Date> getX(@Param("startTime")Date startTime,@Param("endTime") Date endTime);
 }

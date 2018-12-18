@@ -17,22 +17,9 @@ public enum ProcessTypeEnum {
 
     //应急预案
 	FIRE_PLAN("消防预案", 4001, "FirePlanProcess", "path.bpmn.activiti.fire", "path.png.activiti.fire","mq.queue.plan.fire",50.0),
-	WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind","",55.5),
-	WATER_PLAN("排水预案", 4002, "WaterPlanProcess", "path.bpmn.activiti.water", "path.png.activiti.water","",55.1);
+	WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind","",55.5);
+//	WATER_PLAN("排水预案", 4002, "WaterPlanProcess", "path.bpmn.activiti.water", "path.png.activiti.water","",55.1);
 	
-	
-	/**预案数组 
-	 * @return   
-	 * @author shaosen
-	 * @Date 2018年10月16日
-	 */
-	public static ProcessTypeEnum[] getProcessTypeList(){
-        return new ProcessTypeEnum[]{
-        		FIRE_PLAN,
-        		WIND_PLAN,
-        		WATER_PLAN
-        };
-    }
 
     private String name;
     private int value;
@@ -110,13 +97,21 @@ public enum ProcessTypeEnum {
         this.range = range;
     }
 
+	
+	
+	/**预案数组 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年10月16日
+	 */
+	public static ProcessTypeEnum[] getEmPlanList(){
+        return new ProcessTypeEnum[]{
+        		FIRE_PLAN,
+        		WIND_PLAN
+        };
+    }
+	
     
-    /**根据value值获取enum
-     * @param   value
-     * @return ActionEnum
-     * @author shaosen
-     * @date 2018年6月23日
-     */
     public static ProcessTypeEnum getEnum(int value) {
         for (ProcessTypeEnum actionEnum : ProcessTypeEnum.values()) {
             if (value == actionEnum.getValue())
@@ -125,11 +120,6 @@ public enum ProcessTypeEnum {
         return ProcessTypeEnum.NONE;
     }
 
-    /**
-     *
-     * @param processKey
-     * @return
-     */
     public static ProcessTypeEnum getEnum(String processKey) {
         for (ProcessTypeEnum actionEnum : ProcessTypeEnum.values()) {
             if (processKey.toLowerCase().equals(actionEnum.getProcessKey().toLowerCase()))

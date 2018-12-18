@@ -8,19 +8,19 @@
     <insert id="addMeasValueAI" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI">
         INSERT INTO T_MAM_MEASVALUE_AI
         (time, Object_ID, cv)
-        VALUES (#{time}, #{objectId}, #{CV})
+        VALUES (#{time}, #{objectId}, #{cv})
     </insert>
 
     <insert id="addMeasValueAIBatch" useGeneratedKeys="false">
         insert into t_mam_measvalue_ai 
-        (time, object_id, CV)
+        (time, object_id, cv)
         select a.* from (
         <foreach collection="list" item="item" index="index" close=")"
                  open="(" separator="union">
             select
             #{item.time},
             #{item.objectId},
-            #{item.CV}
+            #{item.cv}
             from dual
         </foreach>
         )a
@@ -45,7 +45,7 @@
     <resultMap id="measValueAIMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI">
         <result column="time" property="time" />
         <result column="object_id" property="objectId" />
-        <result column="cv" property="CV" />
+        <result column="cv" property="cv" />
     </resultMap>
     
     <select id="getByObjectId" resultMap="measValueAIMap">
@@ -55,4 +55,78 @@
     <delete id="deleteBatch">
 		delete from T_MAM_MEASVALUE_AI where time &lt;= #{time}
 	</delete>
+	
+	
+    <select id="getCountBymoIdsAndTime" resultType="Int">
+    select count(1) from T_MAM_MEASVALUE_AI
+	  <where>
+	  	<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+	  	<if test="list != null">
+	  		and object_id in 
+	  		 <foreach collection="list" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	  	</if>
+	  </where>
+  </select>
+  
+  
+  <select id="pageQuery" resultMap="measValueAIMap">
+	  select * from (select a.* , ROWNUM  rn from 
+	  (select * from T_MAM_MEASVALUE_AI
+	  	<where>
+	  		<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+	 	<if test="list != null">
+	  		and object_id in 
+	  		 <foreach collection="list" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	  	</if>
+	  	</where>
+	  	order by time DESC
+	  ) a 
+	  where ROWNUM &lt; #{end}) where rn &gt; #{start}
+  </select>
+  
+  <select id="getListByMoIdsAndTime" resultMap="measValueAIMap">
+  	select * from T_MAM_MEASVALUE_AI
+	  	<where>
+	  		<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+	 	<if test="list != null">
+	  		and object_id in 
+	  		 <foreach collection="list" item="item" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	  	</if>
+	  	</where>
+	  	order by time DESC
+  </select>
+  
+  <select id="getX" resultType="Date">
+  	select time from T_MAM_MEASVALUE_AI 
+  	<where>
+  		<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+  	</where>
+  	group by time order by time asc
+  </select>
 </mapper>

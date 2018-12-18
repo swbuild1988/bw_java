@@ -20,6 +20,7 @@
             <Button type="ghost"  @click="handleReset('addCustomerInfo')" style="margin-left: 8px">取消</Button>
         </FormItem>
     </Form>
+    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
 </div>
 </template>
 <script>
@@ -128,7 +129,10 @@ export default {
         handleReset(name){
             this.$refs[name].resetFields()
         },
-
+        //返回
+        goBack(){
+            this.$router.back(-1);
+        }
     }
 }
 </script>
@@ -139,5 +143,10 @@ export default {
     padding: 10px 20px;
     border-radius: 4px;
     margin: 0 auto;
+}
+.goBack{
+    position: absolute;
+    bottom: 2vh;
+    right: 3vw;
 }
 </style>

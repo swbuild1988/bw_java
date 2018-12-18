@@ -4,18 +4,22 @@ var EnumsService = {
 	// 获取文件类型
 	getFileType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('filetype-enums').then(res => {
-				let {
-					code,
-					data,
-					msg
-				} = res.data
-				if (code == 200) {
-					resolve(data)
-				} else {
-					reject(msg + ",地址:/filetype-enums")
-				}
-			})
+			axios.get('filetype-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:/filetype-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
 		})
 	},
 	// 获取资料类型
@@ -303,9 +307,92 @@ var EnumsService = {
 			// }]
 			// resolve(data)
 		})
+	},
+	// 获取开关枚举
+	getSwitch: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('switch-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:switch-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 获取应急目标对象列表
+	getEmTargetObjs: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('/em/target-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:/em/target-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 获取应急行为
+	getEmAction: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('/em/action-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:/em/action-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 获取应急结束类型
+	getEmFinishType: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('/em/finish-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:/em/finish-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
 	}
 }
-
 export {
 	EnumsService
 }

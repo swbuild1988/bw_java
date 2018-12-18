@@ -23,4 +23,20 @@ public class EquipmentModelServiceImpl implements EquipmentModelService {
 	public EquipmentModel getEquipmentModelById(Integer id) {
 		return equipmentModelMapper.selectByPrimaryKey(id);
 	}
+
+	@Override
+	public int deleteByPrimaryKey(Integer id) {
+		return equipmentModelMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int insert(EquipmentModel record) {
+		return equipmentModelMapper.insert(record);
+	}
+
+	@Override
+	public List<EquipmentModel> getEquipmentModelByTypeId(Integer typeId) {
+		return equipmentModelMapper.getEquipmentModelByTypeId(typeId);
+	}
+	
 }

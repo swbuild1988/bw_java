@@ -3,9 +3,11 @@ import {
     doSqlQuery,
     getJson,
     processFailed,
-    _getFieldValues
+    _getFieldValues,
 } from "../../../scripts/commonFun";
 import eventBus from '../../../assets/Bus'
+
+let  { VMEntityConfig } = require('../../../../static/VM/js/VMWebConfig');
 
 export default {
     data(){
@@ -44,6 +46,7 @@ export default {
                 doSqlQuery.call(this,this.viewer,'MOID in ('+ '7001'.toString() +')',this.SuperMapConfig.BIM_DATA,this.searchPlanCompleted,processFailed,range,processName)
             });
         }
+        
     },
     methods:{
         //设置相机视角
@@ -79,7 +82,7 @@ export default {
         eventNotie(){
             let _this = this;
             let day = Vue.prototype.VMConfig.searchEventsDay;
-
+        
             getJson(`events/day/${ day }`).then(data => {
 
                 data.forEach( event => {
@@ -143,16 +146,47 @@ export default {
             }
         },
         addEllipseViewer({ baseProp,...typePara }){
-            let { viewer } = this;
 
-            let viewerType = this.addViewerType( typePara );
-
-            let entity = viewer.entities.add( Object.assign({},baseProp,viewerType) );
+            let { entity,viewer } = this.addCommonView(baseProp,typePara);
 
             this.addParticleSystem({ entity,viewer });
 
         },
-        addViewerType({ position,ellipse,billboard,label }){
+        addIdentifierViewer(){
+            let { visualizationEntityParam,PCEntityParam } = VMEntityConfig;
+
+            let entityParam = screen.width <= 1920 ? PCEntityParam : visualizationEntityParam; //根据分辨率判断是 可视化平台 / pc端
+            entityParam.forEach( entity => {
+                let { entityBaseParameters,entityExtendParameters } = entity;
+
+                let BaseParameters = entityBaseParameters != undefined ? entityBaseParameters : {};
+
+                this.addCommonView(BaseParameters,entityExtendParameters)
+            } )
+            
+        },
+        addCommonView(baseProp,typePara){
+            let { viewer } = this;
+            
+            let viewerType = this.addViewerType( typePara );
+
+            let entity = viewer.entities.add( Object.assign({},baseProp,viewerType) );
+
+            return {
+                viewer,
+                entity
+            }
+        },
+        parametersFilter(parameters){
+            return [].map.call(parameters,( key,val ) => {
+                if( [].toString.call(key) === "[object Object]"){
+                    this.parametersFilter(param);
+                }else{
+                    return JSON.parse(val);
+                }
+            } )
+        },
+        addViewerType({ position,ellipse,billboard,label,point }){
 
             let viewerPosition = position !== undefined ? {
                 position : Cesium.Cartesian3.fromDegrees( parseFloat( position.X ), parseFloat( position.Y ), parseFloat( position.Z ) )
@@ -169,11 +203,39 @@ export default {
                 }
             }:{};
 
-            let billboardViewProp = billboard !== undefined ? billboard : {};
+            let billboardViewProp = billboard !== undefined ? {
+                billboard:{
+                    image : this.drawTextCanvas(billboard.text,billboard.style),
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,30000,0),
+                    verticalOrigin : Cesium.VerticalOrigin.CENTER
+                }
+            } : {};
 
-            let labelViewProp = label !== undefined ? label : {};
+            let labelViewProp = label !== undefined ? {
+                label:{
+                    text:label.text,
+                    font : label.fontSize + 'pt monospace',
+                    fillColor:Cesium.Color.RED,
+                    outlineColor:Cesium.Color.BLACK,
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth : label.outlineWidth,
+                    verticalOrigin : Cesium.VerticalOrigin.TOP,
+                    pixelOffset : new Cesium.Cartesian2( 0 , 5 ),
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }
+            }:{};
 
-            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp);
+            let pointViewProp = point !== undefined ? {
+                point:{
+                    pixelSize : point.pixelSize,
+                    color : Cesium.Color.RED,
+                    outlineColor : Cesium.Color.WHITE,
+                    outlineWidth : point.outlineWidth,
+                    scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
+                }  
+            }:{};
+
+            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp);
         },
         addParticleSystem(minxisParticleSystem){
 
@@ -331,6 +393,29 @@ export default {
             Object.assign(ParticleSystem,minxisParticleSystem);
 
             ParticleSystem.init();
+        },
+        drawTextCanvas(text,fontStyle){
+            let { translate,rotateAngle,canvasStyleCoeff,fontsize } = fontStyle;
+
+            let canvas = document.createElement('canvas'); 
+            let ctx = canvas.getContext('2d');
+
+            canvas.width = ctx.measureText(text).width * canvasStyleCoeff.width;    
+            canvas.height = fontsize * canvasStyleCoeff.height;
+
+            ctx.fillStyle = 'red';
+            ctx.font = fontsize + "pt Calibri,sans-serif";
+
+            ctx.translate(translate.X, translate.Y);
+            ctx.rotate( parseFloat(rotateAngle) * Math.PI / 180 );
+
+            ctx.fillText(text, 0,0);
+
+            ctx.rotate( -( parseFloat(rotateAngle) * Math.PI / 180) );
+            ctx.translate(-translate.X, -translate.Y);
+            
+            return canvas;
         }
+        
     }
 }

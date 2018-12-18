@@ -71,6 +71,32 @@ public class VideoDto extends Video {
         }
         return url;
     }
+    
+    public String getStrUrl() {
+    	String url = "";
+    	VideoVendor vendor = VideoVendor.getEnum(this.videoServerDto.getVendor());
+    	
+    	switch (vendor) {
+    	case DaKang:
+    		url = "rtsp://" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
+    		"/Streaming/Channels/" + super.getChannelNo();
+    		break;
+    		
+    	case HoneyWell_HISD:
+    		url = "rtsp://" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
+    		"/h264/ch" + super.getChannelNo() + "/main/av_stream";
+    		break;
+    		
+    	case HoneyWell_HICC:
+    		url = "rtsp://" + this.videoServerDto.getIp() + ":" + this.videoServerDto.getPort() +
+    		"/media?stream=0";
+    		break;
+	
+    	default:
+    		break;
+    	}
+    	return url;
+    }
 
     @Override
     public String toString() {

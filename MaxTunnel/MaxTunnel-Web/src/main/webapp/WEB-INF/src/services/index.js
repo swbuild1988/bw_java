@@ -35,9 +35,6 @@ import {
 	LoginService
 } from './loginService'
 import {
-	LogoutService
-} from './logoutService'
-import {
 	MeasObjServer
 } from './MeasObjectSerivers'
 import {

@@ -2,7 +2,6 @@ package com.bandweaver.tunnel.common.platform.util;
 
 import java.util.Set;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,11 +9,8 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.bandweaver.tunnel.common.biz.pojo.User;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
-import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
 
 
 /**

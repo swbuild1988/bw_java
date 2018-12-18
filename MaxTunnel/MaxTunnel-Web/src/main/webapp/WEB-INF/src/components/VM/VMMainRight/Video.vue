@@ -5,17 +5,18 @@
                     v-show="style.showVideo"
                     class="view"
                     v-for="(item,index) in tempVideos" :key="index">
-                  <!--<video-component :video="item" :id="item.id"></video-component>-->
+                  <video-component :video="item" :id="item.id"></video-component>
               </div>
               <Carousel v-model="defaultLoopIndex"
                         :autoplay="isAutoplay"
                         v-show="!style.showVideo"
                         :dots="setting.dots"
                         :loop = "setting.loop"
+                        @on-change="changeCopyLoopScene"
                         :autoplay-speed="setting.autoplaySpeed">
-                  <CarouselItem v-for="(val,key) in loopScene" :key="key">
-                      <div class="view" v-for="(item,index) in loopScene[key]" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
-                          <!--<video-component :video="item" :id="item.id"></video-component>-->
+                  <CarouselItem v-for="(val,key) in virtualLoopScene" :key="key">
+                      <div class="view" v-for="(item,index) in virtualLoopScene[key]" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
+                          <video-component :video="item" :id="item.id"></video-component>
                       </div>
                   </CarouselItem>
               </Carousel>
@@ -71,7 +72,7 @@
     import $ from 'jquery'
     import videoComponent from '../../Common/Video/VideoComponent'
     import { CMVideoService } from "../../../services/cmVideoService";
-    import { PlanService } from "../../../services/plan";
+    import { PlanService } from "../../../services/planService";
 
     export default {
         data() {
@@ -82,7 +83,7 @@
                     dots: 'outside',
                     autoplaySpeed: 10000,
                     switchBtn:false,
-                    loop:true
+                    loop:false
                 },
                 style:{
                     offsetHeight:0,
@@ -94,6 +95,7 @@
                 videos:[],//缓存当前场景下所有摄像头
                 tempVideos:[],//保存临时所有摄像头
                 loopScene:[],//保存所有轮询场景
+                virtualLoopScene:[],
                 allVideos:[], //保存所有的视屏服务
                 defaultOption: 1,
                 defaultVideo:0,
@@ -152,10 +154,11 @@
             defaultLoopIndex(){
                 let _this=this,
                     index=this.defaultLoopIndex;
-
-                if(_this.loopScene[index] ==undefined || !_this.loopScene[index].length){ return };
+                    
+                if(_this.loopScene[index] == undefined || !_this.loopScene[index].length){ return };
 
                 _this.loopScene[index].filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID = val.id }});
+
                 // 监听轮播索引
                 _this.changeStyle(_this.loopScene[index]);
             },
@@ -298,9 +301,12 @@
             },
             getLoopScence(){
                 let _this = this;
-
+                
                 _this.fetchData({url:'/video_scenes',array:_this.loopScene})
                     .then(()=>{
+                        
+                        _this.copyLoopScene(_this.loopScene,_this.virtualLoopScene);
+
                         _this.changeStyle(_this.loopScene[0]);
                     });
             },
@@ -323,6 +329,20 @@
                 let { setting } = this;
 
                 setting.loop = status ;
+            },
+            copyLoopScene(originalArray,copyArray){
+                copyArray.splice(0);
+
+                originalArray.forEach((val,key) => !key ? copyArray.push( val ) : copyArray.push( [] ));
+            },
+            changeCopyLoopScene(oldValue, value){
+                let { virtualLoopScene,loopScene } = this; 
+
+                if( oldValue !== value ){
+                    virtualLoopScene[value].push(...loopScene[value]);
+                    virtualLoopScene[oldValue].splice(0);
+                }
+
             },
             addIframe(id){
                 $('#'+id).append($('<iframe src="about:block" frameborder="0" marginheight="0" marginwidth="0" style="position:relative;visibility:inherit;top:0;left:0;width:100%;height:100%;z-Index:-1;opacity: 0;"/>'));

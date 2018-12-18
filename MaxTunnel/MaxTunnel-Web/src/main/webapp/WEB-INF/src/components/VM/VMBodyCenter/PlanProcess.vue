@@ -46,7 +46,7 @@
 <script>
     import Vue from 'vue'
     import eventBus from '../../../assets/Bus'
-    import { PlanService } from "../../../services/plan";
+    import { PlanService } from "../../../services/planService";
     import personnelConfirm from '../AlarmManage/DescAlarmModel'
 
     const PLAN_STATE_COMPLETE = 1; // 完成
@@ -127,7 +127,7 @@
         },
         methods:{
             init(){
-                Vue.prototype.MQ._InitMQ(1, "/queue/queueBigScreen", "",this.planCallback);
+                // Vue.prototype.MQ._InitMQ(1, "/queue/queueBigScreen", "",this.planCallback);
                 this.getNodeListStatus();
             },
             planCallback(message){

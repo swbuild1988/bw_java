@@ -1,54 +1,50 @@
 <template>
-    <div style="padding-left: 10px;">
+    <div class="flex-container">
       <h1>巡检计划信息总览</h1>
-      <Row>
+      <Row class="item-flex">
         <Col span="16">
           <Row>
             <Col span="24">
-              <div class="GISbox" id="GISbox" ref="gisBox">
-                <!--<div class="GISTitle">地图显示所有的管廊位置GIS</div>-->
-                <!-- <sm-viewer v-bind="SMViewer" ref="smviewer" v-show="true">
-                </sm-viewer> -->
-                <TestSmViewer ref="TestSmViewer"></TestSmViewer>
-                <div class="tunnelProfile">
-                  <div>巡检计划执行概况</div>
-                  <div>本月总计划：{{this.monthPlan.value}}</div>
-                  <div>发现缺陷数：{{this.defectCount}}</div>
+                <div class="GISbox" id="GISbox" ref="gisBox">
+                    <!--<div class="GISTitle">地图显示所有的管廊位置GIS</div>-->
+                    <TestSmViewer ref="TestSmViewer"></TestSmViewer>
+                    <div class="tunnelProfile">
+                    <div>巡检计划执行概况</div>
+                    <div>本月总计划：{{this.monthPlan.value}}</div>
+                    <div>发现缺陷数：{{this.defectCount}}</div>
+                    </div>
                 </div>
-              </div>
             </Col>
-            <Col span="11" style="margin-top: 5px">
-              <!-- <p>故障信息列表</p> -->
-              <!-- <Table height="100" :data="faultInfoList" border :columns="columns2"></Table> -->
-              <Card>
-                <p slot="title">故障信息列表</p>
-                <p v-for="(item,index) in faultInfoList" value="item" :key="index">
-                  <span>{{item.name}}</span>
-                  <span style="float: right;font-size: 12px;color: #ff9b00">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
-                </p>
-              </Card>
+            <Col span="11" style="margin-top: 1vh">
+                <Card>
+                    <p slot="title">故障信息列表</p>
+                    <p v-for="(item,index) in faultInfoList" value="item" :key="index">
+                    <span class="goDetail" @click="goDefectDetails(item.id)">{{item.name}}</span>
+                    <span style="float: right;font-size: 12px;color: #ff9b00">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+                    </p>
+                </Card>
             </Col>
-            <Col span="11" offset="2" style="margin-top: 5px;">
-              <Card>
-                <p slot="title">计划信息列表</p>
-                <p v-for="(item,index) in tunnelInfoList" value="item" :key="index">
-                  <span>{{item.name}}</span>
-                  <span style="float: right;font-size: 12px;color: #ff9b00">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
-                </p>
-              </Card>
+            <Col span="11" offset="2" style="margin-top: 1vh;">
+                <Card>
+                    <p slot="title">计划信息列表</p>
+                    <p v-for="(item,index) in tunnelInfoList" value="item" :key="index">
+                        <span class="goDetail" @click="goPatrolPlan(item.planId)">{{item.name}}</span>
+                        <span style="float: right;font-size: 12px;color: #ff9b00">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+                    </p>
+                </Card>
             </Col>
           </Row>
         </Col>
         <Col span="8" class="rightBox">
-        <Row>
-          <Col span="12"><div class="data-box" style="margin-right: 0"><DataShow v-bind="yearPlan"></DataShow></div></Col>
-          <Col span="12"><div class="data-box"><DataShow v-bind="monthPlan"></DataShow></div></Col>
-          <Col span="12"><div class="data-box" style="margin-right: 0"><DataShow v-bind="finishedTask"></DataShow></div></Col>
-          <Col span="12"><div class="data-box"><DataShow v-bind="unfinishedTask"></DataShow></div></Col>
-        </Row>
+            <Row>
+                <Col span="12"><div @click="goToMoudle('/UM/planPatrol/queryAnnualPlan')" class="data-box" style="margin-right: 0"><DataShow v-bind="yearPlan"></DataShow></div></Col>
+                <Col span="12"><div @click="goToMoudle('/UM/planPatrol/queryMonthPlan')" class="data-box"><DataShow v-bind="monthPlan"></DataShow></div></Col>
+                <Col span="12"><div class="data-box" style="margin-right: 0"><DataShow v-bind="finishedTask"></DataShow></div></Col>
+                <Col span="12"><div class="data-box"><DataShow v-bind="unfinishedTask"></DataShow></div></Col>
+            </Row>
         </Col>
       </Row>
-      <Row style="padding-top: 5px;">
+      <Row>
         <Col span="7">
             <div style="width: 24vw; height:22vh;" class="equipmentChartBox">
               <simple-bar v-bind="equipmentChart"></simple-bar>
@@ -61,10 +57,10 @@
         </Col>
         <Col span="5">
             <div class="circleBox" style="background: #2C6A69;" ref="circleBox1">
-                <i-circle :size=this.leftRadius
+                <i-circle :size=leftRadius
                           :trail-width="4"
                           :stroke-width="8"
-                          :percent=this.finishedYearPlanRatio
+                          :percent=finishedYearPlanRatio
                           stroke-linecap="square"
                           stroke-color="#fff" style="margin-top: 5px;">
                     <p class="demo-Circle-inner" style="font-size:22px;color: #fff">年度完成任务占比</p>
@@ -74,10 +70,10 @@
         </Col>
         <Col span="5">
             <div class="circleBox" style="background: #D5C7E1" ref="circleBox2">
-                <i-circle :size=this.rightRadius
+                <i-circle :size=rightRadius
                           :trail-width="4"
                           :stroke-width="8"
-                          :percent=this.currMonthRatio
+                          :percent=currMonthRatio
                           stroke-linecap="square"
                           stroke-color="#E5B500" style="margin-top: 5px;">
                     <p class="demo-Circle-inner" style="font-size:22px">本月计划占比</p>
@@ -107,6 +103,7 @@ import processedPlan from "../../../../assets/UM/processedPlan.png";
 import pendingPlan from "../../../../assets/UM/pendingPlan.png";
 import { PatrolService } from "../../../../services/patrolService";
 import { DefectService } from "../../../../services/defectService";
+import Enum from '../../../../../static/Enum.json'
 // import FeatureSample from '../../../../components/Common/Chart/FeatureSample'
 export default {
     name: "equipmentMain",
@@ -197,9 +194,10 @@ export default {
         };
     },
     beforeRouteLeave(to,from,next){
-        if(to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控列表' || to.name == '管廊环境监测列表'
-            || from.name == '虚拟巡检' || from.name == '人员定位详情' || from.name == '设备管理主页' || from.name == '管廊安防监控详情' || from.name == '管廊安防监控列表'
-            || from.name == '管廊环境监控列表' || from.name == '管廊环境监控详情'
+        if(to.name == '设备管理主页' || to.name == '虚拟巡检' || to.name == '人员定位详情' || to.name == '管廊安防监控列表' 
+            || to.name == '管廊环境监控列表'
+            || from.name == '虚拟巡检' || from.name == '人员定位详情' || from.name == '设备管理主页' 
+            || from.name == '管廊安防监控列表' || from.name == "管廊环境监控列表"
         ){
             from.meta.keepAlive = true;
             to.meta.keepAlive = true
@@ -218,7 +216,6 @@ export default {
         SimplePie,
         Ring,
         DataShow,
-        // SmViewer,
         TestSmViewer,
         ProcessRing
         // FeatureSample
@@ -277,14 +274,32 @@ export default {
         goToMoudle: function(path) {
             this.$router.push(path);
         },
+        goPatrolPlan(id){
+            this.$router.push({
+                name: "UMPatrolDetails",
+                params: {
+                    id: id,
+                }
+            });
+        },
+        goDefectDetails(id){
+            this.$router.push({
+                name: "UMDetailDefect",
+                params: {
+                    id: id,
+                    type: Enum.pageType.Read
+                }
+            });
+        },
         getRadius1() {
             if (
-                this.$refs.circleBox1.offsetWidth >=
-                this.$refs.circleBox1.offsetHeight
+                this.$refs.circleBox1.offsetWidth >= this.$refs.circleBox1.offsetHeight
             ) {
                 this.leftRadius = this.$refs.circleBox1.offsetHeight - 20;
+                console.log("this.leftRadius11",this.leftRadius)
             } else {
                 this.leftRadius = this.$refs.circleBox1.offsetWidth - 20;
+                 console.log("this.leftRadius22",this.leftRadius)
             }
         },
         getRadius2() {
@@ -301,19 +316,19 @@ export default {
             var gis = document.getElementById("newID");
             gis.style.display = "block";
             gis.style.position = 'absolute';
-            gis.style.top = '0px';
+            gis.style.top = '10px';
             gis.style.height = '100%';
             gis.style.width = '100%'    
             document.body.removeChild(gis)
             document.getElementById("GISbox").appendChild(gis)
             // 加载视角
             this.$refs.TestSmViewer.setViewAngAngle({
-                longitude: 112.49446991184571,
-                latitude: 37.70536834041335,
-                height: 121.73914318253694,
-                roll: 6.28318530714758,
-                pitch: -0.7220718086739968,
-                heading: 5.868990772801154
+                longitude:112.49658193083268,
+                latitude:37.70723582609472,
+                height:2150.5826793988153,
+                roll:1.9123609362736715e-9,
+                pitch:-1.5254146937977628,
+                heading:0.360004849679342
             });
         },
         destory3D(){
@@ -330,7 +345,7 @@ export default {
 </script>
 <style scoped>
 .ivu-col-span-12 {
-    padding: 10px;
+    padding: 9px;
 }
 h1,
 .ivu-card >>> .ivu-card-head p,
@@ -339,12 +354,13 @@ h1,
 }
 .GISbox {
     width: 100%;
-    height: 43vh;
+    height: 100%;
+    min-height: 44vh;
     border: 1px solid #dddee1;
     display: inline-block;
     vertical-align: top;
-    margin-top: 10px;
     border-radius: 4px;
+    margin-top: 10px;
 }
 .GISTitle {
     background-color: #f7f8f9;
@@ -389,11 +405,14 @@ h1,
     width: 99%;
 }
 .ivu-card >>> .ivu-card-body {
-    height: 9vh;
+    height: 7vh;
     overflow-y: auto;
 }
 .cesium-viewer-bottom {
     display: none;
+}
+.goDetail{
+    cursor: pointer;
 }
 </style>
 

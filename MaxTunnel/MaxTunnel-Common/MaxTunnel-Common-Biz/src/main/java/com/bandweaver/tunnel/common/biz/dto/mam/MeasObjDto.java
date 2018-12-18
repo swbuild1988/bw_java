@@ -37,10 +37,8 @@ public class MeasObjDto implements Serializable {
     /** 偏差 */
     private Double deviation;
     
-    private double cv;
-    
-    private List<MeasValueAI> valueAIList;
-    
+    //额外用来显示
+    private Double cv;
     private SectionDto section;
 
     public Integer getId() {
@@ -174,24 +172,15 @@ public class MeasObjDto implements Serializable {
 	}
 
 	
-	public double getCv() {
+	public Double getCv() {
 		return cv;
 	}
 
-	public void setCv(double cv) {
+	public void setCv(Double cv) {
 		this.cv = cv;
 	}
 	
 	
-
-	public List<MeasValueAI> getValueAIList() {
-		return valueAIList;
-	}
-
-	public void setValueAIList(List<MeasValueAI> valueAIList) {
-		this.valueAIList = valueAIList;
-	}
-
 	public SectionDto getSection() {
 		return section;
 	}
@@ -206,7 +195,6 @@ public class MeasObjDto implements Serializable {
 				+ ", sectionId=" + sectionId + ", name=" + name + ", datatypeId=" + datatypeId + ", datatypeName="
 				+ datatypeName + ", objtypeId=" + objtypeId + ", objtypeName=" + objtypeName + ", actived=" + actived
 				+ ", description=" + description + ", longitude=" + longitude + ", latitude=" + latitude + ", height="
-				+ height + ", deviation=" + deviation + ", cv=" + cv + ", valueAIList=" + valueAIList + ", section="
-				+ section + "]";
+				+ height + ", deviation=" + deviation + ", cv=" + cv + ", section=" + section + "]";
 	}
 }

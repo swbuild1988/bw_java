@@ -76,7 +76,8 @@ export default {
       default: 10
     },
     explain: {
-      default: "explain"
+      default: "explain",
+
     },
     radius: {
       default: 60
@@ -131,11 +132,14 @@ export default {
 .ProcessRing {
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .ProcessRing .ring-circle {
-  position: relative;
-  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform:translate(-50%,-50%);
 }
 
 .ProcessRing .ring-circle .Mask {
@@ -148,6 +152,6 @@ export default {
   line-height: 1;
 }
 .ProcessRing .ring-circle .Mask p {
-  font-size: 22px;
+  font-size: 21px;
 }
 </style>

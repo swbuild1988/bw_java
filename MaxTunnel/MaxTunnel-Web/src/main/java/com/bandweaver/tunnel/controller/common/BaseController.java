@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
-import org.quartz.SchedulerException;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.pojo.User;
-import com.bandweaver.tunnel.common.biz.vo.BaseVo;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;

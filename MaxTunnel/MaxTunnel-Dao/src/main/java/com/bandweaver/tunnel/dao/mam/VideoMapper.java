@@ -20,4 +20,6 @@ public interface VideoMapper {
     List<VideoDto> getAllVideoDtos();
 
     List<VideoDto> getVideoDtosByScene(@Param("sceneId") int sceneId);
+
+    List<VideoDto> getVideoDtosByExtendScene(@Param("extendSceneId") int extendSceneId);
 }

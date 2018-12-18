@@ -41,6 +41,8 @@ public interface MeasObjMapper {
 	 * @date 2018年5月30日
 	 */
 	List<MeasObjDto> getMeasObjByCondition(MeasObjVo vo);
+	
+	MeasObjDto getDtoById(Integer id);
 
 	/**
 	 * @Description: 根据经纬度高度查询
@@ -75,7 +77,7 @@ public interface MeasObjMapper {
 	 * @date 2018年6月8日
 	 */
 	List<MeasObj> getListByIds(List<Integer> ids);
-
+	
 	List<Integer> getIdsByTunnelId(Integer id);
 
 	List<MeasObj> getListBySectionIDAndObjectTypeID(@Param("sectionId")Integer sectionId, @Param("objectTypeId")Integer objectTypeId);

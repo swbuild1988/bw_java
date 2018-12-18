@@ -5,7 +5,7 @@
 
     <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI">
         INSERT INTO T_MAM_MEASOBJ_AI (ID, REFRESH_TIME, CV)
-        VALUES (#{id}, #{refreshTime}, #{CV})
+        VALUES (#{id}, #{refreshTime}, #{cv})
     </insert>
     
     <insert id="insertSelective"  parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI">
@@ -17,7 +17,7 @@
         	<if test="refreshTime != null">
         		REFRESH_TIME,
         	</if>
-        	<if test="CV != null">
+        	<if test="cv != null">
         		CV,
         	</if>
         </trim>
@@ -28,15 +28,15 @@
         	<if test="refreshTime != null">
         		#{refreshTime,jdbcType=TIMESTAMP},
         	</if>
-        	<if test="CV != null">
-        		#{CV,jdbcType=DECIMAL},
+        	<if test="cv != null">
+        		#{cv,jdbcType=DECIMAL},
         	</if>
         </trim>
     </insert>
 
     <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI">
         UPDATE T_MAM_MEASOBJ_AI
-        SET REFRESH_TIME = #{refreshTime}, CV = #{CV}
+        SET REFRESH_TIME = #{refreshTime}, CV = #{cv}
         WHERE id = #{id}
     </update>
 
@@ -70,7 +70,15 @@
         <result column="height" jdbcType="VARCHAR" property="height"/>
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
-        <result column="CV" jdbcType="VARCHAR" property="CV"/>
+        <result column="CV" jdbcType="VARCHAR" property="cv"/>
+    </resultMap>
+    
+    <resultMap id="dtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
+        <result column="CV" jdbcType="VARCHAR" property="cv"/>
+        <association property="obj" javaType="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto" column="id"
+        	select="com.bandweaver.tunnel.dao.mam.MeasObjMapper.getDtoById"/>
     </resultMap>
 
 	 <insert id="addBatch" useGeneratedKeys="false">
@@ -82,7 +90,7 @@
             select
             #{item.id},
             #{item.refreshTime},
-            #{item.CV}
+            #{item.cv}
             from dual
         </foreach>
         )a
@@ -91,5 +99,23 @@
     <delete id="deleteByPrimaryKey">
     	delete from T_MAM_MEASOBJ_AI where id = #{id}
     </delete>
+    
+    
+    <select id="dataGrid" resultMap="dtoResultMap">
+    	select * from T_MAM_MEASOBJ_AI
+    	<where>
+    		<if test="id != null">
+    			and id = #{id}
+    		</if>
+    		<if test="ids != null">
+    			and id in
+    			<foreach collection="ids" item="item" index="index" close=")"
+                 open="(" separator=",">
+                 #{item}
+             </foreach>
+    		</if>
+    	</where>
+    	order by refresh_time desc
+    </select>
 
 </mapper>

@@ -115,6 +115,18 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_OMM_EQUIPMENT_STATUS'; 
       end   if; 
+-- -- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OMM_EQUIPMENT_TYPE_SEQUENCE'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  OMM_EQUIPMENT_TYPE_SEQUENCE';   
+      end if;     
+-- -- prompt dropping trigger 
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OMM_EQUIPMENT_TYPE_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  OMM_EQUIPMENT_TYPE_TG';   
+      end if; 
 -- -- prompt Dropping 
       num := 0;
       select count(1) into num from user_tables where TABLE_NAME = 'T_OMM_EQUIPMENT_TYPE';
@@ -199,8 +211,187 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_OMM_INSPECTION_GROUP_USER'; 
       end   if; 
+-- 备品表spare
+-- -- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OMM_SPARE_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  OMM_SPARE_SQ';   
+      end if;     
+-- -- prompt dropping trigger 
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OMM_SPARE_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  OMM_SPARE_TG';   
+      end if; 
+-- -- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OMM_SPARE';
+      if   num=1   then 
+          execute immediate 'drop table T_OMM_SPARE'; 
+      end   if; 
+      
+-- -- prompt Dropping 备品出库表
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OMM_SPARE_OUT';
+      if   num=1   then 
+          execute immediate 'drop table T_OMM_SPARE_OUT'; 
+      end   if; 
+      
+-- 仪表工具表instrument
+-- -- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OMM_INSTRUMENT_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  OMM_INSTRUMENT_SQ';   
+      end if;     
+-- -- prompt dropping trigger 
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OMM_INSTRUMENT_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  OMM_INSTRUMENT_TG';   
+      end if; 
+-- -- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OMM_INSTRUMENT';
+      if   num=1   then 
+          execute immediate 'drop table T_OMM_INSTRUMENT'; 
+      end   if; 
+
+-- 仪表工具记录表T_OMM_INSTRUMENT_RECORD
+-- -- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OMM_INSTRUMENT_RECORD_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  OMM_INSTRUMENT_RECORD_SQ';   
+      end if;     
+-- -- prompt dropping trigger 
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OMM_INSTRUMENT_RECORD_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  OMM_INSTRUMENT_RECORD_TG';   
+      end if; 
+-- -- prompt Dropping
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OMM_INSTRUMENT_RECORD';
+      if   num=1   then 
+          execute immediate 'drop table T_OMM_INSTRUMENT_RECORD'; 
+      end   if; 
 end;
 /
+
+-- Create table T_OMM_INSTRUMENT 仪表工具表
+create table T_OMM_INSTRUMENT
+(
+  id                         NUMBER not null,
+  spare_id                   NUMBER,
+  name                       varchar2(30) not null,
+  model_id                  NUMBER not null,
+  type_id                 NUMBER not null,
+  VENDER_ID              NUMBER not null,
+  USE_STATUS              NUMBER NOT NULL,
+  status               NUMBER not null,
+  in_time                  DATE
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table T_OMM_INSTRUMENT add constraint OMM_INSTRUMENT_ID primary key (ID);
+  
+-- create
+create sequence OMM_INSTRUMENT_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER OMM_INSTRUMENT_TG
+  BEFORE INSERT ON T_OMM_INSTRUMENT
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_INSTRUMENT_SQ.nextval into :new.id from dual;
+end OMM_INSTRUMENT_TG;
+/
+alter trigger OMM_INSTRUMENT_TG enable;
+
+-- Create table T_OMM_INSTRUMENT_RECORD 仪表工具记录表
+create table T_OMM_INSTRUMENT_RECORD
+(
+  id                         NUMBER not null,
+  instrument_id              NUMBER not null,
+  staff_id                  NUMBER not null,
+  return_id                  NUMBER,
+  describe                VARCHAR2(200),
+  remark                VARCHAR2(200),
+  borrow_time                  DATE,
+  return_time                  DATE
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table T_OMM_INSTRUMENT_RECORD add constraint OMM_INSTRUMENT_RECORD_ID primary key (ID);
+  
+-- create
+create sequence OMM_INSTRUMENT_RECORD_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER OMM_INSTRUMENT_RECORD_TG
+  BEFORE INSERT ON T_OMM_INSTRUMENT_RECORD
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_INSTRUMENT_RECORD_SQ.nextval into :new.id from dual;
+end OMM_INSTRUMENT_RECORD_TG;
+/
+alter trigger OMM_INSTRUMENT_RECORD_TG enable;
+
+-- Create table T_OMM_SPARE 备品表
+create table T_OMM_SPARE
+(
+  id                         NUMBER not null,
+  name                       varchar2(30) not null,
+  model_id                  NUMBER not null,
+  type_id                 NUMBER not null,
+  vender_id                 NUMBER not null,
+  status                    NUMBER not null,
+  in_time                  DATE
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table T_OMM_SPARE add constraint OMM_SPARE_ID primary key (ID);
+  
+-- create
+create sequence OMM_SPARE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER OMM_SPARE_TG
+  BEFORE INSERT ON T_OMM_SPARE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_SPARE_SQ.nextval into :new.id from dual;
+end OMM_SPARE_TG;
+/
+alter trigger OMM_SPARE_TG enable;
+
+-- Create table T_OMM_SPARE_OUT 备品出库表
+create table T_OMM_SPARE_OUT
+(
+  id                         NUMBER not null,
+  staff_id                  NUMBER not null,
+  user_id                 NUMBER not null,
+  whither                 NUMBER,
+  describe                VARCHAR2(100),
+  out_time                  DATE
+);
 
 -- Create table T_OMM_DEFECT 
 create table T_OMM_DEFECT
@@ -335,6 +526,25 @@ create table T_OMM_EQUIPMENT_TYPE
   name VARCHAR2(30) not null
 );
 alter table T_OMM_EQUIPMENT_TYPE add constraint OMM_EQUIPMENT_TYPE_ID primary key (ID);
+
+-- create
+create sequence OMM_EQUIPMENT_TYPE_SEQUENCE
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER OMM_EQUIPMENT_TYPE_TG
+  BEFORE INSERT ON T_OMM_EQUIPMENT_TYPE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_EQUIPMENT_TYPE_SEQUENCE.nextval into :new.id from dual;
+end OMM_EQUIPMENT_TYPE_TG;
+/
+alter trigger OMM_EQUIPMENT_TYPE_TG enable;
   
 -- prompt Creeate T_OMM_INSPECTION_PLAN        
 create table T_OMM_INSPECTION_PLAN
@@ -513,6 +723,7 @@ end OMM_EQUIPMENT_VENDER_TG;
 --create table T_OMM_EQUIPMENT_MODEL 表：设备型号
 CREATE TABLE T_OMM_EQUIPMENT_MODEL  (
    "ID"                 NUMBER                          NOT NULL,
+   type_id              NUMBER                          NOT NULL,
    "NAME"               VARCHAR2(50 CHAR)               NOT NULL,
    "CRT_TIME"           DATE,
    CONSTRAINT PK_T_OMM_EQUIPMENT_MODEL PRIMARY KEY ("ID")

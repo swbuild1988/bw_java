@@ -113,18 +113,50 @@ export default {
             // 对上述数据进行转换
             // 使数据对柱状图有效
 
-            _this.axios.get(requestUrl).then(result => {
-                let { code, data } = result.data;
-                if (code == 200) {
-                    _this.option.xAxis[0].data = this.getDataX(data);
+            if(requestUrl=='getToolStatic'){
+                var data = [
+                    { key: '温度计', val: [{ key: '正常', val: 152 },{ key: '损坏', val: 25 }] },
+                    { key: '万能表', val: [{ key: '正常', val: 96 },{ key: '损坏', val: 52 }] },
+                    { key: '门禁卡', val: [{ key: '正常', val: 45 },{ key: '损坏', val: 5 }] },
+                    { key: '信号发射器', val: [{ key: '正常', val: 25 },{ key: '损坏', val: 85 }]}
+                ]
+                 _this.option.xAxis[0].data = this.getDataX(data);
                     _this.option.series = [];
                     let tmp_series = this.getSeries(data);
                     tmp_series.forEach(element => {
                         _this.option.series.push(element);
                     });
                     _this.myChart.setOption(_this.option);
-                }
-            });
+            }
+
+            else if(requestUrl=='spares/outs/type'){
+                var data = [
+                    { key: '温度计', val: [{ key: '正常', val: 152 },{ key: '损坏', val: 25 }] },
+                    { key: '万能表', val: [{ key: '正常', val: 96 },{ key: '损坏', val: 52 }] },
+                    { key: '门禁卡', val: [{ key: '正常', val: 45 },{ key: '损坏', val: 5 }] },
+                    { key: '信号发射器', val: [{ key: '正常', val: 25 },{ key: '损坏', val: 85 }]}
+                ]
+                 _this.option.xAxis[0].data = this.getDataX(data);
+                    _this.option.series = [];
+                    let tmp_series = this.getSeries(data);
+                    tmp_series.forEach(element => {
+                        _this.option.series.push(element);
+                    });
+                    _this.myChart.setOption(_this.option);
+            }
+
+            // _this.axios.get(requestUrl).then(result => {
+            //     let { code, data } = result.data;
+            //     if (code == 200) {
+            //         _this.option.xAxis[0].data = this.getDataX(data);
+            //         _this.option.series = [];
+            //         let tmp_series = this.getSeries(data);
+            //         tmp_series.forEach(element => {
+            //             _this.option.series.push(element);
+            //         });
+            //         _this.myChart.setOption(_this.option);
+            //     }
+            // });
         },
         getDataX(data) {
             let xData = [];
@@ -141,6 +173,7 @@ export default {
                         let tmp_series = {
                             name: data[i].val[j].key,
                             type: "bar",
+                            barWidth: 20,
                             data: []
                         };
                         series.push(tmp_series);

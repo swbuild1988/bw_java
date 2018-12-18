@@ -97,4 +97,26 @@ public interface OnvifService {
      */
     void gotoPreset(int id, String presetName);
 
+	/**添加相机源
+	 * @param user
+	 * @param password
+	 * @param ip
+	 * @param id
+	 * @param url
+	 * @return   
+	 * @author shaosen
+	 * @throws Exception 
+	 * @Date 2018年12月4日
+	 */
+	boolean addSrc(String user, String password, String ip, String id, String url) throws Exception;
+
+	/**删除相机源 
+	 * @param id
+	 * @return   
+	 * @author shaosen
+	 * @throws Exception 
+	 * @Date 2018年12月4日
+	 */
+	boolean delSrc(String id) throws Exception;
+
 }

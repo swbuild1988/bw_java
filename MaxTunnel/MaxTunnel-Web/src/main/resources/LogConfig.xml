@@ -11,6 +11,8 @@
 	<LogOperationCategory cid="001" cname="安全管理">
 		<Operation oid="00101" oname="登录账号" desc="用户[{0}]登录,IP[{1}]"/>
 		<Operation oid="00102" oname="退出账号" desc="用户退出,IP[{1}]"/>
+		<Operation oid="00103" oname="修改密码" desc="修改密码,账号信息{2}"/>
+		<Operation oid="00104" oname="重置密码" desc="重置密码,账号ID={2}"/>
 	</LogOperationCategory>
 	<LogOperationCategory cid="002" cname="用户管理">
 		<Operation oid="00201" oname="用户" desc="查询用户"></Operation>

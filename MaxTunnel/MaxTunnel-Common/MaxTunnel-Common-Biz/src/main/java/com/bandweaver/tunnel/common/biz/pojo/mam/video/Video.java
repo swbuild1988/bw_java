@@ -14,6 +14,7 @@ public class Video extends MeasObj {
 
     private Integer serverId;
     private Integer videoSceneId;
+    private Integer videoExtendSceneId;
     private int channelNo;
 
     public Integer getServerId() {
@@ -32,6 +33,14 @@ public class Video extends MeasObj {
         this.videoSceneId = videoSceneId;
     }
 
+    public Integer getVideoExtendSceneId() {
+        return videoExtendSceneId;
+    }
+
+    public void setVideoExtendSceneId(Integer videoExtendSceneId) {
+        this.videoExtendSceneId = videoExtendSceneId;
+    }
+
     public int getChannelNo() {
         return channelNo;
     }
@@ -45,6 +54,7 @@ public class Video extends MeasObj {
         return "Video{" +
                 "serverId=" + serverId +
                 ", videoSceneId=" + videoSceneId +
+                ", videoExtendSceneId=" + videoExtendSceneId +
                 ", channelNo=" + channelNo +
                 "} " + super.toString();
     }

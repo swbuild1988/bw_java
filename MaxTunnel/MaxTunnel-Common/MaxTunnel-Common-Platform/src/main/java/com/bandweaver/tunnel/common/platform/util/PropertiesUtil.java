@@ -2,11 +2,11 @@ package com.bandweaver.tunnel.common.platform.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.Set;
 
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 
 public class PropertiesUtil {
@@ -18,11 +18,12 @@ public class PropertiesUtil {
 		try {
 			prop = new Properties();
 			InputStream is = PropertiesUtil.class.getClassLoader().getResourceAsStream("properties/config.properties");
-			prop.load(is);
+			InputStreamReader isr = new InputStreamReader(is, "UTF-8");//解析中文
+			prop.load(isr);
 			//关闭流
 			is.close();
 		} catch (IOException e) {
-			throw new BandWeaverException(StatusCodeEnum.IO_EXP,e);
+//			throw new BandWeaverException(StatusCodeEnum.IO_EXP,e);
 		}
 	}
 	

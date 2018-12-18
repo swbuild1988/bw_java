@@ -1,24 +1,19 @@
 <template>
     <div>
-        <Modal v-model="show.state" title="新增流程节点">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
-                <FormItem label="监测对象名称" prop="name">
+        <Modal v-model="show.state" title="新增流程节点" width=600>
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
+                <FormItem label="监测对象名称：" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入监测对象名称" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="监测对象ID" :prop="isDisabled ? '' : 'id'">
+                <FormItem label="监测对象ID：" :prop="isDisabled ? '' : 'id'">
                     <Input v-model="formValidate.id" placeholder="请输入监测对象ID" class="InputWidth" :disabled="isDisabled" @on-blur="check"/>
                 </FormItem>
-                <FormItem label="数据类型" prop="datatype">
-                    <Select v-model="formValidate.datatypeId" placeholder="请选择数据类型" class="InputWidth" @on-change="getObjTypeList">
-                        <Option v-for="item in lists.datatypes" :value="item.val" :key="item.val">{{item.key}}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="监测对象类型" prop="objtype">
+                <FormItem label="监测对象类型：" prop="objtype">
                     <Select v-model="formValidate.objtypeId" placeholder="请选择监测对象类型" class="InputWidth">
                         <Option v-for="item in lists.objtypes" :value="item.val" :key="item.val">{{item.key}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="管廊位置">
+                <FormItem label="管廊位置：">
                     <Row class="InputWidth">
                         <Col span="8">
                             <Select v-model="formValidate.tunnelId" placeholder="请选择管廊" @on-change="clearStoreAndArea">
@@ -37,22 +32,22 @@
                         </Col>
                     </Row>
                 </FormItem>
-                <FormItem label="经度">
+                <FormItem label="经度：">
                     <Input v-model="formValidate.longitude" placeholder="请输入经度" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="纬度">
+                <FormItem label="纬度：">
                     <Input v-model="formValidate.latitude" placeholder="请输入纬度" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="高度" prop="height">
+                <FormItem label="高度：" prop="height">
                     <Input v-model="formValidate.height" placeholder="请输入高度" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="偏移量" prop="deviation">
+                <FormItem label="偏移量：" prop="deviation">
                     <Input v-model="formValidate.deviation" placeholder="请输入偏移量" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="描述" prop="description">
-                    <Input v-model="formValidate.description" placeholder="请输入新应急结束" class="InputWidth"/>
+                <FormItem label="描述：" prop="description">
+                    <Input type="textarea" v-model="formValidate.description" placeholder="请输入新应急结束" class="InputWidth"/>
                 </FormItem> 
-                <FormItem label="激活">
+                <FormItem label="激活：">
                     <Select v-model="formValidate.actived" placeholder="请选择是否激活" class="InputWidth">
                         <Option v-for="item in isActived" :value="item.val" :key="item.key">{{item.key}}</Option>
                     </Select>
@@ -68,6 +63,7 @@
 <script>
 import { EnumsService } from '../../../services/enumsService'
 import { TunnelService } from '../../../services/tunnelService'
+import { MeasObjServer } from '../../../services/MeasObjectSerivers'
 export default {
     name: 'meas-obj-module',
     data(){
@@ -102,7 +98,6 @@ export default {
                 ]
             },
             lists: {
-                datatypes: [],
                 objtypes: [],
                 tunnels: [],
                 areas: [],
@@ -140,13 +135,12 @@ export default {
                         if(item === info){
                             this.formValidate[info] = this.editInfo[item]
                         }
-
                     }
                 }
+                this.idChecked = true
                 if(this.formValidate.tunnelId){
                     this.tunnelChanged()
                 }
-                this.getObjTypeList()
                 this.isDisabled = !this.isDisabled
             } 
         }
@@ -157,9 +151,9 @@ export default {
     methods:{
         init(){      
             let _this = this
-            EnumsService.getDataType().then(
+            EnumsService.getObjType().then(
                 result=>{
-                    _this.lists.datatypes = result
+                    _this.lists.objtypes = result
                 },
                 error=>{
                     _this.Log.info(error)
@@ -218,13 +212,6 @@ export default {
             for(let item in this.formValidate){
                 this.formValidate[item] = null
             }
-        },
-        getObjTypeList() {
-            let list = this.lists.datatypes.find(datatype=>{
-                return datatype.val == this.formValidate.datatypeId 
-            })
-            if(list)
-                this.lists.objtypes = list.list
         },
         check(){
             let _this = this

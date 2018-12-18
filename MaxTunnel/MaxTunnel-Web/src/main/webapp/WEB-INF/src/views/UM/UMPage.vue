@@ -16,13 +16,11 @@
 <template>
   <div class="layout">
     <u-m-top></u-m-top>
-
-    <div :style="{marginTop:'65px',}">
+    <div :style="{marginTop:'9vh'}">
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
     </div>
-
   </div>
 </template>
 

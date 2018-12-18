@@ -1,50 +1,80 @@
 <template>
-    <Row style="padding: 5px;">
+    <Row>
+        <Col span="24">
+            <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
+                <Col span="6">
+                    <span>仪表工具名称</span><span>：</span>
+                    <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
+                </Col>
+                <Col span="6">
+                    仪表工具类型：
+                    <Select v-model="toolConditions.typeId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </Col>
+                <Col span="6">
+                    <span>仪表工具型号</span><span>：</span>
+                    <Select v-model="toolConditions.modelId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="6">
+                    <span class="word43">借用人</span><span>：</span>
+                    <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
+                </Col>
+                <Col span="6">
+                    <span>借用开始时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="6">
+                    <span>借用结束时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="6">
+                    <span class="word63">归还人</span><span>：</span>
+                    <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
+                </Col>
+                <Col span="6">
+                    <span>使用状态</span><span>：</span>
+                    <Select v-model="toolConditions.useStatus" style="width: 60%">
+                        <Option value=null key="2">所有</Option>
+                        <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
+                    </Select>
+                </Col>
+                <Col span="6">
+                    <span>归还开始时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.retStartTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="6">
+                    <span>归还结束时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="6" offset="6" style="text-align: right;width: 18%">
+                    <Button type="primary" size="small" @click="showTable()">确定</Button>
+                </Col>
+            </Row>
+            <div class="list">
+                <Table stripe border height="345" :columns="toolColums"  :data="toolData"></Table>
+            </div>
+            <div class="pageContainer">
+                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+            </div>
+        </Col>
         <Col span="12" class="chartBox">
             <MultiBarChart v-bind="toolStatic"></MultiBarChart>
         </Col>
         <Col span="12" class="chartBox" style="margin-left: 5px;">
             <MulitBarPosiNega v-bind="inventory"></MulitBarPosiNega>
         </Col>
-        <Col span="24">
-            <Row class="queryCondition">
-                <Col span="8">
-                    <span>仪表工具名称</span><span>：</span>
-                    <Input type="text" v-model="toolConditions.toolName" style="width: 45%"></Input>
-                </Col>
-                <Col span="8">
-                    <span class="word43">借用人</span><span>：</span>
-                    <Input type="text" v-model="toolConditions.takingPerson" style="width: 45%"></Input>
-                </Col>
-                <Col span="8">
-                    <span>操作员：</span>
-                    <Input type="text" v-model="toolConditions.operation" style="width: 45%"></Input>
-                </Col>
-                <Col span="8">
-                    <span class="word64">开始时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 45%"></DatePicker>
-                </Col>
-                <Col span="8">
-                    <span>结束时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 45%"></DatePicker>
-                </Col>
-                <Col span="8" style="text-align: right;width: 18%">
-                    <Button type="primary" size="small">确定</Button>
-                </Col>
-            </Row>
-            <div class="list">
-                <Table stripe border  :columns="toolColums"  :data="toolData"></Table>
-            </div>
-            <div class="pageContainer">
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                show-elevator @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
-            </div>
-        </Col>
     </Row>    
 </template>
 <script>
 import MultiBarChart from '../../../../components/Common/Chart/MultiBarChart.vue'
 import MulitBarPosiNega from '../../../../components/Common/Chart/MulitBarPosiNega.vue'
+import { EquipmentService } from "../../../../services/equipmentService"
 export default {
     data(){
         return{
@@ -56,33 +86,116 @@ export default {
                 },
                 {
                     title: '仪表工具名称',
-                    key: 'toolName',
+                    key: 'name',
                     align: 'center'
                 },
                 {
-                    title: '借出时间',
-                    key: 'takingTime',
+                    title: '仪表工具类型',
+                    key: 'typeName',
+                    align: 'center'
+                },
+                {
+                    title: '仪表工具型号',
+                    key: 'modelName',
+                    align: 'center'
+                },{
+                    title: '仪表工具使用状态',
+                    key: 'useStatusName',
+                    align: 'center'
+                },
+                {
+                    title: '入库时间',
+                    key: 'inTime',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.inTime!=null){
+                            temp = new Date(param.row.inTime).format("yyyy-MM-dd hh:mm:s")
+                        }
+                        return h('div',temp)
+                    }
+                },
+                {
+                    title: '供应商',
+                    key: 'venderName',
                     align: 'center'
                 },
                 {
                     title: '借用人',
-                    key: 'takingPerson',
-                    align: 'center'
+                    key: 'staffName',
+                    align: 'center',
                 },
                 {
-                    title: '借用数量',
-                    key: 'takingNum',
-                    align: 'center'
+                    title: '借出时间',
+                    key: 'borrowTime',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.borrowTime!=null){
+                            temp = new Date(param.row.borrowTime).format("yyyy-MM-dd hh:mm:s")
+                        }
+                        return h('div',temp)
+                    }
+                },
+                { 
+                    title: '借用时备注',
+                    key: 'describe',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.describe!=null){
+                            if(param.row.describe.length>10){
+                                temp = param.row.describe.substr(0,7)+'...'
+                            }else{
+                                temp = param.row.describe
+                            }
+                        }
+                        return h('div',temp)
+                    }
                 },
                 {
-                    title: '预计归还时间',
-                    key: 'expectReturnTime',
-                    align: 'center'
+                    title: '归还人',
+                    key: 'returnName',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.returnName==null){
+                            temp = '暂未归还'
+                        }else{
+                            temp = param.row.returnName
+                        }
+                        return h('div',temp)
+                    }
                 },
                 {
-                    title: '操作员',
-                    key: 'operation',
-                    align: 'center'
+                    title: '归还时间',
+                    key: 'returnTime',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.retStartTime==null){
+                            temp = '暂未归还'
+                        }else{
+                            temp = new Date(param.row.borrowTime).format("yyyy-MM-dd hh:mm:s")
+                        }
+                        return h('div',temp)
+                    }
+                },
+                {
+                    title: '归还时备注',
+                    key: 'remark',
+                    align: 'center',
+                    render: (h,param) => {
+                        let temp = ''
+                        if(param.row.remark!=null){
+                            if(param.row.remark.length>10){
+                                temp = param.row.remark.substr(0,7)+'...'
+                            }else{
+                                temp = param.row.remark
+                            }
+                        }
+                        return h('div',temp)
+                    }
                 }
             ],
             toolData: [
@@ -93,26 +206,38 @@ export default {
                 { id: 5, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' }
             ],
             page:{
-                pageSize: 3,
-                pageTotal: 100,
+                pageSize: 6,
+                pageTotal: 0,
                 pageNum: 1
             },
+            //仪表工具使用状态
+            usingStatus: [
+                { key: 0, val: '损坏' },
+                { key: 1, val: '正常' }
+            ],
             toolConditions:{
-                toolName: null,
-                takingPerson: null,
-                operation: null,
+                name: null,
+                typeId: null,
+                modelId: null,
+                staffId: null,
                 startTime: null,
-                endTime: null
+                endTime: null,
+                returnId: null,
+                useStatus: null,
+                retStartTime: null,
+                retEndTime: null
             },
             toolStatic: {
                 id: 'toolStaticId',
                 requestUrl: 'getToolStatic',
                 parameters: {
                     option: {
+                        backgroundColor: '#E8E8FF',
+                        color: ['#006699', '#e5323e'],
                         title: {
                             text: "仪表工具状态",
                             textStyle: {
-                                color: "#1affc9"
+                                color: "#161139"
                             }
                         }
                     },
@@ -120,33 +245,121 @@ export default {
             },
             inventory: {
                 id: 'inventoryId',
-                requestUrl: 'getInventory',
-                titleText: '仪表工具库存状态',
-                legendData: ['借出','在库']
-            }
+                requestUrl: 'spares/outs/typelala',
+                parameters: {
+                    option: {
+                        backgroundColor: '#FBFBEA',
+                        title: {
+                            text: '仪表工具库存状态',
+                            textStyle: {
+                                color: '#161139'
+                            }
+                        },
+                        legend: {
+                            data: ['借出','在库'],
+                            textStyle: {
+                                color: '#161139'
+                            }
+                        },
+                    },
+                    timer: {
+                        interval: 5000
+                    }
+                }
+            },
+            toolsType: [],
+            toolsModel: [],
+            venders: [],
+            staffs: []
         }
     },
     components: {
         MultiBarChart,
         MulitBarPosiNega
     },
+    computed:{
+        hisParams(){
+            let param = {
+                name: this.toolConditions.name,
+                typeId: this.toolConditions.typeId,
+                modelId: this.toolConditions.modelId,
+                venderId: this.toolConditions.venderId,
+                useStatus: this.toolConditions.usingStatusId,
+                startTime: this.toolConditions.startTime,
+                endTime: this.toolConditions.endTime,
+                returnId: this.toolConditions.returnId,
+                retStartTime: this.toolConditions.retStartTime,
+                retEndTime: this.toolConditions.retEndTime,
+                pageSize: this.page.pageSize,
+                pageNum: this.page.pageNum
+            }
+            return Object.assign({}, param);
+        },
+    },
+    mounted(){
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.toolsType = res
+            },
+            error => {
+                this.Log.info(error);
+            },
+        );
+        //获取model
+        EquipmentService.getEquipmentModels().then(
+            res=>{
+                this.toolsModel = res
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
+        //获取供应商
+        EquipmentService.getVenders().then(
+            res=>{
+                this.venders = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
+        //获取借用人列表
+        this.axios.get('staffs').then(res=>{
+            let{ code,data } = res.data
+            if(code==200){
+                this.staffs = data
+            }
+        })
+        this.showTable()
+    },
     methods:{
+        showTable(){
+            EquipmentService.queryHisRecord(this.hisParams).then(
+                result => {
+                    this.toolData = result.pagedList
+                    this.page.pageTotal = result.total
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
         handlePage(value) {
             this.page.pageNum = value;
+            this.showTable()
         },
         handlePageSize(value) {
             this.page.pageSize = value;
+            this.showTable()
         },
     }
 }
 </script>
 <style scoped>
 .pageContainer{
-    /* margin-top: 10px;
-    text-align: right; */
-    position: fixed;
-    bottom: 55px;
-    right: 10px;
+    margin-top: 5px;
+    text-align: right;
 }
 .word64{
     letter-spacing: 0.667em;
@@ -156,10 +369,13 @@ export default {
     letter-spacing: 0.5em;
     margin-right: -0.5em;
 }
+.word63{
+    letter-spacing: 1.5em;
+    margin-right: -1.5em;
+}
 .chartBox{
     width: 49.5%;
     height: 30vh;
-    background: #fff;
     margin: 5px 5px 5px 0px;
 }
 </style>

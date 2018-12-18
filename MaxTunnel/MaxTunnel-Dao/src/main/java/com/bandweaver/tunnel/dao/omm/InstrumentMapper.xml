@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InstrumentMapper">
+    <cache/>
+    
+    <insert id="addBatch" useGeneratedKeys="false">
+		insert into t_omm_instrument
+		(name,model_id,type_id,vender_id,use_status,status,in_time)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.name},
+			#{item.modelId},
+			#{item.typeId},
+			#{item.venderId},
+			#{item.useStatus},
+			#{item.status},
+			#{item.inTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+	
+	<insert id="addBatchBySpare" useGeneratedKeys="false">
+		insert into t_omm_instrument
+		(spare_id,name,model_id,type_id,vender_id,use_status,status,in_time)
+		select a.* from (
+		<foreach collection="list" item="item" index="index" close=")"
+			open="(" separator="union">
+			select
+			#{item.spareId},
+			#{item.name},
+			#{item.modelId},
+			#{item.typeId},
+			#{item.venderId},
+			#{item.useStatus},
+			#{item.status},
+			#{item.inTime}
+			from dual
+		</foreach>
+		)a
+	</insert>
+
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Instrument">
+        UPDATE t_omm_instrument
+        <set>
+        	<if test="spareId != null">
+                spare_id = #{spareId},
+            </if>
+        	<if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="modelId != null">
+                model_id = #{modelId},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="venderId != null">
+                vender_id = #{venderId},
+            </if>
+            <if test="useStatus != null">
+                use_status = #{useStatus},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="inTime != null">
+                in_time = #{inTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+	<update id="updateStatus">
+		update t_omm_instrument
+        set status = #{status}
+		where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</update>
+	
+	<update id="updateStatusAndUseStatus">
+		update t_omm_instrument
+        set status = #{in.status},
+        	use_status = #{in.useStatus}
+		where id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+	</update>
+
+    <select id="getInstrumentDtoByCondition" resultMap="instrumentDtoMap">
+        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_instrument a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        <where>
+        	<if test="isSpare == true">
+                and a.spare_id is not null
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and instr(a.name,#{name})>0
+            </if>
+            <if test="modelId != null">
+                and a.model_id = #{modelId}
+            </if>
+            <if test="typeId != null">
+                and a.type_id = #{typeId}
+            </if>
+            <if test="venderId != null">
+                and a.vender_id = #{venderId}
+            </if>
+            <if test="useStatus != null">
+                and a.use_status = #{useStatus}
+            </if>
+            <if test="status != null">
+                and a.status = #{status}
+            </if>
+            <if test="startTime != null">
+                and a.in_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.in_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
+
+	<select id="getInstrumentDtoById" resultMap="instrumentDtoMap">
+		select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
+        from t_omm_instrument a
+        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
+        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
+        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
+        where a.id = #{id}
+	</select>
+	
+	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
+		select a.*,b.name
+	    from (select count(1) as count,type_id as id 
+	      from t_omm_instrument
+	      where status = 1
+	      group by type_id) a
+	    left join t_Omm_Equipment_Type b on a.id = b.id
+	    order by a.count desc
+	</select>
+	
+    <resultMap id="instrumentDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InstrumentDto">
+        <id column="id" property="id"/>
+        <result column="spare_id" property="spareId"/>
+        <result column="name" property="name"/>
+        <result column="model_id" property="modelId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="vender_id" property="venderId"/>
+        <result column="use_status" property="useStatus"/>
+        <result column="status" property="status"/>
+        <result column="model_name" property="modelName"/>
+        <result column="type_name" property="typeName"/>
+        <result column="vender_name" property="venderName"/>
+        <result column="in_time" property="inTime"/>
+    </resultMap>
+    
+    <delete id="deleteByIds">
+    	delete from t_omm_instrument 
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

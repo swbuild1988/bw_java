@@ -29,7 +29,7 @@ import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
-import com.bandweaver.tunnel.common.biz.itf.mam.maxview.MaxviewConfigService;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -59,7 +59,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 	@Autowired
 	private MqService mqService;
 	@Autowired
-	private MaxviewConfigService maxviewConfigService;
+	private SubSystemService subSystemService;
 
 	@Override
 	public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
@@ -73,7 +73,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
 		LogUtil.info("Get variables:" + variables);
 		Integer sectionId = DataTypeUtil.toInteger(variables.get("sectionId"));
-//		Integer objectId = DataTypeUtil.toInteger(variables.get("objectId"));
+		Integer objectId = DataTypeUtil.toInteger(variables.get("objectId"));
 
 		EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
 		LogUtil.info("Get emPlan from DB:" + emPlan);
@@ -101,7 +101,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		}else if (ActionEnum.SWITCH == actionEnum) {
 			Integer inputValue = DataTypeUtil.toInteger(emPlan.getActionValue());
 			for (MeasObj measObj : list) {
-				boolean flag = maxviewConfigService.doAction(measObj.getId(), inputValue);
+				boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
 				LogUtil.info("监测对象【" + measObj.getName() + "】执行【 " + SwitchEnum.getEnum(inputValue).getName() + " 】结果【"+ flag +"】");
 			}
 		}
@@ -121,7 +121,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 			
 			if(emPlan == null) {
 				isFinished = true;
-			}else if(emPlan != null && emPlan.getFinishKey() == 3){
+			}else if(emPlan != null && emPlan.getFinishKey() == FinishEnum.MANUAL.getValue()){
 				isFinished = true;
 			}else {
 				isFinished = emPlan.getIsFinished();
@@ -135,7 +135,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 				activitiService.completeTaskByProcessIntance(processInstanceId);
 				continue;
 			}else if (FinishEnum.MANUAL == finishEnum) {
-				LogUtil.info("手动结束,需要确认,processInstanceId :" + processInstanceId);
+				LogUtil.info("手动结束,需要确认");
 				sendMsg(emPlan, processInstanceId,objectId);
 				continue;
 			}
@@ -155,7 +155,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 		for (HistoricTaskInstance historicTaskInstance : list) {
 			JSONObject json = new JSONObject();
 			json.put("node", historicTaskInstance.getName());
-//			json.put("status", historicTaskInstance.getEndTime() == null ? "进行中" : "完成");
 			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
 			json.put("time", DateUtil.getCurrentDate());
 			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
@@ -168,10 +167,10 @@ public class EmPlanServiceImpl implements EmPlanService {
 		JSONObject json = new JSONObject();
 		json.put("processName", processTypeEnum.getName());
 		json.put("processKey", emPlan.getProcessKey());
-		json.put("process", result);
 		json.put("processInstanceId", processInstanceId);
-		json.put("objectId", objectId);
 		json.put("range", processTypeEnum.getRange());
+		json.put("process", result);
+		json.put("objectId", objectId);
 		json.put("nodeList", getNodeListByProcessKey(emPlan.getProcessKey()));
 		
 		mqService.send2PlanQueue((String)PropertiesUtil.getValue(processTypeEnum.getQueue()),json.toString());

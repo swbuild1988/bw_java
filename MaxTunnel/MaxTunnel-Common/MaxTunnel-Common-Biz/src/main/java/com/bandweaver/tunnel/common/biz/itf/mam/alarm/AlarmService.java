@@ -3,7 +3,6 @@ package com.bandweaver.tunnel.common.biz.itf.mam.alarm;
 import java.util.Date;
 import java.util.List;
 
-import com.bandweaver.tunnel.common.biz.dto.mam.CountResult;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
@@ -48,13 +47,15 @@ public interface AlarmService {
 
 	void cleanAlarm(Alarm alarm);
 
-	List<CountResult> getObjCountByTimeOrderByDesc(Date startTime, Date endTime);
-
 	List<AlarmDto> getByCondition(AlarmVo vo);
 
 	int getCountByObjectIds(List<Integer> objectIdList, Date startTime, Date endTime);
 
 	List<AlarmDto> startPage(int start, int end, List<Integer> objectIdList,Date startTime, Date endTime);
+
+	int getCountByLevel(int level);
+
+	void cleanAlarmBatch(AlarmVo vo);
 
 
 }

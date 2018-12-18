@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.common.biz.vo.mam.alarm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
@@ -16,6 +17,8 @@ public class AlarmVo extends BaseVo{
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	
+	private List<Integer> ids;
 
     private Date alarmDate;
     
@@ -26,6 +29,8 @@ public class AlarmVo extends BaseVo{
     private Integer tunnelId;
 
     private Integer objectId;
+    
+    private List<Integer> objectIds;
     
     private String objectName;
     
@@ -49,7 +54,15 @@ public class AlarmVo extends BaseVo{
         this.id = id;
     }
 
-    public String getAlarmName() {
+    public List<Integer> getIds() {
+		return ids;
+	}
+
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
+	}
+
+	public String getAlarmName() {
 		return alarmName;
 	}
 
@@ -89,7 +102,16 @@ public class AlarmVo extends BaseVo{
         this.objectId = objectId;
     }
 
-    public String getObjectName() {
+    
+    public List<Integer> getObjectIds() {
+		return objectIds;
+	}
+
+	public void setObjectIds(List<Integer> objectIds) {
+		this.objectIds = objectIds;
+	}
+
+	public String getObjectName() {
 		return objectName;
 	}
 

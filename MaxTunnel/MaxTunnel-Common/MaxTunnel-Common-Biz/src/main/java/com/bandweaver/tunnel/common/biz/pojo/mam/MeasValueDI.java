@@ -10,7 +10,7 @@ public class MeasValueDI implements Serializable{
 	private static final long serialVersionUID = -799260672947924884L;
 	private Date time;
     private Integer objectId;
-    private boolean CV;
+    private boolean cv;
 
     public Date getTime() {
         return time;
@@ -28,20 +28,16 @@ public class MeasValueDI implements Serializable{
         this.objectId = objectId;
     }
 
-    public boolean getCV() {
-        return CV;
+    public boolean getCv() {
+        return cv;
     }
 
-    public void setCV(boolean CV) {
-        this.CV = CV;
+    public void setCv(boolean CV) {
+        this.cv = CV;
     }
 
     @Override
-    public String toString() {
-        return "MeasValueDI{" +
-                "time=" + time +
-                ", objectId=" + objectId +
-                ", CV=" + CV +
-                '}';
-    }
+	public String toString() {
+		return "MeasValueDI [time=" + time + ", objectId=" + objectId + ", cv=" + cv + "]";
+	}
 }

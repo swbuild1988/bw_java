@@ -10,7 +10,7 @@
 		parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI">
 		INSERT INTO T_MAM_MEASVALUE_DI
 		(time, object_id, cv)
-		VALUES (#{time}, #{objectId}, #{CV})
+		VALUES (#{time}, #{objectId}, #{cv})
 	</insert>
 
 	<select id="getListByObjectIdAndTime" resultMap="measValueDIMap">
@@ -32,7 +32,7 @@
 		type="com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI">
 		<result column="time" property="time" />
 		<result column="object_id" property="objectId" />
-		<result column="cv" property="CV" />
+		<result column="cv" property="cv" />
 	</resultMap>
 
 	<insert id="addMeasValueDIBatch" useGeneratedKeys="false">
@@ -42,7 +42,7 @@
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
 			select
-			#{item.time}, #{item.objectId}, #{item.CV}
+			#{item.time}, #{item.objectId}, #{item.cv}
 			from dual
 		</foreach>
 		)a
@@ -55,4 +55,23 @@
 	<delete id="deleteBatch">
 		delete from T_MAM_MEASVALUE_DI where time &lt;= #{time}
 	</delete>
-</mapper>
+	
+	<select id="getCountByCondition" resultType="Int">
+		select count(1) from T_MAM_MEASVALUE_DI
+		<where>
+			<if test="objectId != null">
+				and object_id = #{objectId}
+			</if>
+			<if test="startTime != null">
+				and time &gt; = #{startTime}
+			</if>
+			<if test="endTime != null">
+				and time &lt; = #{endTime}
+			</if>
+			<if test="cv != null">
+				and cv = #{cv}
+			</if>
+		</where>
+	
+	</select>
+</mapper>	
