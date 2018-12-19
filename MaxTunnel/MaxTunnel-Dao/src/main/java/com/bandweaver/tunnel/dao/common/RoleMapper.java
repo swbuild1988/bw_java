@@ -1,5 +1,9 @@
 package com.bandweaver.tunnel.dao.common;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 
 public interface RoleMapper {
@@ -14,4 +18,6 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+	void addRolePermissions(@Param("roleId")Integer roleId, @Param("permissionIds")List<Integer> permissionIds);
 }

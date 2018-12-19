@@ -70,4 +70,12 @@
   </update>
  
   
+   <insert id="addRolePermissions">
+        insert into t_security_role_permission (r_id, p_id)
+        values
+        <foreach collection="permissionIds" item="item" index="index" separator=",">
+            (#{roleId}, #{item})
+        </foreach>
+    </insert>
+  
 </mapper>

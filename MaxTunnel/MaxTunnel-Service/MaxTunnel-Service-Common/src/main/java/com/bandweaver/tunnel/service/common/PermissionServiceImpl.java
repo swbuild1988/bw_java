@@ -2,9 +2,11 @@ package com.bandweaver.tunnel.service.common;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.ls.LSInput;
 
 import com.bandweaver.tunnel.common.biz.itf.common.PermissionService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
@@ -50,6 +52,16 @@ public class PermissionServiceImpl implements PermissionService {
 	public List<Permission> getByCondition(PermissionVo vo) {
 		List<Permission> list = permissionMapper.getByCondition(vo);
 		return list == null ? Collections.emptyList() : list;
+	}
+
+	@Override
+	public Set<String> getAllMenuName() {
+		return permissionMapper.getAllMenuName();
+	}
+
+	@Override
+	public List<Permission> getPermissionsByMenu(String menuName) {
+		return permissionMapper.getPermissionsByMenu(menuName);
 	}
 
 }

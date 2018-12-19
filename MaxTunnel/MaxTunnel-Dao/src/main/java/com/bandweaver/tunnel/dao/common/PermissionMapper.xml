@@ -108,8 +108,16 @@
   	select menu_code from T_SECURITY_PERMISSION
   </select>
   
+  <select id="getAllMenuName" resultType="String">
+  	select menu_name from T_SECURITY_PERMISSION
+  </select>
+  
   <select id="getAllPermission" resultType="String">
   	select permission_code from T_SECURITY_PERMISSION
+  </select>
+  
+  <select id="getPermissionsByMenu" resultMap="BaseResultMap">
+  	select * from T_SECURITY_PERMISSION where menu_name = #{menuName}
   </select>
   
   <delete id="deleteBatch">

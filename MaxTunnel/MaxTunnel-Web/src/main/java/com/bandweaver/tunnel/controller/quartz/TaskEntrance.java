@@ -216,7 +216,7 @@ public class TaskEntrance {
 	
 	
 	
-	/** 定时任务保存缓存中的数据到对象表和valu表 
+	/** 定时任务保存缓存中的数据到对象表和value表 
 	 * @author shaosen
 	 * @Date 2018年11月8日
 	 */

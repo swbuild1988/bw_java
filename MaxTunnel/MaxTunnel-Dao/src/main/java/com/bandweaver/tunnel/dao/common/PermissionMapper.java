@@ -26,4 +26,8 @@ public interface PermissionMapper {
 	void deleteBatch(List<Integer> list);
 
 	List<Permission> getByCondition(PermissionVo vo);
+
+	Set<String> getAllMenuName();
+
+	List<Permission> getPermissionsByMenu(String menuName);
 }
