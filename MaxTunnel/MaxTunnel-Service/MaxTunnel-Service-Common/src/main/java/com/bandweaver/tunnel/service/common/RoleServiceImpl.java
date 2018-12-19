@@ -7,13 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.bandweaver.tunnel.common.biz.itf.common.RoleService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
+import com.bandweaver.tunnel.common.biz.pojo.common.RolePermission;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.common.RoleMapper;
+import com.bandweaver.tunnel.dao.common.RolePermissionMapper;
 @Service
 public class RoleServiceImpl implements RoleService {
 
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private RolePermissionMapper rolePermissionMapper;
 	
 	@Override
 	public void addRole(Role role) {
@@ -23,7 +27,13 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public void addRolePermissions(Integer roleId, List<Integer> permissionIds) {
-		roleMapper.addRolePermissions(roleId,permissionIds);
+		for (Integer permissionId : permissionIds) {
+			RolePermission rp = new RolePermission();
+			rp.setrId(roleId);
+			rp.setpId(permissionId);
+			rp.setCrtTime(DateUtil.getCurrentDate());
+			rolePermissionMapper.insertSelective(rp);
+		}
 	}
 
 }

@@ -13,6 +13,7 @@ import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -45,13 +46,12 @@ public class MeasValueAIController {
     @RequestMapping(value = "measvalue-ai/batch", method = RequestMethod.POST)
     public JSONObject addMeasValueAIBatch(@RequestBody List<MeasValueAI> list) {
     	String ip = ContextUtil.getRemoteIp();
-    	LogUtil.info("来自:" + ip + ",接收到MaxView发送的AI数据共：" + list.size() + "条" );
+//    	LogUtil.info("来自:" + ip + ",接收到MaxView发送的AI数据共：" + list.size() + "条" );
         for (MeasValueAI measValueAI : list) {
             measObjModuleCenter.updateMeasObjAIValue(measValueAI);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
     
 
     @RequestMapping(value = "measvalue-ai", method = RequestMethod.POST)

@@ -19,5 +19,4 @@ public interface RoleMapper {
 
     int updateByPrimaryKey(Role record);
 
-	void addRolePermissions(@Param("roleId")Integer roleId, @Param("permissionIds")List<Integer> permissionIds);
 }
