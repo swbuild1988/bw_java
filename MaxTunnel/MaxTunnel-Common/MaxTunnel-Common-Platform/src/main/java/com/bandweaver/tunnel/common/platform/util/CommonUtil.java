@@ -121,6 +121,6 @@ public class CommonUtil {
 	 * @Date 2018年12月18日
 	 */
 	public static <T> T parse2Obj(final JSONObject reqJson,Class<T> clazz) {
-		return JSONObject.parseObject(JSONObject.toJSONString(reqJson), clazz);
+		return JSONObject.parseObject(reqJson.toJSONString(), clazz);
 	}
 }

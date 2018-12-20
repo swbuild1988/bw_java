@@ -23,9 +23,11 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.transform.MeasAlarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -68,18 +70,19 @@ public class AlarmController {
 	
 	/**接收告警并发送到MQ队列
 	 * @param alarm
-	 * @return   
+	 * @return  队列消息格式：{"alarmName":"严重级别的告警","alarmDate":1545278730010,"isDistribute":false,"plans":[{"name":"消防预案","id":4001},{"name":"通风预案","id":4003}],"tunnelId":1,"cleaned":false,"objectName":"监测对象2","alarmLevel":3,"id":10481,"objectId":1}
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
 	@RequestMapping(value = "alarms", method = RequestMethod.POST)
 	public JSONObject add(@RequestBody MeasAlarm measAlarm) {
 		
-//		LogUtil.info("接收到MaxView发送的告警：" + measAlarm );
+		LogUtil.debug("接收到MaxView发送的告警：" + measAlarm );
 		MeasObj measObj = measObjModuleCenter.getMeasObj(measAlarm.getObjectId());
-		if(measObj == null) {
-			LogUtil.info("监测对象[ " + measAlarm.getObjectId() + "]不存在");
-			return null;
+		if(StringTools.isNullOrEmpty(measObj)) {
+			LogUtil.debug("监测对象[ " + measAlarm.getObjectId() + "]不存在");
+			throw new BandWeaverException("监测对象[ " + measAlarm.getObjectId() + "]不存在");
+			
 		}
 		
 		Alarm alarm = new Alarm();
@@ -105,7 +108,7 @@ public class AlarmController {
 			alarm.setLatitude(measAlarm.getLatitude());
 		}
 		alarmService.add(alarm);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+		return CommonUtil.success();
 	}
 	
 

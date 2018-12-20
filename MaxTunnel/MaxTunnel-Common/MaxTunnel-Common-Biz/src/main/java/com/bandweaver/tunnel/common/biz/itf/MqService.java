@@ -5,11 +5,11 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 public interface MqService {
 
 	/**发送消息到告警队列 
-	 * @param alarm   
+	 * @param msg 
 	 * @author shaosen
 	 * @Date 2018年10月29日
 	 */
-	void send2AlarmQueue(Alarm alarm);
+	void send2AlarmQueue(String msg);
 
 	/**发送消息到应急预案队列 
 	 * @param queue
