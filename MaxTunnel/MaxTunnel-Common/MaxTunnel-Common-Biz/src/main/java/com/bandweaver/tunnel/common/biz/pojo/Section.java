@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Section implements Serializable{
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 648624988268979022L;
 
 	private Integer id;
+	
+	private Integer parentId;
 
     private String name;
 
@@ -108,11 +107,20 @@ public class Section implements Serializable{
 		this.endPoint = endPoint;
 	}
 
+	
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
 	@Override
 	public String toString() {
-		return "Section [id=" + id + ", name=" + name + ", tunnelId=" + tunnelId + ", storeId=" + storeId + ", areaId="
-				+ areaId + ", totalCableNumber=" + totalCableNumber + ", camera=" + camera + ", startPoint="
-				+ startPoint + ", endPoint=" + endPoint + ", crtTime=" + crtTime + "]";
+		return "Section [id=" + id + ", parentId=" + parentId + ", name=" + name + ", tunnelId=" + tunnelId
+				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", camera="
+				+ camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime=" + crtTime + "]";
 	}
 
     

@@ -41,7 +41,8 @@ public class AlarmServiceImpl implements AlarmService {
 		//save to DB
 		alarm.setCleaned(false);
 		alarmMapper.insertSelective(alarm);
-//		LogUtil.debug("返回主键ID：" + alarm.getId() );
+		LogUtil.debug("返回主键ID：" + alarm.getId() );
+		
 		//save to Cache
 //		alarmModuleCenter.insert(alarm);
 		

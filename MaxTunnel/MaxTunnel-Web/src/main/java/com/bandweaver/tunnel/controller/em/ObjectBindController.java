@@ -13,12 +13,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoService;
 import com.bandweaver.tunnel.common.biz.pojo.em.ObjectBind;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
+import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 
 /**监测对象关联其他对象（视频和预案）管理
  * @author shaosen
@@ -33,6 +40,10 @@ public class ObjectBindController {
 	private ObjectBindService objectBindService;
 	@Autowired
 	private VideoService videoService;
+	@Autowired
+	private MeasObjModuleCenter measObjModuleCenter;
+	@Autowired
+	private MeasObjService measObjService;
 	
 	
 	/**添加 
@@ -87,6 +98,31 @@ public class ObjectBindController {
 		List<ObjectBind> list = objectBindService.getVideosByObject(id);
 		
 		List<VideoDto> returnData = new ArrayList<>();
+		if(list.isEmpty()) {
+			//默认查询这个section的所有视频
+			MeasObj measObj = measObjModuleCenter.getMeasObj(id);
+			if(StringTools.isNullOrEmpty(measObj))
+				throw new BandWeaverException("监测对象" + id + "不存在");
+			Integer sectionId = measObj.getSectionId();
+			
+			MeasObjVo vo = new MeasObjVo();
+			vo.setSectionId(sectionId);
+			vo.setObjtypeId(ObjectType.VIDEO.getValue());
+			List<MeasObjDto> objectList = measObjService.getMeasObjByCondition(vo);
+			if(objectList.isEmpty()) {
+				returnData.add(new VideoDto());
+			}
+			
+			for (MeasObjDto measObjDto : objectList) {
+				VideoDto videoDto = videoService.getVideoDto(measObjDto.getId());
+				if(StringTools.isNullOrEmpty(videoDto))
+					continue;
+				returnData.add(videoDto);
+			}
+			
+		}
+		
+		
 		for (ObjectBind objectBind : list) {
 			Integer videoId = objectBind.getBindId();
 			VideoDto videoDto = videoService.getVideoDto(videoId);

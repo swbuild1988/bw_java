@@ -209,4 +209,9 @@ public class SectionServiceImpl implements SectionService {
 		return sectionMapper.getByName(name);
 	}
 
+	@Override
+	public List<Section> getSectionListByParentId(Integer sectionId) {
+		return sectionMapper.getSectionListByParentId(sectionId);
+	}
+
 }

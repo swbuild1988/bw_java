@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.service.em;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,11 +35,13 @@ import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.em.EmPlanMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -63,46 +66,48 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 	@Override
 	public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
-		
 		String processDefinitionId = activitiEvent.getProcessDefinitionId();
 		ProcessDefinition processDefinition = activitiService.createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
-		if (processDefinition == null) {
-			throw new RuntimeException("Process not deployed yet !");
-		}
-		LogUtil.info("Get KEY:" + processDefinition.getKey());
+		if (processDefinition == null) 
+			throw new BandWeaverException("流程尚未部署");
+		LogUtil.debug("Get KEY:" + processDefinition.getKey());
+		
 		Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
-		LogUtil.info("Get variables:" + variables);
+		LogUtil.debug("Get variables:" + variables);
 		Integer sectionId = DataTypeUtil.toInteger(variables.get("sectionId"));
-		Integer objectId = DataTypeUtil.toInteger(variables.get("objectId"));
 
 		EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
-		LogUtil.info("Get emPlan from DB:" + emPlan);
+		LogUtil.debug("Get emPlan from DB:" + emPlan);
+		if(StringTools.isNullOrEmpty(emPlan)) 
+			throw new BandWeaverException("流程节点不存在");
 		
 
 		// 第一步：获取目标
-		List<MeasObj> list = new ArrayList<>();
+		Collection<MeasObj> list = new ArrayList<>();
 		TargetEnum targetEnum = TargetEnum.getEnum(emPlan.getTargetKey());
 		if(TargetEnum.ASSIGN_TO == targetEnum) {
 			list = measObjService.getMeasObjByTargetVal(emPlan.getTargetValue());
 		}else if (TargetEnum.TYPE == targetEnum) {
-			list = measObjService.getMeasObjsByTargetValAndVars(emPlan.getTargetValue(),sectionId);
+			list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(),sectionId);
 		}
 		
 		
 		// 第二步：做什么事情
 		ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
 		if(ActionEnum.METION == actionEnum) {
-			//TODO
 			LogUtil.info("提示信息为：" +  emPlan.getActionValue());
+			//TODO
+			
 		}else if (ActionEnum.NOTICE == actionEnum) {
 			Integer unitTypeId = DataTypeUtil.toInteger(emPlan.getActionValue());
-			//TODO
 			LogUtil.info("通知单位类型为：" + UnitTypeEnum.getEnum(unitTypeId).getName() );
+			//TODO
+			
 		}else if (ActionEnum.SWITCH == actionEnum) {
 			Integer inputValue = DataTypeUtil.toInteger(emPlan.getActionValue());
 			for (MeasObj measObj : list) {
 				boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
-				LogUtil.info("监测对象【" + measObj.getName() + "】执行【 " + SwitchEnum.getEnum(inputValue).getName() + " 】结果【"+ flag +"】");
+				LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果["+ flag +"]");
 			}
 		}
 		
@@ -117,7 +122,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		boolean isFinished = false;
 		while(!isFinished) {
 			EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-			LogUtil.info("Get emPlan from session:" + emPlan);
+			LogUtil.debug("Get emPlan from session:" + emPlan);
 			
 			if(emPlan == null) {
 				isFinished = true;
@@ -178,8 +183,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 	}
 
 
-	public EmPlan getEmPlanByProcessKeyAndTaskKey(String key, String taskKey) {
-		return emPlanMapper.getEmPlanByProcessKeyAndTaskKey(key, taskKey);
+	public EmPlan getEmPlanByProcessKeyAndTaskKey(String processKey, String taskKey) {
+		return emPlanMapper.getEmPlanByProcessKeyAndTaskKey(processKey, taskKey);
 	}
 
 

@@ -2,8 +2,10 @@ package com.bandweaver.tunnel.service.mam.measobj;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
@@ -40,6 +44,8 @@ public class MeasObjServiceImpl implements MeasObjService {
     private MeasValueAIMapper measValueAIMapper;
     @Autowired
     private MeasObjModuleCenter measObjModuleCenter;
+    @Autowired
+    private SectionService sectionService;
 //    @Autowired
 //    private RedisTemplate redisTemplate;
 
@@ -157,17 +163,21 @@ public class MeasObjServiceImpl implements MeasObjService {
 	}
 
 	@Override
-	public List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue, Integer sectionId) {
+	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, Integer sectionId) {
 		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
-		List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(sectionId,objectTypeId);
+//		List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(sectionId,objectTypeId);
 		
-		LogUtil.info("所在区段:" + sectionId + "\n"
-				+ "检测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
-				+ "结果列表：" + list );
-		
-		if(list == null || list.isEmpty()) {
-			return Collections.emptyList();
+		Set<MeasObj> set = new HashSet<>();
+		//查询仓以及仓关联的进气出气仓等
+		List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
+		//查询所有仓里指定类型的监测对象
+		for (Section section : sectionList) {
+			List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(),objectTypeId);
+			LogUtil.info("所在区段:" + section.getName() + "\n"
+					+ "监测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
+					+ "结果列表：" + list );
+			set.addAll(list);
 		}
-		return list;
+		return set;
 	}
 }

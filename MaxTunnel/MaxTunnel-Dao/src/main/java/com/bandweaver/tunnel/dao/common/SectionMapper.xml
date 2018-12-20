@@ -259,4 +259,8 @@
 	<select id="getDtoById" resultMap="DtoResultMap">
 		select * from t_common_section where id = #{id}
 	</select>
+	
+	<select id="getSectionListByParentId" resultMap="BaseResultMap">
+		select * from t_common_section where parent_id = #{sectionId}
+	</select>
 </mapper>

@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface MeasObjService {
     int add(MeasObj measObj);
@@ -107,7 +108,7 @@ public interface MeasObjService {
 
 	List<MeasObj> getMeasObjByTargetVal(String targetValue);
 
-	List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue,Integer sectionId);
+	Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue,Integer sectionId);
 	
 
 	
