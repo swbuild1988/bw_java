@@ -130,7 +130,7 @@ public class TaskEntrance {
     	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
     	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
 //    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
-    	measAlarm.setObjectId(1);
+    	measAlarm.setObjectId(203012401);
     	measAlarm.setAlarmSeverity(level);
     	measAlarm.setAdditionalText(null);
     	measAlarm.setAlarmSource(null);

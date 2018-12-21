@@ -17,21 +17,27 @@ public class MqServiceImpl implements MqService {
     private AmqpTemplate amqpTemplate;
 	
 	@Override
-	public void send2AlarmQueue(String msg) {
-		LogUtil.debug("发送到[告警]队列:" + msg );
-		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.ALARM_QUEUE), msg);
+	public void sendToAlarmUMQueue(String msg) {
+		LogUtil.info("发送到[UM告警]队列:" + msg );
+		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_ALARM_UM), msg);
+	}
+	
+	@Override
+	public void sendToAlarmVMQueue(String msg) {
+		LogUtil.info("发送到[VM告警]队列:" + msg );
+		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_ALARM_VM), msg);
 	}
 
 	@Override
-	public void send2PlanQueue(String queue, String msg) {
-		LogUtil.info("发送到[平台应急预案]队列:" + msg);
-		amqpTemplate.convertAndSend(queue, msg);
+	public void sendToPlanUMQueue(String msg) {
+		LogUtil.info("发送到[UM应急]队列:" + msg);
+		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_PLAN_UM), msg);
 	}
 
 	@Override
-	public void send2BigScreenQueue(String msg) {
-		LogUtil.info("发送到[大屏应急预案]队列:" + msg);
-		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.BIGSCREEN_QUEUE), msg);
+	public void sendToPlanVMQueue(String msg) {
+		LogUtil.info("发送到[VM应急]队列:" + msg);
+		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_PLAN_VM), msg);
 	}
 	
 }

@@ -61,7 +61,8 @@ public class AlarmServiceImpl implements AlarmService {
 		
 		JSONObject json = (JSONObject) JSONObject.toJSON(alarm);
 		json.put("plans", returnData);
-		mqService.send2AlarmQueue(json.toJSONString());
+		mqService.sendToAlarmUMQueue(json.toJSONString());
+		mqService.sendToAlarmVMQueue(json.toJSONString());
 	}
 
 

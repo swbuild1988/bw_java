@@ -178,8 +178,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 		json.put("objectId", objectId);
 		json.put("nodeList", getNodeListByProcessKey(emPlan.getProcessKey()));
 		
-		mqService.send2PlanQueue((String)PropertiesUtil.getValue(processTypeEnum.getQueue()),json.toString());
-		mqService.send2BigScreenQueue(json.toString());//发送到大屏
+		mqService.sendToPlanUMQueue(json.toJSONString());
+		mqService.sendToPlanVMQueue(json.toJSONString());
 	}
 
 
@@ -198,7 +198,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 		variables.put("sectionId", sectionId);
 		variables.put("objectId", objectId);
 
-		LogUtil.info("启动流程");
 		ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
 		ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(),variables);
 		LogUtil.debug("Get processInstance:" + processInstance);

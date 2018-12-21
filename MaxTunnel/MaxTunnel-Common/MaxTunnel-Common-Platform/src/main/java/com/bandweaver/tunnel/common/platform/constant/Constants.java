@@ -35,8 +35,12 @@ public class Constants {
     public static final String FILE_PATH = "path.file.upload";
     
     //MQ队列
-    public static final String ALARM_QUEUE = "mq.queue.alarm";
-    public static final String BIGSCREEN_QUEUE = "mq.queue.bigscreen";
+    public static final String QUEUE_ALARM_UM = "mq.queue.alarm.um";
+    public static final String QUEUE_ALARM_VM = "mq.queue.alarm.vm";
+    
+    public static final String QUEUE_PLAN_UM = "mq.queue.plan.um";
+    public static final String QUEUE_PLAN_VM = "mq.queue.plan.vm";
+//    public static final String BIGSCREEN_QUEUE = "mq.queue.bigscreen";
 
     
     
