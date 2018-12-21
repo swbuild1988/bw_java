@@ -7,10 +7,10 @@ package com.bandweaver.tunnel.common.biz.constant.mam;
  * @date 2018年8月14日
  */
 public enum AlarmLevelEnum {
-	PROMPT("提示", 1),
-	NORMAL("一般", 2),
-	SERIOUS("严重", 3), 
-	DANGEROUS("致命", 4);
+	PROMPT("提示告警", 1),
+	NORMAL("一般告警", 2),
+	SERIOUS("严重告警", 3), 
+	DANGEROUS("致命告警", 4);
 
 	AlarmLevelEnum() {
 	}

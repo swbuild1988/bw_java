@@ -118,7 +118,7 @@
   </select>
   
   <select id="getX" resultType="Date">
-  	select time from T_MAM_MEASVALUE_AI 
+  	select distinct(time) from T_MAM_MEASVALUE_AI 
   	<where>
   		<if test="startTime != null">
 	  		and time &gt; = #{startTime}
@@ -127,6 +127,6 @@
 	  		and time &lt; = #{endTime}
 	  	</if>
   	</where>
-  	group by time order by time asc
+  	order by time asc
   </select>
 </mapper>
