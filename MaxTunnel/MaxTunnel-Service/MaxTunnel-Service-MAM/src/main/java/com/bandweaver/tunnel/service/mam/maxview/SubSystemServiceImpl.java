@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.ErrorCodeEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
@@ -21,7 +22,10 @@ import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MaxviewConfig;
 import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.vo.mam.MaxviewConfigVo;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.HttpUtil;
@@ -129,17 +133,17 @@ public class SubSystemServiceImpl implements SubSystemService {
 		
 		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
 		if(measObj == null) {
-			throw new RuntimeException("监测对象[" + objectId + "]不存在");
+			throw new BandWeaverException("监测对象[" + objectId + "]不存在");
 		}
 		
 		TunnelDto tunnel = tunnelService.getDtoById(measObj.getTunnelId());
 		if(tunnel == null) {
-			throw new RuntimeException("管廊不存在");
+			throw new BandWeaverException("管廊不存在");
 		}
 		
 		MaxviewConfig config = maxviewConfigMapper.selectByPrimaryKey(tunnel.getMaxviewConfigId());
 		if(config == null) {
-			throw new RuntimeException("登录失败：终端未配置");
+			throw new BandWeaverException("登录失败：终端未配置");
 		}
 		
 		Integer masObjId, measValue;
@@ -148,8 +152,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 			masObjId = measObjMap.getObjectId2();
 			measValue = measObjMap.getOutputValue();
 		}else {
-			masObjId = objectId;
-			measValue = inputValue;
+			return false;
 		}
 		
 		

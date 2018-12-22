@@ -165,7 +165,6 @@ public class MeasObjServiceImpl implements MeasObjService {
 	@Override
 	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, Integer sectionId) {
 		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
-//		List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(sectionId,objectTypeId);
 		
 		Set<MeasObj> set = new HashSet<>();
 		//查询仓以及仓关联的进气出气仓等

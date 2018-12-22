@@ -301,21 +301,21 @@
              </foreach>
             </if>
             <if test="tunnelIds != null">
-             or tunnel_id in 
+             and tunnel_id in 
              <foreach collection="tunnelIds" item="item" index="index" close=")"
                  open="(" separator=",">
                  #{item}
              </foreach>
             </if>
             <if test="storeIds != null">
-             or store_id in 
+             and store_id in 
              <foreach collection="storeIds" item="item" index="index" close=")"
                  open="(" separator=",">
                  #{item}
              </foreach>
             </if>
             <if test="sectionIds != null">
-             or SECTION_ID in 
+             and SECTION_ID in 
              <foreach collection="sectionIds" item="item" index="index" close=")"
                  open="(" separator=",">
                  #{item}
