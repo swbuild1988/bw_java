@@ -73,7 +73,6 @@ begin
 /*==============================================================*/
 /* Table: "T_SECURITY_USER"                                     */
 /*==============================================================*/
--- ɾ�����
       num := 0;
       select count(1) into num from user_constraints where constraint_name = 'FK_T_U_REFERENCE_T_U'; 
       if num > 0 then   
@@ -801,16 +800,17 @@ end COMMON_STORE_TG;
 
 --仓节
 CREATE TABLE T_COMMON_SECTION  (
-   id                NUMBER               NOT NULL,
-   name                 varchar2(50)		not null,
+   id                   NUMBER               NOT NULL,
+   parent_id            NUMBER                       ,
+   name                 varchar2(50)		     not null,
    tunnel_id            number,
-   store_id          NUMBER               NOT NULL,
-   area_id          NUMBER               NOT NULL,
-   total_cable_number number,
-   camera             varchar2(200),
-   start_point        varchar2(100),
-   end_point          varchar2(100),
-   crt_time          DATE,
+   store_id             NUMBER               NOT NULL,
+   area_id              NUMBER               NOT NULL,
+   total_cable_number   number,
+   camera               varchar2(200),
+   start_point          varchar2(100),
+   end_point            varchar2(100),
+   crt_time             DATE,
    CONSTRAINT PK_T_COMMON_SECTION PRIMARY KEY ("ID")
 );
 

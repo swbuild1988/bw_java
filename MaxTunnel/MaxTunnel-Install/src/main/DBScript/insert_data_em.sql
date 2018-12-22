@@ -19,27 +19,4 @@ values (7, '浦东国际机场', '小壮', '(021)68347575', 6, '上海市浦东新区迎宾大道60
 commit;
 
 --应急预案表
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (1, 'FirePlanProcess', 'usertask1', 2, 41, 3, 1, 1, 1, to_date('09-10-2018', 'dd-mm-yyyy'), 0, '开启声光报警');
 
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (2, 'FirePlanProcess', 'usertask2', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '调用摄像头');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (3, 'FirePlanProcess', 'usertask3', 1, 1, 1, 1, 2, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '值班人员确认');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (4, 'FirePlanProcess', 'usertask4', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '打开风机');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (5, 'FirePlanProcess', 'usertask5', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '打开风阀');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (6, 'FirePlanProcess', 'usertask6', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '打开百叶');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (7, 'FirePlanProcess', 'usertask7', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 0, '启动干粉灭火');
-
-insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, FINISH_VALUE, CRT_TIME, IS_FINISHED, TASK_NAME)
-values (8, 'FirePlanProcess', 'usertask8', 1, 1, 1, 1, 1, 1, to_date('10-10-2018', 'dd-mm-yyyy'), 1, '通知相关单位');
-commit;

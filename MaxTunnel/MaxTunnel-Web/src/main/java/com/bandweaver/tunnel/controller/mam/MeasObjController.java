@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.controller.mam;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -251,6 +252,7 @@ public class MeasObjController {
         	json.put("name", measObjDto.getName());
         	json.put("area", measObjDto.getSection().getArea().getName());
         	json.put("store", measObjDto.getSection().getStore().getName());
+        	json.put("datatypeId", measObjDto.getDatatypeId());
         	json.put("curValue", cv);
         	
         	ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
