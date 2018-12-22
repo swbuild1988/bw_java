@@ -71,18 +71,7 @@ public class ObjectBindController {
 	 */
 	@RequestMapping(value="object-bind/{id}/plans",method=RequestMethod.GET)
 	public JSONObject getPlansByObject(@PathVariable Integer id) {
-		List<ObjectBind> list = objectBindService.getPlansByObject(id);
-		
-		List<JSONObject> returnData = new ArrayList<>();
-		for (ObjectBind objectBind : list) {
-			JSONObject js = new JSONObject();
-			js.put("id", objectBind.getBindId());
-			ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(objectBind.getBindId());
-			if(processTypeEnum == ProcessTypeEnum.NONE)
-				continue;
-			js.put("name",processTypeEnum.getName());
-			returnData.add(js);
-		}
+		List<JSONObject> returnData = objectBindService.getPlansByObject(id);
 		return CommonUtil.success(returnData);
 	}
 	
@@ -95,41 +84,7 @@ public class ObjectBindController {
 	 */
 	@RequestMapping(value="object-bind/{id}/videos",method=RequestMethod.GET)
 	public JSONObject getVideosByObject(@PathVariable Integer id) {
-		List<ObjectBind> list = objectBindService.getVideosByObject(id);
-		
-		List<VideoDto> returnData = new ArrayList<>();
-		if(list.isEmpty()) {
-			//默认查询这个section的所有视频
-			MeasObj measObj = measObjModuleCenter.getMeasObj(id);
-			if(StringTools.isNullOrEmpty(measObj))
-				throw new BandWeaverException("监测对象" + id + "不存在");
-			Integer sectionId = measObj.getSectionId();
-			
-			MeasObjVo vo = new MeasObjVo();
-			vo.setSectionId(sectionId);
-			vo.setObjtypeId(ObjectType.VIDEO.getValue());
-			List<MeasObjDto> objectList = measObjService.getMeasObjByCondition(vo);
-			if(objectList.isEmpty()) {
-				returnData.add(new VideoDto());
-			}
-			
-			for (MeasObjDto measObjDto : objectList) {
-				VideoDto videoDto = videoService.getVideoDto(measObjDto.getId());
-				if(StringTools.isNullOrEmpty(videoDto))
-					continue;
-				returnData.add(videoDto);
-			}
-			
-		}
-		
-		
-		for (ObjectBind objectBind : list) {
-			Integer videoId = objectBind.getBindId();
-			VideoDto videoDto = videoService.getVideoDto(videoId);
-			if(StringTools.isNullOrEmpty(videoDto))
-				continue;
-			returnData.add(videoDto);
-		}
+		List<VideoDto> returnData = objectBindService.getVideosByObject(id);
 		return CommonUtil.success(returnData);
 	}
 }

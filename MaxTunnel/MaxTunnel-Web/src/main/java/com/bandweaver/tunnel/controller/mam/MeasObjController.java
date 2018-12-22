@@ -3,8 +3,10 @@ package com.bandweaver.tunnel.controller.mam;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
@@ -23,9 +25,11 @@ import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
+import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjAIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
@@ -68,6 +72,8 @@ public class MeasObjController {
     private TunnelService tunnelService;
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private ObjectBindService objectBindService;
 
 
     
@@ -207,18 +213,18 @@ public class MeasObjController {
     
     
     
-    /**环境监测和安防监测接口 
+    /**环境监测和安防监测接口--数据
      * @param tunnelId 必填
      * @param storeId 可选
      * @param areaId 可选
-     * @param objtypeId 单选
+     * @param objtypeId 必选
      * @return   {"msg":"请求成功","code":"200","data":[{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210012401,"store":"污水仓","curValue":28.81},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210022401,"store":"电力舱","curValue":14.7},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210022402,"store":"电力舱","curValue":12.99},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210032401,"store":"综合仓","curValue":7.24},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210042401,"store":"燃气舱","curValue":26.58},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210052401,"store":"设备间","curValue":16.67}]}
      * @author shaosen
      * @Date 2018年12月22日
      */
-    @RequestMapping(value="measobjs/list",method=RequestMethod.POST)
-    public JSONObject getObjectListByCondition(@RequestBody JSONObject reqJson) {
-    	CommonUtil.hasAllRequired(reqJson, "tunnelId");
+    @RequestMapping(value="measobjs/datas",method=RequestMethod.POST)
+    public JSONObject getObjectDataListByCondition(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "tunnelId,objtypeId");
     	MeasObjVo measObjVo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
     	List<MeasObjDto> measObjList = measObjService.getMeasObjByCondition(measObjVo);
     	
@@ -277,6 +283,31 @@ public class MeasObjController {
     }
     
  
+    
+    /**环境监测和安防监测接口--视频
+     * @param tunnelId 必填
+     * @param storeId 可选
+     * @param areaId 可选
+     * @param objtypeId 单选
+     * @return  {"msg":"请求成功","code":"200","data":[{"id":210040203,"tunnelId":1,"storeId":1006,"areaId":1001,"sectionId":1090,"name":"防爆型摄像机","datatypeId":7,"objtypeId":7,"actived":true,"description":null,"longitude":null,"latitude":null,"height":null,"deviation":0.0,"serverId":1,"videoSceneId":0,"videoExtendSceneId":0,"channelNo":1,"videoServerDto":{"id":1,"name":"h5streamServer1","vendor":5,"vendorVersion":1,"ip":"192.168.0.30","port":8078,"username":"admin","password":"827ccb0eea8a706c4c34a16891f84e7b","session":null,"channelNum":1000,"vendorName":"H5Stream","vendorVersionName":"VDS"},"ptzOperationsSupported":false,"videoPresets":[],"url":"192.168.0.30:8078","strUrl":""},{"id":210040201,"tunnelId":1,"storeId":1006,"areaId":1001,"sectionId":1090,"name":"防爆型摄像机","datatypeId":7,"objtypeId":7,"actived":true,"description":null,"longitude":null,"latitude":null,"height":null,"deviation":0.0,"serverId":1,"videoSceneId":0,"videoExtendSceneId":0,"channelNo":1,"videoServerDto":{"id":1,"name":"h5streamServer1","vendor":5,"vendorVersion":1,"ip":"192.168.0.30","port":8078,"username":"admin","password":"827ccb0eea8a706c4c34a16891f84e7b","session":null,"channelNum":1000,"vendorName":"H5Stream","vendorVersionName":"VDS"},"ptzOperationsSupported":false,"videoPresets":[],"url":"192.168.0.30:8078","strUrl":""},{"id":210040204,"tunnelId":1,"storeId":1006,"areaId":1001,"sectionId":1090,"name":"防爆型摄像机","datatypeId":7,"objtypeId":7,"actived":true,"description":null,"longitude":null,"latitude":null,"height":null,"deviation":0.0,"serverId":1,"videoSceneId":0,"videoExtendSceneId":0,"channelNo":1,"videoServerDto":{"id":1,"name":"h5streamServer1","vendor":5,"vendorVersion":1,"ip":"192.168.0.30","port":8078,"username":"admin","password":"827ccb0eea8a706c4c34a16891f84e7b","session":null,"channelNum":1000,"vendorName":"H5Stream","vendorVersionName":"VDS"},"ptzOperationsSupported":false,"videoPresets":[],"url":"192.168.0.30:8078","strUrl":""},{"id":210040202,"tunnelId":1,"storeId":1006,"areaId":1001,"sectionId":1090,"name":"防爆型摄像机","datatypeId":7,"objtypeId":7,"actived":true,"description":null,"longitude":null,"latitude":null,"height":null,"deviation":0.0,"serverId":1,"videoSceneId":0,"videoExtendSceneId":0,"channelNo":1,"videoServerDto":{"id":1,"name":"h5streamServer1","vendor":5,"vendorVersion":1,"ip":"192.168.0.30","port":8078,"username":"admin","password":"827ccb0eea8a706c4c34a16891f84e7b","session":null,"channelNum":1000,"vendorName":"H5Stream","vendorVersionName":"VDS"},"ptzOperationsSupported":false,"videoPresets":[],"url":"192.168.0.30:8078","strUrl":""}]}
+     * @author shaosen
+     * @Date 2018年12月22日
+     */
+    @RequestMapping(value="measobjs/videos",method=RequestMethod.POST)
+    public JSONObject getObjectVideoListByCondition(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "tunnelId,objtypeId");
+    	MeasObjVo measObjVo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
+    	List<MeasObjDto> measObjList = measObjService.getMeasObjByCondition(measObjVo);
+    	
+    	Set<VideoDto> returnData = new HashSet<>();
+    	for (MeasObjDto measObjDto : measObjList) {
+    		List<VideoDto> videoList = objectBindService.getVideosByObject(measObjDto.getId());
+    		returnData.addAll(videoList);
+		}
+    	return CommonUtil.success(returnData);
+    }
+    
+    
 
     /**根据id集合获取list
      * @param   ids
