@@ -4,14 +4,14 @@
             <Col span="9" offset="1">
                 监测仓:
                 <Select v-model="conditions.storeId" style="width:60%;z-index: 9999;" id="store">
-                    <Option value=null key="0">所有</Option>
+                    <Option value="" key="0">所有</Option>
                     <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="9">
                 区域:
                 <Select v-model="conditions.areaId" style="width:60%;z-index: 9999;" id="area">
-                    <Option value=null key="0">所有</Option>
+                    <Option value="" key="0">所有</Option>
                     <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
@@ -102,8 +102,8 @@ export default {
         return {
             conditions: {
                 tunnelId: null,
-                storeId: null,
-                areaId: null
+                storeId: '',
+                areaId: ''
             },
             init: {
                 stores: [],
@@ -220,6 +220,8 @@ export default {
                         temp.id = camera.id;
                         temp.name = camera.name;
                         temp.url = camera.url;
+                        temp.storeId = camera.storeId
+                        temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
                         _this.cameraList.push(temp);
