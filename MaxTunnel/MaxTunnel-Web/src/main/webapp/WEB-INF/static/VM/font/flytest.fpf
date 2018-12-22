@@ -9,7 +9,7 @@
 <bottomAltitude>0.00</bottomAltitude>
 </geostyle3d>
 </style>
-<routestop name="stop1" speed="0" excluded="False" viewType="camera">
+<routestop name="站点1" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.494032</longitude>
 <latitude>37.706117999999996</latitude>
@@ -35,7 +35,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop2" speed="0" excluded="False" viewType="camera">
+<routestop name="站点2" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.494032</longitude>
 <latitude>37.7072</latitude>
@@ -61,7 +61,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop3" speed="0" excluded="False" viewType="camera">
+<routestop name="站点3" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.494028</longitude>
 <latitude>37.7072</latitude>
@@ -87,7 +87,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop4" speed="0" excluded="False" viewType="camera">
+<routestop name="站点4" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.494028</longitude>
 <latitude>37.706117999999996</latitude>
@@ -113,7 +113,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop5" speed="0" excluded="False" viewType="camera">
+<routestop name="站点5" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.49408</longitude>
 <latitude>37.706117999999996</latitude>
@@ -139,7 +139,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop6" speed="0" excluded="False" viewType="camera">
+<routestop name="站点6" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.49408</longitude>
 <latitude>37.7072</latitude>

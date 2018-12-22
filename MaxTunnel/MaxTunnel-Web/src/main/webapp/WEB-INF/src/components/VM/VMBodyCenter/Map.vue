@@ -98,6 +98,7 @@
               :infoBox="false"
               :navigation="false"
               :openImageryProvider="true"
+              :openSpinShow="true"
               @replaceVideoUrl="replaceVideoUrl"
       >
       </sm-viewer>
@@ -150,7 +151,7 @@ export default {
           leaveClass:'animated zoomOut',
           allVideos:[],
           searchCamera:{
-              openSearch:true,
+              openSearch:false,
               isShow:false,
           },
           unitsPosition:{
