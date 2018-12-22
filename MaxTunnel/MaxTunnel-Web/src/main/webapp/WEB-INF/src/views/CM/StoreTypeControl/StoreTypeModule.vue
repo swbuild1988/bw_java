@@ -10,6 +10,9 @@
                 <FormItem label="管仓类型编号" prop="sn">
                     <Input v-model="formValidate.sn" placeholder="请输入新管仓类型编号"/>
                 </FormItem>
+                <FormItem label="父仓类型编号">
+                    <Input v-model="formValidate.parent" placeholder="请输入父仓类型编号"/>
+                </FormItem>
             </Form>
             <div slot="footer" v-show="flag">
                 <Button type="primary" size="large" v-on:click="sendMsg('formValidate')">保存</Button>
@@ -29,13 +32,21 @@ export default {
             flag: true,
             formValidate: {
                 name: "",
-                sn: ""
+                sn: "",
+                parent: ""
             },
             ruleValidate: {
                 name: [
                     {
                         required: true,
                         message: "管仓类型不能为空",
+                        trigger: "blur"
+                    }
+                ],
+                sn: [
+                    {
+                        required: true,
+                        message: "管仓类型编号不能为空",
                         trigger: "blur"
                     }
                 ]
@@ -69,6 +80,8 @@ export default {
         sendMsg: function(data) {
             this.$refs[data].validate(valid => {
                 if (valid) {
+                    this.formValidate.parent = this.formValidate.parent == '' ? this.formValidate.sn : this.formValidate.parent
+                    // console.log(this.formValidate)
                     this.$emit("listenToAdd", this.formValidate);
                 } else {
                     this, $Message.error("添加失败");

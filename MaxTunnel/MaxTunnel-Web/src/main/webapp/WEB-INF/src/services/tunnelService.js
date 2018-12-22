@@ -52,7 +52,7 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels" + tunnelId + '/stores')
+            reject(msg + ",地址:/tunnels/" + tunnelId + '/stores')
           }
         })
       } else {
@@ -130,7 +130,7 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels" + tunnelId + '/areas')
+            reject(msg + ",地址:/tunnels/" + tunnelId + '/areas')
           }
         })
       } else {
@@ -140,6 +140,16 @@ var TunnelService = {
           id: 1,
           location: "1",
           name: "1区",
+          tunnel: {
+            id: 1,
+            name: '管廊1'
+          }
+        }, {
+          camera: null,
+          crtTime: 1535611490000,
+          id: 2,
+          location: "2",
+          name: "2区",
           tunnel: {
             id: 1,
             name: '管廊1'
@@ -324,6 +334,27 @@ var TunnelService = {
             resolve(data)
           } else {
             reject(msg + ",地址:/store-type/list")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 批量添加区段
+  batchCreateSections(sections) {
+    return new Promise((resolve, reject) => {
+      axios.post('sections/batch', sections)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:sections/batch')
           }
         })
         .catch(error => {
