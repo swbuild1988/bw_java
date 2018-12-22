@@ -82,11 +82,11 @@
         }
     ],
     "patrolPlanOrderStatus": [{
-            "key": true,
+            "key": 1,
             "value": "已完成"
         },
         {
-            "key": false,
+            "key": 0,
             "value": "未完成"
         }
     ],
