@@ -47,6 +47,10 @@ import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.Constant;
 import com.github.pagehelper.PageInfo;
 
+/**监测对象管理
+ * @author shaosen
+ * @date 2018年12月22日
+ */
 @Controller
 @ResponseBody
 public class MeasObjController {
@@ -66,10 +70,6 @@ public class MeasObjController {
     private StoreService storeService;
 
 
-   
-    //*************************************************************************************
-    //***********后台管理系统接口-start-TODO
-    //*************************************************************************************
     
     /**添加measObj
      * @param   id 
@@ -276,11 +276,6 @@ public class MeasObjController {
     	
     }
     
-    
-    //*************************************************************************************
-    //***********后台管理系统接口-end-TODO
-    //*************************************************************************************
-    
  
 
     /**根据id集合获取list
@@ -309,6 +304,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年6月7日
      */
+    @Deprecated
     @RequestMapping(value = "measobjs", method = RequestMethod.GET)
     public JSONObject getAllMeasObjList() {
         List<MeasObj> list = measObjModuleCenter.getMeasObjs();
@@ -363,6 +359,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年7月18日
      */
+    @Deprecated
     @RequestMapping(value = "measobjs/{ids}/{datatypeId}/cache-cv", method = RequestMethod.GET)
     public JSONObject getCVByIdFromCache(@PathVariable("ids") String ids, @PathVariable("datatypeId") Integer datatypeId) {
 
@@ -428,6 +425,7 @@ public class MeasObjController {
      * @author ya.liu
      * @Date 2018年10月31日
      */
+    @Deprecated
     @RequestMapping(value = "measobjs/condition",method = RequestMethod.POST)
     public JSONObject getMeasObjByCondition(@RequestBody(required = false) MeasObjVo vo) {
     	if(null == vo) {
