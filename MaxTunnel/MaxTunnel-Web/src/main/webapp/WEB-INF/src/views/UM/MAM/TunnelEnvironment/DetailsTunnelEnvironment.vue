@@ -28,7 +28,7 @@
       <div class="data" >
         <Tabs @on-click="changeTabs" v-model="tabName">
           <TabPane name="tunnelVideo" label="视频" icon="ios-film">
-            <div class="map">
+            <div class="map" v-if="curVideo!=null">
               <video-component v-bind:video="curVideo" v-bind:id="'camera'+curVideo.id"></video-component>
             </div>
             <div>
@@ -44,9 +44,9 @@
       </Col>
       <Col span="12" class="data" style="overflow-y:auto ">
       <Row :gutter="16" style="margin-right: 2px;">
-        <Col span="12" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-        <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
-        <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+        <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+          <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
+          <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
         </Col>
       </Row>
       </Col>
@@ -75,7 +75,7 @@
       return {
           tabName:"",
         videosList:[],
-        curVideo: {id: 2332},
+        curVideo: {},
         dataInterval: null,
         videoInterval:null,
         Obj: [],
@@ -144,15 +144,15 @@
 
       intervalData(){
         let _this=this;
-        _this.dataInterval=setInterval(function(){_this.getObjDetialData()},1000);
+        _this.dataInterval=setInterval(function(){_this.getObjDetialData()},5000);
       },
       //变更监测仓
       changeStore() {
         //获取区段列表
         let _this = this
         //获取位置信息
-        let curView = _this.stores.filter(a => a.id == _this.queryCondition.storeId)[0].camera;
-        // _this.changeArea(curView);
+        // let curView = _this.stores.filter(a => a.id == _this.queryCondition.storeId)[0].camera;
+        //  _this.changeArea(curView);
         _this.getObjDetialData();
         _this.getvideos();
       },
@@ -225,6 +225,11 @@
               _this.areas.push(temp);
             })
             _this.queryCondition.areaId= _this.areas[0].id
+              result.forEach(a=>{
+                  if(a.name=="22区"){
+                      _this.queryCondition.areaId=a.id;
+                  }
+              })
             _this.getObjDetialData();
           }
         })
@@ -323,25 +328,25 @@
         MonitorDataService.objDetailDatagrid(Params).then(
           (result) => {
             _this.Obj = [];
-            result.forEach(a => {
-              let temp = {};
-              temp.ObjName = a.name;
-              temp.id = a.id;
-              temp.clickStatus = false;
-              temp.ObjVal = false;
-              temp.objtypeId = _this.queryCondition.curDataType;
-              temp.datatypeId = a.datatypeId;
-              temp.maxValue=a.maxValue;
-              temp.minValue=a.minValue;
-              if (a.datatypeId == 1) {
-                temp.ObjVal = a.curValue.toFixed(2);
-              }
-              else {
-                temp.ObjVal = a.curValue;
-              }
-              temp.objtypeName = _this.curTunnelName +a.area+ a.store;
-              _this.Obj.push(temp);
-            });
+                result.forEach(a => {
+                    let temp = {};
+                    temp.ObjName = a.name;
+                    temp.id = a.id;
+                    temp.clickStatus = false;
+                    temp.ObjVal = false;
+                    temp.objtypeId = _this.queryCondition.curDataType;
+                    temp.datatypeId = a.datatypeId;
+                    temp.maxValue=a.maxValue;
+                    temp.minValue=a.minValue;
+                    if (a.datatypeId == 1) {
+                        temp.ObjVal = a.curValue.toFixed(2);
+                    }
+                    else {
+                        temp.ObjVal = a.curValue;
+                    }
+                    temp.objtypeName = _this.curTunnelName +a.area+ a.store;
+                    _this.Obj.push(temp);
+                });
           },
           (error) => {
             console.log(error)
@@ -361,7 +366,7 @@
           // objtypeId: _this.queryCondition.curDataType
         };
         MonitorDataService.getdataVideos(Params).then((result)=>{
-          if(result){
+          if(result &&result.length>0){
             _this.videosList=result;
             _this.curVideo=result[0];
           }
