@@ -21,6 +21,8 @@ public class SectionDto implements Serializable {
 	private static final long serialVersionUID = -5147808746450270349L;
 
 	private Integer id;
+	
+	private Integer parentId;
 
 	private String name;
 	private Integer tunnelId;
@@ -136,6 +138,20 @@ public class SectionDto implements Serializable {
 	public void setEndPoint(String endPoint) {
 		this.endPoint = endPoint;
 	}
-	
 
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	@Override
+	public String toString() {
+		return "SectionDto [id=" + id + ", parentId=" + parentId + ", name=" + name + ", tunnelId=" + tunnelId
+				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", camera="
+				+ camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime=" + crtTime + ", store="
+				+ store + ", area=" + area + "]";
+	}
 }

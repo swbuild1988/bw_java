@@ -4,8 +4,20 @@
       <p slot="title">{{Obj.objtypeName}}</p>
       <!-- 开 -->
       <img src="../../../assets/UM/照明-开.png" v-if="Obj.objtypeId==11 && isOpen" class="img">
+      <img src="../../../assets/UM/fanstart.gif" v-if="Obj.objtypeId==10 && isOpen" class="img">
+      <img src="../../../assets/UM/pumpstart.gif" v-if="Obj.objtypeId==59 && isOpen" class="img">
+      <img src="../../../assets/UM/blindopen.png" v-if="Obj.objtypeId==58 && isOpen" class="img">
+      <img src="../../../assets/UM/coveropen.png" v-if="Obj.objtypeId==56 && isOpen" class="img">
       <!-- 关 -->
       <img src="../../../assets/UM/照明-关.png" v-if="Obj.objtypeId==11 && !isOpen" class="img">
+      <img src="../../../assets/UM/fanstop.png" v-if="Obj.objtypeId==10 && !isOpen" class="img">
+      <img src="../../../assets/UM/pumpstop.png" v-if="Obj.objtypeId==59 && !isOpen" class="img">
+      <img src="../../../assets/UM/blindclose.png" v-if="Obj.objtypeId==58 && !isOpen" class="img">
+      <img src="../../../assets/UM/coverclose.png" v-if="Obj.objtypeId==56 && !isOpen" class="img">
+
+      <!-- 声光报警，红外，门禁 -->
+      <img src="../../../assets/UM/能耗.png" v-if="Obj.objtypeId==41 || Obj.objtypeId==55 || Obj.objtypeId==57" class="img">
+
       <div class="switchContent">
         <i-switch v-model="Obj.ObjVal" @on-change="change" class="switch">
           <span slot="open" class="open">ON</span>
@@ -80,7 +92,7 @@
       },
     },
     mounted() {
-
+      
     },
   }
 </script>
@@ -141,7 +153,7 @@
   }
   .initOff{
     position: absolute;
-    top: 14px;
+    top: 4px;
     left: 114px;
     color: white;
   }

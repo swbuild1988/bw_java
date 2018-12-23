@@ -26,6 +26,8 @@ public class StoreDto implements Serializable {
 	private String name;
 
 	private String sn;
+	
+	private Integer parentId;
 
 	@JsonIgnore
     private Integer tunnelId;
@@ -113,12 +115,21 @@ public class StoreDto implements Serializable {
 	}
 
 
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
 	@Override
 	public String toString() {
 		return "StoreDto{" +
 				"id=" + id +
 				", name='" + name + '\'' +
 				", sn='" + sn + '\'' +
+				", parentId='" + parentId + '\'' +
 				", tunnelId=" + tunnelId +
 				", tunnel=" + tunnel +
 				", storeTypeId=" + storeTypeId +

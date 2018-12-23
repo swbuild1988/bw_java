@@ -56,7 +56,7 @@ public interface StoreService {
 	 */
 	StoreDto getStoreById(Integer id);
 
-	void add(Store store);
+	Store add(Store store);
 
 	PageInfo<StoreDto> dataGrid(StoreVo vo);
 

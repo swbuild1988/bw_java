@@ -269,4 +269,25 @@ public class ReqHistoryController {
         reqHistoryService.confirm(vo);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
+    
+    /**
+     * 入廊信息
+     * @return
+     * @author ya.liu
+     * @Date 2018年12月7日
+     */
+    @RequestMapping(value = "req-historys/info", method = RequestMethod.GET)
+    public JSONObject getReqInfo() {
+        List<JSONObject> list = new ArrayList<>();
+        String [] str = {"电力通信","供水管道","燃气管道","排水管道","供热管道"};
+        Integer [] in = {6,6,4,4,4};
+        for(int i=0,len=str.length;i<len;i++) {
+        	JSONObject obj = new JSONObject();
+        	obj.put("name", str[i]);
+        	obj.put("value", in[i]);
+        	obj.put("unit", "km");
+        	list.add(obj);
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    }
 }

@@ -1,15 +1,15 @@
 --客户表数据
 insert into T_OAM_CUSTOMER (ID, COMPANY_ID, CONTACT, TEL, CRT_TIME)
-values (2, 1, '联系人0', '13722228880', to_date('26-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
+values (2, 1, '刘冬絮', '13722228880', to_date('26-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_OAM_CUSTOMER (ID, COMPANY_ID, CONTACT, TEL, CRT_TIME)
-values (3, 2, '联系人1', '13722228881', to_date('25-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
+values (3, 2, '李理想', '13722228881', to_date('25-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_OAM_CUSTOMER (ID, COMPANY_ID, CONTACT, TEL, CRT_TIME)
-values (4, 3, '联系人2', '13722228882', to_date('24-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
+values (4, 3, '高鑫', '13722228882', to_date('24-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_OAM_CUSTOMER (ID, COMPANY_ID, CONTACT, TEL, CRT_TIME)
-values (5, 4, '联系人3', '13722228883', to_date('23-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
+values (5, 4, '顾亚茹', '13722228883', to_date('23-06-2018 10:17:47', 'dd-mm-yyyy hh24:mi:ss'));
 commit;
 
 
