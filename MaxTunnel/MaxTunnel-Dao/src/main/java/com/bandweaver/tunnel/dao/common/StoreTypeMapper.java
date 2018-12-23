@@ -27,4 +27,6 @@ public interface StoreTypeMapper {
 	StoreType getByName(String name);
 
     StoreType getBySN(String sn);
+    
+    List<StoreType> getParent();
 }

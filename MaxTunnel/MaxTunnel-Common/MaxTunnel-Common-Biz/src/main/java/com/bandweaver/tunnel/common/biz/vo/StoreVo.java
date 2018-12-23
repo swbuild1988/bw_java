@@ -17,6 +17,8 @@ public class StoreVo extends BaseVo{
 
     private String sn;
     
+    private Integer parentId;
+    
     private Integer tunnelId;
 
     private Integer storeTypeId;
@@ -48,6 +50,14 @@ public class StoreVo extends BaseVo{
     public void setSn(String sn) {
         this.sn = sn;
     }
+
+    public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
     public Integer getTunnelId() {
         return tunnelId;
