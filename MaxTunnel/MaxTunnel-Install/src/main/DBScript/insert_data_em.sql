@@ -1,3 +1,4 @@
+
 --相关单位
 insert into T_EM_RELATED_UNIT (id, name, contact, tel, unit_type, address, section_ids, longitude, latitude, crt_time)
 values (2, '上海市第一人民医院', '王梦飞', '13702569817', 1, '徐汇区人民路001号', '[1],[2],[3],[4],[5]', '112.49326617606197', '37.70596780087469', to_date('09-07-2018 10:59:56', 'dd-mm-yyyy hh24:mi:ss'));

@@ -250,7 +250,7 @@
     </select>
     
     <select id="getAllInspectionPlan" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
-    	SELECT id,name
+    	SELECT id,plan_id,name
     	FROM t_omm_inspection_plan 
     	ORDER BY create_time DESC
     </select>

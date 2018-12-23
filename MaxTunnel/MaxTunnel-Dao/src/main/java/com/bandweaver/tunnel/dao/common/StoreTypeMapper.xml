@@ -6,10 +6,11 @@
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="SN" jdbcType="VARCHAR" property="sn" />
+    <result column="PARENT" jdbcType="VARCHAR" property="parent" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, NAME, SN, CRT_TIME
+    ID, NAME, SN, PARENT, CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -22,9 +23,9 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.StoreType">
-    insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME
+    insert into T_COMMON_STORE_TYPE (ID, NAME, SN, PARENT, CRT_TIME
       )
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},  #{sn,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR},  #{sn,jdbcType=VARCHAR},  #{parent,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.StoreType">
@@ -39,6 +40,9 @@
         <if test="sn != null">
             sn,
         </if>
+      <if test="parent != null">
+        parent,
+      </if>
       <if test="crtTime != null">
         CRT_TIME,
       </if>
@@ -52,6 +56,9 @@
       </if>
         <if test="sn != null">
             #{sn,jdbcType=VARCHAR},
+        </if>
+      <if test="parent != null">
+            #{parent,jdbcType=VARCHAR},
         </if>
       <if test="crtTime != null">
         #{crtTime,jdbcType=TIMESTAMP},
@@ -67,6 +74,9 @@
         <if test="sn != null">
             SN = #{sn, jdbcType=VARCHAR},
         </if>
+      <if test="parent != null">
+            parent = #{parent, jdbcType=VARCHAR},
+        </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -77,6 +87,7 @@
     update T_COMMON_STORE_TYPE
     set NAME = #{name,jdbcType=VARCHAR},
         SN = #{sn,jdbcType=VARCHAR},
+        parent = #{parent,jdbcType=VARCHAR},
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -105,6 +116,9 @@
         <if test="sn != null and sn.trim() != ''">
             and instr(sn,#{sn})>0
         </if>
+        <if test="parent != null and parent.trim() != ''">
+            and parent = #{parent}
+        </if>
   		<if test="startTime != null">
   			and crt_time &gt;= #{startTime}
   		</if>
@@ -112,7 +126,7 @@
   			and crt_time &lt;= #{endTime}
   		</if>
   	</where>
-  	order by crt_time desc
+  	order by sn asc
   </select>
   
   
@@ -123,6 +137,11 @@
 
     <select id="getBySN" resultMap="BaseResultMap">
         select * from T_COMMON_STORE_TYPE where sn = #{sn}
+    </select>
+    
+    <select id="getParent" resultMap="BaseResultMap">
+        select * from t_common_store_type
+        where sn in (select distinct parent from T_COMMON_STORE_TYPE t)
     </select>
 
 </mapper>

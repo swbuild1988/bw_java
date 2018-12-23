@@ -77,8 +77,8 @@ public class InstrumentServiceImpl implements InstrumentService {
 	}
 
 	@Override
-	public List<CommonDto> getCountGroupByTypeId() {
-		return instrumentMapper.getCountGroupByTypeId();
+	public List<CommonDto> getCountGroupByTypeId(InstrumentVo vo) {
+		return instrumentMapper.getCountGroupByTypeId(vo);
 	}
 
 	

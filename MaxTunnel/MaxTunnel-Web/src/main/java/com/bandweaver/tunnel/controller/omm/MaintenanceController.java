@@ -371,7 +371,7 @@ public class MaintenanceController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("key", defect.getName());
 //            jsonObject.put("val", null == defect.getGroupId() ? 0 : defect.getGroupId());
-            jsonObject.put("val", (int) (Math.random() * 1));
+            jsonObject.put("val", (int) (Math.random() * 5 + 1));
             list.add(jsonObject);
         }
 

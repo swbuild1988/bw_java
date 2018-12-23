@@ -73,6 +73,7 @@ begin
 /*==============================================================*/
 /* Table: "T_SECURITY_USER"                                     */
 /*==============================================================*/
+-- ɾ�����
       num := 0;
       select count(1) into num from user_constraints where constraint_name = 'FK_T_U_REFERENCE_T_U'; 
       if num > 0 then   
@@ -527,7 +528,7 @@ alter table T_COMMON_area
 
 -- create sequence
 create sequence COMMON_area_SEQUENCE
-start with 1000
+start with 1001
 increment by 1
 nomaxvalue
 nocycle
@@ -722,13 +723,16 @@ begin
   select SECURITY_USER_ROLE_SQ.nextval into :new.id from dual;
 end SECURITY_USER_ROLE_TG;
 /
- 
+
+   
+   
       
 --管廊仓类型表
 CREATE TABLE T_COMMON_STORE_TYPE  (
    "ID"                 NUMBER               NOT NULL,
    NAME			VARCHAR2(50) not null,
    SN       varchar2(20) not null,
+   PARENT       varchar2(20) ,
    "CRT_TIME"           DATE,
    CONSTRAINT PK_T_COMMON_STORE_TYPE PRIMARY KEY ("ID")
 );
@@ -755,6 +759,7 @@ CREATE TABLE T_COMMON_STORE  (
    "ID"                 NUMBER               NOT NULL,
    name                 varchar2(100),
    sn                   varchar2(20) not null,
+   PARENT_ID            NUMBER,
    "TUNNEL_ID"          NUMBER               NOT NULL,
    store_type_id	    NUMBER		           NOT NULL,
    camera             varchar2(200),
@@ -763,7 +768,7 @@ CREATE TABLE T_COMMON_STORE  (
 );
 --create sequence
 create sequence COMMON_STORE_SEQUENCE
-start with 1000
+start with 1001
 increment by 1
 nomaxvalue
 nocycle
@@ -780,17 +785,17 @@ end COMMON_STORE_TG;
 
 --仓节
 CREATE TABLE T_COMMON_SECTION  (
-   id                   NUMBER               NOT NULL,
-   parent_id            NUMBER                       ,
-   name                 varchar2(50)		     not null,
+   id                NUMBER               NOT NULL,
+   name                 varchar2(50)		not null,
    tunnel_id            number,
-   store_id             NUMBER               NOT NULL,
-   area_id              NUMBER               NOT NULL,
-   total_cable_number   number,
-   camera               varchar2(200),
-   start_point          varchar2(100),
-   end_point            varchar2(100),
-   crt_time             DATE,
+   store_id          NUMBER               NOT NULL,
+   area_id          NUMBER               NOT NULL,
+   total_cable_number number,
+   parent_id             NUMBER,
+   camera             varchar2(200),
+   start_point        varchar2(100),
+   end_point          varchar2(100),
+   crt_time          DATE,
    CONSTRAINT PK_T_COMMON_SECTION PRIMARY KEY ("ID")
 );
 
