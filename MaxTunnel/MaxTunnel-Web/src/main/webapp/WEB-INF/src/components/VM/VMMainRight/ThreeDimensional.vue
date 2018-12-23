@@ -1,5 +1,5 @@
 <template >
-    <div class="ThreeDimensionalContainer BackgroundImage">
+    <div class="ThreeDimensionalContainer">
         <sm-viewer
                 id="threeDViewer"
                 ref="smViewer"
@@ -14,6 +14,10 @@
 </template>
 
 <style scoped>
+    .ThreeDimensionalContainer{
+        width: 100%;
+        height: 100%;
+    }
     .ThreeDimensionalContainer >>> .ivu-select{
         position: absolute;
         top: 5%;

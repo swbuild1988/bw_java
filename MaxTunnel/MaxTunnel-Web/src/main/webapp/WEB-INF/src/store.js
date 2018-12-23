@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
 Vue.use(Vuex)
 
 // 应用初始状态
@@ -31,17 +32,17 @@ const VMstate = {
     },
     //预案视屏联动
     addPlanLinkageVideos: ({
-      planLinkageVideos
-    }, {
-      id,
-      processInstanceId
-    }) => {
+                             planLinkageVideos
+                           }, {
+                             id,
+                             processInstanceId
+                           }) => {
       planLinkageVideos.videoIds = id;
       planLinkageVideos.processInstanceId = processInstanceId;
     },
     removePlanLinkageVideos: ({
-      planLinkageVideos
-    }) => {
+                                planLinkageVideos
+                              }) => {
       planLinkageVideos.videoIds = null;
       planLinkageVideos.processInstanceId = null;
     }
@@ -72,14 +73,11 @@ const UMstate = {
     // state指的是state数据
     // commit调用mutations的方法
     // plan就是调用此方法时要传的参数
-    setPlanData({
-      commit,
-      state
-    }, plan) {
+    setPlanData({commit, state}, plan) {
       // 跟后台打交道
       // 调用mutaions里面的方法
       commit("setPlanData", plan);
-    }
+    },
   },
   // 4. mutations
   mutations: {
@@ -88,6 +86,7 @@ const UMstate = {
     setPlanData(state, plan) {
       state.planData = plan;
     },
+
     comLogin(state, data) {
       state.communication.isLogin = data.isLogin
       state.communication.token = data.token

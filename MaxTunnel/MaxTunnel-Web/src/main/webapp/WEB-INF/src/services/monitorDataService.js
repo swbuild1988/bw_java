@@ -53,9 +53,9 @@ var MonitorDataService = {
 		})
 	},
 	// 详情面板数据分页查询
-	objDetailDatagrid: function(params) {
+	objDetailDatagrid: function(prams) {
 		return new Promise((resolve, reject) => {
-			axios.post('measobjs/datagrid', params).then(res => {
+			axios.post('measobjs/datas', prams).then(res => {
 				let {
 					code,
 					data,
@@ -64,7 +64,7 @@ var MonitorDataService = {
 				if (code == 200) {
 					resolve(data)
 				} else {
-					reject(msg + '地址：measobjs/datagrid')
+					reject(msg + '地址：measobjs/datas')
 				}
 			})
 		})
@@ -88,6 +88,23 @@ var MonitorDataService = {
 				.catch(error => {
 					reject(error.response.status + '  ' + error.response.data)
 				})
+		})
+	},
+
+	getdataVideos: function(params) {
+		return new Promise((resolve, reject) => {
+			axios.post('/videos/condition', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + '地址：/videos/condition')
+				}
+			})
 		})
 	},
 	// 根据ids和dataTypeId获取检测数据

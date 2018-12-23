@@ -14,11 +14,11 @@
       <div class="extre">
         <div class="min">
           <Icon type="arrow-up-c"></Icon>
-          <span>800</span>
+          <span>{{Obj.minValue}}</span>
         </div>
         <div class="max">
           <Icon type="arrow-down-c"></Icon>
-          <span>10000</span>
+          <span>{{Obj.maxValue}}</span>
         </div>
       </div>
       <div>{{Obj.ObjName}}</div>
@@ -68,8 +68,8 @@
           minValue: 0,
           maxValue: 100
         }
-      }
-    },
+    }
+  },
     data: function () {
       return {
         gasMax: 200,

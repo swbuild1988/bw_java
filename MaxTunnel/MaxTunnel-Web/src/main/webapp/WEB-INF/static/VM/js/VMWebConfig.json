@@ -37,6 +37,10 @@
                                     }
                                 }
                             }
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -70,6 +74,10 @@
                             "series": [{
                                 "type": "radar"
                             }]
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -112,6 +120,10 @@
                                 "animationType": "scale",
                                 "animationEasing": "elasticOut"
                             }]
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -149,9 +161,13 @@
                                 "areaStyle": {
                                     "normal": {
                                         "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
-                                }
+                                    }
                                 }
                             }]
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -179,6 +195,10 @@
                                     }
                                 }
                             }
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -205,6 +225,10 @@
                                     }
                                 }
                             }
+                        },
+                        "timer": {
+                            "intervalId": 0,
+                            "intervalTime": 15000
                         }
                     }
                 },
@@ -398,17 +422,17 @@
             "name": "飞行路线_2",
             "path": "/VM/font/flytest2.fpf",
             "isFlyLoop":"true",
-            "waitTime" : 3
+            "waitTime" : 30
         }
     ],
     "VMEntityConfig":{
-        "visualizationEntityParam":[
+        "entityParam":[
             {
                 "entityExtendParameters":{
                     "position":{
                         "X":"112.49948864664668",
                         "Y":"37.71034251365869",
-                        "Z":"5.05671606378695929"
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
                         "outlineWidth":"6",
@@ -416,12 +440,7 @@
                     },
                     "label":{
                         "text":"监控中心",
-                        "fontSize":"30",
-                        "outlineWidth":"10",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"9"
-                        }
+                        "fontSize":"30"
                     }
                 }
             },
@@ -430,7 +449,7 @@
                     "position":{
                         "X":"112.49506",
                         "Y":"37.706148",
-                        "Z":"5.05671606378695929"
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
                         "outlineWidth":"6",
@@ -438,12 +457,7 @@
                     },
                     "label":{
                         "text":"晋源区实验中学",
-                        "fontSize":"30",
-                        "outlineWidth":"10",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"9"
-                        }
+                        "fontSize":"30"
                     }
                 }
             },
@@ -452,7 +466,7 @@
                     "position":{
                         "X":"112.499595",
                         "Y":"37.704056",
-                        "Z":"5.05671606378695929"
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
                         "outlineWidth":"6",
@@ -460,12 +474,7 @@
                     },
                     "label":{
                         "text":"山西省儿童医院",
-                        "fontSize":"30",
-                        "outlineWidth":"10",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"9"
-                        }
+                        "fontSize":"30"
                     }
                 }
             },
@@ -474,7 +483,7 @@
                     "position":{
                         "X":"112.477914",
                         "Y":"37.715545",
-                        "Z":"5.05671606378695929"
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
                         "outlineWidth":"6",
@@ -482,147 +491,80 @@
                     },
                     "label":{
                         "text":"晋源区政府",
-                        "fontSize":"30",
-                        "outlineWidth":"10",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"9"
-                        }
+                        "fontSize":"40"
                     }
                 }
             },
             {
                 "entityExtendParameters":{
                     "position":{
-                        "X":"112.519681",
-                        "Y":"37.704139",
-                        "Z":"5.05671606378695929"
+                        "X":"112.4858731580146",
+                        "Y":"37.72776923822512",
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
                         "outlineWidth":"6",
                         "pixelSize":"20"
                     },
                     "label":{
-                        "text":"南瓦窑小学",
-                        "fontSize":"30",
-                        "outlineWidth":"10",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"9"
-                        }
-                    }
-                }
-            }
-        ],
-        "PCEntityParam":[
-            {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.49948864664668",
-                        "Y":"37.71034251365869",
-                        "Z":"5.05671606378695929"
-                    },
-                    "point":{
-                        "outlineWidth":"2",
-                        "pixelSize":"8"
-                    },
-                    "label":{
-                        "text":"监控中心",
-                        "fontSize":"12",
-                        "outlineWidth":"2",
-                        "pixelOffsetX":"0"
+                        "text":"太原古县城",
+                        "fontSize":"30"
                     }
                 }
             },
             {
                 "entityExtendParameters":{
                     "position":{
-                        "X":"112.49506",
-                        "Y":"37.706148",
-                        "Z":"5.05671606378695929"
+                        "X":"112.52207233753701",
+                        "Y":"37.70384793736499",
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
-                        "outlineWidth":"2",
-                        "pixelSize":"8"
+                        "outlineWidth":"6",
+                        "pixelSize":"20"
                     },
                     "label":{
-                        "text":"晋源区实验中学",
-                        "fontSize":"12",
-                        "outlineWidth":"2",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"5"
-                        }
+                        "text":"管廊东入口",
+                        "fontSize":"30"
                     }
                 }
             },
             {
                 "entityExtendParameters":{
                     "position":{
-                        "X":"112.499595",
-                        "Y":"37.704056",
-                        "Z":"5.05671606378695929"
+                        "X":"112.51743415066589",
+                        "Y":"37.69655876626396",
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
-                        "outlineWidth":"2",
-                        "pixelSize":"8"
+                        "outlineWidth":"6",
+                        "pixelSize":"20"
                     },
                     "label":{
-                        "text":"山西省儿童医院",
-                        "fontSize":"12",
-                        "outlineWidth":"2",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"5"
-                        }
+                        "text":"污水泵站",
+                        "fontSize":"30"
                     }
                 }
             },
             {
                 "entityExtendParameters":{
                     "position":{
-                        "X":"112.477914",
-                        "Y":"37.715545",
-                        "Z":"5.05671606378695929"
+                        "X":"112.51382289846887",
+                        "Y":"37.69271374038769",
+                        "Z":"8.05671606378695929"
                     },
                     "point":{
-                        "outlineWidth":"2",
-                        "pixelSize":"8"
+                        "outlineWidth":"6",
+                        "pixelSize":"20"
                     },
                     "label":{
-                        "text":"晋源区政府",
-                        "fontSize":"12",
-                        "outlineWidth":"2",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"5"
-                        }
-                    }
-                }
-            },
-            {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.519681",
-                        "Y":"37.704139",
-                        "Z":"5.05671606378695929"
-                    },
-                    "point":{
-                        "outlineWidth":"2",
-                        "pixelSize":"8"
-                    },
-                    "label":{
-                        "text":"南瓦窑小学",
-                        "fontSize":"12",
-                        "outlineWidth":"2",
-                        "pixelOffset":{
-                            "x":"0",
-                            "y":"5"
-                        }
+                        "text":"雨水泵站",
+                        "fontSize":"30"
                     }
                 }
             }
         ]
-    }
+    },
+    "progressTime":60 
     
 }

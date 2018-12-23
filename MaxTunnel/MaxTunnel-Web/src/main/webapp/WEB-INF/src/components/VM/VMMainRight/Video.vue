@@ -1,16 +1,18 @@
 <template>
-      <div class="VideoContainer BackgroundImage">
+      <div class="VideoContainer">
           <div class="Video" id="video">
-              <div :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}"
+              <div :style="{height:'100%',width:'100%'}"
                     v-show="style.showVideo"
                     class="view"
                     v-for="(item,index) in tempVideos" :key="index">
-                  <video-component :video="item" :id="item.id"></video-component>
+                  <!-- <video-component :video="item" :id="item.id"></video-component> -->
               </div>
-              <Carousel v-model="defaultLoopIndex"
+              
+              <!-- <Carousel v-model="defaultLoopIndex"
                         :autoplay="isAutoplay"
                         v-show="!style.showVideo"
                         :dots="setting.dots"
+                        :radius-dot="true"
                         :loop = "setting.loop"
                         @on-change="changeCopyLoopScene"
                         :autoplay-speed="setting.autoplaySpeed">
@@ -19,11 +21,15 @@
                           <video-component :video="item" :id="item.id"></video-component>
                       </div>
                   </CarouselItem>
-              </Carousel>
+              </Carousel> -->
+                <div class="view" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
+                    <video-component v-bind:video="currLoopSceneVideo" v-bind:id="'currLoopSceneVideoId'"></video-component>
+                </div>
           </div>
           <i-switch
                   v-model="setting.switchBtn"
                   size="large"
+                  v-show="false"
                   @on-change="getStatus">
               <span slot="open">轮播</span>
               <span slot="close">筛选</span>
@@ -35,11 +41,15 @@
 </template>
 
 <style scoped>
+    .VideoContainer {
+        width: 100%;
+        height: 100%;
+    }
     .Video{
         position: relative;
-        top: 14.5%;
+        /* top: 14.5%; */
         width: 100%;
-        height: 85.5%;
+        height: 100%;
     }
     .Video >>> .ivu-carousel-arrow:hover{
         background-color:#001A27;
@@ -99,7 +109,16 @@
                 allVideos:[], //保存所有的视屏服务
                 defaultOption: 1,
                 defaultVideo:0,
-                defaultLoopIndex:0
+                defaultLoopIndex:0,
+                currShowVideo:{
+                    showVideoTimer:null,
+                    loopSceneIndex:0
+                },
+                currLoopSceneVideo:{
+                    id: null,
+                    url: ''
+                },
+                videoDOM:null,
             }
         },
         components:{
@@ -159,6 +178,7 @@
 
                 _this.loopScene[index].filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID = val.id }});
 
+                // _this.changeCopyLoopScene(index);
                 // 监听轮播索引
                 _this.changeStyle(_this.loopScene[index]);
             },
@@ -194,7 +214,7 @@
                     }
                 },
                 deep:true,
-            },
+            }
         },
         methods:{
             init(){
@@ -222,14 +242,14 @@
 
             },
             changeStyle(showVideos){
-                if(!Array.isArray(showVideos))return;
+                // if(!Array.isArray(showVideos))return;
 
                 let _this=this,
                      height=document.getElementById('video').offsetHeight,
                      width=document.getElementById('video').offsetWidth;
 
-                _this.style.offsetHeight = showVideos.length>6 ? height*0.18 : height*0.28;
-                _this.style.offsetWidth = showVideos.length>6 ? width*0.32 : width*0.48;
+                _this.style.offsetHeight = height;
+                _this.style.offsetWidth = width;
 
                 return false;
             },
@@ -245,7 +265,7 @@
 
                                 para.array.splice(0)//清空数组
                                 data.forEach(tunnel=>para.url=='/tunnels' ? para.array.push({value:tunnel.id,label:tunnel.name})
-                                    :para.array.push(tunnel.videos));
+                                    :para.array.push(...tunnel.videos));
                                 resolve();
                             }
                         })
@@ -304,7 +324,8 @@
                 
                 _this.fetchData({url:'/video_scenes',array:_this.loopScene})
                     .then(()=>{
-                        
+                        _this.getShowVideo();
+
                         _this.copyLoopScene(_this.loopScene,_this.virtualLoopScene);
 
                         _this.changeStyle(_this.loopScene[0]);
@@ -333,21 +354,35 @@
             copyLoopScene(originalArray,copyArray){
                 copyArray.splice(0);
 
-                originalArray.forEach((val,key) => !key ? copyArray.push( val ) : copyArray.push( [] ));
+                originalArray.forEach((val,key) => !key ? copyArray.push( [val] ) : copyArray.push( [] ));
             },
             changeCopyLoopScene(oldValue, value){
                 let { virtualLoopScene,loopScene } = this; 
+                
+                virtualLoopScene[value].push(loopScene[value]);
+                virtualLoopScene[oldValue].splice(0);
 
-                if( oldValue !== value ){
-                    virtualLoopScene[value].push(...loopScene[value]);
-                    virtualLoopScene[oldValue].splice(0);
-                }
+            },
+            getShowVideo(){
 
+                this.changeVideo()
+                this.currShowVideo.showVideoTimer = setInterval(()=>this.changeVideo(),10000)
+            },
+            changeVideo(){
+                this.currLoopSceneVideo = this.loopScene[ this.currShowVideo.loopSceneIndex ];
+                this.currShowVideo.loopSceneIndex >= this.loopScene.length-1 
+                    ? this.currShowVideo.loopSceneIndex = 0 
+                    : this.currShowVideo.loopSceneIndex++;
             },
             addIframe(id){
                 $('#'+id).append($('<iframe src="about:block" frameborder="0" marginheight="0" marginwidth="0" style="position:relative;visibility:inherit;top:0;left:0;width:100%;height:100%;z-Index:-1;opacity: 0;"/>'));
             }
-        }
+        },
+        beforeDestroy() {
+            let { currShowVideo } = this;
+
+            clearInterval(currShowVideo.showVideoTimer)
+        },
     }
 
 </script>
