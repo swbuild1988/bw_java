@@ -45,7 +45,7 @@
   import CustomStep from "../../../../components/UM/EM/CustomStep"
   import {getFormatTime} from '../../../../scripts/DateFormat.js'
   import ComfirmStep from '../../../../components/UM/EM/ConfirmStep'
-import video from '../../../../components/Common/Video/VideoComponent'
+  import video from '../../../../components/Common/Video/VideoComponent'
   export default {
     name: "execute-plan",
     data() {

@@ -9,7 +9,7 @@
         <div class="layout-nav">
           <div style="position: fixed;right: 34px;">
             <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
-              <Dropdown placement="bottom-start">
+                <Dropdown placement="bottom-start">
                 <Button type="primary">
                   <Icon :type="module.frontIcon"></Icon>
                   {{module.name}}
@@ -230,6 +230,10 @@
               {
                 name: '资料管理',
                 url: '/UM/tunnelDocuments/list'
+              },
+              {
+                name: '可视化平台',
+                url: '/VMMain'
               }
             ]
           }

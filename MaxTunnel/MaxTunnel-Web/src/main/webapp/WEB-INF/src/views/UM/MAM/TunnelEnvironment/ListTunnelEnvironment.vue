@@ -238,92 +238,6 @@
         }
         this.getObjDetialData();
       },
-      //加载超图模型
-      /*onload(parent) {
-        let _this = this;
-        let Cesium = parent.Cesium;
-
-        // 初始化viewer部件
-        var viewer = new Cesium.Viewer(this.mapId, {
-          navigation: false, //关闭导航控件
-          infoBox: false
-        });
-        var scene = viewer.scene,
-          widget = viewer.cesiumWidget,
-          imageryLayers = viewer.imageryLayers,
-          imagery_mec;
-        this.scene = scene;
-        var provider_mec = new Cesium.SuperMapImageryProvider({
-          url: this.SuperMapConfig.IMG_MAP //墨卡托投影地图服务
-        });
-        imagery_mec = imageryLayers.addImageryProvider(provider_mec);
-
-        try {
-          //打开所发布三维服务下的所有图层
-          var promise = scene.open(this.SuperMapConfig.BIM_SCP);
-
-          promise.then(function (layer) {
-            // 将东西设置成不可选择
-            layer.forEach(element => {
-              // 结构性框架的要查数据，非结构性框架的不用管了，也不能选择
-              if (element.name.indexOf("结构框架") < 0) {
-                element.selectEnabled = false;
-              } else {
-                // 设置查找参数
-                element.setQueryParameter({
-                  url: this.SuperMapConfig.BIM_DATA,
-                  dataSourceName: "tunnel",
-                  dataSetName: "结构框架",
-                  keyWord: "SmID"
-                });
-              }
-            });
-          });
-          //注册鼠标点击事件
-          viewer.pickEvent.addEventListener(function (feater) {
-          });
-          // lay是所有的数据集
-          Cesium.when(
-            promise,
-            function (layer) {
-              //设置相机位置、视角，便于观察场景
-              setViewAngle(scene, Cesium, _this.camera);
-              viewer.pickEvent.addEventListener(function (feature) {
-              });
-            },
-            function (e) {
-              if (widget._showRenderLoopErrors) {
-                var title =
-                  "加载SCP失败，请检查网络连接状态或者url地址是否正确？";
-                widget.showErrorPanel(title, undefined, e);
-              }
-            }
-          );
-        } catch (e) {
-          if (widget._showRenderLoopErrors) {
-            var title = "渲染时发生错误，已停止渲染。";
-            widget.showErrorPanel(title, undefined, e);
-          }
-        }
-
-        //滚轮滑动，获得当前窗口的经纬度，偏移角
-        var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-        handler.setInputAction(e => {
-          addLabel.call(
-            _this,
-            scene,
-            viewer,
-            500,
-            doSqlQuery,
-            this.SuperMapConfig.BIM_DATA,
-            labelSqlCompleted,
-            processFailed,
-            getSection
-          );
-        }, Cesium.ScreenSpaceEventType.WHEEL);
-
-        bubble.call(_this, Cesium, scene, viewer, "model-content"); //调用气泡
-      },*/
       //变更模型视角
       changeArea(area) {
         let _this = this;
@@ -374,17 +288,6 @@
         this.btnStasus = false;
         //获取区段列表
         let _this = this
-        TunnelService.getSectionsByStoreId(_this.queryCondition.storeId).then(
-          (result) => {
-            _this.sections = result.sort((a, b) => a.id - b.id);
-            _this.curSotre.id = _this.sections[0].id;
-            _this.queryCondition.sectionId = _this.sections[0].id;
-            _this.curSotre.name = _this.sections[0].name;
-            _this.getSectionsMonitorData();
-          },
-          (error) => {
-            console.log(error)
-          })
         //获取位置信息
         let curView = this.sotres.filter(
           a => a.id == this.queryCondition.storeId
@@ -460,6 +363,19 @@
           (error) => {
             console.log(error)
           })
+
+        //获取区域
+        TunnelService.getTunnelArea(_this.tunnelId).then((result) => {
+          if (result) {
+            _this.sections = [];
+            result.forEach(a => {
+              var temp = {};
+              temp.name = a.name;
+              temp.id = a.id;
+              _this.sections.push(temp);
+            })
+          }
+        })
       },
 
       //根据监测类型获取数据
