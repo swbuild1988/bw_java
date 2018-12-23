@@ -10,7 +10,7 @@ var MonitorDataService = {
 					data,
 					msg
 				} = res.data
-        if (code == 200) {
+				if (code == 200) {
 					resolve(data)
 				} else {
 					reject(msg + '地址：tunnels/' + tunnelId + "/" + monitorType + '/max-cv')
@@ -67,6 +67,27 @@ var MonitorDataService = {
 					reject(msg + '地址：measobjs/datagrid')
 				}
 			})
+		})
+	},
+	// 详情面板数据
+	objDetail(params) {
+		return new Promise((resolve, reject) => {
+			axios.post('measobjs/datas', params)
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：measobjs/datas')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
 		})
 	},
 	// 根据ids和dataTypeId获取检测数据

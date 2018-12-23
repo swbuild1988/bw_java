@@ -19,7 +19,7 @@
       </div>
       </Col>
       <br><br><br> <br><br><br>
-      <div style="width: 90vw;margin-left: 5vw">
+      <div style="width: 80vw;margin-left: 10vw;">
       <Row>
         <Col span="12">
         <div class="title">
@@ -37,7 +37,7 @@
         <Col span="12">
           <Button type="info" class="renYuandinwei"
                   @click="goToMoudle({ path:'/UM/TunnelSafety'})">
-            <div><img src="../../assets/UM/巡检.png">
+            <div><img src="../../assets/UM/管线.png">
               <div :style="{fontSize:mySize}">管廊安防监测</div>
             </div>
           </Button>
@@ -46,7 +46,7 @@
       <Row>
         <Col span="22" offset="2">
         <Button class=" btn-nenghao"
-                style="width: 37vw; height: 14vh; margin: 1vh 0 0.5vh;
+                style="width: 32.6vw; height: 14vh; margin: 1vh 0 0.5vh;
                  box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
                 @click="goToMoudle({ path:'/UM/virtualInspect'})">
           <div><img src="../../assets/UM/能耗.png">
@@ -58,7 +58,7 @@
       <Row type="flex" justify="center" align="top" class="code-row-bg">
         <Col span="10" offset="2">
           <Button type="error" class="renYuandinwei" @click="goToMoudle({ path:'/UM/PersonnelPosition/tunnel'})">
-            <div><img src="../../assets/UM/消防.png">
+            <div><img src="../../assets/UM/检修.png">
               <div :style="{fontSize:mySize}">人员定位</div>
             </div>
           </Button>
@@ -74,18 +74,26 @@
     </Col>
     <Col span="12">
       <div class="title">
-        <p>管理</p>
+        <p style="margin-right: 8vw">管理</p>
       </div>
       <Row type="flex" justify="center" align="top" class="code-row-bg">
-        <Col span="10" offset="2">
-          <Button class=" btn-xunjian renYuandinwei"
+        <Col span="10">
+          <Button class=" btn-xunjian"
+          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
                   @click="goToMoudle({ path:'/UM/patrol/homePage'})">
             <div><img :width="imgWidth" src="../../assets/UM/巡检.png">
-              <div :style="{fontSize:mySize}">运维管理</div>
+              <div :style="{fontSize:mySize}">巡检管理</div>
+            </div>
+          </Button>
+          <Button 
+          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);" type="info"
+                  @click="goToMoudle({ path:'/UM/equipment/homePage'})">
+            <div><img :width="imgWidth" src="../../assets/UM/通信.png">
+              <div :style="{fontSize:mySize}">设备管理</div>
             </div>
           </Button>
         </Col>
-        <Col span="12">
+        <Col span="14">
           <Button class=" btn-jiqiren renYuandinwei" 
                   @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
             <div><img :width="imgWidth" src="../../assets/UM/用户.png">
@@ -95,24 +103,26 @@
         </Col>
       </Row>
       <Row>
-        <Col span="22" offset="2">
-          <Button type="success" style="width:37vw;"
-                class="yjGuanLi" @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
+        <Col span="24">
+          <Button type="success" style="width:32.6vw; height: 14vh; 
+             margin-top: 0.5vh;
+            box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
+                @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
             <div><img src="../../assets/UM/数据.png">
               <div :style="{fontSize:mySize}">数据分析</div>
             </div>
           </Button>
         </Col>
-        <Col span="22" offset="2">
-          <Button class=" btn-yonhu ywGuanli" style="width:37vw;"
+        <Col span="24">
+          <Button class=" btn-yonhu ywGuanli" style="width:32.6vw;"
                   @click="goToMoudle({ path:'/UM/plans/detial/FirePlanProcess'})">
-            <div><img :width="imgWidth" src="../../assets/UM/检修.png">
+            <div><img :width="imgWidth" src="../../assets/UM/消防.png">
               <div :style="{fontSize:mySize}">预案管理</div>
             </div>
           </Button>
         </Col>
-        <Col span="22" offset="2">
-          <Button class="ywGuanli " type="primary" style="width:37vw;"
+        <Col span="24">
+          <Button class="ywGuanli " type="primary" style="width:32.6vw;"
                 @click="goToMoudle({ path:'/UM/TunnelEnergy/homepage'})">
             <div><img src="../../assets/UM/能耗.png">
               <div :style="{fontSize:mySize}">管廊能耗管理</div>
@@ -218,7 +228,7 @@
 
   .renYuandinwei {
     height: 28vh;
-    width: 18vw;
+    width: 16vw;
     margin-top: 0.5vh;
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
   }
@@ -419,7 +429,8 @@
   }
   .title{
     text-align: center;
-    font-size: 40px;
+    font-size: 48px;
     font-weight: bold;
+    margin-bottom: 2vh;
   }
 </style>
