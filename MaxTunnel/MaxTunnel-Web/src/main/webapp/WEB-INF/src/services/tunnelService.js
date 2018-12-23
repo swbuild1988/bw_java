@@ -332,9 +332,9 @@ var TunnelService = {
     })
   },
   //获取管廊内区域
-  getTunnelArea:function (tunnelId) {
+  getTunnelArea: function(tunnelId) {
     return new Promise((resolve, reject) => {
-      axios.get("tunnels/"+tunnelId+"/areas")
+      axios.get("tunnels/" + tunnelId + "/areas")
         .then(res => {
           let {
             code,
@@ -344,7 +344,28 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels/"+tunnelId+"/areas")
+            reject(msg + ",地址:/tunnels/" + tunnelId + "/areas")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 批量添加区段
+  batchCreateSections(params) {
+    return new Promise((resolve, reject) => {
+      axios.post("sections/batch", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:sections/batch")
           }
         })
         .catch(error => {
