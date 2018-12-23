@@ -340,13 +340,13 @@ public class VideoController {
         Integer sectionId = object.getInteger("sectionId");
 
         if (tunnelId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId() == tunnelId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
         if (storeId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getStoreId() == storeId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
         if (areaId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getAreaId() == areaId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
         if (sectionId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getSectionId() == sectionId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getSectionId().intValue() == sectionId.intValue()).collect(Collectors.toList());
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
     }
