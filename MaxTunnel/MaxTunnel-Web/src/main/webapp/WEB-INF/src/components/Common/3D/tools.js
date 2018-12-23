@@ -153,9 +153,8 @@ export default {
 
         },
         addIdentifierViewer(){
-            let { visualizationEntityParam,PCEntityParam } = VMEntityConfig;
+            let { entityParam } = VMEntityConfig;
 
-            let entityParam = screen.width <= 1920 ? PCEntityParam : visualizationEntityParam; //根据分辨率判断是 可视化平台 / pc端
             entityParam.forEach( entity => {
                 let { entityBaseParameters,entityExtendParameters } = entity;
 
@@ -218,9 +217,9 @@ export default {
                     fillColor:Cesium.Color.RED,
                     outlineColor:Cesium.Color.BLACK,
                     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    outlineWidth : label.outlineWidth,
+                    outlineWidth : 10,
                     verticalOrigin : Cesium.VerticalOrigin.TOP,
-                    pixelOffset : new Cesium.Cartesian2( 0 , 5 ),
+                    pixelOffset : new Cesium.Cartesian2(0, 9),
                     scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
                 }
             }:{};
@@ -232,7 +231,7 @@ export default {
                     outlineColor : Cesium.Color.WHITE,
                     outlineWidth : point.outlineWidth,
                     scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
-                }  
+                }   
             }:{};
 
             return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp);

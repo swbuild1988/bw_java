@@ -65,6 +65,36 @@
         <div>
             <section-modification v-bind="changeSectionInfo" v-on:listenToChange="saveChangeSection"></section-modification>
         </div>
+        <Modal 
+            v-model="batchCreate.isShow" 
+            width='900' 
+            style="padding-left: 20px;padding-right: 20px;"
+            title="批量添加区段"
+            ok-text="提交"
+            @on-ok="save"
+            @on-visible-change="visibleChanged"
+            >
+            <div>
+                <span>所属管廊：</span>
+                <Select v-model="batchCreate.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="showSectionsInfo">
+                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
+                </Select>
+            </div>
+            <div style="margin-top: 20px">
+                <Tabs v-model="batchCreate.tabValue">
+                    <TabPane  v-for="section in batchCreate.sectionsInfo" :label="section.storeName" :name="section.storeName" :key="section.id">
+                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 6px;margin-bottom: 6px">
+                            <Checkbox :indeterminate="section.indeterminate" :value="section.checkAll" @click.prevent.native="handleCheckAll(section)">
+                                全选
+                            </Checkbox>
+                        </div>
+                        <CheckboxGroup v-model="section.checkAllGroup" @on-change="checkChanged">
+                            <Checkbox v-for="area in section.areas" :label="area.name" :key="area.id" v-model="area.check" :value="area.check"></Checkbox>
+                        </CheckboxGroup>
+                    </TabPane>
+                </Tabs>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -72,6 +102,8 @@
 import BarnChoose from "../../../views/CM/Store/BarnChoose";
 import SectionModule from "../../../views/CM/SectionControl/SectionModule";
 import SectionModification from "../../../views/CM/SectionControl/SectionModification";
+import { TunnelService } from '../../../services/tunnelService'
+
 export default {
     name: "barn-manage",
     data() {
@@ -198,7 +230,13 @@ export default {
                 changeInfo: {}
             },
             deleteShow: false,
-            deleteSelect: []
+            deleteSelect: [],
+            batchCreate: {
+                isShow: false,
+                tunnelId: null,
+                sectionsInfo: [],  
+                tabValue: null
+            }
         };
     },
     mounted() {
@@ -303,24 +341,24 @@ export default {
         },
         create() {
             this.canCreate = false;
-            this.axios.get("/sections/create").then(res => {
-                this.canCreate = true;
-            });
+            this.batchCreate.isShow = true;
+            // this.axios.get("/sections/create").then(res => {
+            //     this.canCreate = true;
+            // });
         },
         gettunnel() {
-            this.axios.get("/tunnels").then(res => {
-                let { code, data } = res.data;
-                let _tunnels = [];
-                if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
+            let _this = this
+            TunnelService.getTunnels().then(
+                res=>{
+                    let _tunnels = []
+                    for (let i = 0; i < res.length; i++) {
                         let tunnel = {};
-                        tunnel.id = data[i].id;
-                        tunnel.name = data[i].name;
+                        tunnel.id = res[i].id;
+                        tunnel.name = res[i].name;
                         _tunnels.push(tunnel);
                     }
-                    this.tunnels = _tunnels;
-                }
-            });
+                    _this.tunnels = _tunnels;
+                })
         },
         getstoretype() {
             this.axios.get("/store-type/list").then(res => {
@@ -420,6 +458,100 @@ export default {
         },
         research() {
             this.showTable();
+        },
+        showSectionsInfo() {
+            let _this = this
+            if(this.batchCreate.tunnelId){
+                Promise.all([TunnelService.getStoresByTunnelId(this.batchCreate.tunnelId),TunnelService.getAreasByTunnelId(this.batchCreate.tunnelId)]).then(
+                result=>{
+                    _this.batchCreate.sectionsInfo = []
+                    let areas = []
+                    let checkAllGroup = []
+                    result[1].forEach(area=>{
+                        let areaInfo = {}
+                        areaInfo.id = area.id
+                        areaInfo.name = area.name
+                        areas.push(areaInfo)
+                        checkAllGroup.push(area.name)
+                    })
+                    result[0].forEach(store=>{
+                        let temp = {}
+                        temp.storeId = store.id
+                        temp.storeName = store.name
+                        temp.areas = areas
+                        temp.indeterminate = false
+                        temp.checkAll = true
+                        temp.checkAllGroup = checkAllGroup
+                        _this.batchCreate.sectionsInfo.push(temp)
+                    })
+                    _this.batchCreate.tabValue = result[0][0].name
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            }
+        },
+        handleCheckAll(section){
+            if(section.indeterminate){
+                section.checkAll = false
+            } else {
+                section.checkAll = !section.checkAll
+            }
+            section.indeterminate = false
+
+            if(section.checkAll){
+                section.areas.forEach(area=>{
+                    section.checkAllGroup.push(area.name)
+                })
+            } else {
+                section.checkAllGroup = []
+            }
+        },
+        checkChanged(data){
+            let curItem = this.batchCreate.sectionsInfo.find(item=>{
+                return item.storeName == this.batchCreate.tabValue
+            })
+            let length = curItem.areas.length
+            if(data.length == length){
+                curItem.indeterminate = false
+                curItem.checkAll = true
+            }else if(data.length > 0){
+                curItem.indeterminate = true
+                curItem.checkAll = false
+            } else {
+                curItem.indeterminate = false
+                curItem.checkAll = false
+            }
+        },
+        visibleChanged(status){
+            if(!status){
+                this.batchCreate.tunnelId = null
+                this.batchCreate.sectionsInfo = null
+            }
+        },
+        save(){
+            let res ={
+                section: []
+            }
+            this.batchCreate.sectionsInfo.forEach(info=> {
+                let tmp_section = {
+                    storeId: info.storeId,
+                    areaIds:[]
+                }
+                info.checkAllGroup.forEach(checked=> {
+                    tmp_section.areaIds.push(info.areas.find(area=>area.name == checked).id)
+                })
+                res.section.push(tmp_section)
+            })
+            let _this = this
+            TunnelService.batchCreateSections(res).then(
+                result=>{
+                    _this.$Message.info("添加成功！");
+                    _this.showTable()
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         }
     },
     components: {

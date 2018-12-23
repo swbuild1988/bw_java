@@ -43,10 +43,10 @@
     left: 0;
   }
   #top .ImgResponsive{
-    width: 14%;
-    height: 8%;
+    width: 11%;
+    height: 5.5%;
     position:absolute;
-    top: 3%;
+    top: 5%;
   }
 
   #top .TopTitle{
@@ -62,7 +62,8 @@
     margin-top: 0.5%;
     margin-bottom: 0.3%;
     color: rgba(200,242,250);
-    margin-left: 16%;
+    /* margin-left: 16%; */
+     margin-left: 26.5%;
     text-shadow: 0 0 6px #1765B3;
   }
   /* 小屏幕（显示器，小于等于 1920px） */

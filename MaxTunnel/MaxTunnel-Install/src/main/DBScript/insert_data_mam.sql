@@ -1,4 +1,5 @@
 
+
 ---------------------------------------------  监控中心相机  -----------------------------------------------------------
 
 insert into t_mam_measobj (ID, TUNNEL_ID, STORE_ID, AREA_ID, SECTION_ID, NAME, DATATYPE_ID, OBJTYPE_ID, ACTIVED, DESCRIPTION, LONGITUDE, LATITUDE, HEIGHT, DEVIATION)
@@ -374,3 +375,4 @@ commit;
 insert into T_MAM_MAXVIEW_CONFIG (ID, NAME, IP, PORT, USERNAME, PASSWORD, CRT_TIME)
 values (1, '终端1', '192.168.6.14', '80', 'admin', '14e24dc8cf60446f56eb163a7b85bce8a53d3f766badf15e86a1af857d9a9012', to_date('15-11-2018', 'dd-mm-yyyy'));
 commit;
+

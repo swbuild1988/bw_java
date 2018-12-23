@@ -31,7 +31,7 @@
                 <TestSmViewer :cameraPosition="VMConfig.CAMERA" ref="smViewer"></TestSmViewer>
             </Col>
             <Col span="8" offset="1">
-                <Collapse v-model="curPerson" accordion>
+                <Collapse v-model="curPerson" accordion v-if="!none">
                     <Panel v-for="person in personnelInfo" :name="person.id+''" :key="person.id">
                         {{ person.username }}
                         <div slot="content" class="content">
@@ -45,6 +45,7 @@
                         </div>
                     </Panel>
                 </Collapse>
+                <h2 v-if="none">暂无入廊人员或未分配设备</h2>
             </Col>
         </Row>
     </div>
@@ -98,7 +99,8 @@ import { TunnelService } from '../../../../services/tunnelService';
               //   phoneNum: 18378263525,
               //   idCard: 213811199203107264
               // }
-            ]
+            ],
+            none: true
         }
     },
     components: { 
@@ -159,7 +161,9 @@ import { TunnelService } from '../../../../services/tunnelService';
           personnelPositionService.getActiveLocators().then(
             (result)=>{
                   _this.personnelInfo = []
-                  result.forEach(locator=>{
+                  if(result.length != 0){
+                    _this.none = false
+                    result.forEach(locator=>{
                       let temp = {}
                       temp.id = locator.id
                       temp.height = locator.height
@@ -170,7 +174,11 @@ import { TunnelService } from '../../../../services/tunnelService';
                       temp.idCard = locator.owner.idCard
                       temp.phoneNum = locator.owner.phoneNum
                       _this.personnelInfo.push(temp)
-                  })
+                    })
+                  } else {
+                    _this.none = true
+                  }
+                  
             },(error)=>{
                 console.log(error)
             }

@@ -330,6 +330,27 @@ var TunnelService = {
           reject(error.response.status + '  ' + error.response.data)
         })
     })
+  },
+  //获取管廊内区域
+  getTunnelArea:function (tunnelId) {
+    return new Promise((resolve, reject) => {
+      axios.get("tunnels/"+tunnelId+"/areas")
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/tunnels/"+tunnelId+"/areas")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
   }
 };
 export {

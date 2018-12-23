@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.common.biz.itf.mam.video;
 
-import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
@@ -23,5 +22,4 @@ public interface VideoServerService {
     PageInfo<VideoServerDto> dataGrid(VideoServerVo vo);
     
     int deleteVideoServer(Integer id);
-
 }

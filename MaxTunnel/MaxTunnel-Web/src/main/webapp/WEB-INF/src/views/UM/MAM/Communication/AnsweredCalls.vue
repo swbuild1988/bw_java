@@ -16,12 +16,12 @@
 		</div>
 		<div v-if="loginData.isLogin">
 			<Row class="conditions">
-				<Col span="12">
+				<!-- <Col span="12">
 					<span>来电编号：</span>
 					<Input placehold="请输入来电编号" v-model="inboundid" style="width: 60%"></Input>
-				</Col>
-				<Col span="3" offset="9">
-					<Button type="primary" @click="search" icon="ios-search">查询</Button>
+				</Col> -->
+				<Col span="2" offset="22">
+					<!-- <Button type="primary" @click="search" icon="ios-search">查询</Button> -->
 					<Button type="error" @click="logout">退出</Button>
 				</Col>
 			</Row>

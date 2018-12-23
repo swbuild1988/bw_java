@@ -5,10 +5,8 @@
         <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">管仓类型管理</h1>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-            <div>
                 <span>管仓类型名：</span>
                 <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
-            </div>
             </Col>
             <Col span="6">
                 <span>开始时间：</span>
@@ -46,6 +44,7 @@
 <script>
 import StoreTypeModule from "../../CM/StoreTypeControl/StoreTypeModule.vue";
 import StoreTypeModification from "../../CM/StoreTypeControl/StoreTypeModification.vue";
+import { TunnelService } from '../../../services/tunnelService'
 export default {
     name: "store-type-control",
     data() {
@@ -73,6 +72,11 @@ export default {
                 {
                     title: "管仓类型编号",
                     key: "sn",
+                    align: "center"
+                },
+                {
+                    title: "父仓类型编号",
+                    key: "parent",
                     align: "center"
                 },
                 {
@@ -111,6 +115,7 @@ export default {
             data6: [],
             types: [],
             tunnels: [],
+            parents:[],
             page: {
                 pageNum: 1,
                 pageSize: 10,
@@ -150,20 +155,6 @@ export default {
                 endTime: new Date(this.researchInfo.endTime).getTime()
             };
             return Object.assign({}, param);
-        },
-        newparams() {
-            let param = {
-                name: this.formValidate.name,
-                sn: this.formValidate.sn
-            };
-            return Object.assign({}, param);
-        },
-        modifications() {
-            let param = {
-                id: this.formValidate.id,
-                name: this.formValidate.name
-            };
-            return Object.assign({}, param);
         }
     },
     methods: {
@@ -178,6 +169,7 @@ export default {
                         info.id = data.list[index].id;
                         info.name = data.list[index].name;
                         info.sn = data.list[index].sn;
+                        info.parent = data.list[index].parent;
                         info.crtTime = new Date(
                             data.list[index].crtTime
                         ).format("yyyy-MM-dd hh:mm:s");
@@ -201,8 +193,8 @@ export default {
                 .state;
         },
         saveNewStoreType(data) {
-            this.formValidate = data;
-            this.axios.post("/store-type", this.newparams).then(res => {
+            // this.formValidate = data;
+            this.axios.post("/store-type", data).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;
@@ -220,8 +212,8 @@ export default {
                 .state;
         },
         saveUpdateStoreType(data) {
-            this.formValidate = data;
-            this.axios.put("/store-type", this.modifications).then(res => {
+            // this.formValidate = data;
+            this.axios.put("/store-type", data).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;

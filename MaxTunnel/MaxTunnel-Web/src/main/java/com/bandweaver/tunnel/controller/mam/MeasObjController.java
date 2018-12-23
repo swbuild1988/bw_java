@@ -446,6 +446,3 @@ public class MeasObjController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
     }
 }
-
-
-
