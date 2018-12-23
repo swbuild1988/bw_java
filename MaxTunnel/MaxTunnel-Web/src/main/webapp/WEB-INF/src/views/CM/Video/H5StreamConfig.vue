@@ -67,7 +67,7 @@ export default {
             this.videoConfig = []
             data.body.forEach(config=>{
                 let temp = {}
-                temp.id = config[data.header[0]],
+                temp.id = parseInt(config[data.header[0]]),
                 temp.ip = config[data.header[1]],
                 temp.port = config[data.header[2]],
                 temp.user = config[data.header[3]],

@@ -149,7 +149,8 @@
                     position: 'absolute',
                     bottom: '20px',
                     right: '15px'
-                }
+                },
+                contractIds:[] 
             }
         },
         components: { CustomerChoose },
@@ -172,10 +173,10 @@
         mounted(){
             this.initData()
             this.search()
-            setTimeout(function(){
+            this.$nextTick(()=>{
                 let width = document.getElementById('payment').offsetWidth
                 document.getElementById('cusInput').style.width = width + 'px'
-            },300)
+            })
             window.onresize = function(){
                 let width = document.getElementById('payment').offsetWidth
                 document.getElementById('cusInput').style.width = width + 'px'
@@ -233,7 +234,8 @@
                             //         contract.cable.length = data.cableDto.cableLength;
                             //         contract.cable.cableStatus = data.cableDto.cableStatusName;
                             //     })  
-                            // })     
+                            // })  
+                            _this.contractIds.push(a.id)   
                         })
                     })
             },
@@ -245,7 +247,8 @@
                     this.$router.push({
                         name: 'UMEditContract',
                         params: {
-                            id: this.contractList[index].id,
+                            contractIds: this.contractIds,
+                            curIndex: index,
                             type: type
                         }
                     })
@@ -253,7 +256,8 @@
                     this.$router.push({
                         name: 'UMDetailContract',
                         params: {
-                            id: this.contractList[index].id,
+                            contractIds: this.contractIds,
+                            curIndex: index,
                             type: type
                         }
                     })

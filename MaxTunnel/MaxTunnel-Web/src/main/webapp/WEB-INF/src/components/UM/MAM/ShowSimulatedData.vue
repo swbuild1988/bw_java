@@ -3,13 +3,13 @@
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
       <p slot="title">{{Obj.objtypeName}}</p>
       <!-- 数值正常时 -->
-      <img src="../../../assets/UM/温度-蓝.png" v-if="Obj.objtypeId==1 || Obj.objtypeId==8" class="img">
-      <img src="../../../assets/UM/湿度-蓝.png" v-if="Obj.objtypeId==2" class="img"> 
-      <img src="../../../assets/UM/氧气-蓝.png" v-if="Obj.objtypeId==3" class="img">
-      <img src="../../../assets/UM/H2S-蓝.png" v-if="Obj.objtypeId==4" class="img"> 
-      <img src="../../../assets/UM/甲烷-蓝.png" v-if="Obj.objtypeId==5" class="img">
-      <img src="../../../assets/UM/液位仪.png" v-if="Obj.objtypeId==21" class="img">
-      <img src="../../../assets/UM/CO-蓝.png" v-if="Obj.objtypeId==6" class="img"> 
+      <img :src=" normal ? '../../../assets/UM/温度-蓝.png' : '../../../assets/UM/温度-红.png'" v-if="Obj.objtypeId==1 || Obj.objtypeId==8" class="img">
+      <img :src="normal ? '../../../assets/UM/湿度-蓝.png' : '../../../assets/UM/湿度-红.png'" v-if="Obj.objtypeId==2" class="img"> 
+      <img :src="normal ? '../../../assets/UM/氧气-蓝.png' : '../../../assets/UM/氧气-红.png'" v-if="Obj.objtypeId==3" class="img">
+      <img :src="normal ? '../../../assets/UM/H2S-蓝.png' : '../../../assets/UM/H2S-红.png'" v-if="Obj.objtypeId==4" class="img"> 
+      <img :src="normal ? '../../../assets/UM/甲烷-蓝.png' : '../../../assets/UM/甲烷-红.png'" v-if="Obj.objtypeId==5" class="img">
+      <img :src="normal ? '../../../assets/UM/液位仪.png' : '../../../assets/UM/液位仪-红.png'" v-if="Obj.objtypeId==21" class="img">
+      <img :src="normal ? '../../../assets/UM/CO-蓝.png' : '../../../assets/UM/CO-红.png'" v-if="Obj.objtypeId==6" class="img"> 
       <p class="value">{{Obj.ObjVal}}</p>
       <div class="extre">
         <div class="min">
@@ -65,6 +65,8 @@
           GasMin: 0,
           clickStatus:false,
           datatypeId:"",
+          minValue: 0,
+          maxValue: 100
         }
       }
     },
@@ -72,6 +74,7 @@
       return {
         gasMax: 200,
         gasMin: 0,
+        normal: true
       };
     },
     components: {Temperature, Gas},
@@ -84,7 +87,9 @@
     },
     watch: {},
     mounted(){
-     
+     if(this.Obj.ObjVal < minValue || this.Obj.ObjVal > maxValue){
+      this.normal = false
+     }
     }
   }
 </script>
