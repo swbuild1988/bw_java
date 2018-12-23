@@ -14,11 +14,14 @@ import org.apache.http.ParseException;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.ls.LSInput;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
 import com.bandweaver.tunnel.common.biz.dto.H5StreamHttpResponseDto;
 import com.bandweaver.tunnel.common.biz.dto.HttpResponsePresetDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
@@ -452,6 +455,38 @@ public class H5StreamServiceImpl implements OnvifService {
         querys.put("url", url);
         querys.put("session", videoServer.getSession());
         return httpGet(server, _url, headers, querys);
+	}
+
+	@Override
+	public List<String> getSrcList() {
+//		VideoDto videoDto = videoModuleCenter.getVideoDto(DataTypeUtil.toInteger(id));
+//		VideoServerDto videoServer = videoDto.getVideoServerDto();
+//		
+//		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+//        String _url = "/api/v1/GetSrc";
+//        Map<String, String> headers = new HashMap<>();
+//        Map<String, String> querys = new HashMap<>();
+//        querys.put("session", videoServer.getSession());
+//		
+//        HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
+//		if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+//        	String str = EntityUtils.toString(response.getEntity(), "utf-8");
+//        	JSONObject jsonObject = JSON.parseObject(str, JSONObject.class);
+//        	String srcString = jsonObject.getString("src");
+//        	List<H5Src> list = jsonObject.parseArray(srcString, H5Src.class);
+//        	
+//        	List<String> tokenList = new ArrayList<>();
+//        	for (H5Src h5Src : list) {
+//        		tokenList.add(h5Src.getStrToken());
+//			}
+//        	LogUtil.info("获取视频源：" + tokenList);
+//        	
+//        	return tokenList;
+//        }else {
+//        	LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+//        }
+//		
+		return Collections.emptyList();
 	}
 
 	

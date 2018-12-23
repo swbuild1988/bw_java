@@ -119,4 +119,11 @@ public interface OnvifService {
 	 */
 	boolean delSrc(String id) throws Exception;
 
+	/**获取视频源列表 
+	 * @author shaosen
+	 * @return 
+	 * @Date 2018年12月23日
+	 */
+	List<String> getSrcList();
+
 }

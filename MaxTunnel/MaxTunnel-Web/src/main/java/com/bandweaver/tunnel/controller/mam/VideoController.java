@@ -55,6 +55,10 @@ import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
 
+/**相机管理
+ * @author shaosen
+ * @date 2018年12月23日
+ */
 @Controller
 @ResponseBody
 public class VideoController {
@@ -121,6 +125,10 @@ public class VideoController {
      */
     @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
     public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
+    	
+    	//获取所有视频源
+//    	h5streamService.getSrcList();
+    	
     	
     	for (Map<String, String> map : list) {
     		String user = map.get("user");
@@ -391,7 +399,7 @@ public class VideoController {
         if (storeId != null)
             videoDtos = videoDtos.stream().filter(a -> a.getStoreId() == storeId).collect(Collectors.toList());
         if (areaId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getAreaId() == areaId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
         if (sectionId != null)
             videoDtos = videoDtos.stream().filter(a -> a.getSectionId() == sectionId).collect(Collectors.toList());
 

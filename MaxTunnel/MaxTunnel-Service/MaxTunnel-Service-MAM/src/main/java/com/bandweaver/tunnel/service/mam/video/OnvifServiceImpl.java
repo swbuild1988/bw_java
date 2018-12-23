@@ -289,4 +289,11 @@ public class OnvifServiceImpl implements OnvifService {
 		return false;
 	}
 
+	@Override
+	public List<String> getSrcList() {
+		// TODO Auto-generated method stub
+		return null;
+		
+	}
+
 }
