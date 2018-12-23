@@ -388,22 +388,15 @@ export default {
     //根据监测类型获取数据
     getMonitorData() {
       let _this = this;
-      const p1 = MonitorDataService.getMaxMonitorData(_this.tunnelId);
-      const p2 = MonitorDataService.getMonitorData();
-      Promise.all([p1, p2]).then(
+      MonitorDataService.getMaxMonitorData(_this.tunnelId).then(
         result => {
+          console.log("result", result);
           _this.tunnelProps = [];
-          _this.tunnelPropsMax = [];
-          _this.tunnelPropsMax = result[1];
-          result[0].forEach(a => {
+          result.forEach(a => {
             let temp = {};
             temp.location = a.location;
             temp.key = a.key;
             temp.val = new Number(a.val.toFixed(2));
-            temp.percent =
-              (temp.val /
-                _this.tunnelPropsMax.filter(a => a.key == temp.key)[0].val) *
-              100;
             _this.tunnelProps.push(temp);
           });
         },

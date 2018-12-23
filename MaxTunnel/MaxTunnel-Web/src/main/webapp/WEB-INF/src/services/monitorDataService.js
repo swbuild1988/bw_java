@@ -55,7 +55,7 @@ var MonitorDataService = {
     // 详情面板数据分页查询
     objDetailDatagrid: function(prams) {
         return new Promise((resolve, reject) => {
-            axios.post('measobjs/datas', prams).then(res => {
+            axios.post('measobjs/list', prams).then(res => {
                 let {
                     code,
                     data,
@@ -73,7 +73,7 @@ var MonitorDataService = {
     // 详情面板数据
     objDetail(params) {
         return new Promise((resolve, reject) => {
-            axios.post('measobjs/datas', params)
+            axios.post('measobjs/list', params)
                 .then(res => {
                     let {
                         code,

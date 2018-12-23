@@ -6,6 +6,6 @@
     "SuperMapConfig": {
         "BIM_SCP": "http://192.168.0.6:8090/iserver/services/3D-gcdj/rest/realspace",
         "BIM_DATA": "http://192.168.0.6:8090/iserver/services/data-GuChengDaJie/rest/data",
-        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-taiyuanmap/rest/maps/taiyuan_map"
+        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-jinyuanmap/rest/maps/jinyuan_map"
     }
 }

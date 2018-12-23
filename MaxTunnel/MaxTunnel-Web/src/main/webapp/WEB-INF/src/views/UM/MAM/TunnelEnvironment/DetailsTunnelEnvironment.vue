@@ -2,11 +2,6 @@
   <div>
     <div class="top">
       <Row style="font-size:16">
-        <Col span="6">监测仓:
-          <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
-            <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </Col>
         <Col span="6">区域:
           <Select
             v-model="queryCondition.areaId"
@@ -14,6 +9,11 @@
             style="width:12vw;"
           >
             <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          </Select>
+        </Col>
+        <Col span="6">监测仓:
+          <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
+            <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
         </Col>
       </Row>
@@ -39,7 +39,7 @@
           <Tabs @on-click="changeTabs" v-model="tabName">
             <TabPane name="tunnelVideo" label="视频" icon="ios-film">
               <div class="map" v-if="curVideo!=null">
-                <video-component v-bind:video="curVideo" v-bind:id="'camera'+curVideo.id"></video-component>
+                <video-component v-bind:video="curVideo" v-bind:id="'evironmentVideo'"></video-component>
               </div>
               <div></div>
             </TabPane>
@@ -158,11 +158,10 @@ export default {
     },
 
     intervalData() {
+      console.log("start inteval");
       let _this = this;
-      _this.dataInterval = setInterval(function() {
-        _this.getObjDetialData();
-      }, 5000);
-      _this.videoInterval = setInterval(() => _this.changeVideo(), 4000);
+      _this.dataInterval = setInterval(() => _this.getObjDetialData(), 10000);
+      _this.videoInterval = setInterval(() => _this.changeVideo(), 10000);
     },
     //变更监测仓
     changeStore() {
@@ -175,7 +174,10 @@ export default {
       _this.getvideos();
     },
     changeVideo() {
+      if (this.videosList.length == 0) return;
+
       this.curVideo = this.videosList[this.curVideoIndex];
+      console.log("curVideo", this.curVideo);
       this.curVideoIndex >= this.videosList.length - 1
         ? (this.curVideoIndex = 0)
         : this.curVideoIndex++;
@@ -346,7 +348,6 @@ export default {
     },
     // //获取详情面板的数据
     getObjDetialData() {
-      console.log("find obj", this.areas, this.stores, this.curDataTypeList);
       if (this.areas.length == 0) return;
       if (this.stores.length == 0) return;
       if (this.curDataTypeList.length == 0) return;
@@ -406,7 +407,7 @@ export default {
       };
       MonitorDataService.getdataVideos(Params).then(result => {
         if (result && result.length > 0) {
-          _this.videosList = result;
+          this.videosList = result;
         }
       });
     },
