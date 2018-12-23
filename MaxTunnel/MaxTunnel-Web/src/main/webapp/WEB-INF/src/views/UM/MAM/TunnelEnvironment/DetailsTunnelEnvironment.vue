@@ -26,17 +26,17 @@
     <Row :gutter="16">
       <Col span="12">
       <div class="data" >
-        <Tabs>
-          <TabPane label="管廊模型" icon="map">
-            <div class="map"  id="GISbox">
-              <TestSmViewer ref="smViewer1"></TestSmViewer>
-            </div>
-          </TabPane>
-          <TabPane label="视频" icon="ios-film">
+        <Tabs @on-click="changeTabs" v-model="tabName">
+          <TabPane name="tunnelVideo" label="视频" icon="ios-film">
             <div class="map">
               <video-component v-bind:video="curVideo" v-bind:id="'camera'+curVideo.id"></video-component>
             </div>
             <div>
+            </div>
+          </TabPane>
+          <TabPane name="tunnelMap" label="管廊模型" icon="map">
+            <div class="map"  id="GISbox">
+              <TestSmViewer ref="smViewer1"></TestSmViewer>
             </div>
           </TabPane>
         </Tabs>
@@ -73,6 +73,7 @@
     name: "detail-tunnel-environment",
     data() {
       return {
+          tabName:"",
         videosList:[],
         curVideo: {id: 2332},
         dataInterval: null,
@@ -134,14 +135,16 @@
       this.getvideos();
     },
     methods: {
+        changeTabs() {
+            var _this = this;
+            if (_this.tabName == "tunnelVideo") {
+                _this.curVideo = _this.videosList[0];
+            }
+        },
+
       intervalData(){
         let _this=this;
         _this.dataInterval=setInterval(function(){_this.getObjDetialData()},1000);
-
-        // _this.dataInterval();
-      },
-      updateVideo(){
-        var _this=this;
       },
       //变更监测仓
       changeStore() {
@@ -161,7 +164,6 @@
       //切换数据类型
       changeDataType() {
         this.getObjDetialData();
-        this.getvideos();
       },
       //获取数据
       fentchData() {
@@ -329,6 +331,8 @@
               temp.ObjVal = false;
               temp.objtypeId = _this.queryCondition.curDataType;
               temp.datatypeId = a.datatypeId;
+              temp.maxValue=a.maxValue;
+              temp.minValue=a.minValue;
               if (a.datatypeId == 1) {
                 temp.ObjVal = a.curValue.toFixed(2);
               }
@@ -360,7 +364,6 @@
           if(result){
             _this.videosList=result;
             _this.curVideo=result[0];
-            console.log( _this.curVideo);
           }
         })
       },

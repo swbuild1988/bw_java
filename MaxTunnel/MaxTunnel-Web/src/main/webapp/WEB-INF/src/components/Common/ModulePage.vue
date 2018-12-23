@@ -281,189 +281,188 @@
         }
       }
     },
-    methods: {
-      showVideo() {
-        this.videoModal.modalPrams.state =true;
-        this.$refs.video.reflashVideo();
-      },
-
-      goBack() {
-        this.$router.back(-1);
-      },
-
-      goForward() {
-        this.$router.forward();
-      },
-
-      showPlanTip() {
-        var _this = this;
-        this.$Modal.warning({
-          title: "预案提示",
-          content: "系统已开始执行预案，请跳转至预案管理进行处理。",
-          onOk: () => {
-            _this.$router.push("/UM/plans/execute/processKey");
+      methods: {
+          showVideo() {
+              this.videoModal.modalPrams.state = true;
+              this.$refs.video.reflashVideo();
           },
-        });
-      },
 
-      startMQ() {
-        let _this = this;
-        _this.axios.get("/emplans/start/sections/10/process-type/4001").then(result => {
-          let {msg, code, data} = result.data;
-          if (code == 200) {
-          }
-        })
-      },
+          goBack() {
+              this.$router.back(-1);
+          },
 
-      openMQ() {
-        let _this = this;
-        _this.axios.get("emplans/deploy/4001").then(result => {
-          let {msg, code, data} = result.data;
-          if (code == 200) {
-          }
-        })
-      },
-      //获取MQ推送的预案消息
-      acceptPlanData() {
-        var _this = this;
-        _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
-      },
+          goForward() {
+              this.$router.forward();
+          },
 
-      // 连接成功回调函数
-      callback(respond) {
-        let _this = this;
-        let result = JSON.parse(respond.body);
-        //将数据保存在vuex中
-        _this.planData = result;
-        if (_this.planData && "/UM/plans/execute/processKey" != _this.$router.history.current.path) {
-          _this.showPlanTip();
-        }
-      },
-
-      alarmCallback(respond) {
-        let _this = this;
-        let result = JSON.parse(respond.body);
-        _this.videoModal.modalPrams.vedioIdList=[];
-        _this.warningNotice(result);
-
-        VideoService.getAlarmVideoRouter(result.objectId).then((respond) => {
-            if(respond&&respond.length>0){
-              _this.videoModal.modalPrams.vedioIdList=respond;
-              _this.showVideo();
-            }
-        })
-      },
-
-      //开启告警队列监听
-      //接受告警队列推送的数据
-      acceptAlarmData(){
-        var _this = this;
-        _this.MQ._InitMQ(1, "/queue/QUEUE_ALARM_UM", "", _this.alarmCallback);
-      },
-
-      closedMQ() {
-        var _this = this;
-        _this.MQ.closeMQ();
-      },
-
-      goToMoudle(path, index, childIndex) {
-        this.selectedActive[0] = index
-        this.selectedActive[1] = childIndex
-        this.$router.push(path);
-        this.$emit('childByValue', path)
-      },
-      //设置告警面板中分页按钮的显隐
-      changestatu() {
-        this.showPage = !this.showPage;
-      },
-      //点击告警中的分页按钮
-      alarmDataChangePage(index) {
-        this.page.current = index;
-      },
-      //获取告警分页数据
-      getAlatmPageData() {
-        let pram = {};
-        let _this = this;
-        pram.pagesize = 4;
-        pram.current = this.page.current;
-        this.post("").then(result => {
-          let {code, data} = result.data;
-          if (code == 200) {
-            _this.alarmData = data;
-            _this.page.total = data.total;
-          }
-        })
-      },
-
-      //点击告警详情按钮
-      showAlarmDetial(index) {
-        this.alarmModal.alarmData = this.alarmData[index];
-        this.alarmModal.show.state = true;
-      },
-
-      //确认告警
-      confirmAlarm(index) {
-        console.log("this alarm is confirmed!");
-      },
-
-      warningNotice(alarm) {
-        var _this=this;
-        var des="";
-        var plans=alarm.plans; //[{"name":"通风预案","id":4003}]
-        this.alarmLevel.forEach(a => {
-          if (a.val == alarm.alarmLevel) {
-            des = a.key;
-          }
-        });
-        var config={
-          title: des+"告警",
-          desc: alarm.objectName+alarm.alarmName,
-          duration:0
-        };
-        var planLabel=[];
-        var planValue=[];
-          plans.forEach(a=>{
-            planLabel.push(a.name);
-            planValue.push(a.id);
-        })
-        if(plans&&plans.length>0){
-          config.render=h => {
-            return h('span', [
-              '关联预案 ',
-              h('Select', {
-                  props: {value: planValue,width:'70%'},
-                  on: {
-                    'on-change': (event) => {
-                      _this.selectPlan = event;
-                    }
+          showPlanTip() {
+              var _this = this;
+              this.$Modal.warning({
+                  title: "预案提示",
+                  content: "系统已开始执行预案，请跳转至预案管理进行处理。",
+                  onOk: () => {
+                      _this.$router.push("/UM/plans/execute/processKey");
                   },
-                },
-                [h('Option',{props:{value:'1'}},'label1'),h('Option',{props:{value:'1'}},'label2')])
-            ])
-          }
+              });
+          },
 
-        }
-        switch (alarm.alarmLevel) {
-          case 1: {
-            this.$Notice.info(config);
-            break;
-          }
-          case 2: {
-            this.$Notice.success(config);
-            break;
-          }
-          case 3: {
-            this.$Notice.warning(config);
-            break;
-          }
-          case 4: {
-            this.$Notice.error(config);
-            break;
-          }
-        }
+          startMQ() {
+              let _this = this;
+              _this.axios.get("/emplans/start/sections/10/process-type/4001").then(result => {
+                  let {msg, code, data} = result.data;
+                  if (code == 200) {
+                  }
+              })
+          },
 
+          openMQ() {
+              let _this = this;
+              _this.axios.get("emplans/deploy/4001").then(result => {
+                  let {msg, code, data} = result.data;
+                  if (code == 200) {
+                  }
+              })
+          },
+          //获取MQ推送的预案消息
+          acceptPlanData() {
+              var _this = this;
+              _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
+          },
+
+          // 连接成功回调函数
+          callback(respond) {
+              let _this = this;
+              let result = JSON.parse(respond.body);
+              //将数据保存在vuex中
+              _this.planData = result;
+              if (_this.planData && "/UM/plans/execute/processKey" != _this.$router.history.current.path) {
+                  _this.showPlanTip();
+              }
+          },
+
+          alarmCallback(respond) {
+              let _this = this;
+              let result = JSON.parse(respond.body);
+              _this.videoModal.modalPrams.vedioIdList = [];
+              _this.warningNotice(result);
+
+              VideoService.getAlarmVideoRouter(result.objectId).then((respond) => {
+                  if (respond && respond.length > 0) {
+                      _this.videoModal.modalPrams.vedioIdList = respond;
+                      _this.showVideo();
+                  }
+              })
+          },
+
+          //开启告警队列监听
+          //接受告警队列推送的数据
+          acceptAlarmData() {
+              var _this = this;
+              _this.MQ._InitMQ(1, "/queue/QUEUE_ALARM_UM", "", _this.alarmCallback);
+          },
+
+          closedMQ() {
+              var _this = this;
+              _this.MQ.closeMQ();
+          },
+
+          goToMoudle(path, index, childIndex) {
+              this.selectedActive[0] = index
+              this.selectedActive[1] = childIndex
+              this.$router.push(path);
+              this.$emit('childByValue', path)
+          },
+          //设置告警面板中分页按钮的显隐
+          changestatu() {
+              this.showPage = !this.showPage;
+          },
+          //点击告警中的分页按钮
+          alarmDataChangePage(index) {
+              this.page.current = index;
+          },
+          //获取告警分页数据
+          getAlatmPageData() {
+              let pram = {};
+              let _this = this;
+              pram.pagesize = 4;
+              pram.current = this.page.current;
+              this.post("").then(result => {
+                  let {code, data} = result.data;
+                  if (code == 200) {
+                      _this.alarmData = data;
+                      _this.page.total = data.total;
+                  }
+              })
+          },
+
+          //点击告警详情按钮
+          showAlarmDetial(index) {
+              this.alarmModal.alarmData = this.alarmData[index];
+              this.alarmModal.show.state = true;
+          },
+
+          //确认告警
+          confirmAlarm(index) {
+              console.log("this alarm is confirmed!");
+          },
+
+          warningNotice(alarm) {
+              var _this = this;
+              var des = "";
+              var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
+              _this.selectPlan = plans[0].id;
+              _this.alarmLevel.forEach(a => {
+                  if (a.val == alarm.alarmLevel) {
+                      des = a.key;
+                  }
+              });
+              var config = {
+                  title: des + "告警",
+                  desc: alarm.objectName + alarm.alarmName,
+                  duration: 0
+              };
+              if (plans && plans.length > 0) {
+                  config.render = (h) => {
+                      return h('span', [
+                          '关联预案 ',
+                          h('Select', plans.map((item) => {
+                              return h('Option',
+                                  {
+                                      props: {
+                                          value: item.id,
+                                          label: item.name
+                                      },
+                                      on: {
+                                          'on-change': (value) => {
+                                              _this.selectPlan = value;
+                                              console.log(_this.selectPlan);
+                                          }
+                                      },
+                                  })
+                          }))
+                      ])
+                  }
+              }
+              switch (alarm.alarmLevel) {
+                  case 1: {
+                      this.$Notice.info(config);
+                      break;
+                  }
+                  case 2: {
+                      this.$Notice.success(config);
+                      break;
+                  }
+                  case 3: {
+                      this.$Notice.warning(config);
+                      break;
+                  }
+                  case 4: {
+                      this.$Notice.error(config);
+                      break;
+                  }
+              }
+          },
       },
-    },
     components: {
       alarm,
       showVideo

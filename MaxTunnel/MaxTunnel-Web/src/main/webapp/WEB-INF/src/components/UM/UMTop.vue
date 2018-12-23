@@ -32,7 +32,7 @@
                   <Badge :count="countNum">
                     <!--<Avatar style="background-color: #f56a00" shape="circle" icon="person" ></Avatar>-->
                     <Avatar :style="{background:'#f56a00'}" size="large" shape="circle"
-                            src="https://i.loli.net/2017/08/21/599a521472424.jpg"></Avatar>
+                            :src="umImg"></Avatar>
                   </Badge>
                 </a>
                 <DropdownMenu slot="list">
@@ -60,11 +60,13 @@
   import {EnterGalleryService} from '../../services/enterGalleryService.js'
   import showAboutUs from '../../components/Common/Modal/ShowAboutUs'
   // import showUserInfo from '../../components/Common/Modal/ShowUserInfo.vue'
+  import  Img from '../../assets/UM/UMIcon.png'
 
   export default {
     name: "UMTop",
     data() {
       return {
+          umImg:Img,
         title: '综合管廊统一管理平台',
         aboutUs: {
           show: {state: false},

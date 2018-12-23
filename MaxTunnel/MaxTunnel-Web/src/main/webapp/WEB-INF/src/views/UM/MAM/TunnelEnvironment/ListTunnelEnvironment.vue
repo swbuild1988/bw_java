@@ -55,9 +55,9 @@
               {{curName}}
             </h2>
             <div style="padding-left: 3%">
-              <div style="width: 60%;float: left">
-                负责人：{{curTunnel.user}}
-              </div>
+              <!--<div style="width: 60%;float: left">-->
+                <!--负责人：{{curTunnel.user}}-->
+              <!--</div>-->
               <div style="width: 40%;float: left">
                 监测仓个数: {{curTunnel.storeNum}}
               </div>
