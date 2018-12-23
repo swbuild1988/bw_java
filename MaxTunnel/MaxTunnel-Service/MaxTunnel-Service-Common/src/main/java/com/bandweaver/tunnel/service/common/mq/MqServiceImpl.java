@@ -18,19 +18,19 @@ public class MqServiceImpl implements MqService {
 	
 	@Override
 	public void sendToAlarmUMQueue(String msg) {
-		LogUtil.info("发送到[UM告警]队列:" + msg );
+		LogUtil.debug("发送到[UM告警]队列:" + msg );
 		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_ALARM_UM), msg);
 	}
 	
 	@Override
 	public void sendToAlarmVMQueue(String msg) {
-		LogUtil.info("发送到[VM告警]队列:" + msg );
+		LogUtil.debug("发送到[VM告警]队列:" + msg );
 		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_ALARM_VM), msg);
 	}
 
 	@Override
 	public void sendToPlanUMQueue(String msg) {
-		LogUtil.info("发送到[UM应急]队列:" + msg);
+		LogUtil.debug("发送到[UM应急]队列:" + msg);
 		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_PLAN_UM), msg);
 	}
 

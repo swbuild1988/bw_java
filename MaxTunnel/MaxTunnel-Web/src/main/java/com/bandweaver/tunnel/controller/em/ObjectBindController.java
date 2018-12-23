@@ -76,15 +76,5 @@ public class ObjectBindController {
 	}
 	
 	
-	/**通过监测对象获取关联的所有视频
-	 * @param id
-	 * @return   
-	 * @author shaosen
-	 * @Date 2018年12月20日
-	 */
-	@RequestMapping(value="object-bind/{id}/videos",method=RequestMethod.GET)
-	public JSONObject getVideosByObject(@PathVariable Integer id) {
-		List<VideoDto> returnData = objectBindService.getVideosByObject(id);
-		return CommonUtil.success(returnData);
-	}
+	
 }

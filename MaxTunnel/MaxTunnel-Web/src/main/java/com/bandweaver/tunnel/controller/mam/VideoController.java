@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
+import com.bandweaver.tunnel.common.biz.constant.em.ObjectBindTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Obj;
 import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Source;
 import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
@@ -29,18 +32,25 @@ import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
+import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.biz.pojo.em.ObjectBind;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.FileUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
+import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -57,6 +67,42 @@ public class VideoController {
     private SectionService sectionService;
     @Resource(name = "H5StreamServiceImpl")
     private OnvifService h5streamService;
+    @Autowired
+    private ObjectBindService objectBindService;
+    @Autowired
+    private MeasObjModuleCenter measObjModuleCenter;
+    
+    
+    
+    /**通过监测对象获取关联的所有视频
+	 * @param id
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月20日
+	 */
+	@RequestMapping(value="measobjs/{id}/videos",method=RequestMethod.GET)
+	public JSONObject getVideosByObject(@PathVariable Integer id) {
+		List<ObjectBind> list = objectBindService.getListByObjectAndType(id, ObjectBindTypeEnum.VIDEO.getValue());
+		List<VideoDto> returnData = new ArrayList<>();
+		if(list.isEmpty()) {
+			MeasObj measObj = measObjModuleCenter.getMeasObj(id);
+			if(StringTools.isNullOrEmpty(measObj))
+				throw new BandWeaverException("监测对象" + id + "不存在");
+			
+			//默认查询这个section的所有视频
+			List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+			returnData = videoDtos.stream().filter(v -> v.getSectionId().intValue() == measObj.getSectionId().intValue() ).collect(Collectors.toList());
+		}
+		
+		for (ObjectBind objectBind : list) {
+			Integer videoId = objectBind.getBindId();
+			VideoDto videoDto = videoModuleCenter.getVideoDto(videoId);
+			if(StringTools.isNullOrEmpty(videoDto))
+				continue;
+			returnData.add(videoDto);
+		}
+		return CommonUtil.success(returnData);
+	}
     
     
     /**通过api添加rtsp和onvif源
@@ -79,7 +125,7 @@ public class VideoController {
     		String user = map.get("user");
 			String password = map.get("password");
 			String ip = map.get("ip");
-			String port = map.get("port");
+			String port = "554";
 			String channelNo = map.get("channelNo");
 			String id = map.get("id");
 			String vendor = map.get("vendor");

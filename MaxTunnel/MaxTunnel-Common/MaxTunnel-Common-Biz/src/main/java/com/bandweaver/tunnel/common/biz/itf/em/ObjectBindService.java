@@ -12,6 +12,6 @@ public interface ObjectBindService {
 
 	List<JSONObject> getPlansByObject(Integer id);
 
-	List<VideoDto> getVideosByObject(Integer id);
+	List<ObjectBind> getListByObjectAndType(Integer id, Integer type);
 
 }
