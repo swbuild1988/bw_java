@@ -528,7 +528,8 @@ public class TunnelController extends BaseController<Tunnel> {
 
         List<JSONObject> list = new ArrayList<>();
         for (ObjectType type : ObjectType.values()) {
-            Double value = DataTypeUtil.toDouble(PropertiesUtil.getValue("ai." + type.name().toLowerCase()));
+            String name = "ai." + type.name().toLowerCase() + ".max";
+            Double value = DataTypeUtil.toDouble(PropertiesUtil.getValue(name));
             if (value == null)
                 continue;
             JSONObject json = new JSONObject();
