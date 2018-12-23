@@ -76,6 +76,7 @@
           tabName:"",
         videosList:[],
         curVideo: {},
+          curVideoIndex:0,
         dataInterval: null,
         videoInterval:null,
         Obj: [],
@@ -99,7 +100,7 @@
     },
     watch: {
       $route: function () {
-        this.tunnelId = this.$route.params.id;
+        this.tunnelId =parseInt(this.$route.params.id) ;
         this.queryCondition.tunnelId = this.tunnelId;
         this.fentchData();
         this.getObjDetialData();
@@ -137,14 +138,15 @@
     methods: {
         changeTabs() {
             var _this = this;
-            if (_this.tabName == "tunnelVideo") {
-                _this.curVideo = _this.videosList[0];
-            }
+            // if (_this.tabName == "tunnelVideo") {
+            //     _this.curVideo = _this.videosList[0];
+            // }
         },
 
       intervalData(){
         let _this=this;
         _this.dataInterval=setInterval(function(){_this.getObjDetialData()},5000);
+        _this.videoInterval=setInterval(()=>_this.changeVideo(),4000);
       },
       //变更监测仓
       changeStore() {
@@ -156,6 +158,12 @@
         _this.getObjDetialData();
         _this.getvideos();
       },
+        changeVideo(){
+            this.curVideo = this.videosList[ this.curVideoIndex];
+            this.curVideoIndex>= this.videosList.length-1
+                ?  this.curVideoIndex= 0
+                :  this.curVideoIndex++;
+        },
       //变更区段
       changeAreaLocation() {
         this.getObjDetialData();
@@ -167,7 +175,7 @@
       },
       //获取数据
       fentchData() {
-        this.tunnelId = this.$route.params.id;
+        this.tunnelId = parseInt(this.$route.params.id) ;
         this.queryCondition.tunnelId = this.tunnelId;
         let _this = this;
         //获取监测内容
@@ -357,7 +365,7 @@
       getvideos(){
         if (this.areas.length == 0) return;
         if (this.stores.length == 0) return;
-        if  (this.curDataTypeList.length == 0) return;
+        // if  (this.curDataTypeList.length == 0) return;
         let _this = this;
         var Params = {
           tunnelId: _this.queryCondition.tunnelId,
@@ -366,9 +374,10 @@
           // objtypeId: _this.queryCondition.curDataType
         };
         MonitorDataService.getdataVideos(Params).then((result)=>{
+            console.log(_this.videosList);
+            console.log(Params);
           if(result &&result.length>0){
             _this.videosList=result;
-            _this.curVideo=result[0];
           }
         })
       },
@@ -396,8 +405,9 @@
     beforeDestroy() {
       this.destory3D()
       clearInterval(this.dataInterval);
+        clearInterval(this.videoInterval);
       this.dataInterval=null;
-      // this.videoInterval=null;
+      this.videoInterval=null;
     }
   }
 </script>
