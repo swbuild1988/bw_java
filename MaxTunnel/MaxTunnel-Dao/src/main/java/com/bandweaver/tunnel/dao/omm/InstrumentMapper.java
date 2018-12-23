@@ -37,5 +37,5 @@ public interface InstrumentMapper {
 
     int deleteByIds(List<Integer> list);
     
-    List<CommonDto> getCountGroupByTypeId();
+    List<CommonDto> getCountGroupByTypeId(InstrumentVo vo);
 }

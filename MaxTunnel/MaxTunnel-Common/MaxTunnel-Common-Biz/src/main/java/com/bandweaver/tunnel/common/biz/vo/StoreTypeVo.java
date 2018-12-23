@@ -20,6 +20,8 @@ public class StoreTypeVo extends BaseVo{
     private String name;
 
     private String sn;
+    
+    private String parent;
 
     private Date crtTime;
 
@@ -47,7 +49,15 @@ public class StoreTypeVo extends BaseVo{
         this.sn = sn;
     }
 
-    public Date getCrtTime() {
+    public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+
+	public Date getCrtTime() {
         return crtTime;
     }
 

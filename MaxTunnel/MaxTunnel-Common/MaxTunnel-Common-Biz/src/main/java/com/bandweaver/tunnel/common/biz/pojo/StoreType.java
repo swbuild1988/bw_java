@@ -20,6 +20,8 @@ public class StoreType implements Serializable{
     private String name;
 
     private String sn;
+    
+    private String parent;
 
     private Date crtTime;
 
@@ -47,7 +49,15 @@ public class StoreType implements Serializable{
         this.sn = sn;
     }
 
-    public Date getCrtTime() {
+    public String getParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+
+	public Date getCrtTime() {
         return crtTime;
     }
 
@@ -61,6 +71,7 @@ public class StoreType implements Serializable{
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sn='" + sn + '\'' +
+                ", parent='" + parent + '\'' +
                 ", crtTime=" + crtTime +
                 '}';
     }

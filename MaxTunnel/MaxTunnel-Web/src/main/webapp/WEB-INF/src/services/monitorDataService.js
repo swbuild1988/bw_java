@@ -69,6 +69,7 @@ var MonitorDataService = {
 			})
 		})
 	},
+
 	// 详情面板数据
 	objDetail(params) {
 		return new Promise((resolve, reject) => {

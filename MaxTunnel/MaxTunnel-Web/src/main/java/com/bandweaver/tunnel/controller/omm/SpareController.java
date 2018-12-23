@@ -15,9 +15,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.CommonDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareOutDto;
+import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareOutService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 import com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareOutVo;
@@ -39,6 +41,8 @@ public class SpareController {
 	private SpareService spareService;
 	@Autowired
 	private SpareOutService spareOutService;
+	@Autowired
+	private EquipmentTypeService equipmentTypeService;
 	
 	/**
 	 * 添加
@@ -360,17 +364,20 @@ public class SpareController {
 	public JSONObject get() {
 		List<CommonDto> listIn = spareService.getCountGroupByTypeId(true);
 		List<CommonDto> listOut = spareService.getCountGroupByTypeId(false);
+		List<EquipmentType> typeList = equipmentTypeService.getAllEquipmentTypeList();
 		List<JSONObject> list = new ArrayList<>();
-		for(CommonDto dtoIn : listIn) {
+		for(EquipmentType type : typeList) {
 			JSONObject objType = new JSONObject();
-			objType.put("key", dtoIn.getName());
+			objType.put("key", type.getName());
 			List<JSONObject> listType = new ArrayList<>();
-			JSONObject objIn = new JSONObject();
-			objIn.put("key", "在库");
-			objIn.put("val", dtoIn.getCount());
-			listType.add(objIn);
-			for(CommonDto dtoOut : listOut) {
-				if(dtoIn.getName().equals(dtoOut.getName())) {
+			for(CommonDto dtoIn : listIn) {
+				if(!type.getName().equals(dtoIn.getName())) continue;
+				JSONObject objIn = new JSONObject();
+				objIn.put("key", "在库");
+				objIn.put("val", dtoIn.getCount());
+				listType.add(objIn);
+				for(CommonDto dtoOut : listOut) {
+					if(!type.getName().equals(dtoOut.getName())) continue;
 					JSONObject objOut = new JSONObject();
 					objOut.put("key", "出库");
 					objOut.put("val", dtoOut.getCount());

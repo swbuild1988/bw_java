@@ -6,9 +6,8 @@
 
 定时备份数据库数据请执行：
 	1. 新建windows计划任务
-	2. 启动的程序文件：oraclebackup.bat
-	3. 需要恢复数据时，cmd输入：imp 用户名/密码@表空间 file="要恢复的DMP文件"
-	   如：imp bandweaver/123456@MAXTUNNELDB file="D:\Oracle\Backup\20181111.dmp"
+	2. 启动的程序文件：oraclebackup.bat   注：保存的dmp文件默认D:\Oracle\Backup文件夹下
+	3. 需要恢复数据时，修改oracleReturn.bat中return的值为需要恢复的dmp文件全路径，保存后双击该批处理文件
 			 
 			 
 			 
