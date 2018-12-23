@@ -52,7 +52,7 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels/" + tunnelId + '/stores')
+            reject(msg + ",地址:/tunnels" + tunnelId + '/stores')
           }
         })
       } else {
@@ -130,7 +130,7 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ",地址:/tunnels/" + tunnelId + '/areas')
+            reject(msg + ",地址:/tunnels" + tunnelId + '/areas')
           }
         })
       } else {
@@ -140,16 +140,6 @@ var TunnelService = {
           id: 1,
           location: "1",
           name: "1区",
-          tunnel: {
-            id: 1,
-            name: '管廊1'
-          }
-        }, {
-          camera: null,
-          crtTime: 1535611490000,
-          id: 2,
-          location: "2",
-          name: "2区",
           tunnel: {
             id: 1,
             name: '管廊1'
@@ -341,10 +331,10 @@ var TunnelService = {
         })
     })
   },
-  // 批量添加区段
-  batchCreateSections(sections) {
+  //获取管廊内区域
+  getTunnelArea:function (tunnelId) {
     return new Promise((resolve, reject) => {
-      axios.post('sections/batch', sections)
+      axios.get("tunnels/"+tunnelId+"/areas")
         .then(res => {
           let {
             code,
@@ -354,7 +344,7 @@ var TunnelService = {
           if (code == 200) {
             resolve(data)
           } else {
-            reject(msg + ',地址:sections/batch')
+            reject(msg + ",地址:/tunnels/"+tunnelId+"/areas")
           }
         })
         .catch(error => {

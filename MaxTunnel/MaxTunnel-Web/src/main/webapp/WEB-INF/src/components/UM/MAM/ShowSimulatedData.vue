@@ -14,11 +14,11 @@
       <div class="extre">
         <div class="min">
           <Icon type="arrow-up-c"></Icon>
-          <span>800</span>
+          <span>{{Obj.minValue}}</span>
         </div>
         <div class="max">
           <Icon type="arrow-down-c"></Icon>
-          <span>10000</span>
+          <span>{{Obj.maxValue}}</span>
         </div>
       </div>
       <div>{{Obj.ObjName}}</div>
@@ -52,21 +52,21 @@
   export default {
     name: "show-simulated-data",
     props: {
-      Obj: {
-        type: Object,
-        default: {
-          id: "",
-          objtypeName: "",
-          ObjName: "",
-          ObjVal: "",
-          imgUrl: "",
-          objtypeId: "",
-          GasMax: 100,
-          GasMin: 0,
-          clickStatus:false,
-          datatypeId:"",
+        Obj: {
+            type: Object,
+            default: {
+                id: "",
+                objtypeName: "",
+                ObjName: "",
+                ObjVal: "",
+                imgUrl: "",
+                objtypeId: "",
+                maxValue: 100,
+                minValue: 0,
+                clickStatus: false,
+                datatypeId: "",
+            }
         }
-      }
     },
     data: function () {
       return {

@@ -6,6 +6,14 @@
         <div class="Icon">
         </div>
         <span style="font-size: 38px; padding-top:4px"> {{titleName}}</span>
+        <div style="float: right;padding-top: 0px;padding-right: 5px;">
+          <Dropdown divided  @click.native="showAboutUs">
+            <a>
+              <Icon type="information-circled" size="15" color="#fff" title="关于我们"></Icon>
+            </a>
+          </Dropdown>
+          <showAboutUs v-bind="aboutUs"></showAboutUs>
+        </div>
         <div style="float: right;padding-top: 5px;padding-bottom: 10px;">
           <Dropdown divided @click.native="logout">
             <a>
@@ -130,11 +138,21 @@
 <script>
   import {getFormatTime} from '../../scripts/DateFormat.js';
   import {LoginService} from '../../services/loginService.js';
-
+  import showAboutUs from '../../components/Common/Modal/ShowAboutUs'
   export default {
     name: "UmMain",
     data() {
       return {
+          aboutUs: {
+              show: {state: false},
+              company: {
+                  version: "MaxTunnel-5.20",
+                  name: "上海波汇科技有限公司",
+                  email: "Bandweaver@.cn",
+                  telephone: "12413321231",
+                  address: "上海市浦东新区上科路88号豪威科技园1幢503",
+              }
+          },
         fullHeight: window.innerHeight,
         nowFormat: null,
         titleName: "综合管廊统一管理平台",
@@ -147,6 +165,22 @@
       goToMoudle: function (path) {
         this.$router.push(path);
       },
+        showAboutUs() {
+            this.aboutUs.show.state = !this.aboutUs.show.state;
+        },
+        getUsData() {
+            var _this = this;
+            EnterGalleryService.getAboutUsData().then((result => {
+                if (result) {
+                    _this.aboutUs.company.version = result.version;
+                    _this.aboutUs.company.email = result.email;
+                    _this.aboutUs.company.telephone = result.contact;
+                    _this.aboutUs.company.address = result.address;
+                    _this.aboutUs.company.name = result.company;
+                }
+            }))
+        },
+
       logout: function () {
         var _this = this;
         this.$Modal.confirm({
@@ -201,8 +235,10 @@
       if (this.timer) {
         clearInterval(this.timer);//在vue实例销毁钱，清除我们的定时器
       }
-    }
-
+    },
+      components: {
+          showAboutUs,
+      },
   }
 
 </script>

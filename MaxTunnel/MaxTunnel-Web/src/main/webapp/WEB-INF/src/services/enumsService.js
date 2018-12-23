@@ -391,7 +391,28 @@ var EnumsService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
-	}
+	},
+  //获取告警级别
+  getAlarmLevelList:function() {
+    return new Promise((resolve, reject) => {
+      axios.get('alarmlevel-enums')
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:alarmlevel-enums")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
 }
 export {
 	EnumsService
