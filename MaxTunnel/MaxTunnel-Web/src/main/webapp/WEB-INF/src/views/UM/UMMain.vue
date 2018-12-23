@@ -94,7 +94,7 @@
             </div>
           </Button>
           <Button 
-          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);" type="info"
+          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);" type="primary"
                   @click="goToMoudle({ path:'/UM/equipment/homePage'})">
             <div><img :width="imgWidth" src="../../assets/UM/通信.png">
               <div :style="{fontSize:mySize}">设备管理</div>
@@ -134,7 +134,7 @@
           </Button>
         </Col>
         <Col span="24">
-          <Button class="ywGuanli btn-nenghao" type="primary" style="width: 32.6vw" 
+          <Button class="ywGuanli btn-guanxian" style="width: 32.6vw" 
                 @click="goToMoudle({ path:'/VMMain'})">
             <div><img src="../../assets/UM/空间.png">
               <div :style="{fontSize:mySize}">可视化平台</div>
