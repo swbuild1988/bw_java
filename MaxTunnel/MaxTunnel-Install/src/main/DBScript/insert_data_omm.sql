@@ -130,9 +130,9 @@ values (2, 6);
 commit;
 
 --添加设备供应商和设备型号
-insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('张三',sysdate);
-insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('李四',sysdate);
-insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('王五',sysdate);
+insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('李萌',sysdate);
+insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('王超群',sysdate);
+insert into T_OMM_EQUIPMENT_VENDER (Name,Crt_Time) values ('赵晓静',sysdate);
 insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (1,'model-1',sysdate);
 insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (1,'model-2',sysdate);
 insert into T_OMM_EQUIPMENT_model (TYPE_ID,Name,Crt_Time) values (2,'model-3',sysdate);

@@ -19,161 +19,174 @@ values (6, '监控中心',  '01', 5000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:5
 
 commit;
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1000, '污水仓', '01', to_date('28-11-2018 09:45:40', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1001, '电力舱', '02', to_date('28-11-2018 09:45:50', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE ( NAME, SN, PARENT, CRT_TIME)
+values ('污水舱', '01','01', to_date('28-11-2018 09:45:40', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1002, '综合仓', '03', to_date('28-11-2018 09:46:09', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '电力舱', '02', '02', to_date('28-11-2018 09:45:50', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1003, '燃气舱', '04', to_date('28-11-2018 09:46:19', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '综合舱', '03', '03', to_date('28-11-2018 09:46:09', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1004, '设备间', '05', to_date('28-11-2018 09:46:29', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '燃气舱', '04', '04', to_date('28-11-2018 09:46:19', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1005, '污水仓进风口', '11', to_date('28-11-2018 09:46:48', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '设备间', '05', '05', to_date('28-11-2018 09:46:29', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1006, '电力舱进风口', '12', to_date('28-11-2018 09:47:14', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '污水舱进风口', '11', '01', to_date('28-11-2018 09:46:48', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1007, '综合仓进风口', '13', to_date('28-11-2018 09:47:32', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '电力舱进风口', '12', '02', to_date('28-11-2018 09:47:14', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1008, '燃气舱进风口', '14', to_date('28-11-2018 09:47:46', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '综合舱进风口', '13', '03', to_date('28-11-2018 09:47:32', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1009, '污水仓排风口', '21', to_date('28-11-2018 09:48:04', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '燃气舱进风口', '14', '04', to_date('28-11-2018 09:47:46', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1010, '电力舱排风口', '22', to_date('28-11-2018 09:48:14', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '污水舱排风口', '21', '01', to_date('28-11-2018 09:48:04', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1011, '综合仓排风口', '23', to_date('28-11-2018 09:48:33', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '电力舱排风口', '22', '02', to_date('28-11-2018 09:48:14', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1012, '燃气舱排风口', '24', to_date('28-11-2018 09:48:46', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '综合舱排风口', '23', '03', to_date('28-11-2018 09:48:33', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1013, '燃气舱投料井', '31', to_date('28-11-2018 09:49:18', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '燃气舱排风口', '24', '04', to_date('28-11-2018 09:48:46', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1014, '非燃气舱投料井', '32', to_date('28-11-2018 09:49:38', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '燃气舱投料井', '31', '04', to_date('28-11-2018 09:49:18', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE_TYPE (ID, NAME, SN, CRT_TIME)
-values (1015, '其他', '41', to_date('28-11-2018 09:49:48', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '非燃气舱投料井', '32', '32', to_date('28-11-2018 09:49:38', 'dd-mm-yyyy hh24:mi:ss'));
 
-commit;
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1001, '10区', '10', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1002, '11区', '11', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1003, '12区', '12', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1004, '13区', '13', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1005, '14区', '14', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1006, '15区', '15', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1007, '16区', '16', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1008, '17区', '17', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1009, '18区', '18', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1010, '19区', '19', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1011, '20区', '20', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1012, '3区', '03', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1013, '4区', '04', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1014, '5区', '05', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1015, '6区', '06', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1016, '7区', '07', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1017, '8区', '08', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
-
-insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1018, '9区', '09', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_STORE_TYPE (NAME, SN, PARENT, CRT_TIME)
+values ( '其他', '41', '41', to_date('28-11-2018 09:49:48', 'dd-mm-yyyy hh24:mi:ss'));
 
 commit;
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1001, '电力舱', '02', 1, 1001, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '10区', '10', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1002, '电力舱进风口', '12', 1, 1006, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '11区', '11', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1003, '电力舱排风口', '22', 1, 1010, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '12区', '12', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1004, '非燃气舱投料井', '32', 1, 1014, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '13区', '13', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1005, '其他', '41', 1, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '14区', '14', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1006, '燃气舱', '04', 1, 1003, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '15区', '15', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1007, '燃气舱进风口', '14', 1, 1008, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '16区', '16', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1008, '燃气舱排风口', '24', 1, 1012, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '17区', '17', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1009, '燃气舱投料井', '31', 1, 1013, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '18区', '18', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1010, '设备间', '05', 1, 1004, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '19区', '19', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1011, '污水仓', '01', 1, 1000, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '20区', '20', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1012, '污水仓进风口', '11', 1, 1005, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '3区', '03', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1013, '污水仓排风口', '21', 1, 1009, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '4区', '04', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1014, '综合仓', '03', 1, 1002, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '5区', '05', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1015, '综合仓进风口', '13', 1, 1007, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '6区', '06', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
-insert into T_COMMON_STORE (ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1016, '综合仓排风口', '23', 1, 1011, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '7区', '07', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '8区', '08', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '9区', '09', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '21区', '21', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '22区', '22', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_AREA (NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
+values ( '1区', '01', null, 6, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 commit;
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1001, '电力舱', '02', 1, 1001, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1001, '电力舱进风口', '12', 1, 1006, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1001, '电力舱排风口', '22', 1, 1010, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1004, '非燃气舱投料井', '32', 1, 1014, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1005, '其他', '41', 1, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1006, '燃气舱', '04', 1, 1003, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1006, '燃气舱进风口', '14', 1, 1008, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1006, '燃气舱排风口', '24', 1, 1012, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1006, '燃气舱投料井', '31', 1, 1013, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1010, '设备间', '05', 1, 1004, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1011, '污水舱', '01', 1, 1000, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1011, '污水舱进风口', '11', 1, 1005, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1011, '污水舱排风口', '21', 1, 1009, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1014, '综合舱', '03', 1, 1002, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1014, '综合舱进风口', '13', 1, 1007, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1014, '综合舱排风口', '23', 1, 1011, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+
+insert into T_COMMON_STORE (PARENT_ID, NAME, SN, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
+values ( 1017, '其他', '41', 6, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+commit;
+
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, CAMERA, START_POINT, END_POINT, CRT_TIME)
 values (1050, '6区-电力舱排风口', 1, 1003, 1015, 10, null, null, null, to_date('28-11-2018 09:56:30', 'dd-mm-yyyy hh24:mi:ss'));
@@ -1050,22 +1063,19 @@ values (1000, 'admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c92
 
 --员工表
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (1, '张三', 1, 1, to_date('26-06-2018', 'dd-mm-yyyy'));
+values (1, '刘冬絮', 1, 1, to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (2, '李四', 2, 2,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (2, '李萌', 2, 2,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (3, '王五', 3, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (3, '王帅', 3, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID,CRT_TIME)
-values (4, '赵六', 4, 4,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (4, '赵晓静', 4, 4,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (5, '王二', 1, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
-
-insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (1000, 'admin', 1, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (5, '王超群', 1, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
 commit;
 
 
@@ -1099,7 +1109,7 @@ insert into t_common_company (ID, NAME, CRT_TIME)
 values (4, '中国电信', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (5, '中建一局', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (5, '中铁十二局', to_date('22-06-2018', 'dd-mm-yyyy'));
 commit;
 
 --公司部门中间表

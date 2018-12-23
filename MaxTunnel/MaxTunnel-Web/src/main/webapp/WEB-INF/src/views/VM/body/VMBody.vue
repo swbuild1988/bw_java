@@ -1,20 +1,29 @@
 <template>
     <div id="main" class="Main">
         <div class="MainLeft clear" id="mainLeft">
-            <div class="VmModel1 BackgroundImage">
-                <vm-data-model v-if="ModelData1" :modelData = "ModelData1"></vm-data-model>
+            <div class="leftTop BackgroundImage clearfloat">
+                <div class="VmModel2">
+                    <vm-data-model v-if="ModelData2" :modelData = "ModelData2"></vm-data-model>
+                </div>
+                <div class="VmModel4">
+                    <vm-data-model v-if="ModelData4" :modelData = "ModelData4"></vm-data-model>
+                </div>
+                <div class="VmModel3">
+                    <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model>
+                </div>
             </div>
-            <div class="VmModel2 BackgroundImage">
-                <vm-data-model v-if="ModelData2" :modelData = "ModelData2"></vm-data-model>
+            <div class="leftCenter BackgroundImage">
+                <vm-video></vm-video>
             </div>
-            <div class="VmModel3 BackgroundImage" >
-                <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model>
+            <div class="leftBottem BackgroundImage" >
+                <!-- <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model> -->
+                <three-dimensional></three-dimensional>
             </div>
         </div>
 
-        <div class="MainCentre" id="mainCentre">
+        <div class="MainCentre BackgroundImage threeDBackgroundImage" id="mainCentre">
             <vm-map></vm-map>
-            <div class="MainCentreBottom clear" id="mainCentreBottom">
+            <!-- <div class="MainCentreBottom clear" id="mainCentreBottom">
                 <div class="VmModel4 BackgroundImage">
                     <vm-data-model v-if="ModelData4" :modelData="ModelData4"></vm-data-model>
                 </div>
@@ -27,13 +36,13 @@
                 <div class="VmModel7 BackgroundImage">
                     <vm-data-model v-if="ModelData7" :modelData="ModelData7"></vm-data-model>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <div class="MainRight" id="mainRight">
+        <!-- <div class="MainRight" id="mainRight">
             <vm-video></vm-video>
             <three-dimensional></three-dimensional>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -221,37 +230,68 @@ export default {
     left: 0;
 }
 #main .MainLeft {
-    padding-left: 0.7%;
-    width: 15%;
-    height: 86%;
+    /* padding-left: 0.7%; */
+    width: 24.8%;
+    height: 100%;
     position: absolute;
-    top: 14%;
+    /* top: 14%; */
 }
 
-#mainLeft >>> .VmModel1,
-#mainLeft >>> .VmModel2,
-#mainLeft >>> .VmModel3 {
+#mainLeft .VmModel2,
+#mainLeft .VmModel4,
+#mainLeft .VmModel3{
+   position: absolute;
+   width: 50%;
+   height: 50%;
+}
+#mainLeft .VmModel2{
+    right: 0;
+}
+#mainLeft .VmModel4{
+    top: 50%;
+}
+#mainLeft .VmModel3{
+    top: 50%;
+    right: 0;
+}
+.clearfloat:after{
+  content: ""; 
+  display: block; 
+  height: 0; 
+  clear: both; 
+  visibility: hidden;  
+  }
+
+
+#mainLeft .leftBottem,
+#mainLeft .leftTop,
+#mainLeft .leftCenter {
     position: relative;
     width: 100%;
     height: 33%;
     margin-bottom: 1%;
 }
 /*body conter*/
-#main .MainCentre,
-#main .MainRight {
+/* #main .MainCentre{
     position: absolute;
     height: 94%;
     top: 6%;
-}
+} */
 #main .MainCentre {
-    left: 15.7%;
-    width: 59%;
+    position: absolute;
+    height: 94%;
+    top: 6%;
+    /* left: 15.7%;
+    width: 59%; */
+    left: 25%;
+    width: 74.8%;
 }
 #mainCentre >>> .Map {
     position: relative;
     width: 100%;
-    height: 71%;
-    margin-bottom: 0.5%;
+    /* height: 71%; */
+    height: 99.5%;
+    /* margin-bottom: 0.5%; */
     overflow: hidden;
 }
 /*body Centre Bottom*/
@@ -288,6 +328,9 @@ export default {
 }
 #mainRight >>> .ThreeDimensionalContainer {
     position: relative;
+    /* height: 38%; */
+    height: 34.5%;
+    margin-top: 10%;
 }
 .BackgroundImage {
     padding: 1.3%;
@@ -295,20 +338,10 @@ export default {
     border: 1px solid rgba(0, 107, 149, 0.5);
     box-shadow: 0 0 1.5rem rgba(0, 107, 149, 1) inset;
 }
+.threeDBackgroundImage{
+    padding: .3%;
+}
 .BodyCenterPadding {
     padding: 0.3%;
-}
-/* 小屏幕（显示器，小于等于 1920px） */
-@media (max-width: 1920px) {
-    #mainRight >>> .ThreeDimensionalContainer {
-         height: 38%;
-    }
-}
-/* 大屏幕（显示器，大于等于 1920px） */
-@media (min-width: 1921px) {
-    #mainRight >>> .ThreeDimensionalContainer {
-        height: 34.5%;
-        margin-top: 10%;
-    }
 }
 </style>

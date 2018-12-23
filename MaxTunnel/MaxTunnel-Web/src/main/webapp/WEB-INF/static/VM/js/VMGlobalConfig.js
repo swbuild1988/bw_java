@@ -17,12 +17,12 @@ export default {
               flyUpdateTime:1000 //单位ms
           },
           CAMERA:{//相机初始化视角
-              longitude:112.49658193083268,
-              latitude:37.70723582609472,
-              height:2150.5826793988153,
-              roll:1.9123609362736715e-9,
-              pitch:-1.5254146937977628,
-              heading:0.360004849679342
+            longitude:112.49802091380211,
+            latitude:37.70768364078975,
+            height:4999.577866952712,
+            roll:0,
+            pitch:-1.5383928532641606,
+            heading:0.3732143574336426
         },
           entityHeight:10, //实体高度
           searchEventsDay:'5', //查询几天内时间

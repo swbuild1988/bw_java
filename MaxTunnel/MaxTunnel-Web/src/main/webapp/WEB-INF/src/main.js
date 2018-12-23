@@ -11,7 +11,7 @@ import VueAxios from "vue-axios";
 import "iview/dist/styles/iview.css";
 import routes from "./router";
 import Vuex from "vuex";
-import store from "./store";
+import store from './store/index'
 import echarts from "echarts";
 import "animate.css/animate.min.css";
 import Stomp from "stompjs";
@@ -27,11 +27,8 @@ import vueXlsxTable from 'vue-xlsx-table'
 const RouterBase = require("../static/serverconfig").RouterBase;
 const SuperMapConfig = require("../static/serverconfig").SuperMapConfig;
 const VMWebConfig = require("../static/VM/js/VMWebConfig").VMWebConfig;
-
 Vue.prototype.$echarts = echarts;
-
 Vue.prototype.GLOBAL = global_
-
 Vue.use(VMConfig);
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -40,42 +37,29 @@ Vue.use(iView);
 Vue.use(vueXlsxTable, {rABS: false})
 Vue.prototype.RouterBase = RouterBase;
 
-var axios_instance = axios.create({
-  headers: {
-    "Content-Type": "application/json;charset=utf-8"
-  }
-});
+var axios_instance = axios.create({headers: {"Content-Type": "application/json;charset=utf-8"}});
 Vue.use(VueAxios, axios_instance);
 if (process.env.NODE_ENV == "development") {
   axios.defaults.baseURL = "/MaxTunnel-Web/";
   Vue.prototype.ServerConfig = "/static";
   Vue.prototype.SuperMapConfig = SuperMapConfig;
   Vue.prototype.VMWebConfig = VMWebConfig;
-  console.log("VMWebConfig", VMWebConfig);
   Vue.prototype.ApiUrl = require('../static/serverconfig').ApiUrl;
 } else {
-  Vue.prototype.ServerConfig = RouterBase + "dist/static";
-  axios
-    .get("../" + Vue.prototype.ServerConfig + "/serverconfig.json")
-    .then(result => {
-      localStorage.setItem("ApiUrl", result.data.ApiUrl);
-      //在main.js中定义一个全局函数
-      Vue.prototype.ApiUrl = result.data.ApiUrl;
-      Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
-      axios.defaults.baseURL = Vue.prototype.ApiUrl;
-    })
-    .catch(error => {
-      // console.log(error)
-    });
+  Vue.prototype.ServerConfig = require('../static/serverconfig').ApiUrl + "/dist/static";
+  axios.get(Vue.prototype.ServerConfig + "/serverconfig.json").then(result => {
+    localStorage.setItem("ApiUrl", result.data.ApiUrl);
+    Vue.prototype.ApiUrl = result.data.ApiUrl;
+    Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
+    axios.defaults.baseURL = Vue.prototype.ApiUrl;
+  }).catch(error => {
+  });
   // 获取VM的配置页
-  axios
-    .get("../" + Vue.prototype.ServerConfig + "/VM/js/VMWebConfig.json")
-    .then(result => {
-      Vue.prototype.VMWebConfig = result.data.VMWebConfig;
-    })
-    .catch(error => {
-      // console.log(error)
-    });
+  axios.get("../" + Vue.prototype.ServerConfig + "/VM/js/VMWebConfig.json").then(result => {
+    Vue.prototype.VMWebConfig = result.data.VMWebConfig;
+  }).catch(error => {
+    // console.log(error)
+  });
 }
 Vue.config.productionTip = false;
 
@@ -85,9 +69,7 @@ Vue.prototype.Log = {
     console.log(arguments);
   }
 };
-
 Vue.prototype.GLOBAL = global_
-
 const router = new VueRouter({
   mode: "history",
   base: RouterBase, //服务器地址，不设置时，默认为服务器根目录下
@@ -98,14 +80,19 @@ router.beforeEach((to, from, next) => {
   let CMUser = sessionStorage.CMUser;
   let UMUser = sessionStorage.UMUser;
   if (((to.path.substr(1, 2) == "UM" || to.path.substr(1, 2) == "VM") && UMUser) || (to.path.substr(1, 2) == "CM" && CMUser)) {
-    // if (!store.UMstate.state.permissionList) {
-    //   /* 如果没有permissionList，真正的工作开始了 */
-    //   store.dispatch('setPermissionList', {url: ""}).then(() => {
-    //     next({path: to.path});
-    //   })
-  // else
-    {
+    if (!store.state.permission.permissionList) {
+      store.dispatch('permission/FETCH_PERMISSION').then(() => {
+        next({path: to.path})
+      })
       next();
+    }
+    else {
+      if (to.path.trim().toLowerCase().indexOf("login") < 0) {
+        next()
+      }
+      else {
+        next(from.fullPath)
+      }
     }
   }
   else {
