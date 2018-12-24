@@ -80,7 +80,7 @@ public class VideoController {
     		String user = map.get("user");
 			String password = map.get("password");
 			String ip = map.get("ip");
-			String port = map.get("port");
+			String port = map.get("554");
 			String channelNo = map.get("channelNo");
 			String id = map.get("id");
 			String vendor = map.get("vendor");
