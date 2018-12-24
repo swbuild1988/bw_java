@@ -1,4 +1,5 @@
 
+
 --measobj
 
 
@@ -80,3 +81,4 @@ commit;
 insert into T_MAM_MAXVIEW_CONFIG (ID, NAME, IP, PORT, USERNAME, PASSWORD, CRT_TIME)
 values (1, 'жу╤к1', '192.168.6.14', '80', 'admin', '14e24dc8cf60446f56eb163a7b85bce8a53d3f766badf15e86a1af857d9a9012', to_date('15-11-2018', 'dd-mm-yyyy'));
 commit;
+

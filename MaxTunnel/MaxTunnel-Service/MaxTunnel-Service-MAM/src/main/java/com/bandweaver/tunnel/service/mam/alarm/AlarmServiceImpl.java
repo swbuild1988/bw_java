@@ -47,18 +47,7 @@ public class AlarmServiceImpl implements AlarmService {
 //		alarmModuleCenter.insert(alarm);
 		
 		//send to MQ
-		List<ObjectBind> objectBindList = objectBindService.getPlansByObject(alarm.getObjectId());
-		List<JSONObject> returnData = new ArrayList<>();
-		for (ObjectBind objectBind : objectBindList) {
-			JSONObject js = new JSONObject();
-			js.put("id", objectBind.getBindId());
-			ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(objectBind.getBindId());
-			if(processTypeEnum == ProcessTypeEnum.NONE)
-				continue;
-			js.put("name",processTypeEnum.getName());
-			returnData.add(js);
-		}
-		
+		List<JSONObject> returnData = objectBindService.getPlansByObject(alarm.getObjectId());
 		JSONObject json = (JSONObject) JSONObject.toJSON(alarm);
 		json.put("plans", returnData);
 		mqService.sendToAlarmUMQueue(json.toJSONString());
@@ -167,3 +156,4 @@ public class AlarmServiceImpl implements AlarmService {
 
 
 }
+
