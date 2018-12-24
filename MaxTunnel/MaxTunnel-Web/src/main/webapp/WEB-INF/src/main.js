@@ -51,6 +51,7 @@ if (process.env.NODE_ENV == "development") {
     localStorage.setItem("ApiUrl", result.data.ApiUrl);
     Vue.prototype.ApiUrl = result.data.ApiUrl;
     Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
+    Vue.prototype.VMWebConfig = VMWebConfig;
     axios.defaults.baseURL = Vue.prototype.ApiUrl;
   }).catch(error => {
   });

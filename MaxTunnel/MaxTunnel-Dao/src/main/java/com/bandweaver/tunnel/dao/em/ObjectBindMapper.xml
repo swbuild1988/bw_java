@@ -92,7 +92,7 @@
   </update>
   
   
-   <select id="getPlansByObject"  resultMap="BaseResultMap">
+   <select id="getListByObjectAndType"  resultMap="BaseResultMap">
    	select * from T_EM_OBJ_BIND
     where object_id = #{objectId} and type = #{type}
   </select>

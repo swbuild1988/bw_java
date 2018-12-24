@@ -1,3 +1,4 @@
+
 package com.bandweaver.tunnel.controller.quartz;
 
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public class TaskEntrance {
     	measAlarm.setLongitude(null);
     	measAlarm.setLatitude(null);
     	
-    	String host = "http://localhost:8088/MaxTunnel-Web";
+    	String host = "http://localhost:8080/MaxTunnel-Web";
 		String path = "/alarms";
 		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, String> querys = new HashMap<String, String>();
@@ -173,7 +174,7 @@ public class TaskEntrance {
         	list.add(measValueAI);
 		}
     	
-		String host = "http://localhost:8088/MaxTunnel-Web";
+		String host = "http://localhost:8080/MaxTunnel-Web";
 		String path = "/measvalue-ai/batch";
 		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, String> querys = new HashMap<String, String>();
@@ -651,3 +652,4 @@ public class TaskEntrance {
     
     
 }
+
