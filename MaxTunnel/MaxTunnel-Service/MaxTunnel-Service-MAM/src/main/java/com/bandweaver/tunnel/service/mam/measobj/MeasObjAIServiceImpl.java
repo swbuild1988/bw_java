@@ -55,16 +55,19 @@ public class MeasObjAIServiceImpl implements MeasObjAIService{
     		moIdList.add(measObjDto.getId());
 		}
     	
+    	if(moIdList.isEmpty())
+    		return new PageInfo<>(new ArrayList<>());
+    	
     	MeasObjAIVo aiVo = new MeasObjAIVo();
-    	aiVo.setIds(moIdList);
+    	aiVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	aiVo.setPageNum(vo.getPageNum());
     	aiVo.setPageSize(vo.getPageSize());
     	
     	PageHelper.startPage(aiVo.getPageNum(), aiVo.getPageSize());
     	List<MeasObjAIDto> list = measObjAIMapper.dataGrid(aiVo);
-    	LogUtil.info("list:" + list);
+    	LogUtil.debug("list:" + list);
     	PageInfo<MeasObjAIDto> pageInfo = new PageInfo<>(list);
-    	LogUtil.info("pageInfo:" + pageInfo);
+    	LogUtil.debug("pageInfo:" + pageInfo);
 		return pageInfo;
 	}
 }

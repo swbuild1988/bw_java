@@ -231,6 +231,8 @@ public class MeasObjVo extends BaseVo{
 		return "MeasObjVo [id=" + id + ", tunnelId=" + tunnelId + ", storeId=" + storeId + ", areaId=" + areaId
 				+ ", sectionId=" + sectionId + ", name=" + name + ", datatypeId=" + datatypeId + ", objtypeId="
 				+ objtypeId + ", actived=" + actived + ", description=" + description + ", longitude=" + longitude
-				+ ", latitude=" + latitude + ", height=" + height + ", deviation=" + deviation + "]";
+				+ ", latitude=" + latitude + ", height=" + height + ", deviation=" + deviation + ", objtypeIds="
+				+ objtypeIds + ", tunnelIds=" + tunnelIds + ", storeIds=" + storeIds + ", sectionIds=" + sectionIds
+				+ ", cv=" + cv + ", ids=" + ids + ", dcv=" + dcv + ", spacePrecision=" + spacePrecision + "]";
 	}
 }
