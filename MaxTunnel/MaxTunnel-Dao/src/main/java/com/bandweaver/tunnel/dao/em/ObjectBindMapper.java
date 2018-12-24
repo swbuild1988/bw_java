@@ -19,5 +19,5 @@ public interface ObjectBindMapper {
 
     int updateByPrimaryKey(ObjectBind record);
 
-	List<ObjectBind> getPlansByObject(@Param("objectId")Integer objectId, @Param("type")Integer type);
+	List<ObjectBind> getListByObjectAndType(@Param("objectId")Integer objectId, @Param("type")Integer type);
 }

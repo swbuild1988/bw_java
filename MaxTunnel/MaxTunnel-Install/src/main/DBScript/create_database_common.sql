@@ -1039,5 +1039,3 @@ begin
 end COMMON_SCHEDULE_JOB_TG;
 /
 
-
-
