@@ -112,7 +112,7 @@
       </Row>
       <Row>
         <Col span="10">
-          <Button type="success renYuandinwei"
+          <Button type="success" class="renYuandinwei"
                 @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
             <div><img src="../../assets/UM/数据.png">
               <div :style="{fontSize:mySize}">数据分析</div>
