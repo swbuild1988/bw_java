@@ -45,6 +45,9 @@
         </div>
       </div> -->
     </Card>
+    <!-- <Modal v-model="confirmFlag" title="确认" @on-ok="open" :styles="{top: '80px', left: '20%',width: '300px'}">
+        <p>确定打开{{ Obj.ObjName }}开关吗</p>
+    </Modal> -->
   </div>
 </template>
 
@@ -75,12 +78,18 @@
       return {
         curImgUrl: "",
         isOpen: this.ObjVal,
-        initOff: true
+        initOff: true,
+        confirmFlag: false
       };
     },
     components: {Light, Fans},
     methods: {
       change() {
+        // this.$Modal.confirm({
+        //   render: (h)=>{
+        //     return h('span', '确定打开'+ this.Obj.ObjName + '开关吗')
+        //   }
+        // })
         this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,null);
         this.isOpen = !this.isOpen
         this.initOff = false
@@ -90,6 +99,11 @@
         this.Obj.clickStatus = !this.Obj.clickStatus;
         this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,this.Obj.clickStatus);
       },
+      open() {
+        this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,null);
+        this.isOpen = !this.isOpen
+        this.initOff = false
+      }
     },
     mounted() {
       
@@ -154,7 +168,7 @@
   .initOff{
     position: absolute;
     top: 4px;
-    left: 114px;
+    left: 52%;
     color: white;
   }
 </style>

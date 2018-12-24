@@ -18,7 +18,7 @@
       <img src="../../../assets/UM/甲烷-红.png" v-if="Obj.objtypeId==5 && !normal" class="img">
       <img src="../../../assets/UM/液位仪-红.png" v-if="Obj.objtypeId==21 && !normal" class="img">
       <img src="../../../assets/UM/CO-红.png" v-if="Obj.objtypeId==6 && !normal" class="img">
-      <p class="value">{{Obj.ObjVal}}</p>
+      <p class="value">{{Obj.ObjVal}}<span style="font-size: 24px">{{ unit }}</span></p>
       <div class="extre">
         <div class="min" v-if="Obj.minValue != null">
           <Icon type="arrow-up-c"></Icon>
@@ -82,7 +82,8 @@
       return {
         gasMax: 200,
         gasMin: 0,
-        normal: true
+        normal: true,
+        unit: '',
       };
     },
     components: {Temperature, Gas},
@@ -95,7 +96,7 @@
     },
     watch: {
       'Obj.ObjVal': function(){
-        if(this.Obj.minValue != null && this.Obj.maxValue != null(this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
+        if(this.Obj.minValue != null && this.Obj.maxValue != null && (this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
           this.normal = false
         } else {
           this.normal = true
@@ -103,11 +104,33 @@
       }
     },
     mounted(){
-      if(this.Obj.minValue != null && this.Obj.maxValue != null(this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
+      if(this.Obj.minValue != null && this.Obj.maxValue != null && (this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
         this.normal = false
       } else {
         this.normal = true
       }
+
+      switch(this.Obj.objtypeId){
+        case 1:
+          this.unit = '℃'
+          break
+        case 2:
+          this.unit = '%'
+          break
+        case 3:
+          this.unit = '%'
+          break
+        case 4:
+          this.unit = 'ppm'
+          break
+        case 5:
+          this.unit = '%'
+          break
+        case 6:
+          this.unit = '%'
+          break
+      }
+      
     }
   }
 </script>
