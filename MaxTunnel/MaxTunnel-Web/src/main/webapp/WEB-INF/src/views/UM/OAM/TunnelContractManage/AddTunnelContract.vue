@@ -90,7 +90,8 @@
         <Button type="ghost"  @click="handleReset('addContractInfo')" style="margin-left: 8px" v-if="read">返回</Button>
         </div>
     </Form>
-
+    <Button type="primary" @click="prev" v-if="pageType!=pageTypes.Add && curIndex > 0" class="prev">上一页</Button>
+    <Button type="primary" @click="next" v-if="pageType!=pageTypes.Add && curIndex < contractIds.length" class="next">下一页</Button>
   </div>
 </template>
 <script>
@@ -109,7 +110,8 @@ export default {
                 paddingBottom: '20px',
                 height: '100%',
                 backgroundRepeat: 'no-repeat',
-                backgroundSize: '100% 100%'
+                backgroundSize: '100% 100%',
+                position: 'relative'
             },
             pageType: 3,
             pageTypes: types.pageType,
@@ -172,12 +174,16 @@ export default {
                 area: false,
                 store: false
             },
-            read: false
+            read: false,
+            curIndex: null,
+            contractIds: []
         }
     },
     components: { CustomerChoose },
     mounted(){
-        this.addContractInfo.id = this.$route.params.id
+        this.curIndex = this.$route.params.curIndex
+        this.contractIds = this.$route.params.contractIds
+        this.addContractInfo.id = this.contractIds[this.curIndex]
         this.pageType = this.$route.params.type
         if(this.pageType == this.pageTypes.Read){
             this.read = true
@@ -221,6 +227,20 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
+            EnumsService.getContractStatus().then(
+                    (result)=>{
+                        _this.contractStatus = result
+                    },
+                    (error)=>{
+                        _this.Log.info(error)
+                    })
+            EnumsService.getCableStatus().then(
+                (result)=>{
+                    _this.cableStatus = result
+                },
+                (error)=>{
+                    _this.Log.info(error)
+                })
         },
         submitAddContractInfo(name){
             this.$refs[name].validate((valid)=>{
@@ -248,20 +268,6 @@ export default {
         getParams(){
             if(this.pageType == this.pageTypes.Edit || this.pageType == this.pageTypes.Read){
                 let _this = this
-                EnumsService.getContractStatus().then(
-                    (result)=>{
-                        _this.contractStatus = result
-                    },
-                    (error)=>{
-                        _this.Log.info(error)
-                    })
-                EnumsService.getCableStatus().then(
-                    (result)=>{
-                        _this.cableStatus = result
-                    },
-                    (error)=>{
-                        _this.Log.info(error)
-                    })
                 ContractService.getDetailsByContractId(_this.addContractInfo.id).then((result)=>{
                         _this.addContractInfo.name = result.cableDto.contract.name;
                         _this.addContractInfo.contractStartTime = new Date(result.cableDto.contract.contractStartTime);
@@ -307,13 +313,7 @@ export default {
             })
         },
         handleReset(name){
-            if(this.read ||　this.pageType == this.pageTypes.Edit){
-                this.$router.push("/UM/tunnelContract/list")
-            }else{
-                this.$refs[name].resetFields()
-                this.customerName = '';
-                this.sectionNames = '';
-            }
+           this.$router.push("/UM/tunnelContract/list")
         },
         getCustomerId(data){
             this.addContractInfo.customerId = data.id;
@@ -371,6 +371,16 @@ export default {
                     _this.Log.info(error)
                 }
             )
+        },
+        prev() {
+            this.curIndex = this.curIndex - 1
+            this.addContractInfo.id = this.contractIds[this.curIndex]
+            this.getParams()
+        },
+        next() {
+            this.curIndex = this.curIndex + 1
+            this.addContractInfo.id = this.contractIds[this.curIndex]
+            this.getParams()
         }
     }
 }
@@ -395,5 +405,15 @@ h2{
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);*/
+}
+.prev{
+    position: absolute;
+    bottom: 6vh;
+    left: 2vw;
+}
+.next{
+    position: absolute;
+    bottom: 6vh;
+    right: 2vw;
 }
 </style>

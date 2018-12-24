@@ -49,7 +49,7 @@
       </Col>
       <Col span="12":class="!queryCondition.showSwitch? 'data':'smallData' ">
       <Row :gutter="16" style="margin-right: 2px;">
-        <Col span="12" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+        <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
         <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
         <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
         </Col>
