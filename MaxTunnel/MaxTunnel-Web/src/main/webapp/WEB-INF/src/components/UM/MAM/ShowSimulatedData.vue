@@ -3,22 +3,30 @@
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
       <p slot="title">{{Obj.objtypeName}}</p>
       <!-- 数值正常时 -->
-      <img src="../../../assets/UM/温度-蓝.png" v-if="Obj.objtypeId==1 || Obj.objtypeId==8" class="img">
-      <img src="../../../assets/UM/湿度-蓝.png" v-if="Obj.objtypeId==2" class="img"> 
-      <img src="../../../assets/UM/氧气-蓝.png" v-if="Obj.objtypeId==3" class="img">
-      <img src="../../../assets/UM/H2S-蓝.png" v-if="Obj.objtypeId==4" class="img"> 
-      <img src="../../../assets/UM/甲烷-蓝.png" v-if="Obj.objtypeId==5" class="img">
-      <img src="../../../assets/UM/液位仪.png" v-if="Obj.objtypeId==21" class="img">
-      <img src="../../../assets/UM/CO-蓝.png" v-if="Obj.objtypeId==6" class="img"> 
+      <img src="../../../assets/UM/温度-蓝.png" v-if="Obj.objtypeId==1 && normal || Obj.objtypeId==8 && normal" class="img">
+      <img src="../../../assets/UM/湿度-蓝.png" v-if="Obj.objtypeId==2 && normal" class="img"> 
+      <img src="../../../assets/UM/氧气-蓝.png" v-if="Obj.objtypeId==3 && normal" class="img">
+      <img src="../../../assets/UM/H2S-蓝.png" v-if="Obj.objtypeId==4 && normal" class="img"> 
+      <img src="../../../assets/UM/甲烷-蓝.png" v-if="Obj.objtypeId==5 && normal" class="img">
+      <img src="../../../assets/UM/液位仪.png" v-if="Obj.objtypeId==21 && normal" class="img">
+      <img src="../../../assets/UM/CO-蓝.png" v-if="Obj.objtypeId==6 && normal" class="img"> 
+
+      <img src="../../../assets/UM/温度-红.png" v-if="Obj.objtypeId==1 && !normal || Obj.objtypeId==8 && !normal" class="img">
+      <img src="../../../assets/UM/湿度-红.png" v-if="Obj.objtypeId==2 && !normal" class="img">
+      <img src="../../../assets/UM/氧气-红.png" v-if="Obj.objtypeId==3 && !normal" class="img">
+      <img src="../../../assets/UM/H2S-红.png" v-if="Obj.objtypeId==4 && !normal" class="img">
+      <img src="../../../assets/UM/甲烷-红.png" v-if="Obj.objtypeId==5 && !normal" class="img">
+      <img src="../../../assets/UM/液位仪-红.png" v-if="Obj.objtypeId==21 && !normal" class="img">
+      <img src="../../../assets/UM/CO-红.png" v-if="Obj.objtypeId==6 && !normal" class="img">
       <p class="value">{{Obj.ObjVal}}</p>
       <div class="extre">
-        <div class="min">
+        <div class="min" v-if="Obj.minValue != null">
           <Icon type="arrow-up-c"></Icon>
-          <span>800</span>
+          <span>{{Obj.minValue}}</span>
         </div>
-        <div class="max">
+        <div class="max" v-if="Obj.minValue != null">
           <Icon type="arrow-down-c"></Icon>
-          <span>10000</span>
+          <span>{{Obj.maxValue}}</span>
         </div>
       </div>
       <div>{{Obj.ObjName}}</div>
@@ -65,13 +73,16 @@
           GasMin: 0,
           clickStatus:false,
           datatypeId:"",
+          minValue: 0,
+          maxValue: 100
         }
-      }
-    },
+    }
+  },
     data: function () {
       return {
         gasMax: 200,
         gasMin: 0,
+        normal: true
       };
     },
     components: {Temperature, Gas},
@@ -82,9 +93,21 @@
         this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,this.Obj.clickStatus);
       },
     },
-    watch: {},
+    watch: {
+      'Obj.ObjVal': function(){
+        if(this.Obj.minValue != null && this.Obj.maxValue != null(this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
+          this.normal = false
+        } else {
+          this.normal = true
+        }
+      }
+    },
     mounted(){
-     
+      if(this.Obj.minValue != null && this.Obj.maxValue != null(this.Obj.ObjVal < this.Obj.minValue || this.Obj.ObjVal > this.Obj.maxValue)){
+        this.normal = false
+      } else {
+        this.normal = true
+      }
     }
   }
 </script>

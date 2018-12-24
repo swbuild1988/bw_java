@@ -6,6 +6,8 @@ import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 public class SectionVo extends BaseVo {
     private Integer id;
+    
+    private Integer parentId;
 
     private String name;
     
@@ -101,6 +103,14 @@ public class SectionVo extends BaseVo {
 
 	public void setEndPoint(String endPoint) {
 		this.endPoint = endPoint;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
     
 }

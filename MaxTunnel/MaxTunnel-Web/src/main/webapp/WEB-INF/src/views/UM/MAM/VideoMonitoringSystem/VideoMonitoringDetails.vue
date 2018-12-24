@@ -4,14 +4,14 @@
             <Col span="9" offset="1">
                 监测仓:
                 <Select v-model="conditions.storeId" style="width:60%;z-index: 9999;" id="store">
-                    <Option value="" key="0">所有</Option>
+                    <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="9">
                 区域:
                 <Select v-model="conditions.areaId" style="width:60%;z-index: 9999;" id="area">
-                    <Option value="" key="0">所有</Option>
+                    <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
@@ -23,7 +23,7 @@
             <Col span="5">
                 <div class="control">
                     <h2 class="title">云台控制</h2>
-                    <Row class="controlBody" style="height: 20vh"> 
+                    <Row class="controlBody" style="height: 20vh">
                         <Col span="24">
                             <div class="controlContent">
                             <video-control @startDirectCtrl="start" @stopDirectCtrl="stop" v-bind:isDisabled="isDisabled"></video-control>
@@ -69,7 +69,7 @@
                             <Row class="videos">
                                 <Col :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)" v-for="(item,index) in showVideosList" :key="item.id" :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]">
                                     <div @click="selectScene(item)">
-                                    <div :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]" v-if="videoStyle.show">    
+                                    <div :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]" v-if="videoStyle.show">
                                             <video-component v-bind:video="item" v-bind:id="'camera'+item.id"></video-component>
                                         </div>
                                         <div class="options">
@@ -102,8 +102,8 @@ export default {
         return {
             conditions: {
                 tunnelId: null,
-                storeId: '',
-                areaId: ''
+                storeId: null,
+                areaId: null
             },
             init: {
                 stores: [],
@@ -220,8 +220,6 @@ export default {
                         temp.id = camera.id;
                         temp.name = camera.name;
                         temp.url = camera.url;
-                        temp.storeId = camera.storeId
-                        temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
                         _this.cameraList.push(temp);
@@ -271,11 +269,11 @@ export default {
             this.videoNum = num;
             // this.videoStyle.show = false
             this.curPage = 1;
-            
+
             if(num == 1){
                 this.curVideo = null
                 this.curVideo = this.showVideosList[0]
-            } 
+            }
         },
         selectScene(camera) {
             if(this.curVideo && this.curVideo.id == camera.id){
@@ -298,7 +296,7 @@ export default {
                 } else {
                     this.isDisabled = true
                 }
-            }    
+            }
         },
         config(camera) {
             this.$router.push({
@@ -378,7 +376,6 @@ export default {
 </script>
 <style scoped>
 .whole{
-    background: url('../../../../assets/VM/bg_image.png') no-repeat;
     background-size: 100% 100%;
     background-color: rgb(2,23,47);
     min-height: 100%;
@@ -441,8 +438,8 @@ export default {
     height: 69vh;
 }
 .nineSBody{
-    height: 23vh;
-}
+   height: 23vh;
+ }
 .oneScreen {
     height: 62vh;
     margin-top: 10px;

@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +122,56 @@ public class SectionController extends BaseController<Section>{
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    @RequestMapping(value = "sections/batch", method = RequestMethod.POST)
+    public JSONObject createSections(@RequestBody JSONObject obj) {
+    	// 获取集合
+    	List<LinkedHashMap<String, Object>> sections = (List)obj.get("section");
+    	SectionVo vo = new SectionVo();
+    	int i = 0;
+        for (LinkedHashMap<String, Object> s : sections){
+        	List<Integer> areaIds = (List) s.get("areaIds");
+        	Integer storeId = (Integer)s.get("storeId");
+        	StoreDto store = storeService.getStoreById(storeId);
+        	vo.setTunnelId(store.getTunnelId());
+            for (Integer areaId: areaIds) {
+                // 判断是否存在
+                if (sectionService.getSectionByStoreAndArea(storeId,areaId)!=null) continue;
 
+                AreaDto area = areaService.getAreasById(areaId);
+                // 新加section
+                Section section = new Section();
+                section.setStoreId(storeId);
+                section.setAreaId(areaId);
+                section.setTotalCableNumber(10);
+                section.setStartPoint("");
+                section.setEndPoint("");
+                section.setName(area.getName() + "-" + store.getName());
+                section.setCamera("");
+                section.setCrtTime(new Date());
+                section.setTunnelId(area.getTunnelId());
+
+                sectionService.add(section);
+                i ++;
+            }
+        }
+        LogUtil.info("本次共批量生成[" + i + "]条secion");
+        List<SectionDto> list = sectionService.getSectionsByCondition(vo);
+        LogUtil.info("管廊id为" + vo.getTunnelId() + " 下共有section:" + list.size() + "条。");
+        for(SectionDto dto : list) {
+        	Section section = new Section();
+        	section.setId(dto.getId());
+        	//获取section所在舱的parentId
+        	StoreDto store = storeService.getStoreById(dto.getStoreId());
+        	//获取该section的父section对象
+        	Section s = sectionService.getSectionByStoreAndArea(store.getParentId(), dto.getAreaId());
+        	if(s != null) {
+        		section.setParentId(s.getId());
+        		sectionService.update(section);
+        	}
+        }
+        LogUtil.info("section添加完成");
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
     
     /**检查名称是否重复 
      * @param name

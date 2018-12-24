@@ -528,7 +528,7 @@ alter table T_COMMON_area
 
 -- create sequence
 create sequence COMMON_area_SEQUENCE
-start with 1000
+start with 1001
 increment by 1
 nomaxvalue
 nocycle
@@ -724,24 +724,6 @@ begin
 end SECURITY_USER_ROLE_TG;
 /
 
-
-
---外键
-/*ALTER TABLE "T_SECURITY_ROLE_PERMISSION"
-   ADD CONSTRAINT FK_T_R_REFERENCE_T_R FOREIGN KEY ("ROLE_ID")
-      REFERENCES "T_SECURITY_ROLE" ("ID");
-
-ALTER TABLE "T_SECURITY_ROLE_PERMISSION"
-   ADD CONSTRAINT FK_T_R_REFERENCE_T_P FOREIGN KEY ("PER_ID")
-      REFERENCES "T_SECURITY_PERMISSION" ("ID");
-
-ALTER TABLE "T_SECURITY_USER_ROLE"
-   ADD CONSTRAINT FK_T_U_REFERENCE_T_U FOREIGN KEY ("USER_ID")
-      REFERENCES "T_SECURITY_USER" ("ID");
-
-ALTER TABLE "T_SECURITY_USER_ROLE"
-   ADD CONSTRAINT FK_T_U_REFERENCE_T_R FOREIGN KEY ("ROLE_ID")
-      REFERENCES "T_SECURITY_ROLE" ("ID");*/
    
    
       
@@ -750,6 +732,7 @@ CREATE TABLE T_COMMON_STORE_TYPE  (
    "ID"                 NUMBER               NOT NULL,
    NAME			VARCHAR2(50) not null,
    SN       varchar2(20) not null,
+   PARENT       varchar2(20) ,
    "CRT_TIME"           DATE,
    CONSTRAINT PK_T_COMMON_STORE_TYPE PRIMARY KEY ("ID")
 );
@@ -776,6 +759,7 @@ CREATE TABLE T_COMMON_STORE  (
    "ID"                 NUMBER               NOT NULL,
    name                 varchar2(100),
    sn                   varchar2(20) not null,
+   PARENT_ID            NUMBER,
    "TUNNEL_ID"          NUMBER               NOT NULL,
    store_type_id	    NUMBER		           NOT NULL,
    camera             varchar2(200),
@@ -784,7 +768,7 @@ CREATE TABLE T_COMMON_STORE  (
 );
 --create sequence
 create sequence COMMON_STORE_SEQUENCE
-start with 1000
+start with 1001
 increment by 1
 nomaxvalue
 nocycle
@@ -807,6 +791,7 @@ CREATE TABLE T_COMMON_SECTION  (
    store_id          NUMBER               NOT NULL,
    area_id          NUMBER               NOT NULL,
    total_cable_number number,
+   parent_id             NUMBER,
    camera             varchar2(200),
    start_point        varchar2(100),
    end_point          varchar2(100),
