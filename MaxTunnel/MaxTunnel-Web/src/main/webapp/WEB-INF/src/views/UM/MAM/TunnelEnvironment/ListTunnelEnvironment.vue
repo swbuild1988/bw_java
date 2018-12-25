@@ -70,9 +70,7 @@
             </div>
           </div>
           <!-- 根据要监测类型选项切换的模块 -->
-          <div
-            style="padding:4% 0% 4% 13%;height:calc(55vh - 40px); overflow-y: auto;background-color: #fff"
-          >
+          <div style="padding:4% 0% 4% 13%;height:calc(55vh - 40px); overflow-y: auto;background-color: #fff">
             <EnvironmentShow :tunnelProps="tunnelProps" :circleSize="circleSize"></EnvironmentShow>
           </div>
         </div>
@@ -82,23 +80,11 @@
 </template>
 <script>
 import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
-// import SmViewer from "../../../../components/Common/3D/3DViewer";
 import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
 import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
 import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { TunnelService } from "../../../../services/tunnelService";
-import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
-import {
-  setViewAngle,
-  bubble,
-  addLabel,
-  getSection,
-  doSqlQuery,
-  labelSqlCompleted,
-  processFailed
-} from "../../../../scripts/commonFun.js";
-import { SuperMapSqlQuery } from "../../../../scripts/three.js";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 
 export default {
@@ -208,39 +194,6 @@ export default {
     this.setGIS();
   },
   methods: {
-    //勾选全选
-    handleCheckAll() {
-      if (this.indeterminate) {
-        this.checkAll = false;
-      } else {
-        this.checkAll = !this.checkAll;
-      }
-      this.indeterminate = false;
-      if (this.checkAll) {
-        let temp = [];
-        this.curDataTypeList.forEach(a => {
-          temp.push(a.val);
-        });
-        this.queryCondition.objDataType = temp;
-      } else {
-        this.queryCondition.objDataType = [];
-      }
-      this.getObjDetialData();
-    },
-    //勾选数据类型
-    checkAllGroupChange(data) {
-      if (data.length === this.curDataTypeList.length) {
-        this.indeterminate = false;
-        this.checkAll = true;
-      } else if (data.length > 0) {
-        this.indeterminate = true;
-        this.checkAll = false;
-      } else {
-        this.indeterminate = false;
-        this.checkAll = false;
-      }
-      this.getObjDetialData();
-    },
     //变更模型视角
     changeArea(area) {
       let _this = this;
@@ -260,12 +213,6 @@ export default {
         });
       } catch (e) {}
     },
-    // },
-    //切换路由
-    goToMoudle(path) {
-      this.$router.push(path);
-    },
-
     //设置统计图表大小
     setCircleSize() {
       if (window.innerWidth < 1400) {
@@ -386,27 +333,31 @@ export default {
     },
 
     //根据监测类型获取数据
-    getMonitorData() {
-      let _this = this;
-      MonitorDataService.getMaxMonitorData(_this.tunnelId).then(
-        result => {
-          console.log("result", result);
-          _this.tunnelProps = [];
-          result.forEach(a => {
-            let temp = {};
-            temp.location = a.location;
-            temp.key = a.key;
-            temp.val = new Number(a.val.toFixed(2));
-            _this.tunnelProps.push(temp);
-          });
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    },
+      getMonitorData() {
+          let _this = this;
+          const curData = MonitorDataService.getMaxMonitorData(_this.tunnelId);
+          const maxDara = MonitorDataService.getMonitorData();
+          Promise.all([curData, maxDara]).then(
+              (result) => {
+                  console.log(result);
+                  _this.tunnelProps = [];
+                  _this.tunnelPropsMax = result[1];
+                  result[0].forEach(a => {
+                      let temp = {};
+                      temp.location = a.location;
+                      temp.key = a.key;
+                      temp.val = parseInt(a.val.toFixed(2));
+                      temp.percent = temp.val / _this.tunnelPropsMax.filter(a => a.key == temp.key)[0].val * 100;
+                      _this.tunnelProps.push(temp);
+                  });
+              },
+              (error) => {
+                  console.log(error)
+              }
+          )
+      },
 
-    //获取监测仓具体区段的监测数据
+      //获取监测仓具体区段的监测数据
     getSectionsMonitorData() {
       let _this = this;
       MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
@@ -415,11 +366,8 @@ export default {
           result.forEach(a => {
             let temp = {};
             temp.name = a.objTypeName;
-            temp.value = new Number(a.cv).toFixed(2);
-            temp.status =
-              (new Number(temp.value) /
-                _this.tunnelPropsMax.filter(a => a.key == temp.name)[0].val) *
-              100;
+            temp.value = parseInt(a.cv).toFixed(2);
+            temp.status = parseInt(temp.value) /_this.tunnelPropsMax.filter(a => a.key == temp.name)[0].val* 100;
             _this.curEnvData.push(temp);
           });
         },
@@ -427,80 +375,6 @@ export default {
           console.log(error);
         }
       );
-    },
-
-    //获取详情面板的数据
-    getObjDetialData() {
-      let _this = this;
-      var Params = {
-        tunnelId: _this.queryCondition.tunnelId,
-        storeId: _this.queryCondition.storeId,
-        objtypeIds: _this.queryCondition.objDataType,
-        sectionId: _this.queryCondition.sectionId,
-        pageNum: _this.queryCondition.pageNum,
-        pageSize: _this.queryCondition.pageSize
-      };
-      MonitorDataService.objDetailDatagrid(Params).then(
-        result => {
-          let ids = "";
-          let datatypeId = null;
-          _this.Obj = [];
-          result.list.forEach(a => {
-            let temp = {};
-            temp.ObjName = a.name;
-            temp.id = a.id;
-            temp.clickStatus = false;
-            temp.objtypeId = a.objtypeId;
-            temp.ObjVal = false;
-            temp.objtypeIds = _this.queryCondition.objDataType;
-            temp.datatypeId = a.datatypeId;
-            ids += a.id + ",";
-            datatypeId = a.datatypeId;
-            temp.objtypeName =
-              _this.curName + _this.curSotre.name + "---" + a.objtypeName;
-            _this.Obj.push(temp);
-          });
-          _this.queryCondition.total = result.total;
-          _this.queryCondition.pageNum = result.pageNum;
-          ids = ids.slice(0, ids.length - 1);
-          if (result.list != null && result.list.length > 0) {
-            MonitorDataService.getDataByIdsAndDataType(ids, datatypeId).then(
-              result1 => {
-                _this.Obj.forEach(a => {
-                  result1.filter(b => {
-                    if (a.id == b.id) {
-                      if (datatypeId == 1) {
-                        a.ObjVal = b.cv.toFixed(2);
-                        this.queryCondition.showSwitch = false;
-                      } else {
-                        a.ObjVal = b.cv;
-                        this.queryCondition.showSwitch = true;
-                      }
-                    }
-                  });
-                });
-              },
-              error => {
-                console.log(error);
-              }
-            );
-          }
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    },
-    //切换页面
-    changePage(index) {
-      let _this = this;
-      _this.queryCondition.pageNum = index;
-      _this.getObjDetialData();
-    },
-    //切换页码数
-    handlePageSize(value) {
-      this.queryCondition.pageSize = value;
-      this.getObjDetialData();
     },
 
     setGIS() {
@@ -515,6 +389,7 @@ export default {
       // 加载视角
       this.$refs.smViewer.setViewAngAngle();
     },
+
     destory3D() {
       var gis = document.getElementById("newID");
       gis.style.display = "none";
@@ -523,12 +398,10 @@ export default {
     }
   },
   components: {
-    // v_3DViewer,
     SimulatedData,
     showSwitchData,
     Modal,
     EnvironmentShow,
-    // SmViewer
     TestSmViewer
   },
   watch: {
