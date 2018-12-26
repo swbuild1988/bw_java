@@ -22,29 +22,39 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span class="word64">所属管廊</span><span>：</span>
-                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
+                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="getAreaAndStores">
                     <Option value=null>所有</Option>
                     <Option v-for="item in lists.tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
-  <!--           <Col span="6">
-                <Poptip placement="bottom" width="1000">
+            <Col span="6">
+                <span class="word64">所属区域</span><span>：</span>
+                <Select v-model="researchInfo.areaId" placeholder="请选择所属管廊" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in lists.areas" :value="item.id" :key="item.id">{{item.name}}</Option>
+                </Select>
+                <!-- <Poptip placement="bottom" width="1000">
                     <span class="word65">所属管仓</span><span>：</span>
                     <Input v-model="researchInfo.storeName" placeholder="请选择所属管仓" id="store" style="width: 60%"/>
                     <div class="pop" slot="content">
                         <store-choose v-on:listenToStoreChoose="getStore" v-bind:tunnelId="researchInfo.tunnelId"></store-choose>
                     </div>
-                </Poptip>
+                </Poptip> -->
             </Col>
             <Col span="6">
-                <Poptip placement="bottom" width="1000">
+            <span class="word64">所属管舱</span><span>：</span>
+                <Select v-model="researchInfo.storeId" placeholder="请选择所属管廊" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in lists.stores" :value="item.id" :key="item.id">{{item.name}}</Option>
+                </Select>
+                <!-- <Poptip placement="bottom" width="1000">
                     <span class="word64">所属区域</span><span>：</span>
                     <Input v-model="researchInfo.areaName" placeholder="请选择所属区域" id="area" style="width: 60%"/>
                     <div class="pop" slot="content">
                         <area-choose v-on:listenToAreaChoose="getArea" v-bind:tunnelId="researchInfo.tunnelId"></area-choose>
                     </div>
-                </Poptip>
-            </Col> -->
+                </Poptip> -->
+            </Col>
         </Row>
         <div style="margin:20px;">
             <Table border ref="selection" :columns="columns7" :data="data6"></Table>
@@ -67,7 +77,8 @@ export default {
             lists: {
                 objtypes: [],
                 tunnels: [],
-                areas: []
+                areas: [],
+                stores: []
             },   
             researchInfo:{
                 name: null,
@@ -247,6 +258,23 @@ export default {
                 }
             })
             this.$emit("objsChoose",objs)
+        },
+        getAreaAndStores() {
+            let _this = this
+            TunnelService.getStoresByTunnelId(this.researchInfo.tunnelId).then(
+                result=>{
+                    _this.lists.stores = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            TunnelService.getAreasByTunnelId(this.researchInfo.tunnelId).then(
+                result=>{
+                    _this.lists.areas = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         }
     },
     components:{
