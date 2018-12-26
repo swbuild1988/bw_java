@@ -79,4 +79,8 @@
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+  
+  <delete id="deleteByRoleId">
+  delete from T_SECURITY_ROLE_PERMISSION where r_id = #{roleId}
+  </select>
 </mapper>

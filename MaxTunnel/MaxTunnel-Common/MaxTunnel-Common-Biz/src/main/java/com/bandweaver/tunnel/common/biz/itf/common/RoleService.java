@@ -10,4 +10,12 @@ public interface RoleService {
 
 	void addRolePermissions(Integer roleId, List<Integer> permissionIds);
 
+	List<Role> getAllRoles();
+
+	void addUserRole(Integer userId, List<Integer> roleIds);
+
+	void deleteRoleBatch(List<Integer> list);
+
+	void updateRole(Role role);
+
 }
