@@ -53,5 +53,7 @@ public interface EmPlanService {
 
 	List<JSONObject> getNodeListByProcessKey(String processKey);
 
+	List<EmPlanDto> getListByProcessKey(String processKey);
+
 
 }

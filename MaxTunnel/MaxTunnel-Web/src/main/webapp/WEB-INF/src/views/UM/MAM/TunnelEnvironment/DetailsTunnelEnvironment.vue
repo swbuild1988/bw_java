@@ -175,9 +175,7 @@ export default {
     },
     changeVideo() {
       if (this.videosList.length == 0) return;
-
       this.curVideo = this.videosList[this.curVideoIndex];
-      console.log("curVideo", this.curVideo);
       this.curVideoIndex >= this.videosList.length - 1
         ? (this.curVideoIndex = 0)
         : this.curVideoIndex++;

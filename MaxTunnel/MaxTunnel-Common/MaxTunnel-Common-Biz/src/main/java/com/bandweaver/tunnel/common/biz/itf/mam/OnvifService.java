@@ -119,4 +119,6 @@ public interface OnvifService {
 	 */
 	boolean delSrc(String id) throws Exception;
 
+	void delSrcList();
+
 }

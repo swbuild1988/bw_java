@@ -87,10 +87,6 @@ public class DataAnalyseController {
     	CommonUtil.hasAllRequired(reqJson, "datatypeId,pageNum,pageSize");
     	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
     	
-    	if(vo.getObjtypeIds().size()==0) {
-    		vo.setObjtypeIds(null);
-    	}
-    	
     	PageInfo<?> pageInfo = null;
     	DataType dataType = DataType.getEnum(vo.getDatatypeId());
     	switch (dataType) {
