@@ -1,13 +1,10 @@
 package com.bandweaver.tunnel.controller.mam;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
@@ -346,76 +343,110 @@ public class MeasObjController {
 
     }
 
-    
-    
-    /**环境监测和安防监测接口--数据
-     * @param tunnelId 必填
-     * @param storeId 可选
-     * @param areaId 可选
-     * @param objtypeId 必选
-     * @return   {"msg":"请求成功","code":"200","data":[{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210012401,"store":"污水仓","curValue":28.81},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210022401,"store":"电力舱","curValue":14.7},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210022402,"store":"电力舱","curValue":12.99},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210032401,"store":"综合仓","curValue":7.24},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210042401,"store":"燃气舱","curValue":26.58},{"area":"10区","minValue":10.0,"maxValue":40.0,"name":"温度检测仪","id":210052401,"store":"设备间","curValue":16.67}]}
-     * @author shaosen
-     * @Date 2018年12月22日
-     */
-    @RequestMapping(value="measobjs/datas",method=RequestMethod.POST)
-    public JSONObject getObjectDataListByCondition(@RequestBody JSONObject reqJson) {
-    	CommonUtil.hasAllRequired(reqJson, "tunnelId,objtypeId");
-    	MeasObjVo measObjVo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
-    	List<MeasObjDto> measObjList = measObjService.getMeasObjByCondition(measObjVo);
-    	
-    	//获取告警临界值
-    	double temperature_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_MAX));
-    	double temperature_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_MIN));
-    	double humidity_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.HUMIDITY_MAX));
-    	double humidity_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.HUMIDITY_MIN));
-    	double oxygen_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.OXYGEN_MAX));
-    	double oxygen_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.OXYGEN_MIN));
-    	double h2s_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.H2S_MAX));
-    	double h2s_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.H2S_MIN));
-    	double ch4_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CH4_MAX));
-    	double ch4_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CH4_MIN));
-    	double co_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_MAX));
-    	double co_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_MIN));
-    	
-    	List<JSONObject> returnData = new ArrayList<>();
-    	for (MeasObjDto measObjDto : measObjList) {
-    		double cv = measObjService.getMeasObjCVByIdAndDataType(measObjDto.getId(), measObjDto.getDatatypeId());
-        	
-        	JSONObject json = new JSONObject();
-        	json.put("id", measObjDto.getId());
-        	json.put("name", measObjDto.getName());
-        	json.put("area", measObjDto.getSection().getArea().getName());
-        	json.put("store", measObjDto.getSection().getStore().getName());
-        	json.put("datatypeId", measObjDto.getDatatypeId());
-        	json.put("curValue", cv);
-        	
-        	ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
-        	if(objectType == ObjectType.TEMPERATURE) {
-        		json.put("maxValue",temperature_max);
-        		json.put("minValue",temperature_min);
-        	}else if(objectType == ObjectType.HUMIDITY) {
-        		json.put("maxValue",humidity_max);
-        		json.put("minValue",humidity_min);
-        	}else if(objectType == ObjectType.OXYGEN) {
-        		json.put("maxValue", oxygen_max);
-        		json.put("minValue", oxygen_min);
-        	}else if(objectType == ObjectType.H2S) {
-	    		json.put("maxValue", h2s_max);
-	    		json.put("minValue", h2s_min);
-        	}else if(objectType == ObjectType.CH4) {
-	    		json.put("maxValue",ch4_max);
-	    		json.put("minValue",ch4_min);
-        	}else if(objectType == ObjectType.CO) {
-	    		json.put("maxValue", co_max);
-	    		json.put("minValue", co_min);
-        	}else {
-        		json.put("maxValue", null);
-        		json.put("minValue", null);
-        	}
-        	returnData.add(json);
-		}
-    	return CommonUtil.success(returnData);
-    	
+    @RequestMapping(value = "measobjs/max-cv", method = RequestMethod.POST)
+    public JSONObject getMaxCVByTunnelId(@RequestBody JSONObject reqJson) {
+
+        Integer tunnelId = reqJson.getInteger("tunnelId");
+        Integer storeId = reqJson.getInteger("storeId");
+        Integer areaId = reqJson.getInteger("areaId");
+
+        List<MeasObjAI> measObjAIList = measObjModuleCenter.getMeasObjAIs();
+        if (tunnelId != null)
+            measObjAIList = measObjAIList.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
+        if (storeId != null)
+            measObjAIList = measObjAIList.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
+        if (areaId != null)
+            measObjAIList = measObjAIList.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
+
+        // 分别查询温度，湿度等的极限值
+        if (measObjAIList != null && measObjAIList.size() > 0) {
+            List<MeasObjAIParam> paramList = new ArrayList<>();
+            MeasObjAIParam temperature = new MeasObjAIParam(0.00);
+            MeasObjAIParam humidity = new MeasObjAIParam(0.00);
+            MeasObjAIParam oxygen = new MeasObjAIParam(10000.00);
+            MeasObjAIParam h2s = new MeasObjAIParam(0.00);
+            MeasObjAIParam ch4 = new MeasObjAIParam(0.00);
+            MeasObjAIParam co = new MeasObjAIParam(0.00);
+
+            for (ObjectType objType : ObjectType.values()) {
+                int typeId = objType.getValue();
+                MeasObjAI measObjAi = new MeasObjAI();
+                List<MeasObjAI> tmps = new ArrayList<>();
+
+                switch (objType) {
+                    case TEMPERATURE:// 温度
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        temperature.setCv(measObjAi.getCv());
+                        temperature.setObjId(measObjAi.getId());
+                        temperature.setObjTypeName(objType.getName());
+                        temperature.setSectionId(measObjAi.getSectionId());
+                        break;
+                    case HUMIDITY:// 湿度
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        humidity.setCv(measObjAi.getCv());
+                        humidity.setObjId(measObjAi.getId());
+                        humidity.setObjTypeName(objType.getName());
+                        humidity.setSectionId(measObjAi.getSectionId());
+                        break;
+                    case OXYGEN:// 氧气
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        oxygen.setCv(measObjAi.getCv());
+                        oxygen.setObjId(measObjAi.getId());
+                        oxygen.setObjTypeName(objType.getName());
+                        oxygen.setSectionId(measObjAi.getSectionId());
+                        break;
+                    case H2S:// 硫化氢
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        h2s.setCv(measObjAi.getCv());
+                        h2s.setObjId(measObjAi.getId());
+                        h2s.setObjTypeName(objType.getName());
+                        h2s.setSectionId(measObjAi.getSectionId());
+                        break;
+                    case CH4:// 甲烷
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        ch4.setCv(measObjAi.getCv());
+                        ch4.setObjId(measObjAi.getId());
+                        ch4.setObjTypeName(objType.getName());
+                        ch4.setSectionId(measObjAi.getSectionId());
+                        break;
+                    case CO:// 一氧化碳
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+
+                        co.setCv(measObjAi.getCv());
+                        co.setObjId(measObjAi.getId());
+                        co.setObjTypeName(objType.getName());
+                        co.setSectionId(measObjAi.getSectionId());
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            paramList.add(temperature);
+            paramList.add(humidity);
+            paramList.add(oxygen);
+            paramList.add(h2s);
+            paramList.add(ch4);
+            paramList.add(co);
+
+            List<JSONObject> list = getJsonObjList(paramList);
+            return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+
     }
 
     /**
@@ -584,6 +615,27 @@ public class MeasObjController {
         }
         List<MeasObjDto> list = measObjService.getMeasObjByCondition(vo);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+
+
+    /**
+     * convert to Json
+     */
+    private List<JSONObject> getJsonObjList(List<MeasObjAIParam> paramList) {
+        List<JSONObject> list = new ArrayList<>();
+
+        // 判断监测对象是否存在，如果不存在跳过
+        for (MeasObjAIParam param : paramList) {
+            if (param.getObjTypeName() == null)
+                continue;
+            JSONObject jsonobj = new JSONObject();
+            jsonobj.put("key", param.getObjTypeName());
+            jsonobj.put("val", param.getCv());
+            SectionDto dto = sectionService.getSectionById(param.getSectionId());
+            jsonobj.put("location", dto == null ? "" : dto.getName());
+            list.add(jsonobj);
+        }
+        return list;
     }
 }
 

@@ -349,6 +349,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		}
 		List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
 		for (MeasObjAI tmp : measObjAIS) {
+			if (tmp.getCv() == null) tmp.setCv(0.0);
 			measObjAIHashMap.put(tmp.getId(), tmp);
 		}
 		List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();
@@ -357,15 +358,14 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		}
 		List<MeasObjSI> measObjSIs = measObjSIMapper.getAllMeasObjSIs();
 		for (MeasObjSI tmp : measObjSIs) {
+			if (tmp.getCv() == null) tmp.setCv(0);
 			measObjSIHashMap.put(tmp.getId(), tmp);
 		}
 
 		List<MeasObjSO> measObjSOs = measObjSOMapper.getAllMeasObjSOs();
-		// LogUtil.info("measObjSOs:" + measObjSOs);
 		for (MeasObjSO tmp : measObjSOs) {
 			measObjSOHashMap.put(tmp.getId(), tmp);
 		}
-		// LogUtil.info("measObjSOHashMap:" + measObjSOHashMap);
 
 		List<MeasObjDistribute> measObjDistributes = measObjDistributeMapper.getAllMeasObjDistributes();
 		for (MeasObjDistribute tmp : measObjDistributes) {
