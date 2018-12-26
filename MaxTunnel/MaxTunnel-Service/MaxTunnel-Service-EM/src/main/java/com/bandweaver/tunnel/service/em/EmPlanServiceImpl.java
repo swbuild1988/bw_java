@@ -3,9 +3,11 @@ package com.bandweaver.tunnel.service.em;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
@@ -80,7 +82,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 		LogUtil.debug("Get emPlan from DB:" + emPlan);
 		if(StringTools.isNullOrEmpty(emPlan)) 
 			throw new BandWeaverException("流程节点不存在");
-		
 
 		// 第一步：获取目标
 		Collection<MeasObj> list = new ArrayList<>();
@@ -90,7 +91,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 		}else if (TargetEnum.TYPE == targetEnum) {
 			list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(),sectionId);
 		}
-		
 		
 		// 第二步：做什么事情
 		ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
@@ -269,6 +269,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		if(list == null || list.isEmpty()) {
 			return Collections.emptyList();
 		}
+		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
 		
 		List<JSONObject> nodeList = new ArrayList<>();
 		for (EmPlanDto emPlanDto : list) {
@@ -285,8 +286,16 @@ public class EmPlanServiceImpl implements EmPlanService {
 			j.put("statusVal", NodeStatusEnum.WAITING.getValue());
 			nodeList.add(j);
 		}
-		
 		return nodeList;
+	}
+
+
+
+	@Override
+	public List<EmPlanDto> getListByProcessKey(String processKey) {
+		List<EmPlanDto> list = emPlanMapper.getNodeListByProcessKey(processKey);
+		return list == null ? Collections.emptyList() : list;
+		
 	}
 
 	

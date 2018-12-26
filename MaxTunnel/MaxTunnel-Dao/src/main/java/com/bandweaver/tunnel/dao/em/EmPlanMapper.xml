@@ -238,7 +238,7 @@
 				and crt_time &lt; = #{endTime}
 			</if>
 		</where>
-		order by crt_time desc
+		order by process_key,task_key
 	</select>
   
   
