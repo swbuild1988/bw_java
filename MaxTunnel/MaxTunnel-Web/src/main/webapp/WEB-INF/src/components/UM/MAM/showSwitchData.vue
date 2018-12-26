@@ -4,19 +4,23 @@
       <p slot="title">{{Obj.objtypeName}}</p>
       <!-- 开 -->
       <img src="../../../assets/UM/照明-开.png" v-if="Obj.objtypeId==11 && curValue" class="img">
-      <img src="../../../assets/UM/fanstart.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
-      <img src="../../../assets/UM/pumpstart.gif" v-if="Obj.objtypeId==59 && curValue" class="img">
-      <img src="../../../assets/UM/blindopen.png" v-if="Obj.objtypeId==58 && curValue" class="img">
-      <img src="../../../assets/UM/coveropen.png" v-if="Obj.objtypeId==56 && curValue" class="img">
+      <img src="../../../assets/UM/风机gif.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
+      <img src="../../../assets/UM/水泵gif.gif" v-if="Obj.objtypeId==59 && curValue" class="img">
+      <img src="../../../assets/UM/百叶-开.png" v-if="Obj.objtypeId==58 && curValue" class="img">
+      <img src="../../../assets/UM/井盖开.png" v-if="Obj.objtypeId==56 && curValue" class="img">
+      <img src="../../../assets/UM/红外正常gif.gif" v-if="Obj.objtypeId==57 && curValue" class="img">
+      <img src="../../../assets/UM/门-开.png" v-if="Obj.objtypeId==55 && curValue" class="img">
+      <img src="../../../assets/UM/报警-红gif.gif" v-if="Obj.objtypeId==41 && curValue" class="img">
       <!-- 关 -->
       <img src="../../../assets/UM/照明-关.png" v-if="Obj.objtypeId==11 && !curValue" class="img">
-      <img src="../../../assets/UM/fanstop.png" v-if="Obj.objtypeId==10 && !curValue" class="img">
-      <img src="../../../assets/UM/pumpstop.png" v-if="Obj.objtypeId==59 && !curValue" class="img">
-      <img src="../../../assets/UM/blindclose.png" v-if="Obj.objtypeId==58 && !curValue" class="img">
-      <img src="../../../assets/UM/coverclose.png" v-if="Obj.objtypeId==56 && !curValue" class="img">
-
-      <!-- 声光报警，红外，门禁 -->
-      <img src="../../../assets/UM/能耗.png" v-if="Obj.objtypeId==41 || Obj.objtypeId==55 || Obj.objtypeId==57" class="img">
+      <img src="../../../assets/UM/风机.png" v-if="Obj.objtypeId==10 && !curValue" class="img">
+      <img src="../../../assets/UM/水泵.png" v-if="Obj.objtypeId==59 && !curValue" class="img">
+      <img src="../../../assets/UM/百叶-关.png" v-if="Obj.objtypeId==58 && !curValue" class="img">
+      <img src="../../../assets/UM/井盖.png" v-if="Obj.objtypeId==56 && !curValue" class="img">
+      <img src="../../../assets/UM/红外.gif" v-if="Obj.objtypeId==57 && !curValue" class="img">
+      <img src="../../../assets/UM/门-关.png" v-if="Obj.objtypeId==55 && !curValue" class="img">
+      <img src="../../../assets/UM/报警.png" v-if="Obj.objtypeId==55 && !curValue" class="img">
+      <!-- 声光报警 41，红外 57，门禁 55-->
 
       <div class="switchContent">
         <i-switch v-model="curValue" @on-change="confirm" class="switch">

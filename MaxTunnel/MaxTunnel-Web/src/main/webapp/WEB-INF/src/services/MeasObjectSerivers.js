@@ -283,27 +283,48 @@ var MeasObjServer = {
                 })
         })
     },
-  //根基Id查询视频流对象
-  getVideoByIds:function (ids) {
-    return new Promise((resolve, reject) => {
-      axios.get('text' + ids)
-        .then(res => {
-          let {
-            code,
-            data,
-            msg
-          } = res.data
-          if (code == 200) {
-            resolve(data)
-          } else {
-            reject(msg + ',地址:' + ids)
-          }
+    //根基Id查询视频流对象
+    getVideoByIds: function(ids) {
+        return new Promise((resolve, reject) => {
+            axios.get('text' + ids)
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:' + ids)
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
         })
-        .catch(error => {
-          reject(error.response.status + '  ' + error.response.data)
+    },
+    // 批量添加监测对象映射
+    batchAddMap(params) {
+        return new Promise((resolve, reject) => {
+            axios.post('measobj-map/batch', params)
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:measobj-map/batch', params)
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
         })
-    })
-  }
+    }
 }
 
 export {
