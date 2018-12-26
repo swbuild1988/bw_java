@@ -108,7 +108,7 @@ export default {
         show() {
             let width = document.getElementsByClassName('h5StreamVideo')[0].offsetWidth
             let height = document.getElementsByClassName('h5StreamVideo')[0].offsetHeight
-            if(width > 200 && height > 100 && this.video.positionSupport){
+            if(width > 800 && height > 800 && this.video.positionSupport){
                 this.controlFlag = true
                 let height = document.getElementsByClassName('embedControl')[0].offsetHeight
                 document.getElementsByClassName('embedControl')[0].style.width = height + 'px'

@@ -11,15 +11,15 @@
                 <span style="font-size: 18px;font-weight: bold;color:#fff;">摄像头：</span>
                 <Select v-model="curVideo.storeId" id="cameras" @on-change="getCameras" class="select">
                     <Option v-for="store in storeList" :value="store.id" :key="store.id" class="option">{{ store.name }}</Option>
-                    <Option value="" key="0" class="option">空</Option>
+                    <!-- <Option value="" key="0" class="option">空</Option> -->
                 </Select>
                 <Select v-model="curVideo.areaId" id="cameras" @on-change="getCameras" class="select">
                     <Option v-for="area in areaList" :value="area.id" :key="area.id" class="option">{{ area.name }}</Option>
-                    <Option value="" key="0" class="option">空</Option>
+                   <!--  <Option value="" key="0" class="option">空</Option> -->
                 </Select>
                 <Select v-model="curVideo.id" id="cameras" @on-change="changVideo" class="select">
                     <Option v-for="camera in cameraList" :value="camera.id" :key="camera.id" class="option">{{ camera.name }}</Option>
-                    <Option value="" key="0" class="option">空</Option>
+                    <!-- <Option value="" key="0" class="option">空</Option> -->
                 </Select>
             </div>
     		    <div class="camera">
@@ -43,7 +43,7 @@
               <!-- <div class="posTag"></div> -->
   	    			<span class="name">{{ pos }}</span>
   	    			<div class="options">
-  	    				<Button type="primary" size="small" @click="set(pos)">设置</Button>
+  	    				<Button type="primary" size="small" @click="set(pos)">到达预置位</Button>
   	    				<Button type="primary" size="small" icon="edit" @click="edit(pos)"></Button>
   	    				<Button type="error" size="small" icon="trash-a" @click="del(pos)"></Button>
   	    			</div>
@@ -79,7 +79,7 @@ export default {
     data() {
     	return {
 	        // val: 'rtsp://admin:123456@192.168.3.202:554/h264/ch1/main/av_stream',
-	        perPositions: ['预置位1','预置位2','预置位4','预置位预置5预置位预置预置位预置','预置位预置位预置位6'],
+	        perPositions: [],
             curPosition: null,
             isShow: false,
             isAdd: false,
@@ -102,7 +102,7 @@ export default {
     components: { VideoControl,VideoComponent },
     mounted(){
         console.log(this.$route.params.camera)
-  		  this.curVideo.tunnelId = this.$route.params.tunnelId
+  		  this.curVideo.tunnelId = this.$route.params.tunnelId 
         let camera = this.$route.params.camera
         this.isDisabled = !camera.positionSupport
         this.getAreaAndStores()
@@ -125,9 +125,9 @@ export default {
           Promise.all([TunnelService.getStoresByTunnelId(this.curVideo.tunnelId),TunnelService.getAreasByTunnelId(this.curVideo.tunnelId)]).then(
             result=>{
               _this.storeList = result[0]
-              _this.curVideo.storeId = _this.$route.params.camera.storeId
               _this.areaList = result[1]
               _this.curVideo.areaId = _this.$route.params.camera.areaId
+              _this.curVideo.storeId = _this.$route.params.camera.storeId
               _this.getCameras()
             },
             error=>{
