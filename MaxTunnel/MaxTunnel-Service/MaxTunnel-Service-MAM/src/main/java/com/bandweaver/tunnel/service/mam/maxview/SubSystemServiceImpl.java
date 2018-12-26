@@ -30,6 +30,7 @@ import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.HttpUtil;
 import com.bandweaver.tunnel.common.platform.util.Sha256;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.mam.MaxviewConfigMapper;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageHelper;
@@ -130,25 +131,21 @@ public class SubSystemServiceImpl implements SubSystemService {
 	
 	@Override
 	public boolean doAction(Integer objectId,Integer inputValue) {
-		
 		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
-		if(measObj == null) {
+		if(StringTools.isNullOrEmpty(measObj)) 
 			throw new BandWeaverException("监测对象[" + objectId + "]不存在");
-		}
 		
 		TunnelDto tunnel = tunnelService.getDtoById(measObj.getTunnelId());
-		if(tunnel == null) {
+		if(StringTools.isNullOrEmpty(tunnel)) 
 			throw new BandWeaverException("管廊不存在");
-		}
 		
 		MaxviewConfig config = maxviewConfigMapper.selectByPrimaryKey(tunnel.getMaxviewConfigId());
-		if(config == null) {
-			throw new BandWeaverException("登录失败：终端未配置");
-		}
+		if(StringTools.isNullOrEmpty(config)) 
+			throw new BandWeaverException("MaxView终端未配置");
 		
 		Integer masObjId, measValue;
 		MeasObjMap measObjMap = measObjMapService.getMaxViewMeasObj(objectId, inputValue);
-		if(measObjMap != null) {
+		if(!StringTools.isNullOrEmpty(measObjMap)) {
 			masObjId = measObjMap.getObjectId2();
 			measValue = measObjMap.getOutputValue();
 		}else {
