@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 var MonitorDataService = {
-    // 根据tunnelId和monitorType获取该管廊内监测内容数据最大值
-    getMaxMonitorData: function(tunnelId, monitorType) {
+    // 根据tunnelId获取该管廊内监测内容数据最大值
+    getMaxMonitorData: function(tunnelId) {
         return new Promise((resolve, reject) => {
             axios.get('tunnels/' + tunnelId + '/max-cv').then(res => {
                 let {
@@ -13,7 +13,7 @@ var MonitorDataService = {
                 if (code == 200) {
                     resolve(data)
                 } else {
-                    reject(msg + '地址：tunnels/' + tunnelId + "/" + monitorType + '/max-cv')
+                    reject(msg + '地址：tunnels/' + tunnelId + "/"  + '/max-cv')
                 }
             })
         })

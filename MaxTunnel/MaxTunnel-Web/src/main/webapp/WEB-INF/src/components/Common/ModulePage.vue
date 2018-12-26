@@ -3,15 +3,15 @@
     <Layout class="coment">
       <Sider :width="screenWidth" collapsible :collapsed-width="minScreenWidth" v-model="isCollapsed"
              style="background-color: #1D5F87">
-        <transition name="fade">
+        <!--<transition name="fade">-->
           <!-- <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
               <ButtonGroup style="width: 90%;margin-left: 5%">
                 <Button type="primary" shape="circle" style="width:50%"  @click="goBack"><Icon type="chevron-left" ></Icon></Button>
                 <Button type="primary" shape="circle" style="width:50%;float:right"  @click="goForward"><Icon type="chevron-right" ></Icon></Button>
               </ButtonGroup>
           </div> -->
-        </transition>
-        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
+        <!--</transition>-->
+        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="[selectedName]" accordion>
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate"></Icon>

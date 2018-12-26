@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,15 +20,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
 import com.bandweaver.tunnel.common.biz.dto.H5StreamHttpResponseDto;
 import com.bandweaver.tunnel.common.biz.dto.HttpResponsePresetDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.HttpUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 
 import de.onvif.soap.devices.PtzDevices;
 
@@ -452,6 +456,51 @@ public class H5StreamServiceImpl implements OnvifService {
         querys.put("url", url);
         querys.put("session", videoServer.getSession());
         return httpGet(server, _url, headers, querys);
+	}
+
+	@Override
+	public void delSrcList() {
+		//Get videoServer
+		List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+		VideoServerDto videoServer = new VideoServerDto() ;
+		for (VideoDto videoDto : videoDtos) {
+			VideoServerDto videoServerDto = videoDto.getVideoServerDto();
+			if(!StringTools.isNullOrEmpty(videoServerDto)) {
+				videoServer = videoServerDto;
+				break;
+			}
+		}
+		
+		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String _url = "/api/v1/GetSrc";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("session", videoServer.getSession());
+        
+        List<String> tokenList = new ArrayList<>();
+    	try {
+			HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
+			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+				String resp = EntityUtils.toString(response.getEntity(), "utf-8");
+				JSONObject respJson = (JSONObject) JSONObject.parse(resp);
+				List<H5Src> srcList = JSONObject.parseArray(respJson.getString("src"), H5Src.class);
+				srcList.forEach(src -> tokenList.add(src.getStrToken()));
+			}
+		} catch (Exception e) {
+			throw new BandWeaverException("调用API获取视频源列表失败");
+		}
+        
+    	
+    	try {
+			for (String token : tokenList) {
+				String delUrl = "/api/v1/DelSrc";
+				querys.put("token",token);
+				boolean delResult = httpGet(server, delUrl, headers, querys);
+				LogUtil.info("视频源token: " + token + " 删除结果：" + delResult );
+			}
+		} catch (Exception e) {
+			throw new BandWeaverException("调用API删除视频源失败");
+		}
 	}
 
 	

@@ -3,23 +3,23 @@
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
       <p slot="title">{{Obj.objtypeName}}</p>
       <!-- 开 -->
-      <img src="../../../assets/UM/照明-开.png" v-if="Obj.objtypeId==11 && isOpen" class="img">
-      <img src="../../../assets/UM/fanstart.gif" v-if="Obj.objtypeId==10 && isOpen" class="img">
-      <img src="../../../assets/UM/pumpstart.gif" v-if="Obj.objtypeId==59 && isOpen" class="img">
-      <img src="../../../assets/UM/blindopen.png" v-if="Obj.objtypeId==58 && isOpen" class="img">
-      <img src="../../../assets/UM/coveropen.png" v-if="Obj.objtypeId==56 && isOpen" class="img">
+      <img src="../../../assets/UM/照明-开.png" v-if="Obj.objtypeId==11 && curValue" class="img">
+      <img src="../../../assets/UM/fanstart.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
+      <img src="../../../assets/UM/pumpstart.gif" v-if="Obj.objtypeId==59 && curValue" class="img">
+      <img src="../../../assets/UM/blindopen.png" v-if="Obj.objtypeId==58 && curValue" class="img">
+      <img src="../../../assets/UM/coveropen.png" v-if="Obj.objtypeId==56 && curValue" class="img">
       <!-- 关 -->
-      <img src="../../../assets/UM/照明-关.png" v-if="Obj.objtypeId==11 && !isOpen" class="img">
-      <img src="../../../assets/UM/fanstop.png" v-if="Obj.objtypeId==10 && !isOpen" class="img">
-      <img src="../../../assets/UM/pumpstop.png" v-if="Obj.objtypeId==59 && !isOpen" class="img">
-      <img src="../../../assets/UM/blindclose.png" v-if="Obj.objtypeId==58 && !isOpen" class="img">
-      <img src="../../../assets/UM/coverclose.png" v-if="Obj.objtypeId==56 && !isOpen" class="img">
+      <img src="../../../assets/UM/照明-关.png" v-if="Obj.objtypeId==11 && !curValue" class="img">
+      <img src="../../../assets/UM/fanstop.png" v-if="Obj.objtypeId==10 && !curValue" class="img">
+      <img src="../../../assets/UM/pumpstop.png" v-if="Obj.objtypeId==59 && !curValue" class="img">
+      <img src="../../../assets/UM/blindclose.png" v-if="Obj.objtypeId==58 && !curValue" class="img">
+      <img src="../../../assets/UM/coverclose.png" v-if="Obj.objtypeId==56 && !curValue" class="img">
 
       <!-- 声光报警，红外，门禁 -->
       <img src="../../../assets/UM/能耗.png" v-if="Obj.objtypeId==41 || Obj.objtypeId==55 || Obj.objtypeId==57" class="img">
 
       <div class="switchContent">
-        <i-switch v-model="Obj.ObjVal" @on-change="change" class="switch">
+        <i-switch v-model="curValue" @on-change="confirm" class="switch">
           <span slot="open" class="open">ON</span>
           <span slot="close" class="close">OFF</span>
         </i-switch>
@@ -45,6 +45,9 @@
         </div>
       </div> -->
     </Card>
+    <!-- <Modal v-model="confirmFlag" title="确认" @on-ok="open" :styles="{top: '80px', left: '20%',width: '300px'}">
+        <p>确定打开{{ Obj.ObjName }}开关吗</p>
+    </Modal> -->
   </div>
 </template>
 
@@ -74,22 +77,38 @@
     data: function () {
       return {
         curImgUrl: "",
-        isOpen: this.ObjVal,
-        initOff: true
+        initOff: true,
+        confirmFlag: false,
+        curValue: this.Obj.ObjVal
       };
     },
     components: {Light, Fans},
     methods: {
-      change() {
-        this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,null);
-        this.isOpen = !this.isOpen
-        this.initOff = false
+      confirm(data) {
+        this.$nextTick(()=>{
+          this.curValue = !data
+        })
+        let text = data ? '确定打开'+this.Obj.objtypeName + this.Obj.ObjName + '吗?' : '确定关闭 '+this.Obj.objtypeName + this.Obj.ObjName + ' 吗?'
+        this.$Modal.confirm({
+          render: (h)=>{
+            return h('span', text)
+          },
+          onOk: ()=>{
+            this.curValue = !this.curValue
+            this.initOff = false
+            this.change()
+          }
+        })
+       
       },
       //定位设备
       locationEquimpent() {
         this.Obj.clickStatus = !this.Obj.clickStatus;
         this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,this.Obj.clickStatus);
       },
+      change() {
+        this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal,this.Obj.datatypeId,null);
+      }
     },
     mounted() {
       
@@ -154,7 +173,7 @@
   .initOff{
     position: absolute;
     top: 4px;
-    left: 114px;
+    left: 52%;
     color: white;
   }
 </style>
