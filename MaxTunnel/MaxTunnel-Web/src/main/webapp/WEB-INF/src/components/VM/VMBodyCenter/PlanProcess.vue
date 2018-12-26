@@ -127,12 +127,12 @@
         },
         methods:{
             init(){
-                // Vue.prototype.MQ._InitMQ(1, "/queue/queueBigScreen", "",this.planCallback);
+                Vue.prototype.MQ._InitMQ(1, "/queue/QUEUE_PLAN_VM", "",this.planCallback);
                 this.getNodeListStatus();
             },
             planCallback(message){
                 let result = JSON.parse(message.body);
-
+                console.log('result',result)
                 if( result && !this.searchPlan(result) ){
                     let { processInstanceId,processName,nodeList } = result;
 
