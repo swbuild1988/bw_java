@@ -4,7 +4,7 @@
         <div v-if="isTextShow" class="text">
             <p style="padding: 10%">{{text}}</p>
         </div>
-        <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide">
+        <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide" ref="embedControl">
             <embeded-control v-bind:camera = "video" v-bind:isShow="controlFlag"></embeded-control>
         </div>
         <!-- <div class="playPause"></div> -->
@@ -69,6 +69,7 @@ export default {
         if(this.text){
             this.isTextShow = true
         }
+        // this.resetSize()
     },
     beforeDestroy() {
         this.curVideo.disconnect();
@@ -114,6 +115,10 @@ export default {
         },
         hide() {
             this.controlFlag = false
+        },
+        resetSize() {
+            let height = document.getElementsByClassName('embedControl')[0].offsetHeight
+            document.getElementsByClassName('embedControl')[0].style.width = height + 'px'
         }
     }
 };
@@ -176,6 +181,10 @@ export default {
 
 .embedControl{
     position: absolute;
+ /*   width: 24%;*/
+    /*height: 40%;
+    min-height: 100px;
+    min-width: 98px;*/
     width: 98px;
     height: 100px;
     bottom: 0;

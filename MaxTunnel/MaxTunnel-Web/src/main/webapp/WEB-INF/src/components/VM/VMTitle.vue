@@ -13,6 +13,7 @@
     background: url("../../assets/VM/title_bg.png") no-repeat;
     background-size: 100% 100%;
     color: #fff;
+    z-index: 1001
   }
   .ComponentsTitle>span{
     display: inline-block;

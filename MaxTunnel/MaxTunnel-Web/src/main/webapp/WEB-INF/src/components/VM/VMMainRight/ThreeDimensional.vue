@@ -277,23 +277,23 @@
 
             },
             sendAlarms(){
-                console.log('sendAlarms')
-                this.$refs.smViewer.playFly();
-                // setTimeout(()=>{
-                //     this.axios.post('/alarms',
-                //         {
-                //             alarmDate:+new Date(),
-                //             alarmLevel:1,
-                //             tunnelId:1002,
-                //             objectId:7001,
-                //             latitude: "112.49408263714506",
-                //             longitude: "37.70642444695577",
-                //             description:'sad',
-                //             isDistribute:true
-                //         })
-                //         .then(err=>console.log(err)).catch(err=>console.log('err2',err))
-                // },1000)
-                // setTimeout(()=>{
+                // console.log('sendAlarms')
+                // this.$refs.smViewer.playFly();
+                setTimeout(()=>{
+                    this.axios.post('/alarms',
+                        {
+                            alarmDate:+new Date(),
+                            alarmLevel:1,
+                            tunnelId:1002,
+                            objectId:7001,
+                            latitude: "112.49069725638859",
+                            longitude: "37.71331808517105",
+                            description:'sad',
+                            isDistribute:true
+                        })
+                        .then(err=>console.log(err)).catch(err=>console.log('err2',err))
+                },1000)
+                // setTimeout(()=>{        
                 //     this.axios.post('/alarms',
                 //         {
                 //             alarmDate:+new Date(),

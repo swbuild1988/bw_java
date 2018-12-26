@@ -244,6 +244,23 @@ public class EnumController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
+	/** 获取dataType状态量枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="datatypeSI-enums",method=RequestMethod.GET)
+	public JSONObject getDataTypeSIEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		List<ObjectType> objTypeList = ObjectType.getEnumByDataType(DataType.SI.getValue());
+		for (ObjectType objectType : objTypeList) {
+			JSONObject jo = new JSONObject();
+			jo.put("key", objectType.getName());
+			jo.put("val", objectType.getValue());
+			list.add(jo);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 
 	/**
 	 *objectType枚举
