@@ -139,14 +139,14 @@
           if (result) {
             _this.tableData=[];
             this.queryPrams.total = result.total;
-            result.list.reduce((a, b) => {
-              let temp = {};
-              temp.id = b.id
-              temp.name = b.name
-              temp.objtypeName = b.objtypeName
-               temp.tunnelName=b.section!=null?b.section.tunnel.name:"无";
-              _this.tableData.push(temp);
-            }, _this.tableData);
+            result.list.forEach(b=>{
+                let temp = {};
+                temp.id = b.id
+                temp.name = b.name
+                temp.objtypeName = b.objtypeName
+                temp.tunnelName=b.section!=null?b.section.store.tunnel.name:"无";
+                _this.tableData.push(temp);
+            })
           }
         })
       },

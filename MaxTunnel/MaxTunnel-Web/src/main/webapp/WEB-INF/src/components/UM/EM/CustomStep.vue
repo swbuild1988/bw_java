@@ -9,7 +9,6 @@
         <div v-if="curStatusVal==1">
           <Icon type="ios-checkmark-empty" size="38" color="#1289ff" ></Icon>
         </div>
-
       </div>
       <div class="setp-head"  :class="{ 'circle_bottom animation head-finish': curStatusVal==2,'head-finish':curStatusVal==1,'head-unWork':curStatusVal==3,}">
           <span class="step-index"   :class="{ 'main-working': curStatusVal==2, 'main-unWork':curStatusVal==3}"   v-if="curStatusVal!=1">{{curIndex}}</span>
@@ -23,7 +22,13 @@
         {{curStatusStr}}
       </div>
       <div class="tip" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
-        {{stepName}}
+        {{stepName}}&nbsp
+          <div v-if="switBtn.isSwitch" style="float: right;">
+              <i-Switch  :value="switBtn.status" size="large" @on-change="changeSwitch">
+                  <span slot="open">开</span>
+                  <span slot="close">关</span>
+              </i-Switch>
+          </div>
       </div>
     </div>
   </div>
@@ -57,18 +62,38 @@
       },
       defineHeight: {
         type: String,
-        default:"150"
+        default:"120"
       },
       stepLength:{
         type: Number,
-        default:8,
-      }
+        default:3,
+      },
+        switBtn: {
+            type: Object,
+            default: function () {
+                return {
+                    isSwitch: false,
+                    status: false,
+                    mesaObjsId: []
+                }
+            }
+        },
     },
     data: function () {
       return {
+          switchBtn:false,
       }
     },
-    methods: {},
+      mounted(){
+      },
+      methods:{
+        // 切换开关
+          changeSwitch(){
+              let _this=this;
+              let params={status:_this.switBtn.status,mesaObjsId:_this.switBtn.mesaObjsId};
+              this.$emit('getSwitchStatus');
+          }
+      },
   }
 </script>
 
@@ -116,8 +141,7 @@
   }
   .status {
     font-weight: bold;
-    background-color: #fff;
-    width: 70px;
+    /*width: 70px;*/
     position: absolute;
     text-align: center;
   }
@@ -140,7 +164,8 @@
 
   .steps-tail {
     position: absolute;
-    width:calc(99% - 38px) ;
+      margin-left: 70px;
+    width:calc(90% - 80px);
     height: 1px;
     border: 1px solid;
     top: 38px;
@@ -199,7 +224,7 @@
     z-index: 107;
   }
 
-  .animation {;
+  .animation {
     -webkit-animation: twinkling 1s infinite ease-in-out;
     animation: twinkling 1s infinite ease-in-out;
     -webkit-animation-fill-mode: both;

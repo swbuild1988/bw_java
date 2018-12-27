@@ -122,6 +122,12 @@ public class SectionController extends BaseController<Section>{
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /** 批量添加
+     * @param section
+     * @return
+     * @author ya.liu
+     * @Date 2018年12月25日
+     */
     @RequestMapping(value = "sections/batch", method = RequestMethod.POST)
     public JSONObject createSections(@RequestBody JSONObject obj) {
     	// 获取集合
@@ -171,6 +177,20 @@ public class SectionController extends BaseController<Section>{
         }
         LogUtil.info("section添加完成");
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /** 批量更新
+     * @param list<Section>
+     * @return
+     * @author ya.liu
+     * @Date 2018年12月27日
+     */
+    @RequestMapping(value="sections/batch",method=RequestMethod.PUT)
+    public JSONObject updateBatch(@RequestBody List<Section> list) {
+    	for(Section section : list) {
+    		sectionService.update(section);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
     /**检查名称是否重复 

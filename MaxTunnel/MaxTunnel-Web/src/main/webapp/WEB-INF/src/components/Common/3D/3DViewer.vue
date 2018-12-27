@@ -373,19 +373,19 @@ export default {
             _this.handler.setInputAction(e=>{
                 this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
             },Cesium.ScreenSpaceEventType.LEFT_UP)
-                 _this.handler.setInputAction(e=>{
-                    var position=_this.scene.pickPosition(e.position)
-                    var camera=_this.viewer.scene.camera;
-                    var cartographic = Cesium.Cartographic.fromCartesian(position)
-                    var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-                    var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                    var height = cartographic.height;
+                //  _this.handler.setInputAction(e=>{
+                //     var position=_this.scene.pickPosition(e.position)
+                //     var camera=_this.viewer.scene.camera;
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
             
-                    console.log(longitude+"/"+latitude+"/"+height);
-                    console.log('pitch'+camera.pitch)
-                    console.log('roll'+camera.roll)
-                    console.log('heading'+camera.heading)
-                },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
         
         },
         // 开始相机位置刷新

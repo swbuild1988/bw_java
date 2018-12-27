@@ -1,13 +1,12 @@
 <!--开始预案-->
 <template>
   <div>
-    <Modal style="z-index: 1001" v-model="modalPrams.state" title="启动预案" @on-ok="startPlan" ok-text="启动"
-           cancel-text="取消">
+    <Modal style="z-index: 1001" v-model="modalPrams.state" title="启动预案" @on-ok="openPlan" ok-text="启动" cancel-text="取消">
       <div style="text-align: center;font-size: 16px;">
         <Row>
           <Col span="24" style="margin: 4px;">
           <span>预案类型:</span>
-          <Select v-model="prams.planType" style="width:300px">
+          <Select v-model="prams.processKey" style="width:300px">
             <Option v-for="item in planList" :value="item.key" :key="item.key">{{ item.val }}</Option>
           </select>
           </Col>
@@ -30,6 +29,7 @@
   import Treeselect from '@riophae/vue-treeselect'
   import '@riophae/vue-treeselect/dist/vue-treeselect.css'
   import {EnumsService} from '../../../services/enumsService.js'
+  import {PlanService} from '../../../services/planService.js'
 
   export default {
     name: "show-start-plan",
@@ -37,7 +37,7 @@
       modalPrams: {
         type: Object,
         default: function () {
-          return {state: false,};
+          return {state: false,selectPlan:0};
         }
       }
     },
@@ -46,8 +46,8 @@
         planList: [],
         locationList: [],
         prams: {
-          planType: "",
-          location: [],
+            processKey: "",
+          location: null,
           alarmId: "",
         }
       }
@@ -56,62 +56,37 @@
       this.initData();
     },
     computed: {
-      planData: {
-        get() {
-          return this.$store.getters.getPlanData
-        },
-        set(value) {
-          this.$store.commit('setPlanData', value)
+        planData: {
+            get() {
+                return this.$store.getters.getPlanData
+            },
+            set(value) {
+                this.$store.commit('setPlanData', value)
+            }
         }
-      }
     },
     methods: {
-      startMQ() {
-        let _this = this;
-        _this.axios.get("/emplans/start/sections/10/process-type/4001").then(result => {
-          let {msg, code, data} = result.data;
-          if (code == 200) {
-          }
-        })
-      },
-      openMQ() {
-        let _this = this;
-        _this.axios.get("emplans/deploy/4001").then(result => {
-          let {msg, code, data} = result.data;
-          if (code == 200) {
-          }
-        })
-      },
-      // 连接成功回调函数
-      callback(respond) {
-        let _this = this;
-        let result = JSON.parse(respond.body);
-        //将数据保存在vuex中
-        _this.planData = result;
-        if(_this.planData&&"/UM/plans/execute/processKey"!=_this.$router.history.current.path){
-          _this.showPlanTip();
-        }
-      },
-      //获取MQ推送的预案消息
-      acceptPlanData() {
-        var _this = this;
-        _this.MQ._InitMQ(1, "/queue/queuePlan", "", _this.callback);
-      },
-      closedMQ() {
-        var _this = this;
-        _this.MQ.closeMQ();
-      },
-      startPlan() {
-
-        this.openMQ();
-        this.startMQ();
-        this.acceptPlanData();
-      },
+        openPlan() {
+            let _this = this;
+            let location = (_this.prams.location+"").split("_");
+            let parms = {
+                tunnelId:parseInt(location[0]),
+                storeId:location.length>1?parseInt(location[1]):null,
+                sectionId:location.length>2?parseInt(location[2]):null,
+            };
+            EnumsService.getPlanType().then((result)=>{
+                parms.processValue= result.filter(a=>a.processKey==_this.prams.processKey)[0].val;
+                PlanService.startPlan(parms).then(()=>{
+                    if(_this.$router.history.current.name=="执行预案"){
+                        _this.$router.push("/UM/plans/execute/"+_this.prams.processKey);
+                    }
+                });
+            })
+        },
       initData() {
         var _this = this;
         EnumsService.getMonitorZone().then((result) => {
           if (result) {
-            console.log(result);
             result.forEach(a => {
               var temp = {};
               temp.id = a.id;
@@ -152,6 +127,13 @@
           })
       },
     },
+      watch:{
+          "modalPrams.selectPlan": function () {
+              this.prams.processKey=this.modalPrams.selectPlan;
+          },
+      },
+      mounted(){
+      },
     components: {
       Treeselect
     },
