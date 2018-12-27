@@ -1,8 +1,6 @@
 package com.bandweaver.tunnel.controller.em;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -19,9 +17,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
 import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.pojo.PageBean;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
@@ -30,6 +30,7 @@ import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
@@ -52,7 +53,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 	@Autowired
 	private EmPlanService emPlanService;
 	@Autowired
-	private MeasObjModuleCenter measObjModuleCenter;
+	private SectionService sectionService;
 	@Autowired
 	private ObjectBindService objectBindService;
 	
@@ -78,7 +79,8 @@ public class EmPlanController extends BaseController<EmPlan>{
 
 
 	/**手动执行预案 
-	 * @param objectId 监测对象id
+	 * @param storeId 
+	 * @param areaId 
 	 * @param processValue 应急预案类型
 	 * @return   
 	 * @author shaosen
@@ -86,14 +88,22 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 */
 	@RequestMapping(value="emplans/start",method=RequestMethod.POST)
 	public JSONObject startPlan(@RequestBody JSONObject reqJson) {
-		CommonUtil.hasAllRequired(reqJson, "objectId,processValue");
-		Integer objectId = reqJson.getInteger("objectId");
+//		CommonUtil.hasAllRequired(reqJson, "storeId,areaId,processValue");
+//		Integer storeId = reqJson.getInteger("storeId");
+//		Integer areaId = reqJson.getInteger("areaId");
 		Integer processValue = reqJson.getInteger("processValue");
-		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
-		if(StringTools.isNullOrEmpty(measObj))
-			throw new BandWeaverException("监测对象" + objectId + "不存在");
+		Integer sectionId = reqJson.getInteger("sectionId");
+//		Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+//		if(section == null)
+//			throw new BandWeaverException("section不存在");
+//		emPlanService.start(section.getId(),processValue);
+		emPlanService.start(sectionId,processValue);
 		
-		emPlanService.start(measObj.getSectionId(),processValue,objectId);
+		//最后再查一次
+		EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
+		String processInstanceId = (String) ContextUtil.getSession().getAttribute("processInstanceId");
+//		emPlanService.sendMsg(emPlan,processInstanceId,section.getId());
+		emPlanService.sendMsg(emPlan,processInstanceId,sectionId);
 		return CommonUtil.success();
 	}
 
@@ -182,16 +192,16 @@ public class EmPlanController extends BaseController<EmPlan>{
 	@RequestMapping(value="emplans/process-key/{processKey}",method=RequestMethod.GET)
 	public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
 		//方案1
-		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
-		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
-		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
-		return CommonUtil.success(taskNameList);
+//		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
+//		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
+//		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
+//		return CommonUtil.success(taskNameList);
 		//方案2
-		/*List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey);
+		List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey);
 		JSONObject returnData = new JSONObject();
 		returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());
 		returnData.put("planStatus", list);
-		return CommonUtil.success(returnData);*/
+		return CommonUtil.success(returnData);
 		
 	}
 	

@@ -68,5 +68,16 @@
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+  
+  <select id="getAllRoles" resultMap="BaseResultMap">
+  	select * from T_SECURITY_ROLE 
+  </select>
+  
+  <delete id="deleteRoleBatch">
+  	delete from T_SECURITY_ROLE where id in 
+  	<foreach collection="list" item="item" open="(" separator="," close=")">
+  		#{item}
+  	</foreach>
+  </delete>
  
 </mapper>

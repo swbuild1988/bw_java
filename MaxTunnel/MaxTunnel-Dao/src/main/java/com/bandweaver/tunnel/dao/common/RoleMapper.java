@@ -19,4 +19,8 @@ public interface RoleMapper {
 
     int updateByPrimaryKey(Role record);
 
+	List<Role> getAllRoles();
+
+	void deleteRoleBatch(List<Integer> list);
+
 }

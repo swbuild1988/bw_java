@@ -29,10 +29,11 @@ export default {
                   let temp={};
                   temp.id=a.id;
                   temp.name=a.name;
-                  temp.url=_this.treeNodeJumpUrl;
-                  var child=[
-                              {id:2,name: '详情', url: '/UM/VideoMonitoring/details/'+a.id}];
-                              temp.childNode= child;
+                  temp.url='/UM/VideoMonitoring/details/'+a.id;
+
+                  // var child=[
+                  //             {id:2,name: '详情', url: '/UM/VideoMonitoring/details/'+a.id}];
+                  //             temp.childNode= child;
                   _this.VideoMonitoring.leftTree.push(temp);
                 })
           },

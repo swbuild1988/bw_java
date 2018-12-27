@@ -16,6 +16,7 @@ import com.bandweaver.tunnel.common.biz.dto.UserDTO;
 import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.DescEnum;
 import com.bandweaver.tunnel.common.platform.log.WriteLog;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
@@ -76,10 +77,12 @@ public class UserController {
 		
 		User user = userService.selectByPrimaryKey(id);
 		if(user == null)
-			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20006);//用户名不存在
+//			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20006);//用户名不存在
+			throw new BandWeaverException("用户名不存在");
 		
 		if(!user.getPassword().equals(oldPw))
-			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20007);//密码错误
+//			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20007);//密码错误
+			throw new BandWeaverException("原密码错误");
 		
 		User upt = new User();
 		upt.setId(id);

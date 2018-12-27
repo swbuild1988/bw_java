@@ -8,12 +8,17 @@
     >
       <h3 class="title">{{title}}</h3>
       <FormItem prop="userName">
-        <Input type="text" v-model="formValidate.userName" placeholder="用户名">
+        <Input 
+          class="loginInput"
+          type="text" 
+          v-model="formValidate.userName"
+          placeholder="用户名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem prop="passWord">
         <Input
+          class="loginInput"
           type="password"
           v-model="formValidate.passWord"
           placeholder="密码"
@@ -23,7 +28,8 @@
         </Input>
       </FormItem>
       <FormItem>
-        <checkbox v-model="formValidate.checked" checked class="remember">记住密码</checkbox>
+        <checkbox v-model="formValidate.checked" checked class="remember"></checkbox>
+        <span>记住密码</span>
       </FormItem>
       <FormItem>
         <Button
@@ -59,7 +65,7 @@ export default {
       callback();
     };
     return {
-      title: "综合管廊统一管理可视化平台",
+      title: "管廊智慧管理平台",
       loading: false,
       logining: false,
       formValidate: {
@@ -171,8 +177,6 @@ export default {
   -moz-border-radius: 5px;
   background-clip: padding-box;
   /*margin: 180px auto;*/
-  width: 350px;
-  padding: 35px 35px 15px 35px;
   background: rgba(3, 23, 56, 0.4);
   border: 1px solid rgba(166, 218, 241, 1);
   box-shadow: 0 0 4em rgba(60, 166, 234, 0.8);
@@ -205,12 +209,69 @@ export default {
   margin: 0px 0px 35px 0px;
   float: left;
 }
-.main >>> 　.ivu-input-group-append,
+.main >>> .ivu-input-group-append,
 .main >>> .ivu-input-group-prepend {
   color: #fff;
   background-color: #3b94f1;
   border: 1px solid #2d8cf0;
 }
-.ivu-checkbox-wrapper {
+.remember + span {
+  float: left;
+}
+/* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .login-container {
+      width: 350px;
+      padding: 35px 35px 15px 35px;
+    }
+    .title {
+      font-size: 1.5em;
+      margin: 0px auto 20px auto;
+    }
+    .main >>> .ivu-btn {
+      font-size: 16px;
+    }
+    .remember + span {
+      margin-left: .4rem;
+      font-size: 12px;
+      margin-top: .08rem;
+    }
+}
+    /* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+   .login-container {
+      width: 20%;
+      height: 25%;
+      padding: 3rem 3rem 0 3rem;
+    }
+    .title {
+      font-size: 4.5em;
+      margin: 0px auto 2rem auto;
+    }
+    .main >>> .ivu-btn {
+      font-size: 1.6rem !important;
+    }
+    .main >>> .ivu-checkbox-inner {
+      width: 2rem;
+      height: 2rem;
+    }
+    .main >>> .ivu-checkbox-inner:after {
+      width: .6rem;
+      height: 1rem;
+      top: 5px;
+      left: 11px;
+    }
+    .remember + span {
+      margin-left: 1rem;
+      font-size: 1.4rem;
+      margin-top: .02rem;
+    }
+    .main >>> .ivu-input-group-prepend {
+      font-size: 2rem;
+    }
+    .loginInput >>> .ivu-input {
+      height: 2.6rem;
+      font-size: 1.5rem;
+    }
 }
 </style>
