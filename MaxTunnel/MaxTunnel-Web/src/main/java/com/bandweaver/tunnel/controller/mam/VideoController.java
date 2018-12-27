@@ -61,6 +61,19 @@ public class VideoController {
     private OnvifService h5streamService;
     
     
+    /**通过sectionId获取视频列表 
+     * @param id
+     * @return   
+     * @author shaosen
+     * @Date 2018年12月27日
+     */
+    @RequestMapping(value="sections/{id}/videos",method=RequestMethod.GET)
+    public JSONObject getVideosBySection(@PathVariable Integer id) {
+    	List<VideoDto> videoDtos = videoServerService.getVideosBySection(id);
+    	return CommonUtil.success(videoDtos);
+    }
+    
+    
     /**通过api添加rtsp和onvif源
      * @param user 
      * @param password

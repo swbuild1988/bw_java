@@ -82,6 +82,22 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObjDto> getMeasObjByCondition(MeasObjVo vo) {
+    
+    	if(vo.getObjtypeIds() != null && vo.getObjtypeIds().isEmpty()) {
+			vo.setObjtypeIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getTunnelIds() != null && vo.getTunnelIds().isEmpty()) {
+			vo.setTunnelIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getStoreIds() != null && vo.getStoreIds().isEmpty()) {
+			vo.setStoreIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getSectionIds() != null && vo.getSectionIds().isEmpty()) {
+			vo.setSectionIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getIds() != null && vo.getIds().isEmpty()) {
+			vo.setIds(null);//防止mapper.xml拼接sql出错
+		}
          List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
          return list == null ? Collections.emptyList() : list ;
     }
@@ -114,7 +130,7 @@ public class MeasObjServiceImpl implements MeasObjService {
     @Override
     public PageInfo<MeasObjDto> dataGrid(MeasObjVo vo) {
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-        List<MeasObjDto> list = getMeasObjByCondition(vo);
+        List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
         return new PageInfo<>(list);
     }
 
@@ -162,12 +178,10 @@ public class MeasObjServiceImpl implements MeasObjService {
 	}
 
 	@Override
-	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, Integer sectionId) {
+	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
 		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
 		
 		Set<MeasObj> set = new HashSet<>();
-		//查询仓以及仓关联的进气出气仓等
-		List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
 		//查询所有仓里指定类型的监测对象
 		for (Section section : sectionList) {
 			List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(),objectTypeId);
