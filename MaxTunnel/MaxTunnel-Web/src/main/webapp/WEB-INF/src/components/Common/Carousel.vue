@@ -92,11 +92,8 @@ export default {
 .videosContent .commonButton {
     position: absolute;
     z-index: 1001;
-    width: 10%;
-    height: 11%;
     border-radius: 50%;
     top: 50%;
-    font-size: 3rem;
     transition: .2s;
     color: #fff;
     text-align: center;
@@ -115,12 +112,25 @@ export default {
     display: inherit;
     opacity: 0;
 }
-.videosContent:hover {
-
-}
 .videosContent .video-arrow-hover:hover {
     background-color: rgba(255, 255, 255, .5);
     opacity: 1;
+}
+    /* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .videosContent .commonButton {
+        width: 6%;
+        height: 8%;
+        font-size: 1rem;
+    }
+}
+    /* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    .videosContent .commonButton {
+        width: 10%;
+        height: 11%;
+        font-size: 3rem;
+    }
 }
 </style>
 
