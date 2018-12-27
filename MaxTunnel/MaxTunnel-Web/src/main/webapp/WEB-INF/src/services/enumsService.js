@@ -1,4 +1,5 @@
 import axios from 'axios'
+const isRealData = require('../../static/serverconfig').isRealData
 
 var EnumsService = {
 	// 获取文件类型

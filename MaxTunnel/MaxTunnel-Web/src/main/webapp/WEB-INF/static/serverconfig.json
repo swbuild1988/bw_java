@@ -5,7 +5,7 @@
     "isRealData": true,
     "SuperMapConfig": {
         "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-gcdj/rest/realspace",
-        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-GuChengDaJie/rest/data",
+        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-gcdj/rest/data",
         "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-jinyuanmap/rest/maps/jinyuan_map"
     }
 }

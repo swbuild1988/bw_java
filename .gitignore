@@ -164,3 +164,8 @@ node_modules/
 #npm run build
 dist/
 **/dist/
+**/webapp/WEB-INF/html/index.html
+**/webapp/index.html
+
+#log
+*.log
