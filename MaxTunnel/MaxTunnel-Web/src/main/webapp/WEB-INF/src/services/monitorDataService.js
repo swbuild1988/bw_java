@@ -1,10 +1,11 @@
 import axios from 'axios'
 
 var MonitorDataService = {
-    // 根据tunnelId获取该管廊内监测内容数据最大值
-    getMaxMonitorData: function(tunnelId) {
+    // 根据tunnelId获取该管廊内监测内容数据最大数据
+// {tunnelId:"",areaId:"",storeId:""}
+    getMaxMonitorData: function(parms) {
         return new Promise((resolve, reject) => {
-            axios.get('tunnels/' + tunnelId + '/max-cv').then(res => {
+            axios.post('measobjs/max-cv',parms).then(res => {
                 let {
                     code,
                     data,
@@ -13,13 +14,13 @@ var MonitorDataService = {
                 if (code == 200) {
                     resolve(data)
                 } else {
-                    reject(msg + '地址：tunnels/' + tunnelId + "/"  + '/max-cv')
+                    reject(msg + '地址:measobjs/' +'max-cv')
                 }
             })
         })
     },
     // 获取监测数据
-    getMonitorData: function() {
+    getMonitorMaxData: function() {
         return new Promise((resolve, reject) => {
             axios.get('sections/ai/standard-cv').then(res => {
                 let {

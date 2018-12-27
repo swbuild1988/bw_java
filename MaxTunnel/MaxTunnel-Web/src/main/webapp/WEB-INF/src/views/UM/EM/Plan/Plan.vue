@@ -19,7 +19,7 @@
         },
         // treeNodeJumpUrl: "/UM/plans/detial/processKey",
         treeNodeJumpUrl: "/UM/plans/detial/",
-        executeNodeUrl: "/UM/plans/execute/processKey",
+        executeNodeUrl: "/UM/plans/execute/",
       };
     },
     created() {

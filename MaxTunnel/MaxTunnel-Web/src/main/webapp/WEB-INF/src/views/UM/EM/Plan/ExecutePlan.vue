@@ -2,84 +2,140 @@
   <div>
     <ComfirmStep  v-bind:curModal="curModal" ></ComfirmStep>
     <Row>
+        <Col span="2">
+        <div class="begin">
+            <Button type="success" @click="startPlan">启动预案</Button>
+        </div>
+        </Col>
       <div v-for="(step,index) in stepList ">
-        <Col span="3">
-        <CustomStep :stepLength=stepList.lenght :curStatusVal=step.statusVal :curIndex=index+1
-                    :curStatusStr=step.statusStr :stepName=step.stepName></CustomStep>
+        <Col  :span="spanNum">
+        <CustomStep v-bind="step" @getSwitchStatus="getSwitchStatus"></CustomStep>
         </Col>
       </div>
     </Row>
     <hr class="hr3"/>
     <Row>
-      <Col span="12">
+        <Col span="12" style="position: relative;padding: 10px;">
+        <div style="height: 68vh;" class="coolBox">
+            <Carousel v-bind="curCarousel"></Carousel>
+        </div>
+        </Col>
+      <Col span="12" style="padding: 10px;">
       <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);">
         <p slot="title" style="font-size: 20px;">执行日志</p>
-        <div v-for="item in planData.process">
-          <Row style="line-height: 30px;font-size: 16px;">
+          <Row style="line-height: 30px;font-size: 16px;height:calc(45vh - 180px);overflow-y: auto;">
+              <div  v-for="item in processLog">
             <Col span="8">
-            {{item.node}}
+            {{item.stepName}}
             </Col>
             <Col span="5">
-            {{item.status}}
+            {{item.statusStr}}
             </Col>
             <Col span="3">
-            Admin
+            {{item.user}}
             </Col>
             <Col span="8">
-            <span style="position: relative;float: right;right: 5px;">2018-10-22 16:00</span>
+            <span style="position: relative;float: right;right: 5px;">{{item.time}}</span>
             </Col>
+              </div>
           </Row>
-        </div>
       </Card>
       </Col>
-      <Col span="11" style="position: relative;float: right;right: 5px;">
-      <div style="height: 68vh;" class="coolBox">
-        <video v-bind="curVideo"></video>
-      </div>
-      </Col>
+        <Col span="12" style="padding: 10px;">
+        <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);">
+            <p slot="title" style="font-size: 20px;">设备列表</p>
+            <Row style="line-height: 30px;font-size: 16px;height:calc(40vh - 170px);overflow-y: auto;">
+                <div  v-for="item in equipmentList">
+                    <Col span="12" style="padding: 10px;font-size: 18px;">
+                    <span>{{item.name}}</span>
+                    <div style="float: right;">
+                        <img :src="item.url" style="width: 40px;">
+                    </div>
+                    <i-Switch  :value="item.cv" size="large" @on-change="changeStatus(item.id,item.cv)" style="float:right;margin-right: 50px;margin-top: 5px;">
+                        <span slot="open">开</span>
+                        <span slot="close">关</span>
+                    </i-Switch>
+                    </Col>
+                </div>
+            </Row>
+        </Card>
+        </Col>
     </Row>
+      <ShowStartPlan v-bind="showModal"></ShowStartPlan>
   </div>
 </template>
 
 <script>
   import CustomStep from "../../../../components/UM/EM/CustomStep"
-  import {getFormatTime} from '../../../../scripts/DateFormat.js'
   import ComfirmStep from '../../../../components/UM/EM/ConfirmStep'
-  import video from '../../../../components/Common/Video/VideoComponent'
+  import {PlanService} from '../../../../services/planService'
+  import {MeasObjServer} from '../../../../services/MeasObjectSerivers.js'
+  import ShowStartPlan from '../../../../components/Common/Modal/ShowStartPlan'
+  import  Carousel from '../../../../components/Common/Carousel.vue'
+  import fenClose from '../../../../assets/UM/fanClose.png'
+  import  fenOpen from '../../../../assets/UM/fenOpen.gif'
+  import  closeLamp from '../../../../assets/UM/照明-关.png'
+  import openLamp from '../../../../assets/UM/照明-开.png'
+  import openBlinds from '../../../../assets/UM/百叶-开.png'
+  import closeBlinds from '../../../../assets/UM/百叶-关.png'
+
   export default {
+
     name: "execute-plan",
     data() {
       return {
+          curCarousel:{
+              videolist:[],
+          },
+          fenOpen:fenOpen,
+          fenClose:fenClose,
+          openLamp:openLamp,
+          closeLamp:closeLamp,
+          closeBlinds:closeBlinds,
+          openBlinds:openBlinds,
+          img:{open:"",close:""},
+          getStatusInterval:null,
+          openInterval:false,
+          equipmentList:[],
+          processLog:[],
+         showModal: {
+              modalPrams: {
+                  state: false,
+                  selectPlan:""
+              },
+          },
         curModal:{
           isShow:false,
           instanceId:null,
           objectId:null
         },
-        curVideo:{
-          id:"executePlanVideo",
-          video:{},
-        },
         stepList: [
-          {stepName: "开启声光报警", statusStr: "待进行", statusVal: 3},
-          {stepName: "调用摄像头", statusStr: "待进行", statusVal: 3},
-          {stepName: "值班人员确认", statusStr: "待进行", statusVal: 3},
-          {stepName: "打开风机", statusStr: "待进行", statusVal: 3},
-          {stepName: "打开风阀", statusStr: "待进行", statusVal: 3},
-          {stepName: "打开百叶", statusStr: "待进行", statusVal: 3},
-          {stepName: "启动干粉灭火", statusStr: "待进行", statusVal: 3},
-          {stepName: "通知相关单位", statusStr: "待进行", statusVal: 3},
+          // {stepName: "开启声光报警", statusStr: "待进行", statusVal: 3},
+          // {stepName: "调用摄像头", statusStr: "待进行", statusVal: 3},
+          // {stepName: "值班人员确认", statusStr: "待进行", statusVal: 3},
+          // {stepName: "打开风机", statusStr: "待进行", statusVal: 3},
+          // {stepName: "打开风阀", statusStr: "待进行", statusVal: 3},
+          // {stepName: "打开百叶", statusStr: "待进行", statusVal: 3},
+          // {stepName: "启动干粉灭火", statusStr: "待进行", statusVal: 3},
+          // {stepName: "通知相关单位", statusStr: "待进行", statusVal: 3},
         ],
+          spanNum:0,
         queryPram: {
           processKey: null,
         },
       }
     },
+
     mounted() {
+        this.queryPram.processKey = this.$route.params.processKey;
       this.syncStep();
+      this.getProcess();
     },
+
     beforeDestroy() {
 
     },
+
     computed: {
       planData: {
         get() {
@@ -90,46 +146,155 @@
         }
       }
     },
+
     methods: {
+        startPlan() {
+            var _this = this;
+            _this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
+            _this.showModal.modalPrams.selectPlan = _this.queryPram.processKey;
+
+        },
+
+        //获取设备状态图片
+        getStatusUrl(dataTypeId,cv){
+            var _this=this;
+            var imgUrl="";
+            switch(dataTypeId){
+                // 灯
+                case 11:{
+                    if(cv>0){
+                        imgUrl=_this.openLamp;
+                    }
+                    else {
+                        imgUrl=_this.closeLamp;
+                    }
+                    return  imgUrl;
+                }
+                //风机
+                case 10:{
+                    if(cv>0){
+                        imgUrl=_this.fenOpen;
+                    }
+                    else {
+                        imgUrl=_this.fenClose;
+                    }
+                    return  imgUrl;
+                }
+                //百叶
+                case 58:{
+                    if(cv>0){
+                        imgUrl=_this.openBlinds;
+                    }
+                    else {
+                        imgUrl=_this.closeBlinds;
+                    }
+                    return  imgUrl;
+                }
+
+            }
+        },
+
+        // 变更设备状态
+        changeStatus(id,cv){
+            var _this=this;
+            var params={id:id,status:cv};
+            _this.equipmentList.forEach(a=>{
+                if(a.id==id){
+                    a.status=!a.status;
+                    a.cv=(a.cv==0?1:0)
+                    a.url =  _this.getStatusUrl(a.objtypeId,a.cv)
+                }
+            })
+            MeasObjServer.changeEquimentStatus(params).then();
+
+        },
+
+
+        // 获取打开开关后的状态跟新
+        getSwitchStatus(){
+           var _this=this;
+            var temp={};
+            temp.stepName="打开风机"
+            temp.statusStr="已完成";
+            temp.user=sessionStorage.UMUerName;
+            temp.time=new Date().format("yyyy-MM-dd hh:mm:ss");
+            _this.processLog.push(temp);
+           if(_this.openInterval){
+               _this.getStatusInterval=setInterval(()=>{
+                   // 获取打开风机或其他设备的数据
+               },4000);
+               // clearInterval(_this.getStatusInterval);
+               // _this.getStatusInterval = null;
+           }
+        },
+
+        // 获取预案步骤
+        getProcess() {
+            let _this = this;
+            PlanService.getAllSteps(_this.queryPram.processKey).then((result) => {
+                if(result){
+                _this.stepList=[];
+                    let tempLen=result.planStatus.length;
+                    _this.spanNum = tempLen > 3?((tempLen > 6) ? 4 : 3):7;
+                    result.planStatus.forEach((step,index)=>{
+                        var temp={};
+                        temp.curIndex=index+1;
+                        temp.stepName=step.stepName;
+                        temp.curStatusStr=step.statusStr;
+                        temp.curStatusVal=step.statusVal;
+                        temp.switBtn={isSwitch: true, status: false, mesaObjsId: []};
+                        temp.stepLength=tempLen;
+                        _this.stepList.push(temp);
+                    })
+                }
+            })
+        },
+
       //切换路由
       goToMoudle(path) {
         this.$router.push(path);
       },
 
       syncStep() {
-        var _this = this;
+          var _this = this;
         if (_this.planData) {
-          _this.planData.process.forEach(a => {
-            _this.stepList.forEach(b => {
-              if(b.stepName==a.node){
-                if(a.status== 1){
-                  b.statusVal=1;
-                  b.statusStr="已完成"
+            if(_this.curCarousel.videolist.length==0){
+                _this.curCarousel.videolist=_this.planData.videos
+            }
+            _this.processLog=[];
+            _this.equipmentList=[];
+            _this.planData.process.forEach((a,index)=>{
+                if (a.status == 1) {
+                    _this.stepList[index].curStatusStr= "已完成"
+                    _this.stepList[index].curStatusVal= 1;
+                    _this.stepList[index].isSwitch= a.isSwitch;
+                    if(a.objectList.length>0){
+                        a.objectList.forEach(b=>{
+                            let temp = b;
+                            temp.status=b.cv>0?true:false;
+                            temp.url =  _this.getStatusUrl(b.objtypeId,b.cv)
+                            _this.equipmentList.push(temp);
+                        })
+                    }
                 }
-                else if(a.status== 2){
-                  b.statusVal=2;
-                  b.statusStr="进行中"
-                  if(a.node=="值班人员确认"){
-                    _this.curModal.isShow=true;
-                    _this.curModal.instanceId= _this.planData.processInstanceId;
-                    _this.curModal.objectId= _this.planData.objectId;
-                  }
-                }
-                else{
-                  b.statusVal=3;
-                  b.statusStr="待进行"
-                }
-              }
+                var log={};
+                log.stepName=a.node;
+                log.statusStr=  _this.stepList[index].curStatusStr;
+                log.user=sessionStorage.UMUerName;
+                log.time=new Date().format("yyyy-MM-dd hh:mm:ss");
+                _this.processLog.push(log);
             })
-          })
         }
       },
     },
-    components: {CustomStep,ComfirmStep},
+
+    components: {CustomStep,ComfirmStep,ShowStartPlan,Carousel},
+
     watch: {
       '$route': function () {
-        this.queryPram.processKey = this.$route.params.processKey;
-      },
+            this.queryPram.processKey = this.$route.params.processKey;
+            this.getProcess();
+        },
       "planData": function () {
         this.syncStep();
       },
@@ -138,6 +303,12 @@
 </script>
 
 <style scoped>
+    .begin{
+        padding-top: 20px;
+        padding-left: 10px;
+        width: 110px;
+    }
+
   .border {
     box-shadow: 5px 5px 15px #cdf5ff inset;
     border: 1px solid #d9fff1;
@@ -159,11 +330,11 @@
     background-image: linear-gradient(to right, #ccc, #333, #ccc);
   }
 
-  .ivu-steps > > > .ivu-steps-title {
+  .ivu-steps >>> .ivu-steps-title {
     font-size: 18px;
   }
 
-  .ivu-steps > > > .ivu-steps-content {
+  .ivu-steps >>> .ivu-steps-content {
     font-size: 18px;
   }
 

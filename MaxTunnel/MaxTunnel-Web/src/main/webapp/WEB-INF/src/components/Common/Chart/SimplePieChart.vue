@@ -144,10 +144,15 @@ export default {
         },
         //定时刷新数据
         refreshData() {
-            let _this = this;
-            // setInterval(() => {
-            //     _this.fetchData(_this.requestUrl, _this.params);
-            // }, _this.intervalTime);
+        let _this = this;
+        if (_this.parameters.timer) {
+            let { intervalId, intervalTime } = _this.parameters.timer;
+            intervalId = setInterval(() => {
+            _this.option.series[0].data.forEach(a => (a.val = 1));
+            _this.myChart.setOption(_this.option);
+            _this.fetchData(_this.requestUrl);
+            }, intervalTime);
+        }
         }
     }
 };

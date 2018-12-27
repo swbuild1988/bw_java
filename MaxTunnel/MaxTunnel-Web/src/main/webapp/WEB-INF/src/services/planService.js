@@ -178,6 +178,32 @@ var PlanService = {
       })
     })
   },
+    //根据key获取预案流程
+    getAllSteps(processKey) {
+        return new Promise((resolve, reject) => {
+            axios.get('emplans/process-key/'+processKey).then(res => {
+                let {code, data, msg} = res.data;
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject('msg', msg)
+                }
+            })
+        })
+    },
+    //启动预案
+    startPlan(params){
+        return new Promise((resolve, reject) => {
+            axios.post('emplans/start',params).then(res => {
+                let {code, data, msg} = res.data;
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject('msg', msg)
+                }
+            })
+        })
+    },
 }
 
 export {

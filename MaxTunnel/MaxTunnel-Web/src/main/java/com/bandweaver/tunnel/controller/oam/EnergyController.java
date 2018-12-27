@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.bandweaver.tunnel.common.platform.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +40,6 @@ import com.bandweaver.tunnel.common.biz.pojo.oam.Energy;
 import com.bandweaver.tunnel.common.biz.vo.oam.EnergyVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -472,16 +469,17 @@ public class EnergyController {
     public JSONObject getTunnelEnergyConsumptionCount() {
 
         // 获取所有管廊
-        List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+        List<TunnelDto> tunnelList = tunnelService.getDtoList();
         List<JSONObject> objList = new ArrayList<JSONObject>();
 
-        for (TunnelSimpleDto tunnel : tunnelList) {
+        for (TunnelDto tunnel : tunnelList) {
             JSONObject object = new JSONObject();
             object.put("key", tunnel.getName());
-//			Double total = energyService.getTotalValueByTunnelId(tunnel.getId());
+
 //			临时为了太原项目添加假数据
-            Double total = Math.random() * 100 + 50;
-            object.put("val", total == null ? 0.00 : total);
+            double tunnelLength = tunnel.getLength() == null ? 100 : tunnel.getLength().doubleValue();
+            double total = RandomUtil.getValue(0.8 , 1) * tunnelLength;
+            object.put("val", total);
             objList.add(object);
         }
 

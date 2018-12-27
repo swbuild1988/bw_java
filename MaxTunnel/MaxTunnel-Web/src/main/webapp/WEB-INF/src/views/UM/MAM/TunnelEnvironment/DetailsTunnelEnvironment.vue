@@ -158,7 +158,6 @@ export default {
     },
 
     intervalData() {
-      console.log("start inteval");
       let _this = this;
       _this.dataInterval = setInterval(() => _this.getObjDetialData(), 10000);
       _this.videoInterval = setInterval(() => _this.changeVideo(), 10000);
