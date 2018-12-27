@@ -172,11 +172,24 @@ export default {
         },
         //定时刷新数据
         refreshData() {
-            // let _this = this;
-            // setInterval(() => {
-            //     _this.fetchData(_this.requestUrl);
-            // }, _this.intervalTime);
-        }
+            let _this = this;
+            
+            if (_this.parameters.timer) {
+
+                let { intervalId, intervalTime } = _this.parameters.timer;
+
+                intervalId = setInterval(() => {
+                for(let i=0,len = _this.yData.length ;i< len; i++) {
+                    _this.yData[i] = 0;
+                }
+                _this.myChart.setOption({
+                    series: { data: _this.yData }
+                });
+                _this.fetchData(_this.requestUrl);
+                }, intervalTime);
+                
+            }
+            }
     }
 };
 </script>
