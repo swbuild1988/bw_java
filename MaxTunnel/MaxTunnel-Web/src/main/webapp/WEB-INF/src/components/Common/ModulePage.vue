@@ -11,7 +11,7 @@
               </ButtonGroup>
           </div> -->
         <!--</transition>-->
-        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="[selectedName]" accordion>
+        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1']" accordion>
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate"></Icon>
@@ -43,8 +43,7 @@
         </Menu>
       </Sider>
       <Layout>
-        <Content
-          style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;">
+        <Content style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;">
           <router-view></router-view>
           <showVideo v-bind="videoModal" ref="video"></showVideo>
         </Content>
@@ -92,6 +91,7 @@
           </Panel>
           <Footer class="layout-footer-center">2009-2018 &copy; Bandweaver</Footer>
         </Collapse>
+          <ShowStartPlan v-bind="showModal"></ShowStartPlan>
         <div style="position: fixed;float: right;right: 0px; bottom: 48px; " v-show="showPage">
           <Page :current="page.current" :total="page.total" :page-size="4" simple
                 @on-change="alarmDataChangePage"></Page>
@@ -108,6 +108,7 @@
   import UMCustom from '../../styles/UMCustom.css'
   import showVideo from '../../components/Common/Modal/ShowVideos.vue'
   import  {EnumsService} from '../../services/enumsService.js'
+  import ShowStartPlan from '../Common/Modal/ShowStartPlan'
 
   export default {
     name: "mudulePage",
@@ -149,84 +150,90 @@
       }
     },
     data() {
-      return {
-        selectPlan:null,
-        videoModal:{
-          modalPrams:{
-            state:false,
-            vedioIdList:[],
-          }
-        },
-        alarmRouterList: [],
-        alarmLevel:[],
-        tempAlarm: null,
-        isCollapsed: false,
-        alarmModal: {
-          show: {state: false},
-          alarmData: null,
-        },
-        screenWidth: 300,
-        minScreenWidth: 300,
-        screenHeight: 900,
-        childValue: '',
-        showalarm: '1',
-        showPage: false,
-        alarmData: [
-          {
-          id: 101,
-          alarmName: "温度告警",
-          location: "监测仓",
-          alarmType: "event",
-          relatedObjectName: "温度",
-          ObjectNo: "111",
-          description: "温度过高",
-          alatmTime: "2018-08-10",
-          alarmLevel: "危急",
-          alarmScore: "234米",
-        },
-          {
-            alarmlevel: "一般",
-            id: 102,
-            relatedObjectName: "氧气浓度",
-            alarmName: "湿度告警",
-            location: "电力仓区段二",
-            description: "湿度过高",
-            alatmTime: "2018-08-11"
-          },
-          {
-            id: 103,
-            alarmName: "温度告警2",
-            location: "监测仓",
-            relatedObjectName: "温度",
-            description: "温度过高",
-            alatmTime: "2018-08-10",
-            alarmLevel: "危急",
-          },
-          {
-            id: 104,
-            alarmName: "温度告警3",
-            location: "监测仓",
-            relatedObjectName: "温度",
-            description: "温度过高",
-            alatmTime: "2018-08-10",
-            alarmLevel: "危急",
-          },
-        ],
-        page: {
-          total: 20,
-          current: 1,
-        },
-        backStyle: {
-          backgroundImage: "url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
-          height: '100%',
-          position: 'relative',
-        },
-        selectedName: null
-      };
+        return {
+            showModal: {
+                modalPrams: {
+                    state: false,
+                    selectPlan: ""
+                },
+            },
+            selectPlan: null,
+            videoModal: {
+                modalPrams: {
+                    state: false,
+                    vedioIdList: [],
+                }
+            },
+            alarmRouterList: [],
+            alarmLevel: [],
+            tempAlarm: null,
+            isCollapsed: false,
+            alarmModal: {
+                show: {state: false},
+                alarmData: null,
+            },
+            screenWidth: 300,
+            minScreenWidth: 300,
+            screenHeight: 900,
+            childValue: '',
+            showalarm: '1',
+            showPage: false,
+            alarmData: [
+                {
+                    id: 101,
+                    alarmName: "温度告警",
+                    location: "监测仓",
+                    alarmType: "event",
+                    relatedObjectName: "温度",
+                    ObjectNo: "111",
+                    description: "温度过高",
+                    alatmTime: "2018-08-10",
+                    alarmLevel: "危急",
+                    alarmScore: "234米",
+                },
+                {
+                    alarmlevel: "一般",
+                    id: 102,
+                    relatedObjectName: "氧气浓度",
+                    alarmName: "湿度告警",
+                    location: "电力仓区段二",
+                    description: "湿度过高",
+                    alatmTime: "2018-08-11"
+                },
+                {
+                    id: 103,
+                    alarmName: "温度告警2",
+                    location: "监测仓",
+                    relatedObjectName: "温度",
+                    description: "温度过高",
+                    alatmTime: "2018-08-10",
+                    alarmLevel: "危急",
+                },
+                {
+                    id: 104,
+                    alarmName: "温度告警3",
+                    location: "监测仓",
+                    relatedObjectName: "温度",
+                    description: "温度过高",
+                    alatmTime: "2018-08-10",
+                    alarmLevel: "危急",
+                },
+            ],
+            page: {
+                total: 20,
+                current: 1,
+            },
+            backStyle: {
+                backgroundImage: "url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
+                height: '100%',
+                position: 'relative',
+            },
+            selectedName: null
+        }
     },
     mounted() {
       var _this=this;
-      EnumsService.getAlarmLevelList().then((result)=>{
+        EnumsService.getAlarmLevelList().then((result)=>{
         if(result){
           _this.alarmLevel=result;
         }
@@ -241,13 +248,12 @@
           this.selectedName = '1-0'
         }
       }
-      // this.openMQ();
-      // this.startMQ();
-      // this.acceptPlanData();
-      // this.acceptAlarmData();
+      this.acceptPlanData();
+      this.acceptAlarmData();
+        console.log( _this.$store);
     },
     beforeDestroy() {
-      // this.closedMQ();
+      this.closedMQ();
       this.$Notice.destroy()
     },
     watch: {
@@ -282,29 +288,38 @@
       }
     },
       methods: {
+          //手动开启预案
+          startPlan(alarm) {
+              var _this=this;
+              MeasObjServer.getObjById(alarm.measId).then((result)=>{
+                  if(result){
+                      _this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
+                      _this.showModal.modalPrams.selectPlan=_this.selectPlan;
+                  }
+              })
+              _this.getLocationByMeasId()
+          },
+
           showVideo() {
               this.videoModal.modalPrams.state = true;
               this.$refs.video.reflashVideo();
           },
-
-          goBack() {
-              this.$router.back(-1);
-          },
-
-          goForward() {
-              this.$router.forward();
-          },
-
-          showPlanTip() {
-              var _this = this;
-              this.$Modal.warning({
-                  title: "预案提示",
-                  content: "系统已开始执行预案，请跳转至预案管理进行处理。",
-                  onOk: () => {
-                      _this.$router.push("/UM/plans/execute/processKey");
-                  },
-              });
-          },
+          // goBack() {
+          //     this.$router.back(-1);
+          // },
+          // goForward() {
+          //     this.$router.forward();
+          // },
+          // showPlanTip() {
+          //     var _this = this;
+          //     this.$Modal.warning({
+          //         title: "预案提示",
+          //         content: "系统已开始执行预案，请跳转至预案管理进行处理。",
+          //         onOk: () => {
+          //             _this.$router.push("/UM/plans/execute/processKey");
+          //         },
+          //     });
+          // },
 
           startMQ() {
               let _this = this;
@@ -336,7 +351,7 @@
               //将数据保存在vuex中
               _this.planData = result;
               if (_this.planData && "/UM/plans/execute/processKey" != _this.$router.history.current.path) {
-                  _this.showPlanTip();
+                  // _this.showPlanTip();
               }
           },
 
@@ -360,12 +375,10 @@
               var _this = this;
               _this.MQ._InitMQ(1, "/queue/QUEUE_ALARM_UM", "", _this.alarmCallback);
           },
-
           closedMQ() {
               var _this = this;
               _this.MQ.closeMQ();
           },
-
           goToMoudle(path, index, childIndex) {
               this.selectedActive[0] = index
               this.selectedActive[1] = childIndex
@@ -412,14 +425,13 @@
               var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
               _this.selectPlan = plans[0].id;
               _this.alarmLevel.forEach(a => {
-                  if (a.val == alarm.alarmLevel) {
-                      des = a.key;
-                  }
+                  if (a.val == alarm.alarmLevel) {des = a.key;}
               });
               var config = {
                   title: des + "告警",
                   desc: alarm.objectName + alarm.alarmName,
-                  duration: 0
+                  duration: 0,
+                  onClose:_this.startPlan(alarm)
               };
               if (plans && plans.length > 0) {
                   config.render = (h) => {
@@ -463,10 +475,11 @@
               }
           },
       },
-    components: {
-      alarm,
-      showVideo
-    },
+      components: {
+          alarm,
+          showVideo,
+          ShowStartPlan
+      },
   };
 </script>
 

@@ -261,10 +261,10 @@ export default {
 
     //获取数据
     fentchData() {
-      this.tunnelId = this.$route.params.id;
-      this.queryCondition.tunnelId = this.tunnelId;
-      //获取管廊列表
-      let _this = this;
+        //获取管廊列表
+        let _this = this;
+        _this.tunnelId = _this.$route.params.id;
+        _this.queryCondition.tunnelId =_this.$route.params.id;
       TunnelService.getTunnels().then(
         result => {
           _this.tunnels = result;
@@ -335,8 +335,9 @@ export default {
     //根据监测类型获取数据
       getMonitorData() {
           let _this = this;
-          const curData = MonitorDataService.getMaxMonitorData(_this.tunnelId);
-          const maxDara = MonitorDataService.getMonitorData();
+          let parms={tunnelId:_this.tunnelId}
+          const curData = MonitorDataService.getMaxMonitorData(parms);
+          const maxDara = MonitorDataService.getMonitorMaxData();
           Promise.all([curData, maxDara]).then(
               (result) => {
                   console.log(result);
