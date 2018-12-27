@@ -69,7 +69,6 @@ export default {
         if(this.text){
             this.isTextShow = true
         }
-        // this.resetSize()
     },
     beforeDestroy() {
         this.curVideo.disconnect();
@@ -109,16 +108,14 @@ export default {
         show() {
             let width = document.getElementsByClassName('h5StreamVideo')[0].offsetWidth
             let height = document.getElementsByClassName('h5StreamVideo')[0].offsetHeight
-            if(width > 800 && height > 600 && this.video.positionSupport){
+            if(width > 800 && height > 800 && this.video.positionSupport){
                 this.controlFlag = true
+                let height = document.getElementsByClassName('embedControl')[0].offsetHeight
+                document.getElementsByClassName('embedControl')[0].style.width = height + 'px'
             }
         },
         hide() {
             this.controlFlag = false
-        },
-        resetSize() {
-            let height = document.getElementsByClassName('embedControl')[0].offsetHeight
-            document.getElementsByClassName('embedControl')[0].style.width = height + 'px'
         }
     }
 };
@@ -181,12 +178,13 @@ export default {
 
 .embedControl{
     position: absolute;
- /*   width: 24%;*/
-    /*height: 40%;
+    height: 30%;
     min-height: 100px;
-    min-width: 98px;*/
-    width: 98px;
-    height: 100px;
+    min-width: 98px;
+    max-width: 240px;
+    max-height: 240px;
+   /* width: 98px;
+    height: 100px;*/
     bottom: 0;
     left: 50%;
     transform: translate(-70%);
