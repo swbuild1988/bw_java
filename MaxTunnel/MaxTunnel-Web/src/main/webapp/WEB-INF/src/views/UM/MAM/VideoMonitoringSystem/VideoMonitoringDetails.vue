@@ -225,6 +225,7 @@ export default {
                         temp.id = camera.id;
                         temp.name = camera.name;
                         temp.url = camera.url;
+                        temp.tunnelId = _this.conditions.tunnelId
                         temp.storeId = camera.storeId
                         temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
@@ -252,6 +253,7 @@ export default {
                             temp.id = camera.id;
                             temp.name = camera.name;
                             temp.url = camera.url;
+                            temp.tunnelId = _this.conditions.tunnelId
                             temp.storeId = camera.storeId
                             temp.areaId = camera.areaId
                             temp.positionSupport =
@@ -311,7 +313,6 @@ export default {
             this.$router.push({
                 name: "预置位",
                 params: {
-                    tunnelId: this.conditions.tunnelId,
                     camera: camera
                 }
             });

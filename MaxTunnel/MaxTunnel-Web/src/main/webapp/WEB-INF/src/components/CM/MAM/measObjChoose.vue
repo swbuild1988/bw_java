@@ -28,7 +28,7 @@
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word64">所属区域</span><span>：</span>
+                <span class="word65">所属区域</span><span>：</span>
                 <Select v-model="researchInfo.areaId" placeholder="请选择所属管廊" class="inputWidth">
                     <Option value=null>所有</Option>
                     <Option v-for="item in lists.areas" :value="item.id" :key="item.id">{{item.name}}</Option>
