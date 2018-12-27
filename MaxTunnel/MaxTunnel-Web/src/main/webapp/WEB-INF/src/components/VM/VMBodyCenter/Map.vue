@@ -194,7 +194,7 @@ export default {
     methods: {
         init() {
             let _this = this;
-            Vue.prototype.MQ.openMQ(this.MQCallback);
+            // Vue.prototype.MQ.openMQ(this.MQCallback);
             _this.getVideos(); //调用视屏接口
         },
         homeSwitch() {
