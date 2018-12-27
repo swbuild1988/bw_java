@@ -185,7 +185,7 @@ export default {
                 }
             } )
         },
-        addViewerType({ position,ellipse,billboard,label,point }){
+        addViewerType({ position,ellipse,billboard,label,point,polyline }){
 
             let viewerPosition = position !== undefined ? {
                 position : Cesium.Cartesian3.fromDegrees( parseFloat( position.X ), parseFloat( position.Y ), parseFloat( position.Z ) )
@@ -234,7 +234,16 @@ export default {
                 }   
             }:{};
 
-            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp);
+            let polylineProp = polyline !== undefined ? {
+                polyline : {
+                    positions : Cesium.Cartesian3.fromDegreesArray([parseFloat( polyline.position.startLon ),parseFloat( polyline.position.startLat ),
+                        parseFloat(polyline.position.endLon), parseFloat(polyline.position.endLat)]),
+                    width : polyline.width,
+                    material : Cesium.Color.RED
+                }
+            }:{}
+
+            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp,polylineProp);
         },
         addParticleSystem(minxisParticleSystem){
 

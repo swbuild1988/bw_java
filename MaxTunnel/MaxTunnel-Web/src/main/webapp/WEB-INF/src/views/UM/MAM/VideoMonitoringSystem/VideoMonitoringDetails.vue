@@ -109,27 +109,33 @@ export default {
                 areas: []
             },
             cameraList: [
-                {
-                    id: 7001,
-                    name: "摄像头1",
-                    url: "192.168.6.156:8078",
-                    positionSupport: true,
-                    description: "A Camera for tunnel1"
-                },
-                {
-                    id: 7002,
-                    name: "摄像头2",
-                    url: "192.168.6.156:8078",
-                    positionSupport: false,
-                    description: "A Camera for tunnel2"
-                },
-                {
-                    id: 7003,
-                    name: "摄像头3",
-                    url: "192.168.6.156:8078",
-                    positionSupport: true,
-                    description: "A Camera for tunnel3"
-                }
+                // {
+                //     id: 7001,
+                //     name: "摄像头1",
+                //     url: "192.168.6.156:8078",
+                //     positionSupport: true,
+                //     description: "A Camera for tunnel1",
+                //     storeId: 1,
+                //     areaId: 1
+                // },
+                // {
+                //     id: 7002,
+                //     name: "摄像头2",
+                //     url: "192.168.6.156:8078",
+                //     positionSupport: false,
+                //     description: "A Camera for tunnel2",
+                //     storeId: 1,
+                //     areaId: 1
+                // },
+                // {
+                //     id: 7003,
+                //     name: "摄像头3",
+                //     url: "192.168.6.156:8078",
+                //     positionSupport: true,
+                //     description: "A Camera for tunnel3",
+                //     storeId: 1,
+                //     areaId: 1
+                // }
             ],
             // curVideo: {
             //     id: null
@@ -219,6 +225,9 @@ export default {
                         temp.id = camera.id;
                         temp.name = camera.name;
                         temp.url = camera.url;
+                        temp.tunnelId = _this.conditions.tunnelId
+                        temp.storeId = camera.storeId
+                        temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
                         _this.cameraList.push(temp);
@@ -244,6 +253,9 @@ export default {
                             temp.id = camera.id;
                             temp.name = camera.name;
                             temp.url = camera.url;
+                            temp.tunnelId = _this.conditions.tunnelId
+                            temp.storeId = camera.storeId
+                            temp.areaId = camera.areaId
                             temp.positionSupport =
                                 camera.ptzOperationsSupported;
                             temp.description = camera.description;
@@ -301,7 +313,6 @@ export default {
             this.$router.push({
                 name: "预置位",
                 params: {
-                    tunnelId: this.conditions.tunnelId,
                     camera: camera
                 }
             });

@@ -11,7 +11,7 @@
               </ButtonGroup>
           </div> -->
         <!--</transition>-->
-        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="[selectedName]" accordion>
+        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1','1-0']" accordion>
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate"></Icon>

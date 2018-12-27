@@ -8,7 +8,7 @@
                     <span class="word64">预案名</span><span>：</span>
                     <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
                         <Option value=null>不限</Option>
-                        <Option v-for="item in planEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                        <Option v-for="item in planEnums" :value="item.processKey" :key="item.val">{{item.key}}</Option>
                     </Select>
                 </div>
             </Col>
