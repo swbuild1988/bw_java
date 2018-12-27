@@ -236,8 +236,8 @@ export default {
 
             let polylineProp = polyline !== undefined ? {
                 polyline : {
-                    positions : Cesium.Cartesian3.fromDegreesArray([polyline.startLon, polyline.endLat,
-                        polyline.endLon, polyline.endLat]),
+                    positions : Cesium.Cartesian3.fromDegreesArray([parseFloat( polyline.position.startLon ),parseFloat( polyline.position.startLat ),
+                        parseFloat(polyline.position.endLon), parseFloat(polyline.position.endLat)]),
                     width : polyline.width,
                     material : Cesium.Color.RED
                 }

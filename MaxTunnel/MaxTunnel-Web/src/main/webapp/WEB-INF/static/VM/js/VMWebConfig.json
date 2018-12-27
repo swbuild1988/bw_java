@@ -562,7 +562,21 @@
                         "fontSize":"30"
                     }
                 }
+            },
+            {
+                "entityExtendParameters":{
+                    "polyline":{
+                        "position":{
+                            "startLon":"112.484733",
+                            "startLat":"37.715056",
+                            "endLon":"112.524978",
+                            "endLat":"37.703828"
+                        },
+                        "width":5
+                    }
+                }
             }
+
         ]
     },
     "progressTime":30 
