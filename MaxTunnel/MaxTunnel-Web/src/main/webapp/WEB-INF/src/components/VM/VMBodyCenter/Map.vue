@@ -98,7 +98,7 @@
               :infoBox="false"
               :navigation="false"
               :openImageryProvider="true"
-              :openSpinShow="false"
+              :openSpinShow="true"
               @replaceVideoUrl="replaceVideoUrl"
       >
       </sm-viewer>
