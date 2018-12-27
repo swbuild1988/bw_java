@@ -262,7 +262,7 @@ class MQ {
     };
     openMQ(MQCallback){
 
-        this._InitMQ(1, "/queue/queueAlarm", "",MQCallback);
+        this._InitMQ(1, "/queue/QUEUE_ALARM_VM", "",MQCallback);
 
     };
     sendMQ(){
@@ -278,7 +278,7 @@ class MQ {
     //初始化MQ
     _InitMQ(){
         let args=[].slice.call(arguments); //类数组转换成数组
-console.log('MQServerAddress',MQServerAddress)
+
         if ('WebSocket' in window) {
             this.ws = new WebSocket(MQServerAddress);
             // ws = new SockJS('http://192.168.0.41:15670/stomp');

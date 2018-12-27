@@ -1,4 +1,3 @@
-
 package com.bandweaver.tunnel.service.common.mq;
 
 import org.springframework.amqp.core.AmqpTemplate;
@@ -42,4 +41,5 @@ public class MqServiceImpl implements MqService {
 	}
 	
 }
+
 

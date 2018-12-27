@@ -98,7 +98,7 @@
               :infoBox="false"
               :navigation="false"
               :openImageryProvider="true"
-              :openSpinShow="true"
+              :openSpinShow="false"
               @replaceVideoUrl="replaceVideoUrl"
       >
       </sm-viewer>
@@ -194,7 +194,7 @@ export default {
     methods: {
         init() {
             let _this = this;
-            // Vue.prototype.MQ.openMQ(this.MQCallback);
+            Vue.prototype.MQ.openMQ(this.MQCallback);
             _this.getVideos(); //调用视屏接口
         },
         homeSwitch() {
@@ -255,10 +255,14 @@ export default {
         },
         sendPlan() {
             this.axios
-                .get("/emplans/start/sections/10/process-type/4001")
+                .post("/emplans/start",{
+                    objectId:203012401,
+                    processValue:4003
+                })
                 .then(result => {
                     let { msg, code, data } = result.data;
                     if (code == 200) {
+                        console.log('200')  
                     }
                 });
         },

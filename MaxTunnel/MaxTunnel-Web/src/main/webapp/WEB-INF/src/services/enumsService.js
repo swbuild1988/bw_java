@@ -392,27 +392,48 @@ var EnumsService = {
 				})
 		})
 	},
-  //获取告警级别
-  getAlarmLevelList:function() {
-    return new Promise((resolve, reject) => {
-      axios.get('alarmlevel-enums')
-        .then(res => {
-          let {
-            code,
-            data,
-            msg
-          } = res.data
-          if (code == 200) {
-            resolve(data)
-          } else {
-            reject(msg + ",地址:alarmlevel-enums")
-          }
-        })
-        .catch(error => {
-          reject(error.response.status + '  ' + error.response.data)
-        })
-    })
-  },
+	//获取告警级别
+	getAlarmLevelList: function() {
+		return new Promise((resolve, reject) => {
+			axios.get('alarmlevel-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:alarmlevel-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 获取状态量监测对象
+	getSwitchObj() {
+		return new Promise((resolve, reject) => {
+			axios.get('datatypeSI-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:datatypeSI-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	}
 }
 export {
 	EnumsService

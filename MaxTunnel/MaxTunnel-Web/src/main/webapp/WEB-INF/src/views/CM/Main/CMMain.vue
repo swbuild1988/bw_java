@@ -109,6 +109,11 @@ export default {
                         id: 45,
                         name: "监测对象配置",
                         url: "/CMMain/measObj"
+                    },
+                    {
+                        id: 46,
+                        name: '监测对象映射配置',
+                        url: '/CMMain/MeasObjMap'
                     }
                 ]
             },
