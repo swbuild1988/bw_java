@@ -27,9 +27,13 @@ import com.bandweaver.tunnel.common.biz.constant.em.ActionEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.UnitTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
+import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
 import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
@@ -65,6 +69,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 	private MqService mqService;
 	@Autowired
 	private SubSystemService subSystemService;
+	@Autowired
+	private AreaService areaService;
 
 	@Override
 	public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
@@ -118,7 +124,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 	
 	@Override
 	public void nextTask(String processInstanceId,Integer objectId) {
-		
 		boolean isFinished = false;
 		while(!isFinished) {
 			EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
@@ -155,26 +160,42 @@ public class EmPlanServiceImpl implements EmPlanService {
 	 */
 	public void sendMsg(EmPlan emPlan, String processInstanceId,Integer objectId) {
 		// 通过流程实例id获取历史任务节点
-		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
-		List<JSONObject> result = new ArrayList<>();
-		for (HistoricTaskInstance historicTaskInstance : list) {
+//		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
+//		List<JSONObject> result = new ArrayList<>();
+//		for (HistoricTaskInstance historicTaskInstance : list) {
+//			JSONObject json = new JSONObject();
+//			json.put("node", historicTaskInstance.getName());
+//			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
+//			json.put("time", DateUtil.getCurrentDate());
+////			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
+////			json.put("id", emPlan.getTargetValue());
+//			result.add(json);
+//		}
+		
+		List<JSONObject> processList = new ArrayList<>();
+		List<EmPlanDto> eList = getListByProcessKey(emPlan.getProcessKey());
+		eList = eList.stream().filter(e -> emPlan.getTaskKey().compareTo(e.getTaskKey())>=0).collect(Collectors.toList());
+		eList.forEach(e -> {
 			JSONObject json = new JSONObject();
-			json.put("node", historicTaskInstance.getName());
-			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
-			json.put("time", DateUtil.getCurrentDate());
-			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
-			json.put("id", emPlan.getTargetValue());
-			result.add(json);
-		}
+			json.put("node", e.getTaskName());
+			json.put("status", NodeStatusEnum.FINISHED.getValue());
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("防火区：" + areaService.getAreasById(measObjService.get(objectId).getAreaId()).getName() + " ");
+			if(e.getTargetKey() == TargetEnum.ASSIGN_TO.getValue())
+				buffer.append("目标对象：监测对象ID[" + e.getTargetValue() + "]");
+			else if(e.getTargetKey() == TargetEnum.TYPE.getValue())
+				buffer.append("目标对象：所有" + ObjectType.getEnum(DataTypeUtil.toInteger(e.getTargetValue()).intValue()).getName());
+			json.put("desc", buffer.toString());
+			processList.add(json);
+		});
 		
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(emPlan.getProcessKey());
-		
 		JSONObject json = new JSONObject();
 		json.put("processName", processTypeEnum.getName());
 		json.put("processKey", emPlan.getProcessKey());
 		json.put("processInstanceId", processInstanceId);
 		json.put("range", processTypeEnum.getRange());
-		json.put("process", result);
+		json.put("process", processList);
 		json.put("objectId", objectId);
 		json.put("nodeList", getNodeListByProcessKey(emPlan.getProcessKey()));
 		
@@ -201,7 +222,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
 		ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(),variables);
 		LogUtil.debug("Get processInstance:" + processInstance);
-		
+		ContextUtil.getSession().setAttribute("processInstanceId", processInstance.getId());
 		nextTask(processInstance.getId(),objectId);
 		
 	}

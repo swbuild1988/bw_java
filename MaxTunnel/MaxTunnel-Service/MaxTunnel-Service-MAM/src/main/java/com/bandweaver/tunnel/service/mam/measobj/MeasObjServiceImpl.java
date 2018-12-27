@@ -57,8 +57,7 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public MeasObj get(Integer id) {
-        MeasObj o = measObjMapper.selectByPrimaryKey(id);
-        return o;
+        return measObjModuleCenter.getMeasObj(id);
     }
 
     @Override
@@ -94,12 +93,12 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObj> getAllMeasObjList() {
-        return measObjMapper.getAllMeasObjList();
+        return measObjModuleCenter.getMeasObjs();
     }
 
     @Override
     public List<MeasObj> getListByIds(List<Integer> ids) {
-        return measObjMapper.getListByIds(ids);
+        return measObjModuleCenter.getMeasObjsByIds(ids);
     }
 
     @Transactional

@@ -1,8 +1,6 @@
 package com.bandweaver.tunnel.controller.em;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -30,6 +28,7 @@ import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
@@ -94,6 +93,11 @@ public class EmPlanController extends BaseController<EmPlan>{
 			throw new BandWeaverException("监测对象" + objectId + "不存在");
 		
 		emPlanService.start(measObj.getSectionId(),processValue,objectId);
+		
+		//最后再查一次
+		EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
+		String processInstanceId = (String) ContextUtil.getSession().getAttribute("processInstanceId");
+		emPlanService.sendMsg(emPlan,processInstanceId,objectId);
 		return CommonUtil.success();
 	}
 
@@ -182,16 +186,16 @@ public class EmPlanController extends BaseController<EmPlan>{
 	@RequestMapping(value="emplans/process-key/{processKey}",method=RequestMethod.GET)
 	public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
 		//方案1
-		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
-		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
-		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
-		return CommonUtil.success(taskNameList);
+//		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
+//		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
+//		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
+//		return CommonUtil.success(taskNameList);
 		//方案2
-		/*List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey);
+		List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey);
 		JSONObject returnData = new JSONObject();
 		returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());
 		returnData.put("planStatus", list);
-		return CommonUtil.success(returnData);*/
+		return CommonUtil.success(returnData);
 		
 	}
 	
