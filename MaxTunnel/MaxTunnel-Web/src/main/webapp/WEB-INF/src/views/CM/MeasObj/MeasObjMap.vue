@@ -22,9 +22,9 @@
             </Col> 
         </Row>
         <Row>
-            <Col span="6" offset="18">
+            <Col span="10" offset="14">
                 <Button type="primary" size="small"  icon="ios-search" @click="search">查询</Button>
-                <Button type="error" size="small" @click="add">新增监测对象映射</Button> 
+                <Button type="error" size="small" @click="add">新增监测对象映射</Button><Button type="primary" size="small" @click="showModal">批量新增监测对象映射</Button>
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col> 
@@ -37,11 +37,37 @@
         <div>
             <meas-obj-map-module v-bind="map" v-on:addOrEdit="save"></meas-obj-map-module>
         </div>
+        <Modal v-model="batchAdd.isShow" title="批量添加" @on-ok="addMaps">
+            <Form ref="form" :model="batchAdd.params" :label-width="120">
+                <FormItem label="监测对象：">
+                    <Select v-model="batchAdd.objtypeId" class="addWidth">
+                        <Option v-for="item in batchAdd.list" :key="item.val" :value="item.val">{{ item.key }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="开-输出值：">
+                     <Select v-model="batchAdd.openValue" class="addWidth">
+                        <Option v-for="item in valueOptions" :key="item.val" :value="item.val">{{ item.key }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="开-输出点位：">
+                    <Input v-model="batchAdd.openPosition" placeholder="请输入输出点位" class="addWidth"></Input>
+                </FormItem>
+                 <FormItem label="关-输出值：">
+                    <Select v-model="batchAdd.closeValue" class="addWidth">
+                        <Option v-for="item in valueOptions" :key="item.val" :value="item.val">{{ item.key }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="关-输出点位：">
+                    <Input v-model="batchAdd.closePosition" placeholder="请输入输出点位" class="addWidth"></Input>
+                </FormItem>
+            </Form>
+        </Modal>
     </div>
 </template>
 
 <script>
 import { MeasObjServer } from '../../../services/MeasObjectSerivers'
+import { EnumsService } from '../../../services/enumsService'
 import MeasObjMapModule from '../../CM/MeasObj/MeasObjMapModule'
 
 export default {
@@ -129,7 +155,23 @@ export default {
                 },
                 editInfo: null,
                 type: null
-            }
+            },
+            batchAdd: {
+                isShow: false,
+                list: [],
+                objtypeId: null,
+                openValue: 0,
+                openPosition: null,
+                closeValue: 0,
+                closePosition: null
+            },
+            valueOptions: [{
+                key: '开',
+                val: 1
+            },{
+                key: '关',
+                val: 0
+            }]
         }
     },
     computed:{
@@ -143,6 +185,19 @@ export default {
                 endTime: this.condition.endTime
             }
             return Object.assign({}, params)
+        }
+    },
+    watch:{
+        'batchAdd.isShow': function(){
+            let nullVal = ['objtypeId','openPosition','closePosition']
+            let zeoVal = ['openValue','closeValue']
+            for(let item in this.batchAdd){
+                if(nullVal.indexOf(item) > -1){
+                    this.batchAdd[item] = null
+                } else if(zeoVal.indexOf(item) > -1){
+                    this.batchAdd[item] = 0
+                }
+            }
         }
     },
     mounted(){
@@ -246,6 +301,44 @@ export default {
                     this.search();
                 }
             });
+        },
+        showModal(){
+            this.batchAdd.isShow = true
+            let _this = this
+            EnumsService.getSwitchObj().then(
+                result=>{
+                    _this.batchAdd.list = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        },
+        addMaps(){
+            let _this = this
+            let si = [
+                {
+                    key: 1,
+                    val: this.batchAdd.openValue,
+                    count: parseInt(this.batchAdd.openPosition)
+                },
+                {
+                    key: 0,
+                    val: this.batchAdd.closeValue,
+                    count: parseInt(this.batchAdd.closePosition)
+                }
+            ]
+            let params = {
+                objectTypeId: parseInt(this.batchAdd.objtypeId),
+                si: si
+            }
+            MeasObjServer.batchAddMap(params).then(
+                result=>{
+                    _this.$Message.info('添加成功');
+                    _this.search()
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         }
     },
     components:{
@@ -274,6 +367,9 @@ export default {
 .word65{
     letter-spacing: 0.25em;
     margin-right: -0.25em;
+}
+.addWidth{
+    width: 80%;
 }
 </style>
 

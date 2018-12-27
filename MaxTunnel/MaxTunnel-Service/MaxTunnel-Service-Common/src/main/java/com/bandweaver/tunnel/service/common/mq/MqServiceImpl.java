@@ -1,4 +1,3 @@
-
 package com.bandweaver.tunnel.service.common.mq;
 
 import org.springframework.amqp.core.AmqpTemplate;
@@ -31,7 +30,7 @@ public class MqServiceImpl implements MqService {
 
 	@Override
 	public void sendToPlanUMQueue(String msg) {
-		LogUtil.debug("发送到[UM应急]队列:" + msg);
+		LogUtil.info("发送到[UM应急]队列:" + msg);
 		amqpTemplate.convertAndSend((String)PropertiesUtil.getValue(Constants.QUEUE_PLAN_UM), msg);
 	}
 
@@ -42,4 +41,5 @@ public class MqServiceImpl implements MqService {
 	}
 	
 }
+
 

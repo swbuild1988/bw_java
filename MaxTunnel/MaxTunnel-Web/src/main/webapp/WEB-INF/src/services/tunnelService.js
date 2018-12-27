@@ -372,6 +372,27 @@ var TunnelService = {
           reject(error.response.status + '  ' + error.response.data)
         })
     })
+  },
+  // 批量添加区段经纬度
+  batchAddPositions(params) {
+    return new Promise((resolve, reject) => {
+      axios.put("sections/batch", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:sections/batch")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
   }
 };
 export {

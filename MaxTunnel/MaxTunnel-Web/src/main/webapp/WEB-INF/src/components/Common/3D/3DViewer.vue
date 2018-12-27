@@ -146,12 +146,12 @@ export default {
             type: Object,
             default: ()=> {
                 return {
-                    longitude:112.49397907438006,
-                    latitude:37.710661662983384,
-                    height:-1.7297007316681086,
-                    roll:2.5845992013273644e-12,
-                    pitch:-0.30235107580130394,
-                    heading:1.7164865602395531
+                    longitude:112.49360922053003,
+                    latitude:37.71252325043172,
+                    height:-1.0311432831720453,
+                    roll:2.582822844487964e-12,
+                    pitch:-0.30235173267000404,
+                    heading:1.716482618088178
                 };
             }
         }
@@ -352,19 +352,19 @@ export default {
                 _this.scene.canvas
             );
             
-            // setInterval(()=>{
-            //     var camera=_this.viewer.scene.camera;
-            //     var position=camera.position;
-            //     //将笛卡尔坐标化为经纬度坐标
-            //     var cartographic = Cesium.Cartographic.fromCartesian(position);
-            //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-            //     var height = cartographic.height;
-            //     console.log(longitude+"/"+latitude+"/"+height);
-            //     console.log('pitch'+camera.pitch)
-            //     console.log('roll'+camera.roll)
-            //     console.log('heading'+camera.heading)
-            // },10000)
+                // setInterval(()=>{
+                //     var camera=_this.viewer.scene.camera;
+                //     var position=camera.position;
+                //     //将笛卡尔坐标化为经纬度坐标
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position);
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },10000)
             
             _this.handler.setInputAction(e => {
                 this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
@@ -456,7 +456,7 @@ export default {
             let {　viewer　}　= this;
 
             if( obj.isDistribute ){  //isDistribute 为true时为分布式,false为非分布式
-
+            console.log('obj',obj)
                 addEntity({
                     viewer:viewer,
                     X:obj.longitude,

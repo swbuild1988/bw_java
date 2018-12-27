@@ -185,7 +185,7 @@ export default {
                 }
             } )
         },
-        addViewerType({ position,ellipse,billboard,label,point }){
+        addViewerType({ position,ellipse,billboard,label,point,polyline }){
 
             let viewerPosition = position !== undefined ? {
                 position : Cesium.Cartesian3.fromDegrees( parseFloat( position.X ), parseFloat( position.Y ), parseFloat( position.Z ) )
@@ -217,7 +217,7 @@ export default {
                     fillColor:Cesium.Color.RED,
                     outlineColor:Cesium.Color.BLACK,
                     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    outlineWidth : 10,
+                    outlineWidth : 5,
                     verticalOrigin : Cesium.VerticalOrigin.TOP,
                     pixelOffset : new Cesium.Cartesian2(0, 9),
                     scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
@@ -234,7 +234,18 @@ export default {
                 }   
             }:{};
 
-            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp);
+            let polylineProp = polyline !== undefined ? {
+                polyline : {
+                    positions: [
+                        Cesium.Cartesian3.fromDegrees(parseFloat( polyline.position.startLon ), parseFloat( polyline.position.startLat ), 10),
+                        Cesium.Cartesian3.fromDegrees(parseFloat( polyline.position.endLon ), parseFloat( polyline.position.endLat ), 10)
+                    ],
+                    width : polyline.width,
+                    material : Cesium.Color.RED
+                }
+            }:{}
+
+            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp,polylineProp);
         },
         addParticleSystem(minxisParticleSystem){
 

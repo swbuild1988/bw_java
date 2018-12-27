@@ -61,7 +61,7 @@
         name: "plan",
         data(){
             return {
-                initTop : 10,
+                initTop : 8,
                 plans:[],
                 plan:
                     {
@@ -127,12 +127,12 @@
         },
         methods:{
             init(){
-                // Vue.prototype.MQ._InitMQ(1, "/queue/queueBigScreen", "",this.planCallback);
+                // Vue.prototype.MQ._InitMQ(1, "/queue/QUEUE_PLAN_VM", "",this.planCallback);
                 this.getNodeListStatus();
             },
             planCallback(message){
                 let result = JSON.parse(message.body);
-
+                
                 if( result && !this.searchPlan(result) ){
                     let { processInstanceId,processName,nodeList } = result;
 
@@ -260,8 +260,6 @@
         top: 10%;
     }
     .planContent .check {
-        width: 1.8rem;
-        height: 1.8rem;
         border-radius: 50px;
         position: relative;
         -ms-flex-negative: 0;
@@ -278,15 +276,11 @@
         background-size: cover;
     }
     .planContent .plan-left {
-        width: 1.8rem;
         -ms-flex-negative: 0;
         flex-shrink: 0;
-        height: calc(100% - 2em - 1em);
     }
     .planContent .plan-title {
-        height: 1.6rem;
         color: #fff;
-        font-size: 1rem;
         margin-bottom: 2%;
     }
     .plan-title > img {
@@ -309,7 +303,6 @@
     .tag-boder {
         width: 0;
         height: 0;
-        border: 0.6rem solid;
         border-style: dashed;
         border-color: transparent #2096A3 transparent transparent;
         position: relative;
@@ -384,4 +377,67 @@
             transform: rotate(360deg);
         }
     }
+    /* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .planContent .plan-title {
+        height: 1.6rem;
+        font-size: 1rem;
+    }
+    .planContent .plan-left {
+        width: 1.8rem;
+        height: calc(100% - 2em - 1em);
+    }
+    .planContent .check {
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+    .tag-boder {
+        border: 0.6rem solid;
+        border-style: dashed;
+        border-color: transparent #2096A3 transparent transparent;
+    }
+    .tag {
+        border: .6rem solid;
+        border-style: dashed;
+        border-color: transparent #2096A3 transparent transparent;
+        left: -8px;
+        top: -10px;
+    }
+    .planContent .nodeDetail {
+       border-radius: 3px;
+       padding: .2rem  .2rem  .2rem .3rem;
+    }
+}
+    /* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    .planContent .plan-title {
+        height: 3.6rem;
+        font-size: 2.2rem;
+    }
+    .planContent .plan-left {
+        width: 4rem;
+        height: calc(100% - 2em - 3em);
+    }
+    .planContent .check {
+        width: 4rem;
+        height: 4rem;
+    }
+    .tag-boder {
+        border: 1rem solid;
+        border-style: dashed;
+        border-color: transparent #2096A3 transparent transparent;
+    }
+    .planContent .nodeDetail {
+       border-radius: 1rem;
+       padding: 0.55rem  2.2rem  0.3rem 1rem;
+       font-size: 1.9rem;
+    }
+    .tag {
+        border: 1rem solid;
+        border-style: dashed;
+        border-color: transparent #2096A3 transparent transparent;
+        left: -16px;
+        top: -16px;
+    }
+}
 </style>

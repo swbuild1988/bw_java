@@ -349,7 +349,7 @@ public class TunnelController extends BaseController<Tunnel> {
 
                         humidity.setCv(measObjAi.getCv());
                         humidity.setObjId(measObjAi.getId());
-                        co.setObjTypeName(objType.getName());
+                        humidity.setObjTypeName(objType.getName());
                         humidity.setSectionId(measObjAi.getSectionId());
                         break;
                     case OXYGEN:// 氧气
@@ -358,7 +358,7 @@ public class TunnelController extends BaseController<Tunnel> {
 
                         oxygen.setCv(measObjAi.getCv());
                         oxygen.setObjId(measObjAi.getId());
-                        co.setObjTypeName(objType.getName());
+                        oxygen.setObjTypeName(objType.getName());
                         oxygen.setSectionId(measObjAi.getSectionId());
                         break;
                     case H2S:// 硫化氢
@@ -367,7 +367,7 @@ public class TunnelController extends BaseController<Tunnel> {
 
                         h2s.setCv(measObjAi.getCv());
                         h2s.setObjId(measObjAi.getId());
-                        co.setObjTypeName(objType.getName());
+                        h2s.setObjTypeName(objType.getName());
                         h2s.setSectionId(measObjAi.getSectionId());
                         break;
                     case CH4:// 甲烷
@@ -376,7 +376,7 @@ public class TunnelController extends BaseController<Tunnel> {
 
                         ch4.setCv(measObjAi.getCv());
                         ch4.setObjId(measObjAi.getId());
-                        co.setObjTypeName(objType.getName());
+                        ch4.setObjTypeName(objType.getName());
                         ch4.setSectionId(measObjAi.getSectionId());
                         break;
                     case CO:// 一氧化碳

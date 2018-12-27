@@ -1,5 +1,5 @@
 //vm 全局变量
-export const VM_TILTE = '管廊统一管理可视化平台'; //vm title
+export const VM_TILTE = '管廊智慧管理平台'; //vm title
 
 export const LOGO_IMAGE = 'MaxviewLogo'; //vm logo image
 

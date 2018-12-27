@@ -23,7 +23,8 @@
                   </CarouselItem>
               </Carousel> -->
                 <div class="view" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
-                    <video-component v-bind:video="currLoopSceneVideo" v-bind:id="'currLoopSceneVideoId'"></video-component>
+                    <!-- <video-component v-bind:video="currLoopSceneVideo" v-bind:id="'currLoopSceneVideoId'"></video-component> -->
+                    <videoloop :videolist="loopScene"></videoloop>
                 </div>
           </div>
           <i-switch
@@ -83,6 +84,7 @@
     import videoComponent from '../../Common/Video/VideoComponent'
     import { CMVideoService } from "../../../services/cmVideoService";
     import { PlanService } from "../../../services/planService";
+    import videoloop from '../../Common/Carousel'
 
     export default {
         data() {
@@ -123,7 +125,8 @@
         },
         components:{
             VmTitle,
-            videoComponent
+            videoComponent,
+            videoloop
         },
         mounted(){
             this.init();

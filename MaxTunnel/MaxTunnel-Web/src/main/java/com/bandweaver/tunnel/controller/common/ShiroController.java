@@ -116,7 +116,6 @@ public class ShiroController {
 	}
 	
 	
-	
 	/**权限分页查询 
 	 * @param pageNum
 	 * @param pageSize
@@ -135,7 +134,6 @@ public class ShiroController {
 	}
 	
 	
-	
 	/**添加角色 
 	 * @param roleName
 	 * @return   
@@ -151,8 +149,40 @@ public class ShiroController {
 	}
 	
 	
+	/**批量删除角色 
+	 * @param ids
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="roles/batch/{ids}",method=RequestMethod.DELETE)
+	public JSONObject deleteRoleBatch(@PathVariable String ids) {
+		List<Integer> list = CommonUtil.convertStringToList(ids);
+		roleService.deleteRoleBatch(list);
+		return CommonUtil.success();
+	}
 	
-	/**给角色授予权限 
+	
+	/**修改角色 
+	 * @param id
+	 * @param name
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="roles",method=RequestMethod.PUT)
+	public JSONObject updateRole(@RequestBody JSONObject reqJson) {
+		CommonUtil.hasAllRequired(reqJson, "id,name");
+		Role role = CommonUtil.parse2Obj(reqJson, Role.class);
+		roleService.updateRole(role);
+		return CommonUtil.success();
+	}
+	
+	//角色分页查询，并显示对应的权限列表
+	
+	
+	
+	/**给角色授予权限（admin角色不需要赋予权限，因为具有所有权限）
 	 * @param reqJson
 	 * @return   
 	 * @author shaosen
@@ -164,6 +194,35 @@ public class ShiroController {
 		Integer roleId = reqJson.getInteger("roleId");
 		List<Integer> permissionIds = (List<Integer>) reqJson.get("permissionIds");
 		roleService.addRolePermissions(roleId,permissionIds);
+		return CommonUtil.success();
+	}
+	
+	
+	/**获取所有角色，给用户分配角色时使用 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="roles/list",method=RequestMethod.GET)
+	public JSONObject getAllRoles() {
+		List<Role> roleList = roleService.getAllRoles();
+		return CommonUtil.success(roleList);
+	}
+	
+	
+	/**给用户分配角色 
+	 * @param userId
+	 * @param roleIds
+	 * @return   
+	 * @author shaosen
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="users/associate",method=RequestMethod.POST)
+	public JSONObject associateRole2User(@RequestBody JSONObject reqJson) {
+		CommonUtil.hasAllRequired(reqJson, "userId,roleIds");
+		Integer userId = reqJson.getInteger("userId");
+		List<Integer> roleIds = (List<Integer>) reqJson.get("roleIds");
+		roleService.addUserRole(userId,roleIds);
 		return CommonUtil.success();
 	}
 	

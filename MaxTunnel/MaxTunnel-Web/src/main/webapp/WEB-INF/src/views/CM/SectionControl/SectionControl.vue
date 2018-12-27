@@ -12,7 +12,7 @@
             <Col span="6">
             <div>
                 <span>所属管廊：</span>
-                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
+                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="getstores">
                     <Option value="null">不限</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
@@ -32,7 +32,7 @@
                 <span>所属区域：</span>
                 <Select v-model="researchInfo.areaId" placeholder="请选择区域类型" class="inputWidth">
                     <Option value="null">不限</Option>
-                    <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
+                    <Option v-for="item in areas" :value="item.id" :key="item.id">{{item.name}}</Option>
                 </Select>
             </div>
             </Col>
@@ -52,12 +52,14 @@
                     <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
                     <!-- <Button type="error" size="small" @click="addNewSection()">新增区段</Button>  -->
                     <Button type="warning" size="small" @click="create()" :enable="canCreate">根据现有区和仓新建区段</Button> 
+                    <vue-xlsx-table @on-select-file="getPositions">导入经纬度</vue-xlsx-table>
+                    <Button type="primary" size="small" @click="savePos">保存经纬度</Button>
                     <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                     <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
         </Row>
         <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
-        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
+        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top"  show-sizer @on-page-size-change='handlePageSize' :page-size="page.pageSize"
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
         <div>
             <section-module v-bind="addSectionInfo" v-on:listenToAdd="saveSection"></section-module>
@@ -241,7 +243,6 @@ export default {
     },
     mounted() {
         this.gettunnel();
-        this.getstoretype();
         this.showTable();
     },
     computed: {
@@ -320,15 +321,10 @@ export default {
                             info.areaName = data.list[index].area.name;
                             info.areaId = data.list[index].area.id;
                         }
-                        if (data.list[index].camera != null) {
-                            info.camera = data.list[index].camera;
-                        }
-                        if (data.list[index].startPoint != null) {
-                            info.startPoint = data.list[index].startPoint;
-                        }
-                        if (data.list[index].endPoint != null) {
-                            info.endPoint = data.list[index].endPoint;
-                        }
+                        info.camera = data.list[index].camera != null ? data.list[index].camera : ''
+                        info.startPoint = data.list[index].startPoint != null ? data.list[index].startPoint : '';
+                        
+                        info.endPoint = data.list[index].endPoint != null ? data.list[index].endPoint : '';
                         allinfo.push(info);
                     }
                     this.data6 = allinfo;
@@ -360,20 +356,15 @@ export default {
                     _this.tunnels = _tunnels;
                 })
         },
-        getstoretype() {
-            this.axios.get("/store-type/list").then(res => {
-                let { code, data } = res.data;
-                let _types = [];
-                if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let type = {};
-                        type.id = data[i].id;
-                        type.name = data[i].name;
-                        _types.push(type);
-                    }
-                    this.types = _types;
-                }
-            });
+        getstores() {
+            let _this = this
+            TunnelService.getAreasByTunnelId(this.researchInfo.tunnelId).then(
+                result=>{
+                    _this.areas = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -548,6 +539,46 @@ export default {
                 result=>{
                     _this.$Message.info("添加成功！");
                     _this.showTable()
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        },
+        getPositions(data) {
+            this.data6.forEach(section=>{
+                let curPos = data.body.find(pos=>{
+                    return section.id == pos[data.header[0]]
+                })
+                if(curPos != undefined){
+                    let curSection = this.data6.find(item=>{
+                        return item.id == curPos.sectionId
+                    })
+                    if(curSection != undefined){
+                        curSection.startPoint = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]]
+                        curSection.endPoint = curPos[data.header[4]] + ',' + curPos[data.header[5]] + ',' + curPos[data.header[6]]
+                        curSection.camera = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]] + ',' + curPos[data.header[7]] + ',' + curPos[data.header[8]] + ',' + curPos[data.header[9]]
+                    }
+                }
+                
+            })
+        },
+        savePos(){
+            let params = []
+            this.data6.forEach(data=>{
+                if(data.camera.length != 0){
+                    let temp = {}
+                    temp.id = data.id
+                    temp.camera = data.camera
+                    temp.startPoint = data.startPoint
+                    temp.endPoint = data.endPoint
+                    params.push(temp)
+                }
+            })
+            console.log(params)
+            let _this = this
+            TunnelService.batchAddPositions(params).then(
+                result=>{
+                    _this.$Message.info("添加成功！")
                 },
                 error=>{
                     _this.Log.info(error)
