@@ -217,7 +217,7 @@ public class ShiroController {
 	 * @author shaosen
 	 * @Date 2018年12月26日
 	 */
-	@RequestMapping(value="roles/associate",method=RequestMethod.POST)
+	@RequestMapping(value="users/associate",method=RequestMethod.POST)
 	public JSONObject associateRole2User(@RequestBody JSONObject reqJson) {
 		CommonUtil.hasAllRequired(reqJson, "userId,roleIds");
 		Integer userId = reqJson.getInteger("userId");
