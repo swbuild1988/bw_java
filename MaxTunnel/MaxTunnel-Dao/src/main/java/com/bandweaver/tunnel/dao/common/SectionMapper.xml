@@ -147,7 +147,7 @@
         STORE_ID = #{storeId,jdbcType=DECIMAL},
       </if>
       <if test="areaId != null">
-        AREA_ID = #{areaId,jdbcType=DECIMAL},
+        AREA_ID = #{areaId,jdbcType=DECIMAL}, 
       </if>
       <if test="totalCableNumber != null">
         total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},

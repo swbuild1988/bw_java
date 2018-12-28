@@ -211,7 +211,7 @@ public class SectionServiceImpl implements SectionService {
 
 	@Override
 	public List<Section> getSectionListByParentId(Integer sectionId) {
-		return sectionMapper.getSectionListByParentId(sectionId);
+		return sectionMapper.getSectionListByParentId(sectionId); 
 	}
 
 }

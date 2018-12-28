@@ -102,6 +102,6 @@ public interface SectionService {
 
 	Section getByName(String name);
 
-	List<Section> getSectionListByParentId(Integer sectionId);
+	List<Section> getSectionListByParentId(Integer sectionId); 
 
 }
