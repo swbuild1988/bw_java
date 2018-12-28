@@ -2,17 +2,17 @@
     <div class="whole">
         <Row class="query">
             <Col span="9" offset="1">
-                监测仓:
-                <Select v-model="conditions.storeId" style="width:60%;z-index: 9999;" id="store">
+                 区域:
+                <Select v-model="conditions.areaId" style="width:60%;" id="area">
                     <Option value=null key="0">所有</Option>
-                    <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="9">
-                区域:
-                <Select v-model="conditions.areaId" style="width:60%;z-index: 9999;" id="area">
+               监测仓:
+                <Select v-model="conditions.storeId" style="width:60%;" id="store">
                     <Option value=null key="0">所有</Option>
-                    <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="2" offset="1">
@@ -61,7 +61,7 @@
                     </div>
                     <Row style="width: 94%;margin-left: 3%;margin-top:1vh">
                         <Col span="1" class="slipContent">
-                            <Icon type="chevron-left" size="30" :class="['slipLeft',{'enabled': curPage == 1}]" @click.native="pageChange('prev')"></Icon>
+                            <Icon type="chevron-left" size="30" :class="['slipLeft',{'disabled': curPage == 1},{'clicked' : clicked.prev && curPage != 1}]" @click.native="pageChange('prev')" @mousedown.native="down('prev')" @mouseup.native="up('prev')"></Icon>
                         </Col>
                         <Col span="22">
                         <div>
@@ -82,7 +82,7 @@
                         </div>
                         </Col>
                         <Col span="1"  class="slipContent">
-                           <Icon type="chevron-right" size="30"  :class="['slipRight',{'enabled' : curPage == totalPage}]" @click.native="pageChange('next')"></Icon>
+                           <Icon type="chevron-right" size="30"  :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]" @click.native="pageChange('next')" @mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
                         </Col>
                     </Row>
                 </div>
@@ -108,35 +108,7 @@ export default {
                 stores: [],
                 areas: []
             },
-            cameraList: [
-                // {
-                //     id: 7001,
-                //     name: "摄像头1",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: true,
-                //     description: "A Camera for tunnel1",
-                //     storeId: 1,
-                //     areaId: 1
-                // },
-                // {
-                //     id: 7002,
-                //     name: "摄像头2",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: false,
-                //     description: "A Camera for tunnel2",
-                //     storeId: 1,
-                //     areaId: 1
-                // },
-                // {
-                //     id: 7003,
-                //     name: "摄像头3",
-                //     url: "192.168.6.156:8078",
-                //     positionSupport: true,
-                //     description: "A Camera for tunnel3",
-                //     storeId: 1,
-                //     areaId: 1
-                // }
-            ],
+            cameraList: [],
             // curVideo: {
             //     id: null
             // },
@@ -148,7 +120,11 @@ export default {
             nodata: false,
             isDisabled: true,
             videoNum: 4,
-            perPositions: []
+            perPositions: [],
+            clicked: {
+                prev: false,
+                next: false
+            }
         };
     },
     components: { VideoControl, VideoComponent },
@@ -160,10 +136,8 @@ export default {
             this.curVideo = null;
             this.search();
             this.isDisabled = true;
-            // if ($("#iframearea").length > 0) {
-            //     let ifr = document.getElementById("iframearea");
-            //     ifr.parentNode.removeChild(ifr);
-            // }
+            this.conditions.storeId = null
+            this.conditions.areaId = null
         }
     },
     computed: {
@@ -380,6 +354,12 @@ export default {
               error=>{
                 _this.Log.info(error)
               })
+        },
+        down(type){
+            this.clicked[type] = true
+        },
+        up(type){
+            this.clicked[type] = false
         }
     }
 };
@@ -524,8 +504,11 @@ export default {
     cursor: pointer;
     color: lightgray;
 }
-.enabled {
+.disabled {
     color: #656464;
+}
+.clicked {
+    color: rgb(0,228,236);
 }
 .controlContent{
     padding-top: 16px;
