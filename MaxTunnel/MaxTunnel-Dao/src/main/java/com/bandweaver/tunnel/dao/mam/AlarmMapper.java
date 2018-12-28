@@ -37,5 +37,7 @@ public interface AlarmMapper {
 
 	int getCountByLevel(int level);
 
+	List<AlarmDto> getAllNonCleanedAlarm();
+
 	
 }

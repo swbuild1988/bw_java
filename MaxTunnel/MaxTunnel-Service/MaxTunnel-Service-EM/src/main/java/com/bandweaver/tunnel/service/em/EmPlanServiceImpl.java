@@ -7,17 +7,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.ls.LSInput;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
@@ -31,6 +31,7 @@ import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
@@ -39,12 +40,15 @@ import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
 import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
 import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
@@ -76,6 +80,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 	private AreaService areaService;
 	@Autowired
 	private SectionService sectionService;
+	@Autowired
+	private VideoServerService videoServerService;
 
 	@Override
 	public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
@@ -87,7 +93,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		
 		Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
 		LogUtil.debug("Get variables:" + variables);
-		Integer sectionId = DataTypeUtil.toInteger(variables.get("sectionId"));
+		List<Section> sectionList = (List<Section>) variables.get("sectionList");
 
 		EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
 		LogUtil.debug("Get emPlan from DB:" + emPlan);
@@ -100,7 +106,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 		if(TargetEnum.ASSIGN_TO == targetEnum) {
 			list = measObjService.getMeasObjByTargetVal(emPlan.getTargetValue());
 		}else if (TargetEnum.TYPE == targetEnum) {
-			list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(),sectionId);
+			list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(),sectionList);
 		}
 		
 		// 第二步：做什么事情
@@ -126,19 +132,23 @@ public class EmPlanServiceImpl implements EmPlanService {
 		}
 		
 		ContextUtil.getSession().setAttribute("emPlan", emPlan);
+		ContextUtil.getSession().setAttribute("measObjList", list);
 	}
 
 
 	
 	@Override
-	public void nextTask(String processInstanceId,Integer sectionId) {
+	public void nextTask(String processInstanceId,List<Section> sectionList) {
 		boolean isFinished = false;
 		while(!isFinished) {
 			EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-			LogUtil.debug("Get emPlan from session:" + emPlan);
+			Set<MeasObj> measObjList = (Set<MeasObj>) ContextUtil.getSession().getAttribute("measObjList");
+			LogUtil.debug("Get emPlan from session:" + emPlan + "\n"
+					+ "Get emPlan from session:" + measObjList);
 			
 			if(emPlan == null) {
 				isFinished = true;
+				throw new BandWeaverException("流程节点未配置");
 			}else if(emPlan != null && emPlan.getFinishKey() == FinishEnum.MANUAL.getValue()){
 				isFinished = true;
 			}else {
@@ -149,12 +159,12 @@ public class EmPlanServiceImpl implements EmPlanService {
 			FinishEnum finishEnum = FinishEnum.getEnum(emPlan.getFinishKey());
 			if(FinishEnum.AUTO == finishEnum) {
 				LogUtil.info("自动结束");
-				sendMsg(emPlan, processInstanceId,sectionId);
+				sendMsg(emPlan, processInstanceId,sectionList,measObjList);
 				activitiService.completeTaskByProcessIntance(processInstanceId);
 				continue;
 			}else if (FinishEnum.MANUAL == finishEnum) {
 				LogUtil.info("手动结束,需要确认");
-				sendMsg(emPlan, processInstanceId,sectionId);
+				sendMsg(emPlan, processInstanceId,sectionList,measObjList);
 				continue;
 			}
 			
@@ -166,31 +176,37 @@ public class EmPlanServiceImpl implements EmPlanService {
 	/*
 	 * 发送消息到MQ队列
 	 */
-	public void sendMsg(EmPlan emPlan, String processInstanceId ,Integer sectionId) {
+	public void sendMsg(EmPlan emPlan, String processInstanceId ,List<Section> sectionList,Set<MeasObj> measObjList) {
 		// 通过流程实例id获取历史任务节点
-//		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
-//		List<JSONObject> result = new ArrayList<>();
-//		for (HistoricTaskInstance historicTaskInstance : list) {
-//			JSONObject json = new JSONObject();
-//			json.put("node", historicTaskInstance.getName());
-//			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
-//			json.put("time", DateUtil.getCurrentDate());
-////			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
-////			json.put("id", emPlan.getTargetValue());
-//			result.add(json);
-//		}
+/*		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
+		List<JSONObject> result = new ArrayList<>();
+		for (HistoricTaskInstance historicTaskInstance : list) {
+			JSONObject json = new JSONObject();
+			json.put("node", historicTaskInstance.getName());
+			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
+			json.put("time", DateUtil.getCurrentDate());
+//			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
+//			json.put("id", emPlan.getTargetValue());
+			result.add(json);
+		}*/
 		
-		String areaName = "";
+		//获取防火区名称以及经纬度坐标
+//		String areaName = "";
 		double longitude = 0,latitude = 0;
-		SectionDto sectionDto = sectionService.getSectionById(sectionId);
-		if(sectionDto != null) {
-			Area area = sectionDto.getArea();
-			if(area != null){
-				areaName = area.getName();
-			}
+		//获取指定仓
+		Section section = null;
+		List<Section> collect = sectionList.stream().filter(s -> s.getId().intValue() == s.getParentId().intValue()).collect(Collectors.toList());
+		if(!collect.isEmpty())
+			section = collect.get(0);
+		if(section != null) {
+			
+//			Area area = section.getArea();
+//			if(area != null){
+//				areaName = area.getName();
+//			}
 			
 			double longitude_ = 0,latitude_ = 0;
-			String startPoint = sectionDto.getStartPoint();
+			String startPoint = section.getStartPoint();
 			if(!StringTools.isNullOrEmpty(startPoint)) {
 				String[] startPointArr = startPoint.split(",");
 				if(startPointArr.length == 3) {
@@ -199,9 +215,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 				}
 			}
 			
-			
 			double _longitude = 0,_latitude = 0;
-			String endPoint = sectionDto.getEndPoint();
+			String endPoint = section.getEndPoint();
 			if(!StringTools.isNullOrEmpty(endPoint)) {
 				String[] endPointArr = endPoint.split(",");
 				if(endPointArr.length == 3) {
@@ -214,23 +229,40 @@ public class EmPlanServiceImpl implements EmPlanService {
 			latitude = MathUtil.div(MathUtil.add(latitude_, _latitude), 2.0, 6);
 		}
 		
+		//获取当前流程节点列表
 		List<JSONObject> processList = new ArrayList<>();
 		List<EmPlanDto> eList = getListByProcessKey(emPlan.getProcessKey());
 		eList = eList.stream().filter(e -> emPlan.getTaskKey().compareTo(e.getTaskKey())>=0).collect(Collectors.toList());
+		
+		List<MeasObj> allMeasObjList = measObjService.getAllMeasObjList();
+		
 		for (EmPlanDto e : eList) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("防火区：" + areaName + " ");
-			if(e.getTargetKey() == TargetEnum.ASSIGN_TO.getValue())
-				buffer.append("目标对象：监测对象ID[" + e.getTargetValue() + "]");
-			else if(e.getTargetKey() == TargetEnum.TYPE.getValue())
-				buffer.append("目标对象：所有" + ObjectType.getEnum(DataTypeUtil.toInteger(e.getTargetValue()).intValue()).getName());
+			
+			//拼接描述信息
+//			StringBuffer buffer = new StringBuffer();
+//			buffer.append("防火区：" + areaName + " ");
+//			if(e.getTargetKey() == TargetEnum.ASSIGN_TO.getValue())
+//				buffer.append("目标对象：监测对象ID[" + e.getTargetValue() + "]");
+//			else if(e.getTargetKey() == TargetEnum.TYPE.getValue())
+//				buffer.append("目标对象：所有" + ObjectType.getEnum(DataTypeUtil.toInteger(e.getTargetValue()).intValue()).getName());
+			
+			//获取该节点关联的监测对象及状态
+			List<JSONObject> objJsonList = getMeasObjJsonList(sectionList, allMeasObjList, e);
 			
 			JSONObject json = new JSONObject();
 			json.put("node", e.getTaskName());
 			json.put("status", NodeStatusEnum.FINISHED.getValue());
-			json.put("desc", buffer.toString());
+//			json.put("desc", buffer.toString());
+			json.put("objectList", objJsonList);
+			json.put("isSwitch", e.getActionKey() == ActionEnum.SWITCH.getValue());
 			processList.add(json);
 		}
+		
+		//获取section视频列表
+		List<VideoDto> videos = new ArrayList<>();
+		sectionList.forEach(s -> {
+			videos.addAll(videoServerService.getVideosBySection(s.getId()));
+		});
 		
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(emPlan.getProcessKey());
 		JSONObject json = new JSONObject();
@@ -239,9 +271,10 @@ public class EmPlanServiceImpl implements EmPlanService {
 		json.put("processInstanceId", processInstanceId);
 		json.put("range", processTypeEnum.getRange());
 		json.put("process", processList);
-		json.put("nodeList", getNodeListByProcessKey(emPlan.getProcessKey()));
+		json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(),sectionList));
 		json.put("longitude", longitude);
 		json.put("latitude", latitude);
+		json.put("videos", videos);
 		
 		//发送到队列
 		mqService.sendToPlanUMQueue(json.toJSONString());
@@ -256,18 +289,18 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 
 	@Override
-	public void start(Integer sectionId, Integer processValue) {
+	public void start(List<Section> sectionList, Integer processValue) {
 		ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
 		LogUtil.info("开始启动【" + processTypeEnum.getName() + "】");
 		
 		Map<String, Object> variables = new HashMap<>();
-		variables.put("sectionId", sectionId);
+		variables.put("sectionList", sectionList);
 
 		ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition((String)PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
 		ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(),variables);
 		LogUtil.debug("Get processInstance:" + processInstance);
 		ContextUtil.getSession().setAttribute("processInstanceId", processInstance.getId());
-		nextTask(processInstance.getId(),sectionId);
+		nextTask(processInstance.getId(),sectionList);
 		
 	}
 
@@ -329,15 +362,22 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 
 	@Override
-	public List<JSONObject> getNodeListByProcessKey(String processKey) {
+	public List<JSONObject> getNodeListByProcessKeyAndSection(String processKey,List<Section> sectionList) {
 		List<EmPlanDto> list = emPlanMapper.getNodeListByProcessKey(processKey);
 		if(list == null || list.isEmpty()) {
 			return Collections.emptyList();
 		}
+		//通过taskKey从小到大排列
 		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
+		//从缓存中获取所有监测对象
+		List<MeasObj> allMeasObjList = measObjService.getAllMeasObjList();
+		List<JSONObject> returnData = new ArrayList<>();
 		
-		List<JSONObject> nodeList = new ArrayList<>();
+		//遍历获取每个节点详细信息
 		for (EmPlanDto emPlanDto : list) {
+			
+			List<JSONObject> objJsonList = getMeasObjJsonList(sectionList, allMeasObjList, emPlanDto);
+			
 			JSONObject j = new JSONObject();
 			j.put("stepName", emPlanDto.getTaskName());
 			j.put("targetName", emPlanDto.getTargetName());
@@ -349,9 +389,50 @@ public class EmPlanServiceImpl implements EmPlanService {
 			
 			j.put("statusStr", NodeStatusEnum.WAITING.getName());
 			j.put("statusVal", NodeStatusEnum.WAITING.getValue());
-			nodeList.add(j);
+			j.put("objectList", objJsonList);
+			j.put("isSwitch", emPlanDto.getActionKey() == ActionEnum.SWITCH.getValue());
+			returnData.add(j);
 		}
-		return nodeList;
+		return returnData;
+	}
+
+
+
+	public List<JSONObject> getMeasObjJsonList(List<Section> sectionList, List<MeasObj> allMeasObjList, EmPlanDto emPlanDto) {
+		List<Integer> objectIdList = new ArrayList<>();
+		List<JSONObject> objJsonList = new ArrayList<>();
+		
+		if(null != sectionList) {
+			for (Section section : sectionList) {
+				if(TargetEnum.getEnum(emPlanDto.getTargetKey()) == TargetEnum.ASSIGN_TO) {
+					//如果是指定对象，直接返回对象id
+					String targetValue = emPlanDto.getTargetValue();
+					objectIdList = CommonUtil.convertStringToList(targetValue);
+				}else {
+					//如果是指定类型，需要通过sectionId和objectType去查找id集合
+					Integer objectTypeId = ObjectType.getEnum(DataTypeUtil.toInteger(emPlanDto.getTargetValue())).getValue();
+					List<MeasObj> measObjList = allMeasObjList.stream().filter(m -> m.getSectionId().intValue() == section.getId().intValue()
+							&& m.getObjtypeId() == objectTypeId).collect(Collectors.toList());
+					for (MeasObj m : measObjList) {
+						objectIdList.add(m.getId());
+					}
+				}
+			}
+		}
+		
+		//获取监测对象id，name和当前开关状态
+		for (Integer objId : objectIdList) {
+			MeasObj measObj = measObjService.get(objId);
+			JSONObject objectJson = new JSONObject();
+			objectJson.put("id", objId);
+			objectJson.put("name", measObj == null ? "" : measObj.getName());
+			objectJson.put("objtypeId", measObj.getObjtypeId());
+			double cv = measObjService.getMeasObjCVByIdAndDataType(objId, measObj.getDatatypeId());
+			objectJson.put("cv", cv);
+//			objectJson.put("isSwitch", measObj.getDatatypeId()==DataType.SI.getValue());
+			objJsonList.add(objectJson);
+		}
+		return objJsonList;
 	}
 
 

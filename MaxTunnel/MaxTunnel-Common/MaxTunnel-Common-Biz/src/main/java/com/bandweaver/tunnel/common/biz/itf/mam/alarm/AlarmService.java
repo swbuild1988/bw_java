@@ -41,7 +41,7 @@ public interface AlarmService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	List<Alarm> getAllNonCleanedAlarm();
+	List<AlarmDto> getAllNonCleanedAlarm();
 
 	Alarm getById(Integer id);
 

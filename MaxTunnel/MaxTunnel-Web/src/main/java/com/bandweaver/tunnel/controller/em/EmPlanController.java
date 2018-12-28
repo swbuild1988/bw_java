@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.controller.em;
 
 import java.util.List;
+import java.util.Set;
 
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -33,9 +34,7 @@ import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.controller.common.BaseController;
-import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -88,22 +87,23 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 */
 	@RequestMapping(value="emplans/start",method=RequestMethod.POST)
 	public JSONObject startPlan(@RequestBody JSONObject reqJson) {
-//		CommonUtil.hasAllRequired(reqJson, "storeId,areaId,processValue");
-//		Integer storeId = reqJson.getInteger("storeId");
-//		Integer areaId = reqJson.getInteger("areaId");
+		CommonUtil.hasAllRequired(reqJson, "storeId,areaId,processValue");
+		Integer storeId = reqJson.getInteger("storeId");
+		Integer areaId = reqJson.getInteger("areaId");
 		Integer processValue = reqJson.getInteger("processValue");
-		Integer sectionId = reqJson.getInteger("sectionId");
-//		Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
-//		if(section == null)
-//			throw new BandWeaverException("section不存在");
-//		emPlanService.start(section.getId(),processValue);
-		emPlanService.start(sectionId,processValue);
+		Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+		if(section == null)
+			throw new BandWeaverException("section不存在");
+		
+		//查询仓以及仓关联的进气出气仓等
+		List<Section> sectionList = sectionService.getSectionListByParentId(section.getId());
+		emPlanService.start(sectionList,processValue);
 		
 		//最后再查一次
 		EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
 		String processInstanceId = (String) ContextUtil.getSession().getAttribute("processInstanceId");
-//		emPlanService.sendMsg(emPlan,processInstanceId,section.getId());
-		emPlanService.sendMsg(emPlan,processInstanceId,sectionId);
+		Set<MeasObj> measObjList = (Set<MeasObj>) ContextUtil.getSession().getAttribute("measObjList");
+		emPlanService.sendMsg(emPlan,processInstanceId,sectionList,measObjList);
 		return CommonUtil.success();
 	}
 
@@ -197,7 +197,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 //		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
 //		return CommonUtil.success(taskNameList);
 		//方案2
-		List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey);
+		List<JSONObject> list = emPlanService.getNodeListByProcessKeyAndSection(processKey,null);
 		JSONObject returnData = new JSONObject();
 		returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());
 		returnData.put("planStatus", list);

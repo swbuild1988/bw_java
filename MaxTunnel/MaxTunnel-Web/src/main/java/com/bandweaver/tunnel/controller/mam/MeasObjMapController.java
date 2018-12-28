@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.controller.mam;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,26 +157,29 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 	@RequestMapping(value="measobj-map/batch",method=RequestMethod.POST)
 	public JSONObject insertBatch(@RequestBody JSONObject obj) {
 		Integer objectTypeId = obj.getInteger("objectTypeId");
-		Integer inValue = obj.getInteger("inputValue");
-		Integer outValue = obj.getInteger("outputValue");
+		
+		List<LinkedHashMap<String, Integer>> sis = (List)obj.get("si");
+		
 		MeasObjVo vo = new MeasObjVo();
 		vo.setObjtypeId(objectTypeId);
 		List<MeasObjDto>  list = measObjService.getMeasObjByCondition(vo);
 		for(MeasObjDto dto : list) {
-			MeasObjMap map = measObjMapService.getByObjectIdAndInputValue(dto.getId(), inValue);
-			MeasObjMap pojo = new MeasObjMap();
-			pojo.setObjectId(dto.getId());
-			pojo.setCrtTime(new Date());
-			pojo.setInputValue(inValue);
-			Integer objId = dto.getId()/100 * 100;
-			pojo.setObjectId2(objId + outValue);
-			pojo.setOutputValue(1);
-			if(map != null) {
-				if(pojo.getObjectId2().equals(map.getObjectId2()))continue;
-				pojo.setId(map.getId());
-				measObjMapService.update(pojo);
-			}else {
-				measObjMapService.add(pojo);
+			for (LinkedHashMap<String, Integer> si : sis) {
+				MeasObjMap map = measObjMapService.getByObjectIdAndInputValue(dto.getId(), si.get("key"));
+				MeasObjMap pojo = new MeasObjMap();
+				pojo.setObjectId(dto.getId());
+				pojo.setCrtTime(new Date());
+				pojo.setInputValue(si.get("key"));
+				Integer objId = dto.getId()/100 * 100;
+				pojo.setObjectId2(objId + si.get("count"));
+				pojo.setOutputValue(si.get("val"));
+				if(map != null) {
+					if(pojo.getObjectId2().equals(map.getObjectId2()))continue;
+					pojo.setId(map.getId());
+					measObjMapService.update(pojo);
+				}else {
+					measObjMapService.add(pojo);
+				}
 			}
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);

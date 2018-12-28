@@ -45,7 +45,7 @@ public class MeasObjSIServiceImpl implements MeasObjSIService {
 		}
     	
     	MeasObjSIVo siVo = new MeasObjSIVo();
-    	siVo.setIds(moIdList);
+    	siVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	siVo.setPageNum(vo.getPageNum());
     	siVo.setPageSize(vo.getPageSize());
     	siVo.setCv(vo.getCv().intValue());

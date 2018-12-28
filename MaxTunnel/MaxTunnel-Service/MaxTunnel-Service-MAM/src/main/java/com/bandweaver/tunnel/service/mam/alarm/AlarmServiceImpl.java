@@ -80,16 +80,10 @@ public class AlarmServiceImpl implements AlarmService {
 
 
 	@Override
-	public List<Alarm> getAllNonCleanedAlarm() {
-		List<Alarm> list = new ArrayList<>();
+	public List<AlarmDto> getAllNonCleanedAlarm() {
 //		List<Alarm> alarms = alarmModuleCenter.getAlarms();
-		List<Alarm> alarms = alarmMapper.getAllAlarm();
-		for (Alarm alarm : alarms) {
-			if(alarm.getCleaned()!= null && !alarm.getCleaned()) {
-				list.add(alarm);
-			}
-		}
-		return list;
+		List<AlarmDto> list = alarmMapper.getAllNonCleanedAlarm();
+		return list == null ? Collections.emptyList() : list ;
 	}
 
 	@Override

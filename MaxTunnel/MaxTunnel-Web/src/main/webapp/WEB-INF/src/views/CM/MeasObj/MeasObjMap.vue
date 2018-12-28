@@ -40,15 +40,25 @@
         <Modal v-model="batchAdd.isShow" title="批量添加" @on-ok="addMaps">
             <Form ref="form" :model="batchAdd.params" :label-width="120">
                 <FormItem label="监测对象：">
-                    <Select v-model="batchAdd.params.objtypeId" class="addWidth">
+                    <Select v-model="batchAdd.objtypeId" class="addWidth">
                         <Option v-for="item in batchAdd.list" :key="item.val" :value="item.val">{{ item.key }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="输入值：">
-                    <Input v-model="batchAdd.params.inputValue" placeholder="请输入输入值" class="addWidth"></Input>
+                <FormItem label="开-输出值：">
+                     <Select v-model="batchAdd.openValue" class="addWidth">
+                        <Option v-for="item in valueOptions" :key="item.val" :value="item.val">{{ item.key }}</Option>
+                    </Select>
                 </FormItem>
-                <FormItem label="输出值：">
-                    <Input v-model="batchAdd.params.outputValue" placeholder="请输入输出值" class="addWidth"></Input>
+                <FormItem label="开-输出点位：">
+                    <Input v-model="batchAdd.openPosition" placeholder="请输入输出点位" class="addWidth"></Input>
+                </FormItem>
+                 <FormItem label="关-输出值：">
+                    <Select v-model="batchAdd.closeValue" class="addWidth">
+                        <Option v-for="item in valueOptions" :key="item.val" :value="item.val">{{ item.key }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="关-输出点位：">
+                    <Input v-model="batchAdd.closePosition" placeholder="请输入输出点位" class="addWidth"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -149,12 +159,19 @@ export default {
             batchAdd: {
                 isShow: false,
                 list: [],
-                params: {
-                    objtypeId: null,
-                    inputValue: null,
-                    outputValue: null
-                }
-            }
+                objtypeId: null,
+                openValue: 0,
+                openPosition: null,
+                closeValue: 0,
+                closePosition: null
+            },
+            valueOptions: [{
+                key: '开',
+                val: 1
+            },{
+                key: '关',
+                val: 0
+            }]
         }
     },
     computed:{
@@ -172,8 +189,14 @@ export default {
     },
     watch:{
         'batchAdd.isShow': function(){
-            for(let item in this.batchAdd.params){
-                this.batchAdd.params[item] = null
+            let nullVal = ['objtypeId','openPosition','closePosition']
+            let zeoVal = ['openValue','closeValue']
+            for(let item in this.batchAdd){
+                if(nullVal.indexOf(item) > -1){
+                    this.batchAdd[item] = null
+                } else if(zeoVal.indexOf(item) > -1){
+                    this.batchAdd[item] = 0
+                }
             }
         }
     },
@@ -292,10 +315,21 @@ export default {
         },
         addMaps(){
             let _this = this
+            let si = [
+                {
+                    key: 1,
+                    val: this.batchAdd.openValue,
+                    count: parseInt(this.batchAdd.openPosition)
+                },
+                {
+                    key: 0,
+                    val: this.batchAdd.closeValue,
+                    count: parseInt(this.batchAdd.closePosition)
+                }
+            ]
             let params = {
-                objectTypeId: parseInt(this.batchAdd.params.objtypeId),
-                inputValue: parseInt(this.batchAdd.params.inputValue),
-                outputValue: parseInt(this.batchAdd.params.outputValue)
+                objectTypeId: parseInt(this.batchAdd.objtypeId),
+                si: si
             }
             MeasObjServer.batchAddMap(params).then(
                 result=>{

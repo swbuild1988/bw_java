@@ -1,13 +1,16 @@
 package com.bandweaver.tunnel.common.biz.itf.em;
 
 import java.util.List;
+import java.util.Set;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
 import com.github.pagehelper.PageInfo;
 
@@ -20,13 +23,13 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void nextTask(String processInstanceId,Integer sectionId);
+	void nextTask(String processInstanceId,List<Section> sectionList);
 
 	/**发送消息到mq队列 
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void sendMsg(EmPlan emPlan, String processInstanceId,Integer sectionId);
+	void sendMsg(EmPlan emPlan, String processInstanceId,List<Section> sectionList,Set<MeasObj> measObjList);
 
 	/**启动预案 
 	 * @param sectionId
@@ -34,7 +37,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月17日
 	 */
-	void start(Integer sectionId, Integer processValue);
+	void start(List<Section> sectionList, Integer processValue);
 
 	void add(EmPlan record);
 
@@ -48,7 +51,7 @@ public interface EmPlanService {
 
 	PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
 
-	List<JSONObject> getNodeListByProcessKey(String processKey);
+	List<JSONObject> getNodeListByProcessKeyAndSection(String processKey,List<Section> sectionList);
 
 	List<EmPlanDto> getListByProcessKey(String processKey);
 
