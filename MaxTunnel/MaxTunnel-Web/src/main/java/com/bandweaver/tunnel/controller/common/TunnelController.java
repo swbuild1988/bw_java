@@ -213,20 +213,20 @@ public class TunnelController extends BaseController<Tunnel> {
             List<AreaDto> areaList = areaService.getAreasByTunnelId(dto.getId());
 
             List<JSONObject> listTwo = new ArrayList<>();
-            for (StoreDto storeDto : storeList) {
+            for (AreaDto area : areaList) {
                 JSONObject jsonTwo = new JSONObject();
-                jsonTwo.put("name", storeDto.getName());
-                jsonTwo.put("id", storeDto.getId());
-                jsonTwo.put("camera", storeDto.getCamera());
-                jsonTwo.put("sn", storeDto.getSn());
+                jsonTwo.put("name", area.getName());
+                jsonTwo.put("id", area.getId());
+                jsonTwo.put("camera", area.getCamera());
+                jsonTwo.put("sn", area.getSn());
                 
                 List<JSONObject> listThree = new ArrayList<>();
-                for (AreaDto areaDto : areaList) {
+                for (StoreDto store : storeList) {
                     JSONObject jsonThree = new JSONObject();
-                    jsonThree.put("name", areaDto.getName());
-                    jsonThree.put("id", areaDto.getId());
-                    jsonThree.put("camera", areaDto.getCamera());
-                    jsonThree.put("sn", areaDto.getSn());
+                    jsonThree.put("name", store.getName());
+                    jsonThree.put("id", store.getId());
+                    jsonThree.put("camera", store.getCamera());
+                    jsonThree.put("sn", store.getSn());
                     jsonThree.put("list", new ArrayList<>());
                     listThree.add(jsonThree);
                 }
@@ -278,5 +278,37 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, jsonObject);
     }
 
+    
+    /**获取管廊总览 
+     * @param id
+     * @return   {"msg":"请求成功","code":"200","data":{"areaCount":20,"areaList":["3区","4区","5区","6区","7区","8区","9区","10区","11区","12区","13区","14区","15区","16区","17区","18区","19区","20区","21区","22区"],"storeCount":16,"storeList":["污水舱","电力舱","综合舱","燃气舱","设备间","污水舱进风口","电力舱进风口","综合舱进风口","燃气舱进风口","污水舱排风口","电力舱排风口","综合舱排风口","燃气舱排风口","燃气舱投料井","非燃气舱投料井","其他"],"construct":"中铁十二局","operation":"波汇科技"}}
+     * @author shaosen
+     * @Date 2018年12月28日
+     */
+    @RequestMapping(value="tunnels/{id}/detail",method=RequestMethod.GET)
+    public JSONObject getTunnelInfo(@PathVariable Integer id) {
+    	
+    	JSONObject returnData = new JSONObject();
+    	TunnelDto tunnel = tunnelService.getDtoById(id);
+    	returnData.put("construct", tunnel.getConstruct() == null ? "" : tunnel.getConstruct().getName() );
+    	returnData.put("operation", tunnel.getOperation().getName() == null ? "" : tunnel.getOperation().getName());
+    	
+    	List<String> storesName = new ArrayList<>();
+    	List<String> areasName = new ArrayList<>();
+    	List<StoreDto> storeList = storeService.getStoresByTunnelId(id);
+    	storeList.forEach(s -> {
+    		storesName.add(s.getName());
+    	});
+    	List<AreaDto> areaList = areaService.getAreasByTunnelId(id);
+    	areaList.forEach(a -> {
+    		areasName.add(a.getName());
+    	});
+    	
+    	returnData.put("storeList", storesName);
+    	returnData.put("storeCount", storeList.size());
+    	returnData.put("areaList", areasName);
+    	returnData.put("areaCount", areaList.size());
+    	return CommonUtil.success(returnData);
+    }
   
 }
