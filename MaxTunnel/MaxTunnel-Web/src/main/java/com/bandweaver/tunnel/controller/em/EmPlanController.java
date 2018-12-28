@@ -199,7 +199,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 //		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
 //		return CommonUtil.success(taskNameList);
 		//方案2
-		List<JSONObject> list = emPlanService.getNodeListByProcessKey(processKey,null);
+		List<JSONObject> list = emPlanService.getNodeListByProcessKeyAndSection(processKey,null);
 		JSONObject returnData = new JSONObject();
 		returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());
 		returnData.put("planStatus", list);

@@ -343,6 +343,12 @@ public class MeasObjController {
 
     }
 
+    /**求管廊监测数据极值 
+     * @param reqJson
+     * @return   
+     * @author shaosen
+     * @Date 2018年12月28日
+     */
     @RequestMapping(value = "measobjs/max-cv", method = RequestMethod.POST)
     public JSONObject getMaxCVByTunnelId(@RequestBody JSONObject reqJson) {
 
@@ -376,57 +382,68 @@ public class MeasObjController {
                 switch (objType) {
                     case TEMPERATURE:// 温度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        temperature.setCv(measObjAi.getCv());
-                        temperature.setObjId(measObjAi.getId());
-                        temperature.setObjTypeName(objType.getName());
-                        temperature.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            temperature.setCv(measObjAi.getCv());
+                            temperature.setObjId(measObjAi.getId());
+                            temperature.setObjTypeName(objType.getName());
+                            temperature.setSectionId(measObjAi.getSectionId());
+                        }
+                        
                         break;
                     case HUMIDITY:// 湿度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        humidity.setCv(measObjAi.getCv());
-                        humidity.setObjId(measObjAi.getId());
-                        humidity.setObjTypeName(objType.getName());
-                        humidity.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	 measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                             humidity.setCv(measObjAi.getCv());
+                             humidity.setObjId(measObjAi.getId());
+                             humidity.setObjTypeName(objType.getName());
+                             humidity.setSectionId(measObjAi.getSectionId());
+                        }
+                       
                         break;
                     case OXYGEN:// 氧气
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        oxygen.setCv(measObjAi.getCv());
-                        oxygen.setObjId(measObjAi.getId());
-                        oxygen.setObjTypeName(objType.getName());
-                        oxygen.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	 measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
+                             oxygen.setCv(measObjAi.getCv());
+                             oxygen.setObjId(measObjAi.getId());
+                             oxygen.setObjTypeName(objType.getName());
+                             oxygen.setSectionId(measObjAi.getSectionId());
+                        }
+                       
                         break;
                     case H2S:// 硫化氢
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        h2s.setCv(measObjAi.getCv());
-                        h2s.setObjId(measObjAi.getId());
-                        h2s.setObjTypeName(objType.getName());
-                        h2s.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            h2s.setCv(measObjAi.getCv());
+                            h2s.setObjId(measObjAi.getId());
+                            h2s.setObjTypeName(objType.getName());
+                            h2s.setSectionId(measObjAi.getSectionId());
+                        }
+                        
                         break;
                     case CH4:// 甲烷
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        ch4.setCv(measObjAi.getCv());
-                        ch4.setObjId(measObjAi.getId());
-                        ch4.setObjTypeName(objType.getName());
-                        ch4.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            ch4.setCv(measObjAi.getCv());
+                            ch4.setObjId(measObjAi.getId());
+                            ch4.setObjTypeName(objType.getName());
+                            ch4.setSectionId(measObjAi.getSectionId());
+                        }
+                        
                         break;
                     case CO:// 一氧化碳
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-
-                        co.setCv(measObjAi.getCv());
-                        co.setObjId(measObjAi.getId());
-                        co.setObjTypeName(objType.getName());
-                        co.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            co.setCv(measObjAi.getCv());
+                            co.setObjId(measObjAi.getId());
+                            co.setObjTypeName(objType.getName());
+                            co.setSectionId(measObjAi.getSectionId());
+                        }
                         break;
 
                     default:

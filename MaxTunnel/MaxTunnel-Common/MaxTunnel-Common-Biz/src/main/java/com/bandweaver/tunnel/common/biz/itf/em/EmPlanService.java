@@ -51,7 +51,7 @@ public interface EmPlanService {
 
 	PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
 
-	List<JSONObject> getNodeListByProcessKey(String processKey,List<Section> sectionList);
+	List<JSONObject> getNodeListByProcessKeyAndSection(String processKey,List<Section> sectionList);
 
 	List<EmPlanDto> getListByProcessKey(String processKey);
 
