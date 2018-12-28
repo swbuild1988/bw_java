@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <Header :style="{position: 'fixed', width: '100%',zIndex:99999,padding:'0',color:'#1b1754'}">
+    <Header :style="{position: 'fixed', width: '100%',zIndex:999,padding:'0',color:'#1b1754'}">
       <Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
         <div class="layout-logo"></div>
         <div class="layout-title">
