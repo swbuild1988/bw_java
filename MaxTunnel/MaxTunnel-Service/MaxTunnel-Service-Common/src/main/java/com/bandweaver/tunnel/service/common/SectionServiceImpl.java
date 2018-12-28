@@ -251,6 +251,11 @@ public class SectionServiceImpl implements SectionService {
 		}
 		return resultDto;
 	}
+		
+	public List<Section> getSectionListByParentId(Integer sectionId) {
+		return sectionMapper.getSectionListByParentId(sectionId); 
+
+	}
 
 	/**
 	 * 判断点是否在多边形内

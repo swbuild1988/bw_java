@@ -62,5 +62,5 @@ public interface SectionMapper {
 
 	SectionDto getDtoById(Integer id);
 
-	List<Section> getSectionListByParentId(Integer sectionId);
+	List<Section> getSectionListByParentId(Integer sectionId); 
 }
