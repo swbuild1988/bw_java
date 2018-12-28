@@ -248,9 +248,8 @@
           this.selectedName = '1-0'
         }
       }
-      this.acceptPlanData();
-      this.acceptAlarmData();
-        console.log( _this.$store);
+      // this.acceptPlanData();
+      // this.acceptAlarmData();
     },
     beforeDestroy() {
       this.closedMQ();
