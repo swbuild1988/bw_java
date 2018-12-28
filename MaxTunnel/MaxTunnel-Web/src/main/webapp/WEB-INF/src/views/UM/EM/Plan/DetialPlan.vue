@@ -51,7 +51,7 @@
                         </Row>
                     </Card>
                     <hr class="hr3"/>
-                    <img style="width: 100%;height: 60vh" v-bind:src="showData"/>
+                    <img style="width: 100%;height: 60vh" v-bind:src="queryPram.processKey == 'FirePlanProcess' ? firePlan : windPlan"/>
                 </div>
             </TabPane>
             <TabPane label="执行记录" name="log">
@@ -112,7 +112,8 @@
     import toDown from "../../../../assets/UM/toDown.png"
     import next from '../../../../assets/UM/next.png'
     import toUp from "../../../../assets/UM/toUp.png"
-    import showData from "../../../../assets/UM/demo.png"
+    import firePlan from "../../../../assets/UM/demo.png"
+    import windPlan from '../../../../assets/UM/windPlan.png'
     import ShowStartPlan from '../../../../components/Common/Modal/ShowStartPlan'
     import {PlanService} from '../../../../services/planService'
 
@@ -126,7 +127,8 @@
                 tableHeight: 450,
                 toUp: toUp,
                 toDown: toDown,
-                showData: showData,
+                firePlan: firePlan,
+                windPlan: windPlan,
                 pageTotal: 1,
                 showTableDetial: false,
                 queryPram: {
