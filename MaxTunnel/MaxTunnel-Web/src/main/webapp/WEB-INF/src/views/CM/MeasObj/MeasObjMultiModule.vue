@@ -208,15 +208,6 @@ export default {
           _this.Log.info(error);
         }
       );
-
-      TunnelService.getTunnelsTree().then(
-        result => {
-          _this.tunnels = result;
-        },
-        error => {
-          _this.Log.info(error);
-        }
-      );
     },
     equipmentMatchesSelectedFile(data) {
       this.equipmentMatches = [];
