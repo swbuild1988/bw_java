@@ -612,27 +612,7 @@ public class MeasObjController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 
-    /**
-     * 监测对象查询
-     *
-     * @param sectionIds 管舱段id集合
-     * @param storeIds   管舱id集合
-     * @param tunnelIds  管廊id集合
-     * @param id         监测对象主键
-     * @param datatypeId 枚举
-     * @return list
-     * @author ya.liu
-     * @Date 2018年10月31日
-     */
-    @Deprecated
-    @RequestMapping(value = "measobjs/condition", method = RequestMethod.POST)
-    public JSONObject getMeasObjByCondition(@RequestBody(required = false) MeasObjVo vo) {
-        if (null == vo) {
-            return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, null);
-        }
-        List<MeasObjDto> list = measObjService.getMeasObjByCondition(vo);
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
-    }
+
 
 
     /**

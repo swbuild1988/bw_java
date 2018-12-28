@@ -64,13 +64,9 @@ public class TunnelController extends BaseController<Tunnel> {
     @Autowired
     private MeasObjService measObjService;
 
-    //*********************************************************************************************
-    //****************************************增删改查START******************************************
-    //*********************************************************************************************
 
-    /**
-     * 添加管廊
-     *
+    
+    /**添加管廊
      * @param name             管廊名称
      * @param length           管廊长度（数值）
      * @param responsibilityId 负责人id（员工表）
@@ -87,9 +83,8 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-    /**
-     * 检查名称是否重复
-     *
+    
+    /**检查名称是否重复
      * @param name 管廊名称
      * @return ture：可以添加  false:重复不可添加
      * @author shaosen
@@ -104,9 +99,7 @@ public class TunnelController extends BaseController<Tunnel> {
     }
 
 
-    /**
-     * 获取管廊列表(简单列表)
-     *
+    /**获取管廊列表(简单列表)
      * @return {"msg":"请求成功","code":"200","data":[{"id":1,"name":"古城大街"},{"id":2,"name":"实验路"},{"id":3,"name":"经三路"},{"id":4,"name":"经二路"},{"id":5,"name":"纬三路"}]}
      * @author shaosen
      * @date 2018年6月7日
@@ -117,9 +110,8 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, tunnels);
     }
 
-    /**
-     * 通过id获取管廊信息（包含负责人，建筑单位，运营单位信息）
-     *
+    
+    /**通过id获取管廊信息（包含负责人，建筑单位，运营单位信息）
      * @param id 管廊id
      * @return {"msg":"请求成功","code":"200","data":{"id":1,"name":"古城大街","length":5000.0,"responsibility":{"id":1,"name":"张三","deptId":1,"positionId":1,"accountId":1,"crtTime":1529942400000},"construct":{"id":5,"name":"中建一局","crtTime":1529596800000},"operation":{"id":1,"name":"波汇科技","crtTime":1529596800000},"camera":null,"crtTime":1535611490000}}
      * @author shaosen
@@ -132,9 +124,7 @@ public class TunnelController extends BaseController<Tunnel> {
     }
 
 
-    /**
-     * 通过主键更新
-     *
+    /**通过主键更新
      * @param tunnel 参数参考添加接口
      * @return {"msg":"请求成功","code":"200","data":{}}
      * @author shaosen
@@ -146,9 +136,8 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-    /**
-     * 通过主键删除
-     *
+    
+    /**通过主键删除
      * @param id
      * @return {"msg":"请求成功","code":"200","data":{}}
      * @author shaosen
@@ -160,9 +149,8 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-    /**
-     * 批量删除
-     *
+    
+    /**批量删除
      * @param ids id通过逗号拼接的字符串
      * @return
      * @author shaosen
@@ -182,9 +170,7 @@ public class TunnelController extends BaseController<Tunnel> {
     }
 
 
-    /**
-     * 管廊分页查询
-     *
+    /**管廊分页查询
      * @param name             管廊名称（支持模糊查询）
      * @param responsibilityId 负责人id
      * @param constructId      建筑单位id
@@ -203,16 +189,10 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
 
-    //*********************************************************************************************
-    //****************************************增删改查END******************************************
-    //*********************************************************************************************
 
 
-    /**
-     * 获取树形结构
-     *
-     * @param
-     * @return {"msg":"请求成功","code":"200","data":[{"name":"古城大街","id":1,"camera":null,"list":[{"name":"燃气仓","id":1,"camera":null,"list":[{"name":"11区-燃气仓","id":11,"camera":null,"list":null},{"name":"21区-燃气仓","id":21,"camera":null,"list":null},{"name":"20区-燃气仓","id":20,"camera":null,"list":null},{"name":"19区-燃气仓","id":19,"camera":null,"list":null},{"name":"5区-燃气仓","id":5,"camera":null,"list":null},{"name":"6区-燃气仓","id":6,"camera":null,"list":null},{"name":"7区-燃气仓","id":7,"camera":null,"list":null},{"name":"8区-燃气仓","id":8,"camera":null,"list":null},{"name":"9区-燃气仓","id":9,"camera":null,"list":null},{"name":"10区-燃气仓","id":10,"camera":null,"list":null},{"name":"22区-燃气仓","id":22,"camera":null,"list":null},{"name":"12区-燃气仓","id":12,"camera":null,"list":null},{"name":"13区-燃气仓","id":13,"camera":null,"list":null},{"name":"14区-燃气仓","id":14,"camera":null,"list":null},{"name":"15区-燃气仓","id":15,"camera":null,"list":null},{"name":"16区-燃气仓","id":16,"camera":null,"list":null},{"name":"17区-燃气仓","id":17,"camera":null,"list":null},{"name":"18区-燃气仓","id":18,"camera":null,"list":null},{"name":"4区-燃气仓","id":4,"camera":null,"list":null},{"name":"3区-燃气仓","id":3,"camera":null,"list":null},{"name":"2区-燃气仓","id":2,"camera":null,"list":null},{"name":"1区-燃气仓","id":1,"camera":null,"list":null}]},{"name":"污水仓","id":4,"camera":null,"list":[{"name":"1区-污水仓","id":23,"camera":null,"list":null},{"name":"22区-污水仓","id":44,"camera":null,"list":null},{"name":"3区-污水仓","id":25,"camera":null,"list":null},{"name":"4区-污水仓","id":26,"camera":null,"list":null},{"name":"5区-污水仓","id":27,"camera":null,"list":null},{"name":"6区-污水仓","id":28,"camera":null,"list":null},{"name":"7区-污水仓","id":29,"camera":null,"list":null},{"name":"8区-污水仓","id":30,"camera":null,"list":null},{"name":"9区-污水仓","id":31,"camera":null,"list":null},{"name":"10区-污水仓","id":32,"camera":null,"list":null},{"name":"11区-污水仓","id":33,"camera":null,"list":null},{"name":"12区-污水仓","id":34,"camera":null,"list":null},{"name":"13区-污水仓","id":35,"camera":null,"list":null},{"name":"14区-污水仓","id":36,"camera":null,"list":null},{"name":"15区-污水仓","id":37,"camera":null,"list":null},{"name":"16区-污水仓","id":38,"camera":null,"list":null},{"name":"17区-污水仓","id":39,"camera":null,"list":null},{"name":"18区-污水仓","id":40,"camera":null,"list":null},{"name":"19区-污水仓","id":41,"camera":null,"list":null},{"name":"20区-污水仓","id":42,"camera":null,"list":null},{"name":"21区-污水仓","id":43,"camera":null,"list":null},{"name":"2区-污水仓","id":24,"camera":null,"list":null}]},{"name":"电力仓","id":3,"camera":null,"list":[{"name":"1区-电力仓","id":45,"camera":null,"list":null},{"name":"22区-电力仓","id":66,"camera":null,"list":null},{"name":"3区-电力仓","id":47,"camera":null,"list":null},{"name":"4区-电力仓","id":48,"camera":null,"list":null},{"name":"5区-电力仓","id":49,"camera":null,"list":null},{"name":"6区-电力仓","id":50,"camera":null,"list":null},{"name":"7区-电力仓","id":51,"camera":null,"list":null},{"name":"8区-电力仓","id":52,"camera":null,"list":null},{"name":"9区-电力仓","id":53,"camera":null,"list":null},{"name":"10区-电力仓","id":54,"camera":null,"list":null},{"name":"11区-电力仓","id":55,"camera":null,"list":null},{"name":"12区-电力仓","id":56,"camera":null,"list":null},{"name":"13区-电力仓","id":57,"camera":null,"list":null},{"name":"14区-电力仓","id":58,"camera":null,"list":null},{"name":"15区-电力仓","id":59,"camera":null,"list":null},{"name":"16区-电力仓","id":60,"camera":null,"list":null},{"name":"17区-电力仓","id":61,"camera":null,"list":null},{"name":"18区-电力仓","id":62,"camera":null,"list":null},{"name":"19区-电力仓","id":63,"camera":null,"list":null},{"name":"20区-电力仓","id":64,"camera":null,"list":null},{"name":"21区-电力仓","id":65,"camera":null,"list":null},{"name":"2区-电力仓","id":46,"camera":null,"list":null}]},{"name":"综合仓","id":2,"camera":null,"list":[{"name":"1区-综合仓","id":67,"camera":null,"list":null},{"name":"22区-综合仓","id":88,"camera":null,"list":null},{"name":"3区-综合仓","id":69,"camera":null,"list":null},{"name":"4区-综合仓","id":70,"camera":null,"list":null},{"name":"5区-综合仓","id":71,"camera":null,"list":null},{"name":"6区-综合仓","id":72,"camera":null,"list":null},{"name":"7区-综合仓","id":73,"camera":null,"list":null},{"name":"8区-综合仓","id":74,"camera":null,"list":null},{"name":"9区-综合仓","id":75,"camera":null,"list":null},{"name":"10区-综合仓","id":76,"camera":null,"list":null},{"name":"11区-综合仓","id":77,"camera":null,"list":null},{"name":"12区-综合仓","id":78,"camera":null,"list":null},{"name":"13区-综合仓","id":79,"camera":null,"list":null},{"name":"14区-综合仓","id":80,"camera":null,"list":null},{"name":"15区-综合仓","id":81,"camera":null,"list":null},{"name":"16区-综合仓","id":82,"camera":null,"list":null},{"name":"17区-综合仓","id":83,"camera":null,"list":null},{"name":"18区-综合仓","id":84,"camera":null,"list":null},{"name":"19区-综合仓","id":85,"camera":null,"list":null},{"name":"20区-综合仓","id":86,"camera":null,"list":null},{"name":"21区-综合仓","id":87,"camera":null,"list":null},{"name":"2区-综合仓","id":68,"camera":null,"list":null}]}]},{"name":"实验路","id":2,"camera":null,"list":[{"name":"燃气仓","id":5,"camera":null,"list":[{"name":"1区-燃气仓","id":89,"camera":null,"list":null},{"name":"2区-燃气仓","id":90,"camera":null,"list":null},{"name":"6区-燃气仓","id":94,"camera":null,"list":null},{"name":"4区-燃气仓","id":92,"camera":null,"list":null},{"name":"5区-燃气仓","id":93,"camera":null,"list":null},{"name":"3区-燃气仓","id":91,"camera":null,"list":null}]},{"name":"污水仓","id":8,"camera":null,"list":[{"name":"1区-污水仓","id":95,"camera":null,"list":null},{"name":"2区-污水仓","id":96,"camera":null,"list":null},{"name":"6区-污水仓","id":100,"camera":null,"list":null},{"name":"4区-污水仓","id":98,"camera":null,"list":null},{"name":"5区-污水仓","id":99,"camera":null,"list":null},{"name":"3区-污水仓","id":97,"camera":null,"list":null}]},{"name":"电力仓","id":7,"camera":null,"list":[{"name":"1区-电力仓","id":101,"camera":null,"list":null},{"name":"2区-电力仓","id":102,"camera":null,"list":null},{"name":"6区-电力仓","id":106,"camera":null,"list":null},{"name":"4区-电力仓","id":104,"camera":null,"list":null},{"name":"5区-电力仓","id":105,"camera":null,"list":null},{"name":"3区-电力仓","id":103,"camera":null,"list":null}]},{"name":"综合仓","id":6,"camera":null,"list":[{"name":"1区-综合仓","id":107,"camera":null,"list":null},{"name":"2区-综合仓","id":108,"camera":null,"list":null},{"name":"6区-综合仓","id":112,"camera":null,"list":null},{"name":"4区-综合仓","id":110,"camera":null,"list":null},{"name":"5区-综合仓","id":111,"camera":null,"list":null},{"name":"3区-综合仓","id":109,"camera":null,"list":null}]}]},{"name":"经三路","id":3,"camera":null,"list":[{"name":"燃气仓","id":9,"camera":null,"list":[{"name":"1区-燃气仓","id":113,"camera":null,"list":null},{"name":"2区-燃气仓","id":114,"camera":null,"list":null},{"name":"6区-燃气仓","id":118,"camera":null,"list":null},{"name":"4区-燃气仓","id":116,"camera":null,"list":null},{"name":"5区-燃气仓","id":117,"camera":null,"list":null},{"name":"3区-燃气仓","id":115,"camera":null,"list":null}]},{"name":"污水仓","id":12,"camera":null,"list":[{"name":"1区-污水仓","id":119,"camera":null,"list":null},{"name":"2区-污水仓","id":120,"camera":null,"list":null},{"name":"6区-污水仓","id":124,"camera":null,"list":null},{"name":"4区-污水仓","id":122,"camera":null,"list":null},{"name":"5区-污水仓","id":123,"camera":null,"list":null},{"name":"3区-污水仓","id":121,"camera":null,"list":null}]},{"name":"电力仓","id":11,"camera":null,"list":[{"name":"1区-电力仓","id":125,"camera":null,"list":null},{"name":"2区-电力仓","id":126,"camera":null,"list":null},{"name":"6区-电力仓","id":130,"camera":null,"list":null},{"name":"4区-电力仓","id":128,"camera":null,"list":null},{"name":"5区-电力仓","id":129,"camera":null,"list":null},{"name":"3区-电力仓","id":127,"camera":null,"list":null}]},{"name":"综合仓","id":10,"camera":null,"list":[{"name":"1区-综合仓","id":131,"camera":null,"list":null},{"name":"2区-综合仓","id":132,"camera":null,"list":null},{"name":"6区-综合仓","id":136,"camera":null,"list":null},{"name":"4区-综合仓","id":134,"camera":null,"list":null},{"name":"5区-综合仓","id":135,"camera":null,"list":null},{"name":"3区-综合仓","id":133,"camera":null,"list":null}]}]},{"name":"经二路","id":4,"camera":null,"list":[{"name":"燃气仓","id":13,"camera":null,"list":[{"name":"1区-燃气仓","id":137,"camera":null,"list":null},{"name":"2区-燃气仓","id":138,"camera":null,"list":null},{"name":"6区-燃气仓","id":142,"camera":null,"list":null},{"name":"4区-燃气仓","id":140,"camera":null,"list":null},{"name":"5区-燃气仓","id":141,"camera":null,"list":null},{"name":"3区-燃气仓","id":139,"camera":null,"list":null}]},{"name":"污水仓","id":16,"camera":null,"list":[{"name":"1区-污水仓","id":143,"camera":null,"list":null},{"name":"2区-污水仓","id":144,"camera":null,"list":null},{"name":"6区-污水仓","id":148,"camera":null,"list":null},{"name":"4区-污水仓","id":146,"camera":null,"list":null},{"name":"5区-污水仓","id":147,"camera":null,"list":null},{"name":"3区-污水仓","id":145,"camera":null,"list":null}]},{"name":"电力仓","id":15,"camera":null,"list":[{"name":"1区-电力仓","id":149,"camera":null,"list":null},{"name":"2区-电力仓","id":150,"camera":null,"list":null},{"name":"6区-电力仓","id":154,"camera":null,"list":null},{"name":"4区-电力仓","id":152,"camera":null,"list":null},{"name":"5区-电力仓","id":153,"camera":null,"list":null},{"name":"3区-电力仓","id":151,"camera":null,"list":null}]},{"name":"综合仓","id":14,"camera":null,"list":[{"name":"1区-综合仓","id":155,"camera":null,"list":null},{"name":"2区-综合仓","id":156,"camera":null,"list":null},{"name":"6区-综合仓","id":160,"camera":null,"list":null},{"name":"4区-综合仓","id":158,"camera":null,"list":null},{"name":"5区-综合仓","id":159,"camera":null,"list":null},{"name":"3区-综合仓","id":157,"camera":null,"list":null}]}]},{"name":"纬三路","id":5,"camera":null,"list":[{"name":"燃气仓","id":17,"camera":null,"list":[{"name":"20区-燃气仓","id":180,"camera":null,"list":null},{"name":"19区-燃气仓","id":179,"camera":null,"list":null},{"name":"22区-燃气仓","id":182,"camera":null,"list":null},{"name":"1区-燃气仓","id":161,"camera":null,"list":null},{"name":"2区-燃气仓","id":162,"camera":null,"list":null},{"name":"3区-燃气仓","id":163,"camera":null,"list":null},{"name":"4区-燃气仓","id":164,"camera":null,"list":null},{"name":"5区-燃气仓","id":165,"camera":null,"list":null},{"name":"6区-燃气仓","id":166,"camera":null,"list":null},{"name":"7区-燃气仓","id":167,"camera":null,"list":null},{"name":"8区-燃气仓","id":168,"camera":null,"list":null},{"name":"9区-燃气仓","id":169,"camera":null,"list":null},{"name":"10区-燃气仓","id":170,"camera":null,"list":null},{"name":"11区-燃气仓","id":171,"camera":null,"list":null},{"name":"12区-燃气仓","id":172,"camera":null,"list":null},{"name":"13区-燃气仓","id":173,"camera":null,"list":null},{"name":"14区-燃气仓","id":174,"camera":null,"list":null},{"name":"15区-燃气仓","id":175,"camera":null,"list":null},{"name":"16区-燃气仓","id":176,"camera":null,"list":null},{"name":"17区-燃气仓","id":177,"camera":null,"list":null},{"name":"18区-燃气仓","id":178,"camera":null,"list":null},{"name":"21区-燃气仓","id":181,"camera":null,"list":null}]},{"name":"污水仓","id":20,"camera":null,"list":[{"name":"1区-污水仓","id":183,"camera":null,"list":null},{"name":"22区-污水仓","id":204,"camera":null,"list":null},{"name":"3区-污水仓","id":185,"camera":null,"list":null},{"name":"4区-污水仓","id":186,"camera":null,"list":null},{"name":"5区-污水仓","id":187,"camera":null,"list":null},{"name":"6区-污水仓","id":188,"camera":null,"list":null},{"name":"7区-污水仓","id":189,"camera":null,"list":null},{"name":"8区-污水仓","id":190,"camera":null,"list":null},{"name":"9区-污水仓","id":191,"camera":null,"list":null},{"name":"10区-污水仓","id":192,"camera":null,"list":null},{"name":"11区-污水仓","id":193,"camera":null,"list":null},{"name":"12区-污水仓","id":194,"camera":null,"list":null},{"name":"13区-污水仓","id":195,"camera":null,"list":null},{"name":"14区-污水仓","id":196,"camera":null,"list":null},{"name":"15区-污水仓","id":197,"camera":null,"list":null},{"name":"16区-污水仓","id":198,"camera":null,"list":null},{"name":"17区-污水仓","id":199,"camera":null,"list":null},{"name":"18区-污水仓","id":200,"camera":null,"list":null},{"name":"19区-污水仓","id":201,"camera":null,"list":null},{"name":"20区-污水仓","id":202,"camera":null,"list":null},{"name":"21区-污水仓","id":203,"camera":null,"list":null},{"name":"2区-污水仓","id":184,"camera":null,"list":null}]},{"name":"电力仓","id":19,"camera":null,"list":[{"name":"1区-电力仓","id":205,"camera":null,"list":null},{"name":"22区-电力仓","id":226,"camera":null,"list":null},{"name":"3区-电力仓","id":207,"camera":null,"list":null},{"name":"4区-电力仓","id":208,"camera":null,"list":null},{"name":"5区-电力仓","id":209,"camera":null,"list":null},{"name":"6区-电力仓","id":210,"camera":null,"list":null},{"name":"7区-电力仓","id":211,"camera":null,"list":null},{"name":"8区-电力仓","id":212,"camera":null,"list":null},{"name":"9区-电力仓","id":213,"camera":null,"list":null},{"name":"10区-电力仓","id":214,"camera":null,"list":null},{"name":"11区-电力仓","id":215,"camera":null,"list":null},{"name":"12区-电力仓","id":216,"camera":null,"list":null},{"name":"13区-电力仓","id":217,"camera":null,"list":null},{"name":"14区-电力仓","id":218,"camera":null,"list":null},{"name":"15区-电力仓","id":219,"camera":null,"list":null},{"name":"16区-电力仓","id":220,"camera":null,"list":null},{"name":"17区-电力仓","id":221,"camera":null,"list":null},{"name":"18区-电力仓","id":222,"camera":null,"list":null},{"name":"19区-电力仓","id":223,"camera":null,"list":null},{"name":"20区-电力仓","id":224,"camera":null,"list":null},{"name":"21区-电力仓","id":225,"camera":null,"list":null},{"name":"2区-电力仓","id":206,"camera":null,"list":null}]},{"name":"综合仓","id":18,"camera":null,"list":[{"name":"1区-综合仓","id":227,"camera":null,"list":null},{"name":"22区-综合仓","id":248,"camera":null,"list":null},{"name":"3区-综合仓","id":229,"camera":null,"list":null},{"name":"4区-综合仓","id":230,"camera":null,"list":null},{"name":"5区-综合仓","id":231,"camera":null,"list":null},{"name":"6区-综合仓","id":232,"camera":null,"list":null},{"name":"7区-综合仓","id":233,"camera":null,"list":null},{"name":"8区-综合仓","id":234,"camera":null,"list":null},{"name":"9区-综合仓","id":235,"camera":null,"list":null},{"name":"10区-综合仓","id":236,"camera":null,"list":null},{"name":"11区-综合仓","id":237,"camera":null,"list":null},{"name":"12区-综合仓","id":238,"camera":null,"list":null},{"name":"13区-综合仓","id":239,"camera":null,"list":null},{"name":"14区-综合仓","id":240,"camera":null,"list":null},{"name":"15区-综合仓","id":241,"camera":null,"list":null},{"name":"16区-综合仓","id":242,"camera":null,"list":null},{"name":"17区-综合仓","id":243,"camera":null,"list":null},{"name":"18区-综合仓","id":244,"camera":null,"list":null},{"name":"19区-综合仓","id":245,"camera":null,"list":null},{"name":"20区-综合仓","id":246,"camera":null,"list":null},{"name":"21区-综合仓","id":247,"camera":null,"list":null},{"name":"2区-综合仓","id":228,"camera":null,"list":null}]}]}]}
+    /**获取管廊树形结构
+     * @return 
      * @author shaosen
      * @date 2018年7月25日
      */
@@ -227,11 +207,10 @@ public class TunnelController extends BaseController<Tunnel> {
             jsonOne.put("id", dto.getId());
             jsonOne.put("camera", dto.getCamera());
             jsonOne.put("sn", dto.getSn());
-            // 查询下面有多少仓
+            // 查询仓信息
             List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
+            //查询防火区信息
             List<AreaDto> areaList = areaService.getAreasByTunnelId(dto.getId());
-            jsonOne.put("stores", storeList);
-            jsonOne.put("areas", areaList);
 
             List<JSONObject> listTwo = new ArrayList<>();
             for (StoreDto storeDto : storeList) {
@@ -239,15 +218,16 @@ public class TunnelController extends BaseController<Tunnel> {
                 jsonTwo.put("name", storeDto.getName());
                 jsonTwo.put("id", storeDto.getId());
                 jsonTwo.put("camera", storeDto.getCamera());
-                // 查询下面有多少仓段
-                List<SectionDto> sectionList = sectionService.getSectionsByStoreId(storeDto.getId());
+                jsonTwo.put("sn", storeDto.getSn());
+                
                 List<JSONObject> listThree = new ArrayList<>();
-                for (SectionDto sectionDto : sectionList) {
+                for (AreaDto areaDto : areaList) {
                     JSONObject jsonThree = new JSONObject();
-                    jsonThree.put("name", sectionDto.getName());
-                    jsonThree.put("id", sectionDto.getId());
-                    jsonThree.put("camera", sectionDto.getCamera());
-                    jsonThree.put("list", null);
+                    jsonThree.put("name", areaDto.getName());
+                    jsonThree.put("id", areaDto.getId());
+                    jsonThree.put("camera", areaDto.getCamera());
+                    jsonThree.put("sn", areaDto.getSn());
+                    jsonThree.put("list", new ArrayList<>());
                     listThree.add(jsonThree);
                 }
 
@@ -257,16 +237,13 @@ public class TunnelController extends BaseController<Tunnel> {
             jsonOne.put("list", listTwo);
             listOne.add(jsonOne);
         }
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, listOne);
 
     }
 
     
     
-    /**
-     * 获取指定管廊下共有多少管仓
-     *
+    /**获取指定管廊下共有多少管仓
      * @param id 管廊id
      * @return {"msg":"请求成功","code":"200","data":{"val":6,"key":"管仓数"}}
      * @throws @author shaosen
@@ -284,9 +261,8 @@ public class TunnelController extends BaseController<Tunnel> {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, jsonObject);
     }
 
-    /**
-     * 获取指定管廊下共有多少section(仓段)
-     *
+    
+    /**获取指定管廊下共有多少section(仓段)
      * @param id 管廊id
      * @return {"msg":"请求成功","code":"200","data":{"val":16,"key":"仓段数"}}
      * @throws @author shaosen
@@ -296,134 +272,11 @@ public class TunnelController extends BaseController<Tunnel> {
     public JSONObject getSectionsCountByTunnelId(@PathVariable Integer id) {
 
         List<SectionDto> list = tunnelService.getSectionList(id);
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("key", "仓段数");
         jsonObject.put("val", list.size());
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, jsonObject);
     }
 
-
-    /**
-     * 获取具体某个section的各种环境监测对象数值
-     *
-     * @param id 舱段id
-     * @return {"msg":"请求成功","code":"200","data":[{"objId":1005,"sectionId":4,"objTypeName":"甲烷","cv":37.799710155275704}]}
-     * @throws @author shaosen
-     * @date 2018年6月29日
-     */
-    @RequestMapping(value = "tunnels/stores/sections/{id}/ai/cv", method = RequestMethod.GET)
-    public JSONObject getAICVBySectionId(@PathVariable Integer id) {
-
-        List<MeasObj> list = new ArrayList<>();
-        // 从缓存中读取obj数据
-        List<MeasObj> objList = measObjModuleCenter.getMeasObjs();
-        // 获取指定section的obj集合
-        for (MeasObj measObj : objList) {
-            if (measObj.getSectionId().intValue() == id.intValue()) {
-                list.add(measObj);
-            }
-        }
-
-        List<MeasObjAIParam> aiList = new ArrayList<>();
-        for (MeasObj measObj : list) {
-            DataType dataType = DataType.getEnum(measObj.getDatatypeId());
-
-            switch (dataType) {
-                case AI:
-                    aiList = getCV(measObj, aiList);
-                    break;
-                case DI:
-                    break;
-                case SI:
-                    break;
-                case DISTRIBUTE:
-                    break;
-                case VIDEO:
-                    break;
-                case DAS:
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, aiList);
-    }
-
-    private List<MeasObjAIParam> getCV(MeasObj measObj, List<MeasObjAIParam> list) {
-        MeasObjAIParam aiParam = new MeasObjAIParam();
-        Double cv = measObjModuleCenter.getMeasObjAI(measObj.getId()).getCv();
-        aiParam.setObjId(measObj.getId());
-        aiParam.setCv(cv);
-        aiParam.setObjTypeName(ObjectType.getEnum(measObj.getObjtypeId()).getName());
-        aiParam.setSectionId(measObj.getSectionId());
-        list.add(aiParam);
-        return list;
-    }
-
-    /**
-     * 获取环境监测各指标的最大值（用来显示百分比）
-     *
-     * @return {"msg":"请求成功","code":"200","data":[{"val":1000.0,"key":"温度"},{"val":1000.0,"key":"湿度"},{"val":1000.0,"key":"氧气"},{"val":1000.0,"key":"硫化氢"},{"val":1000.0,"key":"甲烷"},{"val":1000.0,"key":"一氧化碳"}]}
-     * @throws @author shaosen
-     * @date 2018年7月3日
-     */
-    @RequestMapping(value = "sections/ai/standard-cv", method = RequestMethod.GET)
-    public JSONObject getAIStandardCV() {
-
-        List<JSONObject> list = new ArrayList<>();
-        for (ObjectType type : ObjectType.values()) {
-            String name = "ai." + type.name().toLowerCase() + ".max";
-            Double value = DataTypeUtil.toDouble(PropertiesUtil.getValue(name));
-            if (value == null)
-                continue;
-            JSONObject json = new JSONObject();
-            json.put("key", type.getName());
-            json.put("val", value);
-            list.add(json);
-        }
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
-
-    }
-
-    @RequestMapping(value = "tunnels/trees", method = RequestMethod.GET)
-    public JSONObject getTrees() {
-
-        List<TunnelDto> dtoList = tunnelService.getDtoList();
-        List<JSONObject> listOne = new ArrayList<>();
-        for (TunnelDto dto : dtoList) {
-            JSONObject jsonOne = new JSONObject();
-            jsonOne.put("name", dto.getName());
-            jsonOne.put("id", dto.getId());
-            // 查询下面有多少仓
-            List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
-            List<JSONObject> listTwo = new ArrayList<>();
-            for (StoreDto storeDto : storeList) {
-                JSONObject jsonTwo = new JSONObject();
-                jsonTwo.put("name", storeDto.getName());
-                jsonTwo.put("id", storeDto.getId());
-                // 查询下面有多少仓段
-                List<SectionDto> sectionList = sectionService.getSectionsByStoreId(storeDto.getId());
-                List<JSONObject> listThree = new ArrayList<>();
-                for (SectionDto sectionDto : sectionList) {
-                    JSONObject jsonThree = new JSONObject();
-                    jsonThree.put("name", sectionDto.getName());
-                    jsonThree.put("id", sectionDto.getId());
-                    listThree.add(jsonThree);
-                }
-
-                jsonTwo.put("list", listThree);
-                listTwo.add(jsonTwo);
-            }
-            jsonOne.put("list", listTwo);
-            listOne.add(jsonOne);
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, listOne);
-
-    }
-
+  
 }
