@@ -401,6 +401,26 @@ public class SectionController extends BaseController<Section>{
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 
+    /**
+     * 通过经纬高确定所在的舱段
+     * @param longitude 经度
+     * @param latitude  纬度
+     * @param height    高度
+     * @return
+     * @author ya.liu
+     * @Date 2018年12月28日
+     */
+    @RequestMapping(value = "sections/xyz", method = RequestMethod.POST)
+    public JSONObject getSectionDtoByPoint(@RequestBody JSONObject map) {
+
+        //获取传过来的经纬度高度
+        double longitude = DataTypeUtil.toDouble(map.get("longitude"));
+        double latitude = DataTypeUtil.toDouble(map.get("latitude"));
+        double height = DataTypeUtil.toDouble(map.get("height"));
+
+        SectionDto resultDto = sectionService.getSectionDtoByGPS(longitude, latitude, height);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultDto);
+    }
 
     /**
      * 通过经纬度确定所在的舱段

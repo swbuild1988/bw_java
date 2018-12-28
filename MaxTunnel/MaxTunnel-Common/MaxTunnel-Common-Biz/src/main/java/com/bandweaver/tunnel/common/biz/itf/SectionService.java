@@ -101,7 +101,13 @@ public interface SectionService {
 	void deleteBatch(List<Integer> list);
 
 	Section getByName(String name);
-
-	List<Section> getSectionListByParentId(Integer sectionId);
+	/**
+	 * 根据 经纬高 获得所属的区段
+	 * @param longitude
+	 * @param latitude
+	 * @param height
+	 * @return
+	 */
+	SectionDto getSectionDtoByGPS(double longitude, double latitude, double height);
 
 }
