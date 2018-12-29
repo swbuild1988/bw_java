@@ -93,16 +93,12 @@ public class EmPlanServiceImpl implements EmPlanService {
 		
 		Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
 		LogUtil.debug("Get variables:" + variables);
-//		Integer sectionId = DataTypeUtil.toInteger(variables.get("sectionId"));
 		List<Section> sectionList = (List<Section>) variables.get("sectionList");
-		
 
 		EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
 		LogUtil.debug("Get emPlan from DB:" + emPlan);
 		if(StringTools.isNullOrEmpty(emPlan)) 
 			throw new BandWeaverException("流程节点不存在");
-		
-		
 
 		// 第一步：获取目标
 		Collection<MeasObj> list = new ArrayList<>();
@@ -182,52 +178,56 @@ public class EmPlanServiceImpl implements EmPlanService {
 	 */
 	public void sendMsg(EmPlan emPlan, String processInstanceId ,List<Section> sectionList,Set<MeasObj> measObjList) {
 		// 通过流程实例id获取历史任务节点
-//		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
-//		List<JSONObject> result = new ArrayList<>();
-//		for (HistoricTaskInstance historicTaskInstance : list) {
-//			JSONObject json = new JSONObject();
-//			json.put("node", historicTaskInstance.getName());
-//			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
-//			json.put("time", DateUtil.getCurrentDate());
-////			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
-////			json.put("id", emPlan.getTargetValue());
-//			result.add(json);
-//		}
+/*		List<HistoricTaskInstance> list = activitiService.getHistoricTaskInstanceListByInstanceId(processInstanceId);
+		List<JSONObject> result = new ArrayList<>();
+		for (HistoricTaskInstance historicTaskInstance : list) {
+			JSONObject json = new JSONObject();
+			json.put("node", historicTaskInstance.getName());
+			json.put("status", historicTaskInstance.getEndTime() == null ? NodeStatusEnum.PROCESSING.getValue() : NodeStatusEnum.FINISHED.getValue());
+			json.put("time", DateUtil.getCurrentDate());
+//			json.put("desc","启动或打开了ID为[" + emPlan.getTargetValue() + "]的设备");
+//			json.put("id", emPlan.getTargetValue());
+			result.add(json);
+		}*/
 		
 		//获取防火区名称以及经纬度坐标
 //		String areaName = "";
-//		double longitude = 0,latitude = 0;
-//		SectionDto sectionDto = sectionService.getSectionById(sectionId);
-//		if(sectionDto != null) {
-//			
-//			Area area = sectionDto.getArea();
+		double longitude = 0,latitude = 0;
+		//获取指定仓
+		Section section = null;
+		List<Section> collect = sectionList.stream().filter(s -> s.getId().intValue() == s.getParentId().intValue()).collect(Collectors.toList());
+		if(!collect.isEmpty())
+			section = collect.get(0);
+		if(section != null) {
+			
+//			Area area = section.getArea();
 //			if(area != null){
 //				areaName = area.getName();
 //			}
-//			
-//			double longitude_ = 0,latitude_ = 0;
-//			String startPoint = sectionDto.getStartPoint();
-//			if(!StringTools.isNullOrEmpty(startPoint)) {
-//				String[] startPointArr = startPoint.split(",");
-//				if(startPointArr.length == 3) {
-//					longitude_ = DataTypeUtil.toDouble(startPointArr[0]);
-//					latitude_ = DataTypeUtil.toDouble(startPointArr[1]);
-//				}
-//			}
-//			
-//			double _longitude = 0,_latitude = 0;
-//			String endPoint = sectionDto.getEndPoint();
-//			if(!StringTools.isNullOrEmpty(endPoint)) {
-//				String[] endPointArr = endPoint.split(",");
-//				if(endPointArr.length == 3) {
-//					_longitude = DataTypeUtil.toDouble(endPointArr[0]);
-//					_latitude = DataTypeUtil.toDouble(endPointArr[1]);
-//				}
-//			}
-//			
-//			longitude = MathUtil.div(MathUtil.add(longitude_, _longitude), 2.0, 6);
-//			latitude = MathUtil.div(MathUtil.add(latitude_, _latitude), 2.0, 6);
-//		}
+			
+			double longitude_ = 0,latitude_ = 0;
+			String startPoint = section.getStartPoint();
+			if(!StringTools.isNullOrEmpty(startPoint)) {
+				String[] startPointArr = startPoint.split(",");
+				if(startPointArr.length == 3) {
+					longitude_ = DataTypeUtil.toDouble(startPointArr[0]);
+					latitude_ = DataTypeUtil.toDouble(startPointArr[1]);
+				}
+			}
+			
+			double _longitude = 0,_latitude = 0;
+			String endPoint = section.getEndPoint();
+			if(!StringTools.isNullOrEmpty(endPoint)) {
+				String[] endPointArr = endPoint.split(",");
+				if(endPointArr.length == 3) {
+					_longitude = DataTypeUtil.toDouble(endPointArr[0]);
+					_latitude = DataTypeUtil.toDouble(endPointArr[1]);
+				}
+			}
+			
+			longitude = MathUtil.div(MathUtil.add(longitude_, _longitude), 2.0, 6);
+			latitude = MathUtil.div(MathUtil.add(latitude_, _latitude), 2.0, 6);
+		}
 		
 		//获取当前流程节点列表
 		List<JSONObject> processList = new ArrayList<>();
@@ -271,9 +271,9 @@ public class EmPlanServiceImpl implements EmPlanService {
 		json.put("processInstanceId", processInstanceId);
 		json.put("range", processTypeEnum.getRange());
 		json.put("process", processList);
-		json.put("nodeList", getNodeListByProcessKey(emPlan.getProcessKey(),sectionList));
-//		json.put("longitude", longitude);
-//		json.put("latitude", latitude);
+		json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(),sectionList));
+		json.put("longitude", longitude);
+		json.put("latitude", latitude);
 		json.put("videos", videos);
 		
 		//发送到队列
@@ -362,7 +362,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 
 
 	@Override
-	public List<JSONObject> getNodeListByProcessKey(String processKey,List<Section> sectionList) {
+	public List<JSONObject> getNodeListByProcessKeyAndSection(String processKey,List<Section> sectionList) {
 		List<EmPlanDto> list = emPlanMapper.getNodeListByProcessKey(processKey);
 		if(list == null || list.isEmpty()) {
 			return Collections.emptyList();

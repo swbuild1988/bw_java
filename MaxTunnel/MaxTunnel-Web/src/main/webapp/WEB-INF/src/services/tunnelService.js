@@ -203,7 +203,7 @@ var TunnelService = {
   // 根据tunnelId获取管廊详细信息
   getTunnelDetailByTunnelId: function(tunnelId) {
     return new Promise((resolve, reject) => {
-      axios.get("tunnels/" + tunnelId).then(res => {
+      axios.get("tunnels/" + tunnelId+"/detail").then(res => {
         let {
           code,
           data,
@@ -212,7 +212,7 @@ var TunnelService = {
         if (code == 200) {
           resolve(data)
         } else {
-          reject(msg + ",地址:tunnels/" + tunnelId)
+          reject(msg + ",地址:tunnels/" + tunnelId+"/detail")
         }
       })
     });
