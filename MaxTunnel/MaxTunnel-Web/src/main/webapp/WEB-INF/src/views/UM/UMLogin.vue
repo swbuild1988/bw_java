@@ -82,6 +82,7 @@
                   "UMRoles",
                   JSON.stringify(roles)
                 );
+                console.log(sessionStorage.getItem('UMUserName'))
                 _this.$router.push({path: "UMmain"});
               },
               error => {

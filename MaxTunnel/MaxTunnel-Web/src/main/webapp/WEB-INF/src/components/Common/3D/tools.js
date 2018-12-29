@@ -425,7 +425,7 @@ export default {
             ctx.translate(-translate.X, -translate.Y);
             
             return canvas;
-        }
+        },
         
     }
 }

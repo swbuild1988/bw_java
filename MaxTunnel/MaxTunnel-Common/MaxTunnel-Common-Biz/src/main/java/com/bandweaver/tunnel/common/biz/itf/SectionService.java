@@ -102,6 +102,17 @@ public interface SectionService {
 
 	Section getByName(String name);
 
+	/**
+	 * 根据 经纬高 获得所属的区段
+	 * @param longitude
+	 * @param latitude
+	 * @param height
+	 * @return
+	 */
+	SectionDto getSectionDtoByGPS(double longitude, double latitude, double height);
+
+
 	List<Section> getSectionListByParentId(Integer sectionId); 
+
 
 }

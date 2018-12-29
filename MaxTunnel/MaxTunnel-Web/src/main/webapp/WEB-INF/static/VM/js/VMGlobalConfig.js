@@ -54,7 +54,7 @@ export default {
             ],
         },
           queryParam:{  //数据集查询参数
-            dataSourceName: "古城大街", //
+            dataSourceName: "tunnels19", //
             dataSetName: "安全设备",
         },
           detectionObj:{

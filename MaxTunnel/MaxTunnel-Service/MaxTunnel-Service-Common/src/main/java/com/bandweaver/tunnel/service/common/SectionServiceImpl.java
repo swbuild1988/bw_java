@@ -210,8 +210,121 @@ public class SectionServiceImpl implements SectionService {
 	}
 
 	@Override
+	public SectionDto getSectionDtoByGPS(double longitude, double latitude, double height) {
+		// 获取舱的高度范围
+		double min = -4.1, mid = 1.1, max = 5.1;
+		
+		// 确定所在舱的高度
+		if(height > mid && height <= max )
+			height = 3;
+		else if(height >= min && height <= mid) 
+			height = -0.75;
+		else return null;
+		//获取所有的section列表
+		List<SectionDto> scList = getAllSections();
+		LogUtil.info("sections:" + scList.size());
+		
+		SectionDto resultDto = null;
+		for (SectionDto sectionDto : scList) {
+			//获取起始经纬度高度
+			String startPoint = sectionDto.getStartPoint();
+			String endPoint = sectionDto.getEndPoint();
+			if(startPoint == null || startPoint.trim().length() == 0) { continue; }
+			if(endPoint == null || endPoint.trim().length() == 0) { continue; }
+			// 经纬高数组
+			List<Double> startList = getListFromString(startPoint);
+			List<Double> endList = getListFromString(endPoint);
+			// 筛选高度，确定所在舱范围
+			if(!startList.get(2).equals(height)) continue;
+			
+			// 获取所在舱的区域范围
+			List<java.awt.geom.Point2D.Double> pts = new ArrayList<java.awt.geom.Point2D.Double>();
+			pts.add(new java.awt.geom.Point2D.Double(startList.get(0) + 1.11E-5, startList.get(1) + 5.0E-5));
+			pts.add(new java.awt.geom.Point2D.Double(startList.get(0) - 1.11E-5, startList.get(1) - 5.0E-5));
+			pts.add(new java.awt.geom.Point2D.Double(endList.get(0) + 1.11E-5, endList.get(1) + 5.0E-5));
+			pts.add(new java.awt.geom.Point2D.Double(endList.get(0) - 1.11E-5, endList.get(1) - 5.0E-5));
+			
+			if(IsPtInPoly(longitude, latitude, pts)) {
+				LogUtil.info("section: " + sectionDto);
+				resultDto = sectionDto;
+			}
+		}
+		return resultDto;
+	}
+		
 	public List<Section> getSectionListByParentId(Integer sectionId) {
 		return sectionMapper.getSectionListByParentId(sectionId); 
+
 	}
 
+	/**
+	 * 判断点是否在多边形内
+	 * @param point 检测点
+	 * @param pts   多边形的顶点
+	 * @return      点在多边形内返回true,否则返回false
+	 */
+	public static boolean IsPtInPoly(double lon,double lat, List<java.awt.geom.Point2D.Double> pts){
+	    
+	    int N = pts.size();
+	    boolean boundOrVertex = true; //如果点位于多边形的顶点或边上，也算做点在多边形内，直接返回true
+	    int intersectCount = 0;//cross points count of x 
+	    double precision = 2e-10; //浮点类型计算时候与0比较时候的容差
+	    java.awt.geom.Point2D.Double p1, p2;//neighbour bound vertices
+	    java.awt.geom.Point2D.Double p = new java.awt.geom.Point2D.Double(lon, lat);; //当前点
+	    
+	    p1 = pts.get(0);//left vertex        
+	    for(int i = 1; i <= N; ++i){//check all rays            
+	        if(p.equals(p1)){
+	            return boundOrVertex;//p is an vertex
+	        }
+	        
+	        p2 = pts.get(i % N);//right vertex            
+	        if(p.x < Math.min(p1.x, p2.x) || p.x > Math.max(p1.x, p2.x)){//ray is outside of our interests                
+	            p1 = p2; 
+	            continue;//next ray left point
+	        }
+	        
+	        if(p.x > Math.min(p1.x, p2.x) && p.x < Math.max(p1.x, p2.x)){//ray is crossing over by the algorithm (common part of)
+	            if(p.y <= Math.max(p1.y, p2.y)){//x is before of ray                    
+	                if(p1.x == p2.x && p.y >= Math.min(p1.y, p2.y)){//overlies on a horizontal ray
+	                    return boundOrVertex;
+	                }
+	                
+	                if(p1.y == p2.y){//ray is vertical                        
+	                    if(p1.y == p.y){//overlies on a vertical ray
+	                        return boundOrVertex;
+	                    }else{//before ray
+	                        ++intersectCount;
+	                    } 
+	                }else{//cross point on the left side                        
+	                    double xinters = (p.x - p1.x) * (p2.y - p1.y) / (p2.x - p1.x) + p1.y;//cross point of y                        
+	                    if(Math.abs(p.y - xinters) < precision){//overlies on a ray
+	                        return boundOrVertex;
+	                    }
+	                    
+	                    if(p.y < xinters){//before ray
+	                        ++intersectCount;
+	                    } 
+	                }
+	            }
+	        }else{//special case when ray is crossing through the vertex                
+	            if(p.x == p2.x && p.y <= p2.y){//p crossing over p2                    
+	            	java.awt.geom.Point2D.Double p3 = pts.get((i+1) % N); //next vertex                    
+	                if(p.x >= Math.min(p1.x, p3.x) && p.x <= Math.max(p1.x, p3.x)){//p.x lies between p1.x & p3.x
+	                    ++intersectCount;
+	                }else{
+	                    intersectCount += 2;
+	                }
+	            }
+	        }            
+	        p1 = p2;//next ray left point
+	    }
+	    
+	    if(intersectCount % 2 == 0){//偶数在多边形外
+	        return false;
+	    } else { //奇数在多边形内
+	        return true;
+	    }
+	    
+	}
 }
