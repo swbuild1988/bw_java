@@ -35,6 +35,7 @@ import {
 import { flyManagerMinix } from './mixins/flyManager'
 import { addBarnLabel } from "./mixins/addBarnLabel";
 import tools from './tools'
+import { TunnelService } from '../../../services/tunnelService'
 
 let { progressTime } = require('../../../../static/VM/js/VMWebConfig')
 
@@ -208,6 +209,21 @@ export default {
                 this.modelProp.show.state = false;
             }
 
+        },
+        'prePosition':{
+            handler({ longitude,latitude,height }) {
+                
+                TunnelService.getStorePosition({ longitude,latitude,height })
+                    .then( storePosition => {
+                        
+                        this.$emit("showStorePosition", { 
+                            areaName: storePosition.area.name,
+                            storeName: storePosition.name,
+                            tunnelName: storePosition.store.tunnel.name
+                        });
+                    } )
+            },
+            deep: true
         }
     },
     components: {
@@ -309,6 +325,12 @@ export default {
                 //开启加载进度条
                 _this.showSpin();
             }
+            if( _this.refreshCameraPosition.enable ){
+                //开启相机定位
+                this.cameraPositionRefresh();
+            }
+            
+
             if(_this.searchCamera.openSearch ||　_this.unitsPosition.openPosition ||　_this.personnelPosition.openPosition ||　_this.defectPosition.openPosition ||　_this.eventsPosition.openPosition){
                 //鼠标经过实体时,触发气泡
                 getEntityProperty.call(_this,_this.scene,Cesium,_this.modelProp,'model-content')
@@ -441,7 +463,7 @@ export default {
                     };
                     if (!cameraPosition.equals(_this.prePosition)) {
                         _this.prePosition = cameraPosition;
-                        console.log("now position", _this.prePosition);
+                        
                         _this.$emit("refreshCameraPosition", cameraPosition);
                     }
                 } catch (error) {
@@ -655,9 +677,22 @@ export default {
         },
         showSpin(){
             let { spin } = this;
-            console.log('spin',spin);
 
             spin.spinTimer = setTimeout(()=> spin.spinShow = false,progressTime * 1000)
+        },
+        flyToMyLocation(flyParam){
+            if(typeof flyParam !='object'){ return }
+            let { scene } = this;
+            let { longitude,latitude,height,roll,pitch,heading } = flyParam.position;
+            console.log(longitude,latitude,height,roll,pitch,heading)
+            scene.camera.flyTo({
+                destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),
+                orientation : {
+                    heading : parseFloat(1.716482618088178),
+                    pitch : parseFloat(-0.30235173267000404),
+                    roll : parseFloat(2.582822844487964e-12)
+                },
+            })
         },
         //销毁viewer
         destoryViewer(){
@@ -686,6 +721,7 @@ export default {
         viewer.selectedEntityChanged.removeEventListener( this.operationEntity );
 
         this.destoryViewer()
+        this.stopCameraPositionRefresh();
     },
 };
 

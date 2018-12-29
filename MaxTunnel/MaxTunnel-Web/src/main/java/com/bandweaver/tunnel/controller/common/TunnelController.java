@@ -208,7 +208,7 @@ public class TunnelController extends BaseController<Tunnel> {
             jsonOne.put("camera", dto.getCamera());
             jsonOne.put("sn", dto.getSn());
             // 查询仓信息
-            List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
+//            List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
             //查询防火区信息
             List<AreaDto> areaList = areaService.getAreasByTunnelId(dto.getId());
 
@@ -220,13 +220,14 @@ public class TunnelController extends BaseController<Tunnel> {
                 jsonTwo.put("camera", area.getCamera());
                 jsonTwo.put("sn", area.getSn());
                 
+                //查询仓段信息
+                List<SectionDto> sectionList = sectionService.getSectionsByAreaId(area.getId());
                 List<JSONObject> listThree = new ArrayList<>();
-                for (StoreDto store : storeList) {
+                for (SectionDto section : sectionList) {
                     JSONObject jsonThree = new JSONObject();
-                    jsonThree.put("name", store.getName());
-                    jsonThree.put("id", store.getId());
-                    jsonThree.put("camera", store.getCamera());
-                    jsonThree.put("sn", store.getSn());
+                    jsonThree.put("name", section.getName());
+                    jsonThree.put("id", section.getId());
+                    jsonThree.put("camera", section.getCamera());
                     jsonThree.put("list", new ArrayList<>());
                     listThree.add(jsonThree);
                 }

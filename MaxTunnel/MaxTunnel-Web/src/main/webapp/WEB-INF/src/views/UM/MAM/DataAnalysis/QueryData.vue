@@ -157,8 +157,6 @@
         queryPrams: {
           tunnelId: "",
           id: "",
-          // storeId: null,
-          // areaId: "",
           objtypeIds: [],
           datatypeId: "",
           maxVal: 100,
@@ -265,7 +263,9 @@
         var _this = this;
         _this.tableData = [];
         _this.tableload=true;
-        DataAnalysisService.getMonitorData(_this.queryPrams).then((result) => {
+        var params= JSON.parse(JSON.stringify(_this.queryPrams));
+          params.tunnelId=  params.tunnelId==""?null:  params.tunnelId;
+        DataAnalysisService.getMonitorData(params).then((result) => {
           if (result) {
             result.list.reduce(function (a, b) {
               let temp = {};

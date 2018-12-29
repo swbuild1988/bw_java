@@ -9,6 +9,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,8 +63,26 @@ public class LoginController {
         JSONObject returnData = loginservice.getUserPermission(user.getName());
         return CommonUtil.success(returnData);
     }
-	
-	
+	/** GET方式登陆
+	 * @param name
+	 * @param password
+	 * @return
+	 */
+	@WriteLog(DescEnum.LOGIN)
+    @RequestMapping(value = "name/{name}/password/{password}", method = RequestMethod.GET)
+    public JSONObject loginGet (@PathVariable("name") String name, @PathVariable("password") String password){
+        
+		Subject subject= SecurityUtils.getSubject();
+        //密码加密是前端的事情，等前端改好之后，此处代码改回来即可
+        UsernamePasswordToken token=new UsernamePasswordToken(name, Sha256.getSHA256StrJava(password));
+        token.setRememberMe(true); 
+        subject.login(token);
+        
+        Session session = subject.getSession();
+        User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
+        JSONObject returnData = loginservice.getUserPermission(user.getName());
+        return CommonUtil.success(returnData);
+    }
 
 	@WriteLog(DescEnum.LOGOUT)
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
