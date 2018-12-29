@@ -292,7 +292,14 @@
         });
       },
       goToMoudle(path) {
-        this.$router.push(path)
+        if(path.path == '/VMMain'){
+          const {href} = this.$router.resolve({
+          name: "可视化主页"
+        });
+        window.open(href, '_blank');
+        } else {
+          this.$router.push(path);
+        } 
       },
       getCountInfoNum() {
         let _this = this
