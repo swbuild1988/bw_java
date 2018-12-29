@@ -198,7 +198,7 @@
 				#{endTime}
 			</if>
 		</where>
-		order by a.crt_time desc
+		order by a.sn asc
 	</select>
 
 	<select id="getAreasById" resultMap="DtoResultMap">

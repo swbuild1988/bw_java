@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.controller.mam;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjMapVo;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
@@ -36,6 +40,8 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 
 	@Autowired
 	private MeasObjMapService measObjMapService;
+	@Autowired
+	private MeasObjService measObjService;
 	
 	
 	/**根据objectId和inputValue获取映射对象 
@@ -140,4 +146,42 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
 	}
 	
+	/** 批量添加
+	 * @param objectTypeId 
+	 * @param inputValue
+	 * @param outputValue
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="measobj-map/batch",method=RequestMethod.POST)
+	public JSONObject insertBatch(@RequestBody JSONObject obj) {
+		Integer objectTypeId = obj.getInteger("objectTypeId");
+		
+		List<LinkedHashMap<String, Integer>> sis = (List)obj.get("si");
+		
+		MeasObjVo vo = new MeasObjVo();
+		vo.setObjtypeId(objectTypeId);
+		List<MeasObjDto>  list = measObjService.getMeasObjByCondition(vo);
+		for(MeasObjDto dto : list) {
+			for (LinkedHashMap<String, Integer> si : sis) {
+				MeasObjMap map = measObjMapService.getByObjectIdAndInputValue(dto.getId(), si.get("key"));
+				MeasObjMap pojo = new MeasObjMap();
+				pojo.setObjectId(dto.getId());
+				pojo.setCrtTime(new Date());
+				pojo.setInputValue(si.get("key"));
+				Integer objId = dto.getId()/100 * 100;
+				pojo.setObjectId2(objId + si.get("count"));
+				pojo.setOutputValue(si.get("val"));
+				if(map != null) {
+					if(pojo.getObjectId2().equals(map.getObjectId2()))continue;
+					pojo.setId(map.getId());
+					measObjMapService.update(pojo);
+				}else {
+					measObjMapService.add(pojo);
+				}
+			}
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
 }

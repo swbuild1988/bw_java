@@ -56,7 +56,7 @@ public class MeasObjDistributeServiceImpl implements MeasObjDistributeService {
 		}
     	
     	MeasObjDistributeVo disVo = new MeasObjDistributeVo();
-    	disVo.setIds(moIdList);
+    	disVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	disVo.setPageNum(vo.getPageNum());
     	disVo.setPageSize(vo.getPageSize());
     	disVo.setDcv(vo.getDcv());

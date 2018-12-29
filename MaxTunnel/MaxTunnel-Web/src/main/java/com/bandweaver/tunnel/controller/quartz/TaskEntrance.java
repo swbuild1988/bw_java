@@ -1,3 +1,4 @@
+
 package com.bandweaver.tunnel.controller.quartz;
 
 import java.util.ArrayList;
@@ -129,7 +130,8 @@ public class TaskEntrance {
     	MeasAlarm measAlarm = new MeasAlarm();
     	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
     	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
-    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
+//    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
+    	measAlarm.setObjectId(203012401);
     	measAlarm.setAlarmSeverity(level);
     	measAlarm.setAdditionalText(null);
     	measAlarm.setAlarmSource(null);
@@ -216,7 +218,7 @@ public class TaskEntrance {
 	
 	
 	
-	/** 定时任务保存缓存中的数据到对象表和valu表 
+	/** 定时任务保存缓存中的数据到对象表和value表 
 	 * @author shaosen
 	 * @Date 2018年11月8日
 	 */
@@ -650,3 +652,4 @@ public class TaskEntrance {
     
     
 }
+

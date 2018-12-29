@@ -25,6 +25,8 @@ public class Store implements Serializable{
 
 	private String sn;
 	
+	private Integer parentId;
+	
     private Integer tunnelId;
 
     private Integer storeTypeId;
@@ -90,12 +92,21 @@ public class Store implements Serializable{
         this.crtTime = crtTime;
     }
 
-    @Override
+    public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+	@Override
     public String toString() {
         return "Store{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sn='" + sn + '\'' +
+                ", parentId='" + parentId + '\'' +
                 ", tunnelId=" + tunnelId +
                 ", storeTypeId=" + storeTypeId +
                 ", camera='" + camera + '\'' +

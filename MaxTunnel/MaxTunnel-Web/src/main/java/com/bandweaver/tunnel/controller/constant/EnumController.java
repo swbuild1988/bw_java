@@ -22,6 +22,7 @@ import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
+import com.bandweaver.tunnel.common.biz.constant.em.ObjectBindTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.UnitTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
@@ -58,6 +59,22 @@ public class EnumController {
 	@Autowired
 	private StoreTypeService storeTypeService;
 	
+	/**监测对象关联其他对象类型（视频和预案）枚举 
+	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"预案"},{"val":2,"key":"视频"}]}
+	 * @author shaosen
+	 * @Date 2018年12月20日
+	 */
+	@RequestMapping(value="objectbind-enums",method=RequestMethod.GET)
+	public JSONObject getOjectBindTypeList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (ObjectBindTypeEnum e : ObjectBindTypeEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
 	
 	
 	
@@ -227,6 +244,23 @@ public class EnumController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
+	/** 获取dataType状态量枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年12月26日
+	 */
+	@RequestMapping(value="datatypeSI-enums",method=RequestMethod.GET)
+	public JSONObject getDataTypeSIEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		List<ObjectType> objTypeList = ObjectType.getEnumByDataType(DataType.SI.getValue());
+		for (ObjectType objectType : objTypeList) {
+			JSONObject jo = new JSONObject();
+			jo.put("key", objectType.getName());
+			jo.put("val", objectType.getValue());
+			list.add(jo);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
 
 	/**
 	 *objectType枚举

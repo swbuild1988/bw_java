@@ -3,7 +3,7 @@
 <mapper namespace="com.bandweaver.tunnel.dao.em.EmPlanMapper">
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
     <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="PROCESS_KEY" jdbcType="VARCHAR" property="processKey" />
+    <result column="process_key" jdbcType="VARCHAR" property="processKey" />
     <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
     <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
     <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
@@ -17,7 +17,7 @@
   </resultMap>
   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto">
     <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="PROCESS_KEY" jdbcType="VARCHAR" property="processKey" />
+    <result column="process_key" jdbcType="VARCHAR" property="processKey" />
     <result column="TASK_KEY" jdbcType="VARCHAR" property="taskKey" />
     <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
     <result column="TARGET_KEY" jdbcType="DECIMAL" property="targetKey" />
@@ -30,7 +30,7 @@
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ID, PROCESS_KEY, TASK_KEY,task_name, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, 
+    ID, process_key, TASK_KEY,task_name, TARGET_KEY, TARGET_VALUE, ACTION_KEY, ACTION_VALUE, FINISH_KEY, 
     FINISH_VALUE, is_finished,CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
@@ -44,7 +44,7 @@
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
-    insert into T_EM_PLAN (ID, PROCESS_KEY, TASK_KEY,task_name, 
+    insert into T_EM_PLAN (ID, process_key, TASK_KEY,task_name, 
       TARGET_KEY, TARGET_VALUE, ACTION_KEY, 
       ACTION_VALUE, FINISH_KEY, FINISH_VALUE, is_finished
       CRT_TIME)
@@ -60,7 +60,7 @@
         ID,
       </if>
       <if test="processKey != null">
-        PROCESS_KEY,
+        process_key,
       </if>
       <if test="taskKey != null">
         TASK_KEY,
@@ -136,7 +136,7 @@
     update T_EM_PLAN
     <set>
       <if test="processKey != null">
-        PROCESS_KEY = #{processKey,jdbcType=VARCHAR},
+        process_key = #{processKey,jdbcType=VARCHAR},
       </if>
       <if test="taskKey != null">
         TASK_KEY = #{taskKey,jdbcType=VARCHAR},
@@ -173,7 +173,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlan">
     update T_EM_PLAN
-    set PROCESS_KEY = #{processKey,jdbcType=VARCHAR},
+    set process_key = #{processKey,jdbcType=VARCHAR},
       TASK_KEY = #{taskKey,jdbcType=VARCHAR},
       task_name = #{taskName,jdbcType=VARCHAR},
       TARGET_KEY = #{targetKey,jdbcType=DECIMAL},
@@ -188,7 +188,7 @@
   </update>
   
   <select id="getEmPlanByProcessKeyAndTaskKey" resultMap="BaseResultMap">
-  	select * from T_EM_PLAN where PROCESS_KEY = #{processKey} and TASK_KEY = #{taskKey}
+  	select * from T_EM_PLAN where process_key = #{processKey} and TASK_KEY = #{taskKey}
   </select>
   
   <select id="getById" resultMap="DtoResultMap">
@@ -238,7 +238,7 @@
 				and crt_time &lt; = #{endTime}
 			</if>
 		</where>
-		order by crt_time desc
+		order by process_key,task_key
 	</select>
   
   

@@ -2,8 +2,10 @@ package com.bandweaver.tunnel.service.mam.measobj;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
@@ -40,6 +44,8 @@ public class MeasObjServiceImpl implements MeasObjService {
     private MeasValueAIMapper measValueAIMapper;
     @Autowired
     private MeasObjModuleCenter measObjModuleCenter;
+    @Autowired
+    private SectionService sectionService;
 //    @Autowired
 //    private RedisTemplate redisTemplate;
 
@@ -51,8 +57,7 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public MeasObj get(Integer id) {
-        MeasObj o = measObjMapper.selectByPrimaryKey(id);
-        return o;
+        return measObjModuleCenter.getMeasObj(id);
     }
 
     @Override
@@ -77,6 +82,22 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObjDto> getMeasObjByCondition(MeasObjVo vo) {
+    
+    	if(vo.getObjtypeIds() != null && vo.getObjtypeIds().isEmpty()) {
+			vo.setObjtypeIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getTunnelIds() != null && vo.getTunnelIds().isEmpty()) {
+			vo.setTunnelIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getStoreIds() != null && vo.getStoreIds().isEmpty()) {
+			vo.setStoreIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getSectionIds() != null && vo.getSectionIds().isEmpty()) {
+			vo.setSectionIds(null);//防止mapper.xml拼接sql出错
+		}
+		if(vo.getIds() != null && vo.getIds().isEmpty()) {
+			vo.setIds(null);//防止mapper.xml拼接sql出错
+		}
          List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
          return list == null ? Collections.emptyList() : list ;
     }
@@ -88,12 +109,12 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObj> getAllMeasObjList() {
-        return measObjMapper.getAllMeasObjList();
+        return measObjModuleCenter.getMeasObjs();
     }
 
     @Override
     public List<MeasObj> getListByIds(List<Integer> ids) {
-        return measObjMapper.getListByIds(ids);
+        return measObjModuleCenter.getMeasObjsByIds(ids);
     }
 
     @Transactional
@@ -109,7 +130,7 @@ public class MeasObjServiceImpl implements MeasObjService {
     @Override
     public PageInfo<MeasObjDto> dataGrid(MeasObjVo vo) {
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-        List<MeasObjDto> list = getMeasObjByCondition(vo);
+        List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
         return new PageInfo<>(list);
     }
 
@@ -157,17 +178,18 @@ public class MeasObjServiceImpl implements MeasObjService {
 	}
 
 	@Override
-	public List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue, Integer sectionId) {
+	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
 		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
-		List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(sectionId,objectTypeId);
 		
-		LogUtil.info("所在区段:" + sectionId + "\n"
-				+ "检测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
-				+ "结果列表：" + list );
-		
-		if(list == null || list.isEmpty()) {
-			return Collections.emptyList();
+		Set<MeasObj> set = new HashSet<>();
+		//查询所有仓里指定类型的监测对象
+		for (Section section : sectionList) {
+			List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(),objectTypeId);
+			LogUtil.info("所在区段:" + section.getName() + "\n"
+					+ "监测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
+					+ "结果列表：" + list );
+			set.addAll(list);
 		}
-		return list;
+		return set;
 	}
 }

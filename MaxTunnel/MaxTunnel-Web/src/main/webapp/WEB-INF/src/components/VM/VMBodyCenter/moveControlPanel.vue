@@ -45,7 +45,7 @@
         z-index: 1000;
         color: white;
         text-align: center;
-        height: 16%;
+        height: 13%;
         width: 20%;
         background: url(../../../assets/VM/alarmContent.png) no-repeat;
         background-size: contain;
@@ -86,12 +86,12 @@
     @media (min-width: 1921px) {
             
         .ControlPanelTitleDiff{
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin: 2.5rem 0 0.3rem;   
         }
         .ControlPanelContent >>> .flyMessageBtn > span {
-            font-size: 1.5rem;
-            line-height: 1.5rem;
+            font-size: 1.6rem;
+            line-height: 1.6rem;
         }
     }
 

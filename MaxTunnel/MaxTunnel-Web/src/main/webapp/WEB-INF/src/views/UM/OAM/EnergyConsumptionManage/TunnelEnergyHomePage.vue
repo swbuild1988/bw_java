@@ -76,12 +76,16 @@
   }
 
   .radar{
-  height:calc(37vh - 60px);
+    height:calc(37vh - 60px);
     width: 100%;
+    /*border-color: white;*/
+    border: 2px solid #dddfe1;
   }
 
   .pie{
     height: calc(37vh - 60px);
+    border: 2px solid #dddfe1;
+    /*box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);*/
   }
 </style>
 <script>

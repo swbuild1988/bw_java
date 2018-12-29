@@ -1,7 +1,10 @@
 <template>
     <div class="h5StreamVideo">
         <video :id="id" class="videos" autoplay webkit-playsinline playsinline @dblclick="fullScreen"></video>
-         <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide">
+        <div v-if="isTextShow" class="text">
+            <p style="padding: 10%">{{text}}</p>
+        </div>
+        <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide" ref="embedControl">
             <embeded-control v-bind:camera = "video" v-bind:isShow="controlFlag"></embeded-control>
         </div>
         <!-- <div class="playPause"></div> -->
@@ -20,12 +23,16 @@ export default {
         },
         id: {
             required: true
+        },
+        text: {
+            required: false
         }
     },
     data() {
         return {
             curVideo: null,
-            controlFlag: false
+            controlFlag: false,
+            isTextShow: false
         };
     },
     components: {
@@ -59,6 +66,9 @@ export default {
         this.Log.info("curVideo Config:", this.config);
         this.curVideo = H5sPlayerCreate(this.config);
         this.curVideo.connect(); 
+        if(this.text){
+            this.isTextShow = true
+        }
     },
     beforeDestroy() {
         this.curVideo.disconnect();
@@ -98,8 +108,10 @@ export default {
         show() {
             let width = document.getElementsByClassName('h5StreamVideo')[0].offsetWidth
             let height = document.getElementsByClassName('h5StreamVideo')[0].offsetHeight
-            if(width > 800 && height > 600 && this.video.positionSupport){
+            if(width > 800 && height > 800 && this.video.positionSupport){
                 this.controlFlag = true
+                let height = document.getElementsByClassName('embedControl')[0].offsetHeight
+                document.getElementsByClassName('embedControl')[0].style.width = height + 'px'
             }
         },
         hide() {
@@ -166,8 +178,13 @@ export default {
 
 .embedControl{
     position: absolute;
-    width: 98px;
-    height: 100px;
+    height: 30%;
+    min-height: 100px;
+    min-width: 98px;
+    max-width: 240px;
+    max-height: 240px;
+   /* width: 98px;
+    height: 100px;*/
     bottom: 0;
     left: 50%;
     transform: translate(-70%);
@@ -175,6 +192,18 @@ export default {
 }
 .trsp{
     opacity: 0;
+}
+.text{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 20%;
+   /* background-color: white;*/
+    z-index: 999;
+    font-size: 20px;
+    /*text-align: center;*/
+    color: red;
 }
 </style>
 

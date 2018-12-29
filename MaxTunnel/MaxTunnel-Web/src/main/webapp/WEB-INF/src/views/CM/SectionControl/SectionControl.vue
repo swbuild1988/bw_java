@@ -9,26 +9,28 @@
             </Col>
             <Col span="6">
                 <span>所属管廊：</span>
-                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-                    <Option value="null">所有</Option>
+                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="getstores">
+                    <Option value="null">不限</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
             </Col>
             <Col span="6">
                 <Poptip placement="bottom" width="1000">
                     <span>所属管仓：</span>
-                    <Input v-model="barnNameShow" placeholder="请选择管仓类型" class="inputWidth"/>
+                    <Input v-model="barnNameShow" placeholder="请选择管仓类型" style="width: 60%"/>
                     <div class="pop" slot="content">
                         <barn-choose v-on:listenToBarnChoose="getBarn"></barn-choose>
                     </div>
                 </Poptip>
             </Col>
             <Col span="6">
+            <div>
                 <span>所属区域：</span>
                 <Select v-model="researchInfo.areaId" placeholder="请选择区域类型" class="inputWidth">
-                    <Option value="null">所有</Option>
-                    <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
+                    <Option value="null">不限</Option>
+                    <Option v-for="item in areas" :value="item.id" :key="item.id">{{item.name}}</Option>
                 </Select>
+            </div>
             </Col>
         </Row>
         <Row style="marginLeft:25px;marginBottom:10px;">
@@ -36,22 +38,24 @@
                 <span>开始时间：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
                 </DatePicker>
-            </Col>
+                </Col>
             <Col span="6">
                 <span>结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
                 </DatePicker>
             </Col>
             <Col span="10">
-                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
-                <!-- <Button type="error" size="small" @click="addNewSection()">新增区段</Button>  -->
-                <Button type="warning" size="small" @click="create()" :enable="canCreate">根据现有区和仓新建区段</Button> 
-                <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
-                <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
+                    <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
+                    <!-- <Button type="error" size="small" @click="addNewSection()">新增区段</Button>  -->
+                    <Button type="warning" size="small" @click="create()" :enable="canCreate">根据现有区和仓新建区段</Button> 
+                    <vue-xlsx-table @on-select-file="getPositions">导入经纬度</vue-xlsx-table>
+                    <Button type="primary" size="small" @click="savePos">保存经纬度</Button>
+                    <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
+                    <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
         </Row>
         <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
-        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
+        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top"  show-sizer @on-page-size-change='handlePageSize' :page-size="page.pageSize"
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
         <div>
             <section-module v-bind="addSectionInfo" v-on:listenToAdd="saveSection"></section-module>
@@ -59,6 +63,36 @@
         <div>
             <section-modification v-bind="changeSectionInfo" v-on:listenToChange="saveChangeSection"></section-modification>
         </div>
+        <Modal 
+            v-model="batchCreate.isShow" 
+            width='900' 
+            style="padding-left: 20px;padding-right: 20px;"
+            title="批量添加区段"
+            ok-text="提交"
+            @on-ok="save"
+            @on-visible-change="visibleChanged"
+            >
+            <div>
+                <span>所属管廊：</span>
+                <Select v-model="batchCreate.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="showSectionsInfo">
+                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
+                </Select>
+            </div>
+            <div style="margin-top: 20px">
+                <Tabs v-model="batchCreate.tabValue">
+                    <TabPane  v-for="section in batchCreate.sectionsInfo" :label="section.storeName" :name="section.storeName" :key="section.id">
+                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 6px;margin-bottom: 6px">
+                            <Checkbox :indeterminate="section.indeterminate" :value="section.checkAll" @click.prevent.native="handleCheckAll(section)">
+                                全选
+                            </Checkbox>
+                        </div>
+                        <CheckboxGroup v-model="section.checkAllGroup" @on-change="checkChanged">
+                            <Checkbox v-for="area in section.areas" :label="area.name" :key="area.id" v-model="area.check" :value="area.check"></Checkbox>
+                        </CheckboxGroup>
+                    </TabPane>
+                </Tabs>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -66,6 +100,8 @@
 import BarnChoose from "../../../views/CM/Store/BarnChoose";
 import SectionModule from "../../../views/CM/SectionControl/SectionModule";
 import SectionModification from "../../../views/CM/SectionControl/SectionModification";
+import { TunnelService } from '../../../services/tunnelService'
+
 export default {
     name: "barn-manage",
     data() {
@@ -88,8 +124,8 @@ export default {
                 },
                 {
                     type: "index",
-                    align: "center",
-                    width: 60
+                    width: 60,
+                    align: "center"
                 },
                 {
                     title: "区段名称",
@@ -99,76 +135,42 @@ export default {
                 {
                     title: "可安装管线数",
                     key: "totalCableNumber",
-                    align: "center",
-                    width: 100
+                    align: "center"
                 },
                 {
                     title: "所属管廊",
-                    key: "tunnelId",
+                    key: "tunnelName",
                     align: "center"
                 },
                 {
                     title: "所属管仓",
                     key: "storeName",
-                    align: "center",
-                    render: (h,params) => {
-                        return h('div',params.row.store.name)
-                    }
+                    align: "center"
                 },
                 {
                     title: "所属区域",
                     key: "areaName",
-                    align: "center",
-                    width: 110,
-                    render: (h,params) => {
-                        return h('div',params.row.area.name)
-                    }
+                    align: "center"
                 },
                 {
                     title: "相机视角",
                     key: "camera",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[0]
-                            return h('div',temp)
-                        }
-                    }
+                    align: "center"
                 },
                 {
                     title: "开始坐标",
                     key: "startPoint",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[1]
-                            return h('div',temp)
-                        }
-                    }
+                    align: "center"
                 },
                 {
                     title: "结束坐标",
                     key: "endPoint",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[2]
-                            return h('div',temp)
-                        }
-                    }
+                    align: "center"
                 },
                 {
                     title: "创建时间",
                     key: "crtTime",
-                    align: "center",
-                    width: 190,
-                    render: (h,params) => {
-                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
-                        return h('div',temp)
-                    }
+                    align: "center"
                 },
                 {
                     title: "操作",
@@ -225,12 +227,17 @@ export default {
                 changeInfo: {}
             },
             deleteShow: false,
-            deleteSelect: []
+            deleteSelect: [],
+            batchCreate: {
+                isShow: false,
+                tunnelId: null,
+                sectionsInfo: [],  
+                tabValue: null
+            }
         };
     },
     mounted() {
         this.gettunnel();
-        this.getstoretype();
         this.showTable();
     },
     computed: {
@@ -242,8 +249,8 @@ export default {
                 tunnelId: this.researchInfo.tunnelId,
                 storeId: this.researchInfo.storeId,
                 areaId: this.researchInfo.areaId,
-                startTime: this.researchInfo.startTime,
-                endTime: this.researchInfo.endTime
+                startTime: new Date(this.researchInfo.startTime).getTime(),
+                endTime: new Date(this.researchInfo.endTime).getTime()
             };
             return Object.assign({}, research);
         },
@@ -281,7 +288,41 @@ export default {
             this.axios.post("/sections/datagrid", this.researches).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
-                    this.data6 = data.list;
+                    let allinfo = [];
+                    for (let index in data.list) {
+                        let info = {};
+                        info.id = data.list[index].id;
+                        info.name = data.list[index].name;
+                        info.crtTime = new Date(
+                            data.list[index].crtTime
+                        ).format("yyyy-MM-dd hh:mm:s");
+                        if (data.list[index].totalCableNumber != null) {
+                            info.totalCableNumber =
+                                data.list[index].totalCableNumber;
+                        }
+                        if (
+                            data.list[index].store != null &&
+                            data.list[index].store.tunnel != null
+                        ) {
+                            info.tunnelName =
+                                data.list[index].store.tunnel.name;
+                            info.tunnelId = data.list[index].store.tunnel.id;
+                        }
+                        if (data.list[index].store != null) {
+                            info.storeName = data.list[index].store.name;
+                            info.storeId = data.list[index].store.id;
+                        }
+                        if (data.list[index].area != null) {
+                            info.areaName = data.list[index].area.name;
+                            info.areaId = data.list[index].area.id;
+                        }
+                        info.camera = data.list[index].camera != null ? data.list[index].camera : ''
+                        info.startPoint = data.list[index].startPoint != null ? data.list[index].startPoint : '';
+                        
+                        info.endPoint = data.list[index].endPoint != null ? data.list[index].endPoint : '';
+                        allinfo.push(info);
+                    }
+                    this.data6 = allinfo;
                     this.page.pageTotal = data.total;
                 }
             });
@@ -291,25 +332,34 @@ export default {
         },
         create() {
             this.canCreate = false;
-            this.axios.get("/sections/create").then(res => {
-                this.canCreate = true;
-            });
+            this.batchCreate.isShow = true;
+            // this.axios.get("/sections/create").then(res => {
+            //     this.canCreate = true;
+            // });
         },
         gettunnel() {
-            this.axios.get("/tunnels").then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.tunnels = data;
-                }
-            });
+            let _this = this
+            TunnelService.getTunnels().then(
+                res=>{
+                    let _tunnels = []
+                    for (let i = 0; i < res.length; i++) {
+                        let tunnel = {};
+                        tunnel.id = res[i].id;
+                        tunnel.name = res[i].name;
+                        _tunnels.push(tunnel);
+                    }
+                    _this.tunnels = _tunnels;
+                })
         },
-        getstoretype() {
-            this.axios.get("/store-type/list").then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.types = data;
-                }
-            });
+        getstores() {
+            let _this = this
+            TunnelService.getAreasByTunnelId(this.researchInfo.tunnelId).then(
+                result=>{
+                    _this.areas = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -337,12 +387,14 @@ export default {
         editSection(index) {
             this.changeSectionInfo.changeInfo = this.data6[index];
             this.formValidate.id = this.data6[index].id;
+            console.log(this.changeSectionInfo.changeInfo);
             this.changeSectionInfo.show.state = !this.changeSectionInfo.show
                 .state;
         },
         saveChangeSection(data) {
             this.formValidate = data;
             this.axios.put("/sections", this.modifications).then(res => {
+                console.log(this.modifications);
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;
@@ -392,6 +444,140 @@ export default {
         },
         research() {
             this.showTable();
+        },
+        showSectionsInfo() {
+            let _this = this
+            if(this.batchCreate.tunnelId){
+                Promise.all([TunnelService.getStoresByTunnelId(this.batchCreate.tunnelId),TunnelService.getAreasByTunnelId(this.batchCreate.tunnelId)]).then(
+                result=>{
+                    _this.batchCreate.sectionsInfo = []
+                    let areas = []
+                    let checkAllGroup = []
+                    result[1].forEach(area=>{
+                        let areaInfo = {}
+                        areaInfo.id = area.id
+                        areaInfo.name = area.name
+                        areas.push(areaInfo)
+                        checkAllGroup.push(area.name)
+                    })
+                    result[0].forEach(store=>{
+                        let temp = {}
+                        temp.storeId = store.id
+                        temp.storeName = store.name
+                        temp.areas = areas
+                        temp.indeterminate = false
+                        temp.checkAll = true
+                        temp.checkAllGroup = checkAllGroup
+                        _this.batchCreate.sectionsInfo.push(temp)
+                    })
+                    _this.batchCreate.tabValue = result[0][0].name
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            }
+        },
+        handleCheckAll(section){
+            if(section.indeterminate){
+                section.checkAll = false
+            } else {
+                section.checkAll = !section.checkAll
+            }
+            section.indeterminate = false
+
+            if(section.checkAll){
+                section.areas.forEach(area=>{
+                    section.checkAllGroup.push(area.name)
+                })
+            } else {
+                section.checkAllGroup = []
+            }
+        },
+        checkChanged(data){
+            let curItem = this.batchCreate.sectionsInfo.find(item=>{
+                return item.storeName == this.batchCreate.tabValue
+            })
+            let length = curItem.areas.length
+            if(data.length == length){
+                curItem.indeterminate = false
+                curItem.checkAll = true
+            }else if(data.length > 0){
+                curItem.indeterminate = true
+                curItem.checkAll = false
+            } else {
+                curItem.indeterminate = false
+                curItem.checkAll = false
+            }
+        },
+        visibleChanged(status){
+            if(!status){
+                this.batchCreate.tunnelId = null
+                this.batchCreate.sectionsInfo = null
+            }
+        },
+        save(){
+            let res ={
+                section: []
+            }
+            this.batchCreate.sectionsInfo.forEach(info=> {
+                let tmp_section = {
+                    storeId: info.storeId,
+                    areaIds:[]
+                }
+                info.checkAllGroup.forEach(checked=> {
+                    tmp_section.areaIds.push(info.areas.find(area=>area.name == checked).id)
+                })
+                res.section.push(tmp_section)
+            })
+            let _this = this
+            TunnelService.batchCreateSections(res).then(
+                result=>{
+                    _this.$Message.info("添加成功！");
+                    _this.showTable()
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        },
+        getPositions(data) {
+            this.data6.forEach(section=>{
+                let curPos = data.body.find(pos=>{
+                    return section.id == pos[data.header[0]]
+                })
+                if(curPos != undefined){
+                    let curSection = this.data6.find(item=>{
+                        return item.id == curPos.sectionId
+                    })
+                    if(curSection != undefined){
+                        curSection.startPoint = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]]
+                        curSection.endPoint = curPos[data.header[4]] + ',' + curPos[data.header[5]] + ',' + curPos[data.header[6]]
+                        curSection.camera = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]] + ',' + curPos[data.header[7]] + ',' + curPos[data.header[8]] + ',' + curPos[data.header[9]]
+                    }
+                }
+                
+            })
+        },
+        savePos(){
+            let params = []
+            this.data6.forEach(data=>{
+                if(data.camera.length != 0){
+                    let temp = {}
+                    temp.id = data.id
+                    temp.camera = data.camera
+                    temp.startPoint = data.startPoint
+                    temp.endPoint = data.endPoint
+                    params.push(temp)
+                }
+            })
+            console.log(params)
+            let _this = this
+            TunnelService.batchAddPositions(params).then(
+                result=>{
+                    _this.$Message.info("添加成功！")
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
         }
     },
     components: {
@@ -412,10 +598,11 @@ export default {
 }
 .pageStyle {
     text-align: right;
-    margin-top: 20px;
+    margin-top: 100px;
     margin-right: 10px;
 }
-.ivu-poptip >>> .ivu-poptip-rel{
+.ivu-poptip,
+.ivu-poptip-rel {
     width: 100%;
 }
 </style>

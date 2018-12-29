@@ -8,9 +8,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
+import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
+import com.bandweaver.tunnel.common.biz.pojo.em.ObjectBind;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -27,6 +31,8 @@ public class AlarmServiceImpl implements AlarmService {
 //	private AlarmModuleCenter alarmModuleCenter;
 	@Autowired
 	private MqService mqService;
+	@Autowired 
+	private ObjectBindService objectBindService;
 	
 
 	@Override
@@ -35,11 +41,17 @@ public class AlarmServiceImpl implements AlarmService {
 		//save to DB
 		alarm.setCleaned(false);
 		alarmMapper.insertSelective(alarm);
-//		LogUtil.info("返回主键ID：" + alarm.getId() );
+		LogUtil.debug("返回主键ID：" + alarm.getId() );
+		
 		//save to Cache
 //		alarmModuleCenter.insert(alarm);
+		
 		//send to MQ
-		mqService.send2AlarmQueue(alarm);
+		List<JSONObject> returnData = objectBindService.getPlansByObject(alarm.getObjectId());
+		JSONObject json = (JSONObject) JSONObject.toJSON(alarm);
+		json.put("plans", returnData);
+		mqService.sendToAlarmUMQueue(json.toJSONString());
+		mqService.sendToAlarmVMQueue(json.toJSONString());
 	}
 
 
@@ -68,16 +80,10 @@ public class AlarmServiceImpl implements AlarmService {
 
 
 	@Override
-	public List<Alarm> getAllNonCleanedAlarm() {
-		List<Alarm> list = new ArrayList<>();
+	public List<AlarmDto> getAllNonCleanedAlarm() {
 //		List<Alarm> alarms = alarmModuleCenter.getAlarms();
-		List<Alarm> alarms = alarmMapper.getAllAlarm();
-		for (Alarm alarm : alarms) {
-			if(alarm.getCleaned()!= null && !alarm.getCleaned()) {
-				list.add(alarm);
-			}
-		}
-		return list;
+		List<AlarmDto> list = alarmMapper.getAllNonCleanedAlarm();
+		return list == null ? Collections.emptyList() : list ;
 	}
 
 	@Override
@@ -144,3 +150,4 @@ public class AlarmServiceImpl implements AlarmService {
 
 
 }
+

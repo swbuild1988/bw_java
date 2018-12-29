@@ -26,12 +26,11 @@
             <FormItem label="入库时间：" prop="inTime">
                 <DatePicker type="datetime" v-model="addBackUp.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
-            <FormItem style="text-align: center;">
+            <div style="text-align: center;">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submit('addBackUp')" :disabled="isDisable">提交</Button>
-                <Button type="ghost" style="margin-left: 8px" @click="handleReset('addBackUp')">取消 </Button>
-            </FormItem>
+            </div>
         </Form>
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>

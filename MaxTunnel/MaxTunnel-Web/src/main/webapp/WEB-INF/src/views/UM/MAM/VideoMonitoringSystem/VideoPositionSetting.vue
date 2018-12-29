@@ -9,9 +9,16 @@
     	<Col span="12" offset="1">
             <div class="cameraList">
                 <span style="font-size: 18px;font-weight: bold;color:#fff;">摄像头：</span>
+                <Select v-model="curVideo.areaId" id="cameras" @on-change="getCameras" class="select" placeholder="请选择区域">
+                    <Option v-for="area in areaList" :value="area.id" :key="area.id" class="option">{{ area.name }}</Option>
+                   <!--  <Option value="" key="0" class="option">空</Option> -->
+                </Select>
+                <Select v-model="curVideo.storeId" id="cameras" @on-change="getCameras" class="select" placeholder="请选择监测仓">
+                    <Option v-for="store in storeList" :value="store.id" :key="store.id" class="option">{{ store.name }}</Option>
+                </Select>
                 <Select v-model="curVideo.id" id="cameras" @on-change="changVideo" class="select">
                     <Option v-for="camera in cameraList" :value="camera.id" :key="camera.id" class="option">{{ camera.name }}</Option>
-                    <Option value="" key="0" class="option">空</Option>
+                    <!-- <Option value="" key="0" class="option">空</Option> -->
                 </Select>
             </div>
     		    <div class="camera">
@@ -35,7 +42,7 @@
               <!-- <div class="posTag"></div> -->
   	    			<span class="name">{{ pos }}</span>
   	    			<div class="options">
-  	    				<Button type="primary" size="small" @click="set(pos)">设置</Button>
+  	    				<Button type="primary" size="small" @click="set(pos)">到达预置位</Button>
   	    				<Button type="primary" size="small" icon="edit" @click="edit(pos)"></Button>
   	    				<Button type="error" size="small" icon="trash-a" @click="del(pos)"></Button>
   	    			</div>
@@ -63,15 +70,15 @@
 <script>
 import VideoControl from '../../../../components/UM/MAM/videoControls/VideoControl'
 import { VideoService } from '../../../../services/videoService'
+import { TunnelService } from '../../../../services/tunnelService' 
 import VideoComponent from "../../../../components/Common/Video/VideoComponent"
 
 export default {
     name: "videoPositionSetting",
     data() {
     	return {
-	        tunnelId: null,
 	        // val: 'rtsp://admin:123456@192.168.3.202:554/h264/ch1/main/av_stream',
-	        perPositions: ['预置位1','预置位2','预置位4','预置位预置5预置位预置预置位预置','预置位预置位预置位6'],
+	        perPositions: [],
             curPosition: null,
             isShow: false,
             isAdd: false,
@@ -80,19 +87,24 @@ export default {
             isDel: false,
             curVideo: {
                 id: null,
-                url: ''
+                url: '',
+                tunnelId: null,
+                storeId: null,
+                areaId: null
             },
             cameraList: [],
-            isDisabled: null
+            areaList: [],
+            storeList: [],
+            isDisabled: null,
     	};
     },
     components: { VideoControl,VideoComponent },
     mounted(){
-        console.log(this.$route.params.camera)
-  		  this.tunnelId = this.$route.params.tunnelId
+  		  this.curVideo.tunnelId = this.$route.params.camera.tunnelId 
+        console.log(this.curVideo.tunnelId)
         let camera = this.$route.params.camera
         this.isDisabled = !camera.positionSupport
-        this.getCameras()
+        this.getAreaAndStores()
     },
     computed:{
         param() {
@@ -107,18 +119,37 @@ export default {
         }
     },
     methods:{
+        getAreaAndStores(){
+          let _this = this
+          Promise.all([TunnelService.getStoresByTunnelId(this.curVideo.tunnelId),TunnelService.getAreasByTunnelId(this.curVideo.tunnelId)]).then(
+            result=>{
+              _this.storeList = result[0]
+              _this.areaList = result[1]
+              _this.curVideo.areaId = _this.$route.params.camera.areaId
+              _this.curVideo.storeId = _this.$route.params.camera.storeId
+              _this.getCameras()
+            },
+            error=>{
+              _this.Log.info(error)
+            })
+        },
         getCameras() {
             let _this = this
-            VideoService.getCamerasByTunnelId(this.tunnelId).then(
-                result=>{
+            let conditions = {
+              tunnelId: this.curVideo.tunnelId,
+              storeId: this.curVideo.storeId,
+              areaId: this.curVideo.areaId
+            }
+            VideoService.getCamerasByConditions(conditions).then(
+                result => {
                     _this.cameraList = result
                     _this.curVideo = _this.$route.params.camera
-                    // _this.curVideo.id = _this.$route.params.camera.id
                     _this.getPositions()
                 },
-                error=>{
+                error => {
                     _this.Log.info(error)
-                })
+                }
+            )
         },
     	getPositions() {
         let _this = this
@@ -132,7 +163,7 @@ export default {
             })
     	},
   		back() {
-  			this.$router.push('/UM/VideoMonitoring/details/' + this.tunnelId)
+  			this.$router.push('/UM/VideoMonitoring/details/' + this.curVideo.tunnelId)
   		},
   		start(data) {
         let _this = this
@@ -345,7 +376,7 @@ export default {
     .cameraList{
         height: 6vh;
         padding: 12px;
-        width: 60%;
+       /* width: 60%;*/
         background: url('../../../../assets/UM/title.png') no-repeat;
         background-size: 100% 100%;
         text-align: center;
@@ -354,7 +385,7 @@ export default {
         float: right;
     }
     .select{
-        width:16vw;
+        width:10vw;
         z-index: 9999;
     }
     .posBox{

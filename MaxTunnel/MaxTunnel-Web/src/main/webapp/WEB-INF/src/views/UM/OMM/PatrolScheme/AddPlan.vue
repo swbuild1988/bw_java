@@ -66,11 +66,10 @@
           </Col>
         </Row>
         <FormItem style="text-align: center;margin-bottom: 0px">
+            <Button type="ghost"  style="margin-right: 8px" @click="goBack()">返回</Button>
             <Button type="primary" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="handleReset('uploadPlan')">取消</Button>
         </FormItem>
       </Form> 
-      <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>  
 
@@ -350,10 +349,5 @@ input[type='number']{
     position: relative;
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
-}
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
 }
 </style>

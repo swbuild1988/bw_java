@@ -38,6 +38,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	 */
 	@RequestMapping(value="store-type",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody StoreType storeType) {
+		if(storeType.getParent() == null) storeType.setParent(storeType.getSn());
 		storeTypeService.insert(storeType);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
@@ -129,4 +130,14 @@ public class StoreTypeController extends BaseController<StoreType>{
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
 	}
 	
+	/** 获取父类sn
+	 * @return
+	 * @author ya.liu
+	 * @Date 2018年12月20日
+	 */
+	@RequestMapping(value="store-type/parent",method=RequestMethod.GET)
+	public JSONObject getParent() {
+		List<StoreType> list = storeTypeService.getParent();
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
 } 

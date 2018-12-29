@@ -7,6 +7,7 @@
 		<id column="ID" jdbcType="DECIMAL" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="sn" jdbcType="VARCHAR" property="sn" />
+		<result column="parent_id" jdbcType="DECIMAL" property="parentId" />
 		<result column="TUNNEL_ID" jdbcType="DECIMAL"
 			property="tunnelId" />
 		<result column="STORE_TYPE_ID" jdbcType="DECIMAL"
@@ -22,6 +23,7 @@
 		<id column="ID" jdbcType="DECIMAL" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="sn" jdbcType="VARCHAR" property="sn" />
+		<result column="parent_id" jdbcType="DECIMAL" property="parentId" />
 		<result column="tunnel_id" property="tunnelId"/>
 		<result column="store_type_id" property="storeTypeId"/>
 		<result column="camera" jdbcType="VARCHAR" property="camera" />
@@ -31,7 +33,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME
+		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME, parent_id
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
@@ -69,6 +71,9 @@
 			<if test="sn != null">
 				sn,
 			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
 			<if test="tunnelId != null">
 				TUNNEL_ID,
 			</if>
@@ -91,6 +96,9 @@
 			</if>
 			<if test="sn != null">
 				#{sn,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=DECIMAL},
 			</if>
 			<if test="tunnelId != null">
 				#{tunnelId,jdbcType=DECIMAL},
@@ -115,6 +123,9 @@
 			</if>
 			<if test="sn != null">
 				sn = #{sn,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=DECIMAL},
 			</if>
 			<if test="tunnelId != null">
 				TUNNEL_ID = #{tunnelId,jdbcType=DECIMAL},
@@ -172,10 +183,13 @@
 				and s.id = #{id}
 			</if>
 			<if test="name != null and name.trim() !=''">
-				INSTR(name,#{name})>0
+				and INSTR(s.name,#{name})>0
 			</if>
 			<if test="sn != null and sn.trim() !=''">
-				INSTR(sn,#{sn})>0
+				and INSTR(s.sn,#{sn})>0
+			</if>
+			<if test="parentId != null">
+				and s.parent_id = #{parentId}
 			</if>
 			<if test="tunnelId != null">
 				and s.tunnel_id = #{tunnelId}
@@ -190,7 +204,7 @@
 				and s.crt_time &lt;= #{endTime}
 			</if>
 		</where>
-		order by s.crt_time DESC
+		order by s.sn asc
 	</select>
 	
 	<select id="getDtoById" resultMap="DtoResultMap">

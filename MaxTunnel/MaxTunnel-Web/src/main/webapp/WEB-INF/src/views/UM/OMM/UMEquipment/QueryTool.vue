@@ -168,49 +168,48 @@
             width="1240" 
         >
             <Row class="queryConditions">
-                <Col span="8">
+                <Col span="6">
                     <span>仪表名称</span><span>：</span>
                     <Input v-model="returnModalConditions.name" style="width: 60%"></Input>
                 </Col>
-                <Col span="8">
+                <Col span="6">
                     仪表工具类型：
                     <Select v-model="returnModalConditions.typeId" style="width: 60%" ref="typeId">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
-                <Col span="8">
+                <Col span="6">
                     借用开始时间：
                     <DatePicker ref="startTime" type="datetime" v-model="returnModalConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="8">
-                    <span style="letter-spacing: 0.5em;margin-right: -0.5em;">供应商</span><span>：</span>
-                    <Select ref="venderId" v-model="returnModalConditions.venderId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    仪表工具型号：
-                    <Select ref="modelId" v-model="returnModalConditions.modelId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    借用结束时间：
-                    <DatePicker ref="endTime" type="datetime" v-model="returnModalConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8">
+                <Col span="6">
                     <span style="letter-spacing: 0.5em;margin-right: -0.5em;">借用人</span><span>：</span>
                     <Select v-model="returnModalConditions.staffId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="8" offset="8">
-                    <Button type="primary" size="small" @click="batchReturn()">查询</Button>
-                    <Button type="default" size="small">取消</Button>
+                <Col span="6">
+                    <span style="letter-spacing: 0.5em;margin-right: -0.5em;">供应商</span><span>：</span>
+                    <Select ref="venderId" v-model="returnModalConditions.venderId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="6">
+                    仪表工具型号：
+                    <Select ref="modelId" v-model="returnModalConditions.modelId" style="width: 60%">
+                        <Option value=null key="0">所有</Option>
+                        <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </Col>
+                <Col span="6">
+                    借用结束时间：
+                    <DatePicker ref="endTime" type="datetime" v-model="returnModalConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="6">
+                    <Button type="primary" size="small" @click="batchReturn()" icon="ios-search">查询</Button>
                 </Col>    
             </Row>
            <Table stripe border height="330"  ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table> 

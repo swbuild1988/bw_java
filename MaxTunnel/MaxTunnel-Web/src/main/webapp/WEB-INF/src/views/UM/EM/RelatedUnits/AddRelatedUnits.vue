@@ -1,6 +1,6 @@
 <template>
 <div :style="backStyle">
-    <Form ref="addRelatedUnitsInfo" :model="addRelatedUnitsInfo" :label-width="120" :rules="ruleValidate">
+    <Form ref="addRelatedUnitsInfo" :model="addRelatedUnitsInfo" :label-width="120" :rules="ruleValidate" @submit.native.prevent>
         <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加相关单位</h2>
         <h2 class="formTitle" v-show="pageType==pageTypes.Edit">更新相关单位信息</h2>
         <FormItem label="单位名称：" prop="name">
@@ -25,13 +25,12 @@
             <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             <div class="ivu-form-item-error-tip" v-show="validateSectionName==true">请选择所属仓段</div>
         </FormItem>
-        <FormItem style="text-align: center">
+        <div style="text-align: center">
+            <Button type="ghost"  style="margin-right: 8px"@click="goBack()">返回</Button>
             <Button type="primary" @click="submit('addRelatedUnitsInfo')" v-show="pageType!=pageTypes.Edit" :disabled="isDisable">提交</Button>
             <Button type="primary" @click="update('addRelatedUnitsInfo')" v-show="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="handleReset('addRelatedUnitsInfo')">取消</Button>
-        </FormItem>
+        </div>
     </Form>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
 </div>       
 </template>
 <script>

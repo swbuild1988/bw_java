@@ -10,11 +10,12 @@
         </OptionGroup>
       </Select>
       </Col>
-      <Col span="6" class="col">
-      <span class="planDec">监测区域:</span>
-      <treeselect :options="zoneList" placeholder="请选择" v-model="queryPrams.storeId"
-                  style="width: 60%;float: left;left: 8px"/>
-      </Col>
+        <Col span="6" class="col">
+        <span class="planDec">所属管廊:</span>
+        <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
+            <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+        </Select>
+        </Col>
       <Col span="6" class="col">
       <span class="planDec">数据类型:</span>
       <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
@@ -130,9 +131,8 @@
 </template>
 
 <script>
-  import Treeselect from '@riophae/vue-treeselect'
-  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
   import {EnumsService} from '../../../../services/enumsService.js'
+  import {TunnelService} from '../../../../services/tunnelService.js'
   import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
   import MultiLineChart from '../../../../components/Common/Chart/MultiLineChart'
   import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
@@ -144,7 +144,7 @@
         tableload:true,
         viewHistory: false,
         isReady: true,
-        zoneList: [],
+          tunnelList: [],
         tableHeight: 450,
         curlineChart: {
           id: "historyDataChart",
@@ -157,8 +157,8 @@
         queryPrams: {
           tunnelId: "",
           id: "",
-          storeId: null,
-          areaId: "",
+          // storeId: null,
+          // areaId: "",
           objtypeIds: [],
           datatypeId: "",
           maxVal: 100,
@@ -200,7 +200,7 @@
           },
           {
             title: '监测区域',
-            key: 'area',
+            key: 'tunnelName',
           },
           {
             title: '对象名称',
@@ -239,34 +239,11 @@
           _this.dataTypeEnum = result;
           this.queryPrams.datatypeId = result[0].val;
         });
-        const p3 = EnumsService.getMonitorZone().then((result) => {
-          var _this = this;
-          if (result) {
-            result.forEach(a => {
-              var temp = {};
-              temp.id = a.id;
-              temp.label = a.name;
-              temp.children = [];
-              _this.zoneList.push(temp);
-              if (a.list.length > 0) {
-                a.list.forEach(b => {
-                  var child = {};
-                  child.id = a.id + "_" + b.id;
-                  child.label = b.name;
-                  child.children = [];
-                  temp.children.push(child);
-                  if (b.list.length > 0) {
-                    b.list.forEach(c => {
-                      var child2 = {};
-                      child2.id = a.id + "_" + b.id + "_" + c.id;
-                      child2.label = c.name;
-                      child.children.push(child2);
-                    })
-                  }
-                })
-              }
-            })
-          }
+        const p3 = TunnelService.getTunnels().then((result) => {
+            _this.tunnelList = [{id: -1, name: "全部"}];
+            result.reduce((a,b)=>{
+                _this.tunnelList.push(b);
+            }, _this.tunnelList)
         });
         Promise.all([
           p1,
@@ -297,7 +274,7 @@
               temp.refreshTime = new Date(b.refreshTime).format("yyyy-MM-dd hh:mm:ss");
               temp.datatypeName = b.obj.datatypeName;
               temp.name = b.obj.name;
-              temp.area = "";
+              temp.tunnelName = b.obj.section.store.tunnel.name+"-"+b.obj.section.name;
               _this.tableData.push(temp);
             }, _this.tableData);
             _this.queryPrams.total = result.total;
@@ -381,7 +358,7 @@
       },
     },
     components: {
-      MultiLineChart, ShowMonitorObjectSelect, Treeselect
+      MultiLineChart, ShowMonitorObjectSelect
     },
     mounted() {
       this.inItData();

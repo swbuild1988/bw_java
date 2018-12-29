@@ -66,11 +66,10 @@
         </Col>
         </Row>
         <FormItem style="text-align: center;margin-bottom: 0px">
+            <Button type="ghost"  style="margin-right: 8px"  @click="goBack()">返回</Button>
             <Button type="primary">更新</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="cancel()">取消</Button>
         </FormItem>
       </Form> 
-      <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
     </div>
 </template>  
 
@@ -365,10 +364,5 @@ input[type='number']{
     opacity: 1;
     cursor: not-allowed;
     color: #495060 !important;
-}
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
 }
 </style>

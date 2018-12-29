@@ -81,8 +81,10 @@ public class ActivitiServiceImpl implements ActivitiService {
                 .addClasspathResource(pngPath)
                 .name(processName)
                 .deploy();
-        LogUtil.info("发布的编号：" + deployment.getId());
-        LogUtil.info("发布的名称：" + deployment.getName());
+        
+        LogUtil.info("流程部署成功!\n"
+        		+ "发布的编号：" + deployment.getId() + "\n"
+        		+ "发布的名称：" + deployment.getName());
 
         // 流程定义
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()

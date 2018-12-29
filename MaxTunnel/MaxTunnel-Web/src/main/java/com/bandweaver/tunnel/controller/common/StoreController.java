@@ -63,12 +63,33 @@ public class StoreController extends BaseController<Store> {
 	 * @date 2018年7月25日
 	 */
 	@RequestMapping(value="stores",method=RequestMethod.POST)
-	public JSONObject add(@RequestBody Store store) {
-		storeService.add(store);
+	public JSONObject add(@RequestBody Store st) {
+		StoreVo v = new StoreVo();
+		v.setTunnelId(st.getTunnelId());
+		v.setStoreTypeId(st.getStoreTypeId());
+		if(storeService.getStoresByCondition(v).size() > 0) {
+			return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+		}
+		Store store = storeService.add(st);
+		
+		// 获取该store所属storeType对象
+		StoreType type = storeTypeService.getById(store.getStoreTypeId());
+		// 获取storeType的父storeType对象
+		StoreType type1 = storeTypeService.getBySN(type.getParent());
+		// 获取该store的父store对象
+		StoreVo vo = new StoreVo();
+		vo.setTunnelId(store.getTunnelId());
+		vo.setStoreTypeId(type1.getId());
+		List<StoreDto> list = storeService.getStoresByCondition(vo);
+		// 修改该store的parentId
+		if(list.size() > 0) {
+			store.setParentId(list.get(0).getId());
+			storeService.update(store);
+		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 
-	/** 添加管舱
+	/** 批量添加管舱
 	 * @param  name 管舱名称
 	 * @param  tunnelId 管廊id
 	 * @param  storeTypeId 管舱类型id
@@ -79,10 +100,37 @@ public class StoreController extends BaseController<Store> {
 	 */
 	@RequestMapping(value="stores/multi",method=RequestMethod.POST)
 	public JSONObject addMulti(@RequestBody List<Store> stores) {
+		int i = 0;
 		for (Store store : stores) {
-			store.setCrtTime(new Date());
+			StoreVo vo = new StoreVo();
+			vo.setTunnelId(store.getTunnelId());
+			vo.setStoreTypeId(store.getStoreTypeId());
+			if(storeService.getStoresByCondition(vo).size() > 0) continue;
+			storeService.add(store);
+			i++;
 		}
-		storeService.addBatch(stores);
+		LogUtil.info("本次共批量生成[" + i + "]条store");
+		List<StoreDto> list = storeService.getStoresByTunnelId(stores.get(0).getTunnelId());
+		LogUtil.info("管廊id为" + stores.get(0).getTunnelId() + " 下共有store:" + list.size() + "条。");
+		for(StoreDto dto : list) {
+			// 获取该store所属storeType对象
+			StoreType type = storeTypeService.getById(dto.getStoreTypeId());
+			// 获取storeType的父storeType对象
+			StoreType type1 = storeTypeService.getBySN(type.getParent());
+			// 获取该store的父store对象
+			StoreVo vo = new StoreVo();
+			vo.setTunnelId(dto.getTunnelId());
+			vo.setStoreTypeId(type1.getId());
+			List<StoreDto> ls = storeService.getStoresByCondition(vo);
+			// 修改该store的parentId
+			Store store = new Store();
+			store.setId(dto.getId());
+			if(ls.size() > 0) {
+				store.setParentId(ls.get(0).getId());
+				storeService.update(store);
+			}
+		}
+		LogUtil.info("store添加完成");
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 

@@ -16,7 +16,7 @@ public enum ProcessTypeEnum {
     REQ_HISTORY("入廊申请", 2001, "reqHistory", "path.bpmn.activiti.reqhistory", "path.png.activiti.reqhistory", null, null),
 
     //应急预案
-	FIRE_PLAN("消防预案", 4001, "FirePlanProcess", "path.bpmn.activiti.fire", "path.png.activiti.fire","mq.queue.plan.fire",50.0),
+	FIRE_PLAN("消防预案", 4001, "FirePlanProcess", "path.bpmn.activiti.fire", "path.png.activiti.fire","",50.0),
 	WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind","",55.5);
 //	WATER_PLAN("排水预案", 4002, "WaterPlanProcess", "path.bpmn.activiti.water", "path.png.activiti.water","",55.1);
 	

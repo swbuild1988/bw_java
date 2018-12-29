@@ -86,7 +86,6 @@
 </template>
 
 <script>
-
   import {EnumsService} from '../../../../services/enumsService.js'
   import {TunnelService} from '../../../../services/tunnelService.js'
   import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'

@@ -153,9 +153,8 @@ export default {
 
         },
         addIdentifierViewer(){
-            let { visualizationEntityParam,PCEntityParam } = VMEntityConfig;
+            let { entityParam } = VMEntityConfig;
 
-            let entityParam = screen.width <= 1920 ? PCEntityParam : visualizationEntityParam; //根据分辨率判断是 可视化平台 / pc端
             entityParam.forEach( entity => {
                 let { entityBaseParameters,entityExtendParameters } = entity;
 
@@ -186,7 +185,7 @@ export default {
                 }
             } )
         },
-        addViewerType({ position,ellipse,billboard,label,point }){
+        addViewerType({ position,ellipse,billboard,label,point,polyline }){
 
             let viewerPosition = position !== undefined ? {
                 position : Cesium.Cartesian3.fromDegrees( parseFloat( position.X ), parseFloat( position.Y ), parseFloat( position.Z ) )
@@ -218,9 +217,9 @@ export default {
                     fillColor:Cesium.Color.RED,
                     outlineColor:Cesium.Color.BLACK,
                     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    outlineWidth : label.outlineWidth,
+                    outlineWidth : 5,
                     verticalOrigin : Cesium.VerticalOrigin.TOP,
-                    pixelOffset : new Cesium.Cartesian2( 0 , 5 ),
+                    pixelOffset : new Cesium.Cartesian2(0, 9),
                     scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
                 }
             }:{};
@@ -232,10 +231,21 @@ export default {
                     outlineColor : Cesium.Color.WHITE,
                     outlineWidth : point.outlineWidth,
                     scaleByDistance : new Cesium.NearFarScalar(0,1,100000,0)
-                }  
+                }   
             }:{};
 
-            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp);
+            let polylineProp = polyline !== undefined ? {
+                polyline : {
+                    positions: [
+                        Cesium.Cartesian3.fromDegrees(parseFloat( polyline.position.startLon ), parseFloat( polyline.position.startLat ), 10),
+                        Cesium.Cartesian3.fromDegrees(parseFloat( polyline.position.endLon ), parseFloat( polyline.position.endLat ), 10)
+                    ],
+                    width : polyline.width,
+                    material : Cesium.Color.RED
+                }
+            }:{}
+
+            return Object.assign({},viewerPosition,ellipseViewProp,billboardViewProp,labelViewProp,pointViewProp,polylineProp);
         },
         addParticleSystem(minxisParticleSystem){
 

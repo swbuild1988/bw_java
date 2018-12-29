@@ -40,7 +40,7 @@
         </Select>
       </Col>
       <Col span="6">
-        <!-- <Poptip placement="bottom" width="1000"> -->
+        <Poptip placement="bottom" width="1000">
           <span class="word65">所属管仓</span>
           <span>：</span>
           <Input v-model="researchInfo.storeName" placeholder="请选择所属管仓" id="store" style="width: 60%"/>
@@ -50,17 +50,17 @@
               v-bind:tunnelId="researchInfo.tunnelId"
             ></store-choose>
           </div>
-        <!-- </Poptip> -->
+        </Poptip>
       </Col>
       <Col span="6">
-        <!-- <Poptip placement="bottom" width="1000"> -->
+        <Poptip placement="bottom" width="1000">
           <span class="word64">所属区域</span>
           <span>：</span>
           <Input v-model="researchInfo.areaName" placeholder="请选择所属区域" id="area" style="width: 60%"/>
           <div class="pop" slot="content">
             <area-choose v-on:listenToAreaChoose="getArea" v-bind:tunnelId="researchInfo.tunnelId"></area-choose>
           </div>
-        <!-- </Poptip> -->
+        </Poptip>
       </Col>
       <Col span="6">
         <Button type="info" size="small" @click="addMulti">批量新增监测对象</Button>
@@ -284,14 +284,16 @@ export default {
   mounted() {
     this.init();
     this.search();
-    // setTimeout(function() {
-    //   let width = document.getElementById("objtype").offsetWidth;
-    //   document.getElementById("store").style.width = width + "px";
-    // }, 300);
-    // window.onresize = function() {
-    //   let width = document.getElementById("objtype").offsetWidth;
-    //   document.getElementById("store").style.width = width + "px";
-    // };
+    this.$nextTick(()=>{
+      let width = document.getElementById("objtype").offsetWidth;
+      document.getElementById("store").style.width = width + "px";
+      document.getElementById("area").style.width = width + "px";
+    })
+    window.onresize = function() {
+      let width = document.getElementById("objtype").offsetWidth;
+      document.getElementById("store").style.width = width + "px";
+      document.getElementById("area").style.width = width + "px";
+    };
   },
   methods: {
     search() {
@@ -489,5 +491,4 @@ export default {
   margin-right: -0.25em;
 }
 </style>
-
 

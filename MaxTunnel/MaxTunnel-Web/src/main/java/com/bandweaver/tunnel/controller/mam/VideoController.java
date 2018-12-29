@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.controller.mam;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.FileUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
+import com.bandweaver.tunnel.service.mam.video.H5StreamServiceImpl;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -59,6 +61,19 @@ public class VideoController {
     private OnvifService h5streamService;
     
     
+    /**通过sectionId获取视频列表 
+     * @param id
+     * @return   
+     * @author shaosen
+     * @Date 2018年12月27日
+     */
+    @RequestMapping(value="sections/{id}/videos",method=RequestMethod.GET)
+    public JSONObject getVideosBySection(@PathVariable Integer id) {
+    	List<VideoDto> videoDtos = videoServerService.getVideosBySection(id);
+    	return CommonUtil.success(videoDtos);
+    }
+    
+    
     /**通过api添加rtsp和onvif源
      * @param user 
      * @param password
@@ -74,12 +89,14 @@ public class VideoController {
      */
     @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
     public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
+    	//删除所有视频源
+    	h5streamService.delSrcList();
     	
     	for (Map<String, String> map : list) {
     		String user = map.get("user");
 			String password = map.get("password");
 			String ip = map.get("ip");
-			String port = map.get("port");
+			String port = "554";
 			String channelNo = map.get("channelNo");
 			String id = map.get("id");
 			String vendor = map.get("vendor");
@@ -102,67 +119,13 @@ public class VideoController {
 	    	default:
 	    		break;
 	    	}
-			
-			boolean delFlag = h5streamService.delSrc(id);
-			LogUtil.info("删除结果：" + delFlag );
 			boolean addFlag = h5streamService.addSrc(user,password,ip,id,url);
 			LogUtil.info("相机"+id+"添加结果：" + addFlag);
 		}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-
-    
-	/**批量添加相机配置 
-     * @return   
-     * @author shaosen
-     * @Date 2018年12月3日
-     */
-    @Deprecated
-    @RequestMapping(value="h5/addsrc",method=RequestMethod.POST)
-    public JSONObject addH5Config(@RequestBody List<Map<String, String>> list) {
-    	
-    	String filePath = "D:\\dev\\h5s-r7.0.1012.18-win64-release\\h5s-r7.0.1012.18-win64-release\\conf\\h5ss.conf";
-    	
-    	String content = FileUtil.readContent(filePath);
-		H5Obj h5Obj = JSONObject.parseObject(content,H5Obj.class);
-		H5Source source = h5Obj.getSource();
-    	
-		List<H5Src> src =  new ArrayList<>();
-    	for (Map<String, String> map : list) {
-    		String user = map.get("user");
-			String password = map.get("password");
-			String ip = map.get("ip");
-			String port = map.get("port");
-			String channelNo = map.get("channelNo");
-			String id = map.get("id");
-			String vendor = map.get("vendor");
-			String url = "";
-			
-			//stream
-			H5Src stream = new H5Src();
-			//todo
-	    	//onvif
-	    	H5Src onvif = new H5Src();
-	    	//todo
-			
-	    	src.add(stream);
-	    	src.add(onvif);
-			source.setSrc(src);
-			h5Obj.setSource(source);
-		}
-    	
-		String jsonString = JSONObject.toJSONString(h5Obj);
-		LogUtil.info("jsonString:" + jsonString );
-		
-		//覆盖之前的文件
-		FileUtil.writeContent(filePath, jsonString);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-    }
-    
-    
-    
-    
+      
 
     /**
      * 添加视频服务
@@ -340,13 +303,13 @@ public class VideoController {
         Integer sectionId = object.getInteger("sectionId");
 
         if (tunnelId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId() == tunnelId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
         if (storeId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getStoreId() == storeId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
         if (areaId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getAreaId() == areaId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
         if (sectionId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getSectionId() == sectionId).collect(Collectors.toList());
+            videoDtos = videoDtos.stream().filter(a -> a.getSectionId().intValue() == sectionId.intValue()).collect(Collectors.toList());
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
     }
@@ -585,3 +548,4 @@ public class VideoController {
 
 
 }
+

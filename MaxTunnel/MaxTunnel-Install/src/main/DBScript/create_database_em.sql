@@ -1,3 +1,4 @@
+
 declare 
       num   number; 
 begin
@@ -39,6 +40,25 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_EM_PLAN'; 
       end   if; 
+--监测对象关联其他对象表
+-- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'EM_OBJ_BIND_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  EM_OBJ_BIND_SQ';   
+      end if;
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'EM_OBJ_BIND_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  EM_OBJ_BIND_TG';   
+      end if;
+-- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_EM_OBJ_BIND';
+      if   num=1   then 
+          execute immediate 'drop table T_EM_OBJ_BIND'; 
+      end   if; 
 
 end;
 /
@@ -51,14 +71,14 @@ end;
 --相关单位
 CREATE TABLE T_EM_RELATED_UNIT(
   id                NUMBER               NOT NULL,
-  name      varchar2(100)               NOT NULL,
-  contact     varchar2(50),
-  tel     varchar2(20),
-  unit_type NUMBER               NOT NULL,--单位类别：学校，医院，机关单位
-  address   varchar2(100),--地址
-  section_ids varchar2(100) not null,--关联哪个section
-  longitude   varchar2(20), --经度
-  latitude    varchar2(20), --维度
+  name              varchar2(100)        NOT NULL,
+  contact           varchar2(50),
+  tel               varchar2(20),
+  unit_type         NUMBER               NOT NULL,
+  address           varchar2(100),
+  section_ids       varchar2(100)        not null,
+  longitude         varchar2(20), 
+  latitude          varchar2(20), 
   crt_time          DATE,
    CONSTRAINT PK_T_EM_RELATED_UNIT PRIMARY KEY ("ID")
 );
@@ -115,3 +135,33 @@ begin
   select EM_PLAN_SQ.nextval into :new.id from dual;
 end EM_PLAN_TG;
 /
+
+--监测对象关联其他对象表
+CREATE TABLE T_EM_OBJ_BIND(
+  id              NUMBER          NOT NULL,
+  object_id       number          not null,   
+  bind_id         number          not null,
+  type            number(1)       not null,
+  crt_time        DATE,       
+   CONSTRAINT PK_T_EM_OBJ_BIND PRIMARY KEY ("ID")
+);
+
+
+--create sequence
+create sequence EM_OBJ_BIND_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+-- create trigger
+CREATE OR REPLACE TRIGGER EM_OBJ_BIND_TG
+  BEFORE INSERT ON T_EM_OBJ_BIND
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select EM_OBJ_BIND_SQ.nextval into :new.id from dual;
+end EM_OBJ_BIND_TG;
+/
+
+

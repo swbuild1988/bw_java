@@ -2,7 +2,7 @@
     <div class="nonCleanedCount​">
         <div class="NonCleanedTitle">{{ Title }}</div>
         <div class="NonCleanedCount">123</div>
-        <div style="text-align: center; font-size: .8rem; color: rgba(255, 255, 255, 0.7);">{{ unit }}</div>
+        <div class="NonCleanedUnit">{{ unit }}</div>
     </div>
 </template>
 
@@ -59,13 +59,43 @@
         text-align: center;
         color: rgba(0, 255, 255, 0.8);
         font-weight: bold;
-        font-size: 1rem;
-        margin: 1rem 0 0.3rem;
     }
     .NonCleanedCount {
         text-align: center;
-        font-size: 1.6rem;
         color: rgba(0, 255, 255, 0.8);
         font-weight: bold;
+    }
+    .NonCleanedUnit {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    /* 小屏幕（显示器，小于等于 1920px） */
+    @media (max-width: 1920px) {
+
+        .NonCleanedTitle{
+            font-size: 1rem;
+            margin: 1rem 0 0.3rem;
+        }
+        .NonCleanedCount {
+            font-size: 1.6rem;
+        }
+        .NonCleanedUnit {
+            font-size: .8rem;
+        }
+        
+    }
+    /* 大屏幕（显示器，大于等于 1920px） */
+    @media (min-width: 1921px) {
+            
+        .NonCleanedTitle{
+            font-size: 3rem;
+            margin: 5rem 0 0.3rem;
+        }
+        .NonCleanedCount {
+            font-size: 2.6rem;
+        }
+        .NonCleanedUnit {
+            font-size: 1.8rem;
+        }
     }
 </style>

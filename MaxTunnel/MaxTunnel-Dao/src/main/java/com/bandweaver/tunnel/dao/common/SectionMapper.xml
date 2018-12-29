@@ -4,6 +4,7 @@
 <cache/>
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Section">
     <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="parent_id" jdbcType="DECIMAL" property="parentId" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
     <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
@@ -17,6 +18,7 @@
   
   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.SectionDto">
     <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="parent_id" jdbcType="DECIMAL" property="parentId" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
     <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
@@ -32,7 +34,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, NAME, tunnel_id,STORE_ID, AREA_ID,total_cable_number, camera,start_point,end_point,CRT_TIME
+    ID, parent_id, NAME, tunnel_id,STORE_ID, AREA_ID,total_cable_number, camera,start_point,end_point,CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -61,6 +63,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         ID,
+      </if>
+      <if test="parentId != null">
+        parent_id,
       </if>
       <if test="name != null">
         NAME,
@@ -94,6 +99,9 @@
       <if test="id != null">
         #{id,jdbcType=DECIMAL},
       </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=DECIMAL},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -126,6 +134,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
     update T_COMMON_SECTION
     <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=DECIMAL},
+      </if>
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
@@ -136,7 +147,7 @@
         STORE_ID = #{storeId,jdbcType=DECIMAL},
       </if>
       <if test="areaId != null">
-        AREA_ID = #{areaId,jdbcType=DECIMAL},
+        AREA_ID = #{areaId,jdbcType=DECIMAL}, 
       </if>
       <if test="totalCableNumber != null">
         total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
@@ -196,6 +207,9 @@
 		<where>
 			<if test="id != null">
 				and id = #{id}
+			</if>
+			<if test="parentId != null">
+				and parent_id = #{parentId}
 			</if>
 			<if test="name != null and name.trim() != ''">
 				and instr(name,#{name})>0
@@ -258,5 +272,9 @@
 	
 	<select id="getDtoById" resultMap="DtoResultMap">
 		select * from t_common_section where id = #{id}
+	</select>
+	
+	<select id="getSectionListByParentId" resultMap="BaseResultMap">
+		select * from t_common_section where parent_id = #{sectionId}
 	</select>
 </mapper>

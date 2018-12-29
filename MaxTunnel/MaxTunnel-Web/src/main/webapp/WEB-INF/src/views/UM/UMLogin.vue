@@ -71,6 +71,7 @@
               result => {
                 _this.logining = false;
                 sessionStorage.setItem("UMUser", JSON.stringify(result));
+                console.log(result);
                 let sessionUserName = result.name;
                 let roles = result.roles;
                 sessionStorage.setItem(

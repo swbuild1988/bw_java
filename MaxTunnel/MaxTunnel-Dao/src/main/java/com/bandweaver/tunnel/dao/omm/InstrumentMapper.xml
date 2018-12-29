@@ -145,7 +145,14 @@
 		select a.*,b.name
 	    from (select count(1) as count,type_id as id 
 	      from t_omm_instrument
-	      where status = 1
+	      <where>
+	      	<if test="useStatus != null">
+                and use_status = #{useStatus}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+	      </where>
 	      group by type_id) a
 	    left join t_Omm_Equipment_Type b on a.id = b.id
 	    order by a.count desc

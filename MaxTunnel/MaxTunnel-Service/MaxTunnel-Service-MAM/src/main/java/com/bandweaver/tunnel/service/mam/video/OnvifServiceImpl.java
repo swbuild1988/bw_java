@@ -289,4 +289,10 @@ public class OnvifServiceImpl implements OnvifService {
 		return false;
 	}
 
+	@Override
+	public void delSrcList() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

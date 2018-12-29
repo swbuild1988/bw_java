@@ -59,29 +59,7 @@ public class MeasObjMapServiceImpl implements MeasObjMapService {
 
 	@Override
 	public MeasObjMap getMaxViewMeasObj(Integer objectId, Integer inputValue) {
-		//1.根据objectId获取obj对象并更新cv值
-		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
-		if(measObj == null) { 
-			return null;
-		}
-		
-		DataType dataType = DataType.getEnum(measObj.getDatatypeId());
-		if(DataType.DI == dataType) {
-			MeasObjDI measObjDI = measObjModuleCenter.getMeasObjDI(objectId);
-			if(measObjDI == null) measObjDI = new MeasObjDI();
-			measObjDI.setCv(inputValue == 1 ? true : false);
-			measObjDI.setRefreshTime(DateUtil.getCurrentDate());
-		}else if(DataType.SI == dataType) {
-			MeasObjSI measObjSI = measObjModuleCenter.getMeasObjSI(objectId);
-			if(measObjSI == null) measObjSI = new MeasObjSI();
-			measObjSI.setCv(inputValue);
-			measObjSI.setRefreshTime(DateUtil.getCurrentDate());
-		}
-		
-		//2.根据objectId和inputValue去映射表里查找映射到的objectId2
-		MeasObjMap result = getByObjectIdAndInputValue(objectId,inputValue);
-		return result;
-		
+		return getByObjectIdAndInputValue(objectId,inputValue);
 	}
 
 	@Override

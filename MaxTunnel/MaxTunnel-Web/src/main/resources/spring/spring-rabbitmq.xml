@@ -18,18 +18,18 @@
     <rabbit:admin connection-factory="connectionFactory" />
 
     <!--定义queue -->
-    <rabbit:queue name="queueAlarm" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="queueData" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="queuePlan" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="queueBigScreen" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:queue name="QUEUE_ALARM_UM" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:queue name="QUEUE_ALARM_VM" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:queue name="QUEUE_PLAN_UM" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:queue name="QUEUE_PLAN_VM" durable="true" auto-delete="false" exclusive="false" />
 
-    <!-- 定义topic exchange，绑定queueTest -->
+    <!-- 定义topic exchange，绑定队列 -->
     <rabbit:topic-exchange name="${mq.exchange}" durable="true" auto-delete="false">
         <rabbit:bindings>
-            <rabbit:binding queue="queueAlarm" pattern="*.alarm" />
-            <rabbit:binding queue="queueData" pattern="*.data" />
-            <rabbit:binding queue="queuePlan" pattern="*.plan" />
-            <rabbit:binding queue="queueBigScreen" pattern="*.bigscreen" />
+            <rabbit:binding queue="QUEUE_ALARM_UM" pattern="alarm.um" />
+            <rabbit:binding queue="QUEUE_ALARM_VM" pattern="alarm.vm" />
+            <rabbit:binding queue="QUEUE_PLAN_UM" pattern="plan.um" />
+            <rabbit:binding queue="QUEUE_PLAN_VM" pattern="plan.vm" />
         </rabbit:bindings>
     </rabbit:topic-exchange>
 
@@ -42,9 +42,8 @@
     <rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory">
        
         <!-- 关闭后台消费者，由前端消费 -->
-       <!--  <rabbit:listener queues="queueData" ref="DataConsumer" /> -->
-       <!-- <rabbit:listener queues="queueAlarm" ref="AlarmConsumer"/> -->
-     <!--   <rabbit:listener queues="queuePlan" ref="firePlanConsumer" /> -->
+       <!-- <rabbit:listener queues="QUEUE_ALARM_UM" ref="AlarmConsumer"/> -->
+     <!--   <rabbit:listener queues="QUEUE_PLAN_UM" ref="firePlanConsumer" /> -->
     </rabbit:listener-container>
 
 </beans>

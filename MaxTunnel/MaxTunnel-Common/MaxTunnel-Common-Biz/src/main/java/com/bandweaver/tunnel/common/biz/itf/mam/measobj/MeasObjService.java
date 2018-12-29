@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.common.biz.itf.mam.measobj;
 
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
@@ -10,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface MeasObjService {
     int add(MeasObj measObj);
@@ -107,7 +109,7 @@ public interface MeasObjService {
 
 	List<MeasObj> getMeasObjByTargetVal(String targetValue);
 
-	List<MeasObj> getMeasObjsByTargetValAndVars(String targetValue,Integer sectionId);
+	Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue,List<Section> sectionList);
 	
 
 	

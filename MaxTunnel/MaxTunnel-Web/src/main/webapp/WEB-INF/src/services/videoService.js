@@ -1,281 +1,332 @@
 import axios from 'axios'
+
 const isRealData = require('../../static/serverconfig').isRealData
 
 var VideoService = {
-	// 根据tunnelId获取该管廊内的摄像头
-	getCamerasByTunnelId: function(tunnelId) {
-		return new Promise((resolve, reject) => {
-			axios.get('tunnels/' + tunnelId + '/videos')
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:tunnels/' + tunnelId + '/videos')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 根据tunnelId / storeId / areaId 获取特定位置的摄像头
-	getCamerasByConditions: function(condition) {
-		return new Promise((resolve, reject) => {
-			axios.post('videos/condition', condition)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/condition')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 摄像头开始移动
-	cameraMove: function(videoId, direction) {
-		return new Promise((resolve, reject) => {
-			axios.get('videos/' + videoId + '/move/' + direction)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/' + videoId + '/move/' + direction)
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 摄像头停止移动
-	cameraStop: function(videoId) {
-		return new Promise((resolve, reject) => {
-			axios.get('videos/' + videoId + '/stop')
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/' + videoId + '/stop')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 根据cameraId获取该相机预置位
-	getPresetsByCameraId: function(cameraId) {
-		return new Promise((resolve, reject) => {
-			if (isRealData) {
-				axios.get('videos/' + cameraId + '/presets')
-					.then(res => {
-						let {
-							code,
-							data,
-							msg
-						} = res.data
-						if (code == 200) {
-							resolve(data)
-						} else {
-							reject(msg + ',地址:videos/' + cameraId + '/presets')
-						}
-					})
-					.catch(error => {
-						reject(error.response.status + '  ' + error.response.data)
-					})
-			} else {
-				let data = ['预置位1', '预置位2', '预置位4',
-					'预置位预置5预置位预置', '预置位预置位预置位6'
-				]
-				resolve(data)
-			}
-		})
-	},
-	// 摄像头到达预置位
-	goToPreset: function(cameraId, presetName) {
-		return new Promise((resolve, reject) => {
-			axios.get('videos/' + cameraId + '/presets/' + presetName + '/goto')
-				.then(res => {
-					resolve(res.data)
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 新增预置位
-	addPreset: function(cameraId, params) {
-		return new Promise((resolve, reject) => {
-			axios.post('videos/' + cameraId + '/presets', params)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/' + cameraId + '/presets')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 编辑预置位摄像头位置
-	editPreset: function(cameraId, params) {
-		return new Promise((resolve, reject) => {
-			axios.put('videos/' + cameraId + '/presets', params)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/' + cameraId + '/presets')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 删除预置位
-	deletePreset: function(cameraId) {
-		return new Promise((resolve, reject) => {
-			axios.delete('videos/' + cameraId + '/presets', {
-					data: param
-				}).then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:videos/' + cameraId + '/presets')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 根据3d位置获取对应虚拟巡检中的摄像头
-	getVICameras: function(position) {
-		return new Promise((resolve, reject) => {
-			axios.post('virual-inspection/video', position)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:virual-inspection/video')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 根据相机获取section信息
-	getSections: function(position) {
-		return new Promise((resolve, reject) => {
-			axios.post('sections/gps', position)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:sections/gps')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 摄像机预置位和3d位置匹配
-	matchPresetAnd3D: function(videoPreset) {
-		return new Promise((resolve, reject) => {
-			axios.post('preset-3d', videoPreset)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:preset-3d')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	},
-	// 批量添加h5Stream配置
-	batchAddH5StreamConfig: function(params) {
-		return new Promise((resolve, reject) => {
-			axios.post('h5/api/addsrc', params)
-				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
-					if (code == 200) {
-						resolve(data)
-					} else {
-						reject(msg + ',地址:h5/api/addsrc')
-					}
-				})
-				.catch(error => {
-					reject(error.response.status + '  ' + error.response.data)
-				})
-		})
-	}
+  // 获取告警关联视频对象路由表
+  getAlarmVideoRouter: function(id) {
+    return new Promise((resolve, reject) => {
+      axios.get("object-bind/" + id + "/videos")
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:' + '/videos')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据tunnelId获取该管廊内的摄像头
+  getCamerasByTunnelId: function(tunnelId) {
+    return new Promise((resolve, reject) => {
+      axios.get('tunnels/' + tunnelId + '/videos')
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:tunnels/' + tunnelId + '/videos')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据tunnelId / storeId / areaId 获取特定位置的摄像头
+  getCamerasByConditions: function(condition) {
+    return new Promise((resolve, reject) => {
+      if (isRealData) {
+        axios.post('videos/condition', condition)
+          .then(res => {
+            let {
+              code,
+              data,
+              msg
+            } = res.data
+            if (code == 200) {
+              resolve(data)
+            } else {
+              reject(msg + ',地址:videos/condition')
+            }
+          })
+          .catch(error => {
+            reject(error.response.status + '  ' + error.response.data)
+          })
+      } else {
+        let data = [{
+          id: 7001,
+          name: "摄像头1",
+          url: "192.168.6.156:8078",
+          positionSupport: true,
+          description: "A Camera for tunnel1",
+          storeId: 1,
+          areaId: 1
+        }, {
+          id: 7002,
+          name: "摄像头2",
+          url: "192.168.6.156:8078",
+          positionSupport: false,
+          description: "A Camera for tunnel2",
+          storeId: 1,
+          areaId: 1
+        }, {
+          id: 7003,
+          name: "摄像头3",
+          url: "192.168.6.156:8078",
+          positionSupport: true,
+          description: "A Camera for tunnel3",
+          storeId: 1,
+          areaId: 1
+        }]
+        resolve(data)
+      }
+    })
+  },
+  // 摄像头开始移动
+  cameraMove: function(videoId, direction) {
+    return new Promise((resolve, reject) => {
+      axios.get('videos/' + videoId + '/move/' + direction)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:videos/' + videoId + '/move/' + direction)
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 摄像头停止移动
+  cameraStop: function(videoId) {
+    return new Promise((resolve, reject) => {
+      axios.get('videos/' + videoId + '/stop')
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:videos/' + videoId + '/stop')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据cameraId获取该相机预置位
+  getPresetsByCameraId: function(cameraId) {
+    return new Promise((resolve, reject) => {
+      if (isRealData) {
+        axios.get('videos/' + cameraId + '/presets')
+          .then(res => {
+            let {
+              code,
+              data,
+              msg
+            } = res.data
+            if (code == 200) {
+              resolve(data)
+            } else {
+              reject(msg + ',地址:videos/' + cameraId + '/presets')
+            }
+          })
+          .catch(error => {
+            reject(error.response.status + '  ' + error.response.data)
+          })
+      } else {
+        let data = ['预置位1', '预置位2', '预置位4',
+          '预置位预置5预置位预置', '预置位预置位预置位6'
+        ]
+        resolve(data)
+      }
+    })
+  },
+  // 摄像头到达预置位
+  goToPreset: function(cameraId, presetName) {
+    return new Promise((resolve, reject) => {
+      axios.get('videos/' + cameraId + '/presets/' + presetName + '/goto')
+        .then(res => {
+          resolve(res.data)
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 新增预置位
+  addPreset: function(cameraId, params) {
+    return new Promise((resolve, reject) => {
+      axios.post('videos/' + cameraId + '/presets', params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:videos/' + cameraId + '/presets')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 编辑预置位摄像头位置
+  editPreset: function(cameraId, params) {
+    return new Promise((resolve, reject) => {
+      axios.put('videos/' + cameraId + '/presets', params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:videos/' + cameraId + '/presets')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 删除预置位
+  deletePreset: function(cameraId) {
+    return new Promise((resolve, reject) => {
+      axios.delete('videos/' + cameraId + '/presets', {
+          data: param
+        }).then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:videos/' + cameraId + '/presets')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据3d位置获取对应虚拟巡检中的摄像头
+  getVICameras: function(position) {
+    return new Promise((resolve, reject) => {
+      axios.post('virual-inspection/video', position)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:virual-inspection/video')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据相机获取section信息
+  getSections: function(position) {
+    return new Promise((resolve, reject) => {
+      axios.post('sections/gps', position)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:sections/gps')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 摄像机预置位和3d位置匹配
+  matchPresetAnd3D: function(videoPreset) {
+    return new Promise((resolve, reject) => {
+      axios.post('preset-3d', videoPreset)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:preset-3d')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 批量添加h5Stream配置
+  batchAddH5StreamConfig: function(params) {
+    return new Promise((resolve, reject) => {
+      axios.post('h5/api/addsrc', params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ',地址:h5/api/addsrc')
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  }
 }
 
 export {
-	VideoService
+  VideoService
 }

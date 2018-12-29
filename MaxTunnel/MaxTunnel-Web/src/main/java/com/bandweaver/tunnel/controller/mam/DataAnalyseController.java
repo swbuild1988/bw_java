@@ -83,11 +83,9 @@ public class DataAnalyseController {
      * @Date 2018年11月19日
      */
     @RequestMapping(value = "data-analyse/measvalue/datagrid" ,method = RequestMethod.POST)
-    public JSONObject dataGrid(@RequestBody MeasObjVo vo) {
-    	
-    	if(vo.getObjtypeIds().size()==0) {
-    		vo.setObjtypeIds(null);
-    	}
+    public JSONObject dataGrid(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "datatypeId,pageNum,pageSize");
+    	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
     	
     	PageInfo<?> pageInfo = null;
     	DataType dataType = DataType.getEnum(vo.getDatatypeId());
@@ -123,7 +121,10 @@ public class DataAnalyseController {
      * @Date 2018年11月27日
      */
     @RequestMapping(value = "data-analyse/measvalue/history/diagram" ,method = RequestMethod.POST)
-    public JSONObject getMoHisDataDiagram(@RequestBody MeasObjVo vo) {
+    public JSONObject getMoHisDataDiagram(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "ids,startTime,endTime");
+    	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
+    	
     	List<Integer> ids = vo.getIds();
     	if(ids == null || ids.isEmpty()) {
     		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, Collections.emptyList());

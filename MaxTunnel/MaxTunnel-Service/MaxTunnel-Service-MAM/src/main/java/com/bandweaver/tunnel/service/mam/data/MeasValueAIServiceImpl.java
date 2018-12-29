@@ -60,9 +60,14 @@ public class MeasValueAIServiceImpl implements MeasValueAIService {
 	@Override
 	public JSONObject getEchartsData(List<Integer> ids, Date startTime, Date endTime) {
 		
+		long stime = System.currentTimeMillis();
 		//get X
+		long x_start = System.currentTimeMillis();
 		List<Date> dateList = measValueAIMapper.getX(startTime,endTime);
+		long x_end = System.currentTimeMillis();
+		System.out.println("x:" + (x_end - x_start) + "ms");
 		
+		long y_start = System.currentTimeMillis();
 		List<JSONObject> jsList = new ArrayList<>();
 		for (Integer id : ids) {
 			MeasObj measObj = measObjModuleCenter.getMeasObj(id);
@@ -82,7 +87,9 @@ public class MeasValueAIServiceImpl implements MeasValueAIService {
 			js.put("val", valList);
 			jsList.add(js);
 		}
-		
+		long y_end = System.currentTimeMillis();
+		System.out.println("y:" + (y_end - y_start) + "ms");
+		System.out.println("total:" + (y_end - stime) + "ms");
 		JSONObject result = new JSONObject();
 		result.put("key", dateList);
 		result.put("val", jsList);

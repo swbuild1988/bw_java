@@ -4,6 +4,7 @@
         <div class="threedContent" :id="id">
             <slot></slot>
         </div>
+        <Spin fix size="large" v-if="spin.spinShow"></Spin>
         <show-model v-bind="modelProp"
                     @showDesModel="showDesModel">
         </show-model>
@@ -35,6 +36,7 @@ import { flyManagerMinix } from './mixins/flyManager'
 import { addBarnLabel } from "./mixins/addBarnLabel";
 import tools from './tools'
 
+let { progressTime } = require('../../../../static/VM/js/VMWebConfig')
 
 export default {
     mixins:[ flyManagerMinix,tools,addBarnLabel ],
@@ -63,6 +65,10 @@ export default {
             default: true
         },
         openFlyLoop:{
+            type: Boolean,
+            default: false
+        },
+        openSpinShow:{
             type: Boolean,
             default: false
         },
@@ -140,12 +146,12 @@ export default {
             type: Object,
             default: ()=> {
                 return {
-                    longitude:112.49397907438006,
-                    latitude:37.710661662983384,
-                    height:-1.7297007316681086,
-                    roll:2.5845992013273644e-12,
-                    pitch:-0.30235107580130394,
-                    heading:1.7164865602395531
+                    longitude:112.49360922053003,
+                    latitude:37.71252325043172,
+                    height:-1.0311432831720453,
+                    roll:2.582822844487964e-12,
+                    pitch:-0.30235173267000404,
+                    heading:1.716482618088178
                 };
             }
         }
@@ -156,7 +162,11 @@ export default {
             scene: null,
             handler:null,
             prePosition: null,
-            personnelPositionTimerId:null
+            personnelPositionTimerId:null,
+            spin:{
+                spinShow : this.openSpinShow,
+                spinTimer : null
+            }
         };
     },
     watch:{
@@ -204,6 +214,11 @@ export default {
         showModel,
         describeModel
     },
+    computed:{
+        IMG_MAP_LIST(){
+            return this.SuperMapConfig.IMG_MAP_LIST;
+        }
+    },
     beforeMount(){
         Vue.prototype.$viewerComponent = this; // 把当前组件挂载到Vue原型$viewerComponent上
     },
@@ -238,12 +253,21 @@ export default {
                 var widget = _this.viewer.cesiumWidget;
             }
 
-            if(_this.openImageryProvider){
+            if( _this.openImageryProvider ){
                 //开启地图服务
                 let provider_mec = new Cesium.SuperMapImageryProvider({
                     url : this.SuperMapConfig.IMG_MAP//墨卡托投影地图服务
                 });
-                _this.viewer.imageryLayers.addImageryProvider(provider_mec);
+                 _this.viewer.imageryLayers.addImageryProvider(provider_mec);
+                
+            //    for(let i=0 , len = _this.IMG_MAP_LIST.length; i < len;i++){
+
+            //        _this.viewer.imageryLayers.addImageryProvider(
+            //             new Cesium.SuperMapImageryProvider({
+            //                 url : _this.IMG_MAP_LIST[i]//墨卡托投影地图服务
+            //             })
+            //         );
+            //    }
             }
 
             if(_this.searchCamera.openSearch){
@@ -281,6 +305,10 @@ export default {
                 this.eventNotie();
             }
 
+            if( _this.openSpinShow ){
+                //开启加载进度条
+                _this.showSpin();
+            }
             if(_this.searchCamera.openSearch ||　_this.unitsPosition.openPosition ||　_this.personnelPosition.openPosition ||　_this.defectPosition.openPosition ||　_this.eventsPosition.openPosition){
                 //鼠标经过实体时,触发气泡
                 getEntityProperty.call(_this,_this.scene,Cesium,_this.modelProp,'model-content')
@@ -318,11 +346,25 @@ export default {
             }
             _this.flyManager(2);
             _this.addIdentifierViewer();
+            
             //滚轮滑动，获得当前窗口的经纬度，偏移角
             _this.handler = new Cesium.ScreenSpaceEventHandler(
                 _this.scene.canvas
             );
-        
+            
+                // setInterval(()=>{
+                //     var camera=_this.viewer.scene.camera;
+                //     var position=camera.position;
+                //     //将笛卡尔坐标化为经纬度坐标
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position);
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },10000)
             
             _this.handler.setInputAction(e => {
                 this.addLabel( this.SuperMapConfig.BIM_DATA,doSqlQuery,processFailed,1000/60 );
@@ -414,7 +456,7 @@ export default {
             let {　viewer　}　= this;
 
             if( obj.isDistribute ){  //isDistribute 为true时为分布式,false为非分布式
-
+            console.log('obj',obj)
                 addEntity({
                     viewer:viewer,
                     X:obj.longitude,
@@ -611,6 +653,12 @@ export default {
                 }
             });
         },
+        showSpin(){
+            let { spin } = this;
+            console.log('spin',spin);
+
+            spin.spinTimer = setTimeout(()=> spin.spinShow = false,progressTime * 1000)
+        },
         //销毁viewer
         destoryViewer(){
             var layers = this.viewer.scene.layers;
@@ -619,7 +667,8 @@ export default {
                 layers.findByIndex(i).ignoreNormal = true
                 layers.findByIndex(i).clearMemoryImmediately = true
             }
-            this.viewer.destroy()
+            this.viewer.destroy();
+            clearTimeout(spin.spinTimer)
         },
 
     },
@@ -651,4 +700,155 @@ export default {
 .cesium-viewer-bottom{
     display:none
 }
+.pace.pace-inactive {
+  display: none;
+}
+
+.pace {
+  -webkit-pointer-events: none;
+  pointer-events: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+
+  z-index: 2000;
+  position: fixed;
+  height: 60px;
+  width: 100px;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pace .pace-progress {
+  z-index: 2000;
+  position: absolute;
+  height: 60px;
+  width: 100px;
+
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  -ms-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.pace .pace-progress:before {
+  content: attr(data-progress-text);
+  text-align: center;
+  color: #fff;
+  background: #29d;
+  border-radius: 50%;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 1;
+  padding: 20% 0 7px;
+  width: 50%;
+  height: 40%;
+  margin: 10px 0 0 30px;
+  display: block;
+  z-index: 999;
+  position: absolute;
+}
+
+.pace .pace-activity {
+  font-size: 15px;
+  line-height: 1;
+  z-index: 2000;
+  position: absolute;
+  height: 60px;
+  width: 100px;
+
+  display: block;
+  -webkit-animation: pace-theme-center-atom-spin 2s linear infinite;
+  -moz-animation: pace-theme-center-atom-spin 2s linear infinite;
+  -o-animation: pace-theme-center-atom-spin 2s linear infinite;
+  animation: pace-theme-center-atom-spin 2s linear infinite;
+}
+
+.pace .pace-activity {
+  border-radius: 50%;
+  border: 5px solid #29d;
+  content: ' ';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 100px;
+}
+
+.pace .pace-activity:after {
+  border-radius: 50%;
+  border: 5px solid #29d;
+  content: ' ';
+  display: block;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  height: 60px;
+  width: 100px;
+
+  -webkit-transform: rotate(60deg);
+  -moz-transform: rotate(60deg);
+  -o-transform: rotate(60deg);
+  transform: rotate(60deg);
+}
+.spin-icon-load{
+    width: 400px;
+    height: 400px;
+    animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+}
+.loading{
+    font-size: 34px;
+}
+.content >>> .ivu-spin-main{
+    width: 15%;
+    height: 15%;
+}
+.content >>> .ivu-spin-large .ivu-spin-dot{
+    width: 100%;
+    height: 100%;
+}
+.pace .pace-activity:before {
+  border-radius: 50%;
+  border: 5px solid #29d;
+  content: ' ';
+  display: block;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  height: 60px;
+  width: 100px;
+
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+
+@-webkit-keyframes pace-theme-center-atom-spin {
+  0%   { -webkit-transform: rotate(0deg) }
+  100% { -webkit-transform: rotate(359deg) }
+}
+@-moz-keyframes pace-theme-center-atom-spin {
+  0%   { -moz-transform: rotate(0deg) }
+  100% { -moz-transform: rotate(359deg) }
+}
+@-o-keyframes pace-theme-center-atom-spin {
+  0%   { -o-transform: rotate(0deg) }
+  100% { -o-transform: rotate(359deg) }
+}
+@keyframes pace-theme-center-atom-spin {
+  0%   { transform: rotate(0deg) }
+  100% { transform: rotate(359deg) }
+}
+
 </style>
