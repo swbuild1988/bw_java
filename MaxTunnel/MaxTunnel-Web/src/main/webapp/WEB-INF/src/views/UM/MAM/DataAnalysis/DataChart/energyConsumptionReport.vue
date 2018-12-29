@@ -1,9 +1,9 @@
 <template>
     <div>
         <Row class="conditions">
-            <Col span="20">
+            <Col span="4">
                 <span>周期：</span>
-                <Select v-model="query.cycleType" style="width:20vw;" @on-change="changeCycle">
+                <Select v-model="query.cycleType" style="width:60%" @on-change="changeCycle">
                       <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
                 </Select>
             </Col>
@@ -17,11 +17,9 @@
                       <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
                 </Select>
             </Col> -->
-            <Col span="2">
-                <Button type="primary" icon="ios-search" @click="getData">查询</Button>
-            </Col>
-            <Col span="2">
-                <Button type="ghost" @click="exportTable">导出</Button>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="getData">查询</Button>
+                <Button type="primary" icon="ios-download-outline"  @click="exportTable" size="small">导出</Button>
             </Col>
         </Row>
         <Row class="list">

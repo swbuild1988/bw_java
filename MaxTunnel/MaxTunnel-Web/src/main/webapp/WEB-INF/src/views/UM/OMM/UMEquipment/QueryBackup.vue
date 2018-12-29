@@ -34,9 +34,8 @@
                 结束时间：
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
-                <Button type="primary" @click="showTable()">确定</Button>
-                <Button type="default" @click="showTable()">取消</Button>
+            <Col span="6" offset="6">
+                <Button type="primary" icon="ios-search" size="small" @click="showTable()">查询</Button>
             </Col>
         </Row>
         <div class="list">
@@ -122,8 +121,7 @@
                     <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="8" style="text-align: right;padding-right: 43px;">
-                    <Button type="primary" @click="showInStorage()" size="small">确定</Button>
-                    <Button type="default" size="small">取消</Button>
+                    <Button type="primary" @click="showInStorage()" size="small" icon="ios-search">查询</Button>
                 </Col>
             </Row>
             <Table stripe border height="330" ref="selection" :columns="outStorageColums"  :data="outStorageData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>

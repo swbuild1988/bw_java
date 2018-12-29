@@ -4,19 +4,15 @@
       <Row style="font-size:16">
         <Col span="6">
         监测仓:
-        <Select v-model="queryCondition.storeId" @on-change='changeStore(queryCondition.storeId)' style="width:12vw;">
-          <Option value="0" key="0">全部
-          </Option>
-          <Option v-for="item in sotres" :value="item.id" :key="item.id">{{ item.name }}
-          </Option>
+        <Select v-model="queryCondition.storeId" @on-change='changeStore(queryCondition.storeId)' style="width:60%">
+          <Option value=null>全部</Option>
+          <Option v-for="item in sotres" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
         </Col>
         <Col span="6">
         区段:
-        <Select v-model="queryCondition.sectionId" @on-change='changeSection(queryCondition.sectionId)'
-                style="width:12vw;">
-          <Option value="0" key="0">全部
-          </Option>
+        <Select v-model="queryCondition.sectionId" @on-change='changeSection(queryCondition.sectionId)' style="width:60%">
+          <Option value=null>全部</Option>
           <Option v-for="item in sections" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
         </Col>

@@ -9,7 +9,8 @@
                 </Select>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small" @click="addVideoService=true">添加视频</Button>
+                <Button type="primary" size="small" icon="ios-search">查询</Button>
+                <Button type="error" size="small" @click="addVideoService=true">新增视频</Button>
             </Col>
         </Row>
         <div style="margin:20px;">
@@ -82,8 +83,7 @@
                 </Row>
             </Form> 
             <div slot="footer">
-                <Button type="primary" @click="submitForm('video')">提交</Button>
-                <Button type="default" @click="cancel('video')">取消</Button>
+                <Button type="primary" @click="submitForm('video')">保存</Button>
             </div>  
         </Modal>
     </div>    
@@ -261,11 +261,7 @@ export default {
                     this.addVideoService=false
                 }
             })
-        },
-        cancel(name){
-            this.$refs[name].resetFields()
-            this.addVideoService=false
-        },
+        }
     }
 }
 </script>

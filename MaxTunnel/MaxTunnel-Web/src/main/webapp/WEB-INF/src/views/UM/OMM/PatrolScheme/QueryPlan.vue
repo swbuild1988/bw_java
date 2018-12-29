@@ -2,27 +2,30 @@
   <div class="allDiv">
     <div class="conditions">
       <Row>
-        <Col span="6">
-          <span class="planDec">流程状态：</span>
-          <Select v-model="conditions.finished"  @on-change='conditionChange()' style="width:60%">
+        <Col span="4">
+          <span>流程状态：</span>
+          <Select v-model="conditions.finished" style="width:60%">
             <Option value=null>所有</Option>
             <Option v-for="item in workOrderStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
           </Select>
         </Col>
-        <Col span="6">
-          <span class="planDec">责任班组：</span>
-          <Select v-model="conditions.groupId"   @on-change='conditionChange()' style="width:60%">
+        <Col span="4">
+          <span>责任班组：</span>
+          <Select v-model="conditions.groupId" style="width:60%">
             <Option value="">所有</Option>
             <Option v-for="item in Groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
         </Col>
-        <Col span="6">
+        <Col span="4">
             <span>开始时间：</span>
-            <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="conditionChange()"></DatePicker>
+            <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
         </Col>
-        <Col span="6">
+        <Col span="4">
             <span>结束时间：</span>
-            <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="conditionChange()"></DatePicker>
+            <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+        </Col>
+        <Col span="4">
+            <Button type="primary" icon="ios-search" size="small" @click="conditionChange()">查询</Button>
         </Col>
       </Row>
     </div>

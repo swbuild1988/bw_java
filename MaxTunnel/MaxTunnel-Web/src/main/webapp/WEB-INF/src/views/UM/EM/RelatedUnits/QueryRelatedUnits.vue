@@ -30,7 +30,7 @@
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
             <Col span="6" offset="6">
-                <Button type="primary" icon="ios-search" @click="queryUnits()">查询</Button>
+                <Button type="primary" icon="ios-search" @click="queryUnits()" size="small">查询</Button>
             </Col>
         </Row> 
         <div class="list">   

@@ -100,7 +100,7 @@
                 url: '/UM/defect/query'
               },
               {
-                name: '维修管理',
+                name: '检修管理',
                 url: '/UM/overhaul/query'
               },
               {

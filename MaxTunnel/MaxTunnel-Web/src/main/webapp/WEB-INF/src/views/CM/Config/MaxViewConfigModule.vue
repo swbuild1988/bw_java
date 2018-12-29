@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Modal v-model="show.state" title="新增流程节点">
+        <Modal v-model="show.state" title="新增MaxView终端">
             <Form ref="data" :model="data" :rules="rule" :label-width="120">
                 <FormItem label="终端名称" prop="name">
                     <Input v-model="data.name" placeholder="请输入终端名称" class="InputWidth"/>

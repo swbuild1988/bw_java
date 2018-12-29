@@ -45,8 +45,7 @@
                 <DatePicker type="datetime" v-model="toolsConditions.InStorageEndTime" placeholder="请输入入库结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small" @click="showTable">确定</Button>
-                <Button type="default" size="small">取消</Button>
+                <Button type="primary" size="small" @click="showTable" icon="ios-search">查询</Button>
             </Col>
         </Row>
         <div class="list">
@@ -210,7 +209,7 @@
                     </Select>
                 </Col>
                 <Col span="8" offset="8">
-                    <Button type="primary" size="small" @click="batchReturn()">确定</Button>
+                    <Button type="primary" size="small" @click="batchReturn()">查询</Button>
                     <Button type="default" size="small">取消</Button>
                 </Col>    
             </Row>

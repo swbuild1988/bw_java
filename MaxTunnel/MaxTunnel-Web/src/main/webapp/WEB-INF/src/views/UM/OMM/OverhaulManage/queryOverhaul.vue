@@ -1,16 +1,16 @@
 <template>
     <div class="allDiv">
         <Row class="conditions">
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
-            <Col span="6">
-                <Button type="primary" icon="ios-search" @click="getList()">查询</Button>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="getList()">查询</Button>
             </Col>
         </Row>
         <div class="list">

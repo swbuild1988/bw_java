@@ -44,7 +44,7 @@
                     </Poptip>
                 </Col>
                 <Col span="6">
-                     <Button type="primary" @click="search" icon="ios-search">查询</Button>
+                     <Button type="primary" @click="search" icon="ios-search" size="small">查询</Button>
                 </Col>
             </Row>
         </div>

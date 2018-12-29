@@ -2,57 +2,57 @@
     <Row>
         <Col span="24">
             <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
-                <Col span="6">
+                <Col span="4">
                     <span>仪表工具名称</span><span>：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     仪表工具类型：
                     <Select v-model="toolConditions.typeId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>仪表工具型号</span><span>：</span>
                     <Select v-model="toolConditions.modelId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
-                    <span class="word43">借用人</span><span>：</span>
+                <Col span="4">
+                    <span class="word63">借用人</span><span>：</span>
                     <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
-                    <span>借用开始时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="6">
-                    <span>借用结束时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="word63">归还人</span><span>：</span>
                     <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>使用状态</span><span>：</span>
                     <Select v-model="toolConditions.useStatus" style="width: 60%">
                         <Option value=null key="2">所有</Option>
                         <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
+                    <span>借用开始时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <span>借用结束时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="4">
                     <span>归还开始时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.retStartTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>归还结束时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="6" offset="6" style="text-align: right;width: 18%">
-                    <Button type="primary" size="small" @click="showTable()">确定</Button>
+                <Col span="4" offset="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
             <div class="list">
@@ -365,9 +365,9 @@ export default {
     letter-spacing: 0.667em;
     margin-right: -0.667em;
 }
-.word43{
-    letter-spacing: 0.5em;
-    margin-right: -0.5em;
+.word63{
+    letter-spacing: 1.5em;
+    margin-right: -1.5em;
 }
 .word63{
     letter-spacing: 1.5em;

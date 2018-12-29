@@ -27,7 +27,7 @@
       </Col>
       <Col span="6">
         <Button type="primary" size="small" icon="ios-search" @click="search">查询</Button>
-        <Button type="success" size="small" @click="add">新增监测对象</Button>
+        <Button type="error" size="small" @click="add">新增监测对象</Button>
       </Col>
     </Row>
     <Row style="marginLeft:25px;marginBottom:10px;">
@@ -191,7 +191,16 @@ export default {
         {
           title: "是否激活",
           key: "actived",
-          align: "center"
+          align: "center",
+          render: (h,params) => {
+            let isActived = null
+            if(params.row.actived==true){
+              isActived = '是'
+            }else{
+              isActived = '否'
+            }
+            return h('div',isActived)
+          }
         },
         {
           title: "操作",
@@ -275,14 +284,14 @@ export default {
   mounted() {
     this.init();
     this.search();
-    setTimeout(function() {
-      let width = document.getElementById("objtype").offsetWidth;
-      document.getElementById("store").style.width = width + "px";
-    }, 300);
-    window.onresize = function() {
-      let width = document.getElementById("objtype").offsetWidth;
-      document.getElementById("store").style.width = width + "px";
-    };
+    // setTimeout(function() {
+    //   let width = document.getElementById("objtype").offsetWidth;
+    //   document.getElementById("store").style.width = width + "px";
+    // }, 300);
+    // window.onresize = function() {
+    //   let width = document.getElementById("objtype").offsetWidth;
+    //   document.getElementById("store").style.width = width + "px";
+    // };
   },
   methods: {
     search() {
@@ -293,7 +302,7 @@ export default {
           _this.data6 = [];
           _this.data6 = result.list;
           _this.data6.forEach(measobj => {
-            measobj.actived = measobj.actived ? "是" : "否";
+            // measobj.actived = measobj.actived ? "是" : "否";
             measobj.location =
               measobj.section.store.tunnel.name + measobj.section.name;
           });

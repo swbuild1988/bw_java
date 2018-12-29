@@ -1,40 +1,38 @@
 <template>
     <div class="allDiv">
-        <Row class="queryCondition">
+        <Row class="conditions">
             <Row>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">缺陷类型：</span>
                 <Select v-model="conditions.type" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectType" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="6">    
+            <Col span="4">    
                 <span class="conditionTitle">缺陷状态：</span>
                 <Select v-model="conditions.status" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectStatus" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="6">    
+            <Col span="4">    
                 <span class="conditionTitle">危险等级：</span>
                 <Select v-model="conditions.level" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectLevel" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            </Row>
-            <Row>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
-                <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="queryCondition()">查询</Button>
             </Col>
             </Row>
         </Row>

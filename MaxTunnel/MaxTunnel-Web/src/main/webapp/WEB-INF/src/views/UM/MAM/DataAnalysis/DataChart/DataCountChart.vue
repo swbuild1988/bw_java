@@ -39,7 +39,7 @@
       </Select>
       </Col>
       <Col span="1" style="position: relative;float: right;right: 15px;margin-top: 15px;">
-      <Button type="primary" icon="ios-search" @click="queryData">查询</Button>
+      <Button type="primary" icon="ios-search" size="small" @click="queryData">查询</Button>
       </Col>
       </Row>
     </div>

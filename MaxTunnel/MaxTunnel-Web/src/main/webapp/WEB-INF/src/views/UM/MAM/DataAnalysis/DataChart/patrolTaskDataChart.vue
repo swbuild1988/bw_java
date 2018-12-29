@@ -8,25 +8,25 @@
                         <Option v-for="(item,index) in dataTypes" :value="item.key" :key="index">{{ item.val }}</Option>
                     </Select>
                 </Col> -->
-                <Col span="6">
+                <Col span="4">
                     <span>所属管廊：</span>
                     <Select v-model="conditions.tunnelId" style="width:60%">
                         <Option v-for="(item,index) in tunnels" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>周期：</span>
                     <Select v-model="conditions.sycle" style="width:60%" @on-change="changeCycle">
                         <Option v-for="(item,index) in sycles" :value="item.key" :key="index">{{ item.val }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>时间：</span>
                     <DatePicker v-model="conditions.time" type="datetimerange" placeholder="请选择"
-                                :readonly="conditions.readonly" style="width:275px;"></DatePicker>
+                                :readonly="conditions.readonly" style="60%;"></DatePicker>
                 </Col>
-                <Col span="6">
-                    <Button @click="query()">查询</Button>
+                <Col span="4">
+                    <Button @click="query()" type="primary" size="small" icon="ios-search">查询</Button>
                 </Col>
             </Row>
         </div>

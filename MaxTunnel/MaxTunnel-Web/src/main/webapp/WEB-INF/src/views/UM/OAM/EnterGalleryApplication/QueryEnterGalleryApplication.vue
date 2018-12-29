@@ -2,28 +2,31 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">入廊目的：</span>
-                    <Select v-model="conditions.actionId"  @on-change='queryRecords()' style="width:60%">
+                    <Select v-model="conditions.actionId"  style="width:60%">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in actions" :value="item.val" :key="index">{{ item.key }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">是否完成：</span>
-                    <Select v-model="conditions.isFinished"  @on-change='queryRecords()' style="width:60%">
+                    <Select v-model="conditions.isFinished" style="width:60%">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in isFinished" :value="item.key" :key="index">{{ item.val }}</Option>
                     </Select>
                 </Col>
 
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryRecords()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryRecords()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryRecords()">查询</Button>
                 </Col>
             </Row>  
         </div>      

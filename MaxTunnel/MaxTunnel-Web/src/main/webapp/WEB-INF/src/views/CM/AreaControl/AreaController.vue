@@ -13,7 +13,7 @@
             <div>
                 <span>所属管廊：</span>
                 <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-                    <Option value="null">不限</Option>
+                    <Option value="null">所有</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
             </div>
@@ -75,7 +75,8 @@ export default {
                 },
                 {
                     type: "index",
-                    align: "center"
+                    align: "center",
+                    width: 60
                 },
                 {
                     title: "区域名称",
@@ -94,33 +95,62 @@ export default {
                 },
                 {
                     title: "所属管廊",
-                    key: "tunnelName",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.tunnel.name)
+                    }
                 },
                 {
                     title: "经度",
                     key: "longitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[0]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "纬度",
                     key: "latitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[1]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "高度",
                     key: "highness",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[2]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "创建时间",
                     key: "crtTime",
-                    align: "center"
+                    align: "center",
+                    width: 190,
+                    render: (h,params) => {
+                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        return h('div',temp)
+                    }
                 },
                 {
                     title: "操作",
                     key: "action",
                     align: "center",
+                    width: 80,
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -129,9 +159,6 @@ export default {
                                     props: {
                                         type: "primary",
                                         size: "small"
-                                    },
-                                    style: {
-                                        marginLeft: "5px"
                                     },
                                     on: {
                                         click: () => {
@@ -189,8 +216,8 @@ export default {
                 pageSize: this.page.pageSize,
                 name: this.researchInfo.name,
                 tunnelId: this.researchInfo.tunnelId,
-                startTime: new Date(this.researchInfo.startTime).getTime(),
-                endTime: new Date(this.researchInfo.endTime).getTime()
+                startTime: this.researchInfo.startTime,
+                endTime: this.researchInfo.endTime
             };
             return Object.assign({}, research);
         },
@@ -218,33 +245,7 @@ export default {
             this.axios.post("/areas/datagrid", this.researches).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
-                    let allinfo = [];
-                    console.log("areas", data);
-                    for (let index in data.list) {
-                        let info = {};
-                        info.id = data.list[index].id;
-                        info.name = data.list[index].name;
-                        info.sn = data.list[index].sn;
-                        info.crtTime = new Date(
-                            data.list[index].crtTime
-                        ).format("yyyy-MM-dd hh:mm:s");
-                        if (data.list[index].tunnel != null) {
-                            info.tunnelName = data.list[index].tunnel.name;
-                            info.tunnelId = data.list[index].tunnel.id;
-                        }
-                        if (data.list[index].location != null) {
-                            info.location = data.list[index].location;
-                        }
-                        if (data.list[index].camera != null) {
-                            info.camera = data.list[index].camera;
-                            let str = info.camera.split(",");
-                            info.longitude = str[0];
-                            info.latitude = str[1];
-                            info.highness = str[2];
-                        }
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
+                    this.data6 = data.list;
                     this.page.pageTotal = data.total;
                 }
             });
@@ -253,21 +254,13 @@ export default {
             this.addAreaInfo.show.state = !this.addAreaInfo.show.state;
         },
         addMultiArea() {
-            this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show
-                .state;
+            this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show.state;
         },
         gettunnel() {
             this.axios.get("/tunnels").then(res => {
                 let { code, data } = res.data;
-                let _tunnels = [];
                 if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let tunnel = {};
-                        tunnel.id = data[i].id;
-                        tunnel.name = data[i].name;
-                        _tunnels.push(tunnel);
-                    }
-                    this.tunnels = _tunnels;
+                    this.tunnels = data;
                 }
             });
         },
@@ -293,7 +286,6 @@ export default {
             });
         },
         saveMultiArea(_data) {
-            console.log("新加区域", _data);
             //保存新区域
             this.axios.post("/areas/multi", _data).then(res => {
                 let { code, data } = res.data;
@@ -384,7 +376,7 @@ export default {
 }
 .pageStyle {
     text-align: right;
-    margin-top: 100px;
+    margin-top: 20px;
     margin-right: 10px;
 }
 .ivu-poptip {

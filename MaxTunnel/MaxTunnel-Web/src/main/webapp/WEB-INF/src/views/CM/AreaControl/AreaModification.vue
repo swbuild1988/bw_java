@@ -2,7 +2,7 @@
     <div>
         <!-- 区域管理之修改区域 -->
         <Modal v-model="show.state" title="修改区域" :label-width="100">
-            <Form ref="formValidate" :model="formValidate">
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
                 <FormItem label="区域名称：" prop="name" class="formStyle">
                     <Input v-model="formValidate.name" placeholder="请输入区域名" class="inputStyle"/>
                 </FormItem>
@@ -53,18 +53,25 @@ export default {
                 latitude:null,
                 highness:null
             },
-            ruleValidate:{}
+            ruleValidate:{
+                name: [
+                    { required: true, message: '区域名称不能为空', trigger: 'blur' }
+                ],
+                tunnelId: [
+                    { type: 'number', required: true, message: '所属管廊不能为空', trigger: 'change' }
+                ]
+            }
         }
     },
     watch:{
         modificationInfo:function(newValue,oldValue){
             this.formValidate = JSON.parse(JSON.stringify(newValue));
         },
-        'formValidate.name':function(newValue,oldValue){
-            if(newValue != null){
-                this.checkName(newValue);
-            }
-        }
+        // 'formValidate.name':function(newValue,oldValue){
+        //     if(newValue != null){
+        //         this.checkName(newValue);
+        //     }
+        // }
     },
     props:{
         show:{

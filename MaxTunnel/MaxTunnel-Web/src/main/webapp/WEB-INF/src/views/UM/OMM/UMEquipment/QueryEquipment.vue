@@ -42,7 +42,7 @@
         <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endEquipmentTime"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary" size="small" @click="showTable()">查询</Button>
+        <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
       </Col>
     </Row>
     <div class="list">

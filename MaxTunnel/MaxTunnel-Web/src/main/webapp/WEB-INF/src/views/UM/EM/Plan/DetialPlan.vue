@@ -57,22 +57,19 @@
         <img style="width: 100%;height: 60vh" v-bind:src="showData"/>
       </TabPane>
       <TabPane label="执行记录" name="log">
-        <Row class="top">
-          <Col span="5">
+        <Row class="conditions">
+          <Col span="4">
           <span>开始时间:</span>
-          <DatePicker v-model="queryPram.startTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime" placeholder="选择时间"
-                      style="width: 61%"></DatePicker>
+          <DatePicker v-model="queryPram.startTime" type="datetime" placeholder="请选择开始时间"
+                      style="width: 60%"></DatePicker>
           </Col>
-          <Col span="5">
+          <Col span="4">
           <span>结束时间</span>
-          <DatePicker v-model="queryPram.endTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime" placeholder="选择时间"
-                      style="width: 61%"></DatePicker>
+          <DatePicker v-model="queryPram.endTime" type="datetime" placeholder="请选择结束时间"
+                      style="width: 60%"></DatePicker>
           </Col>
-          <Col span="2" offset="12">
-          <div style="position: relative;float: right;right: 0px;">
-            <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询"
-                    @click="queryTable"></Button>
-          </div>
+          <Col span="4">
+            <Button type="primary" icon="ios-search" size="small"  @click="queryTable">查询</Button>
           </Col>
         </Row>
         <Row>
@@ -272,7 +269,7 @@
 </script>
 
 <style scoped>
-  .top {
+  /* .top {
     margin-top: 4px;
     background-color: #fff;
     font-size: 16px;
@@ -280,7 +277,7 @@
     padding: 10px;
     margin-left: 10px;
     margin-right: 10px;
-  }
+  } */
 
   .ivu-tabs-card >>>.ivu-tabs-bar {
     margin-bottom: 0px !important;

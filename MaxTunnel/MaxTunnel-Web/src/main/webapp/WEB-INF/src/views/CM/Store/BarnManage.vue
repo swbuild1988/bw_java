@@ -13,7 +13,7 @@
         <div>
           <span>所属管廊：</span>
           <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-            <Option value="null">不限</Option>
+            <Option value="null">所有</Option>
             <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
           </Select>
         </div>
@@ -22,7 +22,7 @@
         <div>
           <span>管仓类型：</span>
           <Select v-model="researchInfo.storeTypeId" placeholder="请选择管仓类型" class="inputWidth">
-            <Option value="null">不限</Option>
+            <Option value="null">所有</Option>
             <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
           </Select>
         </div>
@@ -70,7 +70,7 @@
         placement="top"
         @on-change="handlePage"
         show-elevator
-        class="pageStyle"
+        :style="pageStyle"
       ></Page>
     </div>
     <div>
@@ -108,7 +108,8 @@ export default {
                 },
                 {
                     type: "index",
-                    align: "center"
+                    align: "center",
+                    width: 60
                 },
                 {
                     title: "管仓名称",
@@ -118,12 +119,18 @@ export default {
                 {
                     title: "所属管廊",
                     key: "tunnelName",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.tunnel.name)
+                    }
                 },
                 {
                     title: "管仓类型",
                     key: "storeTypeName",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.storeType.name)
+                    }
                 },
                 {
                     title: "类型编号",
@@ -133,27 +140,56 @@ export default {
                 {
                     title: "经度",
                     key: "longitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[0]
+                            return h('div',temp)
+                        }
+
+                    }
                 },
                 {
                     title: "纬度",
                     key: "latitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[1]
+                            return h('div',temp)
+                        }
+
+                    }
                 },
                 {
                     title: "高度",
                     key: "highness",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[2]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "创建时间",
                     key: "crtTime",
-                    align: "center"
+                    align: "center",
+                    width: 190,
+                    render: (h,params) => {
+                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        return h('div',temp)
+                    }
                 },
                 {
                     title: "操作",
                     key: "action",
                     align: "center",
+                    width: 80,
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -162,9 +198,6 @@ export default {
                                     props: {
                                         type: "primary",
                                         size: "small"
-                                    },
-                                    style: {
-                                        marginLeft: "5px"
                                     },
                                     on: {
                                         click: () => {
@@ -205,35 +238,26 @@ export default {
                 changeInfo: {}
             },
             deleteShow: false,
-            deleteSelect: []
+            deleteSelect: [],
+            pageStyle: {
+                position: 'absolute',
+                bottom: '35px',
+                right: '40px'
+            },
         };
     },
     mounted() {
         this.showTable();
         this.axios.get("/tunnels").then(res => {
             let { code, data } = res.data;
-            let _tunnels = [];
             if (code == 200) {
-                for (let i = 0; i < data.length; i++) {
-                    let tunnel = {};
-                    tunnel.id = data[i].id;
-                    tunnel.name = data[i].name;
-                    _tunnels.push(tunnel);
-                }
-                this.tunnels = _tunnels;
+                this.tunnels = data;
             }
         }),
             this.axios.get("/store-type/list").then(res => {
                 let { code, data } = res.data;
-                let _types = [];
                 if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let type = {};
-                        type.id = data[i].id;
-                        type.name = data[i].name;
-                        _types.push(type);
-                    }
-                    this.types = _types;
+                    this.types = data;
                 }
             });
     },
@@ -246,8 +270,8 @@ export default {
                 name: this.researchInfo.name,
                 tunnelId: this.researchInfo.tunnelId,
                 storeTypeId: this.researchInfo.storeTypeId,
-                startTime: new Date(this.researchInfo.startTime).getTime(),
-                endTime: new Date(this.researchInfo.endTime).getTime()
+                startTime: this.researchInfo.startTime,
+                endTime: this.researchInfo.endTime
             };
             return Object.assign({}, param);
         },
@@ -281,34 +305,7 @@ export default {
                 .then(res => {
                     let { code, data } = res.data;
                     if (code == 200) {
-                        let allinfo = [];
-                        for (let index in data.list) {
-                            let info = {};
-                            info.id = data.list[index].id;
-                            info.name = data.list[index].name;
-                            info.sn = data.list[index].sn;
-                            info.crtTime = new Date(
-                                data.list[index].crtTime
-                            ).format("yyyy-MM-dd hh:mm:s");
-                            if (data.list[index].tunnel != null) {
-                                info.tunnelId = data.list[index].tunnel.id;
-                                info.tunnelName = data.list[index].tunnel.name;
-                            }
-                            if (data.list[index].storeType != null) {
-                                info.storeTypeId =
-                                    data.list[index].storeType.id;
-                                info.storeTypeName =
-                                    data.list[index].storeType.name;
-                            }
-                            if (data.list[index].camera != null) {
-                                let str = data.list[index].camera.split(",");
-                                info.longitude = str[0];
-                                info.latitude = str[1];
-                                info.highness = str[2];
-                            }
-                            allinfo.push(info);
-                        }
-                        this.data6 = allinfo;
+                        this.data6 = data.list;
                         this.page.pageTotal = data.total;
                     }
                 });
@@ -339,7 +336,6 @@ export default {
         },
         saveMultiStore(_data) {
             this.formValidate = _data;
-            console.log("get multi stores", _data);
             this.axios.post("stores/multi", _data).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {

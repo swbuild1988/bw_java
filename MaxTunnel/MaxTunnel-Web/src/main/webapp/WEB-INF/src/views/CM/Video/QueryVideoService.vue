@@ -34,8 +34,8 @@
                     <Input v-model="conditions.username" style="width: 60%"></Input>
                 </Col>
                 <Col span="6">
-                    <Button type="primary" size="small" @click="addVideoService1()">添加视频服务</Button>
-                    <Button type="primary" size="small" @click="queryList()">查询</Button>
+                    <Button type="primary" size="small" @click="queryList()" icon="ios-search">查询</Button>
+                    <Button type="error" size="small" @click="addVideoService1()">新增视频服务</Button>
                 </Col>
             </Row>
         </div>
@@ -81,9 +81,8 @@
                 </FormItem>
             </Form> 
             <div slot="footer">
-                <Button type="primary" @click="submitForm('videoService')" v-if="isAdd">提交</Button>
+                <Button type="primary" @click="submitForm('videoService')" v-if="isAdd">保存</Button>
                 <Button type="primary" @click="updateForm('videoService')" v-if="isEdit">更新</Button>
-                <Button type="default" @click="cancel('videoService')">取消</Button>
             </div>  
         </Modal>
     </div>    
@@ -223,7 +222,7 @@ export default {
                     { required: true, message: 'IP不能为空', trigger: 'blur' }
                 ],
                 port: [
-                    { required: true, message: '端口不能为空', trigger: 'blur' }
+                    { type: 'number', required: true, message: '端口不能为空', trigger: 'blur' }
                 ],
                 username: [
                     { required: true, message: '用户名不能为空', trigger: 'blur' },
@@ -232,7 +231,7 @@ export default {
                     { required: true, message: '密码不能为空', trigger: 'blur' }
                 ],
                 channelNum: [
-                    { required: true, message: '通道数不能为空', trigger: 'blur' }
+                    { type: 'number', required: true, message: '通道数不能为空', trigger: 'blur' }
                 ]
             },
             conditions:{

@@ -94,22 +94,12 @@ export default {
         getStoreTypeList() {
             this.axios.get("/store-type/list").then(res => {
                 let { code, data } = res.data;
-                let _types = [];
                 if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let type = {};
-                        type.id = data[i].id;
-                        type.name = data[i].name;
-                        type.sn = data[i].sn;
-                        _types.push(type);
-                    }
-                    this.types = _types;
+                    this.types = data;
                 }
-                console.log("types", this.types);
             });
         },
         sendMsg: function(data) {
-            console.log("sendmsg:", data);
             let uploadStores = [];
             for (
                 let index = 0;
@@ -134,7 +124,6 @@ export default {
                 };
                 uploadStores.push(t_store);
             }
-            console.log("uploadStores", uploadStores);
             this.$refs[data].validate(valid => {
                 if (valid) {
                     this.$emit("listenToAddMulti", uploadStores);

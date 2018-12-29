@@ -6,32 +6,32 @@
                 <FormItem label="管廊名" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入新管廊名" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="管廊编号" prop="sn">
+                <FormItem label="管廊编号">
                     <Input v-model="formValidate.sn" placeholder="请输入管廊编号" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="管廊长度" prop="length">
+                <FormItem label="管廊长度">
                     <Input v-model="formValidate.length" placeholder="请输入新管廊长度" class="InputWidth"></Input> 
                 </FormItem>
-                <FormItem label="经度" prop="longitude">
+                <FormItem label="经度">
                     <Input v-model="formValidate.longitude" placeholder="请输入经度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="纬度" prop="latitude">
+                <FormItem label="纬度">
                     <Input v-model="formValidate.latitude" placeholder="请输入纬度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="高度" prop="highness">
+                <FormItem label="高度">
                     <Input v-model="formValidate.highness" placeholder="请输入高度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="负责人" prop="responsibility">
+                <FormItem label="负责人">
                     <Select v-model="formValidate.responsibilityId" placeholder="请选择负责人" class="InputWidth">
                         <Option v-for="(item,index) in staffs" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="建筑单位" prop="construct">
+                <FormItem label="建筑单位">
                     <Select v-model="formValidate.constructId" placeholder="请选择建筑单位" class="InputWidth">
                         <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="运营单位" prop="operation">
+                <FormItem label="运营单位">
                     <Select v-model="formValidate.operationId" placeholder="请选择运营单位" class="InputWidth">
                         <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
@@ -73,14 +73,10 @@ export default {
             },
             ruleValidate: {
                 name: [
-                    {
-                        required: true,
-                        message: "管廊名不能为空",
-                        trigger: "blur"
-                    }
+                    { required: true, message: "管廊名不能为空", trigger: "blur" }
                 ],
                 maxview: [
-                    { required: true, message: '管廊名不能为空', trigger: 'blur' }
+                    { type: 'number', required: true, message: 'MaxView终端不能为空', trigger: 'blur' }
                 ]
             }
         };

@@ -6,34 +6,34 @@
                 <FormItem label="管廊名" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入新管廊名" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="管廊长度" prop="length">
+                <FormItem label="管廊长度">
                     <Input v-model="formValidate.length" placeholder="请输入新管廊长度" class="InputWidth"></Input>                    </FormItem>
-                <FormItem label="经度" prop="longitude">
+                <FormItem label="经度">
                     <Input v-model="formValidate.longitude" placeholder="请输入经度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="纬度" prop="latitude">
+                <FormItem label="纬度">
                     <Input v-model="formValidate.latitude" placeholder="请输入纬度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="高度" prop="highness">
+                <FormItem label="高度">
                     <Input v-model="formValidate.highness" placeholder="请输入高度" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="负责人" prop="responsibility">
+                <FormItem label="负责人">
                     <Select v-model="formValidate.responsibilityId" placeholder="请选择负责人" class="InputWidth">
                         <Option v-for="(item,index) in staffs" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="建筑单位" prop="construct">
+                <FormItem label="建筑单位">
                     <Select v-model="formValidate.constructId" placeholder="请选择建筑单位" class="InputWidth">
                         <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="运营单位" prop="operation">
+                <FormItem label="运营单位">
                     <Select v-model="formValidate.operationId" placeholder="请选择运营单位" class="InputWidth">
                         <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="MaxView终端">
-                    <Select v-model="formValidate.maxviewConfigId" placeholder="请选择运营单位" class="InputWidth">
+                <FormItem label="MaxView终端" prop="maxviewConfigId">
+                    <Select v-model="formValidate.maxviewConfigId" placeholder="请选择MaxView终端" class="InputWidth">
                         <Option v-for="item in terminals" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
@@ -67,6 +67,9 @@ export default {
             ruleValidate: {
                 name: [
                     { required: true, message: '管廊名不能为空', trigger: 'blur' }
+                ],
+                maxviewConfigId: [
+                    { type: 'number', required: true, message: 'MaxView终端不能为空', trigger: 'blur' }
                 ]
             },
         }
@@ -100,30 +103,17 @@ export default {
         init(){
             this.axios.get('/staffs').then(res =>{
                 let {code,data} = res.data;
-                let _staff = [];
                 if(code == 200){
-                    for(let i=0;i<data.length;i++){
-                        let staff={};
-                        staff.value = data[i].id;
-                        staff.label = data[i].name;
-                        _staff.push(staff);
-                    }
-                    this.staffs = _staff;
+                    this.staffs = data;
                 }
-            });
+            })
             this.axios.get('/companies').then(res =>{
                 let {code,data} = res.data;
                 let _company = [];
                 if(code == 200){
-                    for(let i=0;i<data.length;i++){
-                        let company={};
-                        company.value = data[i].id;
-                        company.label = data[i].name;
-                        _company.push(company);
-                    }
+                    this.companies = data;
                 }
-                this.companies = _company;
-            });
+            })
             this.axios.get('maxview/list').then(res =>{
                 let {code,data} = res.data
                 this.terminals = data

@@ -63,7 +63,8 @@ export default {
                 },
                 {
                     type: "index",
-                    align: "center"
+                    align: "center",
+                    width: 60
                 },
                 {
                     title: "管仓类型名称",
@@ -84,6 +85,7 @@ export default {
                     title: "操作",
                     key: "action",
                     align: "center",
+                    width: 100,
                     render: (h, params) => {
                         return h("div", [
                             h(

@@ -113,7 +113,7 @@ export default {
             _this.$router.push({ path: "CMmain" });
           },
           error=>{
-            _this.$Message.error(msg);
+            _this.$Message.error(error);
             _this.loading = false;
           })
         // _this.axios.post("/login", loginParams).then(result => {

@@ -13,7 +13,7 @@
             <div>
                 <span style="marginRight:12px">负责人：</span>
                 <Select v-model="researchInfo.responsibilityId" placeholder="请选择负责人" class="inputWidth">
-                    <Option value=null>不限</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="(item,index) in staffs" :value="item.value" :key="index">{{item.label}}</Option>         
                 </Select>
             </div>
@@ -22,7 +22,7 @@
             <div>
                 <span>建筑单位：</span>
                 <Select v-model="researchInfo.constructId" placeholder="请选择建筑单位" class="inputWidth">
-                    <Option value=null>不限</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                 </Select>
             </div>
@@ -31,7 +31,7 @@
             <div>
                 <span>运营单位：</span>
                 <Select v-model="researchInfo.operationId" placeholder="请选择运营单位" class="inputWidth">
-                    <Option value=null>不限</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="(item,index) in companies" :value="item.value" :key="index">{{item.label}}</Option>
                 </Select>
             </div>
@@ -84,6 +84,7 @@ export default {
                 },
                 {
                     type: "index",
+                    width: 60,
                     align: "center"
                 },
                 {
@@ -104,42 +105,76 @@ export default {
                 {
                     title: "负责人",
                     key: "responsibility",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.responsibility.name)
+                    }
                 },
                 {
                     title: "建筑单位",
                     key: "construct",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.construct.name)
+                    }
                 },
                 {
                     title: "运营单位",
                     key: "operation",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.operation.name)
+                    }
                 },
                 {
                     title: "MaxView终端",
-                    key: "maxviewConfigName",
-                    align: "center"
+                    key: "maxviewConfig",
+                    align: "center",
+                    render: (h,params) => {
+                        return h('div',params.row.maxviewConfig.name)
+                    }
                 },
                 {
                     title: "经度",
                     key: "longitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[0]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "纬度",
                     key: "latitude",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[1]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "高度",
                     key: "highness",
-                    align: "center"
+                    align: "center",
+                    render: (h,params) => {
+                        if(params.row.camera!=null){
+                            let str = params.row.camera.split(",");
+                            let temp = str[2]
+                            return h('div',temp)
+                        }
+                    }
                 },
                 {
                     title: "操作",
                     key: "action",
                     align: "center",
+                    width: 80,
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -148,9 +183,6 @@ export default {
                                     props: {
                                         type: "primary",
                                         size: "small"
-                                    },
-                                    style: {
-                                        marginLeft: "5px"
                                     },
                                     on: {
                                         click: () => {
@@ -223,8 +255,8 @@ export default {
                 responsibilityId: this.researchInfo.responsibilityId,
                 constructId: this.researchInfo.constructId,
                 operationId: this.researchInfo.operationId,
-                startTime: new Date(this.researchInfo.startTime).getTime(),
-                endTime: new Date(this.researchInfo.endTime).getTime()
+                startTime: this.researchInfo.startTime,
+                endTime: this.researchInfo.endTime
             };
             return Object.assign({}, param);
         },
@@ -272,45 +304,8 @@ export default {
         showTable() {
             this.axios.post("/tunnels/datagrid", this.researches).then(res => {
                 let { code, data } = res.data;
-                // console.log("get tunnels:", data);
                 if (code == 200) {
-                    let allinfo = [];
-                    for (let index in data.list) {
-                        let info = {};
-                        info.id = data.list[index].id;
-                        info.name = data.list[index].name;
-                        info.length = data.list[index].length;
-                        info.sn = data.list[index].sn;
-                        if (data.list[index].responsibility != null) {
-                            info.responsibility =
-                                data.list[index].responsibility.name;
-                            info.responsibilityId =
-                                data.list[index].responsibility.id;
-                        }
-                        if (data.list[index].construct != null) {
-                            info.construct = data.list[index].construct.name;
-                            info.constructId = data.list[index].construct.id;
-                        }
-                        if (data.list[index].operation != null) {
-                            info.operation = data.list[index].operation.name;
-                            info.operationId = data.list[index].operation.id;
-                        }
-                        if (data.list[index].maxviewConfig) {
-                            info.maxviewConfigName =
-                                data.list[index].maxviewConfig.name;
-                            info.maxviewConfigId =
-                                data.list[index].maxviewConfig.id;
-                        }
-                        // console.log(data.list[index].camera);
-                        if (data.list[index].camera != null) {
-                            let str = data.list[index].camera.split(",");
-                            info.longitude = str[0] == "null" ? "" : str[0];
-                            info.latitude = str[1] == "null" ? "" : str[1];
-                            info.highness = str[2] == "null" ? "" : str[2];
-                        }
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
+                    this.data6 = data.list;
                     this.page.pageTotal = data.total;
                 }
             });
@@ -339,13 +334,7 @@ export default {
                 let { code, data } = res.data;
                 let _staff = [];
                 if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let staff = {};
-                        staff.value = data[i].id;
-                        staff.label = data[i].name;
-                        _staff.push(staff);
-                    }
-                    this.staffs = _staff;
+                    this.staffs = data;
                 }
             });
         },
@@ -354,14 +343,8 @@ export default {
                 let { code, data } = res.data;
                 let _company = [];
                 if (code == 200) {
-                    for (let i = 0; i < data.length; i++) {
-                        let company = {};
-                        company.value = data[i].id;
-                        company.label = data[i].name;
-                        _company.push(company);
-                    }
+                    this.companies = data;
                 }
-                this.companies = _company;
             });
         },
         handlePage(value) {
