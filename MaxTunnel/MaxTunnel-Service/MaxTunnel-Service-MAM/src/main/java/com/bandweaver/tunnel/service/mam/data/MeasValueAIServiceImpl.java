@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MeasValueAIServiceImpl implements MeasValueAIService {
@@ -60,36 +61,33 @@ public class MeasValueAIServiceImpl implements MeasValueAIService {
 	@Override
 	public JSONObject getEchartsData(List<Integer> ids, Date startTime, Date endTime) {
 		
-		long stime = System.currentTimeMillis();
-		//get X
-		long x_start = System.currentTimeMillis();
+		//获取x轴时间集合
 		List<Date> dateList = measValueAIMapper.getX(startTime,endTime);
-		long x_end = System.currentTimeMillis();
-		System.out.println("x:" + (x_end - x_start) + "ms");
+		//获取这个时间段内的所有数据
+		List<MeasValueAI> ls = getListByMoIdsAndTime(ids, startTime, endTime);
 		
-		long y_start = System.currentTimeMillis();
 		List<JSONObject> jsList = new ArrayList<>();
 		for (Integer id : ids) {
+			
 			MeasObj measObj = measObjModuleCenter.getMeasObj(id);
 			if(measObj == null)
 				continue;
 			JSONObject js = new JSONObject();
-			js.put("key",measObj.getName());
+			js.put("key",measObj.getName() + measObj.getId());
 			
 			List<Double> valList = new ArrayList<>();
 			for (Date dt : dateList) {
-				List<MeasValueAI> ls = getListByObjectAndTime(id, dt, dt);
-				if(ls == null || ls.isEmpty())
+				List<MeasValueAI> li = ls.stream().filter(m -> m.getObjectId().intValue() == id.intValue() 
+						&& m.getTime().getTime() == dt.getTime()).collect(Collectors.toList());
+				if(li == null || li.isEmpty())
 					valList.add(0.00);
 				else
-					valList.add(ls.get(0).getCv());
+					valList.add(li.get(0).getCv());
 			}
 			js.put("val", valList);
 			jsList.add(js);
 		}
-		long y_end = System.currentTimeMillis();
-		System.out.println("y:" + (y_end - y_start) + "ms");
-		System.out.println("total:" + (y_end - stime) + "ms");
+		
 		JSONObject result = new JSONObject();
 		result.put("key", dateList);
 		result.put("val", jsList);
