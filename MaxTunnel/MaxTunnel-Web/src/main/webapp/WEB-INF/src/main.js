@@ -11,7 +11,7 @@ import VueAxios from "vue-axios";
 import "iview/dist/styles/iview.css";
 import routes from "./router";
 import Vuex from "vuex";
-import store from './store/index'
+import store from './store.js'
 import echarts from "echarts";
 import "animate.css/animate.min.css";
 import Stomp from "stompjs";
@@ -81,13 +81,13 @@ router.beforeEach((to, from, next) => {
   let CMUser = sessionStorage.CMUser;
   let UMUser = sessionStorage.UMUser;
   if (((to.path.substr(1, 2) == "UM" || to.path.substr(1, 2) == "VM") && UMUser) || (to.path.substr(1, 2) == "CM" && CMUser)) {
-    if (!store.state.permission.permissionList) {
-      store.dispatch('permission/FETCH_PERMISSION').then(() => {
-        next({path: to.path})
-      })
-      next();
-    }
-    else {
+    // if (!store.state.permission.permissionList) {
+    //   store.dispatch('permission/FETCH_PERMISSION').then(() => {
+    //     next({path: to.path})
+    //   })
+    //   next();
+    // }
+     {
       if (to.path.trim().toLowerCase().indexOf("login") < 0) {
         next()
       }

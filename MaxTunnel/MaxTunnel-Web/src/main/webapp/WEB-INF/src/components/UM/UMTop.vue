@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <Header :style="{position: 'fixed', width: '100%',zIndex:99999,padding:'0',color:'#1b1754'}">
+    <Header :style="{position: 'fixed', width: '100%',zIndex:999,padding:'0',color:'#1b1754'}">
       <Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
         <div class="layout-logo"></div>
         <div class="layout-title">
@@ -292,7 +292,14 @@
         });
       },
       goToMoudle(path) {
-        this.$router.push(path)
+        if(path.path == '/VMMain'){
+          const {href} = this.$router.resolve({
+          name: "可视化主页"
+        });
+        window.open(href, '_blank');
+        } else {
+          this.$router.push(path);
+        } 
       },
       getCountInfoNum() {
         let _this = this

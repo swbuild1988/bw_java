@@ -1,7 +1,9 @@
 package com.bandweaver.tunnel.controller.mam;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -148,7 +150,7 @@ public class AlarmController {
 	 */
 	@RequestMapping(value = "alarms/non-cleaned/list",method = RequestMethod.GET)
 	public JSONObject getAllNonCleanedAlarm() {
-		List<Alarm> list = alarmService.getAllNonCleanedAlarm();
+		List<AlarmDto> list = alarmService.getAllNonCleanedAlarm();
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 	
@@ -159,7 +161,7 @@ public class AlarmController {
 	 */
 	@RequestMapping(value = "alarms/non-cleaned/count",method = RequestMethod.GET)
 	public JSONObject getNonCleanedCount() {
-		List<Alarm> list = alarmService.getAllNonCleanedAlarm();
+		List<AlarmDto> list = alarmService.getAllNonCleanedAlarm();
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list.size());
 	}
 	
@@ -227,5 +229,31 @@ public class AlarmController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
 	}
 
+	
+	/**获取未清除告警部分数据 
+	 * @return   {"msg":"请求成功","code":"200","data":[{"id":1110,"alarmDate":1545979320000,"alarmName":"致命告警级别的告警","alarmLevelName":"致命告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1109,"alarmDate":1545979230000,"alarmName":"一般告警级别的告警","alarmLevelName":"一般告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1108,"alarmDate":1545979200000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1107,"alarmDate":1545979170000,"alarmName":"致命告警级别的告警","alarmLevelName":"致命告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1106,"alarmDate":1545979140000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1105,"alarmDate":1545979110000,"alarmName":"提示告警级别的告警","alarmLevelName":"提示告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1104,"alarmDate":1545979080000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1103,"alarmDate":1545979050000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1102,"alarmDate":1545979020000,"alarmName":"提示告警级别的告警","alarmLevelName":"提示告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1101,"alarmDate":1545978990000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1100,"alarmDate":1545978960000,"alarmName":"提示告警级别的告警","alarmLevelName":"提示告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1099,"alarmDate":1545978930000,"alarmName":"一般告警级别的告警","alarmLevelName":"一般告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1098,"alarmDate":1545978900000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1097,"alarmDate":1545978870000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1096,"alarmDate":1545978840000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1095,"alarmDate":1545978810000,"alarmName":"一般告警级别的告警","alarmLevelName":"一般告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1094,"alarmDate":1545978780000,"alarmName":"严重告警级别的告警","alarmLevelName":"严重告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1093,"alarmDate":1545978750000,"alarmName":"一般告警级别的告警","alarmLevelName":"一般告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1092,"alarmDate":1545978720000,"alarmName":"提示告警级别的告警","alarmLevelName":"提示告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null},{"id":1091,"alarmDate":1545978690000,"alarmName":"提示告警级别的告警","alarmLevelName":"提示告警","tunnel":{"id":1,"name":"古城大街"},"objectId":203012401,"objectName":"温度检测仪","isDistribute":false,"description":null,"cleaned":false,"cleanedDate":null,"alarmSource":null,"longitude":null,"latitude":null}]}
+	 * @author shaosen
+	 * @Date 2018年12月28日
+	 */
+	@RequestMapping(value="alarms/non-cleaned/part",method=RequestMethod.GET)
+	public JSONObject getNoneCleanedAlarmTop20() {
+		List<AlarmDto> list = alarmService.getAllNonCleanedAlarm();
+		if(!list.isEmpty()) {
+			list = list.stream().sorted(Comparator.comparing(AlarmDto::getAlarmDate).reversed()).collect(Collectors.toList());
+		}
+		
+		List<AlarmDto> returnData = new ArrayList<>();
+		if(list == null || list.isEmpty())
+			return CommonUtil.success();
+		if(list.size()>=20) {
+			for (int i = 0; i < 20; i++) {
+				returnData.add(list.get(i));
+			}
+		}else {
+			returnData = list;
+		}
+		
+		return CommonUtil.success(returnData);
+	}
 
 }

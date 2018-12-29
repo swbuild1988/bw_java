@@ -324,7 +324,29 @@ var MeasObjServer = {
                     reject(error.response.status + '  ' + error.response.data)
                 })
         })
-    }
+    },
+
+    //修改设备状态
+    changeEquimentStatus(params){
+        return new Promise((resolve, reject) => {
+            axios.get('sub-sys/action/obj/'+params.id+'/inputval/'+params.status)
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:measobj-map/batch', params)
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
+        })
+    },
 }
 
 export {

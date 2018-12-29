@@ -203,7 +203,7 @@ var TunnelService = {
   // 根据tunnelId获取管廊详细信息
   getTunnelDetailByTunnelId: function(tunnelId) {
     return new Promise((resolve, reject) => {
-      axios.get("tunnels/" + tunnelId).then(res => {
+      axios.get("tunnels/" + tunnelId+"/detail").then(res => {
         let {
           code,
           data,
@@ -212,7 +212,7 @@ var TunnelService = {
         if (code == 200) {
           resolve(data)
         } else {
-          reject(msg + ",地址:tunnels/" + tunnelId)
+          reject(msg + ",地址:tunnels/" + tunnelId+"/detail")
         }
       })
     });
@@ -398,6 +398,27 @@ var TunnelService = {
   batchCreateSections(params) {
     return new Promise((resolve, reject) => {
       axios.post("sections/batch", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:sections/batch")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 批量添加区段经纬度
+  batchAddPositions(params) {
+    return new Promise((resolve, reject) => {
+      axios.put("sections/batch", params)
         .then(res => {
           let {
             code,

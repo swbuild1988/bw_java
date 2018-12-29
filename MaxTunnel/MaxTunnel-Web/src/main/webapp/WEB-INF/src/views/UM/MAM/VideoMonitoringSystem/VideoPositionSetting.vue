@@ -9,13 +9,12 @@
     	<Col span="12" offset="1">
             <div class="cameraList">
                 <span style="font-size: 18px;font-weight: bold;color:#fff;">摄像头：</span>
-                <Select v-model="curVideo.storeId" id="cameras" @on-change="getCameras" class="select">
-                    <Option v-for="store in storeList" :value="store.id" :key="store.id" class="option">{{ store.name }}</Option>
-                    <!-- <Option value="" key="0" class="option">空</Option> -->
-                </Select>
-                <Select v-model="curVideo.areaId" id="cameras" @on-change="getCameras" class="select">
+                <Select v-model="curVideo.areaId" id="cameras" @on-change="getCameras" class="select" placeholder="请选择区域">
                     <Option v-for="area in areaList" :value="area.id" :key="area.id" class="option">{{ area.name }}</Option>
                    <!--  <Option value="" key="0" class="option">空</Option> -->
+                </Select>
+                <Select v-model="curVideo.storeId" id="cameras" @on-change="getCameras" class="select" placeholder="请选择监测仓">
+                    <Option v-for="store in storeList" :value="store.id" :key="store.id" class="option">{{ store.name }}</Option>
                 </Select>
                 <Select v-model="curVideo.id" id="cameras" @on-change="changVideo" class="select">
                     <Option v-for="camera in cameraList" :value="camera.id" :key="camera.id" class="option">{{ camera.name }}</Option>

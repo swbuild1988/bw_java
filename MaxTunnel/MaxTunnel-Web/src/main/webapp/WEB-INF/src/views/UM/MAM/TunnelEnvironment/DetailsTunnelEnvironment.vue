@@ -158,7 +158,6 @@ export default {
     },
 
     intervalData() {
-      console.log("start inteval");
       let _this = this;
       _this.dataInterval = setInterval(() => _this.getObjDetialData(), 10000);
       _this.videoInterval = setInterval(() => _this.changeVideo(), 10000);
@@ -261,37 +260,6 @@ export default {
           _this.getvideos();
         }
       });
-    },
-    //根据监测类型获取数据
-    getMonitorData() {
-      let _this = this;
-      Promise.all([
-        MonitorDataService.getMaxMonitorData(
-          _this.tunnelId,
-          _this.queryCondition.monitorType
-        ),
-        MonitorDataService.getMonitorData()
-      ]).then(
-        result => {
-          _this.tunnelProps = [];
-          _this.tunnelPropsMax = [];
-          _this.tunnelPropsMax = result[1];
-          result[0].forEach(a => {
-            let temp = {};
-            temp.location = a.location;
-            temp.key = a.key;
-            temp.val = new Number(a.val.toFixed(2));
-            temp.percent =
-              (temp.val /
-                _this.tunnelPropsMax.filter(a => a.key == temp.key)[0].val) *
-              100;
-            _this.tunnelProps.push(temp);
-          });
-        },
-        error => {
-          console.log(error);
-        }
-      );
     },
     //变更模型视角
     changeArea(area) {

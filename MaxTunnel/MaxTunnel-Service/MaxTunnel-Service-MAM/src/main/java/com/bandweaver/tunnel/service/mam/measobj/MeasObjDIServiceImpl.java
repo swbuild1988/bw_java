@@ -33,7 +33,7 @@ public class MeasObjDIServiceImpl implements MeasObjDIService{
 		}
     	
     	MeasObjDIVo diVo = new MeasObjDIVo();
-    	diVo.setIds(moIdList);
+    	diVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	diVo.setPageNum(vo.getPageNum());
     	diVo.setPageSize(vo.getPageSize());
     	diVo.setCv(vo.getCv() == 1 ? true :false);

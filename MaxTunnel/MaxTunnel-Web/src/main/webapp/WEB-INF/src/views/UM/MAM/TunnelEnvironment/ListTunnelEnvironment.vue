@@ -2,24 +2,14 @@
   <div>
     <div class="top">
       <Row style="font-size:16">
-        <Col span="6">监测仓:
-          <Select
-            v-model="queryCondition.storeId"
-            @on-change="changeStore(queryCondition.storeId)"
-            style="width:12vw;"
-          >
-            <Option value="0" key="0">全部</Option>
-            <Option v-for="item in sotres" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          <Col span="6">区段:
+          <Select v-model="queryCondition.areaId" @on-change="updateArea" style="width:12vw;">
+              <Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
-        </Col>
-        <Col span="6">区段:
-          <Select
-            v-model="queryCondition.sectionId"
-            @on-change="changeSection(queryCondition.sectionId)"
-            style="width:12vw;"
-          >
-            <Option value="0" key="0">全部</Option>
-            <Option v-for="item in sections" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          </Col>
+        <Col span="6">监测仓:
+          <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
+            <Option v-for="item in storeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
         </Col>
       </Row>
@@ -27,57 +17,63 @@
     <Row>
       <Col span="18" style="padding-left: 10px;padding-right: 10px">
         <div class="gis" id="GISbox" :style="{height:curHeight+'px'}">
-          <!-- <sm-viewer :id="mapId" ref="smViewer">
-          </sm-viewer>-->
           <TestSmViewer ref="smViewer"></TestSmViewer>
           <modal v-bind="modelProp"></modal>
         </div>
       </Col>
       <Col span="6" style="padding-left: 10px;padding-right: 10px;">
-        <!--切换区段时显示的信息-->
-        <div class="details" :style="{display:showSection,height:curHeight+'px'}">
-          <div class="tunnelsInfo" style="height: calc(30vh - 70px) ">
-            <div class="title">
-              <h3>{{curName+curSotre.name+"概况"}}</h3>
+        <div :style="{height:curHeight+'px'}">
+          <div class="borde_rhadow" style="height: calc(30vh - 60px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
+            <div style="margin: 10px;">
+              <span style="font-size: 25px;">{{curName}}</span>
+                <Row :gutter="16" style="padding: 2px;">
+                        <Col span="24" class="descCol">
+                        <span>区段数：</span>
+                        <div style="float: right">  {{curTunnel.areaNum}}</div>
+                        </Col>
+                    <Col span="24" class="descCol">
+                    <span>监测仓个数：</span>
+                    <div style="float: right">  {{curTunnel.storeNum}}</div>
+                    </Col>
+                    <Col span="24"class="descCol">
+                    <span>建设单位：</span>
+                    <div style="float: right">  {{curTunnel.constructionUnit}}</div>
+                    </Col>
+                    <Col span="24" class="descCol">
+                    <span>运营单位：</span>
+                    <div style="float: right">  {{curTunnel.operationUnit}}</div>
+                    </Col>
+                </Row>
             </div>
           </div>
-          <div class="environmentalMonitoring">
-            <div class="title">环境监测</div>
-            <div class="inline-box" v-for=" item in curEnvData" :key="item.name">
-              <div class="numerical">{{item.name}}</div>
-              <div class="status">{{item.value}}</div>
-              <div :class="{'normal': item.status<50, 'abnormal': item.status >=50}"></div>
-            </div>
-          </div>
-        </div>
-        <div class="details" v-if="showSection==='none'" :style="{height:curHeight+'px'}">
-          <div class="tunnelsInfo" style="height: calc(30vh - 70px)">
-            <div>
-              <h2>{{curName}}</h2>
-              <div style="padding-left: 3%">
-                <!--<div style="width: 60%;float: left">-->
-                <!--负责人：{{curTunnel.user}}-->
-                <!--</div>-->
-                <div style="width: 40%;float: left">监测仓个数: {{curTunnel.storeNum}}</div>
+          <div class="borde_rhadow" style="height:calc(55vh - 10px); overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
+              <div style="margin: 10px;">
+                   <span style="font-size: 25px;">极值数据统计<Icon type="arrow-graph-up-right"></Icon></span>
+                  <Row :gutter="16">
+                      <div v-for="item in tunnelProps">
+                          <Col span="7"  class="MaxValCol">
+                          <Icon type="clipboard" size=18></Icon>
+                         {{item.key}}
+                          </Col>
+                          <Col span="7" class="MaxValCol">
+                          <Icon type="ios-pulse" size=18></Icon>
+                        {{item.val}}
+                          </Col>
+                          <Col span="10" class="MaxValCol">
+                          <Icon type="android-locate" size=18></Icon>
+                          {{item.location}}
+                          </Col>
+                      </div>
+                  </Row>
               </div>
-              <div style="padding-left: 3%">
-                <div style="width: 60%;float: left">建设单位：{{curTunnel.constructionUnit}}</div>
-                <div style="width: 40%;float: left">区段数：{{curTunnel.sectionNum}}</div>
-              </div>
-              <div style="padding-left: 3%">
-                <div>运营单位：{{curTunnel.operationUnit}}</div>
-              </div>
-            </div>
-          </div>
-          <!-- 根据要监测类型选项切换的模块 -->
-          <div style="padding:4% 0% 4% 13%;height:calc(55vh - 40px); overflow-y: auto;background-color: #fff">
-            <EnvironmentShow :tunnelProps="tunnelProps" :circleSize="circleSize"></EnvironmentShow>
+            <!--<EnvironmentShow :tunnelProps="tunnelProps" :circleSize="circleSize"></EnvironmentShow>-->
           </div>
         </div>
       </Col>
     </Row>
   </div>
 </template>
+
 <script>
 import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
@@ -92,9 +88,6 @@ export default {
   data() {
     return {
       curHeight: 450,
-      checkAll: true,
-      indeterminate: false,
-      Obj: [],
       scene: null,
       modelProp: {
         show: {
@@ -110,53 +103,26 @@ export default {
           { key: "湿度", val: "30%" }
         ] //属性集
       },
-      mapId: "tunnnelMap",
-      detialMapId: "detialMap",
       queryCondition: {
         tunnelId: null, //监测仓ID
         storeId: null, //监测区段ID
-        sectionId: null,
-        objDataType: [], //监测数据类型
-        showDataMenu: false,
-        monitorType: 1, //监测内容类型
-        pageNum: 1,
-        pageSize: 6,
-        total: 100,
-        IsDetial: false,
-        showSwitch: false
+        areaId: null,
       },
-      circleSize: 120,
-      curDataTypeList: [],
-      tunnelId: 0,
       curName: "",
-      showSection: "none",
-      btnStasus: true,
       tunnels: [],
-      sotres: [],
+      storeList: [],
+        areaList: [], //管廊对应区段数据
       tunnelProps: [], //管廊统计数据
-      tunnelPropsMax: [], //监测数据对应最大值
-      sections: [], //管廊对应区段数据
-      queryTypeList: [], //监测内容
       curTunnel: {
-        user: "jisin",
         storeNum: 3,
         constructionUnit: "中建一局",
         operationUnit: "波汇科技",
-        sectionNum: 10
-      }, //当前管廊数据
+          areaNum: 10
+      },
       curSotre: {
         id: "",
         name: ""
       }, //当前监测仓数据
-      curEnvData: [], //环境监测数据
-      curConstructionData: [], //结构监测数据
-      curSecurityData: [], //安防监测数据
-      timer: null,
-      timer: {
-        timeoutId: null,
-        intervalId: null,
-        sectionId: null //保留上次section
-      }
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -187,9 +153,9 @@ export default {
   },
   mounted() {
     this.fentchData();
-    this.setCircleSize();
+    this.getMonitorData();
     // 设置表格高度
-    this.curHeight = window.innerHeight * 0.85 - 60; //将85vh转为数值
+    this.curHeight = window.innerHeight * 0.85 - 55; //将85vh转为数值
     //3D加载
     this.setGIS();
   },
@@ -213,63 +179,32 @@ export default {
         });
       } catch (e) {}
     },
-    //设置统计图表大小
-    setCircleSize() {
-      if (window.innerWidth < 1400) {
-        this.circleSize = 100;
-        if (this.tunnelProps.length > 6) {
-          this.circleSize = 95;
-        }
-      } else if (window.innerWidth > 1400 && window.innerWidth < 1800) {
-        this.circleSize = 120;
-        if (this.tunnelProps.length > 6) {
-          this.circleSize = 105;
-        }
-      } else if (window.innerWidth > 1800) {
-        this.circleSize = 140;
-        if (this.tunnelProps.length > 6) {
-          this.circleSize = 115;
-        }
-      }
-    },
     //变更监测仓
     changeStore() {
-      this.btnStasus = false;
       //获取区段列表
       let _this = this;
       //获取位置信息
-      let curView = this.sotres.filter(
-        a => a.id == this.queryCondition.storeId
+      let curView = this.storeList.filter(
+        a => a.id == _this.queryCondition.storeId
       )[0].camera;
       this.changeArea(curView);
-      if (this.IsDetial) {
-        this.getObjDetialData();
-      }
+        this.getMonitorData();
     },
     //变更区段
-    changeSection() {
-      this.curSotre.id = this.queryCondition.sectionId;
-      this.curSotre.name = this.sections.filter(
-        a => a.id == this.curSotre.id
-      )[0].name;
-      this.queryCondition.sectionId = this.sections[0].id;
-      this.getSectionsMonitorData();
-      if (this.IsDetial) {
-        this.getObjDetialData();
-      }
+    updateArea() {
+        this.getMonitorData();
     },
 
     //获取数据
     fentchData() {
-      this.tunnelId = this.$route.params.id;
-      this.queryCondition.tunnelId = this.tunnelId;
-      //获取管廊列表
-      let _this = this;
+        //获取管廊列表
+        let _this = this;
+        _this.queryCondition.tunnelId =parseInt( _this.$route.params.id);
       TunnelService.getTunnels().then(
         result => {
           _this.tunnels = result;
           _this.tunnels.forEach(a => {
-            if (a.id == _this.tunnelId) {
+            if (a.id == _this.queryCondition.tunnelId) {
               _this.curName = a.name;
             }
           });
@@ -279,39 +214,25 @@ export default {
         }
       );
       //获取管廊详细信息
-      TunnelService.getTunnelDetailByTunnelId(_this.tunnelId).then(
+      TunnelService.getTunnelDetailByTunnelId(_this.queryCondition.tunnelId).then(
         result => {
-          _this.curTunnel.user = result.responsibility.name;
-          _this.curTunnel.constructionUnit = result.construct.name;
-          _this.curTunnel.operationUnit = result.operation.name;
+          _this.curTunnel.areaNum = result.areaCount;
+          _this.curTunnel.storeNum = result.storeCount;
+            _this.curTunnel.constructionUnit = result.construct;
+            _this.curTunnel.operationUnit = result.operation;
         },
         error => {
           console.log(error);
         }
       );
-      //获取管仓列表     url：tunnels/{id}/stores
-      TunnelService.getStoresByTunnelId(_this.tunnelId).then(
+      //获取管仓列表
+      TunnelService.getStoresByTunnelId(_this.queryCondition.tunnelId).then(
         result => {
-          _this.sotres = result;
-        },
-        error => {
-          console.log(error);
-        }
-      );
-      this.getMonitorData();
-      //获取指定管廊下共有多少管仓
-      TunnelService.getStoresCountByTunnelId(_this.tunnelId).then(
-        result => {
-          _this.curTunnel.storeNum = result.val;
-        },
-        error => {
-          console.log(error);
-        }
-      );
-      //获取区段数
-      TunnelService.getSectionsCountByTunnelId(_this.tunnelId).then(
-        result => {
-          _this.curTunnel.sectionNum = result.val;
+            _this.storeList=[{id:0,name:"全部"}];
+            result.forEach(a=>{
+                _this.storeList.push(a)
+            })
+            _this.queryCondition.storeId=_this.storeList[0].id;
         },
         error => {
           console.log(error);
@@ -319,15 +240,16 @@ export default {
       );
 
       //获取区域
-      TunnelService.getTunnelArea(_this.tunnelId).then(result => {
+      TunnelService.getTunnelArea(_this.queryCondition.tunnelId).then(result => {
         if (result) {
-          _this.sections = [];
+          _this.areaList = [{id:0,name:"全部"}];
           result.forEach(a => {
             var temp = {};
             temp.name = a.name;
             temp.id = a.id;
-            _this.sections.push(temp);
+            _this.areaList.push(temp);
           });
+            _this.queryCondition.areaId=_this.areaList[0].id;
         }
       });
     },
@@ -335,47 +257,22 @@ export default {
     //根据监测类型获取数据
       getMonitorData() {
           let _this = this;
-          const curData = MonitorDataService.getMaxMonitorData(_this.tunnelId);
-          const maxDara = MonitorDataService.getMonitorData();
-          Promise.all([curData, maxDara]).then(
-              (result) => {
-                  console.log(result);
-                  _this.tunnelProps = [];
-                  _this.tunnelPropsMax = result[1];
-                  result[0].forEach(a => {
+          let parms={tunnelId:_this.queryCondition.tunnelId,
+              storeId:_this.queryCondition.storeId==0?null:_this.queryCondition.storeId,
+              areaId:_this.queryCondition.areaId==0?null:_this.queryCondition.areaId}
+          MonitorDataService.getMaxMonitorData(parms).then((result)=>{
+              _this.tunnelProps=[];
+              if(result){
+                  result.forEach(a => {
                       let temp = {};
                       temp.location = a.location;
                       temp.key = a.key;
-                      temp.val = parseInt(a.val.toFixed(2));
-                      temp.percent = temp.val / _this.tunnelPropsMax.filter(a => a.key == temp.key)[0].val * 100;
+                      temp.val = parseFloat(a.val);
                       _this.tunnelProps.push(temp);
                   });
-              },
-              (error) => {
-                  console.log(error)
               }
-          )
-      },
-
-      //获取监测仓具体区段的监测数据
-    getSectionsMonitorData() {
-      let _this = this;
-      MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
-        result => {
-          _this.curEnvData = [];
-          result.forEach(a => {
-            let temp = {};
-            temp.name = a.objTypeName;
-            temp.value = parseInt(a.cv).toFixed(2);
-            temp.status = parseInt(temp.value) /_this.tunnelPropsMax.filter(a => a.key == temp.name)[0].val* 100;
-            _this.curEnvData.push(temp);
           });
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    },
+      },
 
     setGIS() {
       var gis = document.getElementById("newID");
@@ -407,14 +304,9 @@ export default {
   watch: {
     $route: function() {
       // $route发生变化时再次赋值
-      this.tunnelId = this.$route.params.id;
       this.queryCondition.tunnelId = this.tunnelId;
-      this.sotres = [];
       this.fentchData();
-      this.getObjDetialData();
-      this.showSection = "none";
-      this.btnStasus = true;
-      this.setCircleSize();
+      this.getMonitorData();
     }
   },
   beforeDestroy() {
@@ -424,8 +316,21 @@ export default {
 </script>
 
 <style scoped>
-.constract,
-.Security {
+    .MaxValCol{
+        margin-top: 5vh;
+        font-size: 18px;
+    }
+    .descCol{
+        margin-top: 15px;
+        font-size: 16px;
+        /*background-color: #66ccee*/
+    }
+    .MaxValCol:hover, .descCol:hover{
+        background-color: #44c3ee;
+        cursor:pointer
+    }
+
+    .borde_rhadow {
   border: 1px solid #b3b0b0;
   border-radius: 8px;
   box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
@@ -482,27 +387,6 @@ export default {
   overflow-x: hidden;
 }
 
-.showSection {
-  display: inline-block;
-  line-height: 35px;
-}
-
-.showSection {
-  overflow: hidden;
-  padding-left: 20%;
-}
-
-.showSection ul li {
-  display: inline-block;
-  border-right: 1px solid #b3b0b0;
-  line-height: 35px;
-  text-align: center;
-}
-
-.showSection ul li {
-  width: 100px;
-}
-
 .tunnelsInfo,
 .environmentalMonitoring,
 .theFireWarning,
@@ -510,9 +394,8 @@ export default {
   margin: 0.5vw;
   border: 1px solid #b3b0b0;
   border-radius: 8px;
-  padding-left: 20px;
   box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-  border-color: #eee;
+  border-color: #828991;
 }
 
 .tunnelsInfo div,
