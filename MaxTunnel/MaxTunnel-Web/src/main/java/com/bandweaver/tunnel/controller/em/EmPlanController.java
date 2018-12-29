@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
@@ -78,8 +79,7 @@ public class EmPlanController extends BaseController<EmPlan>{
 
 
 	/**手动执行预案 
-	 * @param storeId 
-	 * @param areaId 
+	 * @param sectionId 
 	 * @param processValue 应急预案类型
 	 * @return   
 	 * @author shaosen
@@ -87,16 +87,15 @@ public class EmPlanController extends BaseController<EmPlan>{
 	 */
 	@RequestMapping(value="emplans/start",method=RequestMethod.POST)
 	public JSONObject startPlan(@RequestBody JSONObject reqJson) {
-		CommonUtil.hasAllRequired(reqJson, "storeId,areaId,processValue");
-		Integer storeId = reqJson.getInteger("storeId");
-		Integer areaId = reqJson.getInteger("areaId");
+		CommonUtil.hasAllRequired(reqJson, "sectionId,processValue");
+		Integer sectionId = reqJson.getInteger("sectionId");
 		Integer processValue = reqJson.getInteger("processValue");
-		Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+		SectionDto section = sectionService.getSectionById(sectionId);
+		
 		if(section == null)
 			throw new BandWeaverException("section不存在");
-		
 		//查询仓以及仓关联的进气出气仓等
-		List<Section> sectionList = sectionService.getSectionListByParentId(section.getId());
+		List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
 		emPlanService.start(sectionList,processValue);
 		
 		//最后再查一次

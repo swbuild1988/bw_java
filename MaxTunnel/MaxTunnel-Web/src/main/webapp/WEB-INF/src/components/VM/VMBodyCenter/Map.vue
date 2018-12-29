@@ -167,8 +167,8 @@ export default {
       leaveClass: "animated zoomOut",
       allVideos: [],
       searchCamera: {
-        openSearch: false,
-        isShow: false
+        openSearch: true,
+        isShow: true
       },
       unitsPosition: {
         openPosition: false,
@@ -187,7 +187,7 @@ export default {
       },
       openPlanPosition: {
         openPosition: true
-      }
+      },
     };
   },
   computed: {

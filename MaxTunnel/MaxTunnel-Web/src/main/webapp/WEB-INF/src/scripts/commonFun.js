@@ -163,30 +163,30 @@ export function setViewAngle(){
 /**
  * 相机从当前位置飞行到新的空间位置。
  */
-export function flyToMyLocation(flyParam){
+// export function flyToMyLocation(flyParam){
 
-    if(typeof flyParam !='object'){ return }
+//     if(typeof flyParam !='object'){ return }
 
-    let duration,maximumHeight;
-    let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
+//     let duration,maximumHeight;
+//     let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
 
-    duration = flyParam.duration || 5;
-    maximumHeight = flyParam.maximumHeight || 6;
+//     duration = flyParam.duration || 5;
+//     maximumHeight = flyParam.maximumHeight || 6;
 
-    flyParam.scene.camera.flyTo({
-        destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
-        orientation : {
-            heading : heading,
-            pitch : pitch,
-            roll : roll
-        },
-        duration:duration,// 设置飞行持续时间，默认会根据距离来计算
-        maximumHeight:maximumHeight,// 相机最大飞行高度
-        complete:flyParam.completed,// 到达位置后执行的回调函数
-        cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
-    })
+//     flyParam.scene.camera.flyTo({
+//         destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
+//         orientation : {
+//             heading : heading,
+//             pitch : pitch,
+//             roll : roll
+//         },
+//         duration:duration,// 设置飞行持续时间，默认会根据距离来计算
+//         maximumHeight:maximumHeight,// 相机最大飞行高度
+//         complete:flyParam.completed,// 到达位置后执行的回调函数
+//         cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
+//     })
 
-}
+// }
 /**
  * 追加定位广告牌
  */
