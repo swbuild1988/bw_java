@@ -310,6 +310,48 @@ var TunnelService = {
         })
     })
   },
+  // 获取区域下所有的仓
+  getStoresByAreaId: function(params) {
+    return new Promise((resolve, reject) => {
+      axios.post("/tunnels/stores/sections/condition", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/tunnels/stores/sections/condition")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
+  // 根据相机位置获取所处的管仓
+  getStorePosition: function(params) {
+    return new Promise((resolve, reject) => {
+      axios.post("/sections/xyz", params)
+        .then(res => {
+          let {
+            code,
+            data,
+            msg
+          } = res.data;
+          if (code == 200) {
+            resolve(data)
+          } else {
+            reject(msg + ",地址:/tunnels/stores/sections/condition")
+          }
+        })
+        .catch(error => {
+          reject(error.response.status + '  ' + error.response.data)
+        })
+    })
+  },
   // 获取管舱类型列表
   getStoreTypeList: function() {
     return new Promise((resolve, reject) => {
