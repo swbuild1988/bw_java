@@ -17,7 +17,7 @@
                 </Select>
             </Col>
             <Col span="2">
-                <Button type="primary" icon="ios-search" @click="search">查询</Button>
+                <Button type="primary" icon="ios-search" @click="search" size="small">查询</Button>
             </Col>
             <Col span="2" offset="1" v-if="!init">
                 <Button type="ghost" @click="init = true">返回</Button>

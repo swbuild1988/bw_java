@@ -38,7 +38,7 @@
                     </Select>
                 </Col>
                 <Col>
-                    <Button type="primary" size="small">确定</Button>
+                    <Button type="primary" size="small" icon="ios-search">查询</Button>
                 </Col>
             </Row>
             <Table  stripe border :columns="breakColumns"  :style="{height:'29vh',zIndex:101}" :data="breakData"></Table>

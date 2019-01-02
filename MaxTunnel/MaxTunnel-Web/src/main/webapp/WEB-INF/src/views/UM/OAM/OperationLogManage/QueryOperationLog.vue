@@ -1,31 +1,32 @@
 <template>
     <div class="allDiv">
-        <div class="queryCondition">
+        <div class="conditions">
             <Row>
-                <Col span="6">
-                    <span class="conditionTitle">模块类型：</span>
-                    <Input type="text" v-model="conditions.moduleType" placeholder="请输入模块类型" style="width: 60%" @on-keyup="queryOperationLog()"></Input>
+                <Col span="4">
+                    <span>模块类型：</span>
+                    <Input type="text" v-model="conditions.moduleType" placeholder="请输入模块类型" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle">操作人姓名：</span>
-                    <Input type="text" v-model="conditions.reqUser" placeholder="请输入操作人姓名" style="width: 60%" @on-keyup="queryOperationLog()"></Input>
+                <Col span="4">
+                    <span>操作人姓名：</span>
+                    <Input type="text" v-model="conditions.reqUser" placeholder="请输入操作人姓名" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle">请求结果：</span>
-                    <Select v-model="conditions.result"  style="width: 60%" @on-change="queryOperationLog()">
+                <Col span="4">
+                    <span>请求结果：</span>
+                    <Select v-model="conditions.result"  style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option v-for="item in result" :key="item.id" :value="item.name">{{item.name}}</Option>
                     </Select>
                 </Col>
-            </Row>
-            <Row style="margin-top: 10px">
-                <Col span="6">
-                    <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.beginTime" @on-change="queryOperationLog()"></DatePicker>
+                <Col span="4">
+                    <span>开始时间：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.beginTime"></DatePicker>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle word25">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryOperationLog()"></DatePicker>
+                <Col span="4">
+                    <span>结束时间：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryOperationLog()">查询</Button>
                 </Col>
             </Row>
         </div>

@@ -3,62 +3,56 @@
   <div class="queryAlarm">
     <Row class="top">
       <Col span="6">
-      <span class="planDec">告警状态:</span>
+      <span class="planDec">告警状态：</span>
       <Select v-model="queryPrams.cleaned" style="width:65%">
         <Option v-for="item in alarmStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       </Col>
       <Col span="6">
-      <span class="planDec">所属管廊:</span>
+      <span class="planDec">所属管廊：</span>
       <Select v-model="queryPrams.tunnelId" style="width:64%">
         <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
       </Select>
       </Col>
       <Col span="6">
-      <span class="planDec">告警级别:</span>
+      <span class="planDec">告警级别：</span>
       <Select v-model="queryPrams.alarmLevel" style="width:65%">
         <Option v-for="item in enumData.alarmLevel" :value="item.key" :key="item.key">{{ item.value }}</Option>
       </Select>
       </Col>
       <Col span="6">
-      <span class="planDec" style="padding-top: 3px;">监测对象:</span>
+      <span class="planDec" style="padding-top: 3px;">监测对象：</span>
       <Input v-model="queryPrams.objectId"  style="width: 65%;margin-top:14px;">
       <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
       </Input>
       </Col>
       <Col span="6">
-      <span class="planDec">时间类型:</span>
+      <span class="planDec">时间类型：</span>
       <Select v-model="queryPrams.alarmTimeType" style="width:65%" @on-change="changeAlarmType">
         <Option v-for="item in enumData.timeType" :value="item.key" :key="item.key">{{ item.value }}</Option>
       </Select>
       </Col>
       <Col span="6" class="planDec">
-      <span class="planDec">开始时间:</span>
+      <span class="planDec">开始时间：</span>
       <DatePicker :readonly="isReady" v-model="queryPrams.startTime" type="datetime" placeholder="选择结束时间"
                   style="width: 65%;"></DatePicker>
       </Col>
       <Col span="6">
-      <span class="planDec">结束时间:</span>
+      <span class="planDec">结束时间：</span>
       <DatePicker :readonly="isReady" v-model="queryPrams.endTime" type="datetime" placeholder="选择结束时间"
                   style="width: 65%;"></DatePicker>
       </Col>
       <Col span="6">
+        <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small">查询</Button>
+        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small">清除告警数据</Button>
       </Col>
     </Row>
     <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
       <Col span="24">
       <div style="position:absolute; height: 40px;right: 5px;top:-55px;z-index: 10001">
-        <Button type="primary" shape="circle" @click="queryAlarmData" title="查询" icon="ios-search" size="large"
-                style="position:relative;float:right">
-        </Button>
-        <Button type="primary" shape="circle" @click="clearAlarms"
-                style="position:relative;float:right;right: 20px;" title="清除告警数据" icon="ios-trash-outline" size="large">
-        </Button>
         <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
         <ClearAlarm v-bind="alarmsClear"></ClearAlarm>
       </div>
-      <Col span="24">
-      </Col>
         <Table :height="tableHeight" stripe border :columns="tableColumn" :data="tableData" ref="selection"
                :loading="tableLoad"
                @on-selection-change="selectionClick"></Table>

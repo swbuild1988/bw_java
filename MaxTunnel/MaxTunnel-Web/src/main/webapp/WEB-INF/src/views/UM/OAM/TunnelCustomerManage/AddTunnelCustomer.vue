@@ -15,12 +15,11 @@
             <Input  v-model="addCustomerInfo.tel" placeholder="请输入联系方式" type="text"></Input>
         </FormItem>
         <FormItem style="margin-left: 65px;">
+            <Button type="ghost"  @click="goBack()" style="margin-right: 8px">返回</Button>
             <Button type="primary" @click="submitAddCustomerInfo('addCustomerInfo')" v-show="pageType!=pageTypes.Edit" :disabled="isDisable">提交</Button>
             <Button type="primary" @click="submitEditCustomerInfo('addCustomerInfo')" v-show="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
-            <Button type="ghost"  @click="handleReset('addCustomerInfo')" style="margin-left: 8px">取消</Button>
         </FormItem>
     </Form>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
 </div>
 </template>
 <script>
@@ -126,9 +125,6 @@ export default {
               })
             },2000)
         },
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
         //返回
         goBack(){
             this.$router.back(-1);
@@ -143,10 +139,5 @@ export default {
     padding: 10px 20px;
     border-radius: 4px;
     margin: 0 auto;
-}
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
 }
 </style>

@@ -77,11 +77,10 @@
             </Row>
         </FormItem>
         <div style="text-align: center">
+            <Button type="ghost"  style="margin-right: 8px" @click="goBack()">返回</Button>
             <Button type="primary" @click="submitEnterGalleryApplication('addEnterGalleryApplication')" :disabled="isDisable">提交</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="handleReset('addEnterGalleryApplication')">取消</Button>
         </div>
     </Form>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
 </div>    
 </template>
 <script>
@@ -273,9 +272,6 @@ export default {
             })
             },2000)
         },
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
         chooseDeptment(){                                                                                 
             if(this.addEnterGalleryApplication.staffCompany!=null){
                 let _this = this
@@ -361,10 +357,5 @@ export default {
 }
 ul li{
     list-style: none;
-}
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
 }
 </style>

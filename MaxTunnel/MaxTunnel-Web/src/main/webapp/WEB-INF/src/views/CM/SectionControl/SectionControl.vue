@@ -4,19 +4,15 @@
         <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">区段管理</h1>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-            <div>
                 <span>区段名称：</span>
                 <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
-            </div>
             </Col>
             <Col span="6">
-            <div>
                 <span>所属管廊：</span>
                 <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="getstores">
                     <Option value="null">不限</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
-            </div>
             </Col>
             <Col span="6">
                 <Poptip placement="bottom" width="1000">
@@ -128,6 +124,7 @@ export default {
                 },
                 {
                     type: "index",
+                    width: 60,
                     align: "center"
                 },
                 {
@@ -179,6 +176,7 @@ export default {
                     title: "操作",
                     key: "action",
                     align: "center",
+                    width: 80,
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -187,9 +185,6 @@ export default {
                                     props: {
                                         type: "primary",
                                         size: "small"
-                                    },
-                                    style: {
-                                        marginLeft: "5px"
                                     },
                                     on: {
                                         click: () => {

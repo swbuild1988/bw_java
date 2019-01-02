@@ -1,39 +1,30 @@
 <!--管廊能耗总览层级1-->
 <template>
   <div>
-    <Row class="top" style="margin-bottom: 0px;">
-      <Col span="6" class="col">
-      <span>时间周期:</span>
-      <Select v-model="chartPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
-              @on-change="changeDateType">
+    <Row class="top">
+      <Col span="4" class="col">
+      <span>时间周期：</span>
+      <Select v-model="chartPrams.dateType" style="width: 60%" @on-change="changeDateType">
         <Option v-for="item in dateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
       </Select>
       </Col>
-      <Col span="6" class="col">
-      <div style="position: relative;float: left; ">
-        <span>开始时间:</span>
-        <DatePicker v-model="chartPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
-                    style="width: 220px;margin-right: 4px;"></DatePicker>
-      </div>
+      <Col span="4" class="col">
+        <span>开始时间：</span>
+        <DatePicker v-model="chartPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间" style="width: 60%"></DatePicker>
       </Col>
-      <Col span="6" class="col">
-      <div style="position: relative;float: left; ">
-        <span>结束时间:</span>
-        <DatePicker v-model="chartPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
-                    style="width:220px;margin-right: 14px;"></DatePicker>
-      </div>
+      <Col span="4" class="col">
+        <span>结束时间：</span>
+        <DatePicker v-model="chartPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间" style="width: 60%"></DatePicker>
       </Col>
-      <Col span="4" class=" col" offset="1">
-      <div style="margin-top: 5px;">
-        <span>电表类型:</span>
+      <Col span="4" class=" col">
+        <span>电表类型：</span>
         <i-Switch size="large" v-model="chartPrams.ammeterType">
           <span slot="open">普通</span>
           <span slot="close">危急</span>
         </i-Switch>
-      </div>
       </Col>
-      <Col span="1" class="col">
-      <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询" @click="queryDetail"></Button>
+      <Col span="4" class="col">
+        <Button type="primary" icon="ios-search" size="small"  @click="queryDetail">查询</Button>
       </Col>
     </Row>
     <Row>
@@ -185,20 +176,14 @@
   }
 
   .top {
-    margin: 10px;
     background-color: #fff;
-    padding-left: 10px;
-    font-size: 16px;
+    line-height: 5vh;
+    padding-left: 5px;
   }
 
   .planDec {
     padding: 4px;
     font-size: 14px;
     float: left;
-  }
-
-  .col {
-    height: 60px;
-    padding-top: 10px;
   }
 </style>

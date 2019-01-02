@@ -38,8 +38,8 @@
         <div class="data">
           <Tabs @on-click="changeTabs" v-model="tabName">
             <TabPane name="tunnelVideo" label="视频" icon="ios-film">
-              <div class="map" v-if="curVideo!=null">
-                <video-component v-bind:video="curVideo" v-bind:id="'evironmentVideo'"></video-component>
+              <div class="map">
+                  <Carousel v-bind="curCarousel"></Carousel>
               </div>
               <div></div>
             </TabPane>
@@ -59,10 +59,6 @@
           </Col>
         </Row>
       </Col>
-      <!--<div style="position:relative;width:auto;float:right;right: 20px; ">-->
-      <!--<Page class="nextPage" @on-change="changePage" :total="queryCondition.total" show-total show-elevator-->
-      <!--:page-size="queryCondition.pageSize"></Page>-->
-      <!--</div>-->
     </Row>
   </div>
 </template>
@@ -77,36 +73,36 @@ import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import { SuperMapSqlQuery } from "../../../../scripts/three.js";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
+import  Carousel from '../../../../components/Common/Carousel.vue'
 
 export default {
   name: "detail-tunnel-environment",
-  data() {
-    return {
-      tabName: "",
-      videosList: [],
-      curVideo: {},
-      curVideoIndex: 0,
-      dataInterval: null,
-      videoInterval: null,
-      Obj: [],
-      scene: null,
-      queryCondition: {
-        tunnelId: null, //监测仓ID
-        storeId: null, //监测区段ID
-        areaId: null,
-        curDataType: "",
-        monitorType: 1 //监测内容类型,1为环境
-      },
-      curDataTypeList: [],
-      tunnelId: 0,
-      tunnels: [],
-      stores: [],
-      tunnelProps: [], //管廊统计数据
-      tunnelPropsMax: [], //监测数据对应最大值
-      areas: [], //管廊对应区段数据
-      curTunnelName: ""
-    };
-  },
+    data() {
+        return {
+            tabName: "",
+            curCarousel: {
+                videolist: [],
+            },
+            dataInterval: null,
+            Obj: [],
+            scene: null,
+            queryCondition: {
+                tunnelId: null, //监测仓ID
+                storeId: null, //监测区段ID
+                areaId: null,
+                curDataType: "",
+                monitorType: 1 //监测内容类型,1为环境
+            },
+            curDataTypeList: [],
+            tunnelId: 0,
+            tunnels: [],
+            stores: [],
+            tunnelProps: [], //管廊统计数据
+            tunnelPropsMax: [], //监测数据对应最大值
+            areas: [], //管廊对应区段数据
+            curTunnelName: ""
+        };
+    },
   watch: {
     $route: function() {
       this.tunnelId = parseInt(this.$route.params.id);
@@ -141,7 +137,8 @@ export default {
     Modal,
     EnvironmentShow,
     TestSmViewer,
-    videoComponent
+    videoComponent,
+      Carousel
   },
   mounted() {
     this.fentchData();
@@ -152,15 +149,11 @@ export default {
   methods: {
     changeTabs() {
       var _this = this;
-      // if (_this.tabName == "tunnelVideo") {
-      //     _this.curVideo = _this.videosList[0];
-      // }
     },
 
     intervalData() {
       let _this = this;
       _this.dataInterval = setInterval(() => _this.getObjDetialData(), 10000);
-      _this.videoInterval = setInterval(() => _this.changeVideo(), 10000);
     },
     //变更监测仓
     changeStore() {
@@ -171,13 +164,6 @@ export default {
       //  _this.changeArea(curView);
       _this.getObjDetialData();
       _this.getvideos();
-    },
-    changeVideo() {
-      if (this.videosList.length == 0) return;
-      this.curVideo = this.videosList[this.curVideoIndex];
-      this.curVideoIndex >= this.videosList.length - 1
-        ? (this.curVideoIndex = 0)
-        : this.curVideoIndex++;
     },
     //变更区段
     changeAreaLocation() {
@@ -373,7 +359,7 @@ export default {
       };
       MonitorDataService.getdataVideos(Params).then(result => {
         if (result && result.length > 0) {
-          this.videosList = result;
+          this.curCarousel.videolist = result;
         }
       });
     },
@@ -401,9 +387,7 @@ export default {
   beforeDestroy() {
     this.destory3D();
     clearInterval(this.dataInterval);
-    clearInterval(this.videoInterval);
     this.dataInterval = null;
-    this.videoInterval = null;
   }
 };
 </script>

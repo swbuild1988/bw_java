@@ -7,10 +7,6 @@
                 <span>员工姓名：</span>
                 <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
             </Col>
-            <!-- <Col span="6">
-                <span>个人账号：</span>
-                <Input v-model="researchInfo.accountId" placeholder="支持模糊查询" class="inputWidth" />
-            </Col> --> 
             <Col span="6">
                 <span>所属部门：</span>
                 <Select v-model="researchInfo.deptId" placeholder="请选择所属部门" class="inputWidth">
@@ -26,7 +22,7 @@
                 </Select>
             </Col> 
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">查询</Button>
                 <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -44,9 +40,43 @@
                 </DatePicker>
             </Col>  
         </Row>
-        <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
+        <Table 
+            border 
+            ref="selection" 
+            :columns="columns7" 
+            :data="data6" 
+            @on-selection-change="startdelete" 
+            style="margin:20px;"
+        ></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
-              @on-change="handlePage" show-elevator class="pageStyle"></Page>
+              @on-change="handlePage" show-elevator :style="pageStyle"></Page>
+        <Modal
+            v-model="isAddStaff"
+            :title="staffTitle"         
+        >
+            <Form ref="staffInfo" :model="staffInfo" :rules="ruleValidate" :label-width="120">
+                <FormItem label="员工姓名：" prop="staffname">
+                    <Input v-model="staffInfo.staffname" placeholder="请输入员工姓名"></Input>
+                </FormItem>
+                <FormItem label="所属部门：" prop="deptId">
+                    <Select v-model="staffInfo.deptId" placeholder="请选择所属部门">
+                        <Option v-for="item in departments" :value="item.id" :key="item.id">{{item.name}}</Option>         
+                    </Select>
+                </FormItem>
+                <FormItem label="职位名称：" prop="positionId">
+                    <Select v-model="staffInfo.positionId" placeholder="请选择担任职位">
+                        <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>         
+                    </Select>
+                </FormItem>
+                <FormItem label="入职时间：" prop="crtTime">
+                    <DatePicker type="datetime" placeholder="请选择入职时间" style="width: 100%" v-model="staffInfo.crtTime">
+                    </DatePicker>
+                </FormItem>
+            </Form>   
+            <div slot="footer">
+                <Button type="primary" @click="submitStaffInfo('staffInfo')">确定</Button>
+            </div> 
+        </Modal>
     </div>
 </template>
 
@@ -71,18 +101,37 @@ export default {
                 },
                 {
                     type: 'index',
-                    align: 'center'
+                    align: 'center',
+                    width: 60
                 },
                 {
                     title: '员工姓名',
                     key: 'name',
                     align: 'center'
                 },
-                // {
-                //     title: '个人账号',
-                //     key: 'accountId',
-                //     align: 'center'
-                // },
+                {
+                    title: '所属部门',
+                    align: 'center',
+                    render: (h,params) =>{
+                        return h('div',params.row.dept.name)
+                    }
+                },
+                {
+                    title: '职位',
+                    align: 'center',
+                    render: (h,params) => {
+                        return h('div', params.row.position.name)
+                    }
+                },
+                {
+                    title: '入职时间',
+                    align: 'center',
+                    key: 'crtTime',
+                    render: (h,params) => {
+                        let time = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        return h('div',time)
+                    }
+                }
             ],
             data6:[],
             page:{
@@ -90,10 +139,38 @@ export default {
                 pageSize: 10,
                 pageTotal: 0 
             },
+            pageStyle: {
+                position: 'absolute',
+                bottom: '35px',
+                right: '40px'
+            },
             positions:[],
             departments:[],
             deleteShow: false,
-            deleteSelect:[]
+            deleteSelect:[],
+            //modal info data
+            isAddStaff: false,
+            staffTitle: '',
+            staffInfo: {
+                staffname: null,
+                deptId: null,
+                positionId: null,
+                crtTime: null
+            },
+            ruleValidate: {
+                staffname: [
+                    { required: true, message: '请输入员工姓名', trigger: 'blur' }
+                ],
+                deptId: [
+                    { type: 'number', required: true, message: '请选择所属部门', trigger: 'change' }
+                ],
+                positionId: [
+                    { type: 'number', required: true, message: '请选择职位', trigger: 'change' }
+                ],
+                crtTime: [
+                    { type: 'date', required: true, message: '请选择入职时间', trigger: 'change' }
+                ]
+            }
         }
     },
     computed:{
@@ -121,28 +198,35 @@ export default {
             this.axios.post('/staffs/datagrid',(this.researches)).then(res =>{
                 let {code,data} = res.data;
                 if(code == 200){
-                    let allinfo = [];
-                    for( let index in data.list){
-                        let info = {};
-                        info.id = data.list[index].id;
-                        info.name = data.list[index].name;
-                        info.deptId = data.list[index].dept.id;
-                        info.deptName = data.list[index].dept.name;
-                        info.positionId = data.list[index].position.id;
-                        info.positionName = data.list[index].position.name;
-                        // info.accountId = data.list[index].accountId;
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
+                    this.data6 = data.list;
                     this.page.pageTotal = data.total;
                 }
             })
         },
+        //弹出新增员工modal框
         addNewStaff(){
-
+            this.isAddStaff = true
+            this.staffTitle = '新增员工'
         },
-        startdelete(){
-
+        //提交新增员工信息
+        submitStaffInfo(name){
+            this.$refs[name].validate((valid) => {
+                if(valid){
+                    this.$Message.success('新增员工成功!');
+                    this.isAddStaff = false
+                }else{
+                    this.$Message.error('新增员工失败!');
+                }
+            })
+        },
+        //选择删除
+        startdelete(selection){
+            if (selection.length != 0) {
+                this.deleteShow = true;
+                this.deleteSelect = selection;
+            } else {
+                this.deleteShow = false;
+            }
         },
         alldelete(){
 
@@ -151,33 +235,21 @@ export default {
             this.page.pageNum = value;
             this.showTable();
         },
-        getPositionList(){        //获取所有职位列表
+        //获取所有职位列表
+        getPositionList(){     
             this.axios.get('/positions').then( res => {
                 let {code,data} = res.data;
-                let _positions = [];
                 if(code == 200){
-                    for(let i = 0; i<data.length; i++){
-                        let position = {};
-                        position.id = data[i].id;
-                        position.name = data[i].name;
-                        _positions.push(position);
-                    }
-                    this.positions = _positions;
+                    this.positions = data;
                 }
             })
         },
+        //获取所有的部门
         getDepartmentList(){
             this.axios.get('/departments').then( res => {
                 let {code,data} = res.data;
-                let _departments = [];
                 if(code == 200){
-                    for(let i = 0; i<data.length; i++){
-                        let department = {};
-                        department.id = data[i].id;
-                        department.name = data[i].name;
-                        _departments.push(department);
-                    }
-                    this.departments = _departments;
+                    this.departments = data;
                 }
             })
         }
@@ -188,11 +260,6 @@ export default {
 <style scoped>
 .inputWidth{
     width: 60%;
-}
-.pageStyle{
-    text-align: right;
-    margin-top: 100px;
-    margin-right: 10px;
 }
 </style>
 

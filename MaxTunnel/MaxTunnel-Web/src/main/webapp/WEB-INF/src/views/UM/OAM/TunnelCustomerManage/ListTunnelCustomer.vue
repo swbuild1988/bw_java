@@ -2,24 +2,27 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">所属公司：</span>
-                    <Select v-model="conditions.companyId" @on-change="queryList()" style="width: 60%">
+                    <Select v-model="conditions.companyId" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option v-for="item in company" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">联系人：</span>
-                    <Input v-model="conditions.contact" placeholder="请输入联系人姓名" style="width: 60%" @on-keyup="queryList()"></Input>
+                    <Input v-model="conditions.contact" placeholder="请输入联系人姓名" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryList()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryList()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryList()">查询</Button>
                 </Col>
             </Row>
         </div>

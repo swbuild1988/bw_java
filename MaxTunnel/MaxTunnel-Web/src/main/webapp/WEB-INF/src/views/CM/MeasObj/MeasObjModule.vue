@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Modal v-model="show.state" title="新增流程节点" width=600>
+        <Modal v-model="show.state" title="新增监测对象" width=600>
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
                 <FormItem label="监测对象名称：" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入监测对象名称" class="InputWidth"/>

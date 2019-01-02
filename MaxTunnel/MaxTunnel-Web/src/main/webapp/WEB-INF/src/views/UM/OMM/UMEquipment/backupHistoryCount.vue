@@ -103,9 +103,8 @@
                     结束时间：
                     <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="8" style="text-align: right;padding-right: 43px;">
-                    <Button type="primary" @click="showTable()" size="small">确定</Button>
-                    <Button type="default" size="small">取消</Button>
+                <Col span="8">
+                    <Button type="primary" @click="showTable()" icon="ios-search" size="small">查询</Button>
                 </Col>
             </Row>
             <Table stripe border :columns="toolColumns"  height="385"  :data="toolData"></Table>

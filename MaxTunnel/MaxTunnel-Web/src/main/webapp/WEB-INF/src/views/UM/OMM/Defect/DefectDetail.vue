@@ -48,12 +48,11 @@
             <FormItem label="缺陷描述：" prop="description">
                 <Input v-model="defectDetails.description" type="textarea" :rows="4" placeholder="请输入缺陷描述" :readonly=this.isTrue></Input>
             </FormItem>
-            <FormItem style="text-align: center;" v-show="this.pageType!=1&&this.pageType!=2">
+            <div style="text-align: center;" v-show="this.pageType!=1&&this.pageType!=2">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
-                <Button type="ghost" style="margin-left: 8px" @click="handleReset('defectDetails')">取消 </Button>
-            </FormItem>
+            </div>
         </Form> 
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>   
 </template>
 <script>

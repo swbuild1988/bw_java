@@ -50,7 +50,7 @@
         },
         ruleValidate: {
           userName: [
-            {required: true, message: "姓名不能为空", trigger: "blur"}
+            {required: true, message: "用户名不能为空", trigger: "blur"}
           ],
           passWord: [
             {required: true, message: "密码不能为空", trigger: "blur"}
@@ -86,7 +86,7 @@
                 _this.$router.push({path: "UMmain"});
               },
               error => {
-                _this.$Message.error(msg);
+                _this.$Message.error(error);
                 _this.loading = false;
               })
           } else {

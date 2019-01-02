@@ -54,6 +54,7 @@ public class UserServiceImpl implements UserService {
 			permissions.put("menuList", menuList);
 			permissions.put("permissionList", permissionList);
 		}
+		permissions.put("name", name);
 		
 		return permissions;
 	}

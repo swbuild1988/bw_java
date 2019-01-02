@@ -98,8 +98,8 @@
           </FormItem>
           </Col>
           <Col span="24" style="text-align: center" v-show="pageType==pageTypes.Edit">
-          <Button type="primary">确定</Button>
           <Button type="default">取消</Button>
+          <Button type="primary">确定</Button>
           </Col>
         </Form>
       </div>

@@ -59,7 +59,7 @@
                           <Icon type="ios-pulse" size=18></Icon>
                         {{item.val}}
                           </Col>
-                          <Col span="10" class="MaxValCol">
+                          <Col span="10" class="MaxValCol" color="#de8d1b">
                           <Icon type="android-locate" size=18></Icon>
                           {{item.location}}
                           </Col>
@@ -317,7 +317,7 @@ export default {
 
 <style scoped>
     .MaxValCol{
-        margin-top: 5vh;
+        margin-top: 4.5vh;
         font-size: 18px;
     }
     .descCol{

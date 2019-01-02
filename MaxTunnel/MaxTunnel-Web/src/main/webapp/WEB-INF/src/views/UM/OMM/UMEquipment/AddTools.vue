@@ -32,11 +32,10 @@
                 <DatePicker type="datetime" v-model="tools.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
             <div style="text-align: center">
-                <Button type="primary" style="margin-right: 10px;" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
-                <Button type="default" @click="handleReset('tools')">取消</Button>
+                <Button type="default" @click="goBack()" style="margin-right: 10px;" >返回</Button>
+                <Button type="primary" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
             </div>
-        </Form> 
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>   
+        </Form>  
     </div>
 </template>
 <script>
@@ -143,9 +142,9 @@ export default {
             },2000)
         },
         //取消
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
+        // handleReset(name){
+        //     this.$refs[name].resetFields()
+        // },
         //返回
         goBack(){
             this.$router.back(-1);
