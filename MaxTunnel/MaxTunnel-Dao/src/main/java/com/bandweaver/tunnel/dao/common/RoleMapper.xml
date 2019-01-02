@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.common.RoleMapper">
+
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.Role">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
+  
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.common.RoleDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+  </resultMap>
+  
   <sql id="Base_Column_List">
     ID, ROLE_NAME, CRT_TIME
   </sql>
@@ -79,5 +87,24 @@
   		#{item}
   	</foreach>
   </delete>
+  
+  <select id="getByCondition" resultMap="DtoResultMap">
+  	select * from T_SECURITY_ROLE
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="roleName != null and roleName.trim() != ''">
+  			and instr(role_name,#{roleName})>0
+  		</if>
+  		<if test="startTime != null">
+  			and crt_time &gt; = #{startTime}
+  		</if>
+  		<if test="endTime != null">
+  			and crt_time &lt; = #{endTime}
+  		</if>
+  	</where>
+  	order by crt_time desc
+  </select>
  
 </mapper>

@@ -6,14 +6,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bandweaver.tunnel.common.biz.dto.common.RoleDto;
 import com.bandweaver.tunnel.common.biz.itf.common.RoleService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 import com.bandweaver.tunnel.common.biz.pojo.common.RolePermission;
 import com.bandweaver.tunnel.common.biz.pojo.common.UserRole;
+import com.bandweaver.tunnel.common.biz.vo.common.RoleVo;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.common.RoleMapper;
 import com.bandweaver.tunnel.dao.common.RolePermissionMapper;
 import com.bandweaver.tunnel.dao.common.UserRoleMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -73,6 +77,13 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public void updateRole(Role role) {
 		roleMapper.updateByPrimaryKeySelective(role);
+	}
+
+	@Override
+	public PageInfo<RoleDto> dataGrid(RoleVo vo) {
+		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+		List<RoleDto> list = roleMapper.getByCondition(vo);
+		return new PageInfo<>(list);
 	}
 
 }

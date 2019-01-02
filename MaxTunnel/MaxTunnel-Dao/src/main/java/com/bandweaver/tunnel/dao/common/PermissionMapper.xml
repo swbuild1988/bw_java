@@ -154,4 +154,14 @@
   	</where>
   		order by crt_time desc
   </select>
+  
+  
+  <select id="getPermissionsByRole" resultMap="BaseResultMap">
+  	select p.* from T_SECURITY_PERMISSION p
+	left join t_security_role_permission rp
+	on p.id = rp.p_id 
+	where rp.r_id = #{rid}
+  	
+  </select>
+  
 </mapper>

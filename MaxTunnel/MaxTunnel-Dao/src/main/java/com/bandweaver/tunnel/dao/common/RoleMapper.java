@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.bandweaver.tunnel.common.biz.dto.common.RoleDto;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
+import com.bandweaver.tunnel.common.biz.vo.common.RoleVo;
 
 public interface RoleMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,5 +24,7 @@ public interface RoleMapper {
 	List<Role> getAllRoles();
 
 	void deleteRoleBatch(List<Integer> list);
+
+	List<RoleDto> getByCondition(RoleVo vo);
 
 }

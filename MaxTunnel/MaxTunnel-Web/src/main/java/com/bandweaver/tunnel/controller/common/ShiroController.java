@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.common.RoleDto;
 import com.bandweaver.tunnel.common.biz.itf.common.PermissionService;
 import com.bandweaver.tunnel.common.biz.itf.common.RoleService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
+import com.bandweaver.tunnel.common.biz.pojo.common.RolePermission;
 import com.bandweaver.tunnel.common.biz.vo.common.PermissionVo;
+import com.bandweaver.tunnel.common.biz.vo.common.RoleVo;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -178,7 +182,32 @@ public class ShiroController {
 		return CommonUtil.success();
 	}
 	
-	//角色分页查询，并显示对应的权限列表
+	
+	/**角色分页查询，并显示对应的权限列表 
+	 * @param reqJson
+	 * @return   
+	 * @author shaosen
+	 * @Date 2019年1月2日
+	 */
+	@RequestMapping(value="roles/datagrid",method=RequestMethod.POST)
+	public JSONObject rolesDataGrid(@RequestBody JSONObject reqJson) {
+		CommonUtil.hasAllRequired(reqJson, "pageNum,pageSize");
+		RoleVo roleVo = CommonUtil.parse2Obj(reqJson, RoleVo.class);
+		PageInfo<RoleDto> result = roleService.dataGrid(roleVo);
+		
+		List<RoleDto> roleList = result.getList();
+		for (RoleDto role : roleList) {
+			if("admin".equals(role.getRoleName())) {
+				role.setPermissionList(null);
+			}else {
+				List<Permission> pList = permissionService.getPermissionsByRole(role.getId());
+				role.setPermissionList(pList);
+			}
+			
+		}
+		
+		return CommonUtil.success(result);
+	}
 	
 	
 	
