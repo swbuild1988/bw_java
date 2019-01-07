@@ -160,7 +160,7 @@
   	select p.* from T_SECURITY_PERMISSION p
 	left join t_security_role_permission rp
 	on p.id = rp.p_id 
-	where rp.r_id = #{rid}
+	where rp.r_id = #{rid} order by p.menu_name
   	
   </select>
   

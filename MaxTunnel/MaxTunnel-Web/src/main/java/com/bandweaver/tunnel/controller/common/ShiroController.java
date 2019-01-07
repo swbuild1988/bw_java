@@ -14,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.UserDTO;
 import com.bandweaver.tunnel.common.biz.dto.common.RoleDto;
 import com.bandweaver.tunnel.common.biz.itf.common.PermissionService;
 import com.bandweaver.tunnel.common.biz.itf.common.RoleService;
+import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 import com.bandweaver.tunnel.common.biz.pojo.common.RolePermission;
 import com.bandweaver.tunnel.common.biz.vo.common.PermissionVo;
 import com.bandweaver.tunnel.common.biz.vo.common.RoleVo;
+import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.github.pagehelper.PageInfo;
 
 /**权限管理
@@ -38,6 +42,8 @@ public class ShiroController {
 	private PermissionService permissionService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private UserService userService;
 	
 	/**添加权限
 	 * @param menuCode user
@@ -154,7 +160,7 @@ public class ShiroController {
 	
 	
 	/**批量删除角色 
-	 * @param ids
+	 * @param ids 逗号分隔
 	 * @return   
 	 * @author shaosen
 	 * @Date 2018年12月26日
@@ -184,8 +190,13 @@ public class ShiroController {
 	
 	
 	/**角色分页查询，并显示对应的权限列表 
-	 * @param reqJson
-	 * @return   
+	 * 说明：当角色为admin时，显示对应的权限信息为字符串“具有所有权限”
+	 * @param roleName 角色名称
+	 * @param pageNum
+	 * @param pageSize
+	 * @param startTime
+	 * @param endTime
+	 * @return   {"msg":"请求成功","code":"200","data":{"total":3,"list":[{"id":1,"roleName":"admin","permissionList":[],"crtTime":1546358400000},{"id":2,"roleName":"manager","permissionList":[{"id":1000,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:list","permissionName":"列表","crtTime":1546358400000},{"id":1002,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:update","permissionName":"更新","crtTime":1546358400000},{"id":1001,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:add","permissionName":"添加","crtTime":1546358400000}],"crtTime":1546358400000},{"id":3,"roleName":"test","permissionList":[{"id":1003,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:delete","permissionName":"删除","crtTime":1546358400000}],"crtTime":1546358400000}],"pageNum":1,"pageSize":10,"size":3,"startRow":1,"endRow":3,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"lastPage":1,"firstPage":1}}
 	 * @author shaosen
 	 * @Date 2019年1月2日
 	 */
@@ -198,21 +209,39 @@ public class ShiroController {
 		List<RoleDto> roleList = result.getList();
 		for (RoleDto role : roleList) {
 			if("admin".equals(role.getRoleName())) {
-				role.setPermissionList(null);
+				role.setPermissionList(new ArrayList<>());
 			}else {
 				List<Permission> pList = permissionService.getPermissionsByRole(role.getId());
 				role.setPermissionList(pList);
 			}
-			
 		}
-		
 		return CommonUtil.success(result);
 	}
 	
 	
+	/**根据id查询角色信息(包含具有的权限信息)
+	 * @param id 角色id
+	 * @return  {"msg":"请求成功","code":"200","data":{"id":2,"roleName":"manager","permissionList":[{"id":1000,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:list","permissionName":"列表","crtTime":1546358400000},{"id":1002,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:update","permissionName":"更新","crtTime":1546358400000},{"id":1001,"menuCode":"tunnel","menuName":"管廊","permissionCode":"tunnel:add","permissionName":"添加","crtTime":1546358400000}],"crtTime":1546358400000}} 
+	 * @author shaosen
+	 * @Date 2019年1月7日
+	 */
+	@RequestMapping(value="roles/{id}",method=RequestMethod.GET)
+	public JSONObject getRoleInfo(@PathVariable Integer id) {
+		Role role = roleService.getRole(id);
+		RoleDto roleDto = new RoleDto();
+		if(!StringTools.isNullOrEmpty(role)) {
+			roleDto.setId(role.getId());
+			roleDto.setRoleName(role.getRoleName());
+			roleDto.setCrtTime(role.getCrtTime());
+			roleDto.setPermissionList(permissionService.getPermissionsByRole(role.getId()));
+		}
+		return CommonUtil.success(roleDto);
+	}
+	
 	
 	/**给角色授予权限（admin角色不需要赋予权限，因为具有所有权限）
-	 * @param reqJson
+	 * @param roleId 角色id
+	 * @param permissionIds 权限id数组
 	 * @return   
 	 * @author shaosen
 	 * @Date 2018年12月19日
@@ -227,8 +256,8 @@ public class ShiroController {
 	}
 	
 	
-	/**获取所有角色，给用户分配角色时使用 
-	 * @return   
+	/**获取所有角色，给账号分配角色时使用 
+	 * @return   {"msg":"请求成功","code":"200","data":[{"id":1,"roleName":"admin","crtTime":1546358400000},{"id":3,"roleName":"test","crtTime":1546358400000},{"id":2,"roleName":"manager","crtTime":1546358400000}]}
 	 * @author shaosen
 	 * @Date 2018年12月26日
 	 */
@@ -239,9 +268,9 @@ public class ShiroController {
 	}
 	
 	
-	/**给用户分配角色 
-	 * @param userId
-	 * @param roleIds
+	/**给账号分配角色 
+	 * @param userId 账号id
+	 * @param roleIds 角色id数组
 	 * @return   
 	 * @author shaosen
 	 * @Date 2018年12月26日
@@ -255,5 +284,40 @@ public class ShiroController {
 		return CommonUtil.success();
 	}
 	
+	
+	/**批量删除账号 
+	 * @param ids
+	 * @return   
+	 * @author shaosen
+	 * @Date 2019年1月7日
+	 */
+	@RequestMapping(value = "users/batch/{ids}",method = RequestMethod.DELETE)
+	public JSONObject deleteBatch(@PathVariable String ids) {
+		List<Integer> list = CommonUtil.convertStringToList(ids);
+		userService.deleteBatch(list);
+		return CommonUtil.success();
+	}
+	
+	
+	/**通过id获取账号信息(并获取对应的角色信息)
+	 * @param id 账号id
+	 * @return {"msg":"请求成功","code":"200","data":{"roles":[{"id":1,"roleName":"admin","crtTime":1546358400000}],"name":"admin","id":1000}}
+	 * @author shaosen
+	 * @date 2018年6月20日
+	 */
+	@RequestMapping(value = "users/{id}", method = RequestMethod.GET)
+	public JSONObject getById(@PathVariable("id") Integer id) {
+		UserDTO user = userService.getUser(id);
+		JSONObject returnData = new JSONObject();
+		if(!StringTools.isNullOrEmpty(user)) {
+			returnData.put("id", user.getId());
+			returnData.put("name", user.getName());
+			returnData.put("roles", roleService.getRolesByUser(user.getId()));
+		}
+		return CommonUtil.success(returnData);
+	}
+	
+	
+	//账号分页查询
 	
 }

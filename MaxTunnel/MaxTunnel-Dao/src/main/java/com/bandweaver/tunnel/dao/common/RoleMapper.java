@@ -27,4 +27,6 @@ public interface RoleMapper {
 
 	List<RoleDto> getByCondition(RoleVo vo);
 
+	List<Role> getRolesByUser(Integer id);
+
 }

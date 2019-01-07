@@ -78,7 +78,7 @@
   </update>
   
   <select id="getAllRoles" resultMap="BaseResultMap">
-  	select * from T_SECURITY_ROLE 
+  	select * from T_SECURITY_ROLE order by crt_time desc
   </select>
   
   <delete id="deleteRoleBatch">
@@ -107,4 +107,11 @@
   	order by crt_time desc
   </select>
  
+ 
+ <select id="getRolesByUser" resultMap="BaseResultMap">
+ 	select r.* from T_SECURITY_ROLE r
+ 	left join t_security_user_role ur
+ 	on r.id = ur.r_id 
+ 	where ur.u_id = #{id}
+ </select>
 </mapper>

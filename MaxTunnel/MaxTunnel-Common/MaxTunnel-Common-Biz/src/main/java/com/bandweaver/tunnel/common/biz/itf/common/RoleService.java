@@ -23,4 +23,8 @@ public interface RoleService {
 
 	PageInfo<RoleDto> dataGrid(RoleVo roleVo);
 
+	Role getRole(Integer id);
+
+	List<Role> getRolesByUser(Integer id);
+
 }
