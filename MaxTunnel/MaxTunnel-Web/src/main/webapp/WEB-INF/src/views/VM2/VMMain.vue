@@ -69,8 +69,8 @@ export default {
         ThreeDimensionsModule,
         VideoModule
     },
-    created() {},
-    mounted() {},
+    created() { },
+    mounted() { },
     methods: {}
 };
 </script>
