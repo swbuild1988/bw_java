@@ -229,7 +229,7 @@
                     .then( stores => {
                         _this.storeList.splice(0);
                         _this.location.splice(0);
-                        console.log('stores',stores)
+                        
                         stores.forEach( store => { 
                             _this.storeList.push({ value: store.store.id ,label: store.store.name });
                             _this.location.push({ 
