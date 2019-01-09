@@ -1,7 +1,7 @@
 <template>
     <div class="Main">
         <div class="Title">
-            <p>{{title}}</p>
+            <module-title :title="title"></module-title>
         </div>
         <div class="Chart">
             <timeline-chart v-bind="data"></timeline-chart>
@@ -14,6 +14,7 @@ import { TunnelService } from '../../../services/tunnelService'
 import { EnterGalleryService } from '../../../services/enterGalleryService'
 import { EnergyConsumptionService } from '../../../services/energyConsumptionService'
 import TimelineChart from '../../../components/Common/Chart/TimelineChart'
+import ModuleTitle from "../../../components/VM2/ModuleTitle";
 
 export default {
     data() {
@@ -40,7 +41,8 @@ export default {
         };
     },
     components: {
-        TimelineChart
+        TimelineChart,
+        ModuleTitle
     },
     mounted() {
         this.init();
@@ -119,21 +121,8 @@ export default {
     background-size: 100% 100%;
 }
 .Main .Title {
-    /*flex 布局*/
-    display: flex;
-    /*实现垂直居中*/
-    align-items: center;
-    /*实现水平居中*/
-    justify-content: center;
-
-    width: 25%;
+    width: 100%;
     height: 15%;
-    background: url("../../../assets/VM/vm_module_title.png") no-repeat;
-    background-size: 100% 100%;
-}
-.Title > p {
-    font-size: 1.5vmin;
-    color: #fff;
 }
 .Main .Chart {
     margin-left: 1vw;

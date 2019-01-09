@@ -1,5 +1,8 @@
 <template>
-  <div class="SimplePie" :id="id"></div>
+    <div
+        class="SimplePie"
+        :id="id"
+    ></div>
 </template>
 <style scoped>
 .SimplePie {
@@ -30,7 +33,7 @@ export default {
                     {
                         type: "pie",
                         radius: '65%',
-                        center: ['50%','50%'],
+                        center: ['50%', '50%'],
                         data: []
                     }
                 ]
@@ -58,6 +61,26 @@ export default {
                 _this.myChart.setOption(_this.parameters.option);
             }
             window.addEventListener("resize", _this.myChart.resize);
+            window.addEventListener("resize", _this.resize);
+        },
+        resize() {
+            this.fetchData(this.requestUrl);
+        },
+        drawChart(data) {
+            let _this = this;
+
+            _this.option.series[0].data = [];
+            var tempCount = 0;
+            data.filter(function (item) {
+                tempCount += item.val;
+            });
+            _this.option.series[0].data = data.map(curObj => {
+                return {
+                    value: curObj.val,
+                    name: curObj.key + " " + ((100 * curObj.val) / tempCount).toFixed(2) + "%"
+                };
+            });
+            _this.myChart.setOption(_this.option);
         },
         fetchData(requestUrl) {
             let _this = this;
@@ -66,47 +89,13 @@ export default {
                     .post(requestUrl, this.parameters.params)
                     .then(result => {
                         let { code, data } = result.data;
-                        var tempCount = 0;
-                        data.filter(function(item) {
-                            tempCount += item.val;
-                        });
-                        let newData = data.map(curObj => {
-                            return {
-                                value: curObj.val,
-                                name:
-                                    curObj.key +
-                                    " " +
-                                    ((100 * curObj.val) / tempCount).toFixed(
-                                        2
-                                    ) +
-                                    "%"
-                            };
-                        });
-                        _this.option.series[0].data = newData;
-                        _this.myChart.setOption(_this.option);
+                        _this.drawChart(data);
                     });
             } else {
                 _this.axios.get(requestUrl).then(result => {
                     let { code, data } = result.data;
                     if (code == 200) {
-                        _this.option.series[0].data = [];
-                        var tempCount = 0;
-                        data.filter(function(item) {
-                            tempCount += item.val;
-                        });
-                        _this.option.series[0].data = data.map(curObj => {
-                            return {
-                                value: curObj.val,
-                                name:
-                                    curObj.key +
-                                    " " +
-                                    ((100 * curObj.val) / tempCount).toFixed(
-                                        2
-                                    ) +
-                                    "%"
-                            };
-                        });
-                        _this.myChart.setOption(_this.option);
+                        _this.drawChart(data);
                     } else {
                         if ("getCountLendData" == requestUrl) {
                             _this.option = {
@@ -144,15 +133,29 @@ export default {
         },
         //定时刷新数据
         refreshData() {
-        let _this = this;
-        if (_this.parameters.timer) {
-            let { intervalId, intervalTime } = _this.parameters.timer;
-            intervalId = setInterval(() => {
-            _this.option.series[0].data.forEach(a => (a.val = 1));
-            _this.myChart.setOption(_this.option);
-            _this.fetchData(_this.requestUrl);
-            }, intervalTime);
-        }
+            let _this = this;
+            if (_this.parameters.timer) {
+                let { intervalId, intervalTime } = _this.parameters.timer;
+                intervalId = setInterval(() => {
+                    _this.option.series[0].data.forEach(a => (a.val = 1));
+                    _this.myChart.setOption(_this.option);
+                    _this.fetchData(_this.requestUrl);
+                }, intervalTime);
+            }
+        },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     }
 };

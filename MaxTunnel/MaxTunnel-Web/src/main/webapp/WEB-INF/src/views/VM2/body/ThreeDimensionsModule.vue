@@ -1,15 +1,24 @@
 <template>
     <div class="Main">
-        3D !!!!
+        <div class="Title">
+            <module-title :title="title"></module-title>
+        </div>
     </div>
 </template>
 
 <script>
+import ModuleTitle from "../../../components/VM2/ModuleTitle";
+
 export default {
     data() {
-        return {};
+        return {
+            title: "3D"
+        };
     },
-    mounted() {},
+    components: {
+        ModuleTitle
+    },
+    mounted() { },
     methods: {}
 };
 </script>
@@ -17,9 +26,12 @@ export default {
 <style scoped>
 .Main {
     width: 100%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    height: 100%;
+    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.Main .Title {
+    width: 100%;
+    height: 15%;
 }
 </style>

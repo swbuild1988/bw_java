@@ -1,7 +1,7 @@
 <template>
     <div class="Main">
         <div class="Title">
-            <p>{{title}}</p>
+            <module-title :title="title"></module-title>
         </div>
         <div class="TunnelMessage">
             <grid v-bind="tunnelMessage"></grid>
@@ -22,7 +22,8 @@
 
 <script>
 import Grid from "../../../components/VM2/Grid1";
-import { TunnelService } from '../../../services/tunnelService'
+import ModuleTitle from "../../../components/VM2/ModuleTitle";
+import { TunnelService } from '../../../services/tunnelService';
 
 export default {
     data() {
@@ -43,7 +44,8 @@ export default {
         };
     },
     components: {
-        Grid
+        Grid,
+        ModuleTitle
     },
     mounted() {
         this.init();
@@ -86,21 +88,8 @@ export default {
     background-size: 100% 100%;
 }
 .Main .Title {
-    /*flex 布局*/
-    display: flex;
-    /*实现垂直居中*/
-    align-items: center;
-    /*实现水平居中*/
-    justify-content: center;
-
-    width: 25%;
+    width: 100%;
     height: 15%;
-    background: url("../../../assets/VM/vm_module_title.png") no-repeat;
-    background-size: 100% 100%;
-}
-.Title > p {
-    font-size: 1.5vmin;
-    color: #fff;
 }
 .Main .TunnelMessage {
     float: left;
