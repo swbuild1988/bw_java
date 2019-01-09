@@ -145,7 +145,7 @@ var EnergyConsumptionService = {
                 tmp.push({
                     time: times[i],
                     tunnel: tunnels[j],
-                    energy: Math.random() * 1000 + 1000
+                    energy: (Math.random() * 1000 + 1000).toFixed(2)
                 });
             }
             res.push(tmp);
@@ -173,7 +173,7 @@ var EnergyConsumptionService = {
                 tmp.push({
                     time: times[i],
                     tunnel: tunnels[j],
-                    energy: Math.random() * 100 + 200
+                    energy: (Math.random() * 100 + 200).toFixed(2)
                 });
             }
             res.push(tmp);
