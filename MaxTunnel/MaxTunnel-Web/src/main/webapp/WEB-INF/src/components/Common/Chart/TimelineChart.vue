@@ -2,6 +2,7 @@
     <div
         class='TimelineChart'
         :id=id
+        ref="element"
     ></div>
 </template>
 
@@ -93,14 +94,12 @@ export default {
             _this.option.title.text = _this.title;
             _this.myChart.setOption(_this.option);
             window.addEventListener('resize', this.myChart.resize);
+            window.addEventListener('resize', this.resize);
+        },
+        resize() {
+            this.draw();
         },
         draw() {
-            console.log("this.group", this.group)
-            console.log("this.timeline", this.timeline)
-            console.log("this.series", this.series)
-            console.log("this.title", this.title)
-            console.log("this.labels", this.labels)
-
             let _this = this;
 
             // Schema:
@@ -170,14 +169,14 @@ export default {
                         },
                         data: []
                     },
-                    backgroundColor: '#404a59',
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
                     title: [{
                         text: this.timeline[0],
                         textAlign: 'center',
                         left: '63%',
                         top: '55%',
                         textStyle: {
-                            fontSize: 20,
+                            fontSize: _this.getFontSize('12%'),
                             color: 'rgba(255, 255, 255, 0.7)'
                         }
                     }, {
@@ -187,7 +186,7 @@ export default {
                         textStyle: {
                             color: '#aaa',
                             fontWeight: 'normal',
-                            fontSize: 20
+                            fontSize: _this.getFontSize('10%')
                         }
                     }],
                     tooltip: {
@@ -197,10 +196,11 @@ export default {
                         borderWidth: 1,
                         formatter: function (obj) {
                             var value = obj.value;
-                            var res = schema[schema.length].text + '：' + value[schema.length] + '<br>';
+                            var res = schema[schema.length - 1].text + '：' + value[schema.length - 1] + '<br>';
                             for (let i = 0; i < schema.length - 1; i++) {
                                 res += schema[i].text + '：' + value[i] + schema[i].unit + '<br>'
                             }
+                            _this.getDpr();
                             return res;
                         }
                     },
@@ -208,7 +208,8 @@ export default {
                         top: '15%',
                         containLabel: true,
                         left: '3%',
-                        right: '10%'
+                        right: '10%',
+                        bottom: '8%'
                     },
                     xAxis: {
                         type: 'value',
@@ -216,7 +217,7 @@ export default {
                         nameGap: 25,
                         nameLocation: 'middle',
                         nameTextStyle: {
-                            fontSize: 18
+                            fontSize: _this.getFontSize('5%')
                         },
                         splitLine: {
                             show: false
@@ -235,7 +236,7 @@ export default {
                         name: this.labels.y,
                         nameTextStyle: {
                             color: '#ccc',
-                            fontSize: 18
+                            fontSize: _this.getFontSize('5%')
                         },
                         axisLine: {
                             lineStyle: {
@@ -297,10 +298,7 @@ export default {
                         itemStyle: itemStyle,
                         data: this.series[n],
                         symbolSize: function (val) {
-                            console.log("options symbolSize", val)
-                            var size = _this.sizeFunction(val[2]);
-                            console.log("size", size);
-                            return size;
+                            return _this.sizeFunction(val[2]);
                         }
                     }
                 });
@@ -309,8 +307,35 @@ export default {
             this.myChart.setOption(this.option);
         },
         sizeFunction(x) {
-            var y = (Math.sqrt(x / 10) + 0.1).toFixed(2);
-            return y;
+            var min = Math.min.apply(null, this.series.map(o1 => {
+                return Math.min.apply(null, o1.map(o2 => {
+                    return parseFloat(o2[2]);
+                }));
+            }));
+            var max = Math.max.apply(null, this.series.map(o1 => {
+                return Math.max.apply(null, o1.map(o2 => {
+                    return parseFloat(o2[2]);
+                }));
+            }));
+
+            // 最小的5%，最大的15%
+            var y = 5 + (x - min) / (max - min) * (15 - 5);
+            var size = this.getFontSize(y + '%');
+            return size;
+        },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     },
 }
