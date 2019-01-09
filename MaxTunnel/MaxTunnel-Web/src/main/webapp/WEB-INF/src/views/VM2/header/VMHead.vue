@@ -42,7 +42,7 @@ export default {
 }
 .Top > span {
     vertical-align: top;
-    font-size: 3vw;
+    font-size: 5vmin;
     color: #fff;
     text-shadow: 0 0 6px #1765b3;
 }
