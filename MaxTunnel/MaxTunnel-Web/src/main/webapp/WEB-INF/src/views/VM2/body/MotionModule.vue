@@ -58,6 +58,7 @@ export default {
             let p4 = EnergyConsumptionService.getOneKmEneryEveryMonthAndTunnel();
 
             Promise.all([p1, p2, p3, p4]).then(result => {
+                // console.log("result", result);
                 this.data.group = []
                 this.data.timeline = []
                 this.data.series = []
@@ -98,9 +99,9 @@ export default {
                         tmp.push([x, y, z, this.data.group[j], this.data.timeline[i]])
                     }
                     this.data.series.push(tmp);
+
                 }
 
-                console.log("this.data", this.data)
             }).then(error => {
                 if (error) console.log("error", error)
             })
