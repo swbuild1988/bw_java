@@ -17,18 +17,22 @@ export default {
             default: 'TimelineChart',
             type: String
         },
+        // 有几个球
         group: {
             default: [],
             type: Array
         },
+        // 时间线
         timeline: {
             default: [],
             type: Array
         },
+        // 显示的数据
         series: {
             default: [],
             type: Array
         },
+        // x,y,z的单位
         units: {
             default: {
                 x: "",
@@ -37,6 +41,7 @@ export default {
             },
             type: Object
         },
+        // x，y，z，以及group的标签显示
         labels: {
             default: {
                 x: "",
@@ -72,8 +77,6 @@ export default {
         },
         series: {
             handler(newValue, oldValue) {
-                console.log("oldValue", oldValue)
-                console.log("newValue", newValue)
                 if (newValue.length && newValue.length > 0) this.draw();
             },
             deep: true,
@@ -92,14 +95,20 @@ export default {
             window.addEventListener('resize', this.myChart.resize);
         },
         draw() {
+            console.log("this.group", this.group)
+            console.log("this.timeline", this.timeline)
+            console.log("this.series", this.series)
+            console.log("this.title", this.title)
+            console.log("this.labels", this.labels)
+
             let _this = this;
 
             // Schema:
             var schema = [
-                { name: 'group', index: 3, text: this.labels.group, unit: '' },
                 { name: 'x', index: 0, text: this.labels.x, unit: this.units.x },
                 { name: 'y', index: 1, text: this.labels.y, unit: this.units.y },
                 { name: 'z', index: 2, text: this.labels.z, unit: this.units.z },
+                { name: 'group', index: 3, text: this.labels.group, unit: '' },
             ];
 
             var itemStyle = {
@@ -119,12 +128,12 @@ export default {
                         orient: 'vertical',
                         autoPlay: true,
                         inverse: true,
-                        playInterval: 1000,
+                        playInterval: 5000,
                         left: null,
                         right: 0,
-                        top: 20,
-                        bottom: 20,
-                        width: 55,
+                        top: '5%',
+                        bottom: '2%',
+                        width: '7%',
                         height: null,
                         label: {
                             normal: {
@@ -168,13 +177,13 @@ export default {
                         left: '63%',
                         top: '55%',
                         textStyle: {
-                            fontSize: 100,
+                            fontSize: 20,
                             color: 'rgba(255, 255, 255, 0.7)'
                         }
                     }, {
                         text: this.title,
                         left: 'center',
-                        top: 10,
+                        top: '2%',
                         textStyle: {
                             color: '#aaa',
                             fontWeight: 'normal',
@@ -188,20 +197,21 @@ export default {
                         borderWidth: 1,
                         formatter: function (obj) {
                             var value = obj.value;
-                            var res = "";
-                            for (let i = 0; i < schema.length; i++) {
+                            var res = schema[schema.length].text + '：' + value[schema.length] + '<br>';
+                            for (let i = 0; i < schema.length - 1; i++) {
                                 res += schema[i].text + '：' + value[i] + schema[i].unit + '<br>'
                             }
+                            return res;
                         }
                     },
                     grid: {
-                        top: 100,
+                        top: '15%',
                         containLabel: true,
-                        left: 30,
-                        right: '110'
+                        left: '3%',
+                        right: '10%'
                     },
                     xAxis: {
-                        type: 'log',
+                        type: 'value',
                         name: this.labels.x,
                         nameGap: 25,
                         nameLocation: 'middle',
@@ -264,13 +274,11 @@ export default {
                             itemStyle: itemStyle,
                             data: _this.series[0],
                             symbolSize: function (val) {
-                                console.log("symbolSize", val)
-                                // return _this.sizeFunction(val[2]);
-                                return 10;
+                                return _this.sizeFunction(val[2]);
                             }
                         }
                     ],
-                    animationDurationUpdate: 1000,
+                    animationDurationUpdate: 500,
                     animationEasingUpdate: 'quinticInOut'
                 },
                 options: []
@@ -281,7 +289,7 @@ export default {
                 this.option.options.push({
                     title: {
                         show: true,
-                        'text': this.timeline[n] + ''
+                        text: this.timeline[n]
                     },
                     series: {
                         name: this.timeline[n],
@@ -289,20 +297,20 @@ export default {
                         itemStyle: itemStyle,
                         data: this.series[n],
                         symbolSize: function (val) {
-                            console.log("symbolSize", val)
-                            // return _this.sizeFunction(val[2]);
-                            return 10;
+                            console.log("options symbolSize", val)
+                            var size = _this.sizeFunction(val[2]);
+                            console.log("size", size);
+                            return size;
                         }
                     }
                 });
             }
 
-            console.log("this.option", this.option);
             this.myChart.setOption(this.option);
         },
         sizeFunction(x) {
-            var y = Math.sqrt(x / 5e8) + 0.1;
-            return y * 80;
+            var y = (Math.sqrt(x / 10) + 0.1).toFixed(2);
+            return y;
         }
     },
 }

@@ -18,10 +18,10 @@ import TimelineChart from '../../../components/Common/Chart/TimelineChart'
 export default {
     data() {
         return {
-            title: "每月管廊入廊次数及能耗",
+            title: "",
             data: {
                 id: "VmMotionModuleChart",
-                title: "",
+                title: "每月管廊入廊次数及能耗",
                 group: [],
                 timeline: [],
                 series: [],
@@ -95,11 +95,7 @@ export default {
                             else
                                 return false;
                         }).find(a => a.tunnel === this.data.group[j]).energy;
-                        tmp.push({
-                            x: x,
-                            y: y,
-                            z: z
-                        })
+                        tmp.push([x, y, z, this.data.group[j], this.data.timeline[i]])
                     }
                     this.data.series.push(tmp);
                 }
@@ -115,6 +111,7 @@ export default {
 
 <style scoped>
 .Main {
+    position: relative;
     width: 100%;
     height: 100%;
     background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
@@ -138,7 +135,8 @@ export default {
     color: #fff;
 }
 .Main .Chart {
-    width: 100%;
-    height: 85%;
+    margin-left: 1vw;
+    width: 90%;
+    height: 80%;
 }
 </style>
