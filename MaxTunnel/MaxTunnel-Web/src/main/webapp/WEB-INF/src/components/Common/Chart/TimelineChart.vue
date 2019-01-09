@@ -200,7 +200,6 @@ export default {
                             for (let i = 0; i < schema.length - 1; i++) {
                                 res += schema[i].text + '：' + value[i] + schema[i].unit + '<br>'
                             }
-                            _this.getDpr();
                             return res;
                         }
                     },
@@ -214,6 +213,9 @@ export default {
                     xAxis: {
                         type: 'value',
                         name: this.labels.x,
+                        min: function (value) {
+                            return Math.round(value.min - (value.max - value.min) * 0.2)
+                        },
                         nameGap: 25,
                         nameLocation: 'middle',
                         nameTextStyle: {

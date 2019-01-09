@@ -1,27 +1,45 @@
 <template>
     <div class="Main">
-        <p class="title">监测对象</p>
+        <div class="Title">
+            <module-title :title="title"></module-title>
+        </div>
         <div class="left">
-            <div class="item" v-for="(item,index) in extreData" :key="index">
+            <div
+                class="item"
+                v-for="(item,index) in extreData"
+                :key="index"
+            >
                 <p class="name">{{ item.name }}</p>
                 <p class="number">{{ item.number + item.unit }}</p>
                 <p class="location">{{ item.location }}</p>
             </div>
         </div>
         <div class="right">
-            <div class="count" v-for="(item,index) in countData" :key="index">
+            <div
+                class="count"
+                v-for="(item,index) in countData"
+                :key="index"
+            >
                 <p class="name">{{ item.name }}</p>
                 <span class="number">{{ item.number + item.unit }}</span>
-                 <span class="riseIcons"><Icon :type="item.isRise ? 'arrow-up-c' : 'arrow-down-c'" :color="item.isRise ? 'rgb(247, 26, 56)': 'white'"></Icon></span>
+                <span class="riseIcons">
+                    <Icon
+                        :type="item.isRise ? 'arrow-up-c' : 'arrow-down-c'"
+                        :color="item.isRise ? 'rgb(247, 26, 56)': 'white'"
+                    ></Icon>
+                </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import ModuleTitle from "../../../components/VM2/ModuleTitle";
+
 export default {
     data() {
         return {
+            title: '管廊监测',
             extreData: [
                 {
                     name: '最高温度',
@@ -64,7 +82,10 @@ export default {
             ]
         };
     },
-    mounted() {},
+    components: {
+        ModuleTitle
+    },
+    mounted() { },
     methods: {}
 };
 </script>
@@ -76,17 +97,14 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    background: url('../../../assets/VM/vm_module_bg.png') no-repeat;
+    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
-.title{
-    font-size: 2.4vmin;
-    position: absolute;
-    top: 2.2vh;
-    left: 2vw;
-    color: white;
+.Main .Title {
+    width: 100%;
+    height: 15%;
 }
-.left{
+.left {
     position: absolute;
     width: 44%;
     height: 73%;
@@ -94,26 +112,26 @@ export default {
     left: 7%;
     overflow: auto;
 }
-.item{
-    background: url('../../../assets/UM/videoBody.png') no-repeat;
+.item {
+    background: url("../../../assets/UM/videoBody.png") no-repeat;
     background-size: 100% 100%;
     width: 90%;
     margin: 0.4vh auto;
     text-align: center;
 }
-.name{
+.name {
     color: white;
     font-size: 1.6vmin;
 }
-.number{
+.number {
     color: #37bbcc;
     font-size: 2vmin;
 }
-.location{
+.location {
     color: white;
     font-size: 1.2vmin;
 }
-.right{
+.right {
     width: 40%;
     height: 73%;
     position: absolute;
@@ -122,10 +140,10 @@ export default {
     text-align: center;
     overflow: auto;
 }
-.count{
+.count {
     margin: 1vh auto;
 }
-.riseIcons{
+.riseIcons {
     font-size: 2vmin;
     float: right;
     margin-right: 1vw;

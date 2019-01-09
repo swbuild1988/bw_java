@@ -75,9 +75,6 @@ export default {
 };
 </script>
 <style scoped>
-div {
-    border: 1px solid #000;
-}
 .MainContent {
     top: 0;
     bottom: 0;
@@ -98,64 +95,64 @@ div {
 .MainContent .CommonModule {
     position: absolute;
     top: 10%;
-    left: 0%;
-    width: 25%;
-    height: 23.3%;
+    left: 0.5%;
+    width: 24%;
+    height: 22.5%;
 }
 .MainContent .InspectModule {
     position: absolute;
-    top: 33.3%;
-    left: 0%;
-    width: 25%;
-    height: 33.3%;
+    top: 33.5%;
+    left: 0.5%;
+    width: 24%;
+    height: 32.5%;
 }
 .MainContent .EquipmentModule {
     position: absolute;
-    top: 66.6%;
-    left: 0%;
-    width: 25%;
-    height: 33.3%;
+    top: 67%;
+    left: 0.5%;
+    width: 24%;
+    height: 32.5%;
 }
 .MainContent .MapModule {
     position: absolute;
     top: 10%;
-    left: 25%;
-    width: 50%;
-    height: 56.6%;
+    left: 25.5%;
+    width: 49%;
+    height: 56%;
 }
 .MainContent .AlarmModule {
     position: absolute;
-    top: 66.6%;
-    left: 25%;
-    width: 25%;
-    height: 33.3%;
+    top: 67%;
+    left: 25.5%;
+    width: 24%;
+    height: 32.5%;
 }
 .MainContent .MeasureModule {
     position: absolute;
-    top: 66.6%;
-    left: 50%;
-    width: 25%;
-    height: 33.3%;
+    top: 67%;
+    left: 50.5%;
+    width: 24%;
+    height: 32.5%;
 }
 .MainContent .MotionModule {
     position: absolute;
     top: 10%;
-    left: 75%;
-    width: 25%;
-    height: 23.3%;
+    left: 75.5%;
+    width: 24%;
+    height: 22.5%;
 }
 .MainContent .VideoModule {
     position: absolute;
-    top: 33.3%;
-    left: 75%;
-    width: 25%;
-    height: 33.3%;
+    top: 33.5%;
+    left: 75.5%;
+    width: 24%;
+    height: 32.5%;
 }
 .MainContent .ThreeDimensionsModule {
     position: absolute;
-    top: 66.6%;
-    left: 75%;
-    width: 25%;
-    height: 33.3%;
+    top: 67%;
+    left: 75.5%;
+    width: 24%;
+    height: 32.5%;
 }
 </style>
