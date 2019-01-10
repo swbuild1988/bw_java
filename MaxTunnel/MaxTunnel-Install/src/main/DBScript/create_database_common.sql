@@ -464,6 +464,26 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_COMMON_SCHEDULE_JOB'; 
       end   if;  
+      
+--管廊运行信息表
+-- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'COMMON_TUNNEL_RUN_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  COMMON_TUNNEL_RUN_SQ';   
+      end if;
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'COMMON_TUNNEL_RUN_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  COMMON_TUNNEL_RUN_TG';   
+      end if;
+-- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_COMMON_TUNNEL_RUN';
+      if   num=1   then 
+          execute immediate 'drop table T_COMMON_TUNNEL_RUN'; 
+      end   if; 
 end;
 /
 
@@ -1038,5 +1058,32 @@ CREATE OR REPLACE TRIGGER COMMON_SCHEDULE_JOB_TG
 begin
   select COMMON_SCHEDULE_JOB_SQ.nextval into :new.JOB_ID from dual;
 end COMMON_SCHEDULE_JOB_TG;
+/
+
+
+--管廊运行时间表
+CREATE TABLE T_COMMON_TUNNEL_RUN(
+  id              NUMBER    NOT NULL,
+  run_days  number    not null,
+  safe_dyas number    not null,
+   CONSTRAINT PK_T_COMMON_TUNNEL_RUN PRIMARY KEY ("ID")
+);
+
+
+--create sequence
+create sequence COMMON_TUNNEL_RUN_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+-- create trigger
+CREATE OR REPLACE TRIGGER COMMON_TUNNEL_RUN_TG
+  BEFORE INSERT ON T_COMMON_TUNNEL_RUN
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_TUNNEL_RUN_SQ.nextval into :new.id from dual;
+end COMMON_TUNNEL_RUN_TG;
 /
 

@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
@@ -28,6 +29,7 @@ import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
 import com.bandweaver.tunnel.common.biz.itf.oam.EnergyService;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute;
@@ -119,6 +121,17 @@ public class TaskEntrance {
     private ConsumeDataService consumeDataService;
     
    
+    /**管廊运行时间定时自增
+     * @author shaosen
+     * @date 2019年1月10日
+     * @param   
+     * @return void  
+     */
+    public void runDaysAutoAdded() {
+    	TunnelRun runInfo = tunnelService.getTunnelRunInfo();
+    	tunnelService.updateTunnelRunInfo(runInfo);
+    }
+    
     
     /**模拟maxview发送告警
      * @throws Exception   

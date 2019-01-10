@@ -16,10 +16,12 @@ import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.vo.TunnelVo;
 import com.bandweaver.tunnel.dao.common.SectionMapper;
 import com.bandweaver.tunnel.dao.common.StoreMapper;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
+import com.bandweaver.tunnel.dao.common.TunnelRunMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -31,6 +33,8 @@ public class TunnelServiceImpl implements TunnelService {
     private StoreService storeService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private TunnelRunMapper tunnelRunMapper;
     
 
     @Override
@@ -105,5 +109,22 @@ public class TunnelServiceImpl implements TunnelService {
 	@Override
 	public Tunnel getBySN(String sn) {
 		return tunnelMapper.getBySN(sn);
+	}
+
+	@Override
+	public TunnelRun getTunnelRunInfo() {
+		return tunnelRunMapper.getRunInfo();
+	}
+
+	@Override
+	public void updateTunnelRunInfo(TunnelRun runInfo) {
+		runInfo.setRunDays(runInfo.getRunDays() + 1);
+		runInfo.setSafeDyas(runInfo.getSafeDyas() + 1);
+		tunnelRunMapper.updateByPrimaryKeySelective(runInfo);
+	}
+
+	@Override
+	public void addTunnelRun(TunnelRun tr) {
+		tunnelRunMapper.insertSelective(tr);
 	}
 }

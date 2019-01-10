@@ -31,6 +31,7 @@ import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
@@ -43,6 +44,7 @@ import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -364,6 +366,30 @@ public class TunnelController extends BaseController<Tunnel> {
 		returnData.add(lengthJson);
     	
     	return CommonUtil.success(returnData);
+    }
+    
+    
+    /**管廊运行信息
+     * @author shaosen
+     * @date 2019年1月10日
+     * @param   
+     * @return JSONObject  
+     */
+    @RequestMapping(value="tunnels/run-message",method=RequestMethod.GET)
+    public JSONObject getDaysInfo() {
+    	TunnelRun info = tunnelService.getTunnelRunInfo();
+    	if(StringTools.isNullOrEmpty(info)) {
+    		TunnelRun tr = new TunnelRun();
+    		tr.setId(1);
+    		tr.setRunDays(1);
+    		tr.setSafeDyas(1);
+    		info = tr;
+    		tunnelService.addTunnelRun(tr);
+    	}
+    	JSONObject rtData = new JSONObject();
+    	rtData.put("total", info.getRunDays());
+    	rtData.put("safe", info.getSafeDyas());
+    	return CommonUtil.success(rtData);
     }
   
 }
