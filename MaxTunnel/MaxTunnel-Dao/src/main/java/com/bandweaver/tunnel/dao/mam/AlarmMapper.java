@@ -41,5 +41,7 @@ public interface AlarmMapper {
 
 	int getCountByTunnel(Integer tunnelId);
 
+	List<Alarm> getListFromNowYear(Date beginDayOfYear);
+
 	
 }

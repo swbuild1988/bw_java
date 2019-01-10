@@ -2,9 +2,12 @@ package com.bandweaver.tunnel.controller.mam;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
@@ -275,6 +279,46 @@ public class AlarmController {
 			rtData.add(json);
 		}
 		return CommonUtil.success(rtData);
+	}
+	
+	
+	/**获取每个月各级别告警次数
+	 * @author shaosen
+	 * @date 2019年1月10日
+	 * @param   
+	 * @return {"msg":"请求成功","code":"200","data":[{"一般告警":2661,"提示告警":2609,"严重告警":2679,"key":"1月","致命告警":2708}]}  
+	 */
+	@RequestMapping(value="alarms/level-count–everymonth",method=RequestMethod.GET)
+	public JSONObject getLevelCountEverymonth() {
+		
+		List<JSONObject> rtData = new ArrayList<>();
+		//获取今年开始日期
+		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
+		List<Alarm> alarmList = alarmService.getListFromNowYear(beginDayOfYear);
+		
+		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(TimeEnum.MONTH);
+	    for (int i = 0; i < list.size(); i++) {
+	    	 Date startTime = list.get(list.size() - 1 - i).get("startDay");
+             Date endTime = list.get(list.size() - 1 - i).get("endDay");
+             
+             JSONObject json = new JSONObject();
+             json.put("key", DateUtil.getNowMonth(startTime) + "月");
+             json.put(AlarmLevelEnum.DANGEROUS.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.DANGEROUS,startTime,endTime));
+             json.put(AlarmLevelEnum.NORMAL.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.NORMAL,startTime,endTime));
+             json.put(AlarmLevelEnum.PROMPT.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.PROMPT,startTime,endTime));
+             json.put(AlarmLevelEnum.SERIOUS.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.SERIOUS,startTime,endTime));
+             rtData.add(json);
+	    }
+		return CommonUtil.success(rtData);
+	}
+
+
+	private int getCountByStartTimeAndEndTimeAndLevel( List<Alarm> alarmList , AlarmLevelEnum ale, Date startTime, Date endTime) {
+		 List<Alarm> ls = alarmList.stream().filter(x -> x.getAlarmLevel().intValue() == ale.getValue()
+        		 && x.getAlarmDate().getTime() >= startTime.getTime()
+        		 && x.getAlarmDate().getTime() <= endTime.getTime()).collect(Collectors.toList());
+		return ls.size();
+		
 	}
 
 }
