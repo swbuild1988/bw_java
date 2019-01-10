@@ -480,6 +480,7 @@ create table T_COMMON_TUNNEL
   id    NUMBER not null,
   name  VARCHAR2(30) not null,
   length NUMBER,
+  status number(1),
   sn     VARCHAR2(20) not null,
   responsibility_id number  not null,
   construct_id      number  not null,

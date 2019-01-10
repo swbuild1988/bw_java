@@ -94,4 +94,6 @@ public interface AreaService {
 
 	Area getByTunnelAndSN(Integer tunnelId, String sn);
 
+	int getTotalCount();
+
 }

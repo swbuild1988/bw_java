@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.service.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,8 @@ public class TunnelServiceImpl implements TunnelService {
 
     @Override
     public List<TunnelSimpleDto> getList() {
-    	return tunnelMapper.getList();
+    	List<TunnelSimpleDto> list = tunnelMapper.getList();
+    	return list == null ? Collections.emptyList() : list;
     }
 
 	@Override

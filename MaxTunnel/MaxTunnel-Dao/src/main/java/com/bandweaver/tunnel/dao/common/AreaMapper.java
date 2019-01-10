@@ -72,4 +72,6 @@ public interface AreaMapper {
 	Area getAreaByTunnelAndSN(Integer tunnelId, String sn);
 
 	List<Area> getAreasByTunnelId(Integer tunnelId);
+
+	int getTotalCount();
 }
