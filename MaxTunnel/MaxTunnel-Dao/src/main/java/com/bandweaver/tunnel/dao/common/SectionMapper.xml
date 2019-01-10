@@ -277,4 +277,11 @@
 	<select id="getSectionListByParentId" resultMap="BaseResultMap">
 		select * from t_common_section where parent_id = #{sectionId}
 	</select>
+	
+	<select id="getSectionIdsByStoreIds" resultType="Int">
+		select id from t_common_section where store_id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach> 
+	</select>
 </mapper>

@@ -10,4 +10,6 @@ public interface CableSectionService {
 
 	int getCountBySectionId(Integer id);
 
+	List<String> getSetBysectionIds(List<Integer> sectionIdList);
+
 }
