@@ -342,4 +342,10 @@
   	select * from T_MAM_ALARM where cleaned = 0
   </select>
   
+  <select id="getCountByTunnel" resultType="Int" >
+  	select count(1) from T_MAM_ALARM where tunnel_id = #{tunnelId}
+  </select>
+  
+  
+  
 </mapper> 

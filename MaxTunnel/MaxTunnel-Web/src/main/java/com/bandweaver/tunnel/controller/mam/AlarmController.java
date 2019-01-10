@@ -255,5 +255,26 @@ public class AlarmController {
 		
 		return CommonUtil.success(returnData);
 	}
+	
+	
+	/**获取各管廊告警次数
+	 * @author shaosen
+	 * @date 2019年1月10日
+	 * @param   
+	 * @return {"msg":"请求成功","code":"200","data":[{"value":12696,"key":"古城大街"},{"value":0,"key":"实验路"},{"value":0,"key":"经三路"},{"value":0,"key":"经二路"},{"value":0,"key":"纬三路"},{"value":0,"key":"监控中心"}]}  
+	 */
+	@RequestMapping(value="tunnels/alarm-count",method=RequestMethod.GET)
+	public JSONObject getTunnelsAlarmCount() {
+		List<JSONObject> rtData = new ArrayList<>();
+		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+		for (TunnelSimpleDto t : tunnelList) {
+			int count = alarmService.getCountByTunnel(t.getId());
+			JSONObject json = new JSONObject();
+			json.put("key", t.getName());
+			json.put("value", count);
+			rtData.add(json);
+		}
+		return CommonUtil.success(rtData);
+	}
 
 }

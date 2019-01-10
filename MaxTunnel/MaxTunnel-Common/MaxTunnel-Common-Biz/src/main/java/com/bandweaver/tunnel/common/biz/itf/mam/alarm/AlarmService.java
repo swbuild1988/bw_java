@@ -57,5 +57,7 @@ public interface AlarmService {
 
 	void cleanAlarmBatch(AlarmVo vo);
 
+	int getCountByTunnel(Integer id);
+
 
 }

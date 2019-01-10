@@ -148,6 +148,12 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 
+	@Override
+	public int getCountByTunnel(Integer id) {
+		return alarmMapper.getCountByTunnel(id);
+	}
+
+
 
 }
 
