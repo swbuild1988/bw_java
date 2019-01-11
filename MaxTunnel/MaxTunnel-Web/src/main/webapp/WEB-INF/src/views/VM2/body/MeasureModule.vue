@@ -10,7 +10,7 @@
                 :key="index"
             >
                 <p class="name">{{ item.name }}</p>
-                <p class="number">{{ item.number + item.unit }}</p>
+                <p class="number">{{ item.value + item.unit }}</p>
                 <p class="location">{{ item.location }}</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 :key="index"
             >
                 <p class="name">{{ item.name }}</p>
-                <span class="number">{{ item.number + item.unit }}</span>
+                <span class="number">{{ item.value + item.unit }}</span>
                 <span class="riseIcons">
                     <Icon
                         :type="item.isRise ? 'arrow-up-c' : 'arrow-down-c'"
@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import ModuleTitle from "../../../components/VM2/ModuleTitle";
+import ModuleTitle from "../../../components/VM2/ModuleTitle"
+import { MeasObjServer } from '../../../services/MeasObjectSerivers'
 
 export default {
     data() {
@@ -43,19 +44,19 @@ export default {
             extreData: [
                 {
                     name: '最高温度',
-                    number: 21,
+                    value: 21,
                     unit: '℃',
                     location: '古城大街3区污水仓'
                 },
                 {
                     name: '最高湿度',
-                    number: 22,
+                    value: 22,
                     unit: 'ppm',
                     location: '实验路2区综合仓'
                 },
                 {
                     name: '最低含氧量',
-                    number: 22,
+                    value: 22,
                     unit: '%',
                     location: '纬三路1区燃气仓'
                 }
@@ -63,19 +64,19 @@ export default {
             countData: [
                 {
                     name: '电子井盖打开',
-                    number: 12,
+                    value: 12,
                     unit: '次',
                     isRise: false
                 },
                 {
                     name: '门禁触发',
-                    number: 15,
+                    value: 15,
                     unit: '次',
                     isRise: true
                 },
                 {
                     name: '红外探测器触发',
-                    number: 2,
+                    value: 2,
                     unit: '次',
                     isRise: false
                 }
@@ -85,8 +86,28 @@ export default {
     components: {
         ModuleTitle
     },
-    mounted() { },
-    methods: {}
+    mounted() { 
+        this.init()
+    },
+    methods: {
+        init(){
+            let _this = this
+            MeasObjServer.getToDayExtreDatas().then(
+                result=>{
+                    _this.extreData = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            MeasObjServer.getMeasTriggerCounts().then(
+                result=>{
+                    _this.countData = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        }
+    }
 };
 </script>
 
@@ -97,7 +118,7 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
 .Main .Title {

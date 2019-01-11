@@ -11,10 +11,28 @@ import videoloop from "../../../components/Common/Carousel";
 export default {
     data() {
         return {
-            loopScene:[],
+            setting:{
+                value:0,
+                dots: 'outside',
+                autoplaySpeed: 10000,
+                switchBtn:false,
+                loop:false
+            },
+            videos:[],//缓存当前场景下所有摄像头
+            tempVideos:[],//保存临时所有摄像头
+            loopScene:[],//保存所有轮询场景
+            virtualLoopScene:[],
+            allVideos:[], //保存所有的视屏服务
+            defaultOption: 1,
+            defaultVideo:0,
+            defaultLoopIndex:0,
             currShowVideo:{
                 showVideoTimer:null,
                 loopSceneIndex:0
+            },
+            currLoopSceneVideo:{
+                id: null,
+                url: ''
             },
             style:{
                 offsetHeight:0,
@@ -28,19 +46,91 @@ export default {
     mounted() {
         this.getLoopScence()
     },
+    computed: {
+        isAutoplay () {
+            return this.$store.state.VMstate.autoplay;
+        },
+        planLinkageVideo(){
+            return this.$store.state.VMstate.planLinkageVideos;
+        },
+    },
     watch: {
-        // defaultLoopIndex(){
-        //     let _this=this,
-        //         index=this.defaultLoopIndex;
+        optionList(){
+            let _this=this;
+            _this.addOption(_this.optionList);
+
+            $('#cd-dropdown').dropdown( {
+                gutter : 5,
+                stack : false,
+                slidingIn : 100,
+                onOptionSelect(opt){
+                    _this.changeStatus(opt.attr('data-value'));
+                }
+            } )
+            _this.addIframe('cd-dropdown');
+
+        },
+        sceneList(){
+            let _this=this;
+            _this.addOption(_this.sceneList,'scene-dropdown');
+
+            $('#scene-dropdown').dropdown( {
+                defaultClass:['cd-dropdown','Areas'],
+                gutter : 5,
+                stack : false,
+                slidingIn : 100,
+                onOptionSelect(opt){
+                    _this.changeScene(opt.attr('data-value'));
+                }
+            } );
+            _this.addIframe('scene-dropdown');
+
+        },
+        defaultLoopIndex(){
+            let _this=this,
+                index=this.defaultLoopIndex;
                 
-        //     if(_this.loopScene[index] == undefined || !_this.loopScene[index].length){ return };
+            if(_this.loopScene[index] == undefined || !_this.loopScene[index].length){ return };
 
-        //     _this.loopScene[index].filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID = val.id }});
+            _this.loopScene[index].filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID = val.id }});
 
-        //     // _this.changeCopyLoopScene(index);
-        //     // 监听轮播索引
-        //     _this.changeStyle(_this.loopScene[index]);
-        // }
+            // _this.changeCopyLoopScene(index);
+            // 监听轮播索引
+            _this.changeStyle(_this.loopScene[index]);
+        },
+        tempVideos(){
+            if(!this.tempVideos.length){ return };
+
+            this.tempVideos.filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID=val.id }})
+        },
+        'planLinkageVideo':{
+            handler({ videoIds,processInstanceId }){
+
+                if( videoIds == null || videoIds === undefined ){
+                    this.switchLoopStatus(true);
+                    this.getLoopScence();
+                }else {
+                    try {
+                        let  videosService = this.allVideos.filter( videos =>  videoIds.toString().split(',').indexOf( videos.id.toString() ) !== -1 );
+
+                        this.switchLoopStatus(false);
+                        this.showDropdown(false);
+
+                        this.loopScene.splice(0);
+                        this.loopScene.push(videosService);
+                        this.changeStyle(this.loopScene[0]);
+
+                        this.$nextTick(()=> PlanService.ConfirmStep(processInstanceId,videoIds,'yes'))
+
+
+                    } catch (err) {
+                        console.warn('err',err)
+                    }
+
+                }
+            },
+            deep:true,
+        }
     },
     methods: {
         getLoopScence(){
@@ -115,12 +205,12 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    background: url('../../../assets/VM/vm_module_bg.png') no-repeat;
+    background: url('../../../assets/VM/module_bg.png') no-repeat;
     background-size: 100% 100%;
 }
 .camera{
-    margin: 4.6% auto;
+    margin: 6% 7%;
     width: 84%;
-    height: 84%;
+    height: 86%;
 }
 </style>

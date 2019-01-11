@@ -415,16 +415,16 @@ var TunnelService = {
                 value: 1,
                 unit: "条"
             },
-            {
-                name: "防火分区共",
-                value: 49,
-                unit: "个"
-            },
-            {
-                name: "总长度",
-                value: 15.3,
-                unit: "km"
-            }
+            // {
+            //     name: "防火分区共",
+            //     value: 49,
+            //     unit: "个"
+            // },
+            // {
+            //     name: "总长度",
+            //     value: 15.3,
+            //     unit: "km"
+            // }
         ];
         return new Promise((resolve, reject) => {
             resolve(res);
@@ -449,16 +449,16 @@ var TunnelService = {
                 value: 12,
                 unit: "km"
             },
-            {
-                name: "供暖管线",
-                value: 11,
-                unit: "km"
-            },
-            {
-                name: "水力管线",
-                value: 15.3,
-                unit: "km"
-            }
+        // {
+        //     name: "供暖管线",
+        //     value: 11,
+        //     unit: "km"
+        // },
+        // {
+        //     name: "水力管线",
+        //     value: 15.3,
+        //     unit: "km"
+        // }
         ];
         return new Promise((resolve, reject) => {
             resolve(res);

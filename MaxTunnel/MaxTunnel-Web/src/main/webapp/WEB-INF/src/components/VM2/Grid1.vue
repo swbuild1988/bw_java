@@ -58,24 +58,29 @@ export default {
     height: 20%;
 }
 .Title > p {
-    font-size: 1vmin;
+    font-size: 1.4vmin;
     color: #fff;
 }
 .Row {
     width: 100%;
-    height: 15%;
+    height: 24%;
+    background: url('../../assets/VM/common_item_bg.png');
+    background-size: 100% 100%;
+    margin: 0.2vmin 0;
 }
 .Row >>> p {
-    font-size: 0.75vmin;
+    font-size: 1.2vmin;
     color: #fff;
 }
 .Row .Name {
     float: left;
     height: 100%;
+    padding: 0.6vmin 2vmin;
 }
 .Row .Result {
     float: right;
     height: 100%;
+    padding: 0.6vmin 0.4vmin;
 }
 .Result .Value {
     float: left;

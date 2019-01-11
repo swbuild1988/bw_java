@@ -84,7 +84,7 @@ export default {
 .Main {
     width: 100%;
     height: 100%;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
 .Main .Title {
@@ -104,19 +104,19 @@ export default {
 .Main .RunMessage {
     float: left;
     width: 100%;
-    height: 35%;
+    height: 34%;
 }
 .RunMessage > p {
     margin-left: 2vw;
-    font-size: 2.2vmin;
+    font-size: 2vmin;
     color: #fff;
 }
 .total {
-    font-size: 2.7vmin;
+    font-size: 2.4vmin;
     color: #fa0;
 }
 .safe {
-    font-size: 2.7vmin;
+    font-size: 2.4vmin;
     color: #0af;
 }
 </style>

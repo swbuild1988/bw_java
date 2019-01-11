@@ -117,7 +117,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
 .Main .Title {

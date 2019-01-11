@@ -20,6 +20,10 @@
       parameters: {
         type: Object
       },
+      type: {
+        type: String,
+        default: 'post'
+      }
     },
     data() {
       return {
@@ -89,37 +93,72 @@
       },
       fetchData() {
         let _this = this;
-        let prams = _this.parameters.prams;
-        ChartService.getPileBarChartData(prams).then((result) => {
-          if (result) {
-            _this.serises = [];
-            _this.xData = [];
-            _this.legendData = Object.keys(result[0]);
-            for (var i = 0; i < result.length; i++) {
-              let tempdata=result[i];
-              _this.xData.push(result[i].key);
-              for (var j = 0; j < _this.legendData.length; j++) {
-                if (!_this.serises[j] && _this.legendData[j] != "key") {
-                  _this.serises[j] = {};
-                  _this.serises[j].name = _this.legendData[j];
-                  _this.serises[j].type = 'bar';
-                  _this.serises[j].stack = 'count';
-                  _this.serises[j].data = [];
-                }
-                for (var key in tempdata) {
-                  if (_this.legendData[j] == key && _this.legendData[j] != "key") {
-                     _this.serises[j].data[i] = tempdata[key];
+        if(_this.type == 'post'){
+          let prams = _this.parameters.prams;
+          ChartService.getPileBarChartData(prams).then((result) => {
+            if (result) {
+              _this.serises = [];
+              _this.xData = [];
+              _this.legendData = Object.keys(result[0]);
+              for (var i = 0; i < result.length; i++) {
+                let tempdata=result[i];
+                _this.xData.push(result[i].key);
+                for (var j = 0; j < _this.legendData.length; j++) {
+                  if (!_this.serises[j] && _this.legendData[j] != "key") {
+                    _this.serises[j] = {};
+                    _this.serises[j].name = _this.legendData[j];
+                    _this.serises[j].type = 'bar';
+                    _this.serises[j].stack = 'count';
+                    _this.serises[j].data = [];
+                  }
+                  for (var key in tempdata) {
+                    if (_this.legendData[j] == key && _this.legendData[j] != "key") {
+                       _this.serises[j].data[i] = tempdata[key];
+                    }
                   }
                 }
               }
+              _this.myChart.setOption({
+                xAxis: {data: _this.xData},
+                legend: {data: _this.legendData},
+                series: _this.serises
+              })
             }
-            _this.myChart.setOption({
-              xAxis: {data: _this.xData},
-              legend: {data: _this.legendData},
-              series: _this.serises
-            })
-          }
-        })
+          })
+        } else {
+          ChartService.getPileBarDataByGet(_this.requestUrl).then(
+            result=>{
+              if (result) {
+              _this.serises = [];
+              _this.xData = [];
+              _this.legendData = Object.keys(result[0]);
+              for (var i = 0; i < result.length; i++) {
+                let tempdata=result[i];
+                _this.xData.push(result[i].key);
+                for (var j = 0; j < _this.legendData.length; j++) {
+                  if (!_this.serises[j] && _this.legendData[j] != "key") {
+                    _this.serises[j] = {};
+                    _this.serises[j].name = _this.legendData[j];
+                    _this.serises[j].type = 'bar';
+                    _this.serises[j].stack = 'count';
+                    _this.serises[j].data = [];
+                  }
+                  for (var key in tempdata) {
+                    if (_this.legendData[j] == key && _this.legendData[j] != "key") {
+                       _this.serises[j].data[i] = tempdata[key];
+                    }
+                  }
+                }
+              }
+              _this.myChart.setOption({
+                xAxis: {data: _this.xData},
+                legend: {data: _this.legendData},
+                series: _this.serises
+              })
+            }
+          })
+        }
+        
       },
 
       //定时刷新数据

@@ -29,18 +29,16 @@
             <simple-pie-chart v-bind="pieChart"></simple-pie-chart>
         </div>
         <div class="bottom">
-            <StackBar
-                ref="stackBar"
-                v-bind="stackBar"
-            ></StackBar>
+            <pile-bar-chart v-bind="pileBarChart" ref="pileBar"></pile-bar-chart>
         </div>
     </div>
 </template>
 
 <script>
 import SimplePieChart from '../../../components/Common/Chart/SimplePieChart'
-import StackBar from "../../../components/Common/Chart/StackChart"
-import ModuleTitle from "../../../components/VM2/ModuleTitle";
+import pileBarChart from "../../../components/Common/Chart/PileBarChart"
+import ModuleTitle from "../../../components/VM2/ModuleTitle"
+import { AlarmService } from '../../../services/alarmService'
 
 export default {
     data() {
@@ -71,32 +69,58 @@ export default {
                     }
                 }
             },
-            stackBar: {
-                id: "stackChart",
-                requestUrl: "stacChart",
-                titleName: "",
-                title: "22",
-                titleColor: "#030303",
-                intervalTime: 1000,
-                tunnelId: null,
-                timeCycle: null,
-                xData: [],
-                legendData: [
-                    "提示",
-                    "一般",
-                    "严重",
-                    "危急"
-                ]
-            },
+            pileBarChart: {
+                id: 'alarmReportBar',
+                requestUrl: "alarms/level-count–everymonth",
+                parameters: {option: {
+                    legend: {
+                        data: ["严重", "一般", "提示", "致命"],
+                        textStyle: {
+                            color: 'white'
+                        },
+                        orient: 'horizontal',
+                        left: 20
+                    },
+                    xAxis: {
+                        axisLabel: {
+                           color: 'white'
+                        }
+                    },
+                    yAxis: {
+                        axisLabel: {
+                            color: 'white'
+                        }
+                    }
+                }, prams: {}},
+                type: 'get'
+            }
         };
     },
     components: {
         SimplePieChart,
-        StackBar,
+        pileBarChart,
         ModuleTitle
     },
-    mounted() { },
-    methods: {}
+    mounted() {
+        this.init()
+    },
+    methods: {
+        init(){
+            let _this = this
+            AlarmService.getYearAndMonthAlarmCount().then(
+                result=>{
+                    result.forEach(item=>{
+                        if(item.key == 'year'){
+                            _this.yearTotal.number = item.value
+                            _this.yearTotal.isRise = item.isRise
+                        } else {
+                            _this.monthTotal.number = item.value
+                            _this.monthTotal.isRise = item.isRise
+                        }
+                    })
+                })
+        }
+    }
 };
 </script>
 
@@ -107,7 +131,7 @@ export default {
     top: 0;
     bottom: 0;
     left: 0;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
 .topLeft {
@@ -138,7 +162,7 @@ export default {
 .subTitle {
     font-size: 1.4vmin;
     color: white;
-    margin: 0.8vh 0.4vw;
+    margin: 1vh 1.4vw;
 }
 .number {
     font-size: 2vmin;
@@ -148,13 +172,13 @@ export default {
 .yearIcon {
     font-size: 3vmin;
     position: absolute;
-    top: 5vh;
-    right: 1.4vw;
+    top: 5.4vh;
+    right: 0;
 }
 .monthIcon {
     font-size: 3vmin;
     position: absolute;
-    top: 8.6vh;
-    right: 1.4vw;
+    top: 9.2vh;
+    right: 0;
 }
 </style>
