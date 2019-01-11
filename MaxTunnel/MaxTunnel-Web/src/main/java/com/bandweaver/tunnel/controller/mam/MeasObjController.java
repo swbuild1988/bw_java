@@ -47,6 +47,7 @@ import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.Constant;
 import com.github.pagehelper.PageInfo;
@@ -658,12 +659,12 @@ public class MeasObjController {
 		JSONObject rt3 = getMaxOrMinValueByObjType(dbList, measObjs,"min",ObjectType.OXYGEN);
 		
 		List<JSONObject> rtdata = new ArrayList<>();
-		rtdata.add(rt1);
-		rtdata.add(rt2);
-		rtdata.add(rt3);
-		
-		if(rt1 == null && rt2 == null && rt3 == null)
-			rtdata = Collections.emptyList();
+		if(rt1 != null)
+			rtdata.add(rt1);
+		if(rt2 != null)
+			rtdata.add(rt2);
+		if(rt3 != null)
+			rtdata.add(rt3);
     	
     	return CommonUtil.success(rtdata);
     }
