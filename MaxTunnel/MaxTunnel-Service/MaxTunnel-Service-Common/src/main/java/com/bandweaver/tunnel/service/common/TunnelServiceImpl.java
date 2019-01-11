@@ -18,6 +18,7 @@ import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.vo.TunnelVo;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.common.SectionMapper;
 import com.bandweaver.tunnel.dao.common.StoreMapper;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
@@ -118,6 +119,14 @@ public class TunnelServiceImpl implements TunnelService {
 
 	@Override
 	public void updateTunnelRunInfo(TunnelRun runInfo) {
+		if(StringTools.isNullOrEmpty(runInfo)) {
+			TunnelRun tr = new TunnelRun();
+    		tr.setId(1);
+    		tr.setRunDays(1);
+    		tr.setSafeDyas(1);
+    		runInfo = tr;
+    		addTunnelRun(tr);
+		}
 		runInfo.setRunDays(runInfo.getRunDays() + 1);
 		runInfo.setSafeDyas(runInfo.getSafeDyas() + 1);
 		tunnelRunMapper.updateByPrimaryKeySelective(runInfo);
