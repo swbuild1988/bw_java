@@ -93,4 +93,10 @@ public class MeasValueAIServiceImpl implements MeasValueAIService {
 		result.put("val", jsList);
 		return result;
 	}
+
+	@Override
+	public List<MeasValueAI> getListByTime(Date dayBegin) {
+		List<MeasValueAI> list = measValueAIMapper.getListByTime(dayBegin);
+		return list == null ? Collections.emptyList() : list;
+	}
 }
