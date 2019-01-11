@@ -346,10 +346,12 @@
   	select count(1) from T_MAM_ALARM where tunnel_id = #{tunnelId}
   </select>
   
-  <select id="getListFromNowYear" resultMap="BaseResultMap" >
+  <select id="getListFromYear" resultMap="BaseResultMap" >
   	select * from T_MAM_ALARM where alarm_date &gt; = #{beginDayOfYear}
   </select>
   
-  
+  <select id="getCountByTime" resultType="Int">
+  	select count(1) from T_MAM_ALARM where alarm_date &gt;= #{date}
+  </select>
   
 </mapper> 

@@ -59,7 +59,9 @@ public interface AlarmService {
 
 	int getCountByTunnel(Integer id);
 
-	List<Alarm> getListFromNowYear(Date beginDayOfYear);
+	List<Alarm> getListFromYear(Date beginDayOfYear);
+
+	int getCountByTime(Date date);
 
 
 }

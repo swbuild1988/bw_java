@@ -294,7 +294,7 @@ public class AlarmController {
 		List<JSONObject> rtData = new ArrayList<>();
 		//获取今年开始日期
 		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
-		List<Alarm> alarmList = alarmService.getListFromNowYear(beginDayOfYear);
+		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfYear);
 		
 		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(TimeEnum.MONTH);
 	    for (int i = 0; i < list.size(); i++) {
@@ -319,6 +319,57 @@ public class AlarmController {
         		 && x.getAlarmDate().getTime() <= endTime.getTime()).collect(Collectors.toList());
 		return ls.size();
 		
+	}
+	
+	
+	/**获取本年度,本月总告警数
+	 * @author shaosen
+	 * @date 2019年1月11日
+	 * @param   
+	 * @return {"msg":"请求成功","code":"200","data":[{"isRise":true,"value":10657,"key":"year"},{"isRise":true,"value":10657,"key":"month"}]}  
+	 */
+	@RequestMapping(value="alarm-total-count",method=RequestMethod.GET)
+	public JSONObject getAlarmTotalCount() {
+		//获取相关日期
+		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
+		Date beginDayOfMonth = DateUtil.getBeginDayOfMonth();
+		
+		//获取去年开始日期
+		Date frontDay = DateUtil.getFrontDay(beginDayOfYear, 1);
+		Date lastYearBeginTime = DateUtil.getBeginDayOfYear(frontDay);
+		
+		//获取上个月开始日期
+		Date frontDay2 = DateUtil.getFrontDay(beginDayOfMonth, 1);
+		Date lastMonthBeginTime = DateUtil.getBeginDayOfMonth(frontDay2);
+		
+		
+		List<Alarm> alarmList = alarmService.getListFromYear(lastYearBeginTime);
+		long lastYearCt = alarmList.stream().filter(x -> x.getAlarmDate().getTime() >= lastYearBeginTime.getTime() 
+				&& x.getAlarmDate().getTime() < beginDayOfYear.getTime()).count();
+		
+		long nowYearCt = alarmList.stream().filter(x -> x.getAlarmDate().getTime() >= beginDayOfYear.getTime()).count();
+		
+		long lastMonthCt = alarmList.stream().filter(x -> x.getAlarmDate().getTime() >= lastMonthBeginTime.getTime() 
+				&& x.getAlarmDate().getTime() < beginDayOfMonth.getTime()).count();
+		
+		long nowMonthCt = alarmList.stream().filter(x -> x.getAlarmDate().getTime() >= beginDayOfMonth.getTime()).count();
+		
+		
+		JSONObject yjs = new JSONObject();
+		yjs.put("key", "year");
+		yjs.put("value",  nowYearCt);
+		yjs.put("isRise", nowYearCt > lastYearCt);
+		
+		JSONObject mjs = new JSONObject();
+		mjs.put("key", "month");
+		mjs.put("value", nowMonthCt);
+		mjs.put("isRise", nowMonthCt > lastMonthCt);
+		
+		List<JSONObject> rtdata = new ArrayList<>();
+		rtdata.add(yjs);
+		rtdata.add(mjs);
+		
+		return CommonUtil.success(rtdata);
 	}
 
 }

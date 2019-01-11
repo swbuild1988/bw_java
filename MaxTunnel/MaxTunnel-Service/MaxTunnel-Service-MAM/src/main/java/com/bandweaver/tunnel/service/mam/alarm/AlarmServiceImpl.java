@@ -155,9 +155,15 @@ public class AlarmServiceImpl implements AlarmService {
 
 
 	@Override
-	public List<Alarm> getListFromNowYear(Date beginDayOfYear) {
-		List<Alarm> list = alarmMapper.getListFromNowYear(beginDayOfYear);
+	public List<Alarm> getListFromYear(Date beginDayOfYear) {
+		List<Alarm> list = alarmMapper.getListFromYear(beginDayOfYear);
 		return list == null ? Collections.emptyList() : list;
+	}
+
+
+	@Override
+	public int getCountByTime(Date date) {
+		return alarmMapper.getCountByTime(date);
 	}
 
 
