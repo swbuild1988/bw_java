@@ -1,15 +1,13 @@
 package com.bandweaver.tunnel.controller.mam;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.bandweaver.tunnel.common.biz.dto.AreaDto;
-import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
-import com.bandweaver.tunnel.common.biz.itf.AreaService;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
-import com.bandweaver.tunnel.common.biz.pojo.Area;
-import com.bandweaver.tunnel.common.biz.pojo.Store;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,23 +17,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
+import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
-import com.bandweaver.tunnel.common.biz.dto.StoreDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueAIService;
+import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueSIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjAIService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
@@ -47,9 +50,7 @@ import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
-import com.github.pagehelper.Constant;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -79,6 +80,8 @@ public class MeasObjController {
     private AreaService areaService;
     @Autowired
     private MeasValueAIService measValueAIService;
+    @Autowired
+    private MeasValueSIService measValueSIService;
 
 
     /**
@@ -753,6 +756,60 @@ public class MeasObjController {
     	
     	return rtdata;
     	
+	}
+	
+	
+	
+	/**获取今日监测对象触发次数及与昨日比是否增长
+	 * @author shaosen
+	 * @date 2019年1月11日
+	 * @param   
+	 * @return {"msg":"请求成功","code":"200","data":[{"unit":"次","name":"电子井盖触发","isRise":false,"value":0},{"unit":"次","name":"门禁触发","isRise":false,"value":0},{"unit":"次","name":"红外触发","isRise":false,"value":0}]}  
+	 */
+	@RequestMapping(value="meas-trigger-counts",method=RequestMethod.GET)
+	public JSONObject getMeasTriggerCounts(){
+		
+		Date today = DateUtil.getDayBegin();
+		Date yesterday = DateUtil.getFrontDay(DateUtil.getCurrentDate(), 1);
+    	List<MeasValueSI> dbList = measValueSIService.getListByTime(yesterday);
+    	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+    	
+    	JSONObject rt1 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ELECTRONIC_COVERS);
+    	JSONObject rt2 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ENTRANCE_GUARD);
+    	JSONObject rt3 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.INFRARED);
+    	
+    	List<JSONObject> rtdata = new ArrayList<>();
+    	rtdata.add(rt1);
+    	rtdata.add(rt2);
+    	rtdata.add(rt3);
+		return CommonUtil.success(rtdata);
+	}
+
+
+	private JSONObject getTriggerCountByObjType(Date today, List<MeasValueSI> dbList, List<MeasObj> measObjs, ObjectType objType) {
+		//获取监测对象
+    	List<MeasObj> filterList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+    	
+    	//获取监测对象id
+    	List<Integer> ids = filterList.stream().map(x -> x.getId()).collect(Collectors.toList());
+    	
+    	//获取今日数据
+    	long todayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId()) 
+    			&& x.getTime().getTime() >= today.getTime()
+    			&& x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
+    	
+    	//获取昨日数据
+    	long yesterdayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId()) 
+    			&& x.getTime().getTime() < today.getTime()
+    			&& x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
+    	
+    	JSONObject json = new JSONObject();
+    	json.put("name", objType.getName() + "触发");
+    	json.put("value", todayCt);
+    	json.put("unit", "次");
+    	json.put("isRise", todayCt > yesterdayCt );
+    	
+    	return json;
 	}
 	
 	
