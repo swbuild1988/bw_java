@@ -414,7 +414,7 @@ var TunnelService = {
                 name: "规划中",
                 value: 1,
                 unit: "条"
-            },
+            }
             // {
             //     name: "防火分区共",
             //     value: 49,
@@ -448,17 +448,17 @@ var TunnelService = {
                 name: "燃气管线",
                 value: 12,
                 unit: "km"
-            },
-        // {
-        //     name: "供暖管线",
-        //     value: 11,
-        //     unit: "km"
-        // },
-        // {
-        //     name: "水力管线",
-        //     value: 15.3,
-        //     unit: "km"
-        // }
+            }
+            // {
+            //     name: "供暖管线",
+            //     value: 11,
+            //     unit: "km"
+            // },
+            // {
+            //     name: "水力管线",
+            //     value: 15.3,
+            //     unit: "km"
+            // }
         ];
         return new Promise((resolve, reject) => {
             resolve(res);

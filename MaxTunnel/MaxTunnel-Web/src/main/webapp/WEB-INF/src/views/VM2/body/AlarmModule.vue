@@ -29,7 +29,10 @@
             <simple-pie-chart v-bind="pieChart"></simple-pie-chart>
         </div>
         <div class="bottom">
-            <pile-bar-chart v-bind="pileBarChart" ref="pileBar"></pile-bar-chart>
+            <pile-bar-chart
+                v-bind="pileBarChart"
+                ref="pileBar"
+            ></pile-bar-chart>
         </div>
     </div>
 </template>
@@ -72,26 +75,26 @@ export default {
             pileBarChart: {
                 id: 'alarmReportBar',
                 requestUrl: "alarms/level-count–everymonth",
-                parameters: {option: {
-                    legend: {
-                        data: ["严重", "一般", "提示", "致命"],
-                        textStyle: {
-                            color: 'white'
+                parameters: {                    option: {
+                        legend: {
+                            data: ["严重", "一般", "提示", "致命"],
+                            textStyle: {
+                                color: 'white'
+                            },
+                            orient: 'horizontal',
+                            left: 20
                         },
-                        orient: 'horizontal',
-                        left: 20
-                    },
-                    xAxis: {
-                        axisLabel: {
-                           color: 'white'
+                        xAxis: {
+                            axisLabel: {
+                                color: 'white'
+                            }
+                        },
+                        yAxis: {
+                            axisLabel: {
+                                color: 'white'
+                            }
                         }
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            color: 'white'
-                        }
-                    }
-                }, prams: {}},
+                    }, prams: {}                },
                 type: 'get'
             }
         };
@@ -105,12 +108,12 @@ export default {
         this.init()
     },
     methods: {
-        init(){
+        init() {
             let _this = this
             AlarmService.getYearAndMonthAlarmCount().then(
-                result=>{
-                    result.forEach(item=>{
-                        if(item.key == 'year'){
+                result => {
+                    result.forEach(item => {
+                        if (item.key == 'year') {
                             _this.yearTotal.number = item.value
                             _this.yearTotal.isRise = item.isRise
                         } else {

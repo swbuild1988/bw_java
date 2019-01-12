@@ -10,8 +10,15 @@
                 :key="index"
             >
                 <p class="name">{{ item.name }}</p>
-                <p class="number">{{ item.value + item.unit }}</p>
-                <p class="location">{{ item.location }}</p>
+                <<<<<<<
+                    HEAD
+                    <p
+                    class="number"
+                >{{ item.value + item.unit }}</p>
+                    =======
+                    <p class="number">{{ item.number + item.unit }}</p>
+                    >>>>>>> origin/fanxinling
+                    <p class="location">{{ item.location }}</p>
             </div>
         </div>
         <div class="right">
@@ -86,24 +93,24 @@ export default {
     components: {
         ModuleTitle
     },
-    mounted() { 
+    mounted() {
         this.init()
     },
     methods: {
-        init(){
+        init() {
             let _this = this
             MeasObjServer.getToDayExtreDatas().then(
-                result=>{
+                result => {
                     _this.extreData = result
                 },
-                error=>{
+                error => {
                     _this.Log.info(error)
                 })
             MeasObjServer.getMeasTriggerCounts().then(
-                result=>{
+                result => {
                     _this.countData = result
                 },
-                error=>{
+                error => {
                     _this.Log.info(error)
                 })
         }
