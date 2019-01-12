@@ -1,7 +1,7 @@
 <template>
     <div class="Main">
         <div class="camera" id="camera">
-            <videoloop :videolist="loopScene"></videoloop>
+            <!-- <videoloop :videolist="loopScene"></videoloop> -->
         </div>
     </div>
 </template>
