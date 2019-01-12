@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.oam.space;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,11 @@ public class CableSectionServiceImpl implements CableSectionService{
 	@Override
 	public int getCountBySectionId(Integer id) {
 		return cableSectionMapper.getCountBySectionId(id);
+	}
+
+	@Override
+	public List<String> getSetBysectionIds(List<Integer> sectionIdList) {
+		List<String> list = cableSectionMapper.getSetBysectionIds(sectionIdList);
+		return list == null ? Collections.emptyList() : list;
 	}
 }

@@ -39,5 +39,11 @@ public interface AlarmMapper {
 
 	List<AlarmDto> getAllNonCleanedAlarm();
 
+	int getCountByTunnel(Integer tunnelId);
+
+	List<Alarm> getListFromYear(Date beginDayOfYear);
+
+	int getCountByTime(Date date);
+
 	
 }

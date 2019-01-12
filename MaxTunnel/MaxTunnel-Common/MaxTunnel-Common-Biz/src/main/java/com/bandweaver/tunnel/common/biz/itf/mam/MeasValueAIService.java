@@ -21,4 +21,6 @@ public interface MeasValueAIService {
 	List<MeasValueAI> getListByMoIdsAndTime(List<Integer> list,Date startTime,Date endTime);
 
 	JSONObject getEchartsData(List<Integer> ids, Date startTime, Date endTime);
+
+	List<MeasValueAI> getListByTime(Date dayBegin);
 }

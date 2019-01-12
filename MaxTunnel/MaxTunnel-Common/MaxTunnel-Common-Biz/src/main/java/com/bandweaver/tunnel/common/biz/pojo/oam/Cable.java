@@ -19,7 +19,7 @@ public class Cable implements Serializable {
 
     private String cableName;
 
-    private Integer cableLength;
+    private Double cableLength;
 
     private Integer cableStatus;
 
@@ -45,11 +45,11 @@ public class Cable implements Serializable {
         this.cableName = cableName == null ? null : cableName.trim();
     }
 
-    public Integer getCableLength() {
+    public Double getCableLength() {
         return cableLength;
     }
 
-    public void setCableLength(Integer cableLength) {
+    public void setCableLength(Double cableLength) {
         this.cableLength = cableLength;
     }
 

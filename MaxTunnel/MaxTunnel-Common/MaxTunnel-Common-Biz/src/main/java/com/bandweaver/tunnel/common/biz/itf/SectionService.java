@@ -112,7 +112,9 @@ public interface SectionService {
 	SectionDto getSectionDtoByGPS(double longitude, double latitude, double height);
 
 
-	List<Section> getSectionListByParentId(Integer sectionId); 
+	List<Section> getSectionListByParentId(Integer sectionId);
+
+	List<Integer> getSectionIdsByStoreIds(List<Integer> storeIdList); 
 
 
 }

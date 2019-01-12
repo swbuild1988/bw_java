@@ -40,7 +40,7 @@ public class ContractVo extends BaseVo implements Serializable {
 	
 	private String cableName;// 管线名称
 
-	private Integer cableLength;// 管线长度
+	private Double cableLength;// 管线长度
 
 	private String cableLocation;// 管线位置
 	
@@ -120,11 +120,11 @@ public class ContractVo extends BaseVo implements Serializable {
 		this.cableName = cableName;
 	}
 
-	public Integer getCableLength() {
+	public Double getCableLength() {
 		return cableLength;
 	}
 
-	public void setCableLength(Integer cableLength) {
+	public void setCableLength(Double cableLength) {
 		this.cableLength = cableLength;
 	}
 

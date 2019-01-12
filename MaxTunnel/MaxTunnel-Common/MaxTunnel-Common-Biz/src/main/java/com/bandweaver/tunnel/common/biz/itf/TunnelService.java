@@ -6,6 +6,7 @@ import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.vo.TunnelVo;
 import com.github.pagehelper.PageInfo;
 
@@ -75,4 +76,10 @@ public interface TunnelService {
 	Tunnel getByName(String name);
 
 	Tunnel getBySN(String sn);
+
+	TunnelRun getTunnelRunInfo();
+
+	void updateTunnelRunInfo(TunnelRun runInfo);
+
+	void addTunnelRun(TunnelRun tr);
 }

@@ -129,4 +129,8 @@
   	</where>
   	order by time asc
   </select>
+  
+  <select id="getListByTime" resultMap="measValueAIMap">
+  	select * from T_MAM_MEASVALUE_AI where time &gt;= #{date}
+  </select>
 </mapper>

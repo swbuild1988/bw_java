@@ -148,6 +148,25 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 
+	@Override
+	public int getCountByTunnel(Integer id) {
+		return alarmMapper.getCountByTunnel(id);
+	}
+
+
+	@Override
+	public List<Alarm> getListFromYear(Date beginDayOfYear) {
+		List<Alarm> list = alarmMapper.getListFromYear(beginDayOfYear);
+		return list == null ? Collections.emptyList() : list;
+	}
+
+
+	@Override
+	public int getCountByTime(Date date) {
+		return alarmMapper.getCountByTime(date);
+	}
+
+
 
 }
 

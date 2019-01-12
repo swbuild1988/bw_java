@@ -43,4 +43,6 @@ public interface CableMapper {
 	CableDto getCableDetByContractId(String id);
 
 	void deleteByContractId(String id);
+
+	List<Cable> getListByIds(List<String> list);
 }

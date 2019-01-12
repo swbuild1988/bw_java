@@ -680,13 +680,7 @@ public class DateUtil {
 			list.add(map);
 			// 继续找上月开始时间和结束时间
 			getStartTimeAndEndTimeByMonth(startDay, list);
-		} else {
-			// 获取本年第一月开始日期和结束日期
-			Map<String, Date> lastMap = new HashMap<>();
-			lastMap.put("startDay", DateUtil.getBeginDayOfYear());
-			lastMap.put("endDay", date);
-			list.add(lastMap);
-		}
+		} 
 		return list;
 	}
 	

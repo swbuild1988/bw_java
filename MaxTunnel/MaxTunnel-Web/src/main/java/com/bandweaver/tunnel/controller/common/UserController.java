@@ -91,30 +91,6 @@ public class UserController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
-	
-
-	/**通过id获取用户账号信息
-	 * @param id
-	 * @return JSONObject
-	 * @author shaosen
-	 * @date 2018年6月20日
-	 */
-	@RequestMapping(value = "users/{id}", method = RequestMethod.GET)
-	public JSONObject getById(@PathVariable("id") Integer id) {
-		UserDTO user = userService.getUser(id);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, user);
-	}
-	
-	
-	/**
-	 * 批量删除
-	 */
-	@RequestMapping(value = "users/batch/{ids}",method = RequestMethod.DELETE)
-	public JSONObject deleteBatch(@PathVariable String ids) {
-		List<Integer> list = CommonUtil.convertStringToList(ids);
-		userService.deleteBatch(list);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}
 
 	/**
 	 * 获取超级管理员信息

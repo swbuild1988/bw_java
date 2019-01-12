@@ -94,4 +94,12 @@
 	<delete id="deleteByCableId">
 		delete from T_OAM_CABLE_SECTION where cable_id = #{id}
 	</delete>
+	
+	
+	<select id="getSetBysectionIds" resultType="String">
+		select distinct(cable_id) from T_OAM_CABLE_SECTION where section_id in 
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

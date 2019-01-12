@@ -1,21 +1,21 @@
 --管廊数据
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (1, '古城大街', '02', 5000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:50', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (1, '古城大街', 5000, '02', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:50', 'dd-mm-yyyy hh24:mi:ss'), 1);
 
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (2, '实验路',  '03',1000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (2, '实验路', 1000, '03', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (3, '经三路',  '04',1000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (3, '经三路', 1000, '04', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (4, '经二路',  '05',1000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (4, '经二路', 1000, '05', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (5, '纬三路',  '06',5000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (5, '纬三路', 5000, '06', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
-insert into T_COMMON_TUNNEL (ID, NAME, sn, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, maxview_config_id,CRT_TIME)
-values (6, '监控中心',  '01', 5000, 1, 5, 1, null, 1,to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'));
+insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
+values (6, '监控中心', 500, '01', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 1);
 
 commit;
 
@@ -1128,4 +1128,8 @@ values (1002, 'job10', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.Tas
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
 values (1003, 'job11', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'sendTestAlarm', '0/30 * * * * ?', '模拟maxview发送告警');
+
+insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
+values (1004, 'job12', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'runDaysAutoAdded', '1 0 0 * * ?', '管廊运行时间定时自增');
+
 commit;
