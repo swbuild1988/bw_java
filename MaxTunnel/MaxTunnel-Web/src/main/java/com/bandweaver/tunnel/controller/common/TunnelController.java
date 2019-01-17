@@ -79,6 +79,8 @@ public class TunnelController extends BaseController<Tunnel> {
      * @param constructId      建筑单位id（公司表）
      * @param operationId      运营单位（公司表）
      * @param camera           相机视角（字符串）
+     * @param maxviewConfigId  二级子系统id
+     * @param status           管廊状态
      * @return {"msg":"请求成功","code":"200","data":{}}
      * @author shaosen
      * @date 2018年7月25日

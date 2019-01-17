@@ -286,23 +286,24 @@ public class AlarmController {
 	 * @author shaosen
 	 * @date 2019年1月10日
 	 * @param   
-	 * @return {"msg":"请求成功","code":"200","data":[{"一般告警":2661,"提示告警":2609,"严重告警":2679,"key":"1月","致命告警":2708}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.2","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.3","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.4","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.5","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.6","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.7","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.8","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.9","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.10","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.11","致命告警":0},{"一般告警":483,"提示告警":521,"严重告警":503,"key":"2018.12","致命告警":532},{"一般告警":2661,"提示告警":2609,"严重告警":2679,"key":"2019.1","致命告警":2708}]}  
 	 */
 	@RequestMapping(value="alarms/level-count–everymonth",method=RequestMethod.GET)
 	public JSONObject getLevelCountEverymonth() {
 		
 		List<JSONObject> rtData = new ArrayList<>();
-		//获取今年开始日期
+		//获取去年开始日期
 		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
-		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfYear);
+		Date beginDayOfLastYear = DateUtil.getBeginDayOfYear(DateUtil.getFrontDay(beginDayOfYear, 1));
+		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfLastYear);
 		
-		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(TimeEnum.MONTH);
+		List<Map<String, Date>> list = DateUtil.getBefore12Months();
 	    for (int i = 0; i < list.size(); i++) {
 	    	 Date startTime = list.get(list.size() - 1 - i).get("startDay");
              Date endTime = list.get(list.size() - 1 - i).get("endDay");
              
              JSONObject json = new JSONObject();
-             json.put("key", DateUtil.getNowMonth(startTime) + "月");
+             json.put("key", DateUtil.getNowYear(startTime) + "." +DateUtil.getNowMonth(startTime));
              json.put(AlarmLevelEnum.DANGEROUS.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.DANGEROUS,startTime,endTime));
              json.put(AlarmLevelEnum.NORMAL.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.NORMAL,startTime,endTime));
              json.put(AlarmLevelEnum.PROMPT.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.PROMPT,startTime,endTime));

@@ -266,9 +266,16 @@ public class DateUtil {
      */
     public static Integer getNowYear() {
         Date date = new Date();
-        GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
-        gc.setTime(date);
-        return Integer.valueOf(gc.get(1));
+        return getNowYear(date);
+    }
+    /**
+     * 获取今年是哪一年
+     * @return
+     */
+    public static Integer getNowYear(Date date) {
+    	GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
+    	gc.setTime(date);
+    	return Integer.valueOf(gc.get(1));
     }
 
     /**
@@ -705,5 +712,41 @@ public class DateUtil {
 			list.add(lastMap);
 		}
 		return list;
+	}
+	
+	
+	/**获取当月以前共12个月的日期集合
+	 * @author shaosen
+	 * @date 2019年1月17日
+	 * @param   
+	 * @return List<Map<String,Date>>  
+	 */
+	public static List<Map<String, Date>> getBefore12Months(){
+		
+		List<Map<String, Date>> list = new ArrayList<>();
+	
+		Date startDay = DateUtil.getBeginDayOfMonth();
+		Map<String, Date> map = new HashMap<>();
+		map.put("startDay", startDay);
+		map.put("endDay", new Date());
+		list.add(map);
+		
+		for (int i = 1; i < 12; i++) {
+			startDay = DateUtil.getBeginDayOfMonth(DateUtil.getFrontDay(startDay, 1));
+			Map<String, Date> m = new HashMap<>();
+			m.put("startDay", startDay);
+			m.put("endDay", DateUtil.getEndDayOfMonth(startDay));
+			list.add(m);
+		}
+		return list;
+	}
+	
+	public static void main(String[] args) {
+		List<Map<String, Date>> list = getBefore12Months();
+		for (Map<String, Date> map : list) {
+			System.out.println(map.get("startDay"));
+			System.out.println(map.get("endDay"));
+			System.out.println("--------------------");
+		}
 	}
 }
