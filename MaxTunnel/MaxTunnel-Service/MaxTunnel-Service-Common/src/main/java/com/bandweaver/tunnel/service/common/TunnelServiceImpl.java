@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.service.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,10 +16,13 @@ import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.vo.TunnelVo;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.common.SectionMapper;
 import com.bandweaver.tunnel.dao.common.StoreMapper;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
+import com.bandweaver.tunnel.dao.common.TunnelRunMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -30,11 +34,14 @@ public class TunnelServiceImpl implements TunnelService {
     private StoreService storeService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private TunnelRunMapper tunnelRunMapper;
     
 
     @Override
     public List<TunnelSimpleDto> getList() {
-    	return tunnelMapper.getList();
+    	List<TunnelSimpleDto> list = tunnelMapper.getList();
+    	return list == null ? Collections.emptyList() : list;
     }
 
 	@Override
@@ -103,5 +110,30 @@ public class TunnelServiceImpl implements TunnelService {
 	@Override
 	public Tunnel getBySN(String sn) {
 		return tunnelMapper.getBySN(sn);
+	}
+
+	@Override
+	public TunnelRun getTunnelRunInfo() {
+		return tunnelRunMapper.getRunInfo();
+	}
+
+	@Override
+	public void updateTunnelRunInfo(TunnelRun runInfo) {
+		if(StringTools.isNullOrEmpty(runInfo)) {
+			TunnelRun tr = new TunnelRun();
+    		tr.setId(1);
+    		tr.setRunDays(1);
+    		tr.setSafeDyas(1);
+    		runInfo = tr;
+    		addTunnelRun(tr);
+		}
+		runInfo.setRunDays(runInfo.getRunDays() + 1);
+		runInfo.setSafeDyas(runInfo.getSafeDyas() + 1);
+		tunnelRunMapper.updateByPrimaryKeySelective(runInfo);
+	}
+
+	@Override
+	public void addTunnelRun(TunnelRun tr) {
+		tunnelRunMapper.insertSelective(tr);
 	}
 }

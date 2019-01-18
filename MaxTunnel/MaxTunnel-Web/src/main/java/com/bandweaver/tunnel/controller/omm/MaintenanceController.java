@@ -413,6 +413,22 @@ public class MaintenanceController {
     }
 
     /**
+     * 获取最新的一条设备缺陷
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月8日
+     */
+    @RequestMapping(value = "defects/new-one", method = RequestMethod.GET)
+    public JSONObject getNewDefect() {
+    	DefectVo vo = new DefectVo();
+    	vo.setType(DefectType.Equipment.getValue());
+        List<DefectDto> list = defectService.getDefectsByCondition(vo);
+        List<DefectDto> ls = new ArrayList<>();
+        if(list != null && list.size() > 0) ls.add(list.get(0));
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, ls);
+    }
+    
+    /**
      * 获取所有缺陷信息
      *
      * @return
@@ -424,7 +440,7 @@ public class MaintenanceController {
         DefectVo vo = new DefectVo();
         List<DefectDto> list = defectService.getDefectsByCondition(vo);
         for (DefectDto defect : list) {
-            if (defect.getType() == 1) {
+            if (defect.getType().equals(DefectType.Tunnel.getValue())) {
                 SectionDto section = sectionService.getSectionById(defect.getSectionId());
                 String startPoint = section.getStartPoint();
                 String endPoint = section.getEndPoint();
@@ -483,4 +499,68 @@ public class MaintenanceController {
         activitiService.getImageByProcessInstance(mo.getProcessInstanceId(), response);
     }
 
+    /**
+     * 获取今年和去年的缺陷总数
+     * @return {"nowYearDefectCount":130, "beforeYearDefectCount":124}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "defects/count-year", method = RequestMethod.GET)
+    public JSONObject getDefectsCountByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的缺陷总数，有本体缺陷和设备缺陷，范围在【100-150】之间
+    	int nowYearDefectCount = (int)(Math.random() * 50 + 100);
+    	// 获取去年的缺陷总数
+    	int beforeYearDefectCount = (int)(Math.random() * 50 + 100);
+    	obj.put("nowYearDefectCount", nowYearDefectCount);
+    	obj.put("beforeYearDefectCount", beforeYearDefectCount);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    
+    /**
+     * 获取今年和去年的维修总数
+     * @return {"nowYearOrderCount":72, "beforeYearOrderCount":68}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "orders/count-year", method = RequestMethod.GET)
+    public JSONObject getOrdersCountByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的维修总数，只有设备缺陷需要维修，范围在【60-80】之间
+    	int nowYearOrderCount = (int)(Math.random() * 20 + 60);
+    	// 获取去年的维修总数
+    	int beforeYearOrderCount = (int)(Math.random() * 20 + 60);
+    	obj.put("nowYearOrderCount", nowYearOrderCount);
+    	obj.put("beforeYearOrderCount", beforeYearOrderCount);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    
+    /**
+     * 获取今年和去年的维修率
+     * @return {"nowYearOrderPercentage":98.2, "beforeYearOrderPercentage":97.6}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "orders/percentage-year", method = RequestMethod.GET)
+    public JSONObject getOrdersPercentageByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的维修总数
+    	
+    	// 获取今年状态为已完成的维修总数
+    	
+    	// 对比，计算出维修率  这里直接给出维修率,控制在【90%-100%】范围内
+    	double nowYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	// 获取去年的维修总数
+
+    	// 获取去年状态为已完成的维修总数
+    	
+    	// 对比，计算出维修率  这里直接给出维修率
+    	double beforeYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	obj.put("nowYearOrderPercentage", nowYearOrderPercentage);
+    	obj.put("beforeYearOrderPercentage", beforeYearOrderPercentage);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
 }

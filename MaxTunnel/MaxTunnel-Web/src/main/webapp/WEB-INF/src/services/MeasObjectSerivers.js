@@ -327,9 +327,9 @@ var MeasObjServer = {
     },
 
     //修改设备状态
-    changeEquimentStatus(params){
+    changeEquimentStatus(params) {
         return new Promise((resolve, reject) => {
-            axios.get('sub-sys/action/obj/'+params.id+'/inputval/'+params.status)
+            axios.get('sub-sys/action/obj/' + params.id + '/inputval/' + params.status)
                 .then(res => {
                     let {
                         code,
@@ -347,6 +347,89 @@ var MeasObjServer = {
                 })
         })
     },
+    //获取今日温度，湿度，含氧量最值
+    getToDayExtreDatas() {
+        return new Promise((resolve, reject) => {
+            // axios.get('extreme-datas')
+            //     .then(res => {
+            //         let {
+            //             code,
+            //             data,
+            //             msg
+            //         } = res.data
+            //         if (code == 200) {
+            //             resolve(data)
+            //         } else {
+            //             reject(msg + ',地址:extreme-datas')
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + '  ' + error.response.data)
+            //     })
+            let data =
+                [{
+                    name: "最高温度",
+                    value: 22,
+                    unit: "℃",
+                    location: "古城大街3区污水仓"
+
+                }, {
+                    name: "最高湿度",
+                    value: 21,
+                    unit: "ppm",
+                    location: "实验路2区综合仓"
+                }, {
+                    name: "最低含氧量",
+                    value: 21,
+                    unit: "%",
+                    location: "纬三路1区燃气仓"
+                }, {
+                    name: "最高含甲烷量",
+                    value: 3,
+                    unit: "%",
+                    location: "古城大街22区污水仓"
+                }]
+            resolve(data)
+        })
+    },
+    //获取今日监测对象触发次数及与昨日比是否增长
+    getMeasTriggerCounts() {
+        return new Promise((resolve, reject) => {
+            axios.get('meas-trigger-counts')
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:meas-trigger-counts')
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
+            // let data = [{
+            //     name: "电子井盖打开",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: false
+            // }, {
+            //     name: "门禁触发",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: false
+            // }, {
+            //     name: "红外探测器触发",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: true
+            // }]
+            // resolve(data)
+        })
+    }
 }
 
 export {

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Stomp from "stompjs";
 import { infromationManagDetails } from "../components/Common/3D/infromationManagChart";
+import { changStrLength } from "./commonFun";
 import createProxy from './createProxy'
 
 const MQServerAddress = require('../../static/serverconfig').MQServerAddress;
@@ -45,15 +46,26 @@ class InformationManagement {
         newInformations.forEach((details)=>{
             this.getInformation(informationType).forEach((information,index,messageType)=>{
 
-                if(typeof information=='object' &&　typeof details=='object'){
-                    information[id] == details[id] &&　messageType.splice(index,1);
+                if( typeof information === 'object'
+                    && typeof details === 'object'
+                    && information[id] === details[id]){
+
+                    if( informationType === "personnel" ) {
+
+                        let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == information[id] && entitie.messageType == 'personnel' ) );
+                        Vue.prototype.$viewer.entities.remove( entity )
+
+                    }
+                     messageType.splice(index,1);
                 }
             })
-
         });
+        console.log(informationType,this.getInformation(informationType))
         return this;
     }
     searchInformation(entity,modelProp){
+
+        if(entity._messageType === undefined) return
 
         if(['videos'].indexOf(entity._messageType) !== -1){ //当为视屏实体时，隐藏弹框
             modelProp.show.state = false;
@@ -150,7 +162,7 @@ class alarmManage{
     };
     searchEntity(newEntity){
         let timer = setInterval(()=>{
-            let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == newEntity.objectId && entitie.messageType == 'alarm' ) );
+            let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == changStrLength(newEntity.objectId,10) && entitie.messageType == 'alarm' ) );
 
             if( global.Cesium.defined( entity ) ){
                 clearInterval( timer );

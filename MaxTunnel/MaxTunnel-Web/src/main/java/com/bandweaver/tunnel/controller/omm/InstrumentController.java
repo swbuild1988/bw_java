@@ -180,36 +180,37 @@ public class InstrumentController {
 	 */
 	@RequestMapping(value = "instruments/status/types", method = RequestMethod.GET)
 	public JSONObject getStatusCountGroupByTypeId() {
-		InstrumentVo vo = new InstrumentVo();
-		// 在库仪表工具
-		vo.setStatus(true);
-		List<CommonDto> inList = instrumentService.getCountGroupByTypeId(vo);
-		// 出库仪表工具
-		vo.setStatus(false);
-		List<CommonDto> outList = instrumentService.getCountGroupByTypeId(vo);
+		
 		List<EquipmentType> typeList = equipmentTypeService.getAllEquipmentTypeList();
 		List<JSONObject> list = new ArrayList<>();
 		for(EquipmentType type : typeList) {
-			JSONObject typeObj = new JSONObject();
-			typeObj.put("key", type.getName());
-			List<JSONObject> typeVal = new ArrayList<>();
-			for(CommonDto inDto : inList) {
-				if(!type.getName().equals(inDto.getName())) continue;
-				JSONObject inObj = new JSONObject();
-				inObj.put("key", "在库");
-				inObj.put("val", inDto.getCount());
-				typeVal.add(inObj);
-				for(CommonDto outDto : outList) {
-					if(!type.getName().equals(outDto.getName())) continue;
-					JSONObject outObj = new JSONObject();
-					outObj.put("key", "出库");
-					outObj.put("val", outDto.getCount());
-					typeVal.add(outObj);
-				}
-			}
-			typeObj.put("val", typeVal);
-			list.add(typeObj);
+			InstrumentVo vo = new InstrumentVo();
+			vo.setTypeId(type.getId());
+			// 在库仪表工具
+			vo.setStatus(true);
+			int inCount = instrumentService.getCountByCondition(vo);
+			// 出库仪表工具
+			vo.setStatus(false);
+			int outCount = instrumentService.getCountByCondition(vo);
+			
+			JSONObject obj = new JSONObject();
+			obj.put("key", type.getName());
+			// 添加在库和出库
+			List<JSONObject> listType = new ArrayList<>();
+			JSONObject objIn = new JSONObject();
+			objIn.put("key", "在库");
+			objIn.put("val", inCount);
+			listType.add(objIn);
+			JSONObject objOut = new JSONObject();
+			objOut.put("key", "出库");
+			objOut.put("val", outCount);
+			listType.add(objOut);
+			obj.put("val", listType);
+			
+			list.add(obj);
+			
 		}
+
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 	
@@ -221,41 +222,40 @@ public class InstrumentController {
 	 */
 	@RequestMapping(value = "instruments/usestatus/types", method = RequestMethod.GET)
 	public JSONObject getUseStatusCountGroupByTypeId() {
-		InstrumentVo vo = new InstrumentVo();
-		// 正常仪表工具
-		vo.setUseStatus(EquipmentStatusEnum.NORMAL.getValue());
-		List<CommonDto> inList = instrumentService.getCountGroupByTypeId(vo);
-		// 损坏仪表工具
-		vo.setUseStatus(EquipmentStatusEnum.BROKEN.getValue());
-		List<CommonDto> outList = instrumentService.getCountGroupByTypeId(vo);
+		
 		List<EquipmentType> typeList = equipmentTypeService.getAllEquipmentTypeList();
 		List<JSONObject> list = new ArrayList<>();
 		for(EquipmentType type : typeList) {
-			JSONObject typeObj = new JSONObject();
-			typeObj.put("key", type.getName());
-			List<JSONObject> typeVal = new ArrayList<>();
-			for(CommonDto inDto : inList) {
-				if(!type.getName().equals(inDto.getName())) continue;
-				JSONObject inObj = new JSONObject();
-				inObj.put("key", "正常");
-				inObj.put("val", inDto.getCount());
-				typeVal.add(inObj);
-				for(CommonDto outDto : outList) {
-					if(!type.getName().equals(outDto.getName())) continue;
-					JSONObject outObj = new JSONObject();
-					outObj.put("key", "损坏");
-					outObj.put("val", outDto.getCount());
-					typeVal.add(outObj);
-				}
-			}
-			typeObj.put("val", typeVal);
-			list.add(typeObj);
+			
+			InstrumentVo vo = new InstrumentVo();
+			vo.setTypeId(type.getId());
+			// 正常仪表工具
+			vo.setUseStatus(EquipmentStatusEnum.NORMAL.getValue());
+			int inCount = instrumentService.getCountByCondition(vo);
+			// 损坏仪表工具
+			vo.setUseStatus(EquipmentStatusEnum.BROKEN.getValue());
+			int outCount = instrumentService.getCountByCondition(vo);
+			
+			JSONObject obj = new JSONObject();
+			obj.put("key", type.getName());
+			List<JSONObject> listType = new ArrayList<>();
+			JSONObject objIn = new JSONObject();
+			objIn.put("key", "正常");
+			objIn.put("val", inCount);
+			listType.add(objIn);
+			JSONObject objOut = new JSONObject();
+			objOut.put("key", "损坏");
+			objOut.put("val", outCount);
+			listType.add(objOut);
+			obj.put("val", listType);
+			
+			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 	
 	/**
-	 * 仪表借出记录
+	 * 添加仪表借出记录
 	 * @param ids 仪表id "1,2,3"
 	 * @param staffId 借用人id
 	 * @param borrowTime 借出时间
@@ -282,7 +282,7 @@ public class InstrumentController {
 	}
 	
 	/**
-	 * 仪表归还记录
+	 * 添加仪表归还记录
 	 * @param ids 借出id "3,4,5"
 	 * @param returnId 归还人
 	 * @param returnTime 归还时间

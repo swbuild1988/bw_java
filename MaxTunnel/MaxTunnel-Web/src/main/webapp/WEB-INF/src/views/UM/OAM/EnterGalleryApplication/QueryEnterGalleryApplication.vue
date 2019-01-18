@@ -504,19 +504,13 @@ export default {
 };
 </script>
 <style scoped>
-.allDiv{
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 60px;
-}
-.conditions {
-    height: 60px;
-    line-height: 60px;
-    background: #ffffff;
-    padding-left: 10px;
-}
-.list{
-  background: #ffffff;
-  margin-top: 10px;
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
 }
 </style>

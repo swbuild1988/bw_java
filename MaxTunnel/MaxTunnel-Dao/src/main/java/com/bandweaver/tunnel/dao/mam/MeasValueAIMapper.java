@@ -37,4 +37,6 @@ public interface MeasValueAIMapper {
 	List<MeasValueAI> getListByMoIdsAndTime(@Param("list")List<Integer> list, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
 
 	List<Date> getX(@Param("startTime")Date startTime,@Param("endTime") Date endTime);
+
+	List<MeasValueAI> getListByTime(Date date);
 }

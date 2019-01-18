@@ -80,9 +80,8 @@
                             dayobject.day.getFullYear()==new Date(item.taskTime).getFullYear() && 
                             dayobject.day.getMonth()==new Date(item.taskTime).getMonth()" 
                             @click="show(item.id)" >
-                            <!-- <span class="dot">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
                             <div class="explanationShow">{{item.inspectManName}}</div>
-                            <div class="explanationShow">{{item.processStatus}}</div>
+                            <div class="explanationShow" :title="item.processStatus">{{item.processStatus}}</div>
                         </div>
                     </span>
                 </div>
@@ -121,9 +120,7 @@ export default {
     },
     created: function() { //在vue初始化时调用
         this.initData(null);
-    },
-    mounted(){
-        // this.showMonth()
+        this.showMonth()
     },
     methods: {
         initData: function(cur) {
@@ -135,7 +132,7 @@ export default {
                 var now = new Date();
                 var d = new Date(this.formatDate(now.getFullYear(), now.getMonth(), 1));
                 d.setDate(this.showDayNum);
-                date = new Date(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+                date = new Date(this.formatDate(now.getFullYear(), now.getMonth() + 1, 1));
             }
 
             this.currentDay = date.getDate();
@@ -199,6 +196,8 @@ export default {
             var m = month;
             if (0 < m < 10) {
                 m = "0" + m
+            }else if(m==0){
+                m = "0" + m
             }
             var d = day;
             if (d < 10) d = "0" + d;
@@ -219,6 +218,7 @@ export default {
         //数组月份转英文
         showMonth: function(){
             var month = this.currentMonth
+            console.log("month",month)
             switch(month){
                 case 1:
                     this.eCurrentMonth = 'JAN'
@@ -340,7 +340,7 @@ ul li{
 .explanationShow{
     text-align: center;
     display: inline-block;
-    width: 49%;
+    width: 48%;
     vertical-align: top;
     overflow: hidden;
     white-space: nowrap;

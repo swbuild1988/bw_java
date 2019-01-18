@@ -3,25 +3,17 @@
     <Layout class="coment">
       <Sider :width="screenWidth" collapsible :collapsed-width="minScreenWidth" v-model="isCollapsed"
              style="background-color: #1D5F87">
-        <!--<transition name="fade">-->
-          <!-- <div  style="background-color: #1d5f87;width: 100%;height: 40px; margin-top: 4px;" v-show="!isCollapsed">
-              <ButtonGroup style="width: 90%;margin-left: 5%">
-                <Button type="primary" shape="circle" style="width:50%"  @click="goBack"><Icon type="chevron-left" ></Icon></Button>
-                <Button type="primary" shape="circle" style="width:50%;float:right"  @click="goForward"><Icon type="chevron-right" ></Icon></Button>
-              </ButtonGroup>
-          </div> -->
-        <!--</transition>-->
         <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1','1-0']" accordion>
           <Submenu name="1">
             <template slot="title">
-              <Icon type="ios-navigate"></Icon>
+              <Icon type="ios-navigate" class="icons"></Icon>
               <span>{{moduleName}}</span>
             </template>
             <div v-for="(item,index) in leftTree" :key="item.key">
               <div v-if="item.childNode && item.childNode.length>0">
                 <Submenu :name="'1-'+ index">
                   <template slot="title">
-                    <Icon type="ios-paper"></Icon>
+                    <Icon type="ios-paper" class="icons"></Icon>
                     <span>{{ item.name}}</span>
                   </template>
                   <MenuItem v-for="(child,childIndex) in item.childNode" :key="child.id"
@@ -252,7 +244,7 @@
       // this.acceptAlarmData();
     },
     beforeDestroy() {
-      this.closedMQ();
+      // this.closedMQ();
       this.$Notice.destroy()
     },
     watch: {
@@ -485,7 +477,7 @@
 <style scoped>
   .ivu-menu >>> .ivu-menu-item {
     padding-left: 36px !important;
-    font-size: 14px !important;
+    font-size: 1.66vmin !important;
   }
 
   .ivu-menu-item, .ivu-menu-submenu {
@@ -501,6 +493,7 @@
     border-radius: 10px;
     background-color: rgba(23, 67, 160, 0.3);
     border: 1px solid rgba(224, 180, 23, 0.9);
+    font-size: 2vmin;
   }
 
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item {
@@ -569,7 +562,7 @@
     right: 20px;
     color: #464d4f;
     line-height: 50px;
-    font-size: 22px;
+    font-size: 2.4vmin;
     z-index: 10001;
   }
 
@@ -588,7 +581,7 @@
   .menu-item span {
     display: inline-block;
     overflow: hidden;
-    width: 160px;
+    /*width: 160px;*/
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: bottom;
@@ -599,7 +592,7 @@
     transform: translateX(0px);
     transition: font-size 0.2s ease, transform 0.2s ease;
     vertical-align: middle;
-    font-size: 14px;
+    font-size: 1.66vmin;
   }
 
   .collapsed-menu span {
@@ -638,6 +631,7 @@
 
   .ivu-layout-footer {
     padding: 13px 50px;
+    font-size: 1.66vmin;
   }
 
   .ivu-menu-light {
@@ -675,6 +669,10 @@
   /*去除footer的白边*/
   .ivu-collapse {
     border: none;
+  }
+
+  .coment >>> .ivu-layout-sider-trigger .ivu-icon{
+    font-size: 1.66vmin;
   }
 </style>
 

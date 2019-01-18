@@ -10,7 +10,7 @@
                 <span slot="title" >
                 取用备品备件排行
                 </span>
-                <div style="position: relative;float: right;">
+                <div class="listUpdate">
                 <a href="#" slot="extra" @click="getBackUpType">
                     <Icon type="ios-loop-strong"></Icon>
                     刷新
@@ -19,7 +19,7 @@
                 <hr>
                 <div>
                 <ul v-for="(item,index) in backupTakeData" :key="index">
-                    <li style="margin-top: 3px;line-height: 24px;list-style-type:none;">
+                    <li class="takeBackUpList">
                         <Icon type="star" color="#ff3c1d"></Icon>
                         {{item.name}}
                         <span style="position: relative;float: right;">
@@ -36,7 +36,7 @@
                 <span slot="title" >
                 备品取用人排行
                 </span>
-                <div style="position: relative;float: right;">
+                <div class="listUpdate">
                     <a href="#" slot="extra" @click="getBackUpBorrower">
                         <Icon type="ios-loop-strong"></Icon>
                         刷新
@@ -45,7 +45,7 @@
                 <hr>
                 <div>
                     <ul v-for="(item,index) in takeUserData" :key="index">
-                        <li style="line-height: 24px;list-style-type:none;">
+                        <li class="takeBackUpList">
                             <Icon type="reply-all" size="20" color="#15ffe4"></Icon>
                             {{item.name}}
                             <span style="position: relative;float: right;">
@@ -71,7 +71,7 @@
         </div>
         </Col>
         <Col span="12" style="margin-top: 1.5vh">
-            <div style="width:42vw;height: 52vh;">
+            <div style="width:43vw;height: 52vh;" ref="MultiBarChartBox">
                 <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
             </div>
         </Col>
@@ -107,9 +107,9 @@
                     <Button type="primary" @click="showTable()" icon="ios-search" size="small">查询</Button>
                 </Col>
             </Row>
-            <Table stripe border :columns="toolColumns"  height="385"  :data="toolData"></Table>
+            <Table stripe border :columns="toolColumns"  :height="tableHeight"  :data="toolData"></Table>
             <div>
-                <Page  :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+                <Page ref="pageBox" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
                     placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
                     :style='pageStyle'></Page>
             </div>
@@ -118,7 +118,7 @@
     <Modal
         v-model="isTaking"
         title="取用备品详情"
-        width="1100"
+        :width="modalWidth"
         @on-cancel="resetVal"
     >
         <Row style="margin-bottom: 10px;">
@@ -127,8 +127,8 @@
             </div> 
             <Col span="14">
                 <span>出库时间：</span>
-                <DatePicker type="datetime" ref="takingStartTime" v-model="takingSpareModalConditions.startTime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
-                <DatePicker type="datetime" ref="takingEndTime" v-model="takingSpareModalConditions.endTime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
+                <DatePicker type="datetime" ref="takingStartTime" v-model="takingSpareModalConditions.startTime" placeholder="请选择开始时间" class="timeWidth"></DatePicker> -
+                <DatePicker type="datetime" ref="takingEndTime" v-model="takingSpareModalConditions.endTime" placeholder="请选择结束时间" class="timeWidth"></DatePicker>
             </Col>
             <Col span="7">
                 取用人：
@@ -154,7 +154,7 @@
     <Modal
         v-model="isTakingPerson"
         title="取用备品人详情"
-        width="870"
+        :width="modalWidth"
         @on-cancel = "takingPersonReset"
     >
         <Row style="margin-bottom: 10px">
@@ -163,12 +163,12 @@
             </div>
             <Col span="14">
                 <span>出库时间：</span>
-                <DatePicker type="datetime" ref="takingPersonStartTime" v-model="takingPersonConditions.startTime" placeholder="请选择开始时间" style="width: 153px"></DatePicker> -
-                <DatePicker type="datetime" ref="takingPersonEndTime" v-model="takingPersonConditions.endTime" placeholder="请选择结束时间" style="width: 153px"></DatePicker>
+                <DatePicker type="datetime" ref="takingPersonStartTime" v-model="takingPersonConditions.startTime" placeholder="请选择开始时间" class="timeWidth"></DatePicker> -
+                <DatePicker type="datetime" ref="takingPersonEndTime" v-model="takingPersonConditions.endTime" placeholder="请选择结束时间" class="timeWidth"></DatePicker>
             </Col>
             <Col span="7">
                 <span>备品名称：</span>
-                <Input ref="borrowName" type="text" style="width: 130px" v-model="takingPersonConditions.name"></Input>
+                <Input ref="borrowName" type="text" class="borrowName" v-model="takingPersonConditions.name"></Input>
             </Col>
             <Col span="3" style="text-align: center">
                 <Button type="primary" size="small" @click="showTakingPersonDetails(staffId)">查询</Button>
@@ -321,9 +321,9 @@ export default {
                     text: "取用备品设备比例"
                     }
                 },
-                timer: {
-                    interval: 5000
-                }
+                // timer: {
+                //     interval: 50000
+                // }
                 }
             },
             countStoreBackupData: {
@@ -335,9 +335,9 @@ export default {
                         text: "库存备品比例"
                         }
                     },
-                    timer: {
-                        interval: 5000
-                    }
+                    // timer: {
+                    //     interval: 5000
+                    // }
                 }
             },
             backupDetailData: {
@@ -354,9 +354,9 @@ export default {
                             }
                         }
                     },
-                    timer: {
-                        interval: 5000
-                    }
+                    // timer: {
+                    //     interval: 5000
+                    // }
                 }
             },
             toolColumns: [
@@ -381,8 +381,8 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '出库时间',
-                    key: 'inTime',
+                    title: '出库至',
+                    key: 'whitherName',
                     align: 'center'
                 },
                 {
@@ -393,12 +393,23 @@ export default {
                 {
                     title: '出库时间',
                     key: 'outTime',
-                    align: 'center'
+                    align: 'center',
                 },
                 {
                     title: '备注',
                     key: 'describe',
-                    align: 'center'
+                    align: 'center',
+                    render: (h,params) => {
+                        let temp = params.row.describe
+                        if(temp!=null){
+                            if(temp.length<7){
+                                temp=temp
+                            }else{
+                                temp=temp.substring(0,7)+'......'
+                            }
+                        }
+                        return h('div',temp)
+                    }
                 },
             ],
             toolData: [],
@@ -412,7 +423,7 @@ export default {
             pageStyle: {
                 position: "absolute",
                 bottom: "-46px",
-                right: "15px"
+                right: "15px",
             },
             outStorageConditions:{
                 name: null,
@@ -423,6 +434,8 @@ export default {
                 //批量出库查询是否在库，否
                 status: 0,
             },
+            modalWidth: null,
+            tableHeight: null
         };
     },
     components: {
@@ -432,7 +445,7 @@ export default {
     watch:{
         typeId: function(curVal,oldVal){
             this.showTakingDetails(curVal)
-        }
+        },
     },
     computed:{
             outStorageParams() {
@@ -479,6 +492,7 @@ export default {
         this.showTable()
         this.getBackUpType()
         this.getBackUpBorrower()
+        this.getModalWidth()
     },
     methods: {
         //用户AutoComplete
@@ -619,6 +633,10 @@ export default {
         takingPersonHandlePage(value){
             this.takingPersonPage.pageNum = value
             this.showTakingPersonDetails(this.staffId)
+        },
+        getModalWidth(){
+            this.modalWidth = document.body.offsetWidth *0.5
+            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-45
         }
     }
 };
@@ -641,6 +659,44 @@ export default {
 .pageContainer{
     margin-top: 10px;
     text-align: right;
+}
+.takeBackUpList{
+    margin-top: 3px;
+    line-height: 24px;
+    list-style-type:none;
+}
+.listUpdate{
+    position: relative;
+    float: right;
+}
+.timeWidth{
+    width: 153px;
+}
+.borrowName{
+    width: 130px;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .queryCondition{
+        font-size: 1.4vmin;
+    }
+    .takeBackUpList{
+        font-size: 1.4vmin;
+        line-height: 3.5vmin;
+    }
+    .datapanle,.listUpdate{
+        font-size: 1.5vmin;
+        line-height: 4vmin;
+    }
+    .timeWidth,.borrowName{
+        width: 17vmin;
+    }
 }
 </style>
 

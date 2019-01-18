@@ -14,13 +14,16 @@
         <result column="type" property="typeId"/>
         <result column="type_name" property="typeName"/>
         <result column="crt_time" property="crtTime"/>
-        <result column="service_life" property="serviceLife"/>
+        <result column="run_time" property="runTime"/>
+        <result column="alarm_no" property="alarmNo"/>
         <result column="status" property="status"/>
         <result column="tunnel_id" property="tunnelId"/>
         <result column="vender_id" property="venderId"/>
         <result column="model_id" property="modelId"/>
         <result column="obj_id" property="objId"/>
         <result column="img_url" property="imgUrl"/>
+        <association property="obj" javaType="MeasObj" column="obj_id"
+                     select="com.bandweaver.tunnel.dao.mam.MeasObjMapper.selectByPrimaryKey"/>
         <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
                      column="tunnel_id"
                      select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
@@ -50,8 +53,11 @@
             <if test="crtTime != null">
                 crt_time,
             </if>
-            <if test="serviceLife != null">
-                service_life,
+            <if test="runTime != null">
+                run_time,
+            </if>
+            <if test="alarmNo != null">
+                alarm_no,
             </if>
             <if test="status != null">
                 status,
@@ -85,8 +91,11 @@
             <if test="crtTime != null">
                 #{crtTime},
             </if>
-            <if test="serviceLife != null">
-                #{serviceLife},
+            <if test="runTime != null">
+                #{runTime},
+            </if>
+            <if test="alarmNo != null">
+                #{alarmNo},
             </if>
             <if test="status != null">
                 #{status},
@@ -113,24 +122,6 @@
         
     </insert>
 
-    <update id="updateEquipment"
-            parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Equipment">
-        UPDATE t_omm_equipment
-        SET t_omm_equipment.name         =
-        #{name},
-            t_omm_equipment.type         = #{type},
-            t_omm_equipment.crt_time     =
-            #{crtTime},
-            t_omm_equipment.service_life = #{serviceLife},
-            t_omm_equipment.status       = #{status},
-            t_omm_equipment.tunnel_id    =
-            #{tunnelId},
-            t_omm_equipment.vender_id    = #{venderId},
-            t_omm_equipment.model_id     = #{modelId},
-            t_omm_equipment.img_url      =
-            #{imgUrl}
-    </update>
-
     <select id="getList" resultMap="equipmentMap">
         SELECT *
         FROM t_omm_equipment
@@ -151,7 +142,8 @@
         <result column="asset_no" property="assetNo"/>
         <result column="type" property="type"/>
         <result column="crt_time" property="crtTime"/>
-        <result column="service_life" property="serviceLife"/>
+        <result column="run_time" property="runTime"/>
+        <result column="alarm_no" property="alarmNo"/>
         <result column="status" property="status"/>
         <result column="tunnel_id" property="tunnelId"/>
         <result column="vender_id" property="venderId"/>
@@ -186,15 +178,15 @@
                 and e.vender_id = #{venderId}
             </if>
             <if test="startTime != null">
-                and e.crt_time <![CDATA[>=]]>
+                and e.run_time <![CDATA[>=]]>
                 #{startTime}
             </if>
             <if test="endTime != null">
-                and e.crt_time <![CDATA[<=]]>
+                and e.run_time <![CDATA[<=]]>
                 #{endTime}
             </if>
         </where>
-        order by e.crt_time desc
+        order by e.run_time desc
     </select>
 
     <update id="updateEquipmentById">
@@ -212,8 +204,11 @@
             <if test="crtTime != null">
                 t.crt_time = #{crtTime},
             </if>
-            <if test="serviceLife != null">
-                t.service_life = #{serviceLife},
+            <if test="runTime != null">
+                t.run_time = #{runTime},
+            </if>
+            <if test="alarmNo != null">
+                t.alarm_no = #{alarmNo},
             </if>
             <if test="status != null">
                 t.status = #{status},
@@ -234,7 +229,7 @@
                 t.img_url = #{imgUrl}
             </if>
         </set>
-        WHERE id = #{id}
+        WHERE t.id = #{id}
     </update>
 
     <select id="getEquipmentById"
@@ -242,12 +237,12 @@
         SELECT e.*,a.name as type_name
         FROM t_omm_equipment e
         left join t_omm_equipment_type a on a.id = e.type
-        WHERE id = #{id}
+        WHERE e.id = #{id}
     </select>
 
     <insert id="addEquipmentBatch" useGeneratedKeys="false">
         insert into t_omm_equipment
-        (id,name,type,crt_time,service_life,status,asset_no,tunnel_id,vender_id,model_id,img_url)
+        (id,name,type,crt_time,run_time,status,tunnel_id,vender_id,model_id,alarm_no)
         select OMM_EQUIPMENT_SEQUENCE.nextval,a.* from (
         <foreach collection="list" item="item" index="index" close=")"
                  open="(" separator="union">
@@ -255,13 +250,12 @@
             #{item.name},
             #{item.type},
             #{item.crtTime},
-            #{item.serviceLife},
+            #{item.runTime},
             #{item.status},
-            #{item.assetNo},
             #{item.tunnelId},
             #{item.venderId},
             #{item.modelId},
-            #{item.imgUrl}
+            #{item.alarmNo}
             from dual
         </foreach>
         )a
@@ -335,6 +329,6 @@
         FROM t_omm_equipment e
         left join t_omm_equipment_type a on a.id = e.type
         WHERE
-            obj_id = #{objId}
+            e.obj_id = #{objId}
     </select>
 </mapper>

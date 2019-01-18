@@ -25,4 +25,6 @@ public interface CableSectionMapper {
 
 	void deleteByCableId(String id);
 
+	List<String> getSetBysectionIds(List<Integer> list);
+
 }

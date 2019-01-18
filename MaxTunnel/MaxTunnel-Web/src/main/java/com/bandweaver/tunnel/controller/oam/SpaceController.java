@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.oam;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,17 +16,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
+import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
+import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableContractService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableSectionService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableService;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
+import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
+import com.bandweaver.tunnel.common.platform.util.MathUtil;
 
 
 /**
@@ -47,6 +54,10 @@ public class SpaceController {
 	private CableSectionService cableSectionService;
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private TunnelService tunnelService;
+	@Autowired
+	private StoreTypeService storeTypeService;
 	
 	
 	
@@ -164,6 +175,51 @@ public class SpaceController {
 			result.add(json);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+	}
+	
+	
+	/**管线基本信息
+	 * @author shaosen
+	 * @date 2019年1月10日
+	 * @param   
+	 * @return JSONObject  
+	 */
+	@RequestMapping(value="lines/message",method=RequestMethod.GET)
+	public JSONObject getLinesMessage() {
+
+		List<JSONObject> returnData = new ArrayList<>();
+		List<Store> sList = storeService.getList();
+		List<StoreType> stList = storeTypeService.getList();
+		
+		for (StoreType storeType : stList) {
+			JSONObject json = new JSONObject();
+			json.put("name", storeType.getName() + "管线");
+			
+			List<Cable> cableList = new ArrayList<>();
+			List<Store> tmpStoreList = sList.stream().filter(s -> s.getStoreTypeId().intValue() == storeType.getId().intValue() ).collect(Collectors.toList());
+			if(tmpStoreList != null && tmpStoreList.size() > 0 ) {
+				List<Integer> storeIdList = tmpStoreList.stream().map( s -> s.getId() ).collect(Collectors.toList());
+				if(storeIdList != null && storeIdList.size() > 0) {
+					List<Integer> sectionIdList = sectionService.getSectionIdsByStoreIds(storeIdList);
+					if(sectionIdList.size() > 0) {
+						List<String> cids = cableSectionService.getSetBysectionIds(sectionIdList);
+						if(cids.size() > 0) {
+							cableList = cableService.getListByIds(cids);
+						}
+					}
+				}
+			}
+			
+			Double totalLength = 0.00;
+			for (Cable cable : cableList) {
+				totalLength = MathUtil.add(totalLength, cable.getCableLength());
+			}
+			json.put("value", totalLength/1000);
+			json.put("unit", "km");
+			returnData.add(json);
+		}
+		
+		return CommonUtil.success(returnData);
 	}
 	
 }

@@ -14,9 +14,9 @@ public enum EquipmentStatusEnum {
 	/**正常*/
 	NORMAL("正常" , 1),
 	/**损坏*/
-	BROKEN("损坏" , 2),
+	BROKEN("损坏" , 2);
 	/** 报废 */
-	SCRAP("报废" , 3);
+	//SCRAP("报废" , 3);
 	
 	private String name;
     private int value;

@@ -75,7 +75,7 @@ export default {
         display: table-cell;
         text-align: center;
         vertical-align: middle;
-        font-size: 24px;
+        font-size: 1.8vmin;
         font-weight: 700;
         border-top-right-radius: 10px;
     }
@@ -88,7 +88,7 @@ export default {
         display: table-cell;
         text-align: center;
         vertical-align: middle;
-        font-size: 16px;
+        font-size: 1.6vmin;
         border-bottom-right-radius: 10px;
     }
     img{

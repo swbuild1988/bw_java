@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.common.biz.itf.mam;
 
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 
 import java.util.Date;
@@ -19,4 +20,6 @@ public interface MeasValueSIService {
 	 * @date 2018年5月30日
 	 */
 	void addMeasValueSIBatch(List<MeasValueSI> list);
+
+	List<MeasValueSI> getListByTime(Date dayBegin);
 }

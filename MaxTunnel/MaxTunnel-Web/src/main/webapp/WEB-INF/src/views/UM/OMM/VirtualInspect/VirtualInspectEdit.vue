@@ -36,7 +36,7 @@
                             <div class="posTag"></div>
                             <span class="name">{{ pos }}</span>
                             <div class="options">
-                                <Button type="primary" size="small" @click="set(pos)">设置</Button>
+                                <Button type="primary" size="small" @click="set(pos)">到达预置位</Button>
                                 <Button type="primary" size="small" @click="match(pos)">匹配</Button>
                                 <Button type="primary" size="small" icon="edit" @click="edit(pos)"></Button>
                                 <Button type="error" size="small" icon="trash-a" @click="del(pos)"></Button>
@@ -65,27 +65,27 @@ export default {
     data() {
         return {
             cameraList: [
-                {
-                    id: 7005,
-                    name: "红外摄像头1",
-                    url: "192.168.6.156:8078",
-                    positionSupport: true,
-                    description: "A Camera for tunnel"
-                },
-                {
-                    id: 7002,
-                    name: "红外摄像头2",
-                    url: "192.168.6.156:8078",
-                    positionSupport: true,
-                    description: "A Camera for tunnel"
-                }
+                // {
+                //     id: 7005,
+                //     name: "红外摄像头1",
+                //     url: "192.168.6.156:8078",
+                //     positionSupport: true,
+                //     description: "A Camera for tunnel"
+                // },
+                // {
+                //     id: 7002,
+                //     name: "红外摄像头2",
+                //     url: "192.168.6.156:8078",
+                //     positionSupport: true,
+                //     description: "A Camera for tunnel"
+                // }
             ],
             curId: null,
             curSection: {
                 id: 0
             },
             isSelected: false,
-            perPositions: ['预置位1','预置位2','预置位4','预置位预置5预置位预置','预置位预置位预置位6','预置位7','预置位8'],
+            perPositions: [],
             isAdd: false,
             name: null,
             isShow: false,
@@ -156,17 +156,6 @@ export default {
                 error=>{
                     _this.Log.info(error);
                 })
-            // this.axios
-            //     .get("videos/" + this.curVideo.id + "/presets")
-            //     .then(res => {
-            //         let { code, data } = res.data;
-            //         if (code == 200) {
-            //             this.perPositions = [];
-            //             this.perPositions = data;
-            //             if (this.perPositions.length == 0)
-            //                 this.perPositions = ["default"];
-            //         }
-            //     });
         },
         add() {
             this.isAdd = true;
@@ -191,19 +180,6 @@ export default {
                         _this.name = null;
                         _this.getPositions();
                     })
-                // this.axios
-                //     .post(
-                //         "videos/" + this.curVideo.id + "/presets",
-                //         this.addParam
-                //     )
-                //     .then(res => {
-                //         let { code, data } = res.data;
-                //         if (code == 200) {
-                //             this.isAdd = false;
-                //             this.name = null;
-                //             this.getPositions();
-                //         }
-                //     });
             }
         },
         set(name) {
@@ -215,13 +191,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios
-            //     .get(
-            //         "videos/" + this.curVideo.id + "/presets/" + name + "/goto"
-            //     )
-            //     .then(res => {
-            //         this.Log.info("setted" + res.data);
-            //     });
         },
         cancel() {
             this.isAdd = false;
@@ -243,16 +212,6 @@ export default {
                         error=>{
                             _this.Log.info(error)
                         })
-                    // _this.axios
-                    //     .delete("videos/" + _this.curVideo.id + "/presets", {
-                    //         data: param
-                    //     })
-                    //     .then(res => {
-                    //         let { code, data } = res.data;
-                    //         if (code == 200) {
-                    //             _this.getPositions();
-                    //         }
-                    //     });
                 }
             });
         },
@@ -273,14 +232,6 @@ export default {
                         error=>{
                             _this.Log.info(error)
                         })
-                    // _this.axios
-                    //     .put("videos/" + _this.curVideo.id + "/presets", param)
-                    //     .then(res => {
-                    //         let { code, data } = res.data;
-                    //         if (code == 200) {
-                    //             _this.getPositions();
-                    //         }
-                    //     });
                 }
             });
         },
@@ -302,17 +253,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios.post("sections/gps", this.cameraPosition).then(res => {
-            //     let { code, data } = res.data;
-            //     if (code == 200) {
-            //         this.Log.info("get section ", data);
-            //         if (this.curSection.id != data.sectionInfo.id) {
-            //             // 如果section变了，查找section中的相机
-            //             this.curSection = data.sectionInfo;
-            //             this.getVideos(this.curSection.id);
-            //         }
-            //     }
-            // });
             VideoService.getVICameras(this.cameraPosition).then(
                 result=>{
                     _this.Log.info("get camera", result);
@@ -320,14 +260,6 @@ export default {
                 error=>{
                     _this.Log.info(error);
                 })
-            // this.axios
-            //     .post("virual-inspection/video", this.cameraPosition)
-            //     .then(res => {
-            //         let { code, data } = res.data;
-            //         if (code == 200) {
-            //             this.Log.info("get camera", data);
-            //         }
-            //     });
         },
         getVideos(sectionId) {
             let _this = this
@@ -341,16 +273,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios
-            //     .post("videos/condition", {
-            //         sectionId: sectionId
-            //     })
-            //     .then(res => {
-            //         let { code, data } = res.data;
-            //         if (code == 200) {
-            //             this.cameraList = data;
-            //         }
-            //     });
         },
         match(pos) {
             if (this.cameraPosition == null) return;
@@ -373,10 +295,6 @@ export default {
                 error=>{
                     _this.Log.info(error);
                 })
-            // this.axios.post("preset-3d", videoPreset).then(res => {
-            //     let { code, data } = res.data;
-            //     this.Log.info(data);
-            // });
         },
         back() {
             this.$router.push("/UM/virtualInspect");
@@ -408,11 +326,10 @@ export default {
 .titleCam{
     background-image: url('../../../../assets/UM/title4.png');
     background-size: 100% 100%;
-    font-size: 18px;
+    font-size: 1.8vmin;
     font-weight: bold;
     padding: 10px;
     text-align: center;
-
 }
 .cameraList ul {
     list-style-type: none;
@@ -421,7 +338,7 @@ export default {
     padding: 10px;
 }
 .cameraList ul li {
-    font-size: 16px;
+    font-size: 1.66vmin;
     cursor: pointer;
     padding: 4px;
     text-align: center;
@@ -445,11 +362,11 @@ export default {
 }
 .titleCtr {
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 1.8vmin;
     font-weight: bold;
     position: absolute;
     width: 42%;
-    height: 40px;
+    height: 4vmin;
     top: -10px;
     left: 0;
     background: url('../../../../assets/UM/title.png') no-repeat;
@@ -460,7 +377,7 @@ export default {
 }
 .titlePos {
     margin: 10px;
-    font-size: 18px;
+    font-size: 1.8vmin;
     font-weight: bold;
     background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
@@ -468,7 +385,7 @@ export default {
     text-align: center;
     position: absolute;
     width: 42%;
-    height: 40px;
+    height: 4vmin;
     top: -10px;
     left: -6px;
     padding: 8px 0;
@@ -485,15 +402,15 @@ export default {
 }
 .positions {
     background-color: rgb(53,122,163);
-    padding: 10px 10px 10px 20px;
+    padding: 1vmin 1vmin 1vmin 2vmin;
     color: #fff;
-    margin: 10px;
+    margin: 1vmin;
     position: relative;
     border-radius: 6px;
-    line-height: 26px;
+    line-height: 2.6vmin;
 }
 .name {
-    font-size: 16px;
+    font-size: 1.66vmin;
 }
 .options {
     float: right;

@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.common.biz.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.bandweaver.tunnel.common.biz.constant.TunnelStatus;
 import com.bandweaver.tunnel.common.biz.pojo.Company;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MaxviewConfig;
@@ -38,6 +39,10 @@ public class TunnelDto implements Serializable{
     @JsonIgnore
     private Integer maxviewConfigId;
     private MaxviewConfig maxviewConfig;
+    
+    @JsonIgnore
+    private Integer status;
+    private String statusName;
     
     private Date crtTime;
 
@@ -152,8 +157,27 @@ public class TunnelDto implements Serializable{
 	public void setMaxviewConfig(MaxviewConfig maxviewConfig) {
 		this.maxviewConfig = maxviewConfig;
 	}
+	
+	
 
-    @Override
+    public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getStatusName() {
+		TunnelStatus tunnelStatus = TunnelStatus.getEnum(this.status);
+		return tunnelStatus == null ? String.valueOf(this.status) : tunnelStatus.getName();
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+
+	@Override
     public String toString() {
         return "TunnelDto{" +
                 "id=" + id +

@@ -1,13 +1,13 @@
 <template>
     <div class="nonCleanedCount​">
         <div class="NonCleanedTitle">{{ Title }}</div>
-        <div class="NonCleanedCount">123</div>
+        <div class="NonCleanedCount">{{ NonCleanedCount }}</div>
         <div class="NonCleanedUnit">{{ unit }}</div>
     </div>
 </template>
 
 <script>
-    import { getJson } from "../../../scripts/commonFun";
+    import { DataAnalysisService } from "../../../services/dataAnalysisService";
 
     export default {
         data(){
@@ -26,13 +26,9 @@
                 this.getAllNonCleanedAlarm();
             },
             getAllNonCleanedAlarm(){
-                let { timer,NonCleanedCount } = this;
-
-                timer = setInterval(()=>{  //每秒轮询未清除告警
-                    getJson('alarms/non-cleaned/list')
-                        .then(result => NonCleanedCount = result.length)
+                this.timer = setInterval(()=>{  //每秒轮询未清除告警
+                    DataAnalysisService.NonClearAlarms().then( result =>  this.NonCleanedCount = result.length )
                 },1000)
-
             }
         },
         beforeDestroy(){

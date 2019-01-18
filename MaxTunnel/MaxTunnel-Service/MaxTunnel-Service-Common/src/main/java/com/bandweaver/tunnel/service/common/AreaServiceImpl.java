@@ -114,4 +114,9 @@ public class AreaServiceImpl implements AreaService {
 	public Area getByTunnelAndSN(Integer tunnelId, String sn) {
 		return areaMapper.getAreaByTunnelAndSN(tunnelId, sn);
 	}
+
+	@Override
+	public int getTotalCount() {
+		return areaMapper.getTotalCount();
+	}
 }

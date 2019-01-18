@@ -13,6 +13,7 @@
     <result column="OPERATION_ID" jdbcType="DECIMAL" property="operationId" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="maxview_config_id" jdbcType="DECIMAL" property="maxviewConfigId" />
+    <result column="status" jdbcType="DECIMAL" property="status" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   
@@ -26,6 +27,7 @@
     <result column="OPERATION_ID" jdbcType="DECIMAL" property="operationId" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="maxview_config_id" jdbcType="DECIMAL" property="maxviewConfigId" />
+    <result column="status" jdbcType="DECIMAL" property="status" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
     <association property="responsibility" javaType="Staff" column="RESPONSIBILITY_ID" 
     	select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
@@ -40,11 +42,13 @@
    <resultMap id="SimpleDtoMap" type="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto">
         <id column="id" property="id" />
         <result column="name" property="name" />
+        <result column="status" property="status" />
+        <result column="length" property="length" />
     </resultMap>
     
     
   <sql id="Base_Column_List">
-    ID, NAME, SN, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID,camera,maxview_config_id, CRT_TIME
+    ID, NAME, SN, LENGTH, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID,camera,maxview_config_id,status, CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -58,11 +62,12 @@
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
     insert into T_COMMON_TUNNEL (ID, NAME, SN, LENGTH,
-      RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, camera,maxview_config_id,
+      RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, camera,maxview_config_id,status,
       CRT_TIME)
     values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{sn,jdbcType=VARCHAR}, #{length,jdbcType=DECIMAL},
       #{responsibilityId,jdbcType=DECIMAL}, #{constructId,jdbcType=DECIMAL}, #{operationId,jdbcType=DECIMAL},  #{camera,jdbcType=VARCHAR},
       #{maxviewConfigId,jdbcType=DECIMAL},
+      #{status,jdbcType=DECIMAL},
       #{crtTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Tunnel">
@@ -96,6 +101,9 @@
       <if test="maxviewConfigId != null">
         maxview_config_id,
       </if>
+      <if test="status != null">
+        status,
+      </if>
       <if test="crtTime != null">
         CRT_TIME,
       </if>
@@ -124,6 +132,9 @@
       </if>
       <if test="maxviewConfigId != null">
         #{maxviewConfigId,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
       </if>
       <if test="crtTime != null">
         #{crtTime,jdbcType=TIMESTAMP},
@@ -157,6 +168,9 @@
       <if test="maxviewConfigId != null">
         maxview_config_id = #{maxviewConfigId,jdbcType=DECIMAL},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=DECIMAL},
+      </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
@@ -173,17 +187,18 @@
       OPERATION_ID = #{operationId,jdbcType=DECIMAL},
       camera = #{camera,jdbcType=VARCHAR},
       maxview_config_id = #{maxviewConfigId,jdbcType=DECIMAL},
+      status = #{status,jdbcType=DECIMAL},
       CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-<cache />
+
     <select id="getList" resultMap="SimpleDtoMap">
-        SELECT id,name from t_common_tunnel
+        SELECT id,name,status,length from t_common_tunnel
     </select>
 
     
     <select id="getTunnelById" resultMap="SimpleDtoMap">
-    	select id,name from t_common_tunnel where id = #{id}
+    	select id,name,status from t_common_tunnel where id = #{id}
     </select>
 
 	<select id="getNameById" resultType="String">
@@ -223,6 +238,9 @@
 			</if>
 			<if test="maxviewConfigId != null">
 				and maxview_config_id = #{maxviewConfigId}
+			</if>
+			<if test="status != null">
+				and status = #{status}
 			</if>
 		</where>
 		order by crt_time DESC

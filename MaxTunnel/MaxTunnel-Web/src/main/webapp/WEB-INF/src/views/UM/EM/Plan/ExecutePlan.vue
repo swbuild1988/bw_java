@@ -7,7 +7,7 @@
             <Button type="success" @click="startPlan">启动预案</Button>
         </div>
         </Col>
-      <div v-for="(step,index) in stepList ">
+      <div v-for="(step,index) in stepList " :key="index">
         <Col  :span="spanNum">
         <CustomStep v-bind="step" @getSwitchStatus="getSwitchStatus"></CustomStep>
         </Col>

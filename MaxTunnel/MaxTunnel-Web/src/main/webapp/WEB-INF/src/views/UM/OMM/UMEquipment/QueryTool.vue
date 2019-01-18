@@ -4,35 +4,35 @@
             <Col span="6">
                 <span>仪表工具类型</span><span>：</span>
                 <Select v-model="toolsConditions.typeId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
                 <span>仪表工具型号</span><span>：</span>
                 <Select v-model="toolsConditions.modelId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
             <Col span="6">
                 <span class="word64">使用状态</span><span>：</span>
                 <Select v-model="toolsConditions.usingStatusId" style="width: 60%">
-                    <Option value=null key="2">所有</Option>
-                    <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in usingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </Col>
             <Col span="6">
                 <span class="word63">供应商</span><span>：</span>
                 <Select v-model="toolsConditions.venderId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
             <Col span="6">
                 <span class="word64">库存状态</span><span>：</span>
                 <Select v-model="toolsConditions.ventoryStatusId" style="width: 60%">
-                    <Option value=null key="2">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in inventoryStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                 </Select>
             </Col>
@@ -88,7 +88,7 @@
         <Modal
             v-model="isBatchLend"
             title="批量借出"
-            width="840"
+            :width="modalWidth"
         >
             <Row class="queryConditions">
                 <Col span="8">
@@ -126,7 +126,7 @@
                 </Col>
             </Row>
 
-            <Table stripe border height="330" ref="selection" :columns="batchLendColums"  :data="batchLendData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
+            <Table stripe border ref="selection" :columns="batchLendColums"  :data="batchLendData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
             
             <Page :total="batchLendPage.pageTotal" :current="batchLendPage.pageNum" :page-size="batchLendPage.pageSize" show-total show-sizer
                 placement="top" @on-change="handlePageBatchLend" @on-page-size-change='handPageSizeBatchLend' show-elevator style="margin-top: 10px;text-align: right"></Page>
@@ -165,7 +165,7 @@
         <Modal
             v-model="isBatchReturn"
             title="批量归还"
-            width="1240" 
+           :width="modalWidth"
         >
             <Row class="queryConditions">
                 <Col span="6">
@@ -212,7 +212,7 @@
                     <Button type="primary" size="small" @click="batchReturn()" icon="ios-search">查询</Button>
                 </Col>    
             </Row>
-           <Table stripe border height="330"  ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table> 
+           <Table stripe border   ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table> 
             
             <Page :total="returnPage.pageTotal" :current="returnPage.pageNum" :page-size="returnPage.pageSize" show-total show-sizer
                 placement="top" @on-change="handlePageBatchReturn" @on-page-size-change='handlePageSizeBatchReturn' show-elevator style="margin-top: 10px;text-align: right"></Page>
@@ -256,9 +256,11 @@
             </div>
         </Modal>
         <!-- 借出信息登记 -->
+        <!-- <BorrowModal :isBorrow="isBorrow" :isBorrowId="isBorrowId" :onsubmit="showTable"></BorrowModal> -->
         <Modal
             v-model="isBorrow"
             title="借出信息登记"
+            :width="minModalWidth"
         >
             <Form ref="borrow" :model="borrow" :rules="borrowRules" :label-width="140">
                 <FormItem label="借用人：" prop="staffId">
@@ -282,6 +284,7 @@
         <Modal
             v-model="isReturn"
             title="归还信息登记"
+            :width="minModalWidth"
         >
             <Form ref="toolReturn" :model="toolReturn" :rules="returnRules" :label-width="140">
                 <FormItem label="归还人：" prop="staffId">
@@ -311,7 +314,7 @@
         <Modal
             v-model="isSHowHistory"
             title="历史记录"
-            width = '850'
+            :width="modalWidth"
         >
             <Row class="queryCondition">
                 <Col span="8">
@@ -357,7 +360,9 @@
 <script>
 import { EquipmentService } from "../../../../services/equipmentService";
 import { TunnelService } from '../../../../services/tunnelService';
+import BorrowModal from './borrowModalQT.vue'
 export default {
+    components: {BorrowModal},
     data(){
         return{
             isShow: true,
@@ -367,8 +372,8 @@ export default {
             staffs: [],
             //仪表工具使用状态
             usingStatus: [
-                { key: 0, val: '损坏' },
-                { key: 1, val: '正常' }
+                // { key: 0, val: '损坏' },
+                // { key: 1, val: '正常' }
             ],
             //库存状态
             inventoryStatus: [
@@ -439,8 +444,7 @@ export default {
                 },{
                     title: '入库时间',
                     key: 'inTime',
-                    align: 'center',
-                    width: 195
+                    align: 'center'
                 }
             ],
             batchLendData: [],
@@ -490,7 +494,6 @@ export default {
                     title: '入库时间',
                     key: 'inTime',
                     align: 'center',
-                    width: 195
                 },{
                     title: '借用人',
                     key: 'staffName',
@@ -499,7 +502,6 @@ export default {
                     title: '借用时间',
                     key: 'borrowTime',
                     align: 'center',
-                    width: 195
                 },{
                     title: '借用备注',
                     key: 'describe',
@@ -534,8 +536,8 @@ export default {
                 pageTotal: 0
             },
             returnUsingStatus: [
-                { key: '正常', val: 1 },
-                { key: '损坏', val: 0 }
+                // { key: '正常', val: 1 },
+                // { key: '损坏', val: 0 }
             ],
             batchReturnSubmitData:{
                 ids: null,
@@ -647,7 +649,9 @@ export default {
                 pageNum: 1,
                 pageSize: 6,
                 pageTotal: 0
-            }
+            },
+            modalWidth: null,
+            minModalWidth: null
         }
     },
     computed: {
@@ -733,7 +737,18 @@ export default {
                 this.staffs = data
             }
         })
+        //获取tool状态
+        EquipmentService.getStatus().then(
+            res=>{
+                this.usingStatus = res
+                this.returnUsingStatus = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
         this.showTable()
+        this.getModalWidth()
     },
     methods: {
         add(path){
@@ -748,11 +763,11 @@ export default {
                         if(result.pagedList[index].status == false){
                             this.isAloneReturn = true
                             this.isAloneBorrow = false
-                            this.isColor = 'red'
+                            // this.isColor = 'red'
                         }else{
                             this.isAloneBorrow = true
                             this.isAloneReturn = false
-                            this.isColor = 'green'
+                            // this.isColor = 'green'
                         }
                     }
                     this.toolData = result.pagedList
@@ -988,7 +1003,9 @@ export default {
                 endTime: this.historyConditions.endTime,
                 returnId: this.historyConditions.returnId,
                 retStaTime: this.historyConditions.returnStartTime,
-                retEndTime: this.historyConditions.returnEndTime
+                retEndTime: this.historyConditions.returnEndTime,
+                pageNum: this.historyPage.pageNum,
+                pageSize: this.historyPage.pageSize
             }
             EquipmentService.queryHisRecord(hisParams).then(
                 result => {
@@ -999,6 +1016,11 @@ export default {
                     this.Log.info(error)
                 }
             )
+        },
+        //modal赋值宽度
+        getModalWidth(){
+            this.modalWidth = document.body.offsetWidth*0.7
+            this.minModalWidth = document.body.offsetWidth*0.3
         }
     }
 }
@@ -1078,5 +1100,41 @@ export default {
 }
 .falseStatus{
     color: red;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .queryCondition{
+        font-size: 1.4vmin;
+    }
+    h2{
+        font-size: 2.5vmin;
+    }
+    .toolInfo p,.operation{
+        line-height: 4.5vmin;
+        font-size: 1.6vmin;
+    }
+    .operation:hover{
+        font-size: 1.7vmin;
+    }
+    .toolBtn p{
+        font-size: 2.5vmin;
+    }
+    .toolTitle,.toolBtn{
+        line-height: 4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
 }
 </style>

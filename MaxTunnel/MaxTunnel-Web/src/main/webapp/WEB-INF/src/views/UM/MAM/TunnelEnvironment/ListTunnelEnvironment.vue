@@ -1,31 +1,48 @@
 <template>
   <div>
-    <div class="top">
-      <Row style="font-size:16">
-          <Col span="6">区段:
-          <Select v-model="queryCondition.areaId" @on-change="updateArea" style="width:12vw;">
-              <Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-          </Col>
-        <Col span="6">监测仓:
-          <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
-            <Option v-for="item in storeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </Col>
-      </Row>
+    <div style="margin: 1vh;">
+      <RadioGroup
+        v-model="queryCondition.areaId"
+        type="button"
+        @on-change="updateArea"
+        size="large"
+      >
+        <Radio
+          v-for="(item,key) in areaList"
+          :key="key"
+          :label="item.id"
+          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+          :class="{select_radio:queryCondition.areaId==item.id}"
+        >{{item.name}}</Radio>
+      </RadioGroup>
+    </div>
+    <div style="margin: 1vh;height:3vh;overflow-y: auto">
+      <RadioGroup
+        v-model="queryCondition.storeId"
+        type="button"
+        @on-change="changeStore"
+        size="large"
+      >
+        <Radio
+          v-for="(item,key) in storeList"
+          :key="key"
+          :label="item.id"
+          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+          :class="{select_radio:queryCondition.storeId==item.id}"
+        >{{item.name}}</Radio>
+      </RadioGroup>
     </div>
     <Row>
       <Col span="18" style="padding-left: 10px;padding-right: 10px">
-        <div class="gis" id="GISbox" :style="{height:curHeight+'px'}">
-          <TestSmViewer ref="smViewer"></TestSmViewer>
-          <modal v-bind="modelProp"></modal>
+        <div class="gis" :style="{height:curHeight+'px'}" >
+            <test-sm-viewer ref="smViewer"></test-sm-viewer>
         </div>
       </Col>
       <Col span="6" style="padding-left: 10px;padding-right: 10px;">
         <div :style="{height:curHeight+'px'}">
-          <div class="borde_rhadow" style="height: calc(30vh - 60px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
+          <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
             <div style="margin: 10px;">
-              <span style="font-size: 25px;">{{curName}}</span>
+              <span style="font-size: 2.5vmin">{{curName}}</span>
                 <Row :gutter="16" style="padding: 2px;">
                         <Col span="24" class="descCol">
                         <span>区段数：</span>
@@ -46,27 +63,26 @@
                 </Row>
             </div>
           </div>
-          <div class="borde_rhadow" style="height:calc(55vh - 10px); overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
+          <div class="borde_rhadow" style="height:calc(46vh ); overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
               <div style="margin: 10px;">
-                   <span style="font-size: 25px;">极值数据统计<Icon type="arrow-graph-up-right"></Icon></span>
+                   <span style="font-size: 2.5vmin">极值数据统计<Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon></span>
                   <Row :gutter="16">
                       <div v-for="item in tunnelProps">
                           <Col span="7"  class="MaxValCol">
-                          <Icon type="clipboard" size=18></Icon>
+                          <Icon type="clipboard" :size="iconSize"></Icon>
                          {{item.key}}
                           </Col>
                           <Col span="7" class="MaxValCol">
-                          <Icon type="ios-pulse" size=18></Icon>
+                          <Icon type="ios-pulse" :size="iconSize"></Icon>
                         {{item.val}}
                           </Col>
                           <Col span="10" class="MaxValCol" color="#de8d1b">
-                          <Icon type="android-locate" size=18></Icon>
+                          <Icon type="android-locate" :size="iconSize"></Icon>
                           {{item.location}}
                           </Col>
                       </div>
                   </Row>
               </div>
-            <!--<EnvironmentShow :tunnelProps="tunnelProps" :circleSize="circleSize"></EnvironmentShow>-->
           </div>
         </div>
       </Col>
@@ -85,9 +101,11 @@ import EnvironmentShow from "../../../../components/Common/TunnelDisplay/Environ
 
 export default {
   name: "tunnel-list-tunnel-environment",
+
   data() {
     return {
       curHeight: 450,
+      iconSize:16,
       scene: null,
       modelProp: {
         show: {
@@ -125,7 +143,10 @@ export default {
       }, //当前监测仓数据
     };
   },
+
   beforeRouteLeave(to, from, next) {
+      console.log("to",to)
+      console.log("from",from)
     if (
       to.name == "UMPatrolHomePage" ||
       to.name == "设备管理主页" ||
@@ -133,6 +154,8 @@ export default {
       to.name == "虚拟巡检" ||
       to.name == "管廊安防监控列表" ||
       to.name == "管廊环境监控详情" ||
+      to.name== "管廊环境监控"  ||
+      from.name == "管廊环境监控列表"||
       from.name == "UMPatrolHomePage" ||
       from.name == "设备管理主页" ||
       from.name == "人员定位详情" ||
@@ -151,14 +174,17 @@ export default {
       next();
     }
   },
+
   mounted() {
     this.fentchData();
     this.getMonitorData();
     // 设置表格高度
-    this.curHeight = window.innerHeight * 0.85 - 55; //将85vh转为数值
+    this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+    this.iconSize=window.innerHeight*0.02;
     //3D加载
-    this.setGIS();
+    // this.setGIS();
   },
+
   methods: {
     //变更模型视角
     changeArea(area) {
@@ -273,27 +299,8 @@ export default {
               }
           });
       },
-
-    setGIS() {
-      var gis = document.getElementById("newID");
-      gis.style.display = "block";
-      gis.style.position = "absolute";
-      gis.style.top = "0px";
-      gis.style.height = "100%";
-      gis.style.width = "100%";
-      document.body.removeChild(gis);
-      document.getElementById("GISbox").appendChild(gis);
-      // 加载视角
-      this.$refs.smViewer.setViewAngAngle();
-    },
-
-    destory3D() {
-      var gis = document.getElementById("newID");
-      gis.style.display = "none";
-      document.getElementById("GISbox").removeChild(gis);
-      document.body.appendChild(gis);
-    }
   },
+
   components: {
     SimulatedData,
     showSwitchData,
@@ -301,6 +308,7 @@ export default {
     EnvironmentShow,
     TestSmViewer
   },
+
   watch: {
     $route: function() {
       // $route发生变化时再次赋值
@@ -309,22 +317,25 @@ export default {
       this.getMonitorData();
     }
   },
+
   beforeDestroy() {
-    this.destory3D();
   }
 };
 </script>
 
 <style scoped>
-    .MaxValCol{
-        margin-top: 4.5vh;
-        font-size: 18px;
-    }
-    .descCol{
-        margin-top: 15px;
-        font-size: 16px;
-        /*background-color: #66ccee*/
-    }
+  .ivu-select-single .ivu-select-selection{
+    height: 100px;
+  }
+  .MaxValCol {
+    margin-top: 4.5vh;
+    font-size: 1.66vmin;
+  }
+
+  .descCol {
+    margin-top: 1vh;
+    font-size: 1.66vmin;
+  }
     .MaxValCol:hover, .descCol:hover{
         background-color: #44c3ee;
         cursor:pointer
@@ -337,18 +348,11 @@ export default {
   border-color: #eee;
 }
 
-.top {
-  margin: 0 0 12px 0;
-  line-height: 50px;
-  background: #fff;
-  padding-left: 10px;
-}
-
-.bottom {
-  background: #fff;
-  margin-top: 10px;
-  padding: 10px;
-}
+  .select_radio {
+    color: #fff;
+    background-color: #869bcb;
+    background-position: 0 -15px;
+  }
 
 .ivu-modal-wrap > .ivu-modal {
   left: 500px;
@@ -371,13 +375,6 @@ export default {
 .gis {
   position: relative;
 }
-
-.details {
-  position: relative;
-  float: right;
-  overflow-y: auto;
-}
-
 .Section #pageBox {
   border: 1px solid #b3b0b0;
   bottom: 0px;
@@ -406,43 +403,7 @@ export default {
   font-size: 14px;
 }
 
-.title {
-  font-size: 20px !important;
-  text-align: center;
-  font-weight: 700;
-  margin-top: 5px;
-}
-
 .inline-box div {
   display: inline-block;
-}
-
-.normal {
-  width: 15px !important;
-  height: 15px !important;
-  border-radius: 100%;
-  background: green;
-}
-
-.abnormal {
-  width: 15px !important;
-  height: 15px !important;
-  border-radius: 100%;
-  background: red;
-}
-
-.numerical {
-  width: 60%;
-}
-
-.status {
-  width: 20%;
-}
-
-.nextPage {
-  position: relative;
-  /*width: 470px;*/
-  bottom: 0px;
-  float: right;
 }
 </style>

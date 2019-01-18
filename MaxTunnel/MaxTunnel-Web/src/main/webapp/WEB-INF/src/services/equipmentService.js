@@ -26,6 +26,31 @@ var EquipmentService = {
             }
         })
     },
+    //获取设备状态
+    getStatus() {
+        return new Promise((resolve, reject) => {
+            if (isRealData) {
+                axios.get("/equipmentstatus-enums")
+                    .then(res => {
+                        let {
+                            code,
+                            data,
+                            msg
+                        } = res.data
+                        if (code == 200) {
+                            resolve(data)
+                        } else {
+                            reject(msg + '地址：/equipmentstatus-enums')
+                        }
+                    })
+                    .catch((error) => {
+                        reject(error.response.status + '  ' + error.response.data)
+                    })
+            } else {
+                // 假数据
+            }
+        })
+    },
     // 获取所有设备型号
     getEquipmentModels: function() {
         return new Promise((resolve, reject) => {
@@ -143,6 +168,26 @@ var EquipmentService = {
             }
         })
     },
+    //修改设备信息
+    updateEquipmentInfo: function(param) {
+        return new Promise((resolve, reject) => {
+            if (isRealData) {
+                axios.put('/equipments', param).then(res => {
+                        let { code, data, msg } = res.data
+                        if (code == 200) {
+                            resolve(data)
+                        } else {
+                            reject(msg + '地址：/equipments/')
+                        }
+                    })
+                    .catch((error) => {
+                        reject(error.response.status + '  ' + error.response.data)
+                    })
+            } else {
+                //假数据
+            }
+        })
+    },
     // 获取各设备类别个数
     getEquTypeAndCount: function() {
         return new Promise((resolve, reject) => {
@@ -218,10 +263,10 @@ var EquipmentService = {
             }
         })
     },
-    batchOutBound: function(ids, param) {
+    batchOutBound: function(ids, tunnelId, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post('/spare-outs/' + ids, param).then(res => {
+                axios.post('/spare-outs/' + ids + '/tunnels/' + tunnelId, param).then(res => {
                         let { code, data, msg } = res.data
                         if (code == 200) {
                             resolve(data)
@@ -425,9 +470,9 @@ var EquipmentService = {
                 })
             }
         })
-    }
+    },
 }
 
 export {
-	EquipmentService
+    EquipmentService
 }

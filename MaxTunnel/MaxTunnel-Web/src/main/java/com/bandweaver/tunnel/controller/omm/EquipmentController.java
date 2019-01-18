@@ -73,13 +73,13 @@ public class EquipmentController {
     /**
      *  添加设备
      * @param name 设备名称
-     * @param type 设备类型（枚举）
-     * @param serviceLife 声明周期（数值）
+     * @param type 设备类型
+     * @param runTime 投运时间
      * @param status 设备状态（枚举）
-     * @param assetNo 资产编号（字符串）
      * @param tunnelId 管廊id
      * @param venderId 供应商id
      * @param modelId 设备型号id
+     * @param objId 关联对象id
      * @return {"msg":"请求成功","code":"200","data":{}}  
      * @throws
      * @author shaosen
@@ -94,45 +94,10 @@ public class EquipmentController {
     
     
     /**
-     * 添加测试数据
-     * @return JSONObject  
-     * @throws
-     * @author shaosen
-     * @date 2018年6月11日
-     */
-    @RequestMapping(value="equipments/batch",method=RequestMethod.GET)
-    public JSONObject addTestData() {
-    	
-    	List<Equipment> list = new ArrayList<>();
-    		for (int i = 1; i <= 200; i++) {
-    			Equipment pojo = new Equipment();
-    			pojo.setName("设备-"+i);
-    			pojo.setType((int)(Math.random()*6)+1);
-    			pojo.setCrtTime(DateUtil.getFrontDay(new Date(), i));
-    			pojo.setServiceLife(1000);
-    			pojo.setStatus((int)(Math.random()*2)+1);
-    			pojo.setAssetNo("sn-"+i);
-    			pojo.setTunnelId((int)(Math.random()*5)+1);
-    			pojo.setVenderId((int)(Math.random()*3)+1);
-    			pojo.setModelId((int)(Math.random()*3)+1);
-    			pojo.setImgUrl("");
-    			list.add(pojo);
-    		
-    		}
-    		equipmentService.addEquipmentBatch(list);
-    	
-    		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-    }
-    
-    
-    
-
-    /**
      *  分页查询
      * @param name 设备名称（支持模糊查询）
-     * @param type 设备类型（枚举）
+     * @param type 设备类型
      * @param status 设备状态（枚举）
-     * @param assetNo 资产编号（字符串）
      * @param tunnelId 管廊id
      * @param venderId 供应商id
      * @param modelId 设备型号id
@@ -140,7 +105,7 @@ public class EquipmentController {
      * @param endTime 结束时间
      * @param pageNum 必须
      * @param pageSize 必须
-     * @return {"msg":"请求成功","code":"200","data":{"total":11,"list":[{"id":1,"assetNo":"sn003","name":"安全防范设备3","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-1\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":1,"name":"model-1","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}},{"id":2,"assetNo":"sn001","name":"安全防范设备1","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-2\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":2,"name":"model-2","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":6,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6],"navigateFirstPage":1,"navigateLastPage":6,"firstPage":1,"lastPage":6}}  
+     * @return {"msg":"请求成功","code":"200","data":{"total":11,"list":[{"id":1,"name":"安全防范设备3","type":1,"typeName":"安全防范","crtTime":1525406400000,"status":1,"statusName":"运行中","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":1,"name":"model-1","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}},{"id":2,"assetNo":"sn001","name":"安全防范设备1","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-2\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":2,"name":"model-2","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":6,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6],"navigateFirstPage":1,"navigateLastPage":6,"firstPage":1,"lastPage":6}}  
      * @throws
      * @author shaosen
      * @date 2018年5月29日
@@ -168,7 +133,7 @@ public class EquipmentController {
     /**
      	* 通过id获取设备信息
      * @param  id 设备id
-     * @return {"msg":"请求成功","code":"200","data":{"id":1,"assetNo":"sn003","name":"安全防范设备3","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-1\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":1,"name":"model-1","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}}}  
+     * @return {"msg":"请求成功","code":"200","data":{"id":1,"name":"安全防范设备3","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-1\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":1,"name":"model-1","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}}}  
      * @throws
      * @author shaosen
      * @date 2018年6月6日
@@ -182,7 +147,6 @@ public class EquipmentController {
     /**
           * 更新设备
      * @param  equipment 参考添加参数列表
-     * @param @return   
      * @return {"msg":"请求成功","code":"200","data":{}}  
      * @throws
      * @author shaosen
@@ -555,14 +519,14 @@ public class EquipmentController {
     	list.add(jsonOne);
     	
     	JSONObject jsonTwo = new JSONObject();
-    	jsonTwo.put("key", "故障设备数");
+    	jsonTwo.put("key", "设备故障数");
     	jsonTwo.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.BROKEN.getValue(),null));
     	list.add(jsonTwo);
     	
-    	JSONObject jsonThree = new JSONObject();
-    	jsonThree.put("key", "备品数");
-    	//jsonThree.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.BACKUP.getValue(),null));
-    	list.add(jsonThree);
+//    	JSONObject jsonThree = new JSONObject();
+//    	jsonThree.put("key", "设备报废数");
+//    	jsonThree.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.SCRAP.getValue(),null));
+//    	list.add(jsonThree);
     	
     	//设备运行总时长
     	List<EquipmentDto> dtoList = equipmentService.getAllEquipmentList();
@@ -605,20 +569,29 @@ public class EquipmentController {
     }
     
     /**
-     * 每条管廊的故障设备数
-     * @return	{"msg":"请求成功","code":"200","data":[{"key":"古城大街","val":1},{"key":"金科路","val":0}]}
+     * 每条管廊的故障/正常设备数
+     * @return
      * @author liuya
      * @Date 2018年9月1日
      */
-    @RequestMapping(value = "tunnels/equipments/broken/count",method=RequestMethod.GET)
+    @RequestMapping(value = "tunnels/equipments/status",method=RequestMethod.GET)
     public JSONObject getTunnelEquipmentBrokenCount() {
     	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-		List<Map<String,Object>> list = new ArrayList<>();
+		List<JSONObject> list = new ArrayList<>();
 		for (TunnelSimpleDto tunnel : tunnelList) {
-			Map<String,Object> map = new HashMap<>();
-			map.put("key", tunnelService.getNameById(tunnel.getId()));
-			map.put("val", equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BROKEN.getValue(), null));
-			list.add(map);
+			JSONObject obj = new JSONObject();
+			obj.put("key", tunnel.getName());
+			List<JSONObject> statusList = new ArrayList<>();
+			JSONObject brokenObj = new JSONObject();
+			brokenObj.put("key", "故障");
+			brokenObj.put("val", equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BROKEN.getValue(), null));
+			statusList.add(brokenObj);
+			JSONObject normalObj = new JSONObject();
+			normalObj.put("key", "正常");
+			normalObj.put("val", equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.NORMAL.getValue(), null));
+			statusList.add(normalObj);
+			obj.put("val", statusList);
+			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
@@ -648,20 +621,20 @@ public class EquipmentController {
      * @author liuya
      * @Date 2018年9月3日
      */
-    @RequestMapping(value="equipments/tunnels/count", method=RequestMethod.GET)
+    @RequestMapping(value="tunnels/equipments/types", method=RequestMethod.GET)
     public JSONObject getCountByTunnelAndEquipment() {
-    	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
     	JSONObject json = new JSONObject();
-    	for(TunnelSimpleDto tunnel : tunnelList) {
+    	List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+		for(EquipmentType type : equipmentTypes) {
     		List<Map<String,Object>> list = new ArrayList<>();
-    		List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
-    		for(EquipmentType type : equipmentTypes) {
+    		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+    		for(TunnelSimpleDto tunnel : tunnelList) {
     			Map<String,Object> map = new HashMap<>();
-    			map.put("key",type.getName());
+    			map.put("key",tunnel.getName());
     			map.put("val",equipmentService.getCountByCondition(tunnel.getId(), null, type.getId()));
     			list.add(map);
     		}
-    		json.put(tunnelService.getNameById(tunnel.getId()), list);
+    		json.put(type.getName(), list);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
     }

@@ -333,4 +333,46 @@ export default {
     bottom: 2vh;
     right: 3vw;
 }
+@media (min-width: 2200px){
+    .planContainer{
+      width: 70%;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .btn{
+        margin-left: 20% !important;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    input[type='number']{
+        height: 4vmin;
+        width: 8vmin;
+        font-size: 1.6vmin;
+    }
+}
 </style>

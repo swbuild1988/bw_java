@@ -1,20 +1,20 @@
 <template>
   <div>
-    <Form ref="addDocument" :model="addDocument" :label-width="120">
+    <Form ref="addDocument" :model="addDocument" class="form">
         <h2 class="title">添加文件</h2>
         <div class="content">
             <FormItem label="资料类型：">
-                <Select v-model="addDocument.docType">
+                <Select v-model="addDocument.docType" class="inputWidth">
                     <Option v-for="type in selectList.docTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="文件类型：">
-                <Select v-model="addDocument.fileType">
+                <Select v-model="addDocument.fileType" class="inputWidth">
                     <Option v-for="type in selectList.fileTypes" :value="type.val" :key="type.val">{{ type.key  +'  支持'+ type.type}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="文件：">
-                <Upload multiple  ref="upload" :data="addDocument" type="drag" :action="'/'+apiUrl+'/files/upload'" :on-success="success" :on-error="error">
+                <Upload multiple  ref="upload" :data="addDocument" type="drag" :action="'/'+apiUrl+'/files/upload'" :on-success="success" :on-error="error" class="inputWidth">
                     <div class="upload">
                         <Icon type="android-upload" size="52" color="#3399ff"></Icon>
                         <p>选择或拖拽要上传的文件</p>
@@ -123,15 +123,15 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 600px;
-    margin: 20px auto;
+    width: 60vmin;
+    margin: 2vmin auto;
 }
 h2{
     text-align: center;
     margin-bottom: 20px;
 }
 .tip{
-    font-size: 6px;
+    font-size: 0.6vmin;
 }
 .upload{
     height: 200px;
@@ -142,5 +142,29 @@ h2{
 }
 .title{
     margin-top: 5vh;
+    font-size: 1.8vmin;
+}
+.form >>> .ivu-form-item-label{
+    width: 12vmin;
+}
+.inputWidth{
+    width: 40vmin;
+}
+
+.form >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+
+.form >>> .ivu-select-placeholder{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
+}
+.form >>> .ivu-select-selected-value{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
 }
 </style>

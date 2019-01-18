@@ -64,4 +64,10 @@ public class PermissionServiceImpl implements PermissionService {
 		return permissionMapper.getPermissionsByMenu(menuName);
 	}
 
+	@Override
+	public List<Permission> getPermissionsByRole(Integer rid) {
+		List<Permission> list = permissionMapper.getPermissionsByRole(rid);
+		return list == null ? Collections.emptyList() : list;
+	}
+
 }

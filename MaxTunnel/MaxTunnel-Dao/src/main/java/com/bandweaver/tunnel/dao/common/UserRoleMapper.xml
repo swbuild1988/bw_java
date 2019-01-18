@@ -83,4 +83,5 @@
   <delete id="deleteByUserId">
   	delete from T_SECURITY_USER_ROLE where u_id = #{userId}
   </delete>
+  
 </mapper>

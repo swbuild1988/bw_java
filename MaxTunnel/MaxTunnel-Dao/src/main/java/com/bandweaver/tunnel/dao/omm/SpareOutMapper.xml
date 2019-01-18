@@ -159,14 +159,9 @@
 		order by a.count desc
 	</select>
 	
-	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
-		select a.*,b.name
-	    from (select count(1) as count,type_id as id 
-	      from T_OMM_SPARE
-	      where status = 0
-	      group by type_id) a
-	    left join t_Omm_Equipment_Type b on a.id = b.id
-	    order by a.count desc
+	<select id="getCountByWhither" resultType="Integer">
+		select count(1) from t_omm_spare_out
+		where whither = #{whither}
 	</select>
 	
     <resultMap id="spareOutDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.SpareOutDto">

@@ -38,11 +38,23 @@
     }
     .mapgaugeLast {
         width: 100%;
-        height: 16%;
+
         position: relative;
         /*box-shadow: 0 0 1rem rgba(26,216,239,1) inset;*/
         background: url("../../../assets/VM/gauge_bg.png") no-repeat;
         background-size: 100% 100%;
+    }
+    /* 小屏幕（显示器，小于等于 1920px） */
+    @media (max-width: 1920px) {
+        .mapgaugeLast {
+            height: 16%;
+        }
+    }
+    /* 大屏幕（显示器，大于等于 1920px） */
+    @media (min-width: 1921px) {
+        .mapgaugeLast {
+            height: 14%;
+        }
     }
 </style>
 

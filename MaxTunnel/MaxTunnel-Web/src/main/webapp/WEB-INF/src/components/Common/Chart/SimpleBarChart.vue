@@ -134,7 +134,6 @@ export default {
                                     : [].concat(init.yData, item.val)
                         };
                     }, {});
-                    console.log("simple bar data", newData);
                     if (
                         JSON.stringify(newData.xData) !=
                             JSON.stringify(_this.xData) ||
@@ -173,7 +172,7 @@ export default {
         //定时刷新数据
         refreshData() {
             let _this = this;
-            
+
             if (_this.parameters.timer) {
 
                 let { intervalId, intervalTime } = _this.parameters.timer;
@@ -187,7 +186,7 @@ export default {
                 });
                 _this.fetchData(_this.requestUrl);
                 }, intervalTime);
-                
+
             }
             }
     }

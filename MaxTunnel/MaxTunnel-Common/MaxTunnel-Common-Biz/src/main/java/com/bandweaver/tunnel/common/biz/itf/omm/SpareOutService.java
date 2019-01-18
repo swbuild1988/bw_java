@@ -12,7 +12,7 @@ public interface SpareOutService {
 
     int update(SpareOut s);
 
-    int addBatch(List<SpareOut> list);
+    int addBatch(List<SpareOut> list, Integer tunnelId);
     
     List<SpareOutDto> getSpareOutDtoByCondition(SpareOutVo vo);
     
@@ -24,6 +24,6 @@ public interface SpareOutService {
     
     List<CommonDto> getCountGroupByStaffId();
     
-    List<CommonDto> getCountGroupByTypeId();
+    int getCountByWhither(Integer whither);
     
 }

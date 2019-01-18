@@ -1,7 +1,8 @@
 {
     "VMWebConfig": {
         "WebConfig": {
-            "data": [{
+            "data": [
+                {
                     "id": 1,
                     "title": "入廊信息",
                     "url": "/req-historys/info",
@@ -56,9 +57,9 @@
                             "legend": {
                                 "data": []
                             },
-                            "grid":{
-                                "left":"10%",
-                                "right":"10%"
+                            "grid": {
+                                "left": "10%",
+                                "right": "10%"
                             },
                             "radar": {
                                 "name": {
@@ -71,9 +72,11 @@
                                     }
                                 }
                             },
-                            "series": [{
-                                "type": "radar"
-                            }]
+                            "series": [
+                                {
+                                    "type": "radar"
+                                }
+                            ]
                         },
                         "timer": {
                             "intervalId": 0,
@@ -89,37 +92,39 @@
                     "parameters": {
                         "option": {
                             "title": {},
-                            "series": [{
-                                "type": "pie",
-                                "radius": [50, 130],
-                                "center": ["50%", "50%"],
-                                "label": {
-                                    "normal": {
-                                        "show": true,
-                                        "textStyle": {}
-                                    },
-                                    "emphasis": {
-                                        "show": true,
-                                        "textStyle": {
-                                            "fontSize": "15",
-                                            "fontWeight": "bold"
-                                        }
-                                    }
-                                },
-                                "labelLine": {
-                                    "normal": {
-                                        "show": true,
-                                        "lineStyle": {
-                                            "color": "rgba(255, 255, 255, 0.3)"
+                            "series": [
+                                {
+                                    "type": "pie",
+                                    "radius": [50, 130],
+                                    "center": ["50%", "50%"],
+                                    "label": {
+                                        "normal": {
+                                            "show": true,
+                                            "textStyle": {}
                                         },
-                                        "smooth": 0.2,
-                                        "length": 10,
-                                        "length2": 10
-                                    }
-                                },
-                                "animationType": "scale",
-                                "animationEasing": "elasticOut"
-                            }]
+                                        "emphasis": {
+                                            "show": true,
+                                            "textStyle": {
+                                                "fontSize": "15",
+                                                "fontWeight": "bold"
+                                            }
+                                        }
+                                    },
+                                    "labelLine": {
+                                        "normal": {
+                                            "show": true,
+                                            "lineStyle": {
+                                                "color": "rgba(255, 255, 255, 0.3)"
+                                            },
+                                            "smooth": 0.2,
+                                            "length": 10,
+                                            "length2": 10
+                                        }
+                                    },
+                                    "animationType": "scale",
+                                    "animationEasing": "elasticOut"
+                                }
+                            ]
                         },
                         "timer": {
                             "intervalId": 0,
@@ -138,7 +143,6 @@
                             "tunnelName": "古城大街"
                         },
                         "option": {
-
                             "xAxis": {
                                 "axisLabel": {
                                     "interval": 0,
@@ -156,14 +160,16 @@
                                     }
                                 }
                             },
-                            "series": [{
-                                "type": "line",
-                                "areaStyle": {
-                                    "normal": {
-                                        "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
+                            "series": [
+                                {
+                                    "type": "line",
+                                    "areaStyle": {
+                                        "normal": {
+                                            "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
+                                        }
                                     }
                                 }
-                            }]
+                            ]
                         },
                         "timer": {
                             "intervalId": 0,
@@ -296,7 +302,8 @@
                     "parameters": {}
                 }
             ],
-            "deployCharts": [{
+            "deployCharts": [
+                {
                     "modelId": "vmModel1",
                     "dataId": 1,
                     "chartType": 900
@@ -379,206 +386,200 @@
             ]
         }
     },
-    "VMExtendStyle":{
-        "VMContextExtend0":
-        {
-            "className":"模块0",
-            "extendStyle":
-            {
-                "width":"100%",
-                "left":"0"
+    "VMExtendStyle": {
+        "VMContextExtend0": {
+            "className": "模块0",
+            "extendStyle": {
+                "width": "100%",
+                "left": "0"
             },
-            "isShow":true
+            "isShow": true
         },
-        "VMContextExtend1":
-        {
-            "className":"模块1",
-            "extendStyle":
-            {
-                "width":"0",
-                "left":"0"
+        "VMContextExtend1": {
+            "className": "模块1",
+            "extendStyle": {
+                "width": "0",
+                "left": "0"
             },
-            "isShow":true
+            "isShow": true
         },
-        "VMContextExtend2":
-        {
-            "className":"模块2",
-            "extendStyle":
-            {
-                "width":"0",
-                "left":"0"
+        "VMContextExtend2": {
+            "className": "模块2",
+            "extendStyle": {
+                "width": "0",
+                "left": "0"
             },
-            "isShow":true
+            "isShow": true
         }
     },
-    "flyFilePathes":[
+    "flyFilePathes": [
         {
             "id": 1,
             "name": "飞行路线_1",
             "path": "/VM/font/flytest.fpf",
-            "isFlyLoop":"true"
-        }, {
+            "isFlyLoop": "true"
+        },
+        {
             "id": 2,
             "name": "飞行路线_2",
             "path": "/VM/font/flytest2.fpf",
-            "isFlyLoop":"true",
-            "waitTime" : 30
+            "isFlyLoop": "true",
+            "waitTime": 30
         }
     ],
-    "VMEntityConfig":{
-        "entityParam":[
+    "VMEntityConfig": {
+        "entityParam": [
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.49948864664668",
-                        "Y":"37.71034251365869",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.49948864664668",
+                        "Y": "37.71034251365869",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"监控中心",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "监控中心",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.49506",
-                        "Y":"37.706148",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.49506",
+                        "Y": "37.706148",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"晋源区实验中学",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "晋源区实验中学",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.499595",
-                        "Y":"37.704056",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.499595",
+                        "Y": "37.704056",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"山西省儿童医院",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "山西省儿童医院",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.477914",
-                        "Y":"37.715545",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.477914",
+                        "Y": "37.715545",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"晋源区政府",
-                        "fontSize":"40"
+                    "label": {
+                        "text": "晋源区政府",
+                        "fontSize": "40"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.4858731580146",
-                        "Y":"37.72776923822512",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.4858731580146",
+                        "Y": "37.72776923822512",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"太原古县城",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "太原古县城",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.52207233753701",
-                        "Y":"37.70384793736499",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.52207233753701",
+                        "Y": "37.70384793736499",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"管廊东入口",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "管廊东入口",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.51743415066589",
-                        "Y":"37.69655876626396",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.51743415066589",
+                        "Y": "37.69655876626396",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"污水泵站",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "污水泵站",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "position":{
-                        "X":"112.51382289846887",
-                        "Y":"37.69271374038769",
-                        "Z":"8.05671606378695929"
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.51382289846887",
+                        "Y": "37.69271374038769",
+                        "Z": "8.05671606378695929"
                     },
-                    "point":{
-                        "outlineWidth":"6",
-                        "pixelSize":"20"
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
                     },
-                    "label":{
-                        "text":"雨水泵站",
-                        "fontSize":"30"
+                    "label": {
+                        "text": "雨水泵站",
+                        "fontSize": "30"
                     }
                 }
             },
             {
-                "entityExtendParameters":{
-                    "polyline":{
-                        "position":{
-                            "startLon":"112.484733",
-                            "startLat":"37.715056",
-                            "endLon":"112.524978",
-                            "endLat":"37.703828"
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": {
+                            "startLon": "112.484733",
+                            "startLat": "37.715056",
+                            "endLon": "112.524978",
+                            "endLat": "37.7036"
                         },
-                        "width":5
+                        "width": 5,
+                        "color": "black"
                     }
                 }
             }
-
         ]
     },
-    "progressTime":90  
-    
+    "progressTime": 90
 }

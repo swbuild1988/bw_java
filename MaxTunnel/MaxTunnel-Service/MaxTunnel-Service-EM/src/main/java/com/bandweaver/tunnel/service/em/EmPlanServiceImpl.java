@@ -200,11 +200,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 			section = collect.get(0);
 		if(section != null) {
 			
-//			Area area = section.getArea();
-//			if(area != null){
-//				areaName = area.getName();
-//			}
-			
 			double longitude_ = 0,latitude_ = 0;
 			String startPoint = section.getStartPoint();
 			if(!StringTools.isNullOrEmpty(startPoint)) {
@@ -238,21 +233,12 @@ public class EmPlanServiceImpl implements EmPlanService {
 		
 		for (EmPlanDto e : eList) {
 			
-			//拼接描述信息
-//			StringBuffer buffer = new StringBuffer();
-//			buffer.append("防火区：" + areaName + " ");
-//			if(e.getTargetKey() == TargetEnum.ASSIGN_TO.getValue())
-//				buffer.append("目标对象：监测对象ID[" + e.getTargetValue() + "]");
-//			else if(e.getTargetKey() == TargetEnum.TYPE.getValue())
-//				buffer.append("目标对象：所有" + ObjectType.getEnum(DataTypeUtil.toInteger(e.getTargetValue()).intValue()).getName());
-			
 			//获取该节点关联的监测对象及状态
 			List<JSONObject> objJsonList = getMeasObjJsonList(sectionList, allMeasObjList, e);
 			
 			JSONObject json = new JSONObject();
 			json.put("node", e.getTaskName());
 			json.put("status", NodeStatusEnum.FINISHED.getValue());
-//			json.put("desc", buffer.toString());
 			json.put("objectList", objJsonList);
 			json.put("isSwitch", e.getActionKey() == ActionEnum.SWITCH.getValue());
 			processList.add(json);
@@ -429,7 +415,6 @@ public class EmPlanServiceImpl implements EmPlanService {
 			objectJson.put("objtypeId", measObj.getObjtypeId());
 			double cv = measObjService.getMeasObjCVByIdAndDataType(objId, measObj.getDatatypeId());
 			objectJson.put("cv", cv);
-//			objectJson.put("isSwitch", measObj.getDatatypeId()==DataType.SI.getValue());
 			objJsonList.add(objectJson);
 		}
 		return objJsonList;

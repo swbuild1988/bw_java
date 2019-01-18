@@ -17,20 +17,14 @@ public interface SpareMapper {
     int update(Spare spare);
 
     int addBatch(List<Spare> list);
+    
     /**
-     * 获取所有未出库的备品
+     * 获取状态备品
      * @return
      * @author ya.liu
      * @Date 2018年11月26日
      */
-    List<SpareDto> getSpareDto();
-    /**
-     * 获取所有已出库的备品
-     * @return
-     * @author ya.liu
-     * @Date 2018年11月26日
-     */
-    List<SpareDto> getSpareDtoByStatus();
+    List<SpareDto> getSpareDtoByStatus(Boolean status);
     /**
      * 条件查询列表
      * @param vo
@@ -44,5 +38,7 @@ public interface SpareMapper {
 
     int deleteByIds(List<Integer> list);
     
-    List<CommonDto> getCountGroupByTypeId(@Param("status") Boolean status);
+    int getCountByTypeIdAndStatus(@Param("status") Boolean status, @Param("typeId") Integer typeId);
+    
+    int getCountBystatus(@Param("status") Boolean status);
 }

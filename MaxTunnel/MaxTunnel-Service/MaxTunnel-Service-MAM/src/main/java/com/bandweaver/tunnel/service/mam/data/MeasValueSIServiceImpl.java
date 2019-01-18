@@ -1,11 +1,13 @@
 package com.bandweaver.tunnel.service.mam.data;
 
 import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueSIService;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.dao.mam.MeasValueSIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -27,5 +29,11 @@ public class MeasValueSIServiceImpl implements MeasValueSIService {
 	@Override
 	public void addMeasValueSIBatch(List<MeasValueSI> list) {
 		measValueSIMapper.addMeasValueSIBatch(list);
+	}
+
+	@Override
+	public List<MeasValueSI> getListByTime(Date dayBegin) {
+		List<MeasValueSI> list = measValueSIMapper.getListByTime(dayBegin);
+		return list == null ? Collections.emptyList() : list;
 	}
 }

@@ -14,7 +14,7 @@
             </Col>
         </Row> -->
         <div class="main">
-            <Table border :columns="columns" :data="distributionList" :height="this.distributionList.length * 50 + 40 >　700 ? 700 : this.distributionList.length * 50 + 40"></Table>
+            <Table border :columns="columns" :data="distributionList"></Table>
         </div>
         <!--  <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
         </Page> -->
@@ -254,65 +254,6 @@ export default {
                         console.log(error)
                     }
                 )
-            // axios
-            //     .all([
-            //         axios.get("req-historys/visitors"),
-            //         axios.get("actived-locators"),
-            //         axios.get("locators")
-            //     ])
-            //     .then(
-            //         axios.spread(function(res1, res2, res3) {
-            //             let visitors = res1.data.data;
-            //             // console.log("visitors", visitors);
-            //             let actLocators = res2.data.data;
-            //             // console.log("actLocators", actLocators);
-            //             let locators = res3.data.data;
-            //             // console.log("locators", locators);
-
-            //             if (
-            //                 res1.data.code == 200 &&
-            //                 res2.data.code == 200 &&
-            //                 res3.data.code == 200
-            //             ) {
-            //                 //  获取没有使用的设备
-            //                 _this.equipmentList = [];
-            //                 locators.forEach(equ => {
-            //                     let f = actLocators.find(a => {
-            //                         return a.id == equ.id;
-            //                     });
-            //                     if (!f) {
-            //                         let temp = {};
-            //                         temp.id = equ.id;
-            //                         temp.name = equ.name;
-            //                         _this.equipmentList.push(temp);
-            //                     }
-            //                 });
-
-            //                 // console.log("equipment", _this.equipmentList);
-
-            //                 _this.distributionList = [];
-            //                 visitors.forEach(visitor => {
-            //                     let f = actLocators.find(a => {
-            //                         if (a.owner == null) return false;
-            //                         return a.owner.idCard == visitor.idCard;
-            //                     });
-            //                     let temp = {};
-            //                     temp.username = visitor.name;
-            //                     temp.user = visitor;
-            //                     if (f) {
-            //                         temp.equipmentId = f.id;
-            //                         temp.equipmentName = f.name;
-            //                     } else {
-            //                         temp.equipmentId = null;
-            //                         temp.equipmentName = "";
-            //                     }
-            //                     _this.distributionList.push(temp);
-            //                 });
-
-            //                 // console.log("distribution", _this.distributionList);
-            //             }
-            //         })
-            //     );
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -385,5 +326,21 @@ export default {
     width: 90%;
     height: 88vh;
     text-align: center;
+}
+.main >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+
+.main >>> .ivu-select-placeholder{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
+}
+.main >>> .ivu-select-selected-value{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
 }
 </style>

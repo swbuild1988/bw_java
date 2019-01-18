@@ -26,6 +26,8 @@ public class Tunnel implements Serializable{
     private String camera;
     
     private Integer maxviewConfigId;
+    
+    private Integer status;
 
     private Date crtTime;
 
@@ -108,20 +110,21 @@ public class Tunnel implements Serializable{
 	public void setMaxviewConfigId(Integer maxviewConfigId) {
 		this.maxviewConfigId = maxviewConfigId;
 	}
+	
+	
 
-    @Override
-    public String toString() {
-        return "Tunnel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", sn='" + sn + '\'' +
-                ", length=" + length +
-                ", responsibilityId=" + responsibilityId +
-                ", constructId=" + constructId +
-                ", operationId=" + operationId +
-                ", camera='" + camera + '\'' +
-                ", maxviewConfigId=" + maxviewConfigId +
-                ", crtTime=" + crtTime +
-                '}';
-    }
+    public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	@Override
+	public String toString() {
+		return "Tunnel [id=" + id + ", name=" + name + ", sn=" + sn + ", length=" + length + ", responsibilityId="
+				+ responsibilityId + ", constructId=" + constructId + ", operationId=" + operationId + ", camera="
+				+ camera + ", maxviewConfigId=" + maxviewConfigId + ", status=" + status + ", crtTime=" + crtTime + "]";
+	}
 }

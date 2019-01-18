@@ -3,6 +3,8 @@ package com.bandweaver.tunnel.common.biz.pojo.omm;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * ClassName: Equipment
  * @Description: 设备
@@ -15,11 +17,13 @@ public class Equipment implements Serializable{
 	 */
 	private static final long serialVersionUID = -7268420534954351487L;
 	private Integer id;
+	@JsonIgnore
     private String assetNo;
     private String name;
     private Integer type;
     private Date crtTime;
-    private Integer serviceLife;
+    private Date runTime;
+    private Integer alarmNo;
     private Integer status;
     private Integer tunnelId;
     private Integer venderId;
@@ -92,15 +96,23 @@ public class Equipment implements Serializable{
 		this.crtTime = crtTime;
 	}
 
-	public Integer getServiceLife() {
-        return serviceLife;
-    }
+    public Date getRunTime() {
+		return runTime;
+	}
 
-    public void setServiceLife(Integer serviceLife) {
-        this.serviceLife = serviceLife;
-    }
+	public void setRunTime(Date runTime) {
+		this.runTime = runTime;
+	}
 
-    public Integer getStatus() {
+	public Integer getAlarmNo() {
+		return alarmNo;
+	}
+
+	public void setAlarmNo(Integer alarmNo) {
+		this.alarmNo = alarmNo;
+	}
+
+	public Integer getStatus() {
         return status;
     }
 
@@ -126,8 +138,10 @@ public class Equipment implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Equipment [id=" + id + ", assetNo=" + assetNo + ", name=" + name + ", type=" + type + ", crtTime="
-				+ crtTime + ", serviceLife=" + serviceLife + ", status=" + status + ", tunnelId=" + tunnelId
-				+ ", venderId=" + venderId + ", modelId=" + modelId + ", imgUrl=" + imgUrl + "]";
+		return "Equipment [id=" + id + ", assetNo=" + assetNo + ", name="
+				+ name + ", type=" + type + ", crtTime=" + crtTime
+				+ ", runTime=" + runTime + ", status=" + status + ", tunnelId="
+				+ tunnelId + ", venderId=" + venderId + ", modelId="
+				+ modelId + ", alarmNo=" + alarmNo + ", imgUrl=" + imgUrl + "]";
 	}
 }

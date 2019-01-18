@@ -1,7 +1,7 @@
 <template>
     <Row>
         <Col span="24">
-            <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
+            <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
                 <Col span="4">
                     <span>仪表工具名称</span><span>：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
@@ -56,9 +56,9 @@
                 </Col>
             </Row>
             <div class="list">
-                <Table stripe border height="345" :columns="toolColums"  :data="toolData"></Table>
+                <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
             </div>
-            <div class="pageContainer">
+            <div class="pageContainer" ref="pageContainer">
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
                 show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
@@ -229,7 +229,7 @@ export default {
             },
             toolStatic: {
                 id: 'toolStaticId',
-                requestUrl: 'getToolStatic',
+                requestUrl: 'instruments/usestatus/types',
                 parameters: {
                     option: {
                         backgroundColor: '#E8E8FF',
@@ -245,7 +245,7 @@ export default {
             },
             inventory: {
                 id: 'inventoryId',
-                requestUrl: 'spares/outs/typelala',
+                requestUrl: 'instruments/status/types',
                 parameters: {
                     option: {
                         backgroundColor: '#FBFBEA',
@@ -256,7 +256,7 @@ export default {
                             }
                         },
                         legend: {
-                            data: ['借出','在库'],
+                            data: ['在库','出库'],
                             textStyle: {
                                 color: '#161139'
                             }
@@ -270,7 +270,8 @@ export default {
             toolsType: [],
             toolsModel: [],
             venders: [],
-            staffs: []
+            staffs: [],
+            tableHieght: null
         }
     },
     components: {
@@ -332,6 +333,7 @@ export default {
             }
         })
         this.showTable()
+        this.getTableHeight()
     },
     methods:{
         showTable(){
@@ -353,6 +355,9 @@ export default {
             this.page.pageSize = value;
             this.showTable()
         },
+        getTableHeight(){
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight
+        }
     }
 }
 </script>
@@ -369,13 +374,21 @@ export default {
     letter-spacing: 1.5em;
     margin-right: -1.5em;
 }
-.word63{
-    letter-spacing: 1.5em;
-    margin-right: -1.5em;
-}
 .chartBox{
     width: 49.5%;
-    height: 30vh;
+    height: 40vh;
     margin: 5px 5px 5px 0px;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .queryConditions{
+        font-size: 1.4vmin;
+    }
 }
 </style>

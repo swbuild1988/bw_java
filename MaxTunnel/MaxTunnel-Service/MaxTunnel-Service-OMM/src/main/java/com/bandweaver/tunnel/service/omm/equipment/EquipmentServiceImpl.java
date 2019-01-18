@@ -27,12 +27,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public Integer addEquipment(Equipment equipment) {
 		equipment.setCrtTime(new Date());
+		equipment.setAlarmNo(0);
 		return equipmentMapper.addEquipment(equipment);
-	}
-
-	@Override
-	public Integer updateEquipment(Equipment equipment) {
-		return equipmentMapper.updateEquipment(equipment);
 	}
 
 	@Override

@@ -1,11 +1,15 @@
 <template>
-  <div>
+  <div class="pieContainer">
     <div class="nameTop">{{titleName}}</div>
-    <div class="pie" :id=gaugeId></div>
+    <div class="pie"  :id=gaugeId></div>
   </div>
 </template>
 
 <style scoped>
+  .pieContainer{
+    width: 100%;
+    height: 100%;
+  }
   .pie {
     position: relative;
     margin-top: 1%;
@@ -20,8 +24,21 @@
     fontWeight: "normal";
     z-index: 1003;
     color: #fff;
-    top: .3em;
+
     left: .7em;
+  }
+  /* 小屏幕（显示器，小于等于 1920px） */
+  @media (max-width: 1920px) {
+    .nameTop {
+      top: .3em;
+    }
+  }
+  /* 大屏幕（显示器，大于等于 1920px） */
+  @media (min-width: 1921px) {
+    .nameTop {
+      top: 1rem;
+      font-size: 2rem;
+    }
   }
 </style>
 
@@ -42,7 +59,8 @@
         DOMClass:{
             $pie:"",
             $Map:"",
-            height:""
+            height:"",
+            $fatherDOM:""
         }
       }
     },
@@ -52,6 +70,21 @@
     mounted() {
       this.init();
     },
+      computed:{
+          // contentStyles () {
+          //     let style = {};
+          //     console.log('this.DOMClass.$fatherDOM',document.getElementsByClassName('mapgaugeLast')[0])
+          //     this.DOMClass.$fatherDOM = this.DOMClass.$fatherDOM ? this.DOMClass.$fatherDOM : document.getElementsByClassName('mapgaugeLast')[0];
+          //
+          //     const pieStyle = {
+          //         width : this.DOMClass.$fatherDOM.offsetWidth,
+          //         height : this.DOMClass.$fatherDOM.offsetHeight
+          //     };
+          //
+          //     Object.assign(style,pieStyle);
+          //     return style;
+          // },
+      },
     methods: {
       init() {
         let titleFontSize = this.titleFontSize || 12;
@@ -210,8 +243,8 @@
               width:_this.DOMClass.$Map.width()*0.085,
               height:_this.DOMClass.height*0.085
           })
-      }
 
+      }
     }
   }
 

@@ -22,7 +22,7 @@
         {{curStatusStr}}
       </div>
       <div class="tip" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
-        {{stepName}}&nbsp
+        {{stepName}}&nbsp;
           <div v-if="switBtn.isSwitch" style="float: right;">
               <i-Switch  :value="switBtn.status" size="large" @on-change="changeSwitch">
                   <span slot="open">开</span>
@@ -231,7 +231,7 @@
     animation-fill-mode: both;
   }
 
-  .animation2 {;
+  .animation2 {
     -webkit-animation: twinkling 1s infinite ease-in-out;
     animation: twinkling 1s infinite ease-in-out;
     -webkit-animation-fill-mode: both;

@@ -189,7 +189,7 @@ export default {
 <style scoped>
     .infoList{
         border: 1px solid#dddfe1;
-        width: 260px;
+        width: 75%;
         margin: 10px auto;
         padding: 5px 0px;
         border-radius: 4px;
@@ -217,12 +217,6 @@ export default {
     .option{
         padding: 0px 0px 0px 10px;
     }
-    .conditions{
-        height: 60px;
-        background: #fff;
-        line-height: 60px;
-        padding-left: 10px;
-    }
     .add{
         width: 100px;
         float: right;
@@ -231,9 +225,22 @@ export default {
         margin-right: 5px;
         color: #ff9b00;
     }
-    .allDiv{
-        position:relative;  
-        min-height: 100%;
-        padding-bottom: 60px;
+    @media (min-width: 2200px){
+        .company{
+            font-size: 1.8vmin;
+        }
+        .contact,.tel,.crtTime{
+            font-size: 1.6vmin;
+        }
+        .company,.conta-ctInfo,.crtTime{
+            line-height: 4vh;
+        }
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
     }
 </style>

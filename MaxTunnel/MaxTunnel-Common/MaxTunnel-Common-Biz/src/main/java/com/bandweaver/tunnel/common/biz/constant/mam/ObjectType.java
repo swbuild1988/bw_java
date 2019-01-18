@@ -16,7 +16,7 @@ public enum ObjectType {
     DISTRIBUTET("分布式温度", 8, 1, 1),
     ROBOT("机器人", 9, 4, 97),
     FAN("风机", 10, 1, 3),
-    LIGHT("灯", 11, 1, 3),
+    LIGHT("照明", 11, 1, 3),
     POSITION("定位设备", 20, 4, 97),
     LIQUID("液位仪", 21, 1, 1),
 
