@@ -328,17 +328,6 @@
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-  /* .top {
-    margin-top: 4px;
-    background-color: #fff;
-    font-size: 16px;
-    height: 50px;
-    padding: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-  } */
-=======
     .top {
         margin-top: 4px;
         background-color: #fff;
@@ -348,7 +337,6 @@
         margin-left: 10px;
         margin-right: 10px;
     }
->>>>>>> origin/dev
 
 
     .ivu-tabs-card > > > .ivu-tabs-bar {

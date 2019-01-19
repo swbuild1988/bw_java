@@ -52,12 +52,9 @@
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
             </div>
-<<<<<<< HEAD
             <div style="text-align: center;" v-show="this.pageType==1">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
             </div>
-=======
->>>>>>> origin/dev
         </Form> 
     </div>   
 </template>

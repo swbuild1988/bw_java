@@ -29,30 +29,17 @@
         <Col span="24">
         <Row style="margin-bottom: 10px;">
           <Col span="9" offset="1">
-<<<<<<< HEAD
           <span class="defaultFont_size">起始时间：</span>
           <DatePicker v-model="startTime" type="date" placeholder="选择时间" style="width:61%"></DatePicker>
           </Col>
           <Col span="9">
           <span style="font-size: 1.66vmin;">结束时间：</span>
-=======
-          <span>起始时间：</span>
-          <DatePicker v-model="startTime" type="date" placeholder="选择时间" style="width:61%"></DatePicker>
-          </Col>
-          <Col span="9">
-          <span>结束时间：</span>
->>>>>>> origin/dev
           <DatePicker v-model="endTime" type="date" placeholder="选择时间" style="width: 61%"></DatePicker>
           </Col>
           <Col span="5">
           <div style="position: relative;float: right;right: 0px;">
-<<<<<<< HEAD
             <Button type="primary" icon="ios-search"  style="font-size: 1.66vmin;" @click="queryEnergies" size="small">查询</Button>
             <Button type="primary" icon="ios-download-outline" style="font-size: 1.66vmin;"  @click="exportData" size="small">导出</Button>
-=======
-            <Button type="primary" icon="ios-search"  @click="queryEnergies" size="small">查询</Button>
-            <Button type="primary" icon="ios-download-outline"  @click="exportData" size="small">导出</Button>
->>>>>>> origin/dev
           </div>
           </Col>
         </Row>
@@ -247,11 +234,7 @@
       RadarChart
     },
     mounted() {
-<<<<<<< HEAD
       this.tableHeight = window.innerHeight*0.34;
-=======
-      this.tableHeight = window.innerHeight*0.37-27;
->>>>>>> origin/dev
       this.queryEnergies();
       this.initConsumption();
       this.initTime();

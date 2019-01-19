@@ -312,17 +312,11 @@
   .top {
     padding-top: 8px;
     padding-left: 5px;
-<<<<<<< HEAD
     height: 5vmin;
     background-color: #fff;
     margin-bottom: 10px;
   }
   .top span{
     font-size: 1.66vmin;
-=======
-    height: 50px;
-    background-color: #fff;
-    margin-bottom: 10px;
->>>>>>> origin/dev
   }
 </style>

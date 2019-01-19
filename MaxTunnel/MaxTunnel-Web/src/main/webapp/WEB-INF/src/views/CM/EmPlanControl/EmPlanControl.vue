@@ -6,13 +6,8 @@
             <Col span="6">
                 <span class="word43">预案名</span><span>：</span>
                 <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
-<<<<<<< HEAD
                     <Option value=''>所有</Option>
                     <Option v-for="item in planEnums" :value="item.processKey" :key="item.key">{{item.key}}</Option>
-=======
-                    <Option value=null>所有</Option>
-                    <Option v-for="item in planEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
->>>>>>> origin/dev
                 </Select>
             </Col>
             <Col span="6">

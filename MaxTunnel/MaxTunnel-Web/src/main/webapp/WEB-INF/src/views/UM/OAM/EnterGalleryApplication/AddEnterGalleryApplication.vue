@@ -358,7 +358,6 @@ export default {
 ul li{
     list-style: none;
 }
-<<<<<<< HEAD
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
@@ -396,6 +395,4 @@ ul li{
         font-size: 1.4vmin;
     }
 }
-=======
->>>>>>> origin/dev
 </style>
