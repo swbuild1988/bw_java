@@ -1,6 +1,6 @@
 <template>
 <div :style="backStyle">
-    <Form ref="addRelatedUnitsInfo" :model="addRelatedUnitsInfo" :label-width="120" :rules="ruleValidate">
+    <Form ref="addRelatedUnitsInfo" :model="addRelatedUnitsInfo" :label-width="120" :rules="ruleValidate" @submit.native.prevent>
         <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加相关单位</h2>
         <h2 class="formTitle" v-show="pageType==pageTypes.Edit">更新相关单位信息</h2>
         <FormItem label="单位名称：" prop="name">
@@ -25,13 +25,12 @@
             <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             <div class="ivu-form-item-error-tip" v-show="validateSectionName==true">请选择所属仓段</div>
         </FormItem>
-        <FormItem style="text-align: center">
+        <div style="text-align: center">
+            <Button type="ghost"  style="margin-right: 8px"@click="goBack()">返回</Button>
             <Button type="primary" @click="submit('addRelatedUnitsInfo')" v-show="pageType!=pageTypes.Edit" :disabled="isDisable">提交</Button>
             <Button type="primary" @click="update('addRelatedUnitsInfo')" v-show="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="handleReset('addRelatedUnitsInfo')">取消</Button>
-        </FormItem>
+        </div>
     </Form>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
 </div>       
 </template>
 <script>
@@ -333,5 +332,47 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .planContainer{
+      width: 70%;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .btn{
+        margin-left: 20% !important;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    input[type='number']{
+        height: 4vmin;
+        width: 8vmin;
+        font-size: 1.6vmin;
+    }
 }
 </style>

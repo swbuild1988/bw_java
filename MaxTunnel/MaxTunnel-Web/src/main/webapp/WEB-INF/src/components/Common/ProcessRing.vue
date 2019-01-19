@@ -90,7 +90,9 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    // this.resize()
+  },
   computed: {
     completenessLeftHandle() {
       let circleLength = Math.floor(2 * Math.PI * this.option.radius);
@@ -118,7 +120,12 @@ export default {
       return baseOption;
     }
   },
-  methods: {}
+  methods: {
+    // resize(){
+    //   window.addEventListener("resize",this.completenessLeftHandle)
+    //   window.addEventListener("resize",this.completenessRightHandle)
+    // }
+  }
 };
 </script>
 
@@ -152,6 +159,6 @@ export default {
   line-height: 1;
 }
 .ProcessRing .ring-circle .Mask p {
-  font-size: 21px;
+  font-size: 2.1vmin;
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="conditions">
             <Row>
                 <Col span="6">
-                    流程类型：
+                    <span class="conditionTitle">流程类型：</span>
                     <Select style="width:60%" v-model="conditions.processType" @on-change="queryMyTask()">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in processType" :value="item.val" :key="index">{{item.key}}</Option>
@@ -26,7 +26,7 @@
                     <div class="unitBox" @click="goToMoudle(item)">
                         <div class="title">
                             <p>{{item.processTypeName}}</p>
-                            <p style="font-size: 18px;margin-top: 5px;">{{item.status}}</p>
+                            <p class="workDetails">{{item.status}}</p>
                         </div>
                         <div class="crtTime">
                             <span>{{item.crtTime}} </span>
@@ -208,5 +208,37 @@ export default {
         bottom: 2px;
         right: 5px;
         color: #fff;
+    }
+    .workDetails{
+        font-size: 18px;
+        margin-top: 5px;
+    }
+    @media (min-width: 2200px){
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
+        .workDetails{
+            font-size: 1.8vmin;
+            margin-top: 0.5vmin;
+        }
+        .unitBox{
+            height: 10vmin;
+            margin: 1vmin auto;
+            border-radius: 0.4vmin;
+        }
+        .title{
+            font-size: 2vmin;
+            line-height: 3vmin;
+            padding-top: 1vmin;
+        }
+        .crtTime{
+            bottom: 0.2vmin;
+            right: 0.5vmin;
+            font-size: 1.2vmin;
+        }
     }
 </style>

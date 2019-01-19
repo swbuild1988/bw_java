@@ -36,8 +36,10 @@
       <Button type="error" style="margin-left: 8px" @click="agree(0)" v-show="this.$route.params.isFinished!=false">不同意</Button>
       <Button type="info"  class="btn" v-show="this.$route.params.isFinished==false">审核中</Button>
     </FormItem>
+    <FormItem style="text-align: center;margin-left: -140px">
+        <Button @click="goBack()" type="gost">返回</Button>
+    </FormItem>
   </Form>
-  <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
   </div>
 </div>
 </template>
@@ -164,6 +166,33 @@ button {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .formTitle{
+        font-size: 2.5vmin;
+    }
+    textarea.ivu-input{
+        height: 5.5vmin !important;
+        min-height: 5.5vmin !important;
+    }
 }
 </style>
 

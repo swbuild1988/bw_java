@@ -35,7 +35,7 @@
                     </DatePicker>
                 </Col>
                  <Col span="6">
-                    <Poptip placement="bottom" width="1000">
+                    <Poptip placement="bottom">
                        <span>客户名称：</span>
                        <Input v-model="customerName" placeholder="请选择客户" id="cusInput"></Input>
                        <div class="pop" slot="content">
@@ -44,7 +44,7 @@
                     </Poptip>
                 </Col>
                 <Col span="6">
-                     <Button type="primary" @click="search" icon="ios-search">查询</Button>
+                    <Button type="primary" @click="search" icon="ios-search" size="small">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -81,25 +81,27 @@
                         <div class="option">
                             <Tooltip content="详情">
                                 <div class="buttons">
-                                    <Icon type="android-list" @click="read(index)" size="24" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="android-list" @click="read(index)" color="rgb(198,206,230)" class="icons"></Icon>
                                 </div>
                             </Tooltip>
                             <Tooltip content="编辑">
                                 <div class="buttons">
-                                    <Icon type="edit" @click="edit(index)" size="24" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="edit" @click="edit(index)" class="icons" color="rgb(198,206,230)"></Icon>
                                 </div>
                             </Tooltip>
                         </div>
                         <Tooltip content="删除" class="del">
-                            <Icon type="trash-a" @click="del(index)" size="26" color="rgb(162, 77, 72)"></Icon>
+                            <Icon type="trash-a" @click="del(index)" class="icons" color="rgb(162, 77, 72)"></Icon>
                         </Tooltip>
                         </div>
                     </div>
                 </Col>
             </Row>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
-        </Page>
+        <div class="page">
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
+            </Page>
+        </div>
     </div>
 </template>
 
@@ -236,6 +238,7 @@
                             //     })  
                             // })  
                             _this.contractIds.push(a.id)   
+                            _this.page.pageTotal = result.total
                         })
                     })
             },
@@ -304,6 +307,9 @@
 </script>
 
 <style scoped>
+.allDiv {
+    padding-bottom: 0;
+}
 .list{
     margin-top: 10px;
     background-color: white;
@@ -330,13 +336,13 @@
 }
 .option{
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 1.66vmin;
+    right: 1.66vmin;
 }
 .contractName{
     text-align: center;
     padding: 20px 0 10px 0;
-    font-size: 20px;
+    font-size: 2vmin;
     font-weight: bold;
     color: rgb(252,252,255);
     cursor: pointer;
@@ -382,17 +388,115 @@
 .title{
     color: rgb(223,223,241);
     display: inline-block;
-    font-size: 16px;
+    font-size: 1.66vmin;
     width: 38%;
     text-align: right;
 }
 .info{
     display: inline-block;
     color: rgb(234,234,243);
-    font-size: 16px;
+    font-size: 1.66vmin;
     width: 60%;
 }
 
+.queryCondition >>> .ivu-poptip-popper{
+    width: 100vmin;
+}
 
+.queryCondition span{
+    font-size: 1.66vmin;
+}
+
+.queryCondition >>> .ivu-input {
+    height: 3.2vmin;
+    font-size: 1.28vmin;
+}
+ /*日期选择*/
+.queryCondition >>> .ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+
+.queryCondition >>> .ivu-picker-panel-icon-btn{
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+}
+
+.queryCondition >>> .ivu-date-picker-header-label{
+    font-size: 1.66vmin;
+}
+
+@media (min-width: 1921px){
+    .queryCondition >>> .ivu-date-picker-cells {
+        width: 15vmin;
+        font-size: 1.66vmin;
+    }
+
+    .queryCondition >>> .ivu-date-picker-cells-cell{
+        width: 2vmin;
+    }
+    .queryCondition >>> .ivu-date-picker-cells-header span{
+        padding-right: 2.5rem;
+    }
+}
+
+/*下拉框*/
+.queryCondition >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+
+.queryCondition >>> .ivu-select-placeholder{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
+}
+.queryCondition >>> .ivu-select-selected-value{
+    font-size: 1.28vmin;
+    padding-top: 0.64vmin;
+    height: 2.2vmin;
+    line-height: 2vmin;
+}
+.icons{
+    font-size: 2.4vmin;
+}
+
+.page >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+.page >>> .ivu-select-selected-value{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-select-placeholder{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator input{
+    font-size: 1.2vmin;
+    height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator{
+    display: inline-block;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+.page >>> .ivu-page-next{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-next .ivu-icon{
+    font-size: 1.6vmin;
+}
+.page >>> .ivu-page-prev{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-prev .ivu-icon{
+    font-size: 1.6vmin;
+}
 </style>
 

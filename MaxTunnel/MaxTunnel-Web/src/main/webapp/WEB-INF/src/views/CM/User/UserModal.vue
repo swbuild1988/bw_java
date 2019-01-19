@@ -2,18 +2,19 @@
 <template>
   <div>
     <Modal v-model="show.state" :title="title">
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
         <FormItem label="用户名" prop="username">
-          <Input v-model="formValidate.username" placeholder="设置用户名"></Input>
+          <Input v-model="formValidate.username" placeholder="请输入用户名"></Input>
         </FormItem>
         <FormItem label="密码" prop="password">
-          <Input v-model="formValidate.password" placeholder="密码" type="password"></Input>
+          <Input v-model="formValidate.password" placeholder="请输入密码"></Input>
         </FormItem>
         <FormItem label="确认密码" prop="_password">
-          <Input v-model="formValidate._password" placeholder="确认密码" type="password"></Input>
+          <Input v-model="formValidate._password" placeholder="请输入确认密码" @on-blur="checkPwd()"></Input>
+          <div class="ivu-form-item-error-tip"  v-show="validatePwdCheck">确认密码与初始密码不一致</div>
         </FormItem>
         <FormItem label="年龄" prop="age">
-          <Input v-model="formValidate.age" placeholder="年龄"></Input>
+          <Input v-model="formValidate.age" placeholder="请输入年龄"></Input>
         </FormItem>
         <FormItem label="性别" prop="gender">
           <RadioGroup v-model="formValidate.gender">
@@ -22,21 +23,16 @@
           </RadioGroup>
         </FormItem>
         <FormItem label="真实姓名" prop="realName">
-          <Input v-model="formValidate.realName" placeholder="真实姓名"></Input>
+          <Input v-model="formValidate.realName" placeholder="请输入真实姓名"></Input>
         </FormItem>
         <FormItem label="联系方式" prop="phone">
-          <Input v-model="formValidate.phone" placeholder="联系方式"></Input>
+          <Input v-model="formValidate.phone" placeholder="请输入联系方式"></Input>
         </FormItem>
         <FormItem label="角色" prop="role">
           <Select v-model="formValidate.role">
             <Option v-for="item in roleList" :value="item.label" :key="item.value">{{ item.label }}</Option>
-            <!-- error: this.model.push() is not a function -->
           </Select>
         </FormItem>
-        <!-- <FormItem>
-          <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-          <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
-        </FormItem> -->
       </Form>
       <div slot="footer">
           <Button type="primary" size="large" @click="modalOk('formValidate')">保存</Button>
@@ -105,15 +101,16 @@
             phone:'',
             role:''                //权限
           },
+          validatePwdCheck: false,
           ruleValidate: {
             username: [
               { required: true, message: '用户名不能为空', trigger: 'blur' }
             ],
             password: [
-              { required: true, message: '密码不能为空', trigger: 'blur'}
+              { required: true, message: '请输入密码', trigger: 'blur'}
             ],
             _password: [
-              { required: true, message: '确认密码不能为空', trigger: 'blur'}
+              { required: true, message: '确认密码不能为空', trigger: 'blur' }
             ],
             age: [
               { required: true, message: '年龄不能为空', trigger: 'blur' }
@@ -135,7 +132,7 @@
       },
       mounted(){
         this.formValidate._password = this.formValidate.password;
-        this.handleReset('formValidate');
+        // this.handleReset('formValidate');
       },
       watch: {
         condition: function(){
@@ -153,9 +150,9 @@
       methods: {
         modalOk (name) {
           this.$refs[name].validate((valid) => {
-            if (valid) {
+            if (valid&&this.validatePwdCheck==false) {
               this.$Message.success('成功!');
-              // console.log(this.condition);
+              this.show.state = false
             } else {
               this.$Message.error('失败!');
             }
@@ -171,6 +168,13 @@
         },
         handleReset (name) {
           this.$refs[name].resetFields();
+        },
+        checkPwd(){
+          if(this.formValidate.password!=null&&this.formValidate.password!=this.formValidate._password){
+            this.validatePwdCheck = true
+          }else{
+            this.validatePwdCheck = false
+          }
         }
       }
     }

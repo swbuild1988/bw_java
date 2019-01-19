@@ -25,8 +25,10 @@
         </Row>
         <div style="margin:20px;">
             <Table border ref="selection" :columns="columns7" :data="tableData" @on-selection-change="startdelete"></Table>
-            <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
-            @on-change="handlePage" show-elevator class="pageStyle"></Page>
+        </div>
+        <div>
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total placement="top" 
+            @on-change="handlePage" show-elevator :style="pageStyle"></Page>
         </div>
         <div>
             <max-view-config-module v-bind="config" @addOrEdit="save"></max-view-config-module>
@@ -122,7 +124,12 @@ export default {
                 },
                 editInfo: null,
                 type: null
-            }
+            },
+            pageStyle:{
+                position: 'absolute',
+                bottom: '35px',
+                right: '40px'
+            },
         }
     },
     computed:{
@@ -245,11 +252,6 @@ export default {
 <style scoped>
 .inputWidth{
     width: 60%;
-}
-.pageStyle{
-    text-align: right;
-    margin-top: 100px;
-    margin-right: 10px;
 }
 </style>
 

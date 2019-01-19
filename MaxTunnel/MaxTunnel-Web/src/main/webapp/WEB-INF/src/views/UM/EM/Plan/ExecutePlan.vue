@@ -7,7 +7,7 @@
             <Button type="success" @click="startPlan">启动预案</Button>
         </div>
         </Col>
-      <div v-for="(step,index) in stepList ">
+      <div v-for="(step,index) in stepList " :key="index">
         <Col  :span="spanNum">
         <CustomStep v-bind="step" @getSwitchStatus="getSwitchStatus"></CustomStep>
         </Col>
@@ -21,9 +21,9 @@
         </div>
         </Col>
       <Col span="12" style="padding: 10px;">
-      <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);">
-        <p slot="title" style="font-size: 20px;">执行日志</p>
-          <Row style="line-height: 30px;font-size: 16px;height:calc(45vh - 180px);overflow-y: auto;">
+      <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);" class="card">
+        <p slot="title" style="font-size: 2vmin;">执行日志</p>
+          <Row style="line-height: 3vmin;font-size: 1.66vmin;height:calc(45vh - 180px);overflow-y: auto;">
               <div  v-for="item in processLog">
             <Col span="8">
             {{item.stepName}}
@@ -42,11 +42,11 @@
       </Card>
       </Col>
         <Col span="12" style="padding: 10px;">
-        <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);">
-            <p slot="title" style="font-size: 20px;">设备列表</p>
-            <Row style="line-height: 30px;font-size: 16px;height:calc(40vh - 170px);overflow-y: auto;">
+        <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);" class="card">
+            <p slot="title" style="font-size: 2vmin;">设备列表</p>
+            <Row style="line-height: 3vmin;font-size: 1.66vmin;height:calc(40vh - 170px);overflow-y: auto;">
                 <div  v-for="item in equipmentList">
-                    <Col span="12" style="padding: 10px;font-size: 18px;">
+                    <Col span="12" style="padding: 10px;font-size: 1.8vmin;">
                     <span>{{item.name}}</span>
                     <div style="float: right;">
                         <img :src="item.url" style="width: 40px;">
@@ -304,9 +304,9 @@
 
 <style scoped>
     .begin{
-        padding-top: 20px;
-        padding-left: 10px;
-        width: 110px;
+        padding-top: 2vmin;
+        padding-left: 1vmin;
+        width: 11vmin;
     }
 
   .border {
@@ -346,5 +346,10 @@
     background-clip: padding-box;
     background: rgba(36, 40, 42, 0.5);
     box-shadow: 0 0 13px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .card >>> .ivu-card-head p{
+    height: 2vmin;
+    line-height: 2vmin;
   }
 </style>

@@ -2,28 +2,31 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">入廊目的：</span>
-                    <Select v-model="conditions.actionId"  @on-change='queryRecords()' style="width:60%">
+                    <Select v-model="conditions.actionId"  style="width:60%">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in actions" :value="item.val" :key="index">{{ item.key }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">是否完成：</span>
-                    <Select v-model="conditions.isFinished"  @on-change='queryRecords()' style="width:60%">
+                    <Select v-model="conditions.isFinished" style="width:60%">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in isFinished" :value="item.key" :key="index">{{ item.val }}</Option>
                     </Select>
                 </Col>
 
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryRecords()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryRecords()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryRecords()">查询</Button>
                 </Col>
             </Row>  
         </div>      
@@ -32,8 +35,9 @@
             <Modal
                 title="参观人员信息"
                 v-model="modal10"
-                class-name="vertical-center-modal">
-                <Table :columns="columns2" :data="visitorInfo" width="500" :height="300"></Table>
+                class-name="vertical-center-modal"
+                :width="modalWidth">
+                <Table :columns="columns2" :data="visitorInfo"></Table>
                 <div slot="footer">
                   <Button type="primary" @click="modal10=false">确定</Button>
                 </div>
@@ -41,7 +45,8 @@
             <Modal
                 title="申请状态"
                 v-model="modal1"
-                class-name="vertical-center-modal">
+                class-name="vertical-center-modal"
+                :width="modalWidth">
                 <image-from-url :url="imageUrl"></image-from-url>
                 <div slot="footer">
                   <Button type="primary" @click="modal1=false">确定</Button>
@@ -297,13 +302,11 @@ export default {
         {
           title: "身份证",
           key: "idCard",
-          align: "center",
-          width: 210
+          align: "center"
         },
         {
           title: "联系方式",
           key: "tel",
-          width: 140,
           align: "center"
         }
       ],
@@ -330,7 +333,9 @@ export default {
       isFinished:[
         {key: 1, val: '是'},
         {key: 0, val: '否'}
-      ]
+      ],
+      modalWidth: null,
+      tableWidth: null
     };
   },
   watch: {
@@ -377,24 +382,7 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/tunnels ").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.tunnels = data;
-    //   }
-    // });
-    // this.axios.get("/action-enums").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.actions = data;
-    //   }
-    // });
-    // this.axios.get("/reqstatus-enums").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.status = data;
-    //   }
-    // });
+    this.getModalWidth()
   },
   methods: {
     queryRecords() {
@@ -496,24 +484,25 @@ export default {
     showPic(id) {
         this.imageUrl = "/req-historys/" + id + "/activiti-png";
         this.modal1 = true;
+    },
+    getModalWidth(){
+      this.modalWidth = document.body.offsetWidth*0.4
+      this.tableWidth = this.modalWidth - 100
     }
   }
 };
 </script>
 <style scoped>
-.allDiv{
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 60px;
-}
-.conditions {
-    height: 60px;
-    line-height: 60px;
-    background: #ffffff;
-    padding-left: 10px;
-}
-.list{
-  background: #ffffff;
-  margin-top: 10px;
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    /* .ivu-modal{
+      width: 50vw !important;
+    } */
 }
 </style>

@@ -17,8 +17,8 @@ import {
 	DefectService
 } from './defectService'
 import {
-	energyConsumptionService
-} from './energyConsumptionService'
+	EnergyConsumptionService
+} from './EnergyConsumptionService'
 import {
 	EnterGalleryService
 } from './enterGalleryService'
@@ -76,7 +76,7 @@ var IndexServices = {
 	CryptoService,
 	CustomerService,
 	DefectService,
-	energyConsumptionService,
+	EnergyConsumptionService,
 	EnterGalleryService,
 	EnumsService,
 	EquipmentService,

@@ -35,14 +35,14 @@
       </Col>
       <Col span="6">
         <span>开始时间：</span>
-        <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startEquipmentTime"></DatePicker>
+        <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
       </Col>
       <Col span="6">
         <span>结束时间：</span>
-        <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endEquipmentTime"></DatePicker>
+        <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary" size="small" @click="showTable()">查询</Button>
+        <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
       </Col>
     </Row>
     <div class="list">
@@ -56,21 +56,21 @@
         </Col>
         <Col span="24">
         <Row :gutter="16">
-          <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 6px;">
-            <div :style="{backgroundImage:'url(' + item.imgUrl + ')'}" class="backGoundBox">
+          <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
+            <div :style="backImage" class="backGoundBox">
               <div class="topBox">
-                <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
+                <a class="ivu-modal-close" style="right: 8px;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
                 <p class="equipentTitle">{{ item.name }}</p>
-                <div class="imgBox"><img :src="item.imgUrl"></div>
+                <div class="imgBox"><img :src="imgUrl"></div>
               </div>
             </div>
             <Row class="detailsBox">
-              <Col span="12">所属管廊：{{item.tunnel.name}}</Col>
-              <Col span="12">设备类型：{{ item.typeName }}</Col>
-              <Col span="12">供应商：{{item.vender.name}}</Col>
-              <Col span="12">所属型号：{{item.model.name}}</Col>
-              <Col span="12">设备状态：{{item.statusName}}</Col>
-              <Col span="12">启用时间：{{ item.crtTime }}</Col>
+              <Col span="11">所属管廊：{{item.tunnel.name}}</Col>
+              <Col span="13">设备类型：{{ item.typeName }}</Col>
+              <Col span="11">供应商：{{item.vender.name}}</Col>
+              <Col span="13">所属型号：{{item.model.name}}</Col>
+              <Col span="11">设备状态：{{item.statusName}}</Col>
+              <Col span="13">启用时间：{{ item.crtTime }}</Col>
             </Row>
             <div class="operation">
               <Row>
@@ -103,10 +103,12 @@
 import types from "../../../../../static/Enum.json";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EquipmentService } from "../../../../services/equipmentService";
+import equipemtTunnel from "../../../../assets/UM/equipemtTunnel.jpg";
 export default {
   name: "queryEquipment",
   data() {
     return {
+      imgUrl: equipemtTunnel,
       showOn: true,
       equipments: [],
       tunnels: [],
@@ -118,7 +120,9 @@ export default {
         typeId: null,
         modelId: null,
         status: null,
-        venderId: null
+        venderId: null,
+        startTime: null,
+        endTime: null
       },
       equipmentStatus: types.equipmentStatus,
       pagingList: [],
@@ -134,7 +138,10 @@ export default {
       },
       equipmentType: [],
       equipmentModel: [],
-      venders: []
+      venders: [],
+      backImage: {
+        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",   
+      }
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -160,15 +167,16 @@ export default {
   computed: {
     params() {
       let param = {
-        // pageNum: this.page.pageNum,
-        // pageSize: this.page.pageSize,
-        // tunnelId: this.tunnelId,
-        // type: this.condition.type,
-        // status: this.condition.status,
-        // startEquipmentTime: new Date(
-        //   this.condition.startEquipmentTime
-        // ).getTime(),
-        // endEquipmentTime: new Date(this.condition.endEquipmentTime).getTime()
+        name: this.conditions.name,
+        type: this.conditions.typeId,
+        status: this.conditions.status,
+        tunnelId: this.conditions.tunnelId,
+        venderId: this.conditions.venderId,
+        modelId: this.conditions.modelId,
+        startTime: this.conditions.startTime,
+        endTime: this.conditions.endTime,
+        pageNum: this.page.pageNum,
+        pageSize: this.page.pageSize
       };
       return Object.assign({}, param);
     }
@@ -233,13 +241,11 @@ export default {
       EquipmentService.equipmentDatagird(this.params).then(
         result => {
           for (let index in result.list) {
-            result.list[index].crtTime = new Date(
-              result.list[index].crtTime
-            ).format("yyyy-MM-dd");
-            if (result.list[index].imgUrl != null) {
-              result.list[index].imgUrl =
-                _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
-            }
+            result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd hh:mm:s");
+            // if (result.list[index].imgUrl != null) {
+            //   result.list[index].imgUrl =
+            //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
+            // }
           }
           _this.equipments = result.list;
           _this.page.pageTotal = result.total;
@@ -258,7 +264,6 @@ export default {
       this.showTable();
     },
     show(index) {
-      console.log(index);
       this.goToMoudle(index, types.pageType.Read);
     },
     edit(index) {
@@ -301,24 +306,6 @@ export default {
 };
 </script>
 <style scoped>
-/* .queryEquipment {
-  position: relative;
-  min-height: 100%;
-  padding-bottom: 60px;
-} */
-
-.top {
-  height: 60px;
-  line-height: 60px;
-  background: #fff;
-  padding-left: 10px;
-}
-
-.bottom {
-  background: #fff;
-  margin-top: 10px;
-  padding: 10px;
-}
 
 .equipmentList {
   font-size: 17px;
@@ -341,7 +328,7 @@ export default {
   color: #fff;
   font-size: 20px;
   text-align: center;
-  line-height: 50px;
+  line-height: 10vh;
 }
 
 .imgBox {
@@ -356,7 +343,7 @@ export default {
 
 .backGoundBox {
   position: relative;
-  height: 70px;
+  height: 10vh;
   width: 100%;
 }
 
@@ -370,13 +357,14 @@ export default {
 }
 
 .imgBox img {
-    height: 40px;
-    width: 40px;
-    border-radius: 40px;
+    width: 5vh;
+    height: 5vh;
+    border-radius: 5vh;
     position: absolute;
     z-index: 5;
     left: 50%;
-    margin-left: -20px;
+    top: 70%;
+    margin-left: -2.5vh
 }
 
 .detailsBox {
@@ -385,7 +373,7 @@ export default {
   background: #fff;
 }
 
-.detailsBox .ivu-col-span-12 {
+.detailsBox .ivu-col-span-11,.detailsBox .ivu-col-span-13 {
   line-height: 35px;
   padding-left: 20px;
 }
@@ -415,6 +403,47 @@ export default {
 .word43{
   letter-spacing: 0.5em;
   margin-right:  -0.5em;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .queryCondition{
+        font-size: 1.4vmin;
+    }
+    .equipmentList{
+        font-size: 2.5vmin;
+    }
+    .addList {
+        border: 0.2min dashed #dfdfdf;
+        text-align: center;
+        line-height: 4min;
+        color: #8b8b8b;
+        margin-top: 20px;
+        border-radius: 10px;
+        background: #fff;
+        z-index: 10001;
+    }
+    .detailsBox{
+        padding-top: 2vh;    
+    }
+    .detailsBox .ivu-col-span-11,.detailsBox .ivu-col-span-13{
+        line-height: 4vmin;
+        font-size: 1.3vmin;
+    }
+    .operation{
+        font-size: 1.4vmin;
+    }
+    .equipentTitle{
+      font-size: 2vmin;
+    }
+    .ivu-icon{
+      font-size: 2vmin !important;
+    }
 }
 </style>
 

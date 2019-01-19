@@ -14,10 +14,10 @@
             <Input v-model="addEnterGalleryApplication.actionName" readonly></Input>
           </FormItem>
           <FormItem label="计划入廊时间：">
-            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" readonly style="width: 560px"></DatePicker>
+            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" readonly style="width: 100%"></DatePicker>
           </FormItem>
           <FormItem label="访客总人数：">
-            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 560px;"></InputNumber>
+            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
           </FormItem>
           <FormItem label="访客所属公司">
             <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
@@ -26,7 +26,7 @@
             <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
           </FormItem>
           <FormItem label="备注：">
-            <Input type="textarea" v-model="addEnterGalleryApplication.comment" :autosize="{minRows: 2,maxRows: 5}" readonly></Input>
+            <Input class="remark" type="textarea" v-model="addEnterGalleryApplication.comment" readonly></Input>
           </FormItem>
           <FormItem label="审批意见：">
             <!-- <Button type="success"  class="btn" v-show="">同意</Button> -->
@@ -43,7 +43,7 @@
             <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
             <Button type="default">取消</Button>
           </FormItem>
-          <FormItem style="text-align: center" v-show="this.$route.params.isFinished==null">
+          <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished==null">
             <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
             <Button type="default">取消</Button>
           </FormItem>   
@@ -99,8 +99,7 @@ export default {
         {
           title: "身份证号",
           key: "idCard",
-          align: "center",
-          width: 200
+          align: "center"
         },
         {
           title: "联系方式",
@@ -262,6 +261,49 @@ button {
 }
 .btn {
   cursor: text;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .formTitle{
+        font-size: 2.5vmin;
+    }
+    .remark textarea{
+        height: 5.5vmin !important;
+        min-height: 5.5vmin !important;
+    }
+    button{
+        width: 8vmin;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    input[type='number']{
+        height: 4vmin;
+        width: 8vmin;
+        font-size: 1.6vmin;
+    }
+    .ivu-input-number-input-wrap{
+        height: 3.2vmin;
+    }
 }
 </style>
 

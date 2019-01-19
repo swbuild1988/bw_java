@@ -88,6 +88,22 @@ var DataAnalysisService = {
       })
     })
   },
+  NonClearAlarms:function() {
+    return new Promise((resolve, reject) => {
+        axios.get('alarms/non-cleaned/list').then(res => {
+            let {
+                code,
+                data,
+                msg
+            } = res.data
+            if (code == 200) {
+                resolve(data)
+            } else {
+                reject(msg + '地址：alarms/non-cleaned/list')
+            }
+        })
+    })
+}
 }
 
 export {

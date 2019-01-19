@@ -17,7 +17,7 @@
             </FormItem>
             <FormItem label="使用状态：" prop="useStatus">
                 <Select v-model="tools.useStatus">
-                    <Option v-for="item in usingState" :key="item.key" :value="item.key">{{item.val}}</Option>
+                    <Option v-for="item in usingState" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="添加数量：">
@@ -32,11 +32,10 @@
                 <DatePicker type="datetime" v-model="tools.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
             <div style="text-align: center">
-                <Button type="primary" style="margin-right: 10px;" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
-                <Button type="default" @click="handleReset('tools')">取消</Button>
+                <Button type="default" @click="goBack()" style="margin-right: 10px;" >返回</Button>
+                <Button type="primary" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
             </div>
-        </Form> 
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>   
+        </Form>  
     </div>
 </template>
 <script>
@@ -60,8 +59,8 @@ export default {
                 { id: 4, name: '电烙铁' },{ id: 5, name: '信号发射器' },{ id: 6, name: '钢丝钳' }
             ],
             usingState: [
-                { val: '正常', key: 1 },
-                { val: '损坏', key: 0}
+                // { val: '正常', key: 1 },
+                // { val: '损坏', key: 0}
             ],
             toolsModel:[],
             backStyle:{
@@ -122,6 +121,16 @@ export default {
                 this.Log.info(error)
             }
         )
+        //获取tool的状态
+        EquipmentService.getStatus().then(
+            res=>{
+                this.usingState = res
+                console.log(res)
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
     },
     methods:{
         addToolsSubmit(name){
@@ -143,9 +152,9 @@ export default {
             },2000)
         },
         //取消
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
+        // handleReset(name){
+        //     this.$refs[name].resetFields()
+        // },
         //返回
         goBack(){
             this.$router.back(-1);
@@ -166,6 +175,26 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
 }
 </style>
 

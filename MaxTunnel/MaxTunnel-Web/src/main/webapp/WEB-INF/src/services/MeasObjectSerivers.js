@@ -327,9 +327,9 @@ var MeasObjServer = {
     },
 
     //修改设备状态
-    changeEquimentStatus(params){
+    changeEquimentStatus(params) {
         return new Promise((resolve, reject) => {
-            axios.get('sub-sys/action/obj/'+params.id+'/inputval/'+params.status)
+            axios.get('sub-sys/action/obj/' + params.id + '/inputval/' + params.status)
                 .then(res => {
                     let {
                         code,
@@ -347,6 +347,65 @@ var MeasObjServer = {
                 })
         })
     },
+    //获取今日温度，湿度，含氧量最值
+    getToDayExtreDatas() {
+        return new Promise((resolve, reject) => {
+            axios.get('extreme-datas')
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:extreme-datas')
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
+        })
+    },
+    //获取今日监测对象触发次数及与昨日比是否增长
+    getMeasTriggerCounts() {
+        return new Promise((resolve, reject) => {
+            axios.get('meas-switched-counts')
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + ',地址:meas-switched-counts')
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
+            // let data = [{
+            //     name: "电子井盖打开",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: false
+            // }, {
+            //     name: "门禁触发",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: false
+            // }, {
+            //     name: "红外探测器触发",
+            //     value: 12,
+            //     unit: "次",
+            //     isRise: true
+            // }]
+            // resolve(data)
+        })
+    }
 }
 
 export {

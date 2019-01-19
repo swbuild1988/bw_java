@@ -1,23 +1,6 @@
 <template>
   <div>
-    <div class="top">
-      <Row style="font-size:16">
-        <Col span="6">区域:
-          <Select
-            v-model="queryCondition.areaId"
-            @on-change="changeAreaLocation"
-            style="width:12vw;"
-          >
-            <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </Col>
-        <Col span="6">监测仓:
-          <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
-            <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </Col>
-      </Row>
-      <div>
+      <div style="margin: 1vh;">
         <RadioGroup
           v-model="queryCondition.curDataType"
           type="button"
@@ -28,10 +11,42 @@
             v-for="(item,key) in curDataTypeList"
             :key="key"
             :label="item.val"
+            style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
             :class="{select_radio:queryCondition.curDataType==item.val}"
           >{{item.key}}</Radio>
         </RadioGroup>
       </div>
+    <div style="margin: 1vh;">
+      <RadioGroup
+        v-model="queryCondition.areaId"
+        type="button"
+        @on-change="changeAreaLocation"
+        size="large"
+      >
+        <Radio
+          v-for="(item,key) in areas"
+          :key="key"
+          :label="item.id"
+          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+          :class="{select_radio:queryCondition.areaId==item.id}"
+        >{{item.name}}</Radio>
+      </RadioGroup>
+    </div>
+    <div style="margin: 1vh;height:3vh;overflow-y: auto">
+      <RadioGroup
+        v-model="queryCondition.storeId"
+        type="button"
+        @on-change="changeStore"
+        size="large"
+      >
+        <Radio
+          v-for="(item,key) in stores"
+          :key="key"
+          :label="item.id"
+          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+          :class="{select_radio:queryCondition.storeId==item.id}"
+        >{{item.name}}</Radio>
+      </RadioGroup>
     </div>
     <Row :gutter="16">
       <Col span="12">
@@ -44,8 +59,8 @@
               <div></div>
             </TabPane>
             <TabPane name="tunnelMap" label="管廊模型" icon="map">
-              <div class="map" id="GISbox">
-                <TestSmViewer ref="smViewer1"></TestSmViewer>
+              <div class="map">
+                <TestSmViewer ref="smViewer"></TestSmViewer>
               </div>
             </TabPane>
           </Tabs>
@@ -60,6 +75,7 @@
         </Row>
       </Col>
     </Row>
+
   </div>
 </template>
 <script>
@@ -86,13 +102,13 @@ export default {
             dataInterval: null,
             Obj: [],
             scene: null,
-            queryCondition: {
-                tunnelId: null, //监测仓ID
-                storeId: null, //监测区段ID
-                areaId: null,
-                curDataType: "",
-                monitorType: 1 //监测内容类型,1为环境
-            },
+          queryCondition: {
+            tunnelId: null, //监测仓ID
+            storeId: null, //监测区段ID
+            areaId: null,
+            curDataType: "",
+            monitorType: 1 //监测内容类型,1为环境
+          },
             curDataTypeList: [],
             tunnelId: 0,
             tunnels: [],
@@ -143,7 +159,6 @@ export default {
   mounted() {
     this.fentchData();
     this.changeDataType();
-    this.setGIS();
     this.intervalData();
   },
   methods: {
@@ -160,8 +175,10 @@ export default {
       //获取区段列表
       let _this = this;
       //获取位置信息
-      // let curView = _this.stores.filter(a => a.id == _this.queryCondition.storeId)[0].camera;
-      //  _this.changeArea(curView);
+      let curView = _this.stores.filter(a => a.id == _this.queryCondition.storeId)[0].camera;
+      if(curView&&curView!=""){
+          _this.changeArea(curView);
+      }
       _this.getObjDetialData();
       _this.getvideos();
     },
@@ -267,7 +284,7 @@ export default {
       } catch (e) {}
     },
 
-    //切换开关量控制和设备是否点击
+    //定位设备切换开关量控制
     changeStatus(id, ObjVal, datatypeId, clickStatus) {
       if (datatypeId != 1) {
         this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
@@ -278,15 +295,14 @@ export default {
             b.clickStatus = clickStatus;
             this.Log.info("click " + b.id);
             SuperMapSqlQuery(
-              this,
-              SuperMapConfig.BIM_DATA,
+              this.SuperMapConfig.BIM_DATA,
               this.VMConfig.queryParam,
               "moid = " + b.id
             )
               .then(res => {
                 this.Log.info("查找成功", res);
                 if (res.length > 0) {
-                  this.$refs.smViewer1.LookAt1(res[0], 50, -10, 5);
+                  this.$refs.smViewer.LookAt1(res[0], 50, -10, 5);
                 }
               })
               .then(res => {
@@ -327,6 +343,7 @@ export default {
             temp.datatypeId = a.datatypeId;
             temp.maxValue = a.maxValue;
             temp.minValue = a.minValue;
+            temp.time = a.time == undefined || a.time == '' ? '' : new Date(a.time).format('yyyy-MM-dd hh:mm:ss');
             if (a.datatypeId == 1) {
               temp.ObjVal = a.curValue.toFixed(2);
             } else {
@@ -363,29 +380,8 @@ export default {
         }
       });
     },
-
-    setGIS() {
-      var gis = document.getElementById("newID");
-      gis.style.display = "block";
-      gis.style.position = "absolute";
-      gis.style.top = "0px";
-      gis.style.height = "100%";
-      gis.style.width = "98%";
-      document.body.removeChild(gis);
-      document.getElementById("GISbox").appendChild(gis);
-      // 加载视角
-      this.$refs.smViewer1.setViewAngAngle();
-    },
-
-    destory3D() {
-      var gis = document.getElementById("newID");
-      gis.style.display = "none";
-      document.getElementById("GISbox").removeChild(gis);
-      document.body.appendChild(gis);
-    }
   },
   beforeDestroy() {
-    this.destory3D();
     clearInterval(this.dataInterval);
     this.dataInterval = null;
   }
@@ -411,25 +407,14 @@ export default {
 
 .map {
   width: 42vw;
-  height: calc(85vh - 200px);
+  height: calc(65vh);
   margin-left: 10px;
 }
 
 .data {
-  height: calc(85vh - 100px - 20px - 40px);
-}
-
-.top {
-  margin: 10px;
-  line-height: 50px;
-  background: #dfe5e5;
-  padding-left: 10px;
-}
-
-.bottom {
-  background: #fff;
-  margin-top: 10px;
-  padding: 10px;
+  height: calc(72vh);
+  font-size: 1.66vmin;
+  padding-bottom: 10px;
 }
 
 .ivu-modal-wrap > .ivu-modal {

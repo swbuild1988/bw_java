@@ -29,8 +29,8 @@
                 <span>结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
-            <Col span="6" offset="6">
-                <Button type="primary" icon="ios-search" @click="queryUnits()">查询</Button>
+            <Col span="6">
+                <Button type="primary" icon="ios-search" @click="queryUnits()" size="small">查询</Button>
             </Col>
         </Row> 
         <div class="list">   
@@ -351,5 +351,74 @@ export default {
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+    }
+    @media (min-width: 2200px){
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
+        .queryCondition{
+            font-size: 1.4vmin;
+        }
+        .unitBox{
+            border: 0.1vmin solid#dddfe1;
+            margin: 1vmin auto;
+            padding: 0.5vmin 0px;
+            border-radius: 0.4vmin;
+            box-shadow: 0.5vmin 0.6vmin 0.4vmin rgba(0, 0, 0, .2);
+        }
+        .title{
+            font-size: 2vmin;
+            padding: 0px 1vmin;
+        }
+        .address{
+            padding: 0px 1vmin;
+        }
+        .contact{
+            line-height: 3.5vmin;
+            margin: 1vmin 0px;
+            padding: 0px 1vmin;
+        }
+        .crtTime{
+            font-size: 1.6vmin;
+            line-height: 4vmin;
+        }
+        .option{
+            padding: 0px 0.4vmin;
+        }
+        .ivu-icon {
+            margin-right: 0.5vmin;
+        }
+        .sectionName{
+            margin-left: 7.7vmin;
+        }
+        .ivu-dropdown-item >>> .ivu-select-dropdown{
+            margin-left: 1.4vmin;
+        }
+        .tree{
+            margin-left: 7.5vmin;
+            border: 0.1vmin solid #cccccc;
+        }
+        .address,.contact{
+            font-size: 1.4vmin;
+        }
+        .ivu-icon{
+            font-size: 1.5vmin !important;
+        }
+        .ivu-tree ul{
+            font-size: 1.4vmin;
+        }
+        .ivu-tree-arrow{
+            font-size: 1.2vmin;
+        }
+        .ivu-checkbox-inner{
+            width: 1.4vmin;
+            height: 1.4vmin;
+            border: 0.1vmin solid #dddee1;
+            border-radius: 0.2vmin;
+        }
     }
 </style>

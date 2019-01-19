@@ -25,23 +25,21 @@
       </div>
       </Col>
       <Col span="15" offset="1" style="padding-right: 10px;">
-      <Row>
+      <Row class="table">
         <Col span="24">
         <Row style="margin-bottom: 10px;">
           <Col span="9" offset="1">
-          <span>起始时间:</span>
+          <span class="defaultFont_size">起始时间：</span>
           <DatePicker v-model="startTime" type="date" placeholder="选择时间" style="width:61%"></DatePicker>
           </Col>
           <Col span="9">
-          <span>结束时间:</span>
+          <span style="font-size: 1.66vmin;">结束时间：</span>
           <DatePicker v-model="endTime" type="date" placeholder="选择时间" style="width: 61%"></DatePicker>
           </Col>
           <Col span="5">
           <div style="position: relative;float: right;right: 0px;">
-            <Button type="primary" icon="ios-search"  @click="queryEnergies" title="查询"
-                    shape="circle"></Button>
-            <Button type="primary" icon="ios-download-outline"  @click="exportData" title="导出"
-                    shape="circle"></Button>
+            <Button type="primary" icon="ios-search"  style="font-size: 1.66vmin;" @click="queryEnergies" size="small">查询</Button>
+            <Button type="primary" icon="ios-download-outline" style="font-size: 1.66vmin;"  @click="exportData" size="small">导出</Button>
           </div>
           </Col>
         </Row>
@@ -71,6 +69,9 @@
   </div>
 </template>
 <style scoped>
+  .defaultFont_size{
+    font-size: 1.66vmin;
+  }
   h1 {
     margin: 2% 1% 0 0;
     width: 8%;
@@ -89,6 +90,41 @@
     border: 2px solid #dddfe1;
     /*box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);*/
   }
+  .table span{
+    font-size: 1.66vmin;
+  }
+  .table >>> .ivu-input {
+      height: 3.2vmin;
+      font-size: 1.28vmin;
+  }
+  .table >>> .ivu-date-picker-header {
+      height: 3.2vmin;
+      line-height: 3.2vmin;
+  }
+
+  .table >>> .ivu-picker-panel-icon-btn{
+      font-size: 1.66vmin;
+      width: 1.28vmin;
+      height: 2.5vmin;
+  }
+
+  .table >>> .ivu-date-picker-header-label{
+      font-size: 1.66vmin;
+  }
+
+  @media (min-width: 1921px){
+      .table >>> .ivu-date-picker-cells {
+          width: 15vmin;
+          font-size: 1.66vmin;
+      }
+
+      .table >>> .ivu-date-picker-cells-cell{
+          width: 2vmin;
+      }
+      .table >>> .ivu-date-picker-cells-header span{
+          padding-right: 2.5rem;
+      }
+  }
 </style>
 <script>
   import DataBox2 from "../../../../components/Common/Box/DataBox2";
@@ -97,7 +133,7 @@
   import RadarChart from "../../../../components/Common/Chart/SimpleRadarChart";
   import EnergyIcon from "../../../../assets/UM/TunnelEnergy.png";
   import {EnumsService} from "../../../../services/enumsService";
-  import {energyConsumptionService} from "../../../../services/energyConsumptionService";
+  import {EnergyConsumptionService} from "../../../../services/EnergyConsumptionService";
 
   export default {
     name: "tunnel-energy-consumption",
@@ -198,7 +234,7 @@
       RadarChart
     },
     mounted() {
-      this.tableHeight = window.innerHeight*0.37-32;
+      this.tableHeight = window.innerHeight*0.34;
       this.queryEnergies();
       this.initConsumption();
       this.initTime();
@@ -229,9 +265,9 @@
       initConsumption() {
         let _this = this;
         Promise.all([
-          energyConsumptionService.getECHistoryTotal(),
-          energyConsumptionService.getECYearTotal(),
-          energyConsumptionService.getECMonthTotal()
+          EnergyConsumptionService.getECHistoryTotal(),
+          EnergyConsumptionService.getECYearTotal(),
+          EnergyConsumptionService.getECMonthTotal()
         ]).then(result => {
           _this.historyData.value = result[0].val;
           _this.curYearData.value = result[1].val;
@@ -280,7 +316,7 @@
             endTime: _this.endTime.getTime()
           };
         }
-        energyConsumptionService.getECDetail(queryParams).then(
+        EnergyConsumptionService.getECDetail(queryParams).then(
           result => {
             _this.tableData = [];
             _this.tableColumnAdd.powerConsumption = 0;

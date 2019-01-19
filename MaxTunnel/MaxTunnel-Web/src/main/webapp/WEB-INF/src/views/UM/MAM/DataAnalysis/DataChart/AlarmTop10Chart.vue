@@ -1,38 +1,32 @@
 <!--告警top10统计报表-->
 <template>
   <div>
-    <Row class="top" style="margin-bottom: 0px;">
-      <Col span="6" class="col">
-      <span>时间周期:</span>
-      <Select v-model="chartPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
-              @on-change="changeAlarmType">
-        <Option v-for="item in dateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
-      </Select>
+    <Row class="conditions" style="margin-bottom: 0px;">
+      <Col span="4">
+        <span>时间周期：</span>
+        <Select v-model="chartPrams.dateType" style="width:60%;" @on-change="changeAlarmType">
+          <Option v-for="item in dateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
+        </Select>
       </Col>
-      <Col span="6" class="col">
-      <div style="position: relative;float: left; ">
-        <span>开始时间:</span>
+      <Col span="4">
+        <span>开始时间：</span>
         <DatePicker v-model="chartPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
-                    style="width: 220px;margin-right: 4px;"></DatePicker>
-      </div>
+                    style="width: 60%"></DatePicker>
       </Col>
-      <Col span="6" class="col">
-      <div style="position: relative;float: left; ">
-        <span>结束时间:</span>
+      <Col span="4">
+        <span>结束时间：</span>
         <DatePicker v-model="chartPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
-                    style="width:220px;margin-right: 14px;"></DatePicker>
-      </div>
+                    style="width:60%"></DatePicker>
       </Col>
-      <Col span="5" class=" col">
-      <span class="planDec">监测对象:
-      </span>
-      <Input v-model="chartPrams.objectId" readonly style="width: 65%;">
-      <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
-      </Input>
+      <Col span="4">
+        <span class="explain">监测对象：</span>
+        <Input v-model="chartPrams.objectId" readonly style="width: 60%;margin-top: 8px">
+          <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
+        </Input>
       </Col>
       <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
-      <Col span="1" class="col">
-      <Button type="primary" shape="circle" icon="ios-search" size="large" title="生成报表" @click="createChart"></Button>
+      <Col span="4">
+        <Button type="primary"  icon="ios-search" size="small" @click="createChart">生成报表</Button>
       </Col>
     </Row>
     <Row style="margin-top: 20px;">
@@ -206,14 +200,7 @@
     padding-left: 10px;
   }
 
-  .planDec {
-    padding: 4px;
-    font-size: 14px;
+  .explain {
     float: left;
-  }
-
-  .col {
-    height: 60px;
-    padding-top: 10px;
   }
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Stomp from "stompjs";
 import { infromationManagDetails } from "../components/Common/3D/infromationManagChart";
+import { changStrLength } from "./commonFun";
 import createProxy from './createProxy'
 
 const MQServerAddress = require('../../static/serverconfig').MQServerAddress;
@@ -45,15 +46,26 @@ class InformationManagement {
         newInformations.forEach((details)=>{
             this.getInformation(informationType).forEach((information,index,messageType)=>{
 
-                if(typeof information=='object' &&　typeof details=='object'){
-                    information[id] == details[id] &&　messageType.splice(index,1);
+                if( typeof information === 'object'
+                    && typeof details === 'object'
+                    && information[id] === details[id]){
+
+                    if( informationType === "personnel" ) {
+
+                        let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == information[id] && entitie.messageType == 'personnel' ) );
+                        Vue.prototype.$viewer.entities.remove( entity )
+
+                    }
+                     messageType.splice(index,1);
                 }
             })
-
         });
+        console.log(informationType,this.getInformation(informationType))
         return this;
     }
     searchInformation(entity,modelProp){
+
+        if(entity._messageType === undefined) return
 
         if(['videos'].indexOf(entity._messageType) !== -1){ //当为视屏实体时，隐藏弹框
             modelProp.show.state = false;
@@ -62,25 +74,27 @@ class InformationManagement {
         modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
         let informations=this.getInformation(entity._messageType);
-
+        console.log('informations',informations)
         if(informations !== undefined && informations.length !== 0 &&　Array.isArray(informations)){
 
             informations.forEach(information=>{
 
                 if( this._getEntityMoId(information,entity._messageType) == entity._moId ){
-
+                    console.log('modelProp',modelProp)
                     modelProp.data.splice(0);
                     modelProp.show.state = true;
                     modelProp.showModelFooter &&　Vue.prototype.$viewerComponent.$store.commit('changeAlarm',{'entity':entity,'object':information});//缓存鼠标获取最后一个告警
 
-                    for(let details in information){
-                        if(information.hasOwnProperty(details)){
-
-                            let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'],details,information);
-
-                            processObj && modelProp.data.push({key:processObj.key,val:processObj.val});
-                        }
-                    }
+                    // for( let details in information ){
+                    //     if(information.hasOwnProperty(details)){
+                    //         console.log(entity._messageType,infromationManagDetails[entity._messageType + 'Infromations'])
+                    //         let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'],details,information);
+                    //
+                    //         processObj && modelProp.data.push({key:processObj.key,val:processObj.val});
+                    //     }
+                    // }
+                    this._getInformation( information,entity,modelProp );
+                    console.log('modelProp2',modelProp)
                 }
             })
         }
@@ -116,7 +130,21 @@ class InformationManagement {
         }
     };
     _isString(param){
-        return Object.prototype.toString.call( param ) == '[object Object]' || Object.prototype.toString.call( param ) == '[object Function]';
+        return Object.prototype.toString.call( param ) === '[object Object]' || Object.prototype.toString.call( param ) === '[object Function]';
+    };
+    _getInformation( information,entity,modelProp ){
+        if( !this._isString( information ) ) return;
+
+        for( let details in information ){
+            if(information.hasOwnProperty(details)){
+                if( typeof information[details] === "object" ){
+                    this._getInformation( information[details],entity,modelProp )
+                }
+                let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'],details,information);
+
+                processObj && modelProp.data.push({key:processObj.key,val:processObj.val});
+            }
+        }
     }
 
 }
@@ -150,7 +178,7 @@ class alarmManage{
     };
     searchEntity(newEntity){
         let timer = setInterval(()=>{
-            let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == newEntity.objectId && entitie.messageType == 'alarm' ) );
+            let [ entity ] = Vue.prototype.$viewer.entities._entities._array.filter( entitie => ( entitie._moId == changStrLength(newEntity.objectId,10) && entitie.messageType == 'alarm' ) );
 
             if( global.Cesium.defined( entity ) ){
                 clearInterval( timer );

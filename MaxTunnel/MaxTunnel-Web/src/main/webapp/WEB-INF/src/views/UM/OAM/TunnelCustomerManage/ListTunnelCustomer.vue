@@ -2,24 +2,27 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">所属公司：</span>
-                    <Select v-model="conditions.companyId" @on-change="queryList()" style="width: 60%">
+                    <Select v-model="conditions.companyId" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option v-for="item in company" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">联系人：</span>
-                    <Input v-model="conditions.contact" placeholder="请输入联系人姓名" style="width: 60%" @on-keyup="queryList()"></Input>
+                    <Input v-model="conditions.contact" placeholder="请输入联系人姓名" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryList()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryList()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryList()">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -186,7 +189,7 @@ export default {
 <style scoped>
     .infoList{
         border: 1px solid#dddfe1;
-        width: 260px;
+        width: 75%;
         margin: 10px auto;
         padding: 5px 0px;
         border-radius: 4px;
@@ -214,12 +217,6 @@ export default {
     .option{
         padding: 0px 0px 0px 10px;
     }
-    .conditions{
-        height: 60px;
-        background: #fff;
-        line-height: 60px;
-        padding-left: 10px;
-    }
     .add{
         width: 100px;
         float: right;
@@ -228,9 +225,25 @@ export default {
         margin-right: 5px;
         color: #ff9b00;
     }
-    .allDiv{
-        position:relative;  
-        min-height: 100%;
-        padding-bottom: 60px;
+    @media (min-width: 2200px){
+        .company{
+            font-size: 1.8vmin;
+        }
+        .contact,.tel,.crtTime{
+            font-size: 1.6vmin;
+        }
+        .company,.conta-ctInfo,.crtTime{
+            line-height: 4vh;
+        }
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
+        .infoList{
+            width: 82%;
+        }
     }
 </style>

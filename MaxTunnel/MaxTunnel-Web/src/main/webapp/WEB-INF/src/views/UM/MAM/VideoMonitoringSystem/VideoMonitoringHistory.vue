@@ -12,7 +12,7 @@
 	        </DatePicker>
 	    </Col>
 	    <Col span="3">
-	        <Button type="primary" icon="ios-search" @click="searchVideo">查询</Button>
+	        <Button type="primary" icon="ios-search" @click="searchVideo" size="small">查询</Button>
 	    </Col>
 	    <Col span="1" offset="1">
 	    	<Button type="ghost" @click="back">返回</Button>

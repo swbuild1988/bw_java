@@ -1,27 +1,27 @@
 <template>
     <div class="content">
         <div :class="['up',isDisabled ? 'isDisabled' : (upActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('up')" @mouseup="stopVideoDirectCtrl('up')">
-            <Icon type="arrow-up-b" size="25" class="upArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
+            <Icon type="arrow-up-b" class="upArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
         </div>
         <div :class="['left',isDisabled ? 'isDisabled' : (leftActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('left')" @mouseup="stopVideoDirectCtrl('left')">
-            <Icon type="arrow-left-b" size="25" class="leftArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
+            <Icon type="arrow-left-b" class="leftArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
         </div>
         <div :class="['down',isDisabled ? 'isDisabled' : (downActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('down')" @mouseup="stopVideoDirectCtrl('down')">
-            <Icon type="arrow-down-b" size="25" class="downArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
+            <Icon type="arrow-down-b" class="downArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
         </div>
         <div :class="['right',isDisabled ? 'isDisabled' : (rightActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('right')" @mouseup="stopVideoDirectCtrl('right')">
-            <Icon type="arrow-right-b" size="25" class="rightArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
+            <Icon type="arrow-right-b" class="rightArrow" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
         </div>
         <div class="stopContent">
             <div :class="['stop',isDisabled ? 'isDisabled' : (stopActive ? 'isActived' : 'buttons')]" @click="stopAll" @mousedown="stopActive = true" @mouseup="stopActive = false">
-                <Icon type="stop" size="25" :color="isDisabled ? 'rgb(16,16,16)' : 'white'"></Icon>
+                <Icon type="stop" :color="isDisabled ? 'rgb(16,16,16)' : 'white'" style="font-size: 2.6vmin;"></Icon>
             </div>
         </div>
         <div :class="['zoomIn',isDisabled ? 'isDisabled' : (zoomInActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('zoomIn')" @mouseup="stopVideoDirectCtrl('zoomIn')">
-            <Icon type="plus" size="25" :color="isDisabled ? 'rgb(16,16,16)' : 'white'" class="zoomInBtn"></Icon>
+            <Icon type="plus" :color="isDisabled ? 'rgb(16,16,16)' : 'white'" class="zoomInBtn"></Icon>
         </div>
         <div :class="['zoomOut',isDisabled ? 'isDisabled' : (zoomOutActive ? 'isActived' : 'buttons')]" @mousedown="startVideoDirectCtrl('zoomOut')" @mouseup="stopVideoDirectCtrl('zoomOut')">
-            <Icon type="minus" size="25" :color="isDisabled ? 'rgb(16,16,16)' : 'white'" class="zoomOutBtn"></Icon>
+            <Icon type="minus" :color="isDisabled ? 'rgb(16,16,16)' : 'white'" class="zoomOutBtn"></Icon>
         </div>
     </div>
 </template>
@@ -159,6 +159,7 @@ export default {
     position: absolute;
     top: 30%;
     left: 40%;
+    font-size: 2.6vmin;
     transform:rotate(-45deg);
     -ms-transform:rotate(-45deg);    
     -moz-transform:rotate(-45deg);    
@@ -182,6 +183,7 @@ export default {
     position: absolute;
     top: 30%;
     left: 40%;
+    font-size: 2.6vmin;
     transform:rotate(45deg);
     -ms-transform:rotate(45deg);    
     -moz-transform:rotate(45deg);    
@@ -205,6 +207,7 @@ export default {
     position: absolute;
     top: 30%;
     left: 40%;
+    font-size: 2.6vmin;
     transform:rotate(135deg);
     -ms-transform:rotate(135deg);    
     -moz-transform:rotate(135deg);    
@@ -229,6 +232,7 @@ export default {
     position: absolute;
     top: 30%;
     left: 40%;
+    font-size: 2.6vmin;
     transform:rotate(225deg);
     -ms-transform:rotate(225deg);    
     -moz-transform:rotate(225deg);    
@@ -274,6 +278,7 @@ export default {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    font-size: 2.6vmin;
 }
 .zoomOut{
     position: absolute;

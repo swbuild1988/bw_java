@@ -6,24 +6,27 @@
     </div>
     <div v-if="isTable">
         <Row class="conditions">
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">任务进程：</span>
-                <Select v-model="conditions.finished" style="width: 60%" @on-change="queryConditions()">
+                <Select v-model="conditions.finished" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="(item,index) in patrolResult" :key="index" :value="item.val">{{item.key}}</Option>
                 </Select>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">巡检人：</span>
-                <Input type="text" style="width: 60%" v-model="conditions.name" @on-keyup="queryConditions()"></Input>
+                <Input type="text" style="width: 60%" v-model="conditions.name"></Input>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
-                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
-                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%" @on-change="queryConditions()"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%"></DatePicker>
+            </Col>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="queryConditions()">查询</Button>
             </Col>
         </Row>
         <div class="list">           
@@ -40,6 +43,7 @@
 <script>
 import Enum from '../../../../../static/Enum.json'
 import superCalender from '../../../Common/SuperCalender.vue'
+// import superCalender from '../../../Common/copySuperCalender.vue'
 export default {
     components: {
         superCalender
@@ -312,6 +316,26 @@ export default {
 }
 .navigation div:hover,.activeTable,.activeSuper{
     border-bottom: 2px solid #357aa1;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .navigation{
+        line-height: 3.5vmin;
+    }
+    .navigation div{
+        line-height: 3.5vmin;
+        padding: 0.9vmin;
+        font-size: 1.5vmin;
+    }
+    .navigation div:hover,.activeTable,.activeSuper{
+        border-bottom: 0.2vmin solid #357aa1;
+    }
 }
 </style>
 

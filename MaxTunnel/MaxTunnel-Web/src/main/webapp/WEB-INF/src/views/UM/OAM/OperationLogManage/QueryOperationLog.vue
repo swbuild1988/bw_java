@@ -1,38 +1,41 @@
 <template>
     <div class="allDiv">
-        <div class="queryCondition">
+        <div class="conditions">
             <Row>
-                <Col span="6">
-                    <span class="conditionTitle">模块类型：</span>
-                    <Input type="text" v-model="conditions.moduleType" placeholder="请输入模块类型" style="width: 60%" @on-keyup="queryOperationLog()"></Input>
+                <Col span="4">
+                    <span>模块类型：</span>
+                    <Input type="text" v-model="conditions.moduleType" placeholder="请输入模块类型" style="width: 56%"></Input>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle">操作人姓名：</span>
-                    <Input type="text" v-model="conditions.reqUser" placeholder="请输入操作人姓名" style="width: 60%" @on-keyup="queryOperationLog()"></Input>
+                <Col span="4">
+                    <span>操作人姓名：</span>
+                    <Input type="text" v-model="conditions.reqUser" placeholder="请输入操作人姓名" style="width: 56%"></Input>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle">请求结果：</span>
-                    <Select v-model="conditions.result"  style="width: 60%" @on-change="queryOperationLog()">
+                <Col span="4">
+                    <span>请求结果：</span>
+                    <Select v-model="conditions.result"  style="width: 56%">
                         <Option value="null">所有</Option>
                         <Option v-for="item in result" :key="item.id" :value="item.name">{{item.name}}</Option>
                     </Select>
                 </Col>
-            </Row>
-            <Row style="margin-top: 10px">
-                <Col span="6">
-                    <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.beginTime" @on-change="queryOperationLog()"></DatePicker>
+                <Col span="4">
+                    <span>开始时间：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 56%" v-model="conditions.beginTime"></DatePicker>
                 </Col>
-                <Col span="6">
-                    <span class="conditionTitle word25">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryOperationLog()"></DatePicker>
+                <Col span="4">
+                    <span>结束时间：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 56%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="queryOperationLog()">查询</Button>
                 </Col>
             </Row>
         </div>
         <div class="list">
             <Table :columns="columns1" :data="operationLog"></Table>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+            <div class="page">
+                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
                     placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 20px; right: 15px;"></Page>
+            </div>
         </div>
     </div>
 </template>
@@ -189,22 +192,97 @@ export default {
 }
 </script>
 <style scoped>
-    .allDiv{
+    /*.allDiv{
         position: relative;
         min-height: 100%;
         padding-bottom: 60px;
-    }
+    }*/
     .word25{
         letter-spacing: 0.25em;
         margin-right: -0.25em;
     }
-    .conditions{
-        line-height: 38px;
-        background: #ffffff;
-        padding: 5px 10px;
-    }   
-    .list{
+   /* .list{
         background: #ffffff;
         margin-top: 10px;
+    }*/
+    @media (min-width: 2200px){
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
+    }
+
+    .conditions >>> .ivu-input {
+        height: 3.2vmin;
+        font-size: 1.28vmin;
+    }
+
+    .page >>> .ivu-select-selection{
+        height: 3.2vmin;
+    }
+    .page >>> .ivu-select-selected-value{
+        font-size: 1.2vmin;
+        height: 3vmin;
+        line-height: 3vmin;
+    }
+    .page >>> .ivu-select-placeholder{
+        font-size: 1.2vmin;
+        height: 3vmin;
+        line-height: 3vmin;
+    }
+    .page >>> .ivu-page-options-elevator input{
+        font-size: 1.2vmin;
+        height: 3vmin;
+    }
+    .page >>> .ivu-page-options-elevator{
+        display: inline-block;
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+    }
+    .page >>> .ivu-page-next{
+        height: 3.2vmin;
+        line-height: 3vmin;
+    }
+    .page >>> .ivu-page-next .ivu-icon{
+        font-size: 1.6vmin;
+    }
+    .page >>> .ivu-page-prev{
+        height: 3.2vmin;
+        line-height: 3vmin;
+    }
+    .page >>> .ivu-page-prev .ivu-icon{
+        font-size: 1.6vmin;
+    }
+
+    .conditions >>> .ivu-date-picker-header {
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+    }
+
+    .conditions >>> .ivu-picker-panel-icon-btn{
+        font-size: 1.66vmin;
+        width: 1.28vmin;
+        height: 2.5vmin;
+    }
+
+    .conditions >>> .ivu-date-picker-header-label{
+        font-size: 1.66vmin;
+    }
+
+    @media (min-width: 1921px){
+        .conditions >>> .ivu-date-picker-cells {
+            width: 15vmin;
+            font-size: 1.66vmin;
+        }
+
+        .conditions >>> .ivu-date-picker-cells-cell{
+            width: 2vmin;
+        }
+        .conditions >>> .ivu-date-picker-cells-header span{
+            padding-right: 2.5rem;
+        }
     }
 </style>

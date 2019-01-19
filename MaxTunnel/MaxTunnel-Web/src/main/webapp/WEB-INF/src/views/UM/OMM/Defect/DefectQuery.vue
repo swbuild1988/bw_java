@@ -1,40 +1,38 @@
 <template>
     <div class="allDiv">
-        <Row class="queryCondition">
+        <Row class="conditions">
             <Row>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">缺陷类型：</span>
                 <Select v-model="conditions.type" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectType" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="6">    
+            <Col span="4">    
                 <span class="conditionTitle">缺陷状态：</span>
                 <Select v-model="conditions.status" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectStatus" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="6">    
+            <Col span="4">    
                 <span class="conditionTitle">危险等级：</span>
                 <Select v-model="conditions.level" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectLevel" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            </Row>
-            <Row>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
+            <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6">
-                <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="queryCondition()">查询</Button>
             </Col>
             </Row>
         </Row>
@@ -91,7 +89,6 @@ export default {
                 {
                     title:"发现时间",
                     key:"createTime",
-                    width: 200,
                     align: 'center',
                     render: (h, params) => {
                         return h(
@@ -147,8 +144,8 @@ export default {
                 {
                     title:"操作",
                     key:"action",
-                    width:300,
                     align:'center',
+                    width: window.innerWidth*0.15,
                     render:(h, params) => {
                         return h('div', [
                             h('Button', {
@@ -159,6 +156,7 @@ export default {
                                 style: {
                                     marginRight: '5px'
                                 },
+                                class: 'btnShow',
                                 on: {
                                     click: () => {
                                         this.enterOrder(params.index)
@@ -184,6 +182,7 @@ export default {
                                     type: 'info',
                                     size: 'small'
                                 },
+                                class: 'btnOrder',
                                 on: {
                                     click: ()=> {
                                         this.queryDetails(params.index)
@@ -332,5 +331,17 @@ export default {
     }  
 }
 </script>
+<style scoped>
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+}
+</style>
+
 
 

@@ -29,11 +29,10 @@
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" readonly></Input>
             </FormItem>
             <FormItem style="text-align: center" v-show="this.pageType==4">
+                <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
                 <Button type="primary">提交</Button>
-                <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -315,10 +314,5 @@ export default {
 }
 .addRecords{
     margin: 5px;
-}
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
 }
 </style>

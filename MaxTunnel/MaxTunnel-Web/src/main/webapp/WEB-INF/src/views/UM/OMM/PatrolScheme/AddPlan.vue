@@ -66,11 +66,10 @@
           </Col>
         </Row>
         <FormItem style="text-align: center;margin-bottom: 0px">
+            <Button type="ghost"  style="margin-right: 8px" @click="goBack()">返回</Button>
             <Button type="primary" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</Button>
-            <Button type="ghost"  style="margin-left: 8px" @click="handleReset('uploadPlan')">取消</Button>
         </FormItem>
       </Form> 
-      <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>  
 
@@ -323,7 +322,7 @@ input[type='number']{
     padding: 10px 20px;
 }
 .planContainer{
-  width: 570px;
+  width: 80%;
   background: #fff;
   padding: 10px 20px;
   border-radius: 8px;
@@ -336,13 +335,13 @@ input[type='number']{
   margin: 10px 20px 10px;
 }
 .inputStyle{
-  display: inline-block;
+    display: inline-block;
     width: 100%;
-    height: 32px;
-    line-height: 1.5;
+    height: 4vh;
+    line-height: 4vh;
     padding: 4px 7px;
     font-size: 12px;
-    border: 1px solid #dddee1;
+    border: 0.2vmin solid #dddee1;
     border-radius: 4px;
     color: #495060;
     background-color: #fff;
@@ -351,9 +350,61 @@ input[type='number']{
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
 }
-.goBack{
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
+.ivu-select-single .ivu-select-selection,.ivu-input{
+  height: 4vh;
+  line-height: 4vh;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        /* width: 15vmin !important; */
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        /* margin-left: 15vmin !important; */
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .btn{
+        margin-left: 20% !important;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    input[type='number']{
+        height: 4vmin;
+        width: 8vmin;
+        font-size: 1.6vmin;
+    }
+    .inputStyle{
+        font-size: 1.4vmin;
+    }
+    /* 年月时间选择器 */
+    .ivu-picker-panel-body >>> .ivu-date-picker-cells {
+        width: 18vmin;
+    }
+    .ivu-date-picker-cells span {
+        width: 5.7vmin;
+        height: 5.6vmin;
+    }
+    .ivu-date-picker-cells-month span{
+        line-height: 2.8vmin;
+    }
 }
 </style>

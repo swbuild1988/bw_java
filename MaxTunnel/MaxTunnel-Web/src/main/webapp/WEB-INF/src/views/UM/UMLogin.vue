@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1 class="form">综合管廊统一管理平台</h1>
+    <h1 class="form">综合管廊智慧管理平台</h1>
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="demo-ruleForm login-container">
       <h2 class="title">用户登录</h2>
       <FormItem prop="userName">
@@ -50,7 +50,7 @@
         },
         ruleValidate: {
           userName: [
-            {required: true, message: "姓名不能为空", trigger: "blur"}
+            {required: true, message: "用户名不能为空", trigger: "blur"}
           ],
           passWord: [
             {required: true, message: "密码不能为空", trigger: "blur"}
@@ -71,8 +71,8 @@
               result => {
                 _this.logining = false;
                 sessionStorage.setItem("UMUser", JSON.stringify(result));
-                console.log(result);
                 let sessionUserName = result.name;
+                let sessionUserId = result.userId
                 let roles = result.roles;
                 sessionStorage.setItem(
                   "UMUerName",
@@ -82,11 +82,15 @@
                   "UMRoles",
                   JSON.stringify(roles)
                 );
-                console.log(sessionStorage.getItem('UMUserName'))
+                sessionStorage.setItem(
+                    "UMUerId",
+                    JSON.stringify(sessionUserId)
+                );
+
                 _this.$router.push({path: "UMmain"});
               },
               error => {
-                _this.$Message.error(msg);
+                _this.$Message.error(error);
                 _this.loading = false;
               })
           } else {
@@ -145,6 +149,7 @@
     padding-top: 5%;
     position: relative;
     z-index: 999;
+    font-size: 2.6vmin;
   }
 
   .login-container {
@@ -152,7 +157,7 @@
     background-clip: padding-box;
     margin: 180px auto;
     margin: 70px auto;
-    width: 350px;
+    width: 18vw;
     padding: 35px 35px 15px 35px;
     box-shadow: 0 0 25px #cac6c6;
     z-index: 999;
@@ -164,10 +169,39 @@
     margin: 0px auto 20px auto;
     text-align: center;
     color: #fff;
+    font-size: 1.8vmin;
   }
 
   .remember {
     margin: 0px 0px 35px 0px;
     color: #fff;
   }
+
+  .ivu-input-group {
+    font-size: 1.8vmin;
+  }
+
+  .login-container >>> .ivu-input{
+    font-size: 1.4vmin;
+    height: 3.2vmin;
+  }
+
+  .ivu-checkbox-wrapper {
+    font-size: 1.4vmin !important;
+  }
+
+  .ivu-btn{
+    font-size: 1.6vmin !important;
+  }
+
+  .login-container >>> .ivu-checkbox-inner{
+    width: 1.4vmin;
+    height: 1.4vmin;
+  }
+
+  .login-container >>> .ivu-checkbox-inner:after{
+    width: 0.6vmin;
+    height: 1vmin;
+  }
+
 </style>

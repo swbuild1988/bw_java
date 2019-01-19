@@ -2,27 +2,30 @@
   <div class="allDiv">
     <div class="conditions">
       <Row>
-        <Col span="6">
-          <span class="planDec">流程状态：</span>
-          <Select v-model="conditions.finished"  @on-change='conditionChange()' style="width:60%">
+        <Col span="4">
+          <span>流程状态：</span>
+          <Select v-model="conditions.finished" style="width:60%">
             <Option value=null>所有</Option>
             <Option v-for="item in workOrderStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
           </Select>
         </Col>
-        <Col span="6">
-          <span class="planDec">责任班组：</span>
-          <Select v-model="conditions.groupId"   @on-change='conditionChange()' style="width:60%">
+        <Col span="4">
+          <span>责任班组：</span>
+          <Select v-model="conditions.groupId" style="width:60%">
             <Option value="">所有</Option>
             <Option v-for="item in Groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
         </Col>
-        <Col span="6">
+        <Col span="4">
             <span>开始时间：</span>
-            <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="conditionChange()"></DatePicker>
+            <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
         </Col>
-        <Col span="6">
+        <Col span="4">
             <span>结束时间：</span>
-            <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="conditionChange()"></DatePicker>
+            <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+        </Col>
+        <Col span="4">
+            <Button type="primary" icon="ios-search" size="small" @click="conditionChange()">查询</Button>
         </Col>
       </Row>
     </div>
@@ -67,8 +70,10 @@
         </Col>
       </Row>
       <!-- </Scroll> -->
+    <div class="page">
     <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-      placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>   
+      placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page> 
+      </div>  
     </div>
   </div>
 </template>
@@ -254,20 +259,20 @@ export default {
     margin-left: 5px;
 }
 .planStatusDec,.patrolGroupName{
-  font-size: 22px;
+  font-size: 2.2vmin;
 }
 .details-bottom div{
   margin: 10px;
 }
 .planStatus,.patrolGroup{
   color:#a4a4a4;
-  font-size: 14px;
+  font-size: 1.4vmin;
   margin-bottom: 2px;
 }
 .option{
   background: #F7F9FA;
   line-height: 30px;
-  font-size: 16px;
+  font-size: 1.66vmin;
   color: #979696;
   border-top: 1px solid #e8e8e8
 }
@@ -279,10 +284,118 @@ export default {
 }
 .timeContainer{
     width: 50%;
-    font-size: 13px;
+    font-size: 1.3vmin;
     color: orange;
     line-height: 40px;
     text-align: center;
+}
+/* .planName{
+  font-size: 1.66vmin;
+} */
+
+/* .conditions >>> .ivu-select-placeholder{
+    font-size: 1.6vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.conditions >>> .ivu-select-selection{
+    height: 3vmin;
+}
+.conditions >>> .ivu-input{
+  font-size: 1.2vmin;
+  height: 3.2vmin;
+} */
+/*.conditions >>> .ivu-input-icon{
+  font-size: 1.66vmin;
+  width: 3.2vmin;
+  height: 3.2vmin;
+}*/
+.page >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+.page >>> .ivu-select-selected-value{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-select-placeholder{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator input{
+    font-size: 1.2vmin;
+    height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator{
+    display: inline-block;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+.page >>> .ivu-page-next{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-next .ivu-icon{
+    font-size: 1.6vmin;
+}
+.page >>> .ivu-page-prev{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-prev .ivu-icon{
+    font-size: 1.6vmin;
+}
+
+ /*日期选择*/
+.conditions >>> .ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+
+.conditions >>> .ivu-picker-panel-icon-btn{
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+}
+
+.conditions >>> .ivu-date-picker-header-label{
+    font-size: 1.66vmin;
+}
+
+@media (min-width: 1921px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .conditions >>> .ivu-date-picker-cells {
+        width: 15vmin;
+        font-size: 1.66vmin;
+    }
+
+    .conditions >>> .ivu-date-picker-cells-cell{
+        width: 2vmin;
+    }
+    .conditions >>> .ivu-date-picker-cells-header span{
+        padding-right: 2.5rem;
+    }
+    .detailsInfo{
+      padding: 1vmin;
+    }
+    .option,.timeContainer{
+      line-height: 4vmin;
+      font-size: 1.6vmin;
+    }
+    .detailsList .everyList{
+      border: 0.1vmin solid #ccc;
+      border-radius: 0.5vmin;
+    }
+    .planName{
+      font-size: 2.2vmin;
+    }
 }
 </style>
 

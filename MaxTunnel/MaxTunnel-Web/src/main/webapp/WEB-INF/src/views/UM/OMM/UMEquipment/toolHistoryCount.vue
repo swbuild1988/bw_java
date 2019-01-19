@@ -1,64 +1,64 @@
 <template>
     <Row>
         <Col span="24">
-            <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
-                <Col span="6">
+            <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
+                <Col span="4">
                     <span>仪表工具名称</span><span>：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     仪表工具类型：
                     <Select v-model="toolConditions.typeId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>仪表工具型号</span><span>：</span>
                     <Select v-model="toolConditions.modelId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
-                    <span class="word43">借用人</span><span>：</span>
+                <Col span="4">
+                    <span class="word63">借用人</span><span>：</span>
                     <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
-                    <span>借用开始时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="6">
-                    <span>借用结束时间</span><span>：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="word63">归还人</span><span>：</span>
                     <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>使用状态</span><span>：</span>
                     <Select v-model="toolConditions.useStatus" style="width: 60%">
                         <Option value=null key="2">所有</Option>
                         <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
+                    <span>借用开始时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <span>借用结束时间</span><span>：</span>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
+                </Col>
+                <Col span="4">
                     <span>归还开始时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.retStartTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span>归还结束时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="6" offset="6" style="text-align: right;width: 18%">
-                    <Button type="primary" size="small" @click="showTable()">确定</Button>
+                <Col span="4">
+                    <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
             <div class="list">
-                <Table stripe border height="345" :columns="toolColums"  :data="toolData"></Table>
+                <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
             </div>
-            <div class="pageContainer">
+            <div class="pageContainer" ref="pageContainer">
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
                 show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
@@ -229,7 +229,8 @@ export default {
             },
             toolStatic: {
                 id: 'toolStaticId',
-                requestUrl: 'getToolStatic',
+                requestUrl: 'instruments/usestatus/types',
+                title: '仪表工具状态',
                 parameters: {
                     option: {
                         backgroundColor: '#E8E8FF',
@@ -245,7 +246,9 @@ export default {
             },
             inventory: {
                 id: 'inventoryId',
-                requestUrl: 'spares/outs/typelala',
+                requestUrl: 'instruments/status/types',
+                title: '仪表工具库存状态',
+                legendData: ['在库','出库'],
                 parameters: {
                     option: {
                         backgroundColor: '#FBFBEA',
@@ -256,7 +259,7 @@ export default {
                             }
                         },
                         legend: {
-                            data: ['借出','在库'],
+                            data: ['在库','出库'],
                             textStyle: {
                                 color: '#161139'
                             }
@@ -270,7 +273,8 @@ export default {
             toolsType: [],
             toolsModel: [],
             venders: [],
-            staffs: []
+            staffs: [],
+            tableHieght: null
         }
     },
     components: {
@@ -332,6 +336,7 @@ export default {
             }
         })
         this.showTable()
+        this.getTableHeight()
     },
     methods:{
         showTable(){
@@ -353,6 +358,9 @@ export default {
             this.page.pageSize = value;
             this.showTable()
         },
+        getTableHeight(){
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-30
+        }
     }
 }
 </script>
@@ -365,17 +373,25 @@ export default {
     letter-spacing: 0.667em;
     margin-right: -0.667em;
 }
-.word43{
-    letter-spacing: 0.5em;
-    margin-right: -0.5em;
-}
 .word63{
     letter-spacing: 1.5em;
     margin-right: -1.5em;
 }
 .chartBox{
     width: 49.5%;
-    height: 30vh;
+    height: 40vh;
     margin: 5px 5px 5px 0px;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .queryConditions{
+        font-size: 1.3vmin;
+    }
 }
 </style>

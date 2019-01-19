@@ -1,27 +1,15 @@
 <template>
     <div>
         <Row class="conditions">
-            <Col span="20">
+            <Col span="4">
                 <span>周期：</span>
-                <Select v-model="query.cycleType" style="width:20vw;" @on-change="changeCycle">
+                <Select v-model="query.cycleType" style="width:60%" @on-change="changeCycle">
                       <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
                 </Select>
             </Col>
-           <!--  <Col span="10">
-                <span>时间：</span>
-                <DatePicker v-model="query.time" type="datetimerange" placeholder="请选择"  :readonly="query.readonly" style="width:20vw;"></DatePicker>
-            </Col> -->
-            <!-- <Col span="6">
-                <span>单位：</span>
-                <Select v-model="query.period" style="width:14vw;" @on-change="changePeriod">
-                      <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
-                </Select>
-            </Col> -->
-            <Col span="2">
-                <Button type="primary" icon="ios-search" @click="getData">查询</Button>
-            </Col>
-            <Col span="2">
-                <Button type="ghost" @click="exportTable">导出</Button>
+            <Col span="4">
+                <Button type="primary" icon="ios-search" size="small" @click="getData">查询</Button>
+                <Button type="primary" icon="ios-download-outline"  @click="exportTable" size="small">导出</Button>
             </Col>
         </Row>
         <Row class="list">
@@ -31,7 +19,6 @@
                 </Page>
             </Col>
             <Col span="12">
-                   <!--  <div id="eCReportBar" style="height:100%"></div> -->
                   <pile-bar-chart v-bind="pileBarChart" style="width: 42vw;height: 36vh;"></pile-bar-chart>
                   <div id="eCReportLine" style="width: 42vw;height: 36vh;"></div>
             </Col>

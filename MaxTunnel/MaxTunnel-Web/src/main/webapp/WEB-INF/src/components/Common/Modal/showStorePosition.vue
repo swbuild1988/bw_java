@@ -1,6 +1,6 @@
 <template>
     <div class="positionInformation">
-        <div class="titleInformation">{{ Title }}</div>
+        <!--<div class="titleInformation">{{ Title }}</div>-->
         <div class="rowInfor lf">
             <strong>街道 :</strong>
             {{ currPosition.tunnelName }}
@@ -44,11 +44,12 @@ export default {
         right: 7%;
         z-index: 1000;
         color: white;
-        height: 18%;
+        margin-top: 1%;
+        height: 9%;
         width: 28%;
-        background: url(../../../assets/VM/alarmContent.png) no-repeat;
-        background-size: contain;
-        background-position: center;
+        /*background: url(../../../assets/VM/alarmContent.png) no-repeat;*/
+        /*background-size: contain;*/
+        /*background-position: center;*/
     }
     .titleInformation {
         text-align: center;

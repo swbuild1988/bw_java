@@ -4,25 +4,19 @@
         <h1 style="text-align:center;margin-bottom:20px;margin-top:10px">应急管理</h1>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-                <div>
-                    <span class="word64">预案名</span><span>：</span>
-                    <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
-                        <Option value=null>不限</Option>
-                        <Option v-for="item in planEnums" :value="item.processKey" :key="item.val">{{item.key}}</Option>
-                    </Select>
-                </div>
+                <span class="word43">预案名</span><span>：</span>
+                <Select v-model="researchInfo.processKey" placeholder="请选择预案名" class="inputWidth">
+                    <Option value=''>所有</Option>
+                    <Option v-for="item in planEnums" :value="item.processKey" :key="item.key">{{item.key}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-                <div>
-                    <span>BPMN节点ID</span><span>：</span>
-                    <Input v-model="researchInfo.taskKey" placeholder="支持模糊查询" class="inputWidth"/>
-                </div>
+                <span>BPMN节点ID</span><span>：</span>
+                <Input v-model="researchInfo.taskKey" placeholder="支持模糊查询" class="inputWidth"/></Input>
             </Col>
             <Col span="6">
-                <div>
-                    <span>BPMN节点Name</span><span>：</span>
-                    <Input v-model="researchInfo.taskName" placeholder="支持模糊查询" class="inputWidth"/>
-                </div>
+                <span>BPMN节点Name</span><span>：</span>
+                <Input v-model="researchInfo.taskName" placeholder="支持模糊查询" class="inputWidth"/></Input>
             </Col>
             <Col span="6">
                 <Button type="primary" size="small"  icon="ios-search" @click="showTable">查询</Button>
@@ -33,40 +27,32 @@
         </Row>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
-                <div>
-                    <span>目标类型</span><span>：</span>
-                    <Select v-model="researchInfo.targetKey" placeholder="请选择应急目标值" class="inputWidth">
-                        <Option value=null>不限</Option>
-                        <Option v-for="item in targetEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
-                    </Select>
-                </div>
+                <span>目标类型</span><span>：</span>
+                <Select v-model="researchInfo.targetKey" placeholder="请选择应急目标值" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in targetEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-                <div>
-                    <span>应急行为类型</span><span>：</span>
-                    <Select v-model="researchInfo.actionKey" placeholder="请选择应急行为值" class="inputWidth">
-                        <Option value=null>不限</Option>
-                        <Option v-for="item in actionEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
-                    </Select>
-                </div>
+                <span>应急行为类型</span><span>：</span>
+                <Select v-model="researchInfo.actionKey" placeholder="请选择应急行为值" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in actionEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-                <div>
-                    <span class="word63">应急结束</span><span>：</span>
-                    <Select v-model="researchInfo.finishKey" placeholder="请选择应急结束值" class="inputWidth">
-                        <Option value=null>不限</Option>
-                        <Option v-for="item in finishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
-                    </Select>
-                </div>
+                <span class="word63">应急结束</span><span>：</span>
+                <Select v-model="researchInfo.finishKey" placeholder="请选择应急结束值" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in finishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-                <div>
-                    <span>是否结束节点：</span>
-                    <Select v-model="researchInfo.isFinished" placeholder="请选择是否结束" class="inputWidth">
-                        <Option value=null>不限</Option>
-                        <Option v-for="item in isFinishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
-                    </Select>
-                </div>
+                <span>是否结束节点：</span>
+                <Select v-model="researchInfo.isFinished" placeholder="请选择是否结束" class="inputWidth">
+                    <Option value=null>所有</Option>
+                    <Option v-for="item in isFinishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
+                </Select>
             </Col>
         </Row>
         <Row  style="marginLeft:25px;marginBottom:10px;">
@@ -87,7 +73,7 @@
         <div style="margin:20px;">
             <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete"></Table>
             <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
-            @on-change="handlePage" show-elevator class="pageStyle"></Page>
+            @on-change="handlePage" show-elevator :style="pageStyle"></Page>
         </div>
         <div>
             <em-plan-module v-bind="emPlanInfo" v-on:addOrEdit="save"></em-plan-module>
@@ -189,12 +175,17 @@ export default {
                 {
                     title: '创建时间',
                     key: 'crtTime',
-                    align: 'center'
+                    align: 'center',
+                    width: 190,
+                    render: (h,params) => {
+                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        return h('div',temp)
+                    }
                 },
                 {
                     title: '操作',
                     key: 'action',
-                    width: 100,
+                    width: 80,
                     align: 'center',
                     render: (h, params) => {
                         return h('div', [
@@ -202,9 +193,6 @@ export default {
                                 props: {
                                     type: 'primary',
                                     size: 'small'
-                                },
-                                style: {
-                                    marginLeft: '5px'
                                 },
                                 on: {
                                     click: () => {
@@ -244,6 +232,11 @@ export default {
             publish: {
                 flag: false,
                 list: []
+            },
+            pageStyle: {
+                position: 'absolute',
+                bottom: '35px',
+                right: '40px'
             }
         }
     },
@@ -259,8 +252,8 @@ export default {
                 actionKey: this.researchInfo.actionKey,
                 finishKey: this.researchInfo.finishKey,
                 isFinished: this.researchInfo.isFinished,
-                startTime: new Date(this.researchInfo.startTime).getTime(),
-                endTime: new Date(this.researchInfo.endTime).getTime()
+                startTime: this.researchInfo.startTime,
+                endTime: this.researchInfo.endTime
             };
             return Object.assign({}, param);
         }
@@ -279,7 +272,6 @@ export default {
                     let switchEnums = result[2]
                     _this.data6 = plans
                     _this.data6.forEach(item=>{
-                        item.crtTime = new Date(item.crtTime).format('yyyy-MM-dd hh:mm:s')
                         if(item.actionKey == 2){
                             let actionValue = unitTypeEnums.find(a=>{
                                 return a.val == item.actionValue
@@ -447,10 +439,9 @@ export default {
 .inputWidth{
     width: 60%;
 }
-.pageStyle{
-    text-align: right;
-    margin-top: 100px;
-    margin-right: 10px;
+.word43{
+    letter-spacing: 0.5em;
+    margin-right: -0.5em;
 }
 .word63{
     letter-spacing: 1.2em;

@@ -24,98 +24,88 @@
         legendData: [],
         serises: [],
         xData: [],
-        option: {
+        option: {},
+      }
+    },
+    components: {},
+    mounted() {
+      this.init();
+      this.resizeChart();
+    },
+    methods: {
+      init() {
+        this.drawLine();
+        this.fetchData(this.requestUrl);
+        this.refreshData();
+      },
+      resizeChart(){
+        let _this=this;
+        window.addEventListener("resize", function () {
+          _this.drawLine();
+          _this.myChart.resize();
+          _this.fetchData(_this.requestUrl);
+        });
+      },
+      drawLine() {
+        let _this = this;
+        _this.option={
           title: {
             text: "",
-            x: 'center',
-            textStyle: {}
+            top:"left",
+            textStyle: {
+              color: "#fff",
+              fontSize: window.innerHeight * 0.018,
+            },
           },
           tooltip: {
             trigger: 'axis'
           },
-          // visualMap: [{
-          //   show: false,
-          //   seriesIndex: 0,
-          //   inRange: {
-          //     color: ['#cb514d'],
-          //   },
-          //   min: 0,
-          //   max: 10000,
-          // },
-          //   {
-          //     show: false,
-          //     type: 'continuous',
-          //     seriesIndex: 1,
-          //     inRange: {
-          //       color: ['#5a6c77'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 2,
-          //     inRange: {
-          //       color: ['#81b3ba'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 3,
-          //     inRange: {
-          //       color: ['#dc9b85'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 4,
-          //     inRange: {
-          //       color: ['#a7d3be'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          // ],
           legend: {
-            data: []
+            textStyle:{
+              color:'#fff',
+              fontSize:window.innerHeight*0.016,
+            },
+            top:"center",
+            left:"center"
           },
           xAxis: {
             type: 'category',
-            nameTextStyle: {
-              fontSize: 16,    //单位：件的字号大小
+            axisLine: {
+              lineStyle:{
+                color: '#fff'
+              },
             },
+            axisLabel:{fontSize:window.innerHeight*0.014},
             data: []
           },
           yAxis: {
             type: 'value',
-            nameTextStyle: {
-              fontSize: 16,    //单位：件的字号大小
+            axisLine: {
+              margin:2,
+              lineStyle:{
+                color: '#fff'
+              },
             },
+            axisLabel:{fontSize:window.innerHeight*0.014,
+              formatter: function (value, index) {
+                if (value >= 10000 && value < 100000) {
+                  value = value / 10000 + "万";
+                }
+                else if (value >= 100000&&value<1000000) {
+                  value = value / 1000000 + "十万";
+                }
+                else if (value >= 10000000) {
+                  value = value / 10000000 + "千万";
+                }
+                return value;
+              },},
           },
           series: [{
             data: [],
             type: 'line',
             smooth: true
           }]
-        },
-      }
-    },
-    components: {},
-    mounted() {
-      this.init();
-    },
-    methods: {
-      init() {
-        this.drawLine();
-        this.fetchData(this.requestUrl + this.period, this.titleColor);
-        this.refreshData();
-      },
-      drawLine() {
-        let _this = this;
+        };
         _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
         _this.myChart.setOption(_this.option);
         // 加载新的参数
@@ -132,6 +122,8 @@
             _this.serises = [];
             _this.legendData = [];
             _this.xData = [];
+            let yMin=0;
+              let yMax=0;
             data.forEach(a => {
               var temp = {};
               temp.name = a.key;
@@ -139,8 +131,10 @@
               temp.smooth = true;
               _this.legendData.push(a.key);
               let tempData = [];
-              a.val.filter(b => tempData.push(b.val.toFixed(2)));
-              temp.data = tempData;
+              a.val.filter(b => tempData.push(parseFloat(b.val.toFixed(2))));
+              temp.data=tempData;
+              yMin = (Math.min.apply(null, _this.xData) < yMin || yMin == 0) ? Math.min.apply(null,  temp.data) : yMin;
+               // yMax=  (Math.max.apply(null, _this.xData) > yMax || yMax == 0) ? Math.max.apply(null,  temp.data) : yMax;
               _this.serises.push(temp);
             })
             data[0].val.filter(a => {
@@ -151,9 +145,13 @@
               xAxis: {
                 data: _this.xData,
               },
+              yAxis: {
+                min: yMin,
+              },
               legend: {
                 data: _this.legendData,
-                bottom: '0',
+                top:"10%",
+                left:'center'
               },
             })
           }
@@ -163,7 +161,6 @@
         let _this = this;
         // setInterval(() => _this.fetchData(_this.requestUrl + _this.period), 5000)
       },
-
     }
   }
 
@@ -173,6 +170,5 @@
   .Line {
     width: 100%;
     height: 100%;
-    position: relative;
   }
 </style>

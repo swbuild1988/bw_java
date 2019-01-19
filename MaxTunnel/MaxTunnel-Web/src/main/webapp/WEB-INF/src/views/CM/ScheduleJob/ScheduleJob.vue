@@ -75,11 +75,14 @@ export default {
                     align: 'center'
                 },
                 {
-                    type: 'index'
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
                 },
                 {
                     title: '任务名称',
-                    key: 'jobName'
+                    key: 'jobName',
+                    align: 'center'
                 },
                 // {
                 //     title: '任务组',
@@ -87,23 +90,29 @@ export default {
                 // },
                 {
                     title: '任务描述',
-                    key: 'description'
+                    key: 'description',
+                    align: 'center'
                 },
                 {
                     title: '任务周期',
                     key: 'cronExpression',
+                    align: 'center'
                 },
                 {
                     title: '任务类',
-                    key: 'jobClass'
+                    key: 'jobClass',
+                    align: 'center'
                 },
                 {
                     title: '任务方法',
-                    key: 'jobMethod'
+                    key: 'jobMethod',
+                    align: 'center'
                 },
                 {
                     title: '是否启用',
                     key: 'jobStatusName',
+                    align: 'center',
+                    width: 120,
                     render:(h,params) =>{
                         return h('i-switch',{
                            props: {
@@ -122,15 +131,14 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
+                    align: 'center',
+                    width: 80,
                     render: (h, params) => {
                         return h('div', [
                             h('Button', {
                                 props: {
                                     type: 'primary',
                                     size: 'small'
-                                },
-                                style: {
-                                    marginLeft: '5px'
                                 },
                                 on: {
                                     click: () => {

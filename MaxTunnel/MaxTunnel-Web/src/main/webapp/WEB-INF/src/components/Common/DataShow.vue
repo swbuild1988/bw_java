@@ -2,7 +2,7 @@
   <div class="dataBoxModul" v-bind:style="{width: boxWidth+'%', height: boxHeight+'vh',backgroundImage:'url(' + imgSrc + ')',background: imgBac}">
     <!--<div class="backBox" :style="{backgroundImage:'url(' + imgSrc + ')',backgroundRepeat:'no-repeat'}">-->
     <div class="backBox">
-      <img :src=imgSrc />
+      <img :src=imgSrc style="width: 10.5vmin;height: 10.5vmin"/>
     </div>
     <div class="showData">{{value}}</div>
     <div class="showData showDataTitle">{{label}}</div>

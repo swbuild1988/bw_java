@@ -2,8 +2,8 @@
 
   <div v-bind:style="{height:'11vh',backgroundColor: backGroundColor, width:'100%',position: 'relative'}" class="boxBody">
     <div style="position: absolute; top: 0.8vh; right: 0.4vw">
-      <Icon type="ios-arrow-thin-up" size="70" color="#fff"></Icon>
-      <p style="color: white; padding: 2px">{{ unit }}</p>
+      <Icon type="ios-arrow-thin-up" style="font-size: 7vmin" color="#fff"></Icon>
+      <p style="color: white; padding: 0.2vmin;font-size: 1.66vmin">{{ unit }}</p>
     </div>
     <!-- <div style="position: relative; float: right;color: #fff;margin: 7px;">
       <ul style="list-style-type:none; text-align: right;">
@@ -11,13 +11,13 @@
         <li style="width:'10%'">{{unit}}</li>
       </ul>
     </div> -->
-    <p style="position: absolute;top: 50%;left: 50%;font-size: 30px;transform: translate(-50%,-50%);">
+    <p style="position: absolute;top: 50%;left: 50%;font-size: 3vmin;transform: translate(-50%,-50%);">
       {{value}} 
     </p>
     <div>
-      <img :src="imgSrc" style="height: 7vh; padding-left:10px;top:5px; "/>
+      <img :src="imgSrc" style="height: 7vh; padding-left:1vmin;top:0.5vmin; "/>
     </div>
-    <Tag :style="{background:tagColor,height:'3vh',width:'15%',minWidth:'80px'}">{{label}}</Tag>
+    <Tag :style="{background:tagColor,height:'3vh',width:'30%',minWidth:'8vmin',fontSize:'1.6vmin'}">{{label}}</Tag>
   </div>
 
 </template>
@@ -59,6 +59,9 @@ export default {
     border: 1px solid#dddfe1;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
   }
-
+  .boxBody >>> .ivu-tag{
+    line-height: 2.3vmin;
+    height: 2.2vmin;
+  }
 </style>
 

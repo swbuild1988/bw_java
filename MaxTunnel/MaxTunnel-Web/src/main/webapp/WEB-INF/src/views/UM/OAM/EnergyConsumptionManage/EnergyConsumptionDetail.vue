@@ -5,20 +5,16 @@
       <div class="top-div">
         <Row class="top">
           <Col span="6">
-          <span class="planDec">开始时间</span>
-          <DatePicker type="date" size="large" v-model="startTime" placeholder="选择时间" style="width: 60%"></DatePicker>
+          <span>开始时间：</span>
+          <DatePicker type="date" v-model="startTime" placeholder="选择时间" style="width: 60%"></DatePicker>
           </Col>
           <Col span="6">
-          <span class="planDec">结束时间</span>
-          <DatePicker type="date" size="large" v-model="endTime" placeholder="选择时间" style="width: 60%"></DatePicker>
+          <span>结束时间：</span>
+          <DatePicker type="date" v-model="endTime" placeholder="选择时间" style="width: 60%"></DatePicker>
           </Col>
-          <Col span="2" offset="10">
-          <div style="position: relative;float: right;right: 5px;">
-            <Button type="primary" shape="circle" icon="ios-search" title="查询" @click="queryTable"
-                    size="large"></Button>
-            <Button type="primary" shape="circle" icon="ios-download-outline" title="导出" @click="exportData"
-                    size="large"></Button>
-          </div>
+          <Col span="6">
+            <Button type="primary"  icon="ios-search" size="small" @click="queryTable">查询</Button>
+            <Button type="primary"  icon="ios-download-outline" @click="exportData" size="small">导出</Button>
           </Col>
         </Row>
         <div>
@@ -43,7 +39,7 @@
 
 <script>
   import {TunnelService} from '../../../../services/tunnelService'
-  import {energyConsumptionService} from '../../../../services/energyConsumptionService'
+  import {EnergyConsumptionService} from '../../../../services/EnergyConsumptionService'
 
   export default {
     name: "energy-consumption-detail",
@@ -153,7 +149,7 @@
         if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
-        energyConsumptionService.getECDatagrid(queryParams).then(
+        EnergyConsumptionService.getECDatagrid(queryParams).then(
           (result) => {
             _this.page.pageTotal = result.total;
             result.list.forEach(a => {
@@ -266,7 +262,7 @@
         if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
-        energyConsumptionService.getECInfo(queryParams).then(
+        EnergyConsumptionService.getECInfo(queryParams).then(
           (result) => {
             _this.data = [];
             _this.date = [];
@@ -315,14 +311,12 @@
 
   .top {
     padding-top: 8px;
-    height: 50px;
+    padding-left: 5px;
+    height: 5vmin;
     background-color: #fff;
     margin-bottom: 10px;
-    font-size: 16px;
   }
-
-  .planDec {
-    padding: 4px;
-    font-size: 14px;
+  .top span{
+    font-size: 1.66vmin;
   }
 </style>
