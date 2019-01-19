@@ -20,8 +20,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
@@ -50,6 +52,8 @@ public class AlarmController {
 	private TunnelService tunnelService;
 	@Autowired
 	private MeasObjModuleCenter measObjModuleCenter;
+	@Autowired
+	private SectionService sectionService;
 	
 	
 	/**
@@ -275,7 +279,7 @@ public class AlarmController {
 			int count = alarmService.getCountByTunnel(t.getId());
 			JSONObject json = new JSONObject();
 			json.put("key", t.getName());
-			json.put("value", count);
+			json.put("val", count);
 			rtData.add(json);
 		}
 		return CommonUtil.success(rtData);
@@ -369,6 +373,54 @@ public class AlarmController {
 		List<JSONObject> rtdata = new ArrayList<>();
 		rtdata.add(yjs);
 		rtdata.add(mjs);
+		
+		return CommonUtil.success(rtdata);
+	}
+	
+	
+	
+	/**获取最新的20条告警 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2019年1月18日
+	 */
+	@RequestMapping(value="alarms/part",method=RequestMethod.GET)
+	public JSONObject getAlarmTop20() {
+		List<Alarm> list = alarmService.getAllList();
+		if(list.size() == 0)
+			return CommonUtil.success(new ArrayList<>());
+		
+		list = list.stream().sorted(Comparator.comparing(Alarm::getAlarmDate).reversed()).collect(Collectors.toList());
+		
+		List<Alarm> tmp = new ArrayList<>();
+		if(list.size()>=20) {
+			for (int i = 0; i < 20; i++) {
+				tmp.add(list.get(i));
+			}
+		}else {
+			tmp = list;
+		}
+		
+		List<JSONObject> rtdata = new ArrayList<>();
+		tmp.forEach(x -> {
+			
+			String location = "";
+			MeasObj measObj = measObjModuleCenter.getMeasObj(x.getObjectId());
+        	if(measObj != null) {
+        		SectionDto section = sectionService.getSectionById(measObj.getSectionId());
+        		if(section != null) {
+        			location = section.getStore().getTunnel().getName() + section.getName();
+        		}
+        	}
+			
+			JSONObject json = new JSONObject();
+			json.put("id", x.getId());
+			json.put("location", location );
+			json.put("alarmDate", x.getAlarmDate());
+			json.put("alarmLevel", AlarmLevelEnum.getEnum(x.getAlarmLevel()).getName());
+			json.put("name", x.getAlarmName());
+			rtdata.add(json);
+		});
 		
 		return CommonUtil.success(rtdata);
 	}

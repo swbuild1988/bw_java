@@ -22,14 +22,16 @@ public class EquipmentVo extends BaseVo{
 	/**设备类型*/
 	private Integer type;
 	private Date crtTime;
-	private Integer serviceLife;
+	private Date runTime;
+	/** 告警次数 */
+	private Integer alarmNo;
 	/**设备状态*/
 	private Integer status;
-	private String imgUrl;
     
     private Integer tunnelId;
 	private Integer modelId;
 	private Integer venderId;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -60,23 +62,11 @@ public class EquipmentVo extends BaseVo{
 	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
 	}
-	public Integer getServiceLife() {
-		return serviceLife;
-	}
-	public void setServiceLife(Integer serviceLife) {
-		this.serviceLife = serviceLife;
-	}
 	public Integer getStatus() {
 		return status;
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-	public String getImgUrl() {
-		return imgUrl;
-	}
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
 	}
 	public Integer getTunnelId() {
 		return tunnelId;
@@ -96,9 +86,17 @@ public class EquipmentVo extends BaseVo{
 	public void setVenderId(Integer venderId) {
 		this.venderId = venderId;
 	}
-	
-	
-	
-
+	public Date getRunTime() {
+		return runTime;
+	}
+	public void setRunTime(Date runTime) {
+		this.runTime = runTime;
+	}
+	public Integer getAlarmNo() {
+		return alarmNo;
+	}
+	public void setAlarmNo(Integer alarmNo) {
+		this.alarmNo = alarmNo;
+	}
 	
 }

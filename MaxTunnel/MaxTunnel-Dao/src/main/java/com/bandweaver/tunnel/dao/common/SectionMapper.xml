@@ -10,6 +10,7 @@
     <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
     <result column="AREA_ID" jdbcType="DECIMAL" property="areaId" />
     <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber" />
+    <result column="length" jdbcType="DECIMAL" property="length" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="start_point" jdbcType="VARCHAR" property="startPoint" />
     <result column="end_point" jdbcType="VARCHAR" property="endPoint" />
@@ -24,6 +25,7 @@
     <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
     <result column="AREA_ID" jdbcType="DECIMAL" property="areaId" />
     <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber" />
+    <result column="length" jdbcType="DECIMAL" property="length" />
     <result column="camera" jdbcType="VARCHAR" property="camera" />
     <result column="start_point" jdbcType="VARCHAR" property="startPoint" />
     <result column="end_point" jdbcType="VARCHAR" property="endPoint" />
@@ -34,7 +36,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, parent_id, NAME, tunnel_id,STORE_ID, AREA_ID,total_cable_number, camera,start_point,end_point,CRT_TIME
+    ID, parent_id, NAME, tunnel_id,STORE_ID, AREA_ID,total_cable_number,length, camera,start_point,end_point,CRT_TIME
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -48,11 +50,13 @@
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
     insert into T_COMMON_SECTION (ID, NAME,tunnel_id, STORE_ID, 
-      AREA_ID, total_cable_number,camera,start_point,end_point,CRT_TIME)
+      AREA_ID, total_cable_number,length,camera,start_point,end_point,CRT_TIME)
     values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
       #{tunnelId,jdbcType=DECIMAL}, 
       #{storeId,jdbcType=DECIMAL}, 
-      #{areaId,jdbcType=DECIMAL}, #{totalCableNumber,jdbcType=DECIMAL}, 
+      #{areaId,jdbcType=DECIMAL}, 
+      #{totalCableNumber,jdbcType=DECIMAL}, 
+      #{length,jdbcType=DECIMAL}, 
       #{camera,jdbcType=VARCHAR},
       #{startPoint,jdbcType=VARCHAR},
       #{endPoint,jdbcType=VARCHAR},
@@ -81,6 +85,9 @@
       </if>
       <if test="totalCableNumber != null">
         total_cable_number,
+      </if>
+      <if test="length != null">
+        length,
       </if>
       <if test="camera != null">
         camera,
@@ -117,6 +124,9 @@
       <if test="totalCableNumber != null">
        #{totalCableNumber,jdbcType=DECIMAL},
       </if>
+      <if test="length != null">
+       #{length,jdbcType=DECIMAL},
+      </if>
       <if test="camera != null">
        #{camera,jdbcType=VARCHAR},
       </if>
@@ -152,6 +162,9 @@
       <if test="totalCableNumber != null">
         total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
       </if>
+      <if test="length != null">
+        length = #{length,jdbcType=DECIMAL},
+      </if>
       <if test="camera != null">
         camera = #{camera,jdbcType=VARCHAR},
       </if>
@@ -174,6 +187,7 @@
       STORE_ID = #{storeId,jdbcType=DECIMAL},
       AREA_ID = #{areaId,jdbcType=DECIMAL},
       total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
+      length = #{length,jdbcType=DECIMAL},
       camera = #{camera,jdbcType=VARCHAR},
       start_point = #{startPoint,jdbcType=VARCHAR},
       end_point = #{endPoint,jdbcType=VARCHAR},
@@ -183,7 +197,7 @@
   
   <insert id="addBatch" useGeneratedKeys="false">
 		insert into T_COMMON_SECTION
-		(id,name,tunnel_id,store_id,area_id,total_cable_number,camera,start_point,end_point,crt_time)
+		(id,name,tunnel_id,store_id,area_id,total_cable_number,length,camera,start_point,end_point,crt_time)
 		select COMMON_SECTION_SEQUENCE.nextval,a.* from (
 		<foreach collection="list" item="item" index="index" close=")"
 			open="(" separator="union">
@@ -193,6 +207,7 @@
 			#{item.storeId},
 			#{item.areaId},
 			#{item.totalCableNumber},
+			#{item.length},
 			#{item.camera},
 			#{item.startPoint},
 			#{item.endPoint},
@@ -284,4 +299,12 @@
 			#{item}
 		</foreach> 
 	</select>
+	
+	<select id="getSectionsByStoreIds" resultMap="BaseResultMap">
+		select * from t_common_section where store_id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach> 
+	</select>
+	
 </mapper>

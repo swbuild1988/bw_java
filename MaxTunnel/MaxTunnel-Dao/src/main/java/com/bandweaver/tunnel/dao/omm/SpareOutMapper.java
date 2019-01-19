@@ -25,6 +25,6 @@ public interface SpareOutMapper {
     
     List<CommonDto> getCountGroupByStaffId();
     
-    List<CommonDto> getCountGroupByTypeId();
+    int getCountByWhither(Integer whither);
     
 }

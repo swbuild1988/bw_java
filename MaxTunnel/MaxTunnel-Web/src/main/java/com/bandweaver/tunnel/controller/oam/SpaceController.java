@@ -25,6 +25,7 @@ import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableContractService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableSectionService;
 import com.bandweaver.tunnel.common.biz.itf.oam.CableService;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
@@ -195,27 +196,42 @@ public class SpaceController {
 			JSONObject json = new JSONObject();
 			json.put("name", storeType.getName() + "管线");
 			
+			List<Section> sectionList = new ArrayList<>();
+			
 			List<Cable> cableList = new ArrayList<>();
 			List<Store> tmpStoreList = sList.stream().filter(s -> s.getStoreTypeId().intValue() == storeType.getId().intValue() ).collect(Collectors.toList());
 			if(tmpStoreList != null && tmpStoreList.size() > 0 ) {
 				List<Integer> storeIdList = tmpStoreList.stream().map( s -> s.getId() ).collect(Collectors.toList());
 				if(storeIdList != null && storeIdList.size() > 0) {
-					List<Integer> sectionIdList = sectionService.getSectionIdsByStoreIds(storeIdList);
-					if(sectionIdList.size() > 0) {
-						List<String> cids = cableSectionService.getSetBysectionIds(sectionIdList);
-						if(cids.size() > 0) {
-							cableList = cableService.getListByIds(cids);
+					sectionList = sectionService.getSectionsByStoreIds(storeIdList);
+					if(sectionList.size() > 0) {
+						List<Integer> sectionIdList = sectionList.stream().map(x -> x.getId()).collect(Collectors.toList());
+						if(sectionIdList.size() > 0) {
+							List<String> cids = cableSectionService.getSetBysectionIds(sectionIdList);
+							if(cids.size() > 0) {
+								cableList = cableService.getListByIds(cids);
+							}
 						}
 					}
 				}
+			}
+			
+			//获取总长度
+			Double tl = 0.0;
+			for (Section x : sectionList) {
+				Integer totalCableNumber = x.getTotalCableNumber();
+				Double length = x.getLength();
+				Double mul = MathUtil.mul((double)totalCableNumber, length);
+				tl = MathUtil.add(tl, mul);
 			}
 			
 			Double totalLength = 0.00;
 			for (Cable cable : cableList) {
 				totalLength = MathUtil.add(totalLength, cable.getCableLength());
 			}
-			json.put("value", totalLength/1000);
+			json.put("value", MathUtil.div(totalLength, (double)1000.00, 2));
 			json.put("unit", "km");
+			json.put("percent", tl == 0 ? 0.0 : MathUtil.div(totalLength, tl, 4 )*100 + "%");
 			returnData.add(json);
 		}
 		

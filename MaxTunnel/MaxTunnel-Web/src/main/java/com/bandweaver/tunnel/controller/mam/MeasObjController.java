@@ -39,6 +39,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
@@ -321,6 +322,7 @@ public class MeasObjController {
             }
             json.put("datatypeId", measObjDto.getDatatypeId());
             json.put("curValue", cv);
+            json.put("time", measObjModuleCenter.getMeasObjAI(measObjDto.getId()) == null ? new Date().getTime() : measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getRefreshTime().getTime());
 
             ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
             if (objectType == ObjectType.TEMPERATURE) {
@@ -563,37 +565,37 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年7月18日
      */
-    @Deprecated
-    @RequestMapping(value = "measobjs/{ids}/{datatypeId}/cache-cv", method = RequestMethod.GET)
-    public JSONObject getCVByIdFromCache(@PathVariable("ids") String ids, @PathVariable("datatypeId") Integer datatypeId) {
-
-        List<Integer> idList = new ArrayList<>();
-        String[] arr = ids.split(",");
-        for (String str : arr) {
-            idList.add(DataTypeUtil.toInteger(str));
-        }
-
-        DataType dataType = DataType.getEnum(datatypeId);
-        switch (dataType) {
-            case AI:
-                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjAIListByIds(idList));
-            case DI:
-                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjDIListByIds(idList));
-            case SI:
-                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjSIListByIds(idList));
-            case DISTRIBUTE:
-                break;
-            case VIDEO:
-                break;
-            case SO:
-                break;
-            case DAS:
-                break;
-            default:
-                break;
-        }
-        return null;
-    }
+//    @Deprecated
+//    @RequestMapping(value = "measobjs/{ids}/{datatypeId}/cache-cv", method = RequestMethod.GET)
+//    public JSONObject getCVByIdFromCache(@PathVariable("ids") String ids, @PathVariable("datatypeId") Integer datatypeId) {
+//
+//        List<Integer> idList = new ArrayList<>();
+//        String[] arr = ids.split(",");
+//        for (String str : arr) {
+//            idList.add(DataTypeUtil.toInteger(str));
+//        }
+//
+//        DataType dataType = DataType.getEnum(datatypeId);
+//        switch (dataType) {
+//            case AI:
+//                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjAIListByIds(idList));
+//            case DI:
+//                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjDIListByIds(idList));
+//            case SI:
+//                return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, measObjModuleCenter.getMeasObjSIListByIds(idList));
+//            case DISTRIBUTE:
+//                break;
+//            case VIDEO:
+//                break;
+//            case SO:
+//                break;
+//            case DAS:
+//                break;
+//            default:
+//                break;
+//        }
+//        return null;
+//    }
 
     /**
      * 通过管仓和区段获取对象信息
@@ -649,7 +651,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2019年1月11日
      * @param   
-     * @return {"msg":"请求成功","code":"200","data":[{"unit":"℃","name":"最高温度","location":"古城大街-12区-电力舱","value":29.81},{"unit":"ppm","name":"最高湿度","location":"古城大街-11区-污水舱","value":29.9},{"unit":"%","name":"最低含氧量","location":"古城大街-8区-电力舱","value":0.03}]}  
+     * @return {"msg":"请求成功","code":"200","data":[{"unit":"℃","name":"最高温度","location":"古城大街-18区-电力舱","value":29.99},{"unit":"ppm","name":"最高甲烷","location":"古城大街-20区-污水舱","value":29.99},{"unit":"%","name":"最低含氧量","location":"古城大街-16区-设备间","value":0.0}]}  
      */
     @RequestMapping(value="extreme-datas",method=RequestMethod.GET)
     public JSONObject getExtremeDatas() {
@@ -658,16 +660,13 @@ public class MeasObjController {
     	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
     		
 		JSONObject rt1 = getMaxOrMinValueByObjType(dbList, measObjs,"max",ObjectType.TEMPERATURE);
-		JSONObject rt2 = getMaxOrMinValueByObjType(dbList, measObjs,"max",ObjectType.HUMIDITY);
+		JSONObject rt2 = getMaxOrMinValueByObjType(dbList, measObjs,"max",ObjectType.CH4);
 		JSONObject rt3 = getMaxOrMinValueByObjType(dbList, measObjs,"min",ObjectType.OXYGEN);
 		
 		List<JSONObject> rtdata = new ArrayList<>();
-		if(rt1 != null)
-			rtdata.add(rt1);
-		if(rt2 != null)
-			rtdata.add(rt2);
-		if(rt3 != null)
-			rtdata.add(rt3);
+		rtdata.add(rt1);
+		rtdata.add(rt2);
+		rtdata.add(rt3);
     	
     	return CommonUtil.success(rtdata);
     }
@@ -689,7 +688,32 @@ public class MeasObjController {
     	final List<Integer> idList = ids;
     	List<MeasValueAI> todayTmprtList = dbList.stream().filter( x -> idList.contains(x.getObjectId())).collect(Collectors.toList());
     	if(todayTmprtList.isEmpty()) {
-        	return null;
+        	switch (objType) {
+			case TEMPERATURE:
+				JSONObject json_1 = new JSONObject();
+				json_1.put("name", "最高温度");
+				json_1.put("value", value);
+				json_1.put("unit", "℃");
+				json_1.put("location", "");
+				return json_1;
+			case CH4:
+				JSONObject json_2 = new JSONObject();
+				json_2.put("name", "最高甲烷");
+				json_2.put("value", value);
+				json_2.put("unit", "ppm");
+				json_2.put("location", "");
+				return json_2;
+			case OXYGEN:
+				JSONObject json_3 = new JSONObject();
+				json_3.put("name", "最低含氧量");
+				json_3.put("value", value);
+				json_3.put("unit", "%");
+				json_3.put("location", "");
+				return json_3;
+
+			default:
+				break;
+			}
     	}
     	
     	
@@ -766,6 +790,7 @@ public class MeasObjController {
 	 * @param   
 	 * @return {"msg":"请求成功","code":"200","data":[{"unit":"次","name":"电子井盖触发","isRise":false,"value":0},{"unit":"次","name":"门禁触发","isRise":false,"value":0},{"unit":"次","name":"红外触发","isRise":false,"value":0}]}  
 	 */
+	@Deprecated
 	@RequestMapping(value="meas-trigger-counts",method=RequestMethod.GET)
 	public JSONObject getMeasTriggerCounts(){
 		
@@ -811,6 +836,40 @@ public class MeasObjController {
     	
     	return json;
 	}
+	
+	
+	
+	
+	/**获取处于“开”状态的监测对象数量以及在廊人数 
+	 * @author shaosen
+	 * @Date 2019年1月18日
+	 * @return   {"msg":"请求成功","code":"200","data":[{"name":"已打开电子井盖数","value":0},{"name":"在廊人数","value":2}]}
+	 */
+	@RequestMapping(value="meas-switched-counts",method=RequestMethod.GET)
+	public JSONObject getSwitchedCount() {
+		
+		//获取已打开电子井盖数
+		List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
+		long count = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == ObjectType.ELECTRONIC_COVERS.getValue()
+				&& x.getCv() == SwitchEnum.OPEN.getValue()).count();
+		
+		JSONObject json_1 = new JSONObject();
+		json_1.put("name", "已打开电子井盖数");
+		json_1.put("value", count);
+		
+		List<JSONObject> rtdata = new ArrayList<>();
+		rtdata.add(json_1);
+		
+		//获取当前入廊人数
+		//TODO
+		JSONObject json_2 = new JSONObject();
+		json_2.put("name", "在廊人数");
+		json_2.put("value", 2);
+		rtdata.add(json_2);
+		
+		return CommonUtil.success(rtdata);
+	}
+	
 	
 	
 }

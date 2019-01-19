@@ -24,13 +24,6 @@ public interface EquipmentService {
 	 */
 	Integer addEquipment(Equipment equipment);
 
-	/**
-	 * 更新设备
-	 * 
-	 * @param equipment
-	 * @return
-	 */
-	Integer updateEquipment(Equipment equipment);
 
 	/**
 	 * 获得所有的设备
@@ -114,10 +107,9 @@ public interface EquipmentService {
 
 	/**
 	 * @Description: 根据条件统计设备数
-	 * @param @param tunnelId 管廊id
-	 * @param @param status 状态id
-	 * @param @param type 类型id
-	 * @param @return
+	 * @param tunnelId 管廊id
+	 * @param status 状态id
+	 * @param type 类型id
 	 * @return int
 	 * @throws @author shaosen
 	 * @date 2018年6月13日

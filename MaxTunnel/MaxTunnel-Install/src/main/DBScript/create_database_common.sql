@@ -812,6 +812,7 @@ CREATE TABLE T_COMMON_SECTION  (
    store_id          NUMBER               NOT NULL,
    area_id          NUMBER               NOT NULL,
    total_cable_number number,
+   length number,
    parent_id             NUMBER,
    camera             varchar2(200),
    start_point        varchar2(100),

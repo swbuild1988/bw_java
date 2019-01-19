@@ -345,6 +345,7 @@ public class TunnelController extends BaseController<Tunnel> {
     		tunnelJson.put("name", tunnelStatus.getName());
     		tunnelJson.put("value", tunnelList.size());
     		tunnelJson.put("unit", "条");
+    		tunnelJson.put("percent",list.isEmpty() ? "0" : MathUtil.div((double)(tunnelList.size()), (double)(list.size()), 4) * 100 + "%");
     		returnData.add(tunnelJson);
 		}
     	

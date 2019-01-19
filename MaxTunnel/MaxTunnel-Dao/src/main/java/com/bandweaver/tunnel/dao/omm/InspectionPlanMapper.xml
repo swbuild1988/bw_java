@@ -118,7 +118,7 @@
                 #{endTime}
             </if>
             <if test="isFinished != null">
-                a.is_finished = #{isFinished}
+                and a.is_finished = #{isFinished}
             </if>
         </where>
         order by a.create_time desc
