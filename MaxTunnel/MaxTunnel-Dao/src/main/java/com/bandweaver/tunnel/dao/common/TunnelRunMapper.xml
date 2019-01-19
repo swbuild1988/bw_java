@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.TunnelRunMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="RUN_DAYS" jdbcType="DECIMAL" property="runDays" />
+    <result column="SAFE_DYAS" jdbcType="DECIMAL" property="safeDyas" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, RUN_DAYS, SAFE_DYAS
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COMMON_TUNNEL_RUN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" >
+    delete from T_COMMON_TUNNEL_RUN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun">
+    insert into T_COMMON_TUNNEL_RUN (ID, RUN_DAYS, SAFE_DYAS
+      )
+    values (#{id,jdbcType=DECIMAL}, #{runDays,jdbcType=DECIMAL}, #{safeDyas,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun">
+    insert into T_COMMON_TUNNEL_RUN
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="runDays != null">
+        RUN_DAYS,
+      </if>
+      <if test="safeDyas != null">
+        SAFE_DYAS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="runDays != null">
+        #{runDays,jdbcType=DECIMAL},
+      </if>
+      <if test="safeDyas != null">
+        #{safeDyas,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun">
+    update T_COMMON_TUNNEL_RUN
+    <set>
+      <if test="runDays != null">
+        RUN_DAYS = #{runDays,jdbcType=DECIMAL},
+      </if>
+      <if test="safeDyas != null">
+        SAFE_DYAS = #{safeDyas,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun">
+    update T_COMMON_TUNNEL_RUN
+    set RUN_DAYS = #{runDays,jdbcType=DECIMAL},
+      SAFE_DYAS = #{safeDyas,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  
+   <select id="getRunInfo"  resultMap="BaseResultMap">
+    select * from T_COMMON_TUNNEL_RUN
+  </select>
+</mapper>

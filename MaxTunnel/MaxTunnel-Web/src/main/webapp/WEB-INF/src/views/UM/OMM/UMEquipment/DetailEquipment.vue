@@ -2,6 +2,7 @@
   <div style="background: #fff">
     <Row>
       <Col span="12">
+<<<<<<< HEAD
         <div style="overflow-y:auto;height: 86vh;padding: 5px;">
           <Form :model="equipment" :label-width="130" @submit.native.prevent>
             <Col span="12">
@@ -118,6 +119,109 @@
             <Button type="primary" @click="updateEquipmentInfo()">确定</Button>
           </div>
         </div>
+=======
+      <div style="overflow-y:auto;height: 86vh;padding: 5px;">
+        <Form :model="equipment" :label-width="130" @submit.native.prevent>
+          <!-- <Col span="12">
+          <FormItem label="设备编号">
+            <Input v-model='equipment.assetNo' :disabled='pageType!=pageTypes.Add'></Input>
+          </FormItem>
+          </Col> -->
+          <Col span="12">
+          <FormItem label="设备名称：">
+            <Input v-model='equipment.name' :disabled='pageType==pageTypes.Read'></Input>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="所属管廊：">
+            <Select v-model='equipment.tunnel.id' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="设备类型：">
+            <Select v-model='equipment.type' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in equipmentTypes" :value="index" :key="index">{{ item.value }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="投运时间：">
+            <Input v-model='equipment.crtTime' :disabled='pageType==pageTypes.Read'></Input>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="设备状态：">
+            <Select v-model='equipment.status' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in equipmentStatus" :value="item.key" :key="index">{{ item.value }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="供应商：">
+            <Select v-model='equipment.vender.id' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="设备型号：">
+            <Select v-model='equipment.model.id' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in equipmentModels" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="设备位置：">
+            <Input v-model='equipment.tunnelName' :disabled='pageType==pageTypes.Read'></Input>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="维修记录：" v-show="pageType!=pageTypes.Create" style="overflow-y:auto;max-height: 80px; min-height: 40px;">
+            <ul class="record">
+              <li v-for="(item,index) in repairRecord" :key="index" :disabled='pageType==pageTypes.Read'>
+                {{item.id}} : {{item.record}}
+              </li>
+            </ul>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="报警次数：">
+            <Input v-model='equipment.alarmCount' disabled></Input>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="运行时间：">
+            <Input v-model='equipment.runTime' disabled style="width: calc(100% - 30px);"></Input>(时)
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="关联监测对象：">
+            <Select v-model='equipment.venderId' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="12">
+          <FormItem label="对象类型：">
+            <Select v-model='equipment.venderId' :disabled='pageType==pageTypes.Read'>
+              <Option v-for="(item,index) in venders" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          </Col>
+          <Col span="24">
+          <FormItem label="设备图片：">
+            <img :src="equipmentIMgSrc" class="equipmentImg">
+          </FormItem>
+          </Col>
+          <Col span="24" style="text-align: center" v-show="pageType==pageTypes.Edit">
+          <Button type="default">取消</Button>
+          <Button type="primary">确定</Button>
+          </Col>
+        </Form>
+      </div>
+>>>>>>> origin/dev
       </Col>
       <Col span="12" style="height:86vh;"  ref="gisBox">
         <TestSmViewer ref="smViewer" :openImageryProvider="false"></TestSmViewer>

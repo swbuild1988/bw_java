@@ -182,7 +182,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
 		// 根据storeid & areaid查找
 		Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-		measObj.setSectionId(section.getId());
+		if(section != null) measObj.setSectionId(section.getId());
+		else measObj.setSectionId(0);
 
 		// 塞进数据库
 		measObjMapper.insertSelective(measObj);

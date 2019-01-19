@@ -14,7 +14,11 @@
         <FormItem label="联系方式：" prop="tel">
             <Input  v-model="addCustomerInfo.tel" placeholder="请输入联系方式" type="text"></Input>
         </FormItem>
+<<<<<<< HEAD
         <FormItem style="margin-left: 65px;" class="btn">
+=======
+        <FormItem style="margin-left: 65px;">
+>>>>>>> origin/dev
             <Button type="ghost"  @click="goBack()" style="margin-right: 8px">返回</Button>
             <Button type="primary" @click="submitAddCustomerInfo('addCustomerInfo')" v-show="pageType!=pageTypes.Edit" :disabled="isDisable">提交</Button>
             <Button type="primary" @click="submitEditCustomerInfo('addCustomerInfo')" v-show="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
@@ -140,6 +144,7 @@ export default {
     border-radius: 4px;
     margin: 0 auto;
 }
+<<<<<<< HEAD
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
@@ -172,4 +177,6 @@ export default {
         font-size: 1.6vmin !important;
     }
 }
+=======
+>>>>>>> origin/dev
 </style>

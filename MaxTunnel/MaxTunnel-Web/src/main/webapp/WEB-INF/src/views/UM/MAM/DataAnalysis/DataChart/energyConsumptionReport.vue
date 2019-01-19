@@ -7,6 +7,19 @@
                       <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
                 </Select>
             </Col>
+<<<<<<< HEAD
+=======
+           <!--  <Col span="10">
+                <span>时间：</span>
+                <DatePicker v-model="query.time" type="datetimerange" placeholder="请选择"  :readonly="query.readonly" style="width:20vw;"></DatePicker>
+            </Col> -->
+            <!-- <Col span="6">
+                <span>单位：</span>
+                <Select v-model="query.period" style="width:14vw;" @on-change="changePeriod">
+                      <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                </Select>
+            </Col> -->
+>>>>>>> origin/dev
             <Col span="4">
                 <Button type="primary" icon="ios-search" size="small" @click="getData">查询</Button>
                 <Button type="primary" icon="ios-download-outline"  @click="exportTable" size="small">导出</Button>

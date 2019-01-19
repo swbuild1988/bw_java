@@ -23,6 +23,8 @@ public class TunnelVo extends BaseVo implements Serializable{
 
     private Integer operationId;
     
+    private Integer status;
+    
     private String camera;
     
     private Integer maxviewConfigId;
@@ -108,5 +110,14 @@ public class TunnelVo extends BaseVo implements Serializable{
 	public void setMaxviewConfigId(Integer maxviewConfigId) {
 		this.maxviewConfigId = maxviewConfigId;
 	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
     
+	
 }

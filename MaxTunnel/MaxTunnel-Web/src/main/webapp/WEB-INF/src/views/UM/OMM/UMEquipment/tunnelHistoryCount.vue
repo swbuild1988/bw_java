@@ -29,6 +29,7 @@
                         <Option value=null>所有</Option>
                         <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
+<<<<<<< HEAD
                 </div>
                 <div class="conWidth">
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
@@ -40,6 +41,30 @@
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
                     show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
+=======
+                </Col>
+                <Col span="8">
+                    设备状态：
+                    <Select v-model="conditions.statusId" style="width: 60%">
+                        <Option value=null key=0>所有</Option>                    
+                        <Option v-for="item in status" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </Col>
+                <Col span="8">
+                    所属管廊：
+                    <Select v-model="conditions.tunnelId" style="width: 60%">
+                        <Option value=null key=0>所有</Option>                    
+                        <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </Col>
+                <Col>
+                    <Button type="primary" size="small" icon="ios-search">查询</Button>
+                </Col>
+            </Row>
+            <Table  stripe border :columns="breakColumns"  :style="{height:'29vh',zIndex:101}" :data="breakData"></Table>
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
+                show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+>>>>>>> origin/dev
         </Col>
         <Col span="24" style="height: 40vh;width: 86vw;margin-top: 1vh;">
             <ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>

@@ -365,6 +365,7 @@ input[type='number']{
     cursor: not-allowed;
     color: #495060 !important;
 }
+<<<<<<< HEAD
 @media (min-width: 2200px){
       .inputStyle{
         height: 4vh;
@@ -413,4 +414,6 @@ input[type='number']{
         font-size: 1.6vmin;
     }
 }
+=======
+>>>>>>> origin/dev
 </style>

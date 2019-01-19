@@ -39,13 +39,8 @@ public class SpareServiceImpl implements SpareService {
 	}
 
 	@Override
-	public List<SpareDto> getSpareDto() {
-		return spareMapper.getSpareDto();
-	}
-
-	@Override
-	public List<SpareDto> getSpareDtoByStatus() {
-		return spareMapper.getSpareDtoByStatus();
+	public List<SpareDto> getSpareDtoByStatus(Boolean status) {
+		return spareMapper.getSpareDtoByStatus(status);
 	}
 
 	@Override
@@ -71,8 +66,13 @@ public class SpareServiceImpl implements SpareService {
 	}
 
 	@Override
-	public List<CommonDto> getCountGroupByTypeId(Boolean status) {
-		return spareMapper.getCountGroupByTypeId(status);
+	public int getCountByTypeIdAndStatus(Boolean status, Integer typeId) {
+		return spareMapper.getCountByTypeIdAndStatus(status,typeId);
+	}
+
+	@Override
+	public int getCountBystatus(Boolean status) {
+		return spareMapper.getCountBystatus(status);
 	}
 
 }

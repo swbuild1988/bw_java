@@ -163,4 +163,12 @@
 	<delete id="deleteByContractId">
 		delete from t_oam_cable where contract_id = #{id}
 	</delete>
+	
+	
+	<select id="getListByIds" resultMap="BaseResultMap">
+		select * from t_oam_cable where id in
+		<foreach collection="list" item="item"  close=")" 	open="(" separator=",">
+			#{item}
+		</foreach>
+	</select>
 </mapper>

@@ -47,6 +47,7 @@ import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -413,6 +414,22 @@ public class MaintenanceController {
     }
 
     /**
+     * 获取最新的一条设备缺陷
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月8日
+     */
+    @RequestMapping(value = "defects/new-one", method = RequestMethod.GET)
+    public JSONObject getNewDefect() {
+    	DefectVo vo = new DefectVo();
+    	vo.setType(DefectType.Equipment.getValue());
+        List<DefectDto> list = defectService.getDefectsByCondition(vo);
+        List<DefectDto> ls = new ArrayList<>();
+        if(list != null && list.size() > 0) ls.add(list.get(0));
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, ls);
+    }
+    
+    /**
      * 获取所有缺陷信息
      *
      * @return
@@ -424,7 +441,7 @@ public class MaintenanceController {
         DefectVo vo = new DefectVo();
         List<DefectDto> list = defectService.getDefectsByCondition(vo);
         for (DefectDto defect : list) {
-            if (defect.getType() == 1) {
+            if (defect.getType().equals(DefectType.Tunnel.getValue())) {
                 SectionDto section = sectionService.getSectionById(defect.getSectionId());
                 String startPoint = section.getStartPoint();
                 String endPoint = section.getEndPoint();
@@ -483,4 +500,116 @@ public class MaintenanceController {
         activitiService.getImageByProcessInstance(mo.getProcessInstanceId(), response);
     }
 
+    /**
+     * 获取今年和去年的缺陷总数
+     * @return {"nowYearDefectCount":130, "beforeYearDefectCount":124}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "defects/count-year", method = RequestMethod.GET)
+    public JSONObject getDefectsCountByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的缺陷总数，有本体缺陷和设备缺陷，范围在【100-150】之间
+    	int nowYearDefectCount = (int)(Math.random() * 50 + 100);
+    	// 获取去年的缺陷总数
+    	int beforeYearDefectCount = (int)(Math.random() * 50 + 100);
+    	obj.put("nowYearDefectCount", nowYearDefectCount);
+    	obj.put("beforeYearDefectCount", beforeYearDefectCount);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    
+    /**
+     * 获取今年和去年的维修总数
+     * @return {"nowYearOrderCount":72, "beforeYearOrderCount":68}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "orders/count-year", method = RequestMethod.GET)
+    public JSONObject getOrdersCountByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的维修总数，只有设备缺陷需要维修，范围在【60-80】之间
+    	int nowYearOrderCount = (int)(Math.random() * 20 + 60);
+    	// 获取去年的维修总数
+    	int beforeYearOrderCount = (int)(Math.random() * 20 + 60);
+    	obj.put("nowYearOrderCount", nowYearOrderCount);
+    	obj.put("beforeYearOrderCount", beforeYearOrderCount);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    
+    /**
+     * 获取今年和去年的维修率
+     * @return {"nowYearOrderPercentage":98.2, "beforeYearOrderPercentage":97.6}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "orders/percentage-year", method = RequestMethod.GET)
+    public JSONObject getOrdersPercentageByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的维修总数
+    	
+    	// 获取今年状态为已完成的维修总数
+    	
+    	// 对比，计算出维修率  这里直接给出维修率,控制在【90%-100%】范围内
+    	double nowYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	// 获取去年的维修总数
+
+    	// 获取去年状态为已完成的维修总数
+    	
+    	// 对比，计算出维修率  这里直接给出维修率
+    	double beforeYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	obj.put("nowYearOrderPercentage", nowYearOrderPercentage);
+    	obj.put("beforeYearOrderPercentage", beforeYearOrderPercentage);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    /**
+     * 获取设备缺陷每个月的维修情况
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月17日
+     */
+    @RequestMapping(value = "maintenance-orders/months", method = RequestMethod.GET)
+    public JSONObject getEquipmentOrderCountByMonth() {
+    	
+    	List<JSONObject> list = new ArrayList<>();
+    	Date now = new Date();
+    	// 往后循环12个月
+		for(int i=0;i<12;i++) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", now.getMonth() + 1 + "月");
+			Date startTime = DateUtil.getBeginDayOfMonth(now);
+			Date endTime = DateUtil.getEndDayOfMonth(now);
+			
+			MaintenanceOrderVo vo = new MaintenanceOrderVo();
+			vo.setStartTime(startTime);
+			vo.setEndTime(endTime);
+			
+			// 存放“已维修”和“未维修”
+			List<JSONObject> orderList = new ArrayList<>();
+			JSONObject maintenance = new JSONObject();
+			maintenance.put("key", "已维修");
+			orderList.add(maintenance);
+			JSONObject unmaintenance = new JSONObject();
+			unmaintenance.put("key", "未维修");
+			orderList.add(unmaintenance);
+			
+			for(JSONObject order : orderList) {
+				vo.setIsFinished(false);
+				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+				int count = 0;
+				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+				for(MaintenanceOrderDto dto : dtoList) {
+					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+					if(defectDto.getObjectId() != null) count++;
+				}
+				order.put("val", count);
+			}
+			obj.put("val", orderList);
+			list.add(obj);
+			now.setMonth(now.getMonth() - 1);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
 }

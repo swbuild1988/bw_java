@@ -1,5 +1,7 @@
 package com.bandweaver.tunnel.controller.common;
 
+import static org.junit.Assume.assumeFalse;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.TunnelStatus;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
@@ -28,6 +31,7 @@ import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
@@ -38,7 +42,9 @@ import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
+import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -73,6 +79,8 @@ public class TunnelController extends BaseController<Tunnel> {
      * @param constructId      建筑单位id（公司表）
      * @param operationId      运营单位（公司表）
      * @param camera           相机视角（字符串）
+     * @param maxviewConfigId  二级子系统id
+     * @param status           管廊状态
      * @return {"msg":"请求成功","code":"200","data":{}}
      * @author shaosen
      * @date 2018年7月25日
@@ -310,6 +318,81 @@ public class TunnelController extends BaseController<Tunnel> {
     	returnData.put("areaList", areasName);
     	returnData.put("areaCount", areaList.size());
     	return CommonUtil.success(returnData);
+    }
+    
+    
+   
+    /**管廊基本信息
+     * @author shaosen
+     * @date 2019年1月10日
+     * @param   
+     * @return {"msg":"请求成功","code":"200","data":[{"unit":"条","name":"运行中","value":2},{"unit":"条","name":"建设中","value":4},{"unit":"条","name":"规划中","value":0},{"unit":"个","name":"防火分区共","value":21},{"unit":"km","name":"总长度","value":13.5}]}  
+     */
+    @RequestMapping(value="tunnels/message",method=RequestMethod.GET)
+    public JSONObject tunnelsMessage() {
+    	
+    	List<JSONObject> returnData = new ArrayList<>();
+    	List<TunnelSimpleDto> list = tunnelService.getList();
+    	
+    	//获取各运行状态管廊个数
+    	for (TunnelStatus tunnelStatus : TunnelStatus.values()) {
+    		
+    		List<TunnelSimpleDto> tunnelList = list.stream()
+    				.filter(t -> t.getStatus().intValue() == tunnelStatus.getValue())
+    				.collect(Collectors.toList());
+    		
+    		JSONObject tunnelJson = new JSONObject();
+    		tunnelJson.put("name", tunnelStatus.getName());
+    		tunnelJson.put("value", tunnelList.size());
+    		tunnelJson.put("unit", "条");
+    		tunnelJson.put("percent",list.isEmpty() ? "0" : MathUtil.div((double)(tunnelList.size()), (double)(list.size()), 4) * 100 + "%");
+    		returnData.add(tunnelJson);
+		}
+    	
+    	//获取防火分区总数
+    	int totalArea = areaService.getTotalCount();
+    	JSONObject areaJson = new JSONObject();
+    	areaJson.put("name", "防火分区共");
+    	areaJson.put("value", totalArea);
+    	areaJson.put("unit", "个");
+    	returnData.add(areaJson);
+    	
+    	//获取管廊总长度
+    	Double sum = 0.0;
+    	for (TunnelSimpleDto tunnelSimpleDto : list) {
+			sum = MathUtil.add(sum, tunnelSimpleDto.getLength());
+		}
+		JSONObject lengthJson = new JSONObject();
+		lengthJson.put("name", "总长度");
+		lengthJson.put("value", sum/1000);
+		lengthJson.put("unit", "km");
+		returnData.add(lengthJson);
+    	
+    	return CommonUtil.success(returnData);
+    }
+    
+    
+    /**管廊运行信息
+     * @author shaosen
+     * @date 2019年1月10日
+     * @param   
+     * @return JSONObject  
+     */
+    @RequestMapping(value="tunnels/run-message",method=RequestMethod.GET)
+    public JSONObject getDaysInfo() {
+    	TunnelRun info = tunnelService.getTunnelRunInfo();
+    	if(StringTools.isNullOrEmpty(info)) {
+    		TunnelRun tr = new TunnelRun();
+    		tr.setId(1);
+    		tr.setRunDays(1);
+    		tr.setSafeDyas(1);
+    		info = tr;
+    		tunnelService.addTunnelRun(tr);
+    	}
+    	JSONObject rtData = new JSONObject();
+    	rtData.put("total", info.getRunDays());
+    	rtData.put("safe", info.getSafeDyas());
+    	return CommonUtil.success(rtData);
     }
   
 }

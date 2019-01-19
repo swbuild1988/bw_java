@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.controller.oam;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,6 +19,7 @@ import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.constant.oam.EnergyType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
@@ -31,6 +33,7 @@ import com.bandweaver.tunnel.common.biz.vo.oam.ConsumeDataVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 
 /**
@@ -75,9 +78,6 @@ public class ConsumeDataController {
 	 */
 	@RequestMapping(value = "consume-datas/batch", method = RequestMethod.POST)
 	public JSONObject addBatch(@RequestBody List<ConsumeData> list) {
-		for(ConsumeData data : list) {
-			LogUtil.info(data);
-		}
 		consumeDataService.addBatch(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
@@ -260,5 +260,93 @@ public class ConsumeDataController {
 		consumeDataService.deleteBatch(consumeData.getTime());
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
+	
+	/**
+	 * 获取每条管廊，每个月的总能耗
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年1月10日
+	 */
+	@RequestMapping(value = "energy/totle-everymonth", method = RequestMethod.GET)
+    public JSONObject getEnergyByTunnleIds() {
+    	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+    	List<JSONObject> list = new ArrayList<>();
+    	
+		// 遍历，获取每个管廊的能耗
+    	for(TunnelSimpleDto dto : tunnelList) {
+    		JSONObject json = new JSONObject();
+    		json.put("key", dto.getName());
+    		List<JSONObject> energyList = new ArrayList<>();
+    		Date now = new Date();
+    		now.setMonth(now.getMonth() - 11);
+        	// 往后循环12个月
+    		for(int i=0;i<12;i++) {
+    			JSONObject obj = new JSONObject();
+    			obj.put("key", now.getMonth() + 1 + "月");
+    		
+				ConsumeDataVo vo = new ConsumeDataVo();
+				Date nowStart = DateUtil.getBeginDayOfMonth(now);
+				Date nowEnd = DateUtil.getEndDayOfMonth(now);
+				vo.setStartTime(nowStart);
+				vo.setEndTime(nowEnd);
+				vo.setTunnelId(dto.getId());
+				// 一个月的总能耗
+				Double sum = getSum(vo);
+				obj.put("val", sum);
+				energyList.add(obj);
+				now.setMonth(now.getMonth() + 1);
+    		}
+    		json.put("val", energyList);
+    		list.add(json);
+		}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    }
+	
+	/**
+	 * 获取每个月【2018-9~2019-1】，每条管廊的平均能耗/每公里
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年1月10日
+	 */
+	@RequestMapping(value = "energy/average-everymonth", method = RequestMethod.GET)
+    public JSONObject getAverageEnergyByTunnleIds() {
+    	List<TunnelDto> tunnelList = tunnelService.getDtoList();
+    	List<List<JSONObject>> list = new ArrayList<>();
+    	
+		// 获取2018年9月到2019年2月的时间
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date sd = null;
+		Date ed = null;
+		try {
+			sd = sdf.parse("2018-9-1");
+			ed = sdf.parse("2019-1-31");
+		} catch (Exception e) {
+			
+		}
+		while(sd.before(ed)) {
+			List<JSONObject> energyList = new ArrayList<>();
+			// 遍历，获取每个管廊的能耗
+			for(TunnelDto dto : tunnelList) {
+				ConsumeDataVo vo = new ConsumeDataVo();
+				Date nowStart = DateUtil.getBeginDayOfMonth(sd);
+				Date nowEnd = DateUtil.getEndDayOfMonth(sd);
+				vo.setStartTime(nowStart);
+				vo.setEndTime(nowEnd);
+				vo.setTunnelId(dto.getId());
+				// 一个月的总能耗
+				Double sum = getSum(vo);
+				//平均每公里的能耗
+				sum = sum / dto.getLength() * 1000;
+				JSONObject obj = new JSONObject();
+				obj.put("time", nowStart);
+				obj.put("tunnel", dto.getName());
+				obj.put("energy", sum);
+				energyList.add(obj);
+			}
+			list.add(energyList);
+			sd.setMonth(sd.getMonth() + 1);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    }
 }
 			

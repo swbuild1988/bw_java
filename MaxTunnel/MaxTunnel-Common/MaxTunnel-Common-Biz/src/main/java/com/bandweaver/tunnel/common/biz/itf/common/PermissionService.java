@@ -23,4 +23,7 @@ public interface PermissionService {
 
 	List<Permission> getPermissionsByMenu(String menuName);
 
+	List<Permission> getPermissionsByRole(Integer rid);
+
+
 }

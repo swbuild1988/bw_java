@@ -18,6 +18,7 @@ public class SectionVo extends BaseVo {
     private Integer areaId;
     
     private Integer totalCableNumber;
+    private Double length;
     
     private String camera;
     private String startPoint;
@@ -71,6 +72,14 @@ public class SectionVo extends BaseVo {
 
 	public void setTotalCableNumber(Integer totalCableNumber) {
 		this.totalCableNumber = totalCableNumber;
+	}
+
+	public Double getLength() {
+		return length;
+	}
+
+	public void setLength(Double length) {
+		this.length = length;
 	}
 
 	public String getCamera() {

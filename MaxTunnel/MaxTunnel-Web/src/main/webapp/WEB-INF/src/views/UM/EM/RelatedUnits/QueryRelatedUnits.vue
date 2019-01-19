@@ -29,7 +29,11 @@
                 <span>结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
+<<<<<<< HEAD
             <Col span="6">
+=======
+            <Col span="6" offset="6">
+>>>>>>> origin/dev
                 <Button type="primary" icon="ios-search" @click="queryUnits()" size="small">查询</Button>
             </Col>
         </Row> 

@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.oam.space;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,11 @@ public class CableServiceImpl implements CableService {
 	@Override
 	public void addBatch(List<Cable> list) {
 		cableMapper.addBatch(list);
+	}
+
+	@Override
+	public List<Cable> getListByIds(List<String> cids) {
+		List<Cable> list = cableMapper.getListByIds(cids);
+		return list == null ? Collections.emptyList() : list;
 	}
 }

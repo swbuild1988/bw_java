@@ -1,7 +1,11 @@
 <template>
     <Row>
         <Col span="24">
+<<<<<<< HEAD
             <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
+=======
+            <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
+>>>>>>> origin/dev
                 <Col span="4">
                     <span>仪表工具名称</span><span>：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
@@ -51,7 +55,11 @@
                     <span>归还结束时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
+<<<<<<< HEAD
                 <Col span="4">
+=======
+                <Col span="4" offset="4">
+>>>>>>> origin/dev
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
@@ -373,6 +381,13 @@ export default {
     letter-spacing: 0.667em;
     margin-right: -0.667em;
 }
+<<<<<<< HEAD
+=======
+.word63{
+    letter-spacing: 1.5em;
+    margin-right: -1.5em;
+}
+>>>>>>> origin/dev
 .word63{
     letter-spacing: 1.5em;
     margin-right: -1.5em;

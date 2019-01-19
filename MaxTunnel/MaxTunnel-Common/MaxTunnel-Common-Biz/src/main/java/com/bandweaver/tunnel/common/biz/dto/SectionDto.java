@@ -32,6 +32,7 @@ public class SectionDto implements Serializable {
 	private Integer areaId;
 
 	private Integer totalCableNumber;
+	private Double length;
 
 	private String camera;
 	private String startPoint;
@@ -89,6 +90,14 @@ public class SectionDto implements Serializable {
 
 	public void setTotalCableNumber(Integer totalCableNumber) {
 		this.totalCableNumber = totalCableNumber;
+	}
+
+	public Double getLength() {
+		return length;
+	}
+
+	public void setLength(Double length) {
+		this.length = length;
 	}
 
 	public String getCamera() {
@@ -150,8 +159,8 @@ public class SectionDto implements Serializable {
 	@Override
 	public String toString() {
 		return "SectionDto [id=" + id + ", parentId=" + parentId + ", name=" + name + ", tunnelId=" + tunnelId
-				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", camera="
-				+ camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime=" + crtTime + ", store="
-				+ store + ", area=" + area + "]";
+				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", length="
+				+ length + ", camera=" + camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime="
+				+ crtTime + ", store=" + store + ", area=" + area + "]";
 	}
 }

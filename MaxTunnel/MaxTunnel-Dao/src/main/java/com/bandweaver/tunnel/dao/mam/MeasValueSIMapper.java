@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.dao.mam;
 
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,6 @@ public interface MeasValueSIMapper {
      * 批量删除
      */
     void deleteBatch(Date time);
+
+	List<MeasValueSI> getListByTime(Date date);
 }

@@ -350,6 +350,7 @@ input[type='number']{
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
 }
+<<<<<<< HEAD
 .ivu-select-single .ivu-select-selection,.ivu-input{
   height: 4vh;
   line-height: 4vh;
@@ -407,4 +408,6 @@ input[type='number']{
         line-height: 2.8vmin;
     }
 }
+=======
+>>>>>>> origin/dev
 </style>

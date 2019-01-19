@@ -92,22 +92,13 @@
         WHERE id = #{id}
     </update>
 
-    <select id="getSpareDto" resultMap="spareDtoMap">
-        select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
-        from t_omm_spare a
-        LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
-        LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
-        LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
-        WHERE status = 1
-    </select>
-
 	<select id="getSpareDtoByStatus" resultMap="spareDtoMap">
         select a.*, b.name as model_name, c.name as type_name, d.name as vender_name
         from t_omm_spare a
         LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
         LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
         LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
-        WHERE status = 0
+        WHERE status = #{status}
     </select>
 	
     <select id="getSpareDtoByCondition" resultMap="spareDtoMap">
@@ -117,6 +108,9 @@
         LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
         LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
         <where>
+        	<if test="id != null">
+                and a.id = #{id}
+            </if>
             <if test="name != null and name.trim() != ''">
                 instr(a.name,#{name})>0
             </if>
@@ -150,14 +144,17 @@
         where a.id = #{id}
 	</select>
 	
-	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
-		select a.*,b.name
-	    from (select count(1) as count,type_id as id 
+	<select id="getCountByTypeIdAndStatus" resultType="Integer">
+		select count(1) as count
 	      from T_OMM_SPARE
 	      where status = #{status}
-	      group by type_id) a
-	    left join t_Omm_Equipment_Type b on a.id = b.id
-	    order by a.count desc
+	      and type_id = #{typeId}
+	    order by count desc
+	</select>
+	
+	<select id="getCountBystatus" resultType="Integer">
+		select count(1) from T_OMM_SPARE
+		where status = #{status}
 	</select>
 	
     <resultMap id="spareDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.SpareDto">

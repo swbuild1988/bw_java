@@ -14,6 +14,7 @@ public class MaintenanceOrderVo extends BaseVo{
     private Integer status;
     private String maintenanceResult;
     private String describe;
+    private Boolean isFinished;
 
     public String getId() {
         return id;
@@ -85,6 +86,14 @@ public class MaintenanceOrderVo extends BaseVo{
 
 	public void setDescribe(String describe) {
 		this.describe = describe;
+	}
+
+	public Boolean getIsFinished() {
+		return isFinished;
+	}
+
+	public void setIsFinished(Boolean isFinished) {
+		this.isFinished = isFinished;
 	}
 
 	@Override

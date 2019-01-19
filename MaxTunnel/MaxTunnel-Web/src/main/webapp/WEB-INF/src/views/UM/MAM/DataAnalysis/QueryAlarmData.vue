@@ -43,8 +43,13 @@
                   style="width: 65%;"></DatePicker>
       </Col>
       <Col span="6">
+<<<<<<< HEAD
         <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small" style="font-size: 1.7vmin">查询告警</Button>
         <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small" style="font-size: 1.7vmin">清除告警</Button>
+=======
+        <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small">查询</Button>
+        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small">清除告警数据</Button>
+>>>>>>> origin/dev
       </Col>
     </Row>
     <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">

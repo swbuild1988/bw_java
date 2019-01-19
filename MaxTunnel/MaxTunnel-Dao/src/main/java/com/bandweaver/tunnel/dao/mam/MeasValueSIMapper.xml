@@ -57,4 +57,9 @@
 	<delete id="deleteBatch">
 		delete from T_MAM_MEASVALUE_SI where time &lt;= #{time}
 	</delete>
+	
+	
+	<select id="getListByTime" resultMap="measValueSIMap">
+		select * from T_MAM_MEASVALUE_SI where time &gt;= #{date}
+	</select>
 </mapper>

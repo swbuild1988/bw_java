@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.service.common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -326,5 +327,17 @@ public class SectionServiceImpl implements SectionService {
 	        return true;
 	    }
 	    
+	}
+
+	@Override
+	public List<Integer> getSectionIdsByStoreIds(List<Integer> list) {
+		List<Integer> li = sectionMapper.getSectionIdsByStoreIds(list);
+		return li == null ? Collections.emptyList() : li;
+	}
+
+	@Override
+	public List<Section> getSectionsByStoreIds(List<Integer> list) {
+		List<Section> li = sectionMapper.getSectionsByStoreIds(list);
+		return li == null ? Collections.emptyList() : li ;
 	}
 }
