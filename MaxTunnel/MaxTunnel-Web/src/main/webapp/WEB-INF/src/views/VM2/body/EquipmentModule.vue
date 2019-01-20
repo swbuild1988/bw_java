@@ -3,11 +3,15 @@
         <div class="Title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="simplePieChartBox" id="simplePieChartBox">
-            <simplePieChart v-bind="simplePieData"></simplePieChart>
+        <div class="simplePieChartBox">
+            <!-- <simplePieChart v-bind="simplePieData"></simplePieChart> -->
+            <pie-chart v-bind="pieData"></pie-chart>
         </div>
         <div class="stackCrossBox">
-            <stackCrossChart v-bind="stackCrossData" ref="stackCrossChart"></stackCrossChart>
+            <cross-bar-chart
+                v-bind="stackCrossData"
+                ref="stackCrossChart"
+            ></cross-bar-chart>
         </div>
     </div>
 </template>
@@ -16,18 +20,26 @@
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
 import stackCrossChart from "../../../components/Common/Chart/StackCrossChart"
 import simplePieChart from '../../../components/Common/Chart/SimplePieChart'
+import CrossBarChart from "../../../components/Common/Chart/CrossBarChart"
+import PieChart from "../../../components/Common/Chart/PieChart"
+import { EquipmentService } from '../../../services/equipmentService'
 
 export default {
     data() {
         return {
-            title: "设备",
+            title: "设备台账",
             stackCrossData: {
                 id: 'stackCrossID',
-                title: '管廊设备统计',
+                title: '设备类型状态统计',
                 legendData: [],
                 yAxisData: [],
-                seriesData: [],
-                setIntervalTime: 1000*5*60
+                seriesData: []
+            },
+            pieData: {
+                id: 'pieID',
+                title: '设备状态',
+                legendData: [],
+                seriesData: []
             },
             simplePieData: {
                 id: 'simplePieID',
@@ -56,7 +68,7 @@ export default {
                             right: 0
                         },
                     },
-                    timer: 1000*5*60
+                    timer: 1000 * 5 * 60
                 },
                 titleSize: '7%',
                 seriesSize: '4%'
@@ -64,41 +76,50 @@ export default {
         };
     },
     components: {
-        ModuleTitle, stackCrossChart, simplePieChart
+        ModuleTitle, stackCrossChart, simplePieChart, CrossBarChart, PieChart
     },
     mounted() {
-        this.getSerious()
+        this.init()
     },
     methods: {
-        getSerious(){
-            this.axios.get('types/equipments/tunnels').then(res=>{
-                let { code,data } = res.data
-                if(code==200){
-                    this.stackCrossData.legendData = data.types
-                    this.stackCrossData.yAxisData = data.tunnels
-                    var series = data.list
-                    for( var i=0; i<this.stackCrossData.legendData.length; i++ ){
-                        var temp = {
-                            name: this.stackCrossData.legendData[i],
-                            type: 'bar',
-                            stack: '总量',
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'insideRight'
-                                }
-                            },
-                            data: series[i].data
+        init() {
+            // 获取数据
+            EquipmentService.getEquipmentTypeAndStatusCount().then(res => {
+                // 柱状图数据
+                var arr = []
+                for (var i = 0; i < res.length; i++) {
+                    this.stackCrossData.yAxisData.push(res[i].key)
+                    var tmp = [];
+                    for (var j = 0; j < res[i].val.length; j++) {
+                        if (i == 0) {
+                            this.stackCrossData.legendData.push(res[i].val[j].key)
+                            arr.push([res[i].val[j].val])
+                        } else {
+                            arr[j].push(res[i].val[j].val)
                         }
-                        this.stackCrossData.seriesData.push(temp)
                     }
                 }
+                for (var i = 0; i < arr.length; i++) {
+                    this.stackCrossData.seriesData.push({ data: arr[i] })
+                }
+
+                // 饼图
+                this.pieData.legendData = [];
+                for (var i = 0; i < this.stackCrossData.legendData.length; i++) {
+                    this.pieData.legendData.push(this.stackCrossData.legendData[i]);
+                }
+                for (var i = 0; i < arr.length; i++) {
+                    this.pieData.seriesData.push(0);
+                    for (var j = 0; j < arr[i].length; j++) this.pieData.seriesData[i] += arr[i][j];
+                }
+                this.pieData.legendData = this.pieData.legendData.reverse();
+                this.pieData.seriesData = this.pieData.seriesData.reverse();
             })
         },
-        refreshData(){
-            setInterval(()=>{
+        refreshData() {
+            setInterval(() => {
                 this.$refs.stackCrossChart.drawBar()
-            },1000*5)
+            }, 1000 * 60 * 5)
         }
     }
 };
@@ -118,14 +139,13 @@ export default {
 }
 
 .simplePieChartBox {
-    width: 44%;
+    width: 45%;
     height: 85%;
     display: inline-block;
 }
 .stackCrossBox {
-    width: 55%;
+    width: 45%;
     height: 85%;
-    padding-right:3%;
     display: inline-block;
 }
 </style>

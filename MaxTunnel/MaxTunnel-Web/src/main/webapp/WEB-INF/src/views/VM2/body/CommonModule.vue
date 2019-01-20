@@ -31,12 +31,12 @@ export default {
             title: "",
             tunnelMessage: {
                 title: "管廊信息",
-                subTitle: ['状态','数量','占比'],
+                subTitle: ['状态', '数量', '占比'],
                 data: []
             },
             lineMessage: {
                 title: "管线信息",
-                subTitle: ['类型','长度','空间利用率'],
+                subTitle: ['类型', '长度', '利用率'],
                 data: []
             },
             runMessage: {
@@ -56,11 +56,11 @@ export default {
     mounted() {
         this.init();
         let _this = this
-        this.refresh.intervalId = setInterval(()=>{
+        this.refresh.intervalId = setInterval(() => {
             _this.init()
-        },this.refresh.time)
+        }, this.refresh.time)
     },
-    beforeDestory(){
+    beforeDestory() {
         clearInterval(this.refresh.intervalId)
     },
     methods: {
@@ -68,9 +68,9 @@ export default {
             this.title = "基本信息";
             TunnelService.getVmTunnelsMessage().then(
                 result => {
-                    this.tunnelMessage.data = result.slice(0,3)
-                    this.tunnelMessage.data.forEach(tunnel=>{
-                        tunnel.percent = parseInt(tunnel.percent.replace('%','')).toFixed(0) + '%'
+                    this.tunnelMessage.data = result.slice(0, 3)
+                    this.tunnelMessage.data.forEach(tunnel => {
+                        tunnel.percent = parseInt(tunnel.percent.replace('%', '')).toFixed(0) + '%'
 
                     })
                 },
@@ -79,10 +79,10 @@ export default {
                 })
             TunnelService.getVmLineMessage().then(
                 result => {
-                    this.lineMessage.data = result.slice(0,3)
-                    this.lineMessage.data.forEach(line=>{
+                    this.lineMessage.data = result.slice(0, 3)
+                    this.lineMessage.data.forEach(line => {
                         line.value = line.value.toFixed(0)
-                        line.percent = parseInt(line.percent.replace('%','')).toFixed(0) + '%'
+                        line.percent = parseInt(line.percent.replace('%', '')).toFixed(0) + '%'
                     })
                 },
                 error => {

@@ -4,18 +4,30 @@
             <p>{{title}}</p>
         </div>
         <div class="subTitle">
-            <span v-for="sub in subTitle">
-                {{ sub }}
-            </span>
+            <div class="name">
+                <p> {{subTitle[0]}} </p>
+            </div>
+            <div class="val">
+                <p> {{subTitle[1]}} </p>
+            </div>
+            <div class="percent">
+                <p> {{subTitle[2]}} </p>
+            </div>
         </div>
         <div
             v-for="item in data"
             class="row"
             :key="item.name"
         >
-            <span class="name">{{item.name}}</span>
-            <span class="val">{{item.value + item.unit}}</span>
-            <span class="percent">{{item.percent}}</span>
+            <div class="name">
+                <p>{{item.name}}</p>
+            </div>
+            <div class="val">
+                <p>{{item.value + item.unit}}</p>
+            </div>
+            <div class="percent">
+                <p>{{item.percent}}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -56,41 +68,54 @@ export default {
 }
 .gridTitle {
     width: 100%;
-    height: 22%;
+    height: 25%;
 }
 .gridTitle > p {
-    font-size: 1.6vmin;
+    font-size: 1.7vmin;
     color: #fff;
 }
-.subTitle{
-    margin: 0 0 0 0.8vmin;
+.subTitle {
+    position: relative;
+    width: 100%;
+    height: 15%;
 }
-.subTitle span{
-    margin: 0 0 0 1.58vmin;
-    color: #aaa;
-    font-size: 1.24vmin;
-}
-.subTitle span:last-child{
-    float: right;
+.subTitle >>> p {
+    color: #ccc;
+    font-size: 1.25vmin;
 }
 .row {
+    position: relative;
     width: 100%;
-    height: 16%;
-    background: url('../../assets/VM/common_item_bg.png');
+    height: 20%;
+    background: url("../../assets/VM/common_item_bg.png");
     background-size: 100% 100%;
-    margin: 0.6vmin 0;
 }
-.row >>> span {
-    font-size: 1.34vmin;
+.row >>> p {
+    font-size: 1.45vmin;
     color: #fff;
 }
-.name{
-    margin: 0 1.6vmin;
+.name {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    left: 0%;
+    top: 0%;
+    padding-left: 1.65vmin;
 }
-.percent{
-    float: right;
-    margin-right: 0.5vmin;
+.val {
+    text-align: center;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 50%;
+    top: 0%;
 }
-
-
+.percent {
+    text-align: right;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 75%;
+    top: 0%;
+}
 </style>

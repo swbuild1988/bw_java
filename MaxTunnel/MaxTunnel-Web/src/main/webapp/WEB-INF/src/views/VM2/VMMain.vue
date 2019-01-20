@@ -17,7 +17,10 @@
                 <inspect-module></inspect-module>
             </div>
             <div class="MapModule">
-                <map-module ref="map" @jumpTo="destroyViewer"></map-module>
+                <map-module
+                    ref="map"
+                    @jumpTo="destroyViewer"
+                ></map-module>
             </div>
             <div class="MeasureModule">
                 <measure-module></measure-module>
@@ -29,7 +32,7 @@
                 <three-dimensions-module ref="threeDimensional"></three-dimensions-module>
             </div>
             <div class="VideoModule">
-                <video-module ></video-module>
+                <video-module></video-module>
             </div>
         </div>
     </div>
@@ -83,7 +86,7 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    background: url("../../assets/VM/VMmain-bg.png") no-repeat;
+    background: url("../../assets/VM/vm_main_bg.png") no-repeat;
     background-size: 100% 100%;
     background-color: #031324;
 }
@@ -96,10 +99,10 @@ export default {
 }
 .MainContent .CommonModule {
     position: absolute;
-    top: 10%;
+    top: 6%;
     left: 0.5%;
     width: 24%;
-    height: 22.5%;
+    height: 26.5%;
 }
 .MainContent .InspectModule {
     position: absolute;
@@ -138,10 +141,10 @@ export default {
 }
 .MainContent .AlarmModule {
     position: absolute;
-    top: 10%;
+    top: 6%;
     left: 75.5%;
     width: 24%;
-    height: 22.5%;
+    height: 26.5%;
 }
 .MainContent .VideoModule {
     position: absolute;

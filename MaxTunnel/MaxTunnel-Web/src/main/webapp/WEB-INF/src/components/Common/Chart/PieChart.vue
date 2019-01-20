@@ -1,6 +1,6 @@
 <template>
     <div
-        class="crossBar"
+        class="pie"
         :id="id"
         ref="element"
     >
@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-    name: 'corssBar',
+    name: 'pie',
     props: {
         id: {
             type: String
@@ -17,9 +17,6 @@ export default {
             type: String
         },
         legendData: {
-            type: Array
-        },
-        yAxisData: {
             type: Array
         },
         seriesData: {
@@ -35,8 +32,10 @@ export default {
     },
     watch: {
         seriesData(newVal, oldVal) {
-            this.drawBar()
-            this.fetchData()
+            if (this.seriesData && this.seriesData.length > 0) {
+                this.drawBar()
+                this.fetchData()
+            }
         }
     },
     mounted() {
@@ -45,7 +44,7 @@ export default {
     },
     methods: {
         init() {
-            this.resize()
+            this.drawBar()
             window.addEventListener("resize", this.myChart.resize);
             window.addEventListener("resize", this.resize)
         },
@@ -65,59 +64,20 @@ export default {
                         fontSize: _this.getFontSize('6.5%')
                     }
                 },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow'
-                    }
-                },
-                legend: {
-                    data: this.legendData,
-                    textStyle: {
-                        color: '#ccc',
-                        fontSize: _this.getFontSize('4%')
-                    },
-                    top: _this.getFontSize('6.5%'),
-                    right: _this.getFontSize('1%')
-                },
                 grid: {
                     top: this.title.length > 0 ? '12%' : '1%',
                     left: '3%',
                     right: '3%',
-                    bottom: '1%',
-                    containLabel: true
+                    bottom: '1%'
                 },
-                xAxis: {
-                    type: 'value',
-                    boundaryGap: [0, 0.01],
-                    axisLine: {
-                        lineStyle: {
-                            color: '#ccc'
-                        }
-                    },
-                    axisLabel: {
-                        show: true,
-                        textStyle: {
-                            fontSize: _this.getFontSize('4%')      //更改坐标轴文字大小
-                        }
-                    },
-                },
-                yAxis: {
-                    type: 'category',
-                    data: this.yAxisData,
-                    axisLine: {
-                        lineStyle: {
-                            color: '#ccc'
-                        }
-                    },
-                    axisLabel: {
-                        show: true,
-                        textStyle: {
-                            fontSize: _this.getFontSize('4%')      //更改坐标轴文字大小
-                        }
-                    },
-                },
-                series: []
+                series: [
+                    {
+                        type: "pie",
+                        radius: '50%',
+                        center: ['50%', '50%'],
+                        data: []
+                    }
+                ]
             }
             this.myChart.setOption(_this.option);
         },
@@ -126,20 +86,26 @@ export default {
             while (this.itemStyleColor.length < this.seriesData.length) {
                 this.itemStyleColor = this.itemStyleColor.concat(this.itemStyleColor)
             }
-            for (var i = 0; i < this.legendData.length; i++) {
-                let seriesDataAll = {
-                    name: this.legendData[i],
-                    type: 'bar',
-                    stack: 'total',
-                    data: this.seriesData[i].data,
-                    itemStyle: {
-                        normal: {
-                            color: this.itemStyleColor[i]
-                        }
-                    }
-                };
-                this.option.series.push(seriesDataAll);
+
+            console.log("this.seriesData", this.seriesData);
+            console.log("this.legendData", this.legendData)
+
+            var tempCount = 0;
+            for (let i = 0; i < this.seriesData.length; i++) tempCount += this.seriesData[i];
+            let newData = [];
+            for (let i = 0; i < this.legendData.length; i++) {
+                newData.push({
+                    value: this.seriesData[i],
+                    name:
+                        this.legendData[i] +
+                        ":" +
+                        ((100 * this.seriesData[i]) / tempCount).toFixed(
+                            2
+                        ) +
+                        "%"
+                })
             }
+            this.option.series[0].data = newData;
 
             this.myChart.setOption(this.option);
         },
@@ -161,7 +127,7 @@ export default {
 }
 </script>
 <style scoped>
-.crossBar {
+.pie {
     width: 100%;
     height: 100%;
 }
