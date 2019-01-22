@@ -29,6 +29,7 @@ import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.SpringContextHolder;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 
 import sun.util.logging.resources.logging;
@@ -136,7 +137,10 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 	public List<MeasObjAI> getMeasObjAIListByIds(List<Integer> ids) {
 		List<MeasObjAI> results = new ArrayList<>();
 		for (Integer id : ids) {
-			results.add(measObjAIHashMap.get(id));
+			MeasObjAI measObjAI = measObjAIHashMap.get(id);
+			if(!StringTools.isNullOrEmpty(measObjAI)) {
+				results.add(measObjAI);
+			}
 		}
 		return results;
 	}

@@ -1,8 +1,10 @@
 package com.bandweaver.tunnel.controller.common;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,6 +197,8 @@ public class StoreController extends BaseController<Store> {
 	@RequestMapping(value="tunnels/{id}/stores",method=RequestMethod.GET)
 	public JSONObject getStoresByTunnelId(@PathVariable Integer id) {
 		List<StoreDto> list = storeService.getStoresByTunnelId(id);
+		//orderby sn
+		list = list.stream().sorted(Comparator.comparing(StoreDto::getSn)).collect(Collectors.toList());
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 	}
 
