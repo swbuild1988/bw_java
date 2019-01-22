@@ -578,7 +578,8 @@ public class MaintenanceController {
     	// 往后循环12个月
 		for(int i=0;i<12;i++) {
 			JSONObject obj = new JSONObject();
-			obj.put("key", now.getMonth() + 1 + "月");
+			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+			obj.put("key", time);
 			Date startTime = DateUtil.getBeginDayOfMonth(now);
 			Date endTime = DateUtil.getEndDayOfMonth(now);
 			
@@ -596,15 +597,22 @@ public class MaintenanceController {
 			orderList.add(unmaintenance);
 			
 			for(JSONObject order : orderList) {
-				vo.setIsFinished(false);
-				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
-				int count = 0;
-				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
-				for(MaintenanceOrderDto dto : dtoList) {
-					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
-					if(defectDto.getObjectId() != null) count++;
-				}
-				order.put("val", count);
+				// 添加假数据
+				if(order.equals(orderList.get(0)))
+					order.put("val", (int)(Math.random() * 6 + 16));
+				else
+					order.put("val", (int)(Math.random() * 3 + 4));
+				// 真实数据
+//				vo.setIsFinished(false);
+//				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+//				int count = 0;
+//				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+//				for(MaintenanceOrderDto dto : dtoList) {
+//					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+//					if(defectDto.getObjectId() != null) count++;
+//				}
+//				order.put("val", count);
+				
 			}
 			obj.put("val", orderList);
 			list.add(obj);

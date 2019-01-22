@@ -353,11 +353,9 @@ public class MeasObjController {
 
     }
 
-    /**
-     * 求管廊监测数据极值
-     *
+    /**求管廊监测数据极值 
      * @param reqJson
-     * @return
+     * @return   
      * @author shaosen
      * @Date 2018年12月28日
      */
@@ -394,62 +392,62 @@ public class MeasObjController {
                 switch (objType) {
                     case TEMPERATURE:// 温度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
-                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             temperature.setCv(measObjAi.getCv());
                             temperature.setObjId(measObjAi.getId());
                             temperature.setObjTypeName(objType.getName());
                             temperature.setSectionId(measObjAi.getSectionId());
                         }
-
+                        
                         break;
                     case HUMIDITY:// 湿度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
-                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-                            humidity.setCv(measObjAi.getCv());
-                            humidity.setObjId(measObjAi.getId());
-                            humidity.setObjTypeName(objType.getName());
-                            humidity.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	 measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                             humidity.setCv(measObjAi.getCv());
+                             humidity.setObjId(measObjAi.getId());
+                             humidity.setObjTypeName(objType.getName());
+                             humidity.setSectionId(measObjAi.getSectionId());
                         }
-
+                       
                         break;
                     case OXYGEN:// 氧气
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
-                            measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
-                            oxygen.setCv(measObjAi.getCv());
-                            oxygen.setObjId(measObjAi.getId());
-                            oxygen.setObjTypeName(objType.getName());
-                            oxygen.setSectionId(measObjAi.getSectionId());
+                        if(!tmps.isEmpty()) {
+                        	 measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
+                             oxygen.setCv(measObjAi.getCv());
+                             oxygen.setObjId(measObjAi.getId());
+                             oxygen.setObjTypeName(objType.getName());
+                             oxygen.setSectionId(measObjAi.getSectionId());
                         }
-
+                       
                         break;
                     case H2S:// 硫化氢
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
-                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             h2s.setCv(measObjAi.getCv());
                             h2s.setObjId(measObjAi.getId());
                             h2s.setObjTypeName(objType.getName());
                             h2s.setSectionId(measObjAi.getSectionId());
                         }
-
+                        
                         break;
                     case CH4:// 甲烷
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
-                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                        if(!tmps.isEmpty()) {
+                        	measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             ch4.setCv(measObjAi.getCv());
                             ch4.setObjId(measObjAi.getId());
                             ch4.setObjTypeName(objType.getName());
                             ch4.setSectionId(measObjAi.getSectionId());
                         }
-
+                        
                         break;
                     case CO:// 一氧化碳
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if (!tmps.isEmpty()) {
+                        if(!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             co.setCv(measObjAi.getCv());
                             co.setObjId(measObjAi.getId());
@@ -584,6 +582,8 @@ public class MeasObjController {
     }
 
 
+
+
     /**
      * convert to Json
      */
@@ -603,14 +603,16 @@ public class MeasObjController {
         }
         return list;
     }
-
     
-      
+    
+    
     /**获取缓存中温度，湿度，含氧量最值
      * @author shaosen
      * @date 2019年1月11日
+     * @param   
+     * @return {"msg":"请求成功","code":"200","data":[{"unit":"℃","name":"最高温度","location":"古城大街-18区-电力舱","value":29.99},{"unit":"ppm","name":"最高甲烷","location":"古城大街-20区-污水舱","value":29.99},{"unit":"%","name":"最低含氧量","location":"古城大街-16区-设备间","value":0.0}]}  
      */
-    @RequestMapping(value = "extreme-datas", method = RequestMethod.GET)
+    @RequestMapping(value="extreme-datas",method=RequestMethod.GET)
     public JSONObject getExtremeDatas() {
     	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
     	List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
@@ -809,7 +811,9 @@ public class MeasObjController {
 		
 		return CommonUtil.success(rtdata);
 	}
-
+	
+	
+	
 }
 
 

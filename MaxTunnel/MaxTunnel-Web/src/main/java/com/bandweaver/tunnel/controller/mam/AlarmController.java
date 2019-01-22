@@ -300,12 +300,12 @@ public class AlarmController {
 		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
 		Date beginDayOfLastYear = DateUtil.getBeginDayOfYear(DateUtil.getFrontDay(beginDayOfYear, 1));
 		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfLastYear);
-
+		
 		List<Map<String, Date>> list = DateUtil.getBefore12Months();
 	    for (int i = 0; i < list.size(); i++) {
 	    	 Date startTime = list.get(list.size() - 1 - i).get("startDay");
              Date endTime = list.get(list.size() - 1 - i).get("endDay");
-
+             
              JSONObject json = new JSONObject();
              json.put("key", DateUtil.getNowYear(startTime) + "." +DateUtil.getNowMonth(startTime));
              json.put(AlarmLevelEnum.DANGEROUS.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.DANGEROUS,startTime,endTime));

@@ -219,7 +219,6 @@ public class InspectionController {
      * @author shaosen
      * @date 2018年7月5日
      */
-
     @RequestMapping(value = "inspection-plans/{id}/activiti-png", method = RequestMethod.GET)
     public void getPng(@PathVariable String id, HttpServletResponse response) throws FileNotFoundException, IOException {
 

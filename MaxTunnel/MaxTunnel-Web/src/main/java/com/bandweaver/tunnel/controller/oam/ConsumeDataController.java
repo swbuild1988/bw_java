@@ -282,17 +282,23 @@ public class ConsumeDataController {
         	// 往后循环12个月
     		for(int i=0;i<12;i++) {
     			JSONObject obj = new JSONObject();
-    			obj.put("key", now.getMonth() + 1 + "月");
-    		
-				ConsumeDataVo vo = new ConsumeDataVo();
-				Date nowStart = DateUtil.getBeginDayOfMonth(now);
-				Date nowEnd = DateUtil.getEndDayOfMonth(now);
-				vo.setStartTime(nowStart);
-				vo.setEndTime(nowEnd);
-				vo.setTunnelId(dto.getId());
-				// 一个月的总能耗
-				Double sum = getSum(vo);
-				obj.put("val", sum);
+    			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+    			obj.put("key", time);
+    			
+    			// 真实数据
+//				ConsumeDataVo vo = new ConsumeDataVo();
+//				Date nowStart = DateUtil.getBeginDayOfMonth(now);
+//				Date nowEnd = DateUtil.getEndDayOfMonth(now);
+//				vo.setStartTime(nowStart);
+//				vo.setEndTime(nowEnd);
+//				vo.setTunnelId(dto.getId());
+//				// 一个月的总能耗
+//				Double sum = getSum(vo);
+    			
+    			// 假数据
+    			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
+				
+    			obj.put("val", sum);
 				energyList.add(obj);
 				now.setMonth(now.getMonth() + 1);
     		}
