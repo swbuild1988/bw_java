@@ -18,7 +18,7 @@
       <img src="../../../assets/UM/CH4-error.png" v-if="Obj.objtypeId==5 && !normal" class="img">
       <img src="../../../assets/UM/liquidLevel-error.png" v-if="Obj.objtypeId==21 && !normal" class="img">
       <img src="../../../assets/UM/CO-error.png" v-if="Obj.objtypeId==6 && !normal" class="img">
-      <p class="value">{{Obj.ObjVal}}<span style="font-size: 2vmin">{{ unit }}</span></p>
+      <p class="value">{{Obj.ObjVal}}<span style="font-size: 2vmin">{{ Obj.unit }}</span></p>
       <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
       <div class="extre">
         <div class="min" v-if="Obj.minValue != null">
@@ -66,7 +66,6 @@
         gasMax: 200,
         gasMin: 0,
         normal: true,
-        unit: '',
         isTimeShow: false
       };
     },
@@ -94,27 +93,6 @@
         this.normal = true
       }
 
-      switch(this.Obj.objtypeId){
-        case 1:
-          this.unit = '℃'
-          break
-        case 2:
-          this.unit = '%'
-          break
-        case 3:
-          this.unit = '%'
-          break
-        case 4:
-          this.unit = 'ppm'
-          break
-        case 5:
-          this.unit = '%'
-          break
-        case 6:
-          this.unit = '%'
-          break
-      }
-      
       if(this.Obj.time != ''){
         this.isTimeShow = true
       }

@@ -24,6 +24,18 @@
       intervalTime: {
         default: 60000
       },
+      bgColor: {
+        default: '#fff',
+        type: String
+      },
+      titleColor: {
+        default: '#535353',
+        type: String
+      },
+      fontSizeNum: {
+        default: '5%',
+        type: String
+      }
     },
     data() {
       return {
@@ -99,6 +111,7 @@
       init() {
         this.drawComplexBar();
         this.fetchData(this.requestUrl);
+        window.addEventListener('resize', this.drawComplexBar);
       },
 
       drawComplexBar() {
@@ -109,23 +122,26 @@
           title: {
             text: this.title,
             textStyle: {
-                fontSize: this.getFontSize('5%')
+                fontSize: this.getFontSize(this.fontSizeNum),
+                color: this.titleColor
             },
           },
-          backgroundColor: '#fff',
+          backgroundColor: this.bgColor,
           tooltip: {
             trigger: 'axis',
-            fontSize: this.getFontSize('5%'),
+            fontSize: this.getFontSize(this.fontSizeNum),
             axisPointer: { // 坐标轴指示器，坐标轴触发有效
               type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
             }
           },
           legend: {
-            align: 'right',
-            right: 10,
+            // align: 'right',
+            right: 1,
+            top: _this.getFontSize(this.fontSizeNum),
             textStyle: {
               fontSize: this.getFontSize('5%'),
-            },
+              color: this.titleColor
+            }
           },
           grid: {
             left: '3%',
@@ -137,19 +153,31 @@
           xAxis: [{
             type: 'category',
             axisLabel: {
-              fontSize: this.getFontSize('5%'),
+              fontSize: this.getFontSize(this.fontSizeNum),
+              color: this.titleColor
+            },
+            axisLine: {
+                lineStyle: {
+                    color: this.titleColor
+                }
             },
             data: ['新虹桥', '中山公园', '虹桥', '镇宁路', '天山古北']
           }],
           yAxis: [{
             type: 'value',
-            name: '单位(个)',
+            // name: '单位  (个)',
             nameTextStyle: {
               color: '#5fb6ff',
               fontSize: 14,    //单位：件的字号大小
             },
+            axisLine: {
+                lineStyle: {
+                    color: this.titleColor
+                }
+            },
             axisLabel: {
-              fontSize: this.getFontSize('5%'),
+              fontSize: this.getFontSize(this.fontSizeNum),
+              color: this.titleColor
             }
           }],
           series: []
@@ -190,26 +218,45 @@
           }
         })
         //测试使用模拟静态数据
-        // if ("barChart" == requestUrl) {
-        //   let xData = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-        //   let serise = [
-        //     {
-        //       name: '检查企业数',
-        //       data: [2031, 1793, 3640, 2593, 4377, 3201, 2275, 3289, 3356, 2859, 4244, 3945],
-        //       type: 'bar'
-        //     },
-        //     {
-        //       name: '完成整改企业数',
-        //       data: [1043, 1456, 1900, 1200, 2100, 1870, 980, 1569, 1130, 1490, 2300, 2210],
-        //       type: 'bar'
-        //     },
-        //     {name: '违法违规企业数', data: [787, 571, 999, 341, 231, 812, 735, 231, 322, 712, 1230, 870], type: 'bar'}
-        //   ];
-        //   _this.myChart.setOption({
-        //     xAxis: {data: xData},
-        //     series: serise
-        //   })
-        // }
+        if ("tunnels/equipments/types/test" == requestUrl) {
+          let xData = ['古城大街', '实验路', '经三路', '经二路', '纬三路', '监控中心'];
+          let serise = [
+            {
+              name: '安防',
+              data: [203, 179, 364, 259, 437, 320],
+              type: 'bar'
+            },
+            {
+              name: '消防',
+              data: [104, 145, 190, 120, 210, 187],
+              type: 'bar'
+            },
+            {
+              name: '视频', 
+              data: [387, 271, 159, 341, 231, 812], 
+              type: 'bar'
+            },
+            {
+              name: '环境',
+              data: [227, 328, 335, 285, 424, 394],
+              type: 'bar'
+            },
+            {
+              name: '监控',
+              data: [735, 231, 322, 712, 120, 270],
+              type: 'bar'
+            },
+            {
+              name: '机电',
+              data: [250, 156, 113, 149, 230, 221],
+              type: 'bar'
+            }
+          ];
+          _this.myChart.setOption({
+            xAxis: {data: xData},
+            series: serise
+          })
+        }
       },
       //定时刷新数据
       refreshData() {

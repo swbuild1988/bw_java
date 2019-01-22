@@ -3,9 +3,14 @@
         <div class="Title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="simplePieChartBox">
-            <!-- <simplePieChart v-bind="simplePieData"></simplePieChart> -->
-            <pie-chart v-bind="pieData"></pie-chart>
+        <div class="leftBox">
+            <div class="simplePieChartBox">
+                <!-- <simplePieChart v-bind="simplePieData"></simplePieChart> -->
+                <pie-chart v-bind="pieData"></pie-chart>
+            </div>
+            <div class="letBottomBox">
+                <ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>
+            </div>
         </div>
         <div class="stackCrossBox">
             <cross-bar-chart
@@ -22,6 +27,7 @@ import stackCrossChart from "../../../components/Common/Chart/StackCrossChart"
 import simplePieChart from '../../../components/Common/Chart/SimplePieChart'
 import CrossBarChart from "../../../components/Common/Chart/CrossBarChart"
 import PieChart from "../../../components/Common/Chart/PieChart"
+import ComplexBarChart from "../../../components/Common/Chart/ComplexBarChart.vue"
 import { EquipmentService } from '../../../services/equipmentService'
 
 export default {
@@ -72,11 +78,21 @@ export default {
                 },
                 titleSize: '7%',
                 seriesSize: '4%'
-            }
+            },
+            ComplexBar: {
+                id: "ComplexBarChart",
+                // yAxisName: "单位：个",
+                requestUrl: "tunnels/equipments/types/test",
+                title: "各管廊设备明细",
+                color: "#21d6ff",
+                bgColor: '#0E2644',
+                titleColor: '#ccc',
+                fontSizeNum: '10%'
+            },
         };
     },
     components: {
-        ModuleTitle, stackCrossChart, simplePieChart, CrossBarChart, PieChart
+        ModuleTitle, stackCrossChart, simplePieChart, CrossBarChart, PieChart, ComplexBarChart
     },
     mounted() {
         this.init()
@@ -112,8 +128,8 @@ export default {
                     this.pieData.seriesData.push(0);
                     for (var j = 0; j < arr[i].length; j++) this.pieData.seriesData[i] += arr[i][j];
                 }
-                this.pieData.legendData = this.pieData.legendData.reverse();
-                this.pieData.seriesData = this.pieData.seriesData.reverse();
+                // this.pieData.legendData = this.pieData.legendData.reverse();
+                // this.pieData.seriesData = this.pieData.seriesData.reverse();
             })
         },
         refreshData() {
@@ -138,13 +154,25 @@ export default {
     height: 15%;
 }
 
-.simplePieChartBox {
+.leftBox{
     width: 45%;
     height: 85%;
     display: inline-block;
+    vertical-align: top;
 }
+
+.simplePieChartBox {
+    width: 100%;
+    height: 45%;
+}
+
+.letBottomBox{
+    width: 100%;
+    height: 55%;
+} 
+
 .stackCrossBox {
-    width: 45%;
+    width: 52%;
     height: 85%;
     display: inline-block;
 }

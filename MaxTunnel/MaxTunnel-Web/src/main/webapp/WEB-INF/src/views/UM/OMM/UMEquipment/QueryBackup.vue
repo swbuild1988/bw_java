@@ -84,10 +84,10 @@
                     </div>  
                 </col>
             </Row> 
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-                :style='pageStyle'></Page>       
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+            :style='pageStyle'></Page>       
         <Modal
             title="批量出库"
             v-model="isOutStorage"

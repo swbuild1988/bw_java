@@ -1,105 +1,147 @@
 <template>
-    <div class="Main">
-        <div class="Title">
-            <module-title :title="title"></module-title>
-        </div>
-        <div
-            v-for="item in gaugeChart"
-            class="myChart"
-        >
-            <Simple-gauge
-                v-bind="item"
-                :ref="item.id"
-            ></Simple-gauge>
-        </div>
-        <div
-            class="info"
-            v-for="item in countData"
-        >
-            <div class="infoTitle">
-                <p>{{item.name}}</p>
-            </div>
-            <div class="infoTitle">
-                <p><span style="color: #00a1ff;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>个 </p>
-            </div>
-        </div>
+  <div class="Main">
+    <div class="Title">
+      <module-title :title="title"></module-title>
     </div>
+    <div v-for="item in gaugeChart" class="myChart">
+      <div class="chartInfo">{{item.name}}</div>
+      <Simple-gauge v-bind="item" :ref="item.id"></Simple-gauge>
+      <div class="chartInfo">{{item.time}}</div>
+    </div>
+    <div class="info" v-for="item in countData">
+      <div class="infoTitle" ><p>{{item.name}}</p></div>
+      <div class="infoTitle">
+        <span v-if="item.type==1" ><Icon type="ios-football-outline" :size="iconSize" color="#00a1ff"></Icon></span>
+        <span  v-else style=""><Icon type="ios-people" :size="iconSize" color="#00a1ff"></Icon></span>
+        <span style="color: #ffd50a;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>个
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import ModuleTitle from "../../../components/VM2/ModuleTitle"
-import SimpleGauge from "../../../components/Common/Chart/SimpleGauge2"
-import { MeasObjServer } from '../../../services/MeasObjectSerivers'
+  import ModuleTitle from "../../../components/VM2/ModuleTitle"
+  import SimpleGauge from "../../../components/Common/Chart/SimpleGauge"
+  import {MeasObjServer} from '../../../services/MeasObjectSerivers'
 
-export default {
+  export default {
     data() {
-        return {
-            title: '管廊监测',
-            countData: [],
-            gaugeChart: [],
-        };
+      return {
+        title: '管廊监测',
+        iconSize:window.innerWidth*0.012,
+        fetchTime:5000,
+        extreData: [],
+        countData: [],
+        gaugeChart: {},
+        dataInterval:null,
+      };
     },
     components: {
-        ModuleTitle,
-        SimpleGauge
+      ModuleTitle,
+      SimpleGauge
     },
     mounted() {
-        this.init()
+      this.init();
+      this.fetchData();
     },
     methods: {
-        init() {
-            let _this = this
-            MeasObjServer.getToDayExtreDatas().then(
-                result => {
-                    _this.gaugeChart = [];
-                    if (result) {
-                        result.forEach((a, index) => {
-                            let temp = {};
-                            temp.min = a.min - parseFloat(((a.max - a.min) / 3).toFixed(1));
-                            temp.max = a.max + parseFloat(((a.max - a.min) / 3).toFixed(1));
-                            temp.id = index + "_Chart";
-                            temp.parameters = {
-                                option: {
-                                    series: [{
-                                        data: [{
-                                            value: a.value,
-                                            name: a.name
-                                        }],
-                                        detail: {
-                                            formatter: '{val|{value}' + a.unit + '}\n' + '{section|' + a.location + '}',
-                                            rich: {
-                                                val: {
-                                                    fontSize: 40
-                                                },
-                                                section: {
-                                                    fontSize: 20
-                                                }
-                                            }
-                                        }
-                                    }]
-                                }
-                            };
-                            _this.gaugeChart.push(temp);
-                        })
+      fetchData(){
+        let _this=this;
+        _this.dataInterval = setInterval(() => {
+          _this.init();
+        }, _this.fetchTime)
+      },
+      init() {
+        let _this = this;
+        MeasObjServer.getToDayExtreDatas().then(
+          result => {
+            _this.gaugeChart = [];
+            if (result) {
+              var tempStemp=[];
+              let min=0;
+              let max=100;
+              result.forEach((a, index) => {
+                let temp = {};
+                  temp.requestUrl = "";
+                  temp.name=a.name;
+                  temp.time= new Date(a.time).format("yyyy-MM-dd hh:mm:ss");
+                  temp.id = index + "_Chart";
+                  if(a.type==1){
+                    min=0;
+                    max=50;
+                    tempStemp=[
+                      [0.2, '#c23531'],
+                      [0.8, '#329bff'],
+                      [1, '#c23531'],
+                    ];
+                  }
+               else if(a.type==5){
+                  min=0.25;
+                  max=1.5;
+                  tempStemp=[
+                    [0.2, '#c23531'],
+                    [0.8, '#329bff'],
+                    [1, '#c23531'],
+                  ];
+                }
+                else if(a.type==3){
+                  min=18.3;
+                  max=24.2;
+                  tempStemp=[
+                    [0.2, '#c23531'],
+                    [0.8, '#329bff'],
+                    [1, '#c23531'],
+                  ];
+                    console.log(tempStemp);
+                }
+                  temp.parameters = {
+                    option: {
+                      title: {
+                        // text: a.name,
+                        subtext:a.location
+                      },
+                      series: {
+                        min:min,
+                        max:max,
+                        axisLine:{
+                          lineStyle:{
+                            color:tempStemp
+                          }
+                        },
+                        data: [{
+                          value: a.value,
+                          name: a.name
+                        }],
+                        detail: {formatter: "{value}" + a.unit},
+                      }
                     }
-                },
-                error => {
-                    _this.Log.info(error)
-                })
-            MeasObjServer.getMeasTriggerCounts().then(
-                result => {
-                    _this.countData = result
-                },
-                error => {
-                    _this.Log.info(error)
-                })
-        }
-    }
-};
+                  };
+                  _this.gaugeChart.push(temp);
+              })
+            }
+            _this.extreData = result;
+          },
+          error => {
+            _this.Log.info(error)
+          })
+        MeasObjServer.getMeasTriggerCounts().then(
+          result => {
+            _this.countData = result
+          },
+          error => {
+            _this.Log.info(error)
+          })
+      }
+    },
+    beforeDestroy(){
+      clearInterval(this.dataInterval);
+      this.dataInterval = null;
+    },
+  };
 </script>
 
 <style scoped>
-.Main {
+  .Main {
     width: 100%;
     position: absolute;
     top: 0;
@@ -107,34 +149,41 @@ export default {
     left: 0;
     background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
-}
-
-.Main .Title {
+  }
+  .Main .Title {
     width: 100%;
     height: 15%;
-}
-
-.myChart {
-    width: 33%;
+  }
+  .myChart {
+    margin-left: 0.1vw;
+    width: 32.8%;
     height: 16vh;
     float: left;
+  }
+.chartInfo{
+  text-align: center;
+  font-size: 1.16vmin;
+  color: #fff;
+  background-color: #1c81ff;
+  margin-left: 0.2vw;
+  margin-right: 0.2vw;
+  border-radius:25px;
+  box-shadow: 0.5vh 0.5vh 1vh #000000;
 }
-
-.info {
-    margin: 2vmin 2.5% 1vmin 2.5%;
+  .info {
+    margin: 5vmin 2.5% 1vmin 2.5%;
     width: 45%;
-    height: 8vh;
+    height: 6.5vh;
     float: left;
-
-    border: 0.2vh solid #66ccee;
+    background: url("../../../assets/VM/doubt.png") no-repeat;
+    background-size: 100% 100%;
     border-radius: 1.2vh 0;
-}
-
-.infoTitle {
+  }
+  .infoTitle {
     text-align: center;
-    font-size: 1.66vmin;
-    color: #fff;
-    line-height: 3.2vmin;
+    font-size: 1.4vmin;
+    color: #4dfaff;
+    line-height: 2.8vmin;
     font-family: UnidreamLED;
-}
+  }
 </style>

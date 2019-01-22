@@ -298,49 +298,23 @@ var MeasObjServer = {
   //获取今日温度，湿度，含氧量最值
   getToDayExtreDatas() {
     return new Promise((resolve, reject) => {
-      // axios.get('extreme-datas')
-      //     .then(res => {
-      //         let {
-      //             code,
-      //             data,
-      //             msg
-      //         } = res.data
-      //         if (code == 200) {
-      //             resolve(data)
-      //         } else {
-      //             reject(msg + ',地址:extreme-datas')
-      //         }
-      //     })
-      //     .catch(error => {
-      //         reject(error.response.status + '  ' + error.response.data)
-      //     })
-      let res = [
-        {
-          name: "最高温度",
-          value: 24,
-          min: 10,
-          max: 40,
-          unit: "℃",
-          location: "古城大街22区污水仓"
-        },
-        {
-          name: "最高甲烷",
-          value: 0.7,
-          min: 0.5,
-          max: 1.25,
-          unit: "ppm",
-          location: "古城大街22区综合仓"
-        },
-        {
-          name: "最低含氧量",
-          value: 21.2,
-          min: 19.5,
-          max: 23,
-          unit: "%",
-          location: "古城大街22区电力仓"
-        }
-      ];
-      resolve(res);
+      axios.get('extreme-datas')
+          .then(res => {
+              let {
+                  code,
+                  data,
+                  msg
+              } = res.data
+              if (code == 200) {
+                  resolve(data)
+              } else {
+                  reject(msg + ',地址:extreme-datas')
+              }
+          })
+          .catch(error => {
+              reject(error.response.status + '  ' + error.response.data)
+          })
+      // resolve(res);
     });
   },
   //获取今日监测对象触发次数及与昨日比是否增长

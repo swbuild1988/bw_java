@@ -50,7 +50,7 @@ import vmSelect from '../../../components/Common/Select'
 export default {
     data() {
         return {
-            title: '三维系统',
+            title: 'BIM系统',
             id: 'threeDimensional',
             camera: {
                 longitude: 112.49397907438006,

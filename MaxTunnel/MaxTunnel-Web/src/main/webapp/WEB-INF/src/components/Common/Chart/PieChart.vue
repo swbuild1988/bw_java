@@ -55,27 +55,38 @@ export default {
         drawBar() {
             var _this = this;
             this.myChart = this.$echarts.init(document.getElementById(this.id));
-
             this.option = {
                 title: {
                     text: this.title,
+                    x:'center',
                     textStyle: {
                         color: '#ccc',
-                        fontSize: _this.getFontSize('6.5%')
+                        fontSize: _this.getFontSize('10%')
                     }
                 },
-                grid: {
-                    top: this.title.length > 0 ? '12%' : '1%',
-                    left: '3%',
-                    right: '3%',
-                    bottom: '1%'
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'bottom',
+                    data: ["运行", "故障", "停运", "其它"]
                 },
                 series: [
                     {
+                        name: '各类状态',
                         type: "pie",
                         radius: '50%',
                         center: ['50%', '50%'],
-                        data: []
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
                     }
                 ]
             }
@@ -86,9 +97,6 @@ export default {
             while (this.itemStyleColor.length < this.seriesData.length) {
                 this.itemStyleColor = this.itemStyleColor.concat(this.itemStyleColor)
             }
-
-            console.log("this.seriesData", this.seriesData);
-            console.log("this.legendData", this.legendData)
 
             var tempCount = 0;
             for (let i = 0; i < this.seriesData.length; i++) tempCount += this.seriesData[i];

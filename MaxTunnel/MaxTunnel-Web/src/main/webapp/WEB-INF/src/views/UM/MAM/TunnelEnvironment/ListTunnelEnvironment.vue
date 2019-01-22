@@ -72,11 +72,11 @@
                           <Icon type="clipboard" :size="iconSize"></Icon>
                          {{item.key}}
                           </Col>
-                          <Col span="7" class="MaxValCol">
+                          <Col span="8" class="MaxValCol">
                           <Icon type="ios-pulse" :size="iconSize"></Icon>
                         {{item.val}}
                           </Col>
-                          <Col span="10" class="MaxValCol" color="#de8d1b">
+                          <Col span="9" class="MaxValCol" color="#de8d1b">
                           <Icon type="android-locate" :size="iconSize"></Icon>
                           {{item.location}}
                           </Col>
@@ -291,7 +291,7 @@ export default {
                       let temp = {};
                       temp.location = a.location;
                       temp.key = a.key;
-                      temp.val = parseFloat(a.val);
+                      temp.val = parseFloat(a.val)+a.unit;
                       _this.tunnelProps.push(temp);
                   });
               }

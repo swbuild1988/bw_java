@@ -61,8 +61,10 @@
             height: 50%;
         }
     .ControlPanelContent >>> .flyMessageBtn {
-        width: 40%;
-        height: 50%;
+        /*width: 40%;*/
+        /*height: 50%;*/
+        width: 33%;
+        height: 75%;
         background: #031324;
         color: #fff;
         padding: 0;

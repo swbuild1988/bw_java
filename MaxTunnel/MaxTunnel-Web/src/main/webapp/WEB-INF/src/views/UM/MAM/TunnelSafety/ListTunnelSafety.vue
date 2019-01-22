@@ -290,7 +290,6 @@
       },
 
       //根据监测类型获取数据
-      //根据监测类型获取数据
       getMonitorData() {
         {
           this.tunnelProps = [];
@@ -346,25 +345,10 @@
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
     border-color: #eee;
   }
-
-  .top {
-    margin: 0 0 12px 0;
-    line-height: 50px;
-    background: #fff;
-    padding-left: 10px;
-  }
-
-  .bottom {
-    background: #fff;
-    margin-top: 10px;
-    padding: 10px;
-  }
-
   .ivu-modal-wrap > .ivu-modal {
     left: 500px;
     top: 500px;
   }
-
   .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
     background: #adb3e2;
     color: #fff;
@@ -381,13 +365,6 @@
   .gis {
     position: relative;
   }
-
-  .details {
-    position: relative;
-    float: right;
-    overflow-y: auto;
-  }
-
   .Section #pageBox {
     border: 1px solid #b3b0b0;
     bottom: 0px;
@@ -395,12 +372,6 @@
     left: 0px;
     text-align: center;
     overflow-x: hidden;
-  }
-
-  .select_radio {
-    color: #fff;
-    background-color: #869bcb;
-    background-position: 0 -15px;
   }
   .borde_rhadow {
     border: 1px solid #b3b0b0;
@@ -414,9 +385,67 @@
     line-height: 35px;
     text-align: center;
   }
-
   .showSection ul li {
     width: 100px;
+  }
+  .tunnelsInfo div,
+  .environmentalMonitoring div,
+  .theFireWarning div,
+  .monitoringSituation div {
+    line-height: 5vh;
+    font-size: 14px;
+  }
+  .inline-box div {
+    display: inline-block;
+  }
+  .ivu-select-single .ivu-select-selection{
+    height: 100px;
+  }
+  .MaxValCol {
+    margin-top: 4.5vh;
+    font-size: 1.66vmin;
+  }
+  .descCol {
+    margin-top: 1vh;
+    font-size: 1.66vmin;
+  }
+  .MaxValCol:hover, .descCol:hover{
+    background-color: #44c3ee;
+    cursor:pointer
+  }
+  .borde_rhadow {
+    border: 1px solid #b3b0b0;
+    border-radius: 8px;
+    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
+    border-color: #eee;
+  }
+  .select_radio {
+    color: #fff;
+    background-color: #869bcb;
+    background-position: 0 -15px;
+  }
+  .ivu-modal-wrap > .ivu-modal {
+    left: 500px;
+    top: 500px;
+  }
+  .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+    background: #adb3e2;
+    color: #fff;
+  }
+  .gis,
+  .details {
+    display: inline-block;
+    border: 1px solid #b3b0b0;
+    vertical-align: top;
+    width: 100%;
+  }
+  .Section #pageBox {
+    border: 1px solid #b3b0b0;
+    bottom: 0px;
+    width: 83.5vw;
+    left: 0px;
+    text-align: center;
+    overflow-x: hidden;
   }
 
   .tunnelsInfo,
@@ -426,9 +455,8 @@
     margin: 0.5vw;
     border: 1px solid #b3b0b0;
     border-radius: 8px;
-    padding-left: 20px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
+    border-color: #828991;
   }
 
   .tunnelsInfo div,
@@ -439,43 +467,7 @@
     font-size: 14px;
   }
 
-  .title {
-    font-size: 20px !important;
-    text-align: center;
-    font-weight: 700;
-    margin-top: 5px;
-  }
-
   .inline-box div {
     display: inline-block;
-  }
-
-  .normal {
-    width: 15px !important;
-    height: 15px !important;
-    border-radius: 100%;
-    background: green;
-  }
-
-  .abnormal {
-    width: 15px !important;
-    height: 15px !important;
-    border-radius: 100%;
-    background: red;
-  }
-
-  .numerical {
-    width: 60%;
-  }
-
-  .status {
-    width: 20%;
-  }
-
-  .nextPage {
-    position: relative;
-    /*width: 470px;*/
-    bottom: 0px;
-    float: right;
   }
 </style>

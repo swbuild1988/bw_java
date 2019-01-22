@@ -14,7 +14,7 @@
                 管廊已运行<span class="total">{{runMessage.total}}</span>天
             </p> -->
             <p>
-                安全运行<span class="safe">{{runMessage.safe}}</span>天
+                管廊安全运营<span class="safe">{{runMessage.safe}}</span>天
             </p>
         </div>
     </div>
@@ -81,7 +81,7 @@ export default {
                 result => {
                     this.lineMessage.data = result.slice(0, 3)
                     this.lineMessage.data.forEach(line => {
-                        line.value = line.value.toFixed(0)
+                        line.value = line.value.toFixed(1)
                         line.percent = parseInt(line.percent.replace('%', '')).toFixed(0) + '%'
                     })
                 },

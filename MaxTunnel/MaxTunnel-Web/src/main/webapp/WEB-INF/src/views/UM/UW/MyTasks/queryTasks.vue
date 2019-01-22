@@ -2,20 +2,23 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">任务类型：</span>
-                    <Select style="width:60%" v-model="conditions.processType" @on-change="queryMyTask()">
+                    <Select style="width:60%" v-model="conditions.processType">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in processType" :value="item.val" :key="index">{{item.key}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryMyTask()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryMyTask()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" icon="ios-search" size="small" @click="queryMyTask()">查询</Button>
                 </Col>
             </Row>
         </div>

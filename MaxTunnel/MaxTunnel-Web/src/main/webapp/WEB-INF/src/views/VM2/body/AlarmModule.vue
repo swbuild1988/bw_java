@@ -3,9 +3,9 @@
         <div class="Title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="leftTop">
+        <div class="total">
             <div class="subTitle">
-                <span>本年度告警：</span>
+                <span class="name">本年度告警：</span>
                 <span class="number">{{ yearTotal.number }}</span>
                 <span class="yearIcon">
                     <Icon
@@ -15,7 +15,7 @@
                 </span>
             </div>
             <div class="subTitle">
-                <span style="letter-spacing: 0.25em;margin-right: -0.25em;">本月告警：</span>
+                <span style="letter-spacing: 0.25em;margin-right: -0.25em;" class="name">本月告警：</span>
                 <span class="number">{{ monthTotal.number }}</span>
                 <span class="monthIcon">
                     <Icon
@@ -25,10 +25,10 @@
                 </span>
             </div>
         </div>
-        <div class="leftBottom">
+        <div class="pie">
             <simple-pie-chart v-bind="pieChart"></simple-pie-chart>
         </div>
-        <div class="right">
+        <div class="alarms">
             <!-- <pile-bar-chart v-bind="pileBarChart" ref="pileBar"></pile-bar-chart> -->
             <!-- <textra :data="words" :timer="4" filter="bottom-top" :infinite='true'></textra> -->
             <div class="play" @click="changeState">
@@ -123,7 +123,7 @@ export default {
                     title: "告警",
                     key: "name",
                     align: "center",
-                    // width: '130',
+                    width: '25%',
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -149,6 +149,7 @@ export default {
                     title: "级别",
                     key: "alarmLevel",
                     align: "center",
+                    width: '10%',
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -176,6 +177,7 @@ export default {
                     title: "位置",
                     key: "location",
                     align: "center",
+                    width: '40%',
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -201,6 +203,7 @@ export default {
                     title: '时间',
                     key: 'alarmDate',
                     align: 'center',
+                  width: '25%',
                     render: (h, params) => {
                         return h("div", [
                             h(
@@ -226,6 +229,7 @@ export default {
             carouselInfo: {
                 intervalId: null,
                 totalPage: null,
+                pageSize: 4,
                 curPage: 1,
                 isCarousel: true,
                 time: 2000
@@ -290,7 +294,7 @@ export default {
                                     break
                             }
                         })
-                        _this.carouselInfo.totalPage = result.length % 4 == 0 ? result.length / 4 : result.length / 4 + 1
+                        _this.carouselInfo.totalPage = result.length % _this.carouselInfo.pageSize == 0 ? result.length / _this.carouselInfo.pageSize : parseInt(result.length / _this.carouselInfo.pageSize) + 1
                     }
                 })
             if(this.carouselInfo.isCarousel){
@@ -300,7 +304,7 @@ export default {
             }
         },
         carousel() {
-            this.alarmShowData = this.alarmAllData.slice((this.carouselInfo.curPage-1) * 4, this.carouselInfo.curPage * 4)
+            this.alarmShowData = this.alarmAllData.slice((this.carouselInfo.curPage-1) * this.carouselInfo.pageSize, this.carouselInfo.curPage * this.carouselInfo.pageSize)
             if(this.carouselInfo.curPage === this.carouselInfo.totalPage){
                 this.carouselInfo.curPage = 1
             } else {
@@ -337,32 +341,32 @@ export default {
     background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
-.leftTop {
+.total {
     width: 42%;
-    height: 28%;
+    height: 24%;
     position: absolute;
     top: 18%;
     left: 4%;
     background: url("../../../assets/UM/videoBody.png") no-repeat;
     background-size: 100% 100%;
 }
-.leftBottom {
-    width: 42%;
-    height: 50%;
+.pie {
+    width: 50%;
+    height: 42%;
     position: absolute;
-    top: 50%;
-    left: 6%;
-}
-.right {
-    position: absolute;
-    width: 12.2vw;
-    height: 20vh;
     top: 8%;
     right: 2%;
 }
+.alarms {
+    position: absolute;
+    width: 98%;
+    height: 50%;
+    top: 50%;
+    left: 0;
+}
 .table{
-    width: 11.4vw;
-    height: 18vh;
+    width: 100%;
+    height: 100%;
 }
 .Title {
     width: 42vmin;
@@ -373,56 +377,63 @@ export default {
     color: white;
     margin: 0.2vh 0.8vw;
 }
+.name{
+    vertical-align: middle;
+}
 .number {
     font-size: 2vmin;
     margin-left: 0.6vw;
     color: #37bbcc;
+    vertical-align: middle;
 }
 .yearIcon {
     font-size: 2.6vmin;
     position: absolute;
     top: 0;
     right: 0.8vmin;
+    vertical-align: middle;
 }
 .monthIcon {
     font-size: 2.6vmin;
     position: absolute;
-    top: 3vmin;
+    top: 3.2vmin;
     right: 0.8vmin;
+    vertical-align: middle;
 }
 
-.right >>> .mainTextra{
+.alarms >>> .mainTextra{
     font-size: 2vmin;
     color: white;
 }
 
-.right >>> .ivu-table-wrapper {
+.alarms >>> .ivu-table-wrapper {
     border: 1px solid transparent;
     border-bottom: 0;
     border-right: 0;
     font-size: 1.42vmin;
 }
-.right >>> .ivu-table {
+.alarms >>> .ivu-table {
    /* color: #e1e4e5;*/
     color: white;
     background-color: transparent;
     font-size: 1.42vmin !important;
 }
-.right >>> .ivu-table td {
+.alarms >>> .ivu-table td {
     background-color: transparent;
     border-bottom: transparent;
+    height: 2.8vmin;
 }
-.right >>> .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
+.alarms >>> .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
     background: transparent;
 }
-.right >>> .ivu-table:after,
-.right >>> .ivu-table:before {
+.alarms >>> .ivu-table:after,
+.alarms >>> .ivu-table:before {
     background-color: transparent;
 }
 .play{
     float: right;
-    margin-right: 2vmin;
-    margin-top: -0.8vmin;
+   /* margin-right: 2vmin;*/
+    margin-top: -1.6vmin;
     width: 2vmin;
     height: 2vmin;
     color: #aaa;
