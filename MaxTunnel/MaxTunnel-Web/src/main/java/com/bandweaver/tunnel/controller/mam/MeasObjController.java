@@ -250,8 +250,6 @@ public class MeasObjController {
     @RequestMapping(value = "measobjs/list", method = RequestMethod.POST)
     public JSONObject getObjectListByCondition(@RequestBody JSONObject reqJson) {
         CommonUtil.hasAllRequired(reqJson, "tunnelId");
-//    	MeasObjVo measObjVo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
-//    	List<MeasObjDto> measObjList = measObjService.getMeasObjByCondition(measObjVo);
         List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
         Integer tunnelId = reqJson.getInteger("tunnelId");
         Integer storeId = reqJson.getInteger("storeId");
@@ -347,6 +345,7 @@ public class MeasObjController {
                 json.put("maxValue", null);
                 json.put("minValue", null);
             }
+            json.put("unit", objectType.getUnit());
             returnData.add(json);
         }
         return CommonUtil.success(returnData);
@@ -599,6 +598,7 @@ public class MeasObjController {
             jsonobj.put("val", param.getCv());
             SectionDto dto = sectionService.getSectionById(param.getSectionId());
             jsonobj.put("location", dto == null ? "" : dto.getName());
+            jsonobj.put("unit",ObjectType.getEnum(param.getObjTypeName()).getUnit() );
             list.add(jsonobj);
         }
         return list;
@@ -650,7 +650,7 @@ public class MeasObjController {
 				JSONObject json_1 = new JSONObject();
 				json_1.put("name", "最高温度");
 				json_1.put("value", value);
-				json_1.put("unit", "℃");
+				json_1.put("unit", objType.getUnit());
 				json_1.put("location", "无位置信息");
 				json_1.put("time", currentDate);
 				json_1.put("type", objType.getValue());
@@ -659,7 +659,7 @@ public class MeasObjController {
 				JSONObject json_2 = new JSONObject();
 				json_2.put("name", "最高甲烷");
 				json_2.put("value", value);
-				json_2.put("unit", "ppm");
+				json_2.put("unit", objType.getUnit());
 				json_2.put("location", "无位置信息");
 				json_2.put("time", currentDate);
 				json_2.put("type", objType.getValue());
@@ -668,7 +668,7 @@ public class MeasObjController {
 				JSONObject json_3 = new JSONObject();
 				json_3.put("name", "最低含氧量");
 				json_3.put("value", value);
-				json_3.put("unit", "%");
+				json_3.put("unit", objType.getUnit());
 				json_3.put("location", "无位置信息");
 				json_3.put("time", currentDate);
 				json_3.put("type", objType.getValue());
@@ -688,7 +688,7 @@ public class MeasObjController {
         	
         	rtdata.put("name", "最高" + objType.getName());
         	rtdata.put("value", measValueAI == null ? value : measValueAI.getCv() );
-        	rtdata.put("unit", objType  == ObjectType.TEMPERATURE ? "℃" : "ppm");
+        	rtdata.put("unit", objType.getUnit());
         	rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
         	
     	}else if ("min".equals(maxOrmin)) {
@@ -699,7 +699,7 @@ public class MeasObjController {
         	
         	rtdata.put("name", "最低含氧量");
         	rtdata.put("value", measValueAI == null ? value : measValueAI.getCv() );
-        	rtdata.put("unit", "%");
+        	rtdata.put("unit", objType.getUnit());
         	rtdata.put("time",  measValueAI == null ? currentDate : measValueAI.getRefreshTime());
     	}
     	rtdata.put("location", location);
@@ -715,7 +715,8 @@ public class MeasObjController {
 			if(measObj != null) {
 				SectionDto section = sectionService.getSectionById(measObj.getSectionId());
 				if(section != null) {
-					location = section.getStore().getTunnel().getName() + "-" + section.getName();
+					location = section.getStore().getTunnel().getName() + section.getName();
+					location = location.replaceAll("-", "");
 				}
 			}
 		}

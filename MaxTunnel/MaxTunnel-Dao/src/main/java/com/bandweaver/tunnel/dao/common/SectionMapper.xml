@@ -218,35 +218,36 @@
 	</insert>
 	
 	<select id="getSectionsByCondition" resultMap="DtoResultMap">
-		select * from T_COMMON_SECTION
+		select t.* from T_COMMON_SECTION t
+		left join T_COMMON_STORE s on t.store_id = s.id
 		<where>
 			<if test="id != null">
-				and id = #{id}
+				and t.id = #{id}
 			</if>
 			<if test="parentId != null">
-				and parent_id = #{parentId}
+				and t.parent_id = #{parentId}
 			</if>
 			<if test="name != null and name.trim() != ''">
-				and instr(name,#{name})>0
+				and t.instr(name,#{name})>0
 			</if>
 			
 			<if test="tunnelId != null">
-				and tunnel_id = #{tunnelId}
+				and t.tunnel_id = #{tunnelId}
 			</if>
 			<if test="storeId != null">
-				and store_id = #{storeId}
+				and t.store_id = #{storeId}
 			</if>
 			<if test="areaId != null">
-				and area_id = #{areaId}
+				and t.area_id = #{areaId}
 			</if>
 			<if test="startTime != null">
-				and crt_time &gt;= #{startTime}
+				and t.crt_time &gt;= #{startTime}
 			</if>
 			<if test="endTime != null">
-				and crt_time &lt;= #{endTime}
+				and t.crt_time &lt;= #{endTime}
 			</if>
 		</where>
-		order by crt_time DESC
+		order by s.sn
 	</select>
 
     <select id="getAllSections" resultMap="DtoResultMap">

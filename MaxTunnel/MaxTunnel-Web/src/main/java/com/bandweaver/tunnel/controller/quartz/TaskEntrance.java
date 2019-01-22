@@ -143,11 +143,11 @@ public class TaskEntrance {
      * @Date 2018年12月8日
      */
     public void sendTestAlarm() throws Exception {
-    	int level = (int)(Math.random()*4) + 1;
+//    	int level = (int)(Math.random()*4) + 1;
+    	int level = MathUtil.getRandomInt(1, 2);
     	MeasAlarm measAlarm = new MeasAlarm();
     	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
     	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
-//    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
     	measAlarm.setObjectId(203012401);
     	measAlarm.setAlarmSeverity(level);
     	measAlarm.setAdditionalText(null);
