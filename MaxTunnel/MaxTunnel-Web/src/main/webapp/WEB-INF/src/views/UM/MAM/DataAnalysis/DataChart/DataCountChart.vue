@@ -117,7 +117,7 @@ export default {
                 titleName: "",
                 title: "22",
                 titleColor: "#030303",
-                intervalTime: 1000
+                intervalTime: 1000*5*60
             },
             column: [
                 {

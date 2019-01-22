@@ -221,7 +221,7 @@
             _this.series=[];
             _this.xData =[];
               totalData.data.data.forEach(a=>{
-                _this.xData.push(a.key);
+                _this.xData.push(a.normal);
             })
             let tempTotal=[];
             totalData.data.data.forEach(a=>{

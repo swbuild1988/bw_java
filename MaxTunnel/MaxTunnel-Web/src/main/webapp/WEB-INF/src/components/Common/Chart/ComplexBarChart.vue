@@ -1,5 +1,5 @@
 <template>
-  <div class='ComplexBar' :id=id></div>
+  <div class='ComplexBar' :id=id ref="element"></div>
 </template>
 
 <script>
@@ -105,6 +105,55 @@
         let _this = this;
         _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
         _this.option.title.text = _this.title;
+        this.option = {
+          title: {
+            text: this.title,
+            textStyle: {
+                fontSize: this.getFontSize('5%')
+            },
+          },
+          backgroundColor: '#fff',
+          tooltip: {
+            trigger: 'axis',
+            fontSize: this.getFontSize('5%'),
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          legend: {
+            align: 'right',
+            right: 10,
+            textStyle: {
+              fontSize: this.getFontSize('5%'),
+            },
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true,
+            fontSize: this.getFontSize('5%'),
+          },
+          xAxis: [{
+            type: 'category',
+            axisLabel: {
+              fontSize: this.getFontSize('5%'),
+            },
+            data: ['新虹桥', '中山公园', '虹桥', '镇宁路', '天山古北']
+          }],
+          yAxis: [{
+            type: 'value',
+            name: '单位(个)',
+            nameTextStyle: {
+              color: '#5fb6ff',
+              fontSize: 14,    //单位：件的字号大小
+            },
+            axisLabel: {
+              fontSize: this.getFontSize('5%'),
+            }
+          }],
+          series: []
+        }
         _this.myChart.setOption(_this.option);
         window.addEventListener('resize', _this.myChart.resize);
       },
@@ -141,26 +190,26 @@
           }
         })
         //测试使用模拟静态数据
-        if ("barChart" == requestUrl) {
-          let xData = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-          let serise = [
-            {
-              name: '检查企业数',
-              data: [2031, 1793, 3640, 2593, 4377, 3201, 2275, 3289, 3356, 2859, 4244, 3945],
-              type: 'bar'
-            },
-            {
-              name: '完成整改企业数',
-              data: [1043, 1456, 1900, 1200, 2100, 1870, 980, 1569, 1130, 1490, 2300, 2210],
-              type: 'bar'
-            },
-            {name: '违法违规企业数', data: [787, 571, 999, 341, 231, 812, 735, 231, 322, 712, 1230, 870], type: 'bar'}
-          ];
-          _this.myChart.setOption({
-            xAxis: {data: xData},
-            series: serise
-          })
-        }
+        // if ("barChart" == requestUrl) {
+        //   let xData = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        //   let serise = [
+        //     {
+        //       name: '检查企业数',
+        //       data: [2031, 1793, 3640, 2593, 4377, 3201, 2275, 3289, 3356, 2859, 4244, 3945],
+        //       type: 'bar'
+        //     },
+        //     {
+        //       name: '完成整改企业数',
+        //       data: [1043, 1456, 1900, 1200, 2100, 1870, 980, 1569, 1130, 1490, 2300, 2210],
+        //       type: 'bar'
+        //     },
+        //     {name: '违法违规企业数', data: [787, 571, 999, 341, 231, 812, 735, 231, 322, 712, 1230, 870], type: 'bar'}
+        //   ];
+        //   _this.myChart.setOption({
+        //     xAxis: {data: xData},
+        //     series: serise
+        //   })
+        // }
       },
       //定时刷新数据
       refreshData() {
@@ -169,6 +218,20 @@
           _this.fetchData(_this.requestUrl);
         }, _this.intervalTime)
       },
+      getFontSize(val) {
+          if (typeof (val) == 'number') return val;
+
+          if (typeof (val) == 'string') {
+
+              if (val.indexOf('%') > 0) {
+                  var tmp = parseFloat(val.replace('%', '')) / 100;
+                  let height = this.$refs.element.offsetHeight;
+                  return Math.round(height * tmp);
+              }
+          }
+
+          return 0;
+      }
     },
   }
 </script>

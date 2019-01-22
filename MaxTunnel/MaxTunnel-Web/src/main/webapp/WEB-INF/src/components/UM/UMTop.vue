@@ -7,7 +7,7 @@
           <h1><a class="mainTitle" @click="goToMoudle({ path: '/UMMain'})">{{title}}</a></h1>
         </div>
         <div class="layout-nav">
-          <div style="position: fixed;right: 34px;">
+          <div style="position: fixed;right: 3.4vmin;">
             <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
                 <Dropdown placement="bottom-start">
                 <Button type="primary">
@@ -26,11 +26,11 @@
               </Dropdown>
             </MenuItem>
             <!-- 人物圆点 -->
-            <div style="position:relative;float: right;margin-left: 100px;">
+            <div style="position:relative;float: right;margin-left: 6.25rem;">
               <Dropdown>
                 <a href="javascript:void(0)">
                   <Badge :count="countNum">
-                    <!--<Avatar style="background-color: #f56a00" shape="circle" icon="person" ></Avatar>-->
+
                     <Avatar :style="{background:'#f56a00'}" size="large" shape="circle"
                             :src="umImg"></Avatar>
                   </Badge>
@@ -193,10 +193,10 @@
                 name: '人员定位',
                 url: '/UM/PersonnelPosition/tunnel'
               },
-              {
-                name: '通讯系统',
-                url: '/UM/Communication/answers'
-              }
+              // {
+              //   name: '通讯系统',
+              //   url: '/UM/Communication/answers'
+              // }
             ]
           },
           {
@@ -235,7 +235,7 @@
               },
               {
                 name: '可视化平台',
-                url: '/VMMain'
+                url: '/VMMain2'
               }
             ]
           }
@@ -292,14 +292,16 @@
         });
       },
       goToMoudle(path) {
-        if(path.path == '/VMMain'){
-          const {href} = this.$router.resolve({
-          name: "可视化主页"
-        });
-        window.open(href, '_blank');
-        } else {
-          this.$router.push(path);
-        } 
+        if(String(this.$router.history.current.fullPath).indexOf(String(path.path))<0){
+          if(path.path == '/VMMain'){
+            const {href} = this.$router.resolve({
+              name: "可视化主页"
+            });
+            window.open(href, '_blank');
+          } else {
+            this.$router.push(path);
+          }
+        }
       },
       getCountInfoNum() {
         let _this = this
@@ -333,13 +335,14 @@
   }
 
   .layout-logo {
-    height: 8vh;
-    width: 6vw;
+    height: 6vh;
+    width: 4vw;
     border-radius: 3px;
     position: relative;
     background: url("../../assets/UM/Maxview.png") no-repeat center;
+    background-size: 100% 100%;
     float: left;
-    top: 0;
+    top: 1.2vh;
   }
 
   .layout-title {
@@ -361,9 +364,33 @@
 
   .mainTitle {
     color: #fff;
+    font-size: 4vmin;
   }
 
   .mainTitle:hover {
     color: #66ccee;
+  }
+
+  .ivu-avatar-large{
+    width: 4vmin;
+    height: 4vmin;
+    border-radius: 50%;
+  }
+
+  .layout-nav >>> .ivu-badge-count{
+    font-size: 1.4vmin;
+    min-width: 2.2vmin;
+    height: 2.2vmin;
+    border-radius: 50%;
+    padding: 0.4vmin 0.6vmin;
+  }
+
+  .layout-nav >>> .ivu-btn{
+    padding: 0.6vmin 1.5vmin;
+    font-size: 1.66vmin;
+  }
+
+  .layout-nav >>> .ivu-dropdown-item{
+    font-size: 1.6vmin !important;
   }
 </style>

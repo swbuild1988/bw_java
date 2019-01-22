@@ -113,80 +113,127 @@ export const getJson = function(url,param){
         let obj = {};
 
         if( Object.prototype.toString.call( param ) == '[object Object]' ){
-            try {
-                axios.post(url,Object.assign(obj,param))
-                    .then( result=> {
-                        let { code, data } = result.data;
+            axios.post(url,Object.assign(obj,param))
+                .then( result=> {
+                    let { code, data } = result.data;
 
-                        code == 200 ? resolve(data) : reject('err'+ code)
+                    code == 200 ? resolve(data) : reject('err'+ code)
 
-                    })
-            }catch (err){
-                reject(err)
-            }
+                })
+                .catch( err=> reject('err'+err) )
         }
 
         if( Object.prototype.toString.call( param ) == '[object String]' ||  !param){
-            try {
-                axios.get(url,param)
-                    .then( result=> {
-                        let { code, data } = result.data;
+            axios.get(url,param)
+                .then( result=> {
+                    let { code, data } = result.data;
 
-                        code == 200 ? resolve(data) : reject('err'+ code)
+                    code == 200 ? resolve(data) : reject('err'+ code)
 
-                    })
-            }catch (err){
-                reject('err'+err)
-            }
+                })
+                .catch( err=> reject('err'+err) )
         }
 
         return false;
     })
 }
 /**
+ *修改字符串长度
+ */
+export const changStrLength = function(num,strLength){
+    let str = num.toString();
+    if( str.length === strLength ) return;
+
+    if( str.length < strLength ){
+        for( let i=0 ; i< strLength - str.length ; i++ ){ str = '0'+ str; }
+    }
+    return str;
+}
+/**
  * 设置3D相机角度
  */
 export function setViewAngle(){
-    let args=[].slice.call(arguments); //类数组转换成数组
-    let [ scene,Cesium ,camera ]=args; //解析数组内容
-
+    let args = [].slice.call(arguments); //类数组转换成数组
+    let [ scene ,camera ] = args; //解析数组内容
+console.log(scene,camera);
     //设置相机位置、视角
-    scene.camera.setView({
-        destination : new Cesium.Cartesian3.fromDegrees(camera.longitude,camera.latitude,camera.height),
-        orientation : {
-            heading : camera.heading,
-            pitch : camera.pitch,
-            roll : camera.roll
+    if ( Cesium.defined( scene ) ){
+        scene.camera.setView({
+            destination : new Cesium.Cartesian3.fromDegrees(camera.longitude,camera.latitude,camera.height),
+            orientation : {
+                heading : camera.heading,
+                pitch : camera.pitch,
+                roll : camera.roll
+            }
+        });
+    }
+}
+
+/**
+ * 获取图层
+ */
+export function getLayer(scene,cameraPosition,BIM_SCP) {
+
+    if ( Cesium.defined( scene ) ){
+
+        try {
+            //打开所发布三维服务下的所有图层
+            let promise = scene.open(BIM_SCP);
+
+            Cesium.when(
+                promise,
+                function(layer) {
+                    //设置BIM图层不可选择
+                    layer.forEach(
+                        curBIM => (curBIM._selectEnabled = false)
+                    );
+                    //设置相机位置、视角，便于观察场景
+                    setViewAngle(scene,cameraPosition);
+                },
+                function(e) {
+                    if (widget._showRenderLoopErrors) {
+                        var title =
+                            "加载SCP失败，请检查网络连接状态或者url地址是否正确？";
+                        widget.showErrorPanel(title, undefined, e);
+                    }
+                }
+            );
+        } catch (e) {
+            if (widget._groundPrimitives) {
+                var title = "渲染时发生错误，已停止渲染。";
+                widget.showErrorPanel(title, undefined, e);
+            }
         }
-    });
+    }
+
 }
 /**
  * 相机从当前位置飞行到新的空间位置。
  */
-// export function flyToMyLocation(flyParam){
+export function flyToMyLocation(flyParam){
 
-//     if(typeof flyParam !='object'){ return }
+    if(typeof flyParam !=='object') return;
 
-//     let duration,maximumHeight;
-//     let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
+    let duration,maximumHeight;
+    let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
 
-//     duration = flyParam.duration || 5;
-//     maximumHeight = flyParam.maximumHeight || 6;
+    duration = flyParam.duration || 5;
+    maximumHeight = flyParam.maximumHeight || 6;
 
-//     flyParam.scene.camera.flyTo({
-//         destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
-//         orientation : {
-//             heading : heading,
-//             pitch : pitch,
-//             roll : roll
-//         },
-//         duration:duration,// 设置飞行持续时间，默认会根据距离来计算
-//         maximumHeight:maximumHeight,// 相机最大飞行高度
-//         complete:flyParam.completed,// 到达位置后执行的回调函数
-//         cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
-//     })
+    flyParam.scene.camera.flyTo({
+        destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
+        orientation : {
+            heading : heading,
+            pitch : pitch,
+            roll : roll
+        },
+        duration:duration,// 设置飞行持续时间，默认会根据距离来计算
+        maximumHeight:maximumHeight,// 相机最大飞行高度
+        complete:flyParam.completed,// 到达位置后执行的回调函数
+        cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
+    })
 
-// }
+}
 /**
  * 追加定位广告牌
  */
@@ -197,7 +244,7 @@ export function addBillboard(viewer,typeMode,messageTypes,showEntity){
         let selectedFeatures = queryEventArgs.originResult.features,
             IM=Vue.prototype.IM,
             entiyParam=null;
-
+        console.log('selectedFeatures',selectedFeatures);
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures,messageTypes,'ID');
 
         for(var i=0;i<selectedFeatures.length;i++){
@@ -232,7 +279,7 @@ export function addBillboard(viewer,typeMode,messageTypes,showEntity){
  */
 export function addEntity(entiyParam){
 
-    if(typeof entiyParam != 'object')return;
+    if(typeof entiyParam != 'object') return;
 
     let width = entiyParam.billboard.width || 30,
         height = entiyParam.billboard.height || 40,
@@ -281,15 +328,15 @@ export function getEntitySet(setParam){
         .then(result=>{
             let { code, data } = result.data;
             if(code == 200){
-                console.log(setParam.messageType,data)
+
                 let IM= Vue.prototype.IM,
                     sqlQueryBIMId = [];//sqlQueryBIMId;
 
                 IM.deleteInformation(data,setParam.messageType,'id');
+
                 if(Array.isArray(data) && data.length !== 0){
 
                     for(let i=0;i<data.length;i++){
-                        if(data[i].latitude == null || data[i].longitude　== null)continue;
 
                         let [ type ]=_this.VMConfig[setParam.typeMode].filter(type=>{
                             let moTypeId = _getTypeValue(setParam.typeMode,data[i]);
@@ -300,8 +347,10 @@ export function getEntitySet(setParam){
                         });
 
                         IM.addInformation(setParam.messageType,data[i]);//缓存信息
+
                         if(['flaw'].indexOf(setParam.messageType) != -1 && data[i].type == 2){ //BIM查询
-                            sqlQueryBIMId.push(data[i].objId);
+                            let flawID = changStrLength(data[i].objectId,10);
+                            sqlQueryBIMId.push( flawID );
                             continue;
                         }
 
@@ -327,7 +376,7 @@ export function getEntitySet(setParam){
                     }
 
                     if(sqlQueryBIMId.length != 0){
-                        doSqlQuery.call(_this,setParam.viewer,'MOID in ('+ sqlQueryBIMId.toString() +')',setParam.dataUrl,setParam.onQueryComplete,setParam.processFailed,setParam.typeMode,setParam.messageType,setParam.show)
+                        doSqlQuery.call(_this,setParam.viewer,'MOID in ("'+ sqlQueryBIMId.toString() +'")',setParam.dataUrl,setParam.onQueryComplete,setParam.processFailed,setParam.typeMode,setParam.messageType,setParam.show)
                     }
 
                 }
@@ -351,7 +400,7 @@ export function switchShowEntity(swtichParam){
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj,"MOID")
             : IM._getEntityMoId(currObj,swtichParam.messageType);
         let entities =_this.viewer.entities._entities._array.filter(entitie=>entitie._moId == moId);
-
+        console.log('entities',entities)
         if(entities){
 
             entities.forEach(entitie=>{
@@ -368,6 +417,7 @@ export function doSqlQuery(){
     let [ viewer,SQL ,dataUrl,onQueryComplete,processFailed,startLocation,endLocation,labels ]=args; //解析数组内容,startLocation,endLocation主要用于section中label location计算
     if(typeof onQueryComplete != 'function' ||　typeof processFailed != 'function'){　return　}
 
+    console.log('SQL',SQL)
 
     let _this=this,queryParam=_this.VMConfig.queryParam,getFeatureParam, getFeatureBySQLService, getFeatureBySQLParams;
 
@@ -478,9 +528,7 @@ export function getEntityProperty(){
     handler.setInputAction(function(event) {
 
         if(!scene.pickPositionSupported){
-
             return;
-
         }
         // 获取屏幕坐标
         let scenePosition = scene.pickPosition(event.startPosition);
@@ -745,7 +793,8 @@ function _monitor(){
             windowPosition
         )
         dom.style.bottom = canvasHeight - (windowPosition.y - 50) + 'px'
-        dom.style.left = windowPosition.x - 70 + 'px'
+        dom.style.left = windowPosition.x - 70 +'px'
+
 
     })
 }

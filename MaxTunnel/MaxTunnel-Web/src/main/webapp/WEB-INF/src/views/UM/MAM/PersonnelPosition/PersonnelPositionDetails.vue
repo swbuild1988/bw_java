@@ -20,11 +20,11 @@
                 <Button type="primary" icon="ios-search">查询</Button>
       </Col>-->
       <Col span="23" offset="1">
-        <h1>入廊人员信息</h1>
+        <h1 class="title">入廊人员信息</h1>
       </Col>
     </Row>
     <Row class="list">
-      <Col span="15" class="view" id="GISbox">
+      <Col span="15" class="view">
         <!-- <sm-viewer id="personnelPositionSMViewer" ref="smViewer"></sm-viewer> -->
         <!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
         </sm-viewer>-->
@@ -45,7 +45,7 @@
             </div>
           </Panel>
         </Collapse>
-        <h2 v-if="none">暂无入廊人员或未分配设备</h2>
+        <h2 v-if="none" class="none">暂无入廊人员或未分配设备</h2>
       </Col>
     </Row>
   </div>
@@ -137,35 +137,17 @@ export default {
   },
   watch: {
     $route: function() {
-      this.tunnelId = this.$route.params.id;
-      this.getVisitors();
+      // this.tunnelId = this.$route.params.id;
+      // this.getVisitors();
+      this.$refs.smViewer.stopPersonnelPosition();
     }
   },
   mounted() {
     this.tunnelId = this.$route.params.id;
     this.$refs.smViewer.startPersonnelPosition();
     this.getVisitors();
-    this.setGIS();
   },
   methods: {
-    setGIS() {
-      var gis = document.getElementById("newID");
-      gis.style.display = "block";
-      gis.style.position = "absolute";
-      gis.style.top = "0px";
-      gis.style.height = "100%";
-      gis.style.width = "100%";
-      document.body.removeChild(gis);
-      document.getElementById("GISbox").appendChild(gis);
-      this.$refs.smViewer.setViewAngAngle({
-        longitude: 112.49802091380211,
-        latitude: 37.70768364078975,
-        height: 4999.577866952712,
-        roll: 0,
-        pitch: -1.5383928532641606,
-        heading: 0.3732143574336426
-      });
-    },
     getVisitors() {
       let _this = this;
       personnelPositionService.getActiveLocators().then(
@@ -195,13 +177,6 @@ export default {
       );
     }
   },
-  beforeDestroy() {
-    this.$refs.smViewer.stopPersonnelPosition();
-    var gis = document.getElementById("newID");
-    gis.style.display = "none";
-    document.getElementById("GISbox").removeChild(gis);
-    document.body.appendChild(gis);
-  }
 };
 </script>
 <style scoped>
@@ -228,6 +203,13 @@ export default {
 }
 .content {
   position: relative;
-  height: 16vh;
+  height: 74vh;
+  font-size: 1.66vmin;
+}
+.title{
+  font-size: 3.2vmin;
+}
+.none{
+  font-size: 2vmin;
 }
 </style>

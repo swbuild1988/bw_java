@@ -43,8 +43,8 @@
                   style="width: 65%;"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small">查询</Button>
-        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small">清除告警数据</Button>
+        <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small" style="font-size: 1.7vmin">查询告警</Button>
+        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small" style="font-size: 1.7vmin">清除告警</Button>
       </Col>
     </Row>
     <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
@@ -145,17 +145,16 @@
           {title: 'Id', key: 'id', width: 80,},
           {title: '所属管廊', key: 'tuunelName',},
           {title: '监测对象名', key: 'objectName',},
-          {title: '告警级别', key: 'alarmLevel',width: 110,},
+          {title: '告警级别', key: 'alarmLevel',},
           // {title: '告警类型', key: 'alarmType',},
           {title: '描述', key: 'description',},
-          {title: '告警时间', key: 'alarmTime',width: 200,},
-          {title: '告警次数', key: 'alarmCount',width: 110,},
+          {title: '告警时间', key: 'alarmTime',},
+          {title: '告警次数', key: 'alarmCount',},
           {title: '是否清除', key: 'isClear',},
-          {title: '清除时间', key: 'clearTime',width: 200,},
+          {title: '清除时间', key: 'clearTime',},
           {
             title: '操作',
             key: 'action',
-            width: 100,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -323,7 +322,7 @@
       }
     },
     mounted() {
-      this.tableHeight=window.innerHeight*0.85-180
+      this.tableHeight = window.innerHeight * 0.73-80;
       this.inItData();
       this.changeAlarmType(this.queryPrams.alarmTimeType);
       this.queryAlarmData();
@@ -334,10 +333,16 @@
 <style scoped>
   .planDec {
     padding-right: 5px;
-    font-size: 14px;
+    font-size: 1.66vmin;
     float: left;
   }
-
+  .top {
+    margin: 10px;
+    height: 12vmin;
+    line-height: 5vmin;
+    background: #fff;
+    padding-left: 10px;
+  }
   .queryHis {
     padding-right: 5px;
     background-color: #e5eae99c;
@@ -349,14 +354,6 @@
     position: relative;
     min-height: 100%;
     padding-bottom: 50px;
-  }
-
-  .top {
-    margin: 10px;
-    height: 100px;
-    line-height: 50px;
-    background: #fff;
-    padding-left: 10px;
   }
 
   .nextPage {
@@ -380,13 +377,20 @@
   }
 
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 16px;
+    font-size: 1.4vmin;
   }
 
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 16px;
+    font-size: 1.4vmin;
   }
-
+  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+  .ivu-select-multiple >>> .ivu-tag,.ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
+  {
+    height: 4vmin;
+    line-height: 4vmin;
+    font-size: 1.4vmin;
+  }
   .queryAlarm {
     position: relative;
     min-height: 96%;

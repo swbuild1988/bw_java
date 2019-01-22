@@ -317,5 +317,25 @@ export default {
 .navigation div:hover,.activeTable,.activeSuper{
     border-bottom: 2px solid #357aa1;
 }
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .navigation{
+        line-height: 3.5vmin;
+    }
+    .navigation div{
+        line-height: 3.5vmin;
+        padding: 0.9vmin;
+        font-size: 1.5vmin;
+    }
+    .navigation div:hover,.activeTable,.activeSuper{
+        border-bottom: 0.2vmin solid #357aa1;
+    }
+}
 </style>
 

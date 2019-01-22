@@ -1,24 +1,25 @@
 <template>
   <div @click="locationEquimpent">
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
-      <p slot="title">{{Obj.objtypeName}}</p>
+      <p slot="title" style="font-size: 1.66vmin;height: 1.7vmin;line-height: 1.66vmin">{{Obj.objtypeName}}</p>
       <!-- 数值正常时 -->
-      <img src="../../../assets/UM/温度-蓝.png" v-if="Obj.objtypeId==1 && normal || Obj.objtypeId==8 && normal" class="img">
-      <img src="../../../assets/UM/湿度-蓝.png" v-if="Obj.objtypeId==2 && normal" class="img"> 
-      <img src="../../../assets/UM/氧气-蓝.png" v-if="Obj.objtypeId==3 && normal" class="img">
-      <img src="../../../assets/UM/H2S-蓝.png" v-if="Obj.objtypeId==4 && normal" class="img"> 
-      <img src="../../../assets/UM/甲烷-蓝.png" v-if="Obj.objtypeId==5 && normal" class="img">
-      <img src="../../../assets/UM/液位仪.png" v-if="Obj.objtypeId==21 && normal" class="img">
-      <img src="../../../assets/UM/CO-蓝.png" v-if="Obj.objtypeId==6 && normal" class="img"> 
+      <img src="../../../assets/UM/temp-normal.png" v-if="Obj.objtypeId==1 && normal || Obj.objtypeId==8 && normal" class="img">
+      <img src="../../../assets/UM/humidity-normal.png" v-if="Obj.objtypeId==2 && normal" class="img">
+      <img src="../../../assets/UM/O2-normal.png" v-if="Obj.objtypeId==3 && normal" class="img">
+      <img src="../../../assets/UM/H2S-normal.png" v-if="Obj.objtypeId==4 && normal" class="img">
+      <img src="../../../assets/UM/CH4-normal.png" v-if="Obj.objtypeId==5 && normal" class="img">
+      <img src="../../../assets/UM/liquidLevel-normal.png" v-if="Obj.objtypeId==21 && normal" class="img">
+      <img src="../../../assets/UM/CO-normal.png" v-if="Obj.objtypeId==6 && normal" class="img">
 
-      <img src="../../../assets/UM/温度-红.png" v-if="Obj.objtypeId==1 && !normal || Obj.objtypeId==8 && !normal" class="img">
-      <img src="../../../assets/UM/湿度-红.png" v-if="Obj.objtypeId==2 && !normal" class="img">
-      <img src="../../../assets/UM/氧气-红.png" v-if="Obj.objtypeId==3 && !normal" class="img">
-      <img src="../../../assets/UM/H2S-红.png" v-if="Obj.objtypeId==4 && !normal" class="img">
-      <img src="../../../assets/UM/甲烷-红.png" v-if="Obj.objtypeId==5 && !normal" class="img">
-      <img src="../../../assets/UM/液位仪-红.png" v-if="Obj.objtypeId==21 && !normal" class="img">
-      <img src="../../../assets/UM/CO-红.png" v-if="Obj.objtypeId==6 && !normal" class="img">
-      <p class="value">{{Obj.ObjVal}}<span style="font-size: 24px">{{ unit }}</span></p>
+      <img src="../../../assets/UM/temp-error.png" v-if="Obj.objtypeId==1 && !normal || Obj.objtypeId==8 && !normal" class="img">
+      <img src="../../../assets/UM/humidity-error.png" v-if="Obj.objtypeId==2 && !normal" class="img">
+      <img src="../../../assets/UM/O2-error.png" v-if="Obj.objtypeId==3 && !normal" class="img">
+      <img src="../../../assets/UM/H2S-error.png" v-if="Obj.objtypeId==4 && !normal" class="img">
+      <img src="../../../assets/UM/CH4-error.png" v-if="Obj.objtypeId==5 && !normal" class="img">
+      <img src="../../../assets/UM/liquidLevel-error.png" v-if="Obj.objtypeId==21 && !normal" class="img">
+      <img src="../../../assets/UM/CO-error.png" v-if="Obj.objtypeId==6 && !normal" class="img">
+      <p class="value">{{Obj.ObjVal}}<span style="font-size: 2vmin">{{ unit }}</span></p>
+      <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
       <div class="extre">
         <div class="min" v-if="Obj.minValue != null">
           <Icon type="arrow-up-c"></Icon>
@@ -29,26 +30,7 @@
           <span>{{Obj.maxValue}}</span>
         </div>
       </div>
-      <div>{{Obj.ObjName}}</div>
-      <!-- <Row style="background-color:#048488;height: 100px; ">
-        <Col span="5">
-        <span style="float:left;color: #ffffff;margin-top: 0.8vh;font-size: 16px;left: 2px; ">{{Obj.ObjName}}</span>
-        </Col>
-        <Col span="14">
-        <span class="valueclass">{{Obj.ObjVal}}</span>
-        </Col>
-        <Col span="5" style="padding: 0;"> -->
-        <!-- 温度 --> <!-- 湿度 -->
-       <!--  <div v-if="Obj.objtypeId==1||Obj.objtypeId==2"
-             style="height: 100px;position: relative;float: right;right: 0px;width: 5vw;">
-          <Temperature v-bind="Obj"></Temperature>
-        </div> -->
-        <!-- 氧气，甲烷，一氧化碳 -->
-        <!-- <div v-else style="height: 100px;position: relative;float: right;right: 0px;width: 5vw;">
-          <Gas v-bind="Obj"></Gas>
-        </div>
-        </Col>
-      </Row> -->
+      <div style="font-size: 1.66vmin">{{Obj.ObjName}}</div>
     </Card>
   </div>
 </template>
@@ -74,7 +56,8 @@
           clickStatus:false,
           datatypeId:"",
           minValue: 0,
-          maxValue: 100
+          maxValue: 100,
+          time: ''
         }
     }
   },
@@ -84,6 +67,7 @@
         gasMin: 0,
         normal: true,
         unit: '',
+        isTimeShow: false
       };
     },
     components: {Temperature, Gas},
@@ -131,6 +115,9 @@
           break
       }
       
+      if(this.Obj.time != ''){
+        this.isTimeShow = true
+      }
     }
   }
 </script>
@@ -156,11 +143,11 @@
     border-radius: 10px;
     margin: 1vh 0;
     text-align: center;
-    height: 25vh;
+    height: 28vh;
   }
   .value{
-    margin-top: 4%;
-    font-size: 30px;
+    margin-top: 2%;
+    font-size: 3vmin;
     height: 4vh;
   }
   .min{
@@ -178,10 +165,15 @@
   .extre{
     position: relative;
     height: 3vh;
+    font-size: 1.66vmin;
   }
   .img{
     width: 28%;
     height: 28%;
     margin-top: 1%;
+  }
+  .time{
+    margin: 0.4vh 0;
+    font-size: 1.6vmin;
   }
 </style>

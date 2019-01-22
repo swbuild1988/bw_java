@@ -89,7 +89,6 @@ export default {
                 {
                     title:"发现时间",
                     key:"createTime",
-                    width: 200,
                     align: 'center',
                     render: (h, params) => {
                         return h(
@@ -145,8 +144,8 @@ export default {
                 {
                     title:"操作",
                     key:"action",
-                    width:300,
                     align:'center',
+                    width: window.innerWidth*0.15,
                     render:(h, params) => {
                         return h('div', [
                             h('Button', {
@@ -157,6 +156,7 @@ export default {
                                 style: {
                                     marginRight: '5px'
                                 },
+                                class: 'btnShow',
                                 on: {
                                     click: () => {
                                         this.enterOrder(params.index)
@@ -182,6 +182,7 @@ export default {
                                     type: 'info',
                                     size: 'small'
                                 },
+                                class: 'btnOrder',
                                 on: {
                                     click: ()=> {
                                         this.queryDetails(params.index)
@@ -330,5 +331,17 @@ export default {
     }  
 }
 </script>
+<style scoped>
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+}
+</style>
+
 
 

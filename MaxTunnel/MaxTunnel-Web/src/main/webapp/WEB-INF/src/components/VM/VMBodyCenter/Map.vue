@@ -55,7 +55,7 @@
           </Dropdown>
         </Col>
         <Col span="1" offset="1">
-          <Dropdown divided @click.native="sendPlan">
+          <Dropdown divided @click.native="show.showPlan = !show.showPlan">
             <a>
               <img src="../../../assets/VM/emergencies.png" height="100%" width="100%">
             </a>
@@ -87,7 +87,7 @@
         <img src="../../../assets/VM/footLine.png" height="8px" width="100%">
       </row>
     </div>
-    <temperature class="maptemperature"></temperature>
+    <!--<temperature class="maptemperature"></temperature>-->
     <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
       <map-gauges v-show="show.ges"></map-gauges>
     </transition>
@@ -101,34 +101,38 @@
       <move-control v-show="show.showControlPanel"></move-control>
     </transition>
 
-    <sm-viewer
-      id="mapViewer"
-      ref="smViewer"
-      :cameraPosition="camera"
-      :personnelPosition="personnelPosition"
-      :unitsPosition="unitsPosition"
-      :defectPosition="defectPosition"
-      :searchCamera="searchCamera"
-      :eventsPosition="eventsPosition"
-      :openPlanPosition="openPlanPosition"
-      :openVideoLinkage="true"
-      :infoBox="false"
-      :navigation="false"
-      :openImageryProvider="true"
-      :openSpinShow="true"
-      @replaceVideoUrl="replaceVideoUrl"
-    ></sm-viewer>
+      <sm-viewer
+        ref="smViewer"
+        id="newId"
+        :cameraPosition="camera"
+        :personnelPosition="personnelPosition"
+        :unitsPosition="unitsPosition"
+        :defectPosition="defectPosition"
+        :searchCamera="searchCamera"
+        :eventsPosition="eventsPosition"
+        :openPlanPosition="openPlanPosition"
+        :openVideoLinkage="true"
+        :infoBox="false"
+        :navigation="false"
+        :openImageryProvider="true"
+        :openSpinShow="false"
+        @replaceVideoUrl="replaceVideoUrl"
+      ></sm-viewer>
   </div>
 </template>
 <style scoped>
+.Map {
+    width: 100%;
+    height: 100%;
+}
 .mapTop {
-  z-index: 1001;
-  position: absolute;
-  width: 65%;
-  height: 8%;
-  top: 2%;
-  left: 50%;
-  transform: translate(-55%);
+    z-index: 1001;
+    position: absolute;
+    width: 65%;
+    height: 8%;
+    top: 2%;
+    left: 50%;
+    transform: translate(-55%);
 }
 </style>
 <style>
@@ -143,7 +147,7 @@
 </style>
 
 <script>
-import SmViewer from "../../Common/3D/3DViewer";
+import SmViewer from "../../Common/3D/Test3DViewer";
 import Temperature from "../VMBodyCenter/temperatureBox";
 import MapGauges from "./gauges";
 import AlarmCount from "../AlarmManage/NonCleanedCount";
@@ -167,7 +171,7 @@ export default {
       leaveClass: "animated zoomOut",
       allVideos: [],
       searchCamera: {
-        openSearch: true,
+        openSearch: false,
         isShow: true
       },
       unitsPosition: {
@@ -175,18 +179,19 @@ export default {
         isShow: true
       },
       personnelPosition: {
-        openPosition: false,
-        isShow: true
+          openPosition: false,
+          isShow: true,
+          refreshTime:10000
       },
       defectPosition: {
-        openPosition: false,
+        openPosition: true,
         isShow: true
       },
       eventsPosition: {
         openPosition: true
       },
       openPlanPosition: {
-        openPosition: true
+        openPosition: false
       },
     };
   },
@@ -290,7 +295,9 @@ export default {
     jumpUMLogin() {
       let _this = this;
 
-      _this.$router.push({ path: "UMmain" });
+        _this.$router.push({ path: "UMmain" });
+        _this.$refs.smViewer.destory3D();
+        _this.$emit('jumpTo')
     },
     playFly() {
       this.$refs.smViewer.playFly();

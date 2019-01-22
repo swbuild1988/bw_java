@@ -33,10 +33,10 @@
             </Select>
         </FormItem>
         <FormItem label="计划入廊时间：" prop="preTime">
-            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" style="width: 540px"></DatePicker>
+            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" style="width: 100%"></DatePicker>
         </FormItem>
         <FormItem label="访客总人数：" class="ivu-form-item-required">
-            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 540px;"></InputNumber>
+            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
         </FormItem>
         <FormItem label="访客所属公司" prop="visitorCompany">
             <Select v-model="addEnterGalleryApplication.visitorCompany">
@@ -357,5 +357,42 @@ export default {
 }
 ul li{
     list-style: none;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .btn{
+        margin-left: 20% !important;
+    }
+    .ivu-form-item-required .ivu-form-item-label:before{
+        font-size: 1.6vmin !important;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
 }
 </style>

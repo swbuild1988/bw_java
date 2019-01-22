@@ -1,4 +1,4 @@
-﻿package com.bandweaver.tunnel.service.omm.instrument;
+package com.bandweaver.tunnel.service.omm.instrument;
 
 import java.util.ArrayList;
 import java.util.List;

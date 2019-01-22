@@ -48,7 +48,7 @@
 import DataBox2 from "../../../../components/Common/Box/DataBox2";
 import EnergyIcon from "../../../../assets/UM/TunnelEnergy.png";
 import { EnumsService } from "../../../../services/enumsService";
-import { energyConsumptionService } from "../../../../services/energyConsumptionService";
+import { EnergyConsumptionService } from "../../../../services/EnergyConsumptionService";
 export default {
     name: "eneryCategory",
     data() {
@@ -191,7 +191,7 @@ export default {
             }
 
             let _this = this;
-            energyConsumptionService.getECTotal(params).then(
+            EnergyConsumptionService.getECTotal(params).then(
                 result => {
                     _this.total = result.val;
                 },
@@ -199,7 +199,7 @@ export default {
                     _this.Log.info(error);
                 }
             );
-            energyConsumptionService.getECCategory(params).then(result => {
+            EnergyConsumptionService.getECCategory(params).then(result => {
                 var tempCount = 0;
                 result.filter(function(item) {
                     tempCount += item.val;
@@ -340,7 +340,7 @@ export default {
             this.line.hideLoading();
             this.line.setOption(option);
             let _this = this;
-            energyConsumptionService
+            EnergyConsumptionService
                 .getECCategoryDetail(_this.query.id, _this.period)
                 .then(
                     result => {

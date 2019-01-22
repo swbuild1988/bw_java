@@ -6,16 +6,16 @@
       <span class="planDec">对象类型:</span>
       <Select v-model="queryPrams.objtypeIds" style="width:65%" multiple>
         <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
-          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val" style="font-size: 1.6vmin;line-height: 3.2vmin;height: 3.2vmin">{{ item.key }}</Option>
         </OptionGroup>
       </Select>
       </Col>
-        <Col span="6" class="col">
-        <span class="planDec">所属管廊:</span>
-        <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
-            <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-        </Col>
+      <Col span="6" class="col">
+      <span class="planDec">所属管廊:</span>
+      <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
+        <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      </Select>
+      </Col>
       <Col span="6" class="col">
       <span class="planDec">数据类型:</span>
       <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
@@ -23,7 +23,6 @@
       </Select>
       </Col>
     </Row>
-
     <Row class="top" style="margin-top: 0px;">
       <Col span="6" class=" col">
       <span class="planDec">监测对象:
@@ -36,9 +35,9 @@
         <div v-if="queryPrams.datatypeId==1">
           <Col span="10" class="col">
           <span class="planDec">取整范围:</span>
-          最小值
+          <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最小值</span>
           <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-          最大值
+                    <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最大值</span>
           <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
           </Col>
         </div>
@@ -65,7 +64,7 @@
         </div>
       </transition>
       <Col span="1" style="position: relative;float: right;right: -20px;top:-20px;">
-      <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData" title="查询" size="large"></Button>
+      <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData" title="查询" size="large" v-if="!viewHistory"></Button>
       </Col>
       <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
     </Row>
@@ -117,7 +116,7 @@
                           style="width:220px;margin-right: 14px;"></DatePicker>
             </div>
             <div style="position:relative;float: right;right: 0px;">
-              <Button type="primary" shape="circle" @click="queryHistoryData" icon="ios-search" size="large"
+              <Button type="primary" shape="circle" @click="queryHistoryData" icon="ios-search" size="large" v-if="viewHistory"
                       title="查询历史数据"></Button>
               <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
                       title="返回"></Button>
@@ -144,7 +143,7 @@
         tableload:true,
         viewHistory: false,
         isReady: true,
-          tunnelList: [],
+        tunnelList: [],
         tableHeight: 450,
         curlineChart: {
           id: "historyDataChart",
@@ -168,8 +167,8 @@
           pageSize: 12,
         },
         historyPrams: {
-          startTime: "",
-          endTime: "",
+          startTime: null,
+          endTime: null,
           dateType: 1,
           ids: [],
         },
@@ -238,10 +237,10 @@
           this.queryPrams.datatypeId = result[0].val;
         });
         const p3 = TunnelService.getTunnels().then((result) => {
-            _this.tunnelList = [{id: -1, name: "全部"}];
-            result.reduce((a,b)=>{
-                _this.tunnelList.push(b);
-            }, _this.tunnelList)
+          _this.tunnelList = [{id: -1, name: "全部"}];
+          result.reduce((a,b)=>{
+            _this.tunnelList.push(b);
+          }, _this.tunnelList)
         });
         Promise.all([
           p1,
@@ -264,7 +263,7 @@
         _this.tableData = [];
         _this.tableload=true;
         var params= JSON.parse(JSON.stringify(_this.queryPrams));
-          params.tunnelId=  params.tunnelId==""?null:  params.tunnelId;
+        params.tunnelId=  params.tunnelId==""?null:  params.tunnelId;
         DataAnalysisService.getMonitorData(params).then((result) => {
           if (result) {
             result.list.reduce(function (a, b) {
@@ -286,6 +285,10 @@
 
       viewHistoryData() {
         var _this = this;
+        if(!this.selectSelection){
+          this.$Message.warning('请勾选需要查询历史数据的对象');
+          return;
+        }
         _this.viewHistory = !_this.viewHistory;
         _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
         _this.changeAlarmType(_this.historyPrams.dateType);
@@ -293,6 +296,9 @@
         this.selectSelection.reduce(function (a, b) {
           _this.historyPrams.ids.push(b.id);
         }, _this.historyPrams.ids);
+        _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
+        _this.curlineChart.parameters.queryPram.endTime =new Date(_this.historyPrams.endTime) .getTime();
+        _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
       },
 
       queryHistoryData() {
@@ -363,7 +369,7 @@
     mounted() {
       this.inItData();
       // 设置表格高度
-      this.tableHeight = window.innerHeight * 0.85 - 160;
+      this.tableHeight = window.innerHeight * 0.73-60;
     },
     watch: {
       "dataObjectSelect.selectData.idList": function () {
@@ -371,31 +377,21 @@
       }
     },
   }
+
 </script>
 
 <style scoped>
   .col {
-    height: 50px;
+    height: 6vmin;
     padding-top: 10px;
   }
 
   .planDec {
     padding: 4px;
-    font-size: 14px;
+    font-size: 1.6vmin;
+    line-height: 3.2vmin;
+    height: 3.2vmin;
     float: left;
-  }
-
-  .queryHis {
-    padding-right: 5px;
-    background-color: #e5eae99c;
-    line-height: 50px;
-    font-size: 16px;
-  }
-
-  .queryEquipment {
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 50px;
   }
 
   .top {
@@ -425,11 +421,11 @@
   }
 
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 16px;
+    font-size: 1.66vmin;
   }
 
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 16px;
+    font-size: 1.66vmin;
   }
 
   .chartSize {
@@ -442,5 +438,19 @@
     line-height: 40px;
     background-color: #fff;
     margin-top: 5px;
+  }
+
+  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+  .ivu-select-multiple >>> .ivu-tag,.ivu-select-multiple >>> .ivu-select-placeholder
+  {
+    height: 4vmin;
+    line-height: 4vmin;
+    font-size: 1.4vmin;
+  }
+  .ivu-select-group-wrap >>> .ivu-select-group-title{
+    height: 4vmin;
+    line-height: 3.2vmin;
+    font-size: 1.6vmin;
   }
 </style>

@@ -269,6 +269,7 @@
 
                 if(_this.searchCamera.openSearch ||　_this.unitsPosition.openPosition ||　_this.personnelPosition.openPosition ||　_this.defectPosition.openPosition ||　_this.eventsPosition.openPosition){
                     //鼠标经过实体时,触发气泡
+
                     getEntityProperty.call(_this,_this.scene,Cesium,_this.modelProp,'model-content')
                 }
                 //设置鼠标左键单击回调事件

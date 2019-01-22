@@ -51,8 +51,8 @@
                 multiple
                 type="drag"
                 action="//jsonplaceholder.typicode.com/posts/"
-                style="display: inline-block;width:58px;">
-                <div style="width: 58px;height:58px;line-height: 58px;">
+                class="uploadBox">
+                <div class="addIconBox">
                     <Icon type="camera" size="20"></Icon>
                 </div>
             </Upload>
@@ -64,14 +64,14 @@
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" :readonly="this.$route.params.isFinished==true"></Input>
             </FormItem>
             <FormItem style="text-align: center" v-show="this.$route.params.isFinished!=true">
+                <Button type="ghost" style="margin-right: 8px"  @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitTask">提交</Button>
-                <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>
         <Modal
             v-model="showAddDefect"
             title="添加缺陷"
-            width="1200"
+            :width="modalWidth"
             @on-ok="ok"
         >
 
@@ -161,7 +161,6 @@
             </table>
             <Button type="dashed" long @click="handleAdd" icon="md-add" style="margin-top: 5px;">添加</Button>
         </Modal>   
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -284,7 +283,8 @@ export default {
             ],
             imgName: '',
             visible: false,
-            uploadList: []
+            uploadList: [],
+            modalWidth: null
         }    
     },
     mounted(){
@@ -344,6 +344,7 @@ export default {
             })
         //图片上传   
         this.uploadList = this.$refs.upload.fileList; 
+        this.getModalWidth()
     },
     methods: {
         //modal 添加巡检记录 内部+add
@@ -488,6 +489,9 @@ export default {
         goBack(){
             this.$router.back(-1);
         },
+        getModalWidth(){
+            this.modalWidth = document.body.offsetWidth*0.7
+        },
         //图片上传
         handleView (name) {
             this.imgName = name;
@@ -596,9 +600,61 @@ export default {
     cursor: pointer;
     margin: 0 2px;
 }
+.addIconBox{
+    height: 5.8vmin;
+    width: 5.8vmin;
+    line-height: 5.8vmin;
+}
+.uploadBox{
+    display: inline-block;
+    width: 5.8vmin
+}
 .goBack{
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .demo-upload-list{
+        width: 6vmin;
+        height: 6vmin;
+        line-height: 6vmin;
+        border: 0.1vmin solid transparent;
+        border-radius: 0.4vmin;
+        box-shadow: 0 0.1vmin 0.1vmin rgba(0,0,0,.2);
+        margin-right: 0.4vmin;
+    }
+    .ivu-icon-camera{
+        font-size: 3vmin !important;
+    }
+    .ivu-upload-drag {
+        border: 0.1vmin dashed #dddee1;
+    }
+    .formTitle{
+        font-size: 2.5vmin;
+    }
+    .ivu-checkbox >>> .ivu-checkbox-inner{
+        width: 1.4vmin !important;
+        height: 1.4vmin !important;
+        border: 0.1vmin solid #dddee1;
+    }
 }
 </style>

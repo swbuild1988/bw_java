@@ -52,6 +52,9 @@
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
             </div>
+            <div style="text-align: center;" v-show="this.pageType==1">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
+            </div>
         </Form> 
     </div>   
 </template>
@@ -299,6 +302,26 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
 }
 </style>
 

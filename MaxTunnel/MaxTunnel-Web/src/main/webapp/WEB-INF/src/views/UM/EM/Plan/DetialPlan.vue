@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Tabs type="card" @on-click="changePane">
+        <Tabs type="card" @on-click="changePane" class="tab">
             <TabPane label="预案详情" name="detial">
                 <div>
                     <WorkModal v-if="showModal.val!=null" v-bind="showModal"></WorkModal>
@@ -13,20 +13,20 @@
                             <!--</Col>-->
                             <Col span="2">
                             <div class="begin">
-                                <img style="width:30px;height:30px;" v-bind:src="imgUrl"/>
+                                <img style="width:3vmin;height:3vmin;" v-bind:src="imgUrl"/>
                             </div>
                             </Col>
                             <Col span="1">
                             <div class="next">
-                                <img style=" width:30px;height:30px;" v-bind:src="next"/>
+                                <img style=" width:3vmin;height:3vmin;" v-bind:src="next"/>
                             </div>
                             </Col>
                             <div v-for="(item,index) in allSteps">
                                 <Col span="2">
                                 <div style="width: 7vw;height:3vh;margin-top: -10px;" v-if="index > 0 && allSteps[index - 1].actionKey == 2" :style="{paddingTop : allSteps[index - 1].toTop ? (item.toTop-1) * 3 + 'vh' : '0'}">
-                                    <img style="width:50px;height:50px;" v-bind:src="status"/>
+                                    <img style="width:5vmin;height:5vmin;" v-bind:src="status"/>
                                 </div>
-                                <Tooltip placement="bottom">
+                                <Tooltip placement="bottom" class="toolTip">
                                     <div :style="{ marginTop : item.toTop  ? (allSteps[index - 1].actionKey == 2 ? (item.toTop > 1 ? '6vh': '2vh') : (item.toTop > 2 ? (item.toTop-1) * 4 + 3 + 'vh' : item.toTop * 4 + 'vh')) : '0'}" class="border">
                                         <Icon type="record" color=""></Icon>
                                         {{ item.stepName }}
@@ -38,13 +38,13 @@
                                 </Col>
                                 <Col span="1" v-if="index + 1 != allSteps.length && item.actionKey != 2">
                                 <div class="next" :style="{ paddingTop : item.toTop ? (item.toTop > 2 ? (item.toTop-1) * 3 + 6 + 'vh' : (item.toTop-1) * 4 + 5 + 'vh') : '0'}">
-                                    <img style=" width:30px;height:30px;" v-bind:src="next"/>
+                                    <img style=" width:3vmin;height:3vmin;" v-bind:src="next"/>
                                 </div>
                                 </Col>
                                 <Col span="1" v-if="item.actionKey == 2">
                                 <div :style="{ marginTop: item.toTop ? item.toTop * 4 + 'vh' : '1vh'}">
-                                    <img style=" width:50px;height:20px;" v-bind:src="toUp"/>
-                                    <img style=" width:50px;height:20px;" v-bind:src="toDown"/>
+                                    <img style=" width:5vmin;height:2vmin;" v-bind:src="toUp"/>
+                                    <img style=" width:5vmin;height:2vmin;" v-bind:src="toDown"/>
                                 </div>
                                 </Col>
                             </div>
@@ -328,17 +328,6 @@
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-  /* .top {
-    margin-top: 4px;
-    background-color: #fff;
-    font-size: 16px;
-    height: 50px;
-    padding: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-  } */
-=======
     .top {
         margin-top: 4px;
         background-color: #fff;
@@ -348,7 +337,7 @@
         margin-left: 10px;
         margin-right: 10px;
     }
->>>>>>> origin/dev
+
 
     .ivu-tabs-card > > > .ivu-tabs-bar {
         margin-bottom: 0px !important;
@@ -363,10 +352,11 @@
         text-align: center;
         color: rgb(174, 205, 237);
         height: 100px;
-        font-size: 14px;
+        font-size: 1.6vmin;
         display: table-cell;
         vertical-align: middle;
         font-weight: bold;
+        min-width: 180px;
     }
 
     .ivu-tooltip > > > .ivu-tooltip-arrow {
@@ -383,6 +373,7 @@
         background-color: #22a5f5;
         padding: 7px;
         cursor: pointer;
+        font-size: 1.66vmin;
     }
 
     .hr3 {
@@ -416,7 +407,21 @@
     }
 
     .target {
-        width: 200px;
+        width: 22vmin;
         letter-spacing: 2px;
+        font-size: 1.6vmin;
+    }
+    .toolTip >>> .ivu-tooltip-inner{
+        max-width: 2000px;
+        height: 4vmin;
+    }
+    .tab >>> .ivu-tabs-bar{
+        height: 3.2vmin;
+    }
+    .tab >>> .ivu-tabs-bar .ivu-tabs-tab{
+        height: 3.2vmin;
+    }
+    .tab >>> .ivu-tabs-nav-container{
+        height: 3.2vmin !important;
     }
 </style>

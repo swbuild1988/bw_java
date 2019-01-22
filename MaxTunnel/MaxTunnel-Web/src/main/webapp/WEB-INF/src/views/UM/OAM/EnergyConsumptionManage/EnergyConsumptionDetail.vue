@@ -39,7 +39,7 @@
 
 <script>
   import {TunnelService} from '../../../../services/tunnelService'
-  import {energyConsumptionService} from '../../../../services/energyConsumptionService'
+  import {EnergyConsumptionService} from '../../../../services/EnergyConsumptionService'
 
   export default {
     name: "energy-consumption-detail",
@@ -149,7 +149,7 @@
         if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
-        energyConsumptionService.getECDatagrid(queryParams).then(
+        EnergyConsumptionService.getECDatagrid(queryParams).then(
           (result) => {
             _this.page.pageTotal = result.total;
             result.list.forEach(a => {
@@ -262,7 +262,7 @@
         if (_this.endTime) {
           queryParams.endTime = _this.endTime.getTime();
         }
-        energyConsumptionService.getECInfo(queryParams).then(
+        EnergyConsumptionService.getECInfo(queryParams).then(
           (result) => {
             _this.data = [];
             _this.date = [];
@@ -312,8 +312,11 @@
   .top {
     padding-top: 8px;
     padding-left: 5px;
-    height: 50px;
+    height: 5vmin;
     background-color: #fff;
     margin-bottom: 10px;
+  }
+  .top span{
+    font-size: 1.66vmin;
   }
 </style>

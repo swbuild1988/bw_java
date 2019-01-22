@@ -84,7 +84,7 @@
         },
         watch:{
             'show.state'(){
-
+                console.log(this.show.state,this.data)
                 this.calcHideHeight();
                 if(!this.show.state){
                     this.arrow.state = false;
@@ -95,7 +95,7 @@
 
                 this.arrow.state ? this.calcShowHeight() : this.calcHideHeight();
                 this.changIconClassName(this.arrow.state);
-            }
+            },
         },
         mounted(){
             this.init();
@@ -105,6 +105,7 @@
             },
             calcHideHeight(){
                 this.$nextTick(()=>{
+                    console.log('this.getDOMElement)',this.getDOMElement('modal-body-list'))
                     this.bodyHeight = (this.getDOMElement('modal-body-list').children[0].offsetHeight * 5 +(this.borderPadding / 2) ) +'px';
                 })
             },

@@ -1,44 +1,44 @@
 <template>
-      <div class="VideoContainer">
-          <div class="Video" id="video">
-              <div :style="{height:'100%',width:'100%'}"
-                    v-show="style.showVideo"
-                    class="view"
-                    v-for="(item,index) in tempVideos" :key="index">
-                  <!-- <video-component :video="item" :id="item.id"></video-component> -->
-              </div>
-              
-              <!-- <Carousel v-model="defaultLoopIndex"
-                        :autoplay="isAutoplay"
-                        v-show="!style.showVideo"
-                        :dots="setting.dots"
-                        :radius-dot="true"
-                        :loop = "setting.loop"
-                        @on-change="changeCopyLoopScene"
-                        :autoplay-speed="setting.autoplaySpeed">
-                  <CarouselItem v-for="(val,key) in virtualLoopScene" :key="key">
-                      <div class="view" v-for="(item,index) in virtualLoopScene[key]" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
-                          <video-component :video="item" :id="item.id"></video-component>
-                      </div>
-                  </CarouselItem>
-              </Carousel> -->
-                <div class="view" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
-                    <!-- <video-component v-bind:video="currLoopSceneVideo" v-bind:id="'currLoopSceneVideoId'"></video-component> -->
-                    <videoloop :videolist="loopScene"></videoloop>
-                </div>
-          </div>
-          <i-switch
-                  v-model="setting.switchBtn"
-                  size="large"
-                  v-show="false"
-                  @on-change="getStatus">
-              <span slot="open">轮播</span>
-              <span slot="close">筛选</span>
-          </i-switch>
-          <vm-title :title-text="title"></vm-title>
-          <select class="cd-select" id="cd-dropdown" ></select>
-          <select class="cd-select " id="scene-dropdown"></select>
-      </div>
+    <div class="VideoContainer">
+        <div class="Video" id="video">
+            <div :style="{height:'100%',width:'100%'}"
+                 v-show="style.showVideo"
+                 class="view"
+                 v-for="(item,index) in tempVideos" :key="index">
+                <!-- <video-component :video="item" :id="item.id"></video-component> -->
+            </div>
+
+            <!-- <Carousel v-model="defaultLoopIndex"
+                      :autoplay="isAutoplay"
+                      v-show="!style.showVideo"
+                      :dots="setting.dots"
+                      :radius-dot="true"
+                      :loop = "setting.loop"
+                      @on-change="changeCopyLoopScene"
+                      :autoplay-speed="setting.autoplaySpeed">
+                <CarouselItem v-for="(val,key) in virtualLoopScene" :key="key">
+                    <div class="view" v-for="(item,index) in virtualLoopScene[key]" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
+                        <video-component :video="item" :id="item.id"></video-component>
+                    </div>
+                </CarouselItem>
+            </Carousel> -->
+            <div class="view" :style="{height:style.offsetHeight+'px',width:style.offsetWidth+'px'}">
+                <!-- <video-component v-bind:video="currLoopSceneVideo" v-bind:id="'currLoopSceneVideoId'"></video-component> -->
+                <!--<videoloop :videolist="loopScene"></videoloop>-->
+            </div>
+        </div>
+        <i-switch
+                v-model="setting.switchBtn"
+                size="large"
+                v-show="false"
+                @on-change="getStatus">
+            <span slot="open">轮播</span>
+            <span slot="close">筛选</span>
+        </i-switch>
+        <vm-title :title-text="title"></vm-title>
+        <select class="cd-select" id="cd-dropdown" ></select>
+        <select class="cd-select " id="scene-dropdown"></select>
+    </div>
 </template>
 
 <style scoped>
@@ -176,7 +176,7 @@
             defaultLoopIndex(){
                 let _this=this,
                     index=this.defaultLoopIndex;
-                    
+
                 if(_this.loopScene[index] == undefined || !_this.loopScene[index].length){ return };
 
                 _this.loopScene[index].filter((val,index)=>{if(index==0){ this.VMConfig.VLC.VLC_ID = val.id }});
@@ -248,8 +248,8 @@
                 // if(!Array.isArray(showVideos))return;
 
                 let _this=this,
-                     height=document.getElementById('video').offsetHeight,
-                     width=document.getElementById('video').offsetWidth;
+                    height=document.getElementById('video').offsetHeight,
+                    width=document.getElementById('video').offsetWidth;
 
                 _this.style.offsetHeight = height;
                 _this.style.offsetWidth = width;
@@ -324,7 +324,7 @@
             },
             getLoopScence(){
                 let _this = this;
-                
+
                 _this.fetchData({url:'/video_scenes',array:_this.loopScene})
                     .then(()=>{
                         _this.getShowVideo();
@@ -360,8 +360,8 @@
                 originalArray.forEach((val,key) => !key ? copyArray.push( [val] ) : copyArray.push( [] ));
             },
             changeCopyLoopScene(oldValue, value){
-                let { virtualLoopScene,loopScene } = this; 
-                
+                let { virtualLoopScene,loopScene } = this;
+
                 virtualLoopScene[value].push(loopScene[value]);
                 virtualLoopScene[oldValue].splice(0);
 
@@ -373,8 +373,8 @@
             },
             changeVideo(){
                 this.currLoopSceneVideo = this.loopScene[ this.currShowVideo.loopSceneIndex ];
-                this.currShowVideo.loopSceneIndex >= this.loopScene.length-1 
-                    ? this.currShowVideo.loopSceneIndex = 0 
+                this.currShowVideo.loopSceneIndex >= this.loopScene.length-1
+                    ? this.currShowVideo.loopSceneIndex = 0
                     : this.currShowVideo.loopSceneIndex++;
             },
             addIframe(id){

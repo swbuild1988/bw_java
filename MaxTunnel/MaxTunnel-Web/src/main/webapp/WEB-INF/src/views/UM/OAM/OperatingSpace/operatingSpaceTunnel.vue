@@ -45,13 +45,13 @@
                     <Col span="8" v-for="(cab,index) in cables" :key="index" class="left">
                     <div class="card">
                         <div class="title">
-                             <Icon type="ios-keypad" size=15 color="#ff9b00"></Icon>
+                             <Icon type="ios-keypad" style="font-size: 1.5vmin" color="#ff9b00"></Icon>
                             <span>{{cab.name}}</span>
                         </div>
                         <div class="linesInfo">
                              <Tooltip placement="bottom">
                                 <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)" :size="40">
-                                    <span class="demo-Circle-inner" style="font-size:16px">{{ cab.value[1].val }}</span>
+                                    <span class="demo-Circle-inner" style="font-size:1.66vmin">{{ cab.value[1].val }}</span>
                                 </i-circle>
                                 <div slot="content">
                                    <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="pop" v-if="curDetailId === line.id && curDetailIndex === index" v-for="line in cab.lines" :key="line.id" @mouseover="showDetails(line.id,index)" @mouseout="curDetailId = ''">
-                        <span @click="curDetailId = ''"><Icon type="ios-close" size=15 class="close"></Icon></span>
+                        <span @click="curDetailId = ''"><Icon type="ios-close" style="font-size: 1.5vmin" class="close"></Icon></span>
                         <h3 class="name">{{ line.cableName }}</h3>
                         <p>管线长度：{{ line.cableLength }}</p>
                         <p>管线状态：{{ line.cableStatusName }}</p>
@@ -89,7 +89,7 @@
             </Col> -->
         </Row>
         <Row>
-            <Col span="24">
+            <Col span="24" class="page">
                 <Page v-if="!init" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
                 </Page>
             </Col>
@@ -165,82 +165,6 @@ export default {
         }
     },
     methods:{
-        //加载超图模型
-      onload(parent) {
-        let _this = this;
-        let Cesium = parent.Cesium;
-
-        // 初始化viewer部件
-        var viewer = new Cesium.Viewer(this.mapId, {
-          navigation: false,//关闭导航控件
-          infoBox: false
-        });
-        var scene = viewer.scene,
-          widget = viewer.cesiumWidget,
-          imageryLayers = viewer.imageryLayers,
-          imagery_mec;
-        this.scene = scene;
-        var provider_mec = new Cesium.SuperMapImageryProvider({
-          url: URL_CONFIG.IMG_MAP //墨卡托投影地图服务
-        });
-        imagery_mec = imageryLayers.addImageryProvider(provider_mec);
-
-        try {
-          //打开所发布三维服务下的所有图层
-          var promise = scene.open(URL_CONFIG.BIM_SCP);
-
-          promise.then(function (layer) {
-            // 将东西设置成不可选择
-            layer.forEach(element => {
-              // 结构性框架的要查数据，非结构性框架的不用管了，也不能选择
-              if (element.name.indexOf("结构框架") < 0) {
-                element.selectEnabled = false;
-              } else {
-                // 设置查找参数
-                element.setQueryParameter({
-                  url: URL_CONFIG.BIM_DATA,
-                  dataSourceName: "tunnel",
-                  dataSetName: "结构框架",
-                  keyWord: "SmID"
-                });
-              }
-            });
-          });
-          //注册鼠标点击事件
-          viewer.pickEvent.addEventListener(function (feater) {
-          });
-          // lay是所有的数据集
-          Cesium.when(
-            promise,
-            function (layer) {
-              //设置相机位置、视角，便于观察场景
-              setViewAngle(scene, Cesium, _this.camera);
-              viewer.pickEvent.addEventListener(function (feature) {
-              });
-            },
-            function (e) {
-              if (widget._showRenderLoopErrors) {
-                var title =
-                  "加载SCP失败，请检查网络连接状态或者url地址是否正确？";
-                widget.showErrorPanel(title, undefined, e);
-              }
-            }
-          );
-        } catch (e) {
-          if (widget._showRenderLoopErrors) {
-            var title = "渲染时发生错误，已停止渲染。";
-            widget.showErrorPanel(title, undefined, e);
-          }
-        }
-
-        //滚轮滑动，获得当前窗口的经纬度，偏移角
-        var handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-        handler.setInputAction(e => {
-          addLabel.call(_this, scene, viewer, 500, doSqlQuery, URL_CONFIG.BIM_DATA, labelSqlCompleted, processFailed, getSection);
-        }, Cesium.ScreenSpaceEventType.WHEEL)
-
-        bubble.call(_this, Cesium, scene, viewer, 'model-content') //调用气泡
-      },
         initData() {
             let _this = this
             Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId)])
@@ -365,7 +289,7 @@ export default {
     padding: 2vh 0;
     margin-top: 2vh;
     background-color: white;
-    height: 72vh;
+    height: 74vh;
     overflow-y: auto;
 }
 .left{
@@ -383,7 +307,7 @@ export default {
 }
 .title{
     padding-left: 14px;
-    font-size: 20px;
+    font-size: 2vmin;
     display: inline-block;
     margin: 4px 0;
 }
@@ -392,7 +316,7 @@ export default {
     float: right;
     width: 40px;
     height: 40px;
-    font-size: 16px;
+    font-size: 1.66vmin;
     margin: 4px 12px;
 }
 .option{
@@ -405,12 +329,15 @@ export default {
     background-color: white;
 }
 .storeName{
-    font-size: 30px;
+    font-size: 3vmin;
     position: absolute;
     font-weight: bold;
     top: 36%;
     left: 14%;
     cursor: pointer;
+}
+.conditions span{
+    font-size: 1.66vmin;
 }
 .storeCard{
     margin: 10px 7%;
@@ -436,13 +363,14 @@ export default {
 }
 .lines{
     padding: 6px;
+    font-size: 1.66vmin;
 }
 .bim{
     margin-top: 40px;
     height: 60vh;
 }
 .lineName{
-    font-size: 18px;
+    font-size: 1.8vmin;
     text-align: center;
     cursor:pointer;
     margin-top: 10px;
@@ -477,5 +405,51 @@ export default {
     width: 60%;
     margin-left: 10%;
     margin-top: 20px;
+}
+
+.linesInfo >>> .ivu-tooltip-inner{
+    font-size: 1.66vmin;
+}
+
+.conditions >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+
+.conditions >>> .ivu-select-selected-value{
+    font-size: 1.66vmin;
+    line-height: 3vmin;
+    height: 3vmin;
+}
+/*分页样式*/
+.page >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+.page >>> .ivu-select-selected-value{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator input{
+    font-size: 1.2vmin;
+    height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator{
+    display: inline-block;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+.page >>> .ivu-page-next{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-next .ivu-icon{
+    font-size: 1.6vmin;
+}
+.page >>> .ivu-page-prev{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-prev .ivu-icon{
+    font-size: 1.6vmin;
 }
 </style>

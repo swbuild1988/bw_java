@@ -14,7 +14,7 @@
         <FormItem label="联系方式：" prop="tel">
             <Input  v-model="addCustomerInfo.tel" placeholder="请输入联系方式" type="text"></Input>
         </FormItem>
-        <FormItem style="margin-left: 65px;">
+        <FormItem style="margin-left: 65px;" class="btn">
             <Button type="ghost"  @click="goBack()" style="margin-right: 8px">返回</Button>
             <Button type="primary" @click="submitAddCustomerInfo('addCustomerInfo')" v-show="pageType!=pageTypes.Edit" :disabled="isDisable">提交</Button>
             <Button type="primary" @click="submitEditCustomerInfo('addCustomerInfo')" v-show="pageType==pageTypes.Edit" :disabled="isDisable">更新</Button>
@@ -139,5 +139,37 @@ export default {
     padding: 10px 20px;
     border-radius: 4px;
     margin: 0 auto;
+}
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 11vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 11vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .btn{
+        margin-left: 20% !important;
+    }
+    .ivu-form-item-required .ivu-form-item-label:before{
+        font-size: 1.6vmin !important;
+    }
 }
 </style>
