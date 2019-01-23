@@ -606,7 +606,7 @@ public class MeasObjController {
     
     
     
-    /**获取缓存中温度，湿度，含氧量最值
+    /**获取缓存中温度，甲烷，含氧量最值
      * @author shaosen
      * @date 2019年1月11日
      * @param   
@@ -654,6 +654,8 @@ public class MeasObjController {
 				json_1.put("location", "无位置信息");
 				json_1.put("time", currentDate);
 				json_1.put("type", objType.getValue());
+				json_1.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
+				json_1.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
 				return json_1;
 			case CH4:
 				JSONObject json_2 = new JSONObject();
@@ -663,6 +665,8 @@ public class MeasObjController {
 				json_2.put("location", "无位置信息");
 				json_2.put("time", currentDate);
 				json_2.put("type", objType.getValue());
+				json_2.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
+				json_2.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
 				return json_2;
 			case OXYGEN:
 				JSONObject json_3 = new JSONObject();
@@ -672,6 +676,8 @@ public class MeasObjController {
 				json_3.put("location", "无位置信息");
 				json_3.put("time", currentDate);
 				json_3.put("type", objType.getValue());
+				json_3.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
+				json_3.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
 				return json_3;
 
 			default:
@@ -704,6 +710,9 @@ public class MeasObjController {
     	}
     	rtdata.put("location", location);
     	rtdata.put("type", objType.getValue());
+    	rtdata.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
+    	rtdata.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
+    	
     	return rtdata;
     	
 	}
