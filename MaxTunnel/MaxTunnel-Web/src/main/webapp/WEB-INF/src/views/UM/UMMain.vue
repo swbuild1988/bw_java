@@ -3,25 +3,32 @@
     <!--Top标题-->
     <Row>
       <Col span="24">
+      <div></div>
       <div id="top" class="topOpacity">
-        <div class="Icon">
-        </div>
-        <span class="titleName"> {{titleName}}</span>
-        <div style="float: right;padding-top: 0px;padding-right: 5px;">
-          <Dropdown divided @click.native="showAboutUs">
-            <a>
-              <Icon type="information-circled" color="#fff" title="关于我们" class="about"></Icon>
-            </a>
-          </Dropdown>
-          <showAboutUs v-bind="aboutUs"></showAboutUs>
-        </div>
-        <div style="float: right;padding-top: 1vmin;">
-          <Dropdown divided @click.native="logout">
-            <a>
-              <Icon type="power" color="#fff" class="power"></Icon>
-            </a>
-          </Dropdown>
-        </div>
+        <Row>
+          <Col span="14">
+          <span class="Icon"></span>
+          <span class="titleName"> {{titleName}}</span>
+      </Col>
+      <Col span="6" offset="4">
+      <div style="float: right;padding-top: 0px;padding-right: 5px;">
+        <Dropdown divided @click.native="showAboutUs">
+          <a>
+            <Icon type="information-circled" color="#fff" title="关于我们" class="about"></Icon>
+          </a>
+        </Dropdown>
+        <showAboutUs v-bind="aboutUs"></showAboutUs>
+      </div>
+      <div style="float: right;padding-top: 1vmin;">
+        <Dropdown divided @click.native="logout">
+          <a>
+            <Icon type="power" color="#fff" class="power"></Icon>
+          </a>
+        </Dropdown>
+      </div>
+      </Col>
+      <!--<img style="height: 2.5vh;width: 100%" :src="topBg"/>-->
+    </Row>
       </div>
       </Col>
     </Row>
@@ -248,10 +255,13 @@
   import {LoginService} from '../../services/loginService.js';
   import { TunnelService } from '../../services/tunnelService'
   import showAboutUs from '../../components/Common/Modal/ShowAboutUs'
+  import ImageFromUrl from "../../components/Common/ImageFromUrl";
+  import topBg from '../../assets/VM/footLine.png'
   export default {
     name: "UmMain",
     data() {
       return {
+        topBg:topBg,
           aboutUs: {
               show: {state: false},
               company: {
@@ -373,13 +383,24 @@
       }
     },
       components: {
-          showAboutUs,
+        ImageFromUrl,
+        showAboutUs,
       },
   }
 </script>
 
 
 <style scoped>
+  .titleName{
+    width: 15vw;
+    height: 4vh;
+    font-size: 4vmin;
+    padding-top: 0.5vmin;
+    /*background-image: url("../../assets/UM/bordered.png");*/
+    /*background-size: 100% 100%;*/
+    /*-moz-background-size: 100% 100%;*/
+    /*-webkit-background-size: 100% 100%;*/
+  }
   .rowTop{
     margin-top: 0.5vh;
   }
@@ -423,9 +444,6 @@
     margin-left: 1vmin;
     font-size: 4vmin;
   }
-
-
-
   .main {
     background-image: url("../../assets/UM/UMMainbg2.png");
     color: #fff;
@@ -589,16 +607,10 @@
     background-color: #258486;
     border-color: #519FB2;
   }
-
-  .titleName{
-    font-size: 4vmin;
-    padding-top: 0.5vmin;
-  }
-
   .Icon {
-    height: 6vmin;
-    width: 7vmin;
-    background-image: url("../../assets/UM/Maxview.png");
+    height: 4vh;
+    width: 10vw;
+    background-image: url("../../assets/VM/MaxviewLogo.png");
     background-size: 100% 100%;
     -moz-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;

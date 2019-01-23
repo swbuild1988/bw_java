@@ -80,10 +80,10 @@
                     </div>
                 </Col>
             </Row>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-                :style='pageStyle'></Page>    
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+            :style='pageStyle'></Page>    
         <!-- 批量借出 -->
         <Modal
             v-model="isBatchLend"

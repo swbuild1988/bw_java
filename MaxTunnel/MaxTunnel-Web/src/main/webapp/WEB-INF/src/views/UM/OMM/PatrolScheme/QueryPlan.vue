@@ -70,11 +70,11 @@
         </Col>
       </Row>
       <!-- </Scroll> -->
-    <div class="page">
-    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-      placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page> 
-      </div>  
     </div>
+    <div class="page">
+      <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page> 
+    </div>  
   </div>
 </template>
 <script>

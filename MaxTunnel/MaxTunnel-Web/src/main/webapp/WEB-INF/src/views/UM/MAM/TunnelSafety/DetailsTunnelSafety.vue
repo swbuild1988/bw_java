@@ -343,6 +343,7 @@
               temp.datatypeId = a.datatypeId;
               temp.maxValue = a.maxValue;
               temp.minValue = a.minValue;
+              temp.unit=a.unit;
               if (a.datatypeId == 1) {
                 temp.ObjVal = a.curValue.toFixed(2);
               } else {

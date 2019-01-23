@@ -25,7 +25,6 @@
 const stateQuantity = '状态量输入';
 
 import Cesium from "Cesium";
-import zlib from "zlib";
 import Vue from 'vue'
 import $ from 'jquery'
 import showModel from '../Modal/ShowMapDataModal'
@@ -45,11 +44,12 @@ import { flyManagerMinix } from './mixins/flyManager'
 import { addBarnLabel } from "./mixins/addBarnLabel";
 import tools from './tools'
 import { TunnelService } from '../../../services/tunnelService'
+import  viewerBaseConfig  from "./mixins/viewerBase";
 
 let { progressTime } = require('../../../../static/VM/js/VMWebConfig')
 
 export default {
-    mixins: [flyManagerMinix, tools, addBarnLabel],
+    mixins: [flyManagerMinix, tools, addBarnLabel,viewerBaseConfig('GISbox','$viewer','newID')],
     props: {
         id: {
             type: String,
@@ -224,7 +224,7 @@ export default {
 
                 TunnelService.getStorePosition({ longitude, latitude, height })
                     .then(storePosition => {
-                        if (!storePosition) return;
+                        if ( !storePosition ) return;
 
                         this.$emit("showStorePosition", {
                             areaName: storePosition.area.name,
@@ -249,42 +249,43 @@ export default {
         Vue.prototype.$viewerComponent = this; // 把当前组件挂载到Vue原型$viewerComponent上
     },
     mounted() {
-        this.createHtml().then( ()=> this.init() ).catch( warn => console.log( warn ) )
+        // this.createHtml()
+        //     .then( ()=> {
+        //         this.init();
+        //         // this.initPrams();
+        //     })
+        //     .catch( () => this.initUpdate( Vue.prototype.$simpleViewer,Vue.prototype.$simpleViewer.scene ) )
+
     },
     methods: {
-        createHtml(){
-            let _this = this;
-            return new Promise((resolve, reject) => {
-                if( !Vue.prototype.$viewer ){
-
-                    $('#GISbox')
-                        .prepend("<div id='newID' style='position: relative;height: 100%;width: 100%'></div>")
-                        .end();
-
-                    Vue.prototype.$viewer = new Cesium.Viewer("newID", {
-                        navigation: _this.navigation,
-                        infoBox: _this.infoBox
-                    });
-                    resolve();
-                }else {
-                    _this.setGIS();
-                    reject('setGIS');
-                }
-            });
-        },
+        // createHtml(){
+        //     let _this = this;
+        //     return new Promise((resolve, reject) => {
+        //         if( !Vue.prototype.$viewer ){
+        //
+        //             $('#GISbox')
+        //                 .prepend("<div id='newID' style='position: relative;height: 100%;width: 100%'></div>")
+        //                 .end();
+        //
+        //             Vue.prototype.$viewer = new Cesium.Viewer("newID", {
+        //                 navigation: _this.navigation,
+        //                 infoBox: _this.infoBox
+        //             });
+        //
+        //             resolve();
+        //         }else {
+        //             _this.setGIS();
+        //
+        //             reject();
+        //         }
+        //     });
+        // },
         // 初始化
         init() {
-            var _this = this;
-            // 初始化viewer部件
-            // _this.viewer = new Cesium.Viewer(_this.id,{
-            //     navigation:_this.navigation,
-            //     infoBox:_this.infoBox,
+            let _this = this;
 
-            // });
-            // if( this.id == 'newID' ) Vue.prototype.$viewer = _this.viewer;
-            // Vue.prototype.$viewer = _this.viewer;// 把当前viewer实例挂载到Vue原型$viewer上
             _this.viewer = Vue.prototype.$viewer;
-            _this.scene = Vue.prototype.$viewer.scene;
+            _this.scene = _this.viewer.scene;
 
             if (_this.openDoubleClickView) {
                 //设置是否开始双击视角
@@ -362,7 +363,7 @@ export default {
             //设置鼠标左键单击回调事件
             _this.viewer.selectedEntityChanged.addEventListener(this.operationEntity);
 
-            getLayer(_this.scene,_this.cameraPosition,this.SuperMapConfig.BIM_SCP);
+            // getLayer(_this.scene,_this.cameraPosition,this.SuperMapConfig.BIM_SCP);
 
             _this.flyManager(2);
             _this.addIdentifierViewer();
@@ -393,19 +394,23 @@ export default {
             _this.handler.setInputAction(e => {
                 this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
             }, Cesium.ScreenSpaceEventType.LEFT_UP)
-            //  _this.handler.setInputAction(e=>{
-            //     var position=_this.scene.pickPosition(e.position)
-            //     var camera=_this.viewer.scene.camera;
-            //     var cartographic = Cesium.Cartographic.fromCartesian(position)
-            //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-            //     var height = cartographic.height;
-            //
-            //     console.log(longitude+"/"+latitude+"/"+height);
-            //     console.log('pitch'+camera.pitch)
-            //     console.log('roll'+camera.roll)
-            //     console.log('heading'+camera.heading)
-            // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+             _this.handler.setInputAction(e=>{
+                var position=_this.scene.pickPosition(e.position)
+                var camera=_this.viewer.scene.camera;
+                var cartographic = Cesium.Cartographic.fromCartesian(position)
+                var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height;
+
+                console.log(longitude+"/"+latitude+"/"+height);
+                console.log('pitch'+camera.pitch)
+                console.log('roll'+camera.roll)
+                console.log('heading'+camera.heading)
+            },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+
+        },
+        initUpdate( viewer,scene ){
+            let _this = this;
 
         },
         // 开始相机位置刷新
@@ -470,21 +475,6 @@ export default {
 
                 _this.cameraPositionRefresh();
             }, _this.refreshCameraPosition.interval);
-        },
-        //设置相机视角
-        setViewAngle() {
-            let { scene, cameraPosition } = this;
-
-            if (Cesium.defined(scene)) {
-                scene.camera.setView({
-                    destination: new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height),
-                    orientation: {
-                        heading: cameraPosition.heading,
-                        pitch: cameraPosition.pitch,
-                        roll: cameraPosition.roll
-                    }
-                });
-            }
         },
         //添加告警实体
         addAlarmEntity(obj) {

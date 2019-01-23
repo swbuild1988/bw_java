@@ -9,7 +9,7 @@
 <bottomAltitude>0.00</bottomAltitude>
 </geostyle3d>
 </style>
-<routestop name="stop1" speed="0" excluded="False" viewType="camera">
+<routestop name="Stop1" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.49407600000001</longitude>
 <latitude>37.707107000000001</latitude>
@@ -35,7 +35,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop2" speed="0" excluded="False" viewType="camera">
+<routestop name="Stop2" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.494063</longitude>
 <latitude>37.706518000000003</latitude>

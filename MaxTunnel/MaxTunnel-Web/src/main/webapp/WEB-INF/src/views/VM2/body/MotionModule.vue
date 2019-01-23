@@ -313,7 +313,7 @@ export default {
 }
 
 .Chart {
-    margin: 1vh 1.5vmin 1vh;
+    margin: 0.5vh 1.5vmin 1vh;
     width: 100%;
     height: 26vh;
     position: relative;

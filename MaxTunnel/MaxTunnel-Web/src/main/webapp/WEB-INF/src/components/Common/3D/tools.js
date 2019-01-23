@@ -263,20 +263,9 @@ export default {
         polyline !== undefined
           ? {
               polyline: {
-                positions: [
-                  Cesium.Cartesian3.fromDegrees(
-                    parseFloat(polyline.position.startLon),
-                    parseFloat(polyline.position.startLat),
-                    10
-                  ),
-                  Cesium.Cartesian3.fromDegrees(
-                    parseFloat(polyline.position.endLon),
-                    parseFloat(polyline.position.endLat),
-                    10
-                  )
-                ],
+                positions: Cesium.Cartesian3.fromDegreesArrayHeights(this.getPosition( polyline.position )),
                 width: polyline.width,
-                material: this.getCesiumColor(polyline.color)
+                material: this.lines( polyline.lineType,polyline.color )
               }
             }
           : {};
@@ -296,10 +285,37 @@ export default {
         return Cesium.Color.RED;
       } else if (color == "black") {
         return Cesium.Color.BLACK;
-      } else {
+      } else if (color == "blue") {
+          return Cesium.Color.BLUE;
+      }else {
         return Cesium.Color.RED;
       }
     },
+      lines(lineType,color){
+          if( lineType === 'DottedLine' ){
+              return new Cesium.PolylineDashMaterialProperty({
+                  color:this.getCesiumColor( color )
+              })
+          }
+          return this.getCesiumColor(color)
+      },
+      getPosition(position){
+          if( Object.keys( position ).length === 4 ){
+              return [
+                  parseFloat(position.startLon), parseFloat(position.startLat), 10,
+                  parseFloat(position.endLon), parseFloat(position.endLat), 10
+              ];
+          }else {
+              return [
+                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10,
+                  parseFloat(position.northEasternLon), parseFloat(position.northEasternLat), 10,
+                  parseFloat(position.southEasternLon), parseFloat(position.southEasternLat), 10,
+                  parseFloat(position.southWestLon), parseFloat(position.southWestLat), 10,
+                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10
+              ];
+          }
+
+      },
     addParticleSystem(minxisParticleSystem) {
       let ParticleSystem = {
         rate: 5.0,

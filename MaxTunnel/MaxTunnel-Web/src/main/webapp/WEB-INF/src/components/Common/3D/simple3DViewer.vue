@@ -20,9 +20,10 @@
     import { flyManagerMinix } from './mixins/flyManager'
     import { addBarnLabel } from "./mixins/addBarnLabel";
     import { TunnelService } from '../../../services/tunnelService'
+    import  viewerBaseConfig  from "./mixins/viewerBase";
 
     export default {
-        mixins: [flyManagerMinix, addBarnLabel],
+        mixins: [flyManagerMinix, addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox')],
         props: {
             infoBox: {
                 type: Boolean,
@@ -36,15 +37,15 @@
                 type: Boolean,
                 default: false
             },
-            undergroundMode: {
-                type: Object,
-                default: function () {
-                    return {
-                        enable: true,
-                        distance: -8
-                    };
-                }
-            },
+            // undergroundMode: {
+            //     type: Object,
+            //     default: function () {
+            //         return {
+            //             enable: true,
+            //             distance: -8
+            //         };
+            //     }
+            // },
             refreshCameraPosition: {
                 type: Object,
                 default: function () {
@@ -54,19 +55,19 @@
                     };
                 }
             },
-            cameraPosition: {
-                type: Object,
-                default: () => {
-                    return {
-                        longitude: 112.49360922053003,
-                        latitude: 37.71252325043172,
-                        height: -1.0311432831720453,
-                        roll: 2.582822844487964e-12,
-                        pitch: -0.30235173267000404,
-                        heading: 1.716482618088178
-                    };
-                }
-            }
+            // cameraPosition: {
+            //     type: Object,
+            //     default: () => {
+            //         return {
+            //             longitude: 112.49360922053003,
+            //             latitude: 37.71252325043172,
+            //             height: -1.0311432831720453,
+            //             roll: 2.582822844487964e-12,
+            //             pitch: -0.30235173267000404,
+            //             heading: 1.716482618088178
+            //         };
+            //     }
+            // }
         },
         data() {
             return {
@@ -96,35 +97,36 @@
             }
         },
         mounted() {
-            this.createHtml()
-                .then( ()=> this.init() )
-                .catch( () => this.initUpdate( Vue.prototype.$simpleViewer,Vue.prototype.$simpleViewer.scene ) )
+            // this.createHtml()
+            //     .then( ()=> this.init() )
+            //     .catch( () => this.initUpdate( Vue.prototype.$simpleViewer,Vue.prototype.$simpleViewer.scene ) )
+
         },
         methods: {
-            createHtml(){
-                let _this = this;
-
-                return new Promise(( resolve, reject ) => {
-
-                    if( !Vue.prototype.$simpleViewer ){
-
-                        $('#simpleGISbox')
-                            .prepend("<div id='simple3DBox' style='position: relative;height: 100%;width: 100%'></div>")
-                            .end();
-
-                        Vue.prototype.$simpleViewer = new Cesium.Viewer("simple3DBox", {
-                            navigation: _this.navigation,
-                            infoBox: _this.infoBox
-                        });
-
-                        resolve();
-                    }else {
-                        _this.setGIS();
-
-                        reject();
-                    }
-                });
-            },
+            // createHtml(){
+            //     let _this = this;
+            //
+            //     return new Promise(( resolve, reject ) => {
+            //
+            //         if( !Vue.prototype.$simpleViewer ){
+            //
+            //             $('#simpleGISbox')
+            //                 .prepend("<div id='simple3DBox' style='position: relative;height: 100%;width: 100%'></div>")
+            //                 .end();
+            //
+            //             Vue.prototype.$simpleViewer = new Cesium.Viewer("simple3DBox", {
+            //                 navigation: _this.navigation,
+            //                 infoBox: _this.infoBox
+            //             });
+            //
+            //             resolve();
+            //         }else {
+            //             _this.setGIS();
+            //
+            //             reject();
+            //         }
+            //     });
+            // },
             // 初始化
             init() {
                 let _this = this;
@@ -132,20 +134,20 @@
                 _this.viewer = Vue.prototype.$simpleViewer;
                 _this.scene = _this.viewer.scene;
 
-                if ( _this.undergroundMode.enable ) {
-                    // 设置是否开启地下场景
-                    _this.scene.undergroundMode = _this.undergroundMode.enable;
-                    // 设置相机最小缩放距离,距离地表-8米
-                    _this.scene.screenSpaceCameraController.minimumZoomDistance =
-                        _this.undergroundMode.distance;
-                    var widget = _this.viewer.cesiumWidget;
-                }
+                // if ( _this.undergroundMode.enable ) {
+                //     // 设置是否开启地下场景
+                //     _this.scene.undergroundMode = _this.undergroundMode.enable;
+                //     // 设置相机最小缩放距离,距离地表-8米
+                //     _this.scene.screenSpaceCameraController.minimumZoomDistance =
+                //         _this.undergroundMode.distance;
+                //     var widget = _this.viewer.cesiumWidget;
+                // }
                 //设置鼠标左键单击回调事件
                 _this.viewer.selectedEntityChanged.addEventListener( _this.operationEntity );
 
                 _this.initUpdate( _this.viewer,_this.scene );
 
-                getLayer(_this.scene,_this.cameraPosition,this.SuperMapConfig.BIM_SCP);
+                // getLayer(_this.scene,_this.cameraPosition,this.SuperMapConfig.BIM_SCP);
                 // _this.flyManager(2);
 
                 //滚轮滑动，获得当前窗口的经纬度，偏移角

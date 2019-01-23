@@ -428,6 +428,31 @@ export default {
     left: 50%;
     transform: translate(-55%);
 }
+    .Main >>> .moveControlPanel {
+        width: 21%;
+    }
+
+    .Main >>> .flyMessageBtn {
+        width: 33%;
+        height: 75%;
+    }
+    /* 小屏幕（显示器，小于等于 1920px） */
+    @media (max-width: 1920px) {
+        
+        .Main >>> .ControlPanelTitleDiff {
+            font-size: 1rem;
+            margin: .6rem 0 0 0;
+        }
+
+    }
+    /* 大屏幕（显示器，大于等于 1920px） */
+    @media (min-width: 1921px) {
+
+        .Main >>> .ControlPanelTitleDiff {
+            font-size: 2rem;
+            margin: 1.5rem 0 0 0;
+        }
+    }
 </style>
 <style>
 .cesium-infoBox {

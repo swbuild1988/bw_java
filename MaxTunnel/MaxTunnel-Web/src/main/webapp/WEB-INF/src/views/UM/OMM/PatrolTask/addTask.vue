@@ -32,6 +32,9 @@
                 <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
                 <Button type="primary">提交</Button>
             </FormItem>
+            <FormItem style="text-align: center;margin-left: -140px;" v-show="this.pageType==1">
+                <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
+            </FormItem>
         </Form>
     </div>
 </template>

@@ -54,11 +54,16 @@ export const flyManagerMinix = {
                 routes: routes
             });
 
+            if( !!curRoute.playRate ){
+                console.log(typeof parseFloat(curRoute.playRate),parseFloat(curRoute.playRate))
+                flyManagerAttr.flyManager.playRate = parseFloat( curRoute.playRate );
+            }
             flyManagerAttr.flyManager.readyPromise.then(function() {
                
                 if ( curRoute.isFlyLoop ) {
                     let currentRoute = flyManagerAttr.flyManager.currentRoute
-                    currentRoute.isFlyLoop = JSON.parse( curRoute.isFlyLoop )
+                    currentRoute.isFlyLoop = JSON.parse( curRoute.isFlyLoop );
+
                 }
             })
 

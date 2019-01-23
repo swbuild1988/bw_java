@@ -38,7 +38,7 @@
             <Table  stripe border :columns="breakColumns"  :style="{height:'20',zIndex:101}" :data="breakData"></Table>
             <div class="pageBox">
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
-                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
         </Col>
         <Col span="24" style="height: 40vh;width: 86vw;margin-top: 1vh;">

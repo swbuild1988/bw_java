@@ -55,12 +55,12 @@
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
-            <div class="list">
+            <div>
                 <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
-            </div>
-            <div class="pageContainer" ref="pageContainer">
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                <div class="pageContainer" ref="pageContainer">
+                    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                </div>
             </div>
         </Col>
         <Col span="12" class="chartBox">

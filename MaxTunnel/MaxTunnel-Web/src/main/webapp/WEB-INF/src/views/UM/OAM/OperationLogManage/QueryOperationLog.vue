@@ -32,10 +32,10 @@
         </div>
         <div class="list">
             <Table :columns="columns1" :data="operationLog"></Table>
-            <div class="page">
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 20px; right: 15px;"></Page>
-            </div>
+        </div>
+        <div class="page">
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 20px; right: 15px;"></Page>
         </div>
     </div>
 </template>
@@ -192,19 +192,10 @@ export default {
 }
 </script>
 <style scoped>
-    /*.allDiv{
-        position: relative;
-        min-height: 100%;
-        padding-bottom: 60px;
-    }*/
     .word25{
         letter-spacing: 0.25em;
         margin-right: -0.25em;
     }
-   /* .list{
-        background: #ffffff;
-        margin-top: 10px;
-    }*/
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
         .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

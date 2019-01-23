@@ -28,6 +28,7 @@ export default {
             serises: [],
             xData: [],
             option: {},
+          yMin:0,
         }
     },
     components: {},
@@ -132,8 +133,6 @@ export default {
                     _this.serises = [];
                     _this.legendData = [];
                     _this.xData = [];
-                    let yMin = 0;
-                    let yMax = 0;
                     data.forEach(a => {
                         var temp = {};
                         temp.name = a.key;
@@ -143,8 +142,7 @@ export default {
                         let tempData = [];
                         a.val.filter(b => tempData.push(parseFloat(b.val.toFixed(2))));
                         temp.data = tempData;
-                        yMin = (Math.min.apply(null, _this.xData) < yMin || yMin == 0) ? Math.min.apply(null, temp.data) : yMin;
-                        // yMax=  (Math.max.apply(null, _this.xData) > yMax || yMax == 0) ? Math.max.apply(null,  temp.data) : yMax;
+                      _this.yMin = (Math.min.apply(null, tempData) < _this.yMin || _this.yMin == 0) ? Math.min.apply(null,  tempData) : _this.yMin;
                         _this.serises.push(temp);
                     })
                     data[0].val.filter(a => {
@@ -156,7 +154,7 @@ export default {
                             data: _this.xData,
                         },
                         yAxis: {
-                            min: yMin,
+                            min: _this.yMin,
                         },
                         legend: {
                             data: _this.legendData,

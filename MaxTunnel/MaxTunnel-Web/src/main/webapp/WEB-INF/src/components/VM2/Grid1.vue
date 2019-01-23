@@ -86,15 +86,16 @@ export default {
 .row {
     position: relative;
     width: 100%;
-    height: 20%;
+    height: 16%;
     background: url("../../assets/VM/common_item_bg.png");
     background-size: 100% 100%;
+    margin: 2% 0;
 }
 .row >>> p {
     font-size: 1.45vmin;
     color: #fff;
 }
-.name {
+.subTitle .name {
     position: absolute;
     height: 100%;
     width: 50%;
@@ -102,7 +103,7 @@ export default {
     top: 0%;
     padding-left: 1.65vmin;
 }
-.val {
+.subTitle .val {
     text-align: center;
     position: absolute;
     height: 100%;
@@ -110,12 +111,36 @@ export default {
     left: 50%;
     top: 0%;
 }
-.percent {
+.subTitle .percent {
     text-align: right;
     position: absolute;
     height: 100%;
     width: 25%;
     left: 75%;
     top: 0%;
+}
+.row .name{
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    left: 0%;
+    top: 8%;
+    padding-left: 1.65vmin;
+}
+.row .val {
+    text-align: center;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 50%;
+    top: 8%;
+}
+.row .percent {
+    text-align: right;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 75%;
+    top: 8%;
 }
 </style>
