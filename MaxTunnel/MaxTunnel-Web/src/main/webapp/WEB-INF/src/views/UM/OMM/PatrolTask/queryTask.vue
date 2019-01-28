@@ -26,14 +26,14 @@
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="4">
-                <Button type="primary" icon="ios-search" size="small" @click="queryConditions()">查询</Button>
+                <Button type="primary" icon="ios-search"  @click="queryConditions()">查询</Button>
             </Col>
         </Row>
-        <div class="list">           
+        <div class="list">
             <Table  :columns='columns'  :data="patrolTask"></Table>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
     <div v-if="isSuperCalender">
         <superCalender v-bind="SCalender" v-on:listenToChildEvent="queryOneMonth"></superCalender>
@@ -47,7 +47,7 @@ import superCalender from '../../../Common/SuperCalender.vue'
 export default {
     components: {
         superCalender
-    },  
+    },
     data(){
         return{
             SCalender:{
@@ -60,7 +60,7 @@ export default {
                 endTime: null
             },
             patrolResult:[
-                {id: 1, val: 1, key: '已完成'}, 
+                {id: 1, val: 1, key: '已完成'},
                 {id: 2, val: 0, key: '进行中'}
             ],
             patrolTask:[
@@ -75,7 +75,7 @@ export default {
             pageStyle: {
                 position: 'absolute',
                 bottom: '10px',
-                right: '15px'
+                right: '15px',
             },
             columns:[
                 {
@@ -230,6 +230,10 @@ export default {
             this.isTable = false
         },
         queryConditions(){
+          if(new Date(this.conditions.startTime)>new Date(this.conditions.endTime)){
+            this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
                 var info = {
                     pageNum: this.page.pageNum,
                     pageSize: this.page.pageSize,
@@ -237,7 +241,7 @@ export default {
                     endTime: this.conditions.endTime,
                     finished: this.conditions.finished,
                     name: this.conditions.name,
-                    tunnelId: this.$route.params.id,  
+                    tunnelId: this.$route.params.id,
                 }
             this.axios.post('/inspection-tasks/all',(info)).then(response=>{
                 let{code,data} = response.data
@@ -316,6 +320,26 @@ export default {
 }
 .navigation div:hover,.activeTable,.activeSuper{
     border-bottom: 2px solid #357aa1;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .navigation{
+        line-height: 3.5vmin;
+    }
+    .navigation div{
+        line-height: 3.5vmin;
+        padding: 0.9vmin;
+        font-size: 1.5vmin;
+    }
+    .navigation div:hover,.activeTable,.activeSuper{
+        border-bottom: 0.2vmin solid #357aa1;
+    }
 }
 </style>
 

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -19,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
@@ -44,10 +46,12 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport;
 import com.bandweaver.tunnel.common.biz.pojo.mam.transform.MeasAlarm;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.HttpUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.dao.mam.MeasObjAIMapper;
 import com.bandweaver.tunnel.dao.mam.MeasObjDIMapper;
 import com.bandweaver.tunnel.dao.mam.MeasObjDistributeMapper;
@@ -139,11 +143,11 @@ public class TaskEntrance {
      * @Date 2018年12月8日
      */
     public void sendTestAlarm() throws Exception {
-    	int level = (int)(Math.random()*4) + 1;
+//    	int level = (int)(Math.random()*4) + 1;
+    	int level = MathUtil.getRandomInt(1, 2);
     	MeasAlarm measAlarm = new MeasAlarm();
     	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
     	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
-//    	measAlarm.setObjectId((int)(Math.random()*288 + 1));
     	measAlarm.setObjectId(203012401);
     	measAlarm.setAlarmSeverity(level);
     	measAlarm.setAdditionalText(null);
@@ -168,21 +172,22 @@ public class TaskEntrance {
      */
     public void sendTestData() throws Exception {
     	
-    	List<Integer> ai_id_list = new ArrayList<>();
     	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
-    	for (MeasObj measObj : measObjs) {
-			if(measObj.getDatatypeId()==DataType.AI.getValue())
-				ai_id_list.add(measObj.getId());
-		}
+    	List<MeasObj> collect = measObjs.stream().filter(x -> x.getDatatypeId().intValue() == DataType.AI.getValue()).collect(Collectors.toList());
+    	if(collect.size() <= 0) 
+    		throw new BandWeaverException("无ai监测对象");
+    	
     	List<MeasValueAI> list = new ArrayList<>();
-    	for (Integer objectId : ai_id_list) {
+    	for (MeasObj m : collect) {
     		MeasValueAI measValueAI = new MeasValueAI();
-        	measValueAI.setObjectId(objectId);
+        	measValueAI.setObjectId(m.getId());
         	measValueAI.setTime(DateUtil.getCurrentDate());
         	
-        	double dd = Math.random()*30;
-        	int i = (int)(dd*100);
-        	double cv = (double) i/100;
+        	double cv = 0.00;
+        	ObjectType objectType = ObjectType.getEnum(m.getObjtypeId());
+        	double min = PropertiesUtil.getDoubleValue("test." + objectType.name().toLowerCase() + ".min");
+        	double max = PropertiesUtil.getDoubleValue("test." + objectType.name().toLowerCase() + ".max");
+        	cv = MathUtil.getRandomDouble(min, max, 2);
         	measValueAI.setCv(cv);
         	list.add(measValueAI);
 		}
@@ -195,8 +200,6 @@ public class TaskEntrance {
 	
 		httpPost(host, path, headers, querys, body);
     }
-
-
 
 	public void httpPost(String host, String path, Map<String, String> headers, Map<String, String> querys,
 			String body) throws Exception {

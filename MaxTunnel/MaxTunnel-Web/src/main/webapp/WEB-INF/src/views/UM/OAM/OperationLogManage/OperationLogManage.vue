@@ -28,6 +28,18 @@ export default {
         },
         treeNodeJumpUrl:"/UM/operationLog/query",
     };
+  },
+  created(){
+    if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/operationLog") < 0) {
+          this.goToMoudle({path: this.operationLog.leftTree[0].url});
+          sessionStorage.setItem('selectedName','')
+      }
+        sessionStorage.setItem("refreshAddress", "");
+  },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
   }
 };
 </script>

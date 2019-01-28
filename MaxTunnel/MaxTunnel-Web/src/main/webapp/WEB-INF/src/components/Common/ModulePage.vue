@@ -3,7 +3,7 @@
     <Layout class="coment">
       <Sider :width="screenWidth" collapsible :collapsed-width="minScreenWidth" v-model="isCollapsed"
              style="background-color: #1D5F87">
-        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="['1','1-0']" accordion>
+        <Menu :active-name="selectedName" width="auto" :class="menuitemClasses" :open-names="openNames" accordion ref="leftMenu">
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate" class="icons"></Icon>
@@ -220,7 +220,8 @@
                 height: '100%',
                 position: 'relative',
             },
-            selectedName: null
+            selectedName: null,
+            openNames: ['1']
         }
     },
     mounted() {
@@ -235,10 +236,29 @@
       this.minScreenWidth = window.innerWidth * 0.03;
       if (this.leftTree.length > 0) {
         if (this.leftTree[0].childNode && this.leftTree[0].childNode.length > 0) {
-          this.selectedName = '1-0-0'
+          if(sessionStorage.getItem('selectedName') == ''){
+            this.selectedName = '1-0-0'
+            this.openNames = ['1','1-0']
+          } else {
+            this.selectedName = sessionStorage.getItem('selectedName')
+            let index = this.selectedName.lastIndexOf('-')
+            this.openNames.push(this.selectedName.slice(0,index))
+          }
+         
         } else {
-          this.selectedName = '1-0'
+          if(sessionStorage.getItem('selectedName') == ''){
+            this.selectedName = '1-0'
+            this.openNames = ['1']
+          } else {
+            this.selectedName = sessionStorage.getItem('selectedName')
+            let index = this.selectedName.lastIndexOf('-')
+            this.openNames.push(this.selectedName.slice(0,index))
+          }
         }
+        this.$nextTick(()=>{
+          this.$refs.leftMenu.updateActiveName()
+          this.$refs.leftMenu.updateOpened()
+        })
       }
       // this.acceptPlanData();
       // this.acceptAlarmData();
@@ -251,13 +271,32 @@
       'leftTree': function (newValue, oldValue) {
         if (newValue.length > 0) {
           if (newValue[0].childNode && newValue[0].childNode.length > 0) {
-            this.$nextTick(() => {
+            if(sessionStorage.getItem('selectedName') == ''){
               this.selectedName = '1-0-0'
+              this.openNames = ['1','1-0']
+            } else {
+              this.selectedName = sessionStorage.getItem('selectedName')
+              let index = this.selectedName.lastIndexOf('-')
+              this.openNames.push(this.selectedName.slice(0,index))
+            }
+            this.$nextTick(() => {
+              this.$refs.leftMenu.updateActiveName()
+              this.$refs.leftMenu.updateOpened()
             })
           } else {
-            this.$nextTick(() => {
+           if(sessionStorage.getItem('selectedName') == ''){
               this.selectedName = '1-0'
+              this.openNames = ['1']
+            } else {
+              this.selectedName = sessionStorage.getItem('selectedName')
+              let index = this.selectedName.lastIndexOf('-')
+              this.openNames.push(this.selectedName.slice(0,index))
+            }
+            this.$nextTick(() => {
+              this.$refs.leftMenu.updateActiveName()
+              this.$refs.leftMenu.updateOpened()
             })
+           
           }
         }
       }
@@ -373,7 +412,23 @@
           goToMoudle(path, index, childIndex) {
               this.selectedActive[0] = index
               this.selectedActive[1] = childIndex
-              this.$router.push(path);
+              if(childIndex < 0){
+                  sessionStorage.setItem("selectedName", "1-"+index)
+              } else {
+                  sessionStorage.setItem("selectedName", "1-"+index+'-'+childIndex)
+              }
+             
+              if(path.path == this.$route.path){
+                  this.$router.replace({
+                      path: '/refresh',
+                      query: {
+                          t: Date.now()
+                      }
+                  })
+              } else {
+                  this.$router.push(path);
+              }
+
               this.$emit('childByValue', path)
           },
           //设置告警面板中分页按钮的显隐
@@ -478,21 +533,24 @@
   .ivu-menu >>> .ivu-menu-item {
     padding-left: 36px !important;
     font-size: 1.66vmin !important;
+   /* border-bottom: 1px solid #aaa;*/
   }
 
   .ivu-menu-item, .ivu-menu-submenu {
-    border-radius: 10px;
+    /*border-radius: 10px;
     background-color: rgba(23, 67, 160, 0.3);
-    border: 1px solid rgba(252, 207, 24, 0.9);
+    border: 1px solid rgba(252, 207, 24, 0.9);*/
     border-left: none;
     border-right: none;
   }
 
   .ivu-menu-submenu >>> .ivu-menu-submenu-title {
     padding-left: 20px !important;
-    border-radius: 10px;
+    /*border-radius: 10px;
     background-color: rgba(23, 67, 160, 0.3);
-    border: 1px solid rgba(224, 180, 23, 0.9);
+    border: 1px solid rgba(224, 180, 23, 0.9);*/
+    border-bottom: 1px solid #938e8e9c;
+    border-top: 1px solid #938e8e9c;
     font-size: 2vmin;
   }
 
@@ -643,27 +701,42 @@
   }
 
   .ivu-menu-item:hover {
-    color: #595c56 !important;
+    color: #595c56;
     background-color: #fff;
   }
 
   .ivu-menu {
     color: #fff;
     border-radius: 10px;
-    background-color: rgba(210, 182, 172, 0.2);
+  /*  background-color: rgba(210, 182, 172, 0.2);*/
     padding: 4px;
   }
 
   li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
   .ivu-menu-light >>> .ivu-menu-submenu-title:hover {
-    color: #1c5d85 !important;
+    color: #1c5d85;
     background-color: #fff;
   }
 
   .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-    background: #fff;
-    color: #1d5f87 !important;
-    box-shadow: 0px 0px 15px 7px rgb(121, 170, 220) inset;
+    /*background: #fff;*/
+    /*color: #1d5f87 !important;*/
+    background: #15252f45;
+    color: #fff;
+   /* box-shadow: 0px 0px 15px 7px rgb(121, 170, 220) inset;*/
+  }
+  .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu)::after {
+    /*background: #1a4e6e;*/
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translate(0,-50%);
+    border-top: 0.8vmin solid transparent;
+    border-bottom: 0.8vmin solid transparent;
+    border-left: 1vmin solid #1a4e6e;
   }
 
   /*去除footer的白边*/

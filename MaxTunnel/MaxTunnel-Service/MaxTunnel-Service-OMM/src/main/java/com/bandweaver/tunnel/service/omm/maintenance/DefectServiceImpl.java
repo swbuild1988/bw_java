@@ -14,7 +14,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,7 +27,7 @@ public class DefectServiceImpl implements DefectService {
     @Override
     public int add(Defect defect) {
         LogUtil.info("准备添加缺陷：" + defect);
-        int defectId = defectMapper.add(defect);
+        defectMapper.add(defect);
         LogUtil.info("缺陷添加完毕，启动维修工单：" + defect);
 
         // 缺陷添加完毕后，自动添加维修工单

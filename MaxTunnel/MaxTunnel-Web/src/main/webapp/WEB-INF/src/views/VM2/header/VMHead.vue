@@ -21,7 +21,9 @@ export default {
         //title init
         this.title = VM_TILTE;
     },
-    methods: {}
+    methods: {
+
+    }
 };
 </script>
 

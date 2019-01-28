@@ -44,7 +44,7 @@
                     </Poptip>
                 </Col>
                 <Col span="6">
-                    <Button type="primary" @click="search" icon="ios-search" size="small">查询</Button>
+                    <Button type="primary" @click="resetPageAndSearch" icon="ios-search">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -129,7 +129,7 @@
                     //     contractStatus: '正常',
                     //     contractStartTime: '2018-08-10',
                     //     contractEndTime: '2018-10-02',
-                    //     crtTime: '2018-08-03 10:00:00' 
+                    //     crtTime: '2018-08-03 10:00:00'
                     // }
                 ],
                 conditions:{
@@ -144,15 +144,15 @@
                 selectList:{
                     payType:[],
                     contractStatus:[]
-                }, 
+                },
                 customer: [],
-                customerName: '',  
+                customerName: '',
                 pageStyle: {
                     position: 'absolute',
                     bottom: '20px',
                     right: '15px'
                 },
-                contractIds:[] 
+                contractIds:[]
             }
         },
         components: { CustomerChoose },
@@ -202,12 +202,19 @@
                         _this.Log.info(error)
                     })
             },
-            search: function(){
+            resetPageAndSearch(){
+                this.page.pageNum = 1
+                this.search()
+            },
+            search(){
                 if(!this.customerName && this.conditions.customerId){
                     this.conditions.customerId = null;
                 }
-
                 let _this = this
+              if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+              }
                 ContractService.contractDatagrid(_this.params).then(
                     (result)=>{
                         _this.contractList = [];
@@ -235,9 +242,9 @@
                             //         contract.cable.cableName = data.cableDto.cableName;
                             //         contract.cable.length = data.cableDto.cableLength;
                             //         contract.cable.cableStatus = data.cableDto.cableStatusName;
-                            //     })  
-                            // })  
-                            _this.contractIds.push(a.id)   
+                            //     })
+                            // })
+                            _this.contractIds.push(a.id)
                             _this.page.pageTotal = result.total
                         })
                     })
@@ -282,7 +289,7 @@
                         ContractService.delelteContract(_this.contractList[index].id).then(
                             (result)=>{
                                 _this.contractList.splice(_this.contractList[index].id, 1);
-                                _this.search()
+                                _this.resetPageAndSearch()
                             },
                             (error)=>{
                                 _this.Log.info(error)
@@ -296,7 +303,7 @@
             },
             handlePageSize(value) {
                 this.page.pageSize = value
-                this.search()
+                this.resetPageAndSearch()
             },
             getCustomerId(data) {
                 this.conditions.customerId = data.id;
@@ -323,11 +330,11 @@
    /* border: 1px solid #dddfe1;*/
     width: 90%;
     height: 30vh;
-    margin: 10px auto; 
+    margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69)); 
-    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69)); 
+    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69));
+    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
     background: -moz-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
     background: linear-gradient(to bottom right, rgb(91,95,148) , rgb(31,37,69)); */
     background-image: url('../../../../assets/UM/border2.png');
@@ -347,7 +354,7 @@
     color: rgb(252,252,255);
     cursor: pointer;
 }
-.contactInfo{ 
+.contactInfo{
     padding-bottom: 30px;
 }
 .red{

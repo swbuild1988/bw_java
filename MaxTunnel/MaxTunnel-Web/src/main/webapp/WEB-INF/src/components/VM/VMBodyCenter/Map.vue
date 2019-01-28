@@ -103,6 +103,7 @@
 
       <sm-viewer
         ref="smViewer"
+        id="newId"
         :cameraPosition="camera"
         :personnelPosition="personnelPosition"
         :unitsPosition="unitsPosition"
@@ -178,7 +179,7 @@ export default {
         isShow: true
       },
       personnelPosition: {
-          openPosition: true,
+          openPosition: false,
           isShow: true,
           refreshTime:10000
       },
@@ -187,7 +188,7 @@ export default {
         isShow: true
       },
       eventsPosition: {
-        openPosition: false
+        openPosition: true
       },
       openPlanPosition: {
         openPosition: false

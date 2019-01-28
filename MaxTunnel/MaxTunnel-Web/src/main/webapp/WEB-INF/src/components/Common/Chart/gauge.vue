@@ -15,7 +15,6 @@
     margin-top: 1%;
     width: 100%;
     height: 100%;
-
   }
 
   .nameTop {
@@ -24,7 +23,6 @@
     fontWeight: "normal";
     z-index: 1003;
     color: #fff;
-
     left: .7em;
   }
   /* 小屏幕（显示器，小于等于 1920px） */

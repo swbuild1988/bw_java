@@ -11,12 +11,14 @@ import java.util.Map;
  */
 public enum EquipmentStatusEnum {
 
-	/**正常*/
-	NORMAL("正常" , 1),
-	/**损坏*/
-	BROKEN("损坏" , 2);
-	/** 报废 */
-	//SCRAP("报废" , 3);
+	/**运行*/
+	NORMAL("运行" , 1),
+	/**故障*/
+	BROKEN("故障" , 2),
+	/** 停运 */
+	STOP("停运" , 3),
+	/**其他*/
+	OTHER("其他" , 4);
 	
 	private String name;
     private int value;

@@ -16,7 +16,7 @@
                 </Select>
             </Col>
             <Col span="2" offset="1">
-                <Button type="primary" icon="ios-search" @click="search" size="small">查询</Button>
+                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
             </Col>
         </Row>
         <Row class="content">
@@ -222,6 +222,7 @@ export default {
                         _this.nodata = true;
                     } else {
                         _this.nodata = false;
+                        _this.curPage = 1;
                         result.forEach(camera => {
                             let temp = {};
                             temp.id = camera.id;
@@ -553,24 +554,39 @@ export default {
     background-size: 100% 100%;
     color: #fff;
 }
+
+.query >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
 @media (min-width: 1920px){
     .videos{
         margin-top: 2vh;
     }
+    .query >>> .ivu-select-placeholder{
+        font-size: 1.28vmin;
+        height: 2.2vmin;
+        line-height: 2rem;
+        padding-top: 0.64vmin;
+    }
+    .query >>> .ivu-select-selected-value{
+        font-size: 1.28vmin;
+        height: 2.2vmin;
+        line-height: 2rem;
+        padding-top: 0.64vmin;
+    }
 }
-.query >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    height: 2.2vmin;
-    line-height: 2rem;
-    padding-top: 0.64vmin;
-}
-.query >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    height: 2.2vmin;
-    line-height: 2rem;
-    padding-top: 0.64vmin;
-}
-.query >>> .ivu-select-selection{
-    height: 3.2vmin;
+@media (max-width: 1920px){
+    .query >>> .ivu-select-placeholder{
+        font-size: 1.28vmin;
+        height: 2.2vmin;
+        line-height: 2rem;
+        padding-top: 0;
+    }
+    .query >>> .ivu-select-selected-value{
+        font-size: 1.28vmin;
+        height: 2.2vmin;
+        line-height: 2rem;
+        padding-top: 0;
+    }
 }
 </style>

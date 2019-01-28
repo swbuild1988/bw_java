@@ -138,42 +138,42 @@ var EnterGalleryService = {
     // 获得每条管廊每个月的入廊次数
     getCountOfEnterEveryMonthAndTunnel: function() {
         // 地址
-        // let tunnels = [
-        //     "古城大街",
-        //     "实验路",
-        //     "纬三路",
-        //     "经二路",
-        //     "经三路",
-        //     "监控中心"
-        // ];
-        // let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
-        // let res = [];
-        // for (let i = 0; i < times.length; i++) {
-        //     let tmp = [];
-        //     for (let j = 0; j < tunnels.length; j++) {
-        //         tmp.push({
-        //             time: times[i],
-        //             tunnel: tunnels[j],
-        //             count: Math.floor(Math.random() * 20 + 5)
-        //         });
-        //     }
-        //     res.push(tmp);
-        // }
-        return new Promise((resolve, reject) => {
-            // resolve(res)
-            axios
-                .get("tunnels/enter-count-everymonth")
-                .then(res => {
-                    let { code, data, msg } = res.data;
-                    if (code == 200) {
-                        resolve(data);
-                    } else {
-                        reject(msg + "地址：tunnels/enter-count-everymonth");
-                    }
-                })
-                .catch(error => {
-                    reject(error.response.status + "  " + error.response.data);
+        let tunnels = [
+            "古城大街",
+            "实验路",
+            "纬三路",
+            "经二路",
+            "经三路",
+            "监控中心"
+        ];
+        let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
+        let res = [];
+        for (let i = 0; i < times.length; i++) {
+            let tmp = [];
+            for (let j = 0; j < tunnels.length; j++) {
+                tmp.push({
+                    time: times[i],
+                    tunnel: tunnels[j],
+                    count: Math.floor(Math.random() * 20 + 5)
                 });
+            }
+            res.push(tmp);
+        }
+        return new Promise((resolve, reject) => {
+            resolve(res)
+            // axios
+            //     .get("tunnels/enter-count-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：tunnels/enter-count-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
         });
     }
 };

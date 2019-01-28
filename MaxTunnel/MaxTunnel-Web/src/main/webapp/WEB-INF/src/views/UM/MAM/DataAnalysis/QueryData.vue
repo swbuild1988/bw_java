@@ -5,8 +5,8 @@
       <Col span="6" class="col">
       <span class="planDec">对象类型:</span>
       <Select v-model="queryPrams.objtypeIds" style="width:65%" multiple>
-        <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
-          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val" style="font-size: 1.6vmin;line-height: 3.2vmin;height: 3.2vmin">{{ item.key }}</Option>
+        <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 1.4vmin;">
+          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val" style="font-size: 1.2vmin;line-height: 5vmin;height: 5vmin">{{ item.key }}</Option>
         </OptionGroup>
       </Select>
       </Col>
@@ -63,8 +63,8 @@
           </Col>
         </div>
       </transition>
-      <Col span="1" style="position: relative;float: right;right: -20px;top:-20px;">
-      <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData" title="查询" size="large" v-if="!viewHistory"></Button>
+      <Col span="2" style="position: relative;float: right;right: -20px;top:-20px;">
+      <Button type="primary"  icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
       </Col>
       <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
     </Row>
@@ -385,7 +385,6 @@
     height: 6vmin;
     padding-top: 10px;
   }
-
   .planDec {
     padding: 4px;
     font-size: 1.6vmin;
@@ -393,46 +392,37 @@
     height: 3.2vmin;
     float: left;
   }
-
   .top {
     margin: 10px;
     background-color: #fff;
     padding-left: 10px;
   }
-
   .nextPage {
     position: relative;
     bottom: 0px;
     right: 7px;
     float: right;
   }
-
   .slide-fade-enter-active {
     transition: all .5s ease;
   }
-
   .slide-fade-leave-active {
     transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-
   .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(10px);
     opacity: 0;
   }
-
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
     font-size: 1.66vmin;
   }
-
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
     font-size: 1.66vmin;
   }
-
   .chartSize {
     height: calc(85vh - 170px);
     width: 100%;
   }
-
   .historyDiv {
     position: relative;
     line-height: 40px;
@@ -442,14 +432,20 @@
 
   .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
   .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
-  .ivu-select-multiple >>> .ivu-tag,.ivu-select-multiple >>> .ivu-select-placeholder
+ .ivu-select-multiple >>> .ivu-select-placeholder
   {
     height: 4vmin;
     line-height: 4vmin;
     font-size: 1.4vmin;
   }
+
+  .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.2vmin;
+  }
   .ivu-select-group-wrap >>> .ivu-select-group-title{
-    height: 4vmin;
+    height: 3.8vmin;
     line-height: 3.2vmin;
     font-size: 1.6vmin;
   }

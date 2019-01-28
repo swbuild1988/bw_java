@@ -30,19 +30,26 @@ export default {
         return {
             myChart: {},
             option: {},
-            itemStyleColor: ['#C23531', '#61A0A8']
+            itemStyleColor: ['#75af99', '#c1a048', '#bcd3bb', '#e88f70', '#edc1a5', '#9dc5c8', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a']
+        }
+    },
+    watch: {
+        seriesData(newVal, oldVal) {
+            this.drawBar()
+            this.fetchData()
         }
     },
     mounted() {
         this.init()
+        // this.drawBar()
     },
     methods: {
-        init(){
+        init() {
             this.resize()
-            window.addEventListener('resize', this.myChart.resize);
-            window.addEventListener('resize', this.resize);
+            window.addEventListener("resize", this.myChart.resize);
+            window.addEventListener("resize", this.resize)
         },
-        resize(){
+        resize() {
             this.drawBar()
             this.fetchData()
         },
@@ -55,9 +62,8 @@ export default {
                     text: this.title,
                     textStyle: {
                         color: '#ccc',
-                        fontSize: _this.getFontSize('5%')
-                    },
-                    padding: [5,10]
+                        fontSize: _this.getFontSize('6.5%')
+                    }
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -67,18 +73,18 @@ export default {
                 },
                 legend: {
                     data: this.legendData,
-                    textStyle: { 
+                    textStyle: {
                         color: '#ccc',
-                        fontSize: _this.getFontSize('5%') 
+                        fontSize: _this.getFontSize('4%')
                     },
-                    top: 30,
-                    left: 10,
-                    right: 10
+                    top: _this.getFontSize('6.5%'),
+                    right: _this.getFontSize('1%')
                 },
                 grid: {
+                    top: this.title.length > 0 ? '12%' : '1%',
                     left: '3%',
-                    right: '4%',
-                    bottom: '3%',
+                    right: '3%',
+                    bottom: '1%',
                     containLabel: true
                 },
                 xAxis: {
@@ -92,7 +98,7 @@ export default {
                     axisLabel: {
                         show: true,
                         textStyle: {
-                            fontSize : _this.getFontSize('5%')      //更改坐标轴文字大小
+                            fontSize: _this.getFontSize('4%')      //更改坐标轴文字大小
                         }
                     },
                 },
@@ -107,14 +113,13 @@ export default {
                     axisLabel: {
                         show: true,
                         textStyle: {
-                            fontSize : _this.getFontSize('5%')      //更改坐标轴文字大小
+                            fontSize: _this.getFontSize('4%')      //更改坐标轴文字大小
                         }
                     },
                 },
                 series: []
             }
             this.myChart.setOption(_this.option);
-            // window.addEventListener("resize", this.myChart.resize);
         },
         fetchData() {
             var _this = this;
@@ -125,6 +130,7 @@ export default {
                 let seriesDataAll = {
                     name: this.legendData[i],
                     type: 'bar',
+                    stack: 'total',
                     data: this.seriesData[i].data,
                     itemStyle: {
                         normal: {

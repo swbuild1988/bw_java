@@ -1,28 +1,8 @@
 <template>
-    <div class="gasState" :style="{ top }">
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_CO">
-            </map-ganue>
-        </div>
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_H2S">
-            </map-ganue>
-        </div>
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_CH4">
-            </map-ganue>
-        </div>
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_O2">
-            </map-ganue>
-        </div>
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_Temp">
-            </map-ganue>
-        </div>
-        <div class="mapgaugeLast">
-            <map-ganue :style="{height:'100%'}" v-bind="gauge_West">
-            </map-ganue>
+    <div class="gasState" >
+        <div class="mapgaugeLast"  v-for="item in gaugeChart">
+            <simple-gauge style="height: 10vh;" v-bind="item" ref="item.id">
+            </simple-gauge>
         </div>
     </div>
 </template>
@@ -30,35 +10,23 @@
 <style scoped>
     .gasState{
         position: absolute;
-        height: 80%;
-        top: 15.5%;
+        height: 90%;
+        margin-top: 8.5%;
         z-index: 1003;
         right: 2%;
-        width: 8.5%;
+        width: 5.5vw;
     }
     .mapgaugeLast {
+      height: 11vh;
         width: 100%;
-
         position: relative;
-        /*box-shadow: 0 0 1rem rgba(26,216,239,1) inset;*/
         background: url("../../../assets/VM/gauge_bg.png") no-repeat;
         background-size: 100% 100%;
-    }
-    /* 小屏幕（显示器，小于等于 1920px） */
-    @media (max-width: 1920px) {
-        .mapgaugeLast {
-            height: 16%;
-        }
-    }
-    /* 大屏幕（显示器，大于等于 1920px） */
-    @media (min-width: 1921px) {
-        .mapgaugeLast {
-            height: 14%;
-        }
     }
 </style>
 
 <script>
+  import SimpleGauge from '../../Common/Chart/SimpleGauge.vue'
     import MapGanue from '../../Common/Chart/gauge'
     import config from '../../../../static/VM/js/VMGlobalConfig'
 
@@ -66,71 +34,73 @@
         name:'gauges',
         data() {
             return {
-                gauge_CO: {
-                    gaugeId: 'gaugeCO',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '一氧化碳浓度',
-                    startColor: '#67d1ff',
-                    endColor: '#2eff31',
-                    startDynamicStyle:true,
+              gaugeChart: [],
+              tempData:[
+                {
+                  location:"古城大街1区污水仓",
+                  value:21,
+                  name:"温度",
+                  unit:"℃"
                 },
-                gauge_H2S: {
-                    gaugeId: 'gaugeH2S',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '硫化氢浓度',
-                    startColor: '#edff27',
-                    endColor: '#ff9019',
-                    startDynamicStyle:true,
+                {
+                  location:"古城大街1区污水仓",
+                  value:21,
+                  name:"氧气浓度",
+                  unit:"%"
                 },
-                gauge_CH4: {
-                    gaugeId: 'gaugeCH4',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '甲烷浓度',
-                    startColor: '#51ffe7',
-                    endColor: '#bdbfff',
-                    startDynamicStyle:true,
+                {
+                  location:"古城大街1区污水仓",
+                  value:0.01,
+                  name:"甲烷浓度",
+                  unit:"ppm"
                 },
-                gauge_O2: {
-                    gaugeId: 'gaugeO2',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '氧气浓度',
-                    startColor: '#67d7bc',
-                    endColor: '#ff1317',
-                    startDynamicStyle:true,
+                {
+                  location:"古城大街1区污水仓",
+                  value:10,
+                  name:"湿度",
+                  unit:"%"
                 },
-                gauge_Temp: {
-                    gaugeId: 'gaugeTemp',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '温度',
-                    startColor: '#DBF131',
-                    endColor: '#3ec8ff',
-                    startDynamicStyle:true,
-                },
-                gauge_West: {
-                    gaugeId: 'gaugeWest',
-                    requestUrl: 'tunnels/items/energies',
-                    titleName: '湿度',
-                    startColor: '#2bff7b',
-                    endColor: '#0909ff',
-                    startDynamicStyle:true,
-                },
+                ],
                 top: '15.5%'
             }
         },
         components: {
             MapGanue,
+          SimpleGauge
         },
         mounted(){
             this.init();
         },
         methods:{
-            init(){
-                let { networkAnomaly }=config;
-
+            init() {
+              var _this = this;
+              _this.gaugeChart = [];
+              if (_this.tempData) {
+                _this.tempData.forEach((a, index) => {
+                  let temp = {};
+                  temp.requestUrl = "";
+                  temp.id = index + "_Map_Chart";
+                  temp.parameters = {
+                    option: {
+                      title: {
+                        text: a.location
+                      },
+                      series: {
+                        data: [{
+                          value: a.value,
+                          name: a.name
+                        }],
+                        detail: {formatter: "{value}" + a.unit},
+                      }
+                    }
+                  };
+                  _this.gaugeChart.push(temp);
+                })
+                let {networkAnomaly} = config;
                 this.top = !networkAnomaly ? '15.5%' : '2%';
+              }
             }
         }
     }
 
 </script>
-    

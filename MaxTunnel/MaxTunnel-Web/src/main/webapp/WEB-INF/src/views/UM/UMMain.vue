@@ -1,162 +1,267 @@
 <template>
   <div class="main" :style="{height:fullHeight+'px'}">
+    <!--Top标题-->
     <Row>
       <Col span="24">
+      <div></div>
       <div id="top" class="topOpacity">
-        <div class="Icon">
-        </div>
-        <span class="titleName"> {{titleName}}</span>
-        <div style="float: right;padding-top: 0px;padding-right: 5px;">
-          <Dropdown divided  @click.native="showAboutUs">
-            <a>
-              <Icon type="information-circled" color="#fff" title="关于我们" class="about"></Icon>
-            </a>
-          </Dropdown>
-          <showAboutUs v-bind="aboutUs"></showAboutUs>
-        </div>
-        <div style="float: right;padding-top: 1vmin;">
-          <Dropdown divided @click.native="logout">
-            <a>
-              <Icon type="power" color="#fff" class="power"></Icon>
-            </a>
-          </Dropdown>
-        </div>
-        <div class="time">
-          {{nowFormat}}
-        </div>
+        <Row>
+          <Col span="14">
+          <span class="Icon"></span>
+          <span class="titleName"> {{titleName}}</span>
+      </Col>
+      <Col span="6" offset="4">
+      <div style="float: right;padding-top: 0px;padding-right: 5px;">
+        <Dropdown divided @click.native="showAboutUs">
+          <a>
+            <Icon type="information-circled" color="#fff" title="关于我们" class="about"></Icon>
+          </a>
+        </Dropdown>
+        <showAboutUs v-bind="aboutUs"></showAboutUs>
+      </div>
+      <div style="float: right;padding-top: 1vmin;">
+        <Dropdown divided @click.native="logout">
+          <a>
+            <Icon type="power" color="#fff" class="power"></Icon>
+          </a>
+        </Dropdown>
       </div>
       </Col>
-      <br><br><br> <br><br><br>
-      <div class="modals">
-      <Row>
-        <Col span="12">
-        <div class="title">
-          <p>运行监控</p>
-        </div>
-      <Row type="flex" justify="center" align="top" class="code-row-bg">
-        <Col span="10" offset="2">
-          <Button class=" btn-guanxian renYuandinwei"
-                  @click="goToMoudle({ path:'/UM/TunnelEnvironment'})">
-            <div><img src="../../assets/UM/environment.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">管廊环境监测</div>
-            </div>
-          </Button>
-        </Col>
-        <Col span="12">
-          <Button type="info" class="renYuandinwei"
-                  @click="goToMoudle({ path:'/UM/TunnelSafety'})">
-            <div><img src="../../assets/UM/safe.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">管廊安防监测</div>
-            </div>
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="22" offset="2">
-        <Button class=" btn-nenghao"
-                style="width: 32.6vw; height: 14vh; margin: 0.6vh 0 0.2vh;
-                 box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
-                @click="goToMoudle({ path:'/UM/virtualInspect'})">
-          <div><img src="../../assets/UM/virtualInspect.png" :width="imgWidth">
-            <div :style="{fontSize:mySize}">虚拟巡检</div>
-          </div>
-        </Button>
-        </Col>
-      </Row>
-      <Row type="flex" justify="center" align="top" class="code-row-bg">
-        <Col span="10" offset="2">
-          <Button type="error" class="renYuandinwei" @click="goToMoudle({ path:'/UM/PersonnelPosition/tunnel'})">
-            <div><img src="../../assets/UM/position.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">人员定位</div>
-            </div>
-          </Button>
-        </Col>
-        <Col span="12">
-          <Button class="renYuandinwei btn-shiping" @click="goToMoudle({path: '/UM/VideoMonitoring/details/1'})">
-            <div><img src="../../assets/UM/monitor.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">视频监控系统</div>
-            </div>
-          </Button>
-        </Col>
-      </Row>
-    </Col>
-    <Col span="12">
-      <div class="title">
-        <p style="margin-right: 8vw">综合管理</p>
+      <!--<img style="height: 2.5vh;width: 100%" :src="topBg"/>-->
+    </Row>
       </div>
-      <Row type="flex" justify="center" align="top" class="code-row-bg">
-        <Col span="10">
-          <Button class=" btn-xunjian"
-          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
-                  @click="goToMoudle({ path:'/UM/patrol/homePage'})">
-            <div><img :width="imgWidth" src="../../assets/UM/巡检.png">
-              <div :style="{fontSize:mySize}">巡检管理</div>
-            </div>
-          </Button>
-          <Button
-          style="height: 13.6vh;width: 16vw;margin-top: 0.5vh;box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);" type="primary"
-                  @click="goToMoudle({ path:'/UM/equipment/homePage'})">
-            <div><img :width="imgWidth" src="../../assets/UM/equipments.png">
-              <div :style="{fontSize:mySize}">设备管理</div>
-            </div>
-          </Button>
-        </Col>
-        <Col span="14">
-          <Button class=" btn-jiqiren renYuandinwei"
+      </Col>
+    </Row>
+    <br><br><br> <br><br>
+    <!--菜单内容-->
+    <div class="modals">
+      <Row  type="flex" justify="center" align="top" class="code-row-bg" >
+
+        <!--运营管理-->
+        <Col span="6">
+        <h2 style="font-size: 2.4vmin">运营管理</h2>
+        <Row class="rowTop">
+          <Col span="8">
+            <Button type="info" class="normalBtn"
                   @click="goToMoudle({ path:'/UM/tunnelCustomer/list'})">
-            <div><img :width="imgWidth" src="../../assets/UM/用户.png">
-              <div :style="{fontSize:mySize}">运营管理</div>
+              <div><img src="../../assets/UM/customer.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊客户管理</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button type="info" class="normalBtn"
+                  @click="goToMoudle({ path:'/UM/enterGalleryApplication/query'})">
+              <div><img src="../../assets/UM/enterGallery.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">入廊申请管理</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button class="normalBtn" type="primary"
+                    @click="goToMoudle({ path:'/UM/tunnelDocuments/list'})">
+              <div><img src="../../assets/UM/documents.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊资料管理</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        <Row class="rowTop">
+          <Col span="8">
+            <Button class="normalBtn btn-quexian" type="primary"
+                    @click="goToMoudle({ path:'/UM/TunnelEnergy/homepage'})">
+              <div><img src="../../assets/UM/energy.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊能耗管理</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button class="normalBtn" type="primary"
+                    @click="goToMoudle({ path:'/UM/tunnelContract/list'})">
+              <div><img src="../../assets/UM/contract.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊合同管理</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button class="normalBtn" type="primary"
+                    @click="goToMoudle({ path:'/UM/OperatingSpace/tunnel/1'})">
+              <div><img src="../../assets/UM/空间.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊空间管理</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        <Row class="rowTop">
+          <Col span="8">
+            <Button class="normalBtn" type="primary"
+                    @click="goToMoudle({ path:'/UM/relatedUnits/query'})">
+              <div><img src="../../assets/UM/basicInfo.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">基础信息管理</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        </Col>
+
+        <!--监控与报警-->
+        <Col span="6" offset="1">
+        <h2  style="font-size: 2.4vmin">监控与报警</h2>
+        <Row class="rowTop">
+          <Col span="8">
+            <Button type="info" class="normalBtn"
+                    @click="goToMoudle({ path:'/UM/TunnelSafety'})">
+              <div><img src="../../assets/UM/safe.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">管廊安防监测</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="16">
+            <Button class="widthBtn btn-xunjian" @click="goToMoudle({ path:'/UM/TunnelEnvironment'})">
+              <div><img src="../../assets/UM/environment.png" :width="imgWidth">
+                <div  :style="{fontSize:mySize,textAlign:'center',color: '#fff'}">管廊环境监测</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        <Row class="rowTop">
+          <Col span="8">
+            <Button class="normalBtn btn-guanxian" @click="goToMoudle({path: '/UM/VideoMonitoring/details/1'})">
+              <div><img src="../../assets/UM/monitor.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">视频监控系统</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button type="primary" class="normalBtn"
+                    @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
+              <div><img src="../../assets/UM/dataAnalysis.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">数据分析</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button type="primary" class="normalBtn" @click="goToMoudle({ path:'/UM/PersonnelPosition/tunnel'})">
+              <div><img src="../../assets/UM/position.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">人员定位</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+        </Col>
+
+        <!--设备实施运维-->
+        <Col span="6" offset="1">
+        <h2  style="font-size: 2.4vmin">设备实施运维</h2>
+        <Row class="rowTop">
+          <Col span="8" >
+          <Button class=" btn-nenghao normalBtn"
+                  style="box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);"
+                  @click="goToMoudle({ path:'/UM/virtualInspect'})">
+            <div><img src="../../assets/UM/virtualInspect.png" :width="imgWidth">
+              <div :style="{fontSize:mySize}">虚拟巡检</div>
             </div>
           </Button>
+          </Col>
+          <Col span="8">
+             <Button
+            class=normalBtn type="primary"
+            @click="goToMoudle({ path:'/UM/equipment/homePage'})">
+              <div><img :width="imgWidth" src="../../assets/UM/equipments.png">
+                <div :style="{fontSize:mySize}">设备管理</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+             <Button
+            class=normalBtn type="primary"
+            @click="goToMoudle({ path:'/UM/patrolTask/query'})">
+              <div><img :width="imgWidth" src="../../assets/UM/patrolTask.png">
+                <div :style="{fontSize:mySize}">巡检任务管理</div>
+              </div>
+            </Button>
+          </Col>
+          </Row>
+          <Row  class="rowTop">
+            <Col span="8">
+               <Button
+            class=normalBtn type="primary"
+            @click="goToMoudle({ path:'/UM/defect/query'})">
+                <div><img :width="imgWidth" src="../../assets/UM/defect.png">
+                  <div :style="{fontSize:mySize}">缺陷管理</div>
+                </div>
+              </Button>
+            </Col>
+            <Col span="8">
+            <Button class=" btn-yonhu normalBtn"
+                    @click="goToMoudle({ path:'/UM/plans/detial/FirePlanProcess'})">
+              <div><img :width="imgWidth" src="../../assets/UM/消防.png">
+                <div :style="{fontSize:mySize}">预案管理</div>
+              </div>
+            </Button>
+            </Col>
+            <Col span="8">
+              <Button class="normalBtn" @click="goToMoudle({ path:'/UM/patrol/homePage'})" type="primary">
+                <div><img :width="imgWidth" src="../../assets/UM/巡检.png">
+                  <div :style="{fontSize:mySize}">巡检管理</div>
+                </div>
+              </Button>
+            </Col>
+        </Row>
+        <Row  class="rowTop">
+          <Col span="8">
+            <Button class="normalBtn btn-jiqiren"
+                    @click="goToMoudle({ path:'/VMMain2'})">
+              <div><img src="../../assets/UM/空间.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">可视化平台</div>
+              </div>
+            </Button>
+          </Col>
+          <Col span="8">
+            <Button class="normalBtn" type="primary"
+                    @click="goToMoudle({ path:'/UM/overhaul/query'})">
+              <div><img src="../../assets/UM/检修.png" :width="imgWidth">
+                <div :style="{fontSize:mySize}">检修管理</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
         </Col>
+
+        <!--最右侧时间-->
+        <Col span="3" offset="1">
+        <Row style="margin-top: 16vh">
+          <Col span="24">
+          <p class="time"><Icon type="ios-time-outline"></Icon><span class="curTime">{{nowTime}} </span><span style="font-size: 1.8vmin;font-family: 7LED;">{{timeSection}}</span></p>
+          </Col>
+          <Col span="24">
+          <p class="date">{{nowDate}}</p>
+          </Col>
+          <Col span="24" style="margin-top: 4vh">
+            <span style="font-size: 2.4vmin">安全运营<span class="days">{{days.total}}</span>天</span>
+          </Col>
+        </Row>
+        </Col>
+
       </Row>
-      <Row>
-        <Col span="10">
-          <Button type="success" class="renYuandinwei"
-                @click="goToMoudle({ path:'/UM/DataAnalysis/QueryData'})">
-            <div><img src="../../assets/UM/dataAnalysis.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">数据分析</div>
-            </div>
-          </Button>
-        </Col>
-        <Col span="14">
-          <Button class=" btn-yonhu ywGuanli"
-                  @click="goToMoudle({ path:'/UM/plans/detial/FirePlanProcess'})">
-            <div><img :width="imgWidth" src="../../assets/UM/消防.png">
-              <div :style="{fontSize:mySize}">预案管理</div>
-            </div>
-          </Button>
-          <Button class="ywGuanli " type="primary"
-                @click="goToMoudle({ path:'/UM/TunnelEnergy/homepage'})">
-            <div><img src="../../assets/UM/energy.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">管廊能耗管理</div>
-            </div>
-          </Button>
-        </Col>
-        <Col span="24">
-          <Button class="ywGuanli btn-guanxian" style="width: 32.6vw"
-                @click="goToMoudle({ path:'/VMMain2'})">
-            <div><img src="../../assets/UM/空间.png" :width="imgWidth">
-              <div :style="{fontSize:mySize}">可视化平台</div>
-            </div>
-          </Button>
-        </Col>
-      </Row>
-    </Col>
-    </Row>
+
     </div>
-    </Row>
+
   </div>
 </template>
 
 <script>
-  import {getFormatTime} from '../../scripts/DateFormat.js';
+  import {getSimpleDate} from '../../scripts/DateFormat.js';
   import {LoginService} from '../../services/loginService.js';
+  import { TunnelService } from '../../services/tunnelService'
   import showAboutUs from '../../components/Common/Modal/ShowAboutUs'
+  import ImageFromUrl from "../../components/Common/ImageFromUrl";
+  import topBg from '../../assets/VM/footLine.png'
   export default {
     name: "UmMain",
     data() {
       return {
+        topBg:topBg,
           aboutUs: {
               show: {state: false},
               company: {
@@ -168,22 +273,30 @@
               }
           },
         fullHeight: window.innerHeight,
-        nowFormat: null,
-        titleName: "综合管廊统一管理平台",
+        nowTime: null,
+        nowDate:null,
+        timeSection:null,
+        titleName: "综合管廊智慧管理平台",
         mySize: "1.4rem",
         smSize: "16px",
         imgWidth: "52px",
+        days: {
+          total: null,
+          safe: null
+        }
       }
     },
     methods: {
       goToMoudle: function (path) {
-        if(path.path == '/VMMain'){
-          const {href} = this.$router.resolve({
-          name: "可视化主页"
-        });
-        window.open(href, '_blank');
-        } else {
-          this.$router.push(path);
+        if(String(this.$router.history.current.fullPath).indexOf(String(path.path))<0){
+          if(path.path == '/VMMain'){
+            const {href} = this.$router.resolve({
+              name: "可视化主页"
+            });
+            window.open(href, '_blank');
+          } else {
+            this.$router.push(path);
+          }
         }
       },
         showAboutUs() {
@@ -200,8 +313,20 @@
                     _this.aboutUs.company.name = result.company;
                 }
             }))
-        },
 
+        },
+        init(){
+          let _this = this;
+          TunnelService.getVmRunMessage().then(
+              result=>{
+                _this.days.total = result.total
+                _this.days.safe = result.safe
+              },
+              error=>{
+                _this.Log.info(error)
+              })
+
+        },
       logout: function () {
         var _this = this;
         this.$Modal.confirm({
@@ -216,15 +341,6 @@
               error => {
                 _this.$Message.error(msg);
               })
-            // this.axios.get('/logout').then(result => {
-            //   let {msg, code, data} = result.data;
-            //   if (code !== "200") {
-            //     this.$Message.error(msg);
-            //   } else {
-            //     sessionStorage.removeItem('UMUser');
-            //     _this.$router.push('/UMlogin');
-            //   }
-            // });
           },
           onCancel: () => {
             // this.$Message.info('Clicked cancel');
@@ -233,20 +349,22 @@
       },
 
       updateTime() {
-        this.nowFormat = getFormatTime();
+        this.nowTime = new Date().format("hh:mm:ss");
+        this.timeSection=new Date().getHours()>12?"PM":"AM";
+        this.nowDate=getSimpleDate();
         this.fullHeight = window.innerHeight;
         if (window.innerWidth <= 1400) {
-          this.mySize = "2.2vmin";
+          this.mySize = "1.8vmin";
           this.smSize = "10px";
           this.imgWidth = "50vw";
         }
         else {
           if(window.innerWidth <= 1920){
-            this.mySize = "2.2vmin";
+            this.mySize = "1.5vmin";
             this.smSize = "16px";
             this.imgWidth = "50vw";
           } else {
-            this.mySize = "2.2vmin";
+            this.mySize = "1.5vmin";
             this.smSize = "16px";
             this.imgWidth = "100vw";
           }
@@ -256,6 +374,7 @@
     mounted() {
       var _this = this;
       _this.updateTime();
+      _this.init()
       setInterval(_this.updateTime, 1000);
     },
     beforeDestroy() {
@@ -264,49 +383,67 @@
       }
     },
       components: {
-          showAboutUs,
+        ImageFromUrl,
+        showAboutUs,
       },
   }
-
 </script>
 
 
 <style scoped>
-  .ywGuanli {
-    width: 16vw;
-    height: 13.8vh;
+  .titleName{
+    width: 15vw;
+    height: 4vh;
+    font-size: 4vmin;
+    padding-top: 0.5vmin;
+    /*background-image: url("../../assets/UM/bordered.png");*/
+    /*background-size: 100% 100%;*/
+    /*-moz-background-size: 100% 100%;*/
+    /*-webkit-background-size: 100% 100%;*/
+  }
+  .rowTop{
     margin-top: 0.5vh;
+  }
+  .time{
+    font-size: 3.6vmin;
+    text-align-last: justify;
+  }
+  .date{
+    font-size: 1.8vmin;
+    color: #f59e48;
+    text-align-last: justify;
+  }
+  .normalBtn {
+    width: 7vw;
+    height: 7vw;
+    margin-top: 0.2vmin;
+    background-color: rgba(255,255,255,0.5);
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
   }
-
-  .renYuandinwei {
-    height: 28vh;
-    width: 16vw;
-    margin-top: 0.5vh;
+  .normalBtn:focus, .normalBtn:hover{
+    background-color: rgba(255,255,255,0.7);
+  }
+  .normalBtn:active{
+    background-color: rgba(255,255,255,0.86);
+  }
+  .widthBtn{
+    width: 14.6vw;
+    height: 7vw;
+    margin-top: 0.2vmin;
     box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
   }
-
-  .zhJiankon {
-    height: 27.2vh;
-    width: 12vw;
-    margin-top: 0.5vh;
-    box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
+  .days{
+    margin-left: 0.6vh;
+    margin-right: 0.6vh;
+    color: #99ff23;
+    font-family: UnidreamLED;
+    font-size: 4vmin;
   }
-
-  .yyGuanLi {
-    height: 13.8vh;
-    width: 24.2vw;
-    margin-top: 1vh;
-    box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
+  .curTime{
+    font-family: UnidreamLED;
+    margin-left: 1vmin;
+    font-size: 4vmin;
   }
-
-  .yjGuanLi {
-    width: 12vw;
-    height: 14vh;
-    margin-top: 1.5vh;
-    box-shadow: 3px 3px 20px rgba(6, 6, 18, 0.7);
-  }
-
   .main {
     background-image: url("../../assets/UM/UMMainbg2.png");
     color: #fff;
@@ -470,29 +607,15 @@
     background-color: #258486;
     border-color: #519FB2;
   }
-
-  .titleName{
-    font-size: 4vmin;
-    padding-top: 0.5vmin;
-  }
-
   .Icon {
-    height: 6vmin;
-    width: 7vmin;
-    background-image: url("../../assets/UM/Maxview.png");
+    height: 4vh;
+    width: 10vw;
+    background-image: url("../../assets/VM/MaxviewLogo.png");
     background-size: 100% 100%;
     -moz-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
     float: left;
   }
-
-  .time{
-    font-size: 2vmin;
-    float: right;
-    padding-right: 1vmin;
-    padding-top: 1.8vmin;
-  }
-
   .power{
     font-size: 4vmin;
   }
@@ -501,25 +624,19 @@
     font-size: 2vmin;
   }
 
-  .title{
-    text-align: center;
-    font-size: 5vmin;
-    font-weight: bold;
-    margin-bottom: 2vh;
-  }
   @media (max-width: 1921px){
     .modals{
-      width: 80vw;
-      margin-left: 10vw;
-      margin-top: -3vh;
+      width: 90vw;
+      margin-left: 5vw;
+      margin-top: 4vh;
     }
 
   }
   @media (min-width: 1921px){
     .modals{
-      width: 80vw;
-      margin-left: 10vw;
-      margin-top: 4vh;
+      width: 90vw;
+      margin-left: 5vw;
+      margin-top: 10vh;
     }
   }
 </style>

@@ -309,6 +309,10 @@
       //查询表数据
       queryEnergies() {
         let _this = this;
+        if(new Date(_this.startTime)>new Date(_this.endTime)){
+          _this.$Message.error('开始时间必须小于结束时间！');
+          return;
+        }
         var queryParams = {startTime: null, endTime: null};
         if (_this.startTime && _this.endTime) {
           queryParams = {

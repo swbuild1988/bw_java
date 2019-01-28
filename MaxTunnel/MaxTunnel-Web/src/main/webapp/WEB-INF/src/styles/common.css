@@ -1,7 +1,15 @@
 /* * {
     font-size: 2vw;
 } */
-
+body,html{
+    overflow: hidden;
+}
+@font-face {
+    font-family: UnidreamLED;
+    /*为引入字体命名*/
+    src: url("../../static/VM/font/UnidreamLED.ttf");
+    /*定义要引入字体文件路径*/
+}
 .formTitle {
     text-align: center;
     margin-bottom: 20px;
@@ -31,6 +39,8 @@
     background: #fff;
     margin-top: 10px;
     padding: 10px;
+    position: relative;
+    padding-bottom: 50px;
 }
 
 .containerBox {
@@ -92,7 +102,7 @@ body {
     height: 100%;
     margin: 0px;
     padding: 0px;
-    font-size: 100%;
+    /* font-size: 100%; */
 }
 @media (min-width: 2200px){
     .allDiv{
@@ -102,7 +112,7 @@ body {
         font-size: 1.6vmin;
     }
     .ivu-date-picker-cells{
-        width: 21vmin;
+        width: 21vmin !important;
     }
     span.ivu-date-picker-cells-cell{
         width: 2.6vmin;
@@ -111,20 +121,29 @@ body {
     }
     /* 时间选择器 */
     .ivu-date-picker-cells span{
-        width: 2.7vmin;
-        height: 2.6vmin;
+        width: 2.7vmin !important;
+        height: 2.6vmin !important;
         /* line-height: 1.6vmin;
         margin: 0.125vmin; */
     }
     .ivu-date-picker-cells span em {
-        width: 1.7vmin;
-        height: 1.6vmin;
-        line-height: 1.6vmin;
-        margin: 0.125vmin;
+        width: 1.7vmin !important;
+        height: 1.6vmin !important;
+        line-height: 1.6vmin !important;
+        margin: 0.125vmin !important;
     }
     .ivu-date-picker-header{
-        height: 2.5vmin;
-        line-height: 2.5vmin;
+        height: 2.5vmin !important;
+        line-height: 2.5vmin !important;
+    }
+    .ivu-picker-panel-icon-btn {
+        width: 2vmin;
+        height: 2.4vmin;
+        line-height: 2.6vmin;
+        margin-top: 0.4vmin;
+    }
+    .ivu-picker-panel-icon-btn i{
+        font-size: 1.4vmin;
     }
     /* 查询按钮 */
     .ivu-btn,.ivu-btn-small {
@@ -194,5 +213,29 @@ body {
     .ivu-table th{
         height: 4vmin;
         border-bottom: 0.1px solid #e9eaec;
+    }
+    /*分页*/
+    .ivu-page-total{
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+        margin-right: 1vmin;
+    }
+    .ivu-page-item-jump-next, .ivu-page-item-jump-prev, .ivu-page-next, .ivu-page-prev,.ivu-page-item,.ivu-page-options-elevator,
+    .ivu-page-options-elevator input,.ivu-select-single .ivu-select-selection{
+        min-width: 3.2vmin;
+        height: 3.2vmin;
+        line-height: 3vmin;
+        color: #666;
+        /* border: 0.1vmin solid #dddee1; */
+    }
+    .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+        height: 3vmin;
+        line-height: 3vmin;
+        font-size: 1.2vmin;
+        padding-left: 0.8vmin;
+        padding-right: 2.4vmin;
+    }
+    .ivu-page-next a, .ivu-page-prev a,.ivu-page-options-elevator input {
+        font-size: 1.4vmin;
     }
 }

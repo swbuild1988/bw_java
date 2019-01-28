@@ -334,4 +334,10 @@ public class SectionServiceImpl implements SectionService {
 		List<Integer> li = sectionMapper.getSectionIdsByStoreIds(list);
 		return li == null ? Collections.emptyList() : li;
 	}
+
+	@Override
+	public List<Section> getSectionsByStoreIds(List<Integer> list) {
+		List<Section> li = sectionMapper.getSectionsByStoreIds(list);
+		return li == null ? Collections.emptyList() : li ;
+	}
 }

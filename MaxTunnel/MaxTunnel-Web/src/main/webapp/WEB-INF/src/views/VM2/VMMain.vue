@@ -86,7 +86,7 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    background: url("../../assets/VM/main_bg.png") no-repeat;
+    background: url("../../assets/VM/vm_main_bg.png") no-repeat;
     background-size: 100% 100%;
     background-color: #031324;
 }
@@ -125,7 +125,7 @@ export default {
     width: 49%;
     height: 56%;
 }
-.MainContent .AlarmModule {
+.MainContent .MotionModule {
     position: absolute;
     top: 67%;
     left: 25.5%;
@@ -139,7 +139,7 @@ export default {
     width: 24%;
     height: 32.5%;
 }
-.MainContent .MotionModule {
+.MainContent .AlarmModule {
     position: absolute;
     top: 6%;
     left: 75.5%;

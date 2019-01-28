@@ -45,7 +45,6 @@ export const flyManagerMinix = {
             let curRoute = this.flyFilePathes.find(route => {
                 return route.id == id
             })
-            // console.log('curRoute',curRoute)
             routes.fromFile(this.ServerConfig + curRoute.path);
 
             //初始化飞行管理
@@ -54,11 +53,15 @@ export const flyManagerMinix = {
                 routes: routes
             });
 
+            if( !!curRoute.playRate ){
+                flyManagerAttr.flyManager.playRate = parseFloat( curRoute.playRate );
+            }
             flyManagerAttr.flyManager.readyPromise.then(function() {
                
                 if ( curRoute.isFlyLoop ) {
                     let currentRoute = flyManagerAttr.flyManager.currentRoute
-                    currentRoute.isFlyLoop = JSON.parse( curRoute.isFlyLoop )
+                    currentRoute.isFlyLoop = JSON.parse( curRoute.isFlyLoop );
+
                 }
             })
 

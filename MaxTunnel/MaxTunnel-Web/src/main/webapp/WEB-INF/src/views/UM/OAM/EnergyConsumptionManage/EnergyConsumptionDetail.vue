@@ -13,8 +13,8 @@
           <DatePicker type="date" v-model="endTime" placeholder="选择时间" style="width: 60%"></DatePicker>
           </Col>
           <Col span="6">
-            <Button type="primary"  icon="ios-search" size="small" @click="queryTable">查询</Button>
-            <Button type="primary"  icon="ios-download-outline" @click="exportData" size="small">导出</Button>
+            <Button type="primary"  icon="ios-search"  @click="queryTable">查询</Button>
+            <Button type="primary"  icon="ios-download-outline" @click="exportData" >导出</Button>
           </Col>
         </Row>
         <div>
@@ -98,6 +98,9 @@
       '$route': function () {
         //2. $route发生变化时再次赋值planId
         this.tunnelId = this.$route.params.id;
+        this.startTime="";
+        this.endTime="";
+        this.page={pageSize: 7, pageTotal: 14, curPageNum: 1};
         this.tunnelList.forEach(a => {
           if (a.id == this.tunnelId) {
             this.curName = a.name;
@@ -135,6 +138,10 @@
       },
       queryTable() {
         let _this = this;
+        if(new Date(_this.startTime)>new Date(_this.endTime)){
+          _this.$Message.error('开始时间必须小于结束时间！');
+          return;
+        }
         _this.tableData = [];
         let queryParams = {
           startTime: null,

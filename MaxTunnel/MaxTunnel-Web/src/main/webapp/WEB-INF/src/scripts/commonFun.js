@@ -153,46 +153,49 @@ export const changStrLength = function(num,strLength){
  * 设置3D相机角度
  */
 export function setViewAngle(){
-    let args=[].slice.call(arguments); //类数组转换成数组
-    let [ scene,Cesium ,camera ]=args; //解析数组内容
+    let args = [].slice.call(arguments); //类数组转换成数组
+    let [ scene ,camera ] = args; //解析数组内容
 
     //设置相机位置、视角
-    scene.camera.setView({
-        destination : new Cesium.Cartesian3.fromDegrees(camera.longitude,camera.latitude,camera.height),
-        orientation : {
-            heading : camera.heading,
-            pitch : camera.pitch,
-            roll : camera.roll
-        }
-    });
+    if ( Cesium.defined( scene ) ){
+        scene.camera.setView({
+            destination : new Cesium.Cartesian3.fromDegrees(camera.longitude,camera.latitude,camera.height),
+            orientation : {
+                heading : camera.heading,
+                pitch : camera.pitch,
+                roll : camera.roll
+            }
+        });
+    }
 }
+
 /**
  * 相机从当前位置飞行到新的空间位置。
  */
-// export function flyToMyLocation(flyParam){
+export function flyToMyLocation(flyParam){
 
-//     if(typeof flyParam !='object'){ return }
+    if(typeof flyParam !=='object') return;
 
-//     let duration,maximumHeight;
-//     let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
+    let duration,maximumHeight;
+    let { longitude,latitude,height,roll,pitch,heading }=flyParam.position;
 
-//     duration = flyParam.duration || 5;
-//     maximumHeight = flyParam.maximumHeight || 6;
+    duration = flyParam.duration || 5;
+    maximumHeight = flyParam.maximumHeight || 6;
 
-//     flyParam.scene.camera.flyTo({
-//         destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
-//         orientation : {
-//             heading : heading,
-//             pitch : pitch,
-//             roll : roll
-//         },
-//         duration:duration,// 设置飞行持续时间，默认会根据距离来计算
-//         maximumHeight:maximumHeight,// 相机最大飞行高度
-//         complete:flyParam.completed,// 到达位置后执行的回调函数
-//         cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
-//     })
+    flyParam.scene.camera.flyTo({
+        destination : new Cesium.Cartesian3.fromDegrees(parseFloat(longitude),parseFloat(latitude),parseFloat(height)),// 设置位置
+        orientation : {
+            heading: parseFloat(1.716482618088178),
+            pitch: parseFloat(-0.30235173267000404),
+            roll: parseFloat(2.582822844487964e-12)
+        },
+        duration:duration,// 设置飞行持续时间，默认会根据距离来计算
+        maximumHeight:maximumHeight,// 相机最大飞行高度
+        complete:flyParam.completed,// 到达位置后执行的回调函数
+        cancle:flyParam.cancled,// 如果取消飞行则会调用此函数
+    })
 
-// }
+}
 /**
  * 追加定位广告牌
  */
@@ -287,7 +290,7 @@ export function getEntitySet(setParam){
         .then(result=>{
             let { code, data } = result.data;
             if(code == 200){
-                // console.log(setParam.messageType,data)
+
                 let IM= Vue.prototype.IM,
                     sqlQueryBIMId = [];//sqlQueryBIMId;
 
@@ -296,7 +299,6 @@ export function getEntitySet(setParam){
                 if(Array.isArray(data) && data.length !== 0){
 
                     for(let i=0;i<data.length;i++){
-                        // if(data[i].latitude == null || data[i].longitude　== null) continue;
 
                         let [ type ]=_this.VMConfig[setParam.typeMode].filter(type=>{
                             let moTypeId = _getTypeValue(setParam.typeMode,data[i]);
@@ -354,7 +356,7 @@ export function switchShowEntity(swtichParam){
         messageType=IM.getInformation(swtichParam.messageType);
 
     if(typeof swtichParam != 'object' || messageType.length ==0 ){ return }
-    console.log('messageType',messageType)
+
     messageType.forEach(currObj=>{
 
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj,"MOID")
@@ -488,9 +490,7 @@ export function getEntityProperty(){
     handler.setInputAction(function(event) {
 
         if(!scene.pickPositionSupported){
-
             return;
-
         }
         // 获取屏幕坐标
         let scenePosition = scene.pickPosition(event.startPosition);
@@ -756,6 +756,7 @@ function _monitor(){
         )
         dom.style.bottom = canvasHeight - (windowPosition.y - 50) + 'px'
         dom.style.left = windowPosition.x - 70 +'px'
+
 
     })
 }

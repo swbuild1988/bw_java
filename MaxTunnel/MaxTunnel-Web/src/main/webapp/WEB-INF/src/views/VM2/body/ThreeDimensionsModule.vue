@@ -1,19 +1,19 @@
 <template>
-    <div class="Main">
+    <div class="Main ThreeDMain">
         <div class="BIM">
             <sm-viewer
                 ref="smViewer"
                 :camera="camera"
-                :openFlyLoop="true"
                 :infoBox="false"
                 :navigation="false"
                 :refreshCameraPosition="refreshCameraPosition"
-                :openImageryProvider="false"
                 @showStorePosition="showStorePosition"
             ></sm-viewer>
         </div>
         <div class="Title">
-            <module-title :title="title"></module-title>
+            <module-title
+                :title="title"
+            ></module-title>
         </div>
         <vm-select
             id="list-dropdown"
@@ -32,7 +32,8 @@
             :selectStyle="{ left:'29%' }"
             @getSelectVal="changeStore"
         ></vm-select>
-        <!-- <show-store-position v-bind:currPosition="storePosition" ></show-store-position> -->
+        <show-store-position v-bind:currPosition="storePosition"></show-store-position>
+        <move-control v-show="showControlPanel"></move-control>
     </div>
 </template>
 
@@ -41,10 +42,14 @@ import SmViewer from '../../../components/Common/3D/simple3DViewer'
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
 import Vue from 'vue'
 import showStorePosition from '../../../components/Common/Modal/showStorePosition'
+import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
 import {
     TunnelService,
 } from '../../../services/tunnelService'
 import vmSelect from '../../../components/Common/Select'
+import {
+    flyToMyLocation
+} from "../../../scripts/commonFun";
 
 export default {
     data() {
@@ -64,10 +69,6 @@ export default {
             storeList: [],//当前区域下所有仓
             location: [],//缓存当前管廊下所有区域的位置
             showArea: false,
-            unitsPosition: {
-                openPosition: true,
-                isShow: true,
-            },
             refreshCameraPosition: {
                 enable: true
             },
@@ -75,17 +76,22 @@ export default {
                 tunnelName: '',
                 areaName: '',
                 storeName: ''
-            }
+            },
+            showControlPanel:true,
+            screenWidth : 1920,
         }
     },
     components: {
         SmViewer,
         showStorePosition,
         ModuleTitle,
-        vmSelect
+        vmSelect,
+        MoveControl
     },
     mounted() {
         this.init();
+        this.addEvents().addMouseEnter();
+        this.addEvents().addMouseLeave();
     },
     methods: {
         init() {
@@ -142,7 +148,8 @@ export default {
             try {
                 let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
 
-                this.$refs.smViewer.flyToMyLocation({
+                flyToMyLocation({
+                    scene:Vue.prototype['$simpleViewer'].scene,
                     position: {
                         longitude: longitude,
                         latitude: latitude,
@@ -205,9 +212,62 @@ export default {
         showStorePosition(position) {
             this.storePosition = position;
         },
+        playFly() {
+            this.$refs.smViewer.playFly();
+        },
+        stopFly() {
+            this.$refs.smViewer.stopFly();
+        },
         destroyViewer() {
             this.$refs.smViewer.destory3D();
-        }
+        },
+        addEvents(){
+            let eventListener = {
+                screenWidth:1920,
+                _getDOM( className ){
+                    return document.getElementsByClassName( className )[0];
+                },
+                _getClassName(target){
+                    return true;
+                },
+                _showDOM(){
+                    let _this = this;
+
+                    return function (e) {
+                        if( _this._getClassName(e.target) && window.innerWidth > this.screenWidth ){
+                            _this._getDOM('LLPanel').style.display = 'block';
+                        }
+                    }
+                },
+                hiddenDOM(){
+                    let _this = this;
+
+                    return function (e) {
+                        if( _this._getClassName(e.target)&& window.innerWidth < _this.screenWidth ) return;
+                        _this._getDOM('LLPanel').style.display = 'none';
+                    }
+
+                },
+                addMouseEnter(){
+                    this._getDOM('ThreeDMain').addEventListener( 'mousemove', this._showDOM.call( this ) )
+                },
+                addMouseLeave(){
+                    this._getDOM('ThreeDMain').addEventListener( 'mouseout',this.hiddenDOM.call( this ) )
+                },
+                removeMouseEnter(){
+                    this._getDOM('ThreeDMain').removeEventListener( 'mousemove', this._showDOM.call( this ) )
+                },
+                removeMouseLeave(){
+                    this._getDOM('ThreeDMain').removeEventListener( 'mouseout', this.hiddenDOM.call( this ) )
+                }
+            };
+
+            return eventListener;
+        },
+    },
+    beforeDestroy(){
+        // this.addEvents().removeMouseEnter();
+        // this.addEvents().removeMouseLeave();
     }
 }
 
@@ -230,6 +290,22 @@ export default {
     height: 85%;
     top: 14%;
     left: 1%;
+}
+.Main >>> .positionInformation {
+    top: 14%;
+    right: 1%;
+}
+.Main >>> .moveControlPanel{
+    top: 25.5%;
+    right: 2%;
+    width: 25%;
+}
+ .Main >>> .ControlPanelTitleDiff {
+     font-size: 1rem;
+     margin: .8rem 0 0 0;
+ }
+.Main >>> .moveControlPanel{
+    display: none;
 }
 </style>
 <style>

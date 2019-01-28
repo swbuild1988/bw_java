@@ -4,7 +4,11 @@
             <module-title :title="title"></module-title>
         </div>
         <div class="Chart">
-            <timeline-chart v-bind="data"></timeline-chart>
+            <line-chart
+                v-bind="lineChart"
+                ref="lineChart"
+                style="height: 26vh;"
+            ></line-chart>
         </div>
     </div>
 </template>
@@ -13,46 +17,227 @@
 import { TunnelService } from '../../../services/tunnelService'
 import { EnterGalleryService } from '../../../services/enterGalleryService'
 import { EnergyConsumptionService } from '../../../services/EnergyConsumptionService'
-import TimelineChart from '../../../components/Common/Chart/TimelineChart'
+import LineChart from '../../../components/Common/Chart/LineChart.vue'
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
 
 export default {
     data() {
         return {
-            title: "",
-            data: {
-                id: "VmMotionModuleChart",
-                title: "每月管廊能耗(耗电量)",
-                group: [],
-                timeline: [],
-                series: [],
-                units: {
-                    x: "kw/km",
-                    y: "次",
-                    z: "kw"
-                },
-                labels: {
-                    x: "平均每公里能耗",
-                    y: "入廊次数",
-                    z: "总能耗",
-                    group: "管廊"
+            title: "能耗监测",
+            lineChart: {
+                id: "tunnelEnergyLineChart",
+                requestUrl: "energy/totle-everymonth",
+                parameters: {
+                    option: {
+                        title: {
+                            text: "管廊最近一年耗电量",
+                        },
+                        series: [
+                            {
+                                type: 'line',
+                                name: '1',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#a173ed',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            },
+                            {
+                                type: 'line',
+                                name: '2',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#ed9a20',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            },
+                            {
+                                type: 'line',
+                                name: '3',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#509bed',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            },
+                            {
+                                type: 'line',
+                                name: '4',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#90ed27',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            },
+                            {
+                                type: 'line',
+                                name: '5',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#ed405d',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            },
+                            {
+                                type: 'line',
+                                name: '6',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#adedc3',
+                                        fontSize: window.innerHeight * 0.016,
+                                    },
+                                },
+                                markPoint: {
+                                    data: [
+                                        {
+                                            type: 'max', name: '最大值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#d90051',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        },
+                                        {
+                                            type: 'min', name: '最小值',
+                                            itemStyle: {
+                                                normal: {
+                                                    color: '#01bc8f',
+                                                    fontSize: window.innerHeight * 0.016,
+                                                },
+                                            },
+                                        }
+                                    ]
+                                },
+                            }
+                        ]
+                    }
                 }
-            }
+            },
         };
     },
     components: {
-        TimelineChart,
+        LineChart,
         ModuleTitle
     },
     mounted() {
-        this.init();
     },
     methods: {
-        init() {
-            this.title = "运营能耗";
-
-            this.getData();
-        },
         getData() {
             let p1 = TunnelService.getTunnels();
             let p2 = EnterGalleryService.getCountOfEnterEveryMonthAndTunnel();
@@ -121,13 +306,16 @@ export default {
     background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
+
 .Main .Title {
     width: 100%;
     height: 15%;
 }
-.Main .Chart {
-    margin-left: 1vw;
-    width: 90%;
-    height: 80%;
+
+.Chart {
+    margin: 0.5vh 1.5vmin 1vh;
+    width: 100%;
+    height: 26vh;
+    position: relative;
 }
 </style>

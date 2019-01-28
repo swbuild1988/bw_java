@@ -1,20 +1,38 @@
 <template>
   <div id="app">
-    <!-- <transition name="fade" mode="out-in"> -->
-      <!-- <router-view></router-view> -->
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
+        <div v-if="$route.meta.keepAlive">
+          <router-view v-if="isRouterAlive"></router-view>
+        </div>
       </keep-alive>
-    <keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
-    </keep-alive>
-
-    <!-- </transition> -->
+    <div v-if="!$route.meta.keepAlive">
+      <router-view v-if="isRouterAlive"></router-view>
+    </div>
   </div>
 </template>
 <script>
 export default {
   name: 'app',
+  provide (){
+    return {
+      reload:this.reload
+    }
+  },
+  data(){
+    return {
+      isRouterAlive:true
+    }
+  },
+  methods:{
+    reload (){
+      this.isRouterAlive = false;
+      this.$nextTick(function(){
+        this.isRouterAlive = true
+      })
+    }
+  },
+  components:{
+  },
 }
 </script>
 

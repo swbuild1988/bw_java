@@ -137,8 +137,9 @@ export default {
   },
   watch: {
     $route: function() {
-      this.tunnelId = this.$route.params.id;
-      this.getVisitors();
+      // this.tunnelId = this.$route.params.id;
+      // this.getVisitors();
+      this.$refs.smViewer.stopPersonnelPosition();
     }
   },
   mounted() {

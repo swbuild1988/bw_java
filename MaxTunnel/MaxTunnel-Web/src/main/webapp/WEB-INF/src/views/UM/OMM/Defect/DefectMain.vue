@@ -37,28 +37,20 @@ export default {
               element.name = '添加',
               element.url= '/UM/defect/detail'
               this.defect.leftTree.push(element)
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/defect") < 0) {
+                  _this.goToMoudle({path: _this.defect.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               _this.Log.info(error)
       })
-    // this.axios.get("/tunnels").then(result => {
-    //   let {code, data} = result.data;
-    //   var _this=this;
-    //   if (code == 200) {
-    //     data.forEach(a=>{
-    //       let temp={};
-    //       temp.id=a.id;
-    //       temp.name=a.name;
-    //       temp.url="/UM/defect/query/"+a.id;
-    //       _this.defect.leftTree.push(temp);
-    //     })
-    //   }
-    //   let element = {};
-    //       element.id = data.length+1;
-    //       element.name = '添加',
-    //       element.url= '/UM/defect/detail'
-    //       this.defect.leftTree.push(element)
-    //   });
   },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
+  }
 };
 </script>

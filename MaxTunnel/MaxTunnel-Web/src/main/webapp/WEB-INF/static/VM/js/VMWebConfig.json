@@ -1,585 +1,784 @@
 {
-    "VMWebConfig": {
-        "WebConfig": {
-            "data": [
-                {
-                    "id": 1,
-                    "title": "入廊信息",
-                    "url": "/req-historys/info",
-                    "matchChartTypes": [900],
-                    "parameters": {}
-                },
-                {
-                    "id": 2,
-                    "title": "设备数量",
-                    "url": "equipments/type/count",
-                    "matchChartTypes": [100, 200, 300, 500],
-                    "parameters": {
-                        "option": {
-                            "textStyle": {
-                                "color": "rgba(255, 255, 255, 0.3)"
-                            },
-                            "color": ["#61a0a8"],
-                            "tooltip": {},
-                            "xAxis": {
-                                "axisLabel": {
-                                    "interval": 0,
-                                    "rotate": 40,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            },
-                            "yAxis": {
-                                "axisLabel": {
-                                    "interval": 1,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            }
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 3,
-                    "title": "故障数量对比",
-                    "url": "equipments/type/status/count",
-                    "matchChartTypes": [201, 501],
-                    "parameters": {
-                        "option": {
-                            "title": {},
-                            "tooltip": {},
-                            "legend": {
-                                "data": []
-                            },
-                            "grid": {
-                                "left": "10%",
-                                "right": "10%"
-                            },
-                            "radar": {
-                                "name": {
-                                    "formatter": "{value}",
-                                    "textStyle": {}
-                                },
-                                "splitArea": {
-                                    "areaStyle": {
-                                        "color": ["#001A27"]
-                                    }
-                                }
-                            },
-                            "series": [
-                                {
-                                    "type": "radar"
-                                }
-                            ]
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 4,
-                    "title": "管廊年度总耗电量",
-                    "url": "tunnels/items/energies",
-                    "matchChartTypes": [100, 200, 300, 500],
-                    "parameters": {
-                        "option": {
-                            "title": {},
-                            "series": [
-                                {
-                                    "type": "pie",
-                                    "radius": [50, 130],
-                                    "center": ["50%", "50%"],
-                                    "label": {
-                                        "normal": {
-                                            "show": true,
-                                            "textStyle": {}
-                                        },
-                                        "emphasis": {
-                                            "show": true,
-                                            "textStyle": {
-                                                "fontSize": "15",
-                                                "fontWeight": "bold"
-                                            }
-                                        }
-                                    },
-                                    "labelLine": {
-                                        "normal": {
-                                            "show": true,
-                                            "lineStyle": {
-                                                "color": "rgba(255, 255, 255, 0.3)"
-                                            },
-                                            "smooth": 0.2,
-                                            "length": 10,
-                                            "length2": 10
-                                        }
-                                    },
-                                    "animationType": "scale",
-                                    "animationEasing": "elasticOut"
-                                }
-                            ]
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 5,
-                    "title": "{tunnelName}耗电量",
-                    "url": "tunnels/{tunnelId}/energies/one-year",
-                    "matchChartTypes": [100, 200],
-                    "parameters": {
-                        "format": {
-                            "tunnelId": 1,
-                            "tunnelName": "古城大街"
-                        },
-                        "option": {
-                            "xAxis": {
-                                "axisLabel": {
-                                    "interval": 0,
-                                    "rotate": 40,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            },
-                            "yAxis": {
-                                "axisLabel": {
-                                    "interval": 1,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            },
-                            "series": [
-                                {
-                                    "type": "line",
-                                    "areaStyle": {
-                                        "normal": {
-                                            "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
-                                        }
-                                    }
-                                }
-                            ]
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 6,
-                    "title": "未(待)处理缺陷",
-                    "url": "tunnels/defectcount",
-                    "matchChartTypes": [201, 501],
-                    "parameters": {
-                        "option": {
-                            "xAxis": {
-                                "axisLabel": {
-                                    "interval": 0,
-                                    "rotate": 40,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            },
-                            "yAxis": {
-                                "axisLabel": {
-                                    "interval": 1,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            }
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 7,
-                    "title": "设备报警统计",
-                    "url": "tunnel/alarmcount",
-                    "matchChartTypes": [202],
-                    "parameters": {
-                        "option": {
-                            "xAxis": {
-                                "axisLabel": {
-                                    "interval": 1,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            },
-                            "yAxis": {
-                                "axisLabel": {
-                                    "interval": 0,
-                                    "textStyle": {
-                                        "color": "#F1F2F3"
-                                    }
-                                }
-                            }
-                        },
-                        "timer": {
-                            "intervalId": 0,
-                            "intervalTime": 15000
-                        }
-                    }
-                },
-                {
-                    "id": 8,
-                    "title": "管廊能耗统计",
-                    "url": "tunnels/items/energies",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 9,
-                    "title": "能耗（KWh/km）",
-                    "url": "tunnels/avg-energies",
-                    "matchChartTypes": [500],
-                    "parameters": {}
-                },
-                {
-                    "id": 10,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 11,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 12,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 13,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 14,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 15,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                },
-                {
-                    "id": 16,
-                    "title": "管廊巡检计划数",
-                    "url": "tunnel/defect-count",
-                    "matchChartTypes": [300],
-                    "parameters": {}
-                }
-            ],
-            "deployCharts": [
-                {
-                    "modelId": "vmModel1",
-                    "dataId": 1,
-                    "chartType": 900
-                },
-                {
-                    "modelId": "vmModel2",
-                    "dataId": 2,
-                    "chartType": 200
-                },
-                {
-                    "modelId": "vmModel3",
-                    "dataId": 3,
-                    "chartType": 501
-                },
-                {
-                    "modelId": "vmModel4",
-                    "dataId": 4,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel5",
-                    "dataId": 5,
-                    "chartType": 100
-                },
-                {
-                    "modelId": "vmModel6",
-                    "dataId": 6,
-                    "chartType": 201
-                },
-                {
-                    "modelId": "vmModel7",
-                    "dataId": 7,
-                    "chartType": 202
-                },
-                {
-                    "modelId": "vmModel8",
-                    "dataId": 8,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel9",
-                    "dataId": 9,
-                    "chartType": 500
-                },
-                {
-                    "modelId": "vmModel10",
-                    "dataId": 10,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel11",
-                    "dataId": 11,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel12",
-                    "dataId": 12,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel13",
-                    "dataId": 13,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel14",
-                    "dataId": 14,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel15",
-                    "dataId": 15,
-                    "chartType": 300
-                },
-                {
-                    "modelId": "vmModel16",
-                    "dataId": 16,
-                    "chartType": 300
-                }
-            ]
-        }
-    },
-    "VMExtendStyle": {
-        "VMContextExtend0": {
-            "className": "模块0",
-            "extendStyle": {
-                "width": "100%",
-                "left": "0"
-            },
-            "isShow": true
-        },
-        "VMContextExtend1": {
-            "className": "模块1",
-            "extendStyle": {
-                "width": "0",
-                "left": "0"
-            },
-            "isShow": true
-        },
-        "VMContextExtend2": {
-            "className": "模块2",
-            "extendStyle": {
-                "width": "0",
-                "left": "0"
-            },
-            "isShow": true
-        }
-    },
-    "flyFilePathes": [
+  "VMWebConfig": {
+    "WebConfig": {
+      "data": [
         {
-            "id": 1,
-            "name": "飞行路线_1",
-            "path": "/VM/font/flytest.fpf",
-            "isFlyLoop": "true"
+          "id": 1,
+          "title": "入廊信息",
+          "url": "/req-historys/info",
+          "matchChartTypes": [900],
+          "parameters": {}
         },
         {
-            "id": 2,
-            "name": "飞行路线_2",
-            "path": "/VM/font/flytest2.fpf",
-            "isFlyLoop": "true",
-            "waitTime": 30
-        }
-    ],
-    "VMEntityConfig": {
-        "entityParam": [
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.49948864664668",
-                        "Y": "37.71034251365869",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "监控中心",
-                        "fontSize": "30"
-                    }
+          "id": 2,
+          "title": "设备数量",
+          "url": "equipments/type/count",
+          "matchChartTypes": [100, 200, 300, 500],
+          "parameters": {
+            "option": {
+              "textStyle": {
+                "color": "rgba(255, 255, 255, 0.3)"
+              },
+              "color": ["#61a0a8"],
+              "tooltip": {},
+              "xAxis": {
+                "axisLabel": {
+                  "interval": 0,
+                  "rotate": 40,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
                 }
+              },
+              "yAxis": {
+                "axisLabel": {
+                  "interval": 1,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              }
             },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.49506",
-                        "Y": "37.706148",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "晋源区实验中学",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.499595",
-                        "Y": "37.704056",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "山西省儿童医院",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.477914",
-                        "Y": "37.715545",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "晋源区政府",
-                        "fontSize": "40"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.4858731580146",
-                        "Y": "37.72776923822512",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "太原古县城",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.52207233753701",
-                        "Y": "37.70384793736499",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "管廊东入口",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.51743415066589",
-                        "Y": "37.69655876626396",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "污水泵站",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.51382289846887",
-                        "Y": "37.69271374038769",
-                        "Z": "8.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "雨水泵站",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": {
-                            "startLon": "112.484733",
-                            "startLat": "37.715056",
-                            "endLon": "112.524978",
-                            "endLat": "37.7036"
-                        },
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
             }
-        ]
+          }
+        },
+        {
+          "id": 3,
+          "title": "故障数量对比",
+          "url": "equipments/type/status/count",
+          "matchChartTypes": [201, 501],
+          "parameters": {
+            "option": {
+              "title": {},
+              "tooltip": {},
+              "legend": {
+                "data": []
+              },
+              "grid": {
+                "left": "10%",
+                "right": "10%"
+              },
+              "radar": {
+                "name": {
+                  "formatter": "{value}",
+                  "textStyle": {}
+                },
+                "splitArea": {
+                  "areaStyle": {
+                    "color": ["#001A27"]
+                  }
+                }
+              },
+              "series": [
+                {
+                  "type": "radar"
+                }
+              ]
+            },
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
+            }
+          }
+        },
+        {
+          "id": 4,
+          "title": "管廊年度总耗电量",
+          "url": "tunnels/items/energies",
+          "matchChartTypes": [100, 200, 300, 500],
+          "parameters": {
+            "option": {
+              "title": {},
+              "series": [
+                {
+                  "type": "pie",
+                  "radius": [50, 130],
+                  "center": ["50%", "50%"],
+                  "label": {
+                    "normal": {
+                      "show": true,
+                      "textStyle": {}
+                    },
+                    "emphasis": {
+                      "show": true,
+                      "textStyle": {
+                        "fontSize": "15",
+                        "fontWeight": "bold"
+                      }
+                    }
+                  },
+                  "labelLine": {
+                    "normal": {
+                      "show": true,
+                      "lineStyle": {
+                        "color": "rgba(255, 255, 255, 0.3)"
+                      },
+                      "smooth": 0.2,
+                      "length": 10,
+                      "length2": 10
+                    }
+                  },
+                  "animationType": "scale",
+                  "animationEasing": "elasticOut"
+                }
+              ]
+            },
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
+            }
+          }
+        },
+        {
+          "id": 5,
+          "title": "{tunnelName}耗电量",
+          "url": "tunnels/{tunnelId}/energies/one-year",
+          "matchChartTypes": [100, 200],
+          "parameters": {
+            "format": {
+              "tunnelId": 1,
+              "tunnelName": "古城大街"
+            },
+            "option": {
+              "xAxis": {
+                "axisLabel": {
+                  "interval": 0,
+                  "rotate": 40,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              },
+              "yAxis": {
+                "axisLabel": {
+                  "interval": 1,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              },
+              "series": [
+                {
+                  "type": "line",
+                  "areaStyle": {
+                    "normal": {
+                      "color": "new this.$echarts.graphic.LinearGradient(0,0,1,[{offset: 0,color: \"#699DCE\"},{offset: 1,color: \"#FF202E\"}] )"
+                    }
+                  }
+                }
+              ]
+            },
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
+            }
+          }
+        },
+        {
+          "id": 6,
+          "title": "未(待)处理缺陷",
+          "url": "tunnels/defectcount",
+          "matchChartTypes": [201, 501],
+          "parameters": {
+            "option": {
+              "xAxis": {
+                "axisLabel": {
+                  "interval": 0,
+                  "rotate": 40,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              },
+              "yAxis": {
+                "axisLabel": {
+                  "interval": 1,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              }
+            },
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
+            }
+          }
+        },
+        {
+          "id": 7,
+          "title": "设备报警统计",
+          "url": "tunnel/alarmcount",
+          "matchChartTypes": [202],
+          "parameters": {
+            "option": {
+              "xAxis": {
+                "axisLabel": {
+                  "interval": 1,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              },
+              "yAxis": {
+                "axisLabel": {
+                  "interval": 0,
+                  "textStyle": {
+                    "color": "#F1F2F3"
+                  }
+                }
+              }
+            },
+            "timer": {
+              "intervalId": 0,
+              "intervalTime": 15000
+            }
+          }
+        },
+        {
+          "id": 8,
+          "title": "管廊能耗统计",
+          "url": "tunnels/items/energies",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 9,
+          "title": "能耗（KWh/km）",
+          "url": "tunnels/avg-energies",
+          "matchChartTypes": [500],
+          "parameters": {}
+        },
+        {
+          "id": 10,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 11,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 12,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 13,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 14,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 15,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        },
+        {
+          "id": 16,
+          "title": "管廊巡检计划数",
+          "url": "tunnel/defect-count",
+          "matchChartTypes": [300],
+          "parameters": {}
+        }
+      ],
+      "deployCharts": [
+        {
+          "modelId": "vmModel1",
+          "dataId": 1,
+          "chartType": 900
+        },
+        {
+          "modelId": "vmModel2",
+          "dataId": 2,
+          "chartType": 200
+        },
+        {
+          "modelId": "vmModel3",
+          "dataId": 3,
+          "chartType": 501
+        },
+        {
+          "modelId": "vmModel4",
+          "dataId": 4,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel5",
+          "dataId": 5,
+          "chartType": 100
+        },
+        {
+          "modelId": "vmModel6",
+          "dataId": 6,
+          "chartType": 201
+        },
+        {
+          "modelId": "vmModel7",
+          "dataId": 7,
+          "chartType": 202
+        },
+        {
+          "modelId": "vmModel8",
+          "dataId": 8,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel9",
+          "dataId": 9,
+          "chartType": 500
+        },
+        {
+          "modelId": "vmModel10",
+          "dataId": 10,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel11",
+          "dataId": 11,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel12",
+          "dataId": 12,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel13",
+          "dataId": 13,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel14",
+          "dataId": 14,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel15",
+          "dataId": 15,
+          "chartType": 300
+        },
+        {
+          "modelId": "vmModel16",
+          "dataId": 16,
+          "chartType": 300
+        }
+      ]
+    }
+  },
+  "VMExtendStyle": {
+    "VMContextExtend0": {
+      "className": "模块0",
+      "extendStyle": {
+        "width": "100%",
+        "left": "0"
+      },
+      "isShow": true
     },
-    "progressTime": 90
+    "VMContextExtend1": {
+      "className": "模块1",
+      "extendStyle": {
+        "width": "0",
+        "left": "0"
+      },
+      "isShow": true
+    },
+    "VMContextExtend2": {
+      "className": "模块2",
+      "extendStyle": {
+        "width": "0",
+        "left": "0"
+      },
+      "isShow": true
+    }
+  },
+  "flyFilePathes": [
+    {
+      "id": 1,
+      "name": "飞行路线_1",
+      "path": "/VM/font/flytest.fpf",
+      "isFlyLoop": "true"
+    },
+    {
+      "id": 2,
+      "name": "飞行路线_2",
+      "path": "/VM/font/flytest2.fpf",
+      "isFlyLoop": "true",
+      "waitTime": 30
+    },
+    {
+      "id": 3,
+      "name": "飞行路线_3",
+      "path": "/VM/font/flytest3.fpf",
+      "isFlyLoop": "true",
+      "playRate": "0.05"
+    }
+  ],
+  "VMEntityConfig": {
+    "entityParam": [
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.49948864664668",
+            "Y": "37.71034251365869",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "监控中心",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.49506",
+            "Y": "37.706148",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "晋源区实验中学",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.499595",
+            "Y": "37.704056",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "山西省儿童医院",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.477914",
+            "Y": "37.715545",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "晋源区政府",
+            "fontSize": "40"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.4858731580146",
+            "Y": "37.72776923822512",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "太原古县城",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.52207233753701",
+            "Y": "37.70384793736499",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "管廊东入口",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.51743415066589",
+            "Y": "37.69655876626396",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "污水泵站",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "position": {
+            "X": "112.51382289846887",
+            "Y": "37.69271374038769",
+            "Z": "10.05671606378695929"
+          },
+          "point": {
+            "outlineWidth": "6",
+            "pixelSize": "20"
+          },
+          "label": {
+            "text": "雨水泵站",
+            "fontSize": "30"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 1,
+          "polyline": {
+            "position": {
+              "startLon": "112.484733",
+              "startLat": "37.715056",
+              "endLon": "112.524978",
+              "endLat": "37.7036"
+            },
+            "width": 5,
+            "color": "black"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 2,
+          "polyline": {
+            "position": {
+              "startLon": "112.46497321322141",
+              "startLat": "37.721283776953875",
+              "endLon": "112.48469357685028",
+              "endLat": "37.715046725374094"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 3,
+          "polyline": {
+            "position": {
+              "startLon": "112.5200631521748",
+              "startLat": "37.70063791320829",
+              "endLon": "112.46357985311712",
+              "endLat": "37.71795847249162"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 4,
+          "polyline": {
+            "position": {
+              "startLon": "112.47854790079535",
+              "startLat": "37.70960497901218",
+              "endLon": "112.4649725227166",
+              "endLat": "37.71379327381019"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 5,
+          "polyline": {
+            "position": {
+              "startLon": "112.47579980976145",
+              "startLat": "37.71784195637116",
+              "endLon": "112.47268569619781",
+              "endLat": "37.71144926093433"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 6,
+          "polyline": {
+            "position": {
+              "startLon": "112.47171890502153",
+              "startLat": "37.719147063429226",
+              "endLon": "112.46859753846694",
+              "endLat": "37.71267458641243"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 7,
+          "polyline": {
+            "position": {
+              "startLon": "112.46768743847105",
+              "startLat": "37.72042316810289",
+              "endLon": "112.46609860824107",
+              "endLat": "37.71716704813495"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 8,
+          "polyline": {
+            "position": {
+              "startLon": "112.46610374123236",
+              "startLat": "37.71718326599255",
+              "endLon": "112.46535031570014",
+              "endLat": "37.71373758919339"
+            },
+            "width": 5,
+            "color": "red",
+            "lineType": "DottedLine"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 9,
+          "polyline": {
+            "position": {
+              "startLon": "112.516801",
+              "startLat": "37.6972593",
+              "endLon": "112.47843",
+              "endLat": "37.709596"
+            },
+            "width": 5,
+            "color": "black"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 10,
+          "polyline": {
+            "position": {
+              "startLon": "112.489179",
+              "startLat": "37.713805",
+              "endLon": "112.486048",
+              "endLat": "37.707125"
+            },
+            "width": 5,
+            "color": "black"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 11,
+          "polyline": {
+            "position": {
+              "startLon": "112.492891",
+              "startLat": "37.712722",
+              "endLon": "112.489708",
+              "endLat": "37.705963"
+            },
+            "width": 5,
+            "color": "black"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 12,
+          "polyline": {
+            "position": {
+              "startLon": "112.500104",
+              "startLat": "37.710666",
+              "endLon": "112.496759",
+              "endLat": "37.703691"
+            },
+            "width": 5,
+            "color": "black"
+          }
+        }
+      },
+      {
+        "entityExtendParameters": {
+          "id": 13,
+          "polyline": {
+            "position": {
+              "northWestLon": "112.493083",
+              "northWestLat": "37.730319",
+              "northEasternLon": "112.480216",
+              "northEasternLat": "37.732412",
+              "southWestLon": "112.491123",
+              "southWestLat": "37.723368",
+              "southEasternLon": "112.477995",
+              "southEasternLat": "37.725628"
+            },
+            "width": 5,
+            "color": "blue"
+          }
+        }
+      }
+    ]
+  },
+  "progressTime": 90
 }

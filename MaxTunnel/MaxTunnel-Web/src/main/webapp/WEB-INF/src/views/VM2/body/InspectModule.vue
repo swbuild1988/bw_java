@@ -3,8 +3,14 @@
         <div class="title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="charts">
-            <CrossBarChart v-bind="corssBarChartData"></CrossBarChart>
+        <div
+            class="charts"
+            ref="chart"
+        >
+            <CrossBarChart
+                v-bind="corssBarChartData"
+                ref="corssBarChar"
+            ></CrossBarChart>
         </div>
         <div class="inspectCount">
             <div class="untilNow">至今</div>
@@ -56,11 +62,12 @@
 <script>
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
 import CrossBarChart from "../../../components/Common/Chart/CrossBarChart"
+import { InspectService } from '../../../services/inspectService'
 
 export default {
     data() {
         return {
-            title: "巡检",
+            title: "巡检模块",
             taskCount: {
                 nowYearTaskCount: 0,
                 isRise: false,
@@ -79,19 +86,10 @@ export default {
             },
             corssBarChartData: {
                 id: 'corssBarChartID',
-                title: '巡检计划对比',
-                legendData: ['2018年', '2019年'],
-                yAxisData: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                seriesData: [
-                    {
-                        data: ['15', '26', '86', '78', '53', '45', '82', '78', '29', '156', '75', '65']
-                    }, {
-                        data: ['56', '89', '56', '28', '76', '15', '26', '86', '78', '53', '45', '82']
-                    }
-                ],
-                // legendData: [],
-                // yAxisData: [],
-                // seriesData: [],
+                title: '巡检缺陷维修统计',
+                legendData: [],
+                yAxisData: [],
+                seriesData: [],
             },
             monthValArray1: [],
             monthValArray2: []
@@ -102,96 +100,66 @@ export default {
         CrossBarChart
     },
     mounted() {
-        this.getPatrolTaskCount()
-        this.getDefectCount()
-        this.getMaintenanceCount()
-        this.getMaintenanceRate()
-        // this.getEveryMonthPlan()
+        this.init()
+        this.refreshData()
     },
     methods: {
-        //获取今年的巡检任务总数
-        getPatrolTaskCount() {
-            this.axios.get('inspection-tasks/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.taskCount.nowYearTaskCount = data.nowYearTaskCount
-                    if (data.nowYearTaskCount >= data.beforeYearTaskCount) {
-                        this.taskCount.isRise = true
-                    } else {
-                        this.taskCount.isRise = false
-                    }
-                }
+        init() {
+            let p1 = InspectService.getPatrolTaskCount();
+            let p2 = InspectService.getDefectCount();
+            let p3 = InspectService.getMaintenanceCount();
+            Promise.all([p1, p2, p3]).then(res => {
+                //获取今年的巡检任务总数
+                this.taskCount.nowYearTaskCount = res[0].nowYearTaskCount
+                this.taskCount.isRise = res[0].nowYearTaskCount >= res[0].beforeYearTaskCount ? true : false
+
+                //获取缺陷总数
+                let defectCount1 = res[1].nowYearDefectCount
+                let defectCount2 = res[1].beforeYearDefectCount
+                this.defectCount.nowYearDefectCount = res[1].nowYearDefectCount
+                this.taskCount.isRise = res[1].nowYearDefectCount >= res[1].beforeYearDefectCount ? true : false
+
+                //获取维修数
+                let orderCount1 = res[2].nowYearOrderCount
+                let orderCount2 = res[2].beforeYearOrderCount
+                this.maintenanceCount.nowYearOrderCount = res[2].nowYearOrderCount
+                this.maintenanceCount.isRise = res[2].nowYearOrderCount >= res[2].beforeYearOrderCount ? true : false
+
+                //获取维修率
+                this.maintenanceRateCount.nowYearOrderPercentage = (orderCount1 / defectCount1 * 100).toFixed(1)
+                this.maintenanceRateCount.isRise = (orderCount1 / defectCount1) >= (orderCount2 / defectCount2) ? true : false;
             })
-        },
-        //获取缺陷总数
-        getDefectCount() {
-            this.axios.get('defects/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.defectCount.nowYearDefectCount = data.nowYearDefectCount
-                    if (data.nowYearDefectCount >= data.beforeYearDefectCount) {
-                        this.defectCount.isRise = true
-                    } else {
-                        this.defectCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取维修数
-        getMaintenanceCount() {
-            this.axios.get('/orders/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.maintenanceCount.nowYearOrderCount = data.nowYearOrderCount
-                    if (data.nowYearOrderCount >= data.beforeYearOrderCount) {
-                        this.maintenanceCount.isRise = true
-                    } else {
-                        this.maintenanceCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取维修率
-        getMaintenanceRate() {
-            this.axios.get('orders/percentage-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.maintenanceRateCount.nowYearOrderPercentage = data.nowYearOrderPercentage
-                    if (data.nowYearOrderPercentage >= data.beforeYearOrderPercentage) {
-                        this.maintenanceRateCount.isRise = true
-                    } else {
-                        this.maintenanceRateCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取今年与去年的每月巡检计划数
-        getEveryMonthPlan() {
-            this.axios.get('inspection-tasks/count-month').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    for (var i = 0; i < data.length; i++) {
-                        var year = data[i].key
-                        for (var j = 0; j < data[i].val.length; j++) {
-                            if (i == 0) {
-                                var month = data[0].val[j].key
-                                this.corssBarChartData.yAxisData.push(month)
-                                this.monthValArray1.push(data[0].val[j].val)
-                            } else if (i == 1) {
-                                this.monthValArray2.push(data[i].val[j].val)
-                            }
+            //获取今年与去年的每月巡检计划数
+            InspectService.getEveryMonthMaintenance().then(res => {
+                var arr1 = []
+                var arr2 = []
+                for (var i = 0; i < res.length; i++) {
+                    this.corssBarChartData.yAxisData.push(res[i].key)
+                    for (var j = 0; j < res[i].val.length; j++) {
+                        if (i == 0) {
+                            this.corssBarChartData.legendData.push(res[i].val[j].key)
                         }
-                        this.corssBarChartData.legendData.push(year)
+                        if (j == 0) {
+                            arr1.push(res[i].val[j].val)
+                        }
+                        if (j == 1) {
+                            arr2.push(res[i].val[j].val)
+                        }
                     }
-                    this.corssBarChartData.seriesData.push({
-                        data: this.monthValArray1
-                    }, {
-                            data: this.monthValArray2
-                        })
                 }
-            })
+                arr1 = arr1.reverse()
+                arr2 = arr2.reverse()
+                this.corssBarChartData.yAxisData = this.corssBarChartData.yAxisData.reverse()
+                this.corssBarChartData.seriesData.push({ data: arr1 })
+                this.corssBarChartData.seriesData.push({ data: arr2 })
+            });
+        },
+        refreshData() {
+            setInterval(() => {
+                this.$refs.corssBarChar.drawBar()
+            }, 1000 * 5 * 60)
         }
-    }
+    },
 };
 </script>
 
@@ -211,32 +179,35 @@ export default {
     height: 83%;
     display: inline-block;
     vertical-align: top;
-    margin-left: 4%
+    margin-left: 4%;
 }
 .inspectCount {
-    width: 45%;
+    width: 47%;
     height: 83%;
     display: inline-block;
     vertical-align: top;
-    margin-left: 2%;
-    background: url(../../../assets/VM/patrolVMBG.png) no-repeat
+    padding-left: 2%;
+    padding-right: 1%;
 }
 .untilNow,
 .ratio {
     display: inline-block;
-    color: #fff;
+    color: #ccc;
     font-size: 1.9vmin;
 }
 .untilNow {
     width: 71%;
+    padding-left: 10%;
 }
 .ratio,
 .countDetailBox .iconBox {
-    /* width: 19%; */
     text-align: center;
 }
 .countDetailBox {
-    line-height: 5.5vh;
+    margin-top: 0.5vh;
+    line-height: 5vh;
+    background: url(../../../assets/VM/doubt.png) no-repeat;
+    background-size: 100%;
 }
 .countDetailBox .countTitle,
 .countDetailBox .count,
@@ -250,6 +221,7 @@ export default {
 }
 .countDetailBox .countTitle {
     width: 48%;
+    padding-left: 5%;
 }
 .countDetailBox .count {
     width: 29%;

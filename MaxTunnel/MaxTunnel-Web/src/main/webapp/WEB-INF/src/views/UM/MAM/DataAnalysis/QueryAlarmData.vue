@@ -43,8 +43,8 @@
                   style="width: 65%;"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary"  @click="queryAlarmData" icon="ios-search" size="small" style="font-size: 1.7vmin">查询告警</Button>
-        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline" size="small" style="font-size: 1.7vmin">清除告警</Button>
+        <Button type="primary"  @click="queryAlarmData" icon="ios-search"  style="font-size: 1.7vmin">查询告警</Button>
+        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline"  style="font-size: 1.7vmin">清除告警</Button>
       </Col>
     </Row>
     <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
@@ -215,6 +215,10 @@
 
       queryAlarmData() {
         var _this = this;
+        if(new Date(_this.queryPrams.startTime)>new Date(_this.queryPrams.endTime)){
+          _this.$Message.error('开始时间必须小于结束时间！');
+          return;
+        }
         var prams = {};
         _this.tableLoad = true;
         prams.startTime = _this.queryPrams.startTime != "" ? new Date(_this.queryPrams.startTime).getTime() : 0
@@ -385,11 +389,16 @@
   }
   .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
   .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
-  .ivu-select-multiple >>> .ivu-tag,.ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
+  .ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
   {
     height: 4vmin;
     line-height: 4vmin;
     font-size: 1.4vmin;
+  }
+  .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.2vmin;
   }
   .queryAlarm {
     position: relative;

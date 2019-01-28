@@ -35,10 +35,10 @@
                 </div>
             </div>
             
-            <Table  stripe border :columns="breakColumns"  :style="{height:'20',zIndex:101}" :data="breakData"></Table>
+            <Table  stripe border :columns="breakColumns" :height="tableHeight" :data="breakData"></Table>
             <div class="pageBox">
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
-                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
         </Col>
         <Col span="24" style="height: 40vh;width: 86vw;margin-top: 1vh;">
@@ -59,21 +59,11 @@ export default {
             chartData: {
                 id: 'chartDataId',
                 requestUrl: 'tunnels/equipments/status',
+                title: '管廊设备状态统计',
+                legendData: ['正常','故障'],
                 parameters: {
                     option: {
                         backgroundColor: '#FBFBEA',
-                        title: {
-                            text: '管廊设备状态统计',
-                            textStyle: {
-                                color: '#161139'
-                            }
-                        },
-                        legend: {
-                            data: ['正常','故障'],
-                            textStyle: {
-                                color: '#161139'
-                            }
-                        },
                     },
                     timer: {
                         interval: 5000
@@ -219,6 +209,7 @@ export default {
             }
         )
         this.showTable()
+        this.getTableHieght()
     },
     
     methods:{
@@ -254,14 +245,14 @@ export default {
             this.goToMoudle1(id, types.pageType.Read);
         },
         getTableHieght(){
-            this.tableHeight = document.body.offsetHeight/41 
+            this.tableHeight = document.body.offsetHeight/100*28
         }
     }
 }
 </script>
 <style scoped>
     .conWidth{
-        width: 33%;
+        width: 32%;
         display: inline-block;
     }
     @media (min-width: 2200px){

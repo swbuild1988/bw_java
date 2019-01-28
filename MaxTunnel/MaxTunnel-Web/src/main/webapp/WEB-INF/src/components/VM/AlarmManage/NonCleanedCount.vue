@@ -33,6 +33,7 @@
         },
         beforeDestroy(){
             clearInterval( this.timer );
+            console.log('nonCleanedCount​',document.getElementsByClassName('nonCleanedCount​'))
         }
     }
 </script>

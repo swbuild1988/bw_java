@@ -12,7 +12,7 @@
 	        </DatePicker>
 	    </Col>
 	    <Col span="3">
-	        <Button type="primary" icon="ios-search" @click="searchVideo" size="small">查询</Button>
+	        <Button type="primary" icon="ios-search" @click="searchVideo" >查询</Button>
 	    </Col>
 	    <Col span="1" offset="1">
 	    	<Button type="ghost" @click="back">返回</Button>
@@ -134,6 +134,10 @@ export default {
     },
     methods:{
   		searchVideo() {
+        if(new Date(this.videoSelect.startTime)>new Date(this.videoSelect.endTime)){
+          this.$Message.error('开始时间必须小于结束时间！');
+          return;
+        }
         	console.log('一段时间内的视频')
     	},
     	playVideo(url) {
@@ -157,7 +161,7 @@ export default {
 				let itemId= vlc.playlist.add(this.curVideo)
 				vlc.playlist.playItem(itemId)
 				setTimeout(this.checkVedioStatus,500)
-    		} 
+    		}
 		},
 		checkVedioStatus() {
 			let vlc = document.getElementById("vlc")
@@ -178,7 +182,7 @@ export default {
 			    setTimeout(this.checkTime,50)
 			}else{
 				this.isPlay = false
-				
+
 			}
 		},
 		parseTime(numLength) {
@@ -194,22 +198,22 @@ export default {
 			if(m_time>=60){
 			  h_time=parseInt(m_time/60);
 			  m_time=parseInt(m_time%60);
-			} 
+			}
 			h_time = h_time < 10 ? '0' + h_time : h_time
 			m_time = m_time < 10 ? '0' + m_time : m_time
 			s_time = s_time < 10 ? '0' + s_time : s_time
-			
+
 			return h_time+":"+m_time+":"+s_time;
 		},
 		skipBack() {
 			let vlc = document.getElementById("vlc")
-			vlc.input.position = vlc.input.position - 0.1 
+			vlc.input.position = vlc.input.position - 0.1
 			this.progress.percent = vlc.input.position *　100
 			this.progress.curTime = this.parseTime(parseInt(vlc.input.position * vlc.input.length / 1000))
 		},
 		skipFor() {
 			let vlc = document.getElementById("vlc")
-			vlc.input.position = vlc.input.position + 0.1 
+			vlc.input.position = vlc.input.position + 0.1
 			this.progress.percent = vlc.input.position *　100
 			this.progress.curTime = this.parseTime(parseInt(vlc.input.position * vlc.input.length / 1000))
 		},

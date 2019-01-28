@@ -1,23 +1,32 @@
 <template>
-    <div class='Grid1'>
-        <div class="Title">
+    <div class='grid1'>
+        <div class="gridTitle">
             <p>{{title}}</p>
+        </div>
+        <div class="subTitle">
+            <div class="name">
+                <p> {{subTitle[0]}} </p>
+            </div>
+            <div class="val">
+                <p> {{subTitle[1]}} </p>
+            </div>
+            <div class="percent">
+                <p> {{subTitle[2]}} </p>
+            </div>
         </div>
         <div
             v-for="item in data"
-            class="Row"
+            class="row"
             :key="item.name"
         >
-            <div class="Name">
+            <div class="name">
                 <p>{{item.name}}</p>
             </div>
-            <div class="Result">
-                <div class="Value">
-                    <p>{{item.value}}</p>
-                </div>
-                <div class="Unit">
-                    <p>{{item.unit}}</p>
-                </div>
+            <div class="val">
+                <p>{{item.value + item.unit}}</p>
+            </div>
+            <div class="percent">
+                <p>{{item.percent}}</p>
             </div>
         </div>
     </div>
@@ -29,6 +38,10 @@ export default {
     props: {
         title: {
             type: String,
+            require: true
+        },
+        subTitle: {
+            type: Array,
             require: true
         },
         data: {
@@ -46,49 +59,88 @@ export default {
 </script>
 
 <style scoped>
-.Grid1 {
+.grid1 {
     position: relative;
     left: 10%;
     width: 80%;
     height: 100%;
     overflow: auto;
 }
-.Title {
+.gridTitle {
     width: 100%;
-    height: 22%;
+    height: 25%;
 }
-.Title > p {
-    font-size: 1.6vmin;
+.gridTitle > p {
+    font-size: 1.7vmin;
     color: #fff;
 }
-.Row {
+.subTitle {
+    position: relative;
     width: 100%;
-    height: 18%;
-    background: url('../../assets/VM/common_item_bg.png');
+    height: 15%;
+}
+.subTitle >>> p {
+    color: #ccc;
+    font-size: 1.25vmin;
+}
+.row {
+    position: relative;
+    width: 100%;
+    height: 16%;
+    background: url("../../assets/VM/common_item_bg.png");
     background-size: 100% 100%;
-    margin: 0.6vmin 0;
+    margin: 2% 0;
 }
-.Row >>> p {
-    font-size: 1.34vmin;
+.row >>> p {
+    font-size: 1.45vmin;
     color: #fff;
 }
-.Row .Name {
-    float: left;
+.subTitle .name {
+    position: absolute;
     height: 100%;
-    padding: 0 1.6vmin;
+    width: 50%;
+    left: 0%;
+    top: 0%;
+    padding-left: 1.65vmin;
 }
-.Row .Result {
-    float: right;
+.subTitle .val {
+    text-align: center;
+    position: absolute;
     height: 100%;
-   /* padding: 0 0.4vmin;*/
+    width: 25%;
+    left: 50%;
+    top: 0%;
 }
-.Result .Value {
-    float: left;
+.subTitle .percent {
+    text-align: right;
+    position: absolute;
     height: 100%;
+    width: 25%;
+    left: 75%;
+    top: 0%;
 }
-.Result .Unit {
-    margin-left: 0.2vw;
-    float: left;
+.row .name{
+    position: absolute;
     height: 100%;
+    width: 50%;
+    left: 0%;
+    top: 8%;
+    padding-left: 1.65vmin;
+}
+.row .val {
+    text-align: center;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 50%;
+    top: 8%;
+}
+.row .percent {
+    text-align: right;
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 75%;
+    top: 8%;
 }
 </style>

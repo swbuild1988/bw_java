@@ -1,7 +1,7 @@
 <template>
   <div  @click="locationEquimpent">
     <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
-      <p slot="title">{{Obj.objtypeName}}</p>
+      <p slot="title" style="font-size: 1.6vmin">{{Obj.objtypeName}}</p>
       <!-- 开 -->
       <img src="../../../assets/UM/lamp-on.png" v-if="Obj.objtypeId==11 && curValue" class="img">
       <img src="../../../assets/UM/风机gif.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
@@ -23,13 +23,13 @@
       <!-- 声光报警 41，红外 57，门禁 55-->
 
       <div class="switchContent">
-        <i-switch v-model="curValue" @on-change="confirm" class="switch">
-          <span slot="open" class="open">ON</span>
-          <span slot="close" class="close">OFF</span>
+        <i-switch v-model="curValue" @on-change="confirm" size="large">
+          <span slot="open">开</span>
+          <span slot="close">关</span>
         </i-switch>
-        <span v-if="initOff" class="initOff">OFF</span>
       </div>
-      <div style="margin-top: 3vh">{{Obj.ObjName}}</div>
+      <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
+      <div style="margin-top: 2vh;font-size: 1.66vmin">{{Obj.ObjName}}</div>
       <!-- <p slot="title">{{Obj.objtypeName}}</p>
       <div style="background-color:#7D8481;height: 100px; ">
         <span style="float:left;color: #ffffff;margin-top: 3.2vh;width:40%;font-size: 18px; ">{{Obj.ObjName}}</span>
@@ -83,7 +83,8 @@
         curImgUrl: "",
         initOff: true,
         confirmFlag: false,
-        curValue: this.Obj.ObjVal
+        curValue: null,
+        isTimeShow: false
       };
     },
     components: {Light, Fans},
@@ -115,25 +116,37 @@
       }
     },
     mounted() {
-      
+      if(this.Obj.time != ''){
+        this.isTimeShow = true
+      }
+      this.curValue = this.Obj.ObjVal > 0 ? true : false
     },
   }
 </script>
 
 <style scoped>
   .ivu-switch:after {
-    width: 30px;
-    height: 30px;
-    top: -1px;
+    width: 2vmin;
+    height: 2vmin;
+    left: 0.1vmin;
+    top: 0.1vmin;
   }
-  
+  .ivu-switch-large{
+    width: 6vmin;
+  }
   .ivu-switch{
     background-color: #9e9e9e;
-  }
-  .ivu-switch-checked:after {
-    left: 42px;
+    height: 2.4vmin;
+    line-height: 2.2vmin;
   }
 
+  .ivu-switch-checked:after {
+    left: 3.7vmin;
+  }
+  .ivu-switch >>> .ivu-switch-inner{
+    font-size: 1.2vmin;
+    left: 2.2vmin;
+  }
   .ivu-switch-checked{
     background-color: #2d8cf0;
     border-color: 2px solid #2d8cf0;
@@ -148,36 +161,23 @@
     border-radius: 10px;
     margin: 1vh 0;
     text-align: center;
-    height: 25vh;
-  }
-  .open{
-    position: absolute;
-    top: 2px;
-    left: 0;
-  }
-  .close{
-    position: absolute;
-    top: 2px;
-    right: -40px;
+    height: 28vh;
   }
   .switchContent{
     position: relative;
     margin-top: 2vh;
-  }
-  .switch{
-    width: 74px;
-    height: 30px;
-    position: relative;
   }
 
   .img{
     width: 28%;
     height: 28%;
   }
-  .initOff{
-    position: absolute;
-    top: 4px;
-    left: 52%;
-    color: white;
+  .time {
+    margin: 1vh 0;
+    font-size: 1.6vmin;
+  }
+  .ivu-card-head p{
+    height: 2vmin;
+    line-height: 2vmin;
   }
 </style>

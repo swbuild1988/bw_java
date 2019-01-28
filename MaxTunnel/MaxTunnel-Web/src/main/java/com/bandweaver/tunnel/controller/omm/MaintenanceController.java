@@ -47,6 +47,7 @@ import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -562,5 +563,61 @@ public class MaintenanceController {
     	obj.put("beforeYearOrderPercentage", beforeYearOrderPercentage);
     	
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    /**
+     * 获取设备缺陷每个月的维修情况
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月17日
+     */
+    @RequestMapping(value = "maintenance-orders/months", method = RequestMethod.GET)
+    public JSONObject getEquipmentOrderCountByMonth() {
+    	
+    	List<JSONObject> list = new ArrayList<>();
+    	Date now = new Date();
+    	// 往后循环12个月
+		for(int i=0;i<12;i++) {
+			JSONObject obj = new JSONObject();
+			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+			obj.put("key", time);
+			Date startTime = DateUtil.getBeginDayOfMonth(now);
+			Date endTime = DateUtil.getEndDayOfMonth(now);
+			
+			MaintenanceOrderVo vo = new MaintenanceOrderVo();
+			vo.setStartTime(startTime);
+			vo.setEndTime(endTime);
+			
+			// 存放“已维修”和“未维修”
+			List<JSONObject> orderList = new ArrayList<>();
+			JSONObject maintenance = new JSONObject();
+			maintenance.put("key", "已维修");
+			orderList.add(maintenance);
+			JSONObject unmaintenance = new JSONObject();
+			unmaintenance.put("key", "未维修");
+			orderList.add(unmaintenance);
+			
+			for(JSONObject order : orderList) {
+				// 添加假数据
+				if(order.equals(orderList.get(0)))
+					order.put("val", (int)(Math.random() * 6 + 16));
+				else
+					order.put("val", (int)(Math.random() * 3 + 4));
+				// 真实数据
+//				vo.setIsFinished(false);
+//				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+//				int count = 0;
+//				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+//				for(MaintenanceOrderDto dto : dtoList) {
+//					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+//					if(defectDto.getObjectId() != null) count++;
+//				}
+//				order.put("val", count);
+				
+			}
+			obj.put("val", orderList);
+			list.add(obj);
+			now.setMonth(now.getMonth() - 1);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 }

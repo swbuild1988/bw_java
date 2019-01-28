@@ -34,8 +34,8 @@
                 结束时间：
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
-            <Col span="6" offset="6">
-                <Button type="primary" icon="ios-search" size="small" @click="showTable()">查询</Button>
+            <Col span="6">
+                <Button type="primary" icon="ios-search"  @click="showTable()">查询</Button>
             </Col>
         </Row>
         <div class="list">
@@ -56,38 +56,40 @@
                     </div>
                     <div class="detailsBox">
                         <div>
-                            <div class="backUpInfo">设备类型：{{ item.typeName }}</div>
-                            <div class="backUpInfo">设备型号：{{ item.modelName }}</div>
+                            <div class="backUpInfo" style="width: 44%">设备类型：{{ item.typeName }}</div>
+                            <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
                         </div>
                         <div>
-                            <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
+                            <div class="backUpInfo" style="width: 44%">设备型号：{{ item.modelName }}</div>
                             <div class="backUpInfo">入库时间：{{ item.inTime }}</div>
                         </div>
                     </div>
                     <div class="operation">
                         <Row>
-                            <Col span="8" class="operationSee">
+                            <Col span="12" class="operationSee">
                                 <Icon type="reply" size=20></Icon>
                                 <div class="borrowBox">
                                     <Button class="borrowBtn" @click="show(item.id)" :disabled="item.status==false">取用出库</Button>
-                                </div>    
+                                </div>
                             </Col>
-                            <Col span="8" class="operationEdit">
+                            <!-- <Col span="8" class="operationEdit">
                                 <Icon type="edit" size=19></Icon>
                                 <p @click="edit(index)">编辑</p>
-                            </Col>
-                            <Col span="8" class="operationDel">
+                            </Col> -->
+                            <Col span="12" class="operationDel">
                                 <Icon type="trash-a" size=20></Icon>
-                                <p @click="del(index)">删除</p>
+                                <div class="borrowBox">
+                                    <Button class="borrowBtn" @click="del(item.id)" :disabled="item.status==false">删除</Button>
+                                </div>
                             </Col>
                         </Row>
-                    </div>  
+                    </div>
                 </col>
-            </Row> 
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-                :style='pageStyle'></Page>       
+            </Row>
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+            :style='pageStyle'></Page>
         <Modal
             title="批量出库"
             v-model="isOutStorage"
@@ -125,10 +127,10 @@
                 </Col>
             </Row>
             <Table stripe border height="330" ref="selection" :columns="outStorageColums"  :data="outStorageData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
-            
+
             <Page :total="OutStoragePage.pageTotal" :current="OutStoragePage.pageNum" :page-size="OutStoragePage.pageSize" show-total show-sizer
-              placement="top" @on-change="handlePageStorage" @on-page-size-change='handPageSizeStorage' show-elevator style="margin-top: 10px;text-align: right"></Page>              
-            
+              placement="top" @on-change="handlePageStorage" @on-page-size-change='handPageSizeStorage' show-elevator style="margin-top: 10px;text-align: right"></Page>
+
             <Row style="margin-top: 20px;">
                 <Form ref="outStorageSubmitData" :model="outStorageSubmitData" :rules="ruleInline" inline>
                     <Col span="12">
@@ -232,7 +234,7 @@ export default {
                 isInStorage: null,
             },
             backImage: {
-                backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",   
+                backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
             },
             status:[
                 { key: 0, val: '出库' },
@@ -482,6 +484,10 @@ export default {
         //备品备件分页查询
         showTable() {
             let _this = this;
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             EquipmentService.backUpDatagrid(this.params).then(
                 result => {
                     for (let index in result.list) {
@@ -542,23 +548,15 @@ export default {
             this.OutStoragePage.pageSize = value;
             this.showInStorage()
         },
-        //删除 
-        del(index) {
+        //删除
+        del(id) {
             let _this = this;
-            EquipmentService.equipmentDatagird(this.params).then(
-                result => {
-                    _this.deleteEquipmentInfo = result.list[index];
-                },
-                error => {
-                    _this.Log.info(error);
-                }
-            );
             this.$Modal.confirm({
                 title: "删除",
                 content: "<p>确认删除吗?</p>",
                 onOk: () => {
                     let _this = this;
-                    EquipmentService.deleteEquipment(this.deleteEquipmentInfo.id).then(
+                    EquipmentService.deSpare(id).then(
                         result => {
                             _this.showTable();
                         },
@@ -646,6 +644,7 @@ export default {
         },
         cancelBatchOut(name){
             this.$refs[name].resetFields()
+            this.isOutStorage = false
         },
         getModalWidth(){
             this.modalWidth = document.body.offsetWidth *0.5
@@ -710,7 +709,6 @@ export default {
 
 .backUpInfo{
     display: inline-block;
-    width: 49%;
     line-height: 36px;
     padding-left: 5px;
 }
@@ -763,7 +761,7 @@ export default {
     }
     .backUpInfo{
         line-height: 4vh;
-        font-size: 1.4vmin;
+        font-size: 1.3vmin;
     }
     .operation,.borrowBtn{
         font-size: 1.4vmin !important;
@@ -775,6 +773,9 @@ export default {
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 11vmin !important;
         line-height: 4.5vmin;
+    }
+    .equipentTitle{
+        font-size: 2vmin;
     }
 }
 </style>

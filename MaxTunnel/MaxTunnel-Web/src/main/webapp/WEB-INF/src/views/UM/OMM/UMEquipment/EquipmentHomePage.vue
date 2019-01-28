@@ -61,7 +61,7 @@
             </Col>
             </Col>
         </Row>
-        <Row style="margin-top:2vh;">
+        <Row style="margin-top:1vh;">
             <Col span="5">
             <div
                 class="circleBox"
@@ -85,27 +85,24 @@
             </div>
             </Col>
             <Col span="7">
-            <Card style="width: 98%">
+            <Card style="width: 98%;height: 21vh">
                 <p slot="title">备品备件明细</p>
                 <div style="height: 3vh">
                     <Row :gutter="16">
                         <Col
-                            span="10"
-                            offset="2"
+                            span="12"
                             style="line-height: 4vh;"
                         >
                         出库至管廊设备数：<span>{{spareDetails.equipment}}</span>
                         </Col>
                         <Col
-                            span="10"
-                            offset="2"
+                            span="12"
                             style="line-height: 4vh;"
                         >
                         出库至仪表工具数：<span>{{spareDetails.instrument}}</span>
                         </Col>
                         <Col
-                            span="22"
-                            offset="2"
+                            span="24"
                             style="line-height: 4vh;"
                         >
                         备品备件当前在库数：<span>{{spareDetails.in}}</span>
@@ -115,7 +112,7 @@
             </Card>
             </Col>
             <Col span="7">
-            <Card style="width: 98%">
+            <Card style="width: 98%;height: 21vh">
                 <p slot="title">最新一条故障信息</p>
                 <Table
                     stripe
@@ -246,11 +243,9 @@ export default {
             equipmentChart: {
                 id: "equipmentChartId",
                 requestUrl: "/spares/equipments/instruments/counts/types",
+                title: '设备类别',
                 parameters: {
                     option: {
-                        title: {
-                            text: "设备类别"
-                        }
                     }
                 }
             },
@@ -430,7 +425,6 @@ export default {
                 let { code, data } = res.data
                 if (code == 200) {
                     this.breakData = data
-                    console.log("data", data)
                 }
             })
         },
@@ -524,9 +518,15 @@ ul li {
     height: 16vh;
     overflow-y: auto;
 }
-/* .ivu-card >>> .ivu-card-head{
-    line-height: 2vh;
-} */
+@media (min-width: 2200px){
+    .ivu-col-span-7 >>> .ivu-card, .ivu-card >>> .ivu-card-head p{
+        font-size: 1.4vmin !important;
+    }
+    .ivu-card >>> .ivu-card-head p{
+        height: 2vmin;
+        line-height: 2vmin;
+    }
+}
 </style>
 
 

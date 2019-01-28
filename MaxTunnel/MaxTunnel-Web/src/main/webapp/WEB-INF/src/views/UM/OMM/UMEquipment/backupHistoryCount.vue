@@ -108,7 +108,7 @@
                 </Col>
             </Row>
             <Table stripe border :columns="toolColumns"  :height="tableHeight"  :data="toolData"></Table>
-            <div>
+            <div class="pageBox">
                 <Page ref="pageBox" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
                     placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
                     :style='pageStyle'></Page>
@@ -228,14 +228,12 @@ export default {
                     {
                         title: '入库时间',
                         key: 'inTime',
-                        align: 'center',
-                        width: 190
+                        align: 'center'
                     },
                     {
                         title: '出库时间',
                         key: 'outTime',
-                        align: 'center',
-                        width: 190
+                        align: 'center'
                     },
                     {
                         title: '取用人',
@@ -343,6 +341,7 @@ export default {
             backupDetailData: {
                 id: " toolDetail",
                 requestUrl: "spares/outs/type",
+                title: '备品备件明细',
                 parameters: {
                     option: {
                         backgroundColor: '#FCF2EA',
@@ -635,8 +634,8 @@ export default {
             this.showTakingPersonDetails(this.staffId)
         },
         getModalWidth(){
-            this.modalWidth = document.body.offsetWidth *0.5
-            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-45
+            this.modalWidth = document.body.offsetWidth *0.55
+            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-document.body.offsetHeight/100*3.2
         }
     }
 };
@@ -696,6 +695,9 @@ export default {
     }
     .timeWidth,.borrowName{
         width: 17vmin;
+    }
+    .pageBox{
+        margin-top: 1.3vh;
     }
 }
 </style>

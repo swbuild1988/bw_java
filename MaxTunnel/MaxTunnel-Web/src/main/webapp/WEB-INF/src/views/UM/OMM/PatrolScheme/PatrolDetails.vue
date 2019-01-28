@@ -54,6 +54,9 @@
                   <Input v-model="plan.remark" type="textarea" :rows="4" placeholder="请输入描述..." disabled></Input>
                 </FormItem>
               </Col>
+              <Col span="24" style="text-align: center;padding-bottom: 20px;">
+                <Button type="default" @click="goBack()">返回</Button>
+              </Col>
             </Form>
           </div>
         </Col>
@@ -77,7 +80,7 @@
         </div>
        </Col>
     </Row>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回"></Icon>
+    <!-- <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回"></Icon> -->
   </div>
 </template>
 

@@ -386,6 +386,9 @@ export default {
         margin-left: 15vmin !important;
         line-height: 4.5vmin;
     }
+    .formTitle{
+        font-size: 2.4vmin;
+    }
 }
 </style>
 

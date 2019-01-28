@@ -26,17 +26,18 @@
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <Button type="primary" size="small" icon="ios-search" @click="queryRecords()">查询</Button>
+                    <Button type="primary" icon="ios-search" @click="queryRecords()">查询</Button>
                 </Col>
-            </Row>  
-        </div>      
+            </Row>
+        </div>
         <div class="list">
             <Table :columns="columns1" :data="applicationRecordList"></Table>
             <Modal
                 title="参观人员信息"
                 v-model="modal10"
-                class-name="vertical-center-modal">
-                <Table :columns="columns2" :data="visitorInfo" width="500" :height="300"></Table>
+                class-name="vertical-center-modal"
+                :width="modalWidth">
+                <Table :columns="columns2" :data="visitorInfo"></Table>
                 <div slot="footer">
                   <Button type="primary" @click="modal10=false">确定</Button>
                 </div>
@@ -44,15 +45,16 @@
             <Modal
                 title="申请状态"
                 v-model="modal1"
-                class-name="vertical-center-modal">
+                class-name="vertical-center-modal"
+                :width="modalWidth">
                 <image-from-url :url="imageUrl"></image-from-url>
                 <div slot="footer">
                   <Button type="primary" @click="modal1=false">确定</Button>
                 </div>
             </Modal>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
 <script>
@@ -128,7 +130,7 @@ export default {
           //       style: {
           //         color:
           //           params.row.status == 3 ? "#ff6600"
-          //             : params.row.status == 2 ? "#19be6b" 
+          //             : params.row.status == 2 ? "#19be6b"
           //             : params.row.status == 1 ? "#2d8cf0" : "#a005fdb3"
           //       }
           //     },
@@ -150,7 +152,7 @@ export default {
             return h(
               'span',temp
             )
-          } 
+          }
         },
         {
           title: "查看申请状态",
@@ -300,13 +302,11 @@ export default {
         {
           title: "身份证",
           key: "idCard",
-          align: "center",
-          width: 210
+          align: "center"
         },
         {
           title: "联系方式",
           key: "tel",
-          width: 140,
           align: "center"
         }
       ],
@@ -333,7 +333,9 @@ export default {
       isFinished:[
         {key: 1, val: '是'},
         {key: 0, val: '否'}
-      ]
+      ],
+      modalWidth: null,
+      tableWidth: null
     };
   },
   watch: {
@@ -380,28 +382,15 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/tunnels ").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.tunnels = data;
-    //   }
-    // });
-    // this.axios.get("/action-enums").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.actions = data;
-    //   }
-    // });
-    // this.axios.get("/reqstatus-enums").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.status = data;
-    //   }
-    // });
+    this.getModalWidth()
   },
   methods: {
     queryRecords() {
       let _this = this
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
       EnterGalleryService.enterGalleryDatagrid(_this.params).then(
         (result)=>{
           _this.applicationRecordList = result.list;
@@ -499,6 +488,10 @@ export default {
     showPic(id) {
         this.imageUrl = "/req-historys/" + id + "/activiti-png";
         this.modal1 = true;
+    },
+    getModalWidth(){
+      this.modalWidth = document.body.offsetWidth*0.4
+      this.tableWidth = this.modalWidth - 100
     }
   }
 };
@@ -512,5 +505,8 @@ export default {
         line-height: 4vmin;
         font-size: 1.4vmin;
     }
+    /* .ivu-modal{
+      width: 50vw !important;
+    } */
 }
 </style>

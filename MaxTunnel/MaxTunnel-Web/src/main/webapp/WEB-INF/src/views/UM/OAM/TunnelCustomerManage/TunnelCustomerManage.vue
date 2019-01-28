@@ -30,5 +30,17 @@ export default {
         treeNodeJumpUrl:"/UM/tunnelCustomer/list",
     };
   },
+  created(){
+    if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/tunnelCustomer") < 0) {
+          this.goToMoudle({path: this.tunnelCustomer.leftTree[0].url});
+          sessionStorage.setItem('selectedName','')
+      }
+        sessionStorage.setItem("refreshAddress", "");
+  },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
+  }
 };
 </script>

@@ -1,9 +1,8 @@
 <template>
-    <div class="MultiBar" :id="id"></div>
+    <div class="MultiBar" :id="id" ref="element"></div>
 </template>
 <style scoped>
 .MultiBar {
-    position: relative;
     height: 100%;
     width: 100%;
 }
@@ -18,6 +17,9 @@ export default {
         requestUrl: {
             type: String
         },
+        title: {
+            type: String
+        },
         parameters: {
             type: Object
         }
@@ -25,34 +27,7 @@ export default {
     data() {
         return {
             myChart: {},
-            option: {
-                tooltip: {
-                    trigger: "axis",
-                    axisPointer: {
-                        type: "shadow"
-                    }
-                },
-                grid: {
-                    left: "3%",
-                    right: "4%",
-                    bottom: "3%",
-                    containLabel: true
-                },
-                calculable: true,
-                xAxis: [
-                    {
-                        type: "category",
-                        axisTick: { show: false },
-                        data: []
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: "value"
-                    }
-                ],
-                series: []
-            }
+            option: {}
         };
     },
     mounted() {
@@ -71,6 +46,52 @@ export default {
                 document.getElementById(_this.id)
             );
             // 加载默认参数
+            this.option = {
+                title: {
+                    text: this.title,
+                    textStyle: {
+                        fontSize: this.getFontSize('5%')
+                    },
+                },
+                tooltip: {
+                    trigger: "axis",
+                    axisPointer: {
+                        type: "shadow"
+                    }
+                },
+                grid: {
+                    left: "3%",
+                    right: "4%",
+                    bottom: "3%",
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: "category",
+                        axisTick: { show: false },
+                        data: [],
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
+                            }
+                        },
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: "value",
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
+                            }
+                        },
+                    }
+                ],
+                series: []
+            }
             _this.myChart.setOption(_this.option);
             // 加载新的参数
             if (_this.parameters.option) {
@@ -189,6 +210,20 @@ export default {
             // setInterval(() => {
             //     _this.fetchData(_this.requestUrl);
             // }, _this.intervalTime);
+        },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     }
 };

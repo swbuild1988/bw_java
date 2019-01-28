@@ -25,7 +25,7 @@
             <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
         </Col>
         <Col span="4">
-            <Button type="primary" icon="ios-search" size="small" @click="conditionChange()">查询</Button>
+            <Button type="primary" icon="ios-search" @click="conditionChange()">查询</Button>
         </Col>
       </Row>
     </div>
@@ -70,10 +70,10 @@
         </Col>
       </Row>
       <!-- </Scroll> -->
+    </div>
     <div class="page">
-    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-      placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page> 
-      </div>  
+      <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
   </div>
 </template>
@@ -165,7 +165,11 @@ export default {
   methods: {
     conditionChange: function() {
       let _this = this
-      PatrolService.patrolPlanDatagrid(this.params).then(
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
+      PatrolService.patrolPlanDatagrid(_this.params).then(
         (result)=>{
           for (let index in result.list) {
               result.list[index].inspectTime = new Date(
@@ -250,7 +254,7 @@ export default {
     margin-left: 5px;
     margin-top: 1px;
 }
-.details-top{ 
+.details-top{
     font-size: 16px;
     font-weight: 700;
     line-height: 48px;
@@ -289,11 +293,11 @@ export default {
     line-height: 40px;
     text-align: center;
 }
-.planName{
+/* .planName{
   font-size: 1.66vmin;
-}
+} */
 
-.conditions >>> .ivu-select-placeholder{
+/* .conditions >>> .ivu-select-placeholder{
     font-size: 1.6vmin;
     height: 3vmin;
     line-height: 3vmin;
@@ -304,7 +308,7 @@ export default {
 .conditions >>> .ivu-input{
   font-size: 1.2vmin;
   height: 3.2vmin;
-}
+} */
 /*.conditions >>> .ivu-input-icon{
   font-size: 1.66vmin;
   width: 3.2vmin;

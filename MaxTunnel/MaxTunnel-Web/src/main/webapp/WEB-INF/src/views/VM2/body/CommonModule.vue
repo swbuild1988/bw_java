@@ -1,20 +1,20 @@
 <template>
-    <div class="Main">
-        <div class="Title">
+    <div class="main">
+        <div class="commonTitle">
             <module-title :title="title"></module-title>
         </div>
-        <div class="TunnelMessage">
+        <div class="tunnelMessage">
             <grid v-bind="tunnelMessage"></grid>
         </div>
-        <div class="LineMessage">
+        <div class="lineMessage">
             <grid v-bind="lineMessage"></grid>
         </div>
-        <div class="RunMessage">
-            <p>
+        <div class="runMessage">
+            <!-- <p>
                 管廊已运行<span class="total">{{runMessage.total}}</span>天
-            </p>
+            </p> -->
             <p>
-                管廊连续安全运行<span class="safe">{{runMessage.safe}}</span>天
+                管廊安全运营<span class="safe">{{runMessage.safe}}</span>天
             </p>
         </div>
     </div>
@@ -31,15 +31,21 @@ export default {
             title: "",
             tunnelMessage: {
                 title: "管廊信息",
+                subTitle: ['状态', '数量', '占比'],
                 data: []
             },
             lineMessage: {
                 title: "管线信息",
+                subTitle: ['类型', '长度', '利用率'],
                 data: []
             },
             runMessage: {
                 total: 50,
                 safe: 20
+            },
+            refresh: {
+                time: 300000,
+                intervalId: null
             }
         };
     },
@@ -49,22 +55,34 @@ export default {
     },
     mounted() {
         this.init();
+        let _this = this
+        this.refresh.intervalId = setInterval(() => {
+            _this.init()
+        }, this.refresh.time)
+    },
+    beforeDestory() {
+        clearInterval(this.refresh.intervalId)
     },
     methods: {
         init() {
             this.title = "基本信息";
             TunnelService.getVmTunnelsMessage().then(
                 result => {
-                    this.tunnelMessage.data = result.slice(0,3)
+                    this.tunnelMessage.data = result.slice(0, 3)
+                    this.tunnelMessage.data.forEach(tunnel => {
+                        tunnel.percent = parseInt(tunnel.percent.replace('%', '')).toFixed(0) + '%'
+
+                    })
                 },
                 error => {
                     this.Log.info(error)
                 })
             TunnelService.getVmLineMessage().then(
                 result => {
-                    this.lineMessage.data = result.slice(0,3)
-                    this.lineMessage.data.forEach(line=>{
+                    this.lineMessage.data = result.slice(0, 3)
+                    this.lineMessage.data.forEach(line => {
                         line.value = line.value.toFixed(1)
+                        line.percent = parseInt(line.percent.replace('%', '')).toFixed(0) + '%'
                     })
                 },
                 error => {
@@ -84,42 +102,46 @@ export default {
 </script>
 
 <style scoped>
-.Main {
+.main {
     width: 100%;
     height: 100%;
     background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
-.Main .Title {
+.main .commonTitle {
     width: 100%;
     height: 15%;
 }
-.Main .TunnelMessage {
+.main .tunnelMessage {
     float: left;
     width: 50%;
-    height: 50%;
+    height: 64%;
 }
-.Main .LineMessage {
+.main .lineMessage {
     float: left;
     width: 50%;
-    height: 50%;
+    height: 64%;
 }
-.Main .RunMessage {
+.main .runMessage {
     float: left;
     width: 100%;
-    height: 34%;
+    height: 20%;
 }
-.RunMessage > p {
+.runMessage > p {
     margin-left: 2vw;
-    font-size: 2vmin;
+    font-size: 2.4vmin;
     color: #fff;
+    font-family: UnidreamLED;
+    margin-top: -3.2%;
 }
 .total {
     font-size: 2.4vmin;
     color: #fa0;
+    margin: 0 0.8vmin;
 }
 .safe {
-    font-size: 2.4vmin;
-    color: #0af;
+    font-size: 4.4vmin;
+    color: #fa0;
+    margin: 0 0.8vmin;
 }
 </style>

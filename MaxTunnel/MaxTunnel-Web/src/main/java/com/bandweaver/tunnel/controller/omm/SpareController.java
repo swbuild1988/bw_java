@@ -597,4 +597,29 @@ public class SpareController {
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
+    
+    /**
+     * 获取设备数量/设备状态
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月17日
+     */
+    @RequestMapping(value = "equipments/instruments/status",method=RequestMethod.GET)
+    public JSONObject getEquipmentAndInstrumentStatusCount() {
+		List<JSONObject> list = new ArrayList<>();
+		
+		for (EquipmentStatusEnum e : EquipmentStatusEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			int equipmentCount = equipmentService.getCountByCondition(null, e.getValue(), null);
+			// 获取仪表故障数
+			InstrumentVo vo = new InstrumentVo();
+			vo.setUseStatus(e.getValue());
+			int instrumentCount = instrumentService.getCountByCondition(vo);
+			int count = instrumentCount + equipmentCount;
+			obj.put("val", count);
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
 }

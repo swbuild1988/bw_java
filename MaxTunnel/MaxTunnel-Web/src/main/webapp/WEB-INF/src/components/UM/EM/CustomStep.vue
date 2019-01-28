@@ -1,5 +1,5 @@
 <template>
-  <div class="steps-status" :style="{height:defineHeight + 'px',}">
+  <div class="steps-status" :style="{height:defineHeight + 'vmin',}">
     <!--步骤条间隔线-->
     <div class="steps-tail" v-if="stepLength!=curIndex" :class="{ 'line-unWork': curStatusVal==3,'line-finish':curStatusVal==1, 'line-working':curStatusVal==2,}">
     </div>
@@ -62,7 +62,7 @@
       },
       defineHeight: {
         type: String,
-        default:"120"
+        default:"12"
       },
       stepLength:{
         type: Number,
@@ -104,12 +104,12 @@
     width: 100%;
     height: 100%;
     left: calc(1% + 35px);
-    font-size: 18px;
+    font-size: 1.8vmin;
     z-index: 103;
   }
 
   .step-index{
-    font-size: 20px;
+    font-size: 2vmin;
     color:#999;
     text-align: center;
     z-index: 101;
@@ -144,17 +144,39 @@
     /*width: 70px;*/
     position: absolute;
     text-align: center;
+    font-size: 1.8vmin;
   }
 
   .tip {
     border: 3px solid #fff;
     position: absolute;
-    margin-top: 40px;
+    margin-top: 3vmin;
     border-radius: 4px;
     width: auto;
     padding: 6px;
     text-align: center;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.8vmin;
+  }
+  .tip >>> .ivu-switch-large{
+    width: 6vmin;
+  }
+  .tip >>> .ivu-switch{
+    height: 2.4vmin;
+    line-height: 2.2vmin; 
+  }
+  .tip >>> .ivu-switch-inner{
+    font-size: 1.2vmin;
+    left: 2.5vmin;
+  }
+  .tip >>> .ivu-switch:after{
+    width: 2vmin;
+    height: 2vmin;
+    left: 0.1vmin;
+    top:0.1vmin;
+  }
+  .tip >>> .ivu-switch-checked:after{
+    left: 3.7vmin;
   }
 
   .steps-status {
@@ -164,18 +186,18 @@
 
   .steps-tail {
     position: absolute;
-      margin-left: 70px;
+    margin-left: 7vmin;
     width:calc(90% - 80px);
-    height: 1px;
+    height: 0.1vmin;
     border: 1px solid;
-    top: 38px;
+    top: 3.8vmin;
     left: calc(1% + 35px);
     z-index: 10;
   }
 
   .setp-head {
-    width: 34px;
-    height: 34px;
+    width: 3.4vmin;
+    height: 3.4vmin;
     position: absolute;
     border-radius: 50%;
     border: 1px solid ;
@@ -188,28 +210,28 @@
 
   .step-Icon {
     position: absolute;
-    top: 20px;
-    left: 10px;
+    top: 2vmin;
+    left: 1vmin;
     z-index: 108;
   }
   .circle {
     position: absolute;
-    margin-top: 3px;
-    margin-left: 3px;
+    margin-top: 0.3vmin;
+    margin-left: 0.3vmin;
     background: rgb(255, 53, 59);
     border-radius: 100%;
-    width: 28px;
-    height: 28px;
+    width: 2.8vmin;
+    height: 2.8vmin;
     z-index: 108;
   }
   .circle_bottom {
     position: absolute;
-    margin-top: 3px;
-    margin-left: 3px;
+    margin-top: 0.3vmin;
+    margin-left: 0.3vmin;
     background: rgb(255, 53, 59);
     border-radius: 100%;
-    width: 30px;
-    height: 30px;
+    width: 3vmin;
+    height: 3vmin;
     filter: alpha(opacity=40);
     z-index: 108;
   }
@@ -218,8 +240,8 @@
     position: absolute;
     background: rgba(255, 253, 47,0.4);
     border-radius: 100%;
-    width: 36px;
-    height: 36px;
+    width: 3.6vmin;
+    height: 3.6vmin;
     filter: alpha(opacity=20);
     z-index: 107;
   }

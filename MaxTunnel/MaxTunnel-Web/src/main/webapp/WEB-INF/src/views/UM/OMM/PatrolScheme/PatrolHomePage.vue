@@ -22,9 +22,7 @@
           <p slot="title">故障信息列表</p>
           <p v-for="(item,index) in faultInfoList" value="item" :key="index">
             <span class="goDetail" @click="goDefectDetails(item.id)">{{item.name}}</span>
-            <span
-              style="float: right;font-size: 12px;color: #ff9b00"
-            >{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+            <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
           </p>
         </Card>
         </Col>
@@ -33,9 +31,7 @@
           <p slot="title">计划信息列表</p>
           <p v-for="(item,index) in tunnelInfoList" value="item" :key="index">
             <span class="goDetail" @click="goPatrolPlan(item.planId)">{{item.name}}</span>
-            <span
-              style="float: right;font-size: 12px;color: #ff9b00"
-            >{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+            <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
           </p>
         </Card>
         </Col>
@@ -127,7 +123,7 @@
   import SimpleBar from "../../../../components/Common/Chart/SimpleBarChart";
   import SimplePie from "../../../../components/Common/Chart/SimplePieChart";
   import Ring from "../../../../components/Common/Chart/RingChart";
-  import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
+  import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
   import ProcessRing from "../../../../components/Common/ProcessRing";
   import annualPlan from "../../../../assets/UM/annualPlan.png";
   import curMonthPlan from "../../../../assets/UM/curMonthPlan.png";
@@ -342,8 +338,7 @@
   .GISbox {
     position: relative;
     width: 100%;
-    height: 100%;
-    min-height: 44vh;
+    height: 44vh;
     border: 1px solid #dddee1;
     display: inline-block;
     vertical-align: top;
@@ -402,6 +397,15 @@
   .goDetail {
     cursor: pointer;
   }
+  .goDetail:hover{
+    color:#9300ff;
+    font-size: 1.6vmin;
+  }
+  .defaultListTime{
+    float: right;
+    font-size: 12px;
+    color: #9300ff
+  }
   @media (min-width: 2200px) {
     .ivu-card >>> .ivu-card-head p{
       height: 2vmin;
@@ -410,6 +414,9 @@
     }
     .goDetail{
       font-size: 1.4vmin;
+    }
+    .defaultListTime{
+      font-size: 1.2vmin;
     }
   }
 </style>

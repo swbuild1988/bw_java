@@ -30,6 +30,13 @@ export default {
         treeNodeJumpUrl:"/UM/tunnelContract/list",
     };
   },
+  created() {
+      if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/tunnelContract") < 0) {
+                this.goToMoudle({path: this.tunnelContract.leftTree[0].url});
+                sessionStorage.setItem('selectedName','')
+            }
+              sessionStorage.setItem("refreshAddress", "");
+  },
   watch: {
     '$route': function(){
       if(this.$route.path == '/UM/tunnelContract/add'){
@@ -38,6 +45,11 @@ export default {
         this.tunnelContract.selected = [0,-1]
       }
     }
-  }
+  },
+  methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
+    }
 };
 </script>

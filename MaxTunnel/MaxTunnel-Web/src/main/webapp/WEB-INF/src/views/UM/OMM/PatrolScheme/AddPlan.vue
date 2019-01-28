@@ -392,5 +392,19 @@ input[type='number']{
         width: 8vmin;
         font-size: 1.6vmin;
     }
+    .inputStyle{
+        font-size: 1.4vmin;
+    }
+    /* 年月时间选择器 */
+    .ivu-picker-panel-body >>> .ivu-date-picker-cells {
+        width: 18vmin;
+    }
+    .ivu-date-picker-cells span {
+        width: 5.7vmin;
+        height: 5.6vmin;
+    }
+    .ivu-date-picker-cells-month span{
+        line-height: 2.8vmin;
+    }
 }
 </style>

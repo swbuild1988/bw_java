@@ -22,7 +22,7 @@
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <Button type="primary" size="small" icon="ios-search" @click="queryList()">查询</Button>
+                    <Button type="primary"  icon="ios-search" @click="queryList()">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -56,14 +56,14 @@
                     </div>
                 </Col>
             </Row>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
 <script>
-import { EnterGalleryService } from '../../../../services/enterGalleryService' 
-import { CustomerService } from '../../../../services/customerService' 
+import { EnterGalleryService } from '../../../../services/enterGalleryService'
+import { CustomerService } from '../../../../services/customerService'
 import types from '../../../../../static/Enum.json'
 export default {
     data(){
@@ -127,6 +127,10 @@ export default {
     methods:{
         queryList: function(){
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             CustomerService.customerDatagrid(_this.params).then(
                 (result)=>{
                     for( let index in result.list ){
@@ -241,6 +245,9 @@ export default {
             height: 4vmin;
             line-height: 4vmin;
             font-size: 1.4vmin;
+        }
+        .infoList{
+            width: 82%;
         }
     }
 </style>

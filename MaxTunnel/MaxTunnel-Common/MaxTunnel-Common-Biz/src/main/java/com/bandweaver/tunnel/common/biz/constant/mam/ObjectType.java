@@ -5,59 +5,61 @@ import java.util.List;
 
 public enum ObjectType {
 
-    NONE("无", 0, 0, 0),
-    TEMPERATURE("温度", 1, 1, 1),
-    HUMIDITY("湿度", 2, 1, 1),
-    OXYGEN("氧气", 3, 1, 1),
-    H2S("硫化氢", 4, 1, 1),
-    CH4("甲烷", 5, 1, 1),
-    CO("一氧化碳", 6, 1, 1),
-    VIDEO("视频", 7, 4, 7),
-    DISTRIBUTET("分布式温度", 8, 1, 1),
-    ROBOT("机器人", 9, 4, 97),
-    FAN("风机", 10, 1, 3),
-    LIGHT("照明", 11, 1, 3),
-    POSITION("定位设备", 20, 4, 97),
-    LIQUID("液位仪", 21, 1, 1),
+    NONE("无", 0, 0, 0,""),
+    TEMPERATURE("温度", 1, 1, 1,"℃"),
+    HUMIDITY("湿度", 2, 1, 1,"%"),
+    OXYGEN("氧气", 3, 1, 1, "%"),
+    H2S("硫化氢", 4, 1, 1, "mg/m³"),
+    CH4("甲烷", 5, 1, 1, "%"),
+    CO("一氧化碳", 6, 1, 1, "ppm"),
+    VIDEO("视频", 7, 4, 7, ""),
+    DISTRIBUTET("分布式温度", 8, 1, 1,""),
+    ROBOT("机器人", 9, 4, 97,""),
+    FAN("风机", 10, 1, 3,""),
+    LIGHT("照明", 11, 1, 3,""),
+    POSITION("定位设备", 20, 4, 97,""),
+    LIQUID("液位仪", 21, 1, 1,""),
 
     //普通类电表
-    ELECTRICITY_METER1("风机类电表", 31, 4, 1),
-    ELECTRICITY_METER2("照明类电表", 32, 4, 1),
-    ELECTRICITY_METER3("水泵类电表", 33, 4, 1),
-    ELECTRICITY_METER4("百叶类电表", 34, 4, 1),
-    ELECTRICITY_METER5("井盖类电表", 35, 4, 1),
+    ELECTRICITY_METER1("风机类电表", 31, 4, 1,""),
+    ELECTRICITY_METER2("照明类电表", 32, 4, 1,""),
+    ELECTRICITY_METER3("水泵类电表", 33, 4, 1,""),
+    ELECTRICITY_METER4("百叶类电表", 34, 4, 1,""),
+    ELECTRICITY_METER5("井盖类电表", 35, 4, 1,""),
     //应急类电表
-    ELECTRICITY_METER6("应急照明类电表", 36, 4, 1),
+    ELECTRICITY_METER6("应急照明类电表", 36, 4, 1,""),
     //其他类电表
-    ELECTRICITY_METER7("其他类电表", 37, 4, 1),
+    ELECTRICITY_METER7("其他类电表", 37, 4, 1,""),
 
-    ALTEROR("声光报警", 41, 3, 3),
+    ALTEROR("声光报警", 41, 3, 3,""),
 
-    SETTLE("沉降", 51, 2, 97),
-    EXPANSION_JOINT("伸缩缝", 52, 2, 97),
-    STRESS("应力", 53, 2, 97),
-    EXTERNAL_WATER_PRESSURE("外水压力", 54, 2, 97),
+    SETTLE("沉降", 51, 2, 97,""),
+    EXPANSION_JOINT("伸缩缝", 52, 2, 97,""),
+    STRESS("应力", 53, 2, 97,""),
+    EXTERNAL_WATER_PRESSURE("外水压力", 54, 2, 97,""),
 
-    ENTRANCE_GUARD("门禁", 55, 3, 3),
-    ELECTRONIC_COVERS("电子井盖", 56, 3, 3),
-    INFRARED("红外", 57, 3, 3),
-    BLINDS("百叶", 58, 1, 3),
-    PUMP("水泵", 59, 1, 3);
+    ENTRANCE_GUARD("门禁", 55, 3, 3,""),
+    ELECTRONIC_COVERS("电子井盖", 56, 3, 3,""),
+    INFRARED("红外", 57, 3, 3,""),
+    BLINDS("百叶", 58, 1, 3,""),
+    PUMP("水泵", 59, 1, 3,"");
 
     private String name;
     private int value;
     private int monitorType;
     private int dataType;
+    private String unit;
 
 
     ObjectType() {
     }
 
-    ObjectType(String name, int value, int monitorType, int dataType) {
+    ObjectType(String name, int value, int monitorType, int dataType, String unit) {
         this.name = name;
         this.value = value;
         this.monitorType = monitorType;
         this.dataType = dataType;
+        this.unit = unit;
     }
 
     /**
@@ -155,8 +157,18 @@ public enum ObjectType {
         }
         return null;
     }
+    
+    
 
-    public static List<ObjectType> getEnumByMonitorType(int monitorType) {
+    public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public static List<ObjectType> getEnumByMonitorType(int monitorType) {
         List<ObjectType> list = new ArrayList<>();
         for (ObjectType dl : ObjectType.values()) {
             if (dl.getMonitorType() == monitorType)

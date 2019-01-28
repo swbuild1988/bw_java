@@ -2,20 +2,23 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="6">
-                    任务类型：
-                    <Select style="width:60%" v-model="conditions.processType" @on-change="queryMyTask()">
+                <Col span="4">
+                    <span class="conditionTitle">任务类型：</span>
+                    <Select style="width:60%" v-model="conditions.processType">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in processType" :value="item.val" :key="index">{{item.key}}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime" @on-change="queryMyTask()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="4">
                     <span class="conditionTitle">结束时间：</span>
-                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime" @on-change="queryMyTask()"></DatePicker>
+                    <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
+                </Col>
+                <Col span="4">
+                    <Button type="primary" icon="ios-search" size="small" @click="queryMyTask()">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -27,7 +30,7 @@
                         <div class="unitBox" v-bind:class="{isFinished: item.isFinished,waitStart:item.status=='未开始'}" @click="goToMoudle(item)">
                             <div class="title">
                                 <p>{{item.processTypeName}}</p>
-                                <p style="font-size: 18px;margin-top: 5px;">{{item.status}}</p>
+                                <p class="workDetails">{{item.status}}</p>
                             </div>
                             <div class="crtTime">
                                 <span>{{item.crtTime}} </span>
@@ -247,5 +250,40 @@ export default {
         font-size: 18px;
         padding: 5px;
         border-bottom: 2px solid #357aa1;
+    }
+    .workDetails{
+        font-size: 18px;
+        margin-top: 5px;
+    }
+    @media (min-width: 2200px){
+        .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+        .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+        {
+            height: 4vmin;
+            line-height: 4vmin;
+            font-size: 1.4vmin;
+        }
+        .queryCondition{
+            font-size: 1.4vmin;
+        }
+        .tabName{
+            font-size: 1.8vmin;
+            padding: 0.5vmin;
+            border-bottom: 0.2vmin solid #357aa1;
+        }
+        .unitBox{
+            height: 10vmin;
+            margin: 1vmin auto;
+            border-radius: 0.4vmin;
+        }
+        .title{
+            font-size: 2vmin;
+            line-height: 2.4vmin;
+            padding-top: 2vmin;
+        }
+        .workDetails{
+            font-size: 1.8vmin;
+            margin-top: 0.5vmin;
+        }
     }
 </style>

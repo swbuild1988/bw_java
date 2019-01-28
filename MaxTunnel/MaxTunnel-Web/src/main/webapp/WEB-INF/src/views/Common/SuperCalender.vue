@@ -218,7 +218,6 @@ export default {
         //数组月份转英文
         showMonth: function(){
             var month = this.currentMonth
-            console.log("month",month)
             switch(month){
                 case 1:
                     this.eCurrentMonth = 'JAN'
@@ -393,5 +392,70 @@ ul li{
 }
 .weekDaysBox{
     border: 2px solid #E0AE6E;
+}
+@media (min-width: 2200px){
+    #superCalendar{
+        margin-top: 1vmin;
+    }
+    .arrow{
+        width: 3.5vmin;
+        border: 0.2vmin #357aa1 solid;
+        bottom: 1vmin;
+    }
+    /*年月*/
+    .year-month{
+        margin: 1vmin;
+        font-size: 2.4vmin;
+    }
+    .weekdays div,.days li{
+        width: 8vw;
+    }
+    .weekdays div{
+        border: 0.1vmin solid #64798c;
+        border-radius: 0.4vmin;
+        height: 5.3vh;
+        line-height: 5vh;
+    }
+    .weekdays div:hover{
+        border-radius: 0.4vmin;
+    }
+    .weekdays div{
+        font-size: 1.4vmin;
+    }
+    .days li{
+        font-size: 1.8vmin;
+        padding: 0.3vmin;
+    }
+    /*说明*/
+    .explanation{
+        border: 0.1vmin solid pink;
+        border-radius: 2.9vmin;
+        font-size: 1.2vmin;
+    }
+    .explanationShow{
+        padding: 0px 0.2vmin;
+    }
+    .choose-month-c{
+        font-size: 4.5vmin;
+    }
+    .choose-month-e{
+        font-size: 7.5vmin;
+    }
+    .choose-year{
+        font-size: 5.3vmin;
+    }
+    .daysBox,.weekDaysBox{
+        border-radius: 0.4vmin;
+        padding: 0.3vmin;
+    }
+    .daysBox{
+        border: 0.1vmin solid #14293c;
+    }
+    .weekDaysBox{
+        border: 0.2vmin solid #E0AE6E;
+    }
+    .ivu-icon-chevron-left,.ivu-icon-chevron-right{
+        font-size: 3vmin !important;
+    }
 }
 </style>

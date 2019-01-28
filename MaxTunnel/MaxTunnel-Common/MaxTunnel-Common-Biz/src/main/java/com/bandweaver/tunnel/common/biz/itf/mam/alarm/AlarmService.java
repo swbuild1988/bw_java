@@ -63,5 +63,7 @@ public interface AlarmService {
 
 	int getCountByTime(Date date);
 
+	List<Alarm> getAllList();
+
 
 }

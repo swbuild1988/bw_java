@@ -31,25 +31,11 @@
             url: '/UM/PersonnelPosition/equipmentDistribution'
         }
       ];
-      // this.axios.get("/tunnels").then(result => {
-      //   let {code, data} = result.data;
-      //   var _this = this;
-      //   if (code == 200) {
-      //     data.forEach(a => {
-      //       let temp = {};
-      //       temp.id = a.id;
-      //       temp.name = a.name;
-      //       temp.url = _this.treeNodeJumpUrl + a.id;
-      //       _this.curModule.leftTree.push(temp);
-      //     })
-      //     _this.curModule.leftTree.push({
-      //         name: '设备分配',
-      //         url: '/UM/PersonnelPosition/equipmentDistribution'
-      //     });
-      //     this.goToMoudle({path: this.curModule.leftTree[0].url});
-      //   }
-      // });
-
+      if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/PersonnelPosition") < 0) {
+            this.goToMoudle({path: this.curModule.leftTree[0].url});
+            sessionStorage.setItem('selectedName','')
+        }
+          sessionStorage.setItem("refreshAddress", "");
     },
     beforeRouteUpdate (to, from, next) {
       next()

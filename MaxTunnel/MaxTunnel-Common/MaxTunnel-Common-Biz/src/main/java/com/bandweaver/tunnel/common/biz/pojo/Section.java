@@ -20,6 +20,8 @@ public class Section implements Serializable{
     
     private Integer totalCableNumber;
     
+    private Double length;
+    
     private String camera;
     
     private String startPoint;
@@ -75,6 +77,14 @@ public class Section implements Serializable{
 		this.totalCableNumber = totalCableNumber;
 	}
 
+	public Double getLength() {
+		return length;
+	}
+
+	public void setLength(Double length) {
+		this.length = length;
+	}
+
 	public String getCamera() {
 		return camera;
 	}
@@ -119,8 +129,9 @@ public class Section implements Serializable{
 	@Override
 	public String toString() {
 		return "Section [id=" + id + ", parentId=" + parentId + ", name=" + name + ", tunnelId=" + tunnelId
-				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", camera="
-				+ camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime=" + crtTime + "]";
+				+ ", storeId=" + storeId + ", areaId=" + areaId + ", totalCableNumber=" + totalCableNumber + ", length="
+				+ length + ", camera=" + camera + ", startPoint=" + startPoint + ", endPoint=" + endPoint + ", crtTime="
+				+ crtTime + "]";
 	}
 
     

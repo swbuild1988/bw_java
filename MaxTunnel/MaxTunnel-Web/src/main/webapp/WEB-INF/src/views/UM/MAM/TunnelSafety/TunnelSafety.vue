@@ -45,7 +45,10 @@
                 ];
                   _this.curModule.leftTree.push(temp);
               })
+            if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/TunnelSafety") < 0) {
               _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+            }
+            sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               console.log(error)

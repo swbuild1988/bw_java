@@ -34,15 +34,18 @@ Vue.use(VMConfig);
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(iView);
-Vue.use(vueXlsxTable, { rABS: false });
+Vue.use(vueXlsxTable, {
+  rABS: false
+});
 //设置一个默认值
 Vue.prototype.RouterBase = serverconfig.RouterBase;
 const router = new VueRouter({
   mode: "history",
-  base:  Vue.prototype.RouterBase, //服务器地址，不设置时，默认为服务器根目录下
+  base: Vue.prototype.RouterBase, //服务器地址，不设置时，默认为服务器根目录下
   routes
 });
-
+sessionStorage.setItem("refreshAddress", "");
+sessionStorage.setItem("selectedName", "");
 axios.defaults.timeout = 3000;
 // 开发环境配置
 if (process.env.NODE_ENV == "development") {
@@ -55,6 +58,7 @@ if (process.env.NODE_ENV == "development") {
 }
 //生产环境配置
 else {
+  Vue.prototype.ServerConfig = "/dist/static";
   axios.get("dist/static/serverconfig.json").then(result => {
     Vue.prototype.ApiUrl = result.data.ApiUrl;
     Vue.prototype.ServerConfig = result.data.ApiUrl + "/dist/static";
@@ -63,8 +67,7 @@ else {
     Vue.prototype.RouterBase = result.data.RouterBase;
     axios.defaults.baseURL = Vue.prototype.ApiUrl;
     sessionStorage.setItem("ServerConfig", Vue.prototype.ServerConfig);
-  }).catch(error => {
-  });
+  }).catch(error => {});
   // 获取VM的配置页
   axios.get("dist/static/VM/js/VMWebConfig.json").then(result => {
     Vue.prototype.VMWebConfig = result.data.VMWebConfig;
@@ -73,63 +76,70 @@ else {
   });
 }
 
-var axios_instance = axios.create({timeout:'3000',headers:{"Content-Type": "application/json;charset=utf-8"}});
+var axios_instance = axios.create({
+  timeout: '3000',
+  headers: {
+    "Content-Type": "application/json;charset=utf-8"
+  }
+});
 Vue.use(VueAxios, axios_instance);
- Vue.config.productionTip = false;
+Vue.config.productionTip = false;
 
 // 定义一个全局的日志输出
 Vue.prototype.Log = {
-    info: function() {
-        console.log(arguments);
-    }
+  info: function() {
+    console.log(arguments);
+  }
 };
 
 router.beforeEach((to, from, next) => {
-    let CMUser = sessionStorage.CMUser;
-    let UMUser = sessionStorage.UMUser;
-    if (
-        ((to.path.substr(1, 2).toLowerCase() == "um" || to.path.substr(1, 2).toLowerCase() == "vm") &&
-            UMUser) ||
-        (to.path.substr(1, 2).toLowerCase() == "cm" && CMUser)
-    ) {
-        // if (!store.state.permission.permissionList) {
-        //   store.dispatch('permission/FETCH_PERMISSION').then(() => {
-        //     next({path: to.path})
-        //   })
-        //   next();
-        // }
-        {
-            if (
-                to.path
-                    .trim()
-                    .toLowerCase()
-                    .indexOf("login") < 0
-            ) {
-                next();
-            } else {
-                next();
-            }
-        }
+  let CMUser = sessionStorage.CMUser;
+  let UMUser = sessionStorage.UMUser;
+  if (
+    ((to.path.substr(1, 2).toLowerCase() == "um" || to.path.substr(1, 2).toLowerCase() == "vm") &&
+      UMUser) ||
+    (to.path.substr(1, 2).toLowerCase() == "cm" && CMUser)
+  ) {
+    // if (!store.state.permission.permissionList) {
+    //   store.dispatch('permission/FETCH_PERMISSION').then(() => {
+    //     next({path: to.path})
+    //   })
+    //   next();
+    // }
+    {
+      if (
+        to.path
+        .trim()
+        .toLowerCase()
+        .indexOf("login") < 0
+      ) {
+        next();
+      } else {
+        next();
+      }
     }
-    else {
-        if (to.path.toLowerCase().indexOf("um") > 0 && to.path.trim().toLowerCase().indexOf("umlogin") <0 ) {
-            next({path:"UMlogin"});
-        }
-        else if (to.path.toLowerCase().indexOf("vm") > 0 && to.path.trim().toLowerCase().indexOf("vmlogin") <0 ){
-            next({path: "VMLogin"});
-        }
-        else if (to.path.toLowerCase().indexOf("cm") > 0 && to.path.trim().toLowerCase().indexOf("cmlogin") <0 ) {
-            next({path: "CMlogin"});
-        }
-        else {
-            next();
-        }
+  } else {
+    if (to.path.toLowerCase().indexOf("um") > 0 && to.path.trim().toLowerCase().indexOf("umlogin") < 0) {
+      next({
+        path: "UMlogin"
+      });
+    } else if (to.path.toLowerCase().indexOf("vm") > 0 && to.path.trim().toLowerCase().indexOf("vmlogin") < 0) {
+      next({
+        path: "VMLogin"
+      });
+    } else if (to.path.toLowerCase().indexOf("cm") > 0 && to.path.trim().toLowerCase().indexOf("cmlogin") < 0) {
+      next({
+        path: "CMlogin"
+      });
+    } else {
+      next();
     }
+  }
 });
 
 new Vue({
-    el: "#app",
-    router,
-    store,
-    render: h => h(App)
+  el: "#app",
+  router,
+  store,
+  render: h => h(App)
 });

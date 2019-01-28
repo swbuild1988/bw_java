@@ -1,312 +1,482 @@
 <template>
     <div class="Main">
         <div class="mapTop">
-            <row type="flex" justify="center" align="bottom">
+            <row
+                type="flex"
+                justify="center"
+                align="bottom"
+            >
                 <Col span="1">
-                <Dropdown divided @click.native="homeSwitch">
-                    <a>
-                        <img src="../../../assets/VM/home.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="personnelPosition.isShow = !personnelPosition.isShow">
-                    <a>
-                        <img src="../../../assets/VM/personnel.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="searchCamera.openSearch = !searchCamera.openSearch">
-                    <a>
-                        <img src="../../../assets/VM/video.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="show.ges = !show.ges">
-                    <a>
-                        <img src="../../../assets/VM/genue.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="show.showNonCleanedCount = !show.showNonCleanedCount">
-                    <a>
-                        <img src="../../../assets/VM/alarm.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="defectPosition.isShow = !defectPosition.isShow">
-                    <a>
-                        <img src="../../../assets/VM/flaw.png" height="100%" width="100%">
-                    </a>
-                </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
                 <Dropdown
-                        divided
-                        @click.native="eventsPosition.openPosition = !eventsPosition.openPosition"
+                    divided
+                    @click.native="homeSwitch"
                 >
                     <a>
-                        <img src="../../../assets/VM/event.png" height="100%" width="100%">
+                        <img
+                            src="../../../assets/VM/home.png"
+                            height="100%"
+                            width="100%"
+                        >
                     </a>
                 </Dropdown>
                 </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="show.showPlan = !show.showPlan">
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="personnelPosition.isShow = !personnelPosition.isShow"
+                >
                     <a>
-                        <img src="../../../assets/VM/emergencies.png" height="100%" width="100%">
+                        <img
+                            src="../../../assets/VM/personnel.png"
+                            height="100%"
+                            width="100%"
+                        >
                     </a>
                 </Dropdown>
                 </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="unitsPosition.isShow = !unitsPosition.isShow">
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="searchCamera.openSearch = !searchCamera.openSearch"
+                >
                     <a>
-                        <img src="../../../assets/VM/address_book.png" height="100%" width="100%">
+                        <img
+                            src="../../../assets/VM/video.png"
+                            height="100%"
+                            width="100%"
+                        >
                     </a>
                 </Dropdown>
                 </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="jumpUMLogin">
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="show.ges = !show.ges"
+                >
                     <a>
-                        <img src="../../../assets/VM/pageLinkage.png" height="100%" width="100%">
+                        <img
+                            src="../../../assets/VM/genue.png"
+                            height="100%"
+                            width="100%"
+                        >
                     </a>
                 </Dropdown>
                 </Col>
-                <Col span="1" offset="1">
-                <Dropdown divided @click.native="show.showControlPanel = !show.showControlPanel">
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="show.showNonCleanedCount = !show.showNonCleanedCount"
+                >
                     <a>
-                        <img src="../../../assets/VM/controlPanel.png" height="100%" width="100%">
+                        <img
+                            src="../../../assets/VM/alarm.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="defectPosition.isShow = !defectPosition.isShow"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/flaw.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="eventsPosition.openPosition = !eventsPosition.openPosition"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/event.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="show.showPlan = !show.showPlan"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/emergencies.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="unitsPosition.isShow = !unitsPosition.isShow"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/address_book.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="jumpUMLogin"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/pageLinkage.png"
+                            height="100%"
+                            width="100%"
+                        >
+                    </a>
+                </Dropdown>
+                </Col>
+                <Col
+                    span="1"
+                    offset="1"
+                >
+                <Dropdown
+                    divided
+                    @click.native="show.showControlPanel = !show.showControlPanel"
+                >
+                    <a>
+                        <img
+                            src="../../../assets/VM/controlPanel.png"
+                            height="100%"
+                            width="100%"
+                        >
                     </a>
                 </Dropdown>
                 </Col>
             </row>
-            <row justify="center" type="flex">
-                <img src="../../../assets/VM/footLine.png" height="8px" width="100%">
+            <row
+                justify="center"
+                type="flex"
+            >
+                <img
+                    src="../../../assets/VM/footLine.png"
+                    height="8px"
+                    width="100%"
+                >
             </row>
         </div>
-        <temperature class="maptemperature"></temperature>
-        <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
+        <div class="test"></div>
+        <!--<temperature class="maptemperature"></temperature>-->
+        <transition
+            :enter-active-class="enterClass"
+            :leave-active-class="leaveClass"
+        >
             <map-gauges v-show="show.ges"></map-gauges>
         </transition>
-        <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
+        <transition
+            :enter-active-class="enterClass"
+            :leave-active-class="leaveClass"
+        >
             <alarm-count v-show="show.showNonCleanedCount"></alarm-count>
         </transition>
-        <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
-            <plan-process v-show="show.showPlan" @showPlan="showPlan"></plan-process>
+        <transition
+            :enter-active-class="enterClass"
+            :leave-active-class="leaveClass"
+        >
+            <plan-process
+                v-show="show.showPlan"
+                @showPlan="showPlan"
+            ></plan-process>
         </transition>
-        <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
-            <move-control v-show="show.showControlPanel"></move-control>
+        <transition
+            :enter-active-class="enterClass"
+            :leave-active-class="leaveClass"
+        >
+            <move-control
+                    prefixCls="MapLLPanel"
+                    v-show="show.showControlPanel"
+            ></move-control>
         </transition>
 
-            <sm-viewer
-                    ref="smViewer"
-                    :cameraPosition="camera"
-                    :personnelPosition="personnelPosition"
-                    :unitsPosition="unitsPosition"
-                    :defectPosition="defectPosition"
-                    :searchCamera="searchCamera"
-                    :eventsPosition="eventsPosition"
-                    :openPlanPosition="openPlanPosition"
-                    :openVideoLinkage="true"
-                    :infoBox="false"
-                    :navigation="false"
-                    :openImageryProvider="true"
-                    :openSpinShow="false"
-                    @replaceVideoUrl="replaceVideoUrl"
-            ></sm-viewer>
+        <sm-viewer
+            ref="smViewer"
+            :cameraPosition="camera"
+            :personnelPosition="personnelPosition"
+            :unitsPosition="unitsPosition"
+            :defectPosition="defectPosition"
+            :searchCamera="searchCamera"
+            :eventsPosition="eventsPosition"
+            :openPlanPosition="openPlanPosition"
+            :openVideoLinkage="true"
+            :infoBox="false"
+            :navigation="false"
+            :openImageryProvider="true"
+            :openSpinShow="false"
+        ></sm-viewer>
     </div>
+    <!--@replaceVideoUrl="replaceVideoUrl"-->
 </template>
 
 <script>
-    import SmViewer from "../../../components/Common/3D/Test3DViewer";
-    import Temperature from "../../../components/VM/VMBodyCenter/temperatureBox";
-    import MapGauges from "../../../components/VM/VMBodyCenter/gauges";
-    import AlarmCount from "../../../components/VM/AlarmManage/NonCleanedCount";
-    import Vue from "vue";
-    import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
-    import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
+import SmViewer from "../../../components/Common/3D/Test3DViewer";
+import Temperature from "../../../components/VM/VMBodyCenter/temperatureBox";
+import MapGauges from "../../../components/VM/VMBodyCenter/gauges";
+import AlarmCount from "../../../components/VM/AlarmManage/NonCleanedCount";
+import Vue from "vue";
+import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
+import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
 
-    export default {
-        data() {
-            return {
-                msg: "µØÍ¼",
-                id: "cesiumContainer",
-                show: {
-                    ges: false,
-                    showNonCleanedCount: false,
-                    showPlan: false,
-                    showControlPanel: false
-                },
-                enterClass: "animated bounceInDown",
-                leaveClass: "animated zoomOut",
-                allVideos: [],
-                searchCamera: {
-                    openSearch: false,
-                    isShow: true
-                },
-                unitsPosition: {
-                    openPosition: false,
-                    isShow: true
-                },
-                personnelPosition: {
-                    openPosition: true,
-                    isShow: true,
-                    refreshTime:10000
-                },
-                defectPosition: {
-                    openPosition: true,
-                    isShow: true
-                },
-                eventsPosition: {
-                    openPosition: false
-                },
-                openPlanPosition: {
-                    openPosition: false
-                },
-            };
+export default {
+    data() {
+        return {
+            msg: "åœ°å›¾",
+            id: "cesiumContainer",
+            show: {
+                ges: false,
+                showNonCleanedCount: false,
+                showPlan: false,
+                showControlPanel: false
+            },
+            enterClass: "animated bounceInDown",
+            leaveClass: "animated zoomOut",
+            allVideos: [],
+            searchCamera: {
+                openSearch: true,
+                isShow: true
+            },
+            unitsPosition: {
+                openPosition: false,
+                isShow: false
+            },
+            personnelPosition: {
+                openPosition: false,
+                isShow: false,
+                refreshTime: 10000
+            },
+            defectPosition: {
+                openPosition: false,
+                isShow: false
+            },
+            eventsPosition: {
+                openPosition: false
+            },
+            openPlanPosition: {
+                openPosition: false
+            },
+        };
+    },
+    computed: {
+        camera() {
+            return this.VMConfig.CAMERA;
+        }
+    },
+    components: {
+        SmViewer,
+        Temperature,
+        MapGauges,
+        AlarmCount,
+        PlanProcess,
+        MoveControl
+    },
+    mounted() {
+        this.init();
+    },
+    methods: {
+        init() {
+            let _this = this;
+            Vue.prototype.MQ.openMQ(this.MQCallback);
+            _this.getVideos(); //è°ƒç”¨è§†å±æŽ¥å£
         },
-        computed: {
-            camera() {
-                return this.VMConfig.CAMERA;
+        homeSwitch() {
+            let _this = this;
+
+            _this.show.ges = false; //éšè—æ°”ä½“çŠ¶æ€
+            _this.show.showNonCleanedCount = false; //éšè—æœªæ¸…é™¤å‘Šè­¦æ¡æ•°
+            _this.show.showControlPanel = false;
+            _this.$refs.smViewer.setViewAngle(); //æ¢å¤åˆ°åˆå§‹åŒ–è§†è§’
+            _this.$refs.smViewer.hideAllEntitys(); //éšè—æ‰€æœ‰å®žä½“
+        },
+        getVideos() {
+            let _this = this;
+
+            _this.axios.get("/videos").then(result => {
+                let { code, data } = result.data;
+
+                if (code == 200) {
+                    _this.allVideos.splice(0); //æ¸…ç©ºå½“å‰æ•°ç»„
+
+                    data.forEach(video => {
+                        _this.allVideos.push({
+                            MOID: video.id,
+                            latitude: video.latitude,
+                            longitude: video.longitude,
+                            height: video.height,
+                            url: video.url
+                        });
+                    });
+                }
+            });
+        },
+        replaceVideoUrl(videoId) {
+            let vlc = document.getElementById(this.VMConfig.VLC.VLC_ID);
+
+            let [video] = this.allVideos.filter(video => video.MOID == videoId);
+            if (video == undefined) {
+                this.$store.commit("startVideoLoop"); //å¼€å¯è§†å±ç›‘æŽ§è½®æ’­æ¨¡å¼
+                return;
+            }
+            let mrl = video.url;
+
+            vlc.playlist.playItem(vlc.playlist.add(mrl)); //åŠ¨æ€ä¿®æ”¹vlcæ’­æ”¾è·¯å¾„
+        },
+        MQCallback(message) {
+            let result = JSON.parse(message.body);
+
+            if (result) {
+                this.$Notice.warning({
+                    title: "æŽ¥æ”¶åˆ°ä¸€æ¡æ–°å‘Šè­¦",
+                    duration: 3
+                });
+
+                Vue.prototype.IM.addInformation("alarm", result);
+                Vue.prototype.AM.addAlarm(result);
+                this.$refs.smViewer.addAlarmEntity(result);
             }
         },
-        components: {
-            SmViewer,
-            Temperature,
-            MapGauges,
-            AlarmCount,
-            PlanProcess,
-            MoveControl
-        },
-        mounted() {
-            this.init();
-        },
-        methods: {
-            init() {
-                let _this = this;
-                Vue.prototype.MQ.openMQ(this.MQCallback);
-                _this.getVideos(); //µ÷ÓÃÊÓÆÁ½Ó¿Ú
-            },
-            homeSwitch() {
-                let _this = this;
-
-                _this.show.ges = false; //Òþ²ØÆøÌå×´Ì¬
-                _this.show.showNonCleanedCount = false; //Òþ²ØÎ´Çå³ý¸æ¾¯ÌõÊý
-                _this.show.showControlPanel = false;
-                _this.$refs.smViewer.setViewAngle(); //»Ö¸´µ½³õÊ¼»¯ÊÓ½Ç
-                _this.$refs.smViewer.hideAllEntitys(); //Òþ²ØËùÓÐÊµÌå
-            },
-            getVideos() {
-                let _this = this;
-
-                _this.axios.get("/videos").then(result => {
-                    let { code, data } = result.data;
-
+        sendPlan() {
+            this.axios
+                .post("/emplans/start", {
+                    objectId: 203012401,
+                    processValue: 4003
+                })
+                .then(result => {
+                    let { msg, code, data } = result.data;
                     if (code == 200) {
-                        _this.allVideos.splice(0); //Çå¿Õµ±Ç°Êý×é
-
-                        data.forEach(video => {
-                            _this.allVideos.push({
-                                MOID: video.id,
-                                latitude: video.latitude,
-                                longitude: video.longitude,
-                                height: video.height,
-                                url: video.url
-                            });
-                        });
+                        console.log("200");
                     }
                 });
-            },
-            replaceVideoUrl(videoId) {
-                let vlc = document.getElementById(this.VMConfig.VLC.VLC_ID);
+        },
+        showPlan(status) {
+            let { show } = this;
 
-                let [video] = this.allVideos.filter(video => video.MOID == videoId);
-                if (video == undefined) {
-                    this.$store.commit("startVideoLoop"); //¿ªÆôÊÓÆÁ¼à¿ØÂÖ²¥Ä£Ê½
-                    return;
-                }
-                let mrl = video.url;
+            show.showPlan = status;
+        },
+        jumpUMLogin() {
+            let _this = this;
 
-                vlc.playlist.playItem(vlc.playlist.add(mrl)); //¶¯Ì¬ÐÞ¸Ävlc²¥·ÅÂ·¾¶
-            },
-            MQCallback(message) {
-                let result = JSON.parse(message.body);
-
-                if (result) {
-                    this.$Notice.warning({
-                        title: "½ÓÊÕµ½Ò»ÌõÐÂ¸æ¾¯",
-                        duration: 3
-                    });
-
-                    Vue.prototype.IM.addInformation("alarm", result);
-                    Vue.prototype.AM.addAlarm(result);
-                    this.$refs.smViewer.addAlarmEntity(result);
-                }
-            },
-            sendPlan() {
-                this.axios
-                    .post("/emplans/start", {
-                        objectId: 203012401,
-                        processValue: 4003
-                    })
-                    .then(result => {
-                        let { msg, code, data } = result.data;
-                        if (code == 200) {
-                            console.log("200");
-                        }
-                    });
-            },
-            showPlan(status) {
-                let { show } = this;
-
-                show.showPlan = status;
-            },
-            jumpUMLogin() {
-                let _this = this;
-
-                _this.$router.push({ path: "UMmain" });
-                _this.$refs.smViewer.destory3D();
-                _this.$emit('jumpTo')
-            },
-            playFly() {
-                this.$refs.smViewer.playFly();
-            },
-            stopFly() {
-                this.$refs.smViewer.stopFly();
-            },
-        }
-    };
+            _this.$router.push({ path: "UMMain" });
+            _this.$refs.smViewer.destory3D();
+            _this.$emit('jumpTo')
+        },
+        playFly() {
+            this.$refs.smViewer.playFly();
+        },
+        stopFly() {
+            this.$refs.smViewer.stopFly();
+        },
+    },
+    beforeDestroy(){
+        Vue.prototype.MQ.closeMQ();
+    }
+};
 </script>
 
 <style scoped>
-    .Main {
-        width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
+.Main {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+.mapTop {
+    z-index: 1001;
+    position: absolute;
+    width: 65%;
+    height: 8%;
+    top: 2%;
+    left: 50%;
+    transform: translate(-55%);
+}
+    .Main >>> .moveControlPanel {
+        width: 21%;
     }
-    .mapTop {
-        z-index: 1001;
-        position: absolute;
-        width: 65%;
-        height: 8%;
-        top: 2%;
-        left: 50%;
-        transform: translate(-55%);
+
+
+    /* å°å±å¹•ï¼ˆæ˜¾ç¤ºå™¨ï¼Œå°äºŽç­‰äºŽ 1920pxï¼‰ */
+    @media (max-width: 1920px) {
+        
+        .Main >>> .ControlPanelTitleDiff {
+            font-size: 1rem;
+            margin: .6rem 0 0 0;
+        }
+        .Main >>> .vm-btn {
+            width: 31%;
+            font-size: .7rem;
+        }
+
+    }
+    /* å¤§å±å¹•ï¼ˆæ˜¾ç¤ºå™¨ï¼Œå¤§äºŽç­‰äºŽ 1920pxï¼‰ */
+    @media (min-width: 1921px) {
+
+        .Main >>> .ControlPanelTitleDiff {
+            font-size: 2rem;
+            margin: 1.5rem 0 0 0;
+        }
+        .Main >>> .vm-btn {
+            width: 35%;
+            height: 70%;
+            padding: .7rem 0 0 0;
+            font-size: 1.5rem;
+
+        }
     }
 </style>
 <style>
-    .cesium-infoBox {
-        background: rgba(3, 19, 36, 0.9);
-        box-shadow: 0 0 10px 1px rgba(3, 19, 36, 0.9);
-        top: 16%;
-    }
-    .cesium-infoBox-title {
-        background: rgba(3, 19, 36, 1);
-    }
+.cesium-infoBox {
+    background: rgba(3, 19, 36, 0.9);
+    box-shadow: 0 0 10px 1px rgba(3, 19, 36, 0.9);
+    top: 16%;
+}
+.cesium-infoBox-title {
+    background: rgba(3, 19, 36, 1);
+}
 </style>
 

@@ -3,7 +3,7 @@
         <Row class="queryCondition">
             <Col span="6">
                 <span>所属管仓段：</span>
-                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>                   
+                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>
                 <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             </Col>
             <Col span="6">
@@ -29,11 +29,11 @@
                 <span>结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
-            <Col span="6" offset="6">
-                <Button type="primary" icon="ios-search" @click="queryUnits()" size="small">查询</Button>
+            <Col span="6">
+                <Button type="primary" icon="ios-search" @click="queryUnits()" >查询</Button>
             </Col>
-        </Row> 
-        <div class="list">   
+        </Row>
+        <div class="list">
             <Row type="flex"   align="top" class="code-row-bg">
                 <Col span="6"  v-for="(item,index) in unitInfo" :key='index'>
                     <div class="unitBox">
@@ -58,7 +58,7 @@
                                 <div class="sectionTitle">管仓区段：</div>
                                 <span class="showSectionsName" v-for="(item,index) in sections" :key="index">{{item.name}}</span>
                                 <div class="sectionName" :title=item.sectionIds>{{item.sectionIds}}</div>
-                            </div>    
+                            </div>
                         </div>
                         <div class="option">
                             <Button size=small type="primary" @click="edit(index)">编辑</Button>
@@ -66,14 +66,14 @@
                             <div class="crtTime">
                                 <span><Icon type="android-time"></Icon>{{item.crtTime}}</span>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                 </Col>
             </Row>
-        </div>            
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>   
-    </div>    
+        </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
+    </div>
 </template>
 <script>
 import { TunnelService } from '../../../../services/tunnelService'
@@ -131,7 +131,7 @@ export default {
                 startTime: new Date(this.conditions.startTime).getTime(),
                 endTime: new Date(this.conditions.endTime).getTime(),
                 sectionIds : this.sectionIds
-            };  
+            };
         return Object.assign({}, param);
         }
     },
@@ -143,7 +143,7 @@ export default {
                 e.target.className=='ivu-icon ivu-icon-arrow-down-b ivu-input-icon ivu-input-icon-normal' ||
                 e.target.className=='ivu-icon ivu-icon-arrow-right-b' ||
                 e.target.className=='ivu-tree-children' ||
-                e.target.className=='ivu-tree-arrow ivu-tree-arrow-open' ||        
+                e.target.className=='ivu-tree-arrow ivu-tree-arrow-open' ||
                 e.target.className=='ivu-tree-title' ||
                 e.target.className=='tree ivu-tree' ||
                 e.target.className=='ivu-tree-arrow' ||
@@ -182,11 +182,11 @@ export default {
                                     obj.children = secondChildren
                                 })
                             }
-                            firstChildren.push(obj)                        
+                            firstChildren.push(obj)
                             temp.children = firstChildren
                         })
                     }
-                    _this.treeList.push(temp)                   
+                    _this.treeList.push(temp)
                 });
             },
             function(error){
@@ -200,10 +200,14 @@ export default {
                 console.log(error)
         })
         this.queryUnits()
-    },  
+    },
     methods:{
         queryUnits(){
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             RelatedUnitService.relatedUnitDataGrid(_this.params).then(
                 function(result){
                     _this.page.pageTotal = result.total;
@@ -213,7 +217,7 @@ export default {
                         var str = ''
                         for (let k in _this.unitInfo[index].sectionList){
                             if(_this.unitInfo[index].sectionList.length==1){
-                                _this.unitInfo[index].sectionIds=_this.unitInfo[index].sectionList[k].name                               
+                                _this.unitInfo[index].sectionIds=_this.unitInfo[index].sectionList[k].name
                             }else{
                                 str += _this.unitInfo[index].sectionList[k].name+','
                                 _this.unitInfo[index].sectionIds = str.substring(0,str.length-1)
@@ -329,14 +333,14 @@ export default {
     }
     .sectionTitle{
         float: left;
-    } 
+    }
     .sectionName{
         margin-left: 77px;
     }
     .ivu-dropdown-item >>> .ivu-select-dropdown{
         margin-left: 14px;
     }
-    .word025{   
+    .word025{
         letter-spacing: 0.25em;
         margin-right: -0.25em;
     }
@@ -362,6 +366,63 @@ export default {
         }
         .queryCondition{
             font-size: 1.4vmin;
+        }
+        .unitBox{
+            border: 0.1vmin solid#dddfe1;
+            margin: 1vmin auto;
+            padding: 0.5vmin 0px;
+            border-radius: 0.4vmin;
+            box-shadow: 0.5vmin 0.6vmin 0.4vmin rgba(0, 0, 0, .2);
+        }
+        .title{
+            font-size: 2vmin;
+            padding: 0px 1vmin;
+        }
+        .address{
+            padding: 0px 1vmin;
+        }
+        .contact{
+            line-height: 3.5vmin;
+            margin: 1vmin 0px;
+            padding: 0px 1vmin;
+        }
+        .crtTime{
+            font-size: 1.6vmin;
+            line-height: 4vmin;
+        }
+        .option{
+            padding: 0px 0.4vmin;
+        }
+        .ivu-icon {
+            margin-right: 0.5vmin;
+        }
+        .sectionName{
+            margin-left: 7.7vmin;
+        }
+        .ivu-dropdown-item >>> .ivu-select-dropdown{
+            margin-left: 1.4vmin;
+        }
+        .tree{
+            margin-left: 7.5vmin;
+            border: 0.1vmin solid #cccccc;
+        }
+        .address,.contact{
+            font-size: 1.4vmin;
+        }
+        .ivu-icon{
+            font-size: 1.5vmin !important;
+        }
+        .ivu-tree ul{
+            font-size: 1.4vmin;
+        }
+        .ivu-tree-arrow{
+            font-size: 1.2vmin;
+        }
+        .ivu-checkbox-inner{
+            width: 1.4vmin;
+            height: 1.4vmin;
+            border: 0.1vmin solid #dddee1;
+            border-radius: 0.2vmin;
         }
     }
 </style>

@@ -262,7 +262,7 @@ public class ConsumeDataController {
 	}
 	
 	/**
-	 * 获取每个月【2018-9~2019-1】，每条管廊的总能耗
+	 * 获取每条管廊，每个月的总能耗
 	 * @return
 	 * @author ya.liu
 	 * @Date 2019年1月10日
@@ -270,39 +270,41 @@ public class ConsumeDataController {
 	@RequestMapping(value = "energy/totle-everymonth", method = RequestMethod.GET)
     public JSONObject getEnergyByTunnleIds() {
     	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-    	List<List<JSONObject>> list = new ArrayList<>();
+    	List<JSONObject> list = new ArrayList<>();
     	
-		// 获取2018年9月到2019年2月的时间
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date sd = null;
-		Date ed = null;
-		try {
-			sd = sdf.parse("2018-9-1");
-			ed = sdf.parse("2019-1-31");
-		} catch (Exception e) {
-			
-		}
-		while(sd.before(ed)) {
-			List<JSONObject> energyList = new ArrayList<>();
-			// 遍历，获取每个管廊的能耗
-	    	for(TunnelSimpleDto dto : tunnelList) {
-				ConsumeDataVo vo = new ConsumeDataVo();
-				Date nowStart = DateUtil.getBeginDayOfMonth(sd);
-				Date nowEnd = DateUtil.getEndDayOfMonth(sd);
-				vo.setStartTime(nowStart);
-				vo.setEndTime(nowEnd);
-				vo.setTunnelId(dto.getId());
-				// 一个月的总能耗
-				Double sum = getSum(vo);
-				JSONObject obj = new JSONObject();
-				obj.put("time", nowStart);
-				obj.put("tunnel", dto.getName());
-				obj.put("energy", sum);
+		// 遍历，获取每个管廊的能耗
+    	for(TunnelSimpleDto dto : tunnelList) {
+    		JSONObject json = new JSONObject();
+    		json.put("key", dto.getName());
+    		List<JSONObject> energyList = new ArrayList<>();
+    		Date now = new Date();
+    		now.setMonth(now.getMonth() - 11);
+        	// 往后循环12个月
+    		for(int i=0;i<12;i++) {
+    			JSONObject obj = new JSONObject();
+    			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+    			obj.put("key", time);
+    			
+    			// 真实数据
+//				ConsumeDataVo vo = new ConsumeDataVo();
+//				Date nowStart = DateUtil.getBeginDayOfMonth(now);
+//				Date nowEnd = DateUtil.getEndDayOfMonth(now);
+//				vo.setStartTime(nowStart);
+//				vo.setEndTime(nowEnd);
+//				vo.setTunnelId(dto.getId());
+//				// 一个月的总能耗
+//				Double sum = getSum(vo);
+    			
+    			// 假数据
+    			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
+				
+    			obj.put("val", sum);
 				energyList.add(obj);
-			}
-	    	sd.setMonth(sd.getMonth() + 1);
-		list.add(energyList);
-    	}
+				now.setMonth(now.getMonth() + 1);
+    		}
+    		json.put("val", energyList);
+    		list.add(json);
+		}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
     }
 	

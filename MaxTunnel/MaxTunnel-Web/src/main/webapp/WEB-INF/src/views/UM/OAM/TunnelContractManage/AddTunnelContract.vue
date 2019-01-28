@@ -449,6 +449,9 @@ h2{
     font-size: 1.2vmin;
     margin: 0.3vmin 0.4vmin 0.3vmin 0;
 }
+.form >>> .ivu-form-item-error-tip{
+    left: 14vmin;
+}
 
 /*input*/
 .form >>> .ivu-input{

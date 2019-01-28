@@ -21,8 +21,14 @@ Date.prototype.format = function(format) {
 }
 
 export function getFormatTime() {
-    var date = new Date().format('yyyy年-MM月-dd日 hh:mm:ss');
+    var date = new Date().format('yyyy年MM月dd日 hh:mm:ss');
     var week = "星期" + "日一二三四五六".charAt(new Date().getDay());
     var result = date + " " + week;
     return result;
+}
+export function  getSimpleDate() {
+  var date = new Date().format('yyyy年MM月dd日');
+  var week = "星期" + "日一二三四五六".charAt(new Date().getDay());
+  var result = date + " " + week;
+  return result;
 }

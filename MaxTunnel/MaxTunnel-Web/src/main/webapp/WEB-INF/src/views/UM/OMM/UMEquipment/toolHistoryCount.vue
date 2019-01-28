@@ -51,16 +51,16 @@
                     <span>归还结束时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="4" offset="4">
+                <Col span="4">
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
-            <div class="list">
+            <div>
                 <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
-            </div>
-            <div class="pageContainer" ref="pageContainer">
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                <div class="pageContainer" ref="pageContainer">
+                    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                </div>
             </div>
         </Col>
         <Col span="12" class="chartBox">
@@ -230,6 +230,7 @@ export default {
             toolStatic: {
                 id: 'toolStaticId',
                 requestUrl: 'instruments/usestatus/types',
+                title: '仪表工具状态',
                 parameters: {
                     option: {
                         backgroundColor: '#E8E8FF',
@@ -246,6 +247,8 @@ export default {
             inventory: {
                 id: 'inventoryId',
                 requestUrl: 'instruments/status/types',
+                title: '仪表工具库存状态',
+                legendData: ['在库','出库'],
                 parameters: {
                     option: {
                         backgroundColor: '#FBFBEA',
@@ -356,7 +359,7 @@ export default {
             this.showTable()
         },
         getTableHeight(){
-            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-30
         }
     }
 }
@@ -388,7 +391,7 @@ export default {
         font-size: 1.4vmin;
     }
     .queryConditions{
-        font-size: 1.4vmin;
+        font-size: 1.3vmin;
     }
 }
 </style>

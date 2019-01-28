@@ -72,11 +72,11 @@
                           <Icon type="clipboard" :size="iconSize"></Icon>
                          {{item.key}}
                           </Col>
-                          <Col span="7" class="MaxValCol">
+                          <Col span="8" class="MaxValCol">
                           <Icon type="ios-pulse" :size="iconSize"></Icon>
                         {{item.val}}
                           </Col>
-                          <Col span="10" class="MaxValCol" color="#de8d1b">
+                          <Col span="9" class="MaxValCol" color="#de8d1b">
                           <Icon type="android-locate" :size="iconSize"></Icon>
                           {{item.location}}
                           </Col>
@@ -101,7 +101,6 @@ import EnvironmentShow from "../../../../components/Common/TunnelDisplay/Environ
 
 export default {
   name: "tunnel-list-tunnel-environment",
-
   data() {
     return {
       curHeight: 450,
@@ -143,10 +142,7 @@ export default {
       }, //当前监测仓数据
     };
   },
-
   beforeRouteLeave(to, from, next) {
-      console.log("to",to)
-      console.log("from",from)
     if (
       to.name == "UMPatrolHomePage" ||
       to.name == "设备管理主页" ||
@@ -174,7 +170,6 @@ export default {
       next();
     }
   },
-
   mounted() {
     this.fentchData();
     this.getMonitorData();
@@ -184,7 +179,6 @@ export default {
     //3D加载
     // this.setGIS();
   },
-
   methods: {
     //变更模型视角
     changeArea(area) {
@@ -220,7 +214,6 @@ export default {
     updateArea() {
         this.getMonitorData();
     },
-
     //获取数据
     fentchData() {
         //获取管廊列表
@@ -264,7 +257,6 @@ export default {
           console.log(error);
         }
       );
-
       //获取区域
       TunnelService.getTunnelArea(_this.queryCondition.tunnelId).then(result => {
         if (result) {
@@ -279,7 +271,6 @@ export default {
         }
       });
     },
-
     //根据监测类型获取数据
       getMonitorData() {
           let _this = this;
@@ -293,14 +284,13 @@ export default {
                       let temp = {};
                       temp.location = a.location;
                       temp.key = a.key;
-                      temp.val = parseFloat(a.val);
+                      temp.val = parseFloat(a.val)+a.unit;
                       _this.tunnelProps.push(temp);
                   });
               }
           });
       },
   },
-
   components: {
     SimulatedData,
     showSwitchData,
@@ -308,7 +298,6 @@ export default {
     EnvironmentShow,
     TestSmViewer
   },
-
   watch: {
     $route: function() {
       // $route发生变化时再次赋值
@@ -317,7 +306,6 @@ export default {
       this.getMonitorData();
     }
   },
-
   beforeDestroy() {
   }
 };

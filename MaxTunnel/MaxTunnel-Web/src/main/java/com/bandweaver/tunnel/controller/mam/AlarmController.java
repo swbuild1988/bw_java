@@ -20,8 +20,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
@@ -50,6 +52,8 @@ public class AlarmController {
 	private TunnelService tunnelService;
 	@Autowired
 	private MeasObjModuleCenter measObjModuleCenter;
+	@Autowired
+	private SectionService sectionService;
 	
 	
 	/**
@@ -286,23 +290,24 @@ public class AlarmController {
 	 * @author shaosen
 	 * @date 2019年1月10日
 	 * @param   
-	 * @return {"msg":"请求成功","code":"200","data":[{"一般告警":2661,"提示告警":2609,"严重告警":2679,"key":"1月","致命告警":2708}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.2","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.3","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.4","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.5","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.6","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.7","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.8","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.9","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.10","致命告警":0},{"一般告警":0,"提示告警":0,"严重告警":0,"key":"2018.11","致命告警":0},{"一般告警":483,"提示告警":521,"严重告警":503,"key":"2018.12","致命告警":532},{"一般告警":2661,"提示告警":2609,"严重告警":2679,"key":"2019.1","致命告警":2708}]}  
 	 */
 	@RequestMapping(value="alarms/level-count–everymonth",method=RequestMethod.GET)
 	public JSONObject getLevelCountEverymonth() {
 		
 		List<JSONObject> rtData = new ArrayList<>();
-		//获取今年开始日期
+		//获取去年开始日期
 		Date beginDayOfYear = DateUtil.getBeginDayOfYear();
-		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfYear);
+		Date beginDayOfLastYear = DateUtil.getBeginDayOfYear(DateUtil.getFrontDay(beginDayOfYear, 1));
+		List<Alarm> alarmList = alarmService.getListFromYear(beginDayOfLastYear);
 		
-		List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(TimeEnum.MONTH);
+		List<Map<String, Date>> list = DateUtil.getBefore12Months();
 	    for (int i = 0; i < list.size(); i++) {
 	    	 Date startTime = list.get(list.size() - 1 - i).get("startDay");
              Date endTime = list.get(list.size() - 1 - i).get("endDay");
              
              JSONObject json = new JSONObject();
-             json.put("key", DateUtil.getNowMonth(startTime) + "月");
+             json.put("key", DateUtil.getNowYear(startTime) + "." +DateUtil.getNowMonth(startTime));
              json.put(AlarmLevelEnum.DANGEROUS.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.DANGEROUS,startTime,endTime));
              json.put(AlarmLevelEnum.NORMAL.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.NORMAL,startTime,endTime));
              json.put(AlarmLevelEnum.PROMPT.getName(),getCountByStartTimeAndEndTimeAndLevel(alarmList,AlarmLevelEnum.PROMPT,startTime,endTime));
@@ -368,6 +373,54 @@ public class AlarmController {
 		List<JSONObject> rtdata = new ArrayList<>();
 		rtdata.add(yjs);
 		rtdata.add(mjs);
+		
+		return CommonUtil.success(rtdata);
+	}
+	
+	
+	
+	/**获取最新的20条告警 
+	 * @return   
+	 * @author shaosen
+	 * @Date 2019年1月18日
+	 */
+	@RequestMapping(value="alarms/part",method=RequestMethod.GET)
+	public JSONObject getAlarmTop20() {
+		List<Alarm> list = alarmService.getAllList();
+		if(list.size() == 0)
+			return CommonUtil.success(new ArrayList<>());
+		
+		list = list.stream().sorted(Comparator.comparing(Alarm::getAlarmDate).reversed()).collect(Collectors.toList());
+		
+		List<Alarm> tmp = new ArrayList<>();
+		if(list.size()>=20) {
+			for (int i = 0; i < 20; i++) {
+				tmp.add(list.get(i));
+			}
+		}else {
+			tmp = list;
+		}
+		
+		List<JSONObject> rtdata = new ArrayList<>();
+		tmp.forEach(x -> {
+			
+			String location = "";
+			MeasObj measObj = measObjModuleCenter.getMeasObj(x.getObjectId());
+        	if(measObj != null) {
+        		SectionDto section = sectionService.getSectionById(measObj.getSectionId());
+        		if(section != null) {
+        			location = section.getStore().getTunnel().getName() + section.getName();
+        		}
+        	}
+			
+			JSONObject json = new JSONObject();
+			json.put("id", x.getId());
+			json.put("location", location );
+			json.put("alarmDate", x.getAlarmDate());
+			json.put("alarmLevel", AlarmLevelEnum.getEnum(x.getAlarmLevel()).getName());
+			json.put("name", x.getAlarmName());
+			rtdata.add(json);
+		});
 		
 		return CommonUtil.success(rtdata);
 	}

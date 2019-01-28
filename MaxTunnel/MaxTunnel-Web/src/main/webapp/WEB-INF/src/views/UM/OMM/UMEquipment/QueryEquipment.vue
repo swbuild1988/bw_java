@@ -42,7 +42,7 @@
         <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
+        <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
       </Col>
     </Row>
     <div class="list">
@@ -56,7 +56,7 @@
         </Col>
         <Col span="24">
         <Row :gutter="16">
-          <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 6px;">
+          <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
             <div :style="backImage" class="backGoundBox">
               <div class="topBox">
                 <a class="ivu-modal-close" style="right: 8px;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
@@ -140,7 +140,7 @@ export default {
       equipmentModel: [],
       venders: [],
       backImage: {
-        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",   
+        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
       }
     };
   },
@@ -238,6 +238,10 @@ export default {
     },
     showTable() {
       let _this = this;
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
       EquipmentService.equipmentDatagird(this.params).then(
         result => {
           for (let index in result.list) {
@@ -429,14 +433,20 @@ export default {
         z-index: 10001;
     }
     .detailsBox{
-        padding-top: 2vh;    
+        padding-top: 2vh;
     }
     .detailsBox .ivu-col-span-11,.detailsBox .ivu-col-span-13{
         line-height: 4vmin;
-        font-size: 1.4vmin;
+        font-size: 1.3vmin;
     }
     .operation{
         font-size: 1.4vmin;
+    }
+    .equipentTitle{
+      font-size: 2vmin;
+    }
+    .ivu-icon{
+      font-size: 2vmin !important;
     }
 }
 </style>

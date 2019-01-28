@@ -6,11 +6,6 @@
                     <WorkModal v-if="showModal.val!=null" v-bind="showModal"></WorkModal>
                     <Card style="width: 100%;">
                         <Row :gutter="16">
-                            <!--<Col span="1" offset="1">-->
-                            <!--<div class="begin">-->
-                                <!--<Button type="success" @click="startPlan">启动预案</Button>-->
-                            <!--</div>-->
-                            <!--</Col>-->
                             <Col span="2">
                             <div class="begin">
                                 <img style="width:3vmin;height:3vmin;" v-bind:src="imgUrl"/>
@@ -56,22 +51,17 @@
             </TabPane>
             <TabPane label="执行记录" name="log">
                 <Row class="top">
-                    <Col span="5">
+                    <Col span="6">
                     <span>开始时间:</span>
-                    <DatePicker v-model="queryPram.startTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime"
-                                placeholder="选择时间"
-                                style="width: 61%"></DatePicker>
+                    <DatePicker   style="width: 65%;" v-model="queryPram.startTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime" placeholder="选择时间" ></DatePicker>
                     </Col>
-                    <Col span="5">
+                    <Col span="6">
                     <span>结束时间</span>
-                    <DatePicker v-model="queryPram.endTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime"
-                                placeholder="选择时间"
-                                style="width: 61%"></DatePicker>
+                    <DatePicker    style="width: 65%;"v-model="queryPram.endTime" format="yyyy年MM月dd日-hh:mm:ss" type="datetime" placeholder="选择时间" ></DatePicker>
                     </Col>
-                    <Col span="2" offset="12">
+                    <Col span="2" offset="10">
                     <div style="position: relative;float: right;right: 0px;">
-                        <Button type="primary" shape="circle" icon="ios-search" size="large" title="查询"
-                                @click="queryTable"></Button>
+                        <Button type="primary"  icon="ios-search" @click="queryTable">查询</Button>
                     </div>
                     </Col>
                 </Row>
@@ -81,9 +71,9 @@
                     </Col>
                 </Row>
                 <Row>
-                    <Col span="24" style="margin-bottom: 30px;">
+                    <Col span="24">
                     <Table :height="tableHeight" stripe border :columns="tableColumns" :data="tableData"
-                           style="margin: 10px;"></Table>
+                           style="margin: 1vh;  "></Table>
                     <Modal width="900px;"
                            title="详细信息:"
                            v-model="showTableDetial"
@@ -93,7 +83,7 @@
                     </Modal>
                     </Col>
                 </Row>
-                <div style="position: absolute;bottom: 0px;width:100%;">
+                <div >
                     <Page style="position: relative;float: right;right: 10px;" @on-page-size-change="handlePageSize"
                           :total="pageTotal" :page-size="queryPram.pageSize"
                           :current="queryPram.pageNum" show-total show-elevator show-sizer placement="top"
@@ -209,7 +199,7 @@
         },
         mounted() {
             // 设置表格高度
-            this.tableHeight = window.innerHeight - 270;
+            this.tableHeight = window.innerHeight*0.69;
             this.queryPram.processKey = this.$route.params.processKey;
             this.getProcess();
         },
@@ -295,6 +285,10 @@
                 let prams = {};
                 prams = this.queryPram;
                 let _this = this;
+              if(new Date(_this.queryPram.startTime)>new Date(_this.queryPram.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+              }
                 _this.axios.post("plans/his-proc-inst/datagrid", prams).then(result => {
                     let {code, data} = result.data;
                     if (code == 200) {
@@ -329,25 +323,21 @@
 
 <style scoped>
     .top {
-        margin-top: 4px;
+        margin-top: 1vh;
         background-color: #fff;
-        font-size: 16px;
-        height: 50px;
-        padding: 10px;
+        font-size: 1.66vmin;
+        height: 5.5vh;
+        padding: 1vh;
         margin-left: 10px;
         margin-right: 10px;
     }
-
-
-    .ivu-tabs-card > > > .ivu-tabs-bar {
+    .ivu-tabs-card >>> .ivu-tabs-bar {
         margin-bottom: 0px !important;
     }
-
-    .ivu-tabs > > > .ivu-card-body {
+    .ivu-tabs >>> .ivu-card-body {
         padding: 10px !important;
     }
-
-    .ivu-tooltip > > > .ivu-tooltip-inner {
+    .ivu-tooltip >>> .ivu-tooltip-inner {
         background-color: rgba(110, 110, 110, 0.9);
         text-align: center;
         color: rgb(174, 205, 237);
@@ -358,11 +348,9 @@
         font-weight: bold;
         min-width: 180px;
     }
-
-    .ivu-tooltip > > > .ivu-tooltip-arrow {
+    .ivu-tooltip >>> .ivu-tooltip-arrow {
         border-bottom-color: rgb(112, 112, 112);
     }
-
     .border {
         box-shadow: 5px 5px 15px #cdf5ff inset;
         border: 1px solid #d9fff1;
@@ -375,13 +363,11 @@
         cursor: pointer;
         font-size: 1.66vmin;
     }
-
     .hr3 {
         height: 7px;
         border: none;
         border-top: 5px ridge #45D6D8;
     }
-
     .hr1 {
         margin: 0 auto;
         border: 0;
@@ -389,7 +375,6 @@
         background: #333;
         background-image: linear-gradient(to right, #ccc, #333, #ccc);
     }
-
     .next {
         display: table-cell;
         text-align: center;
@@ -397,7 +382,6 @@
         height: 6vh;
         vertical-align: middle;
     }
-
     .begin {
         display: table-cell;
         text-align: right;
@@ -405,7 +389,6 @@
         height: 6vh;
         vertical-align: middle;
     }
-
     .target {
         width: 22vmin;
         letter-spacing: 2px;
@@ -420,5 +403,16 @@
     }
     .tab >>> .ivu-tabs-bar .ivu-tabs-tab{
         height: 3.2vmin;
+    }
+    .tab >>> .ivu-tabs-nav-container{
+        height: 3.2vmin !important;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+    .ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
+    {
+      height: 4vmin;
+      line-height: 4vmin;
+      font-size: 1.4vmin;
     }
 </style>

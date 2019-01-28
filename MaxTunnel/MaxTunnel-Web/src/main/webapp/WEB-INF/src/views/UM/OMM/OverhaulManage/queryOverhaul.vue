@@ -10,15 +10,15 @@
                 <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
             <Col span="4">
-                <Button type="primary" icon="ios-search" size="small" @click="getList()">查询</Button>
+                <Button type="primary" icon="ios-search"  @click="getList()">查询</Button>
             </Col>
         </Row>
         <div class="list">
             <Table :columns="columns1" :data="overhaulData"></Table>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
-        </div>    
-    </div>    
+        </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
+    </div>
 </template>
 <script>
 import Enum from '../../../../../static/Enum.json'
@@ -43,7 +43,7 @@ export default {
             },
             overhaulData:[
                 {id:0, defectName: '一区燃气仓漏气', overhaulPerson: '张三', defectId: 1, defectName: '凤岭北路电力故障', startTime: 1529596800000, endTime:1529596800000,  overhaulResultId: 1 },
-                {id:1, defectName: '四区污水仓管道腐蚀渗水', overhaulPerson: '张三', defectId: 1, defectName: '凤岭北路电力故障', startTime: 1529596800000, endTime:1529596800000, overhaulResultId: 1 }            
+                {id:1, defectName: '四区污水仓管道腐蚀渗水', overhaulPerson: '张三', defectId: 1, defectName: '凤岭北路电力故障', startTime: 1529596800000, endTime:1529596800000, overhaulResultId: 1 }
             ],
             columns1:[
                 {
@@ -102,7 +102,7 @@ export default {
                         "div",temp
                         );
                     }
-                },  
+                },
                 {
                     title: '操作',
                     width: 300,
@@ -126,7 +126,7 @@ export default {
                             }
                             },
                             "详情"
-                        ), 
+                        ),
                         ]);
                     }
                 },
@@ -180,6 +180,10 @@ export default {
         //获取list
         getList(){
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             OverhaulService.ordersDatagrid(this.params).then(
                 (result)=>{
                     _this.overhaulData = result.list
@@ -223,3 +227,15 @@ export default {
     }
 }
 </script>
+<style scoped>
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+}
+</style>
+

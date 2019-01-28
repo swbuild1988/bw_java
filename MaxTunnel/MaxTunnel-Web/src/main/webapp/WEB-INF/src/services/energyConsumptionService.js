@@ -129,83 +129,83 @@ var EnergyConsumptionService = {
     // 获得每条管廊每个月的总能耗
     getTotleEnergyEveryMonthAndTunnel: function() {
         // 地址
-        // let tunnels = [
-        //     "古城大街",
-        //     "实验路",
-        //     "纬三路",
-        //     "经二路",
-        //     "经三路",
-        //     "监控中心"
-        // ];
-        // let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
-        // let res = [];
-        // for (let i = 0; i < times.length; i++) {
-        //     let tmp = [];
-        //     for (let j = 0; j < tunnels.length; j++) {
-        //         tmp.push({
-        //             time: times[i],
-        //             tunnel: tunnels[j],
-        //             energy: (Math.random() * 1000 + 1000).toFixed(2)
-        //         });
-        //     }
-        //     res.push(tmp);
-        // }
-        return new Promise((resolve, reject) => {
-            axios
-                .get("energy/totle-everymonth")
-                .then(res => {
-                    let { code, data, msg } = res.data;
-                    if (code == 200) {
-                        resolve(data);
-                    } else {
-                        reject(msg + "地址：energy/totle-everymonth");
-                    }
-                })
-                .catch(error => {
-                    reject(error.response.status + "  " + error.response.data);
+        let tunnels = [
+            "古城大街",
+            "实验路",
+            "纬三路",
+            "经二路",
+            "经三路",
+            "监控中心"
+        ];
+        let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
+        let res = [];
+        for (let i = 0; i < times.length; i++) {
+            let tmp = [];
+            for (let j = 0; j < tunnels.length; j++) {
+                tmp.push({
+                    time: times[i],
+                    tunnel: tunnels[j],
+                    energy: (Math.random() * 1000 + 1000).toFixed(2)
                 });
-            // resolve(res)
+            }
+            res.push(tmp);
+        }
+        return new Promise((resolve, reject) => {
+            // axios
+            //     .get("energy/totle-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：energy/totle-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
+            resolve(res);
         });
     },
     // 获得每条管廊每个月的每公里能耗
     getOneKmEneryEveryMonthAndTunnel: function() {
         // 地址
-        // let tunnels = [
-        //     "古城大街",
-        //     "实验路",
-        //     "纬三路",
-        //     "经二路",
-        //     "经三路",
-        //     "监控中心"
-        // ];
-        // let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
-        // let res = [];
-        // for (let i = 0; i < times.length; i++) {
-        //     let tmp = [];
-        //     for (let j = 0; j < tunnels.length; j++) {
-        //         tmp.push({
-        //             time: times[i],
-        //             tunnel: tunnels[j],
-        //             energy: (Math.random() * 100 + 200).toFixed(2)
-        //         });
-        //     }
-        //     res.push(tmp);
-        // }
-        return new Promise((resolve, reject) => {
-            // resolve(res);
-            axios
-                .get("energy/average-everymonth")
-                .then(res => {
-                    let { code, data, msg } = res.data;
-                    if (code == 200) {
-                        resolve(data);
-                    } else {
-                        reject(msg + "地址：energy/average-everymonth");
-                    }
-                })
-                .catch(error => {
-                    reject(error.response.status + "  " + error.response.data);
+        let tunnels = [
+            "古城大街",
+            "实验路",
+            "纬三路",
+            "经二路",
+            "经三路",
+            "监控中心"
+        ];
+        let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
+        let res = [];
+        for (let i = 0; i < times.length; i++) {
+            let tmp = [];
+            for (let j = 0; j < tunnels.length; j++) {
+                tmp.push({
+                    time: times[i],
+                    tunnel: tunnels[j],
+                    energy: (Math.random() * 100 + 200).toFixed(2)
                 });
+            }
+            res.push(tmp);
+        }
+        return new Promise((resolve, reject) => {
+            resolve(res);
+            // axios
+            //     .get("energy/average-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：energy/average-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
         });
     }
 };

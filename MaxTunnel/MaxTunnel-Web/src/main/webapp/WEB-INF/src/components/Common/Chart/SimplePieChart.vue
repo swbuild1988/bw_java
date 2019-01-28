@@ -20,6 +20,14 @@ export default {
         },
         parameters: {
             type: Object
+        },
+        titleSize: {
+            default: '10%',
+            type: String
+        },
+        seriesSize: {
+            default: '6%',
+            type: String
         }
     },
     data() {
@@ -29,7 +37,7 @@ export default {
                 series: [
                     {
                         type: "pie",
-                        radius: '65%',
+                        radius: '50%',
                         center: ['50%','50%'],
                         data: []
                     }
@@ -51,7 +59,7 @@ export default {
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
             );
-           
+
             // 加载默认参数
             _this.myChart.setOption(_this.option);
             // 加载新的参数
@@ -61,14 +69,14 @@ export default {
             _this.myChart.setOption({
                 title: {
                     textStyle: {
-                        fontSize: _this.getFontSize('10%')
+                        fontSize: _this.getFontSize(this.titleSize)
                     }
                 },
                 series: {
                     label: {
                         normal: {
                             textStyle: {
-                                fontSize: _this.getFontSize('6%')
+                                fontSize: _this.getFontSize(this.seriesSize)
                             }
                         }
                     }
@@ -84,7 +92,6 @@ export default {
                     .post(requestUrl, this.parameters.params)
                     .then(result => {
                         let { code, data } = result.data;
-                        console.log(result.data);
                         var tempCount = 0;
                         data.filter(function(item) {
                             tempCount += item.val;
@@ -163,15 +170,21 @@ export default {
         },
         //定时刷新数据
         refreshData() {
-        let _this = this;
-        if (_this.parameters.timer) {
-            let { intervalId, intervalTime } = _this.parameters.timer;
-            intervalId = setInterval(() => {
-            _this.option.series[0].data.forEach(a => (a.val = 1));
-            _this.myChart.setOption(_this.option);
-            _this.fetchData(_this.requestUrl);
-            }, intervalTime);
-        }
+            let _this = this;
+            if (_this.parameters.timer) {
+                // let { intervalId, intervalTime } = _this.parameters.timer;
+                // console.log("intervalTime",intervalTime)
+                // intervalId = setInterval(() => {
+                // _this.option.series[0].data.forEach(a => (a.val = 1));
+                // _this.myChart.setOption(_this.option);
+                // _this.fetchData(_this.requestUrl);
+                // }, intervalTime);
+                setInterval(() => {
+                    _this.option.series[0].data.forEach(a => (a.val = 1));
+                    _this.myChart.setOption(_this.option);
+                    _this.fetchData(_this.requestUrl);
+                }, _this.parameters.timer);
+            }
         },
         sizeFunction(x) {
             var min = Math.min.apply(null, this.series.map(o1 => {

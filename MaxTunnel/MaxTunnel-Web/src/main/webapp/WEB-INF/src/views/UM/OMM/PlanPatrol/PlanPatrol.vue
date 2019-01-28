@@ -33,6 +33,16 @@ export default {
         temp2.name='本月计划';
         temp2.url="/UM/planPatrol/queryMonthPlan";
         _this.task.leftTree.push(temp2);
+        if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/planPatrol") < 0) {
+            _this.goToMoudle({path: _this.task.leftTree[0].url});
+            sessionStorage.setItem('selectedName','')
+        }
+            sessionStorage.setItem("refreshAddress", "");
     },
+    methods: {
+        goToMoudle(path) {
+          this.$router.push(path);
+        }
+    }
 };
 </script>

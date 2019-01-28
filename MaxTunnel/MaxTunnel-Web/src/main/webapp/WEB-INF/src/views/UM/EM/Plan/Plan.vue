@@ -47,6 +47,11 @@
             ]
             _this.plans.leftTree.push(temp);
           });
+            if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/plans") < 0) {
+                _this.goToMoudle({path: _this.plans.leftTree[0].childNode[0].url});
+                sessionStorage.setItem('selectedName','')
+            }
+              sessionStorage.setItem("refreshAddress", "");
         },
         error=>{
           _this.Log.info(error)

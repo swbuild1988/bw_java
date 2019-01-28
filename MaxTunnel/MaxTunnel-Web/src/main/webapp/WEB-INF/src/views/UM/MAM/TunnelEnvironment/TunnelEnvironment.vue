@@ -24,28 +24,32 @@
     created() {
       this.curModule.leftTree = [];
       let _this = this;
+
       TunnelService.getTunnels().then(
-          (result)=>{
-              result.forEach(a=>{
-                  let temp={};
-                  temp.id=a.id;
-                  temp.name=a.name;
-                  // temp.url=_this.treeNodeJumpUrl+a.id;
-                  temp.childNode=[
-                    {
-                            id: 21,
-                            name: "监测总览",
-                            url: "/UM/TunnelEnvironment/list/"+a.id,
-                    },
-                    {
-                      id: 22,
-                      name: "监测详情",
-                      url: "/UM/TunnelEnvironment/details/"+a.id,
-                    }
-                    ];
-                  _this.curModule.leftTree.push(temp);
-              })
+          (result)=> {
+            result.forEach(a => {
+              let temp = {};
+              temp.id = a.id;
+              temp.name = a.name;
+              temp.childNode = [
+                {
+                  id: 21,
+                  name: "监测总览",
+                  url: "/UM/TunnelEnvironment/list/" + a.id,
+                },
+                {
+                  id: 22,
+                  name: "监测详情",
+                  url: "/UM/TunnelEnvironment/details/" + a.id,
+                }
+              ];
+              _this.curModule.leftTree.push(temp);
+            })
+            if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/TunnelEnvironment") < 0) {
               _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+              sessionStorage.setItem('selectedName','')
+          }
+            sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               console.log(error)

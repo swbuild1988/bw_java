@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -625,11 +626,11 @@ public class EquipmentController {
     public JSONObject getCountByTunnelAndEquipment() {
     	JSONObject json = new JSONObject();
     	List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+    	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
 		for(EquipmentType type : equipmentTypes) {
-    		List<Map<String,Object>> list = new ArrayList<>();
-    		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+    		List<JSONObject> list = new ArrayList<>();
     		for(TunnelSimpleDto tunnel : tunnelList) {
-    			Map<String,Object> map = new HashMap<>();
+    			JSONObject map = new JSONObject();
     			map.put("key",tunnel.getName());
     			map.put("val",equipmentService.getCountByCondition(tunnel.getId(), null, type.getId()));
     			list.add(map);
@@ -639,6 +640,37 @@ public class EquipmentController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
     }
     
+    /**
+     * 不同管廊下，每个设备类型的设备数
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月17日
+     */
+    @RequestMapping(value="types/equipments/tunnels", method=RequestMethod.GET)
+    public JSONObject getCountByTunnelAndType() {
+    	List<EquipmentType> equipmentTypes = equipmentTypeService.getAllEquipmentTypeList();
+    	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+    	
+    	JSONObject obj = new JSONObject();
+    	List<String> types = equipmentTypes.stream().map(a -> a.getName()).collect(Collectors.toList());
+    	List<String> tunnels = tunnelList.stream().map(a -> a.getName()).collect(Collectors.toList());
+    	List<JSONObject> list = new ArrayList<>();
+    	for(EquipmentType type : equipmentTypes) {
+    		JSONObject json = new JSONObject();
+    		List<Integer> typeList = new ArrayList<>();
+    		for(TunnelSimpleDto tunnel : tunnelList) {
+				int count = equipmentService.getCountByCondition(tunnel.getId(), null, type.getId());
+				typeList.add(count);
+    		}
+    		json.put("data", typeList);
+    		list.add(json);
+    	}
+    	
+    	obj.put("types", types);
+    	obj.put("tunnels", tunnels);
+    	obj.put("list", list);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
     /**
      * 通过moid获取设备信息
      * @param objId

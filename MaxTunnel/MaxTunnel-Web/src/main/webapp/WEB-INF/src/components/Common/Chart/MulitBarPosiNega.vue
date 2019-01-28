@@ -1,9 +1,8 @@
 <template>
-    <div class="posiNega" :id="id"></div>
+    <div class="posiNega" :id="id" ref="element"></div>
 </template>
 <style scoped>
 .posiNega {
-    position: relative;
     height: 100%;
     width: 100%;
 }
@@ -18,6 +17,12 @@ export default {
         requestUrl: {
             type: String
         },
+        title: {
+            type: String
+        },
+        legendData: {
+            type: Array
+        },
         parameters: {
             type: Object
         }
@@ -26,59 +31,6 @@ export default {
         return{
             myChart: {},
             option: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow',
-                        label: {
-                            show: true,
-                            backgroundColor: '#161139'
-                        }
-                    }
-                },
-                grid: {
-                    left: "3%",
-                    right: "3%",
-                    bottom: "3%",
-                    containLabel: true
-                },
-                calculable: true,
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: [],
-                        axisTick: {
-                            alignWithLabel: true
-                        },                    
-                        splitLine: {
-                            show: false,  
-                        },
-                        axisLabel:{
-                            fontsize:2,
-                            align:'center',
-                            color:'#161139'
-                        }
-                    }
-                ],
-                yAxis: [{
-                    type: 'value',
-                    splitLine: {
-                        show: true,
-                        lineStyle:{
-                            color:'#161139'
-                        }
-                    },
-                    axisLine:{
-                        show:false
-                    },
-                    axisLabel:{                    
-                        fontWeight:10,
-                        fontsize:5,
-                        color:'#161139'
-                    }
-                        
-                }],
-                series: []
             }
         }
     },
@@ -98,6 +50,80 @@ export default {
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
             );
+            this.option = {
+                title: {
+                    text: this.title,
+                    textStyle: {
+                        fontSize: this.getFontSize('5%')
+                    },
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow',
+                        label: {
+                            show: true,
+                            backgroundColor: '#161139'
+                        }
+                    }
+                },
+                grid: {
+                    left: "3%",
+                    right: "3%",
+                    bottom: "3%",
+                    containLabel: true
+                },
+                calculable: true,
+                legend: {
+                    data: this.legendData,
+                    textStyle: { 
+                        fontSize: _this.getFontSize('5%') ,
+                        align:'center',
+                    }
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: [],
+                        axisTick: {
+                            alignWithLabel: true
+                        },                    
+                        splitLine: {
+                            show: false,  
+                        },
+                        axisLabel: {
+                            show: true,
+                            align:'center',
+                            color:'#161139',
+                            textStyle: {
+                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
+                            }
+                        },
+                    }
+                ],
+                yAxis: [{
+                    type: 'value',
+                    splitLine: {
+                        show: true,
+                        lineStyle:{
+                            color:'#161139'
+                        }
+                    },
+                    axisLine:{
+                        show:false
+                    },
+                    axisLabel:{   
+                        show: true, 
+                        textStyle: {
+                            fontSize : _this.getFontSize('4%'),      //更改坐标轴文字大小
+                            fontWeight:  this.getFontSize('10%'),
+                        },                
+                        color:'#161139'
+                    }
+                        
+                }],
+                series: []
+            }
             // 加载默认参数
             _this.myChart.setOption(_this.option);
             if(_this.parameters.option){
@@ -114,10 +140,10 @@ export default {
                     var yData2 = this.getDataY2(data)
                     let series = [
                         {
-                            name: this.parameters.option.legend.data[0],
+                            name: this.option.legend.data[0],
                             type: 'bar',
                             stack: '总量',
-                            barWidth: 10,
+                            barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
                                     barBorderRadius: 50,
@@ -132,10 +158,10 @@ export default {
                             },
                             data: yData1,
                         },{
-                            name: this.parameters.option.legend.data[1],
+                            name: this.option.legend.data[1],
                             type: 'bar',
                             stack: '总量',
-                            barWidth: 10,
+                            barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
                                     barBorderRadius: 50,
@@ -170,12 +196,9 @@ export default {
             let dataY1 = [];
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < data[i].val.length; j++) {
-                    if(data[i].val[j].key==this.parameters.option.legend.data[0]){
+                    if(data[i].val[j].key==this.option.legend.data[0]){
                         dataY1.push(data[i].val[j].val)
                     }
-                    // else if(data[i].val[j].key=='正常'){
-                    //     dataY1.push(data[i].val[j].val)
-                    // }
                 }
             }
             return dataY1
@@ -184,12 +207,9 @@ export default {
             let dataY2 = [];
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < data[i].val.length; j++) {
-                    if(data[i].val[j].key==this.parameters.option.legend.data[1]){
+                    if(data[i].val[j].key==this.option.legend.data[1]){
                         dataY2.push(data[i].val[j].val)
                     }
-                    // else if(data[i].val[j].key=='故障'){
-                    //     dataY2.push(data[i].val[j].val)
-                    // }
                 }
             }
             return dataY2
@@ -203,6 +223,20 @@ export default {
             // setInterval(() => {
             //     _this.fetchData(_this.requestUrl);
             // }, _this.intervalTime);
+        },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     }
 }
