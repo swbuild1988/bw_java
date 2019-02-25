@@ -23,7 +23,7 @@
       <Col span="6">
       <span class="planDec" style="padding-top: 3px;">监测对象：</span>
       <Input v-model="queryPrams.objectId"  style="width: 65%;margin-top:14px;">
-      <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
+      <Button slot="append" icon="ios-search" style="height:4vmin;" @click="queryObject"></Button>
       </Input>
       </Col>
       <Col span="6">
@@ -58,7 +58,7 @@
                @on-selection-change="selectionClick"></Table>
       </Col>
     </Row>
-    <div style="height: 50px;margin:9px;background-color: #fff;position: absolute;width: 99%">
+    <div style="height: 5vh;margin-top:0.5vh;margin-left:10px;background-color: #fff;position: absolute;width: 99%">
       <div style="position:absolute;height: 100%;">
         <div style="margin-left:8px;float: left;height: 100%">
           <div class="alarmCircle" style="background-color: #0066ff;">提示</div>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <Page class="nextPage" @on-change="changePage" @on-page-size-change="handlePageSize"
-            :total="queryPrams.total"
+            :total="queryPrams.total" :page-size-opts=[12,24,36]
             show-total show-elevator show-sizer placement="top"
             :page-size="queryPrams.pageSize"></Page>
     </div>
@@ -326,7 +326,7 @@
       }
     },
     mounted() {
-      this.tableHeight = window.innerHeight * 0.73-80;
+      this.tableHeight = window.innerHeight * 0.655;
       this.inItData();
       this.changeAlarmType(this.queryPrams.alarmTimeType);
       this.queryAlarmData();
@@ -407,8 +407,9 @@
   }
 
   .alarmCircle {
-    width: 35px;
-    height: 35px;
+    width: 4vmin;
+    font-size:1.66vmin;
+    line-height:4vmin;
     color: #a79d9d;
     border-radius: 100%;
     display: flex;
@@ -419,13 +420,13 @@
     align-items: Center;
     margin-top: 10px;
     float: left;
-    font-size: 15px;
   }
 
   .alarmCircleText {
-    line-height: 53px;
-    margin-left: 6px;
-    font-size: 16px;
+    margin-left: 0.5vh;
+    margin-top: 0.2vh;
+    font-size:2vmin;
+    line-height:6vmin;
     color: #a79d9d;
   }
 </style>

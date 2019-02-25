@@ -72,7 +72,7 @@ export default {
                 {
                     type: 'index',
                     align: 'center',
-                    width: 60
+                    width: 100
                 },
                 {
                     title: '模块类型',
@@ -107,7 +107,7 @@ export default {
                 },
                 {
                     title: '',
-                    width: 150,
+                    width: 200,
                     align: "center",
                     render: (h,params)=>{
                         return('div',[

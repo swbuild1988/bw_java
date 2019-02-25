@@ -81,10 +81,9 @@ export default {
             this.$refs[data].validate(valid => {
                 if (valid) {
                     this.formValidate.parent = this.formValidate.parent == '' ? this.formValidate.sn : this.formValidate.parent
-                    // console.log(this.formValidate)
                     this.$emit("listenToAdd", this.formValidate);
                 } else {
-                    this, $Message.error("添加失败");
+                    this.$Message.error("添加失败");
                 }
             });
         },

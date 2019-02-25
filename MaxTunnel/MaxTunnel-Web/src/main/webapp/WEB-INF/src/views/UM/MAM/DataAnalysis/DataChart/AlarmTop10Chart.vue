@@ -4,28 +4,28 @@
     <Row class="conditions" style="margin-bottom: 0px;">
       <Col span="4">
         <span>时间周期：</span>
-        <Select v-model="chartPrams.dateType" style="width:60%;" @on-change="changeAlarmType">
+        <Select v-model="chartPrams.dateType" style="width:65%;" @on-change="changeAlarmType">
           <Option v-for="item in dateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
         </Select>
       </Col>
-      <Col span="4">
+      <Col span="6">
         <span>开始时间：</span>
         <DatePicker v-model="chartPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
-                    style="width: 60%"></DatePicker>
+                    style="width: 65%"></DatePicker>
       </Col>
-      <Col span="4">
+      <Col span="6">
         <span>结束时间：</span>
         <DatePicker v-model="chartPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
-                    style="width:60%"></DatePicker>
+                    style="width:65%"></DatePicker>
       </Col>
       <Col span="4">
         <span class="explain">监测对象：</span>
-        <Input v-model="chartPrams.objectId" readonly style="width: 60%;margin-top: 8px">
-          <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
+        <Input v-model="chartPrams.objectId" readonly style="width: 65%;margin-top: 1.2vh;">
+          <Button slot="append" icon="ios-search" style="height: 4vmin" @click="queryObject"></Button>
         </Input>
       </Col>
       <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
-      <Col span="4">
+      <Col span="2" offset="2">
         <Button type="primary"  icon="ios-search" size="small" @click="createChart">生成报表</Button>
       </Col>
     </Row>
@@ -35,7 +35,7 @@
       </Col>
       <Col span="12" style="padding: 10px;">
       <Table border :columns="columns" :data="tableData" stripe></Table>
-      <div style="margin: 10px;font-size: 16px;">
+      <div style="margin: 10px;font-size: 1.66vmin;line-height: 4vmin;">
         <span>报表时间:</span>
         {{reportTime}}
         <div style="float: right" v-if="startTime!=''">
@@ -202,5 +202,14 @@
 
   .explain {
     float: left;
+  }
+
+  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+  .ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
+  {
+    height: 4vmin;
+    line-height: 4vmin;
+    font-size: 1.4vmin;
   }
 </style>

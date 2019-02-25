@@ -19,11 +19,11 @@ export default {
               name: '系统日志',
               url: "/UM/operationLog/query",
             },
-            {
-              id: 2,
-              name: '安全日志',
-              url: ''
-            }
+            // {
+            //   id: 2,
+            //   name: '安全日志',
+            //   url: ''
+            // }
           ]
         },
         treeNodeJumpUrl:"/UM/operationLog/query",

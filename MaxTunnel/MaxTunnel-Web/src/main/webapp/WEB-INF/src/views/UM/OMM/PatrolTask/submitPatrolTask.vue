@@ -63,9 +63,12 @@
             <FormItem label="巡检描述：">
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" :readonly="this.$route.params.isFinished==true"></Input>
             </FormItem>
-            <FormItem style="text-align: center" v-show="this.$route.params.isFinished!=true">
+            <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished!=true">
                 <Button type="ghost" style="margin-right: 8px"  @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitTask">提交</Button>
+            </FormItem>
+            <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished==true">
+                <Button type="ghost"  @click="goBack()">返回 </Button>
             </FormItem>
         </Form>
         <Modal
@@ -109,7 +112,7 @@
                         <Checkbox v-model="item.hasDefect" class="records" style="text-align: center;" @on-change="addDefect(index)">是否发现故障</Checkbox>
                     </td>
                     <td>
-                        <Button type="ghost" @click="handleRemove(index)" class="records" :disabled="index==0">删除</Button>
+                        <Button type="error" @click="handleRecord(index)" class="records" :disabled="index==0">删除</Button>
                     </td>
                 </tr>
                 <tr v-if="item.hasDefect" style="padding: 0px;"> 
@@ -244,7 +247,7 @@ export default {
                 {
                     title: '巡检记录时间',
                     key: 'recordTime',
-                    width: 200,
+                    width: window.innerWidth/100*10,
                     align: 'center',
                     render: (h,params) => {
                         return h('span',
@@ -254,7 +257,23 @@ export default {
                 },
                 {
                     title: '巡检描述',
-                    key: 'content'
+                    key: 'content',
+                    render: (h,params) => {
+                        let temp = params.row.content
+                        if(temp.length>10)
+                            temp = temp.substring(0,9)
+                        else
+                            temp = temp
+                        return h(
+                            'span',
+                            {
+                                domProps: {
+                                    title: params.row.content
+                                }
+                            },
+                            temp
+                        )
+                    }
                 },
             ],
             areas:[],
@@ -365,10 +384,20 @@ export default {
                 createTime: new Date()
             })
         },
-        handleRemove(index){
-            if(index!=0){
-                this.addRecords[index].status=0;
-            }
+        handleRecord(index){
+            this.$Modal.confirm({
+                title: '巡检记录',
+                width:"25vw",
+                content: '<p>是否删除这条巡检记录</p>',
+                onOk: () => {
+                    if(index!=0){
+                        this.addRecords[index].status=0;
+                    }
+                },
+                onCancel: () => {
+
+                }
+            })
         },
         //添加缺陷
         addDefect(index){
@@ -552,7 +581,7 @@ export default {
     text-align: center;
 }
 .addRecords th{
-    padding: 9px 7px;
+    padding: 0.7vmin 0.9vmin;
 }
 .addRecords{
     margin: 5px;
@@ -617,13 +646,14 @@ export default {
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
+        padding: 1vmin 2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
-        width: 15vmin !important;
+        width: 13vmin !important;
         line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 15vmin !important;
+        margin-left: 13vmin !important;
         line-height: 4.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -655,6 +685,18 @@ export default {
         width: 1.4vmin !important;
         height: 1.4vmin !important;
         border: 0.1vmin solid #dddee1;
+    }
+    .records.ivu-checkbox-wrapper >>> .ivu-checkbox-inner{
+        width: 1.4vmin;
+        height: 1.4vmin;
+        border: 0.1vmin solid #dddee1;
+    }
+
+    .records.ivu-checkbox-wrapper >>> .ivu-checkbox-inner:after{
+        width: 0.6vmin;
+        height: 0.9vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
     }
 }
 </style>

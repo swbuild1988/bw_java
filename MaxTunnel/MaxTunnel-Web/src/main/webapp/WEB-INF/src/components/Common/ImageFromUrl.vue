@@ -1,6 +1,6 @@
 <template>
     <div class="ImageFromUrl">
-        <img style="max-width:100%; max-height:100%;" v-bind:src=imgSrc>
+        <img style="width:100%; height:100%;" v-bind:src=imgSrc>
     </div>                
 </template>
 

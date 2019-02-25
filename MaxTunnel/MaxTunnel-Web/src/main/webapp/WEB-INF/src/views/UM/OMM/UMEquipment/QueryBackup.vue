@@ -553,6 +553,7 @@ export default {
             let _this = this;
             this.$Modal.confirm({
                 title: "删除",
+                width: '24vw',
                 content: "<p>确认删除吗?</p>",
                 onOk: () => {
                     let _this = this;
@@ -776,6 +777,12 @@ export default {
     }
     .equipentTitle{
         font-size: 2vmin;
+    }
+    .borrowBox{
+        height: 1.8vmin;
+    }
+    .ivu-icon{
+        font-size: 2vmin !important;
     }
 }
 </style>

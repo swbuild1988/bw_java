@@ -75,7 +75,8 @@ export default {
                 yAxisName: "单位：个",
                 requestUrl: "tunnels/equipments/types",
                 title: "管廊设备明细",
-                color: "#21d6ff"
+                color: "#21d6ff",
+                gridTop: '15%'
             },
             conditions: {
                 name: null,

@@ -55,7 +55,7 @@
         <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
       </Col>
     </Row>
-    <div style="margin:20px;">
+    <div>
       <Table
         border
         ref="selection"
@@ -223,7 +223,8 @@ export default {
                 name: "",
                 tunnelId: "",
                 storeTypeId: "",
-                camera: ""
+                camera: "",
+                sn: null
             },
             addStoreInfo: {
                 show: { state: false },

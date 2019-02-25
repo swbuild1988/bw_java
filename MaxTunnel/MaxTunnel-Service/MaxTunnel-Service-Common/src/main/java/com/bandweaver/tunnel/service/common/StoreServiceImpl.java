@@ -5,11 +5,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
+import com.bandweaver.tunnel.common.biz.pojo.Area;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.vo.StoreVo;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.dao.common.AreaMapper;
+import com.bandweaver.tunnel.dao.common.SectionMapper;
 import com.bandweaver.tunnel.dao.common.StoreMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -19,6 +25,10 @@ public class StoreServiceImpl implements StoreService {
 
 	@Autowired
 	private StoreMapper storeMapper;
+	@Autowired
+	private AreaMapper areaMapper;
+	@Autowired
+	private SectionMapper sectionMapper;
 
 	@Override
 	public void addBatch(List<Store> list) {
@@ -51,10 +61,26 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
+	@Transactional
 	public Store add(Store store) {
 		
 		store.setCrtTime(new Date());
 		storeMapper.insert(store);
+		
+		List<Area> area_list = areaMapper.getAreasByTunnelId(store.getTunnelId());
+		if(area_list == null) return null;
+		for (Area area : area_list) {
+			String section_name = area.getName() + "-" + store.getName();
+			
+			Section section = new Section();
+			section.setName(section_name);
+			section.setTunnelId(store.getTunnelId());
+			section.setStoreId(store.getId());
+			section.setAreaId(area.getId());
+			section.setCrtTime(new Date());
+			LogUtil.debug("create section:" + section );
+			sectionMapper.insertSelective(section);
+		}
 		
 		return store;
 	}
@@ -77,8 +103,13 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteBatch(List<Integer> list) {
 		storeMapper.deleteBatch(list);
+		
+		//同时删除对应的section
+		List<Integer> sectionIds = sectionMapper.getSectionIdsByStoreIds(list);
+		sectionMapper.deleteBatch(sectionIds);
 	}
 
 	@Override

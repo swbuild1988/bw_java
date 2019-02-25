@@ -70,7 +70,8 @@ export default {
                 grid: {
                     left: "3%",
                     right: "3%",
-                    bottom: "3%",
+                    bottom: "2%",
+                    top: '10%',
                     containLabel: true
                 },
                 calculable: true,
@@ -87,14 +88,12 @@ export default {
                         data: [],
                         axisTick: {
                             alignWithLabel: true
-                        },                    
-                        splitLine: {
-                            show: false,  
-                        },
+                        },                      
                         axisLabel: {
                             show: true,
                             align:'center',
                             color:'#161139',
+                            interval: 0,
                             textStyle: {
                                 fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
                             }
@@ -122,6 +121,7 @@ export default {
                     }
                         
                 }],
+                
                 series: []
             }
             // 加载默认参数

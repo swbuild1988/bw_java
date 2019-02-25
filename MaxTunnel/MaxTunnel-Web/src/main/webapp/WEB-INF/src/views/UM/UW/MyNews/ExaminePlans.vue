@@ -75,7 +75,7 @@ export default {
                 {
                     type: 'index',
                     align: 'center',
-                    width: 60
+                    width: window.innerWidth/100*3
                 },
                 {
                     title: '计划巡检时间',
@@ -173,6 +173,7 @@ export default {
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
+        padding: 1vmin 2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;

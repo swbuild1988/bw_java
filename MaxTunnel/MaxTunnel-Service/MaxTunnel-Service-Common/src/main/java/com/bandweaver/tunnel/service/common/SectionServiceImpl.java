@@ -76,7 +76,7 @@ public class SectionServiceImpl implements SectionService {
 	@Override
 	public PageInfo<SectionDto> dataGrid(SectionVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-		List<SectionDto> list = getSectionsByCondition(vo);
+		List<SectionDto> list = sectionMapper.getSectionsByCondition(vo);
 		return new PageInfo<>(list);
 	}
 
@@ -115,69 +115,55 @@ public class SectionServiceImpl implements SectionService {
 		List<SectionDto> scList = getAllSections();
 		LogUtil.info(" get section list size : " + scList.size());
 
-		double dd = 0.00;
-		boolean flag = true;
 		SectionDto resultDto = null;
 		Point2D p4 = null;
 		for (SectionDto sectionDto : scList) {
 
-			//获取起始经纬度高度
+			// 获取起点和终点的经纬度高
 			String startPoint = sectionDto.getStartPoint();
 			String endPoint = sectionDto.getEndPoint();
-			if(startPoint == null || startPoint.trim().length() == 0) { continue; }
-			if(endPoint == null || endPoint.trim().length() == 0) { continue; }
-
+			if(startPoint == null || startPoint.trim().length() == 0) continue;
+			if(endPoint == null || endPoint.trim().length() == 0) continue;
+			
 			List<Double> startList = getListFromString(startPoint);
-			List<Double> endList = getListFromString(endPoint);
-
 			double startLon = startList.get(0);
 			double startLat = startList.get(1);
 			double startHei = startList.get(2);
-			//将经纬度转化成平面坐标
+
+			// 判断高度
+			double heiLen = sectionDto.getStore().getHeight();
+			if(height > startHei + heiLen / 2 || height < startHei -heiLen / 2) continue;
+			
+			// 将经纬度转化成平面坐标
 			Point2D p1 = GPSUtil.MillierConvertion(startLon, startLat);
 
-			LogUtil.info("section " + sectionDto.getId() + " Start Point: " + p1.toString());
+			//LogUtil.info("section " + sectionDto.getId() + " Start Point: " + p1.toString());
 
+			List<Double> endList = getListFromString(endPoint);
 			double endLon = endList.get(0);
 			double endLat = endList.get(1);
-			//将经纬度转化成平面坐标
+			// 将经纬度转化成平面坐标
 			Point2D p2 = GPSUtil.MillierConvertion(endLon, endLat);
 
-            LogUtil.info("section " + sectionDto.getId() + " End Point: " + p2.toString());
-
-			//获取到投影坐标
+			// 获取到投影坐标
 			p4 = MathUtil.getProjectivePoint(p1, p2, pOut);
-
+			
+			// 判断投影坐标是否在线段上
 			double l = p1.distance(p2);//length from p1 to p2
-            LogUtil.info("the distance of start and end point: " + l);
 			double l1 = p1.distance(p4);//length from p1 to p4
 			double l2 = p2.distance(p4);//length from p2 to p4
-
-
 			double sub1 = l1 + l2 - l;
-			double sub2 = Math.abs(l1 - l2) - l ;
-			if(sub1 == 0 || Math.ceil(sub1) == 0 || Math.floor(sub1) == 0 ) {
-				LogUtil.info(" point maybe in the section : " + sectionDto.getId() );
-				double distance = pOut.distance(p4);
-				LogUtil.info(" distance : " + distance );
-
-				//比较哪个距离更近
-				if(flag) {dd = distance; flag = false;}
-				dd = Math.min(distance,dd);
-				if(Math.min(distance,dd) == distance && distance <= 2) {
-					//判断高度
-					if(Math.abs(height - startHei) <= 5) {
-						resultDto = sectionDto;
-						LogUtil.info(" get section : " + resultDto.getId());
-					}
-				}
-
-			}else if(sub2 == 0 || Math.ceil(sub2) == 0 || Math.floor(sub2) == 0 ){
-				continue;
-			}else {
-				LogUtil.info(" 不该出现的情况");
-				continue;
+			if(sub1 != 0) continue;
+				
+			// 距离
+			double distance = pOut.distance(p4);
+			double widLen = sectionDto.getStore().getWidth();
+			double dis = widLen / 2 - distance;
+			if( dis >= 0) {
+				resultDto = sectionDto;
+				LogUtil.info(" get section : " + resultDto.getName());
 			}
+//			if(sub1 == 0 || Math.ceil(sub1) == 0 || Math.floor(sub1) == 0 )
 		}
 
 		return resultDto;

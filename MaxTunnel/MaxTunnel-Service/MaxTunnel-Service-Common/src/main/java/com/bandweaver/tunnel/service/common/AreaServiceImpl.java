@@ -101,8 +101,13 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteBatch(List<Integer> list) {
 		areaMapper.deleteBatch(list);
+		
+		//同时删除对应的section
+		List<Integer> sectionIds = sectionMapper.getSectionIdsByAreaIds(list);
+		sectionMapper.deleteBatch(sectionIds);
 	}
 
 	@Override

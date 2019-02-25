@@ -55,7 +55,7 @@ export default {
       },
       queryParam: {
         //数据集查询参数
-        dataSourceName: "tunnels19", //
+        dataSourceName: "tunnels191", //
         dataSetName: "安全设备"
       },
       detectionObj: {

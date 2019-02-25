@@ -57,7 +57,7 @@
                 </Col>
             </Row>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total :page-size-opts=[12,24,36]
                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
@@ -164,6 +164,7 @@ export default {
         instance(index) {
             this.$Modal.confirm({
                 title: '客户信息',
+                width: '24vw',
                 content: '<p>是否删除这条客户信息</p>',
                 onOk: () => {
                     let _this = this

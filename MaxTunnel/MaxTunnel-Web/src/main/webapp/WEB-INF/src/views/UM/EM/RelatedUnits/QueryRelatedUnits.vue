@@ -72,7 +72,7 @@
             </Row>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
+                :page-size-opts=[8,16,24] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
 <script>
@@ -231,6 +231,7 @@ export default {
         del(index){
             this.$Modal.confirm({
                 title: '相关单位',
+                width: '24vw',
                 content: '<p>是否删除这条相关单位信息</p>',
                 onOk: () => {
                     let _this = this

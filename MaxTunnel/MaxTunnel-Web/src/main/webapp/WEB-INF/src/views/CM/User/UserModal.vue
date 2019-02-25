@@ -7,14 +7,11 @@
           <Input v-model="formValidate.username" placeholder="请输入用户名"></Input>
         </FormItem>
         <FormItem label="密码" prop="password">
-          <Input v-model="formValidate.password" placeholder="请输入密码"></Input>
+          <Input v-model="formValidate.password" placeholder="请输入6-18位密码"></Input>
         </FormItem>
         <FormItem label="确认密码" prop="_password">
-          <Input v-model="formValidate._password" placeholder="请输入确认密码" @on-blur="checkPwd()"></Input>
-          <div class="ivu-form-item-error-tip"  v-show="validatePwdCheck">确认密码与初始密码不一致</div>
-        </FormItem>
-        <FormItem label="年龄" prop="age">
-          <Input v-model="formValidate.age" placeholder="请输入年龄"></Input>
+          <Input v-model="formValidate._password" placeholder="请输入确认密码"></Input>
+          <!-- <div class="ivu-form-item-error-tip"  v-show="validatePwdCheck">确认密码与初始密码不一致</div> -->
         </FormItem>
         <FormItem label="性别" prop="gender">
           <RadioGroup v-model="formValidate.gender">
@@ -35,7 +32,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-          <Button type="primary" size="large" @click="modalOk('formValidate')">保存</Button>
+          <Button type="primary" size="large" @click="addUser('formValidate')">保存</Button>
       </div>
     </Modal>
   </div>
@@ -56,7 +53,6 @@
             username:'',
             password:'',
             _password:'',           //确认密码
-            age:'',
             gender:'',
             realName:'',
             phone:'',
@@ -95,25 +91,22 @@
             username:'',
             password:'',
             _password:'',           //确认密码
-            age:'',
             gender:'',
             realName:'',
             phone:'',
             role:''                //权限
           },
-          validatePwdCheck: false,
           ruleValidate: {
             username: [
               { required: true, message: '用户名不能为空', trigger: 'blur' }
             ],
             password: [
-              { required: true, message: '请输入密码', trigger: 'blur'}
+              { required: true, message: '请输入密码', trigger: 'blur'},
+              { validator: this.passLength, trigger:'blur' }
             ],
             _password: [
-              { required: true, message: '确认密码不能为空', trigger: 'blur' }
-            ],
-            age: [
-              { required: true, message: '年龄不能为空', trigger: 'blur' }
+              { required: true, message: '确认密码不能为空', trigger: 'blur' },
+              { validator: this.checkPwd, trigger: 'blur' }
             ],
             gender: [
               { required: true, message: '请勾选性别', trigger: 'change' }
@@ -122,7 +115,8 @@
               { required: true, message: '真实姓名不能为空', trigger: 'blur' }
             ],
             phone: [
-              { required: true, message: '联系方式不能为空', trigger: 'blur' }
+              { required: true, message: '联系方式不能为空', trigger: 'blur' },
+              { validator: this.validatePhone, trigger: 'blur' }
             ],
             role: [
               { required: true, message: '勾选用户角色', trigger: 'change' }
@@ -148,7 +142,7 @@
         }
       },
       methods: {
-        modalOk (name) {
+        addUser (name) {
           this.$refs[name].validate((valid) => {
             if (valid&&this.validatePwdCheck==false) {
               this.$Message.success('成功!');
@@ -157,6 +151,27 @@
               this.$Message.error('失败!');
             }
           })
+        },
+        passLength(rule, value, callback){
+          if(value.length>=6&&value.length<=18){
+            callback();
+          }else{
+            callback( new Error("请输入6-18位密码") )
+          }
+        },
+        validatePhone(rule, value, callback){
+          if(!(/^(1[358496]\d{9})$/).test(value)){
+            callback( new Error("请输入正确的联系方式") )
+          }else{
+            callback();
+          }
+        },
+        checkPwd(rule, value, callback){
+          if(this.formValidate.password!=null&&this.formValidate.password!=this.formValidate._password){
+            callback( new Error("确认密码与初始密码不一致") )
+          }else{
+            callback()
+          }
         },
         addNewUser(){
           console.log("111");
@@ -168,13 +183,6 @@
         },
         handleReset (name) {
           this.$refs[name].resetFields();
-        },
-        checkPwd(){
-          if(this.formValidate.password!=null&&this.formValidate.password!=this.formValidate._password){
-            this.validatePwdCheck = true
-          }else{
-            this.validatePwdCheck = false
-          }
         }
       }
     }

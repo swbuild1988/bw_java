@@ -7,7 +7,7 @@ import {
 } from "../../../scripts/commonFun";
 import eventBus from "../../../assets/Bus";
 
-let { VMEntityConfig } = require("../../../../static/VM/js/VMWebConfig");
+// let { VMEntityConfig } = require("../../../../static/serverconfig");
 
 export default {
   data() {
@@ -39,7 +39,7 @@ export default {
   computed: {
     entityHeight() {
       return Vue.prototype.VMConfig.entityHeight;
-    }
+    },
   },
   mounted() {
     if (this.openPlanPosition.openPosition) {
@@ -92,7 +92,7 @@ export default {
       let day = Vue.prototype.VMConfig.searchEventsDay;
 
       getJson(`events/day/${day}`).then(data => {
-        console.log("data", data);
+
         data.forEach(event => {
           _this.addEventEntitys(event); //添加事件实体
           Vue.prototype.IM.addInformation("events", event);
@@ -154,7 +154,7 @@ export default {
         this.addParticleSystem({ entity, viewer });
     },
     addIdentifierViewer() {
-      let { entityParam } = VMEntityConfig;
+      let { entityParam } = this.VMEntityConfig;
 
       entityParam.forEach(entity => {
         let { entityBaseParameters, entityExtendParameters } = entity;

@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.common.biz.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.pojo.Department;
 import com.bandweaver.tunnel.common.biz.pojo.Position;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +23,14 @@ public class StaffDto implements Serializable{
 	private Integer id;
 
     private String name;
+    
+    private String account;
+    
+    private String sex;
+    
+    private String telphone;
+    
+    private Date hireDate;
 
     @JsonIgnore
     private Integer deptId;
@@ -32,6 +41,8 @@ public class StaffDto implements Serializable{
     private Integer positionId;
     
     private Position position;
+    
+    private JSONObject acctInfo;
     
     private Date crtTime;
 
@@ -90,13 +101,49 @@ public class StaffDto implements Serializable{
 	public void setPosition(Position position) {
 		this.position = position;
 	}
+	
 
-	@Override
-	public String toString() {
-		return "StaffDto [id=" + id + ", name=" + name + ", deptId=" + deptId + ", dept=" + dept + ", positionId="
-				+ positionId + ", position=" + position + ", crtTime=" + crtTime + "]";
+	public JSONObject getAcctInfo() {
+		return acctInfo;
 	}
 
+	public void setAcctInfo(JSONObject acctInfo) {
+		this.acctInfo = acctInfo;
+	}
+	
+	
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getTelphone() {
+		return telphone;
+	}
+
+	public void setTelphone(String telphone) {
+		this.telphone = telphone;
+	}
+
+	public Date getHireDate() {
+		return hireDate;
+	}
+
+	public void setHireDate(Date hireDate) {
+		this.hireDate = hireDate;
+	}
     
     
 }

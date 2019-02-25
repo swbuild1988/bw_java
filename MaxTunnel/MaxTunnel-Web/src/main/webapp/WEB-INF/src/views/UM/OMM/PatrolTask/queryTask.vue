@@ -30,7 +30,7 @@
             </Col>
         </Row>
         <div class="list">
-            <Table  :columns='columns'  :data="patrolTask"></Table>
+            <Table  border :columns='columns'  :data="patrolTask"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -80,7 +80,7 @@ export default {
             columns:[
                 {
                     type: 'index',
-                    width: 60,
+                    width: window.innerWidth/100*80/100*5,
                     align: 'center'
                 },
                 {
@@ -150,7 +150,7 @@ export default {
                     title: '巡检描述',
                     key: 'describe',
                     align: 'center',
-                    width: 200,
+                    width: window.innerWidth/100*80/100*15,
                     render:(h,params)=>{
                         let temp = params.row.describe
                         if(temp!=null){
@@ -167,7 +167,7 @@ export default {
                     title:"操作",
                     key:"action",
                     align: 'center',
-                    width:150,
+                    width:window.innerWidth/100*80/100*7,
                     align:'center',
                     render:(h, params) => {
                         return h('div', [
@@ -194,7 +194,7 @@ export default {
             firstDay: null,
             lastDay: null,
             isTable: true,
-            isSuperCalender: false,
+            isSuperCalender: false
         }
     },
     watch:{
@@ -204,6 +204,8 @@ export default {
           this.tunnels.forEach(a => {
             if (a.id == this.tunnelId) {
               this.queryConditions();
+              this.isTable = true;
+              this.isSuperCalender = false;
             }
           });
         },
@@ -303,7 +305,7 @@ export default {
                     })
                 }
             })
-        }
+        },
     }
 }
 </script>

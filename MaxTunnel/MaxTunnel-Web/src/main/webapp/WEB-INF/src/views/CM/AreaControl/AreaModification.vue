@@ -65,7 +65,9 @@ export default {
     },
     watch:{
         modificationInfo:function(newValue,oldValue){
-            this.formValidate = JSON.parse(JSON.stringify(newValue));
+            this.formValidate.name = newValue.name
+            this.formValidate.tunnelId = newValue.tunnel.id
+            this.formValidate.camera = newValue.camera
         },
         // 'formValidate.name':function(newValue,oldValue){
         //     if(newValue != null){

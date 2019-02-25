@@ -412,5 +412,16 @@ input[type='number']{
         width: 8vmin;
         font-size: 1.6vmin;
     }
+    .ivu-date-picker-cells-month span, .ivu-date-picker-cells-year span {
+        width: 4vmin !important;
+        height: 2.8vmin !important;
+        line-height: 2.8vmin !important;
+        margin: 1vmin 1.5vmin !important;
+        border-radius: 0.3vmin !important;
+    }
+    .ivu-date-picker-header {
+        height: 3.2vmin !important;
+        line-height: 3.2vmin !important;
+    }
 }
 </style>

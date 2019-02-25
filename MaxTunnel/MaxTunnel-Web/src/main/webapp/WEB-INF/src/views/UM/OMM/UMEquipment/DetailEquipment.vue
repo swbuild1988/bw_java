@@ -117,6 +117,9 @@
             <Button type="default" style="margin-right: 8px;" @click="goBack()">返回</Button>
             <Button type="primary" @click="updateEquipmentInfo()">确定</Button>
           </div>
+          <div style="text-align: center" v-show="pageType!=pageTypes.Edit">
+            <Button type="default" @click="goBack()">返回</Button>
+          </div>
         </div>
       </Col>
       <Col span="12" style="height:86vh;"  ref="gisBox">

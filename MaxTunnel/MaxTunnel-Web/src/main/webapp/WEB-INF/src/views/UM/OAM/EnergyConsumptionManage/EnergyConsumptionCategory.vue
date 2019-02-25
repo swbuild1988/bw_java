@@ -260,7 +260,7 @@ export default {
                     text: "管廊耗电量分析",
                     x: "center",
                     textStyle: {
-                        color: "#030303",
+                        color: "#ccc",
                         fontSize: 25
                     }
                 },
@@ -320,13 +320,23 @@ export default {
                 },
                 xAxis: {
                     type: "category",
-                    data: this.XCategory
+                    data: this.XCategory,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ccc'
+                        }
+                    },
                     // axisLabel :{
                     //   rotate: 90
                     // }
                 },
                 yAxis: {
-                    type: "value"
+                    type: "value",
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ccc'
+                        }
+                    },
                 },
                 series: [
                     {

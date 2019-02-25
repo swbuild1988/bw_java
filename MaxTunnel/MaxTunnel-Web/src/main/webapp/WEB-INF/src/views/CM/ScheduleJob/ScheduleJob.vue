@@ -84,10 +84,11 @@ export default {
                     key: 'jobName',
                     align: 'center'
                 },
-                // {
-                //     title: '任务组',
-                //     key: 'jobGroup'
-                // },
+                {
+                    title: '任务组',
+                    key: 'jobGroup',
+                    align: 'center'
+                },
                 {
                     title: '任务描述',
                     key: 'description',

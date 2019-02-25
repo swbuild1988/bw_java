@@ -81,17 +81,17 @@
                         <div class="option">
                             <Tooltip content="详情">
                                 <div class="buttons">
-                                    <Icon type="android-list" @click="read(index)" color="rgb(198,206,230)" class="icons"></Icon>
+                                    <Icon type="android-list" @click.native="read(index)" color="rgb(198,206,230)" class="icons"></Icon>
                                 </div>
                             </Tooltip>
                             <Tooltip content="编辑">
                                 <div class="buttons">
-                                    <Icon type="edit" @click="edit(index)" class="icons" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="edit" @click.native="edit(index)" class="icons" color="rgb(198,206,230)"></Icon>
                                 </div>
                             </Tooltip>
                         </div>
                         <Tooltip content="删除" class="del">
-                            <Icon type="trash-a" @click="del(index)" class="icons" color="rgb(162, 77, 72)"></Icon>
+                            <Icon type="trash-a" @click.native="del(index)" class="icons" color="rgb(162, 77, 72)"></Icon>
                         </Tooltip>
                         </div>
                     </div>
@@ -99,7 +99,8 @@
             </Row>
         </div>
         <div class="page">
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size-opts=[8,16,24]
+            :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
             </Page>
         </div>
     </div>
@@ -115,7 +116,7 @@
             return{
                 page: {
                     pageNum: 1,
-                    pageSize: 10,
+                    pageSize: 8,
                     pageTotal: 0
                 },
                 contractList: [
@@ -282,7 +283,7 @@
             },
             del(index) {
                  this.$Modal.confirm({
-                    title: '确认',
+                    title: '合同信息',
                     content: '<p>确定删除吗？</p>',
                     onOk: () => {
                         let _this = this
@@ -450,37 +451,26 @@
 
 /*下拉框*/
 .queryCondition >>> .ivu-select-selection{
-    height: 3.2vmin;
+    height: 3.2vmin !important;
 }
 
-.queryCondition >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
-}
-.queryCondition >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
+.queryCondition >>> .ivu-select-placeholder,.ivu-select-selected-value{
+    font-size: 1.28vmin !important;
+    padding-top: 0.4vmin !important;
+    height: 2.6vmin !important;
+    line-height: 2vmin !important;
 }
 .icons{
     font-size: 2.4vmin;
 }
 
 .page >>> .ivu-select-selection{
-    height: 3.2vmin;
+    height: 3.2vmin !important;
 }
-.page >>> .ivu-select-selected-value{
-    font-size: 1.2vmin;
-    height: 3vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-select-placeholder{
-    font-size: 1.2vmin;
-    height: 3vmin;
-    line-height: 3vmin;
+.page >>> .ivu-select-selected-value, .ivu-select-placeholder{
+    font-size: 1.2vmin !important;
+    height: 3vmin !important;
+    line-height: 3vmin !important;
 }
 .page >>> .ivu-page-options-elevator input{
     font-size: 1.2vmin;

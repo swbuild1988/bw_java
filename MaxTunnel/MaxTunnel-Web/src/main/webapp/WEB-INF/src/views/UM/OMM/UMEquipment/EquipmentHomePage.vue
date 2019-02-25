@@ -1,127 +1,112 @@
 <template>
     <div style="padding-left: 10px;">
-        <h1 style="line-height: 4vh">设备信息总览</h1>
+        <h1 style="line-height: 4vh">设备管理总览</h1>
         <Row>
             <Col span="18">
-            <Col span="6">
-            <data-box
-                v-bind="equimentTotalNum"
-                ref="dataBox"
-            ></data-box>
+                <Col span="6">
+                    <data-box
+                        v-bind="equimentTotalNum"
+                        ref="dataBox"
+                    ></data-box>
+                </Col>
+                <Col span="6">
+                    <data-box v-bind="equimentRunNum"></data-box>
+                </Col>
+                <Col span="6">
+                    <data-box v-bind="spareAFew"></data-box>
+                </Col>
+                <Col span="6">
+                    <data-box v-bind="duration"></data-box>
+                </Col>
+                <Col
+                    span="24"
+                    style="margin-top:1vh"
+                >
+                    <div
+                        class="GISbox"
+                        ref="gisBox"
+                    >
+                        <simple3-d-viewer
+                            ref="smViewer"
+                            :openImageryProvider="false"
+                        ></simple3-d-viewer>
+                    </div>
+                </Col>
             </Col>
-            <Col span="6">
-            <data-box v-bind="equimentRunNum"></data-box>
-            </Col>
-            <Col span="6">
-            <data-box v-bind="spareAFew"></data-box>
-            </Col>
-            <Col span="6">
-            <data-box v-bind="duration"></data-box>
-            </Col>
-            <Col
-                span="24"
-                style="margin-top:1vh"
-            >
-            <div
-                class="GISbox"
-                ref="gisBox"
-            >
-                <simple3-d-viewer
-                    ref="smViewer"
-                    :openImageryProvider="false"
-                ></simple3-d-viewer>
-            </div>
-            </Col>
-            </Col>
-            <Col
-                span="6"
-                class="chartBox"
-            >
-            <Col
-                span="24"
-                style="height: 49%;"
-            >
-            <div
-                style="width: 21.4vw; height:100%;"
-                class="equipmentChartBox"
-            >
-                <simple-bar v-bind="equipmentChart"></simple-bar>
-            </div>
-            </Col>
-            <Col
-                span="24"
-                style="height: 49%;"
-            >
-            <div
-                style="width: 21.4vw; height:100%;"
-                class="equipmentChartDoubleColor"
-            >
-                <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
-            </div>
-            </Col>
+            <Col span="6" class="chartBox">
+                <Col span="24" style="height: 49%;">
+                    <div style="width: 21.4vw; height:100%;" class="equipmentChartBox">
+                        <simple-bar v-bind="equipmentChart"></simple-bar>
+                    </div>
+                </Col>
+                <Col span="24" style="height: 49%;">
+                    <div style="width: 21.4vw; height:100%;" class="equipmentChartDoubleColor">
+                        <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
+                    </div>
+                </Col>
             </Col>
         </Row>
         <Row style="margin-top:1vh;">
             <Col span="5">
-            <div
-                class="circleBox"
-                style="background: #b189a357"
-            >
-                <process-ring v-bind="spare">
-                    <p>{{spare.explain}}</p>
-                    <p>{{spare.percent}}%</p>
-                </process-ring>
-            </div>
+                <div
+                    class="circleBox"
+                    style="background: #b189a357"
+                >
+                    <process-ring v-bind="spare">
+                        <p>{{spare.explain}}</p>
+                        <p>{{spare.percent}}%</p>
+                    </process-ring>
+                </div>
             </Col>
             <Col span="5">
-            <div
-                class="circleBox"
-                style="background: #6e6ec761"
-            >
-                <process-ring v-bind="breakDown">
-                    <p>{{breakDown.explain}}</p>
-                    <p>{{breakDown.percent}}%</p>
-                </process-ring>
-            </div>
-            </Col>
-            <Col span="7">
-            <Card style="width: 98%;height: 21vh">
-                <p slot="title">备品备件明细</p>
-                <div style="height: 3vh">
-                    <Row :gutter="16">
-                        <Col
-                            span="12"
-                            style="line-height: 4vh;"
-                        >
-                        出库至管廊设备数：<span>{{spareDetails.equipment}}</span>
-                        </Col>
-                        <Col
-                            span="12"
-                            style="line-height: 4vh;"
-                        >
-                        出库至仪表工具数：<span>{{spareDetails.instrument}}</span>
-                        </Col>
-                        <Col
-                            span="24"
-                            style="line-height: 4vh;"
-                        >
-                        备品备件当前在库数：<span>{{spareDetails.in}}</span>
-                        </Col>
-                    </Row>
+                <div
+                    class="circleBox"
+                    style="background: #6e6ec761"
+                >
+                    <process-ring v-bind="breakDown">
+                        <p>{{breakDown.explain}}</p>
+                        <p>{{breakDown.percent}}%</p>
+                    </process-ring>
                 </div>
-            </Card>
             </Col>
             <Col span="7">
-            <Card style="width: 98%;height: 21vh">
-                <p slot="title">最新一条故障信息</p>
-                <Table
-                    stripe
-                    border
-                    :columns="breakColumns"
-                    height="100"
-                    :data="breakData"
-                ></Table>
-            </Card>
+                <Card style="width: 98%;height: 21vh">
+                    <p slot="title">备品备件明细</p>
+                    <div style="height: 3vh">
+                        <Row :gutter="16">
+                            <Col
+                                span="12"
+                                style="line-height: 4vh;"
+                            >
+                            出库至管廊设备数：<span>{{spareDetails.equipment}}</span>
+                            </Col>
+                            <Col
+                                span="12"
+                                style="line-height: 4vh;"
+                            >
+                            出库至仪表工具数：<span>{{spareDetails.instrument}}</span>
+                            </Col>
+                            <Col
+                                span="24"
+                                style="line-height: 4vh;"
+                            >
+                            备品备件当前在库数：<span>{{spareDetails.in}}</span>
+                            </Col>
+                        </Row>
+                    </div>
+                </Card>
+            </Col>
+            <Col span="7">
+                <Card style="width: 98%;height: 21vh">
+                    <p slot="title">最新一条故障信息</p>
+                    <Table
+                        stripe
+                        border
+                        :columns="breakColumns"
+                        height="100"
+                        :data="breakData"
+                    ></Table>
+                </Card>
             </Col>
         </Row>
     </div>
@@ -247,7 +232,8 @@ export default {
                 parameters: {
                     option: {
                     }
-                }
+                },
+                xAxisRotate: -40
             },
             equipmentChartDoubleColor: {
                 id: "equipmentCharDoubleColortId",
@@ -525,6 +511,9 @@ ul li {
     .ivu-card >>> .ivu-card-head p{
         height: 2vmin;
         line-height: 2vmin;
+    }
+    h1{
+        font-size: 2.8vmin;
     }
 }
 </style>

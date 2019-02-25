@@ -9,7 +9,7 @@
                 </Select>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small" icon="ios-search">查询</Button>
+                <Button type="primary" size="small" icon="ios-search" @click="search">查询</Button>
                 <Button type="error" size="small" @click="addVideoService=true">新增视频</Button>
             </Col>
         </Row>
@@ -28,21 +28,21 @@
                 <Row>
                     <Col span="12" style="padding: 10px">
                         <FormItem label="ID" prop="id">
-                            <Input v-model="video.id" placeholder="请输入视频名称"></Input>
+                            <Input v-model="video.id" placeholder="请输入视频ID"></Input>
                         </FormItem>
                         <FormItem label="所属管廊" prop="tunnelId">
-                            <Select v-model="video.tunnelId">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
+                            <Select v-model="video.tunnelId" @on-change="tunnelChanged">
+                                <Option v-for="item in lists.tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="所属仓段" prop="areaName">
-                            <Select v-model="video.areaName">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
+                        <FormItem label="所属区域" prop="areaId">
+                            <Select v-model="video.areaId">
+                                <Option v-for="item in lists.areas" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="所属区段" prop="storeName">
-                            <Select v-model="video.storeName">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
+                        <FormItem label="所属管舱" prop="storeId">
+                            <Select v-model="video.storeId">
+                                <Option v-for="item in lists.stores" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="视频名称" prop="videoName">
@@ -53,25 +53,23 @@
                         </FormItem>
                     </Col>
                     <Col span="12" style="padding: 10px">
-                        <FormItem label="视频对象类型" prop="videoObjectType">
+                        <!-- <FormItem label="视频对象类型" prop="videoObjectType">
                             <Input v-model="video.videoObjectType" placeholder="请输入视频对象类型"></Input>
-                        </FormItem>
-                        <FormItem label="视频数据类型" prop="videoDataType">
+                        </FormItem> -->
+                        <!-- <FormItem label="视频数据类型" prop="videoDataType">
                             <Input v-model="video.videoDataType" placeholder="请输入视频数据类型"></Input>
-                        </FormItem>
+                        </FormItem> -->
                         <FormItem label="所属服务商" prop="supplier">
                             <Select v-model="video.supplier">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
+                                <Option v-for="item in lists.services" :key="item.id" :value="item.id">{{item.name}}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="所属通道号" prop="channelNumber">
-                            <Select v-model="video.channelNumber">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
-                            </Select>
+                            <Input v-model="video.channelNumber" placeholder="请输入通道号"></Input>
                         </FormItem>
                         <FormItem label="所属场景" prop="scenario">
                             <Select v-model="video.scenario">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.tunnelId">{{item.name}}</Option>
+                                <Option v-for="item in lists.scenes" :key="item.id" :value="item.id">{{item.name}}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="是否使用" prop="isUser">
@@ -90,6 +88,7 @@
 </template>
 <script>
 import { TunnelService } from '../../../services/tunnelService'
+import { CMVideoService } from '../../../services/cmVideoService'
 export default {
     data(){
         return{
@@ -131,12 +130,7 @@ export default {
                 },
                 {
                     title: '视频对象类型',
-                    key: 'videoObjectType',
-                    align: 'center'
-                },
-                {
-                    title: '视频数据类型',
-                    key: 'videoDataType',
+                    key: 'objectTypeId',
                     align: 'center'
                 },
                 {
@@ -166,7 +160,7 @@ export default {
                 },
             ],
             data1:[
-                {id:1,tunnelId: 1,area:{id: 1, name: '污水仓'},store:{id:1,name:'十二段'},videoName:'电力仓视频',videoObjectType:3,
+                {id:1,tunnelId: 1,area:{id: 1, name: '污水仓'},store:{id:1,name:'十二段'},videoName:'电力仓视频',objectTypeId:'视频',
                 videoDataType:4,supplier:3,channelNumber:2,scenario:1,videoDesc:'可以正常投入使用',isUser:0}
             ],
             page: {
@@ -183,11 +177,10 @@ export default {
             video:{
                 id: null,
                 tunnelId: null,
-                areaName: null,
-                storeName: null,
+                areaId: null,
+                storeId: null,
                 videoName: null,
-                videoObjectType: null,
-                videoDataType: null,
+                objectTypeId: 7,
                 supplier: null,
                 channelNumber: null,
                 scenario: null,
@@ -201,20 +194,17 @@ export default {
                 tunnelId: [
                     { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
                 ],
-                areaName: [
+                areaId: [
                     { type: 'number', required: true, message: '请选择所属仓段', trigger: 'change' }
                 ],
-                storeName: [
+                storeId: [
                     { type: 'number', required: true, message: '请选择所属区段', trigger: 'change' }
                 ],
                 videoName: [
                     { required: true, message: '视频名称不能为空', trigger: 'blur' }
                 ],
-                videoObjectType: [
+                objectTypeId: [
                     { type: 'number', required: true, message: '请选择视频对象类型', trigger: 'change' }
-                ],
-                videoDataType: [
-                    { type: 'number', required: true, message: '请选择视频数据类型', trigger: 'change' }
                 ],
                 supplier: [
                     { type: 'number', required: true, message: '请选择所属服务商', trigger: 'change' }
@@ -241,26 +231,78 @@ export default {
                 { key: 0, val: '否' },
                 { key: 1, val: '是' }
             ],
-            tunnels:[]
+            lists: {
+                tunnels: [],
+                areas: [],
+                stores: [],
+                scenes: [],
+                services: []
+            }
         }
     },
     mounted(){
-        TunnelService.getTunnels().then(
-            (result) => {
-                this.tunnels = result
-            },
-            (error) => {
-                this.Log.info(error)
-            }
-        )
+        this.init()
     },
     methods:{
+        init(){
+            let _this = this
+            TunnelService.getTunnels().then(
+                (result) => {
+                    _this.lists.tunnels = result
+                },
+                (error) => {
+                    _this.Log.info(error)
+                }
+            )
+            CMVideoService.getVideoScenes().then(
+                result=>{
+                    _this.lists.scenes = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            CMVideoService.getVideoServices().then(
+                result=>{
+                    _this.lists.services = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+        },
         submitForm(name){
             this.$refs[name].validate((valid)=>{
                 if(valid){
                     this.addVideoService=false
                 }
             })
+        },
+        tunnelChanged(){
+            let _this = this
+            TunnelService.getAreasByTunnelId(this.video.tunnelId).then(
+                result=>{
+                    _this.lists.areas = result
+                },
+                error=>{
+                    _this.Log.info(error)
+                })
+            TunnelService.getStoresByTunnelId(this.video.tunnelId).then(
+                result=>{
+                    _this.lists.stores = result
+                },
+                error => {
+                    _this.Log.info(error)
+                })
+        },
+        handlePage(value) {
+          this.page.pageNum = value;
+          this.search();
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value
+            this.resetPageAndSearch()
+        },
+        search(){
+
         }
     }
 }

@@ -20,17 +20,18 @@
                 <Button type="primary" icon="ios-search">查询</Button>
       </Col>-->
       <Col span="23" offset="1">
-        <h1 class="title">入廊人员信息</h1>
+      <h1 class="title">入廊人员信息</h1>
       </Col>
     </Row>
     <Row class="list">
       <Col span="15" class="view">
-        <!-- <sm-viewer id="personnelPositionSMViewer" ref="smViewer"></sm-viewer> -->
-        <!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
+      <!-- <sm-viewer id="personnelPositionSMViewer" ref="smViewer"></sm-viewer> -->
+      <!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
         </sm-viewer>-->
-        <TestSmViewer :cameraPosition="VMConfig.CAMERA" ref="smViewer"></TestSmViewer>
+      <TestSmViewer :cameraPosition="VMConfig.CAMERA" ref="smViewer"></TestSmViewer>
       </Col>
       <Col span="8" offset="1">
+      <div style="height: 72vh;width: 100%;background-color: #f9f3ec">
         <Collapse v-model="curPerson" accordion v-if="!none">
           <Panel v-for="person in personnelInfo" :name="person.id+''" :key="person.id">
             {{ person.username }}
@@ -46,170 +47,181 @@
           </Panel>
         </Collapse>
         <h2 v-if="none" class="none">暂无入廊人员或未分配设备</h2>
+      </div>
       </Col>
     </Row>
   </div>
 </template>
 <script>
-import { personnelPositionService } from "../../../../services/personnelPositionService";
-//   import SmViewer from "../../../../components/Common/3D/3DViewer"
-import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
-import { TunnelService } from "../../../../services/tunnelService";
-//   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
+  import {
+    personnelPositionService
+  } from "../../../../services/personnelPositionService";
+  import TestSmViewer from "../../../../components/Common/3D/overLook3DViewer";
+  import {
+    TunnelService
+  } from "../../../../services/tunnelService";
+  //   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
 
-export default {
-  data() {
-    return {
-      tunnelId: null,
-      selectList: {
-        stores: null,
-        areas: null
-      },
-      query: {
-        storeId: null,
-        areaId: null
-      },
-      curPerson: "1",
-      personnelInfo: [
-        // {
-        //   id: '1',
-        //   name: '章散',
-        //   figure: '../../../../assets/UM/用户.png',
-        //   phoneNum: 13678263529,
-        //   idCard: 223911199208102238
-        // },
-        // {
-        //   id: '2',
-        //   name: '里斯',
-        //   figure: '../../../../assets/UM/用户.png',
-        //   phoneNum: 13678263525,
-        //   idCard: 213811199203102238
-        // },
-        // {
-        //   id: '3',
-        //   name: '王武',
-        //   figure: '../../../../assets/UM/用户.png',
-        //   phoneNum: 13978263529,
-        //   idCard: 223911199208102641
-        // },
-        // {
-        //   id: '4',
-        //   name: '朱柳',
-        //   figure: '../../../../assets/UM/用户.png',
-        //   phoneNum: 18378263525,
-        //   idCard: 213811199203107264
-        // }
-      ],
-      none: true
-    };
-  },
-  components: {
-    // SmViewer
-    TestSmViewer
-  },
-  beforeRouteLeave(to, from, next) {
-    if (
-      to.name == "UMPatrolHomePage" ||
-      to.name == "设备管理主页" ||
-      to.name == "人员定位详情" ||
-      to.name == "设备分配" ||
-      to.name == "管廊安防监控列表" ||
-      to.name == "管廊环境监控列表" ||
-      from.name == "UMPatrolHomePage" ||
-      from.name == "设备管理主页" ||
-      from.name == "人员定位详情" ||
-      from.name == "设备分配" ||
-      from.name == "管廊安防监控列表" ||
-      from.name == "管廊安防监控详情" ||
-      from.name == "管廊环境监控列表" ||
-      from.name == "UMDetailEquipment"
-    ) {
-      from.meta.keepAlive = true;
-      to.meta.keepAlive = true;
-      this.$destroy();
-      next();
-    } else {
-      from.meta.keepAlive = false;
-      to.meta.keepAlive = false;
-      this.$destroy();
-      next();
-    }
-  },
-  watch: {
-    $route: function() {
-      // this.tunnelId = this.$route.params.id;
-      // this.getVisitors();
-      this.$refs.smViewer.stopPersonnelPosition();
-    }
-  },
-  mounted() {
-    this.tunnelId = this.$route.params.id;
-    this.$refs.smViewer.startPersonnelPosition();
-    this.getVisitors();
-  },
-  methods: {
-    getVisitors() {
-      let _this = this;
-      personnelPositionService.getActiveLocators().then(
-        result => {
-          _this.personnelInfo = [];
-          if (result.length != 0) {
-            _this.none = false;
-            result.forEach(locator => {
-              let temp = {};
-              temp.id = locator.id;
-              temp.height = locator.height;
-              temp.latitude = locator.latitude;
-              temp.longitude = locator.longitude;
-              temp.username = locator.owner.name;
-              temp.companyName = locator.owner.companyName;
-              temp.idCard = locator.owner.idCard;
-              temp.phoneNum = locator.owner.phoneNum;
-              _this.personnelInfo.push(temp);
-            });
-          } else {
-            _this.none = true;
-          }
+  export default {
+    data() {
+      return {
+        tunnelId: null,
+        selectList: {
+          stores: null,
+          areas: null
         },
-        error => {
-          console.log(error);
-        }
-      );
-    }
-  },
-};
+        query: {
+          storeId: null,
+          areaId: null
+        },
+        curPerson: "1",
+        personnelInfo: [
+          // {
+          //   id: '1',
+          //   name: '章散',
+          //   figure: '../../../../assets/UM/用户.png',
+          //   phoneNum: 13678263529,
+          //   idCard: 223911199208102238
+          // },
+          // {
+          //   id: '2',
+          //   name: '里斯',
+          //   figure: '../../../../assets/UM/用户.png',
+          //   phoneNum: 13678263525,
+          //   idCard: 213811199203102238
+          // },
+          // {
+          //   id: '3',
+          //   name: '王武',
+          //   figure: '../../../../assets/UM/用户.png',
+          //   phoneNum: 13978263529,
+          //   idCard: 223911199208102641
+          // },
+          // {
+          //   id: '4',
+          //   name: '朱柳',
+          //   figure: '../../../../assets/UM/用户.png',
+          //   phoneNum: 18378263525,
+          //   idCard: 213811199203107264
+          // }
+        ],
+        none: true
+      };
+    },
+    components: {
+      // SmViewer
+      TestSmViewer
+    },
+    beforeRouteLeave(to, from, next) {
+      if (
+        to.name == "UMPatrolHomePage" ||
+        to.name == "设备管理主页" ||
+        to.name == "人员定位详情" ||
+        to.name == "设备分配" ||
+        to.name == "管廊安防监控列表" ||
+        to.name == "管廊环境监控列表" ||
+        from.name == "UMPatrolHomePage" ||
+        from.name == "设备管理主页" ||
+        from.name == "人员定位详情" ||
+        from.name == "设备分配" ||
+        from.name == "管廊安防监控列表" ||
+        from.name == "管廊安防监控详情" ||
+        from.name == "管廊环境监控列表" ||
+        from.name == "UMDetailEquipment"
+      ) {
+        from.meta.keepAlive = true;
+        to.meta.keepAlive = true;
+        this.$destroy();
+        next();
+      } else {
+        from.meta.keepAlive = false;
+        to.meta.keepAlive = false;
+        this.$destroy();
+        next();
+      }
+    },
+    watch: {
+      $route: function () {
+        // this.tunnelId = this.$route.params.id;
+        // this.getVisitors();
+        this.$refs.smViewer.stopPersonnelPosition();
+      }
+    },
+    mounted() {
+      this.tunnelId = this.$route.params.id;
+      this.$refs.smViewer.startPersonnelPosition();
+      this.getVisitors();
+    },
+    methods: {
+      getVisitors() {
+        let _this = this;
+        personnelPositionService.getActiveLocators().then(
+          result => {
+            _this.personnelInfo = [];
+            if (result.length != 0) {
+              _this.none = false;
+              result.forEach(locator => {
+                let temp = {};
+                temp.id = locator.id;
+                temp.height = locator.height;
+                temp.latitude = locator.latitude;
+                temp.longitude = locator.longitude;
+                temp.username = locator.owner.name;
+                temp.companyName = locator.owner.companyName;
+                temp.idCard = locator.owner.idCard;
+                temp.phoneNum = locator.owner.phoneNum;
+                _this.personnelInfo.push(temp);
+              });
+            } else {
+              _this.none = true;
+            }
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
+    },
+  };
 </script>
 <style scoped>
-.whole {
-  min-height: 100%;
-  position: relative;
-  background-color: white;
-}
-.view {
-  border: 1px solid #b3b0b0;
-  height: 74vh;
-}
-.perList {
-  display: inline-block;
-  margin-left: 40px;
-  list-style-type: none;
-  position: relative;
-  top: -32px;
-}
-.call {
-  position: absolute;
-  bottom: 0;
-  right: 4px;
-}
-.content {
-  position: relative;
-  height: 74vh;
-  font-size: 1.66vmin;
-}
-.title{
-  font-size: 3.2vmin;
-}
-.none{
-  font-size: 2vmin;
-}
+  .whole {
+    min-height: 100%;
+    position: relative;
+    background-color: white;
+  }
+
+  .view {
+    border: 1px solid #b3b0b0;
+    height: 72vh;
+  }
+
+  .perList {
+    display: inline-block;
+    margin-left: 40px;
+    list-style-type: none;
+    position: relative;
+    top: -32px;
+  }
+
+  .call {
+    position: absolute;
+    bottom: 0;
+    right: 4px;
+  }
+
+  .content {
+    position: relative;
+    height: 74vh;
+    font-size: 1.66vmin;
+  }
+
+  .title {
+    font-size: 3.2vmin;
+  }
+
+  .none {
+    font-size: 2vmin;
+    padding: 1vmin 2vmin;
+  }
 </style>

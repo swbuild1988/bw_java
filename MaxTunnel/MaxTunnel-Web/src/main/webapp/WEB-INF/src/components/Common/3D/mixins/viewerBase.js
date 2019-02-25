@@ -37,6 +37,21 @@ export default ( containerId,viewer,domId,route ) => ({
             }
         },
     },
+    directives:{
+        cancellation:{
+            unbind(els){
+
+                let elementChild = [].slice.call( els.children );
+                let [ gis ] = elementChild.filter(el => el.id === domId);
+                // console.log('elementChild',elementChild)
+                // console.log('gis',gis)
+                gis.style.display = "none";
+
+                els.removeChild(gis);
+                document.body.appendChild(gis);
+            }
+        }
+    },
     computed:{
         viewer(){
             return Vue.prototype[ viewer ];
@@ -176,27 +191,20 @@ export default ( containerId,viewer,domId,route ) => ({
         },
         setGIS() {
             let gis = document.getElementById( domId );
+            setTimeout(()=>{
+                if( !gis ) return;
 
-            if( !gis ) return;
+                gis.style.display = "block";
 
-            gis.style.display = "block";
-
-            document.body.removeChild(gis);
-            document.getElementById( containerId ).appendChild(gis);
+                document.body.removeChild(gis);
+                document.getElementById( containerId ).appendChild(gis);
+            },100)
+                // console.log('getGis',gis)
+                //
+                // console.log('document.getElementById( containerId )',document.getElementById( containerId ))
             // 加载视角
             this.setViewAngle();
         },
-        destory3D() {
-            let gis = document.getElementById( domId );
-
-            if( !gis || this.compare(domId,'body') ) return;
-
-            gis.style.display = "none";
-
-            document.getElementById( containerId ).removeChild(gis);
-            document.body.appendChild(gis);
-
-        }
     },
     beforeDestroy() {
         this.viewer.selectedEntityChanged.removeEventListener( this.operationEntity );

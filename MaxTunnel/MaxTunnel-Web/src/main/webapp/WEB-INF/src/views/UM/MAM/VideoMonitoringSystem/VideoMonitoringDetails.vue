@@ -558,35 +558,14 @@ export default {
 .query >>> .ivu-select-selection{
     height: 3.2vmin;
 }
-@media (min-width: 1920px){
-    .videos{
-        margin-top: 2vh;
-    }
-    .query >>> .ivu-select-placeholder{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0.64vmin;
-    }
-    .query >>> .ivu-select-selected-value{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0.64vmin;
-    }
+
+.videos{
+    margin-top: 2vh !important;
 }
-@media (max-width: 1920px){
-    .query >>> .ivu-select-placeholder{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0;
-    }
-    .query >>> .ivu-select-selected-value{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0;
-    }
+.query >>> .ivu-select-placeholder, .ivu-select-selected-value{
+    font-size: 1.28vmin !important;
+    height: 2.6vmin !important;
+    line-height: 3.2vmin !important;
 }
+
 </style>

@@ -422,19 +422,21 @@ export default {
     }
 
     .cameraList >>> .ivu-select-selected-value{
-        font-size: 1.28vmin;
-        height: 2.57vmin;
-        line-height: 2vmin;
-        padding-top: 0.64vmin;
+        font-size: 1.28vmin !important;
+        height: 2.57vmin !important;
+        line-height: 2vmin !important;
+        padding-top: 0.64vmin !important;
+        width: 90% !important;
     }
     .cameraList >>> .ivu-select-placeholder{
-        font-size: 1.28vmin;
-        height: 2.57vmin;
-        line-height: 2vmin;
-        padding-top: 0.64vmin;
+        font-size: 1.28vmin !important;
+        height: 2.57vmin !important; 
+        line-height: 2vmin !important;
+        padding-top: 0.64vmin !important;
+        width: 90% !important;
     }
 
     .cameraList >>> .ivu-select-selection{
-        height: 3.2vmin;
+        height: 3.2vmin !important;
     }
 </style>

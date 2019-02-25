@@ -1,33 +1,29 @@
+/* eslint-disable camelcase */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable brace-style */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import "@babel/polyfill";
-import "es6-promise/auto";
-import Vue from "vue";
-import App from "./App";
-import VueRouter from "vue-router";
-import iView from "iview";
-import VueAxios from "vue-axios";
-import "iview/dist/styles/iview.css";
-import routes from "./router";
-import Vuex from "vuex";
-import store from "./store.js";
-import echarts from "echarts";
-import "animate.css/animate.min.css";
-import Stomp from "stompjs";
-// import global_ from "./components/Global";
-import "./styles/common.css";
-import VMConfig from "../static/VM/js/VMGlobalConfig";
-import "./scripts/serviceClass";
-import "./scripts/StringFormat";
-import vueXlsxTable from "vue-xlsx-table";
-import axios from "axios/index";
-import serverconfig from '../static/serverconfig'
-
-// console.log("document.body.offsetWidth1",document.body.offsetWidth)
-// if(document.body.offsetWidth>3000){
-//     console.log("document.body.offsetWidth2",document.body.offsetWidth)
-//     require('lib-flexible/flexible.js')
-// }
+import '@babel/polyfill';
+import 'es6-promise/auto';
+import Vue from 'vue';
+import App from './App';
+import VueRouter from 'vue-router';
+import iView from 'iview';
+import VueAxios from 'vue-axios';
+import 'iview/dist/styles/iview.css';
+import routes from './router';
+import Vuex from 'vuex';
+import store from './store.js';
+import echarts from 'echarts';
+import 'animate.css/animate.min.css';
+// import Stomp from 'stompjs';
+import './styles/common.css';
+import VMConfig from '../static/VM/js/VMGlobalConfig';
+import './scripts/serviceClass';
+import './scripts/StringFormat';
+import vueXlsxTable from 'vue-xlsx-table';
+import axios from 'axios/index';
+import serverconfig from '../static/serverconfig';
 
 Vue.prototype.$echarts = echarts;
 Vue.use(VMConfig);
@@ -35,52 +31,57 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(iView);
 Vue.use(vueXlsxTable, {
-  rABS: false
+  rABS: false,
 });
-//设置一个默认值
+// 设置一个默认值
 Vue.prototype.RouterBase = serverconfig.RouterBase;
 const router = new VueRouter({
-  mode: "history",
-  base: Vue.prototype.RouterBase, //服务器地址，不设置时，默认为服务器根目录下
-  routes
+  mode: 'history',
+  base: Vue.prototype.RouterBase, // 服务器地址，不设置时，默认为服务器根目录下
+  routes,
 });
-sessionStorage.setItem("refreshAddress", "");
-sessionStorage.setItem("selectedName", "");
+sessionStorage.setItem('refreshAddress', '');
+sessionStorage.setItem('selectedName', '');
 axios.defaults.timeout = 3000;
 // 开发环境配置
-if (process.env.NODE_ENV == "development") {
+if (process.env.NODE_ENV == 'development') {
   axios.defaults.baseURL = serverconfig.RouterBase;
-  Vue.prototype.ServerConfig = "/static";
+  Vue.prototype.ServerConfig = '/static';
   Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
-  Vue.prototype.VMWebConfig = require("../static/VM/js/VMWebConfig").VMWebConfig;
+  Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
+  Vue.prototype.flyFilePathes = serverconfig.flyFilePathes;
+  Vue.prototype.VMWebConfig =
+   require('../static/VM/js/VMWebConfig').VMWebConfig;
   Vue.prototype.ApiUrl = serverconfig.ApiUrl;
-  sessionStorage.setItem("ServerConfig", Vue.prototype.ServerConfig);
+  sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
 }
-//生产环境配置
+// 生产环境配置
 else {
-  Vue.prototype.ServerConfig = "/dist/static";
-  axios.get("dist/static/serverconfig.json").then(result => {
+  Vue.prototype.ServerConfig = '/dist/static';
+  axios.get('dist/static/serverconfig.json').then((result) => {
     Vue.prototype.ApiUrl = result.data.ApiUrl;
-    Vue.prototype.ServerConfig = result.data.ApiUrl + "/dist/static";
+    Vue.prototype.ServerConfig = result.data.ApiUrl + '/dist/static';
     Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
+    Vue.prototype.flyFilePathes = result.data.flyFilePathes;
+    Vue.prototype.VMEntityConfig = result.data.VMEntityConfig;
     router.base = result.data.RouterBase;
     Vue.prototype.RouterBase = result.data.RouterBase;
     axios.defaults.baseURL = Vue.prototype.ApiUrl;
-    sessionStorage.setItem("ServerConfig", Vue.prototype.ServerConfig);
-  }).catch(error => {});
+    sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
+  }).catch((error) => {});
   // 获取VM的配置页
-  axios.get("dist/static/VM/js/VMWebConfig.json").then(result => {
+  axios.get('dist/static/VM/js/VMWebConfig.json').then((result) => {
     Vue.prototype.VMWebConfig = result.data.VMWebConfig;
-  }).catch(error => {
+  }).catch((error) => {
     // console.log(error)
   });
 }
 
-var axios_instance = axios.create({
+const axios_instance = axios.create({
   timeout: '3000',
   headers: {
-    "Content-Type": "application/json;charset=utf-8"
-  }
+    'Content-Type': 'application/json;charset=utf-8',
+  },
 });
 Vue.use(VueAxios, axios_instance);
 Vue.config.productionTip = false;
@@ -89,16 +90,17 @@ Vue.config.productionTip = false;
 Vue.prototype.Log = {
   info: function() {
     console.log(arguments);
-  }
+  },
 };
 
 router.beforeEach((to, from, next) => {
-  let CMUser = sessionStorage.CMUser;
-  let UMUser = sessionStorage.UMUser;
+  const CMUser = sessionStorage.CMUser;
+  const UMUser = sessionStorage.UMUser;
   if (
-    ((to.path.substr(1, 2).toLowerCase() == "um" || to.path.substr(1, 2).toLowerCase() == "vm") &&
+    ((to.path.substr(1, 2).toLowerCase() == 'um' ||
+     to.path.substr(1, 2).toLowerCase() == 'vm') &&
       UMUser) ||
-    (to.path.substr(1, 2).toLowerCase() == "cm" && CMUser)
+    (to.path.substr(1, 2).toLowerCase() == 'cm' && CMUser)
   ) {
     // if (!store.state.permission.permissionList) {
     //   store.dispatch('permission/FETCH_PERMISSION').then(() => {
@@ -109,9 +111,9 @@ router.beforeEach((to, from, next) => {
     {
       if (
         to.path
-        .trim()
-        .toLowerCase()
-        .indexOf("login") < 0
+            .trim()
+            .toLowerCase()
+            .indexOf('login') < 0
       ) {
         next();
       } else {
@@ -119,17 +121,20 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (to.path.toLowerCase().indexOf("um") > 0 && to.path.trim().toLowerCase().indexOf("umlogin") < 0) {
+    if (to.path.toLowerCase().indexOf('um') > 0 &&
+     to.path.trim().toLowerCase().indexOf('umlogin') < 0) {
       next({
-        path: "UMlogin"
+        path: 'UMlogin',
       });
-    } else if (to.path.toLowerCase().indexOf("vm") > 0 && to.path.trim().toLowerCase().indexOf("vmlogin") < 0) {
+    } else if (to.path.toLowerCase().indexOf('vm') > 0 &&
+    to.path.trim().toLowerCase().indexOf('vmlogin') < 0) {
       next({
-        path: "VMLogin"
+        path: 'VMLogin',
       });
-    } else if (to.path.toLowerCase().indexOf("cm") > 0 && to.path.trim().toLowerCase().indexOf("cmlogin") < 0) {
+    } else if (to.path.toLowerCase().indexOf('cm') > 0 &&
+     to.path.trim().toLowerCase().indexOf('cmlogin') < 0) {
       next({
-        path: "CMlogin"
+        path: 'CMlogin',
       });
     } else {
       next();
@@ -138,8 +143,8 @@ router.beforeEach((to, from, next) => {
 });
 
 new Vue({
-  el: "#app",
+  el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App),
 });

@@ -58,7 +58,10 @@ export default {
     },
     watch:{
         changeInfo:function(value,oldvalue){
-            this.formValidate = JSON.parse(JSON.stringify(value));
+            this.formValidate.name = value.name 
+            this.formValidate.tunnelId = value.tunnel.id
+            this.formValidate.storeTypeId = value.storeType.id
+            this.formValidate.camera = value.camera
         }
     },
     props:{

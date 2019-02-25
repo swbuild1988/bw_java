@@ -56,7 +56,7 @@
                 <Button type="success" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
             </div>
             <Row :gutter="16">
-                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-bottom: 20px;">
+                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-top: 20px;">
                     <div class="toolBox">
                         <h2 class="toolTitle">{{item.name}}</h2>
                         <div class="toolInfo">
@@ -516,7 +516,15 @@ export default {
                                 temp = param.row.describe
                             }
                         }
-                        return h('div',temp)
+                        return h(
+                            'div',
+                            {
+                                domProps: {
+                                    title: param.row.describe
+                                }
+                            },
+                            temp
+                        )
                     }
                 }
             ],
@@ -1081,7 +1089,6 @@ export default {
     color: #357aa1;
 }
 .toolBtn button{
-    display: inline-block;
     float: right;
     margin-right: 5px;
 }
@@ -1148,9 +1155,6 @@ export default {
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
         line-height: 4.5vmin;
-    }
-    .toolBox{
-        margin-bottom: 1vh;
     }
     .operation:hover{
         font-size: 1.6vmin;

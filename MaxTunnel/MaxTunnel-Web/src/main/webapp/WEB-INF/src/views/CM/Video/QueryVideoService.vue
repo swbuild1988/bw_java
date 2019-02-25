@@ -91,6 +91,17 @@
 import { CMVideoService } from '../../../services/cmVideoService.js'
 export default {
     data(){
+        const validateNumber = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('不能为空'));
+                } else {
+                    if (isNaN(value)) {
+                        callback(new Error('请输入数字'))
+                    } else {
+                        callback()
+                    }  
+                }
+            };
         return{
             editVideoService: false,
             isAdd: false,
@@ -222,7 +233,7 @@ export default {
                     { required: true, message: 'IP不能为空', trigger: 'blur' }
                 ],
                 port: [
-                    { type: 'number', required: true, message: '端口不能为空', trigger: 'blur' }
+                    { required: true, message: '端口不能为空', trigger: 'blur' }
                 ],
                 username: [
                     { required: true, message: '用户名不能为空', trigger: 'blur' },
@@ -231,7 +242,8 @@ export default {
                     { required: true, message: '密码不能为空', trigger: 'blur' }
                 ],
                 channelNum: [
-                    { type: 'number', required: true, message: '通道数不能为空', trigger: 'blur' }
+                    { required: true, message: '通道数不能为空', trigger: 'blur' },
+                    { validator: validateNumber, trigger: 'blur' }
                 ]
             },
             conditions:{
@@ -338,6 +350,8 @@ export default {
             CMVideoService.getVideoServiceById(id).then(
                 (result)=>{
                     this.videoService = result
+                    this.videoService.port = this.videoService.port + ''
+                    this.videoService.channelNum = this.videoService.channelNum + ''
                     this.addVideoService = true
                 },
                 (error)=>{
@@ -362,6 +376,7 @@ export default {
                     CMVideoService.editVideoService(formInfo).then(
                         (result)=>{
                             this.addVideoService = false
+                            this.queryList()
                         },
                         (error) => {
                             this.Log.info(error)

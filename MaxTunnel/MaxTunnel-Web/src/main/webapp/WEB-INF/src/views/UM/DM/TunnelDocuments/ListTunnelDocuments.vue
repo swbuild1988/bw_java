@@ -322,22 +322,23 @@ export default {
 .downloadIcon{
     font-size: 2.5vmin;
 }
+
 .queryText{
     /*font-size: 16px;*/
 }
 /*select*/
 .conditions >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    height: 2.57vmin;
-    line-height: 1.2rem;
-    padding-top: 0.64vmin;
+    font-size: 1.28vmin !important;
+    height: 2.57vmin !important;
+    line-height: 1.2rem !important;
+    padding-top: 0.64vmin !important;
 }
 
 .conditions >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    height: 2.57vmin;
-    line-height: 2vmin;
-    padding-top: 0.64vmin;
+    font-size: 1.28vmin !important;
+    height: 2.57vmin !important;
+    line-height: 2vmin !important;
+    padding-top: 0.64vmin !important;
 }
 
 .conditions >>> .ivu-select-selection{

@@ -278,9 +278,6 @@ export default {
                 })
             },2000)
         },
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
         //返回
         goBack(){
             this.$router.back(-1);
@@ -313,8 +310,12 @@ export default {
     right: 3vw;
 }
 @media (min-width: 2200px){
+    .formTitle{
+        font-size: 2.8vmin;
+    }
     .ivu-form.ivu-form-label-right{
         width: 50%;
+        padding: 1vmin 2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;

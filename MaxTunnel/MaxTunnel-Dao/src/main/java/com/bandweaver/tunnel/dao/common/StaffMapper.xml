@@ -5,6 +5,10 @@
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Staff">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate" />
     <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
     <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
@@ -13,6 +17,10 @@
   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.StaffDto">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate" />
     <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
     <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
@@ -24,26 +32,35 @@
   
   
   <sql id="Base_Column_List">
-    ID, NAME, DEPT_ID, POSITION_ID,CRT_TIME
+    ID, NAME, account,sex,telphone,hire_date,DEPT_ID, POSITION_ID,CRT_TIME
   </sql>
+  
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from T_COMMON_STAFF
     where ID = #{id,jdbcType=DECIMAL}
   </select>
+  
   <delete id="deleteByPrimaryKey" >
     delete from T_COMMON_STAFF
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
+  
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
    	<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
             SELECT COMMON_STAFF_SEQUENCE.currval from DUAL
         </selectKey>
-    insert into T_COMMON_STAFF (ID, NAME, DEPT_ID, 
+    insert into T_COMMON_STAFF (ID, NAME,account,sex,telphone,hire_date, DEPT_ID, 
       POSITION_ID,CRT_TIME)
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{deptId,jdbcType=DECIMAL}, 
-      #{positionId,jdbcType=DECIMAL},#{crtTime,jdbcType=TIMESTAMP})
+    values (#{id,jdbcType=DECIMAL}, 
+    #{name,jdbcType=VARCHAR}, 
+    #{account,jdbcType=VARCHAR}, 
+    #{sex,jdbcType=VARCHAR}, 
+    #{telphone,jdbcType=VARCHAR}, 
+    #{hireDate,jdbcType=TIMESTAMP}, 
+    #{deptId,jdbcType=DECIMAL}, 
+    #{positionId,jdbcType=DECIMAL},#{crtTime,jdbcType=TIMESTAMP})
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
@@ -51,6 +68,18 @@
     <set>
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="hireDate != null">
+        hire_date = #{hireDate,jdbcType=TIMESTAMP},
       </if>
       <if test="deptId != null">
         DEPT_ID = #{deptId,jdbcType=DECIMAL},
@@ -64,12 +93,18 @@
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
     update T_COMMON_STAFF
-    set NAME = #{name,jdbcType=VARCHAR},
-      DEPT_ID = #{deptId,jdbcType=DECIMAL},
-      POSITION_ID = #{positionId,jdbcType=DECIMAL},
-      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+    set 
+    NAME = #{name,jdbcType=VARCHAR},
+    account = #{account,jdbcType=VARCHAR},
+    sex = #{sex,jdbcType=VARCHAR},
+    telphone = #{telphone,jdbcType=VARCHAR},
+    hire_date = #{hireDate,jdbcType=TIMESTAMP},
+    DEPT_ID = #{deptId,jdbcType=DECIMAL},
+    POSITION_ID = #{positionId,jdbcType=DECIMAL},
+    CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   
@@ -87,6 +122,12 @@
   		<if test="name != null and name.trim() != ''">
   		and instr(name,#{name})>0
   		</if>
+  		<if test="account != null and account.trim() != ''">
+  		and account = #{account}
+  		</if>
+  		<if test="sex != null and sex.trim() != ''">
+  		and sex = #{sex}
+  		</if>
   		<if test="deptId != null">
   		and dept_id = #{deptId}
   		</if>
@@ -94,13 +135,13 @@
   		and position_id = #{positionId}
   		</if>
   		<if test="startTime != null">
-  		and crt_time &gt;= #{startTime}
+  		and hire_date &gt;= #{startTime}
   		</if>
   		<if test="endTime != null">
-  		and crt_time &lt;= #{endTime}
+  		and hire_date &lt;= #{endTime}
   		</if>
   	</where>
-  	order by crt_time desc
+  	order by hire_date desc
   </select>
   
   <select id="getStaffsByCompanyIdAndDeptId" resultMap="DtoResultMap">
@@ -122,4 +163,8 @@
   <select id="getByName" resultMap="BaseResultMap">
   	select * from T_COMMON_STAFF where name = #{name}
   </select>
+
+    <select id="getMaxID" resultType="Int">
+        select MAX(id) from T_COMMON_STAFF
+    </select>
 </mapper>

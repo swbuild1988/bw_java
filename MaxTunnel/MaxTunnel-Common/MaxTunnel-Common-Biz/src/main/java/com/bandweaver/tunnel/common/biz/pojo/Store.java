@@ -31,6 +31,10 @@ public class Store implements Serializable{
 
     private Integer storeTypeId;
     
+    private Double width;
+    
+    private Double height;
+    
     private String camera;
 
     private Date crtTime;
@@ -100,6 +104,22 @@ public class Store implements Serializable{
 		this.parentId = parentId;
 	}
 
+	public Double getWidth() {
+		return width;
+	}
+
+	public void setWidth(Double width) {
+		this.width = width;
+	}
+
+	public Double getHeight() {
+		return height;
+	}
+
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
 	@Override
     public String toString() {
         return "Store{" +
@@ -109,6 +129,8 @@ public class Store implements Serializable{
                 ", parentId='" + parentId + '\'' +
                 ", tunnelId=" + tunnelId +
                 ", storeTypeId=" + storeTypeId +
+                ", width=" + width +
+                ", height=" + height +
                 ", camera='" + camera + '\'' +
                 ", crtTime=" + crtTime +
                 '}';

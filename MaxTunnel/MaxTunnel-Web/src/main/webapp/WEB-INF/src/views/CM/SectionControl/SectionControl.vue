@@ -387,7 +387,6 @@ export default {
         editSection(index) {
             this.changeSectionInfo.changeInfo = this.data6[index];
             this.formValidate.id = this.data6[index].id;
-            console.log(this.changeSectionInfo.changeInfo);
             this.changeSectionInfo.show.state = !this.changeSectionInfo.show
                 .state;
         },

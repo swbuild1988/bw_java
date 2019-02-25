@@ -73,8 +73,12 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteRoleBatch(List<Integer> list) {
 		roleMapper.deleteRoleBatch(list);
+		rolePermissionMapper.deleteByRIds(list);
+		userRoleMapper.deleteByRIds(list);
+
 	}
 
 	@Override

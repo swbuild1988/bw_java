@@ -158,6 +158,9 @@ import UMPlanPatrol from "../views/UM/OMM/PlanPatrol/PlanPatrol.vue";
 import UMAnnualPlan from "../views/UM/OMM/PlanPatrol/annualPlan.vue";
 import UMMonthPlan from "../views/UM/OMM/PlanPatrol/monthPlan.vue";
 import UMPlanDetails from "../views/UM/OMM/PatrolScheme/PatrolDetails";
+//个人中心
+import UMPersonCenter from "../views/UM/UW/PersonCenter/personCenter"
+import UMEditPassword from "../views/UM/UW/PersonCenter/editPassword"
 //CM后台管理系统
 import CMMain from "../views/CM/Main/CMMain.vue";
 import UserInfoManage from "../views/CM/User/UserInfoManage";
@@ -825,6 +828,15 @@ let routes = [
             name: "UMTunnelDocumentAdd"
         }]
     }, {
+        path: 'personCenter',
+        name: '个人中心',
+        component: UMPersonCenter,
+        children: [{
+            path: 'editPass',
+            component: UMEditPassword,
+            name: 'editPass'
+        }]
+    },{
         path: "DataAnalysis",
         name: "数据分析",
         component: DataAnalysis,

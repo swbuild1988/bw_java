@@ -152,19 +152,20 @@ h2{
 }
 
 .form >>> .ivu-select-selection{
-    height: 3.2vmin;
+    height: 3.2vmin !important;
 }
 
 .form >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
+    font-size: 1.28vmin !important;
+    padding-top: 0.64vmin !important;
+    height: 2.2vmin !important;
+    line-height: 2vmin !important;
 }
 .form >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
+    font-size: 1.28vmin !important;
+    padding-top: 0.64vmin !important;
+    height: 2.2vmin !important;
+    line-height: 2vmin !important;
+    width: 90% !important;
 }
 </style>

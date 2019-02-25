@@ -285,5 +285,10 @@ export default {
             font-size: 1.8vmin;
             margin-top: 0.5vmin;
         }
+        .crtTime{
+            bottom: 0.2vmin;
+            right: 0.5vmin;
+            font-size: 1.4vmin;
+        }
     }
 </style>

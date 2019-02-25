@@ -61,12 +61,13 @@
     methods: {
       handleSubmit(name) {
         let _this = this;
+        var sha256 = require("js-sha256").sha256
         this.$refs[name].validate(valid => {
           if (valid) {
             this.logining = true;
             this.loading = true;
             this.checked ? this.setCookie(this.formValidate.userName, this.formValidate.passWord, 7) : this.clearCookie();
-            var loginParams = {name: _this.formValidate.userName, password: _this.formValidate.passWord};
+            var loginParams = {name: _this.formValidate.userName, password: sha256(_this.formValidate.passWord)};
             LoginService.UmLogin(loginParams).then(
               result => {
                 _this.logining = false;

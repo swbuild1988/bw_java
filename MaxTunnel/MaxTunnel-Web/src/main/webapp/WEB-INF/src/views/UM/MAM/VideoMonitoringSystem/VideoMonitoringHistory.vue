@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row class="query">
+    <Row class="conditions">
     	<Col span="9" offset="1">
 	        <span>开始时间：</span>
 	        <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="videoSelect.startTime">
@@ -14,21 +14,23 @@
 	    <Col span="3">
 	        <Button type="primary" icon="ios-search" @click="searchVideo" >查询</Button>
 	    </Col>
-	    <Col span="1" offset="1">
+	    <Col span="2">
 	    	<Button type="ghost" @click="back">返回</Button>
 	    </Col>
     </Row>
     <Row class="videos">
     	<Col span="16">
-    		<object type='application/x-vlc-plugin' pluginspage="http://www.videolan.org/" events='true' height="560" width="100%" id='vlc'>
-                <param name='mrl' value="" />
-               <!--  <param name='wmode' value='transparent' /> -->
-                <param name='volume' value='50' />
-                <param name='autoplay' value='false' />
-                <param name='loop' value='false' />
-                <param name='fullscreen' value='false' />
-                <param name='controls' value='false' />
-            </object>
+    		<div class="video">
+	    		<object type='application/x-vlc-plugin' pluginspage="http://www.videolan.org/" events='true' height="100%" width="100%" id='vlc'>
+	                <param name='mrl' value="" />
+	               <!--  <param name='wmode' value='transparent' /> -->
+	                <param name='volume' value='50' />
+	                <param name='autoplay' value='false' />
+	                <param name='loop' value='false' />
+	                <param name='fullscreen' value='false' />
+	                <param name='controls' value='false' />
+	            </object>
+	        </div>
             <Row class="controls">
             	<Col span="2">
             		<Button type="primary" :icon="isPlay ? 'pause' : 'play'" @click="doPlayOrPause"></Button>
@@ -43,7 +45,7 @@
 		        	</div>
         	    </Col>
         	    <Col align="right" class="speed">
-        	    	<Select v-model="speed" style="width:100px" @on-change="speedChange">
+        	    	<Select v-model="speed" style="width:10vmin" @on-change="speedChange">
         	    		<Option value="2">2倍</Option>
 				        <Option value="1">正常</Option>
 				        <Option value="0.5">0.5倍</Option>
@@ -60,7 +62,7 @@
 				            <Icon type="plus"></Icon>
 				        </Button>
 				    </ButtonGroup> -->
-				    <Icon type="volume-medium" class="volume" size="25"></Icon>
+				    <Icon type="volume-medium" class="volume" style="font-size: 2.5vmin"></Icon>
 				    <Slider v-model="volume"  class="slide" @on-change="volumeChanged"></Slider>
         	    </Col>
             </Row>
@@ -246,18 +248,27 @@ export default {
 		padding: 20px 10px;
 		background-color: white;
 	}
+	.video{
+		height: 56vmin;
+	}
 	.pics{
 		width: 100%;
-		height: 100px;
+		height: 12vmin;
 	}
 	.list{
-		padding: 20px;
+		padding: 2vmin;
 	}
 	.info{
-		padding: 0 20px;
+		padding: 0 2vmin;
+	}
+	.info h2{
+		font-size: 2vmin;
+	}
+	.info p {
+		font-size: 1.66vmin;
 	}
 	.controls{
-		margin-top: 22px;
+		margin-top: 2.2vmin;
 	}
 	.progress{
 		position: relative;
@@ -265,23 +276,21 @@ export default {
 	.process{
 		width: 56%;
 		position: absolute;
-		top: -2px;
-		left: 110px;
+		top: -0.2vmin;
+		left: 11vmin;
 		display: inline-block;
 	}
 	.curTime{
 		position: absolute;
-		top: 6px;
-		left: 50px;
+		top: 0.6vmin;
+		left: 5vmin;
+		font-size: 1.66vmin;
 	}
 	.totalTime{
 		position: absolute;
-		top: 6px;
-		right: 50px;
-	}
-	.query{
-		background-color: white;
-		padding: 10px;
+		top: 0.6vmin;
+		right: 5vmin;
+		font-size: 1.66vmin;
 	}
 	.back{
 		position: absolute;
@@ -296,7 +305,7 @@ export default {
 	.speed{
 		position: absolute;
 		top: 0;
-		right: 146px;
+		right: 14.6vmin;
 	}
 	.sound{
 		position: absolute;
@@ -304,15 +313,56 @@ export default {
 		right: 0;
 	}
 	.slide{
-		width: 80px;
+		width: 8vmin;
 		display: inline-block;
 		position: absolute;
 		right: 0;
-		top: -4px;
+		top: -0.4vmin;
 	}
     .volume{
     	position: absolute;
     	top: 0;
-    	right: 90px;
+    	right: 9vmin;
     }
+    .slide >>> .ivu-slider-wrap {
+    	height: 0.4vmin;
+    	margin: 1.6vmin 0;
+    }
+    
+    .conditions span{
+	    font-size: 1.66vmin;
+	    margin-top: 0.2vmin;
+	}
+    .conditions >>> .ivu-input {
+	    height: 3.2vmin;
+	    font-size: 1.28vmin;
+	}
+    .conditions >>> .ivu-date-picker-header {
+	    height: 3.2vmin;
+	    line-height: 3.2vmin;
+	}
+
+	.conditions >>> .ivu-picker-panel-icon-btn{
+	    font-size: 1.66vmin;
+	    width: 1.28vmin;
+	    height: 2.5vmin;
+	}
+
+	.conditions >>> .ivu-date-picker-header-label{
+	    font-size: 1.66vmin;
+	}
+
+	@media (min-width: 1921px){
+	    .conditions >>> .ivu-date-picker-cells {
+	        width: 15vmin;
+	        font-size: 1.66vmin;
+	    }
+
+	    .conditions >>> .ivu-date-picker-cells-cell{
+	        width: 2vmin;
+	    }
+	    .conditions >>> .ivu-date-picker-cells-header span{
+	        padding-right: 2.5rem;
+	    }
+	}
 </style>

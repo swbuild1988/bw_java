@@ -57,11 +57,7 @@ export default {
             highness: 0,
             ruleValidate: {
                 name: [
-                    {
-                        required: true,
-                        message: "管仓名不能为空",
-                        trigger: "blur"
-                    }
+                    { required: true, message: "管仓名不能为空", trigger: "blur" }
                 ]
             }
         };
@@ -90,14 +86,13 @@ export default {
     },
     methods: {
         storeTypeChange() {
-            console.log("types", this.types);
             let store = this.types.find(
                 a => a.id === this.formValidate.storeTypeId
             );
-            console.log("storeTypeChange:", store);
-            if (this.formValidate.name == "")
+            if (this.formValidate.name == ""){
                 this.formValidate.name = store.name;
-            this.formValidate.sn = store.sn;
+                this.formValidate.sn = store.sn;
+            }
         },
         getTunnelList() {
             //获取所有管廊的简单列表

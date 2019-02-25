@@ -17,7 +17,7 @@ export default {
           leftTree:[],
           selected:[0,-1]
         },
-        treeNodeJumpUrl:"/UM/defect/query",
+        treeNodeJumpUrl:"/UM/defect/query/1",
     };
   },
   created(){
@@ -37,11 +37,20 @@ export default {
               element.name = '添加',
               element.url= '/UM/defect/detail'
               this.defect.leftTree.push(element)
-              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/defect") < 0) {
-                  _this.goToMoudle({path: _this.defect.leftTree[0].url});
-                  sessionStorage.setItem('selectedName','')
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/defect") < 0 ) {
+                    //gao 代码
+                    // _this.goToMoudle({path: _this.defect.leftTree[0].url});
+                    // sessionStorage.setItem('selectedName','')
+                  //fan 代码 （巡检计划的故障列表跳转到详情）
+                  // if(sessionStorage.patrolToDefect == "yes"){
+                  //   _this.goToMoudle({path: '/UM/defect/detail'})
+                  //   sessionStorage.setItem('patrolToDefect','')
+                  // }else{
+                  //   _this.goToMoudle({path: _this.defect.leftTree[0].url});
+                  //   sessionStorage.setItem('selectedName','')
+                  // }
               }
-                sessionStorage.setItem("refreshAddress", "");
+              sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               _this.Log.info(error)

@@ -3,4 +3,7 @@
     .ivu-tabs-nav-container,.ivu-menu-item{
         font-size: 1.66vmin !important;
     }
+    .ivu-message,.ivu-message .ivu-icon{
+    	font-size: 1.2vmin !important;
+    }
 }

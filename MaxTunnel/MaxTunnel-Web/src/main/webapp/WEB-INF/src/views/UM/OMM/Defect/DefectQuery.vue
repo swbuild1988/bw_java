@@ -25,11 +25,11 @@
             </Col>
             <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
-                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
-                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
                 <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
@@ -286,10 +286,10 @@ export default {
     methods: {
         queryCondition(){
             let _this = this
-          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-            _this.$Message.error('开始时间必须小于结束时间！');
-            return;
-          }
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
             DefectService.defectsDatagrid(this.params).then(
                 (result)=>{
                     _this.defects=result.list

@@ -1,27 +1,35 @@
 <template>
   <div class="Main">
+
     <div class="Title">
       <module-title :title="title"></module-title>
     </div>
 
-    <div v-for="item in gaugeChart" class="myChart">
+    <div class="info" :key="key"  v-for="(item,key) in countData">
+      <div class="infoTitle">
+        <div v-if="item.type==1">
+          <div style="float: left;margin-left: 5%;width:30%;margin-top: 6.5%;">
+            <img :src="jinGaiUrl" width="60%">
+          </div>
+          <div class="infoTitle" ><p>{{item.name}}</p>
+            <span style="color: #ffd50a;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>个
+          </div>
+        </div>
+        <div v-else>
+          <div style="float: left;margin-left: 5%;width:30%;margin-top: 6.5%;">
+            <img :src="userUrl" width="60%">
+          </div>
+          <div class="infoTitle" ><p>{{item.name}}</p>
+            <span style="color: #ffd50a;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>人
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div :key="key"  v-for="(item,key) in gaugeChart" class="myChart">
       <div class="chartInfo">{{item.name}}</div>
       <Simple-gauge v-bind="item" :ref="item.id"></Simple-gauge>
       <div class="chartInfo">{{item.time}}</div>
-    </div>
-
-    <div class="info" v-for="item in countData">
-      <div class="infoTitle" ><p>{{item.name}}</p></div>
-      <div class="infoTitle">
-        <div v-if="item.type==1">
-          <span><Icon type="ios-football-outline" :size="iconSize" color="#00a1ff"></Icon></span>
-          <span style="color: #ffd50a;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>个
-        </div>
-        <div v-else>
-          <span><Icon type="ios-people" :size="iconSize" color="#00a1ff"></Icon></span>
-          <span style="color: #ffd50a;margin-left: 1vw;margin-right: 1vw;font-size: 2.5vmin;">{{item.value}}</span>人
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -30,11 +38,14 @@
   import ModuleTitle from "../../../components/VM2/ModuleTitle"
   import SimpleGauge from "../../../components/Common/Chart/SimpleGauge"
   import {MeasObjServer} from '../../../services/MeasObjectSerivers'
-
+  import  userImg from '../../../assets/VM/userIcon.png'
+  import jinGaiImg from '../../../assets/VM/jinGai.png'
   export default {
     data() {
       return {
         title: '管廊监测',
+        userUrl:userImg,
+        jinGaiUrl:jinGaiImg,
         iconSize:window.innerWidth*0.012,
         fetchTime:5000,
         countData: [],
@@ -190,17 +201,18 @@
     float: left;
   }
 .chartInfo{
+  font-family: "Microsoft YaHei";
   text-align: center;
   font-size: 1.16vmin;
   color: #fff;
-  background-color: #1c81ff;
+  background-color: #2562e9;
   margin-left: 0.2vw;
   margin-right: 0.2vw;
   border-radius:25px;
   box-shadow: 0.5vh 0.5vh 1vh #000000;
 }
   .info {
-    margin: 5vmin 2.5% 1vmin 2.5%;
+    margin: 0.1vmin 2.5% 1vmin 2.5%;
     width: 45%;
     height: 6.5vh;
     float: left;

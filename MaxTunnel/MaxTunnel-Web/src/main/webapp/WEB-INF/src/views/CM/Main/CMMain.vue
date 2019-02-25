@@ -25,13 +25,13 @@ export default {
                 name: "人员管理",
                 typeName: "android-people",
                 childNode: [
+                    // {
+                    //     id: 11,
+                    //     name: "用户管理",
+                    //     url: "/CMMain/user"
+                    // },
                     {
                         id: 11,
-                        name: "用户管理",
-                        url: "/CMMain/user"
-                    },
-                    {
-                        id: 12,
                         name: "员工管理",
                         url: "/CMMain/staff"
                     }

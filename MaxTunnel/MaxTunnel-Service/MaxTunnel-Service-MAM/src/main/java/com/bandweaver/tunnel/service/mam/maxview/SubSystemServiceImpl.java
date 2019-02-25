@@ -96,12 +96,9 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.error("HTTP请求失败，错误信息：" + e.getMessage());
 		}
 	}
-
-
-
 
 	@Override
 	public void heartBeat(Integer configId) {

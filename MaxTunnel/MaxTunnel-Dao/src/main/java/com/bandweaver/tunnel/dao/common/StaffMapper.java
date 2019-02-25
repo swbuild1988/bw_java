@@ -58,4 +58,6 @@ public interface StaffMapper {
 	void deleteBatch(List<Integer> list);
 
 	List<Staff> getByName(String name);
+
+    int getMaxID();
 }

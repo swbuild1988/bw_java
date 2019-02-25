@@ -88,7 +88,7 @@
         data: [],
         date: [],
         page: {
-          pageSize: 7,
+          pageSize: 10,
           pageTotal: 14,
           curPageNum: 1
         },

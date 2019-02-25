@@ -241,7 +241,7 @@ export default {
         .crtTime{
             bottom: 0.2vmin;
             right: 0.5vmin;
-            font-size: 1.2vmin;
+            font-size: 1.4vmin;
         }
     }
 </style>

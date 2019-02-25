@@ -43,7 +43,7 @@
             <span v-if="read && item.val == addContractInfo.cableStatus" v-for="(item,index) in cableStatus" :key="index">{{ item.key }}</span>
         </FormItem>
         <FormItem label="客户：" :prop="read ? null : 'customerId'">
-            <Poptip placement="top" width="1000">
+            <Poptip placement="top">
                  <Input v-model="customerName" placeholder="请选择客户" class="inputWidth" v-if="!read"></Input>
                 <div class="pop" slot="content" v-show="pageType != pageTypes.Read">
                     <customer-choose @selectCustomer="getCustomerId" v-bind:customerId="addContractInfo.customerId"></customer-choose>
@@ -67,21 +67,21 @@
                         <Option v-for="item in cableLocation.tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                     <span v-if="read && item.id == addContractInfo.tunnelId" v-for="(item,index) in cableLocation.tunnels" :key="index">{{ item.name }}</span>
-                    <div class="ivu-form-item-error-tip" v-if="checkCable.tunnel">请选择管廊</div>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.tunnel">请选择管廊</div>
                 </Col>
                 <Col span="8">
                     <Select v-model="addContractInfo.storeId" @on-change="check('store')" v-if="!read">
                         <Option v-for="(item,index) in cableLocation.stores" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                     <span v-if="read && item.id == addContractInfo.storeId" v-for="item in cableLocation.stores" :key="item.id">{{ item.name }}</span>
-                    <div class="ivu-form-item-error-tip" v-if="checkCable.store">请选择仓</div>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.store">请选择仓</div>
                 </Col>
                 <Col span="8">
                    <Select multiple v-model="addContractInfo.areaIds" @on-change="check('area')" v-if="!read">
                         <Option v-for="(item,index) in cableLocation.areas" :value="item.id" :key="index">{{ item.name }}</Option>
                     </Select>
                     <p v-if="read && addContractInfo.areaIds.indexOf(item.id) != -1" v-for="(item,index) in cableLocation.areas" :key="index">{{ item.name }}</p>
-                    <div class="ivu-form-item-error-tip" v-if="checkCable.area">请选择区域</div>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.area">请选择区域</div>
                 </Col>
             </Row>
         </FormItem>
@@ -183,7 +183,7 @@ export default {
     },
     components: { CustomerChoose },
     mounted(){
-        if(this.$route.params.curIndex){
+        if(this.$route.params.curIndex != null){
             this.curIndex = this.$route.params.curIndex
             this.contractIds = this.$route.params.contractIds
             this.addContractInfo.id = this.contractIds[this.curIndex]
@@ -352,8 +352,8 @@ export default {
             if(!this.addContractInfo.tunnelId){
                 this.checkCable.tunnel = false;
             }else{
-                this.addContractInfo.storeId = null
-                this.addContractInfo.areaIds = null
+                // this.addContractInfo.storeId = null
+                // this.addContractInfo.areaIds = null
                 this.getStoreAndAreas()
             }   
         },
@@ -375,6 +375,7 @@ export default {
                     _this.Log.info(error)
                 }
             )
+            console.log(this.cableLocation.stores,this.cableLocation.areas)
         },
         prev() {
             this.curIndex = this.curIndex - 1
@@ -404,6 +405,9 @@ h2{
     max-height:300px;
     overflow-y: auto;
 }
+.form >>> .ivu-poptip-popper{
+    width: 100vmin;
+}
 .form >>> .ivu-form-item-label{
     width: 14vmin;
 }
@@ -427,21 +431,31 @@ h2{
 .form >>> .ivu-form-item{
     margin-bottom: 2.4vmin;
 }
+@media (min-width: 2000px){
+    .form >>> .ivu-form-item-content{
+        line-height: 2.6vmin;
+    }
+}
 /*select*/
 .form >>> .ivu-select-selection{
-    height: 3.2vmin;
+    height: 3.2vmin !important;
+}
+.form >>> .ivu-select-multiple .ivu-select-selection{
+    height: 3.2vmin !important;
 }
 .form >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
+    font-size: 1.26vmin !important;
+    padding-top: 0.2vmin !important;
+    width: 90% !important;
 }
 .form >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    padding-top: 0.64vmin;
-    height: 2.2vmin;
-    line-height: 2vmin;
+    font-size: 1.26vmin !important;
+    padding-top: 0.2vmin !important;
+    width: 90% !important;
+}
+.form >>> .ivu-select-multiple .ivu-select-placeholder{
+    line-height: 3.2vmin !important;
+    height: 3.2vmin !important;
 }
 .form >>> .ivu-tag{
     height: 2.4vmin;
@@ -452,10 +466,13 @@ h2{
 .form >>> .ivu-form-item-error-tip{
     left: 14vmin;
 }
+.form >>> .location{
+    left: 0;
+}
 
 /*input*/
 .form >>> .ivu-input{
-    font-size: 1.6vmin;
+    font-size: 1.4vmin;
     height: 3.2vmin;
 }
 

@@ -1,12 +1,12 @@
 <template>
     <div>
-        <Modal v-model="show.state" title="新增监测对象" width=600>
+        <Modal v-model="show.state" :title="title" width=600>
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="140">
                 <FormItem label="监测对象名称：" prop="name">
                     <Input v-model="formValidate.name" placeholder="请输入监测对象名称" class="InputWidth"/>
                 </FormItem>
                 <FormItem label="监测对象ID：" :prop="isDisabled ? '' : 'id'">
-                    <Input v-model="formValidate.id" placeholder="请输入监测对象ID" class="InputWidth" :disabled="isDisabled" @on-blur="check"/>
+                    <Input v-model="formValidate.id" placeholder="请输入监测对象ID" class="InputWidth" :disabled="isDisabled"/>
                 </FormItem>
                 <FormItem label="监测对象类型：" prop="objtype">
                     <Select v-model="formValidate.objtypeId" placeholder="请选择监测对象类型" class="InputWidth">
@@ -32,20 +32,20 @@
                         </Col>
                     </Row>
                 </FormItem>
-                <FormItem label="经度：">
-                    <Input v-model="formValidate.longitude" placeholder="请输入经度" class="InputWidth"/>
+                <FormItem label="经度：" prop="longitude">
+                    <Input v-model="formValidate.longitude" placeholder="请输入经度(整数或小数)" class="InputWidth"/>
                 </FormItem>
-                <FormItem label="纬度：">
-                    <Input v-model="formValidate.latitude" placeholder="请输入纬度" class="InputWidth"/>
+                <FormItem label="纬度：" prop="latitude">
+                    <Input v-model="formValidate.latitude" placeholder="请输入纬度(整数或小数)" class="InputWidth"/>
                 </FormItem>
                 <FormItem label="高度：" prop="height">
-                    <Input v-model="formValidate.height" placeholder="请输入高度" class="InputWidth"/>
+                    <Input v-model="formValidate.height" placeholder="请输入高度(m)" class="InputWidth"/>
                 </FormItem>
                 <FormItem label="偏移量：" prop="deviation">
                     <Input v-model="formValidate.deviation" placeholder="请输入偏移量" class="InputWidth"/>
                 </FormItem>
                 <FormItem label="描述：" prop="description">
-                    <Input type="textarea" v-model="formValidate.description" placeholder="请输入新应急结束" class="InputWidth"/>
+                    <Input type="textarea" v-model="formValidate.description" placeholder="请输入描述" class="InputWidth"/>
                 </FormItem> 
                 <FormItem label="激活：">
                     <Select v-model="formValidate.actived" placeholder="请选择是否激活" class="InputWidth">
@@ -67,6 +67,49 @@ import { MeasObjServer } from '../../../services/MeasObjectSerivers'
 export default {
     name: 'meas-obj-module',
     data(){
+        const validateNumber = (rule, value, callback) => {
+                if (value === '') {
+                    // callback(new Error('不能为空'));
+                } else {
+                    if (isNaN(value)) {
+                        callback(new Error('请输入数字'))
+                    } else {
+                        callback()
+                    }  
+                }
+            };
+        const validateInt = (rule,value,callback) => {
+            if (value === '') {
+                    callback(new Error('不能为空'))
+            } else {
+                if (isNaN(value) ||  value % 1 !== 0) {
+                    callback(new Error('请输入整数'))
+                } else {
+                    MeasObjServer.checkObjId(value).then(
+                        result=>{
+                            if(!result){
+                                callback(new Error('ID重复，请输入其他ID'))
+                            } else {
+                                callback()
+                            }
+                        })
+                }  
+            }
+        }
+        const checkString = (rule,value,callback) => {
+            if(value === ''){
+                callback(new Error('不能为空'))
+            } else {
+                let regEn = /[`!@#$%^&*()_+<>?:"{},.\/;'[\]]/im
+                let regCn = /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im
+                if(regEn.test(value) || regCn.test(value)) {
+                    callback(new Error('输入了非法字符，请重新输入'))
+                } else {
+                    callback()
+                }
+            }
+        }
+
         return {
             formValidate:{
                 name:null,
@@ -85,16 +128,27 @@ export default {
             },
             ruleValidate:{
                 name: [
-                    { required: true, message: '监测对象名称不能为空', trigger: 'blur' }
+                    { required: true, message: '监测对象名称不能为空', trigger: 'blur' },
+                    { validator: checkString, trigger: 'blur' }
                 ],
                 id: [
-                    { required: true, message: '监测对象ID不能为空', trigger: 'blur' }
+                    { required: true, message: '监测对象ID不能为空', trigger: 'blur' },
+                    { validator: validateInt, trigger: 'blur' }
                 ],
                 objtypeId: [
                     { required: true, message: '监测对象类型不能为空', trigger: 'change' }
                 ],
                 datatypeId: [
                     { required: true, message: '数据类型不能为空', trigger: 'change' }
+                ],
+                deviation: [
+                    { validator: validateNumber, trigger: 'blur' }
+                ],
+                longitude: [
+                    { validator: validateNumber, trigger: 'blur' }
+                ],
+                latitude: [
+                    { validator: validateNumber, trigger: 'blur' }
                 ]
             },
             lists: {
@@ -108,7 +162,8 @@ export default {
                 {   val: 1,key: "是" }
             ],
             isDisabled: false,
-            idChecked: false
+            idChecked: false,
+            title: '新增监测对象'
         }
     },
     props:{
@@ -129,7 +184,9 @@ export default {
             if(this.type == 'add'){
                 this.cleanFormValidate()
                 this.formValidate.actived = 0
+                this.title = '新增监测对象'
             }else {
+                this.title = '编辑监测对象'
                 for(let item in this.editInfo){
                     for(let info in this.formValidate){
                         if(item === info){
@@ -212,16 +269,6 @@ export default {
             for(let item in this.formValidate){
                 this.formValidate[item] = null
             }
-        },
-        check(){
-            let _this = this
-            MeasObjServer.checkObjId(this.formValidate.id).then(
-                result=>{
-                    _this.idChecked = result
-                    if(!_this.idChecked){
-                        _this.$Message.error('ID重复，请输入其他ID')
-                    }
-                })
         }
     }
 }

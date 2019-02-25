@@ -289,10 +289,11 @@ export default {
 }
 
 .coolBox >>> .ivu-select-selected-value {
-    font-size: 1.6vmin;
-    line-height: 1.8vmin;
-    height: 2.2vmin;
-    padding-top: 0.4vmin;
+    font-size: 1.6vmin !important;
+    line-height: 1.8vmin !important;
+    height: 2.2vmin !important;
+    padding-top: 0.4vmin !important;
+    width: 100% !important;
 }
 .coolBox >>> .ivu-select-selection{
     height: 2.4vmin;

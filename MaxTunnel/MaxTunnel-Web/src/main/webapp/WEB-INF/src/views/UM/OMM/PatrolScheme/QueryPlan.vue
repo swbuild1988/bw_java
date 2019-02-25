@@ -73,7 +73,7 @@
     </div>
     <div class="page">
       <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
-        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
+        :page-size-opts=[12,24,36] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
   </div>
 </template>
@@ -263,7 +263,7 @@ export default {
     margin-left: 5px;
 }
 .planStatusDec,.patrolGroupName{
-  font-size: 2.2vmin;
+  font-size: 1.8vmin;
 }
 .details-bottom div{
   margin: 10px;
@@ -399,6 +399,9 @@ export default {
     }
     .planName{
       font-size: 2.2vmin;
+    }
+    .icon,.details,.details-bottom div{
+      line-height: 1.9
     }
 }
 </style>

@@ -1,26 +1,20 @@
 <!--开始预案-->
 <template>
   <div>
-    <Modal style="z-index: 1001" v-model="modalPrams.state" title="启动预案" @on-ok="openPlan" ok-text="启动" cancel-text="取消">
-      <div style="text-align: center;font-size: 16px;">
-        <Row>
-          <Col span="24" style="margin: 4px;">
-          <span>预案类型:</span>
-          <Select v-model="prams.processKey" style="width:300px">
-            <Option v-for="item in planList" :value="item.key" :key="item.key">{{ item.val }}</Option>
-          </select>
-          </Col>
-          <Col span="24" style="margin: 4px;">
-          <span style="position: relative;float:left;margin-left: 90px;margin-right: 5px;margin-top: 5px;">位置:</span>
-          <treeselect :options="locationList" placeholder="请选择" v-model="prams.location"
-                      style="width: 300px;float: left;position: relative;"/>
-          </Col>
-          <Col span="24" style="margin: 4px;">
-          <span>关联告警:</span>
-          <Input v-model="prams.alarmId" placeholder="无" style="width: 300px" readonly h></Input>
-          </Col>
-        </Row>
-      </div>
+    <Modal  :styles="{top: '30%'}" width="30vw;" style="z-index: 1001; " v-model="modalPrams.state" title="启动预案" @on-ok="openPlan" ok-text="启动" cancel-text="取消">
+        <Form  :label-width="labelWidth"  style="font-size: 1.22vmin;">
+          <FormItem label="预案类型">
+            <Select v-model="prams.processKey" style="width: 15vw;float: left;margin-left: 1vw;">
+              <Option v-for="item in planList" :value="item.key" :key="item.key">{{ item.val }}</Option>
+            </select>
+          </FormItem>
+          <FormItem label="位置" >
+            <treeselect :options="locationList" placeholder="请选择" v-model="prams.location"  style="width: 15vw;float: left;margin-left: 1vw;"/>
+          </FormItem>
+          <FormItem label="关联告警">
+            <Input v-model="prams.alarmId" placeholder="无"  style="width: 15vw;float: left;margin-left: 1vw;" readonly h></Input>
+          </FormItem>
+        </Form>
     </Modal>
   </div>
 </template>
@@ -43,6 +37,7 @@
     },
     data() {
       return {
+        labelWidth:120,
         planList: [],
         locationList: [],
         prams: {
@@ -133,6 +128,7 @@
           },
       },
       mounted(){
+      this.labelWidth=window.innerWidth*0.08
       },
     components: {
       Treeselect
@@ -141,8 +137,14 @@
 </script>
 
 <style scoped>
-  .ivu-input {
-    font-size: 16px;
-    height: 38px;
+ .ivu-input-type >>> .ivu-input {
+    font-size: 1.22vmin;
+    height: 4vmin;
   }
+
+ .vertical-center-modal{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
 </style>

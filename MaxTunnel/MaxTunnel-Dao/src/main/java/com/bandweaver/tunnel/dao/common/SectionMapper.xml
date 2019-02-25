@@ -301,6 +301,13 @@
 		</foreach> 
 	</select>
 	
+	<select id="getSectionIdsByAreaIds" resultType="Int">
+		select id from t_common_section where area_id in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach> 
+	</select>
+	
 	<select id="getSectionsByStoreIds" resultMap="BaseResultMap">
 		select * from t_common_section where store_id in
 		<foreach collection="list" item="item" open="(" separator="," close=")">

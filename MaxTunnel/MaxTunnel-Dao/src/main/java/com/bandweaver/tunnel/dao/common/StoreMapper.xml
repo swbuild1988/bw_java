@@ -7,6 +7,8 @@
 		<id column="ID" jdbcType="DECIMAL" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="sn" jdbcType="VARCHAR" property="sn" />
+		<result column="width" jdbcType="DECIMAL" property="width" />
+		<result column="height" jdbcType="DECIMAL" property="height" />
 		<result column="parent_id" jdbcType="DECIMAL" property="parentId" />
 		<result column="TUNNEL_ID" jdbcType="DECIMAL"
 			property="tunnelId" />
@@ -23,6 +25,8 @@
 		<id column="ID" jdbcType="DECIMAL" property="id" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="sn" jdbcType="VARCHAR" property="sn" />
+		<result column="width" jdbcType="DECIMAL" property="width" />
+		<result column="height" jdbcType="DECIMAL" property="height" />
 		<result column="parent_id" jdbcType="DECIMAL" property="parentId" />
 		<result column="tunnel_id" property="tunnelId"/>
 		<result column="store_type_id" property="storeTypeId"/>
@@ -33,7 +37,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME, parent_id
+		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME, parent_id, wigth, height
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
@@ -86,6 +90,12 @@
 			<if test="crtTime != null">
 				CRT_TIME,
 			</if>
+			<if test="wigth != null">
+				wigth,
+			</if>
+			<if test="height != null">
+				height,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -111,6 +121,12 @@
 			</if>
 			<if test="crtTime != null">
 				#{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wigth != null">
+				#{wigth,jdbcType=DECIMAL},
+			</if>
+			<if test="height != null">
+				#{height,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>
@@ -138,6 +154,12 @@
 			</if>
 			<if test="crtTime != null">
 				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="wigth != null">
+				wigth = #{wigth,jdbcType=DECIMAL},
+			</if>
+			<if test="height != null">
+				height = #{height,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where ID = #{id,jdbcType=DECIMAL}

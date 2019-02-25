@@ -74,7 +74,7 @@ export default {
         {
           type: "index",
           align: "center",
-          width: 40
+          width: window.innerWidth/100*80/100*4
         },
         {
           title: "申请人",
@@ -101,7 +101,7 @@ export default {
           title: "计划入廊时间",
           key: "preTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             return h(
               "div",
@@ -157,6 +157,7 @@ export default {
         {
           title: "查看申请状态",
           align: "center",
+          width: window.innerWidth/100*80/100*9,
           render: (h, params) => {
             return h("div", [
               h(
@@ -196,7 +197,7 @@ export default {
           title: "进入管廊时间",
           key: "enterTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             let temp = ''
             if(params.row.enterTime==null){
@@ -213,7 +214,7 @@ export default {
           title: "离开管廊时间",
           key: "exitTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             let temp = ''
             if(params.row.exitTime==null){
@@ -240,8 +241,8 @@ export default {
           }
         },
         {
-          title: "参观人员详细信息",
-          width: 140,
+          title: "参观人员信息",
+          width: window.innerWidth/100*80/100*5,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -252,17 +253,26 @@ export default {
                     type: "primary",
                     size: "small"
                   },
-                  style: {
-                    marginRight: "5px"
-                  },
+                  // style: {
+                  //   marginRight: "5px"
+                  // },
                   on: {
                     click: () => {
                       this.show(params.row.id);
                     }
                   }
                 },
-                "信息"
-              ),
+                "详情"
+              )
+            ]);
+          }
+        },
+        {
+          title: "操作",
+          width: window.innerWidth/100*80/100*6,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
               h(
                 "Button",
                 {
@@ -418,6 +428,7 @@ export default {
     del(id) {
       this.$Modal.confirm({
         title: '入廊申请',
+        width:"25vw",
         content: '<p>是否删除这条入廊申请</p>',
         onOk: () => {
           let _this = this

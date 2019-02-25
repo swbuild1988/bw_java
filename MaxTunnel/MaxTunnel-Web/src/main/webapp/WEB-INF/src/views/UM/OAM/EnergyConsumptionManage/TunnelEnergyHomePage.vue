@@ -19,12 +19,12 @@
 
     <Row style="margin-top: 10px;">
       <!-- 管廊能耗统计 饼图 -->
-      <Col span="8">
+      <Col span="9">
       <div class="pie">
         <pie-chart v-bind="pieChart"></pie-chart>
       </div>
       </Col>
-      <Col span="15" offset="1" style="padding-right: 10px;">
+      <Col span="14" offset="1" style="padding-right: 10px;">
       <Row class="table">
         <Col span="24">
         <Row style="margin-bottom: 10px;">
@@ -38,93 +38,97 @@
           </Col>
           <Col span="5">
           <div style="position: relative;float: right;right: 0px;">
-            <Button type="primary" icon="ios-search"  style="font-size: 1.66vmin;" @click="queryEnergies" size="small">查询</Button>
-            <Button type="primary" icon="ios-download-outline" style="font-size: 1.66vmin;"  @click="exportData" size="small">导出</Button>
+            <Button type="primary" icon="ios-search" style="font-size: 1.66vmin;" @click="queryEnergies" size="small">查询</Button>
+            <Button type="primary" icon="ios-download-outline" style="font-size: 1.66vmin;" @click="exportData" size="small">导出</Button>
           </div>
           </Col>
         </Row>
         </Col>
         <Col span="23" offset="1">
         <Table size="small" stripe border :columns="tableColumn" :data="tableData" ref="table" :height="tableHeight"></Table>
-        <div style="float:right;margin-top: 4px">
-          周期： <Select v-model="period" @on-change='changePeriod(period)' style=" width:70px">
-          <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
-        </Select>
+        <div style="float:right;margin-top:4px;">
+         <span style="font-size: 1.22vmin;">周期：</span>
+          <Select v-model="period" @on-change='changePeriod(period)' style=" width:4vw">
+            <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+          </Select>
         </div>
         </Col>
       </Row>
       </Col>
     </Row>
     <Row>
-      <Col span="8">
+      <Col span="9">
       <!-- 雷达图 -->
       <div class="radar">
         <radar-chart v-bind="radarChart"></radar-chart>
       </div>
       </Col>
-      <Col span="16">
-          <LineChart  style="width:62vw;height:calc(37vh - 60px);" v-bind="lineChart" ref="childChart"></LineChart>
+      <Col span="14" offset="1">
+      <line-chart style="width:50vw;height:calc(30vh - 20px);" v-bind="lineChart" ref="childChart"></line-chart>
       </Col>
     </Row>
   </div>
 </template>
 <style scoped>
-  .defaultFont_size{
+  .defaultFont_size {
     font-size: 1.66vmin;
   }
+
   h1 {
     margin: 2% 1% 0 0;
     width: 8%;
     float: left;
   }
 
-  .radar{
-    height:calc(37vh - 60px);
+  .radar {
+    height: calc(30vh - 20px);
     width: 100%;
-    /*border-color: white;*/
-    border: 2px solid #dddfe1;
   }
 
-  .pie{
-    height: calc(37vh - 60px);
-    border: 2px solid #dddfe1;
-    /*box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);*/
+  .pie {
+    margin-top: 10px;
+    height: 37vh;
   }
-  .table span{
+
+  .table span {
     font-size: 1.66vmin;
   }
-  .table >>> .ivu-input {
-      height: 3.2vmin;
-      font-size: 1.28vmin;
-  }
-  .table >>> .ivu-date-picker-header {
-      height: 3.2vmin;
-      line-height: 3.2vmin;
+
+  .table>>>.ivu-input {
+    height: 3.2vmin;
+    font-size: 1.28vmin;
   }
 
-  .table >>> .ivu-picker-panel-icon-btn{
+  .table>>>.ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+  }
+
+  .table>>>.ivu-picker-panel-icon-btn {
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+  }
+
+  .table>>>.ivu-date-picker-header-label {
+    font-size: 1.66vmin;
+  }
+
+  @media (min-width: 1921px) {
+    .table>>>.ivu-date-picker-cells {
+      width: 15vmin;
       font-size: 1.66vmin;
-      width: 1.28vmin;
-      height: 2.5vmin;
+    }
+
+    .table>>>.ivu-date-picker-cells-cell {
+      width: 2vmin;
+    }
+
+    .table>>>.ivu-date-picker-cells-header span {
+      padding-right: 2.5rem;
+    }
   }
 
-  .table >>> .ivu-date-picker-header-label{
-      font-size: 1.66vmin;
-  }
-
-  @media (min-width: 1921px){
-      .table >>> .ivu-date-picker-cells {
-          width: 15vmin;
-          font-size: 1.66vmin;
-      }
-
-      .table >>> .ivu-date-picker-cells-cell{
-          width: 2vmin;
-      }
-      .table >>> .ivu-date-picker-cells-header span{
-          padding-right: 2.5rem;
-      }
-  }
 </style>
 <script>
   import DataBox2 from "../../../../components/Common/Box/DataBox2";
@@ -132,15 +136,19 @@
   import PieChart from "../../../../components/Common/Chart/SimplePieChart";
   import RadarChart from "../../../../components/Common/Chart/SimpleRadarChart";
   import EnergyIcon from "../../../../assets/UM/TunnelEnergy.png";
-  import {EnumsService} from "../../../../services/enumsService";
-  import {EnergyConsumptionService} from "../../../../services/EnergyConsumptionService";
+  import {
+    EnumsService
+  } from "../../../../services/enumsService";
+  import {
+    EnergyConsumptionService
+  } from "../../../../services/EnergyConsumptionService";
 
   export default {
     name: "tunnel-energy-consumption",
     data() {
       return {
         // 上面databox的参数
-        tableHeight:250,
+        tableHeight: 250,
         historyData: {
           value: 0,
           unit: "千瓦时",
@@ -174,15 +182,16 @@
           id: "tunnelEnergyPieChart",
           parameters: {
             option: {
+              backgroundColor: "#15252f1a",
               title: {
                 text: "管廊能耗统计",
-                x: "center",
+                left: "left",
                 textStyle: {
                   fontWeight: "normal",
                   color: "#030303",
-                  fontSize: "20"
                 }
-              }
+              },
+
             }
           }
         },
@@ -199,8 +208,7 @@
             }
           }
         },
-        tableColumn: [
-          {
+        tableColumn: [{
             title: "管廊名称",
             key: "tunnelName"
           },
@@ -234,7 +242,7 @@
       RadarChart
     },
     mounted() {
-      this.tableHeight = window.innerHeight*0.34;
+      this.tableHeight = window.innerHeight * 0.34;
       this.queryEnergies();
       this.initConsumption();
       this.initTime();
@@ -309,11 +317,14 @@
       //查询表数据
       queryEnergies() {
         let _this = this;
-        if(new Date(_this.startTime)>new Date(_this.endTime)){
-          _this.$Message.error('开始时间必须小于结束时间！');
+        if (new Date(_this.startTime) > new Date(_this.endTime)) {
+          _this.$Message.error("开始时间必须小于结束时间！");
           return;
         }
-        var queryParams = {startTime: null, endTime: null};
+        var queryParams = {
+          startTime: null,
+          endTime: null
+        };
         if (_this.startTime && _this.endTime) {
           queryParams = {
             startTime: _this.startTime.getTime(),
@@ -336,10 +347,7 @@
                 tempData.powerConsumption,
                 2
               );
-              _this.tableColumnAdd.costing += Number(
-                tempData.costing,
-                2
-              );
+              _this.tableColumnAdd.costing += Number(tempData.costing, 2);
               _this.tableData.push(tempData);
             });
             _this.tableColumnAdd.powerConsumption = Number(
@@ -362,6 +370,5 @@
       }
     }
   };
+
 </script>
-
-
