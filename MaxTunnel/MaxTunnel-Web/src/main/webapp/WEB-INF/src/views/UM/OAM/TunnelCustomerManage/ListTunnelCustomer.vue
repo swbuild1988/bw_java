@@ -22,7 +22,7 @@
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <Button type="primary" size="small" icon="ios-search" @click="queryList()">查询</Button>
+                    <Button type="primary"  icon="ios-search" @click="queryList()">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -57,13 +57,13 @@
                 </Col>
             </Row>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total :page-size-opts=[12,24,36]
                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
 <script>
-import { EnterGalleryService } from '../../../../services/enterGalleryService' 
-import { CustomerService } from '../../../../services/customerService' 
+import { EnterGalleryService } from '../../../../services/enterGalleryService'
+import { CustomerService } from '../../../../services/customerService'
 import types from '../../../../../static/Enum.json'
 export default {
     data(){
@@ -127,6 +127,10 @@ export default {
     methods:{
         queryList: function(){
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             CustomerService.customerDatagrid(_this.params).then(
                 (result)=>{
                     for( let index in result.list ){
@@ -160,6 +164,7 @@ export default {
         instance(index) {
             this.$Modal.confirm({
                 title: '客户信息',
+                width: '24vw',
                 content: '<p>是否删除这条客户信息</p>',
                 onOk: () => {
                     let _this = this

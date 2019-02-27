@@ -26,13 +26,13 @@
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="4">
-                <Button type="primary" icon="ios-search" size="small" @click="queryConditions()">查询</Button>
+                <Button type="primary" icon="ios-search"  @click="queryConditions()">查询</Button>
             </Col>
         </Row>
-        <div class="list">           
-            <Table  :columns='columns'  :data="patrolTask"></Table>
+        <div class="list">
+            <Table  border :columns='columns'  :data="patrolTask"></Table>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
     <div v-if="isSuperCalender">
@@ -47,7 +47,7 @@ import superCalender from '../../../Common/SuperCalender.vue'
 export default {
     components: {
         superCalender
-    },  
+    },
     data(){
         return{
             SCalender:{
@@ -60,7 +60,7 @@ export default {
                 endTime: null
             },
             patrolResult:[
-                {id: 1, val: 1, key: '已完成'}, 
+                {id: 1, val: 1, key: '已完成'},
                 {id: 2, val: 0, key: '进行中'}
             ],
             patrolTask:[
@@ -80,7 +80,7 @@ export default {
             columns:[
                 {
                     type: 'index',
-                    width: 60,
+                    width: window.innerWidth/100*80/100*5,
                     align: 'center'
                 },
                 {
@@ -150,7 +150,7 @@ export default {
                     title: '巡检描述',
                     key: 'describe',
                     align: 'center',
-                    width: 200,
+                    width: window.innerWidth/100*80/100*15,
                     render:(h,params)=>{
                         let temp = params.row.describe
                         if(temp!=null){
@@ -167,7 +167,7 @@ export default {
                     title:"操作",
                     key:"action",
                     align: 'center',
-                    width:150,
+                    width:window.innerWidth/100*80/100*7,
                     align:'center',
                     render:(h, params) => {
                         return h('div', [
@@ -194,7 +194,7 @@ export default {
             firstDay: null,
             lastDay: null,
             isTable: true,
-            isSuperCalender: false,
+            isSuperCalender: false
         }
     },
     watch:{
@@ -204,6 +204,8 @@ export default {
           this.tunnels.forEach(a => {
             if (a.id == this.tunnelId) {
               this.queryConditions();
+              this.isTable = true;
+              this.isSuperCalender = false;
             }
           });
         },
@@ -230,6 +232,10 @@ export default {
             this.isTable = false
         },
         queryConditions(){
+          if(new Date(this.conditions.startTime)>new Date(this.conditions.endTime)){
+            this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
                 var info = {
                     pageNum: this.page.pageNum,
                     pageSize: this.page.pageSize,
@@ -237,7 +243,7 @@ export default {
                     endTime: this.conditions.endTime,
                     finished: this.conditions.finished,
                     name: this.conditions.name,
-                    tunnelId: this.$route.params.id,  
+                    tunnelId: this.$route.params.id,
                 }
             this.axios.post('/inspection-tasks/all',(info)).then(response=>{
                 let{code,data} = response.data
@@ -299,7 +305,7 @@ export default {
                     })
                 }
             })
-        }
+        },
     }
 }
 </script>

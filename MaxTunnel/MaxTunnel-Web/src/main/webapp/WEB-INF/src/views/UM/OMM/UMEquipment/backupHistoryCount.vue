@@ -353,9 +353,6 @@ export default {
                             }
                         }
                     },
-                    // timer: {
-                    //     interval: 5000
-                    // }
                 }
             },
             toolColumns: [
@@ -407,7 +404,15 @@ export default {
                                 temp=temp.substring(0,7)+'......'
                             }
                         }
-                        return h('div',temp)
+                        return h(
+                            'div',
+                            {
+                                domProps: {
+                                    title: params.row.describe
+                                }
+                            },
+                            temp
+                        )
                     }
                 },
             ],

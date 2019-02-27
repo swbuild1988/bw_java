@@ -45,7 +45,7 @@
                 <DatePicker type="datetime" v-model="toolsConditions.InStorageEndTime" placeholder="请输入入库结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small" @click="showTable" icon="ios-search">查询</Button>
+                <Button type="primary"  @click="showTable" icon="ios-search">查询</Button>
             </Col>
         </Row>
         <div class="list">
@@ -56,7 +56,7 @@
                 <Button type="success" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
             </div>
             <Row :gutter="16">
-                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-bottom: 20px;">
+                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-top: 20px;">
                     <div class="toolBox">
                         <h2 class="toolTitle">{{item.name}}</h2>
                         <div class="toolInfo">
@@ -73,9 +73,9 @@
                         </div>
                         <div class="operations">
                             <div class="operation" @click="borrowSubmit(item.id)" v-show="item.status">借出</div>
-                            <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">归还</div>                            
+                            <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">归还</div>
                             <div class="operation" @click="showHistory(item.id)">历史记录</div>
-                            <div class="operation">删除</div>
+                            <!-- <div class="operation">删除</div> -->
                         </div>
                     </div>
                 </Col>
@@ -83,7 +83,7 @@
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-            :style='pageStyle'></Page>    
+            :style='pageStyle'></Page>
         <!-- 批量借出 -->
         <Modal
             v-model="isBatchLend"
@@ -127,7 +127,7 @@
             </Row>
 
             <Table stripe border ref="selection" :columns="batchLendColums"  :data="batchLendData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
-            
+
             <Page :total="batchLendPage.pageTotal" :current="batchLendPage.pageNum" :page-size="batchLendPage.pageSize" show-total show-sizer
                 placement="top" @on-change="handlePageBatchLend" @on-page-size-change='handPageSizeBatchLend' show-elevator style="margin-top: 10px;text-align: right"></Page>
 
@@ -153,9 +153,9 @@
                             <Input type="textarea" style="width: 70%;" v-model="batchLendSubmitData.describe"></Input>
                         </FormItem>
                     </Col>
-                </Form>    
+                </Form>
             </Row>
-            
+
             <div slot="footer">
                 <Button type="text" size="large" @click="cancelBatchLend('batchLendSubmitData')">取消</Button>
                 <Button type="primary" size="large" @click="confirmBatchLend('batchLendSubmitData')" :disabled="isBatchLendSubmit">确定</Button>
@@ -210,10 +210,10 @@
                 </Col>
                 <Col span="6">
                     <Button type="primary" size="small" @click="batchReturn()" icon="ios-search">查询</Button>
-                </Col>    
+                </Col>
             </Row>
-           <Table stripe border   ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table> 
-            
+           <Table stripe border   ref="returnSelection" :columns="batchReturnColums"  :data="batchReturnData" @on-selection-change="checkReturnTable" @on-selection-all="checkReturnTable"></Table>
+
             <Page :total="returnPage.pageTotal" :current="returnPage.pageNum" :page-size="returnPage.pageSize" show-total show-sizer
                 placement="top" @on-change="handlePageBatchReturn" @on-page-size-change='handlePageSizeBatchReturn' show-elevator style="margin-top: 10px;text-align: right"></Page>
 
@@ -247,7 +247,7 @@
                             <Input type="textarea" style="width: 70%;" v-model="batchReturnSubmitData.describe"></Input>
                         </FormItem>
                     </Col>
-                </Form>    
+                </Form>
             </Row>
 
             <div slot="footer">
@@ -266,14 +266,14 @@
                 <FormItem label="借用人：" prop="staffId">
                     <Select v-model="borrow.staffId" style="width: 70%">
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>                   
+                    </Select>
                 </FormItem>
                 <FormItem label="借用时间：" prop="borrowTime">
-                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="borrow.borrowTime"></DatePicker>                  
-                </FormItem>  
+                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="borrow.borrowTime"></DatePicker>
+                </FormItem>
                 <FormItem label="借用备注：">
                     <Input type="textarea" v-model="borrow.Describe" style="width: 70%"></Input>
-                </FormItem>  
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button type="default" @click="cancelBorrow('borrow')">取消</Button>
@@ -290,19 +290,19 @@
                 <FormItem label="归还人：" prop="staffId">
                     <Select v-model="toolReturn.staffId" style="width: 70%">
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>                   
+                    </Select>
                 </FormItem>
                 <FormItem label="归还时间：" prop="returnTime">
-                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="toolReturn.returnTime"></DatePicker>                  
-                </FormItem> 
+                    <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="toolReturn.returnTime"></DatePicker>
+                </FormItem>
                 <FormItem label="使用状态：" prop="usingStatus">
                     <Select v-model="toolReturn.usingStatus" style="width: 70%">
                         <Option v-for="item in returnUsingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                     </Select>
-                </FormItem> 
+                </FormItem>
                 <FormItem label="借用备注：">
                     <Input type="textarea" v-model="toolReturn.Describe" style="width: 70%"></Input>
-                </FormItem> 
+                </FormItem>
             </Form>
 
             <div slot="footer">
@@ -350,7 +350,7 @@
 
                 </Col>
             </Row>
-            <Table stripe border height="330"  :columns="historyColums"  :data="historyData"></Table> 
+            <Table stripe border height="330"  :columns="historyColums"  :data="historyData"></Table>
 
             <Page :total="historyPage.pageTotal" :current="historyPage.pageNum" :page-size="historyPage.pageSize" show-total show-sizer
                 placement="top" @on-change="handlePageHistory" @on-page-size-change='handPageSizeHistory' show-elevator style="margin-top: 10px;text-align: right"></Page>
@@ -516,7 +516,15 @@ export default {
                                 temp = param.row.describe
                             }
                         }
-                        return h('div',temp)
+                        return h(
+                            'div',
+                            {
+                                domProps: {
+                                    title: param.row.describe
+                                }
+                            },
+                            temp
+                        )
                     }
                 }
             ],
@@ -756,6 +764,11 @@ export default {
         },
         //首页查询
         showTable(){
+          if(new Date(this.toolsConditions.InStorageStartTime)>new Date(this.toolsConditions.InStorageEndTime)){
+            this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
+
             EquipmentService.queryTools(this.params).then(
                 result => {
                     for(let index in result.pagedList){
@@ -778,7 +791,7 @@ export default {
                 }
             )
         },
-        //首页分页                 
+        //首页分页
         handlePage(value) {
             this.page.pageNum = value;
             this.showTable();
@@ -911,7 +924,7 @@ export default {
                             }
                         )
                     }else{
-                       this.$Message.error("请填写正确的批量归还信息") 
+                       this.$Message.error("请填写正确的批量归还信息")
                     }
                 })
             },2000)
@@ -1076,7 +1089,6 @@ export default {
     color: #357aa1;
 }
 .toolBtn button{
-    display: inline-block;
     float: right;
     margin-right: 5px;
 }
@@ -1085,7 +1097,7 @@ export default {
 }
 .operation{
     display: inline-block;
-    width: 32%;
+    width: 49%;
     line-height: 50px;
     text-align: center;
     cursor: pointer;
@@ -1143,9 +1155,6 @@ export default {
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
         line-height: 4.5vmin;
-    }
-    .toolBox{
-        margin-bottom: 1vh;
     }
     .operation:hover{
         font-size: 1.6vmin;

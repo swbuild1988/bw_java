@@ -3,7 +3,7 @@
         <Row class="queryCondition">
             <Col span="6">
                 <span>所属管仓段：</span>
-                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>                   
+                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>
                 <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             </Col>
             <Col span="6">
@@ -30,10 +30,10 @@
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" icon="ios-search" @click="queryUnits()" size="small">查询</Button>
+                <Button type="primary" icon="ios-search" @click="queryUnits()" >查询</Button>
             </Col>
-        </Row> 
-        <div class="list">   
+        </Row>
+        <div class="list">
             <Row type="flex"   align="top" class="code-row-bg">
                 <Col span="6"  v-for="(item,index) in unitInfo" :key='index'>
                     <div class="unitBox">
@@ -58,7 +58,7 @@
                                 <div class="sectionTitle">管仓区段：</div>
                                 <span class="showSectionsName" v-for="(item,index) in sections" :key="index">{{item.name}}</span>
                                 <div class="sectionName" :title=item.sectionIds>{{item.sectionIds}}</div>
-                            </div>    
+                            </div>
                         </div>
                         <div class="option">
                             <Button size=small type="primary" @click="edit(index)">编辑</Button>
@@ -66,14 +66,14 @@
                             <div class="crtTime">
                                 <span><Icon type="android-time"></Icon>{{item.crtTime}}</span>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                 </Col>
             </Row>
-        </div>            
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>   
-    </div>    
+        </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+                :page-size-opts=[8,16,24] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
+    </div>
 </template>
 <script>
 import { TunnelService } from '../../../../services/tunnelService'
@@ -131,7 +131,7 @@ export default {
                 startTime: new Date(this.conditions.startTime).getTime(),
                 endTime: new Date(this.conditions.endTime).getTime(),
                 sectionIds : this.sectionIds
-            };  
+            };
         return Object.assign({}, param);
         }
     },
@@ -143,7 +143,7 @@ export default {
                 e.target.className=='ivu-icon ivu-icon-arrow-down-b ivu-input-icon ivu-input-icon-normal' ||
                 e.target.className=='ivu-icon ivu-icon-arrow-right-b' ||
                 e.target.className=='ivu-tree-children' ||
-                e.target.className=='ivu-tree-arrow ivu-tree-arrow-open' ||        
+                e.target.className=='ivu-tree-arrow ivu-tree-arrow-open' ||
                 e.target.className=='ivu-tree-title' ||
                 e.target.className=='tree ivu-tree' ||
                 e.target.className=='ivu-tree-arrow' ||
@@ -182,11 +182,11 @@ export default {
                                     obj.children = secondChildren
                                 })
                             }
-                            firstChildren.push(obj)                        
+                            firstChildren.push(obj)
                             temp.children = firstChildren
                         })
                     }
-                    _this.treeList.push(temp)                   
+                    _this.treeList.push(temp)
                 });
             },
             function(error){
@@ -200,10 +200,14 @@ export default {
                 console.log(error)
         })
         this.queryUnits()
-    },  
+    },
     methods:{
         queryUnits(){
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             RelatedUnitService.relatedUnitDataGrid(_this.params).then(
                 function(result){
                     _this.page.pageTotal = result.total;
@@ -213,7 +217,7 @@ export default {
                         var str = ''
                         for (let k in _this.unitInfo[index].sectionList){
                             if(_this.unitInfo[index].sectionList.length==1){
-                                _this.unitInfo[index].sectionIds=_this.unitInfo[index].sectionList[k].name                               
+                                _this.unitInfo[index].sectionIds=_this.unitInfo[index].sectionList[k].name
                             }else{
                                 str += _this.unitInfo[index].sectionList[k].name+','
                                 _this.unitInfo[index].sectionIds = str.substring(0,str.length-1)
@@ -227,6 +231,7 @@ export default {
         del(index){
             this.$Modal.confirm({
                 title: '相关单位',
+                width: '24vw',
                 content: '<p>是否删除这条相关单位信息</p>',
                 onOk: () => {
                     let _this = this
@@ -329,14 +334,14 @@ export default {
     }
     .sectionTitle{
         float: left;
-    } 
+    }
     .sectionName{
         margin-left: 77px;
     }
     .ivu-dropdown-item >>> .ivu-select-dropdown{
         margin-left: 14px;
     }
-    .word025{   
+    .word025{
         letter-spacing: 0.25em;
         margin-right: -0.25em;
     }

@@ -16,7 +16,7 @@
                 </Select>
             </Col>
             <Col span="2" offset="1">
-                <Button type="primary" icon="ios-search" @click="search" size="small">查询</Button>
+                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
             </Col>
         </Row>
         <Row class="content">
@@ -36,6 +36,7 @@
                     <div style="height: 90%;" class="controlBody">
                         <h2 class="videoName" v-if="!curVideo">请选择摄像机</h2>
                         <h2 v-if="curVideo" class="videoName">{{ curVideo.name }}</h2>
+                        <p v-if="curVideo">{{ curVideo.tunnelName + ' ' + curVideo.areaName + ' ' + curVideo.storeName }}</p>
                         <p v-if="curVideo" >{{ curVideo.description }}</p>
                         <div class="posContent" v-if="curVideo" >
                             <div class="positions" v-for="(pos,index) in perPositions" :key="index">
@@ -204,6 +205,9 @@ export default {
                         temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
+                        temp.tunnelName = camera.tunnelName;
+                        temp.storeName = camera.storeName;
+                        temp.areaName = camera.areaName;
                         _this.cameraList.push(temp);
                     });
                     _this.Log.info("videos:", _this.cameraList);
@@ -234,6 +238,9 @@ export default {
                             temp.positionSupport =
                                 camera.ptzOperationsSupported;
                             temp.description = camera.description;
+                            temp.tunnelName = camera.tunnelName;
+                            temp.storeName = camera.storeName;
+                            temp.areaName = camera.areaName;
                             _this.cameraList.push(temp);
                         });
                     }
@@ -558,35 +565,14 @@ export default {
 .query >>> .ivu-select-selection{
     height: 3.2vmin;
 }
-@media (min-width: 1920px){
-    .videos{
-        margin-top: 2vh;
-    }
-    .query >>> .ivu-select-placeholder{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0.64vmin;
-    }
-    .query >>> .ivu-select-selected-value{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0.64vmin;
-    }
+
+.videos{
+    margin-top: 2vh !important;
 }
-@media (max-width: 1920px){
-    .query >>> .ivu-select-placeholder{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0;
-    }
-    .query >>> .ivu-select-selected-value{
-        font-size: 1.28vmin;
-        height: 2.2vmin;
-        line-height: 2rem;
-        padding-top: 0;
-    }
+.query >>> .ivu-select-placeholder, .ivu-select-selected-value{
+    font-size: 1.28vmin !important;
+    height: 2.6vmin !important;
+    line-height: 3.2vmin !important;
 }
+
 </style>

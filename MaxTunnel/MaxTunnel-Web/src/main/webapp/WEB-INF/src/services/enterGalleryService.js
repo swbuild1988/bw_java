@@ -5,11 +5,7 @@ var EnterGalleryService = {
     getCompanys: function() {
         return new Promise((resolve, reject) => {
             axios.get("/companies").then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -22,11 +18,7 @@ var EnterGalleryService = {
     addEnterGalleryApplication: function(params) {
         return new Promise((resolve, reject) => {
             axios.post("/req-historys", params).then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -39,11 +31,7 @@ var EnterGalleryService = {
     getDepsByCompanyId: function(companyId) {
         return new Promise((resolve, reject) => {
             axios.get("/companies/" + companyId + "/departments").then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -60,27 +48,23 @@ var EnterGalleryService = {
             axios
                 .get(
                     "/companies/" +
-                    companyId +
-                    "/departments/" +
-                    depId +
-                    "/staffs"
+                        companyId +
+                        "/departments/" +
+                        depId +
+                        "/staffs"
                 )
                 .then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
                         reject(
                             msg +
-                            "地址：/companies/" +
-                            companyId +
-                            "/departments/" +
-                            depId +
-                            "/staffs"
+                                "地址：/companies/" +
+                                companyId +
+                                "/departments/" +
+                                depId +
+                                "/staffs"
                         );
                     }
                 });
@@ -90,11 +74,7 @@ var EnterGalleryService = {
     enterGalleryDatagrid: function(params) {
         return new Promise((resolve, reject) => {
             axios.post("req-historys/datagrid", params).then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -107,11 +87,7 @@ var EnterGalleryService = {
     deleteEnterGallery: function(id) {
         return new Promise((resolve, reject) => {
             axios.delete("/req-historys/" + id).then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -124,11 +100,7 @@ var EnterGalleryService = {
     getDetailsById: function(id) {
         return new Promise((resolve, reject) => {
             axios.get("/req-historys/" + id).then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -141,11 +113,7 @@ var EnterGalleryService = {
     putExitTime: function(params) {
         return new Promise((resolve, reject) => {
             axios.put("users/out/req-historys", params).then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -158,11 +126,7 @@ var EnterGalleryService = {
     getAboutUsData: function() {
         return new Promise((resolve, reject) => {
             axios.get("/version").then(res => {
-                let {
-                    code,
-                    data,
-                    msg
-                } = res.data;
+                let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -174,49 +138,44 @@ var EnterGalleryService = {
     // 获得每条管廊每个月的入廊次数
     getCountOfEnterEveryMonthAndTunnel: function() {
         // 地址
-        // let tunnels = [
-        //     "古城大街",
-        //     "实验路",
-        //     "纬三路",
-        //     "经二路",
-        //     "经三路",
-        //     "监控中心"
-        // ];
-        // let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
-        // let res = [];
-        // for (let i = 0; i < times.length; i++) {
-        //     let tmp = [];
-        //     for (let j = 0; j < tunnels.length; j++) {
-        //         tmp.push({
-        //             time: times[i],
-        //             tunnel: tunnels[j],
-        //             count: Math.floor(Math.random() * 20 + 5)
-        //         });
-        //     }
-        //     res.push(tmp);
-        // }
+        let tunnels = [
+            "古城大街",
+            "实验路",
+            "纬三路",
+            "经二路",
+            "经三路",
+            "监控中心"
+        ];
+        let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
+        let res = [];
+        for (let i = 0; i < times.length; i++) {
+            let tmp = [];
+            for (let j = 0; j < tunnels.length; j++) {
+                tmp.push({
+                    time: times[i],
+                    tunnel: tunnels[j],
+                    count: Math.floor(Math.random() * 20 + 5)
+                });
+            }
+            res.push(tmp);
+        }
         return new Promise((resolve, reject) => {
-            // resolve(res)
-            axios.get("tunnels/enter-count-everymonth")
-                .then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
-                    if (code == 200) {
-                        resolve(data);
-                    } else {
-                        reject(msg + "地址：tunnels/enter-count-everymonth");
-                    }
-                })
-                .catch(error => {
-                    reject(error.response.status + "  " + error.response.data)
-                })
+            resolve(res)
+            // axios
+            //     .get("tunnels/enter-count-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：tunnels/enter-count-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
         });
     }
 };
 
-export {
-    EnterGalleryService
-};
+export { EnterGalleryService };

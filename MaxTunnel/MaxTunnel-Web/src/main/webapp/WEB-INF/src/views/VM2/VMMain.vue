@@ -17,10 +17,7 @@
                 <inspect-module></inspect-module>
             </div>
             <div class="MapModule">
-                <map-module
-                    ref="map"
-                    @jumpTo="destroyViewer"
-                ></map-module>
+                <map-module></map-module>
             </div>
             <div class="MeasureModule">
                 <measure-module></measure-module>
@@ -29,7 +26,7 @@
                 <motion-module></motion-module>
             </div>
             <div class="ThreeDimensionsModule">
-                <three-dimensions-module ref="threeDimensional"></three-dimensions-module>
+                <three-dimensions-module ></three-dimensions-module>
             </div>
             <div class="VideoModule">
                 <video-module></video-module>
@@ -49,6 +46,7 @@ import MeasureModule from "./body/MeasureModule";
 import MotionModule from "./body/MotionModule";
 import ThreeDimensionsModule from "./body/ThreeDimensionsModule";
 import VideoModule from "./body/VideoModule";
+import Vue from 'vue'
 
 export default {
     data() {
@@ -73,10 +71,7 @@ export default {
     created() { },
     mounted() { },
     methods: {
-        destroyViewer() {
-            this.$refs.threeDimensional.destroyViewer()
-        }
-    }
+    },
 };
 </script>
 <style scoped>

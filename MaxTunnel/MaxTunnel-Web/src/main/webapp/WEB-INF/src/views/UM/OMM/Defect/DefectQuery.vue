@@ -9,14 +9,14 @@
                     <Option v-for="item in defectType" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="4">    
+            <Col span="4">
                 <span class="conditionTitle">缺陷状态：</span>
                 <Select v-model="conditions.status" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectStatus" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="4">    
+            <Col span="4">
                 <span class="conditionTitle">危险等级：</span>
                 <Select v-model="conditions.level" style="width: 60%">
                     <Option value=null key="0">所有</Option>
@@ -25,14 +25,14 @@
             </Col>
             <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
-                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
-                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
-                <Button type="primary" icon="ios-search" size="small" @click="queryCondition()">查询</Button>
+                <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
             </Col>
             </Row>
         </Row>
@@ -41,7 +41,7 @@
                 <Table :columns='columns' :data="defects"></Table>
             </Row>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
         placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
 </template>
@@ -49,7 +49,7 @@
 <script>
 import { TunnelService } from '../../../../services/tunnelService'
 import { DefectService } from '../../../../services/defectService'
-import { EnumsService } from '../../../../services/enumsService'    
+import { EnumsService } from '../../../../services/enumsService'
 import Enum from '../../../../../static/Enum.json'
 export default {
     name:"queryDefect",
@@ -60,7 +60,7 @@ export default {
                     type: 'index',
                     width: 60,
                     align: 'center'
-                },         
+                },
                 {
                     title:"所属区段",
                     align: 'center',
@@ -129,8 +129,8 @@ export default {
                                        params.row.level==0 ? 'green'
                                        :  params.row.level==1 ? 'blue'
                                        :  params.row.level==2 ? 'orange'
-                                       :  'red' 
-                                    
+                                       :  'red'
+
                                 }
                             },params.row.levelName
                         )
@@ -241,7 +241,7 @@ export default {
             type: this.conditions.type,
             level: this.conditions.level,
             status: this.conditions.status,
-            tunnelId: this.$route.params.id  
+            tunnelId: this.$route.params.id
         };
         return Object.assign({}, param);
         }
@@ -285,7 +285,11 @@ export default {
     },
     methods: {
         queryCondition(){
-            let _this = this 
+            let _this = this
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
             DefectService.defectsDatagrid(this.params).then(
                 (result)=>{
                     _this.defects=result.list
@@ -328,7 +332,7 @@ export default {
         queryDetails(index){
             this.goToModule(index,Enum.pageType.Read)
         }
-    }  
+    }
 }
 </script>
 <style scoped>

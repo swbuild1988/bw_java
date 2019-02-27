@@ -1,51 +1,31 @@
-
 <template>
-    <div class="content" id="simpleGISbox">
+    <div class="content" id="simpleGISbox" v-cancellation>
     </div>
 </template>
 
 <script>
-
-    const stateQuantity = '状态量输入';
-
     import Cesium from "Cesium";
     import Vue from 'vue'
     import {
         doSqlQuery,
         processFailed,
         getEntitySet,
-        getLayer,
-        setViewAngle
     } from "../../../scripts/commonFun.js";
-    import { flyManagerMinix } from './mixins/flyManager'
-    import { addBarnLabel } from "./mixins/addBarnLabel";
-    import { TunnelService } from '../../../services/tunnelService'
-    import  viewerBaseConfig  from "./mixins/viewerBase";
+    import {
+        addBarnLabel
+    } from "./mixins/addBarnLabel";
+    import {
+        TunnelService
+    } from '../../../services/tunnelService'
+    import viewerBaseConfig from "./mixins/viewerBase";
 
     export default {
-        mixins: [flyManagerMinix, addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox')],
+        mixins: [addBarnLabel, viewerBaseConfig('simpleGISbox', '$simpleViewer', 'simple3DBox', 3)],
         props: {
-            infoBox: {
-                type: Boolean,
-                default: true
-            },
-            navigation: {
-                type: Boolean,
-                default: true
-            },
             openVideoLinkage: {
                 type: Boolean,
                 default: false
             },
-            // undergroundMode: {
-            //     type: Object,
-            //     default: function () {
-            //         return {
-            //             enable: true,
-            //             distance: -8
-            //         };
-            //     }
-            // },
             refreshCameraPosition: {
                 type: Object,
                 default: function () {
@@ -55,36 +35,42 @@
                     };
                 }
             },
-            // cameraPosition: {
-            //     type: Object,
-            //     default: () => {
-            //         return {
-            //             longitude: 112.49360922053003,
-            //             latitude: 37.71252325043172,
-            //             height: -1.0311432831720453,
-            //             roll: 2.582822844487964e-12,
-            //             pitch: -0.30235173267000404,
-            //             heading: 1.716482618088178
-            //         };
-            //     }
-            // }
+            cameraPosition: {
+                type: Object,
+                default: () => {
+                    return {
+                        longitude: 112.49360922053003,
+                        latitude: 37.71252325043172,
+                        height: -1.0311432831720453,
+                        roll: 2.582822844487964e-12,
+                        pitch: -0.30235173267000404,
+                        heading: 1.716482618088178
+                    };
+                }
+            },
         },
         data() {
             return {
-                viewer: null,
-                scene: null,
                 handler: null,
                 prePosition: null,
-                personnelPositionTimerId: null,
             };
         },
         watch: {
             'prePosition': {
-                handler({ longitude, latitude, height }) {
+                handler({
+                    longitude,
+                    latitude,
+                    height
+                }) {
 
-                    TunnelService.getStorePosition({ longitude, latitude, height })
-                        .then( storePosition => {
-                            if ( !storePosition ) return;
+                    TunnelService.getStorePosition({
+                            longitude,
+                            latitude,
+                            height
+                        })
+                        .then(storePosition => {
+
+                            if (!storePosition) return;
 
                             this.$emit("showStorePosition", {
                                 areaName: storePosition.area.name,
@@ -96,81 +82,35 @@
                 deep: true
             }
         },
-        mounted() {
-            // this.createHtml()
-            //     .then( ()=> this.init() )
-            //     .catch( () => this.initUpdate( Vue.prototype.$simpleViewer,Vue.prototype.$simpleViewer.scene ) )
-
-        },
+        mounted() {},
         methods: {
-            // createHtml(){
-            //     let _this = this;
-            //
-            //     return new Promise(( resolve, reject ) => {
-            //
-            //         if( !Vue.prototype.$simpleViewer ){
-            //
-            //             $('#simpleGISbox')
-            //                 .prepend("<div id='simple3DBox' style='position: relative;height: 100%;width: 100%'></div>")
-            //                 .end();
-            //
-            //             Vue.prototype.$simpleViewer = new Cesium.Viewer("simple3DBox", {
-            //                 navigation: _this.navigation,
-            //                 infoBox: _this.infoBox
-            //             });
-            //
-            //             resolve();
-            //         }else {
-            //             _this.setGIS();
-            //
-            //             reject();
-            //         }
-            //     });
-            // },
             // 初始化
             init() {
                 let _this = this;
 
-                _this.viewer = Vue.prototype.$simpleViewer;
-                _this.scene = _this.viewer.scene;
+                _this.initUpdate(_this.viewer, _this.scene);
 
-                // if ( _this.undergroundMode.enable ) {
-                //     // 设置是否开启地下场景
-                //     _this.scene.undergroundMode = _this.undergroundMode.enable;
-                //     // 设置相机最小缩放距离,距离地表-8米
-                //     _this.scene.screenSpaceCameraController.minimumZoomDistance =
-                //         _this.undergroundMode.distance;
-                //     var widget = _this.viewer.cesiumWidget;
-                // }
-                //设置鼠标左键单击回调事件
-                _this.viewer.selectedEntityChanged.addEventListener( _this.operationEntity );
-
-                _this.initUpdate( _this.viewer,_this.scene );
-
-                // getLayer(_this.scene,_this.cameraPosition,this.SuperMapConfig.BIM_SCP);
-                // _this.flyManager(2);
-
-                //滚轮滑动，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.WHEEL);
-                //鼠标左键松开，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.LEFT_UP)
+                // //滚轮滑动，获得当前窗口的经纬度，偏移角
+                // _this.handler.setInputAction(e => {
+                //     this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
+                // }, Cesium.ScreenSpaceEventType.WHEEL);
+                // //鼠标左键松开，获得当前窗口的经纬度，偏移角
+                // _this.handler.setInputAction(e => {
+                //     this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
+                // }, Cesium.ScreenSpaceEventType.LEFT_UP)
 
             },
-            initUpdate( viewer,scene ){
+            initUpdate(viewer, scene) {
                 let _this = this;
 
-                if ( _this.refreshCameraPosition.enable ) {
+                if (_this.refreshCameraPosition.enable) {
                     //开启相机定位
                     this.cameraPositionRefresh();
                 }
 
-                _this.handler = new Cesium.ScreenSpaceEventHandler(
-                    scene.canvas
-                );
+                // _this.handler = new Cesium.ScreenSpaceEventHandler(
+                //     scene.canvas
+                // );
             },
             // 开始相机位置刷新
             startCameraPositionRefresh() {
@@ -183,7 +123,7 @@
             },
             // 相机位置刷新
             cameraPositionRefresh() {
-                var _this = this;
+                let _this = this;
 
                 setTimeout(() => {
                     try {
@@ -229,7 +169,7 @@
                             _this.$emit("refreshCameraPosition", cameraPosition);
                         }
                     } catch (error) {
-                        console.log(error);
+                        console.warn('error' + error);
                     }
 
                     _this.cameraPositionRefresh();
@@ -251,7 +191,9 @@
             },
             //展示巡检点
             showCheckPointEntity() {
-                let { viewer } = this;
+                let {
+                    viewer
+                } = this;
                 getEntitySet.call(this, {
                     viewer: viewer,
                     url: "actived-locators",
@@ -259,79 +201,16 @@
                     typeMode: "checkPointType",
                     messageType: 'checkPoint'
                 })
-            },
-            //操作实体集
-            operationEntity(feater) {
-                let _this = this;
-                let { viewer } = this;
-
-                if (feater != undefined) {
-                    if (feater._dataTypeName == stateQuantity) {
-
-                        let [updateLabel] = viewer.entities._entities._array.filter(label => label._id == feater._id); //获取当前更新的实体
-                        var image = !feater.cv ? 'open' : 'close';
-
-                        updateLabel.billboard.image = require('../../../assets/VM/' + image + '.png'); //修改告警图片
-                        updateLabel._cv = !feater.cv; //修改cv值
-
-                        return;
-                    }
-                    if (feater._messageType == 'videos' && _this.openVideoLinkage) {
-
-                        _this.$store.commit('closeVideoLoop');   //关闭视屏监控轮播模式
-                        _this.$emit('replaceVideoUrl', feater._moId);
-                    }
-                }
-            },
-            flyToMyLocation(flyParam) {
-                if (typeof flyParam !== 'object') return;
-
-                let { scene } = this;
-                let { longitude, latitude, height, roll, pitch, heading } = flyParam.position;
-                let duration, maximumHeight;
-
-                duration = flyParam.duration || 5;
-                maximumHeight = flyParam.maximumHeight || 6;
-
-                scene.camera.flyTo({
-                    destination: new Cesium.Cartesian3.fromDegrees(parseFloat(longitude), parseFloat(latitude), parseFloat(height)),
-                    orientation: {
-                        heading: parseFloat(1.716482618088178),
-                        pitch: parseFloat(-0.30235173267000404),
-                        roll: parseFloat(2.582822844487964e-12)
-                    },
-                    duration: duration,// 设置飞行持续时间，默认会根据距离来计算
-                    maximumHeight: maximumHeight,// 相机最大飞行高度
-                })
-            },
-            setGIS() {
-                let gis = document.getElementById("simple3DBox");
-                console.log('2gis',gis)
-                if( !gis ) return;
-
-                gis.style.display = "block";
-
-                document.body.removeChild(gis);
-                document.getElementById("simpleGISbox").appendChild(gis);
-                // 加载视角
-                setViewAngle( Vue.prototype.$simpleViewer.scene, this.cameraPosition );
-            },
-            destory3D() {
-                let gis = document.getElementById("simple3DBox");
-                if( !gis ) return;
-
-                gis.style.display = "none";
-
-                document.getElementById("simpleGISbox").removeChild(gis);
-                document.body.appendChild(gis);
-
             }
         },
         beforeDestroy() {
-            let { handler, refreshCameraPosition, timer } = this;
+            let {
+                handler,
+                refreshCameraPosition,
+                timer
+            } = this;
 
             refreshCameraPosition.enable = false;
-            clearInterval(this.personnelPositionTimerId);
             clearInterval(timer.timeoutId);
             clearInterval(timer.intervalId);
 
@@ -340,18 +219,18 @@
             }
 
             this.stopCameraPositionRefresh();
-            this.destory3D();
+            // this.destory3D();
         },
     };
-
 </script>
 
 <style scoped>
-    .content{
+    .content {
         position: relative;
         width: 100%;
         height: 100%;
     }
+
     .cesium-viewer-bottom {
         display: none;
     }

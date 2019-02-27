@@ -7,8 +7,6 @@ import {
 } from "../../../scripts/commonFun";
 import eventBus from "../../../assets/Bus";
 
-let { VMEntityConfig } = require("../../../../static/VM/js/VMWebConfig");
-
 export default {
   data() {
     return {
@@ -39,7 +37,7 @@ export default {
   computed: {
     entityHeight() {
       return Vue.prototype.VMConfig.entityHeight;
-    }
+    },
   },
   mounted() {
     if (this.openPlanPosition.openPosition) {
@@ -92,7 +90,7 @@ export default {
       let day = Vue.prototype.VMConfig.searchEventsDay;
 
       getJson(`events/day/${day}`).then(data => {
-        console.log("data", data);
+
         data.forEach(event => {
           _this.addEventEntitys(event); //添加事件实体
           Vue.prototype.IM.addInformation("events", event);
@@ -154,9 +152,10 @@ export default {
         this.addParticleSystem({ entity, viewer });
     },
     addIdentifierViewer() {
-      let { entityParam } = VMEntityConfig;
+      let { entityParam } = this.VMEntityConfig;
 
-      entityParam.forEach(entity => {
+        entityParam.forEach(entity => {
+
         let { entityBaseParameters, entityExtendParameters } = entity;
 
         let BaseParameters =
@@ -187,6 +186,7 @@ export default {
       });
     },
     addViewerType({ position, ellipse, billboard, label, point, polyline }) {
+
       let viewerPosition =
         position !== undefined
           ? {
@@ -300,20 +300,13 @@ export default {
           return this.getCesiumColor(color)
       },
       getPosition(position){
-          if( Object.keys( position ).length === 4 ){
-              return [
-                  parseFloat(position.startLon), parseFloat(position.startLat), 10,
-                  parseFloat(position.endLon), parseFloat(position.endLat), 10
-              ];
-          }else {
-              return [
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10,
-                  parseFloat(position.northEasternLon), parseFloat(position.northEasternLat), 10,
-                  parseFloat(position.southEasternLon), parseFloat(position.southEasternLat), 10,
-                  parseFloat(position.southWestLon), parseFloat(position.southWestLat), 10,
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10
-              ];
+          let positionArray = [];
+
+          for(let i = 0; i< position.length ;i++){
+              positionArray.push( parseFloat(position[i].Lon), parseFloat(position[i].Lat), 10, )
           }
+
+          return positionArray;
 
       },
     addParticleSystem(minxisParticleSystem) {

@@ -32,23 +32,20 @@ export default {
                 temp.url="/UM/overhaul/query/"+a.id;
                 _this.overhaul.leftTree.push(temp);
             })
+            if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/overhaul") < 0) {
+                  _this.goToMoudle({path: _this.overhaul.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
         },
         (error)=>{
             _this.Log.info(error)
     })
-    // this.axios.get("/tunnels").then(result => {
-    //   let {code, data} = result.data;
-    //   var _this=this;
-    //   if (code == 200) {
-    //     data.forEach(a=>{
-    //       let temp={};
-    //       temp.id=a.id;
-    //       temp.name=a.name;
-    //       temp.url="/UM/overhaul/query/"+a.id;
-    //       _this.overhaul.leftTree.push(temp);
-    //     })
-    //   }
-    // });
   },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
+  }
 };
 </script>

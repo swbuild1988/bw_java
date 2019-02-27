@@ -37,30 +37,20 @@ export default {
               element.name = '制定',
               element.url= '/UM/enterGalleryApplication/add'
               this.enterGalleryApplication.leftTree.push(element)
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/enterGalleryApplication") < 0) {
+                  _this.goToMoudle({path: _this.enterGalleryApplication.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               console.log(error)
       })
-    
-
-    // this.axios.get("/tunnels").then(result => {
-    //   let {code, data} = result.data;
-    //   var _this=this;
-    //   if (code == 200) {
-    //     data.forEach(a=>{
-    //       let temp={};
-    //       temp.id=a.id;
-    //       temp.name=a.name;
-    //       temp.url="/UM/enterGalleryApplication/query/"+a.id;
-    //       _this.enterGalleryApplication.leftTree.push(temp);
-    //     })
-    //   }
-    // let element = {};
-    //     element.id = data.length;
-    //     element.name = '制定',
-    //     element.url= '/UM/enterGalleryApplication/add'
-    //     this.enterGalleryApplication.leftTree.push(element)
-    // });
   },
+  methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
+    }
 };
 </script>

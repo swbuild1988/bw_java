@@ -3,145 +3,181 @@
         <div class="commonTitle">
             <module-title :title="title"></module-title>
         </div>
-        <div class="tunnelMessage">
-            <grid v-bind="tunnelMessage"></grid>
-        </div>
-        <div class="lineMessage">
-            <grid v-bind="lineMessage"></grid>
-        </div>
-        <div class="runMessage">
-            <!-- <p>
-                管廊已运行<span class="total">{{runMessage.total}}</span>天
-            </p> -->
-            <p>
-                管廊安全运营<span class="safe">{{runMessage.safe}}</span>天
-            </p>
+
+        <Row style="padding: 0.1vh;">
+            <Col span="8" offset="1">
+            <div>
+                <hollow-pie-chart v-bind="pieChart" style="height: 12vh;"></hollow-pie-chart>
+            </div>
+            </Col>
+            <Col span="15">
+            <Row>
+                <Col span="20" offset="2">
+                <div class="safeRunText">
+                    <span>管廊安全运营</span>
+                    <span class="safe">{{runMessage.safe}}</span>天
+                </div>
+                </Col>
+                <Col span="7" offset="1" :key="index" v-for="(item,index) in statusList">
+                <div class="statusText">
+                    <span style>{{item.name}}</span>
+                    <p style="margin-left: 5px;" :class="index>0 ? (index>1?'style_3':'style_2'): 'style_1'  ">{{item.value}}</p>
+                </div>
+                </Col>
+            </Row>
+            </Col>
+        </Row>
+
+        <div>
+            <progress-bar-chart v-bind="barChart" style="height: 12vh;"></progress-bar-chart>
         </div>
     </div>
 </template>
 
 <script>
-import Grid from "../../../components/VM2/Grid1";
-import ModuleTitle from "../../../components/VM2/ModuleTitle";
-import { TunnelService } from '../../../services/tunnelService';
+    import Grid from "../../../components/VM2/Grid1";
+    import ModuleTitle from "../../../components/VM2/ModuleTitle";
+    import {
+        TunnelService
+    } from "../../../services/tunnelService";
+    import HollowPieChart from "../../../components/Common/Chart/HollowPieChart.vue";
+    import ProgressBarChart from "../../../components/Common/chart/ProgressBarChart.vue";
 
-export default {
-    data() {
-        return {
-            title: "",
-            tunnelMessage: {
-                title: "管廊信息",
-                subTitle: ['状态', '数量', '占比'],
-                data: []
-            },
-            lineMessage: {
-                title: "管线信息",
-                subTitle: ['类型', '长度', '利用率'],
-                data: []
-            },
-            runMessage: {
-                total: 50,
-                safe: 20
-            },
-            refresh: {
-                time: 300000,
-                intervalId: null
+    export default {
+        data() {
+            return {
+                title: "",
+                statusList: [],
+                pieChart: {
+                    id: "hollow-pie-chart",
+                    requestUrl: "",
+                    unit: "条",
+                    Server: {
+                        status: true,
+                        serverName: "TunnelService.getVmTunnelsMessage"
+                    },
+                    parameters: {
+                        option: {
+                            title: {
+                                text: "管廊总数"
+                            }
+                        }
+                    }
+                },
+                barChart: {
+                    id: "progress-bar-chart",
+                    requestUrl: "",
+                    unit: "km",
+                    Server: {
+                        status: true,
+                        serverName: "TunnelService.getVmLineMessage"
+                    },
+                    parameters: {
+                        option: {}
+                    }
+                },
+                runMessage: {
+                    total: 50,
+                    safe: 20
+                },
+                refresh: {
+                    time: 300000,
+                    intervalId: null
+                }
+            };
+        },
+        components: {
+            Grid,
+            ModuleTitle,
+            HollowPieChart,
+            ProgressBarChart
+        },
+        mounted() {
+            this.init();
+            let _this = this;
+            this.refresh.intervalId = setInterval(() => {
+                _this.init();
+            }, this.refresh.time);
+        },
+        beforeDestory() {
+            clearInterval(this.refresh.intervalId);
+        },
+        methods: {
+            init() {
+                this.title = "基本信息";
+                TunnelService.getVmTunnelsMessage().then(
+                    result => {
+                        this.statusList = [];
+                        let tempData = result.slice(0, 3);
+                        tempData.forEach(tunnel => {
+                            let temp = [];
+                            temp.name = tunnel.name;
+                            temp.value =
+                                parseInt(tunnel.percent.replace("%", "")).toFixed(0) + "%";
+                            this.statusList.push(temp);
+                        });
+                    },
+                    error => {
+                        this.Log.info(error);
+                    }
+                );
+                TunnelService.getVmRunMessage().then(
+                    result => {
+                        this.runMessage.total = result.total;
+                        this.runMessage.safe = result.safe;
+                    },
+                    error => {
+                        this.Log.info(error);
+                    }
+                );
             }
-        };
-    },
-    components: {
-        Grid,
-        ModuleTitle
-    },
-    mounted() {
-        this.init();
-        let _this = this
-        this.refresh.intervalId = setInterval(() => {
-            _this.init()
-        }, this.refresh.time)
-    },
-    beforeDestory() {
-        clearInterval(this.refresh.intervalId)
-    },
-    methods: {
-        init() {
-            this.title = "基本信息";
-            TunnelService.getVmTunnelsMessage().then(
-                result => {
-                    this.tunnelMessage.data = result.slice(0, 3)
-                    this.tunnelMessage.data.forEach(tunnel => {
-                        tunnel.percent = parseInt(tunnel.percent.replace('%', '')).toFixed(0) + '%'
-
-                    })
-                },
-                error => {
-                    this.Log.info(error)
-                })
-            TunnelService.getVmLineMessage().then(
-                result => {
-                    this.lineMessage.data = result.slice(0, 3)
-                    this.lineMessage.data.forEach(line => {
-                        line.value = line.value.toFixed(1)
-                        line.percent = parseInt(line.percent.replace('%', '')).toFixed(0) + '%'
-                    })
-                },
-                error => {
-                    this.Log.info(error)
-                })
-            TunnelService.getVmRunMessage().then(
-                result => {
-                    this.runMessage.total = result.total;
-                    this.runMessage.safe = result.safe;
-                },
-                error => {
-                    this.Log.info(error)
-                })
         }
-    }
-};
+    };
 </script>
 
 <style scoped>
-.main {
-    width: 100%;
-    height: 100%;
-    background: url("../../../assets/VM/module_bg.png") no-repeat;
-    background-size: 100% 100%;
-}
-.main .commonTitle {
-    width: 100%;
-    height: 15%;
-}
-.main .tunnelMessage {
-    float: left;
-    width: 50%;
-    height: 64%;
-}
-.main .lineMessage {
-    float: left;
-    width: 50%;
-    height: 64%;
-}
-.main .runMessage {
-    float: left;
-    width: 100%;
-    height: 20%;
-}
-.runMessage > p {
-    margin-left: 2vw;
-    font-size: 2.4vmin;
-    color: #fff;
-    font-family: UnidreamLED;
-    margin-top: -3.2%;
-}
-.total {
-    font-size: 2.4vmin;
-    color: #fa0;
-    margin: 0 0.8vmin;
-}
-.safe {
-    font-size: 4.4vmin;
-    color: #fa0;
-    margin: 0 0.8vmin;
-}
+    .main {
+        width: 100%;
+        height: 100%;
+        background: url("../../../assets/VM/module_bg.png") no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .main .commonTitle {
+        width: 100%;
+        height: 15%;
+    }
+
+    .safe {
+        font-family: UnidreamLED;
+        font-size: 3.4vmin;
+        color: #2af0ff;
+        margin: 0 0.5vmin;
+    }
+
+    .safeRunText {
+        color: #fff;
+        font-size: 1.66vmin;
+        line-height: 4vmin;
+        margin-left: 1vw;
+    }
+
+    .statusText {
+        color: #fff;
+        font-size: 1.66vmin;
+        line-height: 3vmin;
+        margin-left: 1vw;
+    }
+
+    .style_1 {
+        color: #2af0ff;
+    }
+
+    .style_2 {
+        color: #ffff00;
+    }
+
+    .style_3 {
+        color: #3397ff;
+    }
 </style>

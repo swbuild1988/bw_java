@@ -46,6 +46,11 @@ export default {
               element.name = '制定',
               element.url= '/UM/patrol/add'
               this.patrolScheme.leftTree.push(element)
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/patrol") < 0) {
+                  _this.goToMoudle({path: _this.patrolScheme.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               _this.Log.info(error)
@@ -54,5 +59,10 @@ export default {
   beforeRouteUpdate (to, from, next) {
     next()
   },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
+  }
 };
 </script>

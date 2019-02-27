@@ -1,27 +1,27 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 // 应用初始状态
 const VMstate = {
   state: {
-    autoplay: true, //视屏监控浏览模式，默认轮播
-    entity: null, //缓存告警实体
+    autoplay: true, // 视屏监控浏览模式，默认轮播
+    entity: null, // 缓存告警实体
     alarm: {
       alarmEntity: null,
       alarmObject: [],
     },
-    planLinkageVideos: { //预案视屏联动集合
+    planLinkageVideos: { // 预案视屏联动集合
       videoIds: null,
       processInstanceId: null,
     },
   },
   mutations: {
     // 视频轮询
-    closeVideoLoop: state => state.autoplay = false,
-    startVideoLoop: state => state.autoplay = true,
-    //修改告警
+    closeVideoLoop: (state) => state.autoplay = false,
+    startVideoLoop: (state) => state.autoplay = true,
+    // 修改告警
     changeAlarm: (state, alarm) => {
       const stateAlarm = state.alarm;
 
@@ -30,24 +30,24 @@ const VMstate = {
 
       stateAlarm.alarmEntity = alarm.entity;
     },
-    //预案视屏联动
+    // 预案视屏联动
     addPlanLinkageVideos: ({
-                             planLinkageVideos
-                           }, {
-                             id,
-                             processInstanceId
-                           }) => {
+      planLinkageVideos,
+    }, {
+      id,
+      processInstanceId,
+    }) => {
       planLinkageVideos.videoIds = id;
       planLinkageVideos.processInstanceId = processInstanceId;
     },
     removePlanLinkageVideos: ({
-                                planLinkageVideos
-                              }) => {
+      planLinkageVideos,
+    }) => {
       planLinkageVideos.videoIds = null;
       planLinkageVideos.processInstanceId = null;
-    }
-  }
-}
+    },
+  },
+};
 
 const UMstate = {
   // 1. state
@@ -56,15 +56,15 @@ const UMstate = {
     communication: {
       isLogin: false,
       token: null,
-      intervalId: null
-    }
+      intervalId: null,
+    },
   },
   // 2. getters
   getters: {
     // 参数列表state指的是state数据
     getPlanData(state) {
       return state.planData;
-    }
+    },
   },
   // 3. actions
   // 通常跟api接口打交道
@@ -73,10 +73,13 @@ const UMstate = {
     // state指的是state数据
     // commit调用mutations的方法
     // plan就是调用此方法时要传的参数
-    setPlanData({commit, state}, plan) {
+    setPlanData({
+      commit,
+      state,
+    }, plan) {
       // 跟后台打交道
       // 调用mutaions里面的方法
-      commit("setPlanData", plan);
+      commit('setPlanData', plan);
     },
   },
   // 4. mutations
@@ -88,27 +91,27 @@ const UMstate = {
     },
 
     comLogin(state, data) {
-      state.communication.isLogin = data.isLogin
-      state.communication.token = data.token
+      state.communication.isLogin = data.isLogin;
+      state.communication.token = data.token;
     },
     comLogout(state) {
-      state.communication.isLogin = false
-      state.communication.token = null
+      state.communication.isLogin = false;
+      state.communication.token = null;
     },
     startInterval(state, id) {
-      state.communication.intervalId = id
+      state.communication.intervalId = id;
     },
     stopInterval(state) {
-      state.communication.intervalId = null
-    }
-  }
-}
+      state.communication.intervalId = null;
+    },
+  },
+};
 
 // 创建 store 实例
 export default new Vuex.Store({
   modules: {
     VMstate,
-    UMstate
-  }
+    UMstate,
+  },
 
-})
+});

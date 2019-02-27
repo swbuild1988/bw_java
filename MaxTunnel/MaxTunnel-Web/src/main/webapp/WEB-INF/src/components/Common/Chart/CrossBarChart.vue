@@ -41,7 +41,7 @@ export default {
     },
     mounted() {
         this.init()
-        this.drawBar()
+        // this.drawBar()
     },
     methods: {
         init() {

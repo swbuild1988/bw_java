@@ -1,16 +1,26 @@
 <template>
-    <div class="moveControlPanel">
+    <div :class="warpClasses">
         <div class="ControlPanelTitleCommon  ControlPanelTitleDiff">{{ Title }}</div>  
         <div class="ControlPanelContent">
-            <Button ghost class="flyMessageBtn" @click="startFly">{{ flyTextContent.startFly }}</Button>
-            <Button ghost class="flyMessageBtn" @click="endFly">{{ flyTextContent.endFly }}</Button>
-            <!-- <Button ghost class="flyMessageBtn">{{ flyTextContent.endFly }}</Button> -->
+            <span class="vm-btn" @click="startFly">{{ flyTextContent.startFly }}</span>
+            <span class="vm-btn" @click="endFly">{{ flyTextContent.endFly }}</span>
         </div>
     </div>
 </template>
 
 <script>
     export default {
+        props:{
+            prefixCls:{
+                type: String,
+                default: 'LLPanel'
+            },
+        },
+        computed:{
+            warpClasses(){
+                return `${ this.prefixCls }  moveControlPanel`
+            }
+        },
         data(){
             return {
                 Title:'控制面板',
@@ -22,6 +32,7 @@
             }
         },
         mounted(){
+
         },
         methods:{
             startFly(){
@@ -41,7 +52,7 @@
     .moveControlPanel{
         position: absolute;
         top: 15.5%;
-        left: 2%;
+        /*left: 2%;*/
         z-index: 1000;
         color: white;
         text-align: center;
@@ -60,15 +71,21 @@
             width: 100%;
             height: 50%;
         }
-    .ControlPanelContent >>> .flyMessageBtn {
-        /*width: 40%;*/
-        /*height: 50%;*/
-        width: 33%;
+    .vm-btn {
+        width: 36%;
         height: 75%;
-        background: #031324;
+        border-radius: 36px;
         color: #fff;
-        padding: 0;
-        border-color: rgba(0, 107, 149, 1);
+        background-color: #031324;
+        padding: .3rem 0 0 0;
+        font-size: .8rem;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+    }
+    .vm-btn:hover {
+        color: #fff5e6;
+
     }
     /* 小屏幕（显示器，小于等于 1920px） */
     @media (max-width: 1920px) {

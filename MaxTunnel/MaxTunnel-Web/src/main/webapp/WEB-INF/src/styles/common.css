@@ -83,19 +83,6 @@ td.ivu-table-expanded-cell {
     background-color: #f9f7f7;
 }
 
-
-/*给背景色添加白色蒙版*/
-
-.backImgStyle {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.5);
-    min-height: 100%;
-}
-
 html,
 body {
     width: 100%;
@@ -117,24 +104,23 @@ body {
     span.ivu-date-picker-cells-cell{
         width: 2.6vmin;
         height: 2.6vmin;
-        margin: 0.125vmin;
+        margin: 0.05vmin;
     }
     /* 时间选择器 */
     .ivu-date-picker-cells span{
-        width: 2.7vmin !important;
-        height: 2.6vmin !important;
-        /* line-height: 1.6vmin;
-        margin: 0.125vmin; */
+        width: 2.8vmin !important;
+        height: 2.8vmin !important;
     }
     .ivu-date-picker-cells span em {
-        width: 1.7vmin !important;
-        height: 1.6vmin !important;
-        line-height: 1.6vmin !important;
-        margin: 0.125vmin !important;
+        width: 2.4vmin !important;
+        height: 2.4vmin !important;
+        line-height: 2.4vmin !important;
+        margin: 0.2vmin !important;
+        border-radius: 0.3vmin !important;
     }
     .ivu-date-picker-header{
-        height: 2.5vmin !important;
-        line-height: 2.5vmin !important;
+        height: 3.2vmin !important;
+        line-height: 3.2vmin !important;
     }
     .ivu-picker-panel-icon-btn {
         width: 2vmin;
@@ -145,9 +131,41 @@ body {
     .ivu-picker-panel-icon-btn i{
         font-size: 1.4vmin;
     }
+    /* time */
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds{
+        min-width: 21.6vmin;
+    }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list{
+        width: 7.2vmin;
+    }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-list ul{
+        padding: 0 0 19.2vmin 0;
+    }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list ul li{
+        padding: 0 0 0 2.8vmin;
+    }
+    .ivu-time-picker-cells-list ul li {
+        height: 2.4vmin;
+        line-height: 2.4vmin;
+        padding: 0 0 0 1.6vmin;
+        font-size: 1.2vmin;
+    }
+    /* 月份 */
+    .ivu-date-picker-cells-month span{
+        width: 4vmin;
+        height: 2.8vmin;
+        line-height: 2.8vmin;
+        margin: 1vmin 1.2vmin;
+        border-radius: 0.3vmin;
+    }
+    .ivu-date-picker-cells-month span em, .ivu-date-picker-cells-year span em {
+        width: 4vmin !important;
+        height: 2.8vmin !important;
+        line-height: 2.8vmin !important;
+    }
     /* 查询按钮 */
     .ivu-btn,.ivu-btn-small {
-        padding: 0.6vmin 1.5vmin;
+        padding: 0.3vmin 1.2vmin;
         border-radius: 0.5vmin;
     }
     .ivu-btn-large{
@@ -164,6 +182,7 @@ body {
     /*modal*/
     .ivu-modal{
         width: 30vw;
+        top: 11vh;
     }
     .ivu-modal-header{
         border-bottom: 0.1vmin solid #e9eaec;
@@ -234,8 +253,33 @@ body {
         font-size: 1.2vmin;
         padding-left: 0.8vmin;
         padding-right: 2.4vmin;
+        width: 8vmin;
     }
     .ivu-page-next a, .ivu-page-prev a,.ivu-page-options-elevator input {
         font-size: 1.4vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        padding: 1vmin 2vmin !important;
+    }
+    .ivu-form-item-required .ivu-form-item-label:before{
+        font-size: 1.2vmin;
+    }
+    /* checkbox */
+    .ivu-checkbox-inner {
+        width: 1.4vmin;
+        height: 1.4vmin;
+        border: 0.1vmin solid #dddee1;
+    }
+    .ivu-checkbox-inner:after {
+        width: 0.4vmin;
+        height: 0.8vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
+    }
+    .ivu-checkbox-checked .ivu-checkbox-inner:after {
+        width: 0.4vmin;
+        height: 0.8vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
     }
 }

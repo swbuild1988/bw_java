@@ -30,6 +30,13 @@ export default {
         treeNodeJumpUrl:"/UM/tunnelDocuments/list",
     };
   },
+  created(){
+      if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/tunnelDocuments") < 0) {
+              this.goToMoudle({path: this.tunnelDocuments.leftTree[0].url});
+              sessionStorage.setItem('selectedName','')
+          }
+            sessionStorage.setItem("refreshAddress", "");
+  },
   watch: {
     '$route': function(){
       if(this.$route.path == '/UM/tunnelDocuments/list'){
@@ -38,6 +45,11 @@ export default {
         this.tunnelDocuments.selected = [1,-1]
       }
     }
+  },
+  methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
   }
 };
 </script>

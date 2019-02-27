@@ -35,6 +35,10 @@
       fontSizeNum: {
         default: '5%',
         type: String
+      },
+      gridTop: {
+        default: '10%',
+        type: String
       }
     },
     data() {
@@ -63,19 +67,12 @@
               fontSize: 16,
             },
           },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true,
-            fontSize: 16,
-          },
           xAxis: [{
             type: 'category',
             axisLabel: {
               fontSize: 16,
             },
-            data: ['新虹桥', '中山公园', '虹桥', '镇宁路', '天山古北']
+            data: []
           }],
           yAxis: [{
             type: 'value',
@@ -86,19 +83,7 @@
               fontSize: 14,    //单位：件的字号大小
             },
           }],
-          series: [{
-            name: '包租费',
-            type: 'bar',
-            data: [20, 12, 31, 34, 31]
-          }, {
-            name: '装修费',
-            type: 'bar',
-            data: [10, 20, 5, 9, 3]
-          }, {
-            name: '保洁费',
-            type: 'bar',
-            data: [1, 1, 2, 3, 1]
-          }]
+          series: []
         }
       }
     },
@@ -135,8 +120,10 @@
             }
           },
           legend: {
-            // align: 'right',
-            right: 1,
+            align: 'right',
+            // right: 1,
+            // left: 30,
+            // x: 'right',
             top: _this.getFontSize(this.fontSizeNum),
             textStyle: {
               fontSize: this.getFontSize('5%'),
@@ -146,6 +133,7 @@
           grid: {
             left: '3%',
             right: '4%',
+            top: this.gridTop,
             bottom: '3%',
             containLabel: true,
             fontSize: this.getFontSize('5%'),
@@ -276,7 +264,6 @@
                   return Math.round(height * tmp);
               }
           }
-
           return 0;
       }
     },

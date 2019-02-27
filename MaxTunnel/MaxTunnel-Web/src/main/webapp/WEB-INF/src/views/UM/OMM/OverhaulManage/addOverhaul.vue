@@ -35,6 +35,9 @@
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitOrder()" :disabled="isDisable">提交</Button>
             </FormItem>
+            <FormItem v-show="this.pageType==1" style="text-align: center;margin-left: -140px;">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
+            </FormItem>
         </Form>    
     </div>
 </template>

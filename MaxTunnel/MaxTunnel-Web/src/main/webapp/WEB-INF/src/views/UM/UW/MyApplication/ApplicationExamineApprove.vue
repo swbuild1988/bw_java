@@ -39,13 +39,16 @@
           <FormItem label="出廊时间："  prop="exitTime" v-show="this.addEnterGalleryApplication.result=='agree'">
             <DatePicker type="datetime" placeholder="请选择出廊时间" v-model="addEnterGalleryApplication.exitTime" style="width: 560px" :readonly="this.$route.params.isFinished==true"></DatePicker>
           </FormItem>
-          <FormItem style="text-align: center" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.result=='agree'">
+          <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.result=='agree'">
+            <Button type="gost" style="margin-right: 8px;" @click="goBack()">返回</Button>
             <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
-            <Button type="default">取消</Button>
           </FormItem>
           <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished==null">
+            <Button type="gost" style="margin-right: 8px;" @click="goBack()">返回</Button>
             <Button type="primary"  @click="submitExitTime('addEnterGalleryApplication')">提交</Button>
-            <Button type="default">取消</Button>
+          </FormItem>
+          <FormItem v-show="this.$route.params.isFinished==true" style="text-align: center;margin-left: -140px">
+            <Button type="gost" @click="goBack()">返回</Button>
           </FormItem>   
         </Form>
     </div>  
@@ -242,6 +245,9 @@ export default {
       }else{
         this.agree=2
       }
+    },
+    goBack(){
+      this.$router.back(-1);
     }
   }
 };

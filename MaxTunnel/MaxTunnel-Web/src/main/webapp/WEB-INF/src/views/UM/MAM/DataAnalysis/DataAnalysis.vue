@@ -42,6 +42,13 @@
     components: {
       ModulePage
     },
+    created(){
+        if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/DataAnalysis") < 0) {
+            this.goToMoudle({path: this.curModule.leftTree[0].url});
+            sessionStorage.setItem('selectedName','')
+        }
+          sessionStorage.setItem("refreshAddress", "");
+    },
     methods: {
       goToMoudle(path) {
         this.$router.push(path);

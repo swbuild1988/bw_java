@@ -24,5 +24,17 @@ export default {
         treeNodeJumpUrl:"/UM/myApplication/query",
     };
   },
+  created(){
+    if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/myApplication") < 0) {
+          this.goToMoudle({path: this.myApplication.leftTree[0].url});
+          sessionStorage.setItem('selectedName','')
+      }
+        sessionStorage.setItem("refreshAddress", "");
+  },
+  methods: {
+    goToMoudle(path) {
+      this.$router.push(path);
+    }
+  }
 };
 </script>

@@ -16,22 +16,9 @@
         >{{item.name}}</Radio>
       </RadioGroup>
     </div>
-    <div style="margin: 1vh;height:3vh;overflow-y: auto">
-      <RadioGroup
-        v-model="queryCondition.storeId"
-        type="button"
-        @on-change="changeStore"
-        size="large"
-      >
-        <Radio
-          v-for="(item,key) in storeList"
-          :key="key"
-          :label="item.id"
-          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-          :class="{select_radio:queryCondition.storeId==item.id}"
-        >{{item.name}}</Radio>
-      </RadioGroup>
-    </div>
+        <div style="margin: 1vh;">
+            <check-select v-bind="storeProp"></check-select>
+        </div>
     <Row>
       <Col span="18" style="padding-left: 10px;padding-right: 10px">
         <div class="gis" :style="{height:curHeight+'px'}">
@@ -106,6 +93,7 @@
   import { MonitorDataService } from '../../../../services/monitorDataService'
   import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
+ import checkSelect from "../../../../components/Common/CheckSelect.vue";
 
   export default {
     name:"list-tunnel-safety",
@@ -114,6 +102,11 @@
         curHeight: 450,
         iconSize:16,
         scene: null,
+                storeProp: {
+                    itemLen: 12,
+                    dataList: [],
+                    selectObj: { selectId: "" }
+                },
         modelProp: {
           show: {
             //默认隐藏
@@ -192,7 +185,8 @@
       Modal,
       EnvironmentShow,
       // SmViewer
-      TestSmViewer
+      TestSmViewer,
+      checkSelect
     },
     methods: {
       //变更模型视角
@@ -219,10 +213,12 @@
         //获取区段列表
         let _this = this;
         //获取位置信息
-        let curView = this.storeList.filter(
-          a => a.id == _this.queryCondition.storeId
-        )[0].camera;
-        this.changeArea(curView);
+               let cur = this.storeList.filter(
+                    a => a.id == _this.queryCondition.storeId
+                )[0];
+                if (cur) {
+                    this.changeArea(cur.camera);
+                }
         this.getMonitorData();
       },
       //变更区段
@@ -262,13 +258,17 @@
         );
         //获取管仓列表
         TunnelService.getStoresByTunnelId(_this.queryCondition.tunnelId).then(
-          result => {
-            _this.storeList=[{id:0,name:"全部"}];
-            result.forEach(a=>{
-              _this.storeList.push(a)
-            })
-            _this.queryCondition.storeId=_this.storeList[0].id;
-          },
+                result => {
+                        _this.storeProp.dataList = [{ id: 0, name: "全部" }];
+                        result.forEach((a, index) => {
+                            let temp = {};
+                            temp.id = a.id;
+                            temp.name = a.name;
+                            _this.storeProp.dataList.push(temp);
+                        });
+                        _this.storeProp.selectObj.selectId =
+                            _this.storeProp.dataList[0].id;
+                    },
           error => {
             console.log(error);
           }
@@ -335,6 +335,16 @@
       },
 
     },
+    watch:{
+               storeProp: {
+                handler: function(newVal, oldVal) {
+                    let _this = this;
+                    _this.queryCondition.storeId = newVal.selectObj.selectId;
+                    _this.changeStore();
+                },
+                deep: true
+            }
+    }
   };
 </script>
 

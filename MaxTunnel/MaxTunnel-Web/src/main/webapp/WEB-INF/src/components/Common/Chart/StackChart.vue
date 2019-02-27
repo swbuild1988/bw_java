@@ -1,155 +1,261 @@
 <template>
-  <div class='SimpleBar' :id=id></div>
+  <div
+          class='SimpleBar'
+          ref="element"
+          :id=id></div>
 </template>
 
 <script>
-  export default {
-    name: 'SimpleBar',
-    props: {
-      id: {
-        default: ''
-      },
-      requestUrl: {
-        default: ''
-      },
-      title: {
-        default: 'SimpleBar'
-      },
-      color: {
-        default: '#336666'
-      },
-      intervalTime: {
-        default: 60000
-      },
-      tunnelId:{
-        default: null
-      },
-      timeCycle:{
-        default: 4
-      },
-      xData:{
-        type: Array,
-        default:['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-      },
-      legendData:{
-        type: Array
-      }
-    },
-    data() {
-      return {
-        myChart: {},
-        // xData: [],
-        yData: [],
-        series:[],
-        option: {
-          title: {
-            text: "title",
-            textStyle: {
-              color: '#2e739b'
+    export default {
+        name: 'SimpleBar',
+        props: {
+            id: {
+                type: String
+            },
+            title: {
+                type: String
+            },
+            legendData: {
+                type: Array
+            },
+            xData: {
+                type: Array
+            },
+            seriesData: {
+                type: Array
+            },
+        },
+        watch:{
+            seriesData: {
+                handler(newValue, oldValue) {
+                    if (newValue.length && newValue.length > 0) this.resize();
+                },
+                deep: true,
+                // immediate: true
+            },
+        },
+        data() {
+            return {
+                myChart: {},
+                option: {},
+                chartConfig:{},
+                itemStyleColor: ['#00f6fc', '#11c0ff', '#008bfe', '#2562e9', '#edc1a5', '#9dc5c8', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a']
             }
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-          },
-          legend: {
-              data:this.legendData
-          },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          xAxis : [
-              {
-                  type : 'category',
-                  data : []
-              }
-          ],
-          yAxis : [
-              {
-                  type : 'value'
-              }
-          ],
-          series: []
-        }
-      }
-    },
-    mounted() {
-      this.init();
-      this.refreshData();
-    },
-    methods: {
-      init() {
-        this.drawBar();
-        // this.changexAxis();
-        this.fetchData(this.requestUrl);  
-      },
+        },
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init() {
+                this.resize();
+                window.addEventListener("resize", this.myChart.resize);
+                window.addEventListener("resize", this.resize)
+            },
+            resize() {
+                this.templateConfig();
+                this.drawBar();
+                this.fetchData()
+            },
+            templateConfig(){
+                let _this = this;
+                if(this.id === 'stacChart'){
+                    this.chartConfig ={
+                        legend: {
+                            textStyle: {
+                                color: '#000',
+                                fontSize: _this.getFontSize('4%')
+                            },
+                        },
+                        title: {
+                            textStyle: {
+                                color: '#000',
+                                fontSize: _this.getFontSize('6%')
+                            },
+                        },
+                        xAxis:_this.getCoordinateStyle('#000','4%').xAxis,
+                        yAxis:_this.getCoordinateStyle('#000','4%',100).yAxis,
+                        grid:_this.getGrid('20%','3%','4%','15%')
+                    }
+                }else if(this.id === 'corssBarChartID'){
+                    this.chartConfig ={
+                        legend: {
+                            x:'60%',
+                            y:'15%',
+                            textStyle: {
+                                color: '#ccc',
+                                fontSize: _this.getFontSize('7%')
+                            },
+                        },
+                        title: {
+                            textStyle: {
+                                color: '#ccc',
+                                fontSize: _this.getFontSize('10%')
+                            },
+                            left:'center'
+                        },
+                        xAxis:_this.getCoordinateStyle('#ccc','7%').xAxis,
+                        yAxis:_this.getCoordinateStyle('#ccc','7%',5).yAxis,
+                        grid:_this.getGrid('30%','3%','4%','3%')
+                    }
+                }else {
+                    this.chartConfig ={
+                        legend: {
+                            y:'bottom',      // 可选为：'top' | 'center'
+                            textStyle: {
+                                color: '#ccc',
+                                fontSize: _this.getFontSize('7%')
+                            },
+                        },
+                        title: {
+                            textStyle: {
+                                color: '#ccc',
+                                fontSize: _this.getFontSize('9%')
+                            },
+                            left:'center'
+                        },
+                        xAxis:_this.getCoordinateStyle('#ccc','7%').xAxis,
+                        yAxis:_this.getCoordinateStyle('#ccc','7%',100).yAxis,
+                        grid:_this.getGrid('20%','3%','4%','15%')
+                    }
+                }
 
-      drawBar() {
-        let _this = this;
-        _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
-        _this.option.title.text = _this.title;
-        _this.myChart.setOption(_this.option);
-        window.addEventListener('resize', this.myChart.resize);
-      },
-      fetchData(requestUrl) {
-        let _this = this;
-        _this.axios.get(requestUrl).then(result => {
-          let {code, data} = result.data;
-          if (code == 200) {
-            // console.log("data",data)
-            // let newData = data.reduce((init, item) => {
-            //   return {
-            //     xData: init.xData == undefined ? [].concat(item.key) : [].concat(init.xData, item.key),
-            //     yData: init.yData == undefined ? [].concat(item.val) : [].concat(init.yData, item.val)
-            //   }
-            // }, {})
-            // if (JSON.stringify(newData.xData) != JSON.stringify(_this.xData) || JSON.stringify(newData.yData) != JSON.stringify(_this.xData)) {
-            //   _this.xData = newData.xData;
-            //   _this.yData = newData.yData;
-            //   _this.myChart.setOption({
-            //     xAxis: {data: _this.xData},
-            //     series: {data: _this.yData}
-            //   })
-            // }
-          }
-          if(requestUrl=='stacChart'){
-            this.yData = []
-            for(var i=0; i<this.option.legend.data.length; i++ ){
-              var obj = {
-                name: this.option.legend.data[i],
-                type: 'bar',
-                stack: this.option.legend.data[i].substring(this.option.legend.data[i].length-2,this.option.legend.data[i].length),
-                data: ['12','2','3','4','5','6','7','8','9','10','7','2'],
-              }
-              this.yData.push(obj)
+            },
+            drawBar() {
+                let _this = this;
+                this.myChart = this.$echarts.init(document.getElementById(this.id));
+
+                this.option = {
+                    title: Object.assign({
+                            text: this.title
+                        },
+                        _this.chartConfig.title
+                    ),
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: Object.assign({
+                            data:this.legendData
+                        },
+                        _this.chartConfig.legend
+                    ),
+                    grid: _this.chartConfig.grid,
+                    xAxis : [
+                        Object.assign(
+                            {
+                                type : 'category',
+                                data : [],
+                            },
+                            _this.chartConfig.xAxis
+                        )
+                    ],
+                    yAxis : [
+                        Object.assign(
+                            {
+                                type : 'value',
+                                min:0,
+                            },
+                            _this.chartConfig.yAxis
+                        )
+
+                    ],
+                    series: []
+                }
+                this.myChart.setOption(_this.option);
+            },
+            fetchData() {
+                let _this = this;
+                while (this.itemStyleColor.length < this.seriesData.length) {
+                    this.itemStyleColor = this.itemStyleColor.concat(this.itemStyleColor)
+                }
+
+                for (var i = 0; i < this.legendData.length; i++) {
+                    let seriesData = {
+                        name: this.legendData[i],
+                        type: 'bar',
+                        data: this.seriesData[i].data,
+                        barWidth:'30%',
+                        itemStyle: {
+                            normal: {
+                                color: this.itemStyleColor[i]
+                            }
+                        }
+                    };
+
+                    let seriesDataAll = this.id === 'corssBarChartID'
+                        ? Object.assign({},seriesData)
+                        : Object.assign({
+                              stack: 'total'
+                          },seriesData);
+
+                    this.option.series.push(seriesDataAll);
+
+                }
+                this.option.xAxis[0].data = this.xData;
+
+                this.myChart.setOption(this.option);
+            },
+            getFontSize(val) {
+                if (typeof (val) == 'number') return val;
+
+                if (typeof (val) == 'string') {
+
+                    if (val.indexOf('%') > 0) {
+                        var tmp = parseFloat(val.replace('%', '')) / 100;
+                        let height = this.$refs.element.offsetHeight;
+                        return Math.round(height * tmp);
+                    }
+                }
+
+                return 0;
+            },
+            getCoordinateStyle(lineColor,labelFontSize,interval){
+                let _this = this;
+
+                let Axis = {
+                    axisLine: {
+                        lineStyle: {
+                            color: lineColor
+                        }
+                    },
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            fontSize: _this.getFontSize(labelFontSize)      //更改坐标轴文字大小
+                        },
+                        interval:0,
+                    },
+                }
+
+                return {
+                    xAxis:Object.assign(
+                        Axis,
+                        {}
+                    ),
+                    yAxis:Object.assign(
+                        Axis,
+                        {
+                            interval:interval,
+                        }
+                    ),
+
+                }
+            },
+            getGrid(){
+                let [ top,left,right,bottom ] = [].slice.call(arguments);
+
+                return {
+                    top,
+                    left,
+                    right,
+                    bottom,
+                    containLabel: true
+                }
             }
-            if(this.xData.length==0){
-              this.xData=['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-            }
-            this.myChart.setOption({
-              series:this.yData,
-              xAxis:{
-                type : 'category',
-                data: this.xData
-              }
-            })
-          }
-        })
-      },
-      //定时刷新数据
-      refreshData() {
-        let _this = this;
-        // setInterval(() => {
-        //   _this.fetchData(_this.requestUrl);
-        // }, _this.intervalTime)
-      },
-    },
-  }
+        },
+    }
 </script>
 
 <style scoped>

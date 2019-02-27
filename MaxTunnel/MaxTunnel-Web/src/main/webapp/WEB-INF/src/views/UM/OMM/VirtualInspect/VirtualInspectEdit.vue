@@ -30,7 +30,7 @@
                 <Button type="ghost" @click="back" class="back">返回</Button>
                 <div class="posBox">
                     <div class="titlePos">预置位</div>
-                    <Button type="primary" @click="add" class="add" v-if="!isAdd">添加</Button>
+                    <Button type="primary" @click="add" class="add">添加</Button>
                     <div class="posContent">
                         <div class="positions" v-for="(pos,index) in perPositions" :key="index">
                             <div class="posTag"></div>

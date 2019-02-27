@@ -84,8 +84,6 @@ export default {
             if (cur) {
                 date = cur;
             } else {
-                console.log(this.currentYear)
-                console.log(this.currentMonth)
                 var now = new Date();
                 var d = new Date(this.formatDate(this.currentYear, this.currentMonth-1, 1));
                 d.setDate(this.showDayNum);

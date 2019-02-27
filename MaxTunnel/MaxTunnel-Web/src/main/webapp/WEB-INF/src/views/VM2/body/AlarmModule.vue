@@ -1,338 +1,254 @@
 <template>
-    <div class="main">
-        <div class="Title">
-            <module-title :title="title"></module-title>
-        </div>
-        <div class="total">
-            <div class="subTitle">
-                <span class="name">本年度告警：</span>
-                <span class="number">{{ yearTotal.number }}</span>
-                <span class="yearIcon">
-                    <Icon
-                        :type="yearTotal.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="yearTotal.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </span>
-            </div>
-            <div class="subTitle">
-                <span style="letter-spacing: 0.25em;margin-right: -0.25em;" class="name">本月告警：</span>
-                <span class="number">{{ monthTotal.number }}</span>
-                <span class="monthIcon">
-                    <Icon
-                        :type="monthTotal.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="monthTotal.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </span>
-            </div>
-        </div>
-        <div class="pie">
-            <simple-pie-chart v-bind="pieChart"></simple-pie-chart>
-        </div>
-        <div class="alarms">
-            <!-- <pile-bar-chart v-bind="pileBarChart" ref="pileBar"></pile-bar-chart> -->
-            <!-- <textra :data="words" :timer="4" filter="bottom-top" :infinite='true'></textra> -->
-            <div class="play" @click="changeState">
-                <Icon :type="carouselInfo.isCarousel ? 'pause' : 'play'" class="playIcon"></Icon>
-            </div>
-            <Table :columns="columns" :data="alarmShowData" class="table" :show-header="false"></Table>
-        </div>
+  <div class="main">
+    <div class="Title">
+      <module-title :title="title"></module-title>
     </div>
+    <div class="total">
+      <div class="subTitle">
+        <span class="name">本年度告警：</span>
+        <span class="number">{{ yearTotal.number }}</span>
+        <span class="yearIcon">
+          <Icon :type="yearTotal.isRise ? 'arrow-up-c' : 'arrow-down-c'" :color="yearTotal.isRise ? 'rgb(247, 26, 56)': 'white'"></Icon>
+        </span>
+      </div>
+      <div class="subTitle">
+        <span style="letter-spacing: 0.25em;margin-right: -0.25em;" class="name">本月告警：</span>
+        <span class="number">{{ monthTotal.number }}</span>
+        <span class="monthIcon">
+          <Icon :type="monthTotal.isRise ? 'arrow-up-c' : 'arrow-down-c'" :color="monthTotal.isRise ? 'rgb(247, 26, 56)': 'white'"></Icon>
+        </span>
+      </div>
+    </div>
+    <div class="pie">
+      <simple-pie-chart v-bind="pieChart"></simple-pie-chart>
+    </div>
+    <div class="alarms">
+      <span style="font-size: 1.5vmin;line-height: 2.8vmin;color: #fff;">告警信息</span>
+      <Icon type="android-volume-up" color="#fff" :size="iconSize"></Icon>
+      <div class="play" @click="changeState">
+        <Icon :type="carouselInfo.isCarousel ? 'pause' : 'play'" class="playIcon"></Icon>
+      </div>
+      <Row :gutter="16" style="margin-top: 0.3vh;">
+        <div :key="index" v-for="(alarm,index) in alarmShowData">
+          <Col span="1" offset="1"style="padding-top:0.5vh;">
+          <Icon type="checkmark-circled" color="#0196ff" :size="iconSize"></Icon>
+          </Col>
+          <Col span="5" offset="1" class="colSpan">
+          <div>
+            {{alarm.alarmDate}}
+          </div>
+          </Col>
+          <Col span="6" class="colSpan">
+          <div :title="alarm.name">
+            {{alarm.name}}
+          </div>
+          </Col>
+          <Col span="7" class="colSpan">
+          <div :title="alarm.location">
+            {{alarm.location}}
+          </div>
+          </Col>
+          <Col span="3" class="colSpan">
+          <div :style="{backgroundColor: alarm.color, textAlign: 'center', borderRadius: '5px'}">
+            {{alarm.alarmLevel}}
+          </div>
+          </Col>
+        </div>
+      </Row>
+    </div>
+  </div>
 </template>
 
 <script>
-import SimplePieChart from '../../../components/Common/Chart/SimplePieChart'
-import pileBarChart from "../../../components/Common/Chart/PileBarChart"
-import ModuleTitle from "../../../components/VM2/ModuleTitle"
-import { AlarmService } from '../../../services/alarmService'
+  import SimplePieChart from "../../../components/Common/Chart/SimplePieChart";
+  import pileBarChart from "../../../components/Common/Chart/PileBarChart";
+  import ModuleTitle from "../../../components/VM2/ModuleTitle";
+  import {
+    AlarmService
+  } from "../../../services/alarmService";
 
-export default {
+  export default {
     data() {
-        return {
-            title: '警报统计',
-            yearTotal: {
-                number: 271,
-                isRise: false
-            },
-            monthTotal: {
-                number: 32,
-                isRise: true
-            },
-            pieChart: {
-                requestUrl: "tunnels/alarm-count",
-                id: "tunnelAlarmPieChart",
-                parameters: {
-                    option: {
-                        title: {
-                            text: "管廊警报统计",
-                            x: "center",
-                            textStyle: {
-                                color: "white",
-                                fontSize: "10%"
-                            }
-                        },
-                        series: {
-                            label: {
-                                normal: {
-                                    textStyle: {
-                                        fontSize: '8%'
-                                    }
-                                }
-                            }
-                        },
-                        grid: {
-                            top: '6%',
-                            left: 0,
-                            right: 0
-                        },
-                    }
+      return {
+        title: "警报统计",
+        iconSize: 12,
+        yearTotal: {
+          number: 271,
+          isRise: false
+        },
+        monthTotal: {
+          number: 32,
+          isRise: true
+        },
+        pieChart: {
+          requestUrl: "tunnels/alarm-count",
+          id: "tunnelAlarmPieChart",
+          titleSize: "9%",
+          seriesSize: "10%",
+          parameters: {
+            option: {
+              legend: {
+                textStyle: {
+                  color: "#fff"
                 }
-            },
-            pileBarChart: {
-                id: 'alarmsReportBar',
-                requestUrl: "alarms/level-count–everymonth",
-                parameters: {option: {
-                    legend: {
-                        data: ["严重", "一般", "提示", "致命"],
-                        textStyle: {
-                            color: 'white',
-                            fontSize: '10%'
-                        },
-                        orient: 'horizontal',
-                        left: 20
-                    },
-                    xAxis: {
-                        axisLabel: {
-                           color: 'white',
-                           fontSize: '8%'
-                        }
-                    },
-                    yAxis: {
-                        axisLabel: {
-                            color: 'white',
-                            fontSize: '8%'
-                        }
-                    }
-                }, prams: {}},
-                type: 'get'
-            },
-            words: ['暂无告警'],
-            alarmShowData: [],
-            alarmAllData:[],
-            columns: [
-                {
-                    title: "告警",
-                    key: "name",
-                    align: "center",
-                    width: '25%',
-                    render: (h, params) => {
-                        return h("div", [
-                            h(
-                                "span",
-                                {
-                                    style: {
-                                        display: "inline-block",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        cursor: "pointer"
-                                    },
-                                    domProps: {
-                                        title: params.row.name
-                                    }
-                                },
-                                params.row.name
-                            )
-                        ]);
-                    }
-                },
-                {
-                    title: "级别",
-                    key: "alarmLevel",
-                    align: "center",
-                    width: '10%',
-                    render: (h, params) => {
-                        return h("div", [
-                            h(
-                                "span",
-                                {
-                                    style: {
-                                        display: "inline-block",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        cursor: "pointer",
-                                        color: params.row.color,
-                                        fontSize: '1.8vmin'
-                                    },
-                                    domProps: {
-                                        title: params.row.alarmLevel
-                                    }
-                                },
-                                params.row.alarmLevel
-                            )
-                        ]);
-                    }
-                },
-                {
-                    title: "位置",
-                    key: "location",
-                    align: "center",
-                    width: '40%',
-                    render: (h, params) => {
-                        return h("div", [
-                            h(
-                                "span",
-                                {
-                                    style: {
-                                        display: "inline-block",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        cursor: "pointer"
-                                    },
-                                    domProps: {
-                                        title: params.row.location
-                                    }
-                                },
-                                params.row.location
-                            )
-                        ]);
-                    }
-                },
-                {
-                    title: '时间',
-                    key: 'alarmDate',
-                    align: 'center',
-                  width: '25%',
-                    render: (h, params) => {
-                        return h("div", [
-                            h(
-                                "span",
-                                {
-                                    style: {
-                                        display: "inline-block",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        cursor: "pointer"
-                                    },
-                                    domProps: {
-                                        title: params.row.alarmDate
-                                    }
-                                },
-                                params.row.alarmDate
-                            )
-                        ]);
-                    }
-                }
-            ],
-            carouselInfo: {
-                intervalId: null,
-                totalPage: null,
-                pageSize: 4,
-                curPage: 1,
-                isCarousel: true,
-                time: 2000
-            },
-            refresh: {
-                time: 300000,
-                intervalId: null
+              },
             }
-        };
+          }
+        },
+        pileBarChart: {
+          id: "alarmsReportBar",
+          requestUrl: "alarms/level-count–everymonth",
+          parameters: {
+            option: {
+              legend: {
+                data: ["严重", "一般", "提示", "致命"],
+                textStyle: {
+                  color: "white",
+                  fontSize: "10%"
+                },
+                orient: "horizontal",
+                left: 20
+              },
+              xAxis: {
+                axisLabel: {
+                  color: "white",
+                  fontSize: "8%"
+                }
+              },
+              yAxis: {
+                axisLabel: {
+                  color: "white",
+                  fontSize: "8%"
+                }
+              }
+            },
+            prams: {}
+          },
+          type: "get"
+        },
+        words: ["暂无告警"],
+        alarmShowData: [],
+        alarmAllData: [],
+        carouselInfo: {
+          intervalId: null,
+          totalPage: null,
+          pageSize: 4,
+          curPage: 1,
+          isCarousel: true,
+          time: 2000
+        },
+        refresh: {
+          time: 300000,
+          intervalId: null
+        }
+      };
     },
     components: {
-        SimplePieChart,
-        pileBarChart,
-        ModuleTitle
+      SimplePieChart,
+      pileBarChart,
+      ModuleTitle
     },
     mounted() {
-        this.init()
-        let _this = this
-        this.refresh.intervalId = setInterval(()=>{
-            _this.init()
-        },this.refresh.time)
+      this.iconSize = window.innerWidth * 0.009;
+      this.init();
+      let _this = this;
+      this.refresh.intervalId = setInterval(() => {
+        _this.init();
+      }, this.refresh.time);
+      if (this.carouselInfo.isCarousel) {
+        this.carouselInfo.intervalId = setInterval(() => {
+          _this.carousel();
+        }, this.carouselInfo.time);
+      }
     },
     methods: {
-        init(){
-            let _this = this
-            AlarmService.getYearAndMonthAlarmCount().then(
-                result=>{
-                    result.forEach(item=>{
-                        if(item.key == 'year'){
-                            _this.yearTotal.number = item.value
-                            _this.yearTotal.isRise = item.isRise
-                        } else {
-                            _this.monthTotal.number = item.value
-                            _this.monthTotal.isRise = item.isRise
-                        }
-                    })
-                })
-            AlarmService.getNewAlarmsList().then(
-                result=>{
-                    if(result){
-                        _this.words = []
-                        result.forEach(alarm=>{
-                            let info = alarm.description + ' ' + alarm.alarmLevel + ' ' + alarm.location + ' ' + alarm.alarmTime
-                            _this.words.push(info)
-                        })
-                        _this.alarmAllData = result
-                        _this.alarmAllData.forEach(alarm=>{
-                            alarm.alarmLevel = alarm.alarmLevel.slice(0,2)
-                            alarm.alarmDate = new Date(alarm.alarmDate).format('MM.dd.yy')
-                            switch(alarm.alarmLevel){
-                                case '提示':
-                                    alarm.color = '#0066ff'
-                                    break
-                                case '一般':
-                                    alarm.color = '#ffff00'
-                                    break
-                                case '严重':
-                                    alarm.color = '#ffae00'
-                                    break
-                                case '危急':
-                                    alarm.color = '#ff0000'
-                                    break
-                            }
-                        })
-                        _this.carouselInfo.totalPage = result.length % _this.carouselInfo.pageSize == 0 ? result.length / _this.carouselInfo.pageSize : parseInt(result.length / _this.carouselInfo.pageSize) + 1
-                    }
-                })
-            if(this.carouselInfo.isCarousel){
-                this.carouselInfo.intervalId = setInterval(()=>{
-                    _this.carousel()
-                },this.carouselInfo.time)
-            }
-        },
-        carousel() {
-            this.alarmShowData = this.alarmAllData.slice((this.carouselInfo.curPage-1) * this.carouselInfo.pageSize, this.carouselInfo.curPage * this.carouselInfo.pageSize)
-            if(this.carouselInfo.curPage === this.carouselInfo.totalPage){
-                this.carouselInfo.curPage = 1
+      init() {
+        let _this = this;
+        AlarmService.getYearAndMonthAlarmCount().then(result => {
+          result.forEach(item => {
+            if (item.key == "year") {
+              _this.yearTotal.number = item.value;
+              _this.yearTotal.isRise = item.isRise;
             } else {
-                this.carouselInfo.curPage += 1
+              _this.monthTotal.number = item.value;
+              _this.monthTotal.isRise = item.isRise;
             }
-        },
-        changeState() {
-            this.carouselInfo.isCarousel = !this.carouselInfo.isCarousel
-            if(this.carouselInfo.isCarousel){
-                let _this = this
-                this.carouselInfo.intervalId = setInterval(()=>{
-                    _this.carousel()
-                },this.carouselInfo.time)
-            } else {
-                clearInterval(this.carouselInfo.intervalId)
-                clearInterval(this.refresh.intervalId)
-            }
+          });
+        });
+        AlarmService.getNewAlarmsList().then(result => {
+          if (result) {
+            _this.words = [];
+            result.forEach(alarm => {
+              let info =
+                alarm.description +
+                " " +
+                alarm.alarmLevel +
+                " " +
+                alarm.location +
+                " " +
+                alarm.alarmTime;
+              _this.words.push(info);
+            });
+            _this.alarmAllData = result;
+            _this.alarmAllData.forEach(alarm => {
+              alarm.alarmLevel = alarm.alarmLevel.slice(0, 2);
+              alarm.alarmDate = new Date(alarm.alarmDate).format("MM-dd  hh:mm");
+              switch (alarm.alarmLevel) {
+                case "提示":
+                  alarm.color = "#0066ff";
+                  break;
+                case "一般":
+                  alarm.color = "#ffff00";
+                  break;
+                case "严重":
+                  alarm.color = "#ffae00";
+                  break;
+                case "危急":
+                  alarm.color = "#ff0000";
+                  break;
+              }
+            });
+            _this.carouselInfo.totalPage =
+              result.length % _this.carouselInfo.pageSize == 0 ?
+              result.length / _this.carouselInfo.pageSize :
+              parseInt(result.length / _this.carouselInfo.pageSize) + 1;
+          }
+        });
+      },
+      carousel() {
+        this.alarmShowData = this.alarmAllData.slice(
+          (this.carouselInfo.curPage - 1) * this.carouselInfo.pageSize,
+          this.carouselInfo.curPage * this.carouselInfo.pageSize
+        );
+        if (this.carouselInfo.curPage === this.carouselInfo.totalPage) {
+          this.carouselInfo.curPage = 1;
+        } else {
+          this.carouselInfo.curPage += 1;
         }
+      },
+      changeState() {
+        this.carouselInfo.isCarousel = !this.carouselInfo.isCarousel;
+        if (this.carouselInfo.isCarousel) {
+          let _this = this;
+          this.carouselInfo.intervalId = setInterval(() => {
+            _this.carousel();
+          }, this.carouselInfo.time);
+        } else {
+          clearInterval(this.carouselInfo.intervalId);
+          clearInterval(this.refresh.intervalId);
+        }
+      }
     },
-    beforeDestory(){
-        clearInterval(this.carouselInfo.intervalId)
-        clearInterval(this.refresh.intervalId)
+    beforeDestory() {
+      clearInterval(this.carouselInfo.intervalId);
+      clearInterval(this.refresh.intervalId);
     }
-};
+  };
+
 </script>
 
 <style scoped>
-.main {
+  .main {
     width: 100%;
     position: absolute;
     top: 0;
@@ -340,8 +256,9 @@ export default {
     left: 0;
     background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
-}
-.total {
+  }
+
+  .total {
     width: 42%;
     height: 24%;
     position: absolute;
@@ -349,91 +266,77 @@ export default {
     left: 4%;
     background: url("../../../assets/UM/videoBody.png") no-repeat;
     background-size: 100% 100%;
-}
-.pie {
+  }
+
+  .pie {
     width: 50%;
-    height: 42%;
+    height: 44%;
     position: absolute;
-    top: 8%;
+    top: 6%;
     right: 2%;
-}
-.alarms {
+  }
+
+  .alarms {
     position: absolute;
+    padding: 10px;
     width: 98%;
     height: 50%;
-    top: 50%;
+    top: 42%;
     left: 0;
-}
-.table{
-    width: 100%;
-    height: 100%;
-}
-.Title {
+  }
+
+  .Title {
     width: 42vmin;
     height: 5vmin;
-}
-.subTitle {
+  }
+
+  .subTitle {
     font-size: 1vmin;
     color: white;
     margin: 0.2vh 0.8vw;
-}
-.name{
+  }
+
+  .name {
     vertical-align: middle;
-}
-.number {
+  }
+
+  .number {
     font-size: 2vmin;
     margin-left: 0.6vw;
     color: #37bbcc;
     vertical-align: middle;
-}
-.yearIcon {
+  }
+
+  .yearIcon {
     font-size: 2.6vmin;
     position: absolute;
     top: 0;
     right: 0.8vmin;
     vertical-align: middle;
-}
-.monthIcon {
+  }
+
+  .monthIcon {
     font-size: 2.6vmin;
     position: absolute;
     top: 3.2vmin;
     right: 0.8vmin;
     vertical-align: middle;
-}
+  }
 
-.alarms >>> .mainTextra{
-    font-size: 2vmin;
-    color: white;
-}
+  .colSpan {
+    padding-top: 0.25vh;
+    font-size: 1.22vmin;
+    line-height: 2.5vmin;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*文本不换行，这样超出一行的部分被截取，显示...*/
+    white-space: nowrap;
+  }
 
-.alarms >>> .ivu-table-wrapper {
-    border: 1px solid transparent;
-    border-bottom: 0;
-    border-right: 0;
-    font-size: 1.42vmin;
-}
-.alarms >>> .ivu-table {
-   /* color: #e1e4e5;*/
-    color: white;
-    background-color: transparent;
-    font-size: 1.42vmin !important;
-}
-.alarms >>> .ivu-table td {
-    background-color: transparent;
-    border-bottom: transparent;
-    height: 2.8vmin;
-}
-.alarms >>> .ivu-table-stripe .ivu-table-body tr:nth-child(2n) td {
-    background: transparent;
-}
-.alarms >>> .ivu-table:after,
-.alarms >>> .ivu-table:before {
-    background-color: transparent;
-}
-.play{
+  .play {
     float: right;
-   /* margin-right: 2vmin;*/
-    margin-top: -1.6vmin;
+    margin-top: 0.5vmin;
     width: 2vmin;
     height: 2vmin;
     color: #aaa;
@@ -442,10 +345,12 @@ export default {
     font-size: 1.2vmin;
     display: table;
     cursor: pointer;
-}
-.playIcon{
+  }
+
+  .playIcon {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-}
+  }
+
 </style>

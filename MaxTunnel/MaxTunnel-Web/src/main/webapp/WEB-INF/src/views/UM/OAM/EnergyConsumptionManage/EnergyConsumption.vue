@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ModulePage v-bind="patrolScheme"></ModulePage>
+    <ModulePage v-bind="eneryScheme"></ModulePage>
   </div>
 </template>
 
@@ -13,7 +13,7 @@
     components: {ModulePage},
     data() {
       return {
-        patrolScheme: {
+        eneryScheme: {
           moduleName: "能耗管理",
           leftTree: [],
           selected: [-1, -1]
@@ -22,7 +22,7 @@
       };
     },
     created() {
-      this.patrolScheme.leftTree = [
+      this.eneryScheme.leftTree = [
         {
           id: 0,
           name: '总能耗分析',
@@ -39,7 +39,7 @@
       // temp.childNode = [{id: 1, name: '总览 ', url: '/UM/TunnelEnergy/detials/' + temp.id},
       //   {id: 2, name: '类别详情', url: '/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/' + temp.id}
       // ];
-      // _this.patrolScheme.leftTree.push(temp);
+      // _this.eneryScheme.leftTree.push(temp);
         TunnelService.getTunnels().then(
             (result)=>{
               result.forEach(a=>{
@@ -49,8 +49,13 @@
                             temp.childNode= [{id:1,name: '总览 ', url: '/UM/TunnelEnergy/detials/'+a.id},
                               {id:2,name: '类别详情', url: '/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/'+a.id}
                               ];
-                _this.patrolScheme.leftTree.push(temp);
+                _this.eneryScheme.leftTree.push(temp);
               })
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/TunnelEnergy") < 0) {
+                  _this.goToMoudle({path: _this.eneryScheme.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
             },
             (error)=>{
                 console.log(error)
@@ -59,8 +64,13 @@
     watch: {
       '$route': function () {
         if (this.$route.path == '/UM/TunnelEnergy/homepage') {
-          this.patrolScheme.selected = [-1, -1]
+          this.eneryScheme.selected = [-1, -1]
         }
+      }
+    },
+    methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
       }
     }
   };

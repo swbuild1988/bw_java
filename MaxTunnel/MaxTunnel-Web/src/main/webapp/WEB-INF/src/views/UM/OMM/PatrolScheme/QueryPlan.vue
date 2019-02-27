@@ -25,7 +25,7 @@
             <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
         </Col>
         <Col span="4">
-            <Button type="primary" icon="ios-search" size="small" @click="conditionChange()">查询</Button>
+            <Button type="primary" icon="ios-search" @click="conditionChange()">查询</Button>
         </Col>
       </Row>
     </div>
@@ -72,9 +72,9 @@
       <!-- </Scroll> -->
     </div>
     <div class="page">
-      <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page> 
-    </div>  
+      <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        :page-size-opts=[12,24,36] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
+    </div>
   </div>
 </template>
 <script>
@@ -165,7 +165,11 @@ export default {
   methods: {
     conditionChange: function() {
       let _this = this
-      PatrolService.patrolPlanDatagrid(this.params).then(
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
+      PatrolService.patrolPlanDatagrid(_this.params).then(
         (result)=>{
           for (let index in result.list) {
               result.list[index].inspectTime = new Date(
@@ -250,7 +254,7 @@ export default {
     margin-left: 5px;
     margin-top: 1px;
 }
-.details-top{ 
+.details-top{
     font-size: 16px;
     font-weight: 700;
     line-height: 48px;
@@ -259,7 +263,7 @@ export default {
     margin-left: 5px;
 }
 .planStatusDec,.patrolGroupName{
-  font-size: 2.2vmin;
+  font-size: 1.8vmin;
 }
 .details-bottom div{
   margin: 10px;
@@ -395,6 +399,9 @@ export default {
     }
     .planName{
       font-size: 2.2vmin;
+    }
+    .icon,.details,.details-bottom div{
+      line-height: 1.9
     }
 }
 </style>

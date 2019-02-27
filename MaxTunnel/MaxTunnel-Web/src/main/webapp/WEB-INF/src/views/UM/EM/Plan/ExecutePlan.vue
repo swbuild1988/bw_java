@@ -16,14 +16,14 @@
     <hr class="hr3"/>
     <Row>
         <Col span="12" style="position: relative;padding: 10px;">
-        <div style="height: 68vh;" class="coolBox">
+        <div  :style="{height:moduleHeight*2+20+'px'}" class="coolBox">
             <Carousel v-bind="curCarousel"></Carousel>
         </div>
         </Col>
       <Col span="12" style="padding: 10px;">
-      <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);" class="card">
+      <Card :bordered="false" :style="{height:moduleHeight+'px'}" class="card">
         <p slot="title" style="font-size: 2vmin;">执行日志</p>
-          <Row style="line-height: 3vmin;font-size: 1.66vmin;height:calc(45vh - 180px);overflow-y: auto;">
+          <Row style="line-height: 3vmin;font-size: 1.66vmin;overflow-y: auto;">
               <div  v-for="item in processLog">
             <Col span="8">
             {{item.stepName}}
@@ -42,9 +42,9 @@
       </Card>
       </Col>
         <Col span="12" style="padding: 10px;">
-        <Card :bordered="false" style="box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);border: 1px solid rgba(0, 0, 0, 0.2);" class="card">
+        <Card :bordered="false":style="{height:moduleHeight+'px'}" class="card">
             <p slot="title" style="font-size: 2vmin;">设备列表</p>
-            <Row style="line-height: 3vmin;font-size: 1.66vmin;height:calc(40vh - 170px);overflow-y: auto;">
+            <Row style="line-height: 3vmin;font-size: 1.66vmin;overflow-y: auto;">
                 <div  v-for="item in equipmentList">
                     <Col span="12" style="padding: 10px;font-size: 1.8vmin;">
                     <span>{{item.name}}</span>
@@ -84,6 +84,7 @@
     name: "execute-plan",
     data() {
       return {
+        moduleHeight:400,
           curCarousel:{
               videolist:[],
           },
@@ -152,7 +153,6 @@
             var _this = this;
             _this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
             _this.showModal.modalPrams.selectPlan = _this.queryPram.processKey;
-
         },
 
         //获取设备状态图片
@@ -246,6 +246,13 @@
                         temp.stepLength=tempLen;
                         _this.stepList.push(temp);
                     })
+                  if(_this.stepList.length>5){
+                    _this.moduleHeight=window.innerHeight*0.29-10;
+                  }
+                  else {
+                    _this.moduleHeight=window.innerHeight*0.35-10;
+                    console.log(  _this.moduleHeight);
+                  }
                 }
             })
         },

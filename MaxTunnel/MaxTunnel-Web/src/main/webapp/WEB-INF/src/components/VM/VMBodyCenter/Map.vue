@@ -147,7 +147,7 @@
 </style>
 
 <script>
-import SmViewer from "../../Common/3D/Test3DViewer";
+import SmViewer from "../../Common/3D/overLook3DViewer";
 import Temperature from "../VMBodyCenter/temperatureBox";
 import MapGauges from "./gauges";
 import AlarmCount from "../AlarmManage/NonCleanedCount";

@@ -34,6 +34,12 @@
                   temp.url=_this.treeNodeJumpUrl+a.id;
                   _this.operatingSpace.leftTree.push(temp);
               })
+
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/OperatingSpace") < 0) {
+                _this.goToMoudle({path: _this.operatingSpace.leftTree[0].url});
+                sessionStorage.setItem('selectedName','')
+              }
+            sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               _this.Log.info(error)
@@ -47,12 +53,12 @@
     //   },
 
     // },
-    // methods: {
-    //   //跳转模块
-    //   goToMoudle(path) {
-    //     this.$router.push(path);
-    //   },
-    // }
+    methods: {
+      //跳转模块
+      goToMoudle(path) {
+        this.$router.push(path);
+      },
+    }
   }
   ;
 </script>

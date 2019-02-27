@@ -285,6 +285,7 @@ var TunnelService = {
         .post("/tunnels/stores/sections/condition", params)
         .then(res => {
           let { code, data, msg } = res.data;
+
           if (code == 200) {
             resolve(data);
           } else {
@@ -303,10 +304,11 @@ var TunnelService = {
         .post("/sections/xyz", params)
         .then(res => {
           let { code, data, msg } = res.data;
+
           if (code == 200) {
             resolve(data);
           } else {
-            reject(msg + ",地址:/tunnels/stores/sections/condition");
+            reject(msg + ",地址:/sections/xyz");
           }
         })
         .catch(error => {

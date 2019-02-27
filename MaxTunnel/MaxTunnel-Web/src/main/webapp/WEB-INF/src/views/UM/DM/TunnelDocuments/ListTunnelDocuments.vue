@@ -31,7 +31,7 @@
                     </DatePicker>
                 </Col>
                 <Col span="4">
-                     <Button type="primary" @click="search" icon="ios-search" size="small">查询</Button>
+                     <Button type="primary" @click="resetPageAndSearch" icon="ios-search" >查询</Button>
                 </Col>
             </Row>
         </div>
@@ -153,8 +153,16 @@ export default {
                   console.log(error)
             })
         },
+        resetPageAndSearch(){
+            this.page.pageNum = 1
+            this.search()
+        },
         search() {
             let _this = this
+          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             FileService.filesDataGrid(_this.params).then(
                 function(result){
                     _this.documents = []
@@ -177,13 +185,13 @@ export default {
         },
         del() {
         	if(this.ids[0]){
-        		let ids = this.ids.join(',')	
+        		let ids = this.ids.join(',')
                 let _this = this
                 FileService.deleteFiles(ids).then(
                     function(result){
                         _this.showCheckBox = false
                         _this.ids = []
-                        _this.search()
+                        _this.resetPageAndSearch()
                     },
                     function(error){
                       console.log(error)
@@ -191,7 +199,7 @@ export default {
         	}else{
         		this.$Message.error('请至少选择一项')
         	}
-        	
+
         },
         handlePage(value) {
             this.page.pageNum = value
@@ -199,14 +207,14 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value
-            this.search()
+            this.resetPageAndSearch()
         },
         cancel() {
         	this.showCheckBox = false
         	this.ids = []
         },
         download(id,name) {
-            //IE 
+            //IE
             this.isLoading = true
             this.curFile = id
             let _this = this
@@ -237,7 +245,7 @@ export default {
 	border-bottom: 1px solid #dddfe1;
     /*border-right: 1px solid #dddfe1;*/
     width: 80%;
-    margin: 10px auto; 
+    margin: 10px auto;
     border-radius: 4px;
     /*box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);*/
     position: relative;
@@ -314,22 +322,23 @@ export default {
 .downloadIcon{
     font-size: 2.5vmin;
 }
+
 .queryText{
     /*font-size: 16px;*/
 }
 /*select*/
 .conditions >>> .ivu-select-selected-value{
-    font-size: 1.28vmin;
-    height: 2.57vmin;
-    line-height: 1.2rem;
-    padding-top: 0.64vmin;
+    font-size: 1.28vmin !important;
+    height: 2.57vmin !important;
+    line-height: 1.2rem !important;
+    padding-top: 0.64vmin !important;
 }
 
 .conditions >>> .ivu-select-placeholder{
-    font-size: 1.28vmin;
-    height: 2.57vmin;
-    line-height: 2vmin;
-    padding-top: 0.64vmin;
+    font-size: 1.28vmin !important;
+    height: 2.57vmin !important;
+    line-height: 2vmin !important;
+    padding-top: 0.64vmin !important;
 }
 
 .conditions >>> .ivu-select-selection{

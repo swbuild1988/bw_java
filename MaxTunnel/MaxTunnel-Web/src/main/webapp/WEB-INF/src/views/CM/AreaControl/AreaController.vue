@@ -185,6 +185,7 @@ export default {
                 name: "",
                 tunnelId: null,
                 camera: null,
+                sn: null,
                 startPoint: null,
                 endPoint: null
             },
@@ -226,7 +227,8 @@ export default {
             let param = {
                 name: this.formValidate.name,
                 tunnelId: this.formValidate.tunnelId,
-                camera: this.formValidate.camera
+                camera: this.formValidate.camera,
+                sn: this.formValidate.sn
             };
             return Object.assign({}, param);
         },

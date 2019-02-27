@@ -29,7 +29,6 @@
     components: {},
     mounted() {
       this.init();
-      this.refreshData();
       this.resizeChart();
     },
     methods: {
@@ -79,6 +78,11 @@
                 lineStyle: { // 属性lineStyle控制线条样式
                   width: 8,
                   shadowBlur: 0,
+                    color:[
+                      [0.2, '#EE1289'],
+                      [0.8, '#329bff'],
+                      [1, '#EE1289'],
+                    ]
                 }
               },
               axisTick: { // 坐标轴小标记
@@ -89,8 +93,7 @@
               axisLabel: {
                 distance: 0
               },
-              splitLine:
-                { // 分隔线
+              splitLine: { // 分隔线
                   lineStyle: { // 属性lineStyle控制线条样式
                     color: 'auto'
                   }
@@ -175,6 +178,18 @@
       //定时刷新数据
       refreshData() {
         let _this = this;
+        // 数据以参数的形式传递过来时，用此刷新方法
+        if (_this.parameters.option) {
+          _this.myChart.setOption(_this.parameters.option);
+          let tempOption=_this.parameters.option;
+          _this.myChart.setOption({
+            series: {
+              data: tempOption.series.data,
+              min: tempOption.series.min,
+              max: tempOption.series.max,
+            }
+          });
+        }
         // setInterval(() => {
         //   _this.fetchData(_this.requestUrl);
         // }, _this.intervalTime)

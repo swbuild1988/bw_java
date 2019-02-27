@@ -17,6 +17,10 @@ export default {
         },
         parameters: {
             type: Object
+        },
+        xAxisRotate: {
+            default: 0,
+            type: String
         }
     },
     data() {
@@ -66,7 +70,8 @@ export default {
                 grid: {
                     left: "3%",
                     right: "4%",
-                    bottom: "3%",
+                    bottom: "5%",
+                    top: '11%',
                     containLabel: true
                 },
                 xAxis: [
@@ -75,10 +80,13 @@ export default {
                         data: [],
                         axisLabel: {
                             interval: 0,
+                            boundaryGap: [0,0.01],
+                            rotate: this.xAxisRotate,
                             show: true,
                             textStyle: {
                                 fontSize : this.getFontSize('5%')      //更改坐标轴文字大小
-                            }
+                            },
+                            
                         },
                         axisTick: {
                             alignWithLabel: true

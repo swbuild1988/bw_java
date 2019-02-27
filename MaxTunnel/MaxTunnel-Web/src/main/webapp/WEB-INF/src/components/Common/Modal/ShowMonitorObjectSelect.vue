@@ -1,41 +1,31 @@
 <!--选择监测对象弹框-->
 <template>
-  <Modal v-model="show.state" width="700px" @on-ok="confirmData">
-    <p slot="header" style="color:#f60;font-size: 18px;">
-      选择监测对象
-    </p>
-    <div style="text-align:center;font-size: 16px;">
+  <Modal v-model="show.state" width="40vw"  title="选择监测对象"  @on-ok="confirmData">
+      <Form  :label-width="labelWidth"  style="line-height:4vmin;font-size: 1.66vmin;">
+        <FormItem label="对象名称" >
+          <Input v-model="queryPrams.name" style="width: 15vw;float: left;" placeholder="输入对象名称">
+          </Input>
+        </FormItem>
+        <FormItem label="对象类型" >
+          <Select v-model="queryPrams.objType" style="width:15vw;float: left">
+            <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 1.66vmin;">
+              <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+            </OptionGroup>
+          </Select>
+        </FormItem>
+        <FormItem label="所属管廊" >
+          <Select v-model="queryPrams.tunnelId" style="width:15vw;float: left;">
+            <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          </Select>
+          <Button style="float: right;margin-right: 2vw;font-size: 1.66vmin" type="primary" shape="circle" icon="ios-search" @click="queryTable" title="查询" >查询</Button>
+        </FormItem>
+      </Form>
       <Row>
-        <Col span="20">
-        <span style="float: left;margin-right: 8px;margin-top: 4px;">对象名称:</span>
-        <Input v-model="queryPrams.name" style="width: 320px;float: left;" placeholder="输入对象名称">
-        </Input>
-        </Col>
-        <Col span="20" style="margin-top: 10px; ">
-        <span style="float: left;margin-right: 8px;margin-top: 4px;">对象类型:</span>
-        <Select v-model="queryPrams.objType" style="width:320px;float: left">
-          <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
-            <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
-          </OptionGroup>
-        </Select>
-        </Col>
-        <Col span="20" style="margin-top: 10px; ">
-        <span style="float: left;margin-right: 8px;margin-top: 4px;">所属管廊:</span>
-        <Select v-model="queryPrams.tunnelId" style="width:320px;float: left;">
-          <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-        </Col>
-        <Col span="2">
-        <div style="float: right;right: 0px;margin-top: 10px;">
-          <Button type="primary" shape="circle" icon="ios-search" @click="queryTable" title="查询" size="large"></Button>
-        </div>
-        </Col>
         <Col span="24" style="margin-top: 10px;">
         <Table border ref="selection" :columns="columns" :data="tableData" @on-selection-change="setData"
                :height="tableHeight"></Table>
         </Col>
       </Row>
-    </div>
     <Page style="text-align:center;font-size: 16px;margin-top: 10px; " @on-change="changePage"
           @on-page-size-change="handlePageSize"
           :total="queryPrams.total"
@@ -57,6 +47,7 @@
       return {
         headTip: "选择监测对象",
         tableHeight: 400,
+        labelWidth:120,
         queryPrams: {
           name: "",
           objType: "",
@@ -182,6 +173,7 @@
     },
     mounted() {
       this.tableHeight = window.innerHeight * 0.4;
+      this.labelWidth=window.innerWidth*0.08
       this.initData();
     },
     watch: {
@@ -195,6 +187,11 @@
 
 <style scoped>
   .ivu-radio-large > > > .ivu-radio-wrapper {
-    font-size: 16px;
+    font-size: 1.22vmin;
+    line-height: 4vmin;
+  }
+  .ivu-input-type >>> .ivu-input {
+    font-size: 1.22vmin;
+    height: 4vmin;
   }
 </style>

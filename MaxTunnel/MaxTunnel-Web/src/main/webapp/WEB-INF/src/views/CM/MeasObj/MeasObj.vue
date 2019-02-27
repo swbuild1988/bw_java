@@ -16,7 +16,7 @@
         <span>监测对象类型</span>
         <span>：</span>
         <Select
-          v-model="researchInfo.objtypeIds"
+          v-model="objtypeIds"
           placeholder="请选择监测对象类型"
           class="inputWidth"
           multiple
@@ -26,7 +26,7 @@
         </Select>
       </Col>
       <Col span="6">
-        <Button type="primary" size="small" icon="ios-search" @click="search">查询</Button>
+        <Button type="primary" size="small" icon="ios-search" @click="resetAndSearch">查询</Button>
         <Button type="error" size="small" @click="add">新增监测对象</Button>
       </Col>
     </Row>
@@ -246,33 +246,18 @@ export default {
       },
       measObjMultiModule: {
         show: { state: false }
-      }
+      },
+      objtypeIds: []
     };
   },
   computed: {
     researches() {
-      if (
-        this.researchInfo.objtypeIds &&
-        this.researchInfo.objtypeIds.length == 0
-      ) {
-        this.researchInfo.objtypeIds = null;
-      }
-      if (
-        this.researchInfo.name ||
-        this.researchInfo.id ||
-        this.researchInfo.objtypeIds ||
-        this.researchInfo.datatypeId ||
-        this.researchInfo.storeId ||
-        this.researchInfo.areaId
-      ) {
-        this.page.pageNum = 1;
-      }
       let param = {
         pageNum: this.page.pageNum,
         pageSize: this.page.pageSize,
         name: this.researchInfo.name,
         id: this.researchInfo.id,
-        objtypeIds: this.researchInfo.objtypeIds,
+        objtypeIds: this.objtypeIds.length === 0 ? null : this.objtypeIds,
         datatypeId: this.researchInfo.datatypeId,
         tunnelId: this.researchInfo.tunnelId,
         storeId: this.researchInfo.storeId,
@@ -296,6 +281,10 @@ export default {
     };
   },
   methods: {
+    resetAndSearch(){
+      this.page.pageNum = 1
+      this.search()
+    },
     search() {
       let _this = this;
       MeasObjServer.measObjDataGrid(this.researches).then(
@@ -305,8 +294,9 @@ export default {
           _this.data6 = result.list;
           _this.data6.forEach(measobj => {
             // measobj.actived = measobj.actived ? "是" : "否";
-            measobj.location =
-              measobj.section.store.tunnel.name + measobj.section.name;
+            if(measobj.section != null){
+              measobj.location = measobj.section.store.tunnel.name + measobj.section.name;
+            }
           });
         },
         error => {
@@ -369,7 +359,7 @@ export default {
             _this.page.pageTotal = data.total;
             _this.$Message.success("添加成功！");
             _this.measObjModule.show.state = !this.measObjModule.show.state;
-            _this.search();
+            _this.resetAndSearch();
           },
           error => {
             _this.Log.info(error);
@@ -381,7 +371,7 @@ export default {
             _this.page.pageTotal = data.total;
             _this.$Message.success("更新成功！");
             _this.measObjModule.show.state = !this.measObjModule.show.state;
-            _this.search();
+            _this.resetAndSearch();
           },
           error => {
             _this.Log.info(error);
@@ -399,7 +389,7 @@ export default {
       MeasObjServer.batchPostMeasObjs(data).then(
         res => {
           _this.Log.info(res);
-          this.search()
+          _this.resetAndSearch()
         },
         error => {
           _this.Log.info(error);
@@ -446,7 +436,7 @@ export default {
             result => {
               _this.$Message.info("已删除");
               _this.deleteShow = false;
-              _this.search();
+              _this.resetAndSearch();
             },
             error => {
               _this.Log.info(error);
@@ -455,8 +445,8 @@ export default {
         },
         onCancel: () => {
           this.$Message.info("已取消操作");
-          this.search();
-        }
+          this.resetAndSearch();
+        },
       });
     }
   },

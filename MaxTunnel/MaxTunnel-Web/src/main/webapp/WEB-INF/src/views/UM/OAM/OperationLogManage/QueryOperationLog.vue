@@ -26,7 +26,7 @@
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 56%" v-model="conditions.endTime"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <Button type="primary" size="small" icon="ios-search" @click="queryOperationLog()">查询</Button>
+                    <Button type="primary"  icon="ios-search" @click="queryOperationLog">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -34,7 +34,7 @@
             <Table :columns="columns1" :data="operationLog"></Table>
         </div>
         <div class="page">
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 20px; right: 15px;"></Page>
         </div>
     </div>
@@ -72,7 +72,7 @@ export default {
                 {
                     type: 'index',
                     align: 'center',
-                    width: 60
+                    width: 100
                 },
                 {
                     title: '模块类型',
@@ -107,7 +107,7 @@ export default {
                 },
                 {
                     title: '',
-                    width: 150,
+                    width: 200,
                     align: "center",
                     render: (h,params)=>{
                         return('div',[
@@ -125,7 +125,7 @@ export default {
                         ])
                     }
                 }
-            ]    
+            ]
         }
     },
     computed:{
@@ -148,26 +148,30 @@ export default {
     methods:{
         queryOperationLog(){
             let _this = this
+          if(new Date(_this.conditions.beginTime)>new Date(_this.conditions.endTime)){
+            _this.$Message.error('开始时间必须小于结束时间！');
+            return;
+          }
             OperationLogService.logDatagrid(_this.params).then(
                 (result)=>{
                     if(result.list!=null){
                         for(let index in result.list){
-                            result.list[index].crtTime =  new Date(result.list[index].crtTime).format('yyyy-MM-dd hh:mm:s')                      
-                        }            
+                            result.list[index].crtTime =  new Date(result.list[index].crtTime).format('yyyy-MM-dd hh:mm:s')
+                        }
                         _this.operationLog = result.list
-                        _this.page.pageTotal = result.total  
+                        _this.page.pageTotal = result.total
                     }
                 },
                 (error)=>{
                     _this.Log.info(error)
                 })
         },
-        handlePage(value) {  
-            this.page.pageNum = value 
+        handlePage(value) {
+            this.page.pageNum = value
             this.queryOperationLog()
-        },  
-        handlePageSize(value) {  
-            this.page.pageSize = value  
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value
             this.queryOperationLog()
         },
         del(id) {

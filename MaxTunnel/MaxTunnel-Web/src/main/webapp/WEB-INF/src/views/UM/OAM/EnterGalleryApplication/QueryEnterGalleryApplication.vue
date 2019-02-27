@@ -26,10 +26,10 @@
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <Button type="primary" size="small" icon="ios-search" @click="queryRecords()">查询</Button>
+                    <Button type="primary" icon="ios-search" @click="queryRecords()">查询</Button>
                 </Col>
-            </Row>  
-        </div>      
+            </Row>
+        </div>
         <div class="list">
             <Table :columns="columns1" :data="applicationRecordList"></Table>
             <Modal
@@ -53,7 +53,7 @@
                 </div>
             </Modal>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle"></Page>
     </div>
 </template>
@@ -74,7 +74,7 @@ export default {
         {
           type: "index",
           align: "center",
-          width: 40
+          width: window.innerWidth/100*80/100*4
         },
         {
           title: "申请人",
@@ -101,7 +101,7 @@ export default {
           title: "计划入廊时间",
           key: "preTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             return h(
               "div",
@@ -130,7 +130,7 @@ export default {
           //       style: {
           //         color:
           //           params.row.status == 3 ? "#ff6600"
-          //             : params.row.status == 2 ? "#19be6b" 
+          //             : params.row.status == 2 ? "#19be6b"
           //             : params.row.status == 1 ? "#2d8cf0" : "#a005fdb3"
           //       }
           //     },
@@ -152,11 +152,12 @@ export default {
             return h(
               'span',temp
             )
-          } 
+          }
         },
         {
           title: "查看申请状态",
           align: "center",
+          width: window.innerWidth/100*80/100*9,
           render: (h, params) => {
             return h("div", [
               h(
@@ -196,7 +197,7 @@ export default {
           title: "进入管廊时间",
           key: "enterTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             let temp = ''
             if(params.row.enterTime==null){
@@ -213,7 +214,7 @@ export default {
           title: "离开管廊时间",
           key: "exitTime",
           align: "center",
-          // width: 150,
+          width: window.innerWidth/100*80/100*12,
           render: (h, params) => {
             let temp = ''
             if(params.row.exitTime==null){
@@ -240,8 +241,8 @@ export default {
           }
         },
         {
-          title: "参观人员详细信息",
-          width: 140,
+          title: "参观人员信息",
+          width: window.innerWidth/100*80/100*5,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -252,17 +253,26 @@ export default {
                     type: "primary",
                     size: "small"
                   },
-                  style: {
-                    marginRight: "5px"
-                  },
+                  // style: {
+                  //   marginRight: "5px"
+                  // },
                   on: {
                     click: () => {
                       this.show(params.row.id);
                     }
                   }
                 },
-                "信息"
-              ),
+                "详情"
+              )
+            ]);
+          }
+        },
+        {
+          title: "操作",
+          width: window.innerWidth/100*80/100*6,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
               h(
                 "Button",
                 {
@@ -387,6 +397,10 @@ export default {
   methods: {
     queryRecords() {
       let _this = this
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
       EnterGalleryService.enterGalleryDatagrid(_this.params).then(
         (result)=>{
           _this.applicationRecordList = result.list;
@@ -414,6 +428,7 @@ export default {
     del(id) {
       this.$Modal.confirm({
         title: '入廊申请',
+        width:"25vw",
         content: '<p>是否删除这条入廊申请</p>',
         onOk: () => {
           let _this = this

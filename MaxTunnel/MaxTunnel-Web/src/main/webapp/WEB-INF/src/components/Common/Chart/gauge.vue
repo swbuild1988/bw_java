@@ -19,8 +19,8 @@
 
   .nameTop {
     position: absolute;
-    fontFamily: "'Microsoft YaHei";
-    fontWeight: "normal";
+    font-family: "'Microsoft YaHei";
+    font-weight: "normal";
     z-index: 1003;
     color: #fff;
     left: .7em;

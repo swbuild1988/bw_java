@@ -54,7 +54,7 @@
             <FormItem label="备注：">
                 <Input v-model="defectDetails.remark" type="textarea" :rows="4" placeholder="请输入备注"></Input>
             </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px;">
+            <FormItem style="text-align: center;margin-left: -100px;">
                 <Button type="ghost" @click="goBack()">返回</Button>
                 <Button type="primary" style="margin-left: 8px" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
             </FormItem>

@@ -35,7 +35,7 @@
                 </div>
             </div>
             
-            <Table  stripe border :columns="breakColumns"  :style="{height:'20',zIndex:101}" :data="breakData"></Table>
+            <Table  stripe border :columns="breakColumns" :height="tableHeight" :data="breakData"></Table>
             <div class="pageBox">
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
                     show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
@@ -75,7 +75,8 @@ export default {
                 yAxisName: "单位：个",
                 requestUrl: "tunnels/equipments/types",
                 title: "管廊设备明细",
-                color: "#21d6ff"
+                color: "#21d6ff",
+                gridTop: '15%'
             },
             conditions: {
                 name: null,
@@ -209,6 +210,7 @@ export default {
             }
         )
         this.showTable()
+        this.getTableHieght()
     },
     
     methods:{
@@ -244,7 +246,7 @@ export default {
             this.goToMoudle1(id, types.pageType.Read);
         },
         getTableHieght(){
-            this.tableHeight = document.body.offsetHeight/41 
+            this.tableHeight = document.body.offsetHeight/100*28
         }
     }
 }

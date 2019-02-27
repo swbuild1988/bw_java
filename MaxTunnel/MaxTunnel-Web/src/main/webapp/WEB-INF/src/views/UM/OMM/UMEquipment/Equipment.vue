@@ -71,11 +71,21 @@
           ]
         },
       ];
+      if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/equipment") < 0) {
+          this.goToMoudle({path: this.equipment.leftTree[0].url});
+          sessionStorage.setItem('selectedName','')
+      }
+        sessionStorage.setItem("refreshAddress", "");
     },
     beforeRouteUpdate (to, from, next) {
       // console.log("equipment to",to)
       // console.log("equipment from",from)
       next()
-    },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    },                                                                               
+    methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
+    }                       
   };
 </script>

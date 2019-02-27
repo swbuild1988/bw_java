@@ -1,6 +1,6 @@
 <template>
 <div :style="backStyle">
-  <div class="backImgStyle">
+  <div>
   <Form :label-width="140" @submit.native.prevent>
     <h2 class="formTitle" v-show="this.$route.params.isFinished!=false">审批入廊申请</h2>
     <h2 class="formTitle" v-show="this.$route.params.isFinished==false">入廊申请审批中</h2>

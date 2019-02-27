@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 24px">
     <Row>
-      <h1 style="margin-bottom: 10px;">巡检计划详情</h1>
+      <h2 style="margin-bottom: 10px;">巡检计划详情</h2>
         <Col span="12" style="padding-right: 20px;background: #fff;">
           <div class="leftContainer">
             <Form :model="plan" :label-width="100" @submit.native.prevent>
@@ -360,6 +360,12 @@ ivu-input-wrapper >>> .ivu-input[disabled]{
     }
     .ivu-table td, .ivu-table th{
       height: 4.5vmin;
+    }
+    .finish{
+      width: 3vmin;
+      height: 1.4vmin;
+      border-radius: 0.4vmin;
+      margin-right: 0.5vmin;
     }
 }
 </style>

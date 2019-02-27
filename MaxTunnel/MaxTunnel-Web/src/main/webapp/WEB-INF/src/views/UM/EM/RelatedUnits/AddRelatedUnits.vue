@@ -154,40 +154,8 @@ export default {
             },
             function(error){
                 console.log(error)
-        })
-        // this.axios.get('tunnels/tree').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         data.forEach(element => {
-        //             var firstChildren = []
-        //             let temp={}
-        //             temp.title = element.name
-        //             temp.id = element.id
-        //             if(element.list.length!=0){
-        //                 element.list.forEach(a=>{
-        //                     var secondChildren = []
-        //                     let obj = {}
-        //                     obj.title = a.name
-        //                     obj.id = a.id
-        //                     obj.disabled = true
-        //                     if(a.list.length!=0){
-        //                         obj.disabled = false
-        //                          a.list.forEach(b=>{
-        //                             let secondInfo = {}
-        //                             secondInfo.title = b.name
-        //                             secondInfo.id = b.id
-        //                             secondChildren.push(secondInfo)
-        //                             obj.children = secondChildren
-        //                         })
-        //                     }
-        //                     firstChildren.push(obj)                        
-        //                     temp.children = firstChildren
-        //                 })
-        //             }
-        //             this.treeList.push(temp)                   
-        //         });
-        //     }
-        // })
+            }
+        )
         EnumsService.getUnitType().then(
             function(result){
                 _this.unitType = result
@@ -195,12 +163,6 @@ export default {
             function(error){
                 console.log(error)
         })
-        // axios.get('/unittype-enums').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.unitType = data;
-        //     }
-        // });
         RelatedUnitService.getRelatedUnitInfoById(_this.$route.params.id).then(
             function(result1){
                 _this.addRelatedUnitsInfo = result1
@@ -227,32 +189,8 @@ export default {
             },
             function(error1){
                 console.log(error1)
-            })
-        // axios.get('relatedunits/'+this.$route.params.id).then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.addRelatedUnitsInfo = data;
-        //         axios.get('sections/batch/'+this.addRelatedUnitsInfo.sectionIds).then(response=>{
-        //             let{ code,data } = response.data
-        //             if(code==200){
-        //                 this.sections = data
-        //                 var str = ''
-        //                 for(var k=0; k<this.sections.length; k++){
-        //                     if(this.sections.length==1){
-        //                         this.sectionName=this.sections[k].name
-        //                     }else{
-        //                         if(this.sections[k]==null){
-        //                             str=''
-        //                         }else{
-        //                             str += this.sections[k].name + '，'
-        //                             this.sectionName = str.substring(0,str.length-1)
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         })
-        //     }
-        // });
+            }
+        )
     },
     methods:{
         choiceAll(){
@@ -373,6 +311,21 @@ export default {
         height: 4vmin;
         width: 8vmin;
         font-size: 1.6vmin;
+    }
+    .tree.ivu-tree >>> ul.ivu-tree-children{
+        font-size: 1.4vmin !important;
+    }
+    .tree.ivu-tree >>> .ivu-checkbox-inner{
+        width: 1.4vmin;
+        height: 1.4vmin;
+        border: 0.1vmin solid #dddee1;
+    }
+
+    .tree.ivu-tree >>> .ivu-checkbox-inner:after{
+        width: 0.6vmin;
+        height: 0.9vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
     }
 }
 </style>

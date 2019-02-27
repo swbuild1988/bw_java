@@ -114,8 +114,11 @@
             </Col>
           </Form>
           <div style="text-align: center" v-show="pageType==pageTypes.Edit">
-            <Button type="default" style="margin-right: 8px;">返回</Button>
+            <Button type="default" style="margin-right: 8px;" @click="goBack()">返回</Button>
             <Button type="primary" @click="updateEquipmentInfo()">确定</Button>
+          </div>
+          <div style="text-align: center" v-show="pageType!=pageTypes.Edit">
+            <Button type="default" @click="goBack()">返回</Button>
           </div>
         </div>
       </Col>
@@ -309,14 +312,6 @@ export default {
           this.$router.push("/UM/equipment/queryequipment");
         }
       });
-      // EquipmentService.updateEquipmentInfo(this.info).then(res=>{
-      //     (result) => {
-      //         console.log("222")
-      //     },
-      //     (error) => {
-      //         this.Log.info(error)
-      //     }
-      // })
     },
     getHours(time) {
       var dataEnd = new Date();
@@ -327,6 +322,10 @@ export default {
       this.runTimeCount = hours;
       return this.runTimeCount;
     },
+    //返回
+    goBack(){
+        this.$router.back(-1);
+    }
   },
 
 };

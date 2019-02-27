@@ -23,7 +23,7 @@
         <span>设备状态：</span>
         <Select v-model="conditions.status" style="width:60%">
           <Option value=null key="0">所有</Option>
-          <Option v-for="item in equipmentStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
+          <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
         </Select>
       </Col>
       <Col span="6">
@@ -42,7 +42,7 @@
         <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
       </Col>
       <Col span="6">
-        <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
+        <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
       </Col>
     </Row>
     <div class="list">
@@ -65,12 +65,12 @@
               </div>
             </div>
             <Row class="detailsBox">
-              <Col span="11">所属管廊：{{item.tunnel.name}}</Col>
-              <Col span="13">设备类型：{{ item.typeName }}</Col>
-              <Col span="11">供应商：{{item.vender.name}}</Col>
-              <Col span="13">所属型号：{{item.model.name}}</Col>
-              <Col span="11">设备状态：{{item.statusName}}</Col>
-              <Col span="13">启用时间：{{ item.crtTime }}</Col>
+              <Col span="10">所属管廊：{{item.tunnel.name}}</Col>
+              <Col span="14">设备类型：{{ item.typeName }}</Col>
+              <Col span="10">供应商：{{item.vender.name}}</Col>
+              <Col span="14">所属型号：{{item.model.name}}</Col>
+              <Col span="10">设备状态：{{item.statusName}}</Col>
+              <Col span="14">启用时间：{{ item.crtTime }}</Col>
             </Row>
             <div class="operation">
               <Row>
@@ -93,7 +93,7 @@
         </Col>
       </Row>
     </div>
-    <Page   :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
           placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
           :style='pageStyle'></Page>
   </div>
@@ -124,7 +124,7 @@ export default {
         startTime: null,
         endTime: null
       },
-      equipmentStatus: types.equipmentStatus,
+      equipmentStatus: [],
       pagingList: [],
       page: {
         pageNum: 1,
@@ -140,7 +140,7 @@ export default {
       equipmentModel: [],
       venders: [],
       backImage: {
-        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",   
+        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
       }
     };
   },
@@ -222,6 +222,16 @@ export default {
         error=>{
             this.Log.info(error)
         }
+    ),
+    //设备状态
+    EquipmentService.getStatus().then(
+        res=>{
+          console.log("res",res)
+            this.equipmentStatus = res
+        },
+        error=>{
+            this.Log.info(error)
+        }
     )
     this.showTable();
   },
@@ -238,6 +248,10 @@ export default {
     },
     showTable() {
       let _this = this;
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
       EquipmentService.equipmentDatagird(this.params).then(
         result => {
           for (let index in result.list) {
@@ -282,6 +296,7 @@ export default {
 
       this.$Modal.confirm({
         title: "删除",
+        width: '24vw',
         content: "<p>确认删除吗?</p>",
         onOk: () => {
           let _this = this;
@@ -373,7 +388,7 @@ export default {
   background: #fff;
 }
 
-.detailsBox .ivu-col-span-11,.detailsBox .ivu-col-span-13 {
+.detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14 {
   line-height: 35px;
   padding-left: 20px;
 }
@@ -429,9 +444,9 @@ export default {
         z-index: 10001;
     }
     .detailsBox{
-        padding-top: 2vh;    
+        padding-top: 2vh;
     }
-    .detailsBox .ivu-col-span-11,.detailsBox .ivu-col-span-13{
+    .detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14{
         line-height: 4vmin;
         font-size: 1.3vmin;
     }
