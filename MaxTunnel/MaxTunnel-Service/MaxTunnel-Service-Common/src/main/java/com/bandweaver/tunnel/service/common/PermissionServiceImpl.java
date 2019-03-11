@@ -4,8 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.bandweaver.tunnel.dao.common.RolePermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.ls.LSInput;
 
 import com.bandweaver.tunnel.common.biz.itf.common.PermissionService;
@@ -20,6 +22,8 @@ public class PermissionServiceImpl implements PermissionService {
 	
 	@Autowired
 	private PermissionMapper permissionMapper;
+	@Autowired
+	private RolePermissionMapper rolePermissionMapper;
 
 	@Override
 	public void addPermission(Permission permission) {
@@ -28,8 +32,13 @@ public class PermissionServiceImpl implements PermissionService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteBatch(List<Integer> list) {
+		if(list.isEmpty())
+			return;
 		permissionMapper.deleteBatch(list);
+		//同时删除中间表数据
+		rolePermissionMapper.deleteByPIds(list);
 	}
 
 	@Override

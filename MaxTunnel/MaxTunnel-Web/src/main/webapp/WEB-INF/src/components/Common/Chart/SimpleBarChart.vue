@@ -1,5 +1,5 @@
 <template>
-  <div class='SimpleBar' :id="id"></div>
+  <div class='SimpleBar' :id="id" ref="element"></div>
 </template>
 
 <script>
@@ -9,11 +9,18 @@ export default {
         id: {
             type: String
         },
+        title: {
+            type: String
+        },
         requestUrl: {
             type: String
         },
         parameters: {
             type: Object
+        },
+        xAxisRotate: {
+            default: 0,
+            type: String
         }
     },
     data() {
@@ -23,7 +30,36 @@ export default {
             yData: [],
             series: [],
             option: {
+                
+            }
+        };
+    },
+    components: {},
+    mounted() {
+        this.init();
+        this.refreshData();
+    },
+    methods: {
+        init() {
+            this.drawBar();
+            this.fetchData(this.requestUrl);
+        },
+
+        drawBar() {
+            let _this = this;
+
+            _this.myChart = _this.$echarts.init(
+                document.getElementById(_this.id)
+            );
+            // 加载默认参数
+            _this.option = {
                 color: ["#61a0a8"],
+                title: {
+                    text: this.title,
+                    textStyle: {
+                        fontSize: this.getFontSize('6%')
+                    }
+                },
                 tooltip: {
                     trigger: "axis",
                     axisPointer: {
@@ -34,7 +70,8 @@ export default {
                 grid: {
                     left: "3%",
                     right: "4%",
-                    bottom: "3%",
+                    bottom: "5%",
+                    top: '11%',
                     containLabel: true
                 },
                 xAxis: [
@@ -42,18 +79,29 @@ export default {
                         type: "category",
                         data: [],
                         axisLabel: {
-                            interval: 0
+                            interval: 0,
+                            boundaryGap: [0,0.01],
+                            rotate: this.xAxisRotate,
+                            show: true,
+                            textStyle: {
+                                fontSize : this.getFontSize('5%')      //更改坐标轴文字大小
+                            },
+                            
                         },
                         axisTick: {
                             alignWithLabel: true
-                        }
+                        },
                     }
                 ],
                 yAxis: [
                     {
                         type: "value",
                         axisLabel: {
-                            interval: 0
+                            interval: 0,
+                            show: true,
+                            textStyle: {
+                                fontSize : this.getFontSize('5%')      //更改坐标轴文字大小
+                            }
                         }
                     }
                 ],
@@ -89,26 +137,6 @@ export default {
                     }
                 ]
             }
-        };
-    },
-    components: {},
-    mounted() {
-        this.init();
-        this.refreshData();
-    },
-    methods: {
-        init() {
-            this.drawBar();
-            this.fetchData(this.requestUrl);
-        },
-
-        drawBar() {
-            let _this = this;
-
-            _this.myChart = _this.$echarts.init(
-                document.getElementById(_this.id)
-            );
-            // 加载默认参数
             _this.myChart.setOption(_this.option);
             // 加载新的参数
             if (_this.parameters.option) {
@@ -134,7 +162,6 @@ export default {
                                     : [].concat(init.yData, item.val)
                         };
                     }, {});
-                    console.log("simple bar data", newData);
                     if (
                         JSON.stringify(newData.xData) !=
                             JSON.stringify(_this.xData) ||
@@ -170,10 +197,24 @@ export default {
                 // }
             });
         },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
+        },
         //定时刷新数据
         refreshData() {
             let _this = this;
-            
+
             if (_this.parameters.timer) {
 
                 let { intervalId, intervalTime } = _this.parameters.timer;
@@ -187,7 +228,7 @@ export default {
                 });
                 _this.fetchData(_this.requestUrl);
                 }, intervalTime);
-                
+
             }
             }
     }

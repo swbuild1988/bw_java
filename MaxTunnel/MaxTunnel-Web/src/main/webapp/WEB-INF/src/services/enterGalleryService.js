@@ -160,7 +160,20 @@ var EnterGalleryService = {
             res.push(tmp);
         }
         return new Promise((resolve, reject) => {
-            resolve(res);
+            resolve(res)
+            // axios
+            //     .get("tunnels/enter-count-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：tunnels/enter-count-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
         });
     }
 };

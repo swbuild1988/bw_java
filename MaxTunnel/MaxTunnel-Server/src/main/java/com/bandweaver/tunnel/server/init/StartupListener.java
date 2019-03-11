@@ -31,11 +31,12 @@ public class StartupListener implements ApplicationContextAware {
         long endTime = System.currentTimeMillis();
         
         String version = (String) PropertiesUtil.getValue(Constants.MAXTUNNEL_VERSION);
-        LogUtil.info(	"*********************************\n"
-						+ "描述：初始化结束\n"
-						+ "项目名：太原市综合管廊管理平台\n"
-						+ "版本号：" + version + "\n"
-						+ "耗时：" + (endTime - beginTime) +"ms\n"
-						+ "*********************************");
+
+        LogUtil.info("----------------------------------------------------");
+        LogUtil.info("描  述：初始化结束");
+        LogUtil.info("项目名：太原市综合管廊管理平台");
+        LogUtil.info("版本号：" + version );
+        LogUtil.info("耗  时：" + (endTime - beginTime) +"ms");
+        LogUtil.info("----------------------------------------------------");
     }
 }

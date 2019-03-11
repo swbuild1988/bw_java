@@ -260,7 +260,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @date 2018年6月21日
      */
-//    @RequestMapping(value = "sections/condition", method = RequestMethod.POST)
+    @Deprecated
     @RequestMapping(value = "tunnels/stores/sections/condition", method = RequestMethod.POST)
     public JSONObject getSectionsByCondition(@RequestBody SectionVo vo) {
         List<SectionDto> list = sectionService.getSectionsByCondition(vo);
@@ -418,7 +418,7 @@ public class SectionController extends BaseController<Section>{
         double latitude = DataTypeUtil.toDouble(map.get("latitude"));
         double height = DataTypeUtil.toDouble(map.get("height"));
 
-        SectionDto resultDto = sectionService.getSectionDtoByGPS(longitude, latitude, height);
+        SectionDto resultDto = sectionService.getSectionByGPS(longitude, latitude, height);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultDto);
     }
 

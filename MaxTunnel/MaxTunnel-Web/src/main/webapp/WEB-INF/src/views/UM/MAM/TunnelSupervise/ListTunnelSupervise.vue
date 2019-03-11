@@ -4,8 +4,7 @@
       <Row style="font-size: 16">
         <Col span="6">
         监测内容:
-        <Select v-model="queryCondition.monitorType" style="width:12vw;"
-                @on-change='changeQueryTypeList(queryCondition.monitorType)'>
+        <Select v-model="queryCondition.monitorType" style="width:12vw;" @on-change='changeQueryTypeList(queryCondition.monitorType)'>
           <Option v-for="item in queryTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
         </Select>
         </Col>
@@ -18,8 +17,7 @@
         </Col>
         <Col span="6" v-show="showBtn">
         区段:
-        <Select v-model="queryCondition.sectionId" @on-change='changeSection(queryCondition.sectionId)'
-                style="width:12vw;">
+        <Select v-model="queryCondition.sectionId" @on-change='changeSection(queryCondition.sectionId)' style="width:12vw;">
           <Option v-for="item in sections" :value="item.id" :key="item.id">{{ item.name }}</Option>
         </Select>
         </Col>
@@ -31,10 +29,7 @@
         <diV class="gis">
           <!--<v_3DViewer :id="mapId" @onload="onload">-->
           <!--</v_3DViewer>-->
-          <sm-viewer
-                  :id="mapId"
-                  ref="smViewer"
-          >
+          <sm-viewer :id="mapId" ref="smViewer">
           </sm-viewer>
           <modal v-bind="modelProp"></modal>
         </diV>
@@ -107,20 +102,22 @@
             <!--结构-->
             <div class="constract">
               <p>
-              <h2 style="margin-left: 10px;">结构最大值统计:</h2>
+                <h2 style="margin-left: 10px;">结构最大值统计:</h2>
               </p>
               <div>
                 <Row>
                   <Col v-for="(item,index) in tunnelProps" span="23" :key="index" offset="1" style="padding:12px ">
                   <span style="font-size: 14px;">{{item.key}}：{{item.val}}/{{item.unit}}
-                                        <div style="position: relative;float: right;">
-                                            <span><div
-                                              :class="{'normal': item.status=='正常', 'abnormal': item.status =='不正常'}"
-                                              style="position: relative;float: right;margin-top:4px; "></div></span>
-                                        </div>
-                                        <div style="position: relative; float: right;  margin-right: 30%;">
-                                            <span><Icon size="20" type="location" color="#fa9126"></Icon>{{item.location}}</span>
-                                        </div>
+                    <div style="position: relative;float: right;">
+                      <span>
+                        <div :class="{'normal': item.status=='正常', 'abnormal': item.status =='不正常'}" style="position: relative;float: right;margin-top:4px; "></div>
+                      </span>
+                    </div>
+                    <div style="position: relative; float: right;  margin-right: 30%;">
+                      <span>
+                        <Icon size="20" type="location" color="#fa9126"></Icon>{{item.location}}
+                      </span>
+                    </div>
                   </span>
                   </Col>
                 </Row>
@@ -132,17 +129,16 @@
               <!--安防-->
               <div class="Security">
                 <p>
-                <h2 style="margin-left: 10px;">安防统计:</h2>
+                  <h2 style="margin-left: 10px;">安防统计:</h2>
                 </p>
                 <div>
                   <Row style="color: #fff">
                     <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw;    background: #a8d5de;"
-                         v-for="(item,index) in tunnelProps" :key="index">
+                      v-for="(item,index) in tunnelProps" :key="index">
                     <span style="padding-left: 8px; font-size: 18px;"> {{item.name}}</span>
                     <div style="">
                       <Row>
-                        <Col span="10" style="margin-top: 14px;" offset="2" v-for="(item2,index) in item.data"
-                             :key="index">
+                        <Col span="10" style="margin-top: 14px;" offset="2" v-for="(item2,index) in item.data" :key="index">
                         {{item2.key}}：{{item2.val}}
                         </Col>
                       </Row>
@@ -159,8 +155,7 @@
         <div>
           <Col Col span="20" v-show="queryCondition.showDataMenu">
           <div style="position: relative;float: left;width: 70px;">
-            <Checkbox :indeterminate="indeterminate" :value="checkAll" size="large"
-                      @click.prevent.native="handleCheckAll">全部
+            <Checkbox :indeterminate="indeterminate" :value="checkAll" size="large" @click.prevent.native="handleCheckAll">全部
             </Checkbox>
           </div>
           <checkbox-group v-model="queryCondition.objDataType" @on-change="checkAllGroupChange">
@@ -198,7 +193,7 @@
 
         <div style="position:absolute;width:100%;bottom: 0px;" v-show="queryCondition.showDataMenu">
           <Page class="nextPage" @on-change="changePage" :total="queryCondition.total" show-total show-elevator
-                :page-size="queryCondition.pageSize"></Page>
+            :page-size="queryCondition.pageSize"></Page>
         </div>
       </TabPane>
     </Tabs>
@@ -209,9 +204,15 @@
   import SmViewer from "../../../../components/Common/3D/3DViewer";
   import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
   import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-  import { TunnelService } from '../../../../services/tunnelService'
-  import { EnumsService } from '../../../../services/enumsService'
-  import { MonitorDataService } from '../../../../services/monitorDataService'
+  import {
+    TunnelService
+  } from '../../../../services/tunnelService'
+  import {
+    EnumsService
+  } from '../../../../services/enumsService'
+  import {
+    MonitorDataService
+  } from '../../../../services/monitorDataService'
   import {
     setViewAngle,
     bubble,
@@ -221,7 +222,10 @@
     labelSqlCompleted,
     processFailed
   } from "../../../../scripts/commonFun.js";
-  import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
+  import {
+    SuperMapSqlQuery,
+    lookAt
+  } from "../../../../scripts/three.js";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
   import axios from "axios"
 
@@ -239,11 +243,22 @@
           },
           showButton: false, //关闭底部按钮
           tilte: "详情", //对话框标题
-          data: [
-            {key: "氧气浓度", val: "12.45%"},
-            {key: "硫化氢", val: "45%"},
-            {key: "一氧化碳", val: "34.2%"},
-            {key: "湿度", val: "30%"}
+          data: [{
+              key: "氧气浓度",
+              val: "12.45%"
+            },
+            {
+              key: "硫化氢",
+              val: "45%"
+            },
+            {
+              key: "一氧化碳",
+              val: "34.2%"
+            },
+            {
+              key: "湿度",
+              val: "30%"
+            }
           ] //属性集
         },
         mapId: "tunnnelMap",
@@ -400,16 +415,14 @@
             });
           });
           //注册鼠标点击事件
-          viewer.pickEvent.addEventListener(function (feater) {
-          });
+          viewer.pickEvent.addEventListener(function (feater) {});
           // lay是所有的数据集
           Cesium.when(
             promise,
             function (layer) {
               //设置相机位置、视角，便于观察场景
               setViewAngle(scene, Cesium, _this.camera);
-              viewer.pickEvent.addEventListener(function (feature) {
-              });
+              viewer.pickEvent.addEventListener(function (feature) {});
             },
             function (e) {
               if (widget._showRenderLoopErrors) {
@@ -461,8 +474,7 @@
               roll: parseFloat(location[5])
             }
           });
-        } catch (e) {
-        }
+        } catch (e) {}
       },
       //添加监测区段的视角位置
       addARrea() {
@@ -511,14 +523,14 @@
           //获取区段列表
           let _this = this
           TunnelService.getSectionsByStoreId(_this.queryCondition.storeId).then(
-            (result)=>{
+            (result) => {
               _this.sections = result.sort((a, b) => a.id - b.id);
               _this.curSotre.id = _this.sections[0].id;
               _this.queryCondition.sectionId = _this.sections[0].id;
               _this.curSotre.name = _this.sections[0].name;
               _this.getSectionsMonitorData();
             },
-            (error)=>{
+            (error) => {
               console.log(error)
             })
           //获取位置信息
@@ -576,7 +588,7 @@
         //获取管廊列表
         let _this = this
         TunnelService.getTunnels().then(
-          (result)=>{
+          (result) => {
             _this.tunnels = result;
             _this.tunnels.forEach(a => {
               if (a.id == _this.tunnelId) {
@@ -584,47 +596,47 @@
               }
             });
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
-          //获取管廊详细信息
-          TunnelService.getTunnelDetailByTunnelId(_this.tunnelId).then(
-            (result)=>{
-              _this.curTunnel.user = result.responsibility.name;
-              _this.curTunnel.constructionUnit = result.construct.name;
-              _this.curTunnel.operationUnit = result.operation.name;
-            },
-            (error)=>{
-              console.log(error)
-            })
+        //获取管廊详细信息
+        TunnelService.getTunnelDetailByTunnelId(_this.tunnelId).then(
+          (result) => {
+            _this.curTunnel.user = result.responsibility.name;
+            _this.curTunnel.constructionUnit = result.construct.name;
+            _this.curTunnel.operationUnit = result.operation.name;
+          },
+          (error) => {
+            console.log(error)
+          })
         //获取管仓列表     url：tunnels/{id}/stores
         TunnelService.getStoresByTunnelId(_this.tunnelId).then(
-          (result)=>{
+          (result) => {
             _this.sotres = result;
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
         this.getMonitorData();
         //获取指定管廊下共有多少管仓    url:tunnels/{id}/stores/count
         TunnelService.getStoresCountByTunnelId(_this.tunnelId).then(
-          (result)=>{
+          (result) => {
             _this.curTunnel.storeNum = result.val
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
         //获取区段数
         TunnelService.getSectionsCountByTunnelId(_this.tunnelId).then(
-          (result)=>{
+          (result) => {
             _this.curTunnel.sectionNum = result.val
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
         //获取监测内容
         EnumsService.getMonitorType().then(
-          (result)=>{
+          (result) => {
             console.log(result)
             _this.queryTypeList = result;
             _this.queryTypeList.forEach(a => {
@@ -638,7 +650,7 @@
               }
             });
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
       },
@@ -647,38 +659,41 @@
       getMonitorData() {
         if (this.queryCondition.monitorType == 1) {
           let _this = this
-          Promise.all([MonitorDataService.getMaxMonitorData(_this.tunnelId,_this.queryCondition.monitorType),
-            MonitorDataService.getMonitorData()]).then(
-              (result)=>{
-                _this.tunnelProps = [];
-                _this.tunnelPropsMax = [];
-                _this.tunnelPropsMax = result[1];
-                result[0].forEach(a => {
-                  let temp = {};
-                  temp.location = a.location;
-                  temp.key = a.key;
-                  temp.val = new Number(a.val.toFixed(2));
-                  temp.percent =
-                    temp.val /
-                    _this.tunnelPropsMax.filter(
-                      a => a.key == temp.key
-                    )[0].val *
-                    100;
-                  _this.tunnelProps.push(temp);
-                });
-              },
-              (error)=>{
-                console.log(error)
-              }
-            )
+          Promise.all([MonitorDataService.getMaxMonitorData(_this.tunnelId, _this.queryCondition.monitorType),
+            MonitorDataService.getMonitorData()
+          ]).then(
+            (result) => {
+              _this.tunnelProps = [];
+              _this.tunnelPropsMax = [];
+              _this.tunnelPropsMax = result[1];
+              result[0].forEach(a => {
+                let temp = {};
+                temp.location = a.location;
+                temp.key = a.key;
+                temp.val = new Number(a.val.toFixed(2));
+                temp.percent =
+                  temp.val /
+                  _this.tunnelPropsMax.filter(
+                    a => a.key == temp.key
+                  )[0].val *
+                  100;
+                _this.tunnelProps.push(temp);
+              });
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
         } else if (this.queryCondition.monitorType == 2) {
           this.tunnelProps = [];
           this.axios.get(" ").then(result => {
-            let {code, data} = result.data;
+            let {
+              code,
+              data
+            } = result.data;
             // if (code == 200) {
             // let tempData = data;
-            let tempData = [
-              {
+            let tempData = [{
                 key: "沉降",
                 val: 2,
                 unit: "mm",
@@ -721,32 +736,58 @@
         } else {
           this.tunnelProps = [];
           this.axios.get(" ").then(result => {
-            let {code, data} = result.data;
+            let {
+              code,
+              data
+            } = result.data;
             // if (code == 200) {
             // let tempData = data;
-            let tempData = [
-              {
+            let tempData = [{
                 name: "门禁",
-                data: [
-                  {key: "开", val: "120"},
-                  {key: "关", val: "10"},
-                  {key: "告警", val: "2"}
+                data: [{
+                    key: "开",
+                    val: "120"
+                  },
+                  {
+                    key: "关",
+                    val: "10"
+                  },
+                  {
+                    key: "告警",
+                    val: "2"
+                  }
                 ]
               },
               {
                 name: "电子井盖",
-                data: [
-                  {key: "开", val: "4"},
-                  {key: "关", val: "81"},
-                  {key: "告警", val: "3"}
+                data: [{
+                    key: "开",
+                    val: "4"
+                  },
+                  {
+                    key: "关",
+                    val: "81"
+                  },
+                  {
+                    key: "告警",
+                    val: "3"
+                  }
                 ]
               },
               {
                 name: "红外",
-                data: [
-                  {key: "正常", val: "70"},
-                  {key: "入侵", val: "7"},
-                  {key: "告警", val: "3"}
+                data: [{
+                    key: "正常",
+                    val: "70"
+                  },
+                  {
+                    key: "入侵",
+                    val: "7"
+                  },
+                  {
+                    key: "告警",
+                    val: "3"
+                  }
                 ]
               }
             ];
@@ -777,64 +818,64 @@
         if (this.queryCondition.monitorType == 1) {
           let _this = this
           MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
-            (result)=>{
-                _this.curEnvData = [];
-                result.forEach(a => {
-                  let temp = {};
-                  temp.name = a.objTypeName;
-                  temp.value = new Number(a.cv).toFixed(2);
-                  temp.status =
-                    new Number(temp.value) /
-                    _this.tunnelPropsMax.filter(
-                      a => a.key == temp.name
-                    )[0].val *
-                    100;
-                  _this.curEnvData.push(temp);
-                });
+            (result) => {
+              _this.curEnvData = [];
+              result.forEach(a => {
+                let temp = {};
+                temp.name = a.objTypeName;
+                temp.value = new Number(a.cv).toFixed(2);
+                temp.status =
+                  new Number(temp.value) /
+                  _this.tunnelPropsMax.filter(
+                    a => a.key == temp.name
+                  )[0].val *
+                  100;
+                _this.curEnvData.push(temp);
+              });
             },
-            (error)=>{
+            (error) => {
               console.log(error)
             })
         } else if (this.queryCondition.monitorType == 2) {
           let _this = this
           MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
-            (result)=>{
-                _this.curEnvData = [];
-                result.forEach(a => {
-                  let temp = {};
-                  temp.name = a.objTypeName;
-                  temp.value = new Number(a.cv).toFixed(2);
-                  temp.status =
-                    new Number(temp.value) /
-                    _this.tunnelPropsMax.filter(
-                      a => a.key == temp.name
-                    )[0].val *
-                    100;
-                  _this.curConstructionData.push(temp);
-                });
+            (result) => {
+              _this.curEnvData = [];
+              result.forEach(a => {
+                let temp = {};
+                temp.name = a.objTypeName;
+                temp.value = new Number(a.cv).toFixed(2);
+                temp.status =
+                  new Number(temp.value) /
+                  _this.tunnelPropsMax.filter(
+                    a => a.key == temp.name
+                  )[0].val *
+                  100;
+                _this.curConstructionData.push(temp);
+              });
             },
-            (error)=>{
+            (error) => {
               console.log(error)
             })
         } else {
           let _this = this
           MonitorDataService.getMonitorDataByStoreId(_this.curSotre.id).then(
-            (result)=>{
-                _this.curEnvData = [];
-                result.forEach(a => {
-                  let temp = {};
-                  temp.name = a.objTypeName;
-                  temp.value = new Number(a.cv).toFixed(2);
-                  temp.status =
-                    new Number(temp.value) /
-                    _this.tunnelPropsMax.filter(
-                      a => a.key == temp.name
-                    )[0].val *
-                    100;
-                  _this.curSecurityData.push(temp);
-                });
+            (result) => {
+              _this.curEnvData = [];
+              result.forEach(a => {
+                let temp = {};
+                temp.name = a.objTypeName;
+                temp.value = new Number(a.cv).toFixed(2);
+                temp.status =
+                  new Number(temp.value) /
+                  _this.tunnelPropsMax.filter(
+                    a => a.key == temp.name
+                  )[0].val *
+                  100;
+                _this.curSecurityData.push(temp);
+              });
             },
-            (error)=>{
+            (error) => {
               console.log(error)
             })
           // this.axios
@@ -885,10 +926,10 @@
               b.clickStatus = clickStatus;
               this.Log.info("click " + b.id);
               SuperMapSqlQuery(
-                this,SuperMapConfig.BIM_DATA,
-                this.VMConfig.queryParam,
-                "moid = " + b.id
-              )
+                  this, SuperMapConfig.BIM_DATA,
+                  this.VMConfig.queryParam,
+                  "moid = " + b.id
+                )
                 .then(res => {
                   this.Log.info("查找成功", res);
                   if (res.length > 0) {
@@ -916,7 +957,7 @@
           pageSize: _this.queryCondition.pageSize
         };
         MonitorDataService.objDetailDatagrid(Params).then(
-          (result)=>{
+          (result) => {
             let ids = "";
             let datatypeId = null;
             _this.Obj = [];
@@ -941,29 +982,29 @@
             _this.queryCondition.total = result.total;
             _this.queryCondition.pageNum = result.pageNum;
             ids = ids.slice(0, ids.length - 1);
-             if (result.list != null && result.list.length > 0) {
-              MonitorDataService.getDataByIdsAndDataType(ids,datatypeId).then(
-                (result1)=>{
-                    _this.Obj.forEach(a => {
-                      result1.filter(b => {
-                        if (a.id == b.id) {
-                          if (datatypeId == 1) {
-                            a.ObjVal = b.cv.toFixed(2);
-                            this.queryCondition.showSwitch = false;
-                          } else {
-                            a.ObjVal = b.cv;
-                            this.queryCondition.showSwitch = true;
-                          }
+            if (result.list != null && result.list.length > 0) {
+              MonitorDataService.getDataByIdsAndDataType(ids, datatypeId).then(
+                (result1) => {
+                  _this.Obj.forEach(a => {
+                    result1.filter(b => {
+                      if (a.id == b.id) {
+                        if (datatypeId == 1) {
+                          a.ObjVal = b.cv.toFixed(2);
+                          this.queryCondition.showSwitch = false;
+                        } else {
+                          a.ObjVal = b.cv;
+                          this.queryCondition.showSwitch = true;
                         }
-                      });
+                      }
                     });
+                  });
                 },
-                (error)=>{
+                (error) => {
                   console.log(error)
                 })
-             }
+            }
           },
-          (error)=>{
+          (error) => {
             console.log(error)
           })
         // _this.axios.post("measobjs/datagrid", Params).then(result => {
@@ -1023,15 +1064,13 @@
         //     }
         //   }
         // });
-      }
-      ,
+      },
       //切换页面
       changePage(index) {
         let _this = this;
         _this.queryCondition.pageNum = index;
         _this.getObjDetialData();
-      }
-      ,
+      },
       //切换页码数
       handlePageSize(value) {
         this.queryCondition.pageSize = value;
@@ -1039,6 +1078,7 @@
       }
     }
   };
+
 </script>
 
 <style scoped>
@@ -1063,12 +1103,12 @@
     padding: 10px;
   }
 
-  .ivu-modal-wrap > .ivu-modal {
+  .ivu-modal-wrap>.ivu-modal {
     left: 500px;
     top: 500px;
   }
 
-  .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+  .ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab {
     background: #adb3e2;
     color: #fff;
   }
@@ -1181,4 +1221,5 @@
     bottom: 0px;
     float: right;
   }
+
 </style>

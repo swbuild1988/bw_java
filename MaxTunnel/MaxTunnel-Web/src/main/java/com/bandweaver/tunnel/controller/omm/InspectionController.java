@@ -219,7 +219,6 @@ public class InspectionController {
      * @author shaosen
      * @date 2018年7月5日
      */
-
     @RequestMapping(value = "inspection-plans/{id}/activiti-png", method = RequestMethod.GET)
     public void getPng(@PathVariable String id, HttpServletResponse response) throws FileNotFoundException, IOException {
 
@@ -386,6 +385,50 @@ public class InspectionController {
     @RequestMapping(value = "inspection-tasks/one-month", method = RequestMethod.POST)
     public JSONObject getInspectionTasksByTaskTime (@RequestBody InspectionVo inspectionVo) {
     	List<InspectionTaskDto> list = inspectionTaskService.getInspectionTasksByTaskTime(inspectionVo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 获取今年和去年的巡检任务总数
+     * @return {"nowYearTaskCount":89, "beforeYearTaskCount":76}
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "inspection-tasks/count-year", method = RequestMethod.GET)
+    public JSONObject getTasksCountByYear() {
+    	JSONObject obj = new JSONObject();
+    	// 获取今年的任务总数：最少每周一次，最多三天一次，范围在52-122之间
+    	int nowYearTaskCount = (int) (Math.random() * 70 + 52);
+    	// 获取去年的任务总数
+    	int beforeYearTaskCount = (int) (Math.random() * 70 + 52);
+    	obj.put("nowYearTaskCount", nowYearTaskCount);
+    	obj.put("beforeYearTaskCount", beforeYearTaskCount);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
+    }
+    
+    /**
+     * 获取2018、2019年每月的巡检任务数
+     * @return
+     * @author ya.liu
+     * @Date 2019年1月11日
+     */
+    @RequestMapping(value = "inspection-tasks/count-month", method = RequestMethod.GET)
+    public JSONObject getTasksCountByMonth() {
+    	List<JSONObject> list = new ArrayList<>();
+    	for(int i=0;i<2;i++) {
+    		JSONObject obj = new JSONObject();
+    		obj.put("key", 2018 + i + "年");
+    		List<JSONObject> monthList = new ArrayList<>();
+    		for(int j=1;j<13;j++) {
+    			JSONObject monthObj = new JSONObject();
+    			monthObj.put("key", j + "月");
+    			int math = (int)(Math.random() * 5 + 5);
+    			monthObj.put("val", math);
+    			monthList.add(monthObj);
+    		}
+    		obj.put("val", monthList);
+    		list.add(obj);
+    	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 }

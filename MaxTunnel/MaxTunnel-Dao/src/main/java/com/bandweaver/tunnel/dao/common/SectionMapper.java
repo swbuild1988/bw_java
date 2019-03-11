@@ -64,5 +64,10 @@ public interface SectionMapper {
 
 	List<Section> getSectionListByParentId(Integer sectionId);
 
-	List<Integer> getSectionIdsByStoreIds(List<Integer> list); 
+	List<Integer> getSectionIdsByStoreIds(List<Integer> list);
+	
+	List<Integer> getSectionIdsByAreaIds(List<Integer> list); 
+
+	List<Section> getSectionsByStoreIds(List<Integer> list);
+
 }

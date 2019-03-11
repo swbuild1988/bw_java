@@ -1,6 +1,6 @@
 <template>
     <div
-        class='TimelineChart'
+        class='timelineChart'
         :id=id
         ref="element"
     ></div>
@@ -344,7 +344,7 @@ export default {
 </script>
 
 <style scoped>
-.TimelineChart {
+.timelineChart {
     width: 100%;
     height: 100%;
 }

@@ -47,17 +47,17 @@ public class QuartzJobFactory implements Job {
 		method.setAccessible(true);
 		method.invoke(SpringContextHolder.getBean(bean));
 	} catch (ClassNotFoundException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	} catch (NoSuchMethodException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	} catch (SecurityException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	} catch (IllegalAccessException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	} catch (IllegalArgumentException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	} catch (InvocationTargetException e) {
-		e.printStackTrace();
+		LogUtil.error(e);
 	}
     
     

@@ -1,7 +1,5 @@
 package com.bandweaver.tunnel.dao.omm;
 
-
-import com.bandweaver.tunnel.common.biz.dto.CommonDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InstrumentDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Instrument;
 import com.bandweaver.tunnel.common.biz.vo.omm.InstrumentVo;
@@ -37,5 +35,9 @@ public interface InstrumentMapper {
 
     int deleteByIds(List<Integer> list);
     
-    List<CommonDto> getCountGroupByTypeId(InstrumentVo vo);
+
+    int getCountByCondition(InstrumentVo vo);
+    
+    int getCountByStatus(Boolean status);
+
 }

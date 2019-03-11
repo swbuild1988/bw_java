@@ -4,20 +4,26 @@
             <h2 class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</h2>
             <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
             <h2 class="formTitle" v-show="this.pageType==2">编辑缺陷详情</h2>
-            <FormItem label="所属管廊：" v-show="this.pageType!=1&&this.pageType!=2" prop="tunnelId">
+            <FormItem label="所属管廊：" prop="tunnelId">
                 <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1">
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="所属区段：" prop="area.id">
+            <FormItem label="所属区段：" prop="area.id" v-show="this.pageType!=1">
                 <Select v-model="defectDetails.area.id" :disabled="this.pageType==1">
                     <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="所属管仓：" prop="store.id">
+            <FormItem label="所属区段：" v-show="this.pageType==1" prop="area.id">
+                <Input v-model="defectDetails.area.name" readonly></Input>
+            </FormItem>
+            <FormItem label="所属管仓：" prop="store.id" v-show="this.pageType!=1">
                 <Select v-model="defectDetails.store.id" :disabled="this.pageType==1">
                     <Option v-for="(item,index) in stores" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
+            </FormItem>
+            <FormItem label="所属管仓：" v-show="this.pageType==1" prop="store.id">
+                <Input v-model="defectDetails.store.name" readonly></Input>
             </FormItem>
             <FormItem label="缺陷名称：" prop="name">
                 <Input v-model="defectDetails.name" type="text" placeholder="请输入缺陷名称" :readonly=this.isTrue></Input>
@@ -30,10 +36,13 @@
                     <Option v-for="(item,index) in type" :key="index" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-if="defectDetails.type==2" :disabled="this.pageType==1" prop="objectId">
+            <FormItem label="对象名：" v-if="defectDetails.type==2&&this.pageType!=1" prop="objectId">
                 <Select v-model="defectDetails.objectId" @on-change="getObj()">
                     <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
                 </Select>
+            </FormItem>
+            <FormItem label="对象名：" v-if="this.pageType==1" prop="objectId">
+                <Input v-model="defectDetails.objName" readonly></Input>
             </FormItem>
             <FormItem label="危险等级：" prop="level">
                 <Select v-model="defectDetails.level" :disabled="this.pageType==1">
@@ -51,6 +60,9 @@
             <div style="text-align: center;" v-show="this.pageType!=1&&this.pageType!=2">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
+            </div>
+            <div style="text-align: center;" v-show="this.pageType==1">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
             </div>
         </Form> 
     </div>   
@@ -266,9 +278,6 @@ export default {
                 })
             },2000)
         },
-        handleReset(name){
-            this.$refs[name].resetFields()
-        },
         //返回
         goBack(){
             this.$router.back(-1);
@@ -299,6 +308,30 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .formTitle{
+        font-size: 2.8vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+        padding: 1vmin 2vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
 }
 </style>
 

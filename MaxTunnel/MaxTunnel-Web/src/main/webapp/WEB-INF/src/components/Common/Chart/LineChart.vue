@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="Line" :id=id></div>
+    <div class="Line" :id="id" ref="element"></div>
   </div>
 </template>
 
@@ -24,76 +24,99 @@
         legendData: [],
         serises: [],
         xData: [],
-        option: {
+        option: {},
+        yMin: 0,
+      }
+    },
+    components: {},
+    mounted() {
+      this.init();
+      this.resizeChart();
+    },
+    methods: {
+      init() {
+        this.drawLine();
+        this.fetchData(this.requestUrl);
+        this.refreshData();
+      },
+      resizeChart() {
+        let _this = this;
+        window.addEventListener("resize", function () {
+          _this.drawLine();
+          _this.myChart.resize();
+          _this.fetchData(_this.requestUrl);
+        });
+      },
+      drawLine() {
+        let _this = this;
+        _this.option = {
           title: {
             text: "",
-            x: 'center',
-            textStyle: {}
+            top: "left",
+            left: "center",
+            textStyle: {
+              // color: "#fff",
+              fontSize: window.innerHeight * 0.018,
+            },
           },
           tooltip: {
             trigger: 'axis'
           },
-          // visualMap: [{
-          //   show: false,
-          //   seriesIndex: 0,
-          //   inRange: {
-          //     color: ['#cb514d'],
-          //   },
-          //   min: 0,
-          //   max: 10000,
-          // },
-          //   {
-          //     show: false,
-          //     type: 'continuous',
-          //     seriesIndex: 1,
-          //     inRange: {
-          //       color: ['#5a6c77'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 2,
-          //     inRange: {
-          //       color: ['#81b3ba'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 3,
-          //     inRange: {
-          //       color: ['#dc9b85'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          //   {
-          //     show: false,
-          //     seriesIndex: 4,
-          //     inRange: {
-          //       color: ['#a7d3be'],
-          //     },
-          //     min: 0,
-          //     max: 10000,
-          //   },
-          // ],
           legend: {
-            data: []
+            itemHeight: 4,
+            orient: "vertical",
+            left: "center",
+            bottom: "bottom",
+            margin: 10,
+            // itemGap: 1,
+            itemWidth: window.innerHeight * 0.01,
+            textStyle: {
+              // color: '#fff',
+              fontSize: window.innerHeight * 0.014,
+            },
+          },
+          grid: {
+            top: '15%',
+            left: '10%',
+            right: '10%',
+            bottom: '20%'
           },
           xAxis: {
             type: 'category',
-            nameTextStyle: {
-              fontSize: 16,    //单位：件的字号大小
+            axisLine: {
+              lineStyle: {
+                // color: '#fff'
+              },
+            },
+            axisLabel: {
+              fontSize: window.innerHeight * 0.010
             },
             data: []
           },
           yAxis: {
             type: 'value',
-            nameTextStyle: {
-              fontSize: 16,    //单位：件的字号大小
+            axisLine: {
+              margin: 2,
+              lineStyle: {
+                // color: '#fff'
+              },
+            },
+            axisLabel: {
+              fontSize: window.innerHeight * 0.010,
+              formatter:
+
+                function (value, index) {
+                  if (value >= 10000 && value < 100000) {
+                    value = value / 10000 + "万";
+                  } else if (value >= 100000 && value < 1000000) {
+                    value = value / 1000000 + "十万";
+                  } else if (value >= 10000000) {
+                    value = value / 10000000 + "千万";
+                  }
+                  return value;
+                }
+
+                ,
             },
           },
           series: [{
@@ -101,21 +124,7 @@
             type: 'line',
             smooth: true
           }]
-        },
-      }
-    },
-    components: {},
-    mounted() {
-      this.init();
-    },
-    methods: {
-      init() {
-        this.drawLine();
-        this.fetchData(this.requestUrl + this.period, this.titleColor);
-        this.refreshData();
-      },
-      drawLine() {
-        let _this = this;
+        };
         _this.myChart = _this.$echarts.init(document.getElementById(_this.id));
         _this.myChart.setOption(_this.option);
         // 加载新的参数
@@ -127,7 +136,10 @@
       fetchData(requestUrl) {
         let _this = this;
         _this.axios.get(requestUrl).then(result => {
-          let {code, data} = result.data;
+          let {
+            code,
+            data
+          } = result.data;
           if (code == 200) {
             _this.serises = [];
             _this.legendData = [];
@@ -139,8 +151,10 @@
               temp.smooth = true;
               _this.legendData.push(a.key);
               let tempData = [];
-              a.val.filter(b => tempData.push(b.val.toFixed(2)));
+              a.val.filter(b => tempData.push(parseFloat(b.val.toFixed(2))));
               temp.data = tempData;
+              _this.yMin = (Math.min.apply(null, tempData) < _this.yMin || _this.yMin == 0) ? Math.min.apply(
+                null, tempData) : _this.yMin;
               _this.serises.push(temp);
             })
             data[0].val.filter(a => {
@@ -151,9 +165,11 @@
               xAxis: {
                 data: _this.xData,
               },
+              yAxis: {
+                min: _this.yMin,
+              },
               legend: {
                 data: _this.legendData,
-                bottom: '0',
               },
             })
           }
@@ -161,9 +177,39 @@
       },
       refreshData() {
         let _this = this;
-        // setInterval(() => _this.fetchData(_this.requestUrl + _this.period), 5000)
+        setInterval(() => _this.fetchData(_this.requestUrl), 5000)
       },
+      sizeFunction(x) {
+        var min = Math.min.apply(null, this.series.map(o1 => {
+          return Math.min.apply(null, o1.map(o2 => {
+            return parseFloat(o2[2]);
+          }));
+        }));
+        var max = Math.max.apply(null, this.series.map(o1 => {
+          return Math.max.apply(null, o1.map(o2 => {
+            return parseFloat(o2[2]);
+          }));
+        }));
 
+        // 最小的5%，最大的15%
+        var y = 5 + (x - min) / (max - min) * (15 - 5);
+        var size = this.getFontSize(y + '%');
+        return size;
+      },
+      getFontSize(val) {
+        if (typeof (val) == 'number') return val;
+
+        if (typeof (val) == 'string') {
+
+          if (val.indexOf('%') > 0) {
+            var tmp = parseFloat(val.replace('%', '')) / 100;
+            let height = this.$refs.element.offsetHeight;
+            return Math.round(height * tmp);
+          }
+        }
+
+        return 0;
+      }
     }
   }
 
@@ -173,6 +219,6 @@
   .Line {
     width: 100%;
     height: 100%;
-    position: relative;
   }
+
 </style>

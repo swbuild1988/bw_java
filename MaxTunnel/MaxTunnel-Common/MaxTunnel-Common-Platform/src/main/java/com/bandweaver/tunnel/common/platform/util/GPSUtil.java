@@ -49,8 +49,8 @@ public class GPSUtil {
     /**
      * (米勒投影算法）将经纬度转化为平面坐标 （单位m）
      *
-     * @param lon 经度
-     * @param lat 维度
+     * @param lon 经度 西经为负数
+     * @param lat 维度 南纬是负数
      * @return
      * @author shaosen
      * @Date 2018年8月24日
@@ -70,6 +70,25 @@ public class GPSUtil {
 //         result[0]=x;  
 //         result[1]=y; 
         return new Point2D(x, y);
+    }
+
+    /**
+     * 米勒投影法，将x，y转化成经纬度
+     * @param x
+     * @param y
+     * @return
+     */
+    public static Point2D MillierConvertion2(double x, double y) {
+        double L = 6381372 * Math.PI * 2;//地球周长
+        double W = L;// 平面展开后，x轴等于周长
+        double H = L / 2;// y轴约等于周长一半
+        double mill = 2.3;// 米勒投影中的一个常数，范围大约在正负2.3之间
+        double lat =0;
+        lat = ((H / 2 - y) * 2 * mill) / (1.25 * H);
+        lat = ((Math.atan(Math.exp(lat)) - 0.25 * Math.PI) * 180) / (0.4 * Math.PI);
+        double lon = 0;
+        lon = (x - W / 2) * 360 / W;
+        return new Point2D(lon, lat);
     }
 
 }

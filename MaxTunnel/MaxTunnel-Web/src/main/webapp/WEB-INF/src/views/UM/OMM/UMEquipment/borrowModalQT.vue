@@ -1,6 +1,6 @@
 <template>
     <Modal
-        v-model="isBorrowModal"
+        v-model="isBorrow"
         title="借出信息登记"
     >
         <Form ref="borrow" :model="borrow" :rules="borrowRules" :label-width="140">
@@ -36,7 +36,7 @@ export default {
     data(){
         return{
             confirmBorrowBtn: false,
-            isBorrowModal: this.isBorrow,
+            isBorrowModal: false,
             borrow:{
                 staffId: null,
                 borrowTime: null,
@@ -52,6 +52,10 @@ export default {
             },
             staffs: []
         }
+    },
+    created(){
+        console.log(this.isBorrow,"this.isBorrow")
+        this.isBorrowModal = this.isBorrow
     },
     mounted(){
         //获取借用人列表
@@ -81,7 +85,6 @@ export default {
                                 if(this.onsubmit){
                                     this.onsubmit()
                                     this.isBorrowModal = false
-                                    console.log("this.isBorrow",this.isBorrow)
                                 }
                             },
                             error => {

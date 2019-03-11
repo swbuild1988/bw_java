@@ -9,7 +9,7 @@
 export default {
   mounted(){
     var script=document.createElement("script");
-    script.setAttribute("src", this.ServerConfig+"/3DMap/js/LoginBG.js");
+    script.setAttribute("src", sessionStorage["ServerConfig"]+"/3DMap/js/LoginBG.js");
     document.getElementsByTagName("head")[0].appendChild(script);
   }
 }

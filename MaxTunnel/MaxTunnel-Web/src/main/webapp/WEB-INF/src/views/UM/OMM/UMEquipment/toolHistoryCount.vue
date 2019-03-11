@@ -1,7 +1,7 @@
 <template>
     <Row>
         <Col span="24">
-            <Row style="line-height: 37px;background: #fff;padding-left: 5px;">
+            <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
                 <Col span="4">
                     <span>仪表工具名称</span><span>：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
@@ -51,16 +51,16 @@
                     <span>归还结束时间</span><span>：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
-                <Col span="4" offset="4">
+                <Col span="4">
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
-            <div class="list">
-                <Table stripe border height="345" :columns="toolColums"  :data="toolData"></Table>
-            </div>
-            <div class="pageContainer">
-                <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+            <div>
+                <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
+                <div class="pageContainer" ref="pageContainer">
+                    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                </div>
             </div>
         </Col>
         <Col span="12" class="chartBox">
@@ -150,7 +150,15 @@ export default {
                                 temp = param.row.describe
                             }
                         }
-                        return h('div',temp)
+                        return h(
+                            'div',
+                            {
+                                domProps: {
+                                    title: param.row.describe
+                                },
+                            },
+                            temp
+                        )
                     }
                 },
                 {
@@ -229,7 +237,8 @@ export default {
             },
             toolStatic: {
                 id: 'toolStaticId',
-                requestUrl: 'getToolStatic',
+                requestUrl: 'instruments/usestatus/types',
+                title: '仪表工具状态',
                 parameters: {
                     option: {
                         backgroundColor: '#E8E8FF',
@@ -245,7 +254,9 @@ export default {
             },
             inventory: {
                 id: 'inventoryId',
-                requestUrl: 'spares/outs/typelala',
+                requestUrl: 'instruments/status/types',
+                title: '仪表工具库存状态',
+                legendData: ['在库','出库'],
                 parameters: {
                     option: {
                         backgroundColor: '#FBFBEA',
@@ -256,7 +267,7 @@ export default {
                             }
                         },
                         legend: {
-                            data: ['借出','在库'],
+                            data: ['在库','出库'],
                             textStyle: {
                                 color: '#161139'
                             }
@@ -270,7 +281,8 @@ export default {
             toolsType: [],
             toolsModel: [],
             venders: [],
-            staffs: []
+            staffs: [],
+            tableHieght: null
         }
     },
     components: {
@@ -332,6 +344,7 @@ export default {
             }
         })
         this.showTable()
+        this.getTableHeight()
     },
     methods:{
         showTable(){
@@ -353,6 +366,9 @@ export default {
             this.page.pageSize = value;
             this.showTable()
         },
+        getTableHeight(){
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-30
+        }
     }
 }
 </script>
@@ -369,13 +385,23 @@ export default {
     letter-spacing: 1.5em;
     margin-right: -1.5em;
 }
-.word63{
-    letter-spacing: 1.5em;
-    margin-right: -1.5em;
-}
 .chartBox{
     width: 49.5%;
-    height: 30vh;
+    height: 40vh;
     margin: 5px 5px 5px 0px;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 3.5vmin;
+        line-height: 3.5vmin;
+        font-size: 1.4vmin;
+    }
+    .queryConditions{
+        font-size: 1.3vmin;
+        height: 8.2vh;
+        line-height: 4.1vh; 
+    }
 }
 </style>

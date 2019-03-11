@@ -1,48 +1,46 @@
 <template>
-    <div id="main" class="Main">
-        <div class="MainLeft clear" id="mainLeft">
+    <div
+        id="main"
+        class="Main"
+    >
+        <div
+            class="MainLeft clear"
+            id="mainLeft"
+        >
             <div class="leftTop BackgroundImage clearfloat">
                 <div class="VmModel2">
-                    <vm-data-model v-if="ModelData2" :modelData = "ModelData2"></vm-data-model>
+                    <vm-data-model
+                        v-if="ModelData2"
+                        :modelData="ModelData2"
+                    ></vm-data-model>
                 </div>
                 <div class="VmModel4">
-                    <vm-data-model v-if="ModelData4" :modelData = "ModelData4"></vm-data-model>
+                    <vm-data-model
+                        v-if="ModelData4"
+                        :modelData="ModelData4"
+                    ></vm-data-model>
                 </div>
                 <div class="VmModel3">
-                    <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model>
+                    <vm-data-model
+                        v-if="ModelData3"
+                        :modelData="ModelData3"
+                    ></vm-data-model>
                 </div>
             </div>
             <div class="leftCenter BackgroundImage">
                 <vm-video></vm-video>
             </div>
-            <div class="leftBottem BackgroundImage" >
-                <!-- <vm-data-model v-if="ModelData3" :modelData = "ModelData3"></vm-data-model> -->
-                <three-dimensional></three-dimensional>
+            <div class="leftBottem BackgroundImage">
+                <three-dimensional ref="threeDimensional"></three-dimensional>
             </div>
         </div>
 
-        <div class="MainCentre BackgroundImage threeDBackgroundImage" id="mainCentre">
-            <vm-map></vm-map>
-            <!-- <div class="MainCentreBottom clear" id="mainCentreBottom">
-                <div class="VmModel4 BackgroundImage">
-                    <vm-data-model v-if="ModelData4" :modelData="ModelData4"></vm-data-model>
-                </div>
-                <div class="VmModel5 BackgroundImage">
-                    <vm-data-model v-if="ModelData5" :modelData="ModelData5"></vm-data-model>
-                </div>
-                <div class="VmModel6 BackgroundImage">
-                    <vm-data-model v-if="ModelData6" :modelData="ModelData6"></vm-data-model>
-                </div>
-                <div class="VmModel7 BackgroundImage">
-                    <vm-data-model v-if="ModelData7" :modelData="ModelData7"></vm-data-model>
-                </div>
-            </div> -->
+        <div
+            class="MainCentre BackgroundImage threeDBackgroundImage"
+            id="mainCentre"
+        >
+            <vm-map ref="vmmap" @jumpTo="destroyViewer"></vm-map>
         </div>
-
-        <!-- <div class="MainRight" id="mainRight">
-            <vm-video></vm-video>
-            <three-dimensional></three-dimensional>
-        </div> -->
     </div>
 </template>
 
@@ -54,7 +52,7 @@ import VmDataModel from "../../../components/VM/VMDataModel";
 import { baseView } from '../mixins/BaseView'
 
 export default {
-    mixins:[ baseView ],
+    mixins: [baseView],
     data() {
         return {
             ModelData1: null,
@@ -216,8 +214,11 @@ export default {
             this.ModelData7 = this.getModelData("vmModel7");
             // this.ModelData7.parameters.option = {};
             console.log("vmModelData7", this.ModelData7);
+        },
+        destroyViewer() {
+            this.$refs.threeDimensional.destroyViewer()
         }
-    }
+    },
 };
 </script>
 
@@ -239,29 +240,28 @@ export default {
 
 #mainLeft .VmModel2,
 #mainLeft .VmModel4,
-#mainLeft .VmModel3{
-   position: absolute;
-   width: 50%;
-   height: 50%;
+#mainLeft .VmModel3 {
+    position: absolute;
+    width: 50%;
+    height: 50%;
 }
-#mainLeft .VmModel2{
+#mainLeft .VmModel2 {
     right: 0;
 }
-#mainLeft .VmModel4{
+#mainLeft .VmModel4 {
     top: 50%;
 }
-#mainLeft .VmModel3{
+#mainLeft .VmModel3 {
     top: 50%;
     right: 0;
 }
-.clearfloat:after{
-  content: ""; 
-  display: block; 
-  height: 0; 
-  clear: both; 
-  visibility: hidden;  
-  }
-
+.clearfloat:after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
 
 #mainLeft .leftBottem,
 #mainLeft .leftTop,
@@ -338,8 +338,8 @@ export default {
     border: 1px solid rgba(0, 107, 149, 0.5);
     box-shadow: 0 0 1.5rem rgba(0, 107, 149, 1) inset;
 }
-.threeDBackgroundImage{
-    padding: .3%;
+.threeDBackgroundImage {
+    padding: 0.3%;
 }
 .BodyCenterPadding {
     padding: 0.3%;

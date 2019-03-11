@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +33,12 @@ import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
+import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
@@ -60,6 +64,185 @@ public class VideoController {
     @Resource(name = "H5StreamServiceImpl")
     private OnvifService h5streamService;
     
+    /**
+     * 添加视频
+     * @param id 视频id
+     * @param tunnelId 所属管廊 
+     * @param storeId 所属管舱
+     * @param areaId 所属区域
+     * @param name 视频名称
+     * @param description 描述
+     * @param objtypeId	对象类型
+     * @param datatypeId 数据类型
+     * @param serverId 所属视频服务
+     * @param vendor 所属供应商
+     * @param videoSceneId 所属场景
+     * @param channelNo 通道号
+     * @param actived 是否使用
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月19日
+     */
+    @Transactional
+    @RequestMapping(value = "videos", method = RequestMethod.POST)
+    public JSONObject addVideo(@RequestBody Video video) throws Exception {
+    	// 添加视频到数据库以及缓存
+    	videoModuleCenter.insertVideo(video);
+    	// 添加onvif源
+    	setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    /**
+     * h5添加onvif
+     * @param id
+     * @param user
+     * @param password
+     * @param ip
+     * @param port
+     * @param channelNo
+     * @param vendor
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年2月26日
+     */
+    private void setOnvif(Integer id, String user, String password, String ip,
+    		String port, Integer channelNo, Integer vendor) throws Exception{
+    	String url = "";
+    	VideoVendor videoVendor = VideoVendor.getEnum(vendor);
+		switch (videoVendor) {
+    	case DaKang:
+    		url = "rtsp://" + ip + ":" + port + "/Streaming/Channels/" + channelNo;
+    		break;
+    		
+    	case HoneyWell_HISD:
+    		url = "rtsp://" + ip + ":" + port + "/h264/ch" + channelNo + "/main/av_stream";
+    		break;
+    		
+    	case HoneyWell_HICC:
+    		url = "rtsp://" + ip + ":" + port + "/media?stream=0";
+    		break;
+	
+    	default:
+    		break;
+    	}
+		boolean addFlag = h5streamService.addSrc(user,password,ip,id.toString(),url);
+		LogUtil.info("相机"+ id +"添加结果：" + addFlag);
+    }
+    
+    /**
+     * 更新视频
+     * @param id 视频id
+     * @param tunnelId 所属管廊 
+     * @param storeId 所属管舱
+     * @param areaId 所属区域
+     * @param name 视频名称
+     * @param description 描述
+     * @param objtypeId	对象类型
+     * @param datatypeId 数据类型
+     * @param serverId 所属视频服务
+     * @param vendor 所属供应商
+     * @param videoSceneId 所属场景
+     * @param channelNo 通道号
+     * @param actived 是否使用
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @Transactional
+    @RequestMapping(value = "videos", method = RequestMethod.PUT)
+    public JSONObject updateVideo(@RequestBody Video video) throws Exception {
+    	// 修改视频信息
+    	videoModuleCenter.updateVideo(video);
+    	// 先删除onvif源
+    	h5streamService.delSrc(video.getId().toString());
+    	// 再添加onvif源
+    	setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 分页查询视频列表
+     * @param id
+     * @param tunnelId	管廊
+     * @param storeId	管舱
+     * @param areaId	区域
+     * @param vendor	供应商
+     * @param serverId	服务商
+     * @param actived	是否使用
+     * @param channelNo	通道号
+     * @param videoSceneId 场景
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月22日
+     */
+    @RequestMapping(value = "videos/datagrid", method = RequestMethod.POST)
+    public JSONObject getVideoDtos(@RequestBody VideoVo vo) {
+    	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+    	if (vo.getId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getId().intValue() == vo.getId()).collect(Collectors.toList());
+    	if (vo.getTunnelId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == vo.getTunnelId()).collect(Collectors.toList());
+        if (vo.getStoreId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == vo.getStoreId()).collect(Collectors.toList());
+        if (vo.getAreaId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == vo.getAreaId()).collect(Collectors.toList());
+        if (vo.getVendor() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getVendor().intValue() == vo.getVendor()).collect(Collectors.toList());
+        if (vo.getServerId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getServerId().intValue() == vo.getServerId()).collect(Collectors.toList());
+        if (vo.getActived() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.isActived() == vo.getActived()).collect(Collectors.toList());
+        if (vo.getChannelNo() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getChannelNo() == vo.getChannelNo()).collect(Collectors.toList());
+        if (vo.getVideoSceneId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getVideoSceneId() == vo.getVideoSceneId()).collect(Collectors.toList());
+
+    	ListPageUtil<VideoDto> list = new ListPageUtil<>(videoDtos, vo.getPageNum(), vo.getPageSize());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * id获取视频信息
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @RequestMapping(value = "videos/{id}", method = RequestMethod.GET)
+    public JSONObject getVideo(@PathVariable("id") Integer id) {
+    	VideoDto dto = videoModuleCenter.getVideoDto(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 批量删除视频
+     * @param ids 
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @RequestMapping(value = "videos/{ids}", method = RequestMethod.DELETE)
+    public JSONObject deleteVideo(@PathVariable("ids") String ids) throws Exception {
+    	String [] strs = ids.split(",");
+    	LogUtil.info("strs.length:" + strs.length);
+    	for(String id : strs) {
+    		// 先删除onvif源
+        	h5streamService.delSrc(id);
+        	// 再删除视频信息
+    		videoModuleCenter.deleteVideo(DataTypeUtil.toInteger(id));
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
     
     /**通过sectionId获取视频列表 
      * @param id
@@ -87,6 +270,7 @@ public class VideoController {
      * @throws Exception 
      * @Date 2018年12月4日
      */
+    @Transactional
     @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
     public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
     	//删除所有视频源
@@ -100,27 +284,20 @@ public class VideoController {
 			String channelNo = map.get("channelNo");
 			String id = map.get("id");
 			String vendor = map.get("vendor");
-			String url = "";
 			
-			VideoVendor videoVendor = VideoVendor.getEnum(DataTypeUtil.toInteger(vendor));
-			switch (videoVendor) {
-	    	case DaKang:
-	    		url = "rtsp://" + ip + ":" + port + "/Streaming/Channels/" + channelNo;
-	    		break;
-	    		
-	    	case HoneyWell_HISD:
-	    		url = "rtsp://" + ip + ":" + port + "/h264/ch" + channelNo + "/main/av_stream";
-	    		break;
-	    		
-	    	case HoneyWell_HICC:
-	    		url = "rtsp://" + ip + ":" + port + "/media?stream=0";
-	    		break;
-		
-	    	default:
-	    		break;
-	    	}
-			boolean addFlag = h5streamService.addSrc(user,password,ip,id,url);
-			LogUtil.info("相机"+id+"添加结果：" + addFlag);
+			setOnvif(DataTypeUtil.toInteger(id), user, password, ip,
+	    			port, DataTypeUtil.toInteger(channelNo), DataTypeUtil.toInteger(vendor));
+			
+			// 修改视频表数据，以便后续维护
+			Video video = new Video();
+			video.setId(DataTypeUtil.toInteger(id));
+			video.setUsername(user);
+			video.setPassword(password);
+			video.setIp(ip);
+			video.setPort(DataTypeUtil.toInteger(port));
+			video.setChannelNo(DataTypeUtil.toInt(channelNo));
+			video.setVendor(DataTypeUtil.toInteger(vendor));
+			videoModuleCenter.updateVideo(video);
 		}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

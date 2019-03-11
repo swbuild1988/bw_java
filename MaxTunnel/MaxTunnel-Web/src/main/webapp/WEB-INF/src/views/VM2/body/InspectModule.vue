@@ -1,66 +1,127 @@
 <template>
-    <div class="Main">
-        <div class="Title">
+    <div class="main" ref="main">
+        <div class="title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="charts">
-            <CrossBarChart v-bind="corssBarChartData"></CrossBarChart>
+        <div
+            class="charts"
+            ref="chart"
+        >
+            <line-chart
+                v-bind="corssBarChartData"
+                ref="corssBarChar"
+            ></line-chart>
         </div>
         <div class="inspectCount">
-            <div class="untilNow">至今</div>
-            <div class="ratio">同比</div>
-            <div class="countDetailBox">
-                <div class="countTitle">巡检任务</div>
-                <div class="count">{{taskCount.nowYearTaskCount}}</div>
-                <div class="iconBox">
-                    <Icon
-                        :type="taskCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="taskCount.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </div>
-            </div>
-            <div class="countDetailBox">
-                <div class="countTitle">缺陷</div>
-                <div class="count">{{defectCount.nowYearDefectCount}}</div>
-                <div class="iconBox">
-                    <Icon
-                        :type="defectCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="defectCount.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </div>
-            </div>
-            <div class="countDetailBox">
-                <div class="countTitle">维修</div>
-                <div class="count">{{maintenanceCount.nowYearOrderCount}}</div>
-                <div class="iconBox">
-                    <Icon
-                        :type="maintenanceCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="maintenanceCount.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </div>
-            </div>
-            <div class="countDetailBox">
-                <div class="countTitle">维修率</div>
-                <div class="count">{{maintenanceRateCount.nowYearOrderPercentage}}%</div>
-                <div class="iconBox">
-                    <Icon
-                        :type="maintenanceRateCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
-                        :color="maintenanceRateCount.isRise ? 'rgb(247, 26, 56)': 'white'"
-                    ></Icon>
-                </div>
-            </div>
+            <ul class="taskLists">
+                <li>
+                    <div>
+                        <i-circle 
+                            :percent="80"
+                            :size=circleWidth
+                            stroke-linecap="square"
+                            stroke-color="#00f6fc"
+                            trail-color="#001D49"
+                        >
+                            <span class="demo-Circle-inner">{{taskCount.nowYearTaskCount}}个</span>
+                        </i-circle>
+                    </div>
+                    <div>
+                        <div class="countTitle">今日巡检任务</div>
+                        <div class="iconBox">
+                            <span>同比</span>
+                            <Icon
+                                    :type="taskCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
+                                    :color="taskCount.isRise ? '#ff0000': '#11d67c'"
+                            ></Icon>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <i-circle 
+                            :percent="75"
+                            :size=circleWidth
+                            stroke-linecap="square"
+                            stroke-color="#11c0ff"
+                            trail-color="#001E4A"
+                        >
+                            <span class="demo-Circle-inner">{{defectCount.nowYearDefectCount}}个</span>
+                        </i-circle>
+                    </div>
+                    <div>
+                        <div class="countTitle">今日缺陷</div>
+                        <div class="iconBox">
+                            <span>同比</span>
+                            <Icon
+                                    :type="defectCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
+                                    :color="defectCount.isRise ? '#ff0000': '#11d67c'"
+                            ></Icon>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div ref="circleBox" style="height: 7vh">
+                        <i-circle 
+                            :percent="62"
+                            :size=circleWidth
+                            stroke-linecap="square"
+                            stroke-color="#008bfe"
+                            trail-color="#00204D"
+                        >
+                            <span class="demo-Circle-inner">{{maintenanceCount.nowYearOrderCount}}个</span>
+                        </i-circle>
+                    </div>
+                    <div>
+                        <div class="countTitle">今日维修</div>
+                        <div class="iconBox">
+                            <span>同比</span>
+                            <Icon
+                                    :type="maintenanceCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
+                                    :color="maintenanceCount.isRise ? '#ff0000': '#11d67c'"
+                            ></Icon>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <i-circle 
+                            :percent=maintenanceRateCount.nowYearOrderPercentage
+                            :size=circleWidth
+                            stroke-linecap="square"
+                            stroke-color="#2562e9"
+                            trail-color="#002251"
+                        >
+                            <span class="demo-Circle-inner">{{maintenanceRateCount.nowYearOrderPercentage}}%</span>
+                        </i-circle>
+                    </div>
+                    <div>
+                        <div class="countTitle">维修率</div>
+                        <div class="iconBox">
+                            <span>同比</span>
+                            <Icon
+                                    :type="maintenanceCount.isRise ? 'arrow-up-c' : 'arrow-down-c'"
+                                    :color="maintenanceCount.isRise ? '#ff0000': '#11d67c'"
+                            ></Icon>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
+import LineChart from "../../../components/Common/Chart/StackChart"
 import CrossBarChart from "../../../components/Common/Chart/CrossBarChart"
+import { InspectService } from '../../../services/inspectService'
+import { converArrayFun } from '../../../scripts/commonFun';
 
 export default {
     data() {
         return {
-            title: "巡检",
+            title: "巡检模块",
             taskCount: {
                 nowYearTaskCount: 0,
                 isRise: false,
@@ -79,168 +140,146 @@ export default {
             },
             corssBarChartData: {
                 id: 'corssBarChartID',
-                title: '巡检计划对比',
-                legendData: ['2018年', '2019年'],
-                yAxisData: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                seriesData: [
-                    {
-                        data: ['15', '26', '86', '78', '53', '45', '82', '78', '29', '156', '75', '65']
-                    }, {
-                        data: ['56', '89', '56', '28', '76', '15', '26', '86', '78', '53', '45', '82']
-                    }
-                ],
+                title: '巡检缺陷维修统计',
+                legendData: [],
+                xData: [],
+                seriesData: [],
             },
             monthValArray1: [],
-            monthValArray2: []
+            monthValArray2: [],
+            circleWidth: window.innerHeight/100*6.2
         };
     },
     components: {
         ModuleTitle,
-        CrossBarChart
+        CrossBarChart,
+        LineChart
     },
     mounted() {
-        this.getPatrolTaskCount()
-        this.getDefectCount()
-        this.getMaintenanceCount()
-        this.getMaintenanceRate()
-        // this.getEveryMonthPlan()
+        this.init()
+        this.refreshData()
+        this.getCircleWidth()
+        window.onresize = () => {
+            return (() => {
+                this.circleWidth = window.innerHeight/100*6.2
+            })()
+        }
+    },
+    watch:{
+        circleWidth(newVal, oldVal){
+            this.circleWidth = newVal
+        }
     },
     methods: {
-        //获取今年的巡检任务总数
-        getPatrolTaskCount() {
-            this.axios.get('inspection-tasks/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.taskCount.nowYearTaskCount = data.nowYearTaskCount
-                    if (data.nowYearTaskCount >= data.beforeYearTaskCount) {
-                        this.taskCount.isRise = true
-                    } else {
-                        this.taskCount.isRise = false
-                    }
-                }
+        init() {
+            let p1 = InspectService.getPatrolTaskCount();
+            let p2 = InspectService.getDefectCount();
+            let p3 = InspectService.getMaintenanceCount();
+            Promise.all([p1, p2, p3]).then(res => {
+                //获取今年的巡检任务总数
+                this.taskCount.nowYearTaskCount = res[0].nowYearTaskCount
+                this.taskCount.isRise = res[0].nowYearTaskCount >= res[0].beforeYearTaskCount ? true : false
+
+                //获取缺陷总数
+                let defectCount1 = res[1].nowYearDefectCount
+                let defectCount2 = res[1].beforeYearDefectCount
+                this.defectCount.nowYearDefectCount = res[1].nowYearDefectCount
+                this.taskCount.isRise = res[1].nowYearDefectCount >= res[1].beforeYearDefectCount ? true : false
+
+                //获取维修数
+                let orderCount1 = res[2].nowYearOrderCount
+                let orderCount2 = res[2].beforeYearOrderCount
+                this.maintenanceCount.nowYearOrderCount = res[2].nowYearOrderCount
+                this.maintenanceCount.isRise = res[2].nowYearOrderCount >= res[2].beforeYearOrderCount ? true : false
+
+                //获取维修率
+                this.maintenanceRateCount.nowYearOrderPercentage = (orderCount1 / defectCount1 * 100).toFixed(1)
+                this.maintenanceRateCount.isRise = (orderCount1 / defectCount1) >= (orderCount2 / defectCount2) ? true : false;
             })
-        },
-        //获取缺陷总数
-        getDefectCount() {
-            this.axios.get('defects/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.defectCount.nowYearDefectCount = data.nowYearDefectCount
-                    if (data.nowYearDefectCount >= data.beforeYearDefectCount) {
-                        this.defectCount.isRise = true
-                    } else {
-                        this.defectCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取维修数
-        getMaintenanceCount() {
-            this.axios.get('/orders/count-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.maintenanceCount.nowYearOrderCount = data.nowYearOrderCount
-                    if (data.nowYearOrderCount >= data.beforeYearOrderCount) {
-                        this.maintenanceCount.isRise = true
-                    } else {
-                        this.maintenanceCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取维修率
-        getMaintenanceRate() {
-            this.axios.get('orders/percentage-year').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    this.maintenanceRateCount.nowYearOrderPercentage = data.nowYearOrderPercentage
-                    if (data.nowYearOrderPercentage >= data.beforeYearOrderPercentage) {
-                        this.maintenanceRateCount.isRise = true
-                    } else {
-                        this.maintenanceRateCount.isRise = false
-                    }
-                }
-            })
-        },
-        //获取今年与去年的每月巡检计划数
-        getEveryMonthPlan() {
-            this.axios.get('inspection-tasks/count-month').then(res => {
-                let { code, data } = res.data
-                if (code == 200) {
-                    for (var i = 0; i < data.length; i++) {
-                        var year = data[i].key
-                        for (var j = 0; j < data[i].val.length; j++) {
-                            if (i == 0) {
-                                var month = data[0].val[j].key
-                                this.corssBarChartData.yAxisData.push(month)
-                                this.monthValArray1.push(data[0].val[j].val)
-                            } else if (i == 1) {
-                                this.monthValArray2.push(data[i].val[j].val)
-                            }
+            //获取今年与去年的每月巡检计划数
+            InspectService.getEveryMonthMaintenance().then(res => {
+                var arr1 = []
+                var arr2 = []
+                for (var i = 0; i < res.length; i++) {
+                    this.corssBarChartData.xData.push(res[i].key)
+                    for (var j = 0; j < res[i].val.length; j++) {
+                        if (i == 0) {
+                            this.corssBarChartData.legendData.push(res[i].val[j].key)
                         }
-                        this.corssBarChartData.legendData.push(year)
+                        if (j == 0) {
+                            arr1.push(res[i].val[j].val)
+                        }
+                        if (j == 1) {
+                            arr2.push(res[i].val[j].val)
+                        }
                     }
-                    this.corssBarChartData.seriesData.push({
-                        data: this.monthValArray1
-                    }, {
-                            data: this.monthValArray2
-                        })
                 }
-            })
+                arr1 = arr1.reverse()
+                arr2 = arr2.reverse()
+                this.corssBarChartData.xData = this.corssBarChartData.xData.reverse()
+                this.corssBarChartData.seriesData.push({ data: arr1 })
+                this.corssBarChartData.seriesData.push({ data: arr2 })
+            });
+            // window.addEventListener('resize',this.getCircleWidth())
+        },
+        refreshData() {
+            setInterval(() => {
+                this.$refs.corssBarChar.drawBar()
+            }, 1000 * 5 * 60)
+        },
+        getCircleWidth(){
+            this.circleWidth = window.innerHeight/100*6.2
         }
-    }
+    },
 };
 </script>
 
 <style scoped>
-.Main {
+.main {
     width: 100%;
     height: 100%;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
+    background: url("../../../assets/VM/module_bg.png") no-repeat;
     background-size: 100% 100%;
 }
-.Main .Title {
+.main .title {
     width: 100%;
     height: 15%;
 }
-.charts,
-.inspectCount {
-    width: 48%;
-    height: 85%;
+.charts {
+    width: 100%;
+    height: 50%;
     display: inline-block;
     vertical-align: top;
 }
-.untilNow,
-.ratio {
+.inspectCount {
+    width: 100%;
+    height: 35%;
     display: inline-block;
-    color: #fff;
-    font-size: 1.9vmin;
+    vertical-align: top;
 }
-.untilNow {
-    width: 79%;
+.taskLists{
+    list-style-type: none;
+    height: 100%;
 }
-.ratio,
-.countDetailBox .iconBox {
-    width: 19%;
+.taskLists > li {
+    float: left;
+    width: 25%;
+    height: 100%;
     text-align: center;
 }
-.countDetailBox {
-    line-height: 5.5vh;
+.countTitle,.iconBox{
+    text-align: center;
+    font-size: 1.3vmin;
+    line-height: 2.2vmin;
 }
-.countDetailBox .countTitle,
-.countDetailBox .count,
-.countDetailBox .iconBox {
-    display: inline-block;
-    color: #fff;
-    font-size: 1.6vmin;
+.countTitle{
+    color: #ffffff;
 }
-.countDetailBox .iconBox {
-    font-size: 1.9vmin;
+.iconBox{
+    color: #999FAC;
 }
-.countDetailBox .countTitle {
-    width: 48%;
-}
-.countDetailBox .count {
-    width: 29%;
+.demo-Circle-inner{
+    color: #ffffff;
+    font-size: 1.8vmin;
 }
 </style>

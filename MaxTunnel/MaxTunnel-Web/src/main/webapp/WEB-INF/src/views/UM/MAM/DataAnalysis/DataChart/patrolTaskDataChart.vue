@@ -102,23 +102,49 @@ export default {
             },
             stacChart: {
                 id: "stacChart",
-                requestUrl: "stacChart",
-                titleName: "",
                 title: "22",
-                titleColor: "#030303",
-                intervalTime: 1000,
-                tunnelId: null,
-                timeCycle: null,
-                xData: [],
-                legendData: [
-                    "未完成巡检计划",
-                    "已完成巡检计划",
-                    "未完成巡检任务",
-                    "已完成巡检任务",
-                    "未解决缺陷",
-                    "已解决缺陷"
+                xData: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                legendData: ["未完成巡检计划", "已完成巡检计划", "未完成巡检任务", "已完成巡检任务", "未解决缺陷", "已解决缺陷"],
+                seriesData:[
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
+                    {
+                        data:['12','2','3','4','5','6','7','8','9','10','7','2']
+                    },
                 ]
             },
+            // stacChart: {
+            //     id: "stacChart",
+            //     requestUrl: "stacChart",
+            //     titleName: "",
+            //     title: "22",
+            //     titleColor: "#030303",
+            //     intervalTime: 1000,
+            //     tunnelId: null,
+            //     timeCycle: null,
+            //     xData: [],
+            //     legendData: [
+            //         "未完成巡检计划",
+            //         "已完成巡检计划",
+            //         "未完成巡检任务",
+            //         "已完成巡检任务",
+            //         "未解决缺陷",
+            //         "已解决缺陷"
+            //     ]
+            // },
             tunnels: [],
             dataTypes: [
                 { id: 1, key: 1, val: "巡检任务" },
@@ -280,7 +306,7 @@ export default {
                     this.stacChart.xData.push(weekDay);
                 }
             }
-            this.$refs.stackBar.fetchData("stacChart");
+            // this.$refs.stackBar.fetchData("stacChart");
         },
         mGetDate(year, month) {
             var d = new Date(year, month, 0);

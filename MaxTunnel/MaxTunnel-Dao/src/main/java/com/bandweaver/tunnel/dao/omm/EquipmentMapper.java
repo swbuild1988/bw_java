@@ -26,14 +26,6 @@ public interface EquipmentMapper {
 	Integer addEquipment(Equipment equipment);
 
 	/**
-	 * 更新设备
-	 * 
-	 * @param equipment
-	 * @return
-	 */
-	Integer updateEquipment(Equipment equipment);
-
-	/**
 	 * 获得所有的设备
 	 * 
 	 * @return

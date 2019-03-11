@@ -5,17 +5,17 @@
       <Col span="6" class="col">
       <span class="planDec">对象类型:</span>
       <Select v-model="queryPrams.objtypeIds" style="width:65%" multiple>
-        <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 18px;">
-          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+        <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 1.4vmin;">
+          <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val" style="font-size: 1.2vmin;line-height: 5vmin;height: 5vmin">{{ item.key }}</Option>
         </OptionGroup>
       </Select>
       </Col>
-        <Col span="6" class="col">
-        <span class="planDec">所属管廊:</span>
-        <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
-            <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-        </Col>
+      <Col span="6" class="col">
+      <span class="planDec">所属管廊:</span>
+      <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
+        <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      </Select>
+      </Col>
       <Col span="6" class="col">
       <span class="planDec">数据类型:</span>
       <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
@@ -23,22 +23,21 @@
       </Select>
       </Col>
     </Row>
-
     <Row class="top" style="margin-top: 0px;">
       <Col span="6" class=" col">
       <span class="planDec">监测对象:
       </span>
       <Input v-model="queryPrams.id "  style="width: 65%;">
-      <Button slot="append" icon="ios-search" style="height: 35px;" @click="queryObject"></Button>
+      <Button slot="append" icon="ios-search" style="height: 4vmin;" @click="queryObject"></Button>
       </Input>
       </Col>
       <transition name="slide-fade" mode="in-out">
         <div v-if="queryPrams.datatypeId==1">
           <Col span="10" class="col">
           <span class="planDec">取整范围:</span>
-          最小值
+          <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最小值</span>
           <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-          最大值
+                    <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最大值</span>
           <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
           </Col>
         </div>
@@ -64,8 +63,8 @@
           </Col>
         </div>
       </transition>
-      <Col span="1" style="position: relative;float: right;right: -20px;top:-20px;">
-      <Button type="primary" shape="circle" icon="ios-search" @click="queryTableData" title="查询" size="large"></Button>
+      <Col span="2" style="position: relative;float: right;right: -20px;top:-20px;">
+      <Button type="primary"  icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
       </Col>
       <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
     </Row>
@@ -76,10 +75,10 @@
           <Table :height="tableHeight" stripe border :columns="tableColumn" :data="tableData" ref="selection" :loading="tableload"
                  @on-selection-change="selectionClick"></Table>
           <div class="historyDiv">
-            <Button type="primary" shape="circle" icon="forward" size="large" title="查看历史数据"
-                    @click="viewHistoryData"></Button>
+            <Button type="primary" shape="circle" icon="forward" size="large" title="历史数据"
+                    @click="viewHistoryData">历史数据</Button>
             <Button type="primary" shape="circle" icon="ios-cloud-download" size="large" title="导出"
-                    @click="exportData"></Button>
+                    @click="exportData">导出</Button>
             <Page class="nextPage" @on-change="changePage" @on-page-size-change="handlePageSize"
                   :total="queryPrams.total"
                   show-total show-elevator
@@ -98,29 +97,29 @@
           <div class="chartSize">
             <MultiLineChart style="width: 100%;" v-bind="curlineChart" ref="multiLine"></MultiLineChart>
           </div>
-          <div style="height: 50px;background-color: #fff;padding: 10px;">
-            <div style="position: relative;float: left;">
+          <div style="height: 5.8vh;background-color: #fff;padding: 0.8vh;margin-top: 1vh;">
+            <div style="position: relative;float: left;font-size: 1.66vmin;line-height: 4vmin;">
               <span>时间周期:</span>
-              <Select v-model="historyPrams.dateType" style="width:250px;margin-right: 4px;margin-left: 4px;"
+              <Select v-model="historyPrams.dateType" style="width:12vw;margin-right: 4px;margin-left: 4px;"
                       @on-change="changeAlarmType" placement="top">
                 <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
               </Select>
             </div>
-            <div style="  position: relative;float: left; ">
+            <div style="  position: relative;float: left; font-size: 1.66vmin;line-height: 4vmin;">
               <span>开始时间:</span>
               <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
                           placement="top"
-                          style="width: 220px;margin-right: 4px;"></DatePicker>
+                          style="width: 12vw;margin-right: 4px;"></DatePicker>
               <span>结束时间:</span>
               <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
                           placement="top"
-                          style="width:220px;margin-right: 14px;"></DatePicker>
+                          style="width:12vw;margin-right: 14px;"></DatePicker>
             </div>
-            <div style="position:relative;float: right;right: 0px;">
-              <Button type="primary" shape="circle" @click="queryHistoryData" icon="ios-search" size="large"
-                      title="查询历史数据"></Button>
+            <div  style="position:relative;float: right;right: 0px;">
+              <Button type="primary" shape="circle" @click="queryHistoryData" icon="ios-search" size="large" v-if="viewHistory"
+                      title="历史数据">历史数据</Button>
               <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
-                      title="返回"></Button>
+                      title="返回">返回</Button>
             </div>
           </div>
           </Col>
@@ -144,7 +143,7 @@
         tableload:true,
         viewHistory: false,
         isReady: true,
-          tunnelList: [],
+        tunnelList: [],
         tableHeight: 450,
         curlineChart: {
           id: "historyDataChart",
@@ -165,11 +164,11 @@
           pleace: 0,
           total: 0,
           pageNum: 1,
-          pageSize: 12,
+          pageSize: 10,
         },
         historyPrams: {
-          startTime: "",
-          endTime: "",
+          startTime: null,
+          endTime: null,
           dateType: 1,
           ids: [],
         },
@@ -238,10 +237,10 @@
           this.queryPrams.datatypeId = result[0].val;
         });
         const p3 = TunnelService.getTunnels().then((result) => {
-            _this.tunnelList = [{id: -1, name: "全部"}];
-            result.reduce((a,b)=>{
-                _this.tunnelList.push(b);
-            }, _this.tunnelList)
+          _this.tunnelList = [{id: -1, name: "全部"}];
+          result.reduce((a,b)=>{
+            _this.tunnelList.push(b);
+          }, _this.tunnelList)
         });
         Promise.all([
           p1,
@@ -264,7 +263,7 @@
         _this.tableData = [];
         _this.tableload=true;
         var params= JSON.parse(JSON.stringify(_this.queryPrams));
-          params.tunnelId=  params.tunnelId==""?null:  params.tunnelId;
+        params.tunnelId=  params.tunnelId==""?null:  params.tunnelId;
         DataAnalysisService.getMonitorData(params).then((result) => {
           if (result) {
             result.list.reduce(function (a, b) {
@@ -286,6 +285,10 @@
 
       viewHistoryData() {
         var _this = this;
+        if(!this.selectSelection){
+          this.$Message.warning('请勾选需要查询历史数据的对象');
+          return;
+        }
         _this.viewHistory = !_this.viewHistory;
         _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
         _this.changeAlarmType(_this.historyPrams.dateType);
@@ -293,6 +296,9 @@
         this.selectSelection.reduce(function (a, b) {
           _this.historyPrams.ids.push(b.id);
         }, _this.historyPrams.ids);
+        _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
+        _this.curlineChart.parameters.queryPram.endTime =new Date(_this.historyPrams.endTime) .getTime();
+        _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
       },
 
       queryHistoryData() {
@@ -363,7 +369,7 @@
     mounted() {
       this.inItData();
       // 设置表格高度
-      this.tableHeight = window.innerHeight * 0.85 - 160;
+      this.tableHeight = window.innerHeight * 0.67;
     },
     watch: {
       "dataObjectSelect.selectData.idList": function () {
@@ -371,76 +377,77 @@
       }
     },
   }
+
 </script>
 
 <style scoped>
   .col {
-    height: 50px;
+    height: 6vmin;
     padding-top: 10px;
   }
-
   .planDec {
     padding: 4px;
-    font-size: 14px;
+    font-size: 1.6vmin;
+    line-height: 3.2vmin;
+    height: 3.2vmin;
     float: left;
   }
-
-  .queryHis {
-    padding-right: 5px;
-    background-color: #e5eae99c;
-    line-height: 50px;
-    font-size: 16px;
-  }
-
-  .queryEquipment {
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 50px;
-  }
-
   .top {
     margin: 10px;
     background-color: #fff;
     padding-left: 10px;
   }
-
   .nextPage {
     position: relative;
     bottom: 0px;
     right: 7px;
     float: right;
   }
-
   .slide-fade-enter-active {
     transition: all .5s ease;
   }
-
   .slide-fade-leave-active {
     transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-
   .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(10px);
     opacity: 0;
   }
-
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 16px;
+    font-size: 1.66vmin;
   }
-
   .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 16px;
+    font-size: 1.66vmin;
   }
-
   .chartSize {
-    height: calc(85vh - 170px);
+    height: 64vh;
+    margin-bottom: 1vh;
     width: 100%;
   }
-
   .historyDiv {
     position: relative;
     line-height: 40px;
     background-color: #fff;
-    margin-top: 5px;
+    margin-top: 0.5vh;
+  }
+
+  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+ .ivu-select-multiple >>> .ivu-select-placeholder
+  {
+    height: 4vmin;
+    line-height: 4vmin;
+    font-size: 1.4vmin;
+  }
+
+  .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.2vmin;
+  }
+  .ivu-select-group-wrap >>> .ivu-select-group-title{
+    height: 3.8vmin;
+    line-height: 3.2vmin;
+    font-size: 1.6vmin;
   }
 </style>

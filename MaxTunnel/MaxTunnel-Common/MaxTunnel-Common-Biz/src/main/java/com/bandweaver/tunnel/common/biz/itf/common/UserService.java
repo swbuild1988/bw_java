@@ -23,4 +23,6 @@ public interface UserService {
 
 	void deleteBatch(List<Integer> list);
 
+	JSONObject getUserDet(Integer id);
+
 }

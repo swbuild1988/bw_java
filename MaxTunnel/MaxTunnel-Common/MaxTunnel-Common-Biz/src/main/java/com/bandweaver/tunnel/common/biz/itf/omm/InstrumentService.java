@@ -25,5 +25,8 @@ public interface InstrumentService {
 
     int deleteByIds(List<Integer> list);
     
-    List<CommonDto> getCountGroupByTypeId(InstrumentVo vo);
+    int getCountByCondition(InstrumentVo vo);
+    
+    int getCountByStatus(Boolean status);
+
 }

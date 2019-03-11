@@ -7,7 +7,6 @@ import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 public interface DefectMapper {

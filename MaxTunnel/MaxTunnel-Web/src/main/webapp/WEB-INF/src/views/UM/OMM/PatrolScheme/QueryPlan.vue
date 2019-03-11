@@ -25,7 +25,7 @@
             <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
         </Col>
         <Col span="4">
-            <Button type="primary" icon="ios-search" size="small" @click="conditionChange()">查询</Button>
+            <Button type="primary" icon="ios-search" @click="conditionChange()">查询</Button>
         </Col>
       </Row>
     </div>
@@ -70,8 +70,10 @@
         </Col>
       </Row>
       <!-- </Scroll> -->
-    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-      placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>   
+    </div>
+    <div class="page">
+      <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        :page-size-opts=[12,24,36] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
   </div>
 </template>
@@ -163,7 +165,11 @@ export default {
   methods: {
     conditionChange: function() {
       let _this = this
-      PatrolService.patrolPlanDatagrid(this.params).then(
+      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+        _this.$Message.error('开始时间必须小于结束时间！');
+        return;
+      }
+      PatrolService.patrolPlanDatagrid(_this.params).then(
         (result)=>{
           for (let index in result.list) {
               result.list[index].inspectTime = new Date(
@@ -248,7 +254,7 @@ export default {
     margin-left: 5px;
     margin-top: 1px;
 }
-.details-top{ 
+.details-top{
     font-size: 16px;
     font-weight: 700;
     line-height: 48px;
@@ -257,20 +263,20 @@ export default {
     margin-left: 5px;
 }
 .planStatusDec,.patrolGroupName{
-  font-size: 22px;
+  font-size: 1.8vmin;
 }
 .details-bottom div{
   margin: 10px;
 }
 .planStatus,.patrolGroup{
   color:#a4a4a4;
-  font-size: 14px;
+  font-size: 1.4vmin;
   margin-bottom: 2px;
 }
 .option{
   background: #F7F9FA;
   line-height: 30px;
-  font-size: 16px;
+  font-size: 1.66vmin;
   color: #979696;
   border-top: 1px solid #e8e8e8
 }
@@ -282,10 +288,121 @@ export default {
 }
 .timeContainer{
     width: 50%;
-    font-size: 13px;
+    font-size: 1.3vmin;
     color: orange;
     line-height: 40px;
     text-align: center;
+}
+/* .planName{
+  font-size: 1.66vmin;
+} */
+
+/* .conditions >>> .ivu-select-placeholder{
+    font-size: 1.6vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.conditions >>> .ivu-select-selection{
+    height: 3vmin;
+}
+.conditions >>> .ivu-input{
+  font-size: 1.2vmin;
+  height: 3.2vmin;
+} */
+/*.conditions >>> .ivu-input-icon{
+  font-size: 1.66vmin;
+  width: 3.2vmin;
+  height: 3.2vmin;
+}*/
+.page >>> .ivu-select-selection{
+    height: 3.2vmin;
+}
+.page >>> .ivu-select-selected-value{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-select-placeholder{
+    font-size: 1.2vmin;
+    height: 3vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator input{
+    font-size: 1.2vmin;
+    height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator{
+    display: inline-block;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+.page >>> .ivu-page-next{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-next .ivu-icon{
+    font-size: 1.6vmin;
+}
+.page >>> .ivu-page-prev{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-prev .ivu-icon{
+    font-size: 1.6vmin;
+}
+
+ /*日期选择*/
+.conditions >>> .ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+
+.conditions >>> .ivu-picker-panel-icon-btn{
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+}
+
+.conditions >>> .ivu-date-picker-header-label{
+    font-size: 1.66vmin;
+}
+
+@media (min-width: 1921px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .conditions >>> .ivu-date-picker-cells {
+        width: 15vmin;
+        font-size: 1.66vmin;
+    }
+
+    .conditions >>> .ivu-date-picker-cells-cell{
+        width: 2vmin;
+    }
+    .conditions >>> .ivu-date-picker-cells-header span{
+        padding-right: 2.5rem;
+    }
+    .detailsInfo{
+      padding: 1vmin;
+    }
+    .option,.timeContainer{
+      line-height: 4vmin;
+      font-size: 1.6vmin;
+    }
+    .detailsList .everyList{
+      border: 0.1vmin solid #ccc;
+      border-radius: 0.5vmin;
+    }
+    .planName{
+      font-size: 2.2vmin;
+    }
+    .icon,.details,.details-bottom div{
+      line-height: 1.9
+    }
 }
 </style>
 

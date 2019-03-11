@@ -603,10 +603,10 @@ create table T_OPERATION_LOG
   req_ip      VARCHAR2(20 CHAR),
   req_user    VARCHAR2(20 CHAR),
   method      VARCHAR2(200 CHAR),
-  params      VARCHAR2(200 CHAR),
+  params      VARCHAR2(500 CHAR),
   result      VARCHAR2(10 CHAR) ,
   crt_time    DATE,
-  description VARCHAR2(200),
+  description VARCHAR2(500),
   CONSTRAINT PK_T_OPERATION_LOG PRIMARY KEY ("ID")
 );
 
@@ -812,6 +812,7 @@ CREATE TABLE T_COMMON_SECTION  (
    store_id          NUMBER               NOT NULL,
    area_id          NUMBER               NOT NULL,
    total_cable_number number,
+   length number,
    parent_id             NUMBER,
    camera             varchar2(200),
    start_point        varchar2(100),

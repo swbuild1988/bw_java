@@ -1,49 +1,49 @@
 <template>
-  <div class="main">
-    <div class="ceng">
-  <Form ref="formValidate" :model="formValidate" :rules="ruleValidate"class="demo-ruleForm login-container">
-    <h3 class="title">综合管廊后台管理系统</h3>
-    <FormItem prop="userName">
-      <!-- <Input type="text" v-model="formValidate.userName" placeholder="用户名">
-      <Icon type="ios-person-outline" slot="prepend"></Icon> -->
-      </Input>
-      <div class="radiusBox">
-        <div class="iconBox">
-          <Icon type="ios-person-outline" color="gray" size="20"></Icon>
+    <div class="main">
+        <div class="ceng">
+          <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="demo-ruleForm login-container">
+            <h3 class="title">综合管廊后台管理系统</h3>
+            <FormItem prop="userName">
+              <!-- <Input type="text" v-model="formValidate.userName" placeholder="用户名">
+              <Icon type="ios-person-outline" slot="prepend"></Icon> -->
+              </Input>
+              <div class="radiusBox">
+                <div class="iconBox">
+                  <Icon type="ios-person-outline" color="gray" size="20"></Icon>
+                </div>
+                <div class="inputBox">
+                  <input type="text" v-model="formValidate.userName" placeholder="用户名" @blur="checkName()">
+                </div>
+                <div class="ivu-form-item-error-tip" v-if="isName" style="margin-left: 30px;">姓名不能为空</div>
+              </div>
+            </FormItem>
+            <FormItem prop="passWord">
+              <!-- <Input type="password" >
+              </Input> -->
+              <div class="radiusBox">
+                <div class="iconBox">
+                  <Icon type="ios-locked-outline" color="gray" size="20"></Icon>
+                </div>
+                <div class="inputBox">
+                  <input type="password" v-model="formValidate.passWord" placeholder="密码" @blur="checkPass()">
+                </div>
+                <div class="ivu-form-item-error-tip" v-if="isPass" style="margin-left: 30px;">密码不能为空</div>
+              </div>
+            </FormItem>
+            <FormItem>
+              <!-- <checkbox v-model="checked" checked class="remember" >记住密码 </checkbox> -->
+              <input id="color-input-red" class="chat-button-location-radio-input" v-model="checked" type="checkbox" checked name="color-input-red" value="#f0544d" />
+              <label  for="color-input-red"></label >
+              <span style="font-size: 14px;">记住密码</span>
+            </FormItem>
+            <FormItem style="text-align: center">
+              <Button type="primary" style="width:70%;border-radius: 25px;background: #052752;border-color:#052752" @click="handleSubmit('formValidate')" :loading="loading">
+                <span v-if="!loading">登录</span>
+                <span v-else>Loading...</span></Button>
+            </FormItem>
+          </Form>
         </div>
-        <div class="inputBox">
-          <input type="text" v-model="formValidate.userName" placeholder="用户名" @blur="checkName()">
-        </div>
-        <div class="ivu-form-item-error-tip" v-if="isName" style="margin-left: 30px;">姓名不能为空</div>
-      </div>
-    </FormItem>
-    <FormItem prop="passWord">
-      <!-- <Input type="password" >
-      </Input> -->
-      <div class="radiusBox">
-        <div class="iconBox">
-          <Icon type="ios-locked-outline" color="gray" size="20"></Icon>
-        </div>
-        <div class="inputBox">
-          <input type="password" v-model="formValidate.passWord" placeholder="密码" @blur="checkPass()">
-        </div>
-        <div class="ivu-form-item-error-tip" v-if="isPass" style="margin-left: 30px;">密码不能为空</div>
-      </div>
-    </FormItem>
-    <FormItem>
-      <!-- <checkbox v-model="checked" checked class="remember" >记住密码 </checkbox> -->
-      <input id="color-input-red" class="chat-button-location-radio-input" v-model="checked" type="checkbox" checked name="color-input-red" value="#f0544d" />
-      <label  for="color-input-red"></label >
-      <span style="font-size: 14px;">记住密码</span>
-    </FormItem>
-    <FormItem style="text-align: center">
-      <Button type="primary" style="width:70%;border-radius: 25px;background: #052752;border-color:#052752" @click="handleSubmit('formValidate')" :loading="loading">
-        <span v-if="!loading">登录</span>
-        <span v-else>Loading...</span></Button>
-    </FormItem>
-  </Form>
-  </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -73,6 +73,7 @@ export default {
   methods: {
     handleSubmit(name) {
       var _this = this
+      var sha256 = require("js-sha256").sha256
       // sessionStorage.setItem("CMUser", JSON.stringify("admin"));
       // sessionStorage.setItem("CMUerName", JSON.stringify("admin"));
       this.checkName()
@@ -87,54 +88,25 @@ export default {
               7
             )
           : this.clearCookie();
-        var loginParams = {
+        var loginParams = {    
           name: _this.formValidate.userName,
-          password: _this.formValidate.passWord
+          password: sha256(_this.formValidate.passWord)
         };
-
         LoginService.UmLogin(loginParams).then(
           result=>{
             _this.logining = false;
             let sessionUserName = result.name;
             let roles = result.roles;
             sessionStorage.setItem("CMUser", JSON.stringify(result));
-            sessionStorage.setItem(
-              "CMUerName",
-              JSON.stringify(sessionUserName)
-            );
-            sessionStorage.setItem(
-              "CMUerName",
-              JSON.stringify(sessionUserName)
-            );
-            sessionStorage.setItem(
-              "UMRoles",
-              JSON.stringify(roles)
-            );
+            sessionStorage.setItem("CMUerName",JSON.stringify(sessionUserName));
+            sessionStorage.setItem("CMUerName",JSON.stringify(sessionUserName));
+            sessionStorage.setItem("UMRoles",JSON.stringify(roles));
             _this.$router.push({ path: "CMmain" });
           },
           error=>{
             _this.$Message.error(error);
             _this.loading = false;
           })
-        // _this.axios.post("/login", loginParams).then(result => {
-        //   _this.logining = false;
-        //   let { msg, code, data } = result.data;
-        //   //存用户名 例：“admin”
-        //   let sessionUserName = result.data.data.name;
-        //   let sessionUserId = result.data.data.id;
-        //   if (code !== "200") {
-        //     _this.$Message.error(msg);
-        //     _this.loading = false;
-        //   } else {
-        //     sessionStorage.setItem("UMUser", JSON.stringify(data));
-        //     sessionStorage.setItem(
-        //       "UMUerName",
-        //       JSON.stringify(sessionUserName)
-        //     );
-        //     sessionStorage.setItem("UMUerId", JSON.stringify(sessionUserId));
-        //     _this.$router.push({ path: "CMmain" });
-        //   }
-        // });
       }
     },
     checkName() {

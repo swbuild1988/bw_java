@@ -25,4 +25,5 @@ public interface PermissionService {
 
 	List<Permission> getPermissionsByRole(Integer rid);
 
+
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="mixedLineBar" :id=id>
+    <div class="mixedLineBar" :id=id ref="element">
     </div>
 </template>
 <script>
@@ -28,20 +28,44 @@ export default {
     data(){
         return {
             myChart: {},
-            option: {
+            option: {},
+        }
+    },
+    mounted(){
+        this.init()
+    },
+    methods: {
+        init(){
+            this.resize()
+            window.addEventListener('resize', this.myChart.resize);
+            window.addEventListener('resize', this.resize);
+        },
+        resize(){
+            this.drawBar()
+        },
+        drawBar() {
+            var _this = this
+            this.myChart = this.$echarts.init(
+                document.getElementById(this.id)
+            );
+            this.option = {
                 tooltip: {
                     trigger: 'axis',
                 },
-                toolbox: {
-                    feature: {
-                        dataView: {show: true, readOnly: false},
-                        magicType: {show: true, type: ['line', 'bar']},
-                        restore: {show: true}
-                    }
-                },
+                // toolbox: {
+                //     feature: {
+                //         dataView: {show: true, readOnly: false},
+                //         magicType: {show: true, type: ['line', 'bar']},
+                //         restore: {show: true}
+                //     }
+                // },
                 legend: {
                     data: this.legendData,
-                    textStyle: {color: '#ccc'},
+                    textStyle: {
+                        color: '#ccc',
+                        fontSize: _this.getFontSize('7%')
+                    },
+                    padding: 10
                 },
                 xAxis: [
                     {
@@ -52,7 +76,13 @@ export default {
                         },
                         axisLine:{
                             lineStyle:{
-                                color:'#00FF00'
+                                color:'#ccc'
+                            }
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                fontSize : _this.getFontSize('7%')      //更改坐标轴文字大小
                             }
                         }
                     }
@@ -66,7 +96,13 @@ export default {
                         },
                         axisLine:{
                             lineStyle:{
-                                color:'#00FF00'
+                                color:'#ccc'
+                            }
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                fontSize : _this.getFontSize('7%')      //更改坐标轴文字大小
                             }
                         }
                     },
@@ -78,25 +114,35 @@ export default {
                         },
                         axisLine:{
                             lineStyle:{
-                                color:'#00FF00'
+                                color:'#ccc'
                             }
-                        }
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                fontSize : _this.getFontSize('7%')      //更改坐标轴文字大小
+                            }
+                        },
                     }
                 ],
                 series: this.seriesData
-            },
-        }
-    },
-     mounted(){
-        this.drawBar()
-    },
-    methods: {
-        drawBar() {
-            this.myChart = this.$echarts.init(
-                document.getElementById(this.id)
-            );
-            this.myChart.setOption(this.option);
+            }
+            this.myChart.setOption(_this.option);
             window.addEventListener("resize", this.myChart.resize);
+        },
+        getFontSize(val) {
+            if (typeof (val) == 'number') return val;
+
+            if (typeof (val) == 'string') {
+
+                if (val.indexOf('%') > 0) {
+                    var tmp = parseFloat(val.replace('%', '')) / 100;
+                    let height = this.$refs.element.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     }
 }

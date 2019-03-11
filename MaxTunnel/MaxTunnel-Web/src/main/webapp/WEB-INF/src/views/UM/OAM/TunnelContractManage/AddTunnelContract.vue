@@ -1,50 +1,50 @@
 <template>
   <div :style="backStyle">
-    <Form ref="addContractInfo" :model="addContractInfo"  :rules="ruleValidate" :label-width="140" class="form">
-        <h2 v-if="pageType!=pageTypes.Edit && pageType!=pageTypes.Read">添加合同信息</h2>
-        <h2 v-if="pageType==pageTypes.Edit">修改合同信息</h2>
-        <h2 v-if="pageType==pageTypes.Read">合同信息详情</h2>
+    <Form ref="addContractInfo" :model="addContractInfo"  :rules="ruleValidate" class="form">
+        <p v-if="pageType!=pageTypes.Edit && pageType!=pageTypes.Read" class="title">添加合同信息</p>
+        <p v-if="pageType==pageTypes.Edit" class="title">修改合同信息</p>
+        <p v-if="pageType==pageTypes.Read" class="title">合同信息详情</p>
         <FormItem label="合同名称：" prop="name">
-            <Input v-model="addContractInfo.name" placeholder="请输入合同名称" v-if="!read"></Input>
+            <Input v-model="addContractInfo.name" placeholder="请输入合同名称" v-if="!read" class="inputWidth"></Input>
             <span v-if="read">{{ addContractInfo.name }}</span>
         </FormItem>
          <FormItem label="合同开始日期：" prop="contractStartTime">
-            <DatePicker type="datetime" placeholder="请选择合同开始日期" v-model="addContractInfo.contractStartTime" style="width:460px" v-if="!read"></DatePicker>
+            <DatePicker type="datetime" placeholder="请选择合同开始日期" v-model="addContractInfo.contractStartTime" class="inputWidth" v-if="!read"></DatePicker>
             <span v-if="read">{{ new Date(addContractInfo.contractStartTime).format('yyyy-MM-dd hh-mm-s') }}</span>
         </FormItem>
          <FormItem label="合同结束日期：" :prop="read ? null : 'contractEndTime'"> 
-            <DatePicker type="datetime" placeholder="请选择合同结束日期" v-model="addContractInfo.contractEndTime" style="width: 460px" v-if="!read"></DatePicker>
+            <DatePicker type="datetime" placeholder="请选择合同结束日期" v-model="addContractInfo.contractEndTime" class="inputWidth" v-if="!read"></DatePicker>
             <span v-if="read">{{ new Date(addContractInfo.contractEndTime).format('yyyy-MM-dd hh-mm-s') }}</span>
         </FormItem>
         <FormItem label="付款方式：" prop="payType">
-            <Select v-model="addContractInfo.payType" v-if="!read">
+            <Select v-model="addContractInfo.payType" v-if="!read" class="inputWidth">
                 <Option v-for="(item,index) in payTypes" :value="item.val.toString()" :key="index">{{ item.key }}</Option>
             </Select>
             <span v-if="read && item.val == addContractInfo.payType" v-for="(item,index) in payTypes" :key="index">{{ item.key }}</span>
         </FormItem>
         <FormItem label="合同状态：" v-if="pageType==pageTypes.Edit || read">
-            <Select v-model="addContractInfo.contractStatus" v-if="!read">
+            <Select v-model="addContractInfo.contractStatus" v-if="!read" class="inputWidth">
                 <Option v-for="(item,index) in contractStatus" :value="item.val.toString()" :key="index">{{ item.key }}</Option>
             </Select>
             <span v-if="read && item.val == addContractInfo.contractStatus" v-for="(item,index) in contractStatus" :key="index">{{ item.key }}</span>
         </FormItem>
         <FormItem label="管线名称：" prop="cableName">
-            <Input v-model="addContractInfo.cableName" placeholder="请输入管线名称" v-if="!read"></Input>
+            <Input v-model="addContractInfo.cableName" placeholder="请输入管线名称" v-if="!read" class="inputWidth"></Input>
             <span v-if="read">{{ addContractInfo.cableName }}</span>
         </FormItem>
         <FormItem label="管线长度：" prop="cableLength">
-            <Input v-model="addContractInfo.cableLength" placeholder="请输入管线长度" v-if="!read"></Input>
+            <Input v-model="addContractInfo.cableLength" placeholder="请输入管线长度" v-if="!read" class="inputWidth"></Input>
             <span v-if="read">{{ addContractInfo.cableLength }}</span>
         </FormItem>
         <FormItem label="管线状态：" v-if="pageType==pageTypes.Edit || read">
-            <Select v-model="addContractInfo.cableStatus" v-if="!read">
+            <Select v-model="addContractInfo.cableStatus" v-if="!read" class="inputWidth">
                 <Option v-for="(item,index) in cableStatus" :value="item.val.toString()" :key="index">{{ item.key }}</Option>
             </Select>
             <span v-if="read && item.val == addContractInfo.cableStatus" v-for="(item,index) in cableStatus" :key="index">{{ item.key }}</span>
         </FormItem>
         <FormItem label="客户：" :prop="read ? null : 'customerId'">
-            <Poptip placement="top" width="1000">
-                 <Input v-model="customerName" placeholder="请选择客户" style="width:460px" v-if="!read"></Input>
+            <Poptip placement="top">
+                 <Input v-model="customerName" placeholder="请选择客户" class="inputWidth" v-if="!read"></Input>
                 <div class="pop" slot="content" v-show="pageType != pageTypes.Read">
                     <customer-choose @selectCustomer="getCustomerId" v-bind:customerId="addContractInfo.customerId"></customer-choose>
                 </div>
@@ -60,28 +60,30 @@
             </Poptip>
         </FormItem> -->
         <FormItem label="管线位置：">
-            <Col span="8">
-                <Select v-model="addContractInfo.tunnelId" v-show="!read" @on-change="tunnelChange">
-                  <!--   <Option disabled value="0">管廊</Option> -->
-                    <Option v-for="item in cableLocation.tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-                <span v-if="read && item.id == addContractInfo.tunnelId" v-for="(item,index) in cableLocation.tunnels" :key="index">{{ item.name }}</span>
-                <div class="ivu-form-item-error-tip" v-if="checkCable.tunnel">请选择管廊</div>
-            </Col>
-            <Col span="8">
-                <Select v-model="addContractInfo.storeId" @on-change="check('store')" v-if="!read">
-                    <Option v-for="(item,index) in cableLocation.stores" :value="item.id" :key="index">{{ item.name }}</Option>
-                </Select>
-                <span v-if="read && item.id == addContractInfo.storeId" v-for="item in cableLocation.stores" :key="item.id">{{ item.name }}</span>
-                <div class="ivu-form-item-error-tip" v-if="checkCable.store">请选择仓</div>
-            </Col>
-            <Col span="8">
-               <Select multiple v-model="addContractInfo.areaIds" @on-change="check('area')" v-if="!read">
-                    <Option v-for="(item,index) in cableLocation.areas" :value="item.id" :key="index">{{ item.name }}</Option>
-                </Select>
-                <p v-if="read && addContractInfo.areaIds.indexOf(item.id) != -1" v-for="(item,index) in cableLocation.areas" :key="index">{{ item.name }}</p>
-                <div class="ivu-form-item-error-tip" v-if="checkCable.area">请选择区域</div>
-            </Col>
+            <Row style="width: 45vmin;margin-left: 14vmin">
+                <Col span="8">
+                    <Select v-model="addContractInfo.tunnelId" v-show="!read" @on-change="tunnelChange">
+                      <!--   <Option disabled value="0">管廊</Option> -->
+                        <Option v-for="item in cableLocation.tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                    <span v-if="read && item.id == addContractInfo.tunnelId" v-for="(item,index) in cableLocation.tunnels" :key="index">{{ item.name }}</span>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.tunnel">请选择管廊</div>
+                </Col>
+                <Col span="8">
+                    <Select v-model="addContractInfo.storeId" @on-change="check('store')" v-if="!read">
+                        <Option v-for="(item,index) in cableLocation.stores" :value="item.id" :key="index">{{ item.name }}</Option>
+                    </Select>
+                    <span v-if="read && item.id == addContractInfo.storeId" v-for="item in cableLocation.stores" :key="item.id">{{ item.name }}</span>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.store">请选择仓</div>
+                </Col>
+                <Col span="8">
+                   <Select multiple v-model="addContractInfo.areaIds" @on-change="check('area')" v-if="!read">
+                        <Option v-for="(item,index) in cableLocation.areas" :value="item.id" :key="index">{{ item.name }}</Option>
+                    </Select>
+                    <p v-if="read && addContractInfo.areaIds.indexOf(item.id) != -1" v-for="(item,index) in cableLocation.areas" :key="index">{{ item.name }}</p>
+                    <div class="ivu-form-item-error-tip location" v-if="checkCable.area">请选择区域</div>
+                </Col>
+            </Row>
         </FormItem>
         <div style="text-align: center">
         <Button type="primary" @click="submitAddContractInfo('addContractInfo')" v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read">提交</Button>
@@ -181,9 +183,11 @@ export default {
     },
     components: { CustomerChoose },
     mounted(){
-        this.curIndex = this.$route.params.curIndex
-        this.contractIds = this.$route.params.contractIds
-        this.addContractInfo.id = this.contractIds[this.curIndex]
+        if(this.$route.params.curIndex != null){
+            this.curIndex = this.$route.params.curIndex
+            this.contractIds = this.$route.params.contractIds
+            this.addContractInfo.id = this.contractIds[this.curIndex]
+        }
         this.pageType = this.$route.params.type
         if(this.pageType == this.pageTypes.Read){
             this.read = true
@@ -348,8 +352,8 @@ export default {
             if(!this.addContractInfo.tunnelId){
                 this.checkCable.tunnel = false;
             }else{
-                this.addContractInfo.storeId = null
-                this.addContractInfo.areaIds = null
+                // this.addContractInfo.storeId = null
+                // this.addContractInfo.areaIds = null
                 this.getStoreAndAreas()
             }   
         },
@@ -371,6 +375,7 @@ export default {
                     _this.Log.info(error)
                 }
             )
+            console.log(this.cableLocation.stores,this.cableLocation.areas)
         },
         prev() {
             this.curIndex = this.curIndex - 1
@@ -387,10 +392,10 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 640px;
-    margin: 10px auto;
+    width: 64vmin;
+    margin: 2vh auto;
     background: #fff;
-    padding: 10px 20px;
+    padding: 1vmin 2vmin;
 }
 h2{
     text-align: center;
@@ -400,11 +405,11 @@ h2{
     max-height:300px;
     overflow-y: auto;
 }
-.form{
-   /* position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);*/
+.form >>> .ivu-poptip-popper{
+    width: 100vmin;
+}
+.form >>> .ivu-form-item-label{
+    width: 14vmin;
 }
 .prev{
     position: absolute;
@@ -415,5 +420,89 @@ h2{
     position: absolute;
     bottom: 6vh;
     right: 2vw;
+}
+.title{
+    font-size: 2.5vmin;
+    text-align: center;
+}
+.inputWidth{
+    width: 45vmin;
+}
+.form >>> .ivu-form-item{
+    margin-bottom: 2.4vmin;
+}
+@media (min-width: 2000px){
+    .form >>> .ivu-form-item-content{
+        line-height: 2.6vmin;
+    }
+}
+/*select*/
+.form >>> .ivu-select-selection{
+    height: 3.2vmin !important;
+}
+.form >>> .ivu-select-multiple .ivu-select-selection{
+    height: 3.2vmin !important;
+}
+.form >>> .ivu-select-selected-value{
+    font-size: 1.26vmin !important;
+    padding-top: 0.2vmin !important;
+    width: 90% !important;
+}
+.form >>> .ivu-select-placeholder{
+    font-size: 1.26vmin !important;
+    padding-top: 0.2vmin !important;
+    width: 90% !important;
+}
+.form >>> .ivu-select-multiple .ivu-select-placeholder{
+    line-height: 3.2vmin !important;
+    height: 3.2vmin !important;
+}
+.form >>> .ivu-tag{
+    height: 2.4vmin;
+    line-height: 2.2vmin;
+    font-size: 1.2vmin;
+    margin: 0.3vmin 0.4vmin 0.3vmin 0;
+}
+.form >>> .ivu-form-item-error-tip{
+    left: 14vmin;
+}
+.form >>> .location{
+    left: 0;
+}
+
+/*input*/
+.form >>> .ivu-input{
+    font-size: 1.4vmin;
+    height: 3.2vmin;
+}
+
+/*datepicker*/
+.form >>> .ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+
+.form >>> .ivu-picker-panel-icon-btn{
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+}
+
+.form >>> .ivu-date-picker-header-label{
+    font-size: 1.66vmin;
+}
+
+@media (min-width: 1921px){
+    .form >>> .ivu-date-picker-cells {
+        width: 15vmin;
+        font-size: 1.66vmin;
+    }
+
+    .form >>> .ivu-date-picker-cells-cell{
+        width: 2vmin;
+    }
+    .form >>> .ivu-date-picker-cells-header span{
+        padding-right: 2.5rem;
+    }
 }
 </style>

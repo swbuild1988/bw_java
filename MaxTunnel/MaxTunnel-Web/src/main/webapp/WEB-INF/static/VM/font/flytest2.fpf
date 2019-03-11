@@ -9,11 +9,11 @@
 <bottomAltitude>0.00</bottomAltitude>
 </geostyle3d>
 </style>
-<routestop name="stop1" speed="0" excluded="False" viewType="camera">
+<routestop name="Stop1" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.49407600000001</longitude>
-<latitude>37.707107000000001</latitude>
-<altitude>4.1280099999999997</altitude>
+<longitude>112.50691256687979</longitude>
+<latitude>37.71564828010106</latitude>
+<altitude>11067.155610661437</altitude>
 <heading>173.97208462679581</heading>
 <tilt>69.456878966451569</tilt>
 <altitudeMode>Absolute</altitudeMode>
@@ -35,11 +35,11 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="stop2" speed="0" excluded="False" viewType="camera">
+<routestop name="Stop2" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.494063</longitude>
-<latitude>37.706518000000003</latitude>
-<altitude>5.3006549999999999</altitude>
+<longitude>112.50691256687979</longitude>
+<latitude>37.71564828010106</latitude>
+<altitude>1347.071906565895</altitude>
 <heading>173.97208462679581</heading>
 <tilt>69.456878966451569</tilt>
 <altitudeMode>Absolute</altitudeMode>

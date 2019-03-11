@@ -1,9 +1,5 @@
 <template>
     <div class="Top">
-        <img
-            :src="logo"
-            class="Logo"
-        >
         <span>{{title}}</span>
     </div>
 </template>
@@ -21,11 +17,13 @@ export default {
     },
     mounted() {
         //logo image init
-        this.logo = require("../../../assets/VM/Logo.png");
+        // this.logo = require("../../../assets/VM/Logo.png");
         //title init
         this.title = VM_TILTE;
     },
-    methods: {}
+    methods: {
+
+    }
 };
 </script>
 

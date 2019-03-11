@@ -54,10 +54,15 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+
   <!-- Spring监听器，加了shiro之后必须要有 -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+
 
   <!-- 添加对springmvc的支持 -->
   <!-- 因为加了shiro的缘故，所以要将spring加载项和springmvc的分开，

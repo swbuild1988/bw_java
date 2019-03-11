@@ -2,6 +2,8 @@ package com.bandweaver.tunnel.dao.common;
 
 import com.bandweaver.tunnel.common.biz.pojo.common.RolePermission;
 
+import java.util.List;
+
 public interface RolePermissionMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -16,4 +18,8 @@ public interface RolePermissionMapper {
     int updateByPrimaryKey(RolePermission record);
 
 	void deleteByRoleId(Integer roleId);
+
+    void deleteByPIds(List<Integer> list);
+
+    void deleteByRIds(List<Integer> list);
 }

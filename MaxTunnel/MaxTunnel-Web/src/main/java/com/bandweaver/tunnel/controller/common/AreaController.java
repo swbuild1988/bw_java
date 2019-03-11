@@ -1,8 +1,10 @@
 package com.bandweaver.tunnel.controller.common;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -94,6 +96,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @Date 2018年9月19日
 	 */
+	@Deprecated
 	@RequestMapping(value="areas/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id) {
 		areaService.delete(id);
@@ -128,6 +131,8 @@ public class AreaController extends BaseController<Area>{
 		AreaVo areaVo = new AreaVo();
 		areaVo.setTunnelId(id);
 		List<AreaDto> list = areaService.getAreasByCondition(areaVo);
+		//orderby sn
+		list = list.stream().sorted(Comparator.comparing(AreaDto::getSn)).collect(Collectors.toList());
 		return success(list);
 	}
 	

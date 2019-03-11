@@ -40,8 +40,13 @@ public class Constants {
     
     public static final String QUEUE_PLAN_UM = "mq.queue.plan.um";
     public static final String QUEUE_PLAN_VM = "mq.queue.plan.vm";
-//    public static final String BIGSCREEN_QUEUE = "mq.queue.bigscreen";
 
     
+    //线程
+    public static final int THREAD_POOL_SIZE = 5;
+
+    //excel导出相关参数
+    public static final String EXCEL_EXPORT_PATH = "excel.export.path";
+    public static final String TEMPLATE_01 = "clear_bankfeedetail_template.xls";
     
 }

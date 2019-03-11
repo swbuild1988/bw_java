@@ -1,83 +1,86 @@
 <template>
   <div style="margin: 24px">
     <Row>
-      <h1 style="margin-bottom: 10px;">巡检计划详情</h1>
-      <Col span="12" style="padding-right: 20px;background: #fff;">
-        <div class="leftContainer">
-          <Form :model="plan" :label-width="100" @submit.native.prevent>
-            <Col span="12">
-              <FormItem label="计划编号：">
-                <Input v-model='plan.planId' disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="计划名称：">
-                <Input v-model='plan.name' disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="所属管廊：">
-                <Select v-model='plan.tunnelId' disabled>
-                  <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="计划状态：">
-                <Input type="text" v-model="plan.processStatus" disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="责任班组：">
-                <Select v-model='plan.groupId' disabled>
-                  <Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="责任人：">
-                <Input v-model="plan.inspectionGroup.leader.name" disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="巡检日期：">
-                <Input v-model="plan.inspectTime" disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="执行天数：">
-                <Input v-model="plan.tasks.length" disabled></Input>
-              </FormItem>
-            </Col>
-            <Col span="24">
-              <FormItem label="计划描述：">
-                <Input v-model="plan.remark" type="textarea" :rows="4" placeholder="请输入描述..." disabled></Input>
-              </FormItem>
-            </Col>
-          </Form>
-        </div>
+      <h2 style="margin-bottom: 10px;">巡检计划详情</h2>
+        <Col span="12" style="padding-right: 20px;background: #fff;">
+          <div class="leftContainer">
+            <Form :model="plan" :label-width="100" @submit.native.prevent>
+              <Col span="12">
+                <FormItem label="计划编号：" style="background: #fff">
+                  <Input v-model='plan.planId' disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="计划名称：">
+                  <Input v-model='plan.name' disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="所属管廊：">
+                  <Select v-model='plan.tunnelId' disabled>
+                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="计划状态：">
+                  <Input type="text" v-model="plan.processStatus" disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="责任班组：">
+                  <Select v-model='plan.groupId' disabled>
+                    <Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="责任人：">
+                  <Input v-model="plan.inspectionGroup.leaderName" disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="巡检日期：">
+                  <Input v-model="plan.inspectTime" disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="12">
+                <FormItem label="执行天数：">
+                  <Input v-model="plan.tasks.length" disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="24">
+                <FormItem label="计划描述：">
+                  <Input v-model="plan.remark" type="textarea" :rows="4" placeholder="请输入描述..." disabled></Input>
+                </FormItem>
+              </Col>
+              <Col span="24" style="text-align: center;padding-bottom: 20px;">
+                <Button type="default" @click="goBack()">返回</Button>
+              </Col>
+            </Form>
+          </div>
         </Col>
         <Col span="12">
-        <div class="rightContainer">
-          <h3>巡检记录：（
-            流程未结束：
-            <div class="finish noFinish"></div>
-            流程结束：
-            <div class="finish isFinish"></div>
-            ）
-          </h3>
-          <ul class="patrolRecordUl">
-            <li v-for="item in patrolRecords" :value="item.id" :key="item.id" :class="[item.taskType==1?'noFinish':(item.taskType==2?'isFinish':'') ]">{{item.id}}</li>
-          </ul>
-          <Table border stripe :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
-        <Col span="24" v-show="pageType==pageTypes.Edit" style="text-align: right;margin-top: 20px;">
-          <Button type="primary" @click="submit()">确定</Button>
-          <Button type="primary">取消</Button>
-        </Col>
-       </div>
+          <div class="rightContainer">
+            <h3>巡检记录：（
+              流程未结束：
+              <div class="finish noFinish"></div>
+              流程结束：
+              <div class="finish isFinish"></div>
+              ）
+            </h3>
+            <ul class="patrolRecordUl">
+              <li v-for="item in patrolRecords" :value="item.id" :key="item.id" :class="[item.taskType==1?'noFinish':(item.taskType==2?'isFinish':'') ]">{{item.id}}</li>
+            </ul>
+            <Table border stripe :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
+            <Col span="24" v-show="pageType==pageTypes.Edit" style="text-align: right;margin-top: 20px;">
+              <Button type="primary" @click="submit()">确定</Button>
+              <Button type="primary">取消</Button>
+            </Col>
+        </div>
        </Col>
     </Row>
-    <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回"></Icon>
+    <!-- <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回"></Icon> -->
   </div>
 </template>
 
@@ -98,7 +101,7 @@ export default {
       pageTypes: types.pageType,
       plan: {
         planId: null,
-        name: "",
+        name: null,
         tunnelId: null,
         processStatus: null,
         groupId: null,
@@ -140,7 +143,6 @@ export default {
         {
           title: "巡检日期",
           key: "taskTime",
-          width: 170,
           align: "center"
         },
         {
@@ -161,41 +163,6 @@ export default {
     this.plan.planId = this.$route.params.id;
     this.pageType = this.$route.params.type;
     let _this = this
-    PatrolService.getPDetailByPlanId(this.plan.planId).then(
-      (result)=>{
-        _this.plan = result;
-        // 暂定默认值
-        _this.plan.inspectTime = new Date(_this.plan.inspectTime).format(
-          "yyyy-MM"
-        );
-        _this.plan.tasks.forEach(element => {
-          element.inspectTime = new Date(element.inspectTime).format(
-            "yyyy-MM-dd"
-          );
-          element.taskTime = new Date(element.taskTime).format("yyyy-MM-dd");
-        });
-        _this.getRecords();
-      },
-      (error)=>{
-        _this.Log.info(error)
-      })
-    // this.axios.get("inspection-plans/" + this.plan.planId).then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.plan = data;
-    //     // 暂定默认值
-    //     this.plan.inspectTime = new Date(this.plan.inspectTime).format(
-    //       "yyyy-MM"
-    //     );
-    //     this.plan.tasks.forEach(element => {
-    //       element.inspectTime = new Date(element.inspectTime).format(
-    //         "yyyy-MM-dd"
-    //       );
-    //       element.taskTime = new Date(element.taskTime).format("yyyy-MM-dd");
-    //     });
-    //     this.getRecords();
-    //   }
-    // });
 
     // 获取所有的管廊
     TunnelService.getTunnels().then(
@@ -205,12 +172,6 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/tunnels ").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.tunnels = data;
-    //   }
-    // });
 
     // 从数据库读取责任班组select的option选项
     PatrolService.getGroups().then(
@@ -220,12 +181,6 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/inspection-groups").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.groups = data;
-    //   }
-    // });
 
     //申请状态
     EnumsService.getReqStatus().then(
@@ -240,17 +195,7 @@ export default {
       (error)=>{
         _this.Log.info(error)
       })
-    // this.axios.get("/reqstatus-enums").then(response => {
-    //   let { code, data } = response.data;
-    //   if (code == 200) {
-    //     this.reqstatus = data;
-    //     for (let index in this.reqstatus) {
-    //       if (this.reqstatus[index].val == this.plan.requestStatus) {
-    //         this.plan.requestStatus = this.reqstatus[index].key;
-    //       }
-    //     }
-    //   }
-    // });
+      this.getDetails()
   },
   watch: {
     $route: function() {
@@ -259,6 +204,23 @@ export default {
     }
   },
   methods: {
+    //获取详情
+    getDetails(){
+      PatrolService.getPDetailByPlanId(this.plan.planId).then(
+        (result)=>{
+          this.plan = result;
+          // 暂定默认值
+          this.plan.inspectTime = new Date(this.plan.inspectTime).format("yyyy-MM");
+          this.plan.tasks.forEach(element => {
+            element.inspectTime = new Date(element.inspectTime).format("yyyy-MM-dd");
+            element.taskTime = new Date(element.taskTime).format("yyyy-MM-dd");
+          });
+          this.getRecords();
+        },
+        (error)=>{
+          this.Log.info(error)
+        })
+    },
     //获取天数
     getRecords() {
       this.year = new Date(this.plan.inspectTime).getFullYear();
@@ -344,7 +306,7 @@ h3 {
     border-radius: 4px;
     margin-right: 5px;
 }
-.ivu-input[disabled], fieldset[disabled] .ivu-input{
+ivu-input-wrapper >>> .ivu-input[disabled]{
     background-color: #ffffff !important;
     color: #495060 !important;
 }
@@ -352,5 +314,58 @@ h3 {
     position: absolute;
     bottom: 7vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    /* .ivu-form.ivu-form-label-right{
+        width: 50%;
+    } */
+    h2{
+        font-size: 2.4vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 10vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 10vmin !important;
+        line-height: 6.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form-item-content{
+        line-height: 6.5vmin;
+    }
+    .ivu-form-item-required .ivu-form-item-label:before{
+        font-size: 1.6vmin !important;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .patrolRecordUl li{
+        width: 2.3vmin;
+        height: 2.3vmin;
+        font-size: 1.4vmin;
+        line-height: 2.3vmin;
+    }
+    .rightContainer h3{
+        line-height: 4vmin;
+        font-size: 1.6vmin;
+    }
+    .ivu-table td, .ivu-table th{
+      height: 4.5vmin;
+    }
+    .finish{
+      width: 3vmin;
+      height: 1.4vmin;
+      border-radius: 0.4vmin;
+      margin-right: 0.5vmin;
+    }
 }
 </style>

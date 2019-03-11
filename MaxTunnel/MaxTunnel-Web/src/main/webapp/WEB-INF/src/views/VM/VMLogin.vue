@@ -8,9 +8,9 @@
     >
       <h3 class="title">{{title}}</h3>
       <FormItem prop="userName">
-        <Input 
+        <Input
           class="loginInput"
-          type="text" 
+          type="text"
           v-model="formValidate.userName"
           placeholder="用户名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -92,6 +92,7 @@ export default {
       // sessionStorage.setItem('VMUerName',JSON.stringify("admin"))
       // this.$router.push({ path:'VMmain'});
       let _this = this;
+      var sha256 = require("js-sha256").sha256
       _this.$refs[name].validate(valid => {
         if (valid) {
           _this.logining = true;
@@ -106,7 +107,7 @@ export default {
 
           var loginParams = {
             name: _this.formValidate.userName,
-            password: _this.formValidate.passWord
+            password: sha256(_this.formValidate.passWord)
           };
           LoginService.UmLogin(loginParams).then(
             result => {
@@ -124,7 +125,7 @@ export default {
                 JSON.stringify(sessionUserName)
               );
               sessionStorage.setItem("UMUerId", JSON.stringify(sessionUserId));
-              _this.$router.push({ path: "VMmain" });
+              _this.$router.push({ path: "VMmain2" });
             },
             error => {
               _this.$Message.error(error);

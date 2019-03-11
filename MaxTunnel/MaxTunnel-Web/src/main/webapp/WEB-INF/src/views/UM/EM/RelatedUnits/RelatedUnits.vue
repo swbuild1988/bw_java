@@ -29,6 +29,18 @@ export default {
         },
         treeNodeJumpUrl:"/UM/relatedUnits/query",
     };
-  }
+  },
+  created(){
+      if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/relatedUnits") < 0) {
+          this.goToMoudle({path: this.relatedUnits.leftTree[0].url});
+          sessionStorage.setItem('selectedName','')
+      }
+        sessionStorage.setItem("refreshAddress", "");
+  },
+  methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
+    }
 };
 </script>

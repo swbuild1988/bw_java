@@ -3,152 +3,265 @@
         <div class="Title">
             <module-title :title="title"></module-title>
         </div>
-        <div class="equipmentCount">
-            <div class="countDetailsBox">
-                <div class="countTitle">设备数量</div>
-                <div class="count">1806</div>
-            </div>
-            <div class="countDetailsBox">
-                <div class="countTitle">最长运行时间</div>
-                <div class="count">569 d</div>
-            </div>
-            <div class="countDetailsBox">
-                <div class="countTitle">备品数量</div>
-                <div class="count">56</div>
-            </div>
-            <div class="countDetailsBox">
-                <div class="countTitle">工具数量</div>
-                <div class="count">506</div>
-            </div>
+        <div class="topBox">
+            <!--<div class="simplePieChartBox">-->
+            <!--&lt;!&ndash; <simplePieChart v-bind="simplePieData"></simplePieChart> &ndash;&gt;-->
+            <!--<pie-chart v-bind="pieData"></pie-chart>-->
+            <!--</div>-->
+            <!--<div class="letBottomBox">-->
+            <!--<ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>-->
+            <!--</div>-->
+            <ul class="stateLists">
+                <li :key="key" v-for="(item,key) in stateDataLists">
+                    <div class="stateList-content" >
+                        <span>{{ item.name }}</span>
+                        <span>{{ item.value }}</span>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div class="radarChartBox">
-            <radarChart v-bind="radarData"></radarChart>
+        <div class="bottomBox">
+            <stack-chart
+                    v-bind="stackCrossData"
+                    ref="stackCrossChart"
+            >
+            </stack-chart>
         </div>
-        <div class="mixedLineBarBox">
-            <mixedLineBarChart v-bind="mixedLineBarData"></mixedLineBarChart>
-        </div>
+        <!--<div class="stackCrossBox">-->
+        <!--<cross-bar-chart-->
+        <!--v-bind="stackCrossData"-->
+        <!--ref="stackCrossChart"-->
+        <!--&gt;</cross-bar-chart>-->
+        <!--</div>-->
     </div>
 </template>
 
 <script>
-import ModuleTitle from "../../../components/VM2/ModuleTitle";
-import radarChart from "../../../components/Common/Chart/radarChart"
-import mixedLineBarChart from "../../../components/Common/Chart/MixedLineBarChart"
+    import ModuleTitle from "../../../components/VM2/ModuleTitle";
+    import stackCrossChart from "../../../components/Common/Chart/StackCrossChart"
+    import simplePieChart from '../../../components/Common/Chart/SimplePieChart'
+    import CrossBarChart from "../../../components/Common/Chart/CrossBarChart"
+    import PieChart from "../../../components/Common/Chart/PieChart"
+    import StackChart from "../../../components/Common/Chart/StackChart"
+    import ComplexBarChart from "../../../components/Common/Chart/ComplexBarChart.vue"
+    import { EquipmentService } from '../../../services/equipmentService'
 
-export default {
-    data() {
-        return {
-            title: "设备",
-            radarData: {
-                id: 'radarID',
-                title: '各类型设备数量',
-                legendData: ['各类型设备数量'],
-                radarindicator: [
-                    { name: '环境类', max: 15900 },
-                    { name: '安防类', max: 12590 },
-                    { name: '通讯类', max: 5690 },
-                    { name: '结构类', max: 5892 },
-                    { name: '工具类', max: 8694 },
-                    { name: '监视类', max: 9999 }
-                ],
-                seriesData: [
-                    {
-                        value: [4300, 10000, 2800, 3500, 5000, 1900],
-                        name: '设备数'
+    export default {
+        data() {
+            return {
+                title: "廊内设备",
+                stackCrossData: {
+                    id: 'stackCrossID',
+                    title: '设备类型状态统计',
+                    legendData: [],
+                    xData: [],
+                    seriesData: []
+                },
+                pieData: {
+                    id: 'pieID',
+                    title: '设备状态',
+                    legendData: [],
+                    seriesData: []
+                },
+                stateDataLists:[]
+                // simplePieData: {
+                //     id: 'simplePieID',
+                //     requestUrl: '/equipments/instruments/status',
+                //     parameters: {
+                //         option: {
+                //             title: {
+                //                 text: "设备统计",
+                //                 x: "center",
+                //                 textStyle: {
+                //                     color: "white"
+                //                 }
+                //             },
+                //             series: {
+                //                 label: {
+                //                     normal: {
+                //                         textStyle: {
+                //                             fontSize: '15%'
+                //                         }
+                //                     }
+                //                 }
+                //             },
+                //             grid: {
+                //                 top: '8%',
+                //                 left: 0,
+                //                 right: 0
+                //             },
+                //         },
+                //         timer: 1000 * 5 * 60
+                //     },
+                //     titleSize: '7%',
+                //     seriesSize: '4%'
+                // },
+                // ComplexBar: {
+                //     id: "ComplexBarChart",
+                //     // yAxisName: "单位：个",
+                //     requestUrl: "tunnels/equipments/types/test",
+                //     title: "各管廊设备明细",
+                //     color: "#21d6ff",
+                //     bgColor: 'rgb(255,255,255,0.0001)',
+                //     titleColor: '#ccc',
+                //     fontSizeNum: '10%'
+                // },
+            };
+        },
+        components: {
+            ModuleTitle,
+            stackCrossChart,
+            simplePieChart,
+            CrossBarChart,
+            PieChart,
+            ComplexBarChart,
+            StackChart
+        },
+        mounted() {
+            this.init()
+        },
+        methods: {
+            init() {
+                // 获取数据
+                EquipmentService.getEquipmentTypeAndStatusCount().then(res => {
+                    // 柱状图数据
+                    var arr = []
+                    for (var i = 0; i < res.length; i++) {
+                        this.stackCrossData.xData.push(res[i].key)
+                        var tmp = [];
+                        for (var j = 0; j < res[i].val.length; j++) {
+                            if (i == 0) {
+                                this.stackCrossData.legendData.push(res[i].val[j].key)
+                                arr.push([res[i].val[j].val])
+                            } else {
+                                arr[j].push(res[i].val[j].val)
+                            }
+                        }
                     }
-                ]
+                    for (var i = 0; i < arr.length; i++) {
+                        this.stackCrossData.seriesData.push({ data: arr[i] })
+                    }
+
+                    // 饼图
+                    this.pieData.legendData = [];
+                    for (var i = 0; i < this.stackCrossData.legendData.length; i++) {
+                        this.pieData.legendData.push(this.stackCrossData.legendData[i]);
+                    }
+                    for (var i = 0; i < arr.length; i++) {
+                        this.pieData.seriesData.push(0);
+                        for (var j = 0; j < arr[i].length; j++) this.pieData.seriesData[i] += arr[i][j];
+                    }
+                    // this.pieData.legendData = this.pieData.legendData.reverse();
+                    // this.pieData.seriesData = this.pieData.seriesData.reverse();
+                    this.stateDataLists.splice(0);
+                    for(let i=0,pieData = this.pieData;i<pieData.seriesData.length;i++){
+                        this.stateDataLists.push({
+                            name:pieData.legendData[i],
+                            value:this.percentage(pieData.seriesData,i)
+                        })
+                    }
+
+                })
             },
-            mixedLineBarData: {
-                id: 'mixedLineBarID',
-                legendData: ['设备缺陷', '备品使用量', '工具借用次数'],
-                xAxisData: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                yAxisData1: '个',
-                yAxisData2: '次',
-                seriesData: [
-                    {
-                        name: '设备缺陷',
-                        type: 'bar',
-                        data: [15, 55, 55, 58, 19, 15, 36, 78, 159, 28, 65, 47],
-                        itemStyle: {
-                            normal: {
-                                color: '#19be6b'
-                            }
-                        }
-                    },
-                    {
-                        name: '备品使用量',
-                        type: 'bar',
-                        data: [59, 55, 55, 58, 19, 15, 36, 28, 102, 28, 65, 47],
-                        itemStyle: {
-                            normal: {
-                                color: '#c857f3'
-                            }
-                        }
-                    },
-                    {
-                        name: '工具借用次数',
-                        type: 'line',
-                        yAxisIndex: 1,
-                        data: [88, 55, 55, 58, 19, 15, 36, 156, 159, 28, 65, 47],
-                    }
-                ]
+            percentage(array,index){
+                let sum = array.reduce((prev,cur) => prev + cur );
+                return Math.round( (array[index] / sum) * 100 ) +'%';
+            },
+            refreshData() {
+                setInterval(() => {
+                    this.$refs.stackCrossChart.drawBar()
+                }, 1000 * 60 * 5)
             }
-        };
-    },
-    components: {
-        ModuleTitle, radarChart, mixedLineBarChart
-    },
-    // mounted() {},
-    // methods: {}
-};
+        }
+    };
 </script>
 
 <style scoped>
-.Main {
-    width: 100%;
-    height: 100%;
-    background: url("../../../assets/VM/vm_module_bg.png") no-repeat;
-    background-size: 100% 100%;
-}
+    .Main {
+        width: 100%;
+        height: 100%;
+        background: url("../../../assets/VM/module_bg.png") no-repeat;
+        background-size: 100% 100%;
+    }
 
-.Main .Title {
-    width: 100%;
-    height: 15%;
-}
+    .Main .Title {
+        width: 100%;
+        height: 15%;
+    }
 
-.equipmentCount {
-    height: 40%;
-    width: 49%;
-    display: inline-block;
-    vertical-align: top;
-}
+    .topBox{
+        width: 100%;
+        height: 20%;
+        /*display: inline-block;*/
+        /*vertical-align: top;*/
+        /*margin-left: 3%;*/
+    }
 
-.countDetailsBox {
-    line-height: 3vh;
-}
+    .simplePieChartBox {
+        width: 100%;
+        height: 45%;
+    }
 
-.countDetailsBox .countTitle,
-.countDetailsBox .count {
-    display: inline-block;
-    vertical-align: top;
-    color: #fff;
-    font-size: 1.6vmin;
-}
+    .letBottomBox{
+        width: 100%;
+        height: 55%;
+    }
 
-.countDetailsBox .countTitle {
-    width: 80%;
-    padding-left: 1vw;
-}
+    .stackCrossBox {
+        width: 52%;
+        height: 85%;
+        display: inline-block;
+    }
+    .stateLists{
+        list-style-type: none;
+        height: 100%;
+    }
+    .stateLists > li {
+        float: left;
+        width: 25%;
+        height: 100%;
+        border-right: 1px solid transparent;
+        border-image: linear-gradient(0deg,transparent 0% ,  rgba(22,78,137,.5) 30%,  rgba(22,78,137,1) 50%,rgba(22,78,137,.5) 80%, transparent 100%) 1;
+    }
+    .stateLists > li:last-child{
+        border-right: 1px solid transparent;
+    }
+    .stateList-content{
+        text-align: center;
+    }
+    .stateList-content > span{
+        display: block;
+        color: #fff;
+        font-family: "Microsoft YaHei";
+    }
+    .bottomBox{
+        width: 100%;
+        height: 64%;
+    }
+    /* 小屏幕（显示器，小于等于 1920px） */
+    @media (max-width: 1920px) {
+        .stateList-content{
+            margin-top: 9%;
+        }
+        .stateList-content > span:first-child{
+            font-size: 0.7rem;
+        }
+        .stateList-content > span:last-child{
+            font-size: 1rem;
+        }
 
-.radarChartBox {
-    width: 48%;
-    height: 40%;
-    display: inline-block;
-    vertical-align: top;
-}
-.mixedLineBarBox {
-    width: 96%;
-    height: 45%;
-    margin: 0px 2%;
-}
+    }
+    /* 大屏幕（显示器，大于等于 1920px） */
+    @media (min-width: 1921px) {
+
+        .stateList-content{
+            margin-top: 11%;
+        }
+        .stateList-content > span:first-child{
+            font-size: 1.5rem;
+        }
+        .stateList-content > span:last-child{
+            font-size: 2.25rem;
+        }
+    }
 </style>

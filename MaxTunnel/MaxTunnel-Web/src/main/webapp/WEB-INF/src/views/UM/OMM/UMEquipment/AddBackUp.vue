@@ -21,7 +21,7 @@
                 </Select>
             </FormItem>
             <FormItem label="备品数量：">
-                <InputNumber v-model="addBackUp.count" :min="1" style="width: 540px;"></InputNumber>
+                <InputNumber v-model="addBackUp.count" :min="1" style="width: 100%;"></InputNumber>
             </FormItem>   
             <FormItem label="入库时间：" prop="inTime">
                 <DatePicker type="datetime" v-model="addBackUp.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
@@ -155,5 +155,31 @@
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+        width: 100%;
+    }
 }
 </style>

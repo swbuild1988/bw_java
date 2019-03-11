@@ -32,6 +32,9 @@
                 <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
                 <Button type="primary">提交</Button>
             </FormItem>
+            <FormItem style="text-align: center;margin-left: -140px;" v-show="this.pageType==1">
+                <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
+            </FormItem>
         </Form>
     </div>
 </template>
@@ -314,5 +317,28 @@ export default {
 }
 .addRecords{
     margin: 5px;
+}
+@media (min-width: 2200px){
+    .formTitle{
+        font-size: 2.8vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
 }
 </style>

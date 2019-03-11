@@ -36,10 +36,20 @@ export default {
                   //             temp.childNode= child;
                   _this.VideoMonitoring.leftTree.push(temp);
                 })
+              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/VideoMonitoring") < 0) {
+                  _this.goToMoudle({path: _this.VideoMonitoring.leftTree[0].url});
+                  sessionStorage.setItem('selectedName','')
+              }
+                sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               console.log(error)
       })
   },
+  methods: {
+      goToMoudle(path) {
+        this.$router.push(path);
+      }
+    }
 };
 </script>

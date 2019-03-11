@@ -1,11 +1,11 @@
 package com.bandweaver.tunnel.common.platform.util;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 
 /**
  * 运算工具类
@@ -211,5 +211,40 @@ public class MathUtil {
     
     
     
+    /**获取指定范围内的double随机数 
+     * @author shaosen
+     * @Date 2019年1月21日
+     * @param min 最小值
+     * @param max 最大值
+     * @param scale 保留小数位
+     * @return   
+     */
+    public static double getRandomDouble(double min,double max,int scale) {
+    	double v1 = org.apache.commons.lang3.RandomUtils.nextDouble(min, max);
+    	Double d = div(v1, 1.0 , scale);
+    	return d;
+	}
+    
+    /**获取指定范围内的int随机数  
+     * @author shaosen
+     * @Date 2019年1月21日
+     * @param min 最小值
+     * @param max 最大值
+     * @return   
+     */
+    public static int getRandomInt(int min, int max){
+        Random random = new Random();
+        int i = random.nextInt(max) % (max - min + 1) + min;
+        return i;
+    }
+    
+    
+    public static void main(String[] args) {
+    	for (int i = 0; i < 100; i++) {
+    		double d = getRandomDouble(11.00, 15.00,2);
+        	System.out.println(d);
+		}
+    	
+	}
 
 }

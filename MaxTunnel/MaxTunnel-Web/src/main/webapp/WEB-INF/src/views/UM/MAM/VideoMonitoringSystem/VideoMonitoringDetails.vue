@@ -2,21 +2,21 @@
     <div class="whole">
         <Row class="query">
             <Col span="9" offset="1">
-                 区域:
+                 <span style="font-size: 1.66vmin;">区域:</span>
                 <Select v-model="conditions.areaId" style="width:60%;" id="area">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="9">
-               监测仓:
+               <span style="font-size: 1.66vmin;">监测仓:</span>
                 <Select v-model="conditions.storeId" style="width:60%;" id="store">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="2" offset="1">
-                <Button type="primary" icon="ios-search" @click="search" size="small">查询</Button>
+                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
             </Col>
         </Row>
         <Row class="content">
@@ -36,6 +36,7 @@
                     <div style="height: 90%;" class="controlBody">
                         <h2 class="videoName" v-if="!curVideo">请选择摄像机</h2>
                         <h2 v-if="curVideo" class="videoName">{{ curVideo.name }}</h2>
+                        <p v-if="curVideo">{{ curVideo.tunnelName + ' ' + curVideo.areaName + ' ' + curVideo.storeName }}</p>
                         <p v-if="curVideo" >{{ curVideo.description }}</p>
                         <div class="posContent" v-if="curVideo" >
                             <div class="positions" v-for="(pos,index) in perPositions" :key="index">
@@ -51,22 +52,22 @@
                     <span class="listTitle">摄像头列表</span>
                     <div class="more">
                         <Poptip placement="left">
-                            <Icon type="navicon-round" size="20" class="button" color="#fff"></Icon>
+                            <Icon type="navicon-round" class="button" color="#fff"></Icon>
                             <div class="api" slot="content">
-                                <Icon class="screens" type="android-checkbox-outline-blank" size="20" @click.native="handleScreensNum(1)"></Icon>
-                                <Icon class="screens" type="social-windows" size="20" @click.native="handleScreensNum(4)"></Icon>
-                                <Icon class="screens" type="android-apps" size="20" @click.native="handleScreensNum(9)"></Icon>
+                                <Icon class="screens" type="android-checkbox-outline-blank" @click.native="handleScreensNum(1)"></Icon>
+                                <Icon class="screens" type="social-windows" @click.native="handleScreensNum(4)"></Icon>
+                                <Icon class="screens" type="android-apps" @click.native="handleScreensNum(9)"></Icon>
                             </div>
                         </Poptip>
                     </div>
-                    <Row style="width: 94%;margin-left: 3%;margin-top:1vh">
+                    <Row style="width: 94%;margin-left: 3%;">
                         <Col span="1" class="slipContent">
-                            <Icon type="chevron-left" size="30" :class="['slipLeft',{'disabled': curPage == 1},{'clicked' : clicked.prev && curPage != 1}]" @click.native="pageChange('prev')" @mousedown.native="down('prev')" @mouseup.native="up('prev')"></Icon>
+                            <Icon type="chevron-left" :class="['slipLeft',{'disabled': curPage == 1},{'clicked' : clicked.prev && curPage != 1}]" @click.native="pageChange('prev')" @mousedown.native="down('prev')" @mouseup.native="up('prev')"></Icon>
                         </Col>
                         <Col span="22">
-                        <div>
+                        <div class="videos">
                             <h1 v-if="nodata" style="text-align: center;">暂无数据</h1>
-                            <Row class="videos">
+                            <Row>
                                 <Col :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)" v-for="(item,index) in showVideosList" :key="item.id" :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]">
                                     <div @click="selectScene(item)">
                                     <div :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]" v-if="videoStyle.show">
@@ -82,7 +83,7 @@
                         </div>
                         </Col>
                         <Col span="1"  class="slipContent">
-                           <Icon type="chevron-right" size="30"  :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]" @click.native="pageChange('next')" @mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
+                           <Icon type="chevron-right" :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]" @click.native="pageChange('next')" @mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
                         </Col>
                     </Row>
                 </div>
@@ -204,6 +205,9 @@ export default {
                         temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
+                        temp.tunnelName = camera.tunnelName;
+                        temp.storeName = camera.storeName;
+                        temp.areaName = camera.areaName;
                         _this.cameraList.push(temp);
                     });
                     _this.Log.info("videos:", _this.cameraList);
@@ -222,6 +226,7 @@ export default {
                         _this.nodata = true;
                     } else {
                         _this.nodata = false;
+                        _this.curPage = 1;
                         result.forEach(camera => {
                             let temp = {};
                             temp.id = camera.id;
@@ -233,6 +238,9 @@ export default {
                             temp.positionSupport =
                                 camera.ptzOperationsSupported;
                             temp.description = camera.description;
+                            temp.tunnelName = camera.tunnelName;
+                            temp.storeName = camera.storeName;
+                            temp.areaName = camera.areaName;
                             _this.cameraList.push(temp);
                         });
                     }
@@ -372,7 +380,7 @@ export default {
     position: relative;
 }
 .content {
-    padding: 20px 20px 0 20px;
+    padding: 2vmin 2vmin 0 2vmin;
     /* margin-top: 10px;*/
     /*background-color: white;*/
 }
@@ -381,11 +389,12 @@ export default {
     height: 28vh;
 }
 .title {
-    padding: 10px;
+    padding: 1vmin;
     background: url('../../../../assets/UM/title4.png') no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
+    font-size: 1.66vmin;
 }
 .small {
     margin-top: 10px;
@@ -398,23 +407,24 @@ export default {
 }
 .videoName {
     padding: 6% 10px 0 10%;
+    font-size: 1.66vmin;
 }
 .lists p {
-    margin: 10px 0 10px 10%;
-    font-size: 16px;
+    margin: 1vmin 0 1vmin 10%;
+    font-size: 1.66vmin;
 }
 .scenesList {
     width: 100%;
     border-radius: 40px 10px 40px 40px;
     height: 76vh;
-    padding: 10px;
+    padding: 1vmin;
     overflow-y: auto;
-    margin-left: 10px;
+    margin-left: 1vmin;
     background: url('../../../../assets/UM/videosBg.png') no-repeat;
     background-size: 100% 100%;
 }
 .monitors {
-    padding: 14px 6px 6px 6px;
+    padding: 1.4vmin 0.6vmin 0.6vmin 0.6vmin;
    /* margin-top: 10px;*/
     height: 34vh;
 }
@@ -432,14 +442,14 @@ export default {
  }
 .oneScreen {
     height: 62vh;
-    margin-top: 10px;
+    margin-top: 1vmin;
 }
 .nineScreen{
     height: 16vh;
 }
 .options {
     margin-left: 5%;
-    margin-top: 4px;
+    margin-top: 0.4vmin;
 }
 .active {
     background-color: rgba(25, 190, 107, 0.4);
@@ -460,9 +470,11 @@ export default {
 .screens {
     padding: 0 10px;
     cursor: pointer;
+    font-size: 2vmin;
 }
 .button {
     cursor: pointer;
+    font-size: 2vmin;
 }
 .config {
     margin: 0 10px;
@@ -473,7 +485,7 @@ export default {
     /*color: rgb(130,199,255);*/
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1.28vmin;
 }
 .history{
     background: url('../../../../assets/UM/button2.png');
@@ -483,7 +495,7 @@ export default {
     /*color: rgb(130,199,255);*/
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1.28vmin;
 }
 .slipContent {
     position: relative;
@@ -496,6 +508,7 @@ export default {
     left: 10px;
     cursor: pointer;
     color: lightgray;
+    font-size: 2.88vmin;
 }
 .slipRight {
     position: absolute;
@@ -503,6 +516,7 @@ export default {
     right: 10px;
     cursor: pointer;
     color: lightgray;
+    font-size: 2.88vmin;
 }
 .disabled {
     color: #656464;
@@ -511,7 +525,7 @@ export default {
     color: rgb(0,228,236);
 }
 .controlContent{
-    padding-top: 16px;
+    padding-top: 1.6vmin;
     margin: 0 auto;
     height: 18vh;
     width: 78%;
@@ -520,11 +534,11 @@ export default {
     background-color: rgb(53,122,163);
     padding: 10px;
     color: #fff;
-    margin: 10px 0 10px 6%;
+    margin: 1vmin 0 1vmin 6%;
     position: relative;
     border-radius: 6px;
-    line-height: 26px;
-    font-size: 14px;
+    line-height: 2.6vmin;
+    font-size: 1.4vmin;
     width: 88%;
 }
 .posContent{
@@ -537,7 +551,7 @@ export default {
 .listTitle{
     color: #fff;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 1.66vmin;
     position: absolute;
     top: 4px;
     left: 5%;
@@ -547,7 +561,18 @@ export default {
     background-size: 100% 100%;
     color: #fff;
 }
-.videos{
 
+.query >>> .ivu-select-selection{
+    height: 3.2vmin;
 }
+
+.videos{
+    margin-top: 2vh !important;
+}
+.query >>> .ivu-select-placeholder, .ivu-select-selected-value{
+    font-size: 1.28vmin !important;
+    height: 2.6vmin !important;
+    line-height: 3.2vmin !important;
+}
+
 </style>

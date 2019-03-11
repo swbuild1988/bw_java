@@ -80,9 +80,8 @@
                             dayobject.day.getFullYear()==new Date(item.taskTime).getFullYear() && 
                             dayobject.day.getMonth()==new Date(item.taskTime).getMonth()" 
                             @click="show(item.id)" >
-                            <!-- <span class="dot">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> -->
                             <div class="explanationShow">{{item.inspectManName}}</div>
-                            <div class="explanationShow">{{item.processStatus}}</div>
+                            <div class="explanationShow" :title="item.processStatus">{{item.processStatus}}</div>
                         </div>
                     </span>
                 </div>
@@ -121,9 +120,7 @@ export default {
     },
     created: function() { //在vue初始化时调用
         this.initData(null);
-    },
-    mounted(){
-        // this.showMonth()
+        this.showMonth()
     },
     methods: {
         initData: function(cur) {
@@ -135,7 +132,7 @@ export default {
                 var now = new Date();
                 var d = new Date(this.formatDate(now.getFullYear(), now.getMonth(), 1));
                 d.setDate(this.showDayNum);
-                date = new Date(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+                date = new Date(this.formatDate(now.getFullYear(), now.getMonth() + 1, 1));
             }
 
             this.currentDay = date.getDate();
@@ -198,6 +195,8 @@ export default {
             var y = year;
             var m = month;
             if (0 < m < 10) {
+                m = "0" + m
+            }else if(m==0){
                 m = "0" + m
             }
             var d = day;
@@ -340,7 +339,7 @@ ul li{
 .explanationShow{
     text-align: center;
     display: inline-block;
-    width: 49%;
+    width: 48%;
     vertical-align: top;
     overflow: hidden;
     white-space: nowrap;
@@ -393,5 +392,70 @@ ul li{
 }
 .weekDaysBox{
     border: 2px solid #E0AE6E;
+}
+@media (min-width: 2200px){
+    #superCalendar{
+        margin-top: 1vmin;
+    }
+    .arrow{
+        width: 3.5vmin;
+        border: 0.2vmin #357aa1 solid;
+        bottom: 1vmin;
+    }
+    /*年月*/
+    .year-month{
+        margin: 1vmin;
+        font-size: 2.4vmin;
+    }
+    .weekdays div,.days li{
+        width: 8vw;
+    }
+    .weekdays div{
+        border: 0.1vmin solid #64798c;
+        border-radius: 0.4vmin;
+        height: 5.3vh;
+        line-height: 5vh;
+    }
+    .weekdays div:hover{
+        border-radius: 0.4vmin;
+    }
+    .weekdays div{
+        font-size: 1.4vmin;
+    }
+    .days li{
+        font-size: 1.8vmin;
+        padding: 0.3vmin;
+    }
+    /*说明*/
+    .explanation{
+        border: 0.1vmin solid pink;
+        border-radius: 2.9vmin;
+        font-size: 1.2vmin;
+    }
+    .explanationShow{
+        padding: 0px 0.2vmin;
+    }
+    .choose-month-c{
+        font-size: 4.5vmin;
+    }
+    .choose-month-e{
+        font-size: 7.5vmin;
+    }
+    .choose-year{
+        font-size: 5.3vmin;
+    }
+    .daysBox,.weekDaysBox{
+        border-radius: 0.4vmin;
+        padding: 0.3vmin;
+    }
+    .daysBox{
+        border: 0.1vmin solid #14293c;
+    }
+    .weekDaysBox{
+        border: 0.2vmin solid #E0AE6E;
+    }
+    .ivu-icon-chevron-left,.ivu-icon-chevron-right{
+        font-size: 3vmin !important;
+    }
 }
 </style>

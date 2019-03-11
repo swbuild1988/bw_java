@@ -20,4 +20,5 @@ public interface UserRoleMapper {
 
 	void deleteByUserId(Integer userId);
 
+    void deleteByRIds(List<Integer> list);
 }

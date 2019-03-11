@@ -58,5 +58,10 @@ export const infromationManagDetails =
                             val:objValue => new  Date(objValue).format('yyyy年/MM月/dd日 hh:mm')
                         }
                 }
+            ],
+        personnelInfromations:
+            [
+                {key:'companyName',val:'访客所属公司'},
+                {key:'phoneNum',val:'访客联系方式'},
             ]
     }

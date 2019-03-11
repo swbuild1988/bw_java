@@ -132,7 +132,7 @@
             },
             planCallback(message){
                 let result = JSON.parse(message.body);
-                
+
                 if( result && !this.searchPlan(result) ){
                     let { processInstanceId,processName,nodeList } = result;
 
@@ -147,7 +147,13 @@
 
                     this.$nextTick( () => this.updatePlan( result ) );
 
-                    eventBus.$emit('getPlanPosition',{objectId : result.objectId,range:result.range,processName:result.processName });
+                    eventBus.$emit('getPlanPosition',{
+                        planPosition : {
+                            X: result.longitude,
+                            Y: result.latitude
+                        },
+                        range:result.range,
+                        processInstanceId: processInstanceId });
                 }else{
 
                     this.updatePlan( result );
@@ -205,12 +211,12 @@
             getNodeListStatus(){
                 this.nodeListStatus.splice(0);
 
-                PlanService.getNodeListStatus().then(data => this.nodeListStatus.concat(data));
+                PlanService.getNodeListStatus().then(data => this.nodeListStatus.push( ...data ) );
             },
             modefyNodeListStatus(node,processNode){
                 node.statusVal = processNode.status;
 
-                this.nodeListStatus.forEach( nodeList => nodeList.val === processNode.status && (node.statusStr = nodeList.key));
+                this.nodeListStatus.forEach( nodeList => nodeList.val === processNode.status && ( node.statusStr = nodeList.key ));
             },
             confirm(){
                 let { model,confirmMessage } = this;
@@ -339,16 +345,9 @@
    }
     .check > span {
         background: red;
-        width: .5rem;
-        height: .5rem;
         display: block;
         border-radius: 50%;
         position: relative;
-        top: -0.25rem;
-        left: 0.25rem;
-        -webkit-transform-origin: 0.25rem 1rem;
-        transform-origin: 0.5rem 1.05rem;
-        animation: rotating 2s infinite linear;
     }
     .node-detail-content > strong{
         width: 73%;
@@ -391,6 +390,15 @@
         width: 1.8rem;
         height: 1.8rem;
     }
+    .check > span {
+        width: .5rem;
+        height: .5rem;
+        top: -0.25rem;
+        left: 0.25rem;
+        -webkit-transform-origin: 0.25rem 1rem;
+        transform-origin: 0.5rem 1.05rem;
+        animation: rotating 2s infinite linear;
+    }
     .tag-boder {
         border: 0.6rem solid;
         border-style: dashed;
@@ -421,6 +429,15 @@
     .planContent .check {
         width: 4rem;
         height: 4rem;
+    }
+    .check > span {
+        width: 1.5rem;
+        height: 1.5rem;
+        top: -0.75rem;
+        left: 0.75rem;
+        -webkit-transform-origin: 0.25rem 1rem;
+        transform-origin: 1.5rem 2.6rem;
+        animation: rotating 2s infinite linear;
     }
     .tag-boder {
         border: 1rem solid;

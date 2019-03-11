@@ -2,20 +2,20 @@
     <div>
         <!-- 管仓管理的新增管仓 -->
         <Modal v-model="show.state" title="批量新增管仓">
-            <Form ref="formValidate" :model="formValidate" :label-width="200">
-                <FormItem label="所属管廊" prop="tunnelId">
+            <Form ref="formValidate" :model="formValidate" :label-width="120">
+                <FormItem label="所属管廊：" prop="tunnelId">
                     <Select v-model="formValidate.tunnelId" placeholder="请选择所属管廊" class="InputWidth">
                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="批量加入管仓类型">
+                <FormItem label="批量加入管仓类型：">
                     <CheckboxGroup v-model="formValidate.types">
                         <Checkbox v-for="item in types" :key="item.id" :label="item.id">
                             <span>{{item.name}}</span>
                         </Checkbox>
                     </CheckboxGroup>
                 </FormItem>
-                <FormItem label="命名方式">
+                <FormItem label="命名方式：">
                     <RadioGroup  v-model="formValidate.nameChoose">
                         <Radio v-for="item in nameChooses" :key="item.id" :label="item.id">
                             <span>{{item.name}}</span>

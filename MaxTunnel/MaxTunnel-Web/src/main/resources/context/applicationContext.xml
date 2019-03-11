@@ -10,12 +10,15 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<!-- 配置文件,properties的设置，解决中文乱码问题 -->
+	<bean class="com.bandweaver.tunnel.common.platform.util.PropertiesUtil">
 		<property name="locations">
 			<list>
-				<value>classpath:properties/redis.properties</value>
-				<value>classpath:properties/config.properties</value>
+				<value>classpath:properties/*.properties</value>
 			</list>
+		</property>
+		<property name="fileEncoding">
+			<value>UTF-8</value>
 		</property>
 	</bean>
 
@@ -48,5 +51,6 @@
 	<bean id = "taskEntrance" class="com.bandweaver.tunnel.controller.quartz.TaskEntrance"/>
 
 	<!-- activitiService配置完了，再引入activiti的配置 -->
+
 	
 </beans>

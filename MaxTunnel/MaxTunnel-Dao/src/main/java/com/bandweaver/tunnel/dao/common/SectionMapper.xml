@@ -1,287 +1,354 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.common.SectionMapper">
-<cache/>
-  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Section">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="parent_id" jdbcType="DECIMAL" property="parentId" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
-    <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
-    <result column="AREA_ID" jdbcType="DECIMAL" property="areaId" />
-    <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber" />
-    <result column="camera" jdbcType="VARCHAR" property="camera" />
-    <result column="start_point" jdbcType="VARCHAR" property="startPoint" />
-    <result column="end_point" jdbcType="VARCHAR" property="endPoint" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-  </resultMap>
-  
-  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.SectionDto">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="parent_id" jdbcType="DECIMAL" property="parentId" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId" />
-    <result column="STORE_ID" jdbcType="DECIMAL" property="storeId" />
-    <result column="AREA_ID" jdbcType="DECIMAL" property="areaId" />
-    <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber" />
-    <result column="camera" jdbcType="VARCHAR" property="camera" />
-    <result column="start_point" jdbcType="VARCHAR" property="startPoint" />
-    <result column="end_point" jdbcType="VARCHAR" property="endPoint" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-    <association property="store" javaType="com.bandweaver.tunnel.common.biz.dto.StoreDto" column="store_id" 
-    select="com.bandweaver.tunnel.dao.common.StoreMapper.getDtoById"/>
-    <association property="area" javaType="Area" column="area_id" select="com.bandweaver.tunnel.dao.common.AreaMapper.selectByPrimaryKey"/>
-  </resultMap>
-  
-  <sql id="Base_Column_List">
-    ID, parent_id, NAME, tunnel_id,STORE_ID, AREA_ID,total_cable_number, camera,start_point,end_point,CRT_TIME
-  </sql>
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from T_COMMON_SECTION
-    where ID = #{id,jdbcType=DECIMAL}
-  </select>
-  <delete id="deleteByPrimaryKey" >
-    delete from T_COMMON_SECTION
-    where ID = #{id,jdbcType=DECIMAL}
-  </delete>
-  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
-    insert into T_COMMON_SECTION (ID, NAME,tunnel_id, STORE_ID, 
-      AREA_ID, total_cable_number,camera,start_point,end_point,CRT_TIME)
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, 
-      #{tunnelId,jdbcType=DECIMAL}, 
-      #{storeId,jdbcType=DECIMAL}, 
-      #{areaId,jdbcType=DECIMAL}, #{totalCableNumber,jdbcType=DECIMAL}, 
-      #{camera,jdbcType=VARCHAR},
-      #{startPoint,jdbcType=VARCHAR},
-      #{endPoint,jdbcType=VARCHAR},
-      #{crtTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
-    insert into T_COMMON_SECTION
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ID,
-      </if>
-      <if test="parentId != null">
-        parent_id,
-      </if>
-      <if test="name != null">
-        NAME,
-      </if>
-      <if test="tunnelId != null">
-        tunnel_id,
-      </if>
-      <if test="storeId != null">
-        STORE_ID,
-      </if>
-      <if test="areaId != null">
-        AREA_ID,
-      </if>
-      <if test="totalCableNumber != null">
-        total_cable_number,
-      </if>
-      <if test="camera != null">
-        camera,
-      </if>
-      <if test="startPoint != null">
-        start_point,
-      </if>
-      <if test="endPoint != null">
-        end_point,
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=DECIMAL},
-      </if>
-      <if test="parentId != null">
-        #{parentId,jdbcType=DECIMAL},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="tunnelId != null">
-        #{tunnelId,jdbcType=DECIMAL},
-      </if>
-      <if test="storeId != null">
-        #{storeId,jdbcType=DECIMAL},
-      </if>
-      <if test="areaId != null">
-        #{areaId,jdbcType=DECIMAL},
-      </if>
-      <if test="totalCableNumber != null">
-       #{totalCableNumber,jdbcType=DECIMAL},
-      </if>
-      <if test="camera != null">
-       #{camera,jdbcType=VARCHAR},
-      </if>
-      <if test="startPoint != null">
-       #{startPoint,jdbcType=VARCHAR},
-      </if>
-      <if test="endPoint != null">
-       #{endPoint,jdbcType=VARCHAR},
-      </if>
-      <if test="crtTime != null">
-        #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
-    update T_COMMON_SECTION
-    <set>
-      <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=DECIMAL},
-      </if>
-      <if test="name != null">
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="tunnelId != null">
-        tunnel_id = #{tunnelId,jdbcType=DECIMAL},
-      </if>
-      <if test="storeId != null">
-        STORE_ID = #{storeId,jdbcType=DECIMAL},
-      </if>
-      <if test="areaId != null">
-        AREA_ID = #{areaId,jdbcType=DECIMAL}, 
-      </if>
-      <if test="totalCableNumber != null">
-        total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
-      </if>
-      <if test="camera != null">
-        camera = #{camera,jdbcType=VARCHAR},
-      </if>
-      <if test="startPoint != null">
-        start_point = #{startPoint,jdbcType=VARCHAR},
-      </if>
-      <if test="endPoint != null">
-        end_point = #{endPoint,jdbcType=VARCHAR},
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
-    update T_COMMON_SECTION
-    set NAME = #{name,jdbcType=VARCHAR},
-      tunnel_id = #{tunnelId,jdbcType=DECIMAL},
-      STORE_ID = #{storeId,jdbcType=DECIMAL},
-      AREA_ID = #{areaId,jdbcType=DECIMAL},
-      total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
-      camera = #{camera,jdbcType=VARCHAR},
-      start_point = #{startPoint,jdbcType=VARCHAR},
-      end_point = #{endPoint,jdbcType=VARCHAR},
-      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  
-  <insert id="addBatch" useGeneratedKeys="false">
-		insert into T_COMMON_SECTION
-		(id,name,tunnel_id,store_id,area_id,total_cable_number,camera,start_point,end_point,crt_time)
-		select COMMON_SECTION_SEQUENCE.nextval,a.* from (
-		<foreach collection="list" item="item" index="index" close=")"
-			open="(" separator="union">
-			select
-			#{item.name},
-			#{item.tunnelId},
-			#{item.storeId},
-			#{item.areaId},
-			#{item.totalCableNumber},
-			#{item.camera},
-			#{item.startPoint},
-			#{item.endPoint},
-			#{item.crtTime}
-			from dual
-		</foreach>
-		)a
-	</insert>
-	
-	<select id="getSectionsByCondition" resultMap="DtoResultMap">
-		select * from T_COMMON_SECTION
-		<where>
-			<if test="id != null">
-				and id = #{id}
-			</if>
-			<if test="parentId != null">
-				and parent_id = #{parentId}
-			</if>
-			<if test="name != null and name.trim() != ''">
-				and instr(name,#{name})>0
-			</if>
-			
-			<if test="tunnelId != null">
-				and tunnel_id = #{tunnelId}
-			</if>
-			<if test="storeId != null">
-				and store_id = #{storeId}
-			</if>
-			<if test="areaId != null">
-				and area_id = #{areaId}
-			</if>
-			<if test="startTime != null">
-				and crt_time &gt;= #{startTime}
-			</if>
-			<if test="endTime != null">
-				and crt_time &lt;= #{endTime}
-			</if>
-		</where>
-		order by crt_time DESC
-	</select>
+    <cache/>
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Section">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="parent_id" jdbcType="DECIMAL" property="parentId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="STORE_ID" jdbcType="DECIMAL" property="storeId"/>
+        <result column="AREA_ID" jdbcType="DECIMAL" property="areaId"/>
+        <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber"/>
+        <result column="length" jdbcType="DECIMAL" property="length"/>
+        <result column="camera" jdbcType="VARCHAR" property="camera"/>
+        <result column="start_point" jdbcType="VARCHAR" property="startPoint"/>
+        <result column="end_point" jdbcType="VARCHAR" property="endPoint"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+        <result column="s1" jdbcType="DECIMAL" property="s1"/>
+        <result column="s2" jdbcType="DECIMAL" property="s2"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.SectionDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="parent_id" jdbcType="DECIMAL" property="parentId"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="STORE_ID" jdbcType="DECIMAL" property="storeId"/>
+        <result column="AREA_ID" jdbcType="DECIMAL" property="areaId"/>
+        <result column="total_cable_number" jdbcType="DECIMAL" property="totalCableNumber"/>
+        <result column="length" jdbcType="DECIMAL" property="length"/>
+        <result column="camera" jdbcType="VARCHAR" property="camera"/>
+        <result column="start_point" jdbcType="VARCHAR" property="startPoint"/>
+        <result column="end_point" jdbcType="VARCHAR" property="endPoint"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+        <result column="s1" jdbcType="DECIMAL" property="s1"/>
+        <result column="s2" jdbcType="DECIMAL" property="s2"/>
+        <association property="store" javaType="com.bandweaver.tunnel.common.biz.dto.StoreDto" column="store_id"
+                     select="com.bandweaver.tunnel.dao.common.StoreMapper.getDtoById"/>
+        <association property="area" javaType="Area" column="area_id"
+                     select="com.bandweaver.tunnel.dao.common.AreaMapper.selectByPrimaryKey"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID, parent_id, NAME, tunnel_id, STORE_ID, AREA_ID, total_cable_number, length, camera, start_point, end_point, CRT_TIME, s1, s2
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_COMMON_SECTION
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM T_COMMON_SECTION
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
+        INSERT INTO T_COMMON_SECTION (ID, NAME, tunnel_id, STORE_ID,
+                                      AREA_ID, total_cable_number, length, camera, start_point, end_point, CRT_TIME, s1, s2)
+        VALUES (#{id,jdbcType=DECIMAL},
+            #{name,jdbcType=VARCHAR},
+            #{tunnelId,jdbcType=DECIMAL},
+            #{storeId,jdbcType=DECIMAL},
+            #{areaId,jdbcType=DECIMAL},
+            #{totalCableNumber,jdbcType=DECIMAL},
+            #{length,jdbcType=DECIMAL},
+            #{camera,jdbcType=VARCHAR},
+            #{startPoint,jdbcType=VARCHAR},
+            #{endPoint,jdbcType=VARCHAR},
+            #{crtTime,jdbcType=TIMESTAMP},
+            #{s1,jdbcType=DECIMAL},
+            #{s2,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
+        insert into T_COMMON_SECTION
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="name != null">
+                NAME,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="storeId != null">
+                STORE_ID,
+            </if>
+            <if test="areaId != null">
+                AREA_ID,
+            </if>
+            <if test="totalCableNumber != null">
+                total_cable_number,
+            </if>
+            <if test="length != null">
+                length,
+            </if>
+            <if test="camera != null">
+                camera,
+            </if>
+            <if test="startPoint != null">
+                start_point,
+            </if>
+            <if test="endPoint != null">
+                end_point,
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME,
+            </if>
+            <if test="s1 != null">
+                s1,
+            </if>
+            <if test="s2 != null">
+                s2,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="totalCableNumber != null">
+                #{totalCableNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="length != null">
+                #{length,jdbcType=DECIMAL},
+            </if>
+            <if test="camera != null">
+                #{camera,jdbcType=VARCHAR},
+            </if>
+            <if test="startPoint != null">
+                #{startPoint,jdbcType=VARCHAR},
+            </if>
+            <if test="endPoint != null">
+                #{endPoint,jdbcType=VARCHAR},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="s1 != null">
+                #{s1,jdbcType=DECIMAL},
+            </if>
+            <if test="s2 != null">
+                #{s2,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
+        update T_COMMON_SECTION
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id = #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                STORE_ID = #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                AREA_ID = #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="totalCableNumber != null">
+                total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
+            </if>
+            <if test="length != null">
+                length = #{length,jdbcType=DECIMAL},
+            </if>
+            <if test="camera != null">
+                camera = #{camera,jdbcType=VARCHAR},
+            </if>
+            <if test="startPoint != null">
+                start_point = #{startPoint,jdbcType=VARCHAR},
+            </if>
+            <if test="endPoint != null">
+                end_point = #{endPoint,jdbcType=VARCHAR},
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="s1 != null">
+                s1 = #{s1,jdbcType=DECIMAL},
+            </if>
+            <if test="s2 != null">
+                s2 = #{s2,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
+        UPDATE T_COMMON_SECTION
+        SET NAME               = #{name,jdbcType=VARCHAR},
+            tunnel_id          = #{tunnelId,jdbcType=DECIMAL},
+            STORE_ID           = #{storeId,jdbcType=DECIMAL},
+            AREA_ID            = #{areaId,jdbcType=DECIMAL},
+            total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
+            length             = #{length,jdbcType=DECIMAL},
+            camera             = #{camera,jdbcType=VARCHAR},
+            start_point        = #{startPoint,jdbcType=VARCHAR},
+            end_point          = #{endPoint,jdbcType=VARCHAR},
+            CRT_TIME           = #{crtTime,jdbcType=TIMESTAMP},
+            s1                = #{s1,jdbcType=DECIMAL},
+            s2                = #{s2,jdbcType=DECIMAL}
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <insert id="addBatch" useGeneratedKeys="false">
+        insert into T_COMMON_SECTION
+        (id,name,tunnel_id,store_id,area_id,total_cable_number,length,camera,start_point,end_point,crt_time)
+        select COMMON_SECTION_SEQUENCE.nextval,a.* from (
+        <foreach collection="list" item="item" index="index" close=")"
+                 open="(" separator="union">
+            select
+            #{item.name},
+            #{item.tunnelId},
+            #{item.storeId},
+            #{item.areaId},
+            #{item.totalCableNumber},
+            #{item.length},
+            #{item.camera},
+            #{item.startPoint},
+            #{item.endPoint},
+            #{item.crtTime}
+            from dual
+        </foreach>
+        )a
+    </insert>
+
+    <select id="getSectionsByCondition" resultMap="DtoResultMap">
+        select t.* from T_COMMON_SECTION t
+        left join T_COMMON_STORE s on t.store_id = s.id
+        <where>
+            <if test="id != null">
+                and t.id = #{id}
+            </if>
+            <if test="parentId != null">
+                and t.parent_id = #{parentId}
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and t.instr(name,#{name})>0
+            </if>
+
+            <if test="tunnelId != null">
+                and t.tunnel_id = #{tunnelId}
+            </if>
+            <if test="storeId != null">
+                and t.store_id = #{storeId}
+            </if>
+            <if test="areaId != null">
+                and t.area_id = #{areaId}
+            </if>
+            <if test="startTime != null">
+                and t.crt_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and t.crt_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by s.sn
+    </select>
 
     <select id="getAllSections" resultMap="DtoResultMap">
-    select * from T_COMMON_SECTION
+        SELECT *
+        FROM T_COMMON_SECTION
     </select>
-	
-	<select id="getTunnelBySectionId" resultType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto">
-		select c.* from t_common_section a
-		left join t_common_store b on a.store_id=b.id
-		left join t_common_tunnel c on b.tunnel_id = c.id
-		where a.id = #{id}
-	</select>
-	
-	<select id="getSectionListByStoreAndArea" resultMap="BaseResultMap">
-		select t.id,t.name from t_common_section t
-		<where>
-			<if test="storeId != null">
-				and t.store_id = #{storeId}
-			</if>
-			<if test="areaId != null">
-				and t.area_id = #{areaId}
-			</if>
-		</where>
-		order by t.crt_time DESC
-	</select>
-	
-	
-	<delete id="deleteBatch">
-		delete from t_common_section where id in
+
+    <select id="getTunnelBySectionId" resultType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto">
+        SELECT c.*
+        FROM t_common_section a
+            LEFT JOIN t_common_store b ON a.store_id = b.id
+            LEFT JOIN t_common_tunnel c ON b.tunnel_id = c.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getSectionListByStoreAndArea" resultMap="BaseResultMap">
+        select t.id,t.name from t_common_section t
+        <where>
+            <if test="storeId != null">
+                and t.store_id = #{storeId}
+            </if>
+            <if test="areaId != null">
+                and t.area_id = #{areaId}
+            </if>
+        </where>
+        order by t.crt_time DESC
+    </select>
+
+
+    <delete id="deleteBatch">
+        delete from t_common_section where id in
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
-	</delete>
-	
-	<select id="getByName" resultMap="BaseResultMap">
-		select * from t_common_section where name = #{name}
-	</select>
-	
-	<select id="getDtoById" resultMap="DtoResultMap">
-		select * from t_common_section where id = #{id}
-	</select>
-	
-	<select id="getSectionListByParentId" resultMap="BaseResultMap">
-		select * from t_common_section where parent_id = #{sectionId}
-	</select>
-	
-	<select id="getSectionIdsByStoreIds" resultType="Int">
-		select id from t_common_section where store_id in
-		<foreach collection="list" item="item" open="(" separator="," close=")">
-			#{item}
-		</foreach> 
-	</select>
+    </delete>
+
+    <select id="getByName" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_common_section
+        WHERE name = #{name}
+    </select>
+
+    <select id="getDtoById" resultMap="DtoResultMap">
+        SELECT *
+        FROM t_common_section
+        WHERE id = #{id}
+    </select>
+
+    <select id="getSectionListByParentId" resultMap="BaseResultMap">
+        SELECT *
+        FROM t_common_section
+        WHERE parent_id = #{sectionId}
+    </select>
+
+    <select id="getSectionIdsByStoreIds" resultType="Int">
+        select id from t_common_section where store_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getSectionIdsByAreaIds" resultType="Int">
+        select id from t_common_section where area_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getSectionsByStoreIds" resultMap="BaseResultMap">
+        select * from t_common_section where store_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

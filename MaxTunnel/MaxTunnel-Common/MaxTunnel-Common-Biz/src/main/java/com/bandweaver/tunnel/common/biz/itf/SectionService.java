@@ -5,6 +5,7 @@ import java.util.List;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.github.pagehelper.PageInfo;
 
@@ -32,6 +33,8 @@ public interface SectionService {
 	List<SectionDto> getSectionsByCondition(SectionVo vo);
 
 	List<SectionDto> getAllSections();
+
+	List<SectionDto> getSectionsByTunnel(int tunnelId);
 
 	/**
 	 * @Description: 通过id查询dto
@@ -114,7 +117,11 @@ public interface SectionService {
 
 	List<Section> getSectionListByParentId(Integer sectionId);
 
-	List<Integer> getSectionIdsByStoreIds(List<Integer> storeIdList); 
+	List<Integer> getSectionIdsByStoreIds(List<Integer> storeIdList);
+
+	List<Section> getSectionsByStoreIds(List<Integer> storeIdList);
+
+	boolean calSectionsStartPointAndEndPointByTunnel(int tunnelId);
 
 
 }

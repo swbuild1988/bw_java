@@ -155,12 +155,15 @@
         	<if test="maintenanceResult != null">
         		and a.maintenance_result = #{maintenanceResult}
         	</if>
+        	<if test="isFinished != null">
+        		and a.is_finished = #{isFinished}
+        	</if>
         	<if test="startTime != null">
-                and a.start_time <![CDATA[>=]]>
+                and a.create_time <![CDATA[>=]]>
                 #{startTime}
             </if>
             <if test="endTime != null">
-                and a.start_time <![CDATA[<=]]>
+                and a.create_time <![CDATA[<=]]>
                 #{endTime}
             </if>
         </where>

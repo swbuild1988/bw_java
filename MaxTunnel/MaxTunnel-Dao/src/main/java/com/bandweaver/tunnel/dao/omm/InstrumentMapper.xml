@@ -141,10 +141,10 @@
         where a.id = #{id}
 	</select>
 	
-	<select id="getCountGroupByTypeId" resultType="com.bandweaver.tunnel.common.biz.dto.CommonDto">
-		select a.*,b.name
-	    from (select count(1) as count,type_id as id 
+	<select id="getCountByCondition" resultType="Integer">
+		select count(1) as count
 	      from t_omm_instrument
+
 	      <where>
 	      	<if test="useStatus != null">
                 and use_status = #{useStatus}
@@ -152,10 +152,22 @@
             <if test="status != null">
                 and status = #{status}
             </if>
+            <if test="typeId != null">
+                and type_id = #{typeId}
+            </if>
 	      </where>
-	      group by type_id) a
-	    left join t_Omm_Equipment_Type b on a.id = b.id
-	    order by a.count desc
+	    order by count desc
+
+	</select>
+	
+	<select id="getCountByStatus" resultType="Integer">
+		select count(1) as count
+	      from t_omm_instrument
+	      <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+	      </where>
 	</select>
 	
     <resultMap id="instrumentDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InstrumentDto">

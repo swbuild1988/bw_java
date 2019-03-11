@@ -52,7 +52,7 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public PageInfo<Company> dataGrid(CompanyVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-		List<Company> list = getByCondition(vo);
+		List<Company> list = companyMapper.getByCondition(vo);
 		return new PageInfo<>(list);
 	}
 	

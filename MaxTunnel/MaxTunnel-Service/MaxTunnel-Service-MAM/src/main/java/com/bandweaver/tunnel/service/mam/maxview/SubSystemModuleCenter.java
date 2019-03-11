@@ -35,7 +35,6 @@ public class SubSystemModuleCenter implements ModuleCenterInterface {
 
 	@Override
 	public void start() {
-		long beginTime = System.currentTimeMillis();
 		sessionMap = new HashMap<>();
 		List<TunnelSimpleDto> list = tunnelService.getList();
 		
@@ -46,15 +45,10 @@ public class SubSystemModuleCenter implements ModuleCenterInterface {
 		}
 		
 		for (Integer configId : set) {
-			subSystemService.login(configId);
+//			subSystemService.login(configId);
 		}
 		
-		long endTime = System.currentTimeMillis();
-		LogUtil.info(	"*********************************\n"
-						+ "描述：登录MaxView终端\n"
-						+ "耗时：" + (endTime - beginTime) +"ms\n"
-						+ "*********************************"	);
-	
+
 	}
 
 	@Override

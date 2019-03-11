@@ -96,12 +96,9 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.error("HTTP请求失败，错误信息：" + e);
 		}
 	}
-
-
-
 
 	@Override
 	public void heartBeat(Integer configId) {
@@ -124,7 +121,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.info("HTTP请求失败，错误信息：" + e);
 		}
 	}
 	
@@ -177,7 +174,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 			}
 			
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.info("HTTP请求失败，错误信息：" + e);
 		}
 		return false;
 	

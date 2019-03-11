@@ -322,4 +322,22 @@ body {
     padding: 5px;
     color: gainsboro;
 }
+@media (min-width: 2200px){
+    #calendar{
+        width: 42vmin;
+    }
+    .days li{
+        width: 6vmin;
+        line-height: 6vmin;
+        font-size: 1.8vmin;
+    }
+    .choose-month, .choose-year{
+        font-size: 2.5vmin;
+    }
+    .days li .active{
+        height: 5vmin;
+        width: 5vmin;
+        line-height: 5vmin;
+    }
+}
 </style>

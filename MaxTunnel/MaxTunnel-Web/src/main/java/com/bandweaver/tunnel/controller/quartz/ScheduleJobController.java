@@ -1,7 +1,15 @@
 package com.bandweaver.tunnel.controller.quartz;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import com.bandweaver.tunnel.common.platform.util.ExcelUtil;
+import com.bandweaver.tunnel.service.common.export.ExportTask1;
+import com.bandweaver.tunnel.service.common.export.ExportTask2;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +30,11 @@ import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
 import com.github.pagehelper.PageInfo;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**定时任务调度管理
  * @author shaosen
@@ -33,11 +46,13 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	
 	@Autowired
 	private ScheduleJobService scheduleJobService;
+	@Autowired
+    private HttpServletRequest request;
 
 	/**job分页查询 
-	 * @param jobStatus 枚举，见接口文档
-	 * @param pageNum 必须
-	 * @param pageSize 必须
+	 * @param @jobStatus 枚举，见接口文档
+	 * @param @pageNum 必须
+	 * @param @pageSize 必须
 	 * @return   {"msg":"请求成功","code":"200","data":{"total":1,"list":[{"jobId":1,"jobName":"job1","jobGroup":"group1","jobStatusName":"启用","jobClass":"com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter","jobMethod":"saveDataScheduleBatch","cronExpression":"0 0/1 * * * ?","description":"监测对象数据定时保存"}],"pageNum":1,"pageSize":5,"size":1,"startRow":1,"endRow":1,"pages":1,"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[1],"navigateFirstPage":1,"navigateLastPage":1,"firstPage":1,"lastPage":1}}
 	 * @author shaosen
 	 * @Date 2018年9月7日
@@ -50,11 +65,11 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	
 	
 	/**添加job
-	 * @param jobName job名称
-	 * @param jobClass  任务类 例：com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter
-	 * @param jobMethod  任务方法 例：saveDataScheduleBatch
-	 * @param cronExpression 调度表达式 0/5 * * * * ?
-	 * @param description Job描述
+	 * @param @jobName job名称
+	 * @param @jobClass  任务类 例：com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter
+	 * @param @jobMethod  任务方法 例：saveDataScheduleBatch
+	 * @param @cronExpression 调度表达式 0/5 * * * * ?
+	 * @param @description Job描述
 	 * @throws SchedulerException
 	 * @author shaosen
 	 * @throws ClassNotFoundException 
@@ -84,13 +99,13 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	
 	
 	/**更新Job调度时间/任务类/任务方法/任务描述
-	 * @param jobId 不可更改
-	 * @param jobName job名称，不可更改
-	 * @param jobGroup  job组，不可更改
-	 * @param jobClass  任务类  可更改
-	 * @param jobMethod  任务方法  可更改
-	 * @param cronExpression 调度表达式 可更改
-	 * @param description Job描述 可更改
+	 * @param @jobId 不可更改
+	 * @param @jobName job名称，不可更改
+	 * @param @jobGroup  job组，不可更改
+	 * @param @jobClass  任务类  可更改
+	 * @param @jobMethod  任务方法  可更改
+	 * @param @cronExpression 调度表达式 可更改
+	 * @param @description Job描述 可更改
 	 * @return
 	 * @throws SchedulerException   
 	 * @author shaosen
@@ -103,9 +118,9 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 	}
 	
 	
-	/**禁用/启用Job 
-	 * @param id JobId
-	 * @param jobStatus job状态 枚举，见接口
+	/**禁用/启用Job
+	 * @param @id JobId
+	 * @param @jobStatus job状态 枚举，见接口
 	 * @return   
 	 * @author shaosen
 	 * @throws SchedulerException 
@@ -157,6 +172,21 @@ public class ScheduleJobController extends BaseController<ScheduleJob>{
 			scheduleJobService.delete(id);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
+
+
+	@RequestMapping(value="test/test",method=RequestMethod.GET)
+	public JSONObject test(){
+
+        String templateFilePath = request.getServletContext().getRealPath("files/excel")+ File.separator + Constants.TEMPLATE_01;
+
+		ExecutorService executorService = Executors.newFixedThreadPool(Constants.THREAD_POOL_SIZE);
+        List<Runnable> runnables = Arrays.asList(new ExportTask1(templateFilePath));
+		for (Runnable runnable : runnables){
+			executorService.execute(runnable);
+		}
+		LogUtil.info(Thread.currentThread().getName() + ": 导出报表完成！");
+		return CommonUtil.success();
 	}
 
 }

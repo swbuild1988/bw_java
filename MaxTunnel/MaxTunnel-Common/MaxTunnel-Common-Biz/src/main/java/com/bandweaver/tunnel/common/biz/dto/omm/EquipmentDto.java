@@ -26,16 +26,19 @@ public class EquipmentDto implements Serializable{
 	 */
 	private static final long serialVersionUID = -2181426117543507255L;
 	private Integer id;
+	@JsonIgnore
 	private String assetNo;
 	private String name;
 	/**设备类型*/
 	private Integer typeId;
 	private String typeName;
 	private Date crtTime;
-	private Integer serviceLife;
+	private Date runTime;
+	private Integer alarmNo;
 	/**设备状态*/
 	private Integer status;
 	private String statusName;
+	@JsonIgnore
 	private String imgUrl;
     
 	/** 管廊名称 */
@@ -122,12 +125,6 @@ public class EquipmentDto implements Serializable{
 	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
 	}
-	public Integer getServiceLife() {
-		return serviceLife;
-	}
-	public void setServiceLife(Integer serviceLife) {
-		this.serviceLife = serviceLife;
-	}
 	/**
 	 * @Description: 获取设备状态
 	 * @param @return   
@@ -137,7 +134,7 @@ public class EquipmentDto implements Serializable{
 	 * @date 2018年5月31日
 	 */
 	public String getStatusName() {
-		EquipmentStatusEnum en = EquipmentStatusEnum.getEnum(String.valueOf(status));
+		EquipmentStatusEnum en = EquipmentStatusEnum.getEnum(status);
 		return en == null ? String.valueOf(status) : en.getName();
 	}
 	
@@ -178,7 +175,17 @@ public class EquipmentDto implements Serializable{
 	public void setObj(MeasObj obj) {
 		this.obj = obj;
 	}
-	
-	
+	public Date getRunTime() {
+		return runTime;
+	}
+	public void setRunTime(Date runTime) {
+		this.runTime = runTime;
+	}
+	public Integer getAlarmNo() {
+		return alarmNo;
+	}
+	public void setAlarmNo(Integer alarmNo) {
+		this.alarmNo = alarmNo;
+	}
 	
 }

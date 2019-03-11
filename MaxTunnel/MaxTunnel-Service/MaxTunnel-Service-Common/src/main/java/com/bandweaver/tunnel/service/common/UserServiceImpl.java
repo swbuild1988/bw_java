@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.UserDTO;
+import com.bandweaver.tunnel.common.biz.itf.common.RoleService;
 import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.common.PermissionMapper;
 import com.bandweaver.tunnel.dao.common.UserMapper;
 @Service
@@ -19,6 +21,8 @@ public class UserServiceImpl implements UserService {
 	private UserMapper userMapper;
 	@Autowired
 	private PermissionMapper permissionMapper;
+	@Autowired
+	private RoleService roleService;
 	
 
 	@Override
@@ -68,6 +72,18 @@ public class UserServiceImpl implements UserService {
 	public void deleteBatch(List<Integer> list) {
 		userMapper.deleteBatch(list);
 		
+	}
+
+	@Override
+	public JSONObject getUserDet(Integer id) {
+		UserDTO user = getUser(id);
+		JSONObject returnData = new JSONObject();
+		if(!StringTools.isNullOrEmpty(user)) {
+			returnData.put("id", user.getId());
+			returnData.put("name", user.getName());
+			returnData.put("roles", roleService.getRolesByUser(user.getId()));
+		}
+		return returnData;
 	}
 
 }

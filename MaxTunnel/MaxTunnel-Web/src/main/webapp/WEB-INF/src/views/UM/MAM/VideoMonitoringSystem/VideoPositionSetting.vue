@@ -8,7 +8,7 @@
     <Row>
     	<Col span="12" offset="1">
             <div class="cameraList">
-                <span style="font-size: 18px;font-weight: bold;color:#fff;">摄像头：</span>
+                <span style="font-size: 1.8vmin;font-weight: bold;color:#fff;">摄像头：</span>
                 <Select v-model="curVideo.areaId" id="cameras" @on-change="getCameras" class="select" placeholder="请选择区域">
                     <Option v-for="area in areaList" :value="area.id" :key="area.id" class="option">{{ area.name }}</Option>
                    <!--  <Option value="" key="0" class="option">空</Option> -->
@@ -286,14 +286,14 @@ export default {
 	}
 	.positions{
 		/*background-color: rgb(53,122,163);*/
-		padding: 10px 10px 10px 40px;
+		padding: 1vmin 1vmin 1vmin 2vmin;
     color: #fff;
-    margin: 10px;
+    margin: 1vmin;
     position: relative;
     background: url('../../../../assets/UM/border.png') no-repeat;
     background-size: 100% 100%;
     /*border-radius: 6px;*/
-    line-height: 26px;
+    line-height: 2.6vmin;
 	}
 	.indent{
 		margin-right: 10px;
@@ -303,7 +303,8 @@ export default {
 		margin-top: 10px;
 	}
 	.name{
-		font-size: 16px;
+		font-size: 1.66vmin;
+    margin-left: 0.8vmin;
 	}
 	.posContent{
 		margin-top: 5vh;
@@ -327,7 +328,7 @@ export default {
 	}
 	.titlePos{
 		margin: 10px;
-    font-size: 18px;
+    font-size: 1.8vmin;
     font-weight: bold;
     background: url('../../../../assets/UM/title.png') no-repeat;
     background-size: 100% 100%;
@@ -335,18 +336,18 @@ export default {
     text-align: center;
     position: absolute;
     width: 42%;
-    height: 40px;
+    height: 4vmin;
     top: -10px;
     left: -6px;
     padding: 8px 0;
 	}
 	.titleCtr{
     margin: 10px;
-    font-size: 18px;
+    font-size: 1.8vmin;
     font-weight: bold;
     position: absolute;
     width: 42%;
-    height: 40px;
+    height: 4vmin;
     top: -20px;
     left: -10px;
     background: url('../../../../assets/UM/title.png') no-repeat;
@@ -375,7 +376,7 @@ export default {
 	}
     .cameraList{
         height: 6vh;
-        padding: 12px;
+        padding: 1.2vmin;
        /* width: 60%;*/
         background: url('../../../../assets/UM/title.png') no-repeat;
         background-size: 100% 100%;
@@ -418,5 +419,24 @@ export default {
       margin-top: 16%;
       height: 20vh;
       width: 100%;
+    }
+
+    .cameraList >>> .ivu-select-selected-value{
+        font-size: 1.28vmin !important;
+        height: 2.57vmin !important;
+        line-height: 2vmin !important;
+        padding-top: 0.64vmin !important;
+        width: 90% !important;
+    }
+    .cameraList >>> .ivu-select-placeholder{
+        font-size: 1.28vmin !important;
+        height: 2.57vmin !important; 
+        line-height: 2vmin !important;
+        padding-top: 0.64vmin !important;
+        width: 90% !important;
+    }
+
+    .cameraList >>> .ivu-select-selection{
+        height: 3.2vmin !important;
     }
 </style>

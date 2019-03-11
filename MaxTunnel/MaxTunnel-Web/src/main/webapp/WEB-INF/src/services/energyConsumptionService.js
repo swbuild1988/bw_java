@@ -151,6 +151,19 @@ var EnergyConsumptionService = {
             res.push(tmp);
         }
         return new Promise((resolve, reject) => {
+            // axios
+            //     .get("energy/totle-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：energy/totle-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
             resolve(res);
         });
     },
@@ -180,6 +193,19 @@ var EnergyConsumptionService = {
         }
         return new Promise((resolve, reject) => {
             resolve(res);
+            // axios
+            //     .get("energy/average-everymonth")
+            //     .then(res => {
+            //         let { code, data, msg } = res.data;
+            //         if (code == 200) {
+            //             resolve(data);
+            //         } else {
+            //             reject(msg + "地址：energy/average-everymonth");
+            //         }
+            //     })
+            //     .catch(error => {
+            //         reject(error.response.status + "  " + error.response.data);
+            //     });
         });
     }
 };

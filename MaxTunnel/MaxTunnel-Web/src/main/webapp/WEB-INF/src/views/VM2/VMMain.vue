@@ -26,7 +26,7 @@
                 <motion-module></motion-module>
             </div>
             <div class="ThreeDimensionsModule">
-                <three-dimensions-module></three-dimensions-module>
+                <three-dimensions-module ></three-dimensions-module>
             </div>
             <div class="VideoModule">
                 <video-module></video-module>
@@ -46,8 +46,7 @@ import MeasureModule from "./body/MeasureModule";
 import MotionModule from "./body/MotionModule";
 import ThreeDimensionsModule from "./body/ThreeDimensionsModule";
 import VideoModule from "./body/VideoModule";
-
-let { VMExtendStyle } = require("../../../static/VM/js/VMWebConfig");
+import Vue from 'vue'
 
 export default {
     data() {
@@ -71,7 +70,8 @@ export default {
     },
     created() { },
     mounted() { },
-    methods: {}
+    methods: {
+    },
 };
 </script>
 <style scoped>
@@ -81,7 +81,7 @@ export default {
     width: 100%;
     height: 100%;
     position: absolute;
-    background: url("../../assets/VM/main_bg.png") no-repeat;
+    background: url("../../assets/VM/vm_main_bg.png") no-repeat;
     background-size: 100% 100%;
     background-color: #031324;
 }
@@ -94,10 +94,10 @@ export default {
 }
 .MainContent .CommonModule {
     position: absolute;
-    top: 10%;
+    top: 6%;
     left: 0.5%;
     width: 24%;
-    height: 22.5%;
+    height: 26.5%;
 }
 .MainContent .InspectModule {
     position: absolute;
@@ -120,7 +120,7 @@ export default {
     width: 49%;
     height: 56%;
 }
-.MainContent .AlarmModule {
+.MainContent .MotionModule {
     position: absolute;
     top: 67%;
     left: 25.5%;
@@ -134,12 +134,12 @@ export default {
     width: 24%;
     height: 32.5%;
 }
-.MainContent .MotionModule {
+.MainContent .AlarmModule {
     position: absolute;
-    top: 10%;
+    top: 6%;
     left: 75.5%;
     width: 24%;
-    height: 22.5%;
+    height: 26.5%;
 }
 .MainContent .VideoModule {
     position: absolute;

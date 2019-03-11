@@ -1,6 +1,6 @@
-let {
-    flyFilePathes
-} = require('../../../../../static/VM/js/VMWebConfig')
+// let {
+//     flyFilePathes
+// } = require('../../../../../static/VM/js/VMWebConfig')
 
 export const flyManagerMinix = {
     data() {
@@ -24,9 +24,9 @@ export const flyManagerMinix = {
         }
     },
     computed: {
-        flyFilePathes() {
-            return flyFilePathes;
-        }
+        // flyFilePathes() {
+        //     return flyFilePathes;
+        // }
     },
     methods: {
         // 飞行管理
@@ -45,7 +45,7 @@ export const flyManagerMinix = {
             let curRoute = this.flyFilePathes.find(route => {
                 return route.id == id
             })
-            // console.log('curRoute',curRoute)
+
             routes.fromFile(this.ServerConfig + curRoute.path);
 
             //初始化飞行管理
@@ -54,11 +54,15 @@ export const flyManagerMinix = {
                 routes: routes
             });
 
+            if (!!curRoute.playRate) {
+                flyManagerAttr.flyManager.playRate = parseFloat(curRoute.playRate);
+            }
             flyManagerAttr.flyManager.readyPromise.then(function() {
-               
-                if ( curRoute.isFlyLoop ) {
+
+                if (curRoute.isFlyLoop) {
                     let currentRoute = flyManagerAttr.flyManager.currentRoute
-                    currentRoute.isFlyLoop = JSON.parse( curRoute.isFlyLoop )
+                    currentRoute.isFlyLoop = JSON.parse(curRoute.isFlyLoop);
+
                 }
             })
 
@@ -67,7 +71,7 @@ export const flyManagerMinix = {
                 routeStop => {
                     let stopName = routeStop.stopName;
                     routeStop.waitTime = curRoute.waitTime;
-                    if ( !curRoute.isFlyLoop ) {
+                    if (!curRoute.isFlyLoop) {
                         flyManagerAttr.flyManager.currentStopIndex = routeStop.index
                     }
                 }
@@ -78,7 +82,7 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-            
+
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
             }
@@ -139,7 +143,7 @@ export const flyManagerMinix = {
                                 let temp1 = {}
                                 temp1.stopIndex = i + ',' + stop.index
                                 temp1.stopName = '飞行路线' + i + ' - ' +
-                                    stop.stopName.replace('stop', '站点')
+                                    stop.stopName.replace('Stop', '站点')
                                 stops.push(temp1)
                             }
                         })
@@ -157,7 +161,7 @@ export const flyManagerMinix = {
                         if (stop.index != 0) {
                             let temp = {}
                             temp.stopIndex = stop.index
-                            temp.stopName = stop.stopName.replace('stop', '站点')
+                            temp.stopName = stop.stopName.replace('Stop', '站点')
                             stops.push(temp)
                         }
                     })

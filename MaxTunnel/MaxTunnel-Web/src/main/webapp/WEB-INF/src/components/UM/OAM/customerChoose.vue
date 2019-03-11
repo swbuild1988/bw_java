@@ -25,7 +25,7 @@
     </div>
     <div class="list">
     <Row>
-        <Col span="6" v-for="(item,index) in customers" :key="index">
+        <Col span="8" v-for="(item,index) in customers" :key="index">
             <div class="infoList" @click="getCustomerId(item.id,item.contact)">
                 <!-- <input type="radio" class="radio" name="customers" :checked="item.id == customerId" @change="getCustomerId(item.id,item.contact)"> -->
                 <div class="company">
@@ -150,45 +150,57 @@ export default {
 <style scoped>
 .radio{
     position:absolute;
-    top:48px;
-    left:-20px;
+    top: 4.8vmin;
+    left: -2vmin;
 }
 .infoList{
     border: 1px solid #dddfe1;
-    width: 200px;
-    height: 100px;
-    margin: 10px auto;
+    width: 24vmin;
+    height: 10vmin;
+    margin: 1vmin auto;
     border-radius: 4px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
     position: relative;
     cursor: pointer;
+    font-size: 1.66vmin
 }
 .company{
-    padding-left: 10px;
-    font-size: 20px;
+    padding-left: 1vmin;
+    font-size: 2vmin;
 }
 .contact,.tel{
-    padding-left: 10px;
+    padding-left: 1vmin;
     display: inline-block;
-    line-height: 45px;
+    line-height: 4.5vmin;
 }
 .crtTime{
-    padding: 0px 0px 0px 10px;
+    padding: 0px 0px 0px 1vmin;
 }
 .conditions{
-     padding: 10px;
+     padding: 1vmin;
 }
 .list{
-    margin-top: 10px;
+    margin-top: 1vmin;
 }
 .ivu-icon {
-    margin-right: 5px;
+    margin-right: 0.5vmin;
     color: #ff9b00;
 }
 .checkBox{
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 0.2vmin;
+    right: 0.2vmin;
+}
+
+.infoList >>> .ivu-checkbox-inner{
+  width: 1.4vmin;
+  height: 1.4vmin;
+}
+.infoList >>> .ivu-checkbox-inner:after{
+  width: 0.4vmin;
+  height: 0.8vmin;
+  top: 0.1vmin;
+  left: 0.4vmin;
 }
 </style>
 

@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
-import com.bandweaver.tunnel.common.biz.pojo.em.ObjectBind;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -164,6 +161,13 @@ public class AlarmServiceImpl implements AlarmService {
 	@Override
 	public int getCountByTime(Date date) {
 		return alarmMapper.getCountByTime(date);
+	}
+
+
+	@Override
+	public List<Alarm> getAllList() {
+		List<Alarm> list = alarmMapper.getAllAlarm();
+		return list == null ? Collections.emptyList() : list;
 	}
 
 

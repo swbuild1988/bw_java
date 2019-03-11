@@ -9,14 +9,14 @@
                     <Option v-for="item in defectType" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="4">    
+            <Col span="4">
                 <span class="conditionTitle">缺陷状态：</span>
                 <Select v-model="conditions.status" style="width: 60%">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in defectStatus" :value="item.val" :key="item.value">{{ item.key }}</Option>
                 </Select>
             </Col>
-            <Col span="4">    
+            <Col span="4">
                 <span class="conditionTitle">危险等级：</span>
                 <Select v-model="conditions.level" style="width: 60%">
                     <Option value=null key="0">所有</Option>
@@ -25,14 +25,14 @@
             </Col>
             <Col span="4">
                 <span class="conditionTitle">开始时间：</span>
-                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
                 <span class="conditionTitle">结束时间：</span>
-                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 65%"></DatePicker>
             </Col>
             <Col span="4">
-                <Button type="primary" icon="ios-search" size="small" @click="queryCondition()">查询</Button>
+                <Button type="primary" icon="ios-search" @click="queryCondition()">查询</Button>
             </Col>
             </Row>
         </Row>
@@ -40,16 +40,16 @@
             <Row>
                 <Table :columns='columns' :data="defects"></Table>
             </Row>
-            <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-            placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
         </div>
+        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
     </div>
 </template>
 
 <script>
 import { TunnelService } from '../../../../services/tunnelService'
 import { DefectService } from '../../../../services/defectService'
-import { EnumsService } from '../../../../services/enumsService'    
+import { EnumsService } from '../../../../services/enumsService'
 import Enum from '../../../../../static/Enum.json'
 export default {
     name:"queryDefect",
@@ -60,7 +60,7 @@ export default {
                     type: 'index',
                     width: 60,
                     align: 'center'
-                },         
+                },
                 {
                     title:"所属区段",
                     align: 'center',
@@ -89,7 +89,6 @@ export default {
                 {
                     title:"发现时间",
                     key:"createTime",
-                    width: 200,
                     align: 'center',
                     render: (h, params) => {
                         return h(
@@ -130,8 +129,8 @@ export default {
                                        params.row.level==0 ? 'green'
                                        :  params.row.level==1 ? 'blue'
                                        :  params.row.level==2 ? 'orange'
-                                       :  'red' 
-                                    
+                                       :  'red'
+
                                 }
                             },params.row.levelName
                         )
@@ -145,8 +144,8 @@ export default {
                 {
                     title:"操作",
                     key:"action",
-                    width:300,
                     align:'center',
+                    width: window.innerWidth*0.15,
                     render:(h, params) => {
                         return h('div', [
                             h('Button', {
@@ -157,6 +156,7 @@ export default {
                                 style: {
                                     marginRight: '5px'
                                 },
+                                class: 'btnShow',
                                 on: {
                                     click: () => {
                                         this.enterOrder(params.index)
@@ -182,6 +182,7 @@ export default {
                                     type: 'info',
                                     size: 'small'
                                 },
+                                class: 'btnOrder',
                                 on: {
                                     click: ()=> {
                                         this.queryDetails(params.index)
@@ -240,7 +241,7 @@ export default {
             type: this.conditions.type,
             level: this.conditions.level,
             status: this.conditions.status,
-            tunnelId: this.$route.params.id  
+            tunnelId: this.$route.params.id
         };
         return Object.assign({}, param);
         }
@@ -284,7 +285,11 @@ export default {
     },
     methods: {
         queryCondition(){
-            let _this = this 
+            let _this = this
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
             DefectService.defectsDatagrid(this.params).then(
                 (result)=>{
                     _this.defects=result.list
@@ -327,8 +332,20 @@ export default {
         queryDetails(index){
             this.goToModule(index,Enum.pageType.Read)
         }
-    }  
+    }
 }
 </script>
+<style scoped>
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+}
+</style>
+
 
 

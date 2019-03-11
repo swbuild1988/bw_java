@@ -477,13 +477,14 @@ alter trigger OMM_MAINTENANCE_ORDER_TG enable;
 -- prompt Creating T_OMM_EQUIPMENT. …Ë±∏
 create table T_OMM_EQUIPMENT
 (
-  id           NUMBER not null,
+  id           NUMBER       not null,
   name         VARCHAR2(30) not null,
-  type         NUMBER not null,
+  type         NUMBER       not null,
   crt_time     DATE,
-  service_life NUMBER,
-  status       NUMBER,
-  asset_no     VARCHAR2(30) not null,
+  run_time     date,
+  alarm_no     NUMBER       not null,
+  status       NUMBER(1)    NOT NULL,
+  asset_no     VARCHAR2(30),
   tunnel_id    NUMBER,
   vender_id    NUMBER,
   model_id     NUMBER,
@@ -510,14 +511,6 @@ begin
 end OMM_EQUIPMENT_TG;
 /
 alter trigger OMM_EQUIPMENT_TG enable;
-
--- prompt Creating T_OMM_EQUIPMENT_STATUS... 
-create table T_OMM_EQUIPMENT_STATUS
-(
-  id   NUMBER not null,
-  name VARCHAR2(20)
-);
-alter table T_OMM_EQUIPMENT_STATUS add constraint OMM_EQUIPMENT_STATUS_ID primary key (ID);
 
 -- prompt Creating T_OMM_EQUIPMENT_TYPE...       
 create table T_OMM_EQUIPMENT_TYPE

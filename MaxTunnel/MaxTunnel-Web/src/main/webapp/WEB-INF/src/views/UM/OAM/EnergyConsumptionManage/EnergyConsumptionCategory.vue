@@ -1,88 +1,54 @@
 <template>
-    <div>
-        <div class="dataContainer1">
-            <Row class="chart">
-                <Col span="12">
-                <Row>
-                    <Col span="6">
-                    <h1 class="total">{{ total }} 千瓦时</h1>
-                    </Col>
-                    <Col span="7">
-                    <DatePicker
-                        type="datetime"
-                        placeholder="请选择开始日期和时间"
-                        format="yyyy-MM-dd HH:mm"
-                        class="searchTime"
-                        v-model="query.startTime"
-                    ></DatePicker>
-                    </Col>
-                    <Col span="7">
-                    <DatePicker
-                        type="datetime"
-                        placeholder="请选择结束日期和时间"
-                        format="yyyy-MM-dd HH:mm"
-                        class="searchTime"
-                        v-model="query.endTime"
-                    ></DatePicker>
-                    </Col>
-                    <Col span="4">
-                    <Button
-                        type="primary"
-                        @click="queryData"
-                        icon="ios-search"
-                    >查询</Button>
-                    </Col>
-                </Row>
-                <Row class="catContent">
-                    <Col
-                        span="12"
-                        v-for="(cat,index) in catDatas"
-                        :key="index"
-                    >
-                    <div class="cat">
-                        <data-box2 v-bind="cat"></data-box2>
-                    </div>
-                    </Col>
-                </Row>
-                </Col>
-                <Col span="12">
-                <div
-                    class="piechart"
-                    id="pie"
-                >
-                    <!-- <pie-chart v-bind="pieChart"></pie-chart> -->
-                </div>
-                </Col>
-            </Row>
-            <hr>
-            <div class="linechart">
-                <div style="float:right;margin-top: 4px">
-                    周期： <Select
-                        v-model="period"
-                        @on-change='changePeriod()'
-                        style=" width:70px"
-                    >
-                        <Option
-                            v-for="item in periodList"
-                            :value="item.val"
-                            :key="item.val"
-                        >{{ item.key }}</Option>
-                    </Select>
-                </div>
-                <div
-                    class="Line"
-                    id="line"
-                ></div>
-            </div>
+  <div>
+    <div class="dataContainer1">
+      <Row class="chart">
+        <Col span="12">
+          <Row>
+            <Col span="6">
+              <h1 class="total">{{ total }} 千瓦时</h1>
+            </Col>
+            <Col span="7">
+              <DatePicker type="datetime" placeholder="请选择开始日期和时间" format="yyyy-MM-dd HH:mm" class="searchTime" v-model="query.startTime"></DatePicker>
+            </Col>
+            <Col span="7">
+              <DatePicker type="datetime" placeholder="请选择结束日期和时间" format="yyyy-MM-dd HH:mm" class="searchTime" v-model="query.endTime"></DatePicker>
+            </Col>
+            <Col span="4">
+              <Button type="primary" @click="queryData" icon="ios-search">查询</Button>
+            </Col>
+          </Row>
+          <Row class="catContent">
+            <Col span="12" v-for="(cat,index) in catDatas" :key="index">
+              <div class="cat">
+                <data-box2 v-bind="cat"></data-box2>
+              </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col span="12">
+          <div class="piechart" id="pie">
+            <!-- <pie-chart v-bind="pieChart"></pie-chart> -->
+          </div>
+        </Col>
+      </Row>
+      <hr>
+      <div class="linechart">
+         <div style="float:right;margin-top: 4px">
+          周期： <Select v-model="period" @on-change='changePeriod()' style=" width:70px">
+          <Option v-for="item in periodList" :value="item.val" :key="item.val">{{ item.key }}</Option>
+        </Select>
         </div>
+        <div class="Line" id="line"></div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import DataBox2 from "../../../../components/Common/Box/DataBox2";
 import EnergyIcon from "../../../../assets/UM/TunnelEnergy.png";
 import { EnumsService } from "../../../../services/enumsService";
-import { EnergyConsumptionService } from "../../../../services/energyConsumptionService";
+import { EnergyConsumptionService } from "../../../../services/EnergyConsumptionService";
 export default {
     name: "eneryCategory",
     data() {
@@ -133,7 +99,7 @@ export default {
                         type: "pie",
                         // radius: "55%",
                         center: ["50%", "50%"],
-                        data: [].sort(function (a, b) {
+                        data: [].sort(function(a, b) {
                             return a.value - b.value;
                         }),
                         // roseType: "radius",
@@ -151,7 +117,7 @@ export default {
                             },
                             animationType: "scale",
                             animationEasing: "elasticOut",
-                            animationDelay: function (idx) {
+                            animationDelay: function(idx) {
                                 return Math.random() * 200;
                             },
                             emphasis: {
@@ -189,7 +155,7 @@ export default {
         this.fetchData();
     },
     watch: {
-        $route: function () {
+        $route: function() {
             this.query.id = parseInt(this.$route.params.id);
             this.initTime();
             this.queryData();
@@ -235,7 +201,7 @@ export default {
             );
             EnergyConsumptionService.getECCategory(params).then(result => {
                 var tempCount = 0;
-                result.filter(function (item) {
+                result.filter(function(item) {
                     tempCount += item.val;
                 });
                 let newData = null;
@@ -294,7 +260,7 @@ export default {
                     text: "管廊耗电量分析",
                     x: "center",
                     textStyle: {
-                        color: "#030303",
+                        color: "#ccc",
                         fontSize: 25
                     }
                 },
@@ -354,13 +320,23 @@ export default {
                 },
                 xAxis: {
                     type: "category",
-                    data: this.XCategory
+                    data: this.XCategory,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ccc'
+                        }
+                    },
                     // axisLabel :{
                     //   rotate: 90
                     // }
                 },
                 yAxis: {
-                    type: "value"
+                    type: "value",
+                    axisLine: {
+                        lineStyle: {
+                            color: '#ccc'
+                        }
+                    },
                 },
                 series: [
                     {

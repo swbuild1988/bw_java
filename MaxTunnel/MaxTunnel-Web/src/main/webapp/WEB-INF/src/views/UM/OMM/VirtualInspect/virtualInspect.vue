@@ -3,22 +3,24 @@
         <!--<Button @click="edit">编辑</Button>-->
         <!--<Tabs value="manual">-->
         <!--<TabPane label="手动巡检" name="manual">-->
-        <div class="coolBox" style="height: 60px;padding: 12px;color: #fff;font-size: 16px;">
+        <div class="coolBox" style="height: 5vmin;padding: 1vmin;color: #fff;font-size: 1.66vmin;">
             <Row>
-                <Col span="9"> 飞行路径：
+                <Col span="9"> 
+                <span>飞行路径：</span>
                 <Select v-model="conditions.routeId" style="width: 60%" @on-change="getStopsList"> 
                     <Option value="0">全部</Option> 
                     <Option v-for="item in list.routes" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
                 </Col>
-                <Col span="9"> 站点：
+                <Col span="9"> 
+                <span>站点：</span>
                 <Select v-model="conditions.stopIndex" style="width: 60%" @on-change="handleStopChanged">
                     <Option value='1,0' v-if="defaultOptionFlag == 0">飞行路径1 - 站点1</Option>
                     <Option value='0' v-if="defaultOptionFlag == 1">站点1</Option>
                     <Option v-for="(item,index) in list.stops" :key="index" :value="item.stopIndex">{{item.stopName}}</Option>
                 </Select>
                 </Col>
-                <Col span="6" style="text-align: right">
+                <Col span="6" style="text-align: right;margin-top: -0.5vmin;">
                 <!--<i-Switch size="large">-->
                 <!--<span slot="open">手动</span>-->
                 <!--<span slot="close">自动</span>-->
@@ -32,7 +34,7 @@
         </div>
         <Row :gutter="20" class="mainInfo">
             <Col span="12">
-            <div class="manualShowInspect coolBox" id="GISbox">
+            <div class="manualShowInspect coolBox" >
                 <div class="options" v-if="isManual">
                     <Button type="primary" class="buttons" icon="ios-rewind" @click="speedDown"></Button>
                     <Button type="primary" class="buttons" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="play"></Button>
@@ -40,7 +42,7 @@
                     <Button type="primary" class="buttons" icon="ios-fastforward" @click="speedUp"></Button>
                 </div>
                 <!-- <sm-viewer id="virtualSmViewer" @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer> -->
-                <TestSmViewer @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></TestSmViewer>
+                <TestSmViewer @refreshCameraPosition="refreshCameraPosition" ref="smViewer" :openImageryProvider="false"></TestSmViewer>
             </div>
             </Col>
             <Col span="12">
@@ -62,7 +64,7 @@
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
-import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
+import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import { _getFieldValues } from '../../../../scripts/commonFun';
 export default {
     data() {
@@ -123,7 +125,6 @@ export default {
         this.getStopsList()
         this.Log.info("初始化调用刷新");
         this.$refs.smViewer.startCameraPositionRefresh();
-        this.setGIS()
     },
     components: {
         // SmViewer,
@@ -131,17 +132,6 @@ export default {
         VideoComponent
     },
     methods: {
-        setGIS(){
-            var gis = document.getElementById("newID");
-            gis.style.display = "block";
-            gis.style.position = 'absolute';
-            gis.style.top = '6px';
-            gis.style.height = '99%';
-            gis.style.width = '97%'    
-            document.body.removeChild(gis)
-            document.getElementById("GISbox").appendChild(gis)
-            this.$refs.smViewer.setViewAngAngle();
-        },
         getStopsList() {
             this.list.stops = this.$refs.smViewer.getStopsList(this.conditions.routeId)
             if(this.conditions.routeId == 0){
@@ -237,19 +227,12 @@ export default {
             this.$refs.smViewer.speedDown();
         },
     },
-    beforeDestroy() {
-        this.$refs.smViewer.stopCameraPositionRefresh();
-        var gis = document.getElementById("newID");
-        gis.style.display = "none";
-        document.getElementById("GISbox").removeChild(gis)
-        document.body.appendChild(gis)
-    }
 };
 </script>
 <style scoped>
 .container {
-    height: 93vh;
-    padding: 10px;
+    height: 91vh;
+    padding: 1vmin;
     /*background: #fff;*/
     background: linear-gradient(
         to bottom,
@@ -260,29 +243,29 @@ export default {
 }
 
 .mainInfo {
-    margin-top: 20px;
+    margin-top: 2vmin;
 }
 
 .manualShowInspect {
-    border: 1px solid #ccc;
-    margin: 4px;
+    border: 0.1vmin solid #ccc;
+    margin: 0.4vmin;
     height: 80vh;
 }
 
 .automaticBim,
 .automaticShowInspect {
-    border: 1px silver solid;
+    border: 0.1vmin silver solid;
     height: 77vh;
 }
 
 .btn {
     background-color: rgb(255, 255, 180, 0.5);
-    padding: 5px;
+    padding: 0.5vmin;
     text-align: right;
 }
 
 .bim {
-    margin: 5px;
+    margin: 0.5vmin;
 }
 
 .coolBox {
@@ -292,7 +275,7 @@ export default {
     border-radius: 5px;
     background-clip: padding-box;
     background: rgba(36, 40, 42, 0.5);
-    box-shadow: 0 0 13px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1.3vmin 0.3vmin rgba(0, 0, 0, 0.5);
     /*overflow: hidden;*/
 }
 .options {
@@ -302,6 +285,18 @@ export default {
     left: 32%;
 }
 .buttons {
-    margin: auto 10px;
+    margin: auto 1vmin;
 }
+
+.coolBox >>> .ivu-select-selected-value {
+    font-size: 1.6vmin !important;
+    line-height: 1.8vmin !important;
+    height: 2.2vmin !important;
+    padding-top: 0.4vmin !important;
+    width: 100% !important;
+}
+.coolBox >>> .ivu-select-selection{
+    height: 2.4vmin;
+} 
+
 </style>

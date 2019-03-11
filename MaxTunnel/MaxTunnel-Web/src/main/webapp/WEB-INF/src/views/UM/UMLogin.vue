@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1 class="form">综合管廊统一管理平台</h1>
+    <h1 class="form">综合管廊智慧管理平台</h1>
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="demo-ruleForm login-container">
       <h2 class="title">用户登录</h2>
       <FormItem prop="userName">
@@ -61,18 +61,19 @@
     methods: {
       handleSubmit(name) {
         let _this = this;
+        var sha256 = require("js-sha256").sha256
         this.$refs[name].validate(valid => {
           if (valid) {
             this.logining = true;
             this.loading = true;
             this.checked ? this.setCookie(this.formValidate.userName, this.formValidate.passWord, 7) : this.clearCookie();
-            var loginParams = {name: _this.formValidate.userName, password: _this.formValidate.passWord};
+            var loginParams = {name: _this.formValidate.userName, password: sha256(_this.formValidate.passWord)};
             LoginService.UmLogin(loginParams).then(
               result => {
                 _this.logining = false;
                 sessionStorage.setItem("UMUser", JSON.stringify(result));
-                console.log(result);
                 let sessionUserName = result.name;
+                let sessionUserId = result.userId
                 let roles = result.roles;
                 sessionStorage.setItem(
                   "UMUerName",
@@ -82,7 +83,11 @@
                   "UMRoles",
                   JSON.stringify(roles)
                 );
-                console.log(sessionStorage.getItem('UMUserName'))
+                sessionStorage.setItem(
+                    "UMUerId",
+                    JSON.stringify(sessionUserId)
+                );
+
                 _this.$router.push({path: "UMmain"});
               },
               error => {
@@ -145,6 +150,7 @@
     padding-top: 5%;
     position: relative;
     z-index: 999;
+    font-size: 2.6vmin;
   }
 
   .login-container {
@@ -152,7 +158,7 @@
     background-clip: padding-box;
     margin: 180px auto;
     margin: 70px auto;
-    width: 350px;
+    width: 18vw;
     padding: 35px 35px 15px 35px;
     box-shadow: 0 0 25px #cac6c6;
     z-index: 999;
@@ -164,10 +170,39 @@
     margin: 0px auto 20px auto;
     text-align: center;
     color: #fff;
+    font-size: 1.8vmin;
   }
 
   .remember {
     margin: 0px 0px 35px 0px;
     color: #fff;
   }
+
+  .ivu-input-group {
+    font-size: 1.8vmin;
+  }
+
+  .login-container >>> .ivu-input{
+    font-size: 1.4vmin;
+    height: 3.2vmin;
+  }
+
+  .ivu-checkbox-wrapper {
+    font-size: 1.4vmin !important;
+  }
+
+  .ivu-btn{
+    font-size: 1.6vmin !important;
+  }
+
+  .login-container >>> .ivu-checkbox-inner{
+    width: 1.4vmin;
+    height: 1.4vmin;
+  }
+
+  .login-container >>> .ivu-checkbox-inner:after{
+    width: 0.6vmin;
+    height: 1vmin;
+  }
+
 </style>

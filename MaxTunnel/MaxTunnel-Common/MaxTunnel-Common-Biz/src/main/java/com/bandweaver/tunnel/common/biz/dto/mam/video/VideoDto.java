@@ -14,8 +14,52 @@ public class VideoDto extends Video {
     private VideoServerDto videoServerDto;
     private boolean ptzOperationsSupported;
     private List<VideoPreset> videoPresets;
+    
+    private String tunnelName;
+    private String storeName;
+    private String areaName;
+    private String sceneName;
+    
+    private String vendorName;
+    
+    public String getSceneName() {
+		return sceneName;
+	}
 
-    public VideoServerDto getVideoServerDto() {
+	public void setSceneName(String sceneName) {
+		this.sceneName = sceneName;
+	}
+
+    public String getVendorName() {
+    	String result = this.getVendor() == null ? null : VideoVendor.getEnum(this.getVendor()).getName();
+		return result;
+	}
+
+	public String getTunnelName() {
+		return tunnelName;
+	}
+
+	public void setTunnelName(String tunnelName) {
+		this.tunnelName = tunnelName;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public VideoServerDto getVideoServerDto() {
         return videoServerDto;
     }
 
@@ -98,12 +142,14 @@ public class VideoDto extends Video {
     	return url;
     }
 
-    @Override
-    public String toString() {
-        return "VideoDto{" +
-                "videoServerDto=" + videoServerDto +
-                ", ptzOperationsSupported=" + ptzOperationsSupported +
-                ", videoPresets=" + videoPresets +
-                "} " + super.toString();
-    }
+	@Override
+	public String toString() {
+		return "VideoDto [videoServerDto=" + videoServerDto
+				+ ", ptzOperationsSupported=" + ptzOperationsSupported
+				+ ", videoPresets=" + videoPresets + ", tunnelName="
+				+ tunnelName + ", storeName=" + storeName
+				+ ", areaName=" + areaName + super.toString() +  "]";
+	}
+
+    
 }

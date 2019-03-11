@@ -53,6 +53,7 @@ import com.bandweaver.tunnel.common.biz.vo.em.PlanPageVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 
 @Service
 public class ActivitiServiceImpl implements ActivitiService {
@@ -574,10 +575,10 @@ public class ActivitiServiceImpl implements ActivitiService {
     public Integer getStaffId() {
         //获取登录用户
         User user = ContextUtil.getLoginUser();
-        List<StaffDto> staffList = staffService.getDtoListByCondition(new StaffVo(user.getId(), null, null, null, null, null));
-        if (staffList == null || staffList.isEmpty())
-            throw new RuntimeException("获取账号为[" + user.getName() + "]的员工信息为空");
-        return staffList.get(0).getId();
+        if(StringTools.isNullOrEmpty(user))
+        	return null;
+        
+        return user.getId();
     }
 
     @Override

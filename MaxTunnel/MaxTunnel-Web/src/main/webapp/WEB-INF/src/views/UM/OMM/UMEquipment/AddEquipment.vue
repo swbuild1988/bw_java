@@ -1,49 +1,49 @@
 <template>
     <div :style="backStyle">
-        <Form :model="equipment" :label-width="130" @submit.native.prevent>
+        <Form ref="equipment" :model="equipment" :label-width="140" :rules="validateRules" @submit.native.prevent>
             <h1 class="formTitle">添加管廊设备</h1>
-            <FormItem label="设备名称：">
+            <FormItem label="设备名称：" prop="name">
                 <Input v-model='equipment.name'></Input>
             </FormItem>
-            <FormItem label="所属管廊：">
+            <FormItem label="所属管廊：" prop="tunnelId">
                 <Select v-model='equipment.tunnelId'>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="设备类型：">
+            <FormItem label="设备类型：" prop="type">
                 <Select v-model='equipment.type'>
-                    <Option v-for="item in equipmentTypes" :value="item.key" :key="item.key">{{ item.value }}</Option>
+                    <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="设备型号：" >
+            <FormItem label="设备型号：" prop="modelId">
                 <Select v-model='equipment.modelId'>
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="设备状态：">
+            <FormItem label="设备状态：" prop="status">
                 <Select v-model="equipment.status">
-                    <Option v-for="item in equipmentStatus" :key="item.key" :value="item.key">{{item.value}}</Option>
+                    <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="预计投运时间：">
-                <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.crtTime' style="width: 100%;"></DatePicker>
+            <FormItem label="预计投运时间：" prop="runTime">
+                <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
             </FormItem>
-            <FormItem label="供应商：">
-                    <Select v-model='equipment.venderId'>
+            <FormItem label="供应商：" prop="venderId">
+                <Select v-model='equipment.venderId'>
                     <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="关联监测对象：">
-                    <Select>
-                    <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            <FormItem label="关联监测对象：" prop="objId">
+                <Select v-model="equipment.objId" @on-change="getObjType">
+                    <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="对象类型：">
-                    <Select>
-                    <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
+                <div v-for="item in objTypes" :key="item.objtypeId">
+                    <Input :value="item.objtypeName" readonly></Input>
+                </div>
             </FormItem>
-            <FormItem label="设备图片：">
+            <!-- <FormItem label="设备图片：">
                 <div class="demo-upload-list" v-for="item in uploadList" :key="item.url">
                     <template v-if="item.status === 'finished'">
                         <img :src="item.url">
@@ -77,15 +77,15 @@
                 <Modal title="View Image" v-model="visible">
                     <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
                 </Modal>
-            </FormItem>
-            <FormItem label="相关备品：">
+            </FormItem> -->
+            <!-- <FormItem label="相关备品：">
                 <Button type="default" @click="associationsBackUp()">查看相关备品</Button>
-            </FormItem>
+            </FormItem> -->
             <div class="BtnBox">
-                <Button type="primary" @click="submitEquipment">提交</Button>
+                <Button type="default" @click="goBack()" style="margin-right: 8px;">返回</Button>
+                <Button type="primary" @click="submitEquipment('equipment')" :disabled="isDisable">提交</Button>
             </div>
         </Form>
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon>
     </div>
 </template>
 <script>
@@ -99,14 +99,14 @@ export default {
             //   id: 'GISID',
             // 待编辑的设备
             equipment: {
-                id: null,
                 name: null,
+                type: null,
+                runTime: null,
+                status: 1,
+                tunnelId: null,
                 modelId: null,
                 venderId: null,
-                type: null,
-                tunnelId: null,
-                startTime: null,
-                status: 1
+                objId: 1
             },
             // 设备型号
             equipmentModels: [],
@@ -115,9 +115,12 @@ export default {
             // 管廊
             tunnels: [],
             // 设备类型
-            equipmentTypes: types.equipmentType,
+            equipmentTypes: [],
             // 设备状态
-            equipmentStatus: types.equipmentStatus,
+            equipmentStatus: [],
+            //监测对象
+            objs: [],
+            objTypes: [],
             backStyle:{
                 backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
                 position: 'relative',
@@ -140,7 +143,34 @@ export default {
             ],
             imgName: '',
             visible: false,
-            uploadList: []
+            uploadList: [],
+            isDisable: false,
+            validateRules: {
+                name: [
+                    { required: true, message: '请输入设备名称', trigger: 'blur' }
+                ],
+                type: [
+                    { type: 'number', required: true, message: '请选择设备类型', trigger: 'change' }
+                ],
+                tunnelId: [
+                    { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
+                ],
+                modelId: [
+                    { type: 'number', required: true, message: '请选择设备型号', trigger: 'change' }
+                ],
+                runTime: [
+                    { type: 'date', required: true, message: '请选择预计投运时间', trigger: 'change'}
+                ],
+                status: [
+                    { type: 'number', required: true, message: '请选择设备状态', trigger: 'change' }
+                ],
+                venderId: [
+                    { type: 'number', required: true, message: '请选择供应商', trigger: 'change' }
+                ],
+                objId: [
+                    { type: 'number', required: true, message: '请选择关联的监测对象', trigger: 'change' }
+                ],
+            }
         };
     },
     mounted() {
@@ -153,6 +183,15 @@ export default {
         error => {
             _this.Log.info(error);
         }
+        );
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.equipmentTypes = res
+            },
+            error => {
+                this.Log.info(error);
+            },
         );
         // 获取所有的供应商
         EquipmentService.getVenders().then(
@@ -172,67 +211,104 @@ export default {
                 _this.Log.info(error);
             }
         );
-        this.uploadList = this.$refs.upload.fileList;
-        this.$Notice.config({
-            top: window.innerHeight*0.10
-        })
+        //设备状态
+        EquipmentService.getStatus().then(
+            res=>{
+                this.equipmentStatus = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
+        //obj
+        this.axios.get('measobjs').then(
+            res=>{
+                let{ code,data } = res.data
+                if(code==200){
+                    this.objs = data
+                }
+            }
+        )
+        // this.getObjType()
     },
     methods: {
-        submitEquipment() {
+        submitEquipment(name) {
+            this.isDisable = true
             setTimeout(() => {
-                let _this = this;
-                EquipmentService.addEquipment(this.equipment).then(
-                result => {
-                    _this.Log.info("success");
-                },
-                error => {
-                    _this.Log.info(error);
-                }
-                );
+                this.isDisable = false
+                this.$refs[name].validate((valid) => {
+                    if(valid){
+                        EquipmentService.addEquipment(this.equipment).then(
+                            result => {
+                                this.$router.push('/UM/equipment/queryequipment')
+                            },
+                            error => {
+                                this.Log.info(error);
+                            }
+                        );
+                    }
+                })
+                
             }, 2000);
         },
         //返回
         goBack(){
             this.$router.back(-1);
         },
+        // 对象类型
+        getObjType(){
+            var info = {
+                id: this.equipment.objId,
+                pageSize: 10,
+                pageNum: 1
+            }
+            this.axios.post('measobjs/datagrid',info).then(
+                res=> {
+                    let { code,data,msg } = res.data
+                    if(code==200){
+                        this.objTypes = data.list
+                    }
+                }
+            )
+        },
         //查看相关备品
         associationsBackUp(){
             
         },
-        //上传图片list
-        handleView (name) {
-            this.imgName = name;
-            this.visible = true;
-        },
-        handleRemove (file) {
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-        },
-        handleSuccess (res, file) {
-            file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-            file.name = '7eb99afb9d5f317c912f08b5212fd69a';
-        },
-        handleFormatError (file) {
-            this.$Notice.warning({
-                title: '图片格式错误',
-                desc: '图片 ' + file.name + ' 格式错误, 请选择jpg,jpeg,png,gif格式的图片.'
-            });
-        },
-        handleMaxSize (file) {
-            this.$Notice.warning({
-                title: '超过图片大小限制',
-                desc: '图片' + file.name + '过大, 图片大小不能超过2M.',
-            });
-        },
-        handleBeforeUpload () {
-            const check = this.uploadList.length < 2;
-            if (!check) {
-                this.$Notice.warning({
-                    title: '只能上传一张图片.'
-                });
-            }
-            return check;
-        }
+        // //上传图片list
+        // handleView (name) {
+        //     this.imgName = name;
+        //     this.visible = true;
+        // },
+        // handleRemove (file) {
+        //     const fileList = this.$refs.upload.fileList;
+        //     this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+        // },
+        // handleSuccess (res, file) {
+        //     file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+        //     file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+        // },
+        // handleFormatError (file) {
+        //     this.$Notice.warning({
+        //         title: '图片格式错误',
+        //         desc: '图片 ' + file.name + ' 格式错误, 请选择jpg,jpeg,png,gif格式的图片.'
+        //     });
+        // },
+        // handleMaxSize (file) {
+        //     this.$Notice.warning({
+        //         title: '超过图片大小限制',
+        //         desc: '图片' + file.name + '过大, 图片大小不能超过2M.',
+        //     });
+        // },
+        // handleBeforeUpload () {
+        //     const check = this.uploadList.length < 2;
+        //     if (!check) {
+        //         this.$Notice.warning({
+        //             title: '只能上传一张图片.'
+        //         });
+        //     }
+        //     return check;
+        // }
     }
 };
 </script>
@@ -240,9 +316,6 @@ export default {
 .BtnBox {
   text-align: center;
   margin-top: 20px;
-}
-.ivu-btn-primary {
-  width: 110px;
 }
 .ivu-form.ivu-form-label-right{
     width: 700px;
@@ -293,6 +366,29 @@ export default {
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+}
+@media (min-width: 2200px){
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .formTitle{
+        font-size: 2.4vmin;
+    }
 }
 </style>
 

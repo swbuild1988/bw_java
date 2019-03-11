@@ -35,7 +35,7 @@
                     </DatePicker>
                 </Col>
                  <Col span="6">
-                    <Poptip placement="bottom" width="1000">
+                    <Poptip placement="bottom">
                        <span>客户名称：</span>
                        <Input v-model="customerName" placeholder="请选择客户" id="cusInput"></Input>
                        <div class="pop" slot="content">
@@ -44,7 +44,7 @@
                     </Poptip>
                 </Col>
                 <Col span="6">
-                    <Button type="primary" @click="search" icon="ios-search" size="small">查询</Button>
+                    <Button type="primary" @click="resetPageAndSearch" icon="ios-search">查询</Button>
                 </Col>
             </Row>
         </div>
@@ -81,25 +81,28 @@
                         <div class="option">
                             <Tooltip content="详情">
                                 <div class="buttons">
-                                    <Icon type="android-list" @click="read(index)" size="24" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="android-list" @click.native="read(index)" color="rgb(198,206,230)" class="icons"></Icon>
                                 </div>
                             </Tooltip>
                             <Tooltip content="编辑">
                                 <div class="buttons">
-                                    <Icon type="edit" @click="edit(index)" size="24" color="rgb(198,206,230)"></Icon>
+                                    <Icon type="edit" @click.native="edit(index)" class="icons" color="rgb(198,206,230)"></Icon>
                                 </div>
                             </Tooltip>
                         </div>
                         <Tooltip content="删除" class="del">
-                            <Icon type="trash-a" @click="del(index)" size="26" color="rgb(162, 77, 72)"></Icon>
+                            <Icon type="trash-a" @click.native="del(index)" class="icons" color="rgb(162, 77, 72)"></Icon>
                         </Tooltip>
                         </div>
                     </div>
                 </Col>
             </Row>
         </div>
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
-        </Page>
+        <div class="page">
+            <Page :total="page.pageTotal" :current="page.pageNum" :page-size-opts=[8,16,24]
+            :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
+            </Page>
+        </div>
     </div>
 </template>
 
@@ -113,7 +116,7 @@
             return{
                 page: {
                     pageNum: 1,
-                    pageSize: 10,
+                    pageSize: 8,
                     pageTotal: 0
                 },
                 contractList: [
@@ -127,7 +130,7 @@
                     //     contractStatus: '正常',
                     //     contractStartTime: '2018-08-10',
                     //     contractEndTime: '2018-10-02',
-                    //     crtTime: '2018-08-03 10:00:00' 
+                    //     crtTime: '2018-08-03 10:00:00'
                     // }
                 ],
                 conditions:{
@@ -142,15 +145,15 @@
                 selectList:{
                     payType:[],
                     contractStatus:[]
-                }, 
+                },
                 customer: [],
-                customerName: '',  
+                customerName: '',
                 pageStyle: {
                     position: 'absolute',
                     bottom: '20px',
                     right: '15px'
                 },
-                contractIds:[] 
+                contractIds:[]
             }
         },
         components: { CustomerChoose },
@@ -200,12 +203,19 @@
                         _this.Log.info(error)
                     })
             },
-            search: function(){
+            resetPageAndSearch(){
+                this.page.pageNum = 1
+                this.search()
+            },
+            search(){
                 if(!this.customerName && this.conditions.customerId){
                     this.conditions.customerId = null;
                 }
-
                 let _this = this
+              if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+              }
                 ContractService.contractDatagrid(_this.params).then(
                     (result)=>{
                         _this.contractList = [];
@@ -233,9 +243,10 @@
                             //         contract.cable.cableName = data.cableDto.cableName;
                             //         contract.cable.length = data.cableDto.cableLength;
                             //         contract.cable.cableStatus = data.cableDto.cableStatusName;
-                            //     })  
-                            // })  
-                            _this.contractIds.push(a.id)   
+                            //     })
+                            // })
+                            _this.contractIds.push(a.id)
+                            _this.page.pageTotal = result.total
                         })
                     })
             },
@@ -272,14 +283,14 @@
             },
             del(index) {
                  this.$Modal.confirm({
-                    title: '确认',
+                    title: '合同信息',
                     content: '<p>确定删除吗？</p>',
                     onOk: () => {
                         let _this = this
                         ContractService.delelteContract(_this.contractList[index].id).then(
                             (result)=>{
                                 _this.contractList.splice(_this.contractList[index].id, 1);
-                                _this.search()
+                                _this.resetPageAndSearch()
                             },
                             (error)=>{
                                 _this.Log.info(error)
@@ -293,7 +304,7 @@
             },
             handlePageSize(value) {
                 this.page.pageSize = value
-                this.search()
+                this.resetPageAndSearch()
             },
             getCustomerId(data) {
                 this.conditions.customerId = data.id;
@@ -304,6 +315,9 @@
 </script>
 
 <style scoped>
+.allDiv {
+    padding-bottom: 0;
+}
 .list{
     margin-top: 10px;
     background-color: white;
@@ -317,11 +331,11 @@
    /* border: 1px solid #dddfe1;*/
     width: 90%;
     height: 30vh;
-    margin: 10px auto; 
+    margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69)); 
-    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69)); 
+    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69));
+    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
     background: -moz-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
     background: linear-gradient(to bottom right, rgb(91,95,148) , rgb(31,37,69)); */
     background-image: url('../../../../assets/UM/border2.png');
@@ -330,18 +344,18 @@
 }
 .option{
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 1.66vmin;
+    right: 1.66vmin;
 }
 .contractName{
     text-align: center;
     padding: 20px 0 10px 0;
-    font-size: 20px;
+    font-size: 2vmin;
     font-weight: bold;
     color: rgb(252,252,255);
     cursor: pointer;
 }
-.contactInfo{ 
+.contactInfo{
     padding-bottom: 30px;
 }
 .red{
@@ -382,17 +396,104 @@
 .title{
     color: rgb(223,223,241);
     display: inline-block;
-    font-size: 16px;
+    font-size: 1.66vmin;
     width: 38%;
     text-align: right;
 }
 .info{
     display: inline-block;
     color: rgb(234,234,243);
-    font-size: 16px;
+    font-size: 1.66vmin;
     width: 60%;
 }
 
+.queryCondition >>> .ivu-poptip-popper{
+    width: 100vmin;
+}
 
+.queryCondition span{
+    font-size: 1.66vmin;
+}
+
+.queryCondition >>> .ivu-input {
+    height: 3.2vmin;
+    font-size: 1.28vmin;
+}
+ /*日期选择*/
+.queryCondition >>> .ivu-date-picker-header {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+
+.queryCondition >>> .ivu-picker-panel-icon-btn{
+    font-size: 1.66vmin;
+    width: 1.28vmin;
+    height: 2.5vmin;
+}
+
+.queryCondition >>> .ivu-date-picker-header-label{
+    font-size: 1.66vmin;
+}
+
+@media (min-width: 1921px){
+    .queryCondition >>> .ivu-date-picker-cells {
+        width: 15vmin;
+        font-size: 1.66vmin;
+    }
+
+    .queryCondition >>> .ivu-date-picker-cells-cell{
+        width: 2vmin;
+    }
+    .queryCondition >>> .ivu-date-picker-cells-header span{
+        padding-right: 2.5rem;
+    }
+}
+
+/*下拉框*/
+.queryCondition >>> .ivu-select-selection{
+    height: 3.2vmin !important;
+}
+
+.queryCondition >>> .ivu-select-placeholder,.ivu-select-selected-value{
+    font-size: 1.28vmin !important;
+    padding-top: 0.4vmin !important;
+    height: 2.6vmin !important;
+    line-height: 2vmin !important;
+}
+.icons{
+    font-size: 2.4vmin;
+}
+
+.page >>> .ivu-select-selection{
+    height: 3.2vmin !important;
+}
+.page >>> .ivu-select-selected-value, .ivu-select-placeholder{
+    font-size: 1.2vmin !important;
+    height: 3vmin !important;
+    line-height: 3vmin !important;
+}
+.page >>> .ivu-page-options-elevator input{
+    font-size: 1.2vmin;
+    height: 3vmin;
+}
+.page >>> .ivu-page-options-elevator{
+    display: inline-block;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+}
+.page >>> .ivu-page-next{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-next .ivu-icon{
+    font-size: 1.6vmin;
+}
+.page >>> .ivu-page-prev{
+    height: 3.2vmin;
+    line-height: 3vmin;
+}
+.page >>> .ivu-page-prev .ivu-icon{
+    font-size: 1.6vmin;
+}
 </style>
 

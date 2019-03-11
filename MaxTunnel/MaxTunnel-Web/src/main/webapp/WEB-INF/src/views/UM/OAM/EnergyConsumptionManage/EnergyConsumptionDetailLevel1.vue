@@ -24,26 +24,26 @@
         </i-Switch>
       </Col>
       <Col span="4" class="col">
-        <Button type="primary" icon="ios-search" size="small"  @click="queryDetail">查询</Button>
+        <Button type="primary" icon="ios-search"   @click="queryDetail">查询</Button>
       </Col>
     </Row>
     <Row>
       <Col span="8">
       <div class="chart">
         <SimpleBarWithClickChart ref="storeBar" v-bind="clickBarChartByStore"
-                                 style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
+          style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
       </div>
       </Col>
       <Col span="8">
       <div class="chart">
         <SimpleBarWithClickChart ref="sessionBar" v-bind="clickBarChartBySession"
-                                 style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
+          style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
       </div>
       </Col>
       <Col span="8">
       <div class="chart">
         <SimpleBarWithClickChart ref="typeBar" v-bind="clickBarChartByType"
-                                 style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
+         style="height:calc(85vh - 80px);"></SimpleBarWithClickChart>
       </div>
       </Col>
     </Row>
@@ -119,6 +119,11 @@
     watch: {
       '$route': function () {
         this.tunnelId = parseInt(this.$route.query.id);
+        // 设置默认值
+        this.chartPrams.dateType=1;
+        this.chartPrams.ammeterType=true;
+        this.clickBarChartByStore.clickPrams.areaType=1;
+
       }
     },
     mounted() {
@@ -154,15 +159,18 @@
           _this.chartPrams.endTime = "";
         }
       },
-
       queryDetail() {
         var _this = this;
+        if(new Date(_this.chartPrams.startTime)>new Date(_this.chartPrams.endTime)){
+          _this.$Message.error('开始时间必须小于结束时间！');
+          return;
+        }
         _this.clickBarChartByStore.clickPrams.tunnelId = parseInt(_this.$route.params.id);
         _this.clickBarChartByStore.clickPrams.energyType = _this.chartPrams.ammeterType ? 1 : 2;
         _this.clickBarChartByStore.clickPrams.startTime = new Date(_this.chartPrams.startTime).getTime();
         _this.clickBarChartByStore.clickPrams.endTime = new Date(_this.chartPrams.endTime).getTime();
         _this.$refs.storeBar.fetchData();
-      }
+      },
     },
     components: {
       SimpleBarWithClickChart

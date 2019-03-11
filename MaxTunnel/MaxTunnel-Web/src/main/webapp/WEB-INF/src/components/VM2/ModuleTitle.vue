@@ -2,13 +2,9 @@
     <div class='ModuleTitle'>
         <img
             class="left"
-            src='../../../src/assets/VM/vm_module_title_left.png'
+            src='../../../src/assets/VM/vm_module_title_bg.png'
         >
         <p>{{title}}</p>
-        <img
-            class="right"
-            src='../../../src/assets/VM/vm_module_title_right.png'
-        >
     </div>
 </template>
 
@@ -37,7 +33,7 @@ export default {
     height: 100%;
 }
 .ModuleTitle > img {
-    height: 2vmin;
+    height: 1.5vmin;
 }
 .ModuleTitle .left {
     margin-left: 1.5vw;
@@ -48,6 +44,6 @@ export default {
 .ModuleTitle > p {
     margin-left: 0.5vw;
     font-size: 2vmin;
-    color: #fff;
+    color: #00f6fc;
 }
 </style>

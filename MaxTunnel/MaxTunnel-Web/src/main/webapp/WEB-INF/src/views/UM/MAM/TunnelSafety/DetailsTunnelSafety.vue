@@ -1,76 +1,88 @@
 <template>
     <div>
-        <div class="top">
-            <Row style="font-size:16">
-                <Col span="6">区域:
-                <Select
-                        v-model="queryCondition.areaId"
-                        @on-change="changeAreaLocation"
-                        style="width:12vw;"
-                >
-                    <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-                </Col>
-                <Col span="6">监测仓:
-                <Select v-model="queryCondition.storeId" @on-change="changeStore" style="width:12vw;">
-                    <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-                </Col>
-            </Row>
-            <div>
-                <RadioGroup
-                        v-model="queryCondition.curDataType"
-                        type="button"
-                        @on-change="changeDataType"
-                        size="large"
-                >
-                    <Radio
-                            v-for="(item,key) in curDataTypeList"
-                            :key="key"
-                            :label="item.val"
-                            :class="{select_radio:queryCondition.curDataType==item.val}"
-                    >{{item.key}}</Radio>
-                </RadioGroup>
-            </div>
+        <div style="margin: 1vh;">
+            <RadioGroup
+                v-model="queryCondition.curDataType"
+                type="button"
+                @on-change="changeDataType"
+                size="large"
+            >
+                <Radio
+                    v-for="(item,key) in curDataTypeList"
+                    :key="key"
+                    :label="item.val"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+                    :class="{select_radio:queryCondition.curDataType==item.val}"
+                >{{item.key}}</Radio>
+            </RadioGroup>
+        </div>
+        <div style="margin: 1vh;">
+            <RadioGroup
+                v-model="queryCondition.areaId"
+                type="button"
+                @on-change="changeAreaLocation"
+                size="large"
+            >
+                <Radio
+                    v-for="(item,key) in areas"
+                    :key="key"
+                    :label="item.id"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+                    :class="{select_radio:queryCondition.areaId==item.id}"
+                >{{item.name}}</Radio>
+            </RadioGroup>
+        </div>
+        <div style="margin: 1vh;">
+             <check-select v-bind="storeProp"></check-select>
         </div>
         <Row :gutter="16">
             <Col span="12">
-            <div class="data">
-                <Tabs @on-click="changeTabs" v-model="tabName">
-                    <TabPane name="tunnelVideo" label="视频" icon="ios-film">
-                        <div class="map" v-if="curVideo!=null">
-                            <video-component v-bind:video="curVideo" v-bind:id="'evironmentVideo'"></video-component>
+                <div class="data">
+                    <div class="titles">
+                        <div
+                            class="title"
+                            @click="chooseModule(0)"
+                            :class="{'active' : curModule === 0}"
+                        >
+                            <span>
+                                <Icon type="ios-film" class="icons"></Icon>视频
+                            </span>
                         </div>
-                        <div></div>
-                    </TabPane>
-                    <TabPane name="tunnelMap" label="管廊模型" icon="map">
-                        <div class="map" id="GISbox">
-                            <TestSmViewer ref="smViewer1"></TestSmViewer>
+                        <div
+                            class="title"
+                            @click="chooseModule(1)"
+                            :class="{'active' : curModule === 1}"
+                        >
+                            <span>
+                                <Icon type="map" class="icons"></Icon>管廊模型
+                            </span>
                         </div>
-                    </TabPane>
-                </Tabs>
-            </div>
+                    </div>
+                    <div class="map">
+                        <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
+                        <TestSmViewer ref="smViewer" v-if="curModule === 1"></TestSmViewer>
+                    </div>
+                </div>
             </Col>
             <Col span="12" class="data" style="overflow-y:auto ">
-            <Row :gutter="16" style="margin-right: 2px;">
-                <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
-                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                </Col>
-            </Row>
+                <Row :gutter="16" style="margin-right: 2px;">
+                    <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+                        <SimulatedData
+                            v-bind:Obj="item"
+                            v-if="item.datatypeId==1"
+                            @changeStatus="changeStatus"
+                        ></SimulatedData>
+                        <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                    </Col>
+                </Row>
             </Col>
-            <!--<div style="position:relative;width:auto;float:right;right: 20px; ">-->
-            <!--<Page class="nextPage" @on-change="changePage" :total="queryCondition.total" show-total show-elevator-->
-            <!--:page-size="queryCondition.pageSize"></Page>-->
-            <!--</div>-->
         </Row>
     </div>
 </template>
-
 <script>
     import videoComponent from "../../../../components/Common/Video/VideoComponent.vue";
     import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
-    import TestSmViewer from "../../../../components/Common/3D/Test3DViewer";
+    import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
     import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
     import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
     import { TunnelService } from "../../../../services/tunnelService";
@@ -78,17 +90,23 @@
     import { MonitorDataService } from "../../../../services/monitorDataService";
     import { SuperMapSqlQuery } from "../../../../scripts/three.js";
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
+    import Carousel from "../../../../components/Common/Carousel.vue";
+    import checkSelect from "../../../../components/Common/CheckSelect.vue";
 
     export default {
         name: "detail-tunnel-safety",
         data() {
             return {
                 tabName: "",
-                videosList: [],
-                curVideo: {},
-                curVideoIndex: 0,
+                            storeProp: {
+                    itemLen: 12,
+                    dataList: [],
+                    selectObj: { selectId: "" }
+                },
+                curCarousel: {
+                    videolist: []
+                },
                 dataInterval: null,
-                videoInterval: null,
                 Obj: [],
                 scene: null,
                 queryCondition: {
@@ -101,11 +119,11 @@
                 curDataTypeList: [],
                 tunnelId: 0,
                 tunnels: [],
-                stores: [],
                 tunnelProps: [], //管廊统计数据
                 tunnelPropsMax: [], //监测数据对应最大值
                 areas: [], //管廊对应区段数据
-                curTunnelName: ""
+                curTunnelName: "",
+                curModule: 0
             };
         },
         watch: {
@@ -114,6 +132,14 @@
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
                 this.getObjDetialData();
+            },
+                        storeProp: {
+                handler: function(newVal, oldVal) {
+                    let _this = this;
+                    _this.queryCondition.storeId = newVal.selectObj.selectId;
+                    _this.changeStore();
+                },
+                deep: true
             }
         },
         beforeRouteLeave(to, from, next) {
@@ -142,44 +168,40 @@
             Modal,
             EnvironmentShow,
             TestSmViewer,
-            videoComponent
+            videoComponent,
+            Carousel,
+            checkSelect
         },
         mounted() {
             this.fentchData();
             this.changeDataType();
-            this.setGIS();
             this.intervalData();
         },
         methods: {
             changeTabs() {
                 var _this = this;
-                // if (_this.tabName == "tunnelVideo") {
-                //     _this.curVideo = _this.videosList[0];
-                // }
             },
 
             intervalData() {
-                console.log("start inteval");
                 let _this = this;
-                _this.dataInterval = setInterval(() => _this.getObjDetialData(), 10000);
-                _this.videoInterval = setInterval(() => _this.changeVideo(), 10000);
+                _this.dataInterval = setInterval(
+                    () => _this.getObjDetialData(),
+                    10000
+                );
             },
             //变更监测仓
             changeStore() {
                 //获取区段列表
                 let _this = this;
                 //获取位置信息
-                // let curView = _this.stores.filter(a => a.id == _this.queryCondition.storeId)[0].camera;
-                //  _this.changeArea(curView);
+                let curView = _this.storeProp.dataList.filter(
+                    a => a.id == _this.queryCondition.storeId
+                )[0].camera;
+                if (curView && curView != "") {
+                    _this.changeArea(curView);
+                }
                 _this.getObjDetialData();
                 _this.getvideos();
-            },
-            changeVideo() {
-                if (this.videosList.length == 0) return;
-                this.curVideo = this.videosList[this.curVideoIndex];
-                this.curVideoIndex >= this.videosList.length - 1
-                    ? (this.curVideoIndex = 0)
-                    : this.curVideoIndex++;
             },
             //变更区段
             changeAreaLocation() {
@@ -201,7 +223,8 @@
                         result.forEach(a => {
                             if (a.val == _this.queryCondition.monitorType) {
                                 _this.curDataTypeList = a.objectTypeList;
-                                _this.queryCondition.curDataType = _this.curDataTypeList[0].val;
+                                _this.queryCondition.curDataType =
+                                    _this.curDataTypeList[0].val;
                                 _this.getObjDetialData();
                             }
                         });
@@ -225,15 +248,18 @@
 
                 //获取监测仓列表
                 TunnelService.getStoresByTunnelId(_this.tunnelId).then(
-                    result => {
-                        _this.stores = [{ name: "全部", id: 0 }];
-                        result.forEach(a => {
-                            var temp = {};
-                            temp.name = a.name;
+              result => {
+                        _this.storeProp.dataList = [{ id: 0, name: "全部" }];
+                        result.forEach((a, index) => {
+                            let temp = {};
                             temp.id = a.id;
-                            _this.stores.push(temp);
+                            temp.name = a.name;
+                            _this.storeProp.dataList.push(temp);
                         });
-                        _this.queryCondition.storeId = _this.stores[0].id;
+                        _this.storeProp.selectObj.selectId =
+                            _this.storeProp.dataList[0].id;
+                        _this.queryCondition.storeId =
+                            _this.storeProp.selectObj.selectId;
                         _this.getObjDetialData();
                         _this.getvideos();
                     },
@@ -245,7 +271,12 @@
                 //获取区域列表
                 TunnelService.getTunnelArea(_this.tunnelId).then(result => {
                     if (result) {
-                        _this.areas = [{ name: "全部", id: 0 }];
+                        _this.areas = [
+                            {
+                                name: "全部",
+                                id: 0
+                            }
+                        ];
                         result.forEach(a => {
                             var temp = {};
                             temp.name = a.name;
@@ -262,37 +293,6 @@
                         _this.getvideos();
                     }
                 });
-            },
-            //根据监测类型获取数据
-            getMonitorData() {
-                let _this = this;
-                Promise.all([
-                    MonitorDataService.getMaxMonitorData(
-                        _this.tunnelId,
-                        _this.queryCondition.monitorType
-                    ),
-                    MonitorDataService.getMonitorData()
-                ]).then(
-                    result => {
-                        _this.tunnelProps = [];
-                        _this.tunnelPropsMax = [];
-                        _this.tunnelPropsMax = result[1];
-                        result[0].forEach(a => {
-                            let temp = {};
-                            temp.location = a.location;
-                            temp.key = a.key;
-                            temp.val = new Number(a.val.toFixed(2));
-                            temp.percent =
-                                (temp.val /
-                                    _this.tunnelPropsMax.filter(a => a.key == temp.key)[0].val) *
-                                100;
-                            _this.tunnelProps.push(temp);
-                        });
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                );
             },
             //变更模型视角
             changeArea(area) {
@@ -314,7 +314,7 @@
                 } catch (e) {}
             },
 
-            //切换开关量控制和设备是否点击
+            //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
                 if (datatypeId != 1) {
                     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
@@ -325,15 +325,19 @@
                             b.clickStatus = clickStatus;
                             this.Log.info("click " + b.id);
                             SuperMapSqlQuery(
-                                this,
-                                SuperMapConfig.BIM_DATA,
+                                this.SuperMapConfig.BIM_DATA,
                                 this.VMConfig.queryParam,
                                 "moid = " + b.id
                             )
                                 .then(res => {
                                     this.Log.info("查找成功", res);
                                     if (res.length > 0) {
-                                        this.$refs.smViewer1.LookAt1(res[0], 50, -10, 5);
+                                        this.$refs.smViewer.LookAt1(
+                                            res[0],
+                                            50,
+                                            -10,
+                                            5
+                                        );
                                     }
                                 })
                                 .then(res => {
@@ -348,7 +352,7 @@
             // //获取详情面板的数据
             getObjDetialData() {
                 if (this.areas.length == 0) return;
-                if (this.stores.length == 0) return;
+                if (this.storeProp.dataList.length == 0) return;
                 if (this.curDataTypeList.length == 0) return;
                 let _this = this;
                 var Params = {
@@ -358,7 +362,9 @@
                             ? null
                             : _this.queryCondition.storeId,
                     areaId:
-                        _this.queryCondition.areaId == 0 ? null : _this.queryCondition.areaId,
+                        _this.queryCondition.areaId == 0
+                            ? null
+                            : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -374,12 +380,14 @@
                             temp.datatypeId = a.datatypeId;
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
+                            temp.unit = a.unit;
                             if (a.datatypeId == 1) {
                                 temp.ObjVal = a.curValue.toFixed(2);
                             } else {
                                 temp.ObjVal = a.curValue;
                             }
-                            temp.objtypeName = _this.curTunnelName + a.area + a.store;
+                            temp.objtypeName =
+                                _this.curTunnelName + a.area + a.store;
                             _this.Obj.push(temp);
                         });
                     },
@@ -392,7 +400,7 @@
             //获取视频
             getvideos() {
                 if (this.areas.length == 0) return;
-                if (this.stores.length == 0) return;
+                if (this.storeProp.dataList.length == 0) return;
                 // if  (this.curDataTypeList.length == 0) return;
                 let _this = this;
                 var Params = {
@@ -402,54 +410,39 @@
                             ? null
                             : _this.queryCondition.storeId,
                     areaId:
-                        _this.queryCondition.areaId == 0 ? null : _this.queryCondition.areaId
+                        _this.queryCondition.areaId == 0
+                            ? null
+                            : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
-                        this.videosList = result;
+                        this.curCarousel.videolist = result;
                     }
                 });
             },
-
-            setGIS() {
-                var gis = document.getElementById("newID");
-                gis.style.display = "block";
-                gis.style.position = "absolute";
-                gis.style.top = "0px";
-                gis.style.height = "100%";
-                gis.style.width = "98%";
-                document.body.removeChild(gis);
-                document.getElementById("GISbox").appendChild(gis);
-                // 加载视角
-                this.$refs.smViewer1.setViewAngAngle();
-            },
-
-            destory3D() {
-                var gis = document.getElementById("newID");
-                gis.style.display = "none";
-                document.getElementById("GISbox").removeChild(gis);
-                document.body.appendChild(gis);
+            chooseModule(val) {
+                this.curModule = val;
             }
         },
         beforeDestroy() {
-            this.destory3D();
             clearInterval(this.dataInterval);
-            clearInterval(this.videoInterval);
             this.dataInterval = null;
-            this.videoInterval = null;
         }
     };
 </script>
+
 
 <style scoped>
     .ivu-radio-group-button >>> .ivu-radio-wrapper {
         transition: all 0.1s cubic-bezier(0.6, -0.28, 0.74, 0.05);
     }
+
     .select_radio {
         color: #fff;
         background-color: #869bcb;
         background-position: 0 -15px;
     }
+
     .ivu-radio-group-button >>> .ivu-radio-wrapper:hover {
         color: #fff;
         background-color: #3dbbcb;
@@ -459,25 +452,14 @@
 
     .map {
         width: 42vw;
-        height: calc(85vh - 200px);
+        height: calc(65vh);
         margin-left: 10px;
     }
 
     .data {
-        height: calc(85vh - 100px - 20px - 40px);
-    }
-
-    .top {
-        margin: 10px;
-        line-height: 50px;
-        background: #dfe5e5;
-        padding-left: 10px;
-    }
-
-    .bottom {
-        background: #fff;
-        margin-top: 10px;
-        padding: 10px;
+        height: calc(72vh);
+        font-size: 1.66vmin;
+        padding-bottom: 10px;
     }
 
     .ivu-modal-wrap > .ivu-modal {
@@ -557,5 +539,33 @@
         bottom: 0px;
         float: right;
     }
-</style>
+    .titles {
+        margin: 0 0 0.6vmin 1vmin;
+    }
 
+    .title {
+        display: inline-block;
+        margin-right: 1vmin;
+        cursor: pointer;
+        padding-bottom: 0.4vmin;
+    }
+
+    .icons {
+        margin-right: 0.4vmin;
+    }
+
+    .active {
+        color: rgb(45, 140, 240);
+        position: relative;
+    }
+
+    .active:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 0.2vmin;
+        background-color: rgb(45, 140, 240);
+    }
+</style>

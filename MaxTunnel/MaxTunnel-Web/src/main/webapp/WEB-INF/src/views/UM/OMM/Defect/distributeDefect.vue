@@ -54,12 +54,11 @@
             <FormItem label="备注：">
                 <Input v-model="defectDetails.remark" type="textarea" :rows="4" placeholder="请输入备注"></Input>
             </FormItem>
-            <FormItem style="text-align: center">
-                <Button type="primary" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
-                <Button type="ghost" style="margin-left: 8px">取消 </Button>
+            <FormItem style="text-align: center;margin-left: -100px;">
+                <Button type="ghost" @click="goBack()">返回</Button>
+                <Button type="primary" style="margin-left: 8px" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
             </FormItem>
-        </Form>  
-        <Icon class="goBack" type="chevron-left" size="30" @click="goBack()" title="返回" color="#fff"></Icon> 
+        </Form> 
     </div>
 </template>
 <script>
@@ -270,6 +269,33 @@ export default {
     bottom: 2vh;
     right: 3vw;
 }
+@media (min-width: 2200px){
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .formTitle{
+        font-size: 2.5vmin;
+    }
+    textarea.ivu-input{
+        height: 5.5vmin !important;
+        min-height: 5.5vmin !important;
+    }
+}   
 </style>
 
 

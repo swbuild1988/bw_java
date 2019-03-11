@@ -29,6 +29,7 @@ import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.SpringContextHolder;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 
 import sun.util.logging.resources.logging;
@@ -136,7 +137,10 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 	public List<MeasObjAI> getMeasObjAIListByIds(List<Integer> ids) {
 		List<MeasObjAI> results = new ArrayList<>();
 		for (Integer id : ids) {
-			results.add(measObjAIHashMap.get(id));
+			MeasObjAI measObjAI = measObjAIHashMap.get(id);
+			if(!StringTools.isNullOrEmpty(measObjAI)) {
+				results.add(measObjAI);
+			}
 		}
 		return results;
 	}
@@ -182,7 +186,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
 		// 根据storeid & areaid查找
 		Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-		measObj.setSectionId(section.getId());
+		if(section != null) measObj.setSectionId(section.getId());
+		else measObj.setSectionId(0);
 
 		// 塞进数据库
 		measObjMapper.insertSelective(measObj);
@@ -202,8 +207,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 		
 		//先更新数据库
 		Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-		if(section == null) return;
-		measObj.setSectionId(section.getId());
+		if(section != null) measObj.setSectionId(section.getId());
+		else measObj.setSectionId(0);
 		measObjMapper.updateByPrimaryKeySelective(measObj);
 		
 		//再更新缓存
@@ -460,13 +465,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
 	@Override
 	public void start() {
-		long beginTime = System.currentTimeMillis();
 		initData();
-		long endTime = System.currentTimeMillis();
-		LogUtil.info(	"*********************************\n"
-						+ "描述：加载监测对象数据到缓存\n"
-						+ "耗时：" + (endTime - beginTime) + "ms\n"
-						+ "*********************************" 	);
 	}
 
 	@Override
