@@ -434,9 +434,10 @@ public class SectionServiceImpl implements SectionService {
             double deltaX = (y2 - y1) / tmpDis * l;
             double deltaY = (x2 - x1) / tmpDis * l;
 
-            int y_dir = tunnel_dir == 0 ? 1 : -1;
-            out_sp = new Point2D(x1 + deltaX, y1 + deltaY * y_dir);
-            out_ep = new Point2D(x2 + deltaX, y2 + deltaY * y_dir);
+            int x_dir = tunnel_dir % 2 == 0 ? -1 : 1;
+            int y_dir = tunnel_dir / 2 % 2 == 0 ? -1 : 1;
+            out_sp = new Point2D(x1 + deltaX * x_dir, y1 + deltaY * y_dir);
+            out_ep = new Point2D(x2 + deltaX * x_dir, y2 + deltaY * y_dir);
         }
 
         // 将米勒投影的值变为经纬度
