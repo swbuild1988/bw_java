@@ -1,9 +1,19 @@
 <template>
     <div>
         <div style="margin: 1vh;">
-            <RadioGroup v-model="queryCondition.areaId" type="button" @on-change="updateArea" size="large">
-                <Radio v-for="(item) in areaList" :key="item.id" :label="item.id" style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-                    :class="{select_radio:queryCondition.areaId==item.id}">{{item.name}}</Radio>
+            <RadioGroup
+                v-model="queryCondition.areaId"
+                type="button"
+                @on-change="updateArea"
+                size="large"
+            >
+                <Radio
+                    v-for="(item) in areaList"
+                    :key="item.id"
+                    :label="item.id"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+                    :class="{select_radio:queryCondition.areaId==item.id}"
+                >{{item.name}}</Radio>
             </RadioGroup>
         </div>
         <div style="margin: 1vh;">
@@ -61,7 +71,7 @@
                                 </Col>
                             </div>
                         </Row>
-                    </div>
+                    </div>               
                 </div>
             </div>
             </Col>
@@ -143,6 +153,34 @@
                     name: ""
                 } //当前监测仓数据
             };
+        },
+        beforeRouteLeave(to, from, next) {
+            if (
+                to.name == "UMPatrolHomePage" ||
+                to.name == "设备管理主页" ||
+                to.name == "人员定位详情" ||
+                to.name == "虚拟巡检" ||
+                to.name == "管廊安防监控列表" ||
+                to.name == "管廊环境监控详情" ||
+                to.name == "管廊环境监控" ||
+                from.name == "管廊环境监控列表" ||
+                from.name == "UMPatrolHomePage" ||
+                from.name == "设备管理主页" ||
+                from.name == "人员定位详情" ||
+                from.name == "虚拟巡检" ||
+                from.name == "管廊安防监控列表" ||
+                from.nmae == "管廊环境监控详情"
+            ) {
+                from.meta.keepAlive = true;
+                to.meta.keepAlive = true;
+                this.$destroy();
+                next();
+            } else {
+                from.meta.keepAlive = false;
+                to.meta.keepAlive = false;
+                this.$destroy();
+                next();
+            }
         },
         mounted() {
             this.fentchData();
@@ -270,9 +308,11 @@
                 let parms = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                        null :
+                        _this.queryCondition.areaId
                 };
 
                 MonitorDataService.getMaxMonitorData(parms).then(result => {
@@ -299,7 +339,6 @@
         },
         watch: {
             $route: function () {
-                console.log("watch route change")
                 // $route发生变化时再次赋值
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
@@ -307,7 +346,6 @@
             },
             storeProp: {
                 handler: function (newVal, oldVal) {
-                    console.log("storeProp change", newVal, oldVal);
                     let _this = this;
                     _this.queryCondition.storeId = newVal.selectObj.selectId;
                     _this.changeStore();

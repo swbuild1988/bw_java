@@ -14,8 +14,10 @@
             <Row>
                 <Col span="20" offset="2">
                 <div class="safeRunText">
-                    <span>管廊安全运营</span>
-                    <span class="safe">{{runMessage.safe}}</span>天
+                    <span style="font-weight: bold">管廊安全运营</span>
+                    <span class="safe">{{runMessage.safe}}</span>
+                    <span style="font-weight: bold">天</span>
+
                 </div>
                 </Col>
                 <Col span="7" offset="1" :key="index" v-for="(item,index) in statusList">
@@ -113,7 +115,7 @@
                             let temp = [];
                             temp.name = tunnel.name;
                             temp.value =
-                                parseInt(tunnel.percent.replace("%", "")).toFixed(0) + "%";
+                                Math.round(tunnel.percent.replace("%", "")) + "%";
                             this.statusList.push(temp);
                         });
                     },
@@ -151,15 +153,17 @@
     .safe {
         font-family: UnidreamLED;
         font-size: 3.4vmin;
-        color: #2af0ff;
+        color: red;
         margin: 0 0.5vmin;
     }
 
     .safeRunText {
         color: #fff;
-        font-size: 1.66vmin;
+        font-size: 1.8vmin;
         line-height: 4vmin;
         margin-left: 1vw;
+        margin-top: -5%;
+        margin-bottom: 5%;
     }
 
     .statusText {

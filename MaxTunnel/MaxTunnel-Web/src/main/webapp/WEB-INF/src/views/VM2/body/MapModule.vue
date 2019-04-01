@@ -1,81 +1,81 @@
 <template>
     <div class="Main">
         <div class="mapTop">
-            <row type="flex" justify="center" align="bottom">
+            <row class="navigation_bar" type="flex" justify="center" align="bottom">
                 <Col span="1">
                 <Dropdown divided @click.native="homeSwitch">
                     <a>
-                        <img src="../../../assets/VM/home.png" height="100%" width="100%">
+                        <img class="To_home" src="../../../assets/VM/home.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="personnelPosition.isShow = !personnelPosition.isShow">
                     <a>
-                        <img src="../../../assets/VM/personnel.png" height="100%" width="100%">
+                        <img class="Personnel" src="../../../assets/VM/personnel.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="searchCamera.openSearch = !searchCamera.openSearch">
                     <a>
-                        <img src="../../../assets/VM/video.png" height="100%" width="100%">
+                        <img class="Camera_query" src="../../../assets/VM/video.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="show.ges = !show.ges">
                     <a>
-                        <img src="../../../assets/VM/genue.png" height="100%" width="100%">
+                        <img class="Gas" src="../../../assets/VM/genue.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="show.showNonCleanedCount = !show.showNonCleanedCount">
                     <a>
-                        <img src="../../../assets/VM/alarm.png" height="100%" width="100%">
+                        <img class="Alarm_number" src="../../../assets/VM/alarm.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="defectPosition.isShow = !defectPosition.isShow">
                     <a>
-                        <img src="../../../assets/VM/flaw.png" height="100%" width="100%">
+                        <img class="Flaw_query" src="../../../assets/VM/flaw.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="eventsPosition.openPosition = !eventsPosition.openPosition">
                     <a>
-                        <img src="../../../assets/VM/event.png" height="100%" width="100%">
+                        <img class="Events" src="../../../assets/VM/event.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="show.showPlan = !show.showPlan">
                     <a>
-                        <img src="../../../assets/VM/emergencies.png" height="100%" width="100%">
+                        <img class="Emergencies" src="../../../assets/VM/emergencies.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="unitsPosition.isShow = !unitsPosition.isShow">
                     <a>
-                        <img src="../../../assets/VM/address_book.png" height="100%" width="100%">
+                        <img class="Unit_query" src="../../../assets/VM/address_book.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="jumpUMLogin">
                     <a>
-                        <img src="../../../assets/VM/pageLinkage.png" height="100%" width="100%">
+                        <img class="Management" src="../../../assets/VM/pageLinkage.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
                 <Dropdown divided @click.native="show.showControlPanel = !show.showControlPanel">
                     <a>
-                        <img src="../../../assets/VM/controlPanel.png" height="100%" width="100%">
+                        <img class="Fly" src="../../../assets/VM/controlPanel.png" height="100%" width="100%">
                     </a>
                 </Dropdown>
                 </Col>
@@ -83,6 +83,11 @@
             <row justify="center" type="flex">
                 <img src="../../../assets/VM/footLine.png" height="8px" width="100%">
             </row>
+            <div class="tooltip">
+                <div v-for="item in divAttrList" :class="item.className" :style="{ opacity:item.show }">
+                    <span>{{ item.text }}</span>
+                </div>
+            </div>
         </div>
         <div class="test"></div>
         <!--<temperature class="maptemperature"></temperature>-->
@@ -127,12 +132,25 @@
                     showPlan: false,
                     showControlPanel: false
                 },
+                divAttrList:[
+                    {className:'To_home',text:'返回主页',show:0},
+                    {className:'Personnel',text:'人员定位',show:0},
+                    {className:'Camera_query',text:'相机查询',show:0},
+                    {className:'Gas',text:'气体检测',show:0},
+                    {className:'Alarm_number',text:'告警总数',show:0},
+                    {className:'Flaw_query',text:'缺陷查询',show:0},
+                    {className:'Events',text:'重大事件',show:0},
+                    {className:'Emergencies',text:'紧急事件',show:0},
+                    {className:'Unit_query',text:'单位查询',show:0},
+                    {className:'Management',text:'管理平台',show:0},
+                    {className:'Fly',text:'飞行功能',show:0},
+                ],
                 enterClass: "animated bounceInDown",
                 leaveClass: "animated zoomOut",
                 allVideos: [],
                 searchCamera: {
-                    openSearch: true,
-                    isShow: true
+                    openSearch: false,
+                    isShow: false
                 },
                 unitsPosition: {
                     openPosition: false,
@@ -144,7 +162,7 @@
                     refreshTime: 10000
                 },
                 defectPosition: {
-                    openPosition: false,
+                    openPosition: true,
                     isShow: false
                 },
                 eventsPosition: {
@@ -174,8 +192,9 @@
         methods: {
             init() {
                 let _this = this;
-                Vue.prototype.MQ.openMQ(this.MQCallback);
+                // Vue.prototype.MQ.openMQ(this.MQCallback);
                 _this.getVideos(); //调用视屏接口
+                _this.eventListener();
             },
             homeSwitch() {
                 let _this = this;
@@ -272,7 +291,20 @@
             },
             stopFly() {
                 this.$refs.smViewer.stopFly();
+            },
+            eventListener(){
+                let $navigation_bar = document.getElementsByClassName('navigation_bar')[0];
+
+                $navigation_bar.addEventListener('mousemove',e => {
+
+                    if(e.target.nodeName.toLowerCase() !== "img") return;
+
+                    this.divAttrList.forEach( item => item.className === e.target.className ? item.show = 1 : item.show = 0 )
+                });
+
+                $navigation_bar.addEventListener('mouseout',() => this.divAttrList.forEach( item => item.show = 0))
             }
+
         },
         beforeDestroy() {
             Vue.prototype.MQ.closeMQ();
@@ -299,6 +331,18 @@
         transform: translate(-55%);
     }
 
+    .tooltip {
+        display: grid;
+        grid-template-columns: repeat(11,1fr);
+        color: #fff;
+        text-align: center;
+        margin-left: 4%;
+        margin-right: 4%;
+    }
+    .tooltip > div {
+        transition: all 1s;
+    }
+
     .Main>>>.moveControlPanel {
         width: 21%;
     }
@@ -309,10 +353,13 @@
             font-size: 1rem;
             margin: 0.6rem 0 0 0;
         }
-
         .Main>>>.vm-btn {
             width: 31%;
             font-size: 0.7rem;
+        }
+        .tooltip {
+            grid-template-rows: 5%;
+            font-size: .7rem;
         }
     }
 
@@ -322,12 +369,15 @@
             font-size: 2rem;
             margin: 1.5rem 0 0 0;
         }
-
         .Main>>>.vm-btn {
             width: 35%;
             height: 70%;
             padding: 0.7rem 0 0 0;
             font-size: 1.5rem;
+        }
+        .tooltip {
+            grid-template-rows: 8%;
+            font-size: 1.3rem;
         }
     }
 </style>

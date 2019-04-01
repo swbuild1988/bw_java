@@ -34,6 +34,8 @@ public interface SectionService {
 
 	List<SectionDto> getAllSections();
 
+	List<SectionDto> getSectionsByTunnel(int tunnelId);
+
 	/**
 	 * @Description: 通过id查询dto
 	 * @param @param id
@@ -117,7 +119,9 @@ public interface SectionService {
 
 	List<Integer> getSectionIdsByStoreIds(List<Integer> storeIdList);
 
-	List<Section> getSectionsByStoreIds(List<Integer> storeIdList); 
+	List<Section> getSectionsByStoreIds(List<Integer> storeIdList);
+
+	boolean calSectionsStartPointAndEndPointByTunnel(int tunnelId);
 
 
 }

@@ -4,14 +4,8 @@
 
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
     <id column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
-    <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
-    <result column="JOB_GROUP" jdbcType="VARCHAR" property="jobGroup" />
-    <result column="JOB_STATUS" jdbcType="DECIMAL" property="jobStatus" />
-    <result column="job_class" jdbcType="VARCHAR" property="jobClass" />
-    <result column="job_method" jdbcType="VARCHAR" property="jobMethod" />
-    <result column="CRON_EXPRESSION" jdbcType="VARCHAR" property="cronExpression" />
-    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
   </resultMap>
+
   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.ScheduleJobDto">
     <id column="JOB_ID" jdbcType="DECIMAL" property="jobId" />
     <result column="JOB_NAME" jdbcType="VARCHAR" property="jobName" />
@@ -24,7 +18,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, job_class,job_method,CRON_EXPRESSION, DESCRIPTION
+    JOB_ID, JOB_NAME, job_group, JOB_STATUS,CRON_EXPRESSION, DESCRIPTION, job_type
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -72,6 +66,9 @@
       <if test="description != null">
         DESCRIPTION,
       </if>
+      <if test="jobType != null">
+        job_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="jobId != null">
@@ -98,6 +95,9 @@
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
       </if>
+      <if test="jobType != null">
+        #{jobType,jdbcType=DECIMAL},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.ScheduleJob">
@@ -123,6 +123,9 @@
       </if>
       <if test="description != null">
         DESCRIPTION = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType != null">
+        job_type = #{jobType,jdbcType=DECIMAL},
       </if>
     </set>
     where JOB_ID = #{jobId,jdbcType=DECIMAL}

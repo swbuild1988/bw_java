@@ -19,8 +19,6 @@ public interface StaffMapper {
 
     int updateByPrimaryKeySelective(Staff record);
 
-    int updateByPrimaryKey(Staff record);
-
 	/**
 	 * @Description: 根据id查询dto
 	 * @param @param id
@@ -58,4 +56,6 @@ public interface StaffMapper {
 	void deleteBatch(List<Integer> list);
 
 	List<Staff> getByName(String name);
+
+    int getMaxID();
 }

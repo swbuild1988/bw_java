@@ -28,6 +28,7 @@ import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.vo.StoreVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
@@ -41,7 +42,7 @@ import com.github.pagehelper.PageInfo;
  */
 @Controller
 @ResponseBody
-public class StoreController extends BaseController<Store> {
+public class StoreController {
 
 	@Autowired
 	private StoreService storeService;
@@ -59,55 +60,57 @@ public class StoreController extends BaseController<Store> {
 	 * @param  name 管舱名称
 	 * @param  tunnelId 管廊id
 	 * @param  storeTypeId 管舱类型id
-	 * @param  camera 相机视角（字符串）
+	 * @param  sn 
 	 * @return {"msg":"请求成功","code":"200","data":{}}  
 	 * @author shaosen
 	 * @date 2018年7月25日
 	 */
 	@RequestMapping(value="stores",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Store st) {
-		StoreVo v = new StoreVo();
-		v.setTunnelId(st.getTunnelId());
-		v.setStoreTypeId(st.getStoreTypeId());
-		if(storeService.getStoresByCondition(v).size() > 0) {
-			return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-		}
+//		StoreVo v = new StoreVo();
+//		v.setTunnelId(st.getTunnelId());
+//		v.setStoreTypeId(st.getStoreTypeId());
+//		if(storeService.getStoresByCondition(v).size() > 0) {
+//			return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+//		}
 		Store store = storeService.add(st);
 		
 		// 获取该store所属storeType对象
-		StoreType type = storeTypeService.getById(store.getStoreTypeId());
-		// 获取storeType的父storeType对象
-		StoreType type1 = storeTypeService.getBySN(type.getParent());
-		// 获取该store的父store对象
-		StoreVo vo = new StoreVo();
-		vo.setTunnelId(store.getTunnelId());
-		vo.setStoreTypeId(type1.getId());
-		List<StoreDto> list = storeService.getStoresByCondition(vo);
-		// 修改该store的parentId
-		if(list.size() > 0) {
-			store.setParentId(list.get(0).getId());
-			storeService.update(store);
-		}
+				StoreType type = storeTypeService.getById(store.getStoreTypeId());
+				// 获取storeType的父storeType对象
+				StoreType type1 = storeTypeService.getBySN(type.getParent());
+				// 获取该store的父store对象
+				StoreVo vo = new StoreVo();
+				vo.setTunnelId(store.getTunnelId());
+				vo.setStoreTypeId(type1.getId());
+				List<StoreDto> list = storeService.getStoresByCondition(vo);
+				// 修改该store的parentId
+				if(list.size() > 0) {
+					store.setParentId(list.get(0).getId());
+					storeService.update(store);
+				}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
+
+	
 
 	/** 批量添加管舱
 	 * @param  name 管舱名称
 	 * @param  tunnelId 管廊id
 	 * @param  storeTypeId 管舱类型id
-	 * @param  camera 相机视角（字符串）
+	 * @param sn
 	 * @return {"msg":"请求成功","code":"200","data":{}}
-	 * @author shaosenD
+	 * @author shaosen
 	 * @date 2018年7月25日
 	 */
 	@RequestMapping(value="stores/multi",method=RequestMethod.POST)
 	public JSONObject addMulti(@RequestBody List<Store> stores) {
 		int i = 0;
 		for (Store store : stores) {
-			StoreVo vo = new StoreVo();
-			vo.setTunnelId(store.getTunnelId());
-			vo.setStoreTypeId(store.getStoreTypeId());
-			if(storeService.getStoresByCondition(vo).size() > 0) continue;
+//			StoreVo vo = new StoreVo();
+//			vo.setTunnelId(store.getTunnelId());
+//			vo.setStoreTypeId(store.getStoreTypeId());
+//			if(storeService.getStoresByCondition(vo).size() > 0) continue;
 			storeService.add(store);
 			i++;
 		}
@@ -145,7 +148,7 @@ public class StoreController extends BaseController<Store> {
 	@RequestMapping(value="stores/ajax/{name}",method=RequestMethod.GET)
 	public JSONObject checkName(@PathVariable String name) {
 		Store store = storeService.getByName(name);
-		return success(store == null ? true : false);
+		return CommonUtil.success(store == null ? true : false);
 	}
 	
 	/**更新 
@@ -159,19 +162,7 @@ public class StoreController extends BaseController<Store> {
 		storeService.update(store);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
-	
-	/**删除 
-	 * @param id
-	 * @return   {"msg":"请求成功","code":"200","data":{}}  
-	 * @author shaosen
-	 * @Date 2018年9月19日
-	 */
-	@RequestMapping(value="stores/{id}",method=RequestMethod.DELETE)
-	public JSONObject delete(@PathVariable Integer id) {
-		storeService.delete(id);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}
-	
+		
 
 	/**
 	 * 批量删除

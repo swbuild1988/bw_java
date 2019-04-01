@@ -55,13 +55,13 @@ export default {
       },
       queryParam: {
         //数据集查询参数
-        dataSourceName: "tunnels191", //
+        dataSourceName: "datasources", // 默认值
         dataSetName: "安全设备"
       },
       detectionObj: {
-        analog: [1, 4], //模拟量
+        analog: [1,2,3,4,5,6,8,21,31,32,33,34,35,36,37], //模拟量
         sq: [], //开关量
-        sa: [41] //状态量
+        sa: [41,10,11,55,56,57,58,59] //状态量
       },
       unitType: [
         {

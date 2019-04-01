@@ -241,7 +241,7 @@ public class MathUtil {
     
     public static void main(String[] args) {
     	for (int i = 0; i < 100; i++) {
-    		int d = getRandomInt(1, 2);
+    		double d = getRandomDouble(11.00, 15.00,2);
         	System.out.println(d);
 		}
     	

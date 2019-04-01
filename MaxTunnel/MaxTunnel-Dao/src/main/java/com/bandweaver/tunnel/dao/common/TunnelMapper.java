@@ -23,8 +23,6 @@ public interface TunnelMapper {
 
 	List<TunnelDto> getDtoList();
 
-	void insert(Tunnel tunnel);
-
 	void insertSelective(Tunnel tunnel);
 
 	void deleteByPrimaryKey(Integer id);

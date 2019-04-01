@@ -1,5 +1,7 @@
 package com.bandweaver.tunnel.common.platform.util;
 
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,9 +22,9 @@ public class Sha256 {
 			messageDigest.update(str.getBytes("UTF-8"));
 			encodeStr = byte2Hex(messageDigest.digest());
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LogUtil.error(e.toString());
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			LogUtil.error(e.toString());
 		}
 		return encodeStr;
 	}

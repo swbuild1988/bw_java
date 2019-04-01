@@ -7,16 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bandweaver.tunnel.common.biz.constant.OutsideEnum;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.biz.vo.StaffVo;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
+import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.PinyinUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.common.platform.util.Sha256;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.common.StaffMapper;
 import com.bandweaver.tunnel.dao.common.UserMapper;
 import com.github.pagehelper.Constant;
@@ -47,27 +52,55 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
+	@Transactional
 	public void update(Staff staff) {
+		
+		//检查修改的登录账号是否被占用
+		String account = staff.getAccount();
+		User u = userMapper.getByName(account);
+		if(!StringTools.isNullOrEmpty(u)) {
+			if(u.getId().intValue() != staff.getId().intValue()) {
+				throw new BandWeaverException(StatusCodeEnum.E_20009);	
+			}
+		}
+		
 		staffMapper.updateByPrimaryKeySelective(staff);
+		
+		//同时修改账号表信息
+		User user = new User();
+		user.setId(staff.getId());
+		user.setName(staff.getAccount());
+		userMapper.updateByPrimaryKeySelective(user);
 	}
 
 	@Override
 	@Transactional
 	public void add(Staff staff) {
-		staff.setCrtTime(new Date());
-		staffMapper.insert(staff);
+
+		//判断是否为外来人员，如果是则不生成账号信息
+		if (staff.getOutside() != OutsideEnum.STAFF.getValue()) {
+			staffMapper.insert(staff);
+			return ;
+		}
+
+		//如果是内部员工则需要生成账号
 		
 		//员工表和账号表为一对一关系，他们的id也相同
 		String account = PinyinUtil.ToPinyin(staff.getName());//将员工姓名转换为拼音作为其登陆账号
-		//保证账号唯一，如果有姓名相同的员工，账号后加数字区分
+
+		//保证账号唯一，如果有姓名相同的员工，把账号+ID作为新员工账号
 		List<Staff> list = staffMapper.getByName(staff.getName());
-		LogUtil.info(list);
-		if(list != null && list.size() > 1) {
-			int suffix = list.size();
-			account = account + suffix;
+
+		if(list != null && list.size() > 0) {
+			int maxId = staffMapper.getMaxID();
+			account = account + ( maxId + 1 );
 		}
+
+		staff.setCrtTime(DateUtil.getCurrentDate());
+		staff.setAccount(account);
+		staffMapper.insert(staff);
 		
-		String initPassword = (String) PropertiesUtil.getValue(Constants.INIT_PASSWORD);
+		String initPassword = PropertiesUtil.getString(Constants.INIT_PASSWORD);
 		User user = new User();
 		user.setId(staff.getId());
 		user.setName(account);
@@ -97,7 +130,7 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	public PageInfo<StaffDto> dataGrid(StaffVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-		List<StaffDto> list = getDtoListByCondition(vo);
+		List<StaffDto> list = staffMapper.getDtoListByCondition(vo);
 		return new PageInfo<>(list);
 	}
 	

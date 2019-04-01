@@ -65,5 +65,5 @@ public interface AlarmService {
 
 	List<Alarm> getAllList();
 
-
+	List<AlarmDto> getListByStartTimeAndEndTime(Date startTime,Date endTime);
 }

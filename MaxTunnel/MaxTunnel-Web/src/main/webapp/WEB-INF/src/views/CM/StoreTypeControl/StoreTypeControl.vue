@@ -160,7 +160,6 @@ export default {
         showTable() {
             this.axios.post("/store-type/datagrid", this.params).then(res => {
                 let { code, data } = res.data;
-                console.log("storeTypes:", data);
                 if (code == 200) {
                     let allinfo = [];
                     for (let index in data.list) {

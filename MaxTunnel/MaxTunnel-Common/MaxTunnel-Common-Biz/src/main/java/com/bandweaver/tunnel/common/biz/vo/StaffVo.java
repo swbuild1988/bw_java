@@ -3,76 +3,114 @@ package com.bandweaver.tunnel.common.biz.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class StaffVo extends BaseVo implements Serializable{
-    /**
-	 * 
-	 */
+public class StaffVo extends BaseVo {
+
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 
-    private String name;
+	private String name;
+	private String account;
+	private String sex;
+	private String telphone;
+	private Date hireDate;
 
-    private Integer deptId;
+	private Integer deptId;
 
-    private Integer positionId;
+	private Integer positionId;
 
-    private Date crtTime;
-    
-    
+	private Date crtTime;
 
-    public StaffVo() {
-		super();
-		// TODO Auto-generated constructor stub
+	private String identityNO;
+
+	private Integer outside;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public StaffVo(Integer id, String name, Integer deptId, Integer positionId, Integer accountId, Date crtTime) {
-		super();
+	public void setId(Integer id) {
 		this.id = id;
-		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
+
+	public Integer getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Integer deptId) {
 		this.deptId = deptId;
+	}
+
+	public Integer getPositionId() {
+		return positionId;
+	}
+
+	public void setPositionId(Integer positionId) {
 		this.positionId = positionId;
+	}
+
+	public Date getCrtTime() {
+		return crtTime;
+	}
+
+	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
 	}
 
-	public Integer getId() {
-        return id;
-    }
+	public String getAccount() {
+		return account;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getSex() {
+		return sex;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 
-    public Integer getDeptId() {
-        return deptId;
-    }
+	public String getTelphone() {
+		return telphone;
+	}
 
-    public void setDeptId(Integer deptId) {
-        this.deptId = deptId;
-    }
+	public void setTelphone(String telphone) {
+		this.telphone = telphone;
+	}
 
-    public Integer getPositionId() {
-        return positionId;
-    }
+	public Date getHireDate() {
+		return hireDate;
+	}
 
-    public void setPositionId(Integer positionId) {
-        this.positionId = positionId;
-    }
+	public void setHireDate(Date hireDate) {
+		this.hireDate = hireDate;
+	}
 
-    public Date getCrtTime() {
-        return crtTime;
-    }
+	public String getIdentityNO() {
+		return identityNO;
+	}
 
-    public void setCrtTime(Date crtTime) {
-        this.crtTime = crtTime;
-    }
-    
+	public void setIdentityNO(String identityNO) {
+		this.identityNO = identityNO;
+	}
+
+	public Integer getOutside() {
+		return outside;
+	}
+
+	public void setOutside(Integer outside) {
+		this.outside = outside;
+	}
+
 }

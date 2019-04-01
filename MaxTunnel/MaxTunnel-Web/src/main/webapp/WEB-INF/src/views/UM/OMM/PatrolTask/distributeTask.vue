@@ -55,21 +55,28 @@ export default {
     mounted(){
         this.distributeTask.id =  this.$route.params.id;
         let _this = this
-        PatrolService.getStaffs().then(
-            (result)=>{
-                _this.liable = result
-            },
-            (error)=>{
-                _this.Log.info(error)
-            })
+        this.getStaff()
         // this.axios.get('/staffs').then(response=>{
-        //     let{ code,data } = response.data
+            //     let{ code,data } = response.data
         //     if(code==200){
-        //         this.liable = data
+            //         this.liable = data
         //     }
         // })
     },
     methods:{
+        getStaff(){
+            var params = {
+                    outside: 1
+                }
+            PatrolService.getStaffs().then(
+                (result)=>{
+                    _this.liable = result
+                },
+                (error)=>{
+                    _this.Log.info(error)
+                }
+            )
+        },
         submitTask(){
             let _this = this
             PatrolService.distributeTask().then(

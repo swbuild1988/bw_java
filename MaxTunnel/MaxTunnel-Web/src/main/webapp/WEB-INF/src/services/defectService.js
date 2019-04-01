@@ -70,9 +70,9 @@ var DefectService = {
 		})
 	},
 	// 获取员工列表
-	getStaffs: function() {
+	getStaffs: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.get('/staffs').then(res => {
+			axios.post('/staffs/conditions',params).then(res => {
 				let {
 					code,
 					data,
@@ -81,7 +81,7 @@ var DefectService = {
 				if (code == 200) {
 					resolve(data)
 				} else {
-					reject(msg + '地址：/staffs')
+					reject(msg + '地址：/staffs/conditions')
 				}
 			})
 		})

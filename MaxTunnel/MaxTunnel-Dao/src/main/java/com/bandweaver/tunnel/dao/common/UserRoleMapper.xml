@@ -83,5 +83,11 @@
   <delete id="deleteByUserId">
   	delete from T_SECURITY_USER_ROLE where u_id = #{userId}
   </delete>
-  
+
+  <delete id="deleteByRIds">
+    delete from T_SECURITY_USER_ROLE WHERE r_id in
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 </mapper>

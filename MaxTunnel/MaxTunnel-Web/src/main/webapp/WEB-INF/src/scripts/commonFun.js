@@ -167,7 +167,7 @@ export const changStrLength = function (num, strLength) {
 export function setViewAngle() {
     let args = [].slice.call(arguments); //类数组转换成数组
     let [scene, camera] = args; //解析数组内容
-    
+
     //设置相机位置、视角
     if (Cesium.defined(scene)) {
         scene.camera.setView({
@@ -225,7 +225,7 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
         let selectedFeatures = queryEventArgs.originResult.features,
             IM = Vue.prototype.IM,
             entiyParam = null;
-        console.log('selectedFeatures', selectedFeatures);
+
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures, messageTypes, 'ID');
 
         for (var i = 0; i < selectedFeatures.length; i++) {
@@ -364,6 +364,7 @@ export function getEntitySet(setParam) {
                     }
 
                     if (sqlQueryBIMId.length != 0) {
+
                         doSqlQuery.call(_this, setParam.viewer, 'MOID in ("' + sqlQueryBIMId.toString() + '")', setParam.dataUrl, setParam.onQueryComplete, setParam.processFailed, setParam.typeMode, setParam.messageType, setParam.show)
                     }
 
@@ -390,7 +391,7 @@ export function switchShowEntity(swtichParam) {
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj, "MOID") :
             IM._getEntityMoId(currObj, swtichParam.messageType);
         let entities = _this.viewer.entities._entities._array.filter(entitie => entitie._moId == moId);
-        console.log('entities', entities)
+
         if (entities) {
 
             entities.forEach(entitie => {
@@ -408,8 +409,6 @@ export function doSqlQuery() {
     if (typeof onQueryComplete != 'function' || typeof processFailed != 'function') {
         return
     }
-
-    console.log('SQL', SQL)
 
     let _this = this,
         queryParam = _this.VMConfig.queryParam,
@@ -599,6 +598,7 @@ export function computeIntersections(coord, startLocation, endLocation) {
  * 添加label实体
  */
 export function addLabel() {
+
     let args = [].slice.call(arguments); //类数组转换成数组
     let [scene, viewer, wait, sqlQuery, dataUrl, onQueryComplete, processFailed, callback] = args; //解析数组内容
     let _this = this;
@@ -620,7 +620,7 @@ export function addLabel() {
 
                     result.moInfo.forEach(label => {
                         labels.push(label);
-                        lablesID.push(label.id)
+                        lablesID.push( changStrLength(label.id,10) );
                     });
 
                     sqlQuery.call(_this, viewer, 'MOID in (' + lablesID.toString() + ')', dataUrl, onQueryComplete, processFailed, result.sectionInfo.startPoint, result.sectionInfo.endPoint, labels)
@@ -730,6 +730,7 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
             image = null,
             detectionObj = _this.VMConfig.detectionObj;
 
+
         for (let i = 0; i < selectedFeatures.length; i++) {
 
             let [currLabel] = labels.filter(label => label.id == _getFieldValues(selectedFeatures[i], 'MOID')); //获取当前的label
@@ -784,6 +785,11 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
         }
     }
 
+}
+export function replaceStr(string) {
+    if( typeof string !== 'string') return;
+
+    return string.replace(/(,)/g,'"$1"');
 }
 /**
  * 得到数据集中的值

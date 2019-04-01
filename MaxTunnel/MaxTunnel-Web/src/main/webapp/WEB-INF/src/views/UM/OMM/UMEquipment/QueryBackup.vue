@@ -23,7 +23,7 @@
                 备品状态：
                 <Select style="width: 60%" v-model="conditions.isInStorage">
                     <!-- <Option v-for="item in status" :key="item.id" :value="item.isInStorage">{{item.name}}</Option> -->
-                    <Option v-for="item in status" :key="item.id" :value="item.key">{{item.val}}</Option>
+                    <Option v-for="item in status" :key="item.key" :value="item.key">{{item.val}}</Option>
                 </Select>
             </Col>
             <Col span="6">
@@ -42,11 +42,9 @@
             <div style="text-align: right">
                 <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
                 批量入库</Button>
-                <Button type="error" icon="reply" @click="outStroage">批量出库
-                </Button>
             </div>
             <Row :gutter="8">
-                <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 6px;padding: 5px;">
+                <Col span="6" v-for="item in equipments" :key="item.id" style="margin-top: 6px;padding: 5px;">
                     <div :style="backImage" class="backGoundBox">
                         <div class="topBox">
                             <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
@@ -72,10 +70,6 @@
                                     <Button class="borrowBtn" @click="show(item.id)" :disabled="item.status==false">取用出库</Button>
                                 </div>
                             </Col>
-                            <!-- <Col span="8" class="operationEdit">
-                                <Icon type="edit" size=19></Icon>
-                                <p @click="edit(index)">编辑</p>
-                            </Col> -->
                             <Col span="12" class="operationDel">
                                 <Icon type="trash-a" size=20></Icon>
                                 <div class="borrowBox">
@@ -91,116 +85,33 @@
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
             :style='pageStyle'></Page>
         <Modal
-            title="批量出库"
-            v-model="isOutStorage"
-            :width="modalWidth"
-        >
-            <Row class="queryCondition">
-                <Col span="8">
-                    备品名称：
-                    <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
-                </Col>
-                <Col span="8">
-                    备品类别：
-                    <Select v-model="outStorageConditions.typeId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    备品型号：
-                    <Select v-model="outStorageConditions.modelId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    开始时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8">
-                    结束时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8" style="text-align: right;padding-right: 43px;">
-                    <Button type="primary" @click="showInStorage()" size="small" icon="ios-search">查询</Button>
-                </Col>
-            </Row>
-            <Table stripe border height="330" ref="selection" :columns="outStorageColums"  :data="outStorageData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
-
-            <Page :total="OutStoragePage.pageTotal" :current="OutStoragePage.pageNum" :page-size="OutStoragePage.pageSize" show-total show-sizer
-              placement="top" @on-change="handlePageStorage" @on-page-size-change='handPageSizeStorage' show-elevator style="margin-top: 10px;text-align: right"></Page>
-
-            <Row style="margin-top: 20px;">
-                <Form ref="outStorageSubmitData" :model="outStorageSubmitData" :rules="ruleInline" inline>
-                    <Col span="12">
-                        <FormItem prop="staffId" style="width: 100%" class="borrower" label="取用人：" width="120">
-                            <Select style="width: 60%;" v-model="outStorageSubmitData.staffId">
-                                <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem prop="outTime" class="outTime" style="width: 100%" label="取用时间：">
-                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="outStorageSubmitData.outTime"></DatePicker>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem style="width: 100%" prop="whither" label="备品去向：">
-                            <Select style="width: 60%" v-model="outStorageSubmitData.whither">
-                                <Option v-for="item in whitheres" :key="item.val" :value="item.val">{{item.key}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem label="所属管廊：" style="width: 100%" prop="tunnelId" v-show="outStorageSubmitData.whither==1">
-                            <Select v-model="outStorageSubmitData.tunnelId" style="width: 60%;">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12" v-show="outStorageSubmitData.whither!=1">
-                        <FormItem style="width: 100%" label="备注：">
-                            <Input type="textarea" style="width: 60%;" v-model="outStorageSubmitData.describe"></Input>
-                        </FormItem>
-                    </Col>
-                    <Col span="24" v-show="outStorageSubmitData.whither==1">
-                        <FormItem style="width: 100%" label="备注：">
-                            <Input type="textarea" style="width: 80%;" v-model="outStorageSubmitData.describe"></Input>
-                        </FormItem>
-                    </Col>
-                </Form>
-            </Row>
-
-            <div slot="footer">
-                <Button type="text" size="large" @click="cancelBatchOut('outStorageSubmitData')">取消</Button>
-                <Button type="primary" size="large" @click="BatchOut('outStorageSubmitData')" :disabled="isOutStorageSubmit">确定</Button>
-            </div>
-
-        </Modal>
-        <Modal
             title="取用出库信息登记"
             v-model="isBorrow"
-            :width="modalWidth"
+            width="44vw"
         >
             <Form ref="borrow" :model="borrow" :rules="borrowValidateRules" :label-width="120" @submit.native.prevent>
                 <FormItem label="取用人：" prop="borrower">
                     <Select v-model="borrow.borrower">
-                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                        <Option v-for="(item,index) in staffs" :key="index" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="取用时间：" prop="outTime">
                     <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 100%" v-model="borrow.outTime"></DatePicker>
                 </FormItem>
-                <FormItem label="备品去向：" prop="whither">
-                    <Select v-model="borrow.whither">
-                        <Option v-for="item in whitheres" :key="item.val" :value="item.val">{{item.key}}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="所属管廊：" prop="tunnelId" v-show="borrow.whither==1">
+                <FormItem label="所属管廊：" prop="tunnelId">
                     <Select v-model="borrow.tunnelId">
                         <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
+                </FormItem>
+                <FormItem label="关联监测对象：" prop="objId">
+                    <Select v-model="borrow.objId"  @on-change="getObj()">
+                        <Option v-for="(item,index) in objs" :value="item.id" :key="index">{{ item.id }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="对象类型：" v-show="borrow.objId">
+                    <div v-for="item in objTypes" :key="item.objtypeId">
+                        <Input :value="item.objtypeName" readonly></Input>
+                    </div>
                 </FormItem>
                 <FormItem label="取用目的：">
                     <Input type="textarea" v-model="borrow.borrowPurpose" style="width: 100%"></Input>
@@ -240,60 +151,6 @@ export default {
                 { key: 0, val: '出库' },
                 { key: 1, val: '在库' }
             ],
-            isOutStorage: false,
-            outStorageColums: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },{
-                    type: 'index',
-                    width: 60,
-                    align: 'center'
-                },{
-                    title: '备品名称',
-                    key: 'name',
-                    align: 'center'
-                },{
-                    title: '备品类别',
-                    key: 'typeName',
-                    align: 'center'
-                },{
-                    title: '备品型号',
-                    key: 'modelName',
-                    align: 'center'
-                },{
-                    title: '入库时间',
-                    key: 'inTime',
-                    align: 'center'
-                }
-            ],
-            outStorageData:[
-                { id: 1, backUpName: '温度计1', backUpType: '安全防范类', backUpModel: '温度计', inTime: '2018-11-27 12:30:52',}
-            ],
-            outStorageConditions:{
-                name: null,
-                typeId: null,
-                modelId: null,
-                startTime: null,
-                endTime: null,
-                //批量出库查询是否在库，否
-                status: 1,
-            },
-            OutStoragePage:{
-                pageNum: 1,
-                pageSize: 6,
-                pageTotal: 0
-            },
-            outStorageSubmitData:{
-                ids: null,
-                staffId: null,
-                userId: null,
-                outTime: null,
-                describe: null,
-                whither: null,
-                tunnelId: 0
-            },
             showOn: true,
             equipments: [],
             tunnels: [],
@@ -314,7 +171,7 @@ export default {
             borrow:{
                 borrower: null,
                 outTime: null,
-                whither: null,
+                objId: null,
                 tunnelId: 0,
                 borrowPurpose: null
             },
@@ -327,32 +184,18 @@ export default {
                 outTime: [
                     { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'}
                 ],
-                whither: [
-                    { type: 'number', required: true, message: '请选择备品去向', trigger: 'change' }
+                objId: [
+                    { type: 'number', required: true, message: '请选择关联监测对象', trigger: 'change' }
                 ],
                 tunnelId: [
                     { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
                 ]
             },
-            ruleInline:{
-                staffId:[
-                    { type: 'number', required: true, message: '请选择借用人', trigger: 'change' }
-                ],
-                outTime: [
-                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'}
-                ],
-                whither: [
-                    { type: 'number', required: true, message: '请选择备品去向', trigger: 'change' }
-                ],
-                tunnelId: [
-                    { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
-                ]
-            },
-            isOutStorageSubmit: false,
             isDisabled: false,
             isColor: '#000',
-            whitheres: [],
-            modalWidth: null
+            objs: [],
+            objTypes: [],
+            userId: null
         };
     },
     watch: {
@@ -393,27 +236,16 @@ export default {
             };
             return Object.assign({},param)
         },
-        outStorageSubmitParams(){
-            let param = {
-                ids: this.outStorageSubmitData.ids,
-                staffId: this.outStorageSubmitData.staffId,
-                userId: this.outStorageSubmitData.userId,
-                outTime: this.outStorageSubmitData.outTime,
-                describe: this.outStorageSubmitData.describe,
-                whither: this.outStorageSubmitData.whither,
-                tunnelId: this.outStorageSubmitData.tunnelId
-            }
-            return Object.assign({},param)
-        },
         aloneOutStorageParams(){
             let param = {
                 ids: this.aloneBorrowId,
                 staffId: this.borrow.borrower,
                 outTime: this.borrow.outTime,
-                whither: this.borrow.whither,
+                // whither: this.borrow.whither,
+                // objId: this.borrow.objId,
                 tunnelId: this.borrow.tunnelId,
-                borrowPurpose: this.borrow.borrowPurpose,
-                userId: this.outStorageSubmitData.userId
+                describe: this.borrow.borrowPurpose,
+                userId: this.userId
             }
             return Object.assign({},param)
         }
@@ -459,16 +291,8 @@ export default {
         ),
         this.getSessionUserName()
         this.showTable()
-        //获取备品去向
-        EquipmentService.getWhither().then(
-            result => {
-                this.whitheres = result
-            },
-            error => {
-                this.Log.info(error)
-            }
-        )
-        this.getModalWidth()
+        this.getObj()
+        this.getObjType()
     },
     methods: {
         // type 1:查看， 2：编辑
@@ -496,13 +320,9 @@ export default {
                             result.list[index].imgUrl = _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
                         }
                         if(result.list[index].status == false){
-                            // result.list[index].status = '出库'
                             this.isDisabled = true
-                            // this.isColor = 'red'
                         }else{
-                            // result.list[index].status = '在库'
                             this.isDisabled = false;
-                            // this.isColor = 'green'
                         }
                     }
                     _this.equipments = result.list;
@@ -536,10 +356,6 @@ export default {
                 }
             )
         },
-        outStroage() {
-            this.showInStorage()
-            this.isOutStorage = true
-        },
         handlePageStorage(value){
             this.OutStoragePage.pageNum = value;
             this.showInStorage()
@@ -568,20 +384,8 @@ export default {
                 }
             });
         },
-        //全选全不选
-        // handleSelectAll (status) {
-        //     this.$refs.selection.selectAll(status);
-        // },
         add(path) {
             this.$router.push(path);
-        },
-        checkTable(selection){
-            this.selection = selection;
-            var str = ''
-            this.selection.forEach(element=>{
-                str += element.id+","
-            })
-            this.outStorageSubmitData.ids = str.substr(0,str.length-1)
         },
         show(id){
             this.isBorrow = !this.isBorrow
@@ -595,7 +399,7 @@ export default {
             this.isBorrow = true
             this.$refs[name].validate((valid) => {
                 if(valid){
-                    EquipmentService.batchOutBound(this.aloneBorrowId,this.borrow.tunnelId,this.aloneOutStorageParams).then(
+                    EquipmentService.batchOutBound(this.aloneBorrowId,this.borrow.tunnelId,this.borrow.objId,this.aloneOutStorageParams).then(
                         result => {
                             this.isBorrow = false
                             this.showTable()
@@ -607,48 +411,43 @@ export default {
                         }
                     )
                 }else{
-                    // this.isBorrow = true
-                    this.$Message.error("请填写取用人姓名")
+                    this.$Message.error("请填写取用信息")
                 }
             })
         },
         //读取cookie
         getSessionUserName:function () {
-            if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
-                this.outStorageSubmitData.userId =  parseInt(sessionStorage.UMUerId)
+            if(sessionStorage.UMUerId!=null||sessionStorage.UMUerId!=undefined||sessionStorage.UMUerId!=''){
+                this.userId =  parseInt(sessionStorage.UMUerId)
             }
         },
-        BatchOut(name){
-            this.isOutStorageSubmit = true;
-            setTimeout(()=>{
-                this.isOutStorageSubmit = false;
-                this.$refs[name].validate((valid)=>{
-                    if(valid){
-                        if(this.outStorageSubmitData.ids!=null){
-                            EquipmentService.batchOutBound(this.outStorageSubmitData.ids,this.outStorageSubmitData.tunnelId,this.outStorageSubmitParams).then(
-                                result=>{
-                                    this.isOutStorage = false
-                                    this.showTable()
-                                    this.$refs[name].resetFields()
-                                    this.outStorageSubmitData.describe = null
-                                },
-                                error=>{
-                                    this.Log.info(error)
-                                }
-                            )
-                        }
-                    }else{
-                        this.$Message.error("请填写正确的批量出库信息")
-                    }
-                })
-            },2000)
+        //关联监测对象
+        getObj() {
+            EquipmentService.getObj().then(
+                res=> {
+                    this.objs = res
+                    this.getObjType();
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
         },
-        cancelBatchOut(name){
-            this.$refs[name].resetFields()
-            this.isOutStorage = false
-        },
-        getModalWidth(){
-            this.modalWidth = document.body.offsetWidth *0.5
+        // 对象类型
+        getObjType() {
+            var info = {
+                id: this.borrow.objId,
+                pageSize: 10,
+                pageNum: 1
+            };
+            EquipmentService.getObjType(info).then(
+                res => {
+                    this.objTypes = res;
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
         }
     },
 };

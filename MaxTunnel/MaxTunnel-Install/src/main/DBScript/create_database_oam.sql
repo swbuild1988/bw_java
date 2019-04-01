@@ -160,12 +160,64 @@ begin
       select count(1) into num from user_tables where TABLE_NAME = 'T_OAM_CONSUME_DATA';
       if   num=1   then 
           execute immediate 'drop table T_OAM_CONSUME_DATA'; 
-      end   if; 
+      end   if;
+
+-- prompt dropping sequence
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OAM_REQ_RECORD_SQ';
+      if num > 0 then
+         execute immediate 'DROP SEQUENCE OAM_REQ_RECORD_SQ';
+      end if;
+-- prompt dropping trigger
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OAM_REQ_RECORD_TG';
+      if num > 0 then
+         execute immediate 'DROP TRIGGER OAM_REQ_RECORD_TG';
+      end if;
+-- prompt dropping table
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OAM_REQ_RECORD';
+      if num > 0 then
+         execute immediate 'DROP TABLE T_OAM_REQ_RECORD';
+      end if;
 end;
 /
 -----------------------------------------------------------
 ---------------------TABLE---------------------------------
 -----------------------------------------------------------
+
+-- 入廊记录表
+create table T_OAM_REQ_RECORD
+(
+  ID         NUMBER NOT NULL,
+  STAFF_ID  NUMBER NOT NULL,
+  EQUIPMENT_ID   NUMBER NOT NULL,
+  TIME          DATE,
+  LONGITUDE         VARCHAR2(50),
+  LATITUDE          VARCHAR2(50),
+  HEIGHT    VARCHAR2(50)
+);
+alter table T_OAM_REQ_RECORD add constraint OAM_REQ_RECORD_ID primary key(ID);
+
+-- create OAM_REQ_RECORD_SQ
+create sequence OAM_REQ_RECORD_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OAM_REQ_RECORD_TG
+CREATE OR REPLACE TRIGGER OAM_REQ_RECORD_TG
+  BEFORE INSERT ON T_OAM_REQ_RECORD
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OAM_REQ_RECORD_SQ.nextval into :new.id from dual;
+end OAM_REQ_RECORD_TG;
+/
+alter trigger OAM_REQ_RECORD_TG enable;
+
 
 -- 能耗表
 create table T_OAM_CONSUME

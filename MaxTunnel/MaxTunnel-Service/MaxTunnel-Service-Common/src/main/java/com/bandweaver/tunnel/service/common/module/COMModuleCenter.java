@@ -16,23 +16,14 @@ public class COMModuleCenter implements ModuleCenterInterface {
 	
 	@Override
 	public void start() {
-		long beginTime = System.currentTimeMillis();
-		
+
 		try {
 			scheduleJobService.init();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.error(e.toString());
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LogUtil.error(e.toString());
 		}
-		long endTime = System.currentTimeMillis();
-		LogUtil.info(	"*********************************\n"
-						+ "描述：加载所有定时任务\n"
-						+ "耗时：" + (endTime - beginTime) + "ms\n"
-						+ "*********************************");
-		
 	}
 
 	@Override

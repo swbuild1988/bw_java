@@ -26,7 +26,7 @@
       <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
     </FormItem>
     <FormItem label="访客详细信息：">
-      <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
+      <Table border :columns="columns1" :data="addEnterGalleryApplication.list"></Table>
     </FormItem>
     <FormItem label="备注：" v-show="this.$route.params.isFinished!=false">
       <Input type="textarea" v-model="addEnterGalleryApplication.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
@@ -73,7 +73,6 @@
             name: null
           },
           positionId: null,
-          visitorInfo:[] ,
           remark: '',
           processInstanceId: null
         },
@@ -85,13 +84,12 @@
           },
           {
             title: '身份证号',
-            width: 200,
-            key: 'idCard',
+            key: 'identityNO',
             align: 'center'
           },
           {
             title: '联系方式',
-            key: 'tel',
+            key: 'telphone',
             align: 'center'
           }
         ],
@@ -99,27 +97,10 @@
     },
     mounted(){
       //管理员审批-入廊
-      console.log("this.$route.params",this.$route.params)
-      // axios.get('/users/activiti/task/detail/'+this.$route.params.processInstanceId).then(response=>{
         axios.get("/req-historys/" + this.$route.params.id).then(response => {
           let{ code,data } = response.data
             if(code=200){
                 this.addEnterGalleryApplication  = data
-                var arr = new Array()
-                for(let index in response.data.data.visitorInfo.split(',')){
-                    var str = response.data.data.visitorInfo.split(',')[index]
-                    arr.push(str)
-                }
-                var arr2 = new Array()
-                for(let k in arr){
-                  var obj = {
-                    name: arr[k].split('-')[0],
-                    idCard: arr[k].split('-')[1],
-                    tel: arr[k].split("-")[2]
-                  }
-                  arr2.push(obj)
-                }
-                this.addEnterGalleryApplication.visitorInfo = arr2
                 this.addEnterGalleryApplication.preTime = new Date(this.addEnterGalleryApplication.preTime).format('yyyy-MM-dd hh:mm:s')
                 this.addEnterGalleryApplication.enterTime = new Date(this.addEnterGalleryApplication.enterTime).format('yyyy-MM-dd hh:mm:s') 
             }

@@ -19,4 +19,6 @@ public interface MaintenanceOrderMapper {
     List<MaintenanceOrderDto> getMaintenanceOrderDtosByTunnel(@Param("tunnelId") Integer tunnelId);
 
     List<MaintenanceOrderDto> getMaintenanceOrderDtosByCondition(MaintenanceOrderVo vo);
+    
+    int getCountByCondition(MaintenanceOrderVo vo);
 }

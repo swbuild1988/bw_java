@@ -29,78 +29,65 @@
       </Col>
     </Row>
     <Row type="flex" align="middle" class="code-row-bg" style="marginLeft:25px;marginBottom:10px;">
-      <Col span="6">
-        <span>开始时间：</span>
-        <DatePicker
-          type="datetime"
-          placeholder="请选择开始时间"
-          class="inputWidth"
-          v-model="researchInfo.startTime"
-        ></DatePicker>
-      </Col>
-      <Col span="6">
-        <span>结束时间：</span>
-        <DatePicker
-          type="datetime"
-          placeholder="请选择结束时间"
-          class="inputWidth"
-          v-model="researchInfo.endTime"
-        ></DatePicker>
-      </Col>
-      <Col span="10">
-        <Button type="primary" size="small" icon="ios-search" @click="research()">查询</Button>
-        <Button type="error" size="small" @click="addNewStore()">新增管仓</Button>
-        <Button type="info" size="small" @click="addMultiStores()">批量新增管仓</Button>
-        <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button>
-        <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
-      </Col>
+        <Col span="6">
+            <span>开始时间：</span>
+            <DatePicker
+            type="datetime"
+            placeholder="请选择开始时间"
+            class="inputWidth"
+            v-model="researchInfo.startTime"
+            ></DatePicker>
+        </Col>
+        <Col span="6">
+            <span>结束时间：</span>
+            <DatePicker
+            type="datetime"
+            placeholder="请选择结束时间"
+            class="inputWidth"
+            v-model="researchInfo.endTime"
+            ></DatePicker>
+        </Col>
+        <Col span="10">
+            <Button type="primary" size="small" icon="ios-search" @click="research()">查询</Button>
+            <Button type="error" size="small" @click="addNewStore()">新增管仓</Button>
+            <Button type="info" size="small" @click="addMultiStores()">批量新增管仓</Button>
+            <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button>
+            <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
+        </Col>
     </Row>
     <div>
-      <Table
-        border
-        ref="selection"
-        :columns="columns7"
-        :data="data6"
-        @on-selection-change="startdelete"
-      ></Table>
-      <Page
-        :total="page.pageTotal"
-        :current="page.pageNum"
-        show-total
-        placement="top"
-        @on-change="handlePage"
-        show-elevator
-        :style="pageStyle"
-      ></Page>
+        <Table border ref="selection" :data="storeData" :columns="storeColumns" @on-selection-change="startdelete"></Table>
+        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" @on-change="handlePage" show-elevator :style="pageStyle" ></Page>
     </div>
     <div>
-      <barn-module v-bind="addStoreInfo" v-on:listenToAdd="saveStore"></barn-module>
+        <barn-multi-module v-bind="addMultiStoreInfo" v-on:listenToAddMulti="saveMultiStore"></barn-multi-module>
     </div>
     <div>
-      <barn-multi-module v-bind="addMultiStoreInfo" v-on:listenToAddMulti="saveMultiStore"></barn-multi-module>
-    </div>
-    <div>
-      <barn-modification v-bind="changeStoreInfo" v-on:listenToChange="saveChangeStore"></barn-modification>
+        <barn-modification ref="storeModule" v-bind="changeStoreInfo"  v-on:childIsRefresh="childIsRefresh" v-on:getStoreInfo="saveChangeStore"></barn-modification>
     </div>
   </div>
 </template>
 
 <script>
-import BarnModule from "../../CM/Store/BarnModule.vue";
 import BarnMultiModule from "../../CM/Store/BarnMultiModule.vue";
 import BarnModification from "../../CM/Store/BarnModification.vue";
+import { StoreService } from '@/services/storeService'
 export default {
     name: "store-manage",
+    components: {
+        BarnMultiModule,
+        BarnModification
+    },
     data() {
         return {
             researchInfo: {
-                name: "",
+                name: null,
                 tunnelId: null,
                 storeTypeId: null,
-                startTime: "",
-                endTime: ""
+                startTime: null,
+                endTime: null
             },
-            columns7: [
+            storeColumns: [
                 {
                     type: "selection",
                     width: 60,
@@ -176,6 +163,22 @@ export default {
                     }
                 },
                 {
+                    title: '宽度',
+                    align: 'center'
+                },
+                {
+                    title: '高度',
+                    align: 'center'
+                },
+                {
+                    title: 'L',
+                    align: 'center'
+                },
+                {
+                    title: 'K',
+                    align: 'center'
+                },
+                {
                     title: "创建时间",
                     key: "crtTime",
                     align: "center",
@@ -201,7 +204,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.editStore(params.index);
+                                            this.editStore(params.row.id);
                                         }
                                     }
                                 },
@@ -211,7 +214,7 @@ export default {
                     }
                 }
             ],
-            data6: [],
+            storeData: [],
             types: [],
             tunnels: [],
             page: {
@@ -220,15 +223,11 @@ export default {
                 pageTotal: 0
             },
             formValidate: {
-                name: "",
-                tunnelId: "",
-                storeTypeId: "",
-                camera: "",
+                name: null,
+                tunnelId: null,
+                storeTypeId: null,
+                camera: null,
                 sn: null
-            },
-            addStoreInfo: {
-                show: { state: false },
-                addInfo: {}
             },
             addMultiStoreInfo: {
                 show: { state: false },
@@ -236,7 +235,7 @@ export default {
             },
             changeStoreInfo: {
                 show: { state: false },
-                changeInfo: {}
+                type: null
             },
             deleteShow: false,
             deleteSelect: [],
@@ -249,18 +248,22 @@ export default {
     },
     mounted() {
         this.showTable();
-        this.axios.get("/tunnels").then(res => {
-            let { code, data } = res.data;
-            if (code == 200) {
-                this.tunnels = data;
+        StoreService.getTunnels().then(
+            result => {
+                this.tunnels = result;
+            },
+            error => {
+                this.Log.info( error )
             }
-        }),
-            this.axios.get("/store-type/list").then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.types = data;
-                }
-            });
+        )
+        StoreService.getStoreType().then(res=>{
+            result => {
+                this.types = result;
+            },
+            error => {
+                this.Log.info( error )
+            }
+        })
     },
     computed: {
         params() {
@@ -275,65 +278,47 @@ export default {
                 endTime: this.researchInfo.endTime
             };
             return Object.assign({}, param);
-        },
-        newparams() {
-            // 新增
-            let param = {
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                storeTypeId: this.formValidate.storeTypeId,
-                camera: this.formValidate.camera,
-                sn: this.formValidate.sn
-            };
-            return Object.assign({}, param);
-        },
-        modifications() {
-            // 修改
-            let param = {
-                id: this.formValidate.id,
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                storeTypeId: this.formValidate.storeTypeId,
-                camera: this.formValidate.camera
-            };
-            return Object.assign({}, param);
         }
     },
     methods: {
         showTable() {
-            this.axios
-                .post("/tunnels/stores/datagrid", this.params)
-                .then(res => {
-                    let { code, data } = res.data;
-                    if (code == 200) {
-                        this.data6 = data.list;
-                        this.page.pageTotal = data.total;
-                    }
-                });
+            StoreService.queryStore(this.params).then(
+                result => {
+                    this.storeData = result.list;
+                    this.page.pageTotal = result.total;
+                },
+                error => {
+                    this.Log.info( error )
+                }
+            )
         },
         handlePage(value) {
             this.page.pageNum = value;
             this.showTable();
         },
+        //添加
         addNewStore() {
-            this.addStoreInfo.show.state = !this.addStoreInfo.show.state;
+            this.changeStoreInfo.type = 1
+        },
+        // 编辑
+        editStore(id) {
+            this.changeStoreInfo.show.state = true;
+            this.changeStoreInfo.type = 2
+            this.$refs.storeModule(id)
+        },
+        //add
+        childIsRefresh(isRefresh){
+            this.showTable()
+            this.addStoreInfo.show.state = false;
+        },
+        // 修改
+        saveChangeStore(data) {
+            this.showTable();
+            this.changeStoreInfo.show.state = false;
+            this.$Message.success("修改成功！");
         },
         addMultiStores() {
-            this.addMultiStoreInfo.show.state = !this.addMultiStoreInfo.show
-                .state;
-        },
-        saveStore(_data) {
-            this.formValidate = _data;
-            this.axios.post("/stores", _data).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.$Message.success("添加成功！");
-                    this.addStoreInfo.show.state = !this.addStoreInfo.show
-                        .state;
-                    this.showTable();
-                }
-            });
+            this.addMultiStoreInfo.show.state = true;
         },
         saveMultiStore(_data) {
             this.formValidate = _data;
@@ -345,24 +330,6 @@ export default {
                     this.addMultiStoreInfo.show.state = !this.addMultiStoreInfo
                         .show.state;
                     this.showTable();
-                }
-            });
-        },
-        editStore(index) {
-            this.changeStoreInfo.changeInfo = this.data6[index];
-            this.formValidate.id = this.data6[index].id;
-            this.changeStoreInfo.show.state = !this.changeStoreInfo.show.state;
-        },
-        saveChangeStore(data) {
-            this.formValidate = data;
-            this.axios.put("/stores", this.modifications).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.changeStoreInfo.show.state = !this.changeStoreInfo.show
-                        .state;
-                    this.$Message.success("修改成功！");
                 }
             });
         },
@@ -383,14 +350,16 @@ export default {
                     for (let i = 1; i < this.deleteSelect.length; i++) {
                         ids += "," + this.deleteSelect[i].id;
                     }
-                    this.axios.delete("/stores/batch/" + ids).then(res => {
-                        let { code, data } = res.data;
-                        if (code == 200) {
+                    StoreService.bulkDelete(ids).then(
+                        result => {
                             this.$Message.info("已删除");
                             this.deleteShow = false;
                             this.showTable();
+                        },
+                        error => {
+                            this.Log.info( error )
                         }
-                    });
+                    )
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
@@ -401,11 +370,6 @@ export default {
         research() {
             this.showTable();
         }
-    },
-    components: {
-        BarnModule,
-        BarnMultiModule,
-        BarnModification
     }
 };
 </script>

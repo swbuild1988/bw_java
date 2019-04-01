@@ -126,6 +126,7 @@ export default {
             this.processInstanceId=this.$route.params.id;
         }
     },
+
     mounted(){
         this.processInstanceId =  this.$route.params.id;
         this.pageType = this.$route.params.type;
@@ -139,13 +140,7 @@ export default {
                 _this.Log.info(error)
             })
 
-        DefectService.getStaffs().then(
-            (result)=>{
-                _this.liable = result
-            },
-            (error)=>{
-                _this.Log.info(error)
-            })
+        
         //缺陷类型
         EnumsService.getDefectType().then(
             (result)=>{
@@ -177,7 +172,9 @@ export default {
                 _this.defectDetails.createTime = new Date(result.createTime).format('yyyy-MM-dd hh:mm:s')
                 _this.getAreas()
                 _this.getStores()
-            })
+            }
+        )
+        this.getStaff()
     },
     methods: {
         //获取所属区域
@@ -253,6 +250,20 @@ export default {
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        //获取员工列表
+        getStaff(){
+            var params = {
+                outside: 1
+            }
+            DefectService.getStaffs(params).then(
+                (result)=>{
+                    this.liable = result
+                },
+                (error)=>{
+                    this.Log.info(error)
+                }
+            )
         }
     }
 }

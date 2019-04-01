@@ -151,8 +151,9 @@ export default {
       if (!(messageType !== undefined && messageType === "events"))
         this.addParticleSystem({ entity, viewer });
     },
-    addIdentifierViewer() {
-      let { entityParam } = this.VMEntityConfig;
+    addIdentifierViewer(entityParam = this.VMEntityConfig.linearEntityParam) {
+
+      if( !entityParam.length ) return;
 
         entityParam.forEach(entity => {
 
@@ -175,6 +176,11 @@ export default {
         viewer,
         entity
       };
+    },
+    addPolylineEntity(baseParams,PolylineParams){
+      let viewerType = this.addViewerType(PolylineParams);
+
+      this.viewer.entities.add(Object.assign({},baseParams, viewerType));
     },
     parametersFilter(parameters) {
       return [].map.call(parameters, (key, val) => {
@@ -235,7 +241,7 @@ export default {
               label: {
                 text: label.text,
                 font: label.fontSize + "pt monospace",
-                fillColor: Cesium.Color.RED,
+                fillColor: this.getCesiumColor(label.color),
                 outlineColor: Cesium.Color.BLACK,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 outlineWidth: 1,
@@ -287,11 +293,13 @@ export default {
         return Cesium.Color.BLACK;
       } else if (color == "blue") {
           return Cesium.Color.BLUE;
+      }else if(color == "yellow"){
+          return Cesium.Color.YELLOW
       }else {
-        return Cesium.Color.RED;
+          return Cesium.Color.RED;
       }
     },
-      lines(lineType,color){
+    lines(lineType,color){
           if( lineType === 'DottedLine' ){
               return new Cesium.PolylineDashMaterialProperty({
                   color:this.getCesiumColor( color )
@@ -299,7 +307,7 @@ export default {
           }
           return this.getCesiumColor(color)
       },
-      getPosition(position){
+    getPosition(position){
           let positionArray = [];
 
           for(let i = 0; i< position.length ;i++){
@@ -541,6 +549,18 @@ export default {
       ctx.translate(-translate.X, -translate.Y);
 
       return canvas;
-    }
+    },
+      entityFilter(filterParams){
+          if( typeof filterParams !=='object' ) return;
+          let messageType = filterParams.messageType || 'personnel';
+
+          let entities = filterParams.Id && this.viewer.entities._entities._array.filter(entitie => entitie._moId === filterParams.Id);
+          if( entities.length ){
+
+              entities.forEach(entitie => {
+                  if (entitie._messageType === messageType) entitie._show = !entitie._show
+              })
+          }
+      }
   }
 };

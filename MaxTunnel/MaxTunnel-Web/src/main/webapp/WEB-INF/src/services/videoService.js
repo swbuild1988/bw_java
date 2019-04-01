@@ -325,37 +325,104 @@ var VideoService = {
 				})
 			})
     },
-    // 根据设备获取相机列表
-    getCameraList(){
+    // 获取当前位置附近视频
+    getNearbyVideos(params){
 		return new Promise((resolve,reject)=>{
-			let data = [{
-				id: 7001,
-				name: "摄像头1",
-				url: "192.168.6.156:8078",
-				positionSupport: true,
-				description: "A Camera for tunnel1",
-				storeId: 1,
-				areaId: 1
-			}, {
-				id: 7002,
-				name: "摄像头2",
-				url: "192.168.6.156:8078",
-				positionSupport: false,
-				description: "A Camera for tunnel2",
-				storeId: 1,
-				areaId: 1
-			}, {
-				id: 7003,
-				name: "摄像头3",
-				url: "192.168.6.156:8078",
-				positionSupport: true,
-				description: "A Camera for tunnel3",
-				storeId: 1,
-				areaId: 1
-			}]
-			resolve(data)
+			axios.post('videos/gps',params)
+			.then(
+				result=>{
+					let { code,data,msg } = result.data
+					if(code == 200){
+						resolve(data)
+					} else {
+						reject(msg + ' 地址：videos/gps')
+					}
+				}
+			)
+			.catch(error=>{
+				reject(error.response.status + ' ' + error.response.data)
+			})
 		})
-    }
+	},
+	// 历史照片分页
+	historyPhotosDatagrid(params){
+		return new Promise((resolve,reject)=>{
+			axios.post('snaps/datagrid',params)
+			.then(
+				result=>{
+					let { code,data,msg } = result.data
+					if(code == 200){
+						resolve(data)
+					} else {
+						reject(msg + ' 地址：snaps/datagrid')
+					}
+				}
+			)
+			.catch(error=>{
+				reject(error.response.status + ' ' + error.response.data)
+			})
+			// let data = [
+			// 	{
+			// 		strStartTime: "2019-03-26T13:52:43Z",
+			// 		strPath: "/static/img/robotTop.2ef6c6f.png",
+			// 		strToken: '22123010',
+			// 		strDuration: '0'
+			// 	},
+			// 	{
+			// 		strStartTime: "2019-03-26T14:52:43Z",
+			// 		strPath: "/static/img/robotTop.2ef6c6f.png",
+			// 		strToken: '22123011',
+			// 		strDuration: '0'
+			// 	},
+			// 	{
+			// 		strStartTime: "2019-03-26T15:52:43Z",
+			// 		strPath: "/static/img/robotTop.2ef6c6f.png",
+			// 		strToken: '22123012',
+			// 		strDuration: '0'
+			// 	}
+			// ]
+			// resolve(data)
+		})
+	},
+	// 历史照片全部
+	allHistoryPhotoes(params){
+		return new Promise((resolve,reject)=>{
+			axios.post('snaps/condition',params)
+			.then(
+				result=>{
+					let { code,data,msg } = result.data
+					if(code == 200){
+						resolve(data)
+					} else {
+						reject(msg + ' 地址：snaps/condition')
+					}
+				}
+			)
+			.catch(error=>{
+				reject(error.response.status + ' ' + error.response.data)
+			})
+		})
+	},
+	// 获取 预览和下载图片
+	getPhoto(param){
+		return new Promise((resolve,reject)=>{
+			axios.post('snaps/tp',param,
+			{responseType: "arraybuffer"})
+			.then(
+				result=>{
+					let { status,data } = result
+					if(status == 200){
+						resolve(data)
+					} else {
+						reject('地址：snaps/tp')
+					}
+				}
+			)
+			.catch(error=>{
+				reject(error.response.status + ' ' + error.response.data)
+			})
+		})
+	},
 }
 
 export {

@@ -1,19 +1,15 @@
 package com.bandweaver.tunnel.service.omm.inspection;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionGroupService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
-import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup;
-import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto;
@@ -164,25 +160,13 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
     }
 
 	@Override
-	public int getInspectionPlanSumByYear(InspectionVo inspectionVo) {
-		return inspectionPlanMapper.getInspectionPlanSumByYear(inspectionVo);
+	public int getCountByCondition(InspectionVo inspectionVo) {
+		return inspectionPlanMapper.getCountByCondition(inspectionVo);
 	}
     
-	@Override
-	public int getInspectionPlanSumByMonth(InspectionVo inspectionVo) {
-		return inspectionPlanMapper.getInspectionPlanSumByMonth(inspectionVo);
-	}
-
 	@Override
 	public List<InspectionPlan> getAllInspectionPlan() {
 		return inspectionPlanMapper.getAllInspectionPlan();
 	}
-
-	@Override
-	public List<InspectionPlan> getTunnelCountByTunnelId() {
-		return inspectionPlanMapper.getTunnelCountByTunnelId();
-	}
-	
-	
     
 }

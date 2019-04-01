@@ -1,13 +1,12 @@
 package com.bandweaver.tunnel.controller.mam;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.util.TypeUtils;
+import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -223,15 +222,40 @@ public class MeasObjController {
      * @date 2018年7月18日
      */
     @RequestMapping(value = "measobjs/datagrid", method = RequestMethod.POST)
-    public JSONObject measObjDataGrid(@RequestBody MeasObjVo vo) {
+    public JSONObject dataGrid(@RequestBody MeasObjVo vo) {
         PageInfo<MeasObjDto> pageInfo = measObjService.dataGrid(vo);
 
-        //get CV
         List<MeasObjDto> objDtoList = pageInfo.getList();
         for (MeasObjDto measObjDto : objDtoList) {
             double cv = measObjService.getMeasObjCVByIdAndDataType(measObjDto.getId(), measObjDto.getDatatypeId());
             measObjDto.setCv(cv);
+
+            // 设置预案显示
+            List<String> plansName = new ArrayList<>(10);
+            String planIds = measObjDto.getPlanIds();
+            if (planIds != null && planIds.length() >0) {
+                List<Integer> planIdList = CommonUtil.convertStringToList(planIds);
+                for (Integer planId : planIdList) {
+                    String name = ProcessTypeEnum.getEnum(planId).getName();
+                    plansName.add(name);
+                }
+            }
+            measObjDto.setPlansName(plansName);
+
+            // 设置视频名称显示
+            List<String> videosName = new ArrayList<>(10);
+            String videoIds = measObjDto.getVideoIds();
+            if (videoIds != null && videoIds.length() >0) {
+                List<Integer> videoIdList = CommonUtil.convertStringToList(videoIds);
+                for (Integer videoId : videoIdList) {
+                    String videoName = measObjModuleCenter.getMeasObj(videoId).getName();
+                    videosName.add(videoName);
+                }
+            }
+            measObjDto.setVideosName(videosName);
+
         }
+
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
 
@@ -821,9 +845,58 @@ public class MeasObjController {
 		
 		return CommonUtil.success(rtdata);
 	}
-	
-	
-	
+
+    /**
+     * 绑定预案
+     * @param reqJson {"objtypeId":1,"planIds":"plan1,plan2,plan3"}
+     * @return
+     */
+	@RequestMapping(value = "measobjs/conf/plans", method = RequestMethod.POST)
+	public JSONObject setPlanIds(@RequestBody JSONObject reqJson) {
+	    CommonUtil.hasAllRequired(reqJson,"objtypeId,planIds");
+        Integer objtypeId = reqJson.getInteger("objtypeId");
+        String planIds = reqJson.getString("planIds");
+        measObjService.setPlanIds(objtypeId,planIds);
+
+        return CommonUtil.success();
+    }
+
+
+    /**
+     * 绑定视频
+     * @param reqJson {"id":1,"videoIds":"video1,video2,video3"}
+     * @return
+     */
+    @RequestMapping(value = "measobjs/conf/videos", method = RequestMethod.POST)
+    public JSONObject setVideos(@RequestBody JSONObject reqJson) {
+        CommonUtil.hasAllRequired(reqJson,"id,videoIds");
+        Integer id = reqJson.getInteger("id");
+        String videoIds = reqJson.getString("videoIds");
+        measObjService.setVideoIds(id, videoIds);
+
+        return CommonUtil.success();
+    }
+
+
+    /**
+     * 获取监测对象所在section的所有视频
+     * @param storeId
+     * @param areaId
+     * @return
+     */
+    @RequestMapping(value = "measobjs/{storeId}/{areaId}/videos",method = RequestMethod.GET)
+    public JSONObject getLocalSectionVideoList(@PathVariable("storeId") Integer storeId, @PathVariable("areaId") Integer areaId) {
+
+        List<VideoDto> videoList = new ArrayList<>(10);
+        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+        if (section != null) {
+            videoList = measObjService.getLocalSectionVideoList(section.getId());
+        }
+        return CommonUtil.success(videoList);
+    }
+
+
+
 }
 
 

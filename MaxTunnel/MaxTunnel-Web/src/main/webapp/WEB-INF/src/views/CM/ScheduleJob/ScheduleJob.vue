@@ -5,20 +5,19 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span>任务筛选：</span>
-                <!-- <Input v-model="researchInfo.id" placeholder="输入要查询的任务编号" class="inputWidth"/> -->
                 <Select v-model="researchInfo.status" class="inputWidth">
                     <Option v-for="item in statusSelect" :value="item.val" :key="item.key">{{item.key}}</Option>
                 </Select>
             </Col>
             <Col span="10">
-                <Button type="primary" size="small"  icon="ios-search" @click="filterTask(researchInfo.status)">筛选</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">筛选</Button>
                 <Button type="error" size="small" @click="addNewTask()">新增任务</Button>  
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
         </Row>
         <div style="margin:20px;">
-            <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete"></Table>
+            <Table border ref="selection" :columns="schedulejobColumns" :data="schedulejobData" @on-selection-change="startdelete"></Table>
         </div>
         <div>
             <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show sizer
@@ -26,19 +25,19 @@
                   :style="pageStyle"></Page>
         </div>
         <div>
-            <schedule-module v-bind="addScheduleJob" v-on:listenToAdd="saveSchedule"></schedule-module>
-        </div>
-        <div>
-            <schedule-modification v-bind="changeScheduleInfo" v-on:listenToChange="saveChangeSchedule"></schedule-modification>
+            <schedule-module ref="scheduleModule" v-bind="ScheduleJobInfo" v-on:addScheduleJob="saveSchedule" v-on:editScheduleJob="saveChangeSchedule"></schedule-module>
         </div>
     </div>
 </template>
 
 <script>
 import ScheduleModule from '../../CM/ScheduleJob/ScheduleModule'
-import ScheduleModification from '../../CM/ScheduleJob/ScheduleModification'
+import {SchedulejobService} from '@/services/schedulejobService'
 export default {
     name: "schedule-job",
+    components:{
+        ScheduleModule
+    },
     data(){
         return {
             page:{
@@ -68,7 +67,7 @@ export default {
                 jobMethod:'',
                 description:''
             },
-            columns7:[
+            schedulejobColumns:[
                 {
                     type: 'selection',
                     width: 60,
@@ -85,28 +84,13 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '任务组',
-                    key: 'jobGroup',
-                    align: 'center'
-                },
-                {
-                    title: '任务描述',
+                    title: '任务类型',
                     key: 'description',
                     align: 'center'
                 },
                 {
-                    title: '任务周期',
+                    title: '调度表达式',
                     key: 'cronExpression',
-                    align: 'center'
-                },
-                {
-                    title: '任务类',
-                    key: 'jobClass',
-                    align: 'center'
-                },
-                {
-                    title: '任务方法',
-                    key: 'jobMethod',
                     align: 'center'
                 },
                 {
@@ -119,7 +103,7 @@ export default {
                            props: {
                                type: 'primary',
                                size: 'large',
-                               value: this.data6[params.index].jobStatusName === '启用'     //1则启用，0则禁用
+                               value: this.schedulejobData[params.index].jobStatusName === '启用'     //1则启用，0则禁用
                            },
                            on:{
                                'on-change':(value) => {
@@ -143,7 +127,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.changeSchedule(params.index)
+                                        this.changeSchedule(params.row.jobId)
                                     }
                                 }
                             }, '修改')
@@ -151,14 +135,16 @@ export default {
                     }
                 }
             ],
-            data6:[],
-            addScheduleJob:{
-                show:{state: false}
+            schedulejobData:[],
+            ScheduleJobInfo:{
+                show:{state: false},
+                type: 1,
+                id: null
             },
-            changeScheduleInfo:{
-                show:{state:false},
-                changeInfo:{}
-            },
+            // changeScheduleInfo:{
+            //     show:{state:false},
+            //     changeInfo:{}
+            // },
             deleteShow: false,
             deleteSelect:[]
         }
@@ -167,13 +153,6 @@ export default {
         this.showTable();
     },
     computed:{
-        pages(){
-            let _page = {
-                pageNum: this.page.pageNum,
-                pageSize: this.page.pageSize
-            };
-            return Object.assign({}, _page);
-        },
         choices(){
             let choice = {
                 jobStatus: this.researchInfo.status,
@@ -181,20 +160,6 @@ export default {
                 pageSize: this.page.pageSize
             };
             return Object.assign({}, choice);
-        },
-        params() {
-            let param = {
-                // pageNum: this.page.pageNum,
-                // pageSize: this.page.pageSize,
-                jobName: this.formValidate.jobName,
-                jobGroup: this.formValidate.jobGroup,
-                cronExpression: this.formValidate.cronExpression,
-                jobClass: this.formValidate.jobClass,
-                jobStatus:this.formValidate.jobStatus,
-                jobMethod: this.formValidate.jobMethod,
-                description: this.formValidate.description
-            };
-            return Object.assign({},param);
         },
         modifications(){
             let modification = {
@@ -221,41 +186,15 @@ export default {
             })
         },
         showTable(){
-            this.axios.post('/schedulejobs/datagrid',(this.pages)).then(res =>{
-                let {code,data} = res.data;
-                if (code == 200){
-                    let allinfo = [];
-                    for (let index in data.list){
-                        let info = {};
-                        info.jobId = data.list[index].jobId;
-                        info.jobName = data.list[index].jobName;
-                        info.jobGroup = data.list[index].jobGroup;
-                        info.jobClass = data.list[index].jobClass;
-                        info.jobMethod = data.list[index].jobMethod;
-                        info.cronExpression = data.list[index].cronExpression;
-                        info.description = data.list[index].description;
-                        info.jobStatusName = data.list[index].jobStatusName;
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
-                    this.page.pageTotal = data.total;
+            SchedulejobService.querySchedule(this.choices).then(
+                result => {
+                    this.schedulejobData = result.list
+                    this.page.pageTotal = result.total;
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
-        },
-        addNewTask(){
-            this.addScheduleJob.show.state = !this.addScheduleJob.show.state;
-        },
-        saveSchedule(_data){
-            this.formValidate = _data;
-            this.axios.post('/schedulejobs',(this.params)).then(res => {
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.showTable();
-                    this.page.pageTotal = data.total;
-                    this.$Message.success('添加成功！');
-                    this.addScheduleJob.show.state = !this.addScheduleJob.show.state;
-                }
-            })
+            )
         },
         handlePage(value){
             this.page.pageNum = value;
@@ -265,62 +204,24 @@ export default {
             this.page.pageSize = value;
             this.showTable();
         },
-        changeSchedule(index){
-            this.changeScheduleInfo.changeInfo = this.data6[index];
-            this.formValidate.jobId = this.data6[index].jobId;
-            this.changeScheduleInfo.show.state = !this.changeScheduleInfo.show.state;
+        addNewTask(){
+            this.ScheduleJobInfo.show.state = true;
+            this.ScheduleJobInfo.type = 1
+        },
+        saveSchedule(){
+            this.$Message.success('添加成功！');
+            this.showTable();
+            this.ScheduleJobInfo.show.state = false;
+        },
+        changeSchedule(id){
+            this.$refs.scheduleModule.getScheduleJob(id)
+            this.ScheduleJobInfo.show.state = true;
+            this.ScheduleJobInfo.type = 2
         },
         saveChangeSchedule(data){
-            this.formValidate = data;
-            this.axios.put('/schedulejobs',(this.modifications)).then(res =>{
-                let{code,data} = res.data;
-                if(code == 200){
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.changeScheduleInfo.show.state = !this.changeScheduleInfo.show.state;
-                    this.$Message.success('修改成功!');
-                }
-            })
-        },
-        // deleteSchedule(index){
-        //     this.$Modal.confirm({
-        //         title: '删除确认',
-        //         content: '<p>确认要删除此条信息吗？</p>',
-        //         onOk: () => {
-        //             this.axios.delete('/schedulejobs/' + this.data6[index].jobId).then(res =>{
-        //                 let {code,data} = res.data;
-        //                 if(code == 200){
-        //                     this.$Message.info('已删除');
-        //                     this.showTable();
-        //                 }
-        //             })
-        //         },
-        //         onCancel: () => {
-        //             this.$Message.info('已取消操作');
-        //         }
-        //     });
-        // },
-        filterTask(val){
-            this.axios.post('/schedulejobs/datagrid',(this.choices)).then(res =>{
-                let {code,data} = res.data;
-                if (code == 200){
-                    let allinfo = [];
-                    for (let index in data.list){
-                        let info = {};
-                        info.jobId = data.list[index].jobId;
-                        info.jobName = data.list[index].jobName;
-                        info.jobGroup = data.list[index].jobGroup;
-                        info.jobClass = data.list[index].jobClass;
-                        info.jobMethod = data.list[index].jobMethod;
-                        info.cronExpression = data.list[index].cronExpression;
-                        info.description = data.list[index].description;
-                        info.jobStatusName = data.list[index].jobStatusName;
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
-                    this.page.pageTotal = data.total;
-                }
-            })
+            this.ScheduleJobInfo.show.state = false;
+            this.showTable();
+            this.$Message.success('修改成功!');
         },
         startdelete(selection){
             if(selection.length != 0){
@@ -354,9 +255,6 @@ export default {
                 }
             });
         }, 
-    },
-    components:{
-        ScheduleModule,ScheduleModification
     }
 }
 </script>

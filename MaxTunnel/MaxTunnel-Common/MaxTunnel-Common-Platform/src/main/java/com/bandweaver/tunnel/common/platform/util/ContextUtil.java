@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.common.platform.util;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
@@ -46,6 +47,11 @@ public class ContextUtil {
 	 */
 	public static HttpServletRequest getRequest() {
 		return ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+	}
+
+
+	public static HttpServletResponse getResponse() {
+		return ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getResponse();
 	}
 	
 	/**

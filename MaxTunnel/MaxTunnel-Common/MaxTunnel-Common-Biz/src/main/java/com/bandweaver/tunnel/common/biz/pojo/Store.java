@@ -31,10 +31,22 @@ public class Store implements Serializable{
 
     private Integer storeTypeId;
     
+    private Double width;
+    
+    private Double height;
+
+    private Double k;
+
+    private Double l;
+
+    private String startPoint;
+
+    private String endPoint;
+
     private String camera;
 
     private Date crtTime;
-    
+
     public Integer getId() {
         return id;
     }
@@ -100,15 +112,69 @@ public class Store implements Serializable{
 		this.parentId = parentId;
 	}
 
-	@Override
+	public Double getWidth() {
+		return width;
+	}
+
+	public void setWidth(Double width) {
+		this.width = width;
+	}
+
+	public Double getHeight() {
+		return height;
+	}
+
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
+    public Double getK() {
+        return k;
+    }
+
+    public void setK(Double k) {
+        this.k = k;
+    }
+
+    public Double getL() {
+        return l;
+    }
+
+    public void setL(Double l) {
+        this.l = l;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    @Override
     public String toString() {
         return "Store{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", sn='" + sn + '\'' +
-                ", parentId='" + parentId + '\'' +
+                ", parentId=" + parentId +
                 ", tunnelId=" + tunnelId +
                 ", storeTypeId=" + storeTypeId +
+                ", width=" + width +
+                ", height=" + height +
+                ", k=" + k +
+                ", l=" + l +
+                ", startPoint='" + startPoint + '\'' +
+                ", endPoint='" + endPoint + '\'' +
                 ", camera='" + camera + '\'' +
                 ", crtTime=" + crtTime +
                 '}';

@@ -6,7 +6,7 @@
           <Form :model="equipment" :label-width="130" @submit.native.prevent>
             <Col span="12">
               <FormItem label="设备名称：">
-                <Input v-model="equipment.name" readonly="pageType==pageTypes.Read"></Input>
+                <Input v-model="equipment.name" :readonly=isReadonly></Input>
               </FormItem>
             </Col>
             <Col span="12">
@@ -31,7 +31,7 @@
                 </Select>
                 <Input
                   v-model="equipment.typeName"
-                  readonly="pageType==pageTypes.Read"
+                  :readonly=isReadonly
                   v-show="pageType==pageTypes.Read"
                 ></Input>
               </FormItem>
@@ -41,7 +41,7 @@
                 <DatePicker
                   type="datetime"
                   placeholder="请选择投运时间"
-                  :readonly="pageType==pageTypes.Read"
+                  :readonly=isReadonly
                   v-model="equipment.runTime"
                   style="width: 100%;"
                   @on-change="getHours(equipment.runTime)"
@@ -85,7 +85,7 @@
               <FormItem label="运行时间：">
                 <Input
                   v-model="runTimeCount"
-                  readonly="pageType==pageTypes.Read"
+                  :readonly=isReadonly
                   style="width: calc(100% - 100px);"
                 ></Input>(时)
               </FormItem>
@@ -97,7 +97,7 @@
                   :disabled="pageType==pageTypes.Read"
                   @on-change="getObj()"
                 >
-                  <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                  <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.id }}</Option>
                 </Select>
                 <!-- <Input v-model='equipment.obj.name' :disabled='pageType==pageTypes.Read' v-show="pageType==pageTypes.Read"></Input> -->
               </FormItem>
@@ -167,7 +167,8 @@ export default {
       equipmentTypes: [],
       // 设备状态
       equipmentStatus: [],
-      objTypes: null
+      objTypes: null,
+      isReadonly: false
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -203,6 +204,11 @@ export default {
   mounted() {
     this.equipment.id = this.$route.params.id;
     this.pageType = this.$route.params.type;
+    if(this.pageType==this.pageTypes.Read){
+      this.isReadonly = true
+    }else{
+      this.isReadonly = false
+    }
     // 获取所有的管廊
     TunnelService.getTunnels().then(
       result => {
@@ -271,13 +277,15 @@ export default {
     },
     //关联监测对象
     getObj() {
-      this.axios.get("measobjs").then(res => {
-        let { code, data } = res.data;
-        if (code == 200) {
-            this.objs = data;
-            this.getObjType();
+      EquipmentService.getObj().then(
+        res=> {
+          this.objs = res
+          this.getObjType();
+        },
+        error => {
+          this.Log.info(error)
         }
-      });
+      )
     },
     // 对象类型
     getObjType() {
@@ -286,12 +294,14 @@ export default {
         pageSize: 10,
         pageNum: 1
       };
-      this.axios.post("measobjs/datagrid", info).then(res => {
-        let { code, data, msg } = res.data;
-        if (code == 200) {
-          this.objTypes = data.list;
+      EquipmentService.getObjType(info).then(
+        res => {
+          this.objTypes = res;
+        },
+        error => {
+          this.Log.info(error)
         }
-      });
+      )
     },
     //修改设备信息
     updateEquipmentInfo() {

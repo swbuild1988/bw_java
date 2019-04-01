@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +47,7 @@ public class ShiroController {
 	private UserService userService;
 	
 	/**添加权限
-	 * @param menuCode user
+	 * @param menuCode um/user/...
 	 * @param menuName 用户
 	 * @param permissionCode user:list
 	 * @param permissionName 用户列表
@@ -182,7 +183,7 @@ public class ShiroController {
 	 */
 	@RequestMapping(value="roles",method=RequestMethod.PUT)
 	public JSONObject updateRole(@RequestBody JSONObject reqJson) {
-		CommonUtil.hasAllRequired(reqJson, "id,name");
+		CommonUtil.hasAllRequired(reqJson, "id,roleName");
 		Role role = CommonUtil.parse2Obj(reqJson, Role.class);
 		roleService.updateRole(role);
 		return CommonUtil.success();
@@ -283,20 +284,7 @@ public class ShiroController {
 		roleService.addUserRole(userId,roleIds);
 		return CommonUtil.success();
 	}
-	
-	
-	/**批量删除账号 
-	 * @param ids
-	 * @return   
-	 * @author shaosen
-	 * @Date 2019年1月7日
-	 */
-	@RequestMapping(value = "users/batch/{ids}",method = RequestMethod.DELETE)
-	public JSONObject deleteBatch(@PathVariable String ids) {
-		List<Integer> list = CommonUtil.convertStringToList(ids);
-		userService.deleteBatch(list);
-		return CommonUtil.success();
-	}
+
 	
 	
 	/**通过id获取账号信息(并获取对应的角色信息)
@@ -307,17 +295,10 @@ public class ShiroController {
 	 */
 	@RequestMapping(value = "users/{id}", method = RequestMethod.GET)
 	public JSONObject getById(@PathVariable("id") Integer id) {
-		UserDTO user = userService.getUser(id);
-		JSONObject returnData = new JSONObject();
-		if(!StringTools.isNullOrEmpty(user)) {
-			returnData.put("id", user.getId());
-			returnData.put("name", user.getName());
-			returnData.put("roles", roleService.getRolesByUser(user.getId()));
-		}
-		return CommonUtil.success(returnData);
+
+		JSONObject userDet = userService.getUserDet(id);
+		return CommonUtil.success(userDet);
 	}
-	
-	
-	//账号分页查询
+
 	
 }

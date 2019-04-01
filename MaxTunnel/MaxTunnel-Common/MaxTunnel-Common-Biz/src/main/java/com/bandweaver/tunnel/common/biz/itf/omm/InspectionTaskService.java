@@ -1,10 +1,12 @@
 package com.bandweaver.tunnel.common.biz.itf.omm;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.github.pagehelper.PageInfo;
 
+import java.util.Date;
 import java.util.List;
 
 public interface InspectionTaskService {
@@ -29,15 +31,13 @@ public interface InspectionTaskService {
 
     int startTaskProcessByPlan(int inspectionPlanId);
     
-    int getFinishedInspectionTaskSumByMonth(InspectionVo inspectionVo);
-    
-    int getInspectionTaskSumByYear(InspectionVo inspectionVo);
-    
-    int getFinishedInspectionTaskSumByYear(InspectionVo inspectionVo);
+    int getCountByVo(InspectionVo inspectionVo);
     
     PageInfo<InspectionTaskDto> dataGrid(InspectionVo inspectionVo);
     
     List<InspectionTaskDto> getInspectionTasksByTaskTime(InspectionVo inspectionVo);
+
+    JSONObject getInspectionExcel(Date startTime, Date endTime);
     
     
 }

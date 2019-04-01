@@ -28,17 +28,22 @@ public class MAMModuleCenter implements ModuleCenterInterface {
 
     @Override
     public void start() {
-//    	alarmModuleCenter.start();
+    	alarmModuleCenter.start();
         measObjModuleCenter.start();
         videoModuleCenter.start();
         subSystemModuleCenter.start();
     }
 
     @Override
+    @PreDestroy
     public void stop() {
+
+        // GC垃圾回收
 //    	alarmModuleCenter.stop();
         measObjModuleCenter.stop();
         videoModuleCenter.stop();
         subSystemModuleCenter.stop();
+
+        LogUtil.info("GC垃圾回收完成");
     }
 }

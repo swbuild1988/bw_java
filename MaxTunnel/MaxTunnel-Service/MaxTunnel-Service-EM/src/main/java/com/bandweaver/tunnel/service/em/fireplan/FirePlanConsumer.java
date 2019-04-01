@@ -23,7 +23,7 @@ public class FirePlanConsumer implements ChannelAwareMessageListener {
 			// 将byte数组转换成json对象
 			LogUtil.info("Receive message : " + JSON.parse(new String(message.getBody())));
 		} catch (Throwable e) {
-			e.printStackTrace();
+			LogUtil.error(e.toString());
 		}
 
 	}

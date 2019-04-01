@@ -25,17 +25,48 @@ public class StartupListener implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    	long beginTime = System.currentTimeMillis();
+
+        long beginTime = System.currentTimeMillis();
         mamModuleCenter.start();
         comModuleCenter.start();
         long endTime = System.currentTimeMillis();
         
-        String version = (String) PropertiesUtil.getValue(Constants.MAXTUNNEL_VERSION);
-        LogUtil.info(	"*********************************\n"
-						+ "描述：初始化结束\n"
-						+ "项目名：太原市综合管廊管理平台\n"
-						+ "版本号：" + version + "\n"
-						+ "耗时：" + (endTime - beginTime) +"ms\n"
-						+ "*********************************");
+        String version = PropertiesUtil.getValue(Constants.MAXTUNNEL_VERSION);
+        String company = PropertiesUtil.getString(Constants.MAXTUNNEL_COMPANY);
+        String address = PropertiesUtil.getString(Constants.MAXTUNNEL_ADDRESS);
+
+        LogUtil.info("----------------------------------------------------");
+        LogUtil.info("描  述：初始化结束");
+        LogUtil.info("项目名：太原市综合管廊管理平台");
+        LogUtil.info("开发商：" + company);
+        LogUtil.info("地  址：" + address);
+        LogUtil.info("版本号：" + version );
+        LogUtil.info("耗  时：" + (endTime - beginTime) +"ms");
+        LogUtil.info("----------------------------------------------------");
+
+        LogUtil.info("					_ooOoo_                   ");
+        LogUtil.info("				   o8888888o                  ");
+        LogUtil.info("				   88\" . \"88                  ");
+        LogUtil.info("				   (| -_- |)                  ");
+        LogUtil.info("				   O\\  =  /O                  ");
+        LogUtil.info("				____/`---'\\____               ");
+        LogUtil.info("			  .'  \\|     |//  `.             ");
+        LogUtil.info("			 /  \\\\|||  :  |||//  \\            ");
+        LogUtil.info("			/  _||||| -:- |||||-  \\           ");
+        LogUtil.info("			|   | \\\\\\  -  /// |   |           ");
+        LogUtil.info("			| \\_|  ''\\---/''  |   |           ");
+        LogUtil.info("			\\  .-\\__  `-`  ___/-. /           ");
+        LogUtil.info("		  ___`. .'  /--.--\\  `. . __          ");
+        LogUtil.info("	   .\"\" '<  `.___\\_<|>_/___.'  >'\"\".       ");
+        LogUtil.info("	  | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |     ");
+        LogUtil.info("	  \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /     ");
+        LogUtil.info(" ======`-.____`-.___\\_____/___.-`____.-'======");
+        LogUtil.info("                    `=---='                   ");
+        LogUtil.info(" ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        LogUtil.info("			佛祖保佑		永无BUG                 ");
+
+
+
+
     }
 }

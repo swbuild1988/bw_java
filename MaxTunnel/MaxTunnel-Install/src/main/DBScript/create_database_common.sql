@@ -484,6 +484,24 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_COMMON_TUNNEL_RUN'; 
       end   if; 
+-- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'COMMON_EXPORT_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  COMMON_EXPORT_SQ';   
+      end if;
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'COMMON_EXPORT_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  COMMON_EXPORT_TG';   
+      end if;
+-- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_COMMON_EXPORT';
+      if   num=1   then 
+          execute immediate 'drop table T_COMMON_EXPORT'; 
+      end   if; 
 end;
 /
 
@@ -603,10 +621,10 @@ create table T_OPERATION_LOG
   req_ip      VARCHAR2(20 CHAR),
   req_user    VARCHAR2(20 CHAR),
   method      VARCHAR2(200 CHAR),
-  params      VARCHAR2(200 CHAR),
+  params      VARCHAR2(500 CHAR),
   result      VARCHAR2(10 CHAR) ,
   crt_time    DATE,
-  description VARCHAR2(200),
+  description VARCHAR2(500),
   CONSTRAINT PK_T_OPERATION_LOG PRIMARY KEY ("ID")
 );
 
@@ -946,12 +964,18 @@ end COMMON_COMPANY_DEPT_TG;
 
 --员工表
 CREATE TABLE T_COMMON_STAFF(
-  id                NUMBER               NOT NULL,
-  NAME    VARCHAR2(20),
-  dept_id    NUMBER               NOT NULL,
-  position_id  NUMBER               NOT NULL,
-  crt_time  date,
-   CONSTRAINT PK_T_COMMON_STAFF PRIMARY KEY ("ID")
+  id          NUMBER not null,
+  name        VARCHAR2(20) not null,
+  dept_id     NUMBER,
+  position_id NUMBER,
+  crt_time    DATE,
+  account     VARCHAR2(50),
+  sex         VARCHAR2(2),
+  telphone    VARCHAR2(20),
+  hire_date   DATE,
+  identityno  VARCHAR2(50),
+  outside     NUMBER(1) not null
+  CONSTRAINT PK_T_COMMON_STAFF PRIMARY KEY ("ID")
 );
 
 
@@ -1086,5 +1110,36 @@ CREATE OR REPLACE TRIGGER COMMON_TUNNEL_RUN_TG
 begin
   select COMMON_TUNNEL_RUN_SQ.nextval into :new.id from dual;
 end COMMON_TUNNEL_RUN_TG;
+/
+
+--文件导出表
+CREATE TABLE T_COMMON_EXPORT(
+  id    number    not null,
+  name    varchar2(100) not null,
+  of_type   number(1)   not null,
+  pdf_path    varchar2(200) not null,
+  excel_path    varchar2(200) not null,
+  type    number(1) not null,
+  value   number    not null,
+  crt_time        DATE, 
+   CONSTRAINT PK_T_COMMON_EXPORT PRIMARY KEY ("ID")
+);
+
+
+
+create sequence COMMON_EXPORT_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+CREATE OR REPLACE TRIGGER COMMON_EXPORT_TG
+  BEFORE INSERT ON T_COMMON_EXPORT
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_EXPORT_SQ.nextval into :new.id from dual;
+end COMMON_EXPORT_TG;
 /
 

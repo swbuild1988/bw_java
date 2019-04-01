@@ -237,16 +237,24 @@
                      select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
     </resultMap>
     
-    <select id="getInspectionPlanSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_plan
-    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
-    </select>
-    
-    <select id="getInspectionPlanSumByMonth" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_plan
-    	WHERE create_time <![CDATA[ >= ]]> TRUNC(#{createTime}, 'MM') and create_time <![CDATA[ <= ]]> last_day(#{createTime})
+    <select id="getCountByCondition" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	SELECT COUNT(1) FROM t_omm_inspection_plan a
+    	<where>
+    		<if test="tunnelId != null">
+                and a.tunnel_id = #{tunnelId}
+            </if>
+    		<if test="startTime != null">
+                and a.inspect_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.inspect_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+            <if test="isFinished != null">
+                and a.is_finished = #{isFinished}
+            </if>
+    	</where>
     </select>
     
     <select id="getAllInspectionPlan" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
@@ -254,15 +262,5 @@
     	FROM t_omm_inspection_plan 
     	ORDER BY create_time DESC
     </select>
-    
-    <select id="getTunnelCountByTunnelId" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
-		SELECT a.groupId,b.name
-		FROM (SELECT tunnel_id tunnelId,count(1) groupId
-		    FROM t_omm_inspection_plan
-		    GROUP BY tunnel_id) a
-		RIGHT JOIN t_common_tunnel b ON a.tunnelId = b.id
-	</select>
-	
-	
     
 </mapper>

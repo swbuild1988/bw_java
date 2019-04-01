@@ -1,15 +1,35 @@
 <template>
     <div>
         <div style="margin: 1vh;">
-            <RadioGroup v-model="queryCondition.curDataType" type="button" @on-change="changeDataType" size="large">
-                <Radio v-for="(item,key) in curDataTypeList" :key="key" :label="item.val" style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-                    :class="{select_radio:queryCondition.curDataType==item.val}">{{item.key}}</Radio>
+            <RadioGroup
+                v-model="queryCondition.curDataType"
+                type="button"
+                @on-change="changeDataType"
+                size="large"
+            >
+                <Radio
+                    v-for="(item,index) in curDataTypeList"
+                    :key="index"
+                    :label="item.val"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+                    :class="{select_radio:queryCondition.curDataType==item.val}"
+                >{{item.key}}</Radio>
             </RadioGroup>
         </div>
         <div style="margin: 1vh;">
-            <RadioGroup v-model="queryCondition.areaId" type="button" @on-change="changeAreaLocation" size="large">
-                <Radio v-for="(item,key) in areas" :key="key" :label="item.id" style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-                    :class="{select_radio:queryCondition.areaId==item.id}">{{item.name}}</Radio>
+            <RadioGroup
+                v-model="queryCondition.areaId"
+                type="button"
+                @on-change="changeAreaLocation"
+                size="large"
+            >
+                <Radio
+                    v-for="(item,key) in areas"
+                    :key="key"
+                    :label="item.id"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+                    :class="{select_radio:queryCondition.areaId==item.id}"
+                >{{item.name}}</Radio>
             </RadioGroup>
         </div>
         <div style="margin: 1vh;">
@@ -17,32 +37,44 @@
         </div>
         <Row :gutter="16">
             <Col span="12">
-            <div class="data">
-                <div class="titles">
-                    <div class="title" @click="chooseModule(0)" :class="{'active' : curModule === 0}">
-                        <span>
-                            <Icon type="ios-film" class="icons"></Icon>视频
-                        </span>
+                <div class="data">
+                    <div class="titles">
+                        <div
+                            class="title"
+                            @click="chooseModule(0)"
+                            :class="{'active' : curModule === 0}"
+                        >
+                            <span>
+                                <Icon type="ios-film" class="icons"></Icon>视频
+                            </span>
+                        </div>
+                        <div
+                            class="title"
+                            @click="chooseModule(1)"
+                            :class="{'active' : curModule === 1}"
+                        >
+                            <span>
+                                <Icon type="map" class="icons"></Icon>管廊模型
+                            </span>
+                        </div>
                     </div>
-                    <div class="title" @click="chooseModule(1)" :class="{'active' : curModule === 1}">
-                        <span>
-                            <Icon type="map" class="icons"></Icon>管廊模型
-                        </span>
+                    <div class="map">
+                        <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
+                        <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
                     </div>
                 </div>
-                <div class="map">
-                    <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                    <TestSmViewer ref="smViewer" v-if="curModule === 1"></TestSmViewer>
-                </div>
-            </div>
             </Col>
             <Col span="12" class="data" style="overflow-y:auto ">
-            <Row :gutter="16" style="margin-right: 2px;">
-                <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus"></SimulatedData>
-                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                </Col>
-            </Row>
+                <Row :gutter="16" style="margin-right: 2px;">
+                    <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+                        <SimulatedData
+                            v-bind:Obj="item"
+                            v-if="item.datatypeId==1"
+                            @changeStatus="changeStatus"
+                        ></SimulatedData>
+                        <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                    </Col>
+                </Row>
             </Col>
         </Row>
     </div>
@@ -53,21 +85,14 @@
     import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
     import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
     import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-    import {
-        TunnelService
-    } from "../../../../services/tunnelService";
-    import {
-        EnumsService
-    } from "../../../../services/enumsService";
-    import {
-        MonitorDataService
-    } from "../../../../services/monitorDataService";
-    import {
-        SuperMapSqlQuery
-    } from "../../../../scripts/three.js";
+    import { TunnelService } from "../../../../services/tunnelService";
+    import { EnumsService } from "../../../../services/enumsService";
+    import { MonitorDataService } from "../../../../services/monitorDataService";
+    import { SuperMapSqlQuery } from "../../../../scripts/three.js";
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
     import Carousel from "../../../../components/Common/Carousel.vue";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
+    import { changStrLength } from "../../../../scripts/commonFun";
 
     export default {
         name: "detail-tunnel-environment",
@@ -77,12 +102,11 @@
                 storeProp: {
                     itemLen: 12,
                     dataList: [],
-                    selectObj: {
-                        selectId: ""
-                    }
+                    selectObj: { selectId: "" }
                 },
                 curCarousel: {
-                    videolist: []
+                    videolist: [],
+                    videoNumber: 1
                 },
                 dataInterval: null,
                 Obj: [],
@@ -101,18 +125,19 @@
                 tunnelPropsMax: [], //监测数据对应最大值
                 areas: [], //管廊对应区段数据
                 curTunnelName: "",
-                curModule: 0
+                curModule: 0,
+                detectionObj:null,
             };
         },
         watch: {
-            $route: function () {
+            $route: function() {
                 this.tunnelId = parseInt(this.$route.params.id);
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
                 this.getObjDetialData();
             },
             storeProp: {
-                handler: function (newVal, oldVal) {
+                handler: function(newVal, oldVal) {
                     let _this = this;
                     _this.queryCondition.storeId = newVal.selectObj.selectId;
                     _this.changeStore();
@@ -227,10 +252,7 @@
                 //获取监测仓列表
                 TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                     result => {
-                        _this.storeProp.dataList = [{
-                            id: 0,
-                            name: "全部"
-                        }];
+                        _this.storeProp.dataList = [{ id: 0, name: "全部" }];
                         result.forEach((a, index) => {
                             let temp = {};
                             temp.id = a.id;
@@ -252,10 +274,12 @@
                 //获取区域列表
                 TunnelService.getTunnelArea(_this.tunnelId).then(result => {
                     if (result) {
-                        _this.areas = [{
-                            name: "全部",
-                            id: 0
-                        }];
+                        _this.areas = [
+                            {
+                                name: "全部",
+                                id: 0
+                            }
+                        ];
                         result.forEach(a => {
                             var temp = {};
                             temp.name = a.name;
@@ -295,6 +319,8 @@
 
             //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
+
+                if( !!id && !!datatypeId ) this.detectionObj = {"id":changStrLength(id,10),"moTypeId":datatypeId };
                 if (datatypeId != 1) {
                     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
                 }
@@ -304,10 +330,10 @@
                             b.clickStatus = clickStatus;
                             this.Log.info("click " + b.id);
                             SuperMapSqlQuery(
-                                    this.SuperMapConfig.BIM_DATA,
-                                    this.VMConfig.queryParam,
-                                    "moid = " + b.id
-                                )
+                                this.SuperMapConfig.BIM_DATA,
+                                this.VMConfig.queryParam,
+                                "moid = " + b.id
+                            )
                                 .then(res => {
                                     this.Log.info("查找成功", res);
                                     if (res.length > 0) {
@@ -327,6 +353,7 @@
                         }
                     });
                 }
+
             },
             // //获取详情面板的数据
             getObjDetialData() {
@@ -336,10 +363,14 @@
                 let _this = this;
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
-                    storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
-                    areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId,
+                    storeId:
+                        _this.queryCondition.storeId == 0
+                            ? null
+                            : _this.queryCondition.storeId,
+                    areaId:
+                        _this.queryCondition.areaId == 0
+                            ? null
+                            : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -357,11 +388,11 @@
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
                             temp.time =
-                                a.time == undefined || a.time == "" ?
-                                "" :
-                                new Date(a.time).format(
-                                    "yyyy-MM-dd hh:mm:ss"
-                                );
+                                a.time == undefined || a.time == ""
+                                    ? ""
+                                    : new Date(a.time).format(
+                                          "yyyy-MM-dd hh:mm:ss"
+                                      );
                             if (a.datatypeId == 1) {
                                 temp.ObjVal = a.curValue.toFixed(2);
                             } else {
@@ -386,10 +417,14 @@
                 let _this = this;
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
-                    storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
-                    areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                    storeId:
+                        _this.queryCondition.storeId == 0
+                            ? null
+                            : _this.queryCondition.storeId,
+                    areaId:
+                        _this.queryCondition.areaId == 0
+                            ? null
+                            : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
@@ -410,7 +445,7 @@
 
 
 <style scoped>
-    .ivu-radio-group-button>>>.ivu-radio-wrapper {
+    .ivu-radio-group-button >>> .ivu-radio-wrapper {
         transition: all 0.1s cubic-bezier(0.6, -0.28, 0.74, 0.05);
     }
 
@@ -420,7 +455,7 @@
         background-position: 0 -15px;
     }
 
-    .ivu-radio-group-button>>>.ivu-radio-wrapper:hover {
+    .ivu-radio-group-button >>> .ivu-radio-wrapper:hover {
         color: #fff;
         background-color: #3dbbcb;
         font-size: 17px;
@@ -439,12 +474,12 @@
         padding-bottom: 10px;
     }
 
-    .ivu-modal-wrap>.ivu-modal {
+    .ivu-modal-wrap > .ivu-modal {
         left: 500px;
         top: 500px;
     }
 
-    .ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab {
+    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
         background: #adb3e2;
         color: #fff;
     }

@@ -129,7 +129,7 @@
                 let {
                     camera
                 } = curCamera;
-                console.log('camera',camera)
+                // return
                 try {
                     let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
 

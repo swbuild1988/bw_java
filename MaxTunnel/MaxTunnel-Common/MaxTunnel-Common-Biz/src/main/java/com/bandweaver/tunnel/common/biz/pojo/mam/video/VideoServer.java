@@ -3,6 +3,9 @@ package com.bandweaver.tunnel.common.biz.pojo.mam.video;
 import java.io.Serializable;
 
 public class VideoServer  implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
     private Integer id;
     private String name;
     private Integer vendor;

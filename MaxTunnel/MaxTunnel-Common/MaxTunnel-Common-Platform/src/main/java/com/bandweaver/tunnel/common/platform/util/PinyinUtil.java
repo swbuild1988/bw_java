@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.common.platform.util;
 
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -36,7 +37,7 @@ public class PinyinUtil {
                 try {  
                     pinyinStr += PinyinHelper.toHanyuPinyinStringArray(newChar[i], defaultFormat)[0].charAt(0);  
                 } catch (BadHanyuPinyinOutputFormatCombination e) {  
-                    e.printStackTrace();  
+                    LogUtil.error(e.toString());
                 }  
             }else{  
                 pinyinStr += newChar[i];  
@@ -60,8 +61,8 @@ public class PinyinUtil {
             if (newChar[i] > 128) {  
                 try {  
                     pinyinStr += PinyinHelper.toHanyuPinyinStringArray(newChar[i], defaultFormat)[0];  
-                } catch (BadHanyuPinyinOutputFormatCombination e) {  
-                    e.printStackTrace();  
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    LogUtil.error(e.toString());
                 }  
             }else{  
                 pinyinStr += newChar[i];  

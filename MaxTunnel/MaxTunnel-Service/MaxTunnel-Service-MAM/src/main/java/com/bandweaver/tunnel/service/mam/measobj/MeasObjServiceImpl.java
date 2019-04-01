@@ -6,7 +6,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
+import org.activiti.engine.impl.json.JsonObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +51,11 @@ public class MeasObjServiceImpl implements MeasObjService {
     private MeasObjModuleCenter measObjModuleCenter;
     @Autowired
     private SectionService sectionService;
-//    @Autowired
+    //    @Autowired
 //    private RedisTemplate redisTemplate;
+    @Autowired
+    private VideoServerService videoServerService;
+
 
     //    @Caching(put = @CachePut(key = "'measObj' + #p0.id"), evict = @CacheEvict())
     @Override
@@ -82,24 +90,24 @@ public class MeasObjServiceImpl implements MeasObjService {
 
     @Override
     public List<MeasObjDto> getMeasObjByCondition(MeasObjVo vo) {
-    
-    	if(vo.getObjtypeIds() != null && vo.getObjtypeIds().isEmpty()) {
-			vo.setObjtypeIds(null);//防止mapper.xml拼接sql出错
-		}
-		if(vo.getTunnelIds() != null && vo.getTunnelIds().isEmpty()) {
-			vo.setTunnelIds(null);//防止mapper.xml拼接sql出错
-		}
-		if(vo.getStoreIds() != null && vo.getStoreIds().isEmpty()) {
-			vo.setStoreIds(null);//防止mapper.xml拼接sql出错
-		}
-		if(vo.getSectionIds() != null && vo.getSectionIds().isEmpty()) {
-			vo.setSectionIds(null);//防止mapper.xml拼接sql出错
-		}
-		if(vo.getIds() != null && vo.getIds().isEmpty()) {
-			vo.setIds(null);//防止mapper.xml拼接sql出错
-		}
-         List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
-         return list == null ? Collections.emptyList() : list ;
+
+        if (vo.getObjtypeIds() != null && vo.getObjtypeIds().isEmpty()) {
+            vo.setObjtypeIds(null);//防止mapper.xml拼接sql出错
+        }
+        if (vo.getTunnelIds() != null && vo.getTunnelIds().isEmpty()) {
+            vo.setTunnelIds(null);//防止mapper.xml拼接sql出错
+        }
+        if (vo.getStoreIds() != null && vo.getStoreIds().isEmpty()) {
+            vo.setStoreIds(null);//防止mapper.xml拼接sql出错
+        }
+        if (vo.getSectionIds() != null && vo.getSectionIds().isEmpty()) {
+            vo.setSectionIds(null);//防止mapper.xml拼接sql出错
+        }
+        if (vo.getIds() != null && vo.getIds().isEmpty()) {
+            vo.setIds(null);//防止mapper.xml拼接sql出错
+        }
+        List<MeasObjDto> list = measObjMapper.getMeasObjByCondition(vo);
+        return list == null ? Collections.emptyList() : list;
     }
 
     @Override
@@ -152,44 +160,69 @@ public class MeasObjServiceImpl implements MeasObjService {
         switch (dataType) {
             case AI:
                 Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv();
-            	return cv == null ? 0 : cv;
+                return cv == null ? 0 : cv;
             case DI:
                 return measObjModuleCenter.getMeasObjDI(objId).getCv() ? 1 : 0;
             case SI:
                 Integer cv2 = measObjModuleCenter.getMeasObjSI(objId).getCv();
-                return cv2 == null ? 0: cv2;
+                return cv2 == null ? 0 : cv2;
             default:
                 break;
         }
         return 0;
     }
 
-	@Override
-	public List<MeasObj> getMeasObjByTargetVal(String targetValue) {
-		ArrayList<MeasObj> list = new ArrayList<>();
-		String[] strArr = targetValue.split(",");
-		for (String objId : strArr) {
-			MeasObj measObj = measObjModuleCenter.getMeasObj(DataTypeUtil.toInteger(objId));
-			if(measObj == null) continue;
-			list.add(measObj);
-		}
-		LogUtil.info("获取指定目标对象：" + list );
-		return list;
-	}
+    @Override
+    public List<MeasObj> getMeasObjByTargetVal(String targetValue) {
+        ArrayList<MeasObj> list = new ArrayList<>();
+        String[] strArr = targetValue.split(",");
+        for (String objId : strArr) {
+            MeasObj measObj = measObjModuleCenter.getMeasObj(DataTypeUtil.toInteger(objId));
+            if (measObj == null) continue;
+            list.add(measObj);
+        }
+        LogUtil.info("获取指定目标对象：" + list);
+        return list;
+    }
 
-	@Override
-	public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
-		Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
-		
-		Set<MeasObj> set = new HashSet<>();
-		//查询所有仓里指定类型的监测对象
-		for (Section section : sectionList) {
-			List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(),objectTypeId);
-			LogUtil.info("所在区段:" + section.getName() + "\n"
-					+ "监测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
-					+ "结果列表：" + list );
-			set.addAll(list);
-		}
-		return set;
-	}
+    @Override
+    public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
+        Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
+
+        Set<MeasObj> set = new HashSet<>();
+        //查询所有仓里指定类型的监测对象
+        for (Section section : sectionList) {
+            List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(), objectTypeId);
+            LogUtil.info("所在区段:" + section.getName() + "\n"
+                    + "监测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
+                    + "结果列表：" + list);
+            set.addAll(list);
+        }
+        return set;
+    }
+
+
+
+    @Override
+    public void setPlanIds(int objtypeId, String planIds) {
+        measObjMapper.updatePlanIdsByObjtypeId(objtypeId, planIds);
+    }
+
+
+
+    @Override
+    public void setVideoIds(int id, String videoIds) {
+        measObjMapper.updateVideoIdsByKeyId(id, videoIds);
+    }
+
+
+    @Override
+    public List<VideoDto> getLocalSectionVideoList(int sectionId) {
+        List<VideoDto> videoDtoList = videoServerService.getVideosBySection(sectionId);
+        return videoDtoList;
+
+
+    }
+
+
 }

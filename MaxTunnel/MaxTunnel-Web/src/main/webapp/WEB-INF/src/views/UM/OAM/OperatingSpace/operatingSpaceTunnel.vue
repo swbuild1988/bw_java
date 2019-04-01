@@ -420,6 +420,9 @@ export default {
     line-height: 3vmin;
     height: 3vmin;
 }
+.conditions >>> .ivu-select-dropdown{
+    max-height: 20vmin;
+}
 /*分页样式*/
 .page >>> .ivu-select-selection{
     height: 3.2vmin;

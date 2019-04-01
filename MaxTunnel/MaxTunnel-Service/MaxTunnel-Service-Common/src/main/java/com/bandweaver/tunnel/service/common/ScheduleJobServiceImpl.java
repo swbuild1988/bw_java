@@ -30,6 +30,8 @@ import com.github.pagehelper.PageInfo;
 @Service
 public class ScheduleJobServiceImpl implements ScheduleJobService {
 
+	private static final String JOB_CLAZZ = "com.bandweaver.tunnel.controller.quartz.QuartzJobFactory";
+
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
 	@Autowired
@@ -45,7 +47,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 
 		// 不存在，创建一个
 		if (null == trigger) {
-			Class<? extends Job> clazz = (Class<? extends Job>) Class.forName("com.bandweaver.tunnel.controller.quartz.QuartzJobFactory");
+			Class<? extends Job> clazz = (Class<? extends Job>) Class.forName(JOB_CLAZZ);
 			JobDetail jobDetail = JobBuilder.newJob(clazz)
 					.withIdentity(job.getJobName(), job.getJobGroup()).build();
 			jobDetail.getJobDataMap().put("scheduleJob", job);

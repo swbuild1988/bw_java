@@ -86,8 +86,8 @@
       <row justify="center" type="flex">
         <img src="../../../assets/VM/footLine.png" height="8px" width="100%">
       </row>
+
     </div>
-    <!--<temperature class="maptemperature"></temperature>-->
     <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
       <map-gauges v-show="show.ges"></map-gauges>
     </transition>
@@ -167,6 +167,7 @@ export default {
         showPlan: false,
         showControlPanel: false
       },
+
       enterClass: "animated bounceInDown",
       leaveClass: "animated zoomOut",
       allVideos: [],

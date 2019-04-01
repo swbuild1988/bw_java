@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void addRolePermissions(Integer roleId, List<Integer> permissionIds) {
 		//删除旧权限
 		rolePermissionMapper.deleteByRoleId(roleId);
@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void addUserRole(Integer userId, List<Integer> roleIds) {
 		//删除旧角色
 		userRoleMapper.deleteByUserId(userId);
@@ -73,8 +73,12 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteRoleBatch(List<Integer> list) {
 		roleMapper.deleteRoleBatch(list);
+		rolePermissionMapper.deleteByRIds(list);
+		userRoleMapper.deleteByRIds(list);
+
 	}
 
 	@Override
@@ -98,6 +102,11 @@ public class RoleServiceImpl implements RoleService {
 	public List<Role> getRolesByUser(Integer id) {
 		List<Role> list = roleMapper.getRolesByUser(id);
 		return list == null ? Collections.emptyList() : list;
+	}
+
+	@Override
+	public List<Role> getRoleByUseName(String username) {
+		return roleMapper.getRoleByUseName(username);
 	}
 
 }

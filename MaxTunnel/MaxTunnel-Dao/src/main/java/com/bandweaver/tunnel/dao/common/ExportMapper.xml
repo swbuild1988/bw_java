@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.ExportMapper">
+
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Export">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <id column="of_type" jdbcType="DECIMAL" property="ofType"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="pdf_path" jdbcType="VARCHAR" property="pdfPath"/>
+        <result column="excel_path" jdbcType="VARCHAR" property="excelPath"/>
+        <result column="type" jdbcType="DECIMAL" property="type"/>
+        <result column="value" jdbcType="DECIMAL" property="value"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into T_COMMON_EXPORT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="ofType != null">
+                of_type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="pdfPath != null">
+                pdf_path,
+            </if>
+            <if test="excelPath != null">
+                excel_path,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="value != null">
+                value,
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="ofType != null">
+                #{ofType,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="pdfPath != null">
+                #{pdfPath,jdbcType=VARCHAR},
+            </if>
+            <if test="excelPath != null">
+                #{excelPath,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=DECIMAL},
+            </if>
+            <if test="value != null">
+                #{value,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+    </insert>
+
+    <select id="getList" resultMap="BaseResultMap">
+        select * from T_COMMON_EXPORT
+    </select>
+
+    <select id="get" resultMap="BaseResultMap">
+        select * from T_COMMON_EXPORT where id = #{id}
+    </select>
+
+    <select id="getByExcelPath" resultMap="BaseResultMap">
+        select * from T_COMMON_EXPORT where excel_path = #{excelPath}
+    </select>
+
+    <select id="getListByOfTypeAndType" resultMap="BaseResultMap">
+        select * from T_COMMON_EXPORT where of_type = #{ofType} and type = #{type}
+    </select>
+
+    <select id="getListByOfTypeAndTypeAndValue" resultMap="BaseResultMap">
+        select * from T_COMMON_EXPORT where of_type = #{ofType} and type = #{type} and value = #{value}
+    </select>
+
+</mapper>

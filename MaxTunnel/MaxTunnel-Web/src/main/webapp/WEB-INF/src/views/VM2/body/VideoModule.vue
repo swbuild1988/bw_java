@@ -4,7 +4,7 @@
       <module-title :title="title"></module-title>
     </div>
     <div class="camera" id="camera">
-      <videoloop :videolist="loopScene"></videoloop>
+      <videoloop :videolist="loopScene" :videoNumber="1"></videoloop>
     </div>
   </div>
 </template>

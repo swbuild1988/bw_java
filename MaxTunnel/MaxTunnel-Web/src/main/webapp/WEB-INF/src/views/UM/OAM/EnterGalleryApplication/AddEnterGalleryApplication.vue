@@ -7,13 +7,13 @@
                 <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </FormItem>
-        <FormItem label="申请人所属部门：" prop="positionId">
-            <Select v-model="addEnterGalleryApplication.positionId" @on-change="chooseStaff()"  :disabled="this.addEnterGalleryApplication.staffCompany==null">
+        <FormItem label="申请人所属部门：" prop="positionId" :disabled="this.addEnterGalleryApplication.staffCompany==null">
+            <Select v-model="addEnterGalleryApplication.positionId" @on-change="chooseStaff()" >
                 <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>
             </Select>
         </FormItem>
-        <FormItem label="申请人：" prop="staffId">
-            <Select v-model="addEnterGalleryApplication.staffId"  :disabled="this.addEnterGalleryApplication.staffCompany==null||this.addEnterGalleryApplication.positionId==null">
+        <FormItem label="申请人：" prop="staffId"  :disabled="this.addEnterGalleryApplication.staffCompany==null||this.addEnterGalleryApplication.positionId==null">
+            <Select v-model="addEnterGalleryApplication.staffId">
                 <Option v-for="(item) in staffs" :value="item.id" :key="item.id">{{item.name}}</Option>
             </Select>
             <!-- <Input type="text" v-model="addEnterGalleryApplication.staffId" readonly></Input> -->
@@ -43,38 +43,15 @@
                 <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </FormItem>
-        <FormItem label="访客详细信息："
-            v-for="(item, index) in items"
-                v-if="item.status"
-                :key="index"
-                :prop="item.name+','+item.idCard+','+item.tel"
-                class="ivu-form-item-required">
-            <Row>
-                <Col span="6">
-                    <Input type="text" v-model="item.name" placeholder="请输入访客姓名" @on-blur="validateName(index)"></Input>
-                    <div class="ivu-form-item-error-tip"  v-show="check[index].checkName">访客姓名不能为空</div>
-                </Col>
-                <Col span="6">
-                    <Input type="text" v-model="item.idCard" placeholder="请输入身份证号" @on-blur="validateIdCard(index)"></Input>
-                    <div class="ivu-form-item-error-tip" v-show="check[index].checkidCard">身份证号不能为空</div>
-                    <div class="ivu-form-item-error-tip" v-show="check[index].checkRightIdCard">请输入正确的身份证号</div>
-                </Col>
-                <Col span="6">
-                    <Input type="text" v-model="item.tel" placeholder="请输入联系方式" @on-blur="validateTel(index)"></Input>
-                    <div class="ivu-form-item-error-tip" v-show="check[index].checkTel">联系方式不能为空</div>
-                    <div class="ivu-form-item-error-tip" v-show="check[index].checkRightTel">请输入正确的联系方式</div>
-                </Col>
-                <Col span="4" offset="1">
-                    <Button type="ghost" @click="handleRemove(index)">删除</Button>
-                </Col>
-            </Row>
-        </FormItem>
-        <FormItem>
-            <Row>
-                <Col span="12">
-                    <Button type="dashed" long @click="handleAdd" icon="plus-round">添加访客信息</Button>
-                </Col>
-            </Row>
+        <FormItem label="访客信息：" class="required">
+            <Poptip placement="top" style="width: 100%;">
+                <Input v-model="addEnterGalleryApplication.visitorInfo" v-show="false"></Input>
+                <Input v-model="addEnterGalleryApplication.visitorInfoNames" @on-blur="checkVisitorInfo"></Input>
+                <div class="ivu-form-item-error-tip"  v-show="isVisitorNames">访客不能为空</div>
+                <div class="pop" slot="content">
+                    <outSiders v-on:childByValue="childByValue"></outSiders>
+                </div>    
+            </Poptip>    
         </FormItem>
         <div style="text-align: center">
             <Button type="ghost"  style="margin-right: 8px" @click="goBack()">返回</Button>
@@ -87,8 +64,10 @@
 import { TunnelService } from '../../../../services/tunnelService'
 import { EnumsService } from '../../../../services/enumsService'
 import { EnterGalleryService } from '../../../../services/enterGalleryService'
+import outSiders from '../../../../components/UM/OAM/outsiderChoose'
 
 export default {
+    components: {outSiders},
     data(){ 
         return{
             backStyle:{
@@ -108,11 +87,11 @@ export default {
                 tunnelId: null,
                 action: null,
                 preTime: null,
-                visitorNumber: 1,
+                visitorNumber: null,
                 visitorCompany: null,
                 visitorInfo: null,
-                approverId: null,  
-                remark: ''
+                visitorInfoNames: null,
+                approverId: null
             },
             ruleValidate:{
                 staffCompany:[
@@ -136,36 +115,48 @@ export default {
                 visitorCompany:[
                     {type: 'number',required: true, message: '请选择访客所属公司', trigger: 'change'}
                 ],
+                visitorInfoNames: [
+                    {required: true, message: '请选择访客', trigger: 'blur'}
+                ]
             },
-            staffs:[{id:1,name:'张三'}],
-            company:[{id:1, name: '波汇科技'}],
-            tunnels: [{id: 1,name: '凤岭北路'}],
-            action:[{id: 1,name: '维修'}],
-            positions:[{id:1,partName:'技术部'}],
-            index: 1,
-            items:[
-                {
-                    index: 1,
-                    status: 1,
-                    name: null,
-                    idCard: null,
-                    tel: null
-                }
-            ],
-            check:[
-                {
-                    index: 1,
-                    status: 1,
-                    checkName: false,
-                    checkidCard: false,
-                    checkRightIdCard: false,
-                    checkTel: false,
-                    checkRightTel: false
-                }
-            ],
-            checkStatus: false,
-            isDisable:false
+            staffs:[],
+            company:[],
+            tunnels: [],
+            action:[],
+            positions:[],
+            // index: 1,
+            // items:[
+            //     {
+            //         index: 1,
+            //         status: 1,
+            //         name: null,
+            //         idCard: null,
+            //         tel: null
+            //     }
+            // ],
+            // check:[
+            //     {
+            //         index: 1,
+            //         status: 1,
+            //         checkName: false,
+            //         checkidCard: false,
+            //         checkRightIdCard: false,
+            //         checkTel: false,
+            //         checkRightTel: false
+            //     }
+            // ],
+            isDisable:false,
+            isVisitorNames: false
         }
+    },
+    watch: {
+        'addEnterGalleryApplication.visitorInfoNames': function(newVal, oldVal){
+            if(newVal==''||newVal==null||newVal==undefined){
+                this.isVisitorNames = true
+            }else{
+                this.isVisitorNames = false
+            }
+        }    
     },
     mounted(){
         let _this = this
@@ -201,79 +192,40 @@ export default {
         })
     },
     methods:{
-        handleAdd () {
-            this.index++;
-            this.items.push({
-                index: this.index,
-                status: 1,
-                name:'',
-                idCard:'',
-                tel:''
-            });
-            this.check.push({
-                index: this.index,
-                status: 1,
-                checkName: false,
-                checkidCard: false,
-                checkRightIdCard: false,
-                checkTel: false,
-                checkRightTel: false
-            })
-        },
-        handleRemove (index) {
-            this.items[index].status = 0;
-            this.check[index].status = 0;
-        },
         submitEnterGalleryApplication(name){
             this.isDisable = true
             setTimeout(()=>{
                 this.isDisable = false
-            for(let a in this.items){
-                this.validateName(a);
-                this.validateIdCard(a);
-                this.validateTel(a); 
-                if(this.check[a].checkName&&this.check[a].checkidCard&&this.check[a].checkTel&&this.check[a].checkRightIdCard&&this.check[a].checkRightTel){
-                    this.checkStatus = false;
-                }else{
-                    this.checkStatus = true;
-                }
-            }
-            this.$refs[name].validate((valid) => {
-                if(valid){
-                    if(this.checkStatus == true){
-                        var arr = new Array()
-                        for(let index in this.items){
-                            if(this.items[index].status==1){
-                                arr.push(this.items[index].name+"-"+this.items[index].idCard+"-"+this.items[index].tel)
+                this.$refs[name].validate((valid) => {
+                    if(valid){
+                        if(this.isVisitorNames == false){
+                            var arr = new Array()
+                            var formInfo = {
+                                staffId: parseInt(this.addEnterGalleryApplication.staffId),
+                                approverId: parseInt(this.addEnterGalleryApplication.approverId),
+                                tunnelId: parseInt(this.addEnterGalleryApplication.tunnelId),
+                                action: parseInt(this.addEnterGalleryApplication.action),
+                                preTime: this.addEnterGalleryApplication.preTime,
+                                visitorNumber: this.addEnterGalleryApplication.visitorNumber,
+                                visitorCompany: parseInt(this.addEnterGalleryApplication.visitorCompany),
+                                visitorInfo: this.addEnterGalleryApplication.visitorInfo
                             }
+                            let _this = this
+                            EnterGalleryService.addEnterGalleryApplication(formInfo).then((result)=>{
+                                    _this.$router.push("/UM/enterGalleryApplication/query");
+                                },
+                                (error)=>{
+                                    _this.Log.info(error)
+                                }
+                            )
                         }
-                        this.addEnterGalleryApplication.visitorInfo = arr.toString()
-                        var formInfo = {
-                            staffId: parseInt(this.addEnterGalleryApplication.staffId),
-                            approverId: parseInt(this.addEnterGalleryApplication.approverId),
-                            tunnelId: parseInt(this.addEnterGalleryApplication.tunnelId),
-                            action: parseInt(this.addEnterGalleryApplication.action),
-                            preTime: this.addEnterGalleryApplication.preTime,
-                            visitorNumber: this.addEnterGalleryApplication.visitorNumber,
-                            visitorCompany: parseInt(this.addEnterGalleryApplication.visitorCompany),
-                            visitorInfo: this.addEnterGalleryApplication.visitorInfo
-                        }
-                        let _this = this
-                        EnterGalleryService.addEnterGalleryApplication(formInfo).then((result)=>{
-                                _this.$router.push("/UM/enterGalleryApplication/query");
-                            },
-                            (error)=>{
-                                _this.Log.info(error)
-                            })
                     }
-                }else{
-                    this.$Message.error('请输入正确的申请信息');
-                }
-            })
+                })
             },2000)
         },
-        chooseDeptment(){                                                                                 
+        chooseDeptment(){                                                                             
             if(this.addEnterGalleryApplication.staffCompany!=null){
+                this.addEnterGalleryApplication.positionId = null
                 let _this = this
                 EnterGalleryService.getDepsByCompanyId(_this.addEnterGalleryApplication.staffCompany).then(
                     (result)=>{
@@ -281,69 +233,47 @@ export default {
                     },
                     (error)=>{
                         _this.Log.info(error)
-                    })
-                // this.axios.get('/companies/'+this.addEnterGalleryApplication.staffCompany+'/departments').then(response=>{
-                //     let{ code,data } = response.data
-                //     if(code==200){
-                //         this.positions = data;
-                //     }
-                // })
+                    }
+                )
             }
         },
         chooseStaff(){
             if(this.addEnterGalleryApplication.positionId!=null||this.addEnterGalleryApplication.staffId!=null){
+                this.addEnterGalleryApplication.staffId = null
                 let _this = this
                 EnterGalleryService.getStaffsByComIdAndDepId(_this.addEnterGalleryApplication.staffCompany,_this.addEnterGalleryApplication.positionId).then(
                     (result)=>{
-                        _this.staffs = data
+                        _this.staffs = result
                     },
                     (error)=>{
                         _this.Log.info(error)
-                    })
-                // this.axios.get('/companies/'+this.addEnterGalleryApplication.staffCompany+'/departments/'+this.addEnterGalleryApplication.positionId+'/staffs').then(response=>{
-                //     let{ code,data } =response.data
-                //     if(code==200){
-                //         this.staffs = data
-                //     }
-                // })
+                    }
+                )           
             }
         }, 
-        validateName(index){
-            if(this.items[index].name==null||this.items[index].name==undefined||this.items[index].name==""){
-                this.check[index].checkName = true;
-            }else{
-                this.check[index].checkName = false;
-            }
-        },
-        validateIdCard(index){
-            if(this.items[index].idCard==null||this.items[index].idCard==undefined||this.items[index].idCard==""){
-                this.check[index].checkidCard = true;
-            }else{
-                this.check[index].checkidCard = false;
-                var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
-                if(reg.test(this.items[index].idCard) === false) {
-                    this.check[index].checkRightIdCard = true
-                }else{
-                    this.check[index].checkRightIdCard = false
-                }
-            }
-        },
-        validateTel(index){
-            if(this.items[index].tel==null||this.items[index].tel==undefined||this.items[index].tel==""){
-                this.check[index].checkTel = true;
-            }else{
-                this.check[index].checkTel = false;
-                var reg = /^1[0-9]{10}$/;
-                if(reg.test(this.items[index].tel)===false){
-                   this.check[index].checkRightTel = true; 
-                }else{
-                    this.check[index].checkRightTel = false;
-                }
-            }
-        },
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        childByValue(childByValue){
+            var arr = new Array()
+            var str = ''
+            var names = ''
+            arr = childByValue
+            arr.forEach(temp => {
+                str += temp.split(":")[0]+','
+                names += temp.split(":")[1]+','
+            })
+            this.addEnterGalleryApplication.visitorInfoNames = names.substring(0, names.length-1)
+            this.addEnterGalleryApplication.visitorInfo = str.substring(0,str.length-1)
+        },
+        //验证访客信息不能为空
+        checkVisitorInfo(){
+            if(this.addEnterGalleryApplication.visitorInfoNames==null||this.addEnterGalleryApplication.visitorInfoNames==''){
+                this.isVisitorNames = true
+            }else{
+                this.isVisitorNames = false
+            }
         }
     }
 }
@@ -357,6 +287,18 @@ export default {
 }
 ul li{
     list-style: none;
+}
+.ivu-poptip >>> .ivu-poptip-rel{
+    width: 100%
+}
+.required >>> .ivu-form-item-label:before{
+    content: '*';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+    color: #ed3f14;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{

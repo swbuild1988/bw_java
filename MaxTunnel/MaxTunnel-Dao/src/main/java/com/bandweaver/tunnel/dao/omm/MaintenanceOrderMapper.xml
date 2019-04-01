@@ -169,6 +169,25 @@
         </where>
     </select>
 
+	<select id="getCountByCondition" resultType="int">
+		select count(1) from t_omm_maintenance_order a
+		<where>
+			<if test="tunnelId != null">
+        		and a.tunnel_id = #{tunnelId}
+        	</if>
+        	<if test="isFinished != null">
+        		and a.is_finished = #{isFinished}
+        	</if>
+        	<if test="startTime != null">
+                and a.end_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.end_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+		</where>
+	</select>
 
     <resultMap id="maintenanceOrderDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.MaintenanceOrderDto">
         <id column="id" property="id"/>

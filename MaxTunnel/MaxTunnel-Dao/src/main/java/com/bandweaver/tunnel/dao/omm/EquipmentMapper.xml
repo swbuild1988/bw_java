@@ -242,7 +242,7 @@
 
     <insert id="addEquipmentBatch" useGeneratedKeys="false">
         insert into t_omm_equipment
-        (id,name,type,crt_time,run_time,status,tunnel_id,vender_id,model_id,alarm_no)
+        (id,name,type,crt_time,run_time,status,tunnel_id,vender_id,model_id,obj_id,alarm_no)
         select OMM_EQUIPMENT_SEQUENCE.nextval,a.* from (
         <foreach collection="list" item="item" index="index" close=")"
                  open="(" separator="union">
@@ -255,6 +255,7 @@
             #{item.tunnelId},
             #{item.venderId},
             #{item.modelId},
+            #{item.objId},
             #{item.alarmNo}
             from dual
         </foreach>

@@ -111,6 +111,11 @@
   <select id="getAllMenuName" resultType="String">
   	select menu_name from T_SECURITY_PERMISSION
   </select>
+
+
+    <select id="getAllMenuCode" resultType="String">
+  	select menu_code from T_SECURITY_PERMISSION
+  </select>
   
   <select id="getAllPermission" resultType="String">
   	select permission_code from T_SECURITY_PERMISSION
@@ -119,6 +124,10 @@
   <select id="getPermissionsByMenu" resultMap="BaseResultMap">
   	select * from T_SECURITY_PERMISSION where menu_name = #{menuName}
   </select>
+
+    <select id="getPermissionsByMenuCode" resultMap="BaseResultMap">
+        select * from T_SECURITY_PERMISSION where menu_code = #{menuCode}
+    </select>
   
   <delete id="deleteBatch">
   	delete from T_SECURITY_PERMISSION where id in 
@@ -163,5 +172,7 @@
 	where rp.r_id = #{rid} order by p.menu_name
   	
   </select>
+
+
   
 </mapper>

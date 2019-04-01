@@ -1,6 +1,8 @@
 package com.bandweaver.tunnel.common.biz.itf.mam.measobj;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -110,9 +112,25 @@ public interface MeasObjService {
 	List<MeasObj> getMeasObjByTargetVal(String targetValue);
 
 	Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue,List<Section> sectionList);
-	
 
-	
-	
-	
+	/**
+	 * 绑定预案
+	 * @param objtypeId
+	 * @param planIds
+	 */
+	void setPlanIds(int objtypeId, String planIds);
+
+	/**
+	 * 绑定视频
+	 * @param id
+	 * @param videoIds
+	 */
+	void setVideoIds(int id, String videoIds);
+
+	/**
+	 * 获取监测对象所在section的所有视频列表
+	 * @param sectionId
+	 * @return
+	 */
+	List<VideoDto> getLocalSectionVideoList(int sectionId);
 }

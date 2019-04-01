@@ -32,9 +32,8 @@ public class ByteArrayUtil {
             bo.close();  
             oo.close();  
         } catch (Exception e) {  
-            LogUtil.info("translation" + e.getMessage());  
-            e.printStackTrace();  
-        }  
+            LogUtil.error("translation" + e.toString());
+        }
         return bytes;  
     } 
     
@@ -54,8 +53,7 @@ public class ByteArrayUtil {
             bi.close();
             oi.close();
         } catch (Exception e) {
-        	LogUtil.info("translation" + e.getMessage());
-            e.printStackTrace();
+        	LogUtil.error("translation" + e.toString());
         }
         return obj;
     }

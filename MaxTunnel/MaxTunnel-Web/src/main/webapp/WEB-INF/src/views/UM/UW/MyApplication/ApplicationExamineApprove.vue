@@ -23,7 +23,7 @@
             <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
           </FormItem>
           <FormItem label="访客详细信息：">
-            <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
+            <Table border :columns="columns1" :data="addEnterGalleryApplication.list"></Table>
           </FormItem>
           <FormItem label="备注：">
             <Input class="remark" type="textarea" v-model="addEnterGalleryApplication.comment" readonly></Input>
@@ -84,7 +84,7 @@ export default {
           name: null
         },
         positionId: null,
-        visitorInfo: [],
+        // visitorInfo: [],
         comment: null,
         processInstanceId: null,
         statusName: null,
@@ -101,31 +101,22 @@ export default {
         },
         {
           title: "身份证号",
-          key: "idCard",
+          key: "identityNO",
           align: "center"
         },
         {
           title: "联系方式",
-          key: "tel",
+          key: "telphone",
           align: "center"
         }
       ],
       ruleValidate: {
         enterTime: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择进入管廊时间",
-            trigger: "change"
-          }
+          { required: true, type: "date", message: "请选择进入管廊时间", trigger: "change" }
         ],
         exitTime: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择出廊时间",
-            trigger: "change"
-          }
+          { required: true, type: "date", message: "请选择出廊时间", trigger: "change" },
+          { validator: this.checkEndTime, trigger: 'change' }
         ]
       },
       examineStatus: 1,
@@ -157,21 +148,21 @@ export default {
             _this.addEnterGalleryApplication.exitTime = new Date(result.exitTime).format('yyyy-MM-dd hh:mm:s')
           }
           _this.getAgree()
-          var arr = new Array();
-          for (let index in result.visitorInfo.split(",")) {
-            var str = result.visitorInfo.split(",")[index];
-            arr.push(str);
-          }
-          var arr2 = new Array();
-          for (let k in arr) {
-            var obj = {
-              name: arr[k].split("-")[0],
-              idCard: arr[k].split("-")[1],
-              tel: arr[k].split("-")[2]
-            };
-            arr2.push(obj);
-          }
-          _this.addEnterGalleryApplication.visitorInfo = arr2;
+          // var arr = new Array();
+          // for (let index in result.visitorInfo.split(",")) {
+          //   var str = result.visitorInfo.split(",")[index];
+          //   arr.push(str);
+          // }
+          // var arr2 = new Array();
+          // for (let k in arr) {
+          //   var obj = {
+          //     name: arr[k].split("-")[0],
+          //     idCard: arr[k].split("-")[1],
+          //     tel: arr[k].split("-")[2]
+          //   };
+          //   arr2.push(obj);
+          // }
+          // _this.addEnterGalleryApplication.visitorInfo = result.list;
           _this.addEnterGalleryApplication.preTime = new Date(
             _this.addEnterGalleryApplication.preTime
           ).format("yyyy-MM-dd hh:mm:s");
@@ -207,6 +198,15 @@ export default {
     //   });
   },
   methods: {
+    checkEndTime(rule, value, callback){
+        if(this.addEnterGalleryApplication.enterTime>this.addEnterGalleryApplication.exitTime){
+            callback( new Error("出廊时间不能大于进入管廊时间") )
+        }else if(this.addEnterGalleryApplication.enterTime.getTime()===this.addEnterGalleryApplication.exitTime.getTime()){
+            callback( new Error("进入管廊时间不能等于出廊时间") )
+        }else{
+            callback()
+        }
+    },
     submitExitTime(name) {
       this.$refs[name].validate(valid => {
         if (valid) {

@@ -41,6 +41,6 @@ export default {
     goToMoudle(path) {
       this.$router.push(path);
     }
-  }
+  },
 };
 </script>

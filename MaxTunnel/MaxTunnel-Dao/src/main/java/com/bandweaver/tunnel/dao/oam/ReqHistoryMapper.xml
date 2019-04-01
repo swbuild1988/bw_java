@@ -332,6 +332,9 @@
             <if test="processInstanceId != null">
                 and process_instance_id = #{processInstanceId}
             </if>
+            <if test="visitorInfo != null and visitorInfo.trim() != ''">
+				and instr(visitor_info,#{visitorInfo})>0
+			</if>
             <if test="isFinished != null">
                 and is_finished = #{isFinished}
             </if>

@@ -12,7 +12,7 @@ public interface SpareOutService {
 
     int update(SpareOut s);
 
-    int addBatch(List<SpareOut> list, Integer tunnelId);
+    int addBatch(List<SpareOut> list, Integer tunnelId, Integer objId);
     
     List<SpareOutDto> getSpareOutDtoByCondition(SpareOutVo vo);
     

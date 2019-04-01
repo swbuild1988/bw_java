@@ -2,6 +2,8 @@ import {
     addEntity,
     computeIntersections,
     _getFieldValues,
+    changStrLength,
+    replaceStr
 } from "../../../../scripts/commonFun";
 
 const addBarnLabel = {
@@ -41,10 +43,11 @@ const addBarnLabel = {
 
                             result.moInfo.forEach(label => _this.labelsArray.push(label));
 
-                            let lablesIDArray = _this.labelsArray.map(obj => obj.id);
+                            let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
+
                             let { startPoint,endPoint } = result.sectionInfo;
 
-                            sqlQuery.call(_this, viewer, 'MOID in (' + lablesIDArray.toString() + ')', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
+                            sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
 
                             //更新label值
                             _this._updateEntityVal();
@@ -144,7 +147,7 @@ const addBarnLabel = {
 
             return function (queryEventArgs) {
                 var selectedFeatures = queryEventArgs.originResult.features;
-
+                console.log('selectedFeatures',selectedFeatures)
                 for(let i=0;i<selectedFeatures.length;i++){
 
                     var geographic=computeIntersections({x:_getFieldValues(selectedFeatures[i],'X'),y:_getFieldValues(selectedFeatures[i],'Y'),z:_getFieldValues(selectedFeatures[i],'Z')},startLocation,endLocation);//得到点到直线的垂直交点经纬度
@@ -164,7 +167,7 @@ const addBarnLabel = {
             if( moTypeId == 7 ) return false; //moTypeId = 7 时，为相机对象
 
             let { viewer } = this;
-            let [ currLabel ] = labels.filter( label => label.id == _getFieldValues(selectedFeatures,'MOID')); //获取当前的label
+            let [ currLabel ] = labels.filter( label => changStrLength(label.id,10) == _getFieldValues(selectedFeatures,'MOID')); //获取当前的label
 
             let object = {
                 viewer,

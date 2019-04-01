@@ -1,7 +1,7 @@
 <template>
     <div class="gasState" >
         <div class="mapgaugeLast"  v-for="item in gaugeChart">
-            <simple-gauge style="height: 10vh;" v-bind="item" ref="item.id">
+            <simple-gauge style="height: 10vh;width: 6vw;" v-bind="item" ref="item.id">
             </simple-gauge>
         </div>
     </div>
@@ -14,11 +14,10 @@
         margin-top: 8.5%;
         z-index: 1003;
         right: 2%;
-        width: 5.5vw;
+        width: 6vw;
     }
     .mapgaugeLast {
-      height: 11vh;
-        width: 100%;
+        height: 11vh;
         position: relative;
         background: url("../../../assets/VM/gauge_bg.png") no-repeat;
         background-size: 100% 100%;

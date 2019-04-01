@@ -6,6 +6,8 @@ import com.bandweaver.tunnel.common.biz.pojo.oam.Event;
 
 public class EventDto extends Event {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private Staff staff;
 	private String staffName;
 	
@@ -20,7 +22,9 @@ public class EventDto extends Event {
 	}
 
 	public String getLevelName() {
-		return EventLevelEnum.getEnum(this.getLevel()).getName();
+		if(this.getLevel() == null) return null;
+		EventLevelEnum e = EventLevelEnum.getEnum(this.getLevel());
+		return e == null ? null : e.getName();
 	}
 
 	public void setLevelName(String levelName) {

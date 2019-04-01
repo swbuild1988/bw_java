@@ -1,5 +1,5 @@
 import axios from "axios";
-import { resolve } from "path";
+
 
 const isRealData = require("../../static/serverconfig").isRealData;
 

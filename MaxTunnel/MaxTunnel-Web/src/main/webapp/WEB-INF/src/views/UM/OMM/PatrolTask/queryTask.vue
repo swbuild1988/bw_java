@@ -30,7 +30,7 @@
             </Col>
         </Row>
         <div class="list">
-            <Table  border :columns='columns'  :data="patrolTask"></Table>
+            <Table :columns='columns'  :data="patrolTask"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>

@@ -54,45 +54,13 @@
                     <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
         </Row>
-        <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
+        <Table border ref="selection" :columns="columns7" :data="sectionData" @on-selection-change="startdelete" style="margin:20px;"></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top"  show-sizer @on-page-size-change='handlePageSize' :page-size="page.pageSize"
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
+        <!-- 修改区段信息 -->
         <div>
-            <section-module v-bind="addSectionInfo" v-on:listenToAdd="saveSection"></section-module>
+            <section-modification v-bind="changeSectionInfo"></section-modification>
         </div>
-        <div>
-            <section-modification v-bind="changeSectionInfo" v-on:listenToChange="saveChangeSection"></section-modification>
-        </div>
-        <Modal 
-            v-model="batchCreate.isShow" 
-            width='900' 
-            style="padding-left: 20px;padding-right: 20px;"
-            title="批量添加区段"
-            ok-text="提交"
-            @on-ok="save"
-            @on-visible-change="visibleChanged"
-            >
-            <div>
-                <span>所属管廊：</span>
-                <Select v-model="batchCreate.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="showSectionsInfo">
-                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
-                </Select>
-            </div>
-            <div style="margin-top: 20px">
-                <Tabs v-model="batchCreate.tabValue">
-                    <TabPane  v-for="section in batchCreate.sectionsInfo" :label="section.storeName" :name="section.storeName" :key="section.id">
-                        <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 6px;margin-bottom: 6px">
-                            <Checkbox :indeterminate="section.indeterminate" :value="section.checkAll" @click.prevent.native="handleCheckAll(section)">
-                                全选
-                            </Checkbox>
-                        </div>
-                        <CheckboxGroup v-model="section.checkAllGroup" @on-change="checkChanged">
-                            <Checkbox v-for="area in section.areas" :label="area.name" :key="area.id" v-model="area.check" :value="area.check"></Checkbox>
-                        </CheckboxGroup>
-                    </TabPane>
-                </Tabs>
-            </div>
-        </Modal>
     </div>
 </template>
 
@@ -140,17 +108,28 @@ export default {
                 {
                     title: "所属管廊",
                     key: "tunnelName",
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        let temp = params.row.store.tunnel.name
+                        return h('span', temp)
+                    }
                 },
                 {
                     title: "所属管仓",
                     key: "storeName",
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        let temp = params.row.store.name
+                        return h('span', temp)
+                    }
                 },
                 {
                     title: "所属区域",
                     key: "areaName",
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span', params.row.area.name)
+                    }
                 },
                 {
                     title: "相机视角",
@@ -168,9 +147,22 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "创建时间",
-                    key: "crtTime",
-                    align: "center"
+                    title: 'S1',
+                    align: 'center'
+                },
+                {
+                    title: 'S2',
+                    align: 'center'
+                },
+                {
+                    title: '创建时间',
+                    key: 'crtTime',
+                    align: 'center',
+                    width: 190,
+                    render: (h,params) => {
+                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
+                        return h('div',temp)
+                    }
                 },
                 {
                     title: "操作",
@@ -198,7 +190,7 @@ export default {
                     }
                 }
             ],
-            data6: [],
+            sectionData: [],
             types: [],
             tunnels: [],
             areas: [],
@@ -207,24 +199,12 @@ export default {
                 pageSize: 10,
                 pageTotal: 0
             },
-            formValidate: {
-                name: "",
-                tunnelId: null,
-                storeId: null,
-                areaId: null,
-                totalCableNumber: null,
-                camera: null,
-                startPoint: null,
-                endPoint: null
-            },
             ruleValidate: {},
-            addSectionInfo: {
-                show: { state: false },
-                addInfo: {}
-            },
             changeSectionInfo: {
-                show: { state: false },
-                changeInfo: {}
+                show: { 
+                    state: false 
+                },
+                sectionId: null
             },
             deleteShow: false,
             deleteSelect: [],
@@ -254,81 +234,24 @@ export default {
             };
             return Object.assign({}, research);
         },
-        params() {
-            // 新增
-            let param = {
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                storeId: this.formValidate.storeId,
-                areaId: this.formValidate.areaId,
-                totalCableNumber: this.formValidate.totalCableNumber,
-                camera: this.formValidate.camera,
-                startPoint: this.formValidate.startPoint,
-                endPoint: this.formValidate.endPoint
-            };
-            return Object.assign({}, param);
-        },
-        modifications() {
-            let param = {
-                id: this.formValidate.id,
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                storeId: this.formValidate.storeId,
-                areaId: this.formValidate.areaId,
-                totalCableNumber: this.formValidate.totalCableNumber,
-                camera: this.formValidate.camera,
-                startPoint: this.formValidate.startPoint,
-                endPoint: this.formValidate.endPoint
-            };
-            return Object.assign({}, param);
-        }
     },
     methods: {
         showTable() {
             this.axios.post("/sections/datagrid", this.researches).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
-                    let allinfo = [];
-                    for (let index in data.list) {
-                        let info = {};
-                        info.id = data.list[index].id;
-                        info.name = data.list[index].name;
-                        info.crtTime = new Date(
-                            data.list[index].crtTime
-                        ).format("yyyy-MM-dd hh:mm:s");
-                        if (data.list[index].totalCableNumber != null) {
-                            info.totalCableNumber =
-                                data.list[index].totalCableNumber;
-                        }
-                        if (
-                            data.list[index].store != null &&
-                            data.list[index].store.tunnel != null
-                        ) {
-                            info.tunnelName =
-                                data.list[index].store.tunnel.name;
-                            info.tunnelId = data.list[index].store.tunnel.id;
-                        }
-                        if (data.list[index].store != null) {
-                            info.storeName = data.list[index].store.name;
-                            info.storeId = data.list[index].store.id;
-                        }
-                        if (data.list[index].area != null) {
-                            info.areaName = data.list[index].area.name;
-                            info.areaId = data.list[index].area.id;
-                        }
-                        info.camera = data.list[index].camera != null ? data.list[index].camera : ''
-                        info.startPoint = data.list[index].startPoint != null ? data.list[index].startPoint : '';
-                        
-                        info.endPoint = data.list[index].endPoint != null ? data.list[index].endPoint : '';
-                        allinfo.push(info);
-                    }
-                    this.data6 = allinfo;
+                    this.sectionData = data.list
                     this.page.pageTotal = data.total;
                 }
             });
         },
-        addNewSection() {
-            this.addSectionInfo.show.state = !this.addSectionInfo.show.state;
+        handlePage(value) {
+            this.page.pageNum = value;
+            this.showTable();
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value;
+            this.showTable();
         },
         create() {
             this.canCreate = false;
@@ -361,48 +284,11 @@ export default {
                     _this.Log.info(error)
                 })
         },
-        handlePage(value) {
-            this.page.pageNum = value;
-            this.showTable();
-        },
-        handlePageSize(value) {
-            this.page.pageSize = value;
-            this.showTable();
-        },
-        saveSection(_data) {
-            //保存新区段
-            this.formValidate = _data;
-            this.axios.post("/sections", this.params).then(res => {
-                // console.log(this.params);
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.$Message.success("添加成功！");
-                    this.addSectionInfo.show.state = !this.addSectionInfo.show
-                        .state;
-                    this.showTable();
-                }
-            });
-        },
+        //编辑区段信息
         editSection(index) {
-            this.changeSectionInfo.changeInfo = this.data6[index];
-            this.formValidate.id = this.data6[index].id;
-            this.changeSectionInfo.show.state = !this.changeSectionInfo.show
-                .state;
-        },
-        saveChangeSection(data) {
-            this.formValidate = data;
-            this.axios.put("/sections", this.modifications).then(res => {
-                console.log(this.modifications);
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.changeSectionInfo.show.state = !this.changeSectionInfo
-                        .show.state;
-                    this.$Message.success("修改成功！");
-                }
-            });
+            this.changeSectionInfo.sectionId = this.sectionData[index].id
+            this.changeSectionInfo.show.state = !this.changeSectionInfo.show.state;
+            console.log('this.changeSectionInfo.sectionId', this.changeSectionInfo.sectionId)
         },
         startdelete(selection) {
             if (selection.length != 0) {
@@ -417,6 +303,7 @@ export default {
             this.researchInfo.storeId = _data.id;
             this.barnNameShow = _data.name;
         },
+        // 删除所选区段
         alldelete() {
             this.$Modal.confirm({
                 title: "删除确认",
@@ -476,75 +363,13 @@ export default {
                 })
             }
         },
-        handleCheckAll(section){
-            if(section.indeterminate){
-                section.checkAll = false
-            } else {
-                section.checkAll = !section.checkAll
-            }
-            section.indeterminate = false
-
-            if(section.checkAll){
-                section.areas.forEach(area=>{
-                    section.checkAllGroup.push(area.name)
-                })
-            } else {
-                section.checkAllGroup = []
-            }
-        },
-        checkChanged(data){
-            let curItem = this.batchCreate.sectionsInfo.find(item=>{
-                return item.storeName == this.batchCreate.tabValue
-            })
-            let length = curItem.areas.length
-            if(data.length == length){
-                curItem.indeterminate = false
-                curItem.checkAll = true
-            }else if(data.length > 0){
-                curItem.indeterminate = true
-                curItem.checkAll = false
-            } else {
-                curItem.indeterminate = false
-                curItem.checkAll = false
-            }
-        },
-        visibleChanged(status){
-            if(!status){
-                this.batchCreate.tunnelId = null
-                this.batchCreate.sectionsInfo = null
-            }
-        },
-        save(){
-            let res ={
-                section: []
-            }
-            this.batchCreate.sectionsInfo.forEach(info=> {
-                let tmp_section = {
-                    storeId: info.storeId,
-                    areaIds:[]
-                }
-                info.checkAllGroup.forEach(checked=> {
-                    tmp_section.areaIds.push(info.areas.find(area=>area.name == checked).id)
-                })
-                res.section.push(tmp_section)
-            })
-            let _this = this
-            TunnelService.batchCreateSections(res).then(
-                result=>{
-                    _this.$Message.info("添加成功！");
-                    _this.showTable()
-                },
-                error=>{
-                    _this.Log.info(error)
-                })
-        },
         getPositions(data) {
-            this.data6.forEach(section=>{
+            this.sectionData.forEach(section=>{
                 let curPos = data.body.find(pos=>{
                     return section.id == pos[data.header[0]]
                 })
                 if(curPos != undefined){
-                    let curSection = this.data6.find(item=>{
+                    let curSection = this.sectionData.find(item=>{
                         return item.id == curPos.sectionId
                     })
                     if(curSection != undefined){
@@ -558,7 +383,7 @@ export default {
         },
         savePos(){
             let params = []
-            this.data6.forEach(data=>{
+            this.sectionData.forEach(data=>{
                 if(data.camera.length != 0){
                     let temp = {}
                     temp.id = data.id
@@ -568,7 +393,6 @@ export default {
                     params.push(temp)
                 }
             })
-            console.log(params)
             let _this = this
             TunnelService.batchAddPositions(params).then(
                 result=>{

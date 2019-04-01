@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import { flyManagerMinix } from "./flyManager";
-import { setViewAngle } from "../../../../scripts/commonFun";
 
 const stateQuantity = '状态量输入';
 
@@ -122,6 +121,8 @@ export default ( containerId,viewer,domId,route ) => ({
         },
         initProps(){
             let _this = this;
+            // 去除login/版本信息
+            _this.viewer._cesiumWidget._creditContainer.style.display = "none";
 
             if ( _this.undergroundMode.enable ) {
                 // 设置是否开启地下场景
@@ -131,6 +132,7 @@ export default ( containerId,viewer,domId,route ) => ({
                     _this.undergroundMode.distance;
                 var widget = _this.viewer.cesiumWidget;
             }
+
         },
         paramUpdate(){
             let _this = this;
@@ -185,7 +187,11 @@ export default ( containerId,viewer,domId,route ) => ({
                 gis.style.display = "block";
 
                 document.body.removeChild(gis);
-                document.getElementById( containerId ).appendChild(gis);
+                // document.getElementById( containerId ).appendChild(gis);
+                let parentElement = document.getElementById( containerId );
+                let firstChild = parentElement.firstChild;
+
+                parentElement.insertBefore( gis,firstChild );
             },100)
 
             // 加载视角

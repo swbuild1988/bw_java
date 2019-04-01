@@ -134,7 +134,7 @@
                 spin: {
                     spinShow: this.openSpinShow,
                     spinTimer: null
-                }
+                },
             };
         },
         watch: {
@@ -202,7 +202,7 @@
                         })
                 },
                 deep: true
-            }
+            },
         },
         components: {
             showModel,
@@ -218,30 +218,71 @@
             init() {
                 let _this = this;
 
-                if (_this.openDoubleClickView) {
-                    //设置是否开始双击视角
-                    _this.viewer.screenSpaceEventHandler.setInputAction(function () {}, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+                _this.viewer.screenSpaceEventHandler.setInputAction(function () {}, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+
+                if (_this.openSpinShow) {
+                    //开启加载进度条
+                    _this.showSpin();
                 }
+                this.initUpdate(_this.viewer,_this.scene);
+
+                _this.switchCameraAngle();
+                _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
+
+                // 滚轮滑动，获得当前窗口的经纬度，偏移角
+                // _this.handler = new Cesium.ScreenSpaceEventHandler(
+                //     _this.scene.canvas
+                // );
+                // setInterval(()=>{
+                //     var camera=_this.viewer.scene.camera;
+                //     var position=camera.position;
+                //     //将笛卡尔坐标化为经纬度坐标
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position);
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },10000)
+                //  _this.handler.setInputAction(e=>{
+                //     var position=_this.scene.pickPosition(e.position)
+                //     var camera=_this.viewer.scene.camera;
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+
+            },
+            initUpdate(viewer, scene) {
+                let _this = this;
 
                 if (_this.openImageryProvider) {
                     //开启地图服务
                     let provider_mec = new Cesium.SuperMapImageryProvider({
                         url: this.SuperMapConfig.IMG_MAP //墨卡托投影地图服务
                     });
-                    _this.viewer.imageryLayers.addImageryProvider(provider_mec);
+                    viewer.imageryLayers.addImageryProvider(provider_mec);
 
                 }
 
                 if (_this.searchCamera.openSearch) {
                     //查询全部相机
-                    doSqlQuery.call(_this, _this.viewer, 'MOTYPEID=7', this.SuperMapConfig.BIM_DATA, addBillboard,
+                    doSqlQuery.call(_this, viewer, 'MOTYPEID=7', this.SuperMapConfig.BIM_DATA, addBillboard,
                         processFailed, 'videoType', 'videos', _this.searchCamera.isShow)
                 }
 
                 if (_this.unitsPosition.openPosition) {
                     //开启单位定位
                     getEntitySet.call(this, {
-                        viewer: _this.viewer,
+                        viewer: viewer,
                         url: 'relatedunits',
                         show: _this.unitsPosition.isShow,
                         typeMode: 'unitType',
@@ -254,11 +295,10 @@
                     _this.refreshPersonnelPosition();
 
                 }
-
                 if (_this.defectPosition.openPosition) {
                     //开启缺陷定位
                     getEntitySet.call(this, {
-                        viewer: _this.viewer,
+                        viewer: viewer,
                         url: 'defects/list',
                         typeMode: 'flawType',
                         messageType: 'flaw',
@@ -274,21 +314,8 @@
                     this.eventNotie();
                 }
 
-                if (_this.openSpinShow) {
-                    //开启加载进度条
-                    _this.showSpin();
-                }
-
-                if (_this.searchCamera.openSearch || _this.unitsPosition.openPosition || _this.personnelPosition.openPosition ||
-                    _this.defectPosition.openPosition || _this.eventsPosition.openPosition) {
-                    //鼠标经过实体时,触发气泡
-                    getEntityProperty.call(_this, _this.scene, Cesium, _this.modelProp, 'model-content')
-                }
-
-                _this.addIdentifierViewer();
-
+                getEntityProperty.call(_this, scene, Cesium, _this.modelProp, 'model-content')
             },
-            initUpdate(viewer, scene) {},
             addAlarmEntity(obj) {
                 let {
                     viewer
@@ -350,38 +377,48 @@
 
                 spin.spinTimer = setTimeout(() => spin.spinShow = false, progressTime * 1000)
             },
-            // destory3D() {
-            //     let gis = document.getElementById('newID');
-            //
-            //     if( !gis || this.compare('newID','body') ) return;
-            //
-            //     gis.style.display = "none";
-            //
-            //     document.getElementById('GISbox').removeChild(gis);
-            //     document.body.appendChild(gis);
-            //
-            // },
-            //展示巡检点
-            showCheckPointEntity() {
-                let {
-                    viewer
-                } = this;
-                getEntitySet.call(this, {
-                    viewer: viewer,
-                    url: "actived-locators",
-                    show: true,
-                    typeMode: "checkPointType",
-                    messageType: 'checkPoint'
-                })
+            switchCameraAngle(){
+                let _this =this;
+                let handler = new Cesium.ScreenSpaceEventHandler(
+                    _this.scene.canvas
+                );
+                handler.setInputAction(function (event) {
+
+                    if (!_this.scene.pickPositionSupported) {
+                        return;
+                    }
+
+                    // 获取屏幕坐标
+                    let scenePosition = _this.scene.pickPosition(event.position);
+                    // 通过屏幕坐标获取当前位置的实体信息
+                    let pickedObject = _this.scene.pick(event.position);
+                    // 如果实体信息存在则说明该位置存在实体
+                    if (Cesium.defined(pickedObject)) {
+                        _this.viewer.flyTo(pickedObject.id)
+                    }
+                }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            },
+            deleteEntity(){
+
+                let entitie = this.viewer.entities._entities._array.filter( entitie =>
+                        entitie.messageType === 'linear'
+                        || entitie.messageType==="events"
+                        || entitie.messageType==="videos"
+                        || entitie.messageType==="units"
+                        || entitie.messageType==="personnel"
+                        || entitie.messageType==="flaw");
+
+                if( entitie.length > 0 ){
+                    entitie.forEach( item => this.viewer.entities.remove(item) );
+                }
+
             }
         },
         beforeDestroy() {
+            this.deleteEntity();
 
             clearInterval(this.personnelPositionTimerId);
             clearTimeout(this.spin.spinTimer);
-
-            // this.destory3D();
-
 
         },
     };

@@ -1,55 +1,68 @@
-declare 
-      num   number; 
-begin
---测试表:T_TEST
--- prompt dropping sequence 
-      num := 0;
-      select count(1) into num from user_sequences where sequence_name = 'TEST_SQ'; 
-      if num > 0 then   
-         execute immediate 'DROP SEQUENCE  TEST_SQ';   
-      end if;
--- prompt dropping trigger      
-      num := 0;
-      select count(1) into num from user_triggers where trigger_name = 'TEST_TG'; 
-      if num > 0 then   
-         execute immediate 'DROP TRIGGER  TEST_TG';   
-      end if;
--- prompt Dropping 
-      num := 0;
-      select count(1) into num from user_tables where TABLE_NAME = 'T_TEST';
-      if   num=1   then 
-          execute immediate 'drop table T_TEST'; 
-      end   if; 
-end;
-/
-
-----------------------------------------------------------------
----------------------------TABLE--------------------------------
-----------------------------------------------------------------
-----------------------------------------------------------------
-
---测试表
-CREATE TABLE T_TEST(
-  id              NUMBER          NOT NULL,
-  name            varchar2(100)   not null, 
-  card            number(18),
-  CONSTRAINT PK_T_TEST PRIMARY KEY ("ID")
+-- 入廊记录表
+create table T_OAM_REQ_RECORD
+(
+  ID         NUMBER NOT NULL,
+  STAFF_ID  NUMBER NOT NULL,
+  EQUIPMENT_ID   NUMBER NOT NULL,
+  TIME          DATE,
+  LONGITUDE         VARCHAR2(50),
+  LATITUDE          VARCHAR2(50),
+  HEIGHT    VARCHAR2(50)
 );
+alter table T_OAM_REQ_RECORD add constraint OAM_REQ_RECORD_ID primary key(ID);
 
-
---create sequence
-create sequence TEST_SQ
+-- create OAM_REQ_RECORD_SQ
+create sequence OAM_REQ_RECORD_SQ
 start with 1
 increment by 1
 nomaxvalue
 nocycle
 cache 20;
--- create trigger
-CREATE OR REPLACE TRIGGER TEST_TG
-  BEFORE INSERT ON T_TEST
+
+-- create trigger OAM_REQ_RECORD_TG
+CREATE OR REPLACE TRIGGER OAM_REQ_RECORD_TG
+  BEFORE INSERT ON T_OAM_REQ_RECORD
   FOR EACH ROW
   WHEN (new.id is null)
 begin
-  select TEST_SQ.nextval into :new.id from dual;
-end TEST_TG;
+  select OAM_REQ_RECORD_SQ.nextval into :new.id from dual;
+end OAM_REQ_RECORD_TG;
 /
+alter trigger OAM_REQ_RECORD_TG enable;
+
+
+--文件导出表
+CREATE TABLE T_COMMON_EXPORT(
+  id    number    not null,
+  name    varchar2(100) not null,
+  of_type   number(1)   not null,
+  pdf_path    varchar2(200) not null,
+  excel_path    varchar2(200) not null,
+  type    number(1) not null,
+  value   number    not null,
+  crt_time        DATE, 
+   CONSTRAINT PK_T_COMMON_EXPORT PRIMARY KEY ("ID")
+);
+
+create sequence COMMON_EXPORT_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+CREATE OR REPLACE TRIGGER COMMON_EXPORT_TG
+  BEFORE INSERT ON T_COMMON_EXPORT
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_EXPORT_SQ.nextval into :new.id from dual;
+end COMMON_EXPORT_TG;
+/
+
+insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
+ values (1005, 'job1006', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'weekExport', '0 0 7 ? * MON', '周报导出');
+
+insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
+ values (1006, 'job1007', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'monthExport', '0 0 7 1 * ?', '月报导出');
+commit;

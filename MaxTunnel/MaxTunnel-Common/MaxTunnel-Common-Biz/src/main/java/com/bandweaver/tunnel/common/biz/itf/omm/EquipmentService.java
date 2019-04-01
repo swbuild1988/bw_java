@@ -1,10 +1,12 @@
 package com.bandweaver.tunnel.common.biz.itf.omm;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
 import com.github.pagehelper.PageInfo;
 
+import java.util.Date;
 import java.util.List;
 
 public interface EquipmentService {
@@ -138,5 +140,7 @@ public interface EquipmentService {
 	EquipmentDto getEquipmentListByObj(Integer objId);
 	
 	void updateEquipmentOfObj(Equipment e);
+
+	List<JSONObject> getEquipmentExcel(Date startTime, Date endTime);
 
 }

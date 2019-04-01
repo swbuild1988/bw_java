@@ -335,9 +335,6 @@ export default {
     .sectionTitle{
         float: left;
     }
-    .sectionName{
-        margin-left: 77px;
-    }
     .ivu-dropdown-item >>> .ivu-select-dropdown{
         margin-left: 14px;
     }
@@ -351,6 +348,7 @@ export default {
         position: absolute;
         margin-left: 75px;
         border: 1px solid #cccccc;
+        width: 60%;
     }
     .sectionName{
         overflow: hidden;

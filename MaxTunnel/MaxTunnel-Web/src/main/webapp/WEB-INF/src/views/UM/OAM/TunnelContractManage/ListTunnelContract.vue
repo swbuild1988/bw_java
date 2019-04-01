@@ -460,6 +460,9 @@
     height: 2.6vmin !important;
     line-height: 2vmin !important;
 }
+.queryCondition >>> .ivu-select-dropdown{
+    max-height: 20vmin;
+}
 .icons{
     font-size: 2.4vmin;
 }

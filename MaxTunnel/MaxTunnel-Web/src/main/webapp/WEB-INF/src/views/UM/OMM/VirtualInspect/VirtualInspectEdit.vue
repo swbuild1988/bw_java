@@ -3,7 +3,13 @@
         <Row class="body">
             <Col span="14">
             <div class="sm">
-                <sm-viewer id="virtualInspectEditSmViewer" @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer>
+                <div class="heading">
+                    <span>{{ direction }}</span>
+                </div>
+                <vm-select id="list-dropdown" :optionList="optionList" :selectStyle="{ left:'0',top: '0'}" @getSelectVal="getAreas"></vm-select>
+                <vm-select id="area-dropdown" :optionList="areaList" :selectStyle="{ left:'13.2%',top:'0' }" @getSelectVal="getStores"></vm-select>
+                <vm-select id="store-dropdown" :optionList="storeList" :selectStyle="{ left:'26.4%',top: '0' }" @getSelectVal="changeStore"></vm-select>
+                <sm-viewer @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer>
             </div>
             <div class="cameraContent">
                 <video-component v-bind:video="curVideo" v-bind:id="'virtualInspectEdit'"></video-component>
@@ -16,7 +22,9 @@
                     <div class="titleCam">摄像头列表</div>
                     <br>
                     <ul>
-                        <li v-for="(camera,index) in cameraList" :key="index" @click="selectCamera(camera)" :class="{'active' : curVideo.id == camera.id}">{{ camera.name }}</li>
+                        <li v-for="camera in cameraList" :key="camera.id" @click="selectCamera(camera)" :class="{'active' : curVideo.id == camera.id}">
+                            {{ camera.name + ' ' + camera.id }}
+                        </li>
                     </ul>
                 </div>
                 </Col>
@@ -56,9 +64,13 @@
 
 <script>
 import VideoControl from "../../../../components/UM/MAM/videoControls/VideoControl";
-import SmViewer from "../../../../components/Common/3D/3DViewer";
+import SmViewer from "../../../../components/Common/3D/simple3DViewer";
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 import { VideoService } from "../../../../services/videoService";
+import vmSelect from '../../../../components/Common/Select';
+import { TunnelService } from '../../../../services/tunnelService';
+import Vue from 'vue'
+import { flyToMyLocation } from "../../../../scripts/commonFun";
 
 export default {
     name: "VirtualInspectEdit",
@@ -93,16 +105,23 @@ export default {
                 id: null,
                 url: ""
             },
-            cameraPosition: null
+            cameraPosition: null,
+            optionList: [], 
+            areaList: [], 
+            storeList: [], 
+            location: [],
+            direction: null
         };
     },
     components: {
         VideoControl,
         SmViewer,
-        VideoComponent
+        VideoComponent,
+        vmSelect
     },
     mounted() {
         this.Log.info("初始化调用刷新");
+        this.init()
         this.$refs.smViewer.startCameraPositionRefresh();
     },
     beforeDestroy() {
@@ -117,6 +136,159 @@ export default {
         }
     },
     methods: {
+        init(){
+            this.getTunnels().then(tunnel => {
+                    this.getAreas(tunnel.value)
+                        .then(areas => {
+                            let area = this.getValByArray(areas);
+
+                            this.getStores(area.id)
+                                .then(areaId => this.changeStore(areaId));
+
+                        });
+                });
+        },
+        getTunnels() {
+            let _this = this;
+
+            return new Promise((resolve, reject) => {
+                TunnelService.getTunnels().then(tunnels => {
+
+                    _this.optionList.splice(0); //清空管廊数组
+                    tunnels.forEach(tunnel => _this.optionList.push({
+                        value: tunnel.id,
+                        label: tunnel.name
+                    }));
+
+                    let tunnel = this.getValByArray(_this.optionList);
+
+                    resolve(tunnel)
+                })
+            })
+        },
+        getAreas(val) {
+            let _this = this;
+
+            return new Promise((resolve, reject) => {
+                TunnelService.getAreasByTunnelId(val).then(data => {
+
+                    _this.showArea = true;
+                    _this.areaList.splice(0) //清空管廊数组
+
+                    if (data.length) {
+                        data.reverse().forEach(area => {
+                            _this.areaList.push({
+                                value: area.id,
+                                label: area.name
+                            })
+                        });
+                        resolve(data);
+                    }
+                })
+            })
+        },
+        changeStore(storeId) {
+            let _this = this;
+            let [ curCamera ] = _this.location.filter(position => position.id == storeId);
+            let {
+                camera
+            } = curCamera;
+            // console.log('camera',camera)
+            try {
+                let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
+
+                flyToMyLocation({
+                    scene: Vue.prototype['$simpleViewer'].scene,
+                    position: {
+                        longitude: longitude,
+                        latitude: latitude,
+                        height: height,
+                        roll: roll,
+                        pitch: pitch,
+                        heading: heading
+                    },
+                    maximumHeight:4
+                });
+                
+                this.direction = this.getDirection(heading)
+
+            } catch (e) {
+
+            }
+        },
+        getDirection(heading) {
+            let direction = Math.abs((heading % 6.28)).toFixed(2)
+            let value = null
+            switch(direction){
+                case 0:
+                    value = '正北'
+                    break
+                case 1.57:
+                    value = heading > 0 ? '正东' : '正西'           
+                    break
+                case 3.14:
+                    value = '正南'
+                    break
+                case 4.71:
+                    value = heading > 0 ? '正西' : '正东'
+                    break
+                default:
+                    value = null
+            }
+            if(!value){
+                let angle = direction * 180 / 3.14
+                if(direction > 0 && direction < 1.57){ 
+                    value = heading > 0 ? '北偏东' + angle.toFix(2) + '度' : 
+                    '北偏西' + angle.toFixed(2) + '度'
+                } else {
+                    if(direction > 1.57 && direction < 3.14){
+                        value = heading > 0 ? '东偏南' + (angle - 90).toFixed(2) + '度' : 
+                        '西偏南' + (angle - 90).toFixed(2) + '度'
+                    } else {
+                        if(direction > 3.14 && direction < 4.71){
+                            value = heading > 0 ? '南偏西' + (angle - 180).toFixed(2) + '度' :
+                            '南偏东' + (angle - 180).toFixed(2) + '度'
+                        } else {
+                            value = heading > 0 ? '西偏北' + (angle - 270).toFixed(2) + '度' :
+                            '东偏北' + (angle - 270).toFixed(2) + '度'
+                        }
+                    }
+                }
+            }
+    
+            return value
+        },
+        getStores(areaId) {
+            let _this = this;
+
+            return new Promise((resolve, reject) => {
+                TunnelService.getStoresByAreaId({ areaId })
+                    .then(stores => {
+                        _this.storeList.splice(0);
+                        _this.location.splice(0);
+
+                        stores.forEach(store => {
+                            if(!store.store || !store.startPoint) return;
+                            _this.storeList.push({
+                                value: store.store.id,
+                                label: store.store.name
+                            });
+                            _this.location.push({
+                                id: store.store.id,
+                                camera: store.camera
+                            })
+                        })
+
+                        let store = this.getValByArray(_this.storeList);
+
+                        resolve(store.value);
+                    })
+            })
+
+        },
+        getValByArray([firstVal, ...otherVal]) {
+            return firstVal;
+        },
         start(data) {
             let _this = this
             VideoService.cameraMove(this.curVideo.id,data.direction).then(
@@ -437,6 +609,7 @@ export default {
 }
 .sm {
     height: 42vh;
+    position: relative;
 }
 .back {
     float: right;
@@ -457,5 +630,16 @@ export default {
   top: 0;
   left: 0;
   border-radius: 6px;
+}
+.heading{
+    position: absolute;
+    top: 0;
+    left: 63%;
+    font-size: 1.4vmin;
+    z-index: 10;
+    border: 1px solid rgba(16,159,181,.5);
+    box-shadow: 0 0 1rem #109FB5 inset;
+    color: #fff;
+    padding: 0.4vmin 2.4vmin;
 }
 </style>

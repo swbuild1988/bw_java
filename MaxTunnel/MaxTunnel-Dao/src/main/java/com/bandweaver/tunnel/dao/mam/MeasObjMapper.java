@@ -81,4 +81,8 @@ public interface MeasObjMapper {
 	List<Integer> getIdsByTunnelId(Integer id);
 
 	List<MeasObj> getListBySectionIDAndObjectTypeID(@Param("sectionId")Integer sectionId, @Param("objectTypeId")Integer objectTypeId);
+
+    void updatePlanIdsByObjtypeId(@Param("objtypeId") int objtypeId, @Param("planIds") String planIds);
+
+	void updateVideoIdsByKeyId(@Param("id") int id,@Param("videoIds") String videoIds);
 }
