@@ -166,10 +166,10 @@ export default {
 
 									if (
 										a.type === 1 &&
-										(a.max !== 120 || a.min !== -40)
+										(a.max !== 85 || a.min !== -20)
 									) {
-										min = -40;
-										max = 120;
+										min = -20;
+										max = 85;
 									} else if (
 										a.type === 5 &&
 										(a.max !== 100 || a.min !== 0)
@@ -178,10 +178,10 @@ export default {
 										max = 100;
 									} else if (
 										a.type === 3 &&
-										(a.max !== 30 || a.min !== 0)
+										(a.max !== 25 || a.min !== 15)
 									) {
-										min = 0;
-										max = 30;
+										min = 15;
+										max = 25;
 									}
 
 									b.parameters.option.series.min = min;

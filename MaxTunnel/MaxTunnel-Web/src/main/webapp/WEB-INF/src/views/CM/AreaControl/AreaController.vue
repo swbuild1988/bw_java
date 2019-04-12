@@ -19,7 +19,7 @@
             </div>
             </Col>
             <Col span="10">
-                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch()">查询</Button>
                 <Button type="error" size="small" @click="addNewArea()">新增区域</Button> 
                 <Button type="info" size="small" @click="addMultiArea()">批量新增区域</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
@@ -90,11 +90,6 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "区域位置",
-                    key: "location",
-                    align: "center"
-                },
-                {
                     title: "所属管廊",
                     align: "center",
                     render: (h,params) => {
@@ -102,44 +97,9 @@ export default {
                     }
                 },
                 {
-                    title: "经度",
-                    key: "longitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[0]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
-                    title: "纬度",
-                    key: "latitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[1]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
-                    title: "高度",
-                    key: "highness",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[2]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
                     title: '长度',
-                    align: 'center'
+                    align: 'center',
+                    key: 'length'
                 },
                 {
                     title: "创建时间",
@@ -240,23 +200,23 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.showTable();
+            this.resetPageSearch();
         },
         //新增modal
         addNewArea() {
-            this.modificationAreaInfo.show.state = !this.modificationAreaInfo.show.state;
+            this.modificationAreaInfo.show.state = true;
             this.modificationAreaInfo.type = 1
         },
         //修改modal
         editArea(id) {
-            this.modificationAreaInfo.show.state = !this.modificationAreaInfo.show.state;
+            this.modificationAreaInfo.show.state = true;
             this.modificationAreaInfo.type = 2
             this.$refs.areaModule.getAreasInfo(id)
         },
         childIsRefresh(isRefresh){
             if(isRefresh==true){
-                this.showTable()
-                this.modificationAreaInfo.show.state = !this.modificationAreaInfo.show.state;
+                this.resetPageSearch()
+                this.modificationAreaInfo.show.state = false;
             }
         },
         //批量新增modal
@@ -271,14 +231,14 @@ export default {
                     this.page.pageTotal = data.total;
                     this.$Message.success("添加成功！");
                     this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show.state;
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
         },
         
         //保存修改
         saveChangeArea(data) {
-            this.showTable();
+            this.resetPageSearch();
         },
         getBarn(_data) {
             //获取所属管仓
@@ -308,7 +268,7 @@ export default {
                         result => {
                             this.$Message.success("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.resetPageSearch();
                         },
                         error => {
                             this.$Message.error(error)
@@ -317,9 +277,13 @@ export default {
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
+        },
+        resetPageSearch(){
+            this.page.pageNum = 1;
+            this.showTable();
         }
     }
 };

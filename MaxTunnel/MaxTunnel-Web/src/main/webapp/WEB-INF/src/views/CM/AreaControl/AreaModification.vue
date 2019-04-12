@@ -6,12 +6,15 @@
                 <FormItem label="区域名称：" prop="name">
                     <Input v-model="areaFormInfo.name" placeholder="请输入区域名"/>
                 </FormItem>
+                <FormItem label="区域编号：" prop="sn">
+                    <Input v-model="areaFormInfo.sn" placeholder="请输入区域编号"/>
+                </FormItem>
                 <FormItem label="所属管廊：" prop="tunnelId">
-                    <Select v-model="areaFormInfo.tunnel.id" placeholder="请选择所属管廊">
+                    <Select v-model="areaFormInfo.tunnelId" placeholder="请选择所属管廊">
                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="相机视角：" prop="camera">
+                <!-- <FormItem label="相机视角：" prop="camera">
                     <Row>
                         <Col span="7">
                             <Input v-model="areaFormInfo.longitude" placeholder="请输入经度"/>
@@ -23,7 +26,7 @@
                             <Input v-model="areaFormInfo.highness" placeholder="请输入高度"/>
                         </Col>
                     </Row>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="长度：" prop="length">
                     <Input v-model="areaFormInfo.length" placeholder="请输入长度"></Input>
                 </FormItem>
@@ -55,13 +58,8 @@ export default {
             flag:true,
             areaFormInfo:{
                 name:'',
-                tunnel: {
-                    id: null
-                },
-                camera:'',
-                longitude:null,
-                latitude:null,
-                highness:null,
+                tunnelId: null,
+                sn: null,
                 length: null
             },
             ruleValidate:{
@@ -70,6 +68,9 @@ export default {
                 ],
                 tunnelId: [
                     { type: 'number', required: true, message: '所属管廊不能为空', trigger: 'change' }
+                ],
+                sn: [
+                    { required: true, message: '区域编号不能为空', trigger: 'blur' }
                 ],
                 length: [
                     { required: true, message: '长度不能为空', trigger: 'blur' }
@@ -90,7 +91,8 @@ export default {
                 name: this.areaFormInfo.name,
                 tunnelId: this.areaFormInfo.tunnelId,
                 camera: this.areaFormInfo.camera,
-                length: this.areaFormInfo.length
+                length: this.areaFormInfo.length,
+                sn: this.areaFormInfo.sn
             }
             return Object.assign({},param)
         }
@@ -108,17 +110,17 @@ export default {
         )
     },
     methods:{
-        sendMsg: function(name){
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    //拼接相机视角字符串
-                    this.areaFormInfo.camera = this.areaFormInfo.longitude + ',' + this.areaFormInfo.latitude + ',' + this.areaFormInfo.highness;
-                    this.$emit("listenToChange",this.areaFormInfo);
-                }else{
-                    this.$Message.error("修改失败!");
-                }
-            })
-        },
+        // sendMsg: function(name){
+        //     this.$refs[name].validate((valid) => {
+        //         if (valid) {
+        //             //拼接相机视角字符串
+        //             // this.areaFormInfo.camera = this.areaFormInfo.longitude + ',' + this.areaFormInfo.latitude + ',' + this.areaFormInfo.highness;
+        //             this.$emit("listenToChange");
+        //         }else{
+        //             this.$Message.error("修改失败!");
+        //         }
+        //     })
+        // },
         checkName(name){
             this.axios.get('/areas/ajax/' + name).then(res =>{
                 let{code,data} = res.data;
@@ -145,6 +147,7 @@ export default {
                         result => {
                             this.isRefresh = true
                             this.$emit('childIsRefresh', this.isRefresh)
+                            this.$Message.success("新增成功！")
                         },
                         error => {
                             this.Log.info( error )
@@ -162,6 +165,7 @@ export default {
                         result => {
                             this.isRefresh = true
                             this.$emit('childIsRefresh', this.isRefresh)
+                            this.$Message.success("修改成功！")
                         },
                         error => {
                             this.Log.info( error )

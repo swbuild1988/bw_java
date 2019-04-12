@@ -17,7 +17,7 @@
                 </DatePicker>
             </Col>  
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="search">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch">查询</Button>
                 <Button type="error" size="small" @click="add">新增角色</Button> 
                 <Button :disabled="!deleteAttr.isShow" type="warning" size="small" @click="alldelete">批量删除</Button>
             </Col>
@@ -226,7 +226,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
            
         },
         mounted() {
-           this.search()
+           this.resetPageSearch()
         },
         methods: {
             search(){
@@ -292,7 +292,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                                 this.$Message.success('添加成功');
                                 this.handleReset(name);
                                 this.$nextTick(()=>{
-                                    this.search()
+                                    this.resetPageSearch()
                                 })
                             },
                             error=>{
@@ -306,7 +306,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                                 this.$Message.success('修改成功');
                                 this.handleReset(name);
                                 this.$nextTick(()=>{
-                                    this.search()
+                                    this.resetPageSearch()
                                 })
                             },
                             error=>{
@@ -324,7 +324,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                                 this.$Message.success('赋权成功');
                                 this.checkPerList = []
                                 this.$nextTick(()=>{
-                                    this.search()
+                                    this.resetPageSearch()
                                 })
                             },
                             error=>{
@@ -359,7 +359,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                         PermissionConfigService.batchDeleteRoles(this.deleteAttr.ids).then(
                             res=>{
                                 this.$Message.info('删除成功');
-                                this.search();
+                                this.resetPageSearch();
                             },
                             error=>{
                                 this.$Message.error('删除失败');
@@ -374,6 +374,10 @@ import PermissionConfigService from '../../../services/permissionConfig';
                 if(this.modal.type === 'authorize'){
                     this.checkPerList = []
                 }
+            },
+            resetPageSearch(){
+                this.page.pageNum = 1;
+                this.search();
             }
         }
     };

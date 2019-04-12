@@ -12,7 +12,9 @@
                     </Select>
                 </FormItem>
                 <FormItem label="调度表达式：" prop="cronExpression">
-                    <Input v-model="scheduleForm.cronExpression" placeholder="请输入调度表达式" class="InputWidth"></Input>
+                    <!-- <Input v-model="scheduleForm.cronExpression" placeholder="请输入调度表达式" class="InputWidth"></Input> -->
+                    <cycle-time ref="cycleTime" v-bind:displayData="scheduleForm.cronExpression"></cycle-time>
+                    <div class="ivu-form-item-error-tip" v-if="expError">调度表达式不能为空</div>
                 </FormItem>
             </Form>
             <div slot="footer" v-show="type==1">
@@ -27,8 +29,12 @@
 
 <script>
 import {SchedulejobService} from '@/services/schedulejobService'
+import CycleTime from '../../../components/Common/CycleTime'
 export default {
     name: 'schedule-add',
+    components:{
+        CycleTime
+    },
     data(){
         const validateJobName = (rule,value,callback) => {
             if (value === '') {
@@ -63,12 +69,13 @@ export default {
                     { type: 'number', required: true, message: '定时任务类型不能为空', trigger: 'change' }
                 ],
                 cronExpression: [
-                    { required: true, message: '调度表达式不能为空', trigger: 'change' }
+                    // { required: true, message: '调度表达式不能为空',trigger:'change' }
                 ]
             },
             allstatus:[],
             objTypes: [],
-            title: null
+            title: null,
+            expError: false
         }
     },
     props:{
@@ -121,15 +128,23 @@ export default {
         addScheduleJob: function(name){
             this.$refs[name].validate((valid) => {
                 if (valid) {
-                    SchedulejobService.saveSchedule(this.params).then(
-                        result => {
-                            this.$emit("addScheduleJob")
-                            this.handleReset(name)
-                        },
-                        error => {
-                            this.Log.info(error)
-                        }
-                    )
+                    let cronExpression = this.$refs.cycleTime.collectData()
+                    console.log("cronExpression", cronExpression)
+                    if(cronExpression.length === 0){
+                        this.expError = true
+                    } else {
+                        this.expError = false
+                        this.scheduleForm.cronExpression = cronExpression
+                        SchedulejobService.saveSchedule(this.params).then(
+                            result => {
+                                this.$emit("addScheduleJob")
+                                this.handleReset(name)
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                    }
                 }else{
                     this.$Message.error("添加失败！");
                 }
@@ -150,15 +165,22 @@ export default {
         editScheduleJob: function(name){
             this.$refs[name].validate((valid) => {
                 if(valid) {
-                    SchedulejobService.editSchedule(this.editParams).then(
-                        result => {
-                            this.$emit("editScheduleJob")
-                            this.handleReset(name)
-                        },
-                        error => {
-                            this.Log.info(error)
-                        }
-                    )
+                    let cronExpression = this.$refs.cycleTime.collectData()
+                    console.log("cronExpression", cronExpression)
+                    if(cronExpression.length === 0){
+                        this.expError = true
+                    } else {
+                        this.scheduleForm.cronExpression = cronExpression
+                        SchedulejobService.editSchedule(this.editParams).then(
+                            result => {
+                                this.$emit("editScheduleJob")
+                                this.handleReset(name)
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                    }
                 }else{
                     this.$Message.error("修改失败！")
                 }

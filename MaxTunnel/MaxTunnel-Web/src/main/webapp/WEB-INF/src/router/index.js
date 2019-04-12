@@ -819,5 +819,5 @@ export const asyncRouterMap = [{
 export default new Router({
     mode: 'history',
     routes: routes,
-    base: "/MaxTunnel-Web/", //服务器地址，不设置时，默认为服务器根目录下
+    base: "/", //服务器地址，不设置时，默认为服务器根目录下
 });

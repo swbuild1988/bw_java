@@ -9,10 +9,10 @@
                 <FormItem label="管廊长度：" prop="length">
                     <Input v-model="formValidate.length" placeholder="请输入新管廊长度" class="InputWidth"></Input> 
                 </FormItem>
-                <FormItem label="管廊方向：" prop="directionVal">
+                <FormItem label="管廊方向：" prop="direction">
                     <Poptip trigger="hover" title="管廊方向说明" placement="top">
                         <img slot="content" :src="directionExplation" placement="top" alt="管廊方向说明图" style="height: 200px;">
-                        <Select v-model="formValidate.directionVal" placeholder="请选择管廊方向" style="width: 100%">
+                        <Select v-model="formValidate.direction" placeholder="请选择管廊方向" style="width: 100%">
                             <Option v-for="item in tunnelDirection" :key="item.id" :value="item.value">
                                 {{item.direction}}
                                 <img :src="item.pic" :alt=item.direction class="directionImg"/>
@@ -90,7 +90,9 @@ export default {
                 constructId: null,
                 operationId: null,
                 maxviewConfigId: null,
-                directionVal: null,
+                startPoint: null,
+                endPoint: null,
+                direction: null
             },
             startPoint: {
                 longitude: null,
@@ -107,9 +109,9 @@ export default {
                     { required: true, message: '管廊名不能为空', trigger: 'blur' }
                 ],
                 length: [
-                    { required: true, message: '管廊长度不能为空', trigger: 'blur' }
+                    { type: 'number', required: true, message: '管廊长度不能为空', trigger: 'blur' }
                 ],
-                directionVal: [
+                direction: [
                     { type: 'number', required: true, message: '管廊方向不能为空', trigger: 'blur' }
                 ],
                 responsibilityId: [
@@ -167,6 +169,9 @@ export default {
         sendMsgtoManage: function(name){
             this.$refs[name].validate((valid) => {
                 if (valid) {
+                    this.formValidate.startPoint = this.startPoint.longitude+','+this.startPoint.latitude+','+this.startPoint.highness
+                    this.formValidate.endPoint = this.endPoint.longitude+','+this.endPoint.latitude+','+this.endPoint.highness
+                    console.log(this.formValidate)
                     PipeService.saveEditTunnelInfo(this.formValidate).then(
                         result => {
                             this.$emit("sendMsgtoManage")
@@ -202,7 +207,19 @@ export default {
                     this.formValidate.constructId = result.construct.id
                     this.formValidate.maxviewConfigId = result.maxviewConfig.id
                     this.formValidate.operationId = result.operation.id
-                    this.formValidate.responsibilityId = result.responsibility.id
+                    // this.formValidate.responsibilityId = result.responsibility.id
+                    if(result.startPoint!=null){
+                        var startArray = result.startPoint.split(",")
+                        this.startPoint.longitude = startArray[0]
+                        this.startPoint.latitude = startArray[1]
+                        this.startPoint.highness = startArray[2]
+                    }
+                    if(result.endPoint!=null){
+                        var endArray = result.endPoint.split(",")
+                        this.endPoint.longitude = endArray[0]
+                        this.endPoint.latitude = endArray[1]
+                        this.endPoint.highness = endArray[2]
+                    }
                 },
                 error => {
                     this.Log.info(error)

@@ -44,7 +44,7 @@
                 </DatePicker>
             </Col>  
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageRearch()">查询</Button>
                 <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -408,7 +408,7 @@ export default {
                     StaffService.addStaffInfo(addStaffInfo).then(res=>{
                         this.$Message.success('新增员工信息成功!')
                         this.isAddStaff = false
-                        this.showTable()
+                        this.resetPageRearch()
                         this.handleReset (name)
                     })
                 }else{
@@ -436,7 +436,7 @@ export default {
                     }
                     this.ids = this.ids.substring(0,this.ids.length-1)
                     StaffService.delStaff(this.ids).then(res=>{
-                        this.showTable()
+                        this.resetPageRearch()
                     })
                 },
                 onCancel: () => {}
@@ -444,6 +444,10 @@ export default {
         },
         handlePage(value) {
             this.page.pageNum = value;
+            this.showTable();
+        },
+        resetPageRearch(){
+            this.page.pageNum = 1;
             this.showTable();
         },
         //check telphone
@@ -504,7 +508,7 @@ export default {
                             if(res[0] && code == 200){
                                 this.$Message.success('修改员工信息成功!');
                                 this.isAddStaff = false
-                                this.showTable()
+                                this.resetPageRearch()
                                 this.isAccount = false
                                 this.handleReset(name)
                             } else{
@@ -546,7 +550,7 @@ export default {
                         this.authModal.error = false;
                         this.authModal.info.roleIds = [];
                         this.$nextTick(()=>{
-                            this.showTable()
+                            this.resetPageRearch()
                         })
                     },
                     error=>{

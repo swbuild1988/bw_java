@@ -57,7 +57,8 @@
 					style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;"
 				>
 					<router-view></router-view>
-					<showVideo v-bind="videoModal" ref="video"></showVideo>
+					<!-- <showVideo v-bind="videoModal" ref="video"></showVideo> -->
+					<showAlarm v-bind="videoModal" ref="video"></showAlarm>
 				</Content>
 				<Collapse v-model="showalarm" @on-change="changestatu">
 					<Panel name="alarm">
@@ -131,7 +132,8 @@ import alarm from "../Common/AlarmDetial";
 import { VideoService } from "../../services/videoService.js";
 import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
 import UMCustom from "../../styles/UMCustom.css";
-import showVideo from "../../components/Common/Modal/ShowVideos.vue";
+// import showVideo from "../../components/Common/Modal/ShowVideos.vue";
+import showAlarm from '@/components/Common/Modal/showAlarms'
 import { EnumsService } from "../../services/enumsService.js";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";
 
@@ -188,7 +190,8 @@ export default {
 			videoModal: {
 				modalPrams: {
 					state: false,
-					vedioIdList: []
+					modalInfo: null,
+					planData: null
 				}
 			},
 			alarmRouterList: [],
@@ -253,13 +256,13 @@ export default {
 				current: 1
 			},
 			backStyle: {
-				backgroundImage:
-					"url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
+				backgroundImage:"url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
 				height: "100%",
 				position: "relative"
 			},
 			selectedName: null,
-			openNames: ["1"]
+			openNames: ["1"],
+			alarmContainer: []
 		};
 	},
 	mounted() {
@@ -345,29 +348,6 @@ export default {
 				}
 			}
 		}
-		// '$route': function(newValue,oldValue){
-		//   if(this.leftTree[0].childNode && this.leftTree[0].childNode.length > 0){
-		//     if(newValue == this.leftTree[0].childNode[0].url){
-		//       this.selectedName = '1-0-0'
-		//       this.openNames = ['1','1-0']
-		//       sessionStorage.getItem('selectedName','1-0-0')
-		//       this.$nextTick(() => {
-		//         this.$refs.leftMenu.updateActiveName()
-		//         this.$refs.leftMenu.updateOpened()
-		//       })
-		//     }
-		//   } else {
-		//     if(newValue == this.leftTree[0].url){
-		//       this.selectedName = '1-0'
-		//       this.openNames = ['1']
-		//       sessionStorage.getItem('selectedName','1-0')
-		//       this.$nextTick(() => {
-		//         this.$refs.leftMenu.updateActiveName()
-		//         this.$refs.leftMenu.updateOpened()
-		//       })
-		//     }
-		//   }
-		// }
 	},
 	computed: {
 		menuitemClasses: function() {
@@ -387,38 +367,22 @@ export default {
 	},
 	methods: {
 		//手动开启预案
-		startPlan(alarm) {
-			var _this = this;
-			if (_this.selectPlan) {
-				_this.showModal.modalPrams.state = !_this.showModal.modalPrams
-					.state;
-				_this.showModal.modalPrams.selectPlan = _this.selectPlan;
-			}
-		},
+		// startPlan(alarm) {
+		// 	var _this = this;
+		// 	if (_this.selectPlan) {
+		// 		_this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
+		// 		_this.showModal.modalPrams.selectPlan = _this.selectPlan;
+		// 	}
+		// },
 
-		showVideo() {
+		showAlarmDetails() {
+			// this.alarmContainer.map(item=>{
+			// 	if(item.id==id){
+			// 		this.videoModal.modalPrams.modalInfo = item
+			// 	}
+			// })
+			// this.$refs.video.reflashVideo();
 			this.videoModal.modalPrams.state = true;
-			this.$refs.video.reflashVideo();
-		},
-
-		startMQ() {
-			let _this = this;
-			_this.axios
-				.get("/emplans/start/sections/10/process-type/4001")
-				.then(result => {
-					let { msg, code, data } = result.data;
-					if (code == 200) {
-					}
-				});
-		},
-
-		openMQ() {
-			let _this = this;
-			_this.axios.get("emplans/deploy/4001").then(result => {
-				let { msg, code, data } = result.data;
-				if (code == 200) {
-				}
-			});
 		},
 
 		// 连接成功回调函数
@@ -426,12 +390,10 @@ export default {
 			let _this = this;
 			let result = JSON.parse(respond.body);
 			//将数据保存在vuex中
-			_this.planData = result;
-			if (
-				_this.planData &&
-				"/UM/plans/execute/processKey" !=
-					_this.$router.history.current.path
-			) {
+			console.log("预案",result)
+			_this.videoModal.modalPrams.planData = result
+			// _this.planData = result;
+			if (_this.planData &&"/UM/plans/execute/processKey" !=_this.$router.history.current.path){
 				// _this.showPlanTip();
 			}
 		},
@@ -444,29 +406,22 @@ export default {
 		alarmCallback(respond) {
 			let _this = this;
 			let result = JSON.parse(respond.body);
-			_this.videoModal.modalPrams.vedioIdList = result.videos;
-			_this.showVideo();
+			_this.videoModal.modalPrams.modalInfo = result;
+			_this.showAlarmDetails();
 			_this.warningNotice(result);
-
-			// VideoService.getAlarmVideoRouter(result.objectId).then((respond) => {
-			//   if (respond && respond.length > 0) {
-			//     _this.videoModal.modalPrams.vedioIdList = respond;
-			//     _this.showVideo();
-			//   }
-			// })
+		},
+		getMessageCallback(respond){
+			console.log("getMessageCallback-respond",respond)
 		},
 
 		//开启告警队列监听
 		//接受告警队列推送的数据
 		acceptAlarmData() {
 			var _this = this;
-			_this.MQ._InitMQ(
-				1,
-				"/queue/QUEUE_ALARM_UM",
-				"",
-				_this.alarmCallback
-			);
+			_this.MQ._InitMQ(1,"/queue/QUEUE_ALARM_UM","",_this.alarmCallback);
 			this.alarmQueue = _this.MQ.client;
+			console.log("this.alarmQueue", this.alarmQueue)
+			// _this.MQ._sendMessage("queue/QUEUE_ALARM_UM", _this.getMessageCallback)
 		},
 		closedMQ() {
 			var _this = this;
@@ -508,19 +463,20 @@ export default {
 			this.page.current = index;
 		},
 		//获取告警分页数据
-		getAlatmPageData() {
-			let pram = {};
-			let _this = this;
-			pram.pagesize = 4;
-			pram.current = this.page.current;
-			this.post("").then(result => {
-				let { code, data } = result.data;
-				if (code == 200) {
-					_this.alarmData = data;
-					_this.page.total = data.total;
-				}
-			});
-		},
+		// getAlatmPageData() {
+		// 	let pram = {};
+		// 	let _this = this;
+		// 	pram.pagesize = 4;
+		// 	pram.current = this.page.current;
+		// 	this.post("").then(result => {
+		// 		let { code, data } = result.data;
+		// 		if (code == 200) {
+		// 			console.log("data", data)
+		// 			_this.alarmData = data;
+		// 			_this.page.total = data.total;
+		// 		}
+		// 	});
+		// },
 
 		//点击告警详情按钮
 		showAlarmDetial(index) {
@@ -536,6 +492,7 @@ export default {
 		warningNotice(alarm) {
 			var _this = this;
 			var des = "";
+			this.alarmContainer.push(alarm)
 			var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
 			if (plans && plans.length) {
 				_this.selectPlan = plans[0].id;
@@ -549,31 +506,27 @@ export default {
 				title: des + "告警",
 				desc: alarm.objectName + alarm.alarmName,
 				duration: 0,
-				onClose: _this.startPlan(alarm)
+				// onClose: _this.startPlan(alarm)
 			};
 			if (plans && plans.length > 0) {
-				config.render = h => {
-					return h("span", [
-						"关联预案 ",
-						h(
-							"Select",
-							plans.map(item => {
-								return h("Option", {
-									props: {
-										value: item.id,
-										label: item.name
-									},
-									on: {
-										"on-change": value => {
-											_this.selectPlan = value;
-											// console.log(_this.selectPlan);
-										}
+				config.render = (h, params) => {
+					return h('div',[
+						h('Button',
+							{
+								props: {
+									type: "primary",
+									size: "small"
+								},
+								on: {
+									click: () => {
+										this.showAlarmDetails(alarm.id);
 									}
-								});
-							})
+								}
+							},
+							"详情"
 						)
-					]);
-				};
+					])
+				}
 			}
 			switch (alarm.alarmLevel) {
 				case 1: {
@@ -597,8 +550,8 @@ export default {
 	},
 	components: {
 		alarm,
-		showVideo,
-		ShowStartPlan
+		ShowStartPlan,
+		showAlarm
 	}
 };
 </script>

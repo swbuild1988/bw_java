@@ -15,16 +15,19 @@ export default async () => {
     try {
         if (process.env.NODE_ENV == 'development') {
             // 开发环境配置
-            axios.defaults.baseURL = serverconfig.RouterBase;
+            axios.defaults.baseURL = serverconfig.ApiUrl;
             Vue.prototype.ServerConfig = '/static';
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
             Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
             Vue.prototype.flyFilePathes = serverconfig.flyFilePathes;
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
+            Vue.prototype.RouterBase = serverconfig.RouterBase;
             sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
         } else {
             // 生产环境配置
+            console.log("进入生产环境配置")
+            console.log('axios', axios)
             Vue.prototype.ServerConfig = '/dist/static';
             // axios.get('dist/static/serverconfig.json').then((result) => {
             //     Vue.prototype.ApiUrl = result.data.ApiUrl;
@@ -38,14 +41,13 @@ export default async () => {
             // }).catch((error) => {
             //     console.log("配置生产环境配错误");
             // });
-            let result_config = await axios.get('dist/static/serverconfig.json');
+            let result_config = await axios.get('/dist/static/serverconfig.json');
             Vue.prototype.ApiUrl = result_config.data.ApiUrl;
             Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
             Vue.prototype.SuperMapConfig = result_config.data.SuperMapConfig;
             Vue.prototype.flyFilePathes = result_config.data.flyFilePathes;
             Vue.prototype.VMEntityConfig = result_config.data.VMEntityConfig;
             Vue.prototype.RouterBase = result_config.data.RouterBase;
-            axios.defaults.baseURL = result_config.data.ApiUrl;
             sessionStorage.setItem('ServerConfig', result_config.data.ApiUrl + '/dist/static');
 
             // 获取VM的配置页
@@ -54,15 +56,18 @@ export default async () => {
             // }).catch((error) => {
             //     // console.log(error)
             // });
-            let result_webConfig = await axios.get('dist/static/VM/js/VMWebConfig.json');
+            let result_webConfig = await axios.get('/dist/static/VM/js/VMWebConfig.json');
             Vue.prototype.VMWebConfig = result_webConfig.data.VMWebConfig;
+
+            // 待配置文件都加载好之后，后续的访问都是访问后端接口了，修改地址
+            axios.defaults.baseURL = result_config.data.ApiUrl;
         }
 
         console.log("request.js中的RouterBase", axios.defaults.baseURL)
 
         // 创建axios实例
         const axios_instance = axios.create({
-            timeout: 15000, // 请求超时时间
+            // timeout: 15000, // 请求超时时间
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },

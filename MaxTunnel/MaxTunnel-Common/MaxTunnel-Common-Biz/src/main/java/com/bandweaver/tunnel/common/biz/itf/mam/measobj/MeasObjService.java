@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.common.biz.itf.mam.measobj;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
@@ -133,4 +134,12 @@ public interface MeasObjService {
 	 * @return
 	 */
 	List<VideoDto> getLocalSectionVideoList(int sectionId);
+
+	/**
+	 * @param tunnelId
+	 * @param storeId
+	 * @param areaId
+	 * @return
+	 */
+	List<JSONObject> getMeasObjMaxOrMinValue(Integer tunnelId, Integer storeId, Integer areaId);
 }

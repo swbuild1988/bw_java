@@ -55,4 +55,9 @@ alter table T_COMMON_AREA add LENGTH NUMBER default 0;
 alter table T_COMMON_SECTION add S1 NUMBER default 0;
 alter table T_COMMON_SECTION add S2 NUMBER default 0;
 
+alter table t_mam_measobj add video_ids varchar2(100);
+alter table t_mam_measobj add plan_ids varchar2(100);
+
+alter table T_COMMON_SCHEDULE_JOB add job_type number;
+
 ----------------------------------------------------

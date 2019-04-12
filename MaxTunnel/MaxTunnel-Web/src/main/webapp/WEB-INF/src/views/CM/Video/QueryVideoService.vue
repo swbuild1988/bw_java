@@ -34,7 +34,7 @@
                     <Input v-model="conditions.username" style="width: 60%"></Input>
                 </Col>
                 <Col span="6">
-                    <Button type="primary" size="small" @click="queryList()" icon="ios-search">查询</Button>
+                    <Button type="primary" size="small" @click="resetPageSearch()" icon="ios-search">查询</Button>
                     <Button type="error" size="small" @click="addVideoService1()">新增视频服务</Button>
                 </Col>
             </Row>
@@ -150,7 +150,10 @@ export default {
                 {
                     title: '密码',
                     key: 'password',
-                    align: 'center'
+                    align: 'center',
+                    render: (h,params) => {
+                        return h('p','******')
+                    }
                 },
                 {
                     title: '通道数',
@@ -272,7 +275,7 @@ export default {
         }
     },
     mounted(){
-        this.queryList()
+        this.resetPageSearch()
         CMVideoService.getVendor().then(
             (result) => {
                 this.vendors = result
@@ -325,7 +328,7 @@ export default {
                     CMVideoService.addVideoService(formInfo).then(
                         (result)=>{
                             this.addVideoService=false
-                            this.queryList()
+                            this.resetPageSearch()
                         },
                     )
                 }
@@ -341,7 +344,7 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.queryList()
+            this.resetPageSearch()
         },
         edit(id){
             this.isAdd = false
@@ -376,7 +379,7 @@ export default {
                     CMVideoService.editVideoService(formInfo).then(
                         (result)=>{
                             this.addVideoService = false
-                            this.queryList()
+                            this.resetPageSearch()
                         },
                         (error) => {
                             this.Log.info(error)
@@ -393,7 +396,7 @@ export default {
                     CMVideoService.delVideoService(id).then(
                         (result) => {
                             this.data1.splice(id,1)
-                            this.queryList()
+                            this.resetPageSearch()
                         },
                         (error) => {
                             this.Log.info(error)
@@ -401,6 +404,10 @@ export default {
                     )
                 }
             })
+        },
+        resetPageSearch(){
+            this.page.pageNum = 1;
+            this.queryList();
         }
     }
 }

@@ -18,6 +18,9 @@ import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.vo.AreaVo;
+import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -154,5 +157,17 @@ public class AreaController extends BaseController<Area>{
 		return success();
 	}
 
-	
+	/**
+	 * 区域自动生成起点和终点坐标，前提条件：管廊存在起点和终点坐标，区段长度不为零
+	 * @param tunnelId 管廊id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年4月1日
+	 */
+	@RequestMapping(value = "areas/auto-point/{tunnelId}", method=RequestMethod.GET)
+	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
+		Boolean flag = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
+		LogUtil.info("区域自动生成起点坐标和终点坐标： " + flag);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,flag);
+	}
 }

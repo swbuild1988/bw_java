@@ -16,15 +16,9 @@
                         <Option v-for="item in types" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
-                <!-- <FormItem label="经度：" prop="longitude">
-                    <Input v-model="formValidate.longitude" placeholder="请输入经度" class="InputWidth"></Input>
+                <FormItem label="类型编号：" prop="sn">
+                    <Input v-model="formValidate.sn" placeholder="请输入sn" class="InputWidth"></Input>
                 </FormItem>
-                <FormItem label="纬度：" prop="latitude">
-                    <Input v-model="formValidate.latitude" placeholder="请输入纬度" class="InputWidth"></Input>
-                </FormItem>
-                <FormItem label="高度：" prop="highness">
-                    <Input v-model="formValidate.highness" placeholder="请输入高度" class="InputWidth"></Input>
-                </FormItem> -->
                 <FormItem label="宽度：" prop="width">
                     <Poptip trigger="hover" placement="top-start" style="max-height: 100px;">
                         <img slot="content" :src="storelk" placement="top" alt="管廊方向说明图" style="height: 280px;">
@@ -34,15 +28,6 @@
                         <div slot="content" class="poptipExplain">
                             上图中，k2就是0，其余按照实际计算
                         </div>
-                        <!-- <div slot="content" class="poptipExplain">
-                            L为管廊中心点到某管仓中心点垂线的距离
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            k为管仓中心点管廊中心点的垂直地面距离
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            h表示管仓的高度
-                        </div> -->
                         <div slot="content" class="poptipExplain">
                             w表示管仓的宽度
                         </div>
@@ -58,15 +43,6 @@
                         <div slot="content" class="poptipExplain">
                             上图中，k2就是0，其余按照实际计算
                         </div>
-                        <!-- <div slot="content" class="poptipExplain">
-                            L为管廊中心点到某管仓中心点垂线的距离
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            k为管仓中心点管廊中心点的垂直地面距离
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            w表示管仓的宽度
-                        </div> -->
                         <div slot="content" class="poptipExplain">
                             h表示管仓的高度
                         </div>
@@ -82,15 +58,6 @@
                         <div slot="content" class="poptipExplain">
                             上图中，k2就是0，其余按照实际计算
                         </div>
-                        <!-- <div slot="content" class="poptipExplain">
-                            w表示管仓的宽度
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            h表示管仓的高度
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            k为管仓中心点管廊中心点的垂直地面距离
-                        </div> -->
                         <div slot="content" class="poptipExplain">
                             L为管廊中心点到某管仓中心点垂线的距离
                         </div>
@@ -106,15 +73,6 @@
                         <div slot="content" class="poptipExplain">
                             上图中，k2就是0，其余按照实际计算
                         </div>
-                        <!-- <div slot="content" class="poptipExplain">
-                            w表示管仓的宽度
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            h表示管仓的高度
-                        </div>
-                        <div slot="content" class="poptipExplain">
-                            L为管廊中心点到某管仓中心点垂线的距离
-                        </div> -->
                         <div slot="content" class="poptipExplain">
                             k为管仓中心点管廊中心点的垂直地面距离
                         </div>
@@ -150,10 +108,7 @@ export default {
                 name: null,
                 tunnelId: null,
                 storeTypeId: null,
-                camera: null,
-                // longitude: null,
-                // latitude: null,
-                // highness: null,
+                sn: null,
                 width: null,
                 height: null,
                 l: null,
@@ -169,15 +124,9 @@ export default {
                 storeTypeId: [
                     { type: 'number', required: true, message: '管仓类型不能为空', trigger: 'blur' }
                 ],
-                // longitude: [
-                //     { required: true, message: '经度不能为空', trigger: 'blur' }
-                // ],
-                // latitude: [
-                //     { required: true, message: '纬度不能为空', trigger: 'blur' }
-                // ],
-                // highness: [
-                //     { required: true, message: '高度不能为空', trigger: 'blur' }
-                // ],
+                sn: [
+                    { required: true, message: '管仓类型不能为空', trigger: 'blur' }
+                ],
                 width: [
                     { required: true, message: '宽度不能为空', trigger: 'blur' }
                 ],
@@ -192,8 +141,7 @@ export default {
                 ]
             },
             storelk: require('@/assets/CM/storelk.png'),
-            title: null,
-            isRefresh: false
+            title: null
         }
     },
     watch:{
@@ -207,10 +155,7 @@ export default {
                 name: this.formValidate.name,
                 tunnelId: this.formValidate.tunnelId,
                 storeTypeId: this.formValidate.storeTypeId,
-                camera: this.formValidate.camera,
-                // longitude: this.formValidate.longitude,
-                // latitude: this.formValidate.latitude,
-                // highness: this.formValidate.highness,
+                sn: this.formValidate.sn,
                 width: this.formValidate.width,
                 height: this.formValidate.height,
                 l: this.formValidate.l,
@@ -246,20 +191,18 @@ export default {
             )
         },
         sendMsg: function(data){
-            this.formValidate.camera = this.longitude + ',' + this.latitude + ',' + this.highness;
             this.$refs[data].validate((valid) => {
                 if(valid){
                     StoreService.saveEditStore(this.params).then(
                         result => {
-                            this.isRefresh = true
-                            this.$emit('childIsRefresh', this.isRefresh)
+                            this.$emit('sendMsg')
                         },
                         error => {
                             this.Log.info(error)
                         }
                     )
                 }else{
-                    this.$Message.error('修改失败')
+                    this.$Message.error('修改失败！')
                 }
             })
         },
@@ -272,22 +215,22 @@ export default {
                         name: this.formValidate.name,
                         tunnelId: this.formValidate.tunnelId,
                         storeTypeId: this.formValidate.storeTypeId,
-                        camera: this.formValidate.camera,
-                        // longitude: this.formValidate.longitude,
-                        // latitude: this.formValidate.latitude,
-                        // highness: this.formValidate.highness
+                        sn: this.formValidate.sn,
+                        width: this.formValidate.width,
+                        height: this.formValidate.height,
+                        l: this.formValidate.l,
+                        k: this.formValidate.k
                     }
                     StoreService.saveAddStore(addParams).then(
                         result => {
-                            this.isRefresh = true
-                            this.$emit('childIsRefresh', this.isRefresh)
+                            this.$emit('childIsRefresh')
+                            this.$Message.success("保存成功！")
                         },
                         error => {
                             this.Log.info(error)
                         }
                     )
                 }else{
-                    this.isRefresh = false;
                     this.$Message.error("保存失败")
                 }
             })
@@ -298,6 +241,10 @@ export default {
                 let{ code, data } = res.data
                 if( code == 200 ){
                     this.formValidate = data
+                    this.formValidate.width = data.width.toString()
+                    this.formValidate.height = data.height.toString()
+                    this.formValidate.k = data.k.toString()
+                    this.formValidate.l = data.l.toString()
                 }
             })
         },

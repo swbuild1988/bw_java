@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.common.platform.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.mam.Point3D;
 
 import java.util.Arrays;

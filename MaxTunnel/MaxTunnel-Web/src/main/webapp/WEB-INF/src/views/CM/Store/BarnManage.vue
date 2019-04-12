@@ -48,7 +48,7 @@
             ></DatePicker>
         </Col>
         <Col span="10">
-            <Button type="primary" size="small" icon="ios-search" @click="research()">查询</Button>
+            <Button type="primary" size="small" icon="ios-search" @click="resetPageSearch()">查询</Button>
             <Button type="error" size="small" @click="addNewStore()">新增管仓</Button>
             <Button type="info" size="small" @click="addMultiStores()">批量新增管仓</Button>
             <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button>
@@ -63,7 +63,7 @@
         <barn-multi-module v-bind="addMultiStoreInfo" v-on:listenToAddMulti="saveMultiStore"></barn-multi-module>
     </div>
     <div>
-        <barn-modification ref="storeModule" v-bind="changeStoreInfo"  v-on:childIsRefresh="childIsRefresh" v-on:getStoreInfo="saveChangeStore"></barn-modification>
+        <barn-modification ref="storeModule" v-bind="changeStoreInfo"  v-on:childIsRefresh="childIsRefresh" v-on:sendMsg="saveChangeStore"></barn-modification>
     </div>
   </div>
 </template>
@@ -125,58 +125,24 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "经度",
-                    key: "longitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[0]
-                            return h('div',temp)
-                        }
-
-                    }
-                },
-                {
-                    title: "纬度",
-                    key: "latitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[1]
-                            return h('div',temp)
-                        }
-
-                    }
-                },
-                {
-                    title: "高度",
-                    key: "highness",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[2]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
                     title: '宽度',
-                    align: 'center'
+                    align: 'center',
+                    key: 'width'
                 },
                 {
                     title: '高度',
-                    align: 'center'
+                    align: 'center',
+                    key: 'height'
                 },
                 {
                     title: 'L',
-                    align: 'center'
+                    align: 'center',
+                    key: 'l'
                 },
                 {
                     title: 'K',
-                    align: 'center'
+                    align: 'center',
+                    key: 'k'
                 },
                 {
                     title: "创建时间",
@@ -299,21 +265,22 @@ export default {
         //添加
         addNewStore() {
             this.changeStoreInfo.type = 1
+            this.changeStoreInfo.show.state = true;
         },
         // 编辑
         editStore(id) {
             this.changeStoreInfo.show.state = true;
             this.changeStoreInfo.type = 2
-            this.$refs.storeModule(id)
+            this.$refs.storeModule.getStoreInfo(id)
         },
         //add
-        childIsRefresh(isRefresh){
-            this.showTable()
-            this.addStoreInfo.show.state = false;
+        childIsRefresh(){
+            this.resetPageSearch()
+            this.changeStoreInfo.show.state = false;
         },
         // 修改
-        saveChangeStore(data) {
-            this.showTable();
+        saveChangeStore() {
+            this.resetPageSearch();
             this.changeStoreInfo.show.state = false;
             this.$Message.success("修改成功！");
         },
@@ -329,7 +296,7 @@ export default {
                     this.$Message.success("添加成功！");
                     this.addMultiStoreInfo.show.state = !this.addMultiStoreInfo
                         .show.state;
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
         },
@@ -354,7 +321,7 @@ export default {
                         result => {
                             this.$Message.info("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.resetPageSearch();
                         },
                         error => {
                             this.Log.info( error )
@@ -363,11 +330,12 @@ export default {
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
         },
-        research() {
+        resetPageSearch() {
+            this.page.pageNum = 1;
             this.showTable();
         }
     }

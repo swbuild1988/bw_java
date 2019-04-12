@@ -183,6 +183,14 @@ public class EmPlanServiceImpl implements EmPlanService {
      */
     public void sendMsg(EmPlan emPlan, String processInstanceId, List<Section> sectionList, Set<MeasObj> measObjList) {
 
+        // sleep一段时间为了更好的看到效果
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         double longitude = 0, latitude = 0;
         // 获取指定仓
         Section section = null;

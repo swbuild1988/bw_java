@@ -84,6 +84,18 @@ var PipeService = {
                 }
             })
         })
+    },
+    autoPoint(id){
+        return new Promise((resolve, reject) => {
+            axios.get("areas/auto-point/"+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：areas/auto-point/"+id)
+                }
+            })
+        })
     }
 }
 

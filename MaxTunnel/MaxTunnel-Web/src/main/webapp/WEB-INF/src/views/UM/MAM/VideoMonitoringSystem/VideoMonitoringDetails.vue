@@ -17,7 +17,7 @@
             </Col>
             <Col span="3">
                 <Button type="primary" icon="ios-search" @click="search" >查询</Button>
-                <Button type="primary" @click="histories" >一日历史记录</Button>
+                <!-- <Button type="primary" @click="histories" >一日历史记录</Button> -->
             </Col>
         </Row>
         <Row class="content">

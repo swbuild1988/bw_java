@@ -10,7 +10,7 @@
                 </Select>
             </Col>
             <Col span="10">
-                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">筛选</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch()">筛选</Button>
                 <Button type="error" size="small" @click="addNewTask()">新增任务</Button>  
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -33,10 +33,12 @@
 <script>
 import ScheduleModule from '../../CM/ScheduleJob/ScheduleModule'
 import {SchedulejobService} from '@/services/schedulejobService'
+import CycleTime from '../../../components/Common/CycleTime'
 export default {
     name: "schedule-job",
     components:{
-        ScheduleModule
+        ScheduleModule,
+        CycleTime
     },
     data(){
         return {
@@ -83,15 +85,22 @@ export default {
                     key: 'jobName',
                     align: 'center'
                 },
-                {
-                    title: '任务类型',
-                    key: 'description',
-                    align: 'center'
-                },
+                // {
+                //     title: '任务类型',
+                //     key: 'description',
+                //     align: 'center'
+                // },
                 {
                     title: '调度表达式',
                     key: 'cronExpression',
-                    align: 'center'
+                    align: 'center',
+                    render: (h,params)=>{
+                        return h(CycleTime,{
+                            props:{
+                                displayData: params.row.cronExpression
+                            }
+                        })
+                    }
                 },
                 {
                     title: '是否启用',
@@ -150,7 +159,7 @@ export default {
         }
     },
     mounted(){
-        this.showTable();
+        this.resetPageSearch();
     },
     computed:{
         choices(){
@@ -181,7 +190,7 @@ export default {
             this.axios.get('/schedulejobs/'+ job.jobId +'/jobstatus/'+ (1-jobStatus)).then(res =>{
                 let{code,data} = res.data;
                 if(code == 200){
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             })
         },
@@ -202,7 +211,7 @@ export default {
         },
         handlePageSize(value){
             this.page.pageSize = value;
-            this.showTable();
+            this.resetPageSearch();
         },
         addNewTask(){
             this.ScheduleJobInfo.show.state = true;
@@ -210,7 +219,7 @@ export default {
         },
         saveSchedule(){
             this.$Message.success('添加成功！');
-            this.showTable();
+            this.resetPageSearch();
             this.ScheduleJobInfo.show.state = false;
         },
         changeSchedule(id){
@@ -220,7 +229,7 @@ export default {
         },
         saveChangeSchedule(data){
             this.ScheduleJobInfo.show.state = false;
-            this.showTable();
+            this.resetPageSearch();
             this.$Message.success('修改成功!');
         },
         startdelete(selection){
@@ -244,17 +253,21 @@ export default {
                         let {code,data} = res.data;
                         if (code == 200){
                             this.$Message.info('已删除');
-                            this.showTable();
+                            this.resetPageSearch();
                         }
                     })  
                     console.log(ids);  
                 },
                 onCancel: () => {
                     this.$Message.info('已取消操作');
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
         }, 
+        resetPageSearch(){
+            this.page.pageNum = 1;
+            this.showTable()
+        }
     }
 }
 </script>

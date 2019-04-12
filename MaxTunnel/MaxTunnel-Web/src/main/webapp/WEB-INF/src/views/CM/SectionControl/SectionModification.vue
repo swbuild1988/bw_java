@@ -24,7 +24,7 @@
                 <FormItem label="可安装管线数：" prop="totalCableNumber">
                     <Input v-model="formValidate.totalCableNumber" placeholder="请输入可安装管线数："/>
                 </FormItem>
-                <FormItem label="相机视角：" prop="camera">
+                <!-- <FormItem label="相机视角：" prop="camera">
                     <Row>
                         <Col span="7">
                             <Input v-model="camera.longitude" placeholder="请输入经度"/>
@@ -62,19 +62,19 @@
                             <Input v-model="endPoint.highness" placeholder="请输入高度"/>
                         </Col>
                     </Row>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="s1：" prop="s1">
                     <Poptip trigger="hover" placement="top-start">
                         <img slot="content" :src="sections1s2" placement="top" alt="管廊方向说明图" style="height: 300px;">
                         <div slot="content">s1为管仓到区头的距离,如果是综合仓、电力仓等之类的主仓，s1的值为0</div>
-                        <Input v-model="s1" placeholder="请输入L的值"></Input>
+                        <Input v-model="formValidate.s1" placeholder="请输入s1的值"></Input>
                     </Poptip>
                 </FormItem>
                 <FormItem label="s2：" prop="s2">
                     <Poptip trigger="hover" placement="top-start">
                         <img slot="content" :src="sections1s2" placement="top" alt="管廊方向说明图" style="height: 300px;">
                         <div slot="content">s2为管仓到区尾的距离,如果是综合仓、电力仓等之类的主仓，s2的值为0</div>
-                        <Input v-model="s1" placeholder="请输入L的值"></Input>
+                        <Input v-model="formValidate.s2" placeholder="请输入s2的值"></Input>
                     </Poptip>
                 </FormItem>
             </Form>
@@ -90,47 +90,18 @@ export default {
     name: "section-change",
     data(){
         return {
-            camera:{
-                longitude:'',
-                latitude:'',
-                highness:''
-            },
-            startPoint:{
-                longitude:'',
-                latitude:'',
-                highness:'' 
-            },
-            endPoint:{
-                longitude:'',
-                latitude:'',
-                highness:''
-            },
             tunnels:[],
             stores:[],
             areas:[],
             formValidate:{
-                name:'',
-                tunnelId:null,
-                tunnelName:'',
-                directionVal: null,
-                storeId:null,
-                storeName:'',
-                areaId:null,
-                areaName:'',
-                totalCableNumber:null,
-                camera:null,
-                startPoint:null,
-                endPoint:'',
+                name: null,
+                tunnelId: null,
+                storeId: null,
+                areaId: null,
+                totalCableNumber: null,
+                s1: null,
+                s2: null
             },
-            s1: null,
-            s2: null,
-            ruleValidate:{},
-            tunnelDirection: [
-                { id: 1, direction: '东北方向', pic: require('@/assets/CM/en.png') , value: 1 },
-                { id: 2, direction: '西南方向', pic: require('@/assets/CM/ws.png') , value: 2 },
-                { id: 3, direction: '西北方向', pic: require('@/assets/CM/wn.png') , value: 3 },
-                { id: 4, direction: '东南方向', pic: require('@/assets/CM/es.png') , value: 4 }
-            ],
             sections1s2: require('@/assets/CM/section.png'),
             validateForm: {
                 name: [
@@ -147,15 +118,6 @@ export default {
                 ],
                 totalCableNumber: [
                     { type: 'number', required: true, message: '可安装管线数不能为空', trigger: 'blur' }
-                ],
-                camera: [
-                    { required: true, message: '相机视角不能为空', trigger: 'blur' }
-                ],
-                startPoint: [
-                    { required: true, message: '相机视角不能为空', trigger: 'blur' }
-                ],
-                endPoint: [
-                    { required: true, message: '相机视角不能为空', trigger: 'blur' }
                 ],
                 s1: [
                     { required: true, message: 's1不能为空', trigger: 'blur' }
@@ -188,9 +150,6 @@ export default {
             if(newValue!=null && this.formValidate.areaId!=null){
                 this.updateName(this.formValidate.areaId,newValue);
             }
-        },
-        'sectionId': function(newVal, oldVal){
-            this.getSectionInfoById(newVal)
         }
     },
     mounted(){
@@ -224,13 +183,16 @@ export default {
         sendMsgtoManage: function(name){
             this.$refs[name].validate((valid) => {
                 if(valid) {
-                    //给相机视角和坐标拼接字符串
-                    this.formValidate.camera = this.camera.longitude + ',' + this.camera.latitude + ',' + this.camera.highness;
-                    this.formValidate.startPoint = this.startPoint.longitude + ',' + this.startPoint.latitude + "," + this.startPoint.highness;
-                    this.formValidate.endPoint = this.endPoint.longitude + ',' + this.endPoint.latitude + ',' + this.endPoint.highness;
-                    this.$emit("listenToChange",this.formValidate);
+                    this.axios.put("/sections", this.formValidate).then(res => {
+                        let { code, data } = res.data;
+                        if (code == 200) {
+                            this.$emit("listenToChange");
+                        }else{
+                            this.$Message.error('修改失败');
+                        }
+                    });
                 } else {
-                    this.$Message.error('修改失败');
+                    this.$Message.error('区段信息填写错误');
                 }
             })
         },
@@ -258,23 +220,11 @@ export default {
                     this.formValidate = data
                     this.formValidate.areaId = data.area.id
                     this.formValidate.storeId = data.store.id
+                    this.formValidate.s1 = data.s1.toString()
+                    this.formValidate.s2 = data.s2.toString()
                 }
             })
-        },
-        saveChangeSection(data) {
-            this.formValidate = data;
-            this.axios.put("/sections", this.modifications).then(res => {
-                console.log(this.modifications);
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.changeSectionInfo.show.state = !this.changeSectionInfo
-                        .show.state;
-                    this.$Message.success("修改成功！");
-                }
-            });
-        },
+        }
     }
 }
 </script>

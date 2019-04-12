@@ -12,6 +12,8 @@ public interface AreaMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insertSelective(Area record);
+    
+    Area selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Area record);
 

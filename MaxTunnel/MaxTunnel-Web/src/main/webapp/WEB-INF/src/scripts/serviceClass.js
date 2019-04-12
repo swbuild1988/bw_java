@@ -69,12 +69,11 @@ class InformationManagement {
   }
   searchInformation(entity, modelProp) {
 
-    if (entity._messageType === undefined) return
-
-    if (['videos','linear'].indexOf(entity._messageType) !== -1) { //当为视屏、直线实体时，隐藏弹框
+    if ( !entity._messageType || ['videos','linear'].indexOf(entity._messageType) !== -1) { //当为视屏、直线实体时，隐藏弹框
       modelProp.show.state = false;
       return;
     }
+
     modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
     let informations = this.getInformation(entity._messageType);
@@ -91,7 +90,7 @@ class InformationManagement {
             'entity': entity,
             'object': information
           }); //缓存鼠标获取最后一个告警
-            
+
           this._getInformation(information, entity, modelProp);
 
         }

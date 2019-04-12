@@ -2,24 +2,30 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="9">
+                <Col span="11">
                     <Row style="width: 94%">
-                        <Col span="3">
+                        <Col span="2">
                             <span>摄像头：</span>
                         </Col>
-                        <Col span="7">
+                        <Col span="5">
+                            <Select v-model="conditions.tunnelId" @on-change="getStoreAndAreas">
+                                <Option value="null">所有</Option>
+                                <Option v-for="tunnel in conditionList.tunnels" :key="tunnel.id" :value="tunnel.id">{{tunnel.name}}</Option>
+                            </Select>
+                        </Col>
+                        <Col span="6">
                             <Select v-model="conditions.areaId" @on-change="getCameraList">
                                 <Option value="null">所有</Option>
                                 <Option v-for="area in conditionList.areas" :key="area.id" :value="area.id">{{area.name}}</Option>
                             </Select>
                         </Col>
-                        <Col span="7">
+                        <Col span="5">
                             <Select v-model="conditions.storeId" @on-change="getCameraList">
                                 <Option value="null">所有</Option>
                                 <Option v-for="store in conditionList.stores" :key="store.id" :value="store.id">{{store.name}}</Option>
                             </Select>
                         </Col>
-                        <Col span="7">
+                        <Col span="6">
                             <Select v-model="conditions.cameraId">
                                 <Option value="null">所有</Option>
                                 <Option v-for="camera in conditionList.cameras" :key="camera.id" :value="camera.id">{{camera.name + ' '+ camera.id}}</Option>>
@@ -27,12 +33,12 @@
                         </Col>
                     </Row>
                 </Col>
-                <Col span="6">
+                <Col span="5">
                     <span>开始时间：</span>
                     <DatePicker v-model="conditions.startTime" type="datetime" class="condition" placeholder="请选择开始时间">
                     </DatePicker>
                 </Col>
-                <Col span="6">
+                <Col span="5">
                     <span>结束时间：</span>
                     <DatePicker v-model="conditions.endTime" type="datetime" class="condition" placeholder="请选择结束时间">
                     </DatePicker>
@@ -45,19 +51,21 @@
             </Row>
         </div>
         <div class="list">
-            <div style="padding-bottom:0.6vmin;margin:0.6vmin 2vmin;">
+            <div style="padding-bottom:0.6vmin;margin:0.6vmin 2vmin;font-size: 1.6vmin">
                 <Checkbox
                     :value="downLoad.checkPageAll"
                     @click.prevent.native="handleCheckPageAll">
-                    <span style="font-size: 1.6vmin">本页全选</span>
+                    <span>本页全选</span>
                 </Checkbox>
                 <Checkbox
                     :value="downLoad.checkAll"
                     @click.prevent.native="handleCheckAll">
-                    <span style="font-size: 1.6vmin">所有全选</span>
+                    <span>所有全选</span>
                 </Checkbox>
+                <span >{{ '已选中' + downLoad.total + '个' }}</span>
             </div>
             <Row>
+                <Col span="24" v-if="nodata" class="none">暂无历史照片</Col>
                 <Col span="6" v-for="photo in photos" :key="photo.index">
                     <Card class="card">
                         <div style="text-align:center" @click="stateChange(photo)">
@@ -93,12 +101,14 @@ import { saveAs } from 'file-saver';
                 startTime: new Date(new Date().getTime() - 1000*60*60*24*30),
                 endTime: new Date(Date.now()),
                 storeId: null,
-                areaId: null
+                areaId: null,
+                tunnelId: null
             },
             conditionList: {
                 stores: [],
                 areas: [],
-                cameras: []
+                cameras: [],
+                tunnels: []
             },
             curCamera: {},
             page: {
@@ -115,14 +125,17 @@ import { saveAs } from 'file-saver';
             downLoad: {
                 ids: [],
                 checkAll: false,
-                checkPageAll: false
-            }
+                checkPageAll: false,
+                total: 0
+            },
+            nodata: false,
+            initState: true
         };
     },
     computed:{
         cameraQuery(){
             let param = {
-                tunnelId: this.curCamera.tunnelId,
+                tunnelId: this.conditions.tunnelId === 'null' ? null : this.conditions.tunnelId,
                 storeId: this.conditions.storeId === 'null' ? null : this.conditions.storeId,
                 areaId: this.conditions.areaId === 'null' ? null : this.conditions.areaId
             }
@@ -130,7 +143,7 @@ import { saveAs } from 'file-saver';
         },
         photoDatagridQuery(){
             let param = {
-                tunnelId: this.curCamera.tunnelId,
+                tunnelId: this.conditions.tunnelId === 'null' ? null : this.conditions.tunnelId,
                 storeId: this.conditions.storeId === 'null' ? null : this.conditions.storeId,
                 areaId: this.conditions.areaId === 'null' ? null : this.conditions.areaId,
                 id: this.conditions.cameraId === 'null' ? null : this.conditions.cameraId,
@@ -143,7 +156,7 @@ import { saveAs } from 'file-saver';
         },
         allPhotoesQuery(){
             let param = {
-                tunnelId: this.curCamera.tunnelId,
+                tunnelId: this.conditions.tunnelId === 'null' ? null : this.conditions.tunnelId,
                 storeId: this.conditions.storeId === 'null' ? null : this.conditions.storeId,
                 areaId: this.conditions.areaId === 'null' ? null : this.conditions.areaId,
                 id: this.conditions.cameraId === 'null' ? null : this.conditions.cameraId,
@@ -154,29 +167,39 @@ import { saveAs } from 'file-saver';
         }
     },
     mounted(){
-        let param = this.$route.params
-        if(param.tunnelId){
-            this.curCamera.tunnelId =  param.tunnelId ? param.tunnelId : null
-            this.conditions.startTime = new Date(new Date().getTime() - 1000*60*60*24)
-        } else {
-            this.curCamera = param.camera ? param.camera : {};
-        }
-
-        if(param.camera || param.tunnelId){
-            this.init();
-        }
+        this.init();
     },
     methods: {
         init(){
-            Promise.all([TunnelService.getStoresByTunnelId(this.curCamera.tunnelId),
-            TunnelService.getAreasByTunnelId(this.curCamera.tunnelId)]).then(
+            TunnelService.getTunnels().then(
+                res=>{
+                    this.conditionList.tunnels = res
+                    let param = this.$route.params
+                    if(param.camera){
+                        this.curCamera = param.camera;
+                        this.conditions.tunnelId = +param.camera.tunnelId;
+                        this.getStoreAndAreas()
+                    } else {
+                        this.conditions.startTime = new Date(new Date().getTime() - 1000*60*60*24)
+                        this.resetPageAndSearch()
+                    }
+                },
+                error=>{
+                    this.Log.info(error)
+                }
+            )
+        },
+        getStoreAndAreas(){
+            Promise.all([TunnelService.getStoresByTunnelId(this.conditions.tunnelId),
+            TunnelService.getAreasByTunnelId(this.conditions.tunnelId)]).then(
                 result=>{
                     this.conditionList.stores = result[0];
-                    this.conditions.storeId = this.curCamera.storeId ? this.curCamera.storeId : 'null';
                     this.conditionList.areas = result[1];
-                    this.conditions.areaId = this.curCamera.areaId ? this.curCamera.areaId : 'null';
+                    if(this.initState){
+                        this.conditions.storeId = this.curCamera.storeId ? this.curCamera.storeId : 'null';
+                        this.conditions.areaId = this.curCamera.areaId ? this.curCamera.areaId : 'null';
+                    }
                     this.getCameraList();
-                    this.resetPageAndSearch();
                 },
                 error=>{
                     this.Log.info(error)
@@ -187,7 +210,10 @@ import { saveAs } from 'file-saver';
             VideoService.getCamerasByConditions(this.cameraQuery).then(
                 res=>{
                     this.conditionList.cameras = res;
-                    this.conditions.cameraId = this.curCamera.id ? this.curCamera.id : 'null';
+                    if(this.initState){
+                        this.conditions.cameraId = this.curCamera.id ? this.curCamera.id : 'null';
+                        this.resetPageAndSearch()
+                    } 
                 },
                 error => {
                     this.Log.info(error);
@@ -205,39 +231,41 @@ import { saveAs } from 'file-saver';
             this.page.pageSize = value;
             this.resetPageAndSearch();
         },
-        handlePage(value) {
-            this.page.pageNum = value;
-            this.search();
-        },
         search(){
             VideoService.historyPhotosDatagrid(this.photoDatagridQuery).then(
                 res=>{
                     this.photos = []
-                    res.pagedList.forEach(item=>{
-                        VideoService.getPhoto({path:item.strPath}).then(
-                            res=>{
-                                return ("data:image/png;base64," + 
-                                btoa( new Uint8Array(res).reduce((data, byte) => 
-                                    data + String.fromCharCode(byte),"")
-                                )
-                            );
-                        }).
-                        then(data => {
-                            this.photos.push({
-                                id: item.strToken,
-                                time: item.strStartTime.replace(/[TZ]/g,' '),
-                                path: item.strPath,
-                                tunnel: item.tunnel,
-                                area: item.area,
-                                store: item.store,
-                                name: item.name,
-                                imgPath: data,
-                                checked: false
-                            })
-                        });
-                    })
-                    this.page.pageTotal = res.total
-         
+                    this.initState = false
+                    if(res.pagedList.length == 0){
+                        this.nodata = true
+                    } else {
+                        this.nodata = false
+                        res.pagedList.forEach(item=>{
+                            VideoService.getPhoto({path:item.strPath}).then(
+                                res=>{
+                                    return ("data:image/png;base64," + 
+                                    btoa( new Uint8Array(res).reduce((data, byte) => 
+                                        data + String.fromCharCode(byte),"")
+                                    )
+                                );
+                            }).
+                            then(data => {
+                                this.photos.push({
+                                    id: item.strToken,
+                                    time: item.strStartTime.replace(/[TZ]/g,' '),
+                                    path: item.strPath,
+                                    tunnel: item.tunnel,
+                                    area: item.area,
+                                    store: item.store,
+                                    name: item.name,
+                                    imgPath: data,
+                                    checked: false
+                                })
+                            });
+                        })
+                    }
+                    this.page.pageTotal = res.total;
+                    this.downLoad.total = 0;
                 },
                 error=>{
                     this.$Message.error('查询失败');
@@ -250,16 +278,10 @@ import { saveAs } from 'file-saver';
             this.search();
         },
         downLoadPhotoes(){
-            let count = 0;
-            this.photos.map(photo=>{
-                if(photo.checked){
-                    count ++;
-                }
-            })
-            if(!!count){
+            if(this.downLoad.total){
                 this.$Modal.confirm({
                     title: '历史记录',
-                    content: '<p>确定下载这些照片吗</p>',
+                    content: '<p>确定下载照片吗</p>',
                     onOk: () => {
                         if(this.downLoad.checkAll){
                             VideoService.allHistoryPhotoes(this.allPhotoesQuery).then(
@@ -271,18 +293,17 @@ import { saveAs } from 'file-saver';
                                     this.$Message.info('即将开始下载，请等待')
                                     res.forEach((item,index)=>{
                                         VideoService.getPhoto({path:item.strPath}).then(
-                                            res=>{
-                                                return  
-                                                btoa( new Uint8Array(res).reduce((data, byte) => 
-                                                    data + String.fromCharCode(byte),"")
-                                                )
+                                            photoStream=>{
+                                                return ("data:image/png;base64," +
+                                                    btoa(new Uint8Array(photoStream).reduce((data, byte) => 
+                                                    data + String.fromCharCode(byte),"")))
                                         }).
                                         then(data => {
                                             let length = item.strPath.split('.').length;
                                             let format = item.strPath.split('.')[length - 1];
                                             let time = item.strStartTime.replace(/[TZ]/g,'');
                                             let name = item.tunnel + item.area+ item.store + item.name + time+ '.' + format; 
-                                            imgs.file(name, data, {base64: true})
+                                            imgs.file(name, data.substring(22), {base64: true})
                                             if(index === res.length - 1){
                                                 let _this = this
                                                 zip.generateAsync({type: 'blob'}).then(function (content) {
@@ -329,22 +350,26 @@ import { saveAs } from 'file-saver';
         },
         handleCheckPageAll(){
             this.downLoad.checkPageAll = !this.downLoad.checkPageAll;
+            this.downLoad.total = 0;
             this.photos.map(photo=>{
                 photo.checked = this.downLoad.checkPageAll;
+                if(photo.checked) this.downLoad.total++;
             })
         },
         stateChange(photo){
             photo.checked = !photo.checked;
-            let count = 0,len = this.photos.length;
+            let len = this.photos.length;
+            this.downLoad.total = 0;
             this.photos.map(photo=>{
                 if(photo.checked){
-                    count ++;
+                    this.downLoad.total ++;
                 }
             })
-            this.downLoad.checkPageAll = count === len ? true : false;
+            this.downLoad.checkPageAll = this.downLoad.total === len ? true : false;
         },
         handleCheckAll(){
             this.downLoad.checkAll = !this.downLoad.checkAll;
+            this.downLoad.total = this.downLoad.checkAll ? this.page.pageTotal : 0;
             this.photos.map(photo=>{
                 photo.checked = this.downLoad.checkAll;
             })
@@ -353,6 +378,7 @@ import { saveAs } from 'file-saver';
             this.photos.map(photo=>{
                 photo.checked = false;
             })
+            this.downLoad.total = 0;
         }
     }
 };
@@ -387,5 +413,9 @@ import { saveAs } from 'file-saver';
     .list >>> .ivu-checkbox-inner:after{
         width: 0.8vmin;
         height: 1.2vmin;
+    }
+    .none{
+        font-size: 2vmin;
+        text-align: center;
     }
 </style>

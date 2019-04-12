@@ -12,10 +12,10 @@
                 <Input v-model="item.number" style="width: 75%" :placeholder="item.placeholder"/><span class="cycle-time-unit bottom-unit">{{ item.unit }}</span>
             </div>
         </div>
-        <div class="cycle-time-bottom" v-show="showBottom">
-            <Button @click="comfirm" class="comfirm">确认</Button>
-            <Button @click="cancel" class="cancel" >取消</Button>
-        </div>
+        <!--<div class="cycle-time-bottom" v-show="showBottom">-->
+            <!--<Button @click="comfirm" class="comfirm">确认</Button>-->
+            <!--<Button @click="cancel" class="cancel" >取消</Button>-->
+        <!--</div>-->
     </div>
 
 </template>
@@ -42,12 +42,12 @@
         font-size: .7rem;
         text-align: center;
     }
-    .cycle-time-bottom .comfirm {
-        grid-column-start: 3;
-    }
-    .cycle-time-bottom .cancel {
-        grid-column-start: 4;
-    }
+    /*.cycle-time-bottom .comfirm {*/
+        /*grid-column-start: 3;*/
+    /*}*/
+    /*.cycle-time-bottom .cancel {*/
+        /*grid-column-start: 4;*/
+    /*}*/
 
 </style>
 
@@ -137,7 +137,11 @@
                 let [ nape ] = _this.associative.filter( item => item.key === _this.selectData );
                 this.updateData( nape.key ,nape.value );
 
+            },
+            displayData(){
+                this.init();
             }
+        
         },
         mounted(){
             this.init();
@@ -195,14 +199,14 @@
 
                 return str;
             },
-            comfirm(){
-                let data = this.collectData();
-                //向后端发送数据
-                //xxx
-            },
-            cancel(){
-                this.cycleTimeParam.forEach( param => param.number = '' )
-            },
+            // comfirm(){
+            //     let data = this.collectData();
+            //     //向后端发送数据
+            //     //xxx
+            // },
+            // cancel(){
+            //     this.cycleTimeParam.forEach( param => param.number = '' )
+            // },
             requestData(str){
                 if( str.length < 1 ) return;
 

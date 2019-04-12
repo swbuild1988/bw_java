@@ -49,9 +49,9 @@
                 </DatePicker>
             </Col>
             <Col span="10">
-                    <Button type="primary" size="small"  icon="ios-search" @click="showTable()">查询</Button>
+                    <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch()">查询</Button>
                     <!-- <Button type="error" size="small" @click="addNewPipe()">新增管廊</Button>  -->
-                    <Button type="info" size="small">自动生成起点/终点</Button>
+                    <Button type="info" size="small" @click="autoPoint()">自动生成起点/终点</Button>
                     <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                     <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col>    
@@ -106,6 +106,26 @@ export default {
                     align: "center"
                 },
                 {
+                    title: '管廊方向',
+                    key: 'direction',
+                    align: 'center',
+                    render: (h,params) => {
+                        let tunnelDirection = [
+                            { id: 1, direction: '东北方向', value: 1 },
+                            { id: 2, direction: '西南方向', value: 2 },
+                            { id: 3, direction: '西北方向', value: 3 },
+                            { id: 4, direction: '东南方向', value: 4 }
+                        ]
+                        let temp = null
+                        tunnelDirection.forEach(element => {
+                            if(params.row.direction==element.value){
+                                temp = element.direction
+                            }
+                        }); 
+                        return h('div', temp)      
+                    }
+                },
+                {
                     title: "负责人",
                     key: "responsibility",
                     align: "center",
@@ -138,41 +158,15 @@ export default {
                     }
                 },
                 {
-                    title: "经度",
-                    key: "longitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[0]
-                            return h('div',temp)
-                        }
-                    }
+                    title: '起点（经度、纬度、高度）',
+                    key: 'startPoint',
+                    align: 'center'
                 },
                 {
-                    title: "纬度",
-                    key: "latitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[1]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
-                    title: "高度",
-                    key: "highness",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[2]
-                            return h('div',temp)
-                        }
-                    }
-                },
+                    title: '终点（经度、纬度、高度）',
+                    key: 'endPoint',
+                    align: 'center'
+                },             
                 {
                     title: "操作",
                     key: "action",
@@ -224,11 +218,17 @@ export default {
                 show: { state: false }
             },
             deleteShow: false,
-            deleteSelect: []
+            deleteSelect: [],
+            tunnelDirection: [
+                { id: 1, direction: '东北方向', pic: require('@/assets/CM/en.png') , value: 1 },
+                { id: 2, direction: '西南方向', pic: require('@/assets/CM/ws.png') , value: 2 },
+                { id: 3, direction: '西北方向', pic: require('@/assets/CM/wn.png') , value: 3 },
+                { id: 4, direction: '东南方向', pic: require('@/assets/CM/es.png') , value: 4 }
+            ]
         };
     },
     mounted() {
-        this.showTable();
+        this.resetPageSearch();
         this.getStaffs();
         this.getCompanies();
     },
@@ -266,7 +266,7 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.showTable();
+            this.resetPageSearch();
         },
         // 获取负责人
         getStaffs() {
@@ -301,7 +301,7 @@ export default {
         //修改结束
         saveChangeTunnelInfo(){
             this.changePipeInfo.show.state = false;
-            this.showTable()
+            this.resetPageSearch()
             this.$Message.success("修改成功！")
         },
         handleSelectionChange(val) {
@@ -328,7 +328,7 @@ export default {
                         result => {
                             this.$Message.info("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.resetPageSearch();
                         },
                         error => {
                             this.Log.info(error)
@@ -337,9 +337,32 @@ export default {
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
+        },
+        resetPageSearch(){
+            this.page.pageNum = 1;
+            this.showTable();
+        },
+        //自动生成起点和终点
+        autoPoint(){
+            PipeService.autoPoint(this.deleteSelect[0].id).then(
+                result => {
+                        this.$Message.success("成功生成起点和终点")
+                },
+                error => {
+                    if(this.deleteSelect.length==0){
+                        this.$Message.error("请选择管廊")
+                    }else if(this.deleteSelect.length>1&&this.deleteSelect[0].startPoint!=null&&this.deleteSelect[0].endPoint!=null){
+                        this.$Message.error("一次只能选择一条管廊")
+                    }else if((this.deleteSelect.length==1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length==1&&this.deleteSelect[0].endPoint==null)){
+                        this.$Message.error("管廊的起点和终点不能为空")
+                    }else if((this.deleteSelect.length>1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length>1&&this.deleteSelect[0].endPoint==null)){
+                        this.$Message.error("一次只能选择一条管廊,且管廊的起点和终点不能为空")
+                    }
+                }
+            )
         }
     },
     components: {

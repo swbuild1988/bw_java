@@ -33,7 +33,17 @@
                      column="TUNNEL_ID"
                      select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
     </resultMap>
-
+	
+	<sql id="Base_Column_List">
+        ID, NAME, SN, LOCATION, TUNNEL_ID, camera, CRT_TIME, length, start_point, end_point
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_COMMON_AREA
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+	
     <delete id="deleteByPrimaryKey">
         DELETE FROM T_COMMON_AREA
         WHERE ID = #{id,jdbcType=DECIMAL}
@@ -148,7 +158,7 @@
 
     <insert id="addAreaBatch" useGeneratedKeys="false">
         insert into T_COMMON_AREA
-        (id,name,sn,location,tunnel_id,camera,crt_time)
+        (id,name,sn,location,tunnel_id,camera,crt_time,length)
         select COMMON_AREA_SEQUENCE.nextval,a.* from (
         <foreach collection="list" item="item" index="index" close=")"
                  open="(" separator="union">

@@ -47,7 +47,7 @@ export default {
   },
   components: {
     videoloop,
-    ModuleTitle
+    ModuleTitle,
   },
   mounted() {
     this.getLoopScence();

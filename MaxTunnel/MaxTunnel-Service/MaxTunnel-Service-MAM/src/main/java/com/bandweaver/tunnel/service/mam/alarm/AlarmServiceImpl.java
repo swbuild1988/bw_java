@@ -1,15 +1,13 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.em.ObjectBindTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoService;
-import com.bandweaver.tunnel.common.biz.pojo.em.ObjectBind;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
@@ -39,6 +37,8 @@ public class AlarmServiceImpl implements AlarmService {
 	private MeasObjModuleCenter measObjModuleCenter;
 	@Autowired
 	private VideoServerService videoServerService;
+	@Autowired
+	private MeasObjService measObjService;
 
 
 	@Override
@@ -53,7 +53,19 @@ public class AlarmServiceImpl implements AlarmService {
 
 		List<JSONObject> planList = new ArrayList<>(10);
 		List<VideoServerDto> videoList = new ArrayList<>(10);
+		List<JSONObject> cvList = new ArrayList<>(10);
+		getPlansAndVideosAndCv(measObj, planList, videoList, cvList);
+		jsonObject.put("plans", planList);
+		jsonObject.put("videos", videoList);
+		jsonObject.put("cvList", cvList);
+		jsonObject.put("sectionId", measObj == null ? null : measObj.getSectionId());
 
+		// send to MQ
+		mqService.sendToAlarmUMQueue(jsonObject.toJSONString());
+		mqService.sendToAlarmVMQueue(jsonObject.toJSONString());
+	}
+
+	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoServerDto> videoList, List<JSONObject> cvList) {
 		if (measObj != null) {
 			// 获取监测对象绑定的预案
 			String planIds = measObj.getPlanIds();
@@ -62,6 +74,7 @@ public class AlarmServiceImpl implements AlarmService {
 				JSONObject json = new JSONObject();
 				json.put("id", planId);
 				json.put("name", ProcessTypeEnum.getEnum(planId).getName());
+				json.put("processKey", ProcessTypeEnum.getEnum(planId).getProcessKey());
 				planList.add(json);
 			}
 
@@ -83,17 +96,12 @@ public class AlarmServiceImpl implements AlarmService {
 				}
 			}
 
-			// 获取监测极值 TODO
+			// 获取监测极值
+			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId());
+
 		}
 
-		jsonObject.put("plans", planList);
-		jsonObject.put("videos", videoList);
-
-		// send to MQ
-		mqService.sendToAlarmUMQueue(jsonObject.toJSONString());
-		mqService.sendToAlarmVMQueue(jsonObject.toJSONString());
 	}
-
 
 
 	@Override

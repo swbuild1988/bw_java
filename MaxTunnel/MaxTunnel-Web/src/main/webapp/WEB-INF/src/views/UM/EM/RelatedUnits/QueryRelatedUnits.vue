@@ -3,7 +3,7 @@
         <Row class="queryCondition">
             <Col span="6">
                 <span>所属管仓段：</span>
-                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>
+                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree" readonly></Input>
                 <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             </Col>
             <Col span="6">

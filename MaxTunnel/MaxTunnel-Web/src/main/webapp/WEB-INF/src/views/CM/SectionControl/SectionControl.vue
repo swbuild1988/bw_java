@@ -59,7 +59,7 @@
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
         <!-- 修改区段信息 -->
         <div>
-            <section-modification v-bind="changeSectionInfo"></section-modification>
+            <section-modification ref="sectionModule" v-bind="changeSectionInfo" v-on:listenToChange="saveEditInfo"></section-modification>
         </div>
     </div>
 </template>
@@ -132,27 +132,14 @@ export default {
                     }
                 },
                 {
-                    title: "相机视角",
-                    key: "camera",
-                    align: "center"
-                },
-                {
-                    title: "开始坐标",
-                    key: "startPoint",
-                    align: "center"
-                },
-                {
-                    title: "结束坐标",
-                    key: "endPoint",
-                    align: "center"
-                },
-                {
                     title: 'S1',
-                    align: 'center'
+                    align: 'center',
+                    key: 's1'
                 },
                 {
                     title: 'S2',
-                    align: 'center'
+                    align: 'center',
+                    key: 's2'
                 },
                 {
                     title: '创建时间',
@@ -180,7 +167,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.editSection(params.index);
+                                            this.editSection(params.row.id);
                                         }
                                     }
                                 },
@@ -203,8 +190,7 @@ export default {
             changeSectionInfo: {
                 show: { 
                     state: false 
-                },
-                sectionId: null
+                }
             },
             deleteShow: false,
             deleteSelect: [],
@@ -218,7 +204,7 @@ export default {
     },
     mounted() {
         this.gettunnel();
-        this.showTable();
+        this.research();
     },
     computed: {
         researches() {
@@ -251,7 +237,7 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.showTable();
+            this.research();
         },
         create() {
             this.canCreate = false;
@@ -285,10 +271,14 @@ export default {
                 })
         },
         //编辑区段信息
-        editSection(index) {
-            this.changeSectionInfo.sectionId = this.sectionData[index].id
-            this.changeSectionInfo.show.state = !this.changeSectionInfo.show.state;
-            console.log('this.changeSectionInfo.sectionId', this.changeSectionInfo.sectionId)
+        editSection(id) {
+            this.changeSectionInfo.show.state = true;
+            this.$refs.sectionModule.getSectionInfoById(id)
+        },
+        saveEditInfo(){
+            this.changeSectionInfo.show.state = false
+            this.$Message.success("修改成功！")
+            this.research()
         },
         startdelete(selection) {
             if (selection.length != 0) {
@@ -318,17 +308,18 @@ export default {
                         if (code == 200) {
                             this.$Message.info("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.research();
                         }
                     });
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.research();
                 }
             });
         },
         research() {
+            this.page.pageNum = 1;
             this.showTable();
         },
         showSectionsInfo() {

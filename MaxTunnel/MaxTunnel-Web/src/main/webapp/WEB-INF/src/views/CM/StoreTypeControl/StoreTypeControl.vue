@@ -141,7 +141,7 @@ export default {
         };
     },
     mounted() {
-        this.showTable();
+        this.research();
     },
     computed: {
         params() {
@@ -184,7 +184,7 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.showTable();
+            this.research();
         },
         addNewStoreType() {
             this.addStoreTypeInfo.show.state = !this.addStoreTypeInfo.show
@@ -199,7 +199,7 @@ export default {
                     this.$Message.success("添加成功！");
                     this.addStoreTypeInfo.show.state = !this.addStoreTypeInfo
                         .show.state;
-                    this.showTable();
+                    this.research();
                 }
             });
         },
@@ -215,7 +215,7 @@ export default {
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;
-                    this.showTable();
+                    this.research();
                     this.changeStoreTypeInfo.show.state = !this
                         .changeStoreTypeInfo.show.state;
                     this.$Message.success("修改成功！");
@@ -244,17 +244,18 @@ export default {
                         if (code == 200) {
                             this.$Message.info("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.research();
                         }
                     });
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.research();
                 }
             });
         },
         research() {
+            this.page.pageNum = 1;
             this.showTable();
         }
     },

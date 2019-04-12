@@ -65,6 +65,9 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public void addAreaBatch(List<Area> list) {
+    	for(Area a : list) {
+    		if(a.getLength() == null) a.setLength(0.0);
+    	}
         areaMapper.addAreaBatch(list);
     }
 

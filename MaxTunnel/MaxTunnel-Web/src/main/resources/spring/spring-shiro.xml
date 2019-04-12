@@ -39,7 +39,7 @@
 				/login/** = anon
 
 				<!-- 测试需要，不需要登录，以后改为authc -->
-				/** = anon
+				/** = authc
 				
 				<!-- /auth = authc
 				/student = roles[teacher]

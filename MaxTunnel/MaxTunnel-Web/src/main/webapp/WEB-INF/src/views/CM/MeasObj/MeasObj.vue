@@ -358,11 +358,13 @@ export default {
     },
     addMeasObj() {
       this.measObjModule.show.state = !this.measObjModule.show.state;
-      this.search()
+      this.$Message.success('添加成功');
+      this.resetAndSearch()
     },
     updateMeasObj(){
       this.measObjModule.show.state = !this.measObjModule.show.state;
-      this.search()
+      this.$Message.success('修改成功');
+      this.resetAndSearch()
     },
     saveMulti(data) {
       console.log("save multi", data);

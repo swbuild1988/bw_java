@@ -356,44 +356,32 @@ public class SectionServiceImpl implements SectionService {
     public boolean calSectionsStartPointAndEndPointByTunnel(int tunnelId) {
 
         TunnelDto tunnel = tunnelMapper.getDtoById(tunnelId);
-        LogUtil.info("------------ 管廊1 ------------");
         LogUtil.info(tunnel);
+        if(tunnel == null || tunnel.getDirection() == null) return false;
         int tunnel_dir = tunnel.getDirection().intValue();
         List<SectionDto> sections = getSectionsByTunnel(tunnelId);
 
-        LogUtil.info(sections);
-
         for (SectionDto section : sections) {
-            LogUtil.info("------------ section ------------");
-            LogUtil.info(section);
+        	LogUtil.info(section);
             Area area = section.getArea();
-            LogUtil.info("------------ area ------------");
-            LogUtil.info(area);
             StoreDto store = section.getStore();
-            LogUtil.info("------------ store ------------");
-            LogUtil.info(store);
+            if( area == null || store == null) continue;
 
             // 获得区域的起点和终点
             Point3D startP = PointUtil.get3DPoint(area.getStartPoint());
             Point3D endP = PointUtil.get3DPoint(area.getEndPoint());
-            LogUtil.info("------------ 区的起点和终点 ------------");
-            LogUtil.info(startP);
-            LogUtil.info(endP);
 
             if (startP == null || endP == null) continue;
             if (store.getK() == null || store.getL() == null) continue;
 
             double k = store.getK().doubleValue();
             double l = store.getL().doubleValue();
-            double s1 = section.getS1();
-            double s2 = section.getS2();
+            double s1 = section.getS1() == null ? 0.0 : section.getS1();
+            double s2 = section.getS2() == null ? 0.0 : section.getS2();
 
             Point3D outStartP = new Point3D();
             Point3D outEndP = new Point3D();
-            test(startP, endP, k, l, s1, s2, tunnel_dir, outStartP, outEndP);
-            LogUtil.info("------------ 经过计算后，每个section的起点和终点 ------------");
-            LogUtil.info(outStartP);
-            LogUtil.info(outEndP);
+            getSectionStartPointAndEedPoint(startP, endP, k, l, s1, s2, tunnel_dir, outStartP, outEndP);
 
             section.setStartPoint(PointUtil.get3DPointString(outStartP.getLng(), outStartP.getLat(), outStartP.getHeight()));
             section.setEndPoint(PointUtil.get3DPointString(outEndP.getLng(), outEndP.getLat(), outEndP.getHeight()));
@@ -402,10 +390,13 @@ public class SectionServiceImpl implements SectionService {
 
         }
 
-        return false;
+        return true;
     }
 
-    private void test(Point3D startP, Point3D endP, double k, double l, double s1, double s2, int tunnel_dir, Point3D outStartP, Point3D outEndP) {
+    /**
+     * 计算section的起点和终点
+     */
+    private void getSectionStartPointAndEedPoint(Point3D startP, Point3D endP, double k, double l, double s1, double s2, int tunnel_dir, Point3D outStartP, Point3D outEndP) {
 
         // 计算高度
         outStartP.setHeight(startP.getHeight().doubleValue() + k);
