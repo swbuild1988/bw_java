@@ -263,7 +263,7 @@ export default {
         },
         goToMoudle2: function(index, type) {
             this.$router.push({
-                name: "UMAddTask",
+                name: "添加巡检任务",
                 params: {
                     id: this.patrolTask[index].id,
                     type: type

@@ -103,9 +103,9 @@ export default {
         };
     },
     beforeRouteLeave(to,from,next){
-        if(to.name == '人员定位详情' || to.name == 'UMPatrolHomePage' || to.name == '设备管理主页' || to.name == '管廊环境监控列表' 
+        if(to.name == '人员定位详情' || to.name == '巡检计划总览' || to.name == '设备管理主页' || to.name == '管廊环境监控列表' 
             || to.name == '管理安防监控列表'
-            || from.name == 'UMPatrolHomePage' || from.name == '设备管理主页' || from.name == 'UMDetailEquipment' 
+            || from.name == '巡检计划总览' || from.name == '设备管理主页' || from.name == '设备详情' 
             || from.name == '人员定位详情' || from.name == '管廊安防监控列表' || from.name == '管廊环境监控列表' 
             || from.name == '管廊环境监控详情' || from.name == '管廊安防监控详情'){
             from.meta.keepAlive = true

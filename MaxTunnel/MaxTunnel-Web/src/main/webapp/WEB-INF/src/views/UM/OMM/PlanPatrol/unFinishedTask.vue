@@ -183,7 +183,7 @@ export default {
         //跳转至详情
         goToMoudle2: function(id, type) {
             this.$router.push({
-                name: "UMAddTask",
+                name: "添加巡检任务",
                 params: {
                     id: id,
                     type: type

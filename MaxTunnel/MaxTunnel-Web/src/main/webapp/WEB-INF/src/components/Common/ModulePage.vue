@@ -61,7 +61,8 @@
 					<showAlarm v-bind="videoModal" ref="video"></showAlarm>
 				</Content>
 				<Collapse v-model="showalarm" @on-change="changestatu">
-					<Panel name="alarm">
+					<!-- <Panel name="alarm">
+						<Icon type="arrow-up-b"></Icon>
 						<alarm v-bind="alarmModal"></alarm>
 						<Row type="flex" align="top" class="code-row-bg" slot="content">
 							<Col span="6" v-for="(item,index) in alarmData" :key="index">
@@ -109,7 +110,7 @@
 								</div>
 							</Col>
 						</Row>
-					</Panel>
+					</Panel> -->
 					<Footer class="layout-footer-center">2009-2018 &copy; Bandweaver</Footer>
 				</Collapse>
 				<ShowStartPlan v-bind="showModal"></ShowStartPlan>
@@ -136,6 +137,7 @@ import UMCustom from "../../styles/UMCustom.css";
 import showAlarm from '@/components/Common/Modal/showAlarms'
 import { EnumsService } from "../../services/enumsService.js";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";
+// import { getFormatTime } from "@/scripts/DateFormat.js";
 
 export default {
 	name: "mudulePage",
@@ -192,7 +194,8 @@ export default {
 					state: false,
 					modalInfo: null,
 					planData: null
-				}
+				},
+				alarmContainer: []
 			},
 			alarmRouterList: [],
 			alarmLevel: [],
@@ -261,8 +264,7 @@ export default {
 				position: "relative"
 			},
 			selectedName: null,
-			openNames: ["1"],
-			alarmContainer: []
+			openNames: ["1"]
 		};
 	},
 	mounted() {
@@ -375,22 +377,11 @@ export default {
 		// 	}
 		// },
 
-		showAlarmDetails() {
-			// this.alarmContainer.map(item=>{
-			// 	if(item.id==id){
-			// 		this.videoModal.modalPrams.modalInfo = item
-			// 	}
-			// })
-			// this.$refs.video.reflashVideo();
-			this.videoModal.modalPrams.state = true;
-		},
-
 		// 连接成功回调函数
 		callback(respond) {
 			let _this = this;
 			let result = JSON.parse(respond.body);
 			//将数据保存在vuex中
-			console.log("预案",result)
 			_this.videoModal.modalPrams.planData = result
 			// _this.planData = result;
 			if (_this.planData &&"/UM/plans/execute/processKey" !=_this.$router.history.current.path){
@@ -492,7 +483,7 @@ export default {
 		warningNotice(alarm) {
 			var _this = this;
 			var des = "";
-			this.alarmContainer.push(alarm)
+			this.videoModal.alarmContainer.unshift(alarm)
 			var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
 			if (plans && plans.length) {
 				_this.selectPlan = plans[0].id;
@@ -546,7 +537,18 @@ export default {
 					break;
 				}
 			}
-		}
+		},
+		showAlarmDetails(id) {
+			if(this.videoModal.alarmContainer.length>21){
+				this.videoModal.alarmContainer.splice(this.videoModal.alarmContainer.length-1, 1)
+			}
+			this.videoModal.alarmContainer.map(item=>{
+				if(item.id==id){
+					this.videoModal.modalPrams.modalInfo = item
+				}
+			})
+			this.videoModal.modalPrams.state = !this.videoModal.modalPrams.state;
+		},
 	},
 	components: {
 		alarm,
@@ -669,6 +671,14 @@ export default {
 
 .coment {
 	height: calc(100vh - 9vh);
+}
+
+.coment >>> .ivu-icon-arrow-right-b{
+	display: none;
+}
+
+.coment >>> .ivu-collapse>.ivu-collapse-item.ivu-collapse-item-active>.ivu-collapse-header>i{
+	transform: rotate(180deg)
 }
 
 .menu-item span {

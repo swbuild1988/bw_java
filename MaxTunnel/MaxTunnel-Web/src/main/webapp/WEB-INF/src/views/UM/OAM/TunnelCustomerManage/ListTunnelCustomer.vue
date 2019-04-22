@@ -3,15 +3,15 @@
         <div class="conditions">
             <Row>
                 <Col span="4">
-                    <span class="conditionTitle">所属公司：</span>
-                    <Select v-model="conditions.companyId" style="width: 60%">
-                        <Option value="null">所有</Option>
-                        <Option v-for="item in company" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>
+                    <span class="conditionTitle">企业名称：</span>
+                     <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%" />
                 </Col>
                 <Col span="4">
-                    <span class="conditionTitle">联系人：</span>
-                    <Input v-model="conditions.contact" placeholder="请输入联系人姓名" style="width: 60%"></Input>
+                    <span class="conditionTitle">开户行：</span>
+                    <Select v-model="conditions.bank" style="width: 60%"> 
+                        <Option value="null">所有</Option>
+                        <Option v-for="item in selectLists.banks" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                    </Select>
                 </Col>
                 <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
@@ -27,22 +27,38 @@
             </Row>
         </div>
         <div class="list" style="background: #fff;margin-top: 10px;padding: 10px 0;">
-            <!-- <Button class="add" type="info" @click="goToMoudle({ path:'/UM/tunnelCustomer/add'})"><Icon type="plus-round" color="#fff"></Icon>添加</Button> -->
+            <!-- <Button class="add" type="info" @click="goToMoudle({ path:'/UM/tunnelcompany/add'})"><Icon type="plus-round" color="#fff"></Icon>添加</Button> -->
             <Row>
-                <Col span="6" v-for="(item,index) in customerList" :key="index">
+                <Col span="6" v-for="(item,index) in companyList" :key="index">
                     <div class="infoList">
                         <div class="company">
                             <Icon type="star"></Icon>
-                            <span>{{item.company.name}}</span>
+                            <span>{{item.name}}</span>
                         </div>
                         <div class="conta-ctInfo">
                             <div class="contact">
-                                <Icon type="android-person"></Icon>
-                                <span>{{item.contact}}</span>
+                                <Icon type="ios-home"></Icon>
+                                <span>{{item.address}}</span>
                             </div>
                             <div class="tel">
                                 <Icon type="android-call"></Icon>
-                                <span>{{item.tel}}</span>
+                                <span>{{item.phone}}</span>
+                            </div>
+                            <div class="account">
+                                <Icon type="card"></Icon>
+                                <span>{{item.account}}</span>
+                            </div>
+                            <div class="email">
+                                <Icon type="android-mail"></Icon>
+                                <span>{{item.mail}}</span>
+                            </div>
+                            <div class="creditNo">
+                                <Icon type="ios-barcode"></Icon>
+                                <span>{{item.creditNo}}</span>
+                            </div>
+                            <div class="bank">
+                                <Icon type="cash"></Icon>
+                                <span>{{item.bank}}</span>
                             </div>
                         </div>
                         <div class="crtTime">
@@ -50,8 +66,8 @@
                             <span>{{item.crtTime}}</span>
                         </div>
                         <div class="option">
-                            <Button type="primary" size="small" @click="edit(index)">编辑</Button>
-                            <Button type="error" size="small" @click="instance(index)">删除</Button>
+                            <Button type="primary" size="small" @click="edit(item.id)">编辑</Button>
+                            <Button type="error" size="small" @click="instance(item.id)">删除</Button>
                         </div>
                     </div>
                 </Col>
@@ -62,8 +78,8 @@
     </div>
 </template>
 <script>
-import { EnterGalleryService } from '../../../../services/enterGalleryService'
-import { CustomerService } from '../../../../services/customerService'
+import { EnumsService } from '../../../../services/enumsService';
+import CompanyService from '../../../../services/companyService'
 import types from '../../../../../static/Enum.json'
 export default {
     data(){
@@ -73,30 +89,22 @@ export default {
                 pageSize: 12,
                 pageTotal: 0
             },
-            customerList:[
-                {
-                    id: 1,
-                    company:{name: '波汇科技'},
-                    contact: '占三',
-                    tel: '17664567786',
-                    crtTime: '2018-08-23 12:23:46'
-                }
-            ],
+            companyList:[],
             conditions:{
-                payment: null,
-                companyId:null,
-                contact: null,
+                bank: null,
+                name:null,
                 startTime: null,
                 endTime: null
             },
             payType:[],
-            company: [
-            ],
             pageStyle: {
                 position: 'absolute',
                 bottom: '20px',
                 right: '15px'
             },
+            selectLists: {
+                banks: []
+            }
         }
     },
     computed:{
@@ -104,8 +112,8 @@ export default {
             let param = {
                 pageNum: this.page.pageNum,
                 pageSize: this.page.pageSize,
-                companyId:this.conditions.companyId,
-                contact: this.conditions.contact,
+                name:this.conditions.name,
+                bank: this.conditions.bank,
                 startTime: new Date(this.conditions.startTime).getTime(),
                 endTime: new Date(this.conditions.endTime).getTime()
             };
@@ -113,30 +121,29 @@ export default {
         }
     },
     mounted(){
-        this.queryList()
-        //获取所有的公司
-        let _this = this
-        EnterGalleryService.getCompanys().then(
-            (result)=>{
-                _this.company = result
+        EnumsService.getBanks().then(
+            response=>{
+                this.selectLists.banks = response
             },
-            (error)=>{
-                _this.Log.info(error)
-            })
+            error=>{
+                this.Log.info(error)
+            }
+        )
+        this.queryList()
     },
     methods:{
         queryList: function(){
             let _this = this
-          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-            _this.$Message.error('开始时间必须小于结束时间！');
-            return;
-          }
-            CustomerService.customerDatagrid(_this.params).then(
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
+            CompanyService.companiesDatagrid(_this.params).then(
                 (result)=>{
                     for( let index in result.list ){
                         result.list[index].crtTime = new Date( result.list[index].crtTime ).format( "yyyy-MM-dd hh:mm:s" )
                     }
-                    _this.customerList = result.list;
+                    _this.companyList = result.list;
                     _this.page.pageTotal = result.total
                 },
                 (error)=>{
@@ -146,31 +153,30 @@ export default {
         goToMoudle: function (path) {
             this.$router.push(path);
         },
-        goMoudle: function (index,type) {
+        goMoudle: function (id,type) {
             this.$router.push({
                 name: '添加管廊客户',
                 params: {
-                    id: this.customerList[index].id,
+                    id: id,
                     type: type
                 }
             });
         },
-        edit(index,type){
-            this.goMoudle(index,types.pageType.Edit);
+        edit(id){
+            this.goMoudle(id,types.pageType.Edit);
         },
         ok () {
             this.delIt = true;
         },
-        instance(index) {
+        instance(id) {
             this.$Modal.confirm({
                 title: '客户信息',
                 width: '24vw',
                 content: '<p>是否删除这条客户信息</p>',
                 onOk: () => {
                     let _this = this
-                    CustomerService.deleteCustomer(_this.customerList[index].id).then(
+                    CompanyService.deleteCompany(id).then(
                         (result)=>{
-                            _this.customerList.splice(_this.customerList[index].id, 1);
                             _this.queryList()
                         },
                         (error)=>{
@@ -194,7 +200,7 @@ export default {
 <style scoped>
     .infoList{
         border: 1px solid#dddfe1;
-        width: 75%;
+        width: 80%;
         margin: 10px auto;
         padding: 5px 0px;
         border-radius: 4px;
@@ -204,11 +210,17 @@ export default {
         padding-left: 10px;
         font-size: 22px;
     }
-    .contact,.tel{
+    .contact,.account,.creditNo{
         padding-left: 10px;
         display: inline-block;
-        width: 48%;
-        line-height: 45px;
+        width: 52%;
+        line-height: 34px;
+    }
+    .tel,.email,.bank{
+        padding-left: 10px;
+        display: inline-block;
+        width: 46%;
+        line-height: 34px;
     }
     .crtTime,.option{
         display: inline-block;
@@ -234,8 +246,8 @@ export default {
         .company{
             font-size: 1.8vmin;
         }
-        .contact,.tel,.crtTime{
-            font-size: 1.6vmin;
+        .contact,.tel,.crtTime,.account,.email,.bank,.creditNo{
+            font-size: 1.4vmin;
         }
         .company,.conta-ctInfo,.crtTime{
             line-height: 4vh;

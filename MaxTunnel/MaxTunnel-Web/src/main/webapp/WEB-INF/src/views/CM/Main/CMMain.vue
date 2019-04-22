@@ -7,7 +7,7 @@
 
 <script>
 import CModulePage from "../../../components/CM/Common/ModulePage";
-import { getFormatTime } from "@/scripts/DateFormat.js";
+
 export default {
     name: "c-m-main",
     data() {
@@ -150,6 +150,18 @@ export default {
                         id: 62,
                         name: '监测对象与应急预案',
                         url: '/CMMain/objPreplan'
+                    }
+                ]
+            },
+            {
+                id: 7,
+                name: '日志管理',
+                typeName: 'medkit',
+                childNode: [
+                    {
+                        id: 71,
+                        name: '系统日志管理',
+                        url: '/UM/PersonnelPosition/visitors'
                     }
                 ]
             }

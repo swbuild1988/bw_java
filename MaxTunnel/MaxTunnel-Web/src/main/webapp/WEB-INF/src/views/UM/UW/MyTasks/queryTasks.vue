@@ -118,7 +118,7 @@ export default {
             switch (task.processType){
                 // 巡检计划审批
                 case 1001:
-                    pathParams.name = 'TaskExaminPlans'
+                    pathParams.name = '我的巡检计划详情'
                     pathParams.params = {
                         processInstanceId: task.processInstanceId,
                         status: task.status,
@@ -129,7 +129,7 @@ export default {
 
                 // 巡检任务提交
                 case 1002:
-                    pathParams.name = 'taskSubmitPatralTask'
+                    pathParams.name = '提交巡检任务结果'
                     pathParams.params = {
                         id: task.id,
                         isFinished: task.isFinished
@@ -140,7 +140,7 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation'&&task.isFinished == false) {
-                        pathParams.name = 'taskDistributeDefect'
+                        pathParams.name = '分配巡检任务'
                         pathParams.params = {
                             id: task.id,
                             isFinished: task.isFinished
@@ -148,7 +148,7 @@ export default {
                     }
                     //任务结束 查看
                     if(task.taskKey == 'allocation' && task.isFinished == true){
-                        pathParams.name = 'TaskDetailsOverhaulTrue'
+                        pathParams.name = '已完结工单详情'
                         pathParams.params = {
                             id: task.id,
                             isFinished: task.isFinished,
@@ -157,7 +157,7 @@ export default {
                     }
                     // 结束任务，提交工单
                     if (task.taskKey == 'complete'&&task.isFinished==false) {
-                        pathParams.name = 'TaskDetailsOverhaulFalse'
+                        pathParams.name = '未完结工单详情'
                         pathParams.params = {
                             id: task.id,
                             isFinished: task.isFinished,
@@ -170,7 +170,7 @@ export default {
                 case 2001:
                     // 查看入廊审批
                     if(task.taskKey=="approve"){                        
-                        pathParams.name = 'taskExamineApprove'
+                        pathParams.name = '入廊申请审批'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,
@@ -180,7 +180,7 @@ export default {
                     }
                     // 离开管廊
                     if(task.taskKey=="leave"||task.isFinished==true){    
-                        pathParams.name = 'queryMyApprove'
+                        pathParams.name = '入廊申请详情'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,

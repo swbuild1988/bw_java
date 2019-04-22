@@ -250,7 +250,7 @@ export default {
         },
         goToMoudle: function(index, type) {
             this.$router.push({
-                name: "UMAddRelatedUnits",
+                name: "编辑相关单位",
                 params: {
                     id: this.unitInfo[index].id,
                     type: type

@@ -15,7 +15,8 @@ export default async () => {
     try {
         if (process.env.NODE_ENV == 'development') {
             // 开发环境配置
-            axios.defaults.baseURL = serverconfig.ApiUrl;
+            // axios.defaults.baseURL = serverconfig.ApiUrl;
+            axios.defaults.baseURL = "/MaxTunnel-Web"
             Vue.prototype.ServerConfig = '/static';
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
             Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;

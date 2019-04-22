@@ -16,6 +16,7 @@ import "animate.css/animate.min.css";
 import "./styles/common.css";
 import "./scripts/serviceClass";
 import "./scripts/StringFormat";
+import "./scripts/DateFormat";
 import vueXlsxTable from "vue-xlsx-table";
 import VMConfig from "../static/VM/js/VMGlobalConfig";
 import serverconfig from "../static/serverconfig";

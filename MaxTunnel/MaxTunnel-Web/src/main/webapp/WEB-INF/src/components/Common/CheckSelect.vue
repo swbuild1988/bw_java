@@ -67,10 +67,9 @@ export default {
             _this.dataList.forEach(a => {
                 if (a.name == temp) {
                     _this.clickId = a.id;
-                    return false;
                 }
             });
-            _this.selectObj.selectId = _this.clickId;
+            this.$emit("toParent",this.clickId)
         },
         setLast() {
             if (this.startIndex > 0) {
@@ -121,7 +120,11 @@ export default {
         dataList: {
             handler: function(newVal, oldVal) {
                 if (newVal.length > 0) {
-                    this.clickId = this.dataList[0].id;
+                    if(this.selectObj.selectId!=null||this.selectObj.selectId!=undefined||this.selectObj.selectId!=''){
+                        this.clickId = this.selectObj.selectId;
+                    }else{
+                        this.clickId = this.dataList[0].id;
+                    }
                     this.startIndex = 0;
                     this.endIndex = this.itemLen;
                     this.curList = this.dataList.slice(0, this.endIndex);

@@ -5,7 +5,7 @@
             <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
             <h2 class="formTitle" v-show="this.pageType==2">编辑缺陷详情</h2>
             <FormItem label="所属管廊：" prop="tunnelId">
-                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1">
+                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1" @on-change="changeTunnel()">
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
@@ -164,13 +164,13 @@ export default {
     },
     watch:{
         tunnelId(curVal,oldVal){
-            this.defectDetails.area.id = null;
+            // this.defectDetails.area.id = null;
             this.defectDetails.tunnelId = curVal
             this.getAreas()
             this.getStores()
         },
         areaId(curVal,old){
-            this.defectDetails.store.id = null
+            // this.defectDetails.store.id = null
             this.defectDetails.area.id = curVal
             this.getObj()
         },
@@ -283,6 +283,10 @@ export default {
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        changeTunnel(){
+            this.defectDetails.area.id = null
+            this.defectDetails.store.id = null
         }
 
         //更新缺陷

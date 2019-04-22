@@ -65,24 +65,24 @@ export const asyncRouterMap = [{
                 },
                 children: [{
                     path: 'query/:id',
-                    name: 'UMQueryPlan',
+                    name: '查询巡检计划',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/QueryPlan'], resolve),
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/AddPlan'], resolve),
-                    name: 'UMAddPlan',
+                    name: '添加巡检计划',
                 }, {
                     path: 'edit',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/EditPlan'], resolve),
-                    name: 'UMEditPlan',
+                    name: '编辑巡检计划',
                 }, {
                     path: 'details/:id',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/PatrolDetails'], resolve),
-                    name: 'UMPatrolDetails',
+                    name: '查看巡检计划详情',
                 }, {
                     path: 'homePage',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/PatrolHomePage'], resolve),
-                    name: 'UMPatrolHomePage',
+                    name: '巡检计划总览',
                 }],
             },
             {
@@ -114,23 +114,23 @@ export const asyncRouterMap = [{
                 children: [{
                     path: 'query',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolTask/queryTask'], resolve),
-                    name: 'UMQueryTask',
+                    name: '巡检任务总览',
                 }, {
                     path: 'query/:id',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolTask/queryTask'], resolve),
-                    name: 'UMQueryTask',
+                    name: '查询巡检任务',
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolTask/addTask'], resolve),
-                    name: 'UMAddTask',
+                    name: '添加巡检任务',
                 }, {
                     path: 'add/:id',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolTask/addTask'], resolve),
-                    name: 'UMAddTask',
+                    name: '编辑巡检任务',
                 }, {
                     path: 'distribute',
                     component: (resolve) => require(['@/views/UM/OMM/PatrolTask/distributeTask'], resolve),
-                    name: 'UMDistributeTask',
+                    name: '分配巡检任务',
                 }],
             },
             {
@@ -158,7 +158,7 @@ export const asyncRouterMap = [{
                 }, {
                     path: 'details/:id',
                     component: (resolve) => require(['@/views/UM/OMM/UMEquipment/DetailEquipment'], resolve),
-                    name: 'UMDetailEquipment',
+                    name: '设备详情',
                     meta: {
                         keepAlive: true, // 需要被缓存
                     },
@@ -194,26 +194,26 @@ export const asyncRouterMap = [{
                 component: (resolve) => require(['@/views/UM/OMM/Defect/DefectMain'], resolve),
                 children: [{
                         path: 'query',
-                        name: 'UMQueryDefect',
+                        name: '缺陷总览',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/DefectQuery'], resolve),
                     },
                     {
                         path: 'query/:id',
-                        name: 'UMQueryDefectById',
+                        name: '查询缺陷',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/DefectQuery'], resolve),
                     },
                     {
                         path: 'detail',
-                        name: 'UMDetailDefect',
+                        name: '缺陷详情',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/DefectDetail'], resolve),
                     }, {
                         path: 'distribute/:id',
-                        name: 'UMDistributeDefect',
+                        name: '分配缺陷',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/distributeDefect'], resolve),
                     }, {
                         path: 'details/:id',
                         component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                        name: 'DefectDetailsOverhaul',
+                        name: '维修工单详情',
                         meta: {
                             keepAlive: true, // 需要被缓存
                         },
@@ -227,19 +227,19 @@ export const asyncRouterMap = [{
                 children: [{
                     path: 'query',
                     component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/queryOverhaul'], resolve),
-                    name: 'UMQueryOverhaul',
+                    name: '检修总览',
                 }, {
                     path: 'query/:id',
                     component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/queryOverhaul'], resolve),
-                    name: 'UMQueryOverhaul',
+                    name: '查询检修',
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                    name: 'UMAddOverhaul',
+                    name: '添加检修',
                 }, {
                     path: 'details/:id',
                     component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                    name: 'UMDetailsOverhaul',
+                    name: '检修详情',
                 }],
             },
             {
@@ -314,20 +314,20 @@ export const asyncRouterMap = [{
                     name: '查询操作日志',
                 }],
             },
-            {
-                path: 'TunnelSupervise',
-                name: '管廊本体监控',
-                component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/TunnelSupervise'], resolve),
-                children: [{
-                    path: 'details/:id',
-                    component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/DetailsTunnelSupervise'], resolve),
-                    name: '管廊本体监控详情',
-                }, {
-                    path: 'list/:id',
-                    component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/ListTunnelSupervise'], resolve),
-                    name: '管廊本体监控列表',
-                }],
-            },
+            // {
+            //     path: 'TunnelSupervise',
+            //     name: '管廊本体监控',
+            //     component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/TunnelSupervise'], resolve),
+            //     children: [{
+            //         path: 'details/:id',
+            //         component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/DetailsTunnelSupervise'], resolve),
+            //         name: '管廊本体监控详情',
+            //     }, {
+            //         path: 'list/:id',
+            //         component: (resolve) => require(['@/views/UM/MAM/TunnelSupervise/ListTunnelSupervise'], resolve),
+            //         name: '管廊本体监控列表',
+            //     }],
+            // },
             {
                 path: 'TunnelEnvironment',
                 name: '管廊环境监控',
@@ -368,38 +368,38 @@ export const asyncRouterMap = [{
                     },
                 }],
             },
-            {
-                path: 'PipelineSupervise',
-                name: '管线本体监控',
-                component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/PipelineSupervise'], resolve),
-                children: [{
-                    path: 'electrivity',
-                    component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/DetailsPipeSupervise'], resolve),
-                    name: '管线电缆监控详情',
-                }, {
-                    path: 'light',
-                    component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/ListPipeSupervise'], resolve),
-                    name: '管线光缆监控详情',
-                }, {
-                    path: 'water',
-                    component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/ListPipeSupervise'], resolve),
-                    name: '管线水管监控详情',
-                }],
-            },
-            {
-                path: 'RobotMonitoring',
-                name: '机器人监控系统',
-                component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotMonitoringSystem'], resolve),
-                children: [{
-                    path: 'query',
-                    component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotQuery'], resolve),
-                    name: '机器人监控系统总览',
-                }, {
-                    path: 'details',
-                    component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotDetails'], resolve),
-                    name: '机器人监控系统详情',
-                }],
-            },
+            // {
+            //     path: 'PipelineSupervise',
+            //     name: '管线本体监控',
+            //     component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/PipelineSupervise'], resolve),
+            //     children: [{
+            //         path: 'electrivity',
+            //         component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/DetailsPipeSupervise'], resolve),
+            //         name: '管线电缆监控详情',
+            //     }, {
+            //         path: 'light',
+            //         component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/ListPipeSupervise'], resolve),
+            //         name: '管线光缆监控详情',
+            //     }, {
+            //         path: 'water',
+            //         component: (resolve) => require(['@/views/UM/MAM/PipelineSupervise/ListPipeSupervise'], resolve),
+            //         name: '管线水管监控详情',
+            //     }],
+            // },
+            // {
+            //     path: 'RobotMonitoring',
+            //     name: '机器人监控系统',
+            //     component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotMonitoringSystem'], resolve),
+            //     children: [{
+            //         path: 'query',
+            //         component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotQuery'], resolve),
+            //         name: '机器人监控系统总览',
+            //     }, {
+            //         path: 'details',
+            //         component: (resolve) => require(['@/views/UM/MAM/RobotMonitoringSystem/RobotDetails'], resolve),
+            //         name: '机器人监控系统详情',
+            //     }],
+            // },
             {
                 path: 'VideoMonitoring',
                 name: '视频监控系统',
@@ -477,29 +477,29 @@ export const asyncRouterMap = [{
                     }, {
                         path: 'examineApprove/:processInstanceId/:processType',
                         component: (resolve) => require(['@/views/UM/UW/MyNews/ExamineApprove'], resolve),
-                        name: 'UMExamineApprove',
+                        name: '入廊审批',
                     }, {
                         path: 'examinePlans/:processInstanceId',
                         component: (resolve) => require(['@/views/UM/UW/MyNews/ExaminePlans'], resolve),
-                        name: 'examinPlans',
+                        name: '巡检计划审批',
                     }, {
                         path: 'submitPatralTask/:id',
                         component: (resolve) => require(['@/views/UM/OMM/PatrolTask/submitPatrolTask'], resolve),
-                        name: 'submitPatralTask',
+                        name: '提交巡检任务结果',
                     },
                     {
                         path: 'details/:id',
                         component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                        name: 'UWDetailsOverhaul',
+                        name: '工单详情',
                     }, {
                         // 确认出廊
                         path: 'applicationApprove/:processInstanceId/:processType',
                         component: (resolve) => require(['@/views/UM/UW/MyApplication/ApplicationExamineApprove'], resolve),
-                        name: 'newsExamineApprove',
+                        name: '查看入廊申请进度',
                     }, {
                         path: 'distribute/:id',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/distributeDefect'], resolve),
-                        name: 'newsDistributeDefect',
+                        name: '分配巡检任务',
                     },
                 ],
             },
@@ -514,11 +514,11 @@ export const asyncRouterMap = [{
                 }, {
                     path: 'applicationApprove/:processInstanceId/:processType',
                     component: (resolve) => require(['@/views/UM/UW/MyApplication/ApplicationExamineApprove'], resolve),
-                    name: 'UMApplicationExamineApprove',
+                    name: '查看入廊申请进度',
                 }, {
                     path: 'applicationPlans/:processInstanceId',
                     component: (resolve) => require(['@/views/UM/UW/MyApplication/ApplicationExaminePlans'], resolve),
-                    name: 'UMApplicationExaminePlans',
+                    name: '查看巡检计划申请进度',
                 }],
             },
             {
@@ -528,42 +528,42 @@ export const asyncRouterMap = [{
                 children: [{
                         path: 'query',
                         component: (resolve) => require(['@/views/UM/UW/MyTasks/queryTasks'], resolve),
-                        name: 'UMQueryMyTaskList',
+                        name: '任务列表',
                     }, {
                         path: 'queryMyApprove/:processInstanceId',
                         component: (resolve) => require(['@/views/UM/UW/MyApplication/ApplicationExamineApprove'], resolve),
-                        name: 'queryMyApprove',
+                        name: '入廊申请详情',
                     }, {
                         // 工单详情 未完结
                         path: 'details/:id',
                         component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                        name: 'TaskDetailsOverhaulFalse',
+                        name: '未完结工单详情',
                     }, {
                         // //工单详情 已完结
                         path: 'details/:id',
                         component: (resolve) => require(['@/views/UM/OMM/OverhaulManage/addOverhaul'], resolve),
-                        name: 'TaskDetailsOverhaulTrue',
+                        name: '已完结工单详情',
                     }, {
                         path: 'examinePlans/:processInstanceId',
                         component: (resolve) => require(['@/views/UM/UW/MyNews/ExaminePlans'], resolve),
-                        name: 'TaskExaminPlans',
+                        name: '我的巡检计划详情',
                     },
                     // 入廊申请审批中
                     {
                         path: 'examineApprove/:processInstanceId/:processType',
                         component: (resolve) => require(['@/views/UM/UW/MyNews/ExamineApprove'], resolve),
-                        name: 'taskExamineApprove',
+                        name: '入廊申请审批',
                     },
                     // 提交巡检任务结果、
                     {
                         path: 'submitPatralTask/:id',
                         component: (resolve) => require(['@/views/UM/OMM/PatrolTask/submitPatrolTask'], resolve),
-                        name: 'taskSubmitPatralTask',
+                        name: '提交巡检任务结果',
                     },
                     // 分配巡检任务
                     {
                         path: 'distribute/:id',
-                        name: 'taskDistributeDefect',
+                        name: '分配巡检任务',
                         component: (resolve) => require(['@/views/UM/OMM/Defect/distributeDefect'], resolve),
                     },
                 ],
@@ -579,11 +579,11 @@ export const asyncRouterMap = [{
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/EM/RelatedUnits/AddRelatedUnits'], resolve),
-                    name: 'UMAddRelatedUnits',
+                    name: '添加相关单位',
                 }, {
                     path: 'add/:id',
                     component: (resolve) => require(['@/views/UM/EM/RelatedUnits/AddRelatedUnits'], resolve),
-                    name: 'UMAddRelatedUnits',
+                    name: '编辑相关单位',
                 }],
             },
             {
@@ -617,19 +617,19 @@ export const asyncRouterMap = [{
                 children: [{
                     path: 'list',
                     component: (resolve) => require(['@/views/UM/OAM/TunnelContractManage/ListTunnelContract'], resolve),
-                    name: 'UMQueryContract',
+                    name: '查询合同',
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/OAM/TunnelContractManage/AddTunnelContract'], resolve),
-                    name: 'UMAddContract',
+                    name: '添加合同',
                 }, {
                     path: 'edit',
                     component: (resolve) => require(['@/views/UM/OAM/TunnelContractManage/AddTunnelContract'], resolve),
-                    name: 'UMEditContract',
+                    name: '编辑合同',
                 }, {
                     path: 'detail',
                     component: (resolve) => require(['@/views/UM/OAM/TunnelContractManage/AddTunnelContract'], resolve),
-                    name: 'UMDetailContract',
+                    name: '合同详情',
                 }],
             },
             {
@@ -639,11 +639,11 @@ export const asyncRouterMap = [{
                 children: [{
                     path: 'list',
                     component: (resolve) => require(['@/views/UM/DM/TunnelDocuments/ListTunnelDocuments'], resolve),
-                    name: 'UMTunnelDocumentsList',
+                    name: '查询管廊资料',
                 }, {
                     path: 'add',
                     component: (resolve) => require(['@/views/UM/DM/TunnelDocuments/AddTunnelDocument'], resolve),
-                    name: 'UMTunnelDocumentAdd',
+                    name: '添加管廊资料',
                 }],
             },
             {
@@ -653,7 +653,7 @@ export const asyncRouterMap = [{
                 children: [{
                     path: 'editPass',
                     component: (resolve) => require(['@/views/UM/UW/PersonCenter/editPassword'], resolve),
-                    name: 'editPass',
+                    name: '修改密码',
                 }],
             },
             {
@@ -694,24 +694,24 @@ export const asyncRouterMap = [{
                     component: (resolve) => require(['@/views/UM/MAM/DataAnalysis/DataChart/EquipmentDataAnalysis'], resolve),
                 }],
             },
-            {
-                path: 'Communication',
-                name: '通讯系统',
-                component: (resolve) => require(['@/views/UM/MAM/Communication/CommunicationSystem'], resolve),
-                children: [{
-                    path: 'diales',
-                    component: (resolve) => require(['@/views/UM/MAM/Communication/DialedCalls'], resolve),
-                    name: 'DialedCalls',
-                }, {
-                    path: 'answers',
-                    component: (resolve) => require(['@/views/UM/MAM/Communication/AnsweredCalls'], resolve),
-                    name: 'AnsweredCalls',
-                }, {
-                    path: 'extensions',
-                    component: (resolve) => require(['@/views/UM/MAM/Communication/Extensions'], resolve),
-                    name: 'Extensions',
-                }],
-            },
+            // {
+            //     path: 'Communication',
+            //     name: '通讯系统',
+            //     component: (resolve) => require(['@/views/UM/MAM/Communication/CommunicationSystem'], resolve),
+            //     children: [{
+            //         path: 'diales',
+            //         component: (resolve) => require(['@/views/UM/MAM/Communication/DialedCalls'], resolve),
+            //         name: 'DialedCalls',
+            //     }, {
+            //         path: 'answers',
+            //         component: (resolve) => require(['@/views/UM/MAM/Communication/AnsweredCalls'], resolve),
+            //         name: 'AnsweredCalls',
+            //     }, {
+            //         path: 'extensions',
+            //         component: (resolve) => require(['@/views/UM/MAM/Communication/Extensions'], resolve),
+            //         name: 'Extensions',
+            //     }],
+            // },
         ],
     },
     {

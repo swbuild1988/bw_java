@@ -213,7 +213,7 @@ export default {
         },
         goToModule(id,type){
             this.$router.push({
-                name: 'UMDetailsOverhaul',
+                name: '检修详情',
                 params: {
                     id: id,
                     type: type

@@ -294,7 +294,7 @@
             //跳转缺陷详情
             goToMoudle2: function (id, type) {
                 this.$router.push({
-                    name: "UMDetailDefect",
+                    name: "缺陷详情",
                     params: {
                         id: id,
                         type: type

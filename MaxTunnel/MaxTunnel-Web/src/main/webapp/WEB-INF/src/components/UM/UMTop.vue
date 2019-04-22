@@ -117,6 +117,11 @@ export default {
 							name: "虚拟巡检",
 							url: "/UM/virtualInspect",
 							path: "/UM/virtualInspect"
+						},
+						{
+							name: "人员作业申请",
+							url: "/UM/enterGalleryApplication/query",
+							path: "/UM/enterGalleryApplication/query"
 						}
 					]
 				},
@@ -130,11 +135,6 @@ export default {
 							name: "管廊客户管理",
 							url: "/UM/tunnelCustomer/list",
 							path: "/UM/tunnelCustomer/list"
-						},
-						{
-							name: "入廊申请管理",
-							url: "/UM/enterGalleryApplication/query",
-							path: "/UM/enterGalleryApplication/query"
 						},
 						{
 							name: "管廊能耗管理",
@@ -184,11 +184,11 @@ export default {
 							url: "/UM/VideoMonitoring/details/1",
 							path: "/UM/VideoMonitoring/details"
 						},
-						{
-							name: "人员定位",
-							url: "/UM/PersonnelPosition/visitors",
-							path: "/UM/PersonnelPosition/visitors"
-						}
+						// {
+						// 	name: "人员定位",
+						// 	url: "/UM/PersonnelPosition/visitors",
+						// 	path: "/UM/PersonnelPosition/visitors"
+						// }
 					]
 				},
 				{
@@ -422,5 +422,15 @@ export default {
 	margin-top: 0.5vmin;
 	padding: 0.7vmin 1.6vmin;
 	border-top: 0.1vmin solid #e9eaec;
+}
+
+.ivu-dropdown-item-divided:before {
+    content: '';
+    height: 0.5vmin;
+    display: block;
+    margin: 0 -1.6vmin;
+    background-color: #fff;
+    position: relative;
+    top: -0.7vmin;
 }
 </style>

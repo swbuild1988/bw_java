@@ -114,7 +114,7 @@
                 this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal, this.Obj.datatypeId, this.Obj.clickStatus);
             },
             change() {
-                this.$emit('changeStatus', this.Obj.id, this.Obj.ObjVal, this.Obj.datatypeId, null);
+                this.$emit('changeStatus', this.Obj.id, this.curValue, this.Obj.datatypeId, null);
             }
         },
         mounted() {

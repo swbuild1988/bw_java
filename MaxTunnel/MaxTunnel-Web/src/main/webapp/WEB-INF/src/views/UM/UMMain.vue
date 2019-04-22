@@ -42,7 +42,7 @@
 				<!--运营管理-->
 				<Col span="6">
 					<h2 style="font-size: 2.4vmin">运营管理</h2>
-					<Row class="rowTop">
+					<!-- <Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								type="info"
@@ -52,20 +52,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/customer.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊客户管理</div>
-								</div>
-							</Button>
-						</Col>
-						<Col span="8">
-							<Button
-								type="info"
-								class="normalBtn"
-								:disabled="findPath('/UM/enterGalleryApplication/query')?false:true"
-								@click="goToMoudle({ path:'/UM/enterGalleryApplication/query'})"
-							>
-								<div>
-									<img src="../../assets/UM/enterGallery.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">入廊申请管理</div>
+									<div :style="{fontSize:mySize}">企业客户</div>
 								</div>
 							</Button>
 						</Col>
@@ -78,12 +65,12 @@
 							>
 								<div>
 									<img src="../../assets/UM/documents.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊资料管理</div>
+									<div :style="{fontSize:mySize}">资料管理</div>
 								</div>
 							</Button>
 						</Col>
-					</Row>
-					<Row class="rowTop">
+					<!-- </Row> -->
+					<!-- <Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="normalBtn btn-quexian"
@@ -93,7 +80,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/energy.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊能耗管理</div>
+									<div :style="{fontSize:mySize}">能耗管理</div>
 								</div>
 							</Button>
 						</Col>
@@ -106,7 +93,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/contract.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊合同管理</div>
+									<div :style="{fontSize:mySize}">合同管理</div>
 								</div>
 							</Button>
 						</Col>
@@ -119,12 +106,12 @@
 							>
 								<div>
 									<img src="../../assets/UM/空间.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊空间管理</div>
+									<div :style="{fontSize:mySize}">空间管理</div>
 								</div>
 							</Button>
 						</Col>
-					</Row>
-					<Row class="rowTop">
+					<!-- </Row>
+					<Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="normalBtn"
@@ -138,13 +125,13 @@
 								</div>
 							</Button>
 						</Col>
-					</Row>
+					<!-- </Row> -->
 				</Col>
 
 				<!--监控与报警-->
 				<Col span="6" offset="1">
 					<h2 style="font-size: 2.4vmin">监控与报警</h2>
-					<Row class="rowTop">
+					<!-- <Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								type="info"
@@ -154,7 +141,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/safe.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">管廊安防监测</div>
+									<div :style="{fontSize:mySize}">安防监测</div>
 								</div>
 							</Button>
 						</Col>
@@ -166,12 +153,12 @@
 							>
 								<div>
 									<img src="../../assets/UM/environment.png" :width="imgWidth">
-									<div :style="{fontSize:mySize,textAlign:'center',color: '#fff'}">管廊环境监测</div>
+									<div :style="{fontSize:mySize,textAlign:'center',color: '#fff'}">环境监测</div>
 								</div>
 							</Button>
 						</Col>
-					</Row>
-					<Row class="rowTop">
+					<!-- </Row>
+					<Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="normalBtn btn-guanxian"
@@ -180,7 +167,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/monitor.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">视频监控系统</div>
+									<div :style="{fontSize:mySize}">视频监控</div>
 								</div>
 							</Button>
 						</Col>
@@ -210,13 +197,13 @@
 								</div>
 							</Button>
 						</Col>
-					</Row>
+					<!-- </Row> -->
 				</Col>
 
 				<!--设备实施运维-->
 				<Col span="6" offset="1">
 					<h2 style="font-size: 2.4vmin">设备实施运维</h2>
-					<Row class="rowTop">
+					<!-- <Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="btn-nenghao normalBtn"
@@ -252,12 +239,12 @@
 							>
 								<div>
 									<img :width="imgWidth" src="../../assets/UM/patrolTask.png">
-									<div :style="{fontSize:mySize}">巡检任务管理</div>
+									<div :style="{fontSize:mySize}">巡检任务</div>
 								</div>
 							</Button>
 						</Col>
-					</Row>
-					<Row class="rowTop">
+					<!-- </Row>
+					<Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="normalBtn"
@@ -296,8 +283,8 @@
 								</div>
 							</Button>
 						</Col>
-					</Row>
-					<Row class="rowTop">
+					<!-- </Row> -->
+					<!-- <Row class="rowTop"> -->
 						<Col span="8">
 							<Button
 								class="normalBtn btn-jiqiren"
@@ -323,7 +310,20 @@
 								</div>
 							</Button>
 						</Col>
-					</Row>
+						<Col span="8">
+							<Button
+								type="info"
+								class="normalBtn"
+								:disabled="findPath('/UM/enterGalleryApplication/query')?false:true"
+								@click="goToMoudle({ path:'/UM/enterGalleryApplication/query'})"
+							>
+								<div>
+									<img src="../../assets/UM/enterGallery.png" :width="imgWidth">
+									<div :style="{fontSize:mySize}">人员作业申请</div>
+								</div>
+							</Button>
+						</Col>
+					<!-- </Row> -->
 				</Col>
 
 				<!--最右侧时间-->
@@ -449,13 +449,14 @@ export default {
 		},
 
 		updateTime() {
-			this.nowTime =
-				new Date().getHours() < 12
-					? new Date().format("hh:mm:ss")
-					: new Date(
-							new Date().getTime() - 60 * 60 * 1000 * 12
-					  ).format("hh:mm:ss");
-			this.timeSection = new Date().getHours() > 12 ? "PM" : "AM";
+			// this.nowTime =
+			// 	new Date().getHours() < 12
+			// 		? new Date().format("hh:mm:ss")
+			// 		: new Date(
+			// 				new Date().getTime() - 60 * 60 * 1000 * 12
+			// 		  ).format("hh:mm:ss");
+			this.nowTime = new Date().format("hh:mm:ss")
+			// this.timeSection = new Date().getHours() > 12 ? "PM" : "AM";
 			this.nowDate = getSimpleDate();
 			this.fullHeight = window.innerHeight;
 			if (window.innerWidth <= 1400) {
@@ -544,7 +545,7 @@ export default {
 	/*-webkit-background-size: 100% 100%;*/
 }
 
-.rowTop {
+.ivu-col-span-8, .ivu-col-span-16 {
 	margin-top: 0.5vh;
 }
 
@@ -594,7 +595,7 @@ export default {
 .curTime {
 	font-family: UnidreamLED;
 	/* margin-left: 1vmin; */
-	font-size: 4vmin;
+	font-size: 5vmin;
 }
 
 .main {

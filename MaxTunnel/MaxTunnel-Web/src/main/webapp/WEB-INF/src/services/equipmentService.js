@@ -6,23 +6,17 @@ var EquipmentService = {
     getVenders: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("/equipment-venders")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + ",地址:/venders");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + " " + error.response.data);
-                    });
+                axios.get("/equipment-venders").then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + ",地址:/venders");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + " " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -32,23 +26,17 @@ var EquipmentService = {
     getStatus() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("/equipmentstatus-enums")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipmentstatus-enums");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("/equipmentstatus-enums").then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipmentstatus-enums");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -58,23 +46,17 @@ var EquipmentService = {
     getEquipmentModels: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("/equipment-models")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipment-models");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("/equipment-models").then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipment-models");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -85,11 +67,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.get("/equipment-types").then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -123,23 +101,17 @@ var EquipmentService = {
     addEquipment: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("/equipments", params)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.post("/equipments", params).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 resolve({
                     id: 1,
@@ -161,23 +133,17 @@ var EquipmentService = {
     equipmentDatagird: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("/equipments/datagrid", params)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments/datagrid");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.post("/equipments/datagrid", params).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments/datagrid");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -187,23 +153,17 @@ var EquipmentService = {
     getEquDetailByEquId: function(equId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("/equipments/" + equId)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments/" + equId);
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("/equipments/" + equId).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments/" + equId);
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -213,23 +173,17 @@ var EquipmentService = {
     updateEquipmentInfo: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .put("/equipments", param)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments/");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.put("/equipments", param).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments/");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 //假数据
             }
@@ -239,23 +193,17 @@ var EquipmentService = {
     getEquTypeAndCount: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("/equipments/type/count")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments/type/count");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("/equipments/type/count").then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments/type/count");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -265,23 +213,17 @@ var EquipmentService = {
     deleteEquipment: function(equId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .delete("/equipments/" + equId)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/equipments/" + equId);
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.delete("/equipments/" + equId).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/equipments/" + equId);
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
@@ -292,11 +234,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.delete('spares/' + ids).then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data
+                    let { code, data, msg} = res.data
                     if (code == 200) {
                         resolve(data)
                     } else {
@@ -310,48 +248,36 @@ var EquipmentService = {
     backUpDatagrid: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("/spares/datagrid", params)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/spares/datagrid");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.post("/spares/datagrid", params).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/spares/datagrid");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             } else {
                 // 假数据
             }
         });
     },
-    batchOutBound: function(ids, tunnelId, objId, param) {
+    batchOutBound: function(ids, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("/spare-outs/" + ids + "/tunnels/" + tunnelId + "/objId/" + objId, param)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/spare-outs/ids");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.post("/spare-outs/" + ids + "/equipments", param).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/spare-outs/ids");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             }
         });
     },
@@ -359,23 +285,17 @@ var EquipmentService = {
     backUpHistory: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("/spare-outs/datagrid", param)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/spare-outs/datagrid");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.post("/spare-outs/datagrid", param).then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/spare-outs/datagrid");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             }
         });
     },
@@ -431,14 +351,8 @@ var EquipmentService = {
     getBackUpBorrowerHisList: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("spare-outs/staff")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
+                axios.get("spare-outs/staff").then(res => {
+                        let { code, data, msg } = res.data;
                         if (code == 200) {
                             resolve(data);
                         } else {
@@ -447,7 +361,8 @@ var EquipmentService = {
                     })
                     .catch(error => {
                         reject(error.response.status + "  " + error.response.data);
-                    });
+                    }
+                );
             }
         });
     },
@@ -455,23 +370,17 @@ var EquipmentService = {
     getBackUpBorrowerHisDetails: function(id) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("staffs/" + id + "spare-outs")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：/staffs/+ id + spare-outs");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("staffs/" + id + "spare-outs").then(res => {
+                    let { code, data, msg} = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：/staffs/+ id + spare-outs");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             }
         });
     },
@@ -479,23 +388,17 @@ var EquipmentService = {
     getWhither: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("sparewhither-enums")
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：sparewhithere-enums");
-                        }
-                    })
-                    .catch(error => {
-                        reject(error.response.status + "  " + error.response.data);
-                    });
+                axios.get("sparewhither-enums").then(res => {
+                    let { code, data, msg} = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：sparewhithere-enums");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
             }
         });
     },
@@ -504,11 +407,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.post("instruments/" + count, param).then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -523,11 +422,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.post("instruments/datagride", param).then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -560,11 +455,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.post("instrument-records/datagride", param).then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg} = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -579,11 +470,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.post("instrument-records/" + ids, param).then(res => {
-                    let {
-                        code,
-                        data,
-                        msg
-                    } = res.data;
+                    let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -597,20 +484,14 @@ var EquipmentService = {
     batchReturn: function(ids, usestatus, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .post("instrument-records/" + ids + "/usestatus/" + usestatus, param)
-                    .then(res => {
-                        let {
-                            code,
-                            data,
-                            msg
-                        } = res.data;
-                        if (code == 200) {
-                            resolve(data);
-                        } else {
-                            reject(msg + "地址：instrument-records/+ids+time");
-                        }
-                    });
+                axios.post("instrument-records/" + ids + "/usestatus/" + usestatus, param).then(res => {
+                    let { code, data,  msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：instrument-records/+ids+time");
+                    }
+                });
             }
         });
     },
@@ -685,6 +566,38 @@ var EquipmentService = {
                     }
                 })
             }
+        })
+    },
+    //获取设备信息（不分页）
+    getEquipments(params){
+        return new Promise((resolve, reject) => {
+            if (isRealData) {
+                axios.post('equipments/condition', params)
+                .then(res => {
+                    let { code, data, msg } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + "地址：equipments/condition")
+                    }
+                })
+                .catch(error=>{
+                    reject(error.response.status + ' ' + error.response.code)
+                })
+            }
+        })
+    },
+    //模糊查询objId
+    changeObjId(objId){
+        return new Promise((resolve, reject) => {
+            axios.get('measobjs/'+objId+"/condition").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：")
+                }
+            })
         })
     }
 };

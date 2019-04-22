@@ -238,8 +238,107 @@ var PermissionConfigService = {
                 reject(error.response.status + ' ' + error.response.data)
             })
         })
+    },
+    // 获取后端模块列表
+    getModuleList(){
+        return new Promise((resolve,reject)=>{
+            // axios.get('permissions/modules')
+            // .then(res=>{
+            //     let { msg,data,code } = res.data
+            //     if(code == 200){
+            //         resolve(data)
+            //     } else {
+            //         reject(msg + '地址:permissions/modules')
+            //     }
+            // })
+            // .catch(error=>{
+            //     reject(error.response.status + ' ' + error.response.data)
+            // })
+            let data = [
+                {
+                    id: 1,
+                    name: '用户管理'
+                },
+                {
+                    id: 2,
+                    name: '能耗管理'
+                },
+                {
+                    id: 3,
+                    name: '管廊管理'
+                }
+            ]
+            resolve(data)
+        })
+    },
+    // 获取操作列表
+    getActionsList(){
+        return new Promise((resolve,reject)=>{
+            // axios.get('permissions/actions')
+            // .then(res=>{
+            //     let { msg,data,code } = res.data
+            //     if(code == 200){
+            //         resolve(data)
+            //     } else {
+            //         reject(msg + '地址:permissions/actions')
+            //     }
+            // })
+            // .catch(error=>{
+            //     reject(error.response.status + ' ' + error.response.data)
+            // })
+            let data = [
+                {
+                    val: '添加',
+                    key: 'add'
+                },
+                {
+                    val: '列表',
+                    key: 'list'
+                },
+                {
+                    val: '修改',
+                    key: 'update'
+                },
+                {
+                    val: '删除',
+                    key: 'delete'
+                }
+            ]
+            resolve(data)
+        })
+    },
+    // 根据模块Id获取资源列表
+    getObjectsByModuleId(moduleId){
+        return new Promise((resolve,reject)=>{
+            // axios.get('permissions/'+ moduleId + '/objects')
+            // .then(res=>{
+            //     let { msg,data,code } = res.data
+            //     if(code == 200){
+            //         resolve(data)
+            //     } else {
+            //         reject(msg + '地址:permissions/'+ moduleId +'/objects')
+            //     }
+            // })
+            // .catch(error=>{
+            //     reject(error.response.status + ' ' + error.response.data)
+            // })
+            let data = [
+                {
+                    id: 1,
+                    name: '管廊1'
+                },
+                {
+                    id: 2,
+                    name: '管廊2'
+                },
+                {
+                    id: 3,
+                    name: '管廊3'
+                },
+            ]
+            resolve(data)
+        })
     }
-
 }
 
 export default PermissionConfigService

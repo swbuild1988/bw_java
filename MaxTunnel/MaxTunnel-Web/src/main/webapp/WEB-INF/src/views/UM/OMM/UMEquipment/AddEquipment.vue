@@ -1,36 +1,72 @@
 <template>
     <div :style="backStyle">
-        <Form ref="equipment" :model="equipment" :label-width="140" :rules="validateRules" @submit.native.prevent>
+        <Form ref="equipment" :model="equipment" :label-width="120" :rules="validateRules" @submit.native.prevent>
             <h1 class="formTitle">添加管廊设备</h1>
             <FormItem label="设备名称：" prop="name">
                 <Input v-model='equipment.name'></Input>
             </FormItem>
-            <FormItem label="所属管廊：" prop="tunnelId">
-                <Select v-model='equipment.tunnelId'>
-                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
+            <FormItem label="资产编码：" >
+                <Input v-model='equipment.assetNo'></Input>
             </FormItem>
-            <FormItem label="设备类型：" prop="type">
+            <FormItem label="安装位置：" prop="tunnelId">
+                <Row :gutter="4">
+                    <Col span="5">    
+                        <Select v-model='equipment.tunnelId' @on-change="changeTunnelId(equipment.tunnelId)">
+                            <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="5">
+                        <Select v-model="areaId" @on-change="changeSection()">
+                            <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="5">
+                        <Select v-model="storeId" @on-change="changeSection()">
+                            <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="5">
+                        <Input v-model="equipment.sectionId" v-show="false"></Input>
+                        <Input v-model="sectionName" readonly></Input>
+                    </Col>
+                </Row>
+            </FormItem>
+            <FormItem label="安装时间：" prop="runTime">
+                <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
+            </FormItem>
+            <FormItem label="设备所属系统：" prop="type">
                 <Select v-model='equipment.type'>
                     <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="设备型号：" prop="modelId">
+            <FormItem label="规格型号：" prop="modelId">
                 <Select v-model='equipment.modelId'>
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="设备状态：" prop="status">
-                <Select v-model="equipment.status">
-                    <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
-                </Select>
+            <FormItem label="额定电压：">
+                <Input v-model="equipment.ratedVoltage"></Input>
             </FormItem>
-            <FormItem label="预计投运时间：" prop="runTime">
-                <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
+            <FormItem label="量程：">
+                <Input v-model="equipment.range"></Input>
+            </FormItem>
+            <FormItem label="厂家：">
+                <Input v-model="equipment.factory"></Input>
+            </FormItem>
+            <FormItem label="品牌：">
+                <Input v-model="equipment.brand"></Input>
             </FormItem>
             <FormItem label="供应商：" prop="venderId">
                 <Select v-model='equipment.venderId'>
                     <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="质保期限：">
+                <Input v-model="equipment.qaTerm"></Input>
+            </FormItem>
+            <FormItem label="设备状态：" prop="status">
+                <Select v-model="equipment.status">
+                    <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="关联监测对象：" prop="objId">
@@ -100,13 +136,20 @@ export default {
             // 待编辑的设备
             equipment: {
                 name: null,
+                assetNo: null,
                 type: null,
                 runTime: null,
-                status: 1,
+                status: null,
                 tunnelId: null,
+                sectionId: null,
                 modelId: null,
                 venderId: null,
-                objId: 1
+                objId: null,
+                ratedVoltage: null,
+                range: null,
+                factory: null,
+                brand: null,
+                qaTerm: null
             },
             // 设备型号
             equipmentModels: [],
@@ -170,8 +213,22 @@ export default {
                 objId: [
                     { type: 'number', required: true, message: '请选择关联的监测对象', trigger: 'change' }
                 ],
-            }
+            },
+            areas: [],
+            stores: [],
+            areaId: null,
+            storeId: null,
+            sectionName: null
         };
+    },
+    watch: {
+        'equipment.tunnelId': function(newVal, oldVal){
+            this.areaId = null
+            this.storeId = null
+            this.equipment.sectionId = null
+            this.sectionName = null
+            this.changeTunnelId(newVal)
+        }
     },
     mounted() {
         // 获取所有的管廊
@@ -271,10 +328,43 @@ export default {
                 }
             )
         },
-        //查看相关备品
-        associationsBackUp(){
-            
+        //根据TunnelId,获取area和store
+        changeTunnelId(id){
+            if(id!=null){
+                //获取store
+                TunnelService.getStoresByTunnelId(id).then(
+                    result => {
+                        this.stores = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+                //获取area
+                TunnelService.getAreasByTunnelId(id).then(
+                    result => {
+                        this.areas = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
         },
+        //根据areaId,storeId获取section
+        changeSection(){
+            if(this.storeId!=null&&this.areaId!=null){
+                TunnelService.getSectionByAreaIdStoreId(this.storeId, this.areaId).then(
+                    result => {
+                        this.equipment.sectionId = result.id
+                        this.sectionName = result.name
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
+        }
         // //上传图片list
         // handleView (name) {
         //     this.imgName = name;

@@ -58,16 +58,20 @@
                         <Row :gutter="16">
                             <div v-for="(item,index) in tunnelProps" :key="index">
                                 <Col span="6" class="MaxValCol">
-                                <Icon type="clipboard" :size="iconSize"></Icon>
-                                {{item.key}}
+                                    <Icon type="clipboard" :size="iconSize"></Icon>
+                                    {{item.key}}
                                 </Col>
-                                <Col span="9" class="MaxValCol">
-                                <Icon type="ios-pulse" :size="iconSize"></Icon>
-                                {{item.val}}
+                                <Col span="9" class="MaxValCol" >
+                                    <div  @click="goToDetails(item.key, item.areaId, item.storeId)">
+                                    <Icon type="ios-pulse" :size="iconSize"></Icon>
+                                    <!-- <button> -->
+                                    {{item.val}}{{item.unit}}
+                                    <!-- </button> -->
+                                    </div>
                                 </Col>
                                 <Col span="9" class="MaxValCol" color="#de8d1b">
-                                <Icon type="android-locate" :size="iconSize"></Icon>
-                                {{item.location}}
+                                    <Icon type="android-locate" :size="iconSize"></Icon>
+                                    {{item.location}}
                                 </Col>
                             </div>
                         </Row>
@@ -84,12 +88,8 @@
     import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
     import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
     import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-    import {
-        TunnelService
-    } from "../../../../services/tunnelService";
-    import {
-        MonitorDataService
-    } from "../../../../services/monitorDataService";
+    import {TunnelService} from "../../../../services/tunnelService";
+    import {MonitorDataService} from "../../../../services/monitorDataService";
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
 
@@ -156,7 +156,7 @@
         },
         beforeRouteLeave(to, from, next) {
             if (
-                to.name == "UMPatrolHomePage" ||
+                to.name == "巡检计划总览" ||
                 to.name == "设备管理主页" ||
                 to.name == "人员定位详情" ||
                 to.name == "虚拟巡检" ||
@@ -164,7 +164,7 @@
                 to.name == "管廊环境监控详情" ||
                 to.name == "管廊环境监控" ||
                 from.name == "管廊环境监控列表" ||
-                from.name == "UMPatrolHomePage" ||
+                from.name == "巡检计划总览" ||
                 from.name == "设备管理主页" ||
                 from.name == "人员定位详情" ||
                 from.name == "虚拟巡检" ||
@@ -315,16 +315,19 @@
                         _this.queryCondition.areaId
                 };
 
-                MonitorDataService.getMaxMonitorData(parms).then(result => {
-                    _this.tunnelProps = [];
-                    if (result) {
-                        result.forEach(a => {
-                            let temp = {};
-                            temp.location = a.location;
-                            temp.key = a.key;
-                            temp.val = parseFloat(a.val) + a.unit;
-                            _this.tunnelProps.push(temp);
-                        });
+                MonitorDataService.getMaxMonitorData(parms).then(
+                    result => {
+                        _this.tunnelProps = result
+                });
+            },
+            goToDetails(key, areaId, storeId){
+                this.$router.push({
+                    path:"/UM/TunnelEnvironment/details/"+this.$route.params.id,
+                    query: {
+                        objtypeKey: key,
+                        areaId: areaId,
+                        storeId: storeId,
+                        tunnelId: this.$route.params.id,
                     }
                 });
             }

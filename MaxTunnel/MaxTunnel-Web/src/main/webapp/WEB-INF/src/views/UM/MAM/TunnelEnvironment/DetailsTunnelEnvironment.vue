@@ -33,50 +33,58 @@
             </RadioGroup>
         </div>
         <div style="margin: 1vh;">
-            <check-select v-bind="storeProp"></check-select>
+            <check-select v-bind="storeProp" v-on:toParent="getStoreId"></check-select>
         </div>
-        <Row :gutter="16">
-            <Col span="12">
-                <div class="data">
-                    <div class="titles">
-                        <div
-                            class="title"
-                            @click="chooseModule(0)"
-                            :class="{'active' : curModule === 0}"
-                        >
-                            <span>
-                                <Icon type="ios-film" class="icons"></Icon>视频
-                            </span>
+        <Tabs value="table">
+            <TabPane label="table" name="table">
+                <Table :columns="environmentColums" :data="objTableDate"></Table>
+            </TabPane>
+            <TabPane label="card" name="card">
+                <Row :gutter="16">
+                    <Col span="12">
+                        <div class="data">
+                            <div class="titles">
+                                <div
+                                    class="title"
+                                    @click="chooseModule(0)"
+                                    :class="{'active' : curModule === 0}"
+                                >
+                                    <span>
+                                        <Icon type="ios-film" class="icons"></Icon>视频
+                                    </span>
+                                </div>
+                                <div
+                                    class="title"
+                                    @click="chooseModule(1)"
+                                    :class="{'active' : curModule === 1}"
+                                >
+                                    <span>
+                                        <Icon type="map" class="icons"></Icon>管廊模型
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="map">
+                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
+                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
+                                <!-- <Table :columns="environmentColums" :data="objTableDate" v-if="curModule === 2"></Table> -->
+                            </div>
                         </div>
-                        <div
-                            class="title"
-                            @click="chooseModule(1)"
-                            :class="{'active' : curModule === 1}"
-                        >
-                            <span>
-                                <Icon type="map" class="icons"></Icon>管廊模型
-                            </span>
-                        </div>
-                    </div>
-                    <div class="map">
-                        <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                        <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                    </div>
-                </div>
-            </Col>
-            <Col span="12" class="data" style="overflow-y:auto ">
-                <Row :gutter="16" style="margin-right: 2px;">
-                    <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                        <SimulatedData
-                            v-bind:Obj="item"
-                            v-if="item.datatypeId==1"
-                            @changeStatus="changeStatus"
-                        ></SimulatedData>
-                        <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                    </Col>
+                    <Col span="12" class="data" style="overflow-y:auto ">
+                        <Row :gutter="16" style="margin-right: 2px;">
+                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+                                <SimulatedData
+                                    v-bind:Obj="item"
+                                    v-if="item.datatypeId==1"
+                                    @changeStatus="changeStatus"
+                                ></SimulatedData>
+                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
-            </Col>
-        </Row>
+            </TabPane>
+        </Tabs>
     </div>
 </template>
 <script>
@@ -93,6 +101,7 @@
     import Carousel from "../../../../components/Common/Carousel.vue";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
     import { changStrLength } from "../../../../scripts/commonFun";
+    import { MeasObjServer } from '../../../../services/MeasObjectSerivers'
 
     export default {
         name: "detail-tunnel-environment",
@@ -127,11 +136,66 @@
                 curTunnelName: "",
                 curModule: 0,
                 detectionObj:null,
+                environmentColums: [
+                    {
+                        type: 'index',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '名称',
+                        key: 'name',
+                        align: 'center'
+                    },
+                    {
+                        title: '所属区域',
+                        key: 'area',
+                        align: 'center'
+                    },
+                    {
+                        title: '所属仓',
+                        key: 'store',
+                        align: 'center'
+                    },
+                    {
+                        title: '当前值',
+                        align: 'center' ,
+                        render: (h, params) => {
+                            let temp = params.row.curValue+params.row.unit
+                            return h('div', temp)
+                        }   
+                    },
+                    {
+                        title: '采集时间',
+                        align: 'center',
+                        render: (h, params) => {
+                            let temp = new Date(params.row.time).format('yyyy-MM-dd hh:mm:ss')
+                            return h('div', temp)
+                        }
+                    },
+                    {
+                        title: '最小值',
+                        align: 'center',
+                        render: (h, params) => {
+                            let temp = params.row.minValue+params.row.unit
+                            return h('div', temp)
+                        }
+                    },
+                    {
+                        title: '最大值',
+                        align: 'center',
+                        render: (h, params) => {
+                            let temp = params.row.maxValue+params.row.unit
+                            return h('div', temp)
+                        }
+                    }
+                ],
+                objTableDate: []
             };
         },
         watch: {
             $route: function() {
-                this.tunnelId = parseInt(this.$route.params.id);
+                this.tunnelId = this.$route.params.id || this.$route.query.tunnelId;
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
                 this.getObjDetialData();
@@ -148,7 +212,7 @@
         beforeRouteLeave(to, from, next) {
             if (
                 to.name == "设备管理主页" ||
-                to.name == "UMPatrolHomePage" ||
+                to.name == "巡检计划总览" ||
                 to.name == "虚拟巡检" ||
                 to.name == "人员定位详情" ||
                 to.name == "管廊安防监控列表" ||
@@ -176,6 +240,11 @@
             checkSelect
         },
         mounted() {
+            if(this.$route.query){
+                this.tunnelId = this.$route.query.tunnelId;
+                this.queryCondition.storeId = this.$route.query.storeId
+                this.queryCondition.areaId = this.$route.query.areaId
+            }
             this.fentchData();
             this.changeDataType();
             this.intervalData();
@@ -197,6 +266,9 @@
                 //获取区段列表
                 let _this = this;
                 //获取位置信息
+                if(this.$route.query.storeId!=undefined){
+                    _this.queryCondition.storeId = this.$route.query.storeId
+                }
                 let curView = _this.storeProp.dataList.filter(
                     a => a.id == _this.queryCondition.storeId
                 )[0].camera;
@@ -217,7 +289,7 @@
             },
             //获取数据
             fentchData() {
-                this.tunnelId = parseInt(this.$route.params.id);
+                this.tunnelId = parseInt(this.$route.params.id) || parseInt(this.$route.query.tunnelId);
                 this.queryCondition.tunnelId = this.tunnelId;
                 let _this = this;
                 //获取监测内容
@@ -226,8 +298,15 @@
                         result.forEach(a => {
                             if (a.val == _this.queryCondition.monitorType) {
                                 _this.curDataTypeList = a.objectTypeList;
-                                _this.queryCondition.curDataType =
-                                    _this.curDataTypeList[0].val;
+                                if(this.$route.query.objtypeKey===undefined){
+                                    _this.queryCondition.curDataType = _this.curDataTypeList[0].val;
+                                }else{
+                                    a.objectTypeList.forEach((item, index)=>{
+                                        if(item.key===this.$route.query.objtypeKey){
+                                            _this.queryCondition.curDataType = _this.curDataTypeList[index].val;
+                                        }
+                                    })
+                                }
                                 _this.getObjDetialData();
                             }
                         });
@@ -253,16 +332,13 @@
                 TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                     result => {
                         _this.storeProp.dataList = [{ id: 0, name: "全部" }];
-                        result.forEach((a, index) => {
-                            let temp = {};
-                            temp.id = a.id;
-                            temp.name = a.name;
-                            _this.storeProp.dataList.push(temp);
-                        });
-                        _this.storeProp.selectObj.selectId =
-                            _this.storeProp.dataList[0].id;
-                        _this.queryCondition.storeId =
-                            _this.storeProp.selectObj.selectId;
+                        _this.storeProp.dataList = result
+                        if(this.$route.query.storeId!=undefined){
+                            _this.storeProp.selectObj.selectId = this.$route.query.storeId
+                        }else{
+                            _this.storeProp.selectObj.selectId = _this.storeProp.dataList[0].id;
+                        }
+                        _this.queryCondition.storeId = _this.storeProp.selectObj.selectId;
                         _this.getObjDetialData();
                         _this.getvideos();
                     },
@@ -274,12 +350,10 @@
                 //获取区域列表
                 TunnelService.getTunnelArea(_this.tunnelId).then(result => {
                     if (result) {
-                        _this.areas = [
-                            {
-                                name: "全部",
-                                id: 0
-                            }
-                        ];
+                        // _this.areas = [{
+                        //     id: 0,
+                        //     name: "全部"
+                        // }];
                         result.forEach(a => {
                             var temp = {};
                             temp.name = a.name;
@@ -287,6 +361,7 @@
                             _this.areas.push(temp);
                         });
                         _this.queryCondition.areaId = _this.areas[0].id;
+
                         result.forEach(a => {
                             if (a.name == "22区") {
                                 _this.queryCondition.areaId = a.id;
@@ -319,6 +394,20 @@
 
             //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
+                if(clickStatus === null){
+                    let param = {
+                        id: id,
+                        status: ObjVal ? 1 : 0
+                    }
+                    MeasObjServer.changeEquimentStatus(param).then(
+                        res=>{
+                            this.$Message.info('操作成功')
+                        },
+                        error=>{
+                            this.$Message.error('操作失败')
+                        }
+                    )
+                }
 
                 if( !!id && !!datatypeId ) this.detectionObj = {"id":changStrLength(id,10),"moTypeId":datatypeId };
                 if (datatypeId != 1) {
@@ -352,8 +441,13 @@
                             b.clickStatus = !clickStatus;
                         }
                     });
+                    
                 }
 
+            },
+            getStoreId(data){
+                this.queryCondition.storeId = data
+                this.getObjDetialData()
             },
             // //获取详情面板的数据
             getObjDetialData() {
@@ -362,19 +456,15 @@
                 if (this.curDataTypeList.length == 0) return;
                 let _this = this;
                 var Params = {
-                    tunnelId: _this.queryCondition.tunnelId,
-                    storeId:
-                        _this.queryCondition.storeId == 0
-                            ? null
-                            : _this.queryCondition.storeId,
-                    areaId:
-                        _this.queryCondition.areaId == 0
-                            ? null
-                            : _this.queryCondition.areaId,
+                    tunnelId:  _this.queryCondition.tunnelId,
+                    storeId: _this.queryCondition.storeId == 0 ? null : _this.queryCondition.storeId,
+                    areaId: _this.queryCondition.areaId == 0 ? null : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
                     result => {
+                        console.log("result", result)
+                        _this.objTableDate = result
                         _this.Obj = [];
                         result.forEach(a => {
                             let temp = {};
@@ -387,12 +477,7 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            temp.time =
-                                a.time == undefined || a.time == ""
-                                    ? ""
-                                    : new Date(a.time).format(
-                                          "yyyy-MM-dd hh:mm:ss"
-                                      );
+                            temp.time = a.time == undefined || a.time == "" ? "" : new Date(a.time).format("yyyy-MM-dd hh:mm:ss");
                             if (a.datatypeId == 1) {
                                 temp.ObjVal = a.curValue.toFixed(2);
                             } else {

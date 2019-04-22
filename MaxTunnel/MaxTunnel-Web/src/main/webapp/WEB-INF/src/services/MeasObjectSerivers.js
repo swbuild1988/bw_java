@@ -284,7 +284,7 @@ var MeasObjServer = {
           if (code == 200) {
             resolve(data);
           } else {
-            reject(msg + ",地址:measobj-map/batch", params);
+            reject(msg + ",地址:sub-sys/action/obj/"+ params.id + "/inputval/" + params.status);
           }
         })
         .catch(error => {

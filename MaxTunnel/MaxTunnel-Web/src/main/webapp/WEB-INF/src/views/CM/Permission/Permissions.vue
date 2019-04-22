@@ -159,8 +159,9 @@ import PermissionConfigService from '../../../services/permissionConfig'
                 )
             },
             add(){
-               this.modal.isShow = true;
-               this.modal.type = 'add';
+                this.modal.isShow = true;
+                this.modal.title = '添加权限';
+                this.modal.type = 'add';
             },
             edit(id){
                 PermissionConfigService.getPermissionDetail(id).then(

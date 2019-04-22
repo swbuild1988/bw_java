@@ -8,14 +8,14 @@
             <Col span="6">
                 备品类别：
                 <Select v-model="conditions.typeId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
                 备品型号：
                 <Select v-model="conditions.modelId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
@@ -67,7 +67,7 @@
                             <Col span="12" class="operationSee">
                                 <Icon type="reply" size=20></Icon>
                                 <div class="borrowBox">
-                                    <Button class="borrowBtn" @click="show(item.id)" :disabled="item.status==false">取用出库</Button>
+                                    <Button class="borrowBtn" @click="show(item.id, item.inTime)" :disabled="item.status==false">取用出库</Button>
                                 </div>
                             </Col>
                             <Col span="12" class="operationDel">
@@ -90,6 +90,50 @@
             width="44vw"
         >
             <Form ref="borrow" :model="borrow" :rules="borrowValidateRules" :label-width="120" @submit.native.prevent>
+                <FormItem label="资产编码：" prop="assetNo">
+                    <Input v-model="borrow.assetNo"></Input>
+                </FormItem>
+                <FormItem label="安装位置：" class="location">
+                    <Row :gutter="8">
+                        <Col span="5">  
+                            <FormItem prop="tunnelId">
+                                <Select v-model="borrow.tunnelId" @on-change="changeTunnelId(borrow.tunnelId)">
+                                    <Option v-for="(item, index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
+                                </Select>
+                            </FormItem>  
+                        </Col>
+                        <Col span="5">
+                            <FormItem prop="areaId">
+                                <Select v-model="borrow.areaId" @on-change="changeSection()">
+                                    <Option v-for="(item, index) in areas" :value="item.id" :key="index">{{ item.name }}</Option>
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span="5">
+                            <FormItem prop="storeId">
+                                <Select v-model="borrow.storeId" @on-change="changeSection()">
+                                    <Option v-for="(item, index) in stores" :value="item.id" :key="index">{{ item.name }}</Option>
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span="5">
+                            <FormItem prop="sectionName">
+                                <Input v-model="borrow.sectionId" v-show="false"></Input>
+                                <Input v-model="borrow.sectionName" readonly></Input>
+                            </FormItem>
+                        </Col>
+                    </Row>
+                </FormItem>
+                <FormItem label="关联监测对象：" prop="objId">
+                    <Select v-model="borrow.objId"  @on-change="getObj()">
+                        <Option v-for="(item, index) in objs" :value="item.id" :key="index">{{ item.id }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="对象类型：" v-show="borrow.objId">
+                    <div v-for="item in objTypes" :key="item.objtypeId">
+                        <Input :value="item.objtypeName" readonly></Input>
+                    </div>
+                </FormItem>
                 <FormItem label="取用人：" prop="borrower">
                     <Select v-model="borrow.borrower">
                         <Option v-for="(item,index) in staffs" :key="index" :value="item.id">{{item.name}}</Option>
@@ -97,21 +141,6 @@
                 </FormItem>
                 <FormItem label="取用时间：" prop="outTime">
                     <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 100%" v-model="borrow.outTime"></DatePicker>
-                </FormItem>
-                <FormItem label="所属管廊：" prop="tunnelId">
-                    <Select v-model="borrow.tunnelId">
-                        <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="关联监测对象：" prop="objId">
-                    <Select v-model="borrow.objId"  @on-change="getObj()">
-                        <Option v-for="(item,index) in objs" :value="item.id" :key="index">{{ item.id }}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="对象类型：" v-show="borrow.objId">
-                    <div v-for="item in objTypes" :key="item.objtypeId">
-                        <Input :value="item.objtypeName" readonly></Input>
-                    </div>
                 </FormItem>
                 <FormItem label="取用目的：">
                     <Input type="textarea" v-model="borrow.borrowPurpose" style="width: 100%"></Input>
@@ -158,9 +187,9 @@ export default {
             equipmentTypes: [],
             equipmentModels:[],
             page: {
-              pageNum: 1,
-              pageSize: 8,
-              pageTotal: 0
+                pageNum: 1,
+                pageSize: 8,
+                pageTotal: 0
             },
             pageStyle: {
               position: "absolute",
@@ -172,8 +201,13 @@ export default {
                 borrower: null,
                 outTime: null,
                 objId: null,
-                tunnelId: 0,
-                borrowPurpose: null
+                tunnelId: null,
+                borrowPurpose: null,
+                sectionId: null,
+                assetNo: null,
+                areaId: null,
+                storeId: null,
+                sectionName: null
             },
             aloneBorrowId: null,
             isBorrow: false,
@@ -182,20 +216,36 @@ export default {
                     { type: 'number', required: true, message: '请选择取用人', trigger: 'change'}
                 ],
                 outTime: [
-                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'}
+                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'},
+                    { validator: this.checkOutTime, trigger: 'change' }
                 ],
                 objId: [
                     { type: 'number', required: true, message: '请选择关联监测对象', trigger: 'change' }
                 ],
                 tunnelId: [
-                    { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
+                    { type: 'number', required: true, message: '所属管廊不能为空', trigger: 'change' }
+                ],
+                areaId: [
+                    { type: 'number', required: true, message: '所属区域不能为空', trigger: 'change' }
+                ],
+                storeId: [
+                    { type: 'number', required: true, message: '所属管仓不能为空', trigger: 'change' }
+                ],
+                sectionName: [
+                    { validator: this.checkSection, trigger: 'change' }
+                ],
+                assetNo: [
+                    { required: true, message:'资产编码不能为空', trigger: 'blur' }
                 ]
             },
             isDisabled: false,
             isColor: '#000',
             objs: [],
             objTypes: [],
-            userId: null
+            userId: null,
+            checkIntime: null,
+            areas: null,
+            stores: null
         };
     },
     watch: {
@@ -207,6 +257,13 @@ export default {
                   this.showTable();
                 }
             });
+        },
+        'borrow.tunnelId': function(newVal, oldVal){
+            this.borrow.areaId = null
+            this.borrow.storeId = null
+            this.borrow.sectionId = null
+            this.borrow.sectionName = null
+            this.changeTunnelId(newVal)
         }
     },
     computed: {
@@ -236,19 +293,20 @@ export default {
             };
             return Object.assign({},param)
         },
-        aloneOutStorageParams(){
-            let param = {
-                ids: this.aloneBorrowId,
-                staffId: this.borrow.borrower,
-                outTime: this.borrow.outTime,
-                // whither: this.borrow.whither,
-                // objId: this.borrow.objId,
-                tunnelId: this.borrow.tunnelId,
-                describe: this.borrow.borrowPurpose,
-                userId: this.userId
-            }
-            return Object.assign({},param)
-        }
+        // aloneOutStorageParams(){
+        //     let param = {
+        //         ids: this.aloneBorrowId,
+        //         staffId: this.borrow.borrower,
+        //         outTime: this.borrow.outTime,
+        //         tunnelId: this.borrow.tunnelId,
+        //         describe: this.borrow.borrowPurpose,
+        //         userId: this.userId,
+        //         sectionId: this.borrow.sectionId,
+        //         assetNo: this.borrow.assetNo,
+        //         objId: this.borrow.objId
+        //     }
+        //     return Object.assign({},param)
+        // }
     },
     mounted() {
         let _this = this;
@@ -298,7 +356,7 @@ export default {
         // type 1:查看， 2：编辑
         goToMoudle: function(index, type) {
             this.$router.push({
-                name: "UMDetailEquipment",
+                name: "设备详情",
                 params: {
                     id: this.equipments[index].id,
                     type: type
@@ -308,10 +366,10 @@ export default {
         //备品备件分页查询
         showTable() {
             let _this = this;
-          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-            _this.$Message.error('开始时间必须小于结束时间！');
-            return;
-          }
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
             EquipmentService.backUpDatagrid(this.params).then(
                 result => {
                     for (let index in result.list) {
@@ -387,19 +445,41 @@ export default {
         add(path) {
             this.$router.push(path);
         },
-        show(id){
+        show(id,inTime){
             this.isBorrow = !this.isBorrow
             this.borrow.borrower = null
             this.borrow.operation = null
             this.borrow.borrowPurpose = null
             this.aloneBorrowId = id
+            this.checkIntime = inTime
+        },
+        checkOutTime(rule, value, callback){  
+            if(new Date(value)<=new Date(this.checkIntime)){
+                callback(new Error("备品取用时间不能早于备品入库时间"))
+            }else{
+                callback()
+            }
         },
         //取用出库modal框的“确认”按钮
         confirmBorrow(name){
             this.isBorrow = true
             this.$refs[name].validate((valid) => {
                 if(valid){
-                    EquipmentService.batchOutBound(this.aloneBorrowId,this.borrow.tunnelId,this.borrow.objId,this.aloneOutStorageParams).then(
+                    var param = {
+                        equipment : {
+                            tunnelId: this.borrow.tunnelId,
+                            sectionId: this.borrow.sectionId,
+                            objId: this.borrow.objId,
+                            assetNo: this.borrow.assetNo
+                        },
+                        spareOut : {
+                            describe: this.borrow.borrowPurpose,
+                            userId: this.userId,
+                            staffId: this.borrow.borrower,
+                            outTime: this.borrow.outTime,
+                        }
+                    }
+                    EquipmentService.batchOutBound(this.aloneBorrowId,param).then(
                         result => {
                             this.isBorrow = false
                             this.showTable()
@@ -448,6 +528,54 @@ export default {
                     this.Log.info(error)
                 }
             )
+        },
+        //根据TunnelId,获取area和store
+        changeTunnelId(id){
+            if(id!=null){
+                //获取store
+                TunnelService.getStoresByTunnelId(id).then(
+                    result => {
+                        this.stores = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+                //获取area
+                TunnelService.getAreasByTunnelId(id).then(
+                    result => {
+                        this.areas = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
+        },
+        //根据areaId,storeId获取section
+        changeSection(){
+            if(this.borrow.storeId!=null&&this.borrow.areaId!=null){
+                TunnelService.getSectionByAreaIdStoreId(this.borrow.storeId, this.borrow.areaId).then(
+                    result => {
+                        if(result!=null){
+                            this.borrow.sectionId = result.id
+                            this.borrow.sectionName = result.name
+                        }else{
+                            this.borrow.sectionName = null
+                        }
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
+        },
+        checkSection(rule, value, callback){
+            if(value==null){
+                callback(new Error("所属区段不能为空"))
+            }else{
+                callback()
+            }
         }
     },
 };
@@ -544,6 +672,15 @@ export default {
 }
 .ivu-form .ivu-form-item-label{
     width: 120px;
+}
+.location >>> .ivu-form-item-label:before {
+    content: '*';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+    color: #ed3f14;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

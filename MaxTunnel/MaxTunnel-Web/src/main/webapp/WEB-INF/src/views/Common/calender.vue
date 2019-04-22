@@ -165,8 +165,9 @@ export default {
         //间隔模式
         interVal(startNum, endNum, intervalNum) {
             var arr = this.$refs.dayLi;
-            if (endNum > arr.length) endNum = arr.length;
-            while (startNum <= endNum){
+            if (endNum > arr.length) 
+                endNum = arr.length;
+            while (Number(startNum)<=Number(endNum)){
                 arr[startNum - 1].setAttribute("class", "active");
                 startNum = Number(startNum) + Number(intervalNum);
             }
