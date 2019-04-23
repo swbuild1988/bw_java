@@ -201,7 +201,7 @@ export default {
         },
         goToMoudle2: function(processDefinitionId, processType,type) {
             this.$router.push({
-                name: 'UMApplicationExamineApprove',
+                name: '查看入廊申请进度',
                 params: {
                     type: type,
                     processDefinitionId: processDefinitionId,
@@ -211,7 +211,7 @@ export default {
         },
         goToMoudle1: function(processDefinitionId, processType,type) {
             this.$router.push({
-                name: 'UMApplicationExaminePlans',
+                name: '查看巡检计划申请进度',
                 params: {
                     type: type,
                     processDefinitionId: processDefinitionId,

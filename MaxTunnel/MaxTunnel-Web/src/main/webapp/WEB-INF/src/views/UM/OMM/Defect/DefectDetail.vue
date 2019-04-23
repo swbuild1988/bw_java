@@ -5,13 +5,13 @@
             <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
             <h2 class="formTitle" v-show="this.pageType==2">编辑缺陷详情</h2>
             <FormItem label="所属管廊：" prop="tunnelId">
-                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1">
+                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1" @on-change="changeTunnel()">
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="所属区段：" prop="area.id" v-show="this.pageType!=1">
                 <Select v-model="defectDetails.area.id" :disabled="this.pageType==1">
-                    <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
+                    <Option v-for="item in areas" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="所属区段：" v-show="this.pageType==1" prop="area.id">
@@ -41,7 +41,7 @@
                     <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-if="this.pageType==1" prop="objectId">
+            <FormItem label="对象名：" v-show="defectDetails.type==2&&this.pageType==1" prop="objectId">
                 <Input v-model="defectDetails.objName" readonly></Input>
             </FormItem>
             <FormItem label="危险等级：" prop="level">
@@ -164,11 +164,13 @@ export default {
     },
     watch:{
         tunnelId(curVal,oldVal){
+            // this.defectDetails.area.id = null;
             this.defectDetails.tunnelId = curVal
             this.getAreas()
             this.getStores()
         },
         areaId(curVal,old){
+            // this.defectDetails.store.id = null
             this.defectDetails.area.id = curVal
             this.getObj()
         },
@@ -229,7 +231,7 @@ export default {
             this.axios.get('/tunnels/'+this.defectDetails.tunnelId+'/areas').then(response=>{
                 let{code,data} = response.data
                 if(code==200){
-                    this.areas=data
+                    this.areas=data 
                 }
             })
             this.getObj()
@@ -281,6 +283,10 @@ export default {
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        changeTunnel(){
+            this.defectDetails.area.id = null
+            this.defectDetails.store.id = null
         }
 
         //更新缺陷

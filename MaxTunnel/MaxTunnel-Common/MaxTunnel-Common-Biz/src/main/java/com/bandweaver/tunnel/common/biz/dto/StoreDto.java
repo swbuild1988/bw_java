@@ -21,36 +21,6 @@ public class StoreDto extends Store implements Serializable {
     private TunnelSimpleDto tunnel;
     
     private StoreType storeType;
-    
-    public StoreType getStoreType() {
-		return storeType;
-	}
-
-	public void setStoreType(StoreType storeType) {
-		this.storeType = storeType;
-	}
-
-
-	private String camera;
-    
-    private Date crtTime;
-    
-
-    public String getCamera() {
-		return camera;
-	}
-
-	public void setCamera(String camera) {
-		this.camera = camera;
-	}
-
-	public Date getCrtTime() {
-        return crtTime;
-    }
-
-    public void setCrtTime(Date crtTime) {
-        this.crtTime = crtTime;
-    }
 
 	public TunnelSimpleDto getTunnel() {
 		return tunnel;
@@ -60,15 +30,19 @@ public class StoreDto extends Store implements Serializable {
 		this.tunnel = tunnel;
 	}
 
+	public StoreType getStoreType() {
+		return storeType;
+	}
 
+	public void setStoreType(StoreType storeType) {
+		this.storeType = storeType;
+	}
 
 	@Override
 	public String toString() {
 		return "StoreDto{" +
-				", tunnel=" + tunnel +
+				"tunnel=" + tunnel +
 				", storeType=" + storeType +
-				", camera='" + camera + '\'' +
-				", crtTime=" + crtTime +
-				'}';
+				"} " + super.toString();
 	}
 }

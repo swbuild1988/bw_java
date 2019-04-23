@@ -6,6 +6,9 @@ import java.util.Date;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 public class InspectionVo extends BaseVo {
+	
+	private static final long serialVersionUID = 1L;
+	
     private String id;
     private String name;
     private Integer requestStaffId;

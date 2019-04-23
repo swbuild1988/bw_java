@@ -225,7 +225,6 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
         let selectedFeatures = queryEventArgs.originResult.features,
             IM = Vue.prototype.IM,
             entiyParam = null;
-        console.log('selectedFeatures', selectedFeatures);
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures, messageTypes, 'ID');
 
         for (var i = 0; i < selectedFeatures.length; i++) {
@@ -390,7 +389,7 @@ export function switchShowEntity(swtichParam) {
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj, "MOID") :
             IM._getEntityMoId(currObj, swtichParam.messageType);
         let entities = _this.viewer.entities._entities._array.filter(entitie => entitie._moId == moId);
-        console.log('entities', entities)
+
         if (entities) {
 
             entities.forEach(entitie => {
@@ -408,8 +407,6 @@ export function doSqlQuery() {
     if (typeof onQueryComplete != 'function' || typeof processFailed != 'function') {
         return
     }
-
-    console.log('SQL', SQL)
 
     let _this = this,
         queryParam = _this.VMConfig.queryParam,
@@ -620,7 +617,7 @@ export function addLabel() {
 
                     result.moInfo.forEach(label => {
                         labels.push(label);
-                        lablesID.push(label.id)
+                        lablesID.push( changStrLength(label.id,10) );
                     });
 
                     sqlQuery.call(_this, viewer, 'MOID in (' + lablesID.toString() + ')', dataUrl, onQueryComplete, processFailed, result.sectionInfo.startPoint, result.sectionInfo.endPoint, labels)
@@ -784,6 +781,11 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
         }
     }
 
+}
+export function replaceStr(string) {
+    if( typeof string !== 'string') return;
+
+    return string.replace(/(,)/g,'"$1"');
 }
 /**
  * 得到数据集中的值

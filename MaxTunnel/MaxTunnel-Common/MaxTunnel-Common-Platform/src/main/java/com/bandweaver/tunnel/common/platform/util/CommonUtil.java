@@ -102,12 +102,16 @@ public class CommonUtil {
 	 */
 	public static List<Integer> convertStringToList(String ids){
 		List<Integer> list = new ArrayList<>();
+		if(ids == null || ids.length() ==0) {
+		    return list;
+        }
 		String[] arr = ids.split(",");
-		if(arr.length == 0) {
-			arr = EMPTY_STRING_ARRAY;
-		}
+		
 		for (String str : arr) {
-			list.add(DataTypeUtil.toInteger(str));
+			Integer i = DataTypeUtil.toInteger(str);
+			if(i != null) {
+			    list.add(i);
+            }
 		}
 		return list;
 	}

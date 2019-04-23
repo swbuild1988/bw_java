@@ -2,9 +2,10 @@ package com.bandweaver.tunnel.common.biz.dto.oam;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.constant.ActionEnum;
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
+import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.Company;
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
@@ -46,6 +47,7 @@ public class ReqHistoryDto extends ProcessBase implements Serializable {
 	private Company Company;
 
 	private String visitorInfo;
+	private List<StaffDto> list;
 	
 	private String comment;
 	private String result;
@@ -192,6 +194,14 @@ public class ReqHistoryDto extends ProcessBase implements Serializable {
 
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	public List<StaffDto> getList() {
+		return list;
+	}
+
+	public void setList(List<StaffDto> list) {
+		this.list = list;
 	}
 
 }

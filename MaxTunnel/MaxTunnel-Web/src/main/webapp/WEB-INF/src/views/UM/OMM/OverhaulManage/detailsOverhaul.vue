@@ -52,15 +52,15 @@ export default {
         //         this.tunnel = data
         //     }
         // })
-        this.getSessionUserName()
+        // this.getSessionUserName()
     },
     methods: {
-        getSessionUserName:function () {
-            if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
-                var str = sessionStorage.UMUerName.substring(1,sessionStorage.UMUerName.length-1)
-                this.detailsOverhaul.overhaulPerson = str
-            }
-        }
+        // getSessionUserName:function () {
+        //     if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
+        //         var str = sessionStorage.UMUerName.substring(1,sessionStorage.UMUerName.length-1)
+        //         this.detailsOverhaul.overhaulPerson = str
+        //     }
+        // }
     }
 }
 </script>

@@ -1,59 +1,51 @@
 package com.bandweaver.tunnel.controller.oam;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Comment;
-import org.activiti.engine.task.Task;
-import org.hamcrest.core.Is;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto;
+import com.bandweaver.tunnel.common.biz.dto.oam.ReqRecordDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqHistoryService;
+import com.bandweaver.tunnel.common.biz.itf.oam.ReqRecordService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory;
-import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
+import com.bandweaver.tunnel.common.biz.pojo.oam.ReqRecord;
 import com.bandweaver.tunnel.common.biz.vo.AuditVo;
-import com.bandweaver.tunnel.common.biz.vo.StaffVo;
 import com.bandweaver.tunnel.common.biz.vo.oam.ReqHistoryVo;
+import com.bandweaver.tunnel.common.biz.vo.oam.ReqRecordVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -77,7 +69,13 @@ public class ReqHistoryController {
     @Autowired
     private HistoryService historyService;
     @Autowired
+<<<<<<< HEAD
     private TunnelService tunnelService;
+=======
+    private StaffService staffService;
+    @Autowired
+    private ReqRecordService reqRecordService;
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     
     /**
      * 通过id查询入廊申请记录
@@ -109,7 +107,7 @@ public class ReqHistoryController {
         if(list != null && list.size() > 0)
         	dto.setComment(list.get(0).getFullMessage());
         
-      //获取审批结果
+        // 获取审批结果
         List<HistoricVariableInstance> ls = historyService.createHistoricVariableInstanceQuery().processInstanceId(dto.getProcessInstanceId()).list();
         if(list != null && list.size()>0){
 			for(HistoricVariableInstance hiv : ls){
@@ -186,6 +184,24 @@ public class ReqHistoryController {
     }
 
     /**
+     * 通过绑定设备的人id获取详情
+     * @param staffId 外来人员id
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月6日
+     */
+    @RequestMapping(value = "req-historys/{staffId}/staff", method = RequestMethod.GET)
+    public JSONObject getReqHistoryByStaffId(@PathVariable("staffId") Integer staffId) {
+    	// 获取人员信息以及申请入廊的信息
+    	StaffDto staff = staffService.getDtoById(staffId);
+    	ReqHistoryDto reqHistory = getReq(staffId);
+    	List<StaffDto> list = new ArrayList<>();
+    	list.add(staff);
+    	reqHistory.setList(list);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, reqHistory);
+    }
+    
+    /**
      * 获取申请入廊人员信息
      * @return
      * @author liuya
@@ -194,27 +210,9 @@ public class ReqHistoryController {
     @RequestMapping(value = "req-historys/visitors", method = RequestMethod.GET)
     public JSONObject getDtoList() {
     	ReqHistoryVo vo = new ReqHistoryVo();
+    	vo.setIsFinished(false);
         List<ReqHistoryDto> list = reqHistoryService.getDtoListByCondition(vo);
-        Set<Map<String,String>> set = new HashSet<>();
-        list = list.stream().filter(a -> a.getIsFinished() == false).collect(Collectors.toList());
-        for(ReqHistoryDto dto : list) {
-        	String company = dto.getCompany().getName();
-        	String [] str = dto.getVisitorInfo().split(",");
-        	for(int i=0;i<str.length;i++) {
-        		Map<String,String> map = new HashMap<>();
-        		String [] s = str[i].split("-");
-        		//判断名字，身份证和手机号是否都存在
-        		if(null == s || s.length < 3) continue;
-        		if("null".equals(s[0]) && "null".equals(s[1]) && "null".equals(s[2]))
-        			continue;
-        		map.put("name", s[0]);
-        		map.put("idCard", s[1]);
-        		map.put("phoneNum", s[2]);
-        		map.put("companyName", company);
-        		set.add(map);
-        	}
-        }
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, set);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 
     /**
@@ -275,25 +273,155 @@ public class ReqHistoryController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
+    
+    
+    //------------------------------外来人员入廊模块----------------------------------
+    
     /**
-     * 入廊信息
+     * maxView定时发送在廊人员的定位信息
+     * @param staffId 人id
+     * @param equipmentId 设备id
+     * @param time 时间
+     * @param longitude 经度
+     * @param latitude 纬度
+     * @param height 高度
      * @return
      * @author ya.liu
-     * @Date 2018年12月7日
+     * @Date 2019年3月4日
      */
-    @RequestMapping(value = "req-historys/info", method = RequestMethod.GET)
-    public JSONObject getReqInfo() {
-        List<JSONObject> list = new ArrayList<>();
-        String [] str = {"电力通信","供水管道","燃气管道","排水管道","供热管道"};
-        Integer [] in = {6,6,4,4,4};
-        for(int i=0,len=str.length;i<len;i++) {
-        	JSONObject obj = new JSONObject();
-        	obj.put("name", str[i]);
-        	obj.put("value", in[i]);
-        	obj.put("unit", "km");
-        	list.add(obj);
-        }
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    @RequestMapping(value = "req-record", method = RequestMethod.POST)
+    public JSONObject insertReqRecord(@RequestBody ReqRecord record) {
+    	
+    	reqRecordService.insertSelective(record);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改在廊人员位置信息
+     * @param id
+     * @param staffId 人id
+     * @param equipmentId 设备id
+     * @param time 时间
+     * @param longitude 经度
+     * @param latitude 纬度
+     * @param height 高度
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月4日
+     */
+    @RequestMapping(value = "req-record", method = RequestMethod.PUT)
+    public JSONObject updateReqRecord(@RequestBody ReqRecord record) {
+    	
+    	reqRecordService.updateByIdSelective(record);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取在廊人员某一点的位置信息
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月4日
+     */
+    @RequestMapping(value = "req-record/{id}", method = RequestMethod.GET)
+    public JSONObject getReqRecordById(@PathVariable("id") Integer id) {
+    	
+    	ReqRecordDto dto = reqRecordService.selectById(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 条件查询轨迹
+     * @param staffId 入廊人id
+     * @param equipmentId 设备id
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月4日
+     */
+    @RequestMapping(value = "req-record/condition", method = RequestMethod.POST)
+    public JSONObject getReqRecordDtoByCondition(@RequestBody ReqRecordVo vo) {
+    	
+    	List<ReqRecord> list = reqRecordService.getListByCondition(vo);
+    	// 时间间隔超过十分钟视为下一次入廊
+    	List<List<ReqRecord>> result = new ArrayList<>();
+    	if(list != null && list.size() > 0) {
+    		List<ReqRecord> mid = new ArrayList<>();
+    		for(ReqRecord req : list) {
+    			if(mid.size() < 1) {
+    				mid.add(req);
+    				continue;
+    			}
+    			Date firstTime = mid.get(mid.size() - 1).getTime();
+    			Date secondTime = req.getTime();
+    			long time = DateUtil.dateDiff(firstTime, secondTime);
+    			if(time - 10 * 60 * 1000 > 0) {
+    				result.add(new ArrayList<>(mid));
+    				mid.clear();
+    				mid.add(req);
+    			}else {
+    				mid.add(req);
+    			}
+    		}
+    		result.add(mid);
+    	}
+    	// 处理返回数据
+    	List<JSONObject> objs = new ArrayList<>();
+    	for(int i=0;i<result.size();i++) {
+    		JSONObject obj = new JSONObject();
+    		obj.put("list", result.get(i));
+    		obj.put("id", i+1);
+    		objs.add(obj);
+    	}
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, objs);
+    }
+    
+    /**
+     * 返回该用户最新一次的入廊信息
+     * @param id staffId
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月6日
+     */
+    private ReqHistoryDto getReq(Integer id) {
+    	ReqHistoryVo vo = new ReqHistoryVo();
+    	vo.setVisitorInfo(id.toString());
+    	List<ReqHistoryDto> list = reqHistoryService.getDtoListByCondition(vo);
+    	return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    /**
+     * 分页获取入廊人员信息
+     * @param staffId 入廊人id
+     * @param equipmentId 设备id
+     * @param staffName 入廊人姓名，支持模糊查询
+     * @param telphone 手机号码
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param pageSize
+     * @param pageNum
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月5日
+     */
+    @RequestMapping(value = "req-record/datagrid", method = RequestMethod.POST)
+    public JSONObject getStaffByCondition(@RequestBody ReqRecordVo vo) {
+    	
+    	List<ReqRecordDto> list = reqRecordService.getDtoListByCondition(vo);
+    	if(vo.getStaffName() != null)
+    		list = list.stream().filter(a -> a.getStaff().getName().indexOf(vo.getStaffName()) > -1).collect(Collectors.toList());
+    	if(vo.getTelphone() != null)
+    		list = list.stream().filter(a -> a.getStaff().getTelphone().indexOf(vo.getTelphone()) > -1).collect(Collectors.toList());
+    	
+    	Set<Staff> set = new HashSet<>();
+    	for(ReqRecordDto dto : list) {
+    		set.add(dto.getStaff());
+    	}
+    	List<Staff> dtos = new ArrayList<>(set);
+    	ListPageUtil<Staff> page = new ListPageUtil<>(dtos, vo.getPageNum(), vo.getPageSize());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
     }
     
     /**

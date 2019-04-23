@@ -31,7 +31,7 @@
           :total="queryPrams.total"
           show-total show-elevator
           :current="queryPrams.pageNum"
-          show-total show-elevator show-sizer placement="top"
+          show-sizer placement="top"
           :page-size="queryPrams.pageSize"></Page>
   </Modal>
 </template>
@@ -156,7 +156,7 @@
       },
 
       confirmData() {
-        this.selectData.idList = this.curSelectData;
+        this.selectData.idList = this.curSelectData.toString().substring(0,this.curSelectData.length-1);
       },
       //切换页面
       changePage(index) {
@@ -186,7 +186,7 @@
 </script>
 
 <style scoped>
-  .ivu-radio-large > > > .ivu-radio-wrapper {
+  .ivu-radio-large >>> .ivu-radio-wrapper {
     font-size: 1.22vmin;
     line-height: 4vmin;
   }

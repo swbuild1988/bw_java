@@ -86,7 +86,7 @@
 
   <delete id="deleteByRIds">
     delete from T_SECURITY_USER_ROLE WHERE r_id in
-    <foreach collection="list" item="itme" open="(" separator="," close=")">
+    <foreach collection="list" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
   </delete>

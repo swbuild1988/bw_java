@@ -127,7 +127,7 @@
                     id: "ViewId"
                 },
                 yearPlan: {
-                    label: "年度计划数",
+                    label: "年度计划",
                     value: 365,
                     imgSrc: annualPlan,
                     imgBac: "#8C91A7"
@@ -139,7 +139,7 @@
                     imgBac: "#7ca9a9"
                 },
                 finishedTask: {
-                    label: "已完成巡检任务数",
+                    label: "已完成巡检任务",
                     value: "5",
                     imgSrc: processedPlan,
                     imgBac: "#112f6b"
@@ -286,7 +286,7 @@
             },
             goPatrolPlan(id) {
                 this.$router.push({
-                    name: "UMPatrolDetails",
+                    name: "查看巡检计划详情",
                     params: {
                         id: id,
                         type: Enum.pageType.Read
@@ -295,7 +295,7 @@
             },
             goDefectDetails(id) {
                 this.$router.push({
-                    name: "UMDetailDefect",
+                    name: "缺陷详情",
                     params: {
                         id: id,
                         type: Enum.pageType.Read

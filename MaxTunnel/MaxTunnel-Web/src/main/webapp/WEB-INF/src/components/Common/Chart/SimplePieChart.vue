@@ -2,7 +2,7 @@
   <div
     class="SimplePie"
     :id="id"
-    ref="element"
+    ref="simplePieChart"
   ></div>
 </template>
 <style scoped>
@@ -46,16 +46,9 @@ export default {
             type: "pie",
             radius: "65%",
             roseType: "radius",
-            center: ["45%", "50%"],
+            center: ["40%", "60%"],
             data: [],
-            color: [
-              "#00f6fc",
-              "#42f1f5",
-              "#11c0ff",
-              "#1190fa",
-              "#1255e8",
-              "#1c62ff"
-            ]
+            color: ['#C23531','#2F4554','#61A0A8','#D48265','#91C7AE','#749F83']
           }
         ]
       }
@@ -83,10 +76,9 @@ export default {
             fontSize: _this.getFontSize(this.titleSize)
           }
         },
-        grid: {
-          right: "30%",
-          bottom: "2%"
-        },
+        // grid: {
+        //   right: "30%",
+        // },
         legend: {
           data: [],
           margin: _this.getFontSize(1),
@@ -224,7 +216,7 @@ export default {
       if (typeof val == "string") {
         if (val.indexOf("%") > 0) {
           var tmp = parseFloat(val.replace("%", "")) / 100;
-          let height = this.$refs.element.offsetHeight;
+          let height = this.$refs.simplePieChart.offsetHeight;
           return Math.round(height * tmp);
         }
       }

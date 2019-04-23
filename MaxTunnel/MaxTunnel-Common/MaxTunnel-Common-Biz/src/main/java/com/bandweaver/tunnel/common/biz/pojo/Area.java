@@ -29,6 +29,12 @@ public class Area implements Serializable{
 
     private Date crtTime;
 
+    private Double length;
+
+    private String startPoint;
+
+    private String endPoint;
+
     public Integer getId() {
         return id;
     }
@@ -85,6 +91,30 @@ public class Area implements Serializable{
         this.crtTime = crtTime;
     }
 
+    public Double getLength() {
+        return length;
+    }
+
+    public void setLength(Double length) {
+        this.length = length;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
     @Override
     public String toString() {
         return "Area{" +
@@ -95,6 +125,9 @@ public class Area implements Serializable{
                 ", tunnelId=" + tunnelId +
                 ", camera='" + camera + '\'' +
                 ", crtTime=" + crtTime +
+                ", length=" + length +
+                ", startPoint='" + startPoint + '\'' +
+                ", endPoint='" + endPoint + '\'' +
                 '}';
     }
 }

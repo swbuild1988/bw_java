@@ -51,7 +51,7 @@ public class FileInfoController {
 	
 	
 	
-	/**文件上传 (最大支持30M)
+	/**文件上传 (最大支持30M,可在配置文件spring-controller.xml中修改上限值)
 	 * @param files 支持多个文件上传
 	 * @param fileType 文件类型 枚举
 	 * @param docType 资料类型 枚举

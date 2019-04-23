@@ -1,7 +1,5 @@
 package com.bandweaver.tunnel.dao.omm;
 
-
-import com.bandweaver.tunnel.common.biz.dto.CommonDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareVo;

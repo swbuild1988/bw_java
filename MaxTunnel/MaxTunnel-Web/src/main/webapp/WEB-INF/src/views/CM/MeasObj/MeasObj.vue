@@ -88,13 +88,8 @@
         class="pageStyle"
       ></Page>
     </div>
-
-    <div>
-      <meas-obj-module v-bind="measObjModule" v-on:addOrEdit="save"></meas-obj-module>
-    </div>
-    <div>
+      <meas-obj-module ref="measObjModule" v-bind="measObjModule"  v-on:addMeasObj="addMeasObj" v-on:ListenUpdateMeasObj="updateMeasObj"></meas-obj-module>
       <meas-obj-multi-module v-bind="measObjMultiModule" v-on:saveMulti="saveMulti"></meas-obj-multi-module>
-    </div>
   </div>
 </template>
 
@@ -159,28 +154,32 @@ export default {
           align: "center"
         },
         {
+          title: '关联预案',
+          key: 'plansName',
+          align: 'center',
+          render: (h, params) => {
+            let temp = params.row.plansName
+            if(temp.length==0){
+              temp = null
+            }
+            return h('span',temp)
+          }
+        },
+        {
+          title: '关联视频',
+          key: 'videosName',
+          align: 'center',
+          render: (h, params) => {
+            let temp = params.row.videosName
+            if(temp.length==0){
+              temp = null
+            }
+            return h('span',temp)
+          }
+        },
+        {
           title: "位置",
           key: "location",
-          align: "center"
-        },
-        {
-          title: "经度",
-          key: "longitude",
-          align: "center"
-        },
-        {
-          title: "纬度",
-          key: "latitude",
-          align: "center"
-        },
-        {
-          title: "高度",
-          key: "height",
-          align: "center"
-        },
-        {
-          title: "偏移量",
-          key: "deviation",
           align: "center"
         },
         {
@@ -241,8 +240,9 @@ export default {
       deleteSelect: [],
       measObjModule: {
         show: { state: false },
-        editInfo: {},
-        type: null
+        // editInfo: {},
+        type: null,
+        id: null
       },
       measObjMultiModule: {
         show: { state: false }
@@ -293,7 +293,6 @@ export default {
           _this.data6 = [];
           _this.data6 = result.list;
           _this.data6.forEach(measobj => {
-            // measobj.actived = measobj.actived ? "是" : "否";
             if(measobj.section != null){
               measobj.location = measobj.section.store.tunnel.name + measobj.section.name;
             }
@@ -345,39 +344,27 @@ export default {
     },
     add() {
       this.measObjModule.show.state = !this.measObjModule.show.state;
-      this.measObjModule.type = "add";
+      this.measObjModule.type = 1;
+    },
+    edit(id) {
+      this.measObjModule.show.state = !this.measObjModule.show.state;
+      this.measObjModule.type = 2;
+      this.measObjModule.id = id
+      this.$refs.measObjModule.getMeasObjInfo(id)
     },
     addMulti() {
       this.measObjMultiModule.show.state = !this.measObjMultiModule.show.state;
-      this.measObjMultiModule.type = "addMulti";
+      // this.measObjMultiModule.type = "addMulti";
     },
-    save(data) {
-      let _this = this;
-      if (this.measObjModule.type == "add") {
-        MeasObjServer.addMeasObj(data).then(
-          res => {
-            _this.page.pageTotal = data.total;
-            _this.$Message.success("添加成功！");
-            _this.measObjModule.show.state = !this.measObjModule.show.state;
-            _this.resetAndSearch();
-          },
-          error => {
-            _this.Log.info(error);
-          }
-        );
-      } else {
-        MeasObjServer.updateMeasObj(data).then(
-          res => {
-            _this.page.pageTotal = data.total;
-            _this.$Message.success("更新成功！");
-            _this.measObjModule.show.state = !this.measObjModule.show.state;
-            _this.resetAndSearch();
-          },
-          error => {
-            _this.Log.info(error);
-          }
-        );
-      }
+    addMeasObj() {
+      this.measObjModule.show.state = !this.measObjModule.show.state;
+      this.$Message.success('添加成功');
+      this.resetAndSearch()
+    },
+    updateMeasObj(){
+      this.measObjModule.show.state = !this.measObjModule.show.state;
+      this.$Message.success('修改成功');
+      this.resetAndSearch()
     },
     saveMulti(data) {
       console.log("save multi", data);
@@ -385,29 +372,11 @@ export default {
       data.forEach(element => {
         element.id = parseInt(element.id);
       });
-      // 将data上传，接口measobjs/batch，httpPost，有问题找后端
+      // 将data上传，接口measobjs/batch，http，有问题找后端
       MeasObjServer.batchPostMeasObjs(data).then(
         res => {
           _this.Log.info(res);
           _this.resetAndSearch()
-        },
-        error => {
-          _this.Log.info(error);
-        }
-      );
-    },
-    edit(id) {
-      let _this = this;
-      MeasObjServer.getObjById(id).then(
-        result => {
-          _this.measObjModule.editInfo = [];
-          _this.measObjModule.editInfo = result;
-          _this.measObjModule.editInfo.actived = _this.measObjModule.editInfo
-            .actived
-            ? 1
-            : 0;
-          _this.measObjModule.show.state = !_this.measObjModule.show.state;
-          this.measObjModule.type = "edit";
         },
         error => {
           _this.Log.info(error);

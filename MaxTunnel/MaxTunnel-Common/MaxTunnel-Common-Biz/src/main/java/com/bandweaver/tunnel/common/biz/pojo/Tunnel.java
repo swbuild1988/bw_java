@@ -31,6 +31,12 @@ public class Tunnel implements Serializable{
 
     private Date crtTime;
 
+    private String startPoint;
+
+    private String endPoint;
+
+    private Integer direction;
+
     public Integer getId() {
         return id;
     }
@@ -113,6 +119,17 @@ public class Tunnel implements Serializable{
 	
 	
 
+<<<<<<< HEAD
+=======
+    public Integer getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Integer direction) {
+        this.direction = direction;
+    }
+
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     public Integer getStatus() {
 		return status;
 	}
@@ -121,10 +138,48 @@ public class Tunnel implements Serializable{
 		this.status = status;
 	}
 
+<<<<<<< HEAD
 	@Override
 	public String toString() {
 		return "Tunnel [id=" + id + ", name=" + name + ", sn=" + sn + ", length=" + length + ", responsibilityId="
 				+ responsibilityId + ", constructId=" + constructId + ", operationId=" + operationId + ", camera="
 				+ camera + ", maxviewConfigId=" + maxviewConfigId + ", status=" + status + ", crtTime=" + crtTime + "]";
 	}
+=======
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    @Override
+    public String toString() {
+        return "Tunnel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", sn='" + sn + '\'' +
+                ", length=" + length +
+                ", responsibilityId=" + responsibilityId +
+                ", constructId=" + constructId +
+                ", operationId=" + operationId +
+                ", camera='" + camera + '\'' +
+                ", maxviewConfigId=" + maxviewConfigId +
+                ", status=" + status +
+                ", crtTime=" + crtTime +
+                ", startPoint='" + startPoint + '\'' +
+                ", endPoint='" + endPoint + '\'' +
+                ", direction=" + direction +
+                '}';
+    }
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

@@ -135,9 +135,9 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
-	@RequestMapping(value="companies/{companyId}/departments",method=RequestMethod.GET)
-	public JSONObject getDepartmentsByCompanyId(@PathVariable("companyId") Integer companyId ) {
-		List<DepartmentDto> list = departmentService.getDepartmentsByCompanyId(companyId);
+	@RequestMapping(value="companies/{id}/departments",method=RequestMethod.GET)
+	public JSONObject getDepartmentsByCompanyId(@PathVariable("id") Integer id ) {
+		List<DepartmentDto> list = departmentService.getDepartmentsByCompanyId(id);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	

@@ -230,7 +230,7 @@
                     <Col span="6">
                         <FormItem prop="returnTime">
                             归还时间：
-                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchReturnSubmitData.returnTime"></DatePicker>
+                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="batchReturnSubmitData.returnTime"></DatePicker>
                         </FormItem>
                     </Col>
                     <Col span="6">
@@ -918,6 +918,7 @@ export default {
                                 this.showTable()
                                 this.$refs[name].resetFields()
                                 this.batchReturnSubmitData.describe = null
+                                this.$Message.success("归还成功!")
                             },
                             error => {
                                 this.Log.info(error)
@@ -1105,7 +1106,7 @@ export default {
 }
 .operation:hover{
     color: #357aa1;
-    font-size: 15px;
+    /* font-size: 15px; */
 }
 .purpose{
     display: inline-block;
@@ -1139,9 +1140,9 @@ export default {
         line-height: 4.5vmin;
         font-size: 1.6vmin;
     }
-    .operation:hover{
+    /* .operation:hover{
         font-size: 1.7vmin;
-    }
+    } */
     .toolBtn p{
         font-size: 2.5vmin;
     }
@@ -1156,8 +1157,8 @@ export default {
         margin-left: 15vmin !important;
         line-height: 4.5vmin;
     }
-    .operation:hover{
+    /* .operation:hover{
         font-size: 1.6vmin;
-    }
+    } */
 }
 </style>

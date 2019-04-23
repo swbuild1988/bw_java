@@ -1,5 +1,5 @@
 <template>
-    <Modal title="关于我们" v-model="show.state" width="600px">
+    <Modal title="关于我们" v-model="show.state" width="600px" :mask-closable="false">
         <div class="aboutFont">
             <Row>
                 <Col span="24" style="text-align: center;">

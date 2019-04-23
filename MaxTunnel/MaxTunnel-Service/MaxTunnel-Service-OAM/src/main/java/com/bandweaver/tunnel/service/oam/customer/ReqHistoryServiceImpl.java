@@ -1,33 +1,28 @@
 package com.bandweaver.tunnel.service.oam.customer;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqHistoryService;
-import com.bandweaver.tunnel.common.biz.pojo.MyTask;
-import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory;
 import com.bandweaver.tunnel.common.biz.vo.oam.ReqHistoryVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.bandweaver.tunnel.dao.common.MyTaskMapper;
+import com.bandweaver.tunnel.dao.common.StaffMapper;
 import com.bandweaver.tunnel.dao.oam.ReqHistoryMapper;
-import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -38,6 +33,8 @@ public class ReqHistoryServiceImpl implements ReqHistoryService {
     private ReqHistoryMapper reqHistoryMapper;
     @Autowired
     private ActivitiService activitiService;
+    @Autowired
+    private StaffMapper staffMapper;
 
     @Override
     public void addBatch(List<ReqHistory> list) {
@@ -46,12 +43,18 @@ public class ReqHistoryServiceImpl implements ReqHistoryService {
 
     @Override
     public ReqHistoryDto getDtoById(Integer id) {
-        return reqHistoryMapper.getDtoById(id);
+    	ReqHistoryDto dto = reqHistoryMapper.getDtoById(id);
+    	dto = getStaffs(dto);
+        return dto;
     }
 
     @Override
     public List<ReqHistoryDto> getDtoListByCondition(ReqHistoryVo vo) {
-        return reqHistoryMapper.getDtoListByCondition(vo);
+    	List<ReqHistoryDto> list = reqHistoryMapper.getDtoListByCondition(vo);
+        for(ReqHistoryDto dto : list) {
+        	dto = getStaffs(dto);
+        }
+        return list;
     }
 
     @Transactional
@@ -80,6 +83,29 @@ public class ReqHistoryServiceImpl implements ReqHistoryService {
         return new PageInfo<>(list);
     }
 
+    /**
+     * 返回入廊时外来人员信息
+     * @param dto
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月8日
+     */
+    private ReqHistoryDto getStaffs(ReqHistoryDto dto) {
+    	// 获取入廊人员信息
+    	List<Integer> staffIds = new ArrayList<>();
+        try {
+        	staffIds = CommonUtil.convertStringToList(dto.getVisitorInfo());
+		} catch (Exception e) {
+			LogUtil.info("exception message : " + e);
+		}
+        List<StaffDto> staffList = new ArrayList<>();
+        for(Integer staffId : staffIds) {
+        	staffList.add(staffMapper.getDtoById(staffId));
+        }
+        dto.setList(staffList);
+        return dto;
+    }
+    
     @Override
     public void updateById(ReqHistory pojo) {
         reqHistoryMapper.updateByPrimaryKeySelective(pojo);

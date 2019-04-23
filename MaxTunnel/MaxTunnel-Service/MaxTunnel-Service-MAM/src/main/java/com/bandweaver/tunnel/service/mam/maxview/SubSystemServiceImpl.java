@@ -96,7 +96,11 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
+<<<<<<< HEAD
 			LogUtil.error("HTTP请求失败，错误信息：" + e.getMessage());
+=======
+			LogUtil.error("HTTP请求失败，错误信息：" + e);
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 		}
 	}
 
@@ -121,7 +125,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.info("HTTP请求失败，错误信息：" + e);
 		}
 	}
 	
@@ -174,7 +178,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 			}
 			
 		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e.getMessage());
+			LogUtil.info("HTTP请求失败，错误信息：" + e);
 		}
 		return false;
 	

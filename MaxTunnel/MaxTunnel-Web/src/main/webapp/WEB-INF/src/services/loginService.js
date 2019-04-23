@@ -1,65 +1,93 @@
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
-const isRealData = require('../../static/serverconfig').isRealData
-
-var LoginService = {
-    // UMLogin
-    UmLogin: function(params) {
+const isRealData = require('../../static/serverconfig').isRealData;
+const LoginService = {
+    // Login
+    UmLogin: function (params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/login", params)
-                    .then(res => {
-                        let {
+                axios.post('/login', params)
+                    .then((res) => {
+                        const {
                             msg,
                             code,
-                            data
+                            data,
                         } = res.data;
                         if (code == 200) {
-                            resolve(data)
+                            resolve(data);
                         } else {
-                            reject(msg)
+                            reject(msg);
                         }
                     })
-                    .catch(error => {
-                        reject(error.response.status + '  ' + error.response.data)
-                    })
+                    .catch((error) => {
+                        reject(new Error(error.response.status + '  ' + error.response.data));
+                    });
             } else {
-                let data = {
+                const data = {
                     name: 'admin',
-                    id: 1
-                }
-                resolve(data)
+                    id: 1,
+                };
+                resolve(data);
             }
-        })
+        });
     },
-    // UMLogout
-    UMLogout: function(params) {
+    // 获取登录用户权限
+    getInfo: function (params) {
+        return new Promise((resolve, reject) => {
+            if (isRealData) {
+                axios.get('/login/' + Cookies.get('userName')).then((res) => {
+
+                    const {
+                        msg,
+                        code,
+                        data,
+                    } = res.data;
+                    if (code == 200) {
+                        // data.pList = [{
+                        //   muneCode: '/UMMain',
+                        //   pCodeList: ['list', 'add', 'update'],
+                        // }, {
+                        //   muneCode: '/VMMain2',
+                        //   pCodeList: ['list', 'add', 'update'],
+                        // }];
+                        // data.rList = ['admin'];
+                        resolve(data);
+                    } else {
+                        reject(new Error(msg + '地址:/login/' + Cookies.get('userName')));
+                    }
+                });
+            }
+        });
+    },
+    // Logout
+    UMLogout: function (params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 axios.get('/logout')
-                    .then(res => {
-                        let {
+                    .then((res) => {
+                        const {
                             msg,
                             code,
-                            data
-                        } = res.data
+                            data,
+                        } = res.data;
                         if (code == 200) {
-                            resolve(data)
+                            resolve(data);
                         } else {
-                            reject(msg + '地址：/logout')
+                            reject(new Error(msg + '地址：/logout'));
                         }
                     })
-                    .catch(error => {
-                        reject(error.response.status + '  ' + error.response.data)
-                    })
+                    .catch((error) => {
+                        reject(new Error(error.response.status + '  ' + error.response.data));
+                    });
             } else {
-                let data = {}
-                resolve(data)
+                const data = {};
+                resolve(data);
             }
-        })
-    }
-}
+        });
+    },
+};
 
 export {
-    LoginService
-}
+    LoginService,
+};

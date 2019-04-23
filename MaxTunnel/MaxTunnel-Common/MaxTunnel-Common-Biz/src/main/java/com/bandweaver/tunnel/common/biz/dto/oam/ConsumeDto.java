@@ -9,6 +9,8 @@ import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 
 public class ConsumeDto extends Consume{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private TunnelSimpleDto tunnelSimpleDto;
 	private StoreDto storeDto;
 	private AreaDto areaDto;
@@ -36,13 +38,17 @@ public class ConsumeDto extends Consume{
 		this.areaDto = areaDto;
 	}
 	public String getObjectTypeName() {
-		return ObjectType.getEnum(super.getObjectType()).getName();
+		if(super.getObjectType() == null) return null;
+		ObjectType o = ObjectType.getEnum(super.getObjectType());
+		return o == null ? null : o.getName();
 	}
 	public void setObjectTypeName(String objectTypeName) {
 		this.objectTypeName = objectTypeName;
 	}
 	public String getEnergyTypeName() {
-		return EnergyType.getEnum(super.getEnergyType()).getName();
+		if(super.getEnergyType() == null) return null;
+		EnergyType e = EnergyType.getEnum(super.getEnergyType());
+		return e == null ? null : e.getName();
 	}
 	public void setEnergyTypeName(String energyTypeName) {
 		this.energyTypeName = energyTypeName;

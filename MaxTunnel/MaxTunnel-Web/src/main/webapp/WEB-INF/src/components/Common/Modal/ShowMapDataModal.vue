@@ -1,5 +1,5 @@
 <template>
- <div v-show="show.state" transition="modal" >
+ <div v-show="show.state" transition="modal" style="z-index: 1008">
     <div class="model-content" :style="{bottom:bottom,left:left,position:'absolute'}" >
         <div class="modal-container"
              :style="contentStyles">
@@ -105,7 +105,6 @@
             },
             calcHideHeight(){
                 this.$nextTick(()=>{
-                    console.log('this.getDOMElement)',this.getDOMElement('modal-body-list'))
                     this.bodyHeight = (this.getDOMElement('modal-body-list').children[0].offsetHeight * 5 +(this.borderPadding / 2) ) +'px';
                 })
             },

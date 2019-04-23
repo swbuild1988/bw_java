@@ -14,7 +14,7 @@ const env = require('../config/prod.env')
 const ApiUrl = require('../static/serverconfig')
 //让打包的时候输出可配置的文件
 var GenerateAssetPlugin = require('generate-asset-webpack-plugin')
-var createServerConfig = function(compilation) {
+var createServerConfig = function (compilation) {
   let cfgJson = ApiUrl;
   return JSON.stringify(cfgJson);
 }
@@ -36,7 +36,10 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': env,
+      'process.env.VUE_ENV': JSON.stringify(process.env.VUE_ENV) //增加此行
+      // 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      // 'process.env.VUE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
     }),
     new UglifyJsPlugin({
       uglifyOptions: {

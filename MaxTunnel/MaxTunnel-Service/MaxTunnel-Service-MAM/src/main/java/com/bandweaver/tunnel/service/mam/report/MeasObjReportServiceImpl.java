@@ -78,7 +78,10 @@ public class MeasObjReportServiceImpl implements MeasObjReportService {
 	public void updateByPrimaryKeySelective(MeasObjReport report) {
 		measObjReportMapper.updateByPrimaryKeySelective(report);
 	}
-	
-	
-	
+
+	@Override
+	public List<MeasObjReport> getListByTimeAndTimeType(Date startTime, Date endTime, int type) {
+		List<MeasObjReport> list = measObjReportMapper.getListByTimeAndTimeType(startTime,endTime,type);
+		return list == null ? Collections.EMPTY_LIST : list;
+	}
 }

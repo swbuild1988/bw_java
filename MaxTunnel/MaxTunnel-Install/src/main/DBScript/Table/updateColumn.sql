@@ -1,31 +1,63 @@
 
--- ²âÊÔ±íT_TEST
+-- ï¿½ï¿½ï¿½Ô±ï¿½T_TEST
 
--- Ìí¼Ó×Ö¶Î
+-- ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST add age number(3) default 18;
 
--- section±íÌí¼Ó³¤¶Èlength×Ö¶Î
+-- sectionï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½lengthï¿½Ö¶ï¿½
 alter table T_COMMON_SECTION add length number default 300;
 
--- store±íÌí¼Ó¿íwidthºÍ¸ßheight×Ö¶Î
-alter table T_COMMON_STORE add width NUMBER default 1;
+-- storeï¿½ï¿½ï¿½ï¿½Ó¿ï¿½widthï¿½Í¸ï¿½heightï¿½Ö¶ï¿½
+alter table T_COMMON_STORE add width NUMBER default 2;
 alter table T_COMMON_STORE add height NUMBER default 4;
 
--- staff±íÌí¼Ó×Ö¶Î
+-- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 alter table T_COMMON_STAFF add account VARCHAR2(50);
 alter table T_COMMON_STAFF add sex VARCHAR2(2);
 alter table T_COMMON_STAFF add telphone VARCHAR2(20);
 alter table T_COMMON_STAFF add hire_date DATE;
 
 
--- video±íÌí¼Óip,port,username,passwordËÄ¸ö×Ö¶Î
+-- videoï¿½ï¿½ï¿½ï¿½ï¿½vendor,ip,port,username,passwordï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+alter table T_MAM_VIDEO add vendor NUMBER;
 alter table T_MAM_VIDEO add ip VARCHAR2(20);
 alter table T_MAM_VIDEO add port NUMBER;
 alter table T_MAM_VIDEO add username VARCHAR2(50);
 alter table T_MAM_VIDEO add password VARCHAR2(50);
 
--- ÐÞ¸Ä×Ö¶Î
+-- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+--ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
+alter table T_COMMON_STAFF add identityNO VARCHAR2(50);
+--ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Ê¶
+alter table T_COMMON_STAFF add outside number(1) default 1;
+
+-- ï¿½Þ¸ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST rename column age to ages;
 
--- É¾³ý×Ö¶Î
+-- É¾ï¿½ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST drop column ages;
+
+--------------- V110B02 ----------------------------
+
+alter table T_COMMON_TUNNEL add START_POINT VARCHAR2(50);
+alter table T_COMMON_TUNNEL add END_POINT VARCHAR2(50);
+alter table T_COMMON_TUNNEL add DIRECTION NUMBER default 0;
+
+alter table T_COMMON_STORE add START_POINT VARCHAR2(50);
+alter table T_COMMON_STORE add END_POINT VARCHAR2(50);
+alter table T_COMMON_STORE add K NUMBER default 0.0;
+alter table T_COMMON_STORE add L NUMBER default 0.0;
+
+alter table T_COMMON_AREA add START_POINT VARCHAR2(50);
+alter table T_COMMON_AREA add END_POINT VARCHAR2(50);
+alter table T_COMMON_AREA add LENGTH NUMBER default 0;
+
+alter table T_COMMON_SECTION add S1 NUMBER default 0;
+alter table T_COMMON_SECTION add S2 NUMBER default 0;
+
+alter table t_mam_measobj add video_ids varchar2(100);
+alter table t_mam_measobj add plan_ids varchar2(100);
+
+alter table T_COMMON_SCHEDULE_JOB add job_type number;
+
+----------------------------------------------------

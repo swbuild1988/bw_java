@@ -27,7 +27,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日巡检任务</div>
+                        <div class="countTitle">本年巡检任务</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -50,7 +50,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日缺陷</div>
+                        <div class="countTitle">本年缺陷</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -61,7 +61,7 @@
                     </div>
                 </li>
                 <li>
-                    <div ref="circleBox" style="height: 7vh">
+                    <div ref="circleBox">
                         <i-circle 
                             :percent="62"
                             :size=circleWidth
@@ -73,7 +73,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日维修</div>
+                        <div class="countTitle">本年维修</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -176,6 +176,7 @@ export default {
             let p2 = InspectService.getDefectCount();
             let p3 = InspectService.getMaintenanceCount();
             Promise.all([p1, p2, p3]).then(res => {
+                console.log("res",res)
                 //获取今年的巡检任务总数
                 this.taskCount.nowYearTaskCount = res[0].nowYearTaskCount
                 this.taskCount.isRise = res[0].nowYearTaskCount >= res[0].beforeYearTaskCount ? true : false
@@ -192,8 +193,9 @@ export default {
                 this.maintenanceCount.nowYearOrderCount = res[2].nowYearOrderCount
                 this.maintenanceCount.isRise = res[2].nowYearOrderCount >= res[2].beforeYearOrderCount ? true : false
 
-                //获取维修率
+                //获取维修率 客户需求，模拟假数据，用于展示
                 this.maintenanceRateCount.nowYearOrderPercentage = (orderCount1 / defectCount1 * 100).toFixed(1)
+                // this.maintenanceRateCount.nowYearOrderPercentage = 99.9;
                 this.maintenanceRateCount.isRise = (orderCount1 / defectCount1) >= (orderCount2 / defectCount2) ? true : false;
             })
             //获取今年与去年的每月巡检计划数

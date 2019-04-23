@@ -434,6 +434,27 @@ var EnumsService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
+	},
+	// 获取银行
+	getBanks(){
+		return new Promise((resolve, reject) => {
+			axios.get('bank-enums')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ",地址:bank-enums")
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
 	}
 }
 export {

@@ -23,8 +23,8 @@
     created() {
       this.curModule.leftTree = [
         {
-            name: '人员定位详情',
-            url: '/UM/PersonnelPosition/tunnel'
+            name: '人员定位总览',
+            url: '/UM/PersonnelPosition/visitors'
         },
         {
             name: '设备分配',

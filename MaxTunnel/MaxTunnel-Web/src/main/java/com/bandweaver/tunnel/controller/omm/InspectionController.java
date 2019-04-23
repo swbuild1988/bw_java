@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.UserDTO;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
@@ -34,6 +35,7 @@ import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
+import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionGroupService;
@@ -48,6 +50,7 @@ import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -69,19 +72,13 @@ public class InspectionController {
     @Autowired
     private ActivitiService activitiService;
     @Autowired
-    private TaskService taskService;
-    @Autowired
-    private RepositoryService repositoryService;
-    @Autowired
-    private StaffService staffService;
-    @Autowired
     private SectionService sectionService;
-    @Autowired
-    private MeasObjService measObjService;
     @Autowired
     private AreaService areaService;
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private TunnelService tunnelService;
 
     /**
      * 向数据库内添加模拟数据
@@ -90,14 +87,6 @@ public class InspectionController {
      */
     @RequestMapping(value = "inspection-groups/testadd", method = RequestMethod.GET)
     public JSONObject testAddInspectionGroup() {
-//
-//        for (int i = 0; i < 4; i++) {
-//            User user = new User();
-//            user.setName("test" + i);
-//            user.setPassword("123456");
-//            user.setCrtTime(new Date());
-//            userService.addUser(user);
-//        }
 
         for (int i = 0; i < 2; i++) {
             InspectionGroup inspectionGroup = new InspectionGroup();
@@ -149,14 +138,13 @@ public class InspectionController {
      */
     @RequestMapping(value = "inspection-plans", method = RequestMethod.POST)
     public JSONObject addInspectionPlan(@RequestBody InspectionPlanDto inspectionPlanDto) {
-        LogUtil.info("plan post： " + inspectionPlanDto);
         inspectionPlanService.add(inspectionPlanDto);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
     /**
-     * 获取巡检计划（附带其巡检任务列表）
+     * 获取巡检计划
      *
      * @return
      */
@@ -290,14 +278,12 @@ public class InspectionController {
         InspectionTaskDto taskDto = inspectionTaskService.getTaskDto(id);
         for(InspectionRecordDto record : taskDto.getRecords()) {
         	SectionDto section = sectionService.getSectionById(record.getSectionId());
+        	if(section == null) continue;
         	AreaDto area = areaService.getAreasById(section.getAreaId());
         	StoreDto store = storeService.getStoreById(section.getStoreId());
         	record.setArea(area);
         	record.setStore(store);
         	if(record.getDefect() != null) {
-        		//SectionDto section1 = sectionService.getSectionById(record.getDefect().getSectionId());
-            	//AreaDto area1 = areaService.getAreasById(section1.getAreaId());
-            	//StoreDto store1 = storeService.getStoreById(section1.getStoreId());
             	//记录和缺陷的sectionId相同
         		record.getDefect().setArea(area);
             	record.getDefect().setStore(store);
@@ -307,7 +293,7 @@ public class InspectionController {
     }
     
     /**
-     * 获取年度计划数、本月计划、本月已完成巡检任务数、本月待巡检任务数、计划信息列表
+     * 获取年度计划数、本月计划数、本月已完成巡检任务数、本月待巡检任务数、计划信息列表
      * @return {"msg":"请求成功","code":"200","data":{"yearPlanCount":0,"monthPlanCount":0,"finishTaskCount":0,"unfinishTaskCount":0,"yearTaskCount":0,"finYearTaskCount":0,"listPlan":[{"id":1,"name":"巡检计划"}]}}
      * @author liuya
      * @Date 2018年8月27日
@@ -315,18 +301,26 @@ public class InspectionController {
     @RequestMapping(value = "inspection-plans/count", method = RequestMethod.GET)
     public JSONObject getInspectionPlansAndTask () {
     	JSONObject map = new JSONObject();
-    	InspectionVo inspectionVo = new InspectionVo();
-    	inspectionVo.setCreateTime(new Date());
-    	int yearPlanCount = inspectionPlanService.getInspectionPlanSumByYear(inspectionVo);
-    	int monthPlanCount = inspectionPlanService.getInspectionPlanSumByMonth(inspectionVo);
-    	int yearTaskCount = inspectionTaskService.getInspectionTaskSumByYear(inspectionVo);
+    	InspectionVo vo1 = new InspectionVo();
+    	Date startYear = DateUtil.getBeginDayOfYear();
+    	Date endYear = DateUtil.getEndDayOfYear();
+    	vo1.setStartTime(startYear);
+    	vo1.setEndTime(endYear);
+    	int yearPlanCount = inspectionPlanService.getCountByCondition(vo1);
+    	int yearTaskCount = inspectionTaskService.getCountByVo(vo1);
+    	vo1.setFinished(true);
+    	int finYearTaskCount = inspectionTaskService.getCountByVo(vo1);
     	
-    	//已完成
-    	inspectionVo.setRequestStatus(1);
-    	int finishTaskCount = inspectionTaskService.getFinishedInspectionTaskSumByMonth(inspectionVo);
-    	int finYearTaskCount = inspectionTaskService.getFinishedInspectionTaskSumByYear(inspectionVo);
-    	inspectionVo.setRequestStatus(0);
-    	int unfinishTaskCount = inspectionTaskService.getFinishedInspectionTaskSumByMonth(inspectionVo);
+    	InspectionVo vo2 = new InspectionVo();
+    	Date startMonth = DateUtil.getBeginDayOfMonth();
+    	Date endMonth = DateUtil.getEndDayOfMonth();
+    	vo2.setStartTime(startMonth);
+    	vo2.setEndTime(endMonth);
+    	int monthPlanCount = inspectionPlanService.getCountByCondition(vo2);
+    	vo2.setFinished(true);
+    	int finishTaskCount = inspectionTaskService.getCountByVo(vo2);
+    	vo2.setFinished(false);
+    	int unfinishTaskCount = inspectionTaskService.getCountByVo(vo2);
     	
     	List<InspectionPlan> listPlan = inspectionPlanService.getAllInspectionPlan();
     	
@@ -348,14 +342,15 @@ public class InspectionController {
      */
     @RequestMapping(value = "inspection-plans/tunnelCount", method = RequestMethod.GET)
     public JSONObject getInspectionPlansSum () {
-    	List<InspectionPlan> tunnelCount = inspectionPlanService.getTunnelCountByTunnelId();
+    	List<TunnelSimpleDto> tunnel = tunnelService.getList();
     	List<JSONObject> list = new ArrayList<>();
-    	for(InspectionPlan plan : tunnelCount) {
+    	for(TunnelSimpleDto dto : tunnel) {
     		JSONObject jsonObject = new JSONObject();
-    		jsonObject.put("key", plan.getName());
-//        	jsonObject.put("val", null == plan.getGroupId()? 0 : plan.getGroupId());
-//          太原项目临时添加
-            jsonObject.put("val", (int)(Math.random() * 100));
+    		jsonObject.put("key", dto.getName());
+    		InspectionVo vo = new InspectionVo();
+    		vo.setTunnelId(dto.getId());
+    		int count = inspectionPlanService.getCountByCondition(vo);
+        	jsonObject.put("val", count);
         	list.add(jsonObject);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
@@ -363,7 +358,13 @@ public class InspectionController {
     
     /**
      * 分页，条件查询巡检任务列表
-     * @param inspectionVo
+     * @param tunnelId
+     * @param name	支持模糊查询
+     * @param isFinished
+     * @param pageSize
+     * @param pageNum
+     * @param startTime
+     * @param endTime
      * @return	{"msg":"请求成功","code":"200","data":{"total":0,"pageNum":1,"pageSize":10,"list":[{}]}}
      * @author liuya
      * @Date 2018年8月28日
@@ -399,15 +400,25 @@ public class InspectionController {
     	JSONObject obj = new JSONObject();
     	// 获取今年的任务总数：最少每周一次，最多三天一次，范围在52-122之间
     	int nowYearTaskCount = (int) (Math.random() * 70 + 52);
+//    	InspectionVo vo = new InspectionVo();
+//    	vo.setStartTime(DateUtil.getBeginDayOfYear());
+//    	vo.setEndTime(DateUtil.getEndDayOfYear());
+//    	int nowYearTaskCount = inspectionTaskService.getCountByVo(vo);
+    	
     	// 获取去年的任务总数
     	int beforeYearTaskCount = (int) (Math.random() * 70 + 52);
+//    	Date now = new Date();
+//    	now.setYear(now.getYear() - 1);
+//    	vo.setStartTime(DateUtil.getBeginDayOfYear(now));
+//    	vo.setEndTime(DateUtil.getEndDayOfYear(now));
+//    	int beforeYearTaskCount = inspectionTaskService.getCountByVo(vo);
     	obj.put("nowYearTaskCount", nowYearTaskCount);
     	obj.put("beforeYearTaskCount", beforeYearTaskCount);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, obj);
     }
     
     /**
-     * 获取2018、2019年每月的巡检任务数
+     * 获取去年和今年每月的巡检任务数
      * @return
      * @author ya.liu
      * @Date 2019年1月11日
@@ -415,14 +426,21 @@ public class InspectionController {
     @RequestMapping(value = "inspection-tasks/count-month", method = RequestMethod.GET)
     public JSONObject getTasksCountByMonth() {
     	List<JSONObject> list = new ArrayList<>();
-    	for(int i=0;i<2;i++) {
+    	for(int i=1;i>-1;i--) {
+    		Date now = new Date();
     		JSONObject obj = new JSONObject();
-    		obj.put("key", 2018 + i + "年");
+    		now.setYear(now.getYear() - i);
+    		obj.put("key", now.getYear() + 1900 + "年");
     		List<JSONObject> monthList = new ArrayList<>();
-    		for(int j=1;j<13;j++) {
+    		for(int j=0;j<12;j++) {
     			JSONObject monthObj = new JSONObject();
-    			monthObj.put("key", j + "月");
-    			int math = (int)(Math.random() * 5 + 5);
+    			monthObj.put("key", j + 1 + "月");
+    			int math = (int)(Math.random() * 5 + 5);// 假数据
+//    			InspectionVo vo = new InspectionVo();
+//    			now.setMonth(j);
+//    	    	vo.setStartTime(DateUtil.getBeginDayOfMonth(now));
+//    	    	vo.setEndTime(DateUtil.getEndDayOfMonth(now));
+//    	    	int math = inspectionTaskService.getCountByVo(vo);// 真数据
     			monthObj.put("val", math);
     			monthList.add(monthObj);
     		}

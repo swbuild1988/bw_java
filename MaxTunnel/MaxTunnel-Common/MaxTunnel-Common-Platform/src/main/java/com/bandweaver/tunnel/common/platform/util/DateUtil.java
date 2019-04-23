@@ -6,13 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 
@@ -310,6 +304,10 @@ public class DateUtil {
     	ca.setTime(date);
     	return ca.get(Calendar.WEEK_OF_YEAR);
     }
+    
+    public static int getNowWeek(){
+       return getNowWeek(new Date());
+    }
 
     /**
      * 两个日期相减得到的天数
@@ -558,6 +556,10 @@ public class DateUtil {
     	DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
     	return formatter.format(d);
     }
+    public static String getDate2StringFormat(Date d,String format){
+    	DateFormat formatter = new SimpleDateFormat(format);
+    	return formatter.format(d);
+    }
     
     
     
@@ -740,13 +742,126 @@ public class DateUtil {
 		}
 		return list;
 	}
-	
-	public static void main(String[] args) {
-		List<Map<String, Date>> list = getBefore12Months();
-		for (Map<String, Date> map : list) {
-			System.out.println(map.get("startDay"));
-			System.out.println(map.get("endDay"));
-			System.out.println("--------------------");
-		}
-	}
+
+
+    /**
+     * 获取上周开始时间
+     * @return
+     */
+    public static Date getLastWeekBeginDay(){
+        Date beginDayOfWeek = DateUtil.getBeginDayOfWeek(DateUtil.getFrontDay(DateUtil.getBeginDayOfWeek(), 1));
+        return beginDayOfWeek;
+    }
+
+    /**
+     * 获取上周结束时间
+     * @return
+     */
+    public static Date getLastWeekEndDay(){
+        Date endDayOfWeek = DateUtil.getEndDayOfWeek(getLastWeekBeginDay());
+        return endDayOfWeek;
+    }
+
+    /**
+     * 获取上月开始时间
+     * @return
+     */
+    public static Date getLastMonthBeginDay(){
+        Date oneDayOfLastMonth = DateUtil.getFrontDay(DateUtil.getBeginDayOfMonth(), 1);
+        Date beginDayOfMonth = DateUtil.getBeginDayOfMonth(oneDayOfLastMonth);
+        return beginDayOfMonth;
+    }
+
+    /**
+     * 获取上月结束时间
+     * @return
+     */
+    public static Date getLastMonthEndDay(){
+        Date endDayOfMonth = DateUtil.getEndDayOfMonth(getLastMonthBeginDay());
+        return endDayOfMonth;
+    }
+
+
+
+    /**
+     *      * get Calendar of given year
+     *      * @param year
+     *      * @return
+     *     
+     */
+    private static Calendar getCalendarFormYear(int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.YEAR, year);
+        return cal;
+    }
+
+    /**
+     *      * get start date of given week no of a year
+     *      * @param year
+     *      * @param weekNo
+     *      * @return
+     *     
+     */
+    public static Date getStartDayOfWeekNo(int year, int weekNo) {
+        Calendar cal = getCalendarFormYear(year);
+        cal.set(Calendar.WEEK_OF_YEAR, weekNo);
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),0,0,0);
+        return cal.getTime();
+
+    }
+
+    /**
+     *      * get the end day of given week no of a year.
+     *      * @param year
+     *      * @param weekNo
+     *      * @return
+     *     
+     */
+    public static Date getEndDayOfWeekNo(int year, int weekNo) {
+        Calendar cal = getCalendarFormYear(year);
+        cal.set(Calendar.WEEK_OF_YEAR, weekNo);
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),23,59,59);
+        cal.add(Calendar.DAY_OF_YEAR, 6);
+        return cal.getTime();
+    }
+
+    /**
+     * 获取指定年月开始时间
+     * @param year
+     * @param monthNo
+     * @return
+     */
+    public static Date getStartDayOfMonthNo(int year, int monthNo) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, monthNo -1 );
+        cal.set(Calendar.DAY_OF_MONTH,1);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE,0);
+        cal.set(Calendar.SECOND,0);
+        return cal.getTime();
+    }
+
+    public static Date getEndDayOfMonthNo(int year, int monthNo) {
+        //获取下个月的第一天
+        Date nextMonth = getStartDayOfMonthNo(year, monthNo + 1);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nextMonth);
+        // 往前一天获取本月最后一天
+        cal.add(Calendar.DAY_OF_MONTH,-1);
+        cal.set(Calendar.HOUR_OF_DAY,23);
+        cal.set(Calendar.MINUTE,59);
+        cal.set(Calendar.SECOND,59);
+        return cal.getTime();
+    }
+
+
+    public static void main(String[] args) {
+        Date endDayOfWeekNo = getEndDayOfMonthNo(2019, 2);
+        System.out.println(endDayOfWeekNo);
+    }
+
+
+
 }

@@ -36,10 +36,10 @@
                 </Col>
                  <Col span="6">
                     <Poptip placement="bottom">
-                       <span>客户名称：</span>
-                       <Input v-model="customerName" placeholder="请选择客户" id="cusInput"></Input>
+                       <span>企业客户：</span>
+                       <Input v-model="customerName" placeholder="请选择客户" id="cusInput"/>
                        <div class="pop" slot="content">
-                        <customer-choose @selectCustomer="getCustomerId" v-bind:customerId="conditions.customerId"></customer-choose>
+                        <customer-choose @selectCustomer="getcompanyId" v-bind:companyId="conditions.companyId"></customer-choose>
                         </div>
                     </Poptip>
                 </Col>
@@ -62,8 +62,8 @@
                                 <div class="info">{{ item.companyName }}</div>
                             </div>
                             <div class="item">
-                                <div class="title">联系人：</div>
-                                <div class="info">{{ item.contact }}</div>
+                                <div class="title">联系方式：</div>
+                                <div class="info">{{ item.tel }}</div>
                             </div>
                             <div class="item">
                                 <div class="title">合同状态：</div>
@@ -119,27 +119,14 @@
                     pageSize: 8,
                     pageTotal: 0
                 },
-                contractList: [
-                    // {
-                    //     id: 0,
-                    //     name: '测试合同',
-                    //     companyName: '测试公司',
-                    //     contact: '测试联系人',
-                    //     tel: 13942184630,
-                    //     payType: '月付',
-                    //     contractStatus: '正常',
-                    //     contractStartTime: '2018-08-10',
-                    //     contractEndTime: '2018-10-02',
-                    //     crtTime: '2018-08-03 10:00:00'
-                    // }
-                ],
+                contractList: [],
                 conditions:{
                     payment: null,
                     contractId:null,
                     contractName: null,
                     startTime: null,
                     endTime: null,
-                    customerId: null,
+                    companyId: null,
                     contractStatus: null
                 },
                 selectList:{
@@ -166,7 +153,7 @@
                     name: this.conditions.contractName,
                     startTime: new Date(this.conditions.startTime).getTime(),
                     endTime: new Date(this.conditions.endTime).getTime(),
-                    customerId: this.conditions.customerId,
+                    companyId: this.conditions.companyId,
                     payType: this.conditions.payment,
                     contractStatus: this.conditions.contractStatus
                 };
@@ -208,24 +195,24 @@
                 this.search()
             },
             search(){
-                if(!this.customerName && this.conditions.customerId){
-                    this.conditions.customerId = null;
+                if(!this.customerName && this.conditions.companyId){
+                    this.conditions.companyId = null;
                 }
                 let _this = this
-              if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-                _this.$Message.error('开始时间必须小于结束时间！');
-                return;
-              }
+                if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                    _this.$Message.error('开始时间必须小于结束时间！');
+                    return;
+                }
                 ContractService.contractDatagrid(_this.params).then(
                     (result)=>{
                         _this.contractList = [];
                         result.list.forEach(a=>{
                             _this.contractList.push({
                                 id: a.id,
-                                companyName: a.customer.company.name,
+                                companyName: a.company.name,
                                 name: a.name,
-                                contact: a.customer.contact,
-                                tel: a.customer.tel,
+                                contact: a.company.mail,
+                                tel: a.company.phone,
                                 payType: a.payTypeName,
                                 contractStatus: a.contractStatusName,
                                 contractStartTime: new Date(a.contractStartTime).format('yyyy-MM-dd'),
@@ -247,6 +234,7 @@
                             // })
                             _this.contractIds.push(a.id)
                             _this.page.pageTotal = result.total
+                            
                         })
                     })
             },
@@ -256,7 +244,7 @@
             goMoudle: function (index,type) {
                 if(type == 2){
                     this.$router.push({
-                        name: 'UMEditContract',
+                        name: '编辑合同',
                         params: {
                             contractIds: this.contractIds,
                             curIndex: index,
@@ -265,7 +253,7 @@
                     })
                 }else if(type == 1){
                     this.$router.push({
-                        name: 'UMDetailContract',
+                        name: '合同详情',
                         params: {
                             contractIds: this.contractIds,
                             curIndex: index,
@@ -306,8 +294,8 @@
                 this.page.pageSize = value
                 this.resetPageAndSearch()
             },
-            getCustomerId(data) {
-                this.conditions.customerId = data.id;
+            getcompanyId(data) {
+                this.conditions.companyId = data.id;
                 this.customerName = data.name.toString();
             }
         }
@@ -334,10 +322,6 @@
     margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    /*background: -webkit-linear-gradient(left top, rgb(91,95,148) , rgb(31,37,69));
-    background: -o-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
-    background: -moz-linear-gradient(bottom right, rgb(91,95,148) , rgb(31,37,69));
-    background: linear-gradient(to bottom right, rgb(91,95,148) , rgb(31,37,69)); */
     background-image: url('../../../../assets/UM/border2.png');
     background-size: 100% 100%;
     display: table;
@@ -459,6 +443,9 @@
     padding-top: 0.4vmin !important;
     height: 2.6vmin !important;
     line-height: 2vmin !important;
+}
+.queryCondition >>> .ivu-select-dropdown{
+    max-height: 30vmin;
 }
 .icons{
     font-size: 2.4vmin;

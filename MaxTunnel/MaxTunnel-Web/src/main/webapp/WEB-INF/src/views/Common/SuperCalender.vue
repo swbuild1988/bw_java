@@ -205,7 +205,7 @@ export default {
         },
         goToMoudle: function(id, type) {
             this.$router.push({
-                name: "UMAddTask",
+                name: "添加巡检任务",
                 params: {
                     id: id,
                     type: type

@@ -71,10 +71,10 @@
 
         .NonCleanedTitle{
             font-size: 1rem;
-            margin: 1rem 0 0.3rem;
+            margin: .8rem 0 0 0rem;
         }
         .NonCleanedCount {
-            font-size: 1.6rem;
+            font-size: 1.1rem;
         }
         .NonCleanedUnit {
             font-size: .8rem;
@@ -85,11 +85,11 @@
     @media (min-width: 1921px) {
             
         .NonCleanedTitle{
-            font-size: 3rem;
-            margin: 5rem 0 0.3rem;
+            font-size: 2rem;
+            margin: 2rem 0 0.3rem;
         }
         .NonCleanedCount {
-            font-size: 2.6rem;
+            font-size: 2rem;
         }
         .NonCleanedUnit {
             font-size: 1.8rem;

@@ -1,57 +1,66 @@
 <template>
     <div>
         <!-- 区域管理之修改区域 -->
-        <Modal v-model="show.state" title="修改区域" :label-width="100">
-            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
-                <FormItem label="区域名称：" prop="name" class="formStyle">
-                    <Input v-model="formValidate.name" placeholder="请输入区域名" class="inputStyle"/>
+        <Modal v-model="show.state" :title='title'>
+            <Form ref="areaFormInfo" :model="areaFormInfo" :rules="ruleValidate" :label-width="100">
+                <FormItem label="区域名称：" prop="name">
+                    <Input v-model="areaFormInfo.name" placeholder="请输入区域名"/>
                 </FormItem>
-                <!-- <FormItem label="区域位置：" prop="location" class="formStyle">
-                    <Input v-model="formValidate.location" placeholder="请输入区域位置" class="inputStyle"/>
-                </FormItem> -->
-                <FormItem label="所属管廊：" prop="tunnelId" class="formStyle">
-                    <Select v-model="formValidate.tunnelId" placeholder="请选择所属管廊" class="inputStyle">
+                <FormItem label="区域编号：" prop="sn">
+                    <Input v-model="areaFormInfo.sn" placeholder="请输入区域编号"/>
+                </FormItem>
+                <FormItem label="所属管廊：" prop="tunnelId">
+                    <Select v-model="areaFormInfo.tunnelId" placeholder="请选择所属管廊">
                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="相机视角：" prop="camera" class="formStyle">
+                <!-- <FormItem label="相机视角：" prop="camera">
                     <Row>
-                        <Col span="5">
-                            <Input v-model="formValidate.longitude" placeholder="请输入经度"/>
+                        <Col span="7">
+                            <Input v-model="areaFormInfo.longitude" placeholder="请输入经度"/>
                         </Col>
-                        <Col span="5" offset="1">
-                            <Input v-model="formValidate.latitude" placeholder="请输入纬度"/>
+                        <Col span="7" offset="1">
+                            <Input v-model="areaFormInfo.latitude" placeholder="请输入纬度"/>
                         </Col>
-                        <Col span="5" offset="1">
-                            <Input v-model="formValidate.highness" placeholder="请输入高度"/>
+                        <Col span="7" offset="1">
+                            <Input v-model="areaFormInfo.highness" placeholder="请输入高度"/>
                         </Col>
                     </Row>
+                </FormItem> -->
+                <FormItem label="长度：" prop="length">
+                    <Input v-model="areaFormInfo.length" placeholder="请输入长度"></Input>
                 </FormItem>
                 <span v-show="!flag" class="errorStyle">任务名和任务组需唯一</span>
             </Form>
             <div slot="footer">
-                <Button type="primary" size="large" v-on:click="sendMsg('formValidate')">保存</Button>
+                <Button type="primary" v-if="type==1" size="large" v-on:click="saveAdd('areaFormInfo')">保存1</Button>
+                <Button type="primary" v-if="type==2" size="large" v-on:click="saveEdit('areaFormInfo')">保存2</Button>
             </div>
         </Modal>
     </div>
 </template>
 
 <script>
+import { AreaService } from '@/services/areaService'
 export default {
     name: 'area-modification',
+    props:{
+        show:{
+            state:{
+                default: false
+            }
+        },
+        type: null
+    },
     data(){
         return {
             tunnels:[],
             flag:true,
-            formValidate:{
+            areaFormInfo:{
                 name:'',
-                // location:null,
-                tunnelId:null,
-                tunnelName:'',
-                camera:'',
-                longitude:null,
-                latitude:null,
-                highness:null
+                tunnelId: null,
+                sn: null,
+                length: null
             },
             ruleValidate:{
                 name: [
@@ -59,53 +68,59 @@ export default {
                 ],
                 tunnelId: [
                     { type: 'number', required: true, message: '所属管廊不能为空', trigger: 'change' }
+                ],
+                sn: [
+                    { required: true, message: '区域编号不能为空', trigger: 'blur' }
+                ],
+                length: [
+                    { required: true, message: '长度不能为空', trigger: 'blur' }
                 ]
-            }
+            },
+            isRefresh: false,
+            title: null
         }
     },
     watch:{
-        modificationInfo:function(newValue,oldValue){
-            this.formValidate.name = newValue.name
-            this.formValidate.tunnelId = newValue.tunnel.id
-            this.formValidate.camera = newValue.camera
-        },
-        // 'formValidate.name':function(newValue,oldValue){
-        //     if(newValue != null){
-        //         this.checkName(newValue);
-        //     }
-        // }
+        'type': function(newVal){
+            this.changeTitle(newVal)
+        }
     },
-    props:{
-        show:{
-            state:{
-                default: false
+    computed:{
+        params(){
+            let param = {
+                name: this.areaFormInfo.name,
+                tunnelId: this.areaFormInfo.tunnelId,
+                camera: this.areaFormInfo.camera,
+                length: this.areaFormInfo.length,
+                sn: this.areaFormInfo.sn
             }
-        },
-        modificationInfo:{}
+            return Object.assign({},param)
+        }
     },
     mounted(){
-        this.getTunnelList();
+        // this.getTunnelList();
+        //获取所有管廊的简单列表
+        AreaService.getTunnel().then(
+            result => {
+                this.tunnels = result
+            },
+            error => {
+                this.$Message.error(error)
+            }
+        )
     },
     methods:{
-        sendMsg: function(name){
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    //拼接相机视角字符串
-                    this.formValidate.camera = this.formValidate.longitude + ',' + this.formValidate.latitude + ',' + this.formValidate.highness;
-                    this.$emit("listenToChange",this.formValidate);
-                }else{
-                    this.$Message.error("修改失败!");
-                }
-            })
-        },
-        getTunnelList(){        //获取所有管廊的简单列表
-            this.axios.get('/tunnels').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.tunnels = data;
-                }
-            })
-        },
+        // sendMsg: function(name){
+        //     this.$refs[name].validate((valid) => {
+        //         if (valid) {
+        //             //拼接相机视角字符串
+        //             // this.areaFormInfo.camera = this.areaFormInfo.longitude + ',' + this.areaFormInfo.latitude + ',' + this.areaFormInfo.highness;
+        //             this.$emit("listenToChange");
+        //         }else{
+        //             this.$Message.error("修改失败!");
+        //         }
+        //     })
+        // },
         checkName(name){
             this.axios.get('/areas/ajax/' + name).then(res =>{
                 let{code,data} = res.data;
@@ -113,18 +128,71 @@ export default {
                     this.flag = data;
                 }
             })
+        },
+        //获取area信息
+        getAreasInfo(id){
+            AreaService.getAreaInfo(id).then(
+                result => {
+                    this.areaFormInfo = result
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        saveAdd(name){
+            this.$refs[name].validate((valid) => {
+                if(valid){
+                    AreaService.addArea(this.params).then(
+                        result => {
+                            this.isRefresh = true
+                            this.$emit('childIsRefresh', this.isRefresh)
+                            this.$Message.success("新增成功！")
+                        },
+                        error => {
+                            this.Log.info( error )
+                        }
+                    )
+                }else{
+                    this.$Message.error("新增失败")
+                }
+            })
+        },
+        saveEdit(name){
+            this.$refs[name].validate((valid) => {
+                if(valid){
+                    AreaService.editArea(this.params).then(
+                        result => {
+                            this.isRefresh = true
+                            this.$emit('childIsRefresh', this.isRefresh)
+                            this.$Message.success("修改成功！")
+                        },
+                        error => {
+                            this.Log.info( error )
+                        }
+                    )
+                }else{
+                    this.$Message.error('修改失败')
+                }
+            })
+        },
+        handleReset(name){
+            this.$refs[name].resetFields()
+        },
+        changeTitle(type){
+            if(type==1){
+                this.title = '新增区域'
+                this.handleReset('areaFormInfo')
+            }
+            if(type==2){
+                this.title = '编辑区域信息'
+            }
         }
     }
 }
 </script>
 
 <style scoped>
-.inputStyle{
-    width:70%;
-}
-.formStyle{
-    margin-left: 32px;
-}
 .errorStyle{
     position: absolute;
     font-size: 16px;

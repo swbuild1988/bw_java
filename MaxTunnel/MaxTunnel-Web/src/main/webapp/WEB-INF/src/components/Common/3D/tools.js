@@ -7,8 +7,6 @@ import {
 } from "../../../scripts/commonFun";
 import eventBus from "../../../assets/Bus";
 
-// let { VMEntityConfig } = require("../../../../static/serverconfig");
-
 export default {
   data() {
     return {
@@ -153,10 +151,12 @@ export default {
       if (!(messageType !== undefined && messageType === "events"))
         this.addParticleSystem({ entity, viewer });
     },
-    addIdentifierViewer() {
-      let { entityParam } = this.VMEntityConfig;
+    addIdentifierViewer(entityParam = this.VMEntityConfig.linearEntityParam) {
 
-      entityParam.forEach(entity => {
+      if( !entityParam.length ) return;
+
+        entityParam.forEach(entity => {
+
         let { entityBaseParameters, entityExtendParameters } = entity;
 
         let BaseParameters =
@@ -176,6 +176,11 @@ export default {
         viewer,
         entity
       };
+    },
+    addPolylineEntity(baseParams,PolylineParams){
+      let viewerType = this.addViewerType(PolylineParams);
+
+      this.viewer.entities.add(Object.assign({},baseParams, viewerType));
     },
     parametersFilter(parameters) {
       return [].map.call(parameters, (key, val) => {
@@ -235,7 +240,7 @@ export default {
               label: {
                 text: label.text,
                 font: label.fontSize + "pt monospace",
-                fillColor: Cesium.Color.RED,
+                fillColor: this.getCesiumColor(label.color),
                 outlineColor: Cesium.Color.BLACK,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 outlineWidth: 1,
@@ -287,11 +292,13 @@ export default {
         return Cesium.Color.BLACK;
       } else if (color == "blue") {
           return Cesium.Color.BLUE;
+      }else if(color == "yellow"){
+          return Cesium.Color.YELLOW
       }else {
-        return Cesium.Color.RED;
+          return Cesium.Color.RED;
       }
     },
-      lines(lineType,color){
+    lines(lineType,color){
           if( lineType === 'DottedLine' ){
               return new Cesium.PolylineDashMaterialProperty({
                   color:this.getCesiumColor( color )
@@ -299,21 +306,14 @@ export default {
           }
           return this.getCesiumColor(color)
       },
-      getPosition(position){
-          if( Object.keys( position ).length === 4 ){
-              return [
-                  parseFloat(position.startLon), parseFloat(position.startLat), 10,
-                  parseFloat(position.endLon), parseFloat(position.endLat), 10
-              ];
-          }else {
-              return [
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10,
-                  parseFloat(position.northEasternLon), parseFloat(position.northEasternLat), 10,
-                  parseFloat(position.southEasternLon), parseFloat(position.southEasternLat), 10,
-                  parseFloat(position.southWestLon), parseFloat(position.southWestLat), 10,
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10
-              ];
+    getPosition(position){
+          let positionArray = [];
+
+          for(let i = 0; i< position.length ;i++){
+              positionArray.push( parseFloat(position[i].Lon), parseFloat(position[i].Lat), 10, )
           }
+
+          return positionArray;
 
       },
     addParticleSystem(minxisParticleSystem) {
@@ -548,6 +548,18 @@ export default {
       ctx.translate(-translate.X, -translate.Y);
 
       return canvas;
-    }
+    },
+      entityFilter(filterParams){
+          if( typeof filterParams !=='object' ) return;
+          let messageType = filterParams.messageType || 'personnel';
+
+          let entities = filterParams.Id && this.viewer.entities._entities._array.filter(entitie => entitie._moId === filterParams.Id);
+          if( entities.length ){
+
+              entities.forEach(entitie => {
+                  if (entitie._messageType === messageType) entitie._show = !entitie._show
+              })
+          }
+      }
   }
 };

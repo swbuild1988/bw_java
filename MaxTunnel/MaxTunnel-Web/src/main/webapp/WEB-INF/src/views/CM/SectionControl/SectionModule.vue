@@ -24,7 +24,7 @@
                 <FormItem label="可安装管线数：" prop="totalCableNumber">
                     <Input v-model="formValidate.totalCableNumber" placeholder="请输入可安装管线数：" style="width:66%;"/>
                 </FormItem>
-                <FormItem label="相机视角：" prop="camera" class="formStyle">
+                <!-- <FormItem label="相机视角：" prop="camera" class="formStyle">
                     <Row>
                         <Col span="5">
                             <Input v-model="camera.longitude" placeholder="请输入经度"/>
@@ -62,7 +62,7 @@
                             <Input v-model="endPoint.highness" placeholder="请输入高度"/>
                         </Col>
                     </Row>
-                </FormItem>
+                </FormItem> -->
             </Form>
             <div slot="footer">
                 <Button type="primary" size="large" v-on:click="sendMsg('formValidate')">保存</Button>

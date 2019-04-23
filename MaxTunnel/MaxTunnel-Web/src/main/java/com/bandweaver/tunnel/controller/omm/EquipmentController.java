@@ -161,7 +161,7 @@ public class EquipmentController {
     }
     
     /**
-          *  根据id删除设备
+     *  根据id删除设备
      * @param  id 设备id
      * @return {"msg":"请求成功","code":"200","data":{}}  
      * @throws
@@ -177,7 +177,7 @@ public class EquipmentController {
     
     
     /**
-          *  图片上传
+     *  图片上传
      * @param  id 设备id
      * @throws IllegalStateException
      * @throws IOException   
@@ -448,7 +448,7 @@ public class EquipmentController {
     /******************************************************************/
     
     /**
-         * 获取各种类型设备的数据统计
+     * 获取各种类型设备的数据统计
      * @param    
      * @return {"msg":"请求成功","code":"200","data":[{"val":3,"key":"安全防范"},{"val":2,"key":"视频监控"},{"val":2,"key":"环境监测"},{"val":1,"key":"电缆本体"},{"val":1,"key":"火灾报警"},{"val":2,"key":"隧道通信"}]}  
      * @throws
@@ -470,7 +470,7 @@ public class EquipmentController {
 
    
     /**
-           * 获取每个类型设备下，各个状态设备的个数
+     * 获取每个类型设备下，各个状态设备的个数
      * @param    
      * @return  {"msg":"请求成功","code":"200","data":[{"val":[{"val":3,"key":"总数"},{"val":2,"key":"运行中"},{"val":1,"key":"故障"},{"val":0,"key":"备品"}],"key":"安全防范"},{"val":[{"val":2,"key":"总数"},{"val":2,"key":"运行中"},{"val":0,"key":"故障"},{"val":0,"key":"备品"}],"key":"视频监控"},{"val":[{"val":2,"key":"总数"},{"val":2,"key":"运行中"},{"val":0,"key":"故障"},{"val":0,"key":"备品"}],"key":"环境监测"},{"val":[{"val":1,"key":"总数"},{"val":1,"key":"运行中"},{"val":0,"key":"故障"},{"val":0,"key":"备品"}],"key":"电缆本体"},{"val":[{"val":1,"key":"总数"},{"val":1,"key":"运行中"},{"val":0,"key":"故障"},{"val":0,"key":"备品"}],"key":"火灾报警"},{"val":[{"val":2,"key":"总数"},{"val":2,"key":"运行中"},{"val":0,"key":"故障"},{"val":0,"key":"备品"}],"key":"隧道通信"}]} 
      * @throws
@@ -502,73 +502,7 @@ public class EquipmentController {
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
     }
-    
-    /**
-     * 获取设备状态统计 ： 设备总数，故障设备数，备品数，设备运行总时长
-     * @param    
-     * @return {"msg":"请求成功","code":"200","data":[{"val":11,"key":"设备总数"},{"val":0,"key":"故障设备数"},{"key":"备品数"},{"val":21934,"key":"设备运行总时长"}]}  
-     * @throws
-     * @author shaosen
-     * @date 2018年6月13日
-     */
-    @RequestMapping(value="equipments/status/count",method=RequestMethod.GET)
-    public JSONObject getEquipmentCountByStatus() {
-    	List<JSONObject> list  = new ArrayList<>();
-    	JSONObject jsonOne = new JSONObject();
-    	jsonOne.put("key", "设备总数");
-    	jsonOne.put("val", equipmentService.getCountByCondition(null, null, null));
-    	list.add(jsonOne);
-    	
-    	JSONObject jsonTwo = new JSONObject();
-    	jsonTwo.put("key", "设备故障数");
-    	jsonTwo.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.BROKEN.getValue(),null));
-    	list.add(jsonTwo);
-    	
-//    	JSONObject jsonThree = new JSONObject();
-//    	jsonThree.put("key", "设备报废数");
-//    	jsonThree.put("val", equipmentService.getCountByCondition(null,EquipmentStatusEnum.SCRAP.getValue(),null));
-//    	list.add(jsonThree);
-    	
-    	//设备运行总时长
-    	List<EquipmentDto> dtoList = equipmentService.getAllEquipmentList();
-    	long hours = 0;
-    	for (EquipmentDto equipmentDto : dtoList) {
-    		hours += DateUtil.getDiffHours(equipmentDto.getCrtTime(), new Date());
-		}
-    	
-    	JSONObject jsonFour = new JSONObject();
-    	jsonFour.put("key", "设备运行总时长");
-    	jsonFour.put("val", hours);
-    	list.add(jsonFour);
-    	
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
-    }
-    
    
-    /**
-          * 每条管廊设备总数，故障数，备品数统计
-     * @param    
-     * @return {"msg":"请求成功","code":"200","data":["管廊[ test ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台","管廊[ test ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台","管廊[ 凤岭北路 ],设备总数[ 11 ]台,损坏[ 1 ]台,备品[ 0 ]台","管廊[ 长虹路 ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台","管廊[ 高坡岭路 ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台","管廊[ 凤凰岭路 ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台","管廊[ 佛子岭路 ],设备总数[ 0 ]台,损坏[ 0 ]台,备品[ 0 ]台"]}  
-     * @throws
-     * @author shaosen
-     * @date 2018年6月13日
-     */
-    @RequestMapping(value="tunnels/equipments/status/count",method=RequestMethod.GET)
-    public JSONObject getTunnelEquipmentInfo() {
-    	
-    		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-    		List<String> strList = new ArrayList<>();
-    		for (TunnelSimpleDto tunnel : tunnelList) {
-    			StringBuffer buffer = new StringBuffer();
-        		buffer.append("管廊[ " + tunnelService.getNameById(tunnel.getId()) + " ],");
-        		buffer.append("设备总数[ " + equipmentService.getCountByCondition(tunnel.getId(), null, null) + " ]台,");
-        		buffer.append("损坏[ " + equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BROKEN.getValue(), null) + " ]台,");
-        		//buffer.append("备品[ " + equipmentService.getCountByCondition(tunnel.getId(), EquipmentStatusEnum.BACKUP.getValue(), null) + " ]台");
-        		strList.add(buffer.toString());
-			}
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, strList);
-    }
-    
     /**
      * 每条管廊的故障/正常设备数
      * @return

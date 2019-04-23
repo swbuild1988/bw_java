@@ -50,43 +50,50 @@
                         </div>
                         <div class="linesInfo">
                              <Tooltip placement="bottom">
-                                <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)" :size="40">
+                                <!-- <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)" :size="40">
                                     <span class="demo-Circle-inner" style="font-size:1.66vmin">{{ cab.value[1].val }}</span>
-                                </i-circle>
+                                </i-circle> -->
                                 <div slot="content">
                                    <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
                                 </div>
                             </Tooltip>
                         </div>
-                        <div class="lineName">
-                            <p v-for="(line,j) in cab.lines" :key="j" @click="isShow = true">{{ line.cableName +' '+ line.contract.customer.company.name}}</p>
-                        </div>
+                        <Row>
+                            <Col :span="cab.equips.length ? '12' : '24'">
+                                <div class="ItemName">
+                                    <p v-for="(line,j) in cab.lines" :key="j" @click="isLineShow = true">{{ line.cableName +' '+ line.contract.customer.company.name}}</p>
+                                </div>
+                            </Col>
+                            <Col :span="cab.lines.length ? '12' : '24'">
+                                <div class="ItemName">
+                                    <p v-for="equip in cab.equips" :key="equip.id" @click="isEquipShow = true">{{ equip.name }}</p>
+                                </div>
+                            </Col>
+                        </Row>     
                     </div>
-                    <div class="pop" v-if="curDetailId === line.id && curDetailIndex === index" v-for="line in cab.lines" :key="line.id" @mouseover="showDetails(line.id,index)" @mouseout="curDetailId = ''">
-                        <span @click="curDetailId = ''"><Icon type="ios-close" style="font-size: 1.5vmin" class="close"></Icon></span>
-                        <h3 class="name">{{ line.cableName }}</h3>
+                    <!-- <list-model v-bind:show="isLineShow" v-bind:list="cab.lines"></list-model> -->
+                    <Modal v-model="isLineShow" :title="line.cableName" :mask-closable="false" style="font-size:1.6vmin"
+                    v-for="line in cab.lines" :key="line.id" width="300">
                         <p>管线长度：{{ line.cableLength }}</p>
                         <p>管线状态：{{ line.cableStatusName }}</p>
-                        <!-- <p>管线位置：{{ line.cableLocation }}</p> -->
-                        <p>客户名称：{{ line.contract.customer.company.name }}</p>
-                        <p>联系人：{{ line.contract.customer.contact }}</p>
-                        <p>联系电话：{{ line.contract.customer.tel }}</p>
-                    </div>
-                    <Modal v-model="isShow" :title="line.cableName" v-for="line in cab.lines" :key="line.id" width="300">
-                        <p>管线长度：{{ line.cableLength }}</p>
-                        <p>管线状态：{{ line.cableStatusName }}</p>
-                        <!-- <p>管线位置：{{ line.cableLocation }}</p> -->
                         <p>客户名称：{{ line.contract.customer.company.name }}</p>
                         <p>联系人：{{ line.contract.customer.contact }}</p>
                         <p>联系电话：{{ line.contract.customer.tel }}</p>
                     </Modal>
+                     <Modal v-model="isEquipShow" :title="equip.name" :mask-closable="false" style="font-size:1.6vmin"
+                     v-for="equip in cab.equips" :key="equip.id" width="300">
+                        <p>安装时间：{{ new Date(equip.runTime).format('yyyy-MM-dd hh:mm:ss') }}</p>
+                        <p>规格型号：{{ equip.model.name }}</p>
+                        <p>所属系统：{{ equip.typeName }}</p>
+                        <p>设备状态：{{ equip.statusName }}</p>
+                        <p>厂家：{{ equip.factory }}</p>
+                        <p>品牌：{{ equip.brand }}</p>
+                        <p>额定电压：{{ equip.ratedVoltage }}</p>
+                        <p>质保期限：{{ equip.qaTerm }}</p>
+                    </Modal>
                     </Col>
                 </Row>
             </Col>
-            <!-- <Col span="8" offset="1" class="bim">
-                <v_3DViewer :id="mapId" @onload="onload">
-                </v_3DViewer>
-            </Col> -->
         </Row>
         <Row>
             <Col span="24" class="page">
@@ -99,19 +106,9 @@
 <script>
 import { TunnelService } from '../../../../services/tunnelService'
 import { SpaceService } from '../../../../services/spaceService'
-import Enum from "../../../../../static/Enum.json";
-import Vue from 'vue';
-import v_3DViewer from '../../../../components/Common/3DViewers'
-import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig"
- import {
-    setViewAngle,
-    bubble,
-    addLabel,
-    getSection,
-    doSqlQuery,
-    labelSqlCompleted,
-    processFailed
-  } from "../../../../scripts/commonFun.js"
+import Enum from "../../../../../static/Enum.json"
+import { EquipmentService } from '../../../../services/equipmentService'
+// import ListModel from '../../../../components/UM/OAM/ListModel'
 
 export default {
     data(){
@@ -140,15 +137,15 @@ export default {
                 textAlign: 'right',
                 padding: '12px'
             },
-            mapId: "tunnnelMap",
-            isShow: false
+            isLineShow: false,
+            isEquipShow: false
         }
     },
-    components: { v_3DViewer },
     mounted() {
       this.tunnelId = this.$route.params.id;
       this.initData();
     },
+    // components: { ListModel },
     watch: {
       '$route': function () {
         // $route发生变化时再次赋值planId
@@ -227,14 +224,24 @@ export default {
                     _this.cables = [];
                     _this.ids = [];
                     _this.page.pageTotal = result.total
-                    result.list.forEach(a=>{
-                         _this.ids.push(a.id);
-                         let temp={};
-                         temp.name=a.store.name+a.area.name;
-                         temp.id=a.id;
-                         temp.value=null;
-                         temp.lines=null;
-                         _this.cables.push(temp);
+                    result.list.forEach((a,index)=>{
+                        _this.ids.push(a.id);
+                      
+                        EquipmentService.getEquipments({sectionId: a.id}).then(
+                            res=>{
+                                _this.cables.push({
+                                    name:a.area.name+a.store.name,
+                                    id: a.id,
+                                    value: null,
+                                    lines: [], 
+                                    equips: res == null ? [] : res
+                                })
+                            },
+                            error=>{
+                                _this.Log.info(error)
+                            }
+                        )
+                       
                     })
                     SpaceService.getCableCountBysectionIds(_this.ids).then(
                         result=>{
@@ -249,7 +256,7 @@ export default {
                             _this.cables.forEach(a=>{
                                 SpaceService.getCableInfo(a.id).then(
                                     result=>{
-                                        a.lines = result;
+                                        a.lines = result
                                     },
                                     error=>{
                                         _this.Log.info(error)
@@ -369,7 +376,7 @@ export default {
     margin-top: 40px;
     height: 60vh;
 }
-.lineName{
+.ItemName{
     font-size: 1.8vmin;
     text-align: center;
     cursor:pointer;
@@ -419,6 +426,9 @@ export default {
     font-size: 1.66vmin;
     line-height: 3vmin;
     height: 3vmin;
+}
+.conditions >>> .ivu-select-dropdown{
+    max-height: 20vmin;
 }
 /*分页样式*/
 .page >>> .ivu-select-selection{

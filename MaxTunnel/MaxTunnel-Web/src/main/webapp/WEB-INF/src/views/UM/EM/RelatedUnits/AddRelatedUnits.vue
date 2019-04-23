@@ -21,7 +21,7 @@
             <Input type="text" v-model="addRelatedUnitsInfo.address"></Input>
         </FormItem>
         <FormItem label="管仓区段：" class="ivu-form-item-required">
-            <Input type="text" icon="arrow-down-b"  v-model="sectionName" @click="showTree"></Input>                   
+            <Input type="text" icon="arrow-down-b"  v-model="sectionName" @click="showTree" readonly></Input>                   
             <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             <div class="ivu-form-item-error-tip" v-show="validateSectionName==true">请选择所属仓段</div>
         </FormItem>

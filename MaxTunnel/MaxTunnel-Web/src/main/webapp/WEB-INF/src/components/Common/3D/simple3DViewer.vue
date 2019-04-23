@@ -14,7 +14,9 @@
         doSqlQuery,
         processFailed,
         getEntitySet,
+        _getFieldValues
     } from "../../../scripts/commonFun.js";
+    // import { lookAt } from "../../../scripts/three";
     import { addBarnLabel } from "./mixins/addBarnLabel";
     import { TunnelService } from '../../../services/tunnelService'
     import  viewerBaseConfig  from "./mixins/viewerBase";
@@ -22,6 +24,15 @@
     export default {
         mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',3)],
         props: {
+            detectionObjInfor:{
+                type:Object,
+                default:function(){
+                    return {
+                        id:null,
+                        dataTypeId:null,
+                    }
+                }
+            },
             openVideoLinkage: {
                 type: Boolean,
                 default: false
@@ -35,6 +46,19 @@
                     };
                 }
             },
+            cameraPosition: {
+                type: Object,
+                default: () => {
+                    return {
+                        longitude: 112.49360922053003,
+                        latitude: 37.71252325043172,
+                        height: -1.0311432831720453,
+                        roll: 2.582822844487964e-12,
+                        pitch: -0.30235173267000404,
+                        heading: 1.716482618088178
+                    };
+                }
+            },
         },
         data() {
             return {
@@ -43,6 +67,17 @@
             };
         },
         watch: {
+            'detectionObjInfor':{
+
+                handler(newVal,oldVal) {
+
+                    if( !newVal.id || !newVal.moTypeId ) return
+                    if( !!oldVal ) this.viewer.entities.remove(oldVal.id)
+
+                    this.switchCameraAngle(newVal.id,newVal.moTypeId);
+                },
+                deep: true
+            },
             'prePosition': {
                 handler({ longitude, latitude, height }) {
 
@@ -78,6 +113,21 @@
                 _this.handler.setInputAction(e => {
                     this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
                 }, Cesium.ScreenSpaceEventType.LEFT_UP)
+
+                // _this.handler.setInputAction(e=>{
+                //     var position=_this.scene.pickPosition(e.position)
+                //     var camera=_this.viewer.scene.camera;
+                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                //     var height = cartographic.height;
+                //
+                //     console.log(longitude+"/"+latitude+"/"+height);
+                //     console.log('pitch'+camera.pitch)
+                //     console.log('roll'+camera.roll)
+                //     console.log('heading'+camera.heading)
+                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+
 
             },
             initUpdate( viewer,scene ){
@@ -169,7 +219,7 @@
                     range
                 );
             },
-            //展示巡检点
+            // 展示巡检点
             showCheckPointEntity() {
                 let { viewer } = this;
                 getEntitySet.call(this, {
@@ -179,6 +229,35 @@
                     typeMode: "checkPointType",
                     messageType: 'checkPoint'
                 })
+            },
+            switchCameraAngle(id){
+                let _this = this;
+
+                doSqlQuery.call(_this, _this.viewer, 'MOID in ("'+ id +'")', _this.SuperMapConfig.BIM_DATA, _this.onQueryComplete,_this.processFailed)
+            },
+            onQueryComplete(){
+                let _this = this;
+                return function (queryEventArgs) {
+
+                    let [ selectedFeatures ] = queryEventArgs.originResult.features;
+
+                    let entity = _this.viewer.entities.add({
+                        id: _this.detectionObj.id,
+                        position: Cesium.Cartesian3.fromDegrees(parseFloat(_getFieldValues(selectedFeatures,'X')), parseFloat(_getFieldValues(selectedFeatures,'Y')), parseFloat(_getFieldValues(selectedFeatures,'Z'))),
+                        label:{
+                            text:''
+                        }
+                    });
+
+                    let offset = _this.detectionObjInfor.dataTypeId != 56 ? new Cesium.HeadingPitchRange(0, 0, 1.5) : new Cesium.HeadingPitchRange(0, -90, 2);
+
+                    _this.viewer.flyTo(entity,{
+                        offset:offset,
+                    })
+                }
+            },
+            processFailed(queryEventArgs) {
+                console.log('查询失败！');
             }
         },
         beforeDestroy() {
@@ -193,7 +272,6 @@
             }
 
             this.stopCameraPositionRefresh();
-            // this.destory3D();
         },
     };
 

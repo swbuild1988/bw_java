@@ -311,12 +311,12 @@ export default {
         },
         {
           title: "身份证",
-          key: "idCard",
+          key: "identityNO",
           align: "center"
         },
         {
           title: "联系方式",
-          key: "tel",
+          key: "telphone",
           align: "center"
         }
       ],
@@ -409,13 +409,6 @@ export default {
         (error)=>{
           _this.Log.info(error)
         })
-      // this.axios.post("req-historys/datagrid", this.params).then(response => {
-      //   let { code, data } = response.data;
-      //   if (code == 200) {
-      //     this.applicationRecordList = data.list;
-      //     this.page.pageTotal = data.total;
-      //   }
-      // });
     },
     handlePage(value) {
       this.page.pageNum = value;
@@ -445,55 +438,18 @@ export default {
 
         }
       })
-      // this.axios.delete("/req-historys/" + id).then(response => {
-      //   this.applicationRecordList.splice(id, 1);
-      //   this.queryRecords();
-      // });
     },
     show(id) {
       let _this = this
       EnterGalleryService.getDetailsById(id).then(
         (result)=>{
           if(result != null){
-            var arr = new Array();
-            for (let index in result.visitorInfo.split(",")) {
-              var str = result.visitorInfo.split(",")[index];
-              arr.push(str);
-            }
-            var arr2 = new Array();
-            for (let k in arr) {
-              var obj = {
-                name: arr[k].split("-")[0],
-                idCard: arr[k].split("-")[1],
-                tel: arr[k].split("-")[2]
-              };
-              arr2.push(obj);
-            }
-            _this.visitorInfo = arr2;
+            _this.visitorInfo=result.list
             }
         },
         (error)=>{
           _this.Log.info(error)
         })
-      // this.axios.get("/req-historys/" + id).then(response => {
-      //   if (response.data != null) {
-      //     var arr = new Array();
-      //     for (let index in response.data.data.visitorInfo.split(",")) {
-      //       var str = response.data.data.visitorInfo.split(",")[index];
-      //       arr.push(str);
-      //     }
-      //     var arr2 = new Array();
-      //     for (let k in arr) {
-      //       var obj = {
-      //         name: arr[k].split("-")[0],
-      //         idCard: arr[k].split("-")[1],
-      //         tel: arr[k].split("-")[2]
-      //       };
-      //       arr2.push(obj);
-      //     }
-      //     this.visitorInfo = arr2;
-      //   }
-      // });
       this.modal10 = true;
     },
     showPic(id) {

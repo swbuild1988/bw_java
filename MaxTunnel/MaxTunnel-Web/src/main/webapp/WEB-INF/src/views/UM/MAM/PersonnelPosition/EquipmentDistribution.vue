@@ -27,73 +27,65 @@ export default {
     data() {
         return {
             addEquipment: [],
-            distributionList: [
-                // {
-                //     username: "章散",
-                //     equipmentId: null
-                // },
-                // {
-                //     username: "里斯",
-                //     equipmentId: 1,
-                //     equipmentName: "设备1"
-                // },
-                // {
-                //     username: "王武",
-                //     equipmentId: 3,
-                //     equipmentName: "设备3"
-                // },
-                // {
-                //     username: "李柳",
-                //     equipmentId: 2,
-                //     equipmentName: "设备2"
-                // }
-            ],
+            distributionList: [],
             visitorList: [],
-            equipmentList: [
-                // {
-                //     id: 1,
-                //     name: "设备1"
-                // },
-                // {
-                //     id: 2,
-                //     name: "设备2"
-                // },
-                // {
-                //     id: 3,
-                //     name: "设备3"
-                // },
-                // {
-                //     id: 4,
-                //     name: "设备4"
-                // }
-            ],
-            query: {
-                staffName: null,
-                equipmentName: null
-            },
+            equipmentList: [],
+            // query: {
+            //     staffName: null,
+            //     equipmentName: null
+            // },
+            curEquipment: null,
             columns: [
+                {
+                    title: "预计入廊时间",
+                    key: "expectTime",
+                    align: "center"
+                },
+                {
+                    title: "流程状态",
+                    key: "processStatus",
+                    align: "center"
+                },
+                {
+                    title: "入廊人数",
+                    key: "number",
+                    align: "center"
+                },
                 {
                     title: "访客姓名",
                     key: "username",
                     align: "center",
                     render: (h, params) => {
-                        return h("div", [
-                            h("Icon", {
-                                props: {
-                                    type: "person",
-                                    color: "#ff9b00"
-                                }
-                            }),
-                            h(
-                                "span",
-                                {
-                                    style: {
-                                        marginLeft: "20px"
-                                    }
-                                },
-                                params.row.username
-                            )
-                        ]);
+                        let usernames = []
+                        params.row.visitorList.forEach(
+                            visitor => {
+                                usernames.push(
+                                    h('div',{
+                                        style: {
+                                            height: '4vmin',
+                                            overflow: 'hidden',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }
+                                    },[h("Icon", {
+                                        props: {
+                                            type: "person",
+                                            color: "#ff9b00"
+                                        },
+                                        style: {
+                                            float: 'left',
+                                            margin: '0.2vmin 2vmin'
+                                        }
+                                    }),
+                                    h(
+                                        "span",
+                                        visitor.user.name
+                                    )])
+                                )
+                            }
+                        )
+                        return h("div", usernames)
                     }
                 },
                 {
@@ -101,50 +93,73 @@ export default {
                     key: "equipmentName",
                     align: "center",
                     render: (h, params) => {
-                        if (params.row.equipmentName) {
-                            return h("div", [
-                                h("span", params.row.equipmentName),
-                                h("div", {
-                                    style: {
-                                        float: "right"
-                                    }
-                                })
-                            ]);
-                        } else {
-                            return h("div", [
-                                h(
-                                    "Select",
-                                    {
-                                        props: {
-                                            value: this.curEquipment,
-                                            "not-found-text": "暂无可用设备"
-                                        },
-                                        style: {
-                                            width: "80%"
-                                        },
-                                        on: {
-                                            "on-change": event => {
-                                                this.handleAddEquipment(
-                                                    event,
-                                                    params.index
-                                                );
+                        if(params.row.bindable){
+                            let equipments = []
+                            params.row.visitorList.forEach(
+                                visitor => {
+                                    if (visitor.equipmentName) {
+                                        equipments.push(h('div',{
+                                            style: {
+                                                height: '4vmin',
+                                                overflow: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
                                             }
-                                        }
-                                    },
-                                    this.equipmentList.map(item => {
-                                        return h(
-                                            "Option",
-                                            {
-                                                props: {
-                                                    value: item.id,
-                                                    key: item.id
-                                                }
-                                            },
-                                            item.name
-                                        );
-                                    })
-                                )
-                            ]);
+                                        },[
+                                            h("span", visitor.equipmentName)
+                                        ])
+                                        )
+                                    } else {
+                                        equipments.push(h('div',{
+                                            style: {
+                                                height: '4vmin',
+                                                overflow: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }
+                                        },[
+                                            h(
+                                                "Select",
+                                                {
+                                                    props: {
+                                                        value: this.curEquipment,
+                                                        "not-found-text": "暂无可用设备"
+                                                    },
+                                                    style: {
+                                                        width: "80%"
+                                                    },
+                                                    on: {
+                                                        "on-change": event => {
+                                                            this.handleAddEquipment(
+                                                                event,
+                                                                visitor.user
+                                                            );
+                                                        }
+                                                    }
+                                                },
+                                                this.equipmentList.map(item => {
+                                                    return h(
+                                                        "Option",
+                                                        {
+                                                            props: {
+                                                                value: item.id,
+                                                                key: item.id
+                                                            }
+                                                        },
+                                                        item.name
+                                                    );
+                                                })
+                                            )
+                                        ])
+                                        )
+                                    }
+                                }
+                            )
+                            return h('div',equipments)
+                        } else {
+                            return
                         }
                     }
                 },
@@ -154,41 +169,72 @@ export default {
                     width: 200,
                     align: "center",
                     render: (h, params) => {
-                        if (params.row.equipmentId) {
-                            return h(
-                                "Button",
-                                {
-                                    props: {
-                                        type: "primary",
-                                        size: "small"
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.unbind(params.row.equipmentId);
-                                        }
+                        if(params.row.bindable){
+                            let options = []
+                            params.row.visitorList.forEach(
+                                visitor => {
+                                    if (visitor.equipmentId) {
+                                        options.push(h('div',{
+                                            style: {
+                                                height: '4vmin',
+                                                overflow: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }
+                                        },[
+                                            h(
+                                            "Button",
+                                            {
+                                                props: {
+                                                    type: "primary",
+                                                    size: "small"
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.unbind(visitor.equipmentId);
+                                                    }
+                                                }
+                                            },
+                                            "解绑"
+                                        )
+                                        ])  
+                                        )
+                                    } else {
+                                        options.push(h('div',{
+                                            style: {
+                                                height: '4vmin',
+                                                overflow: 'hidden',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }
+                                        },[
+                                            h(
+                                            "Button",
+                                            {
+                                                props: {
+                                                    type: "success",
+                                                    size: "small"
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.bind(
+                                                            visitor.user
+                                                        );
+                                                    }
+                                                }
+                                            },
+                                            "绑定"
+                                        )
+                                        ]) 
+                                        ) 
                                     }
-                                },
-                                "解绑"
-                            );
+                                }
+                            )
+                            return h('div',options)
                         } else {
-                            return h(
-                                "Button",
-                                {
-                                    props: {
-                                        type: "success",
-                                        size: "small"
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.bind(
-                                                params.row.user,
-                                                params.index
-                                            );
-                                        }
-                                    }
-                                },
-                                "绑定"
-                            );
+                            return
                         }
                     }
                 }
@@ -215,31 +261,37 @@ export default {
                 personnelPositionService.getAllLocators()
                 ]).then(
                     function(result){
-                        let visitors = result[0]
+                        let visitorGroups = result[0]
                         let actLocators = result[1]
                         let locators = result[2]
-                            _this.equipmentList = [];
-                            locators.forEach(equ => {
-                                let f = actLocators.find(a => {
-                                    return a.id == equ.id;
-                                });
-                                if (!f) {
-                                    let temp = {};
-                                    temp.id = equ.id;
-                                    temp.name = equ.name;
-                                    _this.equipmentList.push(temp);
-                                }
+                        _this.equipmentList = [];
+                        locators.forEach(equ => {
+                            let f = actLocators.find(a => {
+                                return a.id == equ.id;
                             });
+                            if (!f) {
+                                let temp = {};
+                                temp.id = equ.id;
+                                temp.name = equ.name;
+                                _this.equipmentList.push(temp);
+                            }
+                        });
 
-                            _this.distributionList = [];
-                            visitors.forEach(visitor => {
+                        _this.distributionList = [];
+                        visitorGroups.forEach(visitors => {
+                            let group = {}
+                            group.expectTime = new Date(visitors.preTime).format('yyyy-MM-dd hh:mm:ss')
+                            group.processStatus = visitors.processStatus
+                            group.bindable = group.processStatus != '确认出廊' ? false : true
+                            group.number = visitors.visitorNumber
+                            group.visitorList = []
+                            visitors.list.forEach(visitor => {
                                 let f = actLocators.find(a => {
                                     if (a.owner == null) return false;
-                                    return a.owner.idCard == visitor.idCard;
+                                    return a.owner.id == visitor.id;
                                 });
                                 let temp = {};
-                                temp.username = visitor.name;
-                                temp.user = visitor;
+                                temp.user = visitor
                                 if (f) {
                                     temp.equipmentId = f.id;
                                     temp.equipmentName = f.name;
@@ -247,11 +299,14 @@ export default {
                                     temp.equipmentId = null;
                                     temp.equipmentName = "";
                                 }
-                                _this.distributionList.push(temp);
+                                group.visitorList.push(temp)
                             });
+                            _this.distributionList.push(group)
+                        })
+                        // console.log(_this.distributionList)
                     },
                     function(error){
-                        console.log(error)
+                        _this.Log.info(error)
                     }
                 )
         },
@@ -263,11 +318,11 @@ export default {
             this.page.pageSize = value;
             this.getData();
         },
-        bind(user, index) {
-            let param = {
-                user: user
-            };
-            if (!this.addEquipment[index]) {
+        bind(userInfo) {
+            let equ = this.addEquipment.find(add=>{
+                return add.user.id == userInfo.id
+            })
+            if(!equ){
                 this.$Message.error({
                     content: "请选择设备",
                     duration: 5
@@ -278,15 +333,18 @@ export default {
                     title: "确认",
                     content: "<p>确定绑定吗？</p>",
                     onOk: () => {
+                        let params = {
+                            user: equ.user
+                        }
                         let _this = this
-                        console.log(_this.addEquipment[index])
-                        personnelPositionService.bindLocator(_this.addEquipment[index],param).then(
+                        personnelPositionService.bindLocator(equ.equipmentId,params).then(
                             function(result){
                                 _this.getData();
                                 _this.addEquipment = [];
+                                _this.curEquipment = null
                             },
                             function(error){
-                                console.log(error)
+                                _this.Log.info(error)
                             })
                     }
                 });
@@ -304,13 +362,28 @@ export default {
                             _this.getData()
                         },
                         function(error){
-                            console.log(error)
+                            _this.Log.info(error)
                         })
                 }
             });
         },
-        handleAddEquipment(equipmentId, index) {
-            this.addEquipment[index] = equipmentId;
+        handleAddEquipment(equId, userInfo) {
+            let addFlag = true
+            this.addEquipment.forEach(equ=>{
+                if(equ.equipmentId === equId){
+                    equ.user = userInfo
+                    addFlag = false
+                    this.curEquipment = null
+                }
+            })
+            if(addFlag){
+                let bind = {
+                    equipmentId: equId,
+                    user: userInfo
+                }
+                this.addEquipment.push(bind)
+            }
+            // console.log(this.addEquipment)
         }
     }
 };
@@ -342,5 +415,8 @@ export default {
     padding-top: 0.64vmin;
     height: 2.2vmin;
     line-height: 2vmin;
+}
+.main >>> .ivu-select-dropdown{
+    max-height: 20vmin !important;
 }
 </style>

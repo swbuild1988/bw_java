@@ -137,7 +137,7 @@ export default {
                 reqUser: this.conditions.reqUser,
                 beginTime: new Date(this.conditions.beginTime).getTime(),
                 endTime: new Date(this.conditions.endTime).getTime(),
-                result: this.conditions.result
+                result: this.conditions.result === 'null' ? null : this.conditions.result
             };
             return Object.assign({}, param);
         }
@@ -154,6 +154,7 @@ export default {
           }
             OperationLogService.logDatagrid(_this.params).then(
                 (result)=>{
+                    _this.operationLog = []
                     if(result.list!=null){
                         for(let index in result.list){
                             result.list[index].crtTime =  new Date(result.list[index].crtTime).format('yyyy-MM-dd hh:mm:s')

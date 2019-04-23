@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.controller.common;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -16,16 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.vo.AreaVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -96,6 +91,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @Date 2018年9月19日
 	 */
+	@Deprecated
 	@RequestMapping(value="areas/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id) {
 		areaService.delete(id);
@@ -110,13 +106,8 @@ public class AreaController extends BaseController<Area>{
 	 */
 	@RequestMapping(value="areas/{id}",method=RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
-		AreaVo areaVo = new AreaVo();
-		areaVo.setId(id);
-		List<AreaDto> list = areaService.getAreasByCondition(areaVo);
-		if(list.size()>0) {
-			return success(list.get(0));
-		}
-		return success();
+		AreaDto dto = areaService.getAreasById(id);
+		return success(dto);
 	}
 	
 	/**根据管廊id查询区域列表
@@ -127,9 +118,7 @@ public class AreaController extends BaseController<Area>{
 	 */
 	@RequestMapping(value="tunnels/{id}/areas",method=RequestMethod.GET)
 	public JSONObject getAreasByTunnelId(@PathVariable Integer id) {
-		AreaVo areaVo = new AreaVo();
-		areaVo.setTunnelId(id);
-		List<AreaDto> list = areaService.getAreasByCondition(areaVo);
+		List<AreaDto> list = areaService.getAreasByTunnelId(id);
 		//orderby sn
 		list = list.stream().sorted(Comparator.comparing(AreaDto::getSn)).collect(Collectors.toList());
 		return success(list);
@@ -168,5 +157,17 @@ public class AreaController extends BaseController<Area>{
 		return success();
 	}
 
-	
+	/**
+	 * 区域自动生成起点和终点坐标，前提条件：管廊存在起点和终点坐标，区段长度不为零
+	 * @param tunnelId 管廊id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年4月1日
+	 */
+	@RequestMapping(value = "areas/auto-point/{tunnelId}", method=RequestMethod.GET)
+	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
+		Boolean flag = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
+		LogUtil.info("区域自动生成起点坐标和终点坐标： " + flag);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,flag);
+	}
 }

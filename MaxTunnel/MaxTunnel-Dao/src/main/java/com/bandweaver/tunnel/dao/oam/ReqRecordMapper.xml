@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.oam.ReqRecordMapper">
+    <cache/>
+
+	<resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.ReqRecord">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId"/>
+        <result column="EQUIPMENT_ID" jdbcType="DECIMAL" property="equipmentId"/>
+        <result column="TIME" jdbcType="TIMESTAMP" property="time"/>
+        <result column="longitude" jdbcType="TIMESTAMP" property="longitude"/>
+        <result column="latitude" jdbcType="DECIMAL" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.ReqRecordDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId"/>
+        <result column="EQUIPMENT_ID" jdbcType="DECIMAL" property="equipmentId"/>
+        <result column="TIME" jdbcType="TIMESTAMP" property="time"/>
+        <result column="longitude" jdbcType="TIMESTAMP" property="longitude"/>
+        <result column="latitude" jdbcType="DECIMAL" property="latitude"/>
+        <result column="height" jdbcType="VARCHAR" property="height"/>
+        <result column="equipment_name" jdbcType="VARCHAR" property="equipmentName"/>
+        <association property="staff" javaType="Staff" column="staff_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="DtoResultMap">
+        select t.*, b.name as equipment_name
+        from T_OAM_REQ_Record t
+        left join t_mam_measobj b on t.equipment_id = b.id
+        where t.id = #{id,jdbcType=DECIMAL}
+    </select>
+    
+    <delete id="deleteById">
+        DELETE FROM T_OAM_REQ_Record
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+    
+    <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqRecord">
+        insert into T_OAM_REQ_Record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="staffId != null">
+                STAFF_ID,
+            </if>
+            <if test="equipmentId != null">
+                EQUIPMENT_ID,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="staffId != null">
+                #{staffId},
+            </if>
+            <if test="equipmentId != null">
+                #{equipmentId},
+            </if>
+            <if test="longitude != null">
+                #{longitude},
+            </if>
+            <if test="latitude != null">
+                #{latitude},
+            </if>
+            <if test="time != null">
+                #{time},
+            </if>
+            <if test="height != null">
+                #{height},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateByIdSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.ReqRecord">
+        update T_OAM_REQ_Record
+        <set>
+            <if test="staffId != null">
+                STAFF_ID = #{staffId,jdbcType=DECIMAL},
+            </if>
+            <if test="equipmentId != null">
+                equipment_ID = #{equipmentId,jdbcType=DECIMAL},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=VARCHAR},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=VARCHAR},
+            </if>
+            <if test="height != null">
+                height = #{height,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    
+    <select id="getListByCondition" resultMap="BaseResultMap">
+        select t.*
+        from T_OAM_REQ_Record t
+        <where>
+            <if test="id != null">
+                and t.id = #{id}
+            </if>
+            <if test="staffId != null">
+                and t.staff_id = #{staffId}
+            </if>
+            <if test="equipmentId != null">
+                and t.equipment_id = #{equipmentId}
+            </if>
+            <if test="startTime != null">
+                and t.time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and t.time &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.time
+    </select>
+
+    <select id="getDtoListByCondition" resultMap="DtoResultMap">
+        select t.*, b.name as equipment_name
+        from T_OAM_REQ_Record t
+        left join t_mam_measobj b on t.equipment_id = b.id
+        <where>
+            <if test="id != null">
+                and t.id = #{id}
+            </if>
+            <if test="staffId != null">
+                and t.staff_id = #{staffId}
+            </if>
+            <if test="equipmentId != null">
+                and t.equipment_id = #{equipmentId}
+            </if>
+            <if test="startTime != null">
+                and t.time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and t.time &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.time
+    </select>
+    
+</mapper>

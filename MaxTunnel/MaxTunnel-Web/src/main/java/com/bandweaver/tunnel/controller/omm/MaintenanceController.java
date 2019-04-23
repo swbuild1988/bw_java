@@ -37,12 +37,9 @@ import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.DefectService;
-import com.bandweaver.tunnel.common.biz.itf.omm.OrderService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Defect;
-import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
 import com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder;
-import com.bandweaver.tunnel.common.biz.pojo.omm.Order;
 import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -50,7 +47,7 @@ import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
+@SuppressWarnings("deprecation")
 @Controller
 @ResponseBody
 public class MaintenanceController {
@@ -58,8 +55,6 @@ public class MaintenanceController {
     private DefectService defectService;
     @Autowired
     private TunnelService tunnelService;
-    @Autowired
-    private OrderService orderService;
     @Autowired
     private MaintenanceOrderService maintenanceOrderService;
     @Autowired
@@ -76,7 +71,7 @@ public class MaintenanceController {
     @RequestMapping(value = "defects", method = RequestMethod.POST)
     public JSONObject add(@RequestBody DefectDto defect) {
         Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
-        defect.setSectionId(section.getId());
+        defect.setSectionId(section == null ? 0 : section.getId());
         defectService.add(defect);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
@@ -85,7 +80,7 @@ public class MaintenanceController {
     @RequestMapping(value = "defects", method = RequestMethod.PUT)
     public JSONObject update(@RequestBody DefectDto defect) {
         Section section = sectionService.getSectionByStoreAndArea(defect.getStore().getId(), defect.getArea().getId());
-        defect.setSectionId(section.getId());
+        defect.setSectionId(section == null ? 0 : section.getId());
         defectService.update(defect);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
@@ -131,7 +126,6 @@ public class MaintenanceController {
         List<JSONObject> result = new ArrayList<>();
 
         List<TunnelSimpleDto> l_tunnel = tunnelService.getList();
-
         // 获取每个管廊的数据
         for (TunnelSimpleDto tunnel : l_tunnel) {
             JSONObject o = new JSONObject();
@@ -141,8 +135,12 @@ public class MaintenanceController {
             for (DefectType type : DefectType.values()) {
                 JSONObject o1 = new JSONObject();
                 o1.put("key", type.getName());
-//                int count = defectService.getCountOfDefectByTunnelAndType(tunnel.getId(), type.getValue());
-                int count = (int) (Math.random() * 1);
+                DefectVo vo = new DefectVo();
+                vo.setTunnelId(tunnel.getId());
+                vo.setType(type.getValue());
+                vo.setStatus(DefectStatus.None.getValue());
+                int count = defectService.getCountByCondition(vo);
+                //int count = (int) (Math.random() * 1);
                 o1.put("val", count);
                 l_o.add(o1);
             }
@@ -194,45 +192,6 @@ public class MaintenanceController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
     }
 
-
-    /**
-     * @param @return
-     * @return JSONObject
-     * @throws
-     * @Description: 添加测试数据
-     * @author shaosen
-     * @date 2018年6月12日
-     */
-    @RequestMapping(value = "orders/testadd", method = RequestMethod.GET)
-    public JSONObject orderTestAdd() {
-        List<TunnelSimpleDto> l_tunnel = tunnelService.getList();
-
-        for (TunnelSimpleDto tunnel : l_tunnel) {
-            List<DefectDto> defectDtos = defectService.getDefectsOfTunnel(tunnel.getId());
-            for (DefectDto defect : defectDtos) {
-                if (defect.getId() % 2 == 1) continue;
-
-                Order order = new Order();
-                order.setId("Order" + tunnel.getId() + "-" + defect.getId());
-                order.setTunnelId(tunnel.getId());
-                order.setType(1);
-                order.setDefectId(defect.getId());
-                order.setWorkerId(0);
-                order.setWorkTime(null);
-                order.setStatus(1);
-
-                orderService.add(order);
-
-                Defect defect1 = (Defect) defect;
-                defect1.setOrderId(order.getId());
-                defectService.update(defect1);
-
-            }
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-    }
-
     /**
      * @param order
      * @return
@@ -240,7 +199,6 @@ public class MaintenanceController {
     @RequestMapping(value = "orders", method = RequestMethod.POST)
     public JSONObject addOrder(@RequestBody MaintenanceOrder order) {
         maintenanceOrderService.add(order);
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -254,12 +212,10 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "orders", method = RequestMethod.PUT)
     public JSONObject updateOrder(@RequestBody MaintenanceOrder order) {
-
         LogUtil.info("修改维修工单信息");
         maintenanceOrderService.update(order);
         LogUtil.info("结束任务");
         maintenanceOrderService.completeMaintenanceOrder(order.getId());
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -316,7 +272,6 @@ public class MaintenanceController {
     @RequestMapping(value = "maintenance-order/{id}/maintenance-person/{manId}/remark/{remark}", method = RequestMethod.GET)
     public JSONObject setMaintenancePerson(@PathVariable("id") int id, @PathVariable("manId") int manId) {
         maintenanceOrderService.setMaintenancePerson(id, manId);
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -353,7 +308,6 @@ public class MaintenanceController {
     @RequestMapping(value = "maintenance-order/{id}/complete", method = RequestMethod.GET)
     public JSONObject setMaintenancePerson(@PathVariable("id") int id) {
         maintenanceOrderService.completeMaintenanceOrder(id);
-
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -366,13 +320,16 @@ public class MaintenanceController {
      */
     @RequestMapping(value = "tunnel/defect-count", method = RequestMethod.GET)
     public JSONObject getDefectCountByTunnel() {
-        List<InspectionPlan> defectCount = defectService.getDefectCountByTunnelId();
+    	List<TunnelSimpleDto> tunnels = tunnelService.getList();
         List<JSONObject> list = new ArrayList<>();
-        for (InspectionPlan defect : defectCount) {
+        for (TunnelSimpleDto dto : tunnels) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("key", defect.getName());
-//            jsonObject.put("val", null == defect.getGroupId() ? 0 : defect.getGroupId());
-            jsonObject.put("val", (int) (Math.random() * 5 + 1));
+            jsonObject.put("key", dto.getName());
+            DefectVo vo = new DefectVo();
+            vo.setTunnelId(dto.getId());
+            int count = defectService.getCountByCondition(vo);
+            jsonObject.put("val", count);
+            //jsonObject.put("val", (int) (Math.random() * 5 + 1));
             list.add(jsonObject);
         }
 
@@ -430,7 +387,7 @@ public class MaintenanceController {
     }
     
     /**
-     * 获取所有缺陷信息
+     * 获取所有缺陷信息，不分页
      *
      * @return
      * @author liuya
@@ -506,13 +463,23 @@ public class MaintenanceController {
      * @author ya.liu
      * @Date 2019年1月11日
      */
-    @RequestMapping(value = "defects/count-year", method = RequestMethod.GET)
+	@RequestMapping(value = "defects/count-year", method = RequestMethod.GET)
     public JSONObject getDefectsCountByYear() {
     	JSONObject obj = new JSONObject();
-    	// 获取今年的缺陷总数，有本体缺陷和设备缺陷，范围在【100-150】之间
+    	// 获取今年的缺陷总数
     	int nowYearDefectCount = (int)(Math.random() * 50 + 100);
+//    	Date startTime = DateUtil.getBeginDayOfYear();
+//    	Date endTime = DateUtil.getEndDayOfYear();
+//    	DefectVo vo = new DefectVo();
+//    	vo.setStartTime(startTime);
+//    	vo.setEndTime(endTime);
+//    	int nowYearDefectCount = defectService.getCountByCondition(vo);
     	// 获取去年的缺陷总数
     	int beforeYearDefectCount = (int)(Math.random() * 50 + 100);
+//    	startTime.setYear(startTime.getYear() - 1);
+//    	endTime.setYear(endTime.getYear() - 1);
+//    	int beforeYearDefectCount = defectService.getCountByCondition(vo);
+    	
     	obj.put("nowYearDefectCount", nowYearDefectCount);
     	obj.put("beforeYearDefectCount", beforeYearDefectCount);
     	
@@ -525,13 +492,23 @@ public class MaintenanceController {
      * @author ya.liu
      * @Date 2019年1月11日
      */
-    @RequestMapping(value = "orders/count-year", method = RequestMethod.GET)
+	@RequestMapping(value = "orders/count-year", method = RequestMethod.GET)
     public JSONObject getOrdersCountByYear() {
     	JSONObject obj = new JSONObject();
-    	// 获取今年的维修总数，只有设备缺陷需要维修，范围在【60-80】之间
+    	// 获取今年的维修总数
     	int nowYearOrderCount = (int)(Math.random() * 20 + 60);
+//    	Date startTime = DateUtil.getBeginDayOfYear();
+//    	Date endTime = DateUtil.getEndDayOfYear();
+//    	MaintenanceOrderVo vo = new MaintenanceOrderVo();
+//    	vo.setStartTime(startTime);
+//    	vo.setEndTime(endTime);
+//    	int nowYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
+    	
     	// 获取去年的维修总数
     	int beforeYearOrderCount = (int)(Math.random() * 20 + 60);
+//    	startTime.setYear(startTime.getYear() - 1);
+//    	endTime.setYear(endTime.getYear() - 1);
+//    	int beforeYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	obj.put("nowYearOrderCount", nowYearOrderCount);
     	obj.put("beforeYearOrderCount", beforeYearOrderCount);
     	
@@ -544,21 +521,35 @@ public class MaintenanceController {
      * @author ya.liu
      * @Date 2019年1月11日
      */
-    @RequestMapping(value = "orders/percentage-year", method = RequestMethod.GET)
+	@RequestMapping(value = "orders/percentage-year", method = RequestMethod.GET)
     public JSONObject getOrdersPercentageByYear() {
     	JSONObject obj = new JSONObject();
     	// 获取今年的维修总数
-    	
+    	Date startTime = DateUtil.getBeginDayOfYear();
+    	Date endTime = DateUtil.getEndDayOfYear();
+    	MaintenanceOrderVo vo = new MaintenanceOrderVo();
+    	vo.setStartTime(startTime);
+    	vo.setEndTime(endTime);
+    	int nowYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	// 获取今年状态为已完成的维修总数
-    	
+    	vo.setIsFinished(true);
+    	int nowYearFinshedOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	// 对比，计算出维修率  这里直接给出维修率,控制在【90%-100%】范围内
-    	double nowYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
-    	// 获取去年的维修总数
-
-    	// 获取去年状态为已完成的维修总数
+    	//double nowYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	double nowYearOrderPercentage = nowYearOrderCount == 0 ? 0 : (int)(nowYearFinshedOrderCount * 10000 / nowYearOrderCount) / 100.0;
     	
+    	// 获取去年的维修总数
+    	startTime.setYear(startTime.getYear() - 1);
+    	endTime.setYear(endTime.getYear() - 1);
+    	vo.setIsFinished(null);
+    	int beforeYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
+    	// 获取去年状态为已完成的维修总数
+    	vo.setIsFinished(true);
+    	int beforeYearFinshedOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	// 对比，计算出维修率  这里直接给出维修率
-    	double beforeYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	//double beforeYearOrderPercentage = (int)(Math.random() * 100 + 900) / 10.0;
+    	double beforeYearOrderPercentage = beforeYearOrderCount == 0 ? 0 : (int)(beforeYearFinshedOrderCount * 10000 / beforeYearOrderCount) / 100.0;
+    	
     	obj.put("nowYearOrderPercentage", nowYearOrderPercentage);
     	obj.put("beforeYearOrderPercentage", beforeYearOrderPercentage);
     	
@@ -570,7 +561,7 @@ public class MaintenanceController {
      * @author ya.liu
      * @Date 2019年1月17日
      */
-    @RequestMapping(value = "maintenance-orders/months", method = RequestMethod.GET)
+	@RequestMapping(value = "maintenance-orders/months", method = RequestMethod.GET)
     public JSONObject getEquipmentOrderCountByMonth() {
     	
     	List<JSONObject> list = new ArrayList<>();
@@ -578,7 +569,7 @@ public class MaintenanceController {
     	// 往后循环12个月
 		for(int i=0;i<12;i++) {
 			JSONObject obj = new JSONObject();
-			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+			String time = now.getYear() % 100 + "年" + (now.getMonth() + 1) + "月";
 			obj.put("key", time);
 			Date startTime = DateUtil.getBeginDayOfMonth(now);
 			Date endTime = DateUtil.getEndDayOfMonth(now);
@@ -598,20 +589,20 @@ public class MaintenanceController {
 			
 			for(JSONObject order : orderList) {
 				// 添加假数据
-				if(order.equals(orderList.get(0)))
-					order.put("val", (int)(Math.random() * 6 + 16));
-				else
-					order.put("val", (int)(Math.random() * 3 + 4));
+//				if(order.equals(orderList.get(0)))
+//					order.put("val", (int)(Math.random() * 6 + 16));
+//				else
+//					order.put("val", (int)(Math.random() * 3 + 4));
 				// 真实数据
-//				vo.setIsFinished(false);
-//				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
-//				int count = 0;
-//				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
-//				for(MaintenanceOrderDto dto : dtoList) {
-//					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
-//					if(defectDto.getObjectId() != null) count++;
-//				}
-//				order.put("val", count);
+				vo.setIsFinished(false);
+				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+				int count = 0;
+				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+				for(MaintenanceOrderDto dto : dtoList) {
+					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+					if(defectDto.getObjectId() != null) count++;
+				}
+				order.put("val", count);
 				
 			}
 			obj.put("val", orderList);

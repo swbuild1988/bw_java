@@ -3,148 +3,83 @@
 /* eslint-disable brace-style */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import '@babel/polyfill';
-import 'es6-promise/auto';
-import Vue from 'vue';
-import App from './App';
-import VueRouter from 'vue-router';
-import iView from 'iview';
-import VueAxios from 'vue-axios';
-import 'iview/dist/styles/iview.css';
-import routes from './router';
-import Vuex from 'vuex';
-import store from './store.js';
-import echarts from 'echarts';
-import 'animate.css/animate.min.css';
-// import Stomp from 'stompjs';
-import './styles/common.css';
-import VMConfig from '../static/VM/js/VMGlobalConfig';
-import './scripts/serviceClass';
-import './scripts/StringFormat';
-import vueXlsxTable from 'vue-xlsx-table';
-import axios from 'axios/index';
-import serverconfig from '../static/serverconfig';
+import "@babel/polyfill";
+import "es6-promise/auto";
+import Vue from "vue";
+import App from "./App";
+import iView from "iview";
+import "iview/dist/styles/iview.css";
+import router from "./router";
+import store from "./store";
+import echarts from "echarts";
+import "animate.css/animate.min.css";
+import "./styles/common.css";
+import "./scripts/serviceClass";
+import "./scripts/StringFormat";
+import "./scripts/DateFormat";
+import vueXlsxTable from "vue-xlsx-table";
+import VMConfig from "../static/VM/js/VMGlobalConfig";
+import serverconfig from "../static/serverconfig";
 
 Vue.prototype.$echarts = echarts;
 Vue.use(VMConfig);
-Vue.use(VueRouter);
-Vue.use(Vuex);
 Vue.use(iView);
 Vue.use(vueXlsxTable, {
-  rABS: false,
+    rABS: false
 });
-// 设置一个默认值
+// 设置一个默认值s
 Vue.prototype.RouterBase = serverconfig.RouterBase;
-const router = new VueRouter({
-  mode: 'history',
-  base: Vue.prototype.RouterBase, // 服务器地址，不设置时，默认为服务器根目录下
-  routes,
-});
-sessionStorage.setItem('refreshAddress', '');
-sessionStorage.setItem('selectedName', '');
-axios.defaults.timeout = 3000;
-// 开发环境配置
-if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = serverconfig.RouterBase;
-  Vue.prototype.ServerConfig = '/static';
-  Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
-  Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
-  Vue.prototype.flyFilePathes = serverconfig.flyFilePathes;
-  Vue.prototype.VMWebConfig =
-   require('../static/VM/js/VMWebConfig').VMWebConfig;
-  Vue.prototype.ApiUrl = serverconfig.ApiUrl;
-  sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
-}
-// 生产环境配置
-else {
-  Vue.prototype.ServerConfig = '/dist/static';
-  axios.get('dist/static/serverconfig.json').then((result) => {
-    Vue.prototype.ApiUrl = result.data.ApiUrl;
-    Vue.prototype.ServerConfig = result.data.ApiUrl + '/dist/static';
-    Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
-    Vue.prototype.flyFilePathes = result.data.flyFilePathes;
-    Vue.prototype.VMEntityConfig = result.data.VMEntityConfig;
-    router.base = result.data.RouterBase;
-    Vue.prototype.RouterBase = result.data.RouterBase;
-    axios.defaults.baseURL = Vue.prototype.ApiUrl;
-    sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
-  }).catch((error) => {});
-  // 获取VM的配置页
-  axios.get('dist/static/VM/js/VMWebConfig.json').then((result) => {
-    Vue.prototype.VMWebConfig = result.data.VMWebConfig;
-  }).catch((error) => {
-    // console.log(error)
-  });
-}
 
-const axios_instance = axios.create({
-  timeout: '3000',
-  headers: {
-    'Content-Type': 'application/json;charset=utf-8',
-  },
-});
-Vue.use(VueAxios, axios_instance);
+router.base = Vue.prototype.RouterBase;
+sessionStorage.setItem("refreshAddress", "");
+sessionStorage.setItem("selectedName", "");
+
 Vue.config.productionTip = false;
 
 // 定义一个全局的日志输出
 Vue.prototype.Log = {
-  info: function() {
-    console.log(arguments);
-  },
+    info: function () {
+        // console.log("开启全局日志输出！");
+        console.info.apply(console, arguments);
+    },
+    error: function () {
+        console.error.apply(console, arguments);
+    }
 };
 
-router.beforeEach((to, from, next) => {
-  const CMUser = sessionStorage.CMUser;
-  const UMUser = sessionStorage.UMUser;
-  if (
-    ((to.path.substr(1, 2).toLowerCase() == 'um' ||
-     to.path.substr(1, 2).toLowerCase() == 'vm') &&
-      UMUser) ||
-    (to.path.substr(1, 2).toLowerCase() == 'cm' && CMUser)
-  ) {
-    // if (!store.state.permission.permissionList) {
-    //   store.dispatch('permission/FETCH_PERMISSION').then(() => {
-    //     next({path: to.path})
-    //   })
-    //   next();
-    // }
-    {
-      if (
-        to.path
-            .trim()
-            .toLowerCase()
-            .indexOf('login') < 0
-      ) {
-        next();
-      } else {
-        next();
-      }
-    }
-  } else {
-    if (to.path.toLowerCase().indexOf('um') > 0 &&
-     to.path.trim().toLowerCase().indexOf('umlogin') < 0) {
-      next({
-        path: 'UMlogin',
-      });
-    } else if (to.path.toLowerCase().indexOf('vm') > 0 &&
-    to.path.trim().toLowerCase().indexOf('vmlogin') < 0) {
-      next({
-        path: 'VMLogin',
-      });
-    } else if (to.path.toLowerCase().indexOf('cm') > 0 &&
-     to.path.trim().toLowerCase().indexOf('cmlogin') < 0) {
-      next({
-        path: 'CMlogin',
-      });
-    } else {
-      next();
-    }
-  }
-});
+// main 初始化
+async function main_init() {
+    console.log("开始初始化")
+    try {
+        console.log("引入request")
+        let request = (await import("@/utils/request.js")).default;
+        console.log("request", request)
+        await request();
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: (h) => h(App),
-});
+        console.log("引入permission")
+        let permission = (await import("@/permission")).permission;
+        console.log("permission", permission)
+        await permission();
+
+        return "success"
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+main_init().then(res => {
+    console.log("初始化结束", res)
+
+    // 待初始化成功后，创建新的Vue实例
+    new Vue({
+        el: "#app",
+        router,
+        store,
+        render: h => h(App)
+    });
+
+}).catch(err => {
+    console.log("初始化异常", err)
+})
+
+console.log("main.js运行结束")

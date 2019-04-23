@@ -439,4 +439,7 @@ export default {
     .cameraList >>> .ivu-select-selection{
         height: 3.2vmin !important;
     }
+    .cameraList >>> .ivu-select-dropdown{
+        max-height: 20vmin !important;
+    }
 </style>

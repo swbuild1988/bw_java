@@ -44,9 +44,7 @@ var MeasObjServer = {
   // 添加监测对象
   addMeasObj: function(params) {
     return new Promise((resolve, reject) => {
-      axios
-        .post("/measobjs", params)
-        .then(res => {
+      axios.post("/measobjs", params).then(res => {
           let { code, data, msg } = res.data;
           if (code == 200) {
             resolve(data);
@@ -62,8 +60,7 @@ var MeasObjServer = {
   // 更新监测对象
   updateMeasObj: function(params) {
     return new Promise((resolve, reject) => {
-      axios
-        .put("measobjs", params)
+      axios.put("measobjs", params)
         .then(res => {
           let { code, data, msg } = res.data;
           if (code == 200) {
@@ -287,7 +284,7 @@ var MeasObjServer = {
           if (code == 200) {
             resolve(data);
           } else {
-            reject(msg + ",地址:measobj-map/batch", params);
+            reject(msg + ",地址:sub-sys/action/obj/"+ params.id + "/inputval/" + params.status);
           }
         })
         .catch(error => {
@@ -320,9 +317,7 @@ var MeasObjServer = {
   //获取今日监测对象触发次数及与昨日比是否增长
   getMeasTriggerCounts() {
     return new Promise((resolve, reject) => {
-      axios
-        .get("meas-switched-counts")
-        .then(res => {
+      axios.get("meas-switched-counts").then(res => {
           let { code, data, msg } = res.data;
           if (code == 200) {
             resolve(data);
@@ -351,6 +346,19 @@ var MeasObjServer = {
       // }]
       // resolve(data)
     });
+  },
+  //更areaId, storeId获取section内所有的视频
+  getSectionVideos(storeId,areaId){
+    return new Promise((resolve, reject) => {
+      axios.get('measobjs/'+storeId+'/'+areaId+'/videos').then(res=>{
+        let{ code, data, msg } = res.data
+        if( code == 200 ){
+          resolve(data)
+        }else{
+          reject(msg+"地址：")
+        }
+      })
+    })
   }
 };
 

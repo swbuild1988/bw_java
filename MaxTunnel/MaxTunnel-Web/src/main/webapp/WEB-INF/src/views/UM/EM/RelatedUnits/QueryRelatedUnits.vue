@@ -3,7 +3,7 @@
         <Row class="queryCondition">
             <Col span="6">
                 <span>所属管仓段：</span>
-                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree"></Input>
+                <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree" readonly></Input>
                 <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             </Col>
             <Col span="6">
@@ -250,7 +250,7 @@ export default {
         },
         goToMoudle: function(index, type) {
             this.$router.push({
-                name: "UMAddRelatedUnits",
+                name: "编辑相关单位",
                 params: {
                     id: this.unitInfo[index].id,
                     type: type
@@ -335,9 +335,6 @@ export default {
     .sectionTitle{
         float: left;
     }
-    .sectionName{
-        margin-left: 77px;
-    }
     .ivu-dropdown-item >>> .ivu-select-dropdown{
         margin-left: 14px;
     }
@@ -351,6 +348,7 @@ export default {
         position: absolute;
         margin-left: 75px;
         border: 1px solid #cccccc;
+        width: 60%;
     }
     .sectionName{
         overflow: hidden;

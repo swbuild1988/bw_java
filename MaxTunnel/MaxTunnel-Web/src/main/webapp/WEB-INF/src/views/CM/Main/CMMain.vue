@@ -7,6 +7,7 @@
 
 <script>
 import CModulePage from "../../../components/CM/Common/ModulePage";
+
 export default {
     name: "c-m-main",
     data() {
@@ -76,7 +77,13 @@ export default {
                 childNode: [
                     {
                         id: 31,
-                        name: "权限管理"
+                        name: "权限管理",
+                        url: "/CMMain/permissionConfig"
+                    },
+                    {
+                        id: 32,
+                        name: "角色管理",
+                        url: "/CMMain/roleConfig"
                     }
                 ]
             },
@@ -138,6 +145,23 @@ export default {
                         id: 61,
                         name: "应急管理",
                         url: "/CMMain/EmPlan"
+                    },
+                    {
+                        id: 62,
+                        name: '监测对象与应急预案',
+                        url: '/CMMain/objPreplan'
+                    }
+                ]
+            },
+            {
+                id: 7,
+                name: '日志管理',
+                typeName: 'medkit',
+                childNode: [
+                    {
+                        id: 71,
+                        name: '系统日志管理',
+                        url: '/UM/PersonnelPosition/visitors'
                     }
                 ]
             }

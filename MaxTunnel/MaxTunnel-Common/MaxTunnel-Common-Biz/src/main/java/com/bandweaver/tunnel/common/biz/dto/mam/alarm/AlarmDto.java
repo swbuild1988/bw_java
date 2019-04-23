@@ -45,6 +45,8 @@ public class AlarmDto implements Serializable {
     private String longitude;
     private String latitude;
 
+    private Integer flag;//其他用途
+
     public Integer getId() {
         return id;
     }
@@ -173,6 +175,14 @@ public class AlarmDto implements Serializable {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Integer flag) {
+		this.flag = flag;
 	}
 
 	@Override

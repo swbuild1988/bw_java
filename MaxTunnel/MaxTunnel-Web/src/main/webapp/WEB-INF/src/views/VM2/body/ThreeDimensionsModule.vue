@@ -125,12 +125,11 @@
             },
             changeStore(storeId) {
                 let _this = this;
-
-                let [curCamera] = _this.location.filter(position => position.id == storeId);
+                let [ curCamera ] = _this.location.filter(position => position.id == storeId);
                 let {
                     camera
                 } = curCamera;
-
+                // return
                 try {
                     let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
 
@@ -154,14 +153,13 @@
                 let _this = this;
 
                 return new Promise((resolve, reject) => {
-                    TunnelService.getStoresByAreaId({
-                            areaId
-                        })
+                    TunnelService.getStoresByAreaId({ areaId })
                         .then(stores => {
                             _this.storeList.splice(0);
                             _this.location.splice(0);
 
                             stores.forEach(store => {
+                                if(!store.store || !store.startPoint) return;
                                 _this.storeList.push({
                                     value: store.store.id,
                                     label: store.store.name
@@ -172,9 +170,9 @@
                                 })
                             })
 
-                            let store = this.getValByArray(stores);
+                            let store = this.getValByArray(_this.storeList);
 
-                            resolve(store.store.id);
+                            resolve(store.value);
                         })
                 })
 
@@ -256,13 +254,13 @@
             },
         },
         beforeDestroy() {
-            console.log("3d module beforedestory")
+            // console.log("3d module beforedestory")
             // this.destroyViewer();
             // this.addEvents().removeMouseEnter();
             // this.addEvents().removeMouseLeave();
         },
         destroyed() {
-            console.log("3D module destory")
+            // console.log("3D module destory")
         },
     }
 </script>

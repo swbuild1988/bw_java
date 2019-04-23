@@ -83,36 +83,6 @@ public class ConsumeDataController {
 	}
 	
 	/**
-	 * vo获取某一电表并统计该电表在某一时间段内的总能耗
-	 * @param vo
-	 * @return
-	 * @author ya.liu
-	 * @Date 2018年11月15日
-	 */
-	private Double getSum(ConsumeDataVo vo) {
-		if(vo.getStoreId() == null) vo.setStoreId(0);
-		if(vo.getAreaId() == null) vo.setAreaId(0);
-		if(vo.getObjectType() == null) vo.setObjectType(0);
-		if(vo.getEnergyType() == null) vo.setEnergyType(0);
-		List<ConsumeDto> consumeDto = consumeService.getConsumesByCondition(vo);
-		if(consumeDto.size() == 0) return null;
-		ConsumeDataVo dataVo = new ConsumeDataVo();
-		dataVo.setId(consumeDto.get(0).getId());
-		dataVo.setEndTime(vo.getEndTime());
-		dataVo.setStartTime(vo.getStartTime());
-		List<ConsumeData> list = consumeDataService.getListByIdAndTime(dataVo);
-		Double sum = 0.0;
-		for(ConsumeData data : list) {
-			
-			Double num = data.getDirect();
-			Double count = data.getIndirect();
-			Double cv = num == null ? (count == null ? 0 : count) : num;
-			sum = MathUtil.add(sum, cv);
-		}
-		return sum;
-	}
-	
-	/**
 	 * 某一电表在某段时间内的总能耗
 	 * @param tunnelId 管廊id
 	 * @param storeId 管舱id
@@ -127,7 +97,7 @@ public class ConsumeDataController {
 	 */
 	@RequestMapping(value = "consume-datas/condition", method = RequestMethod.POST)
 	public JSONObject getConsumeDatasByCondition(@RequestBody ConsumeDataVo vo) {
-		Double sum = getSum(vo);
+		Double sum = consumeService.getSumByCondition(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, sum);
 	}
 	
@@ -147,7 +117,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(TunnelSimpleDto dto : TunnelList) {
     		vo.setTunnelId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("key", dto);
     		obj.put("val", sum);
@@ -174,7 +144,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(StoreDto dto : dtoList) {
     		vo.setStoreId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("name", dto.getName());
     		obj.put("val", sum);
@@ -202,7 +172,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(AreaDto dto : dtoList) {
     		vo.setAreaId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("name", dto.getName());
     		obj.put("val", sum);
@@ -237,7 +207,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(ObjectType obj : objList) {
     		vo.setObjectType(obj.getValue());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject json = new JSONObject();
     		json.put("name", obj.getName());
     		json.put("val", sum);
@@ -282,7 +252,11 @@ public class ConsumeDataController {
         	// 往后循环12个月
     		for(int i=0;i<12;i++) {
     			JSONObject obj = new JSONObject();
+<<<<<<< HEAD
     			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+=======
+    			String time = now.getYear() % 100 + "年" + (now.getMonth() + 1) + "月";
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     			obj.put("key", time);
     			
     			// 真实数据
@@ -293,7 +267,11 @@ public class ConsumeDataController {
 //				vo.setEndTime(nowEnd);
 //				vo.setTunnelId(dto.getId());
 //				// 一个月的总能耗
+<<<<<<< HEAD
 //				Double sum = getSum(vo);
+=======
+//				Double sum = consumeService.getSumByCondition(vo);
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     			
     			// 假数据
     			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
@@ -340,7 +318,11 @@ public class ConsumeDataController {
 				vo.setEndTime(nowEnd);
 				vo.setTunnelId(dto.getId());
 				// 一个月的总能耗
+<<<<<<< HEAD
 				Double sum = getSum(vo);
+=======
+				Double sum = consumeService.getSumByCondition(vo);
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 				//平均每公里的能耗
 				sum = sum / dto.getLength() * 1000;
 				JSONObject obj = new JSONObject();

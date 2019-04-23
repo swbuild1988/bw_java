@@ -29,7 +29,11 @@ public interface PermissionMapper {
 
 	Set<String> getAllMenuName();
 
+	Set<String> getAllMenuCode();
+
 	List<Permission> getPermissionsByMenu(String menuName);
 
 	List<Permission> getPermissionsByRole(Integer rid);
+
+	List<Permission> getPermissionsByMenuCode(String menuCode);
 }

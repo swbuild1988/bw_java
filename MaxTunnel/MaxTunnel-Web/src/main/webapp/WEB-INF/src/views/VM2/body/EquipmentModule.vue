@@ -57,7 +57,7 @@
                     xData: [],
                     seriesData: []
                 },
-                pieData: {
+                    pieData: {
                     id: 'pieID',
                     title: '设备状态',
                     legendData: [],

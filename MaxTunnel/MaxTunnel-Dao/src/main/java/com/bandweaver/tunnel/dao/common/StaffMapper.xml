@@ -1,166 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.common.StaffMapper">
-<cache/>
-  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Staff">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="sex" jdbcType="VARCHAR" property="sex" />
-    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
-    <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate" />
-    <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
-    <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-  </resultMap>
-  
-  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.StaffDto">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="sex" jdbcType="VARCHAR" property="sex" />
-    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
-    <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate" />
-    <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId" />
-    <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-    <association property="dept" javaType="Department" column="dept_id"
-    	select="com.bandweaver.tunnel.dao.common.DepartmentMapper.selectByPrimaryKey"/>
-    <association property="position" javaType="Position" column="position_id"
-    	select="com.bandweaver.tunnel.dao.common.PositionMapper.selectByPrimaryKey"/>
-  </resultMap>
-  
-  
-  <sql id="Base_Column_List">
-    ID, NAME, account,sex,telphone,hire_date,DEPT_ID, POSITION_ID,CRT_TIME
+    <cache/>
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Staff">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="telphone" jdbcType="VARCHAR" property="telphone"/>
+        <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate"/>
+        <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId"/>
+        <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+        <result column="identityNO" jdbcType="VARCHAR" property="identityNO"/>
+        <result column="outside" jdbcType="DECIMAL" property="outside"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.StaffDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="telphone" jdbcType="VARCHAR" property="telphone"/>
+        <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate"/>
+        <result column="DEPT_ID" jdbcType="DECIMAL" property="deptId"/>
+        <result column="POSITION_ID" jdbcType="DECIMAL" property="positionId"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+        <result column="identityNO" jdbcType="VARCHAR" property="identityNO"/>
+        <result column="outside" jdbcType="DECIMAL" property="outside"/>
+        <association property="dept" javaType="Department" column="dept_id"
+                     select="com.bandweaver.tunnel.dao.common.DepartmentMapper.selectByPrimaryKey"/>
+        <association property="position" javaType="Position" column="position_id"
+                     select="com.bandweaver.tunnel.dao.common.PositionMapper.selectByPrimaryKey"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    ID, NAME, account,sex,telphone,hire_date,DEPT_ID, POSITION_ID,CRT_TIME,identityNO,outside
   </sql>
-  
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from T_COMMON_STAFF
-    where ID = #{id,jdbcType=DECIMAL}
-  </select>
-  
-  <delete id="deleteByPrimaryKey" >
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_COMMON_STAFF
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+
+    <delete id="deleteByPrimaryKey">
     delete from T_COMMON_STAFF
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  
-  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
-   	<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
             SELECT COMMON_STAFF_SEQUENCE.currval from DUAL
         </selectKey>
-    insert into T_COMMON_STAFF (ID, NAME,account,sex,telphone,hire_date, DEPT_ID, 
-      POSITION_ID,CRT_TIME)
-    values (#{id,jdbcType=DECIMAL}, 
-    #{name,jdbcType=VARCHAR}, 
-    #{account,jdbcType=VARCHAR}, 
-    #{sex,jdbcType=VARCHAR}, 
-    #{telphone,jdbcType=VARCHAR}, 
-    #{hireDate,jdbcType=TIMESTAMP}, 
-    #{deptId,jdbcType=DECIMAL}, 
-    #{positionId,jdbcType=DECIMAL},#{crtTime,jdbcType=TIMESTAMP})
-  </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
-    update T_COMMON_STAFF
-    <set>
-      <if test="name != null">
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null">
-        account = #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null">
-        sex = #{sex,jdbcType=VARCHAR},
-      </if>
-      <if test="telphone != null">
-        telphone = #{telphone,jdbcType=VARCHAR},
-      </if>
-      <if test="hireDate != null">
-        hire_date = #{hireDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deptId != null">
-        DEPT_ID = #{deptId,jdbcType=DECIMAL},
-      </if>
-      <if test="positionId != null">
-        POSITION_ID = #{positionId,jdbcType=DECIMAL},
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
-    update T_COMMON_STAFF
-    set 
-    NAME = #{name,jdbcType=VARCHAR},
-    account = #{account,jdbcType=VARCHAR},
-    sex = #{sex,jdbcType=VARCHAR},
-    telphone = #{telphone,jdbcType=VARCHAR},
-    hire_date = #{hireDate,jdbcType=TIMESTAMP},
-    DEPT_ID = #{deptId,jdbcType=DECIMAL},
-    POSITION_ID = #{positionId,jdbcType=DECIMAL},
-    CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  
-  <select id="getDtoById" resultMap="DtoResultMap">
+        insert into T_COMMON_STAFF
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+	      <if test="id != null">
+	        	ID,
+	      </if>
+	      <if test="name != null">
+                NAME,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="telphone != null">
+                telphone,
+            </if>
+            <if test="hireDate != null">
+                hire_date,
+            </if>
+            <if test="deptId != null">
+                DEPT_ID,
+            </if>
+            <if test="positionId != null">
+                POSITION_ID,
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME,
+            </if>
+            <if test="identityNO != null">
+                identityNO,
+            </if>
+            <if test="outside != null">
+                outside,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+	      <if test="id != null">
+	        	#{id,jdbcType=DECIMAL},
+	      </if>
+	      <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="hireDate != null">
+                #{hireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=DECIMAL},
+            </if>
+            <if test="positionId != null">
+                #{positionId,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="identityNO != null">
+                #{identityNO,jdbcType=VARCHAR},
+            </if>
+            <if test="outside != null">
+                #{outside,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Staff">
+        update T_COMMON_STAFF
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                telphone = #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="hireDate != null">
+                hire_date = #{hireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deptId != null">
+                DEPT_ID = #{deptId,jdbcType=DECIMAL},
+            </if>
+            <if test="positionId != null">
+                POSITION_ID = #{positionId,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="identityNO != null">
+                identityNO = #{identityNO,jdbcType=VARCHAR},
+            </if>
+            <if test="outside != null">
+                outside = #{outside,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <select id="getDtoById" resultMap="DtoResultMap">
   	select * from T_COMMON_STAFF where id = #{id}
   </select>
-  
-  
-  <select id="getDtoListByCondition" resultMap="DtoResultMap">
-  	select * from T_COMMON_STAFF
-  	<where>
-  		<if test="id != null">
-		and id = #{id}  		
-  		</if>
-  		<if test="name != null and name.trim() != ''">
-  		and instr(name,#{name})>0
-  		</if>
-  		<if test="account != null and account.trim() != ''">
-  		and account = #{account}
-  		</if>
-  		<if test="sex != null and sex.trim() != ''">
-  		and sex = #{sex}
-  		</if>
-  		<if test="deptId != null">
-  		and dept_id = #{deptId}
-  		</if>
-  		<if test="positionId != null">
-  		and position_id = #{positionId}
-  		</if>
-  		<if test="startTime != null">
-  		and hire_date &gt;= #{startTime}
-  		</if>
-  		<if test="endTime != null">
-  		and hire_date &lt;= #{endTime}
-  		</if>
-  	</where>
-  	order by hire_date desc
-  </select>
-  
-  <select id="getStaffsByCompanyIdAndDeptId" resultMap="DtoResultMap">
+
+
+    <select id="getDtoListByCondition" resultMap="DtoResultMap">
+        select * from T_COMMON_STAFF
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and instr(name,#{name})>0
+            </if>
+            <if test="account != null and account.trim() != ''">
+                and account = #{account}
+            </if>
+            <if test="sex != null and sex.trim() != ''">
+                and sex = #{sex}
+            </if>
+            <if test="deptId != null">
+                and dept_id = #{deptId}
+            </if>
+            <if test="telphone != null">
+                and telphone = #{telphone}
+            </if>
+            <if test="identityNO != null">
+                and identityNO = #{identityNO}
+            </if>
+            <if test="positionId != null">
+                and position_id = #{positionId}
+            </if>
+            <if test="startTime != null">
+                and hire_date &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and hire_date &lt;= #{endTime}
+            </if>
+            <if test="outside != null">
+                and outside = #{outside}
+            </if>
+        </where>
+        order by hire_date desc
+    </select>
+
+    <select id="getStaffsByCompanyIdAndDeptId" resultMap="DtoResultMap">
   	select t.* from T_COMMON_staff t 
 	left join T_COMMON_DEPT d on d.id = t.dept_id
 	left join T_COMMON_company_dept cd on d.id = cd.dept_id
 	left join T_COMMON_company c on c.id = cd.company_id
 	where d.id = #{deptId} and c.id = #{companyId}
   </select>
-  
-   <delete id="deleteBatch">
-		delete from T_COMMON_STAFF where id in
+
+    <delete id="deleteBatch">
+        delete from T_COMMON_STAFF where id in
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
-	</delete>
-  
-  
-  <select id="getByName" resultMap="BaseResultMap">
+    </delete>
+
+
+    <select id="getByName" resultMap="BaseResultMap">
   	select * from T_COMMON_STAFF where name = #{name}
   </select>
 

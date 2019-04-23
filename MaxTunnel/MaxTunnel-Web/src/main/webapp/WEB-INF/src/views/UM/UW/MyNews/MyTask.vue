@@ -106,7 +106,7 @@ export default {
             switch (task.processType){
                 // 巡检计划审批
                 case 1001:
-                    pathParams.name = 'examinPlans'
+                    pathParams.name = '巡检计划审批'
                     pathParams.params = {
                         processInstanceId: task.processInstanceId,
                         status: task.status,
@@ -116,7 +116,7 @@ export default {
 
                 // 巡检任务提交
                 case 1002:
-                    pathParams.name = 'submitPatralTask'
+                    pathParams.name = '提交巡检任务'
                     pathParams.params = {
                         id: task.id
                     }
@@ -126,14 +126,14 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation') {
-                        pathParams.name = 'newsDistributeDefect'
+                        pathParams.name = '分配巡检任务'
                         pathParams.params = {
                             id: task.id
                         }
                     }
                     // 结束任务，提交工单 完结工单
                     if (task.taskKey == 'complete') {
-                        pathParams.name = 'UWDetailsOverhaul'
+                        pathParams.name = '工单详情'
                         pathParams.params = {
                             id: task.id,
                             type: 4,
@@ -145,7 +145,7 @@ export default {
                 case 2001:
                     // 入廊审批
                     if(task.taskKey=="approve"){                        
-                        pathParams.name = 'UMExamineApprove'
+                        pathParams.name = '入廊审批'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,
@@ -154,7 +154,7 @@ export default {
                     }
                     // 离开管廊
                     if(task.taskKey=="leave"){         
-                        pathParams.name = 'newsExamineApprove'
+                        pathParams.name = '查看入廊申请进度'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,

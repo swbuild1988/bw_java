@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.common.platform.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import org.apache.http.HttpResponse;
 
 
@@ -49,7 +50,7 @@ public class MessageUtil {
                 //获取response的body
                 //System.out.println(EntityUtils.toString(response.getEntity()));
             } catch (Exception e) {
-                e.printStackTrace();
+                LogUtil.error(e.toString());
             }
     }
 }

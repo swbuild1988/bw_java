@@ -28,116 +28,118 @@
 </template>
 
 <script>
-    export default {
-        name: "check-select",
-        props: {
-            dataList: {
-                type: Array,
-                default: () => {
-                    return [];
-                }
-            },
-            selectObj: {
-                type: Object,
-                default: () => {
-                    return {
-                        selectId: ""
-                    };
-                }
-            },
-            itemLen: {
-                type: Number,
-                default: 10
+export default {
+    name: "check-select",
+    props: {
+        dataList: {
+            type: Array,
+            default: () => {
+                return [];
             }
         },
-        data() {
-            return {
-                clickId: "",
-                lastDisabled: true,
-                nextDisabled: false,
-                startIndex: 0,
-                endIndex: 10,
-                curList: []
-            };
+        selectObj: {
+            type: Object,
+            default: () => {
+                return {
+                    selectId: ""
+                };
+            }
         },
-        methods: {
-            choose(e) {
-                let _this = this;
-                let temp = e.target.innerHTML;
-                _this.dataList.forEach(a => {
-                    if (a.name == temp) {
-                        _this.clickId = a.id;
-                        return false;
-                    }
-                });
-                _this.selectObj.selectId = _this.clickId;
-            },
-            setLast() {
-                if (this.startIndex > 0) {
-                    this.startIndex -= this.itemLen;
-                    this.endIndex -= this.itemLen;
-                    if (this.startIndex < 0) {
-                        this.startIndex = 0;
-                    }
-                    if (this.endIndex < this.itemLen) {
-                        this.endIndex = this.itemLen;
-                    }
-                    if (this.startIndex == 0) {
-                        this.lastDisabled = true;
-                    }
-                    this.nextDisabled = false;
-                } else {
+        itemLen: {
+            type: Number,
+            default: 10
+        }
+    },
+    data() {
+        return {
+            clickId: "",
+            lastDisabled: true,
+            nextDisabled: false,
+            startIndex: 0,
+            endIndex: 10,
+            curList: []
+        };
+    },
+    methods: {
+        choose(e) {
+            let _this = this;
+            let temp = e.target.innerHTML;
+            _this.dataList.forEach(a => {
+                if (a.name == temp) {
+                    _this.clickId = a.id;
+                }
+            });
+            this.$emit("toParent",this.clickId)
+        },
+        setLast() {
+            if (this.startIndex > 0) {
+                this.startIndex -= this.itemLen;
+                this.endIndex -= this.itemLen;
+                if (this.startIndex < 0) {
+                    this.startIndex = 0;
+                }
+                if (this.endIndex < this.itemLen) {
+                    this.endIndex = this.itemLen;
+                }
+                if (this.startIndex == 0) {
                     this.lastDisabled = true;
                 }
-                this.setcurList();
-            },
+                this.nextDisabled = false;
+            } else {
+                this.lastDisabled = true;
+            }
+            this.setcurList();
+        },
 
-            setcurList() {
-                let _this = this;
-                _this.curList = _this.dataList.slice(
-                    _this.startIndex,
-                    _this.endIndex
-                );
-
-            },
-            setNext() {
-                if (this.endIndex < this.dataList.length) {
-                    this.startIndex += this.itemLen;
-                    this.endIndex += this.itemLen;
-                    if (this.endIndex > this.dataList.length) {
-                        this.endIndex = this.dataList.length;
-                    }
-                    if (this.endIndex == this.dataList.length) {
-                        this.nextDisabled = true;
-                    }
-                    this.lastDisabled = false;
-                } else {
+        setcurList() {
+            let _this = this;
+            _this.curList = _this.dataList.slice(
+                _this.startIndex,
+                _this.endIndex
+            );
+        },
+        setNext() {
+            if (this.endIndex < this.dataList.length) {
+                this.startIndex += this.itemLen;
+                this.endIndex += this.itemLen;
+                if (this.endIndex > this.dataList.length) {
+                    this.endIndex = this.dataList.length;
+                }
+                if (this.endIndex == this.dataList.length) {
                     this.nextDisabled = true;
                 }
-                this.setcurList();
+                this.lastDisabled = false;
+            } else {
+                this.nextDisabled = true;
             }
-        },
-        mounted() {},
-        watch: {
-            dataList: {
-                handler: function(newVal, oldVal) {
-                    if (newVal.length > 0) {
-                        this.clickId = this.dataList[0].id;
-                        this.startIndex = 0;
-                        this.endIndex = this.itemLen;
-                        this.curList = this.dataList.slice(0, this.endIndex);
-                    }
-                },
-                deep: true
-            }
+            this.setcurList();
         }
-    };
+    },
+    mounted() {},
+    watch: {
+        dataList: {
+            handler: function(newVal, oldVal) {
+                if (newVal.length > 0) {
+                    if(this.selectObj.selectId!=null||this.selectObj.selectId!=undefined||this.selectObj.selectId!=''){
+                        this.clickId = this.selectObj.selectId;
+                    }else{
+                        this.clickId = this.dataList[0].id;
+                    }
+                    this.startIndex = 0;
+                    this.endIndex = this.itemLen;
+                    this.curList = this.dataList.slice(0, this.endIndex);
+                }
+            },
+            deep: true
+        }
+    }
+};
 </script>
 
 <style scoped>
-    .select_radio {
-        color: #fff;
-        background-color: #869bcb;
-        background-position: 0 -15px;
-    }
+.select_radio {
+    color: #fff;
+    background-color: #869bcb;
+    background-position: 0 -15px;
+}
 </style>

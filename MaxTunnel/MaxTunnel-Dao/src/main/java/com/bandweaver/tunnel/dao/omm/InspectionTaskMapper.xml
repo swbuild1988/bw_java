@@ -239,26 +239,40 @@
         </collection>
     </resultMap>
     
-    <select id="getFinishedInspectionTaskSumByMonth" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE (create_time <![CDATA[ >= ]]> TRUNC(#{createTime}, 'MM') and create_time <![CDATA[ <= ]]> last_day(#{createTime}))
-    	AND is_finished = #{requestStatus}
+    <select id="getCountByVo" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	select count(1) from t_omm_inspection_task a
+    	<where>
+	        <if test="isFinished != null">
+	        	and a.is_finished = #{isFinished}
+	        </if>
+	        <if test="startTime != null">
+                and a.create_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.create_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+    	</where>
     </select>
     
-    <select id="getInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
+    <select id="getCountByCondition" resultType="int">
+    	select count(1) from t_omm_inspection_task a
+    	<where>
+	        <if test="isFinished != null">
+	        	and a.is_finished = #{isFinished}
+	        </if>
+	        <if test="startTime != null">
+                and a.end_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.end_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+    	</where>
     </select>
     
-	<select id="getFinishedInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-		SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
-    	AND is_finished = #{requestStatus}
-	</select>
-	
 	<select id="getInspectionTasksByVo" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto" >
 		SELECT
 			a.id,

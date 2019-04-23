@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.UserDTO;
+import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
 import com.bandweaver.tunnel.common.biz.pojo.common.User;
 
 public interface UserMapper {
@@ -29,4 +30,5 @@ public interface UserMapper {
 	void deleteBatch(List<Integer> list);
 
 	JSONObject getPermissions(String name);
+
 }

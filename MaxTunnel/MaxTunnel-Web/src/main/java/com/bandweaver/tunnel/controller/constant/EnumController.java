@@ -3,25 +3,12 @@ package com.bandweaver.tunnel.controller.constant;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bandweaver.tunnel.common.biz.constant.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.ActionEnum;
-import com.bandweaver.tunnel.common.biz.constant.DocTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.FileTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.JobStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
-import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
-import com.bandweaver.tunnel.common.biz.constant.TunnelStatus;
 import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.ObjectBindTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
@@ -59,6 +46,59 @@ public class EnumController {
 	
 	@Autowired
 	private StoreTypeService storeTypeService;
+
+
+	/**
+	 * 定时任务类型枚举
+	 * @return
+	 */
+	@RequestMapping(value = "jobtype-enums")
+	public JSONObject getJobTypeList(){
+		List<JSONObject> list = new ArrayList<>();
+		for (JobType e : JobType.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
+
+
+	/**
+	 * 获取报表导出模块列表
+	 * @return
+	 */
+	@RequestMapping(value = "oftype-enums")
+	public JSONObject getOfTypeList(){
+		List<JSONObject> list = new ArrayList<>();
+		for (OfTypeEnum e : OfTypeEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
+	
+	
+	/**管廊运行状态枚举
+	 * @author shaosen
+	 * @date 2019年1月10日
+	 * @param   
+	 * @return JSONObject  
+	 */
+	@RequestMapping(value="tunnelstatus-enums",method=RequestMethod.GET)
+	public JSONObject getTunnelStatusList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (TunnelStatus e : TunnelStatus.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
 	
 	
 	/**管廊运行状态枚举
@@ -703,6 +743,24 @@ public class EnumController {
 	public JSONObject getSpareWhitherEnumList() {
 		List<JSONObject> list = new ArrayList<>();
 		for(SpareWhitherEnum s : SpareWhitherEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", s.getName());
+			obj.put("val", s.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 获取人员类型枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年2月28日
+	 */
+	@RequestMapping(value = "outside-enums", method = RequestMethod.GET)
+	public JSONObject getOutsideEnumList() {
+		List<JSONObject> list = new ArrayList<>();
+		for(OutsideEnum s : OutsideEnum.values()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", s.getName());
 			obj.put("val", s.getValue());

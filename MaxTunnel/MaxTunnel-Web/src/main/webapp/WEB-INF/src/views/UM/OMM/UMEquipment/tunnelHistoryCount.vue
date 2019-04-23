@@ -235,7 +235,7 @@ export default {
         },
         goToMoudle1: function(id, type) {
             this.$router.push({
-                name: "UMDetailEquipment",
+                name: "设备详情",
                 params: {
                     id: id,
                     type: type

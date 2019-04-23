@@ -14,6 +14,9 @@ export default {
         },
         parameters: {
             type: Object
+        },
+        title: {
+            type: String
         }
     },
     data() {
@@ -23,6 +26,9 @@ export default {
             yData: [],
             series: [],
             option: {
+                title: {
+                    text: this.title,
+                },
                 textStyle: {
                     color: "rgba(255, 255, 255, 0.3)"
                 },

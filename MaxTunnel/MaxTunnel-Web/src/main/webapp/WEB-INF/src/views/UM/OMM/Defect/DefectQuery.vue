@@ -310,7 +310,7 @@ export default {
         },
         goToModule(index,type){
             this.$router.push({
-                name: 'DefectDetailsOverhaul',
+                name: '维修工单详情',
                 params: {
                     id: this.defects[index].id,
                     type: type
@@ -319,7 +319,7 @@ export default {
         },
         goToMoudle2: function(index, type) {
             this.$router.push({
-                name: "UMDetailDefect",
+                name: "缺陷详情",
                 params: {
                     id: this.defects[index].id,
                     type: type

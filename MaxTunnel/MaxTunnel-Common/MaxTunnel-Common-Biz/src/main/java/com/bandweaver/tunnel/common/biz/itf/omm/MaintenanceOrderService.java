@@ -21,6 +21,8 @@ public interface MaintenanceOrderService {
 
     List<MaintenanceOrderDto> getMaintenanceOrderDtosByCondition(MaintenanceOrderVo vo);
 
+    int getCountByCondition(MaintenanceOrderVo vo);
+    
     /**
      * 设置维修人员
      * @param id

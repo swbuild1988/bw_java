@@ -8,4 +8,5 @@ public interface Loginservice {
 
 	JSONObject getUserPermission(String name);
 
+    JSONObject getPermissionListByUserName(String username);
 }

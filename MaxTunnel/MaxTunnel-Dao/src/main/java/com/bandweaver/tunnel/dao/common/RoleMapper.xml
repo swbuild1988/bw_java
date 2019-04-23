@@ -114,4 +114,11 @@
  	on r.id = ur.r_id 
  	where ur.u_id = #{id}
  </select>
+
+    <select id="getRoleByUseName" resultMap="BaseResultMap">
+        select r.* from t_security_role r
+        left JOIN t_security_user_role ur ON r.id = ur.r_id
+        LEFT JOIN t_security_user u ON ur.u_id = u.id
+        WHERE u.name = #{username}
+    </select>
 </mapper>

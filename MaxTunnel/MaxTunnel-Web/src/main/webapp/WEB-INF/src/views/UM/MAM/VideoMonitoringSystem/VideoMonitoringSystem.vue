@@ -35,7 +35,12 @@ export default {
                   //             {id:2,name: '详情', url: '/UM/VideoMonitoring/details/'+a.id}];
                   //             temp.childNode= child;
                   _this.VideoMonitoring.leftTree.push(temp);
-                })
+				})
+                _this.VideoMonitoring.leftTree.push({
+					id: _this.VideoMonitoring.leftTree[result.length - 1].id + 1,
+					name: '历史记录',
+					url: '/UM/VideoMonitoring/historyPhotos'
+				})
               if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/VideoMonitoring") < 0) {
                   _this.goToMoudle({path: _this.VideoMonitoring.leftTree[0].url});
                   sessionStorage.setItem('selectedName','')

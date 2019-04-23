@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.common;
 
 import java.util.Set;
 
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
@@ -41,9 +42,9 @@ public class LoginController {
 	
 
     /** 登录并返回权限列表
-     * @param name
-     * @param password
-     * @return {"msg":"请求成功","code":"200","data":{"menuList":["user","tunnel"],"roleName":"test","permissionList":["user:list","user:add","tunnel:list"],"userId":1}}
+     * @param
+     * @param
+     * @return
      */
 	@WriteLog(DescEnum.LOGIN)
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -53,19 +54,40 @@ public class LoginController {
 		String name = requestJson.getString("name");
 		String password = requestJson.getString("password");
         Subject subject= SecurityUtils.getSubject();
-        //密码加密是前端的事情，等前端改好之后，此处代码改回来即可
-        UsernamePasswordToken token=new UsernamePasswordToken(name, Sha256.getSHA256StrJava(password));
+
+        UsernamePasswordToken token=new UsernamePasswordToken(name,password);
         token.setRememberMe(true); 
         subject.login(token);
+
+		Session session = subject.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
+
+        JSONObject json = new JSONObject();
+        json.put("token",token);
+        json.put("userId",user.getId());
+
+        return CommonUtil.success(json);
         
-        Session session = subject.getSession();
-        User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
-        JSONObject returnData = loginservice.getUserPermission(user.getName());
-        return CommonUtil.success(returnData);
     }
+
+	/**
+	 * 获取登录用户信息
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping(value = "/login/{username}",method = RequestMethod.GET)
+    public JSONObject getLogInfo(@PathVariable("username") String username){
+
+		JSONObject returnData = loginservice.getPermissionListByUserName(username);
+		return  CommonUtil.success(returnData);
+
+	}
+
+
+
 	/** GET方式登陆
 	 * @param name
-	 * @param password
+	 * @param password 
 	 * @return
 	 */
 	@WriteLog(DescEnum.LOGIN)
@@ -74,13 +96,14 @@ public class LoginController {
         
 		Subject subject= SecurityUtils.getSubject();
         //密码加密是前端的事情，等前端改好之后，此处代码改回来即可
-        UsernamePasswordToken token=new UsernamePasswordToken(name, Sha256.getSHA256StrJava(password));
+        UsernamePasswordToken token=new UsernamePasswordToken(name, password);
         token.setRememberMe(true); 
         subject.login(token);
         
         Session session = subject.getSession();
         User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
         JSONObject returnData = loginservice.getUserPermission(user.getName());
+		returnData.put("token",token);
         return CommonUtil.success(returnData);
     }
 
@@ -123,6 +146,8 @@ public class LoginController {
 		returnData.put("contact", PropertiesUtil.getValue(Constants.MAXTUNNEL_CONTACT));
 		returnData.put("company", PropertiesUtil.getValue(Constants.MAXTUNNEL_COMPANY));
 		returnData.put("address", PropertiesUtil.getValue(Constants.MAXTUNNEL_ADDRESS));
+        LogUtil.info("version:");
+        LogUtil.info(returnData);
 		return CommonUtil.success(returnData);
 	}
 	

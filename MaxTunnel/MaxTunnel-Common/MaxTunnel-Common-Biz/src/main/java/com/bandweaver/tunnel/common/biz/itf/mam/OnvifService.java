@@ -6,6 +6,7 @@ import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import de.onvif.soap.devices.PtzDevices;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OnvifService {
@@ -120,5 +121,9 @@ public interface OnvifService {
 	boolean delSrc(String id) throws Exception;
 
 	void delSrcList();
+
+	void addSnap();
+
+	String getSnapJSON(VideoDto dto, Date start, Date end) throws Exception;
 
 }

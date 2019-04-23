@@ -10,14 +10,12 @@
 		<result column="width" jdbcType="DECIMAL" property="width" />
 		<result column="height" jdbcType="DECIMAL" property="height" />
 		<result column="parent_id" jdbcType="DECIMAL" property="parentId" />
-		<result column="TUNNEL_ID" jdbcType="DECIMAL"
-			property="tunnelId" />
-		<result column="STORE_TYPE_ID" jdbcType="DECIMAL"
-			property="storeTypeId" />
-		<result column="camera" jdbcType="VARCHAR"
-			property="camera" />
-		<result column="CRT_TIME" jdbcType="TIMESTAMP"
-			property="crtTime" />
+		<result column="TUNNEL_ID" jdbcType="DECIMAL" property="tunnelId" />
+		<result column="STORE_TYPE_ID" jdbcType="DECIMAL" property="storeTypeId" />
+		<result column="camera" jdbcType="VARCHAR" property="camera" />
+		<result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+		<result column="k" jdbcType="DECIMAL" property="k" />
+		<result column="l" jdbcType="DECIMAL" property="l" />
 	</resultMap>
 
 	<resultMap id="DtoResultMap"
@@ -32,12 +30,14 @@
 		<result column="store_type_id" property="storeTypeId"/>
 		<result column="camera" jdbcType="VARCHAR" property="camera" />
 		<result column="crt_time" property="crtTime"/>
+		<result column="k" jdbcType="DECIMAL" property="k" />
+		<result column="l" jdbcType="DECIMAL" property="l" />
 		<association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto" column="tunnel_id" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
 		<association property="storeType" javaType="com.bandweaver.tunnel.common.biz.pojo.StoreType" column="store_type_id" select="com.bandweaver.tunnel.dao.common.StoreTypeMapper.selectByPrimaryKey"/>
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME, parent_id, wigth, height
+		ID, name, sn, TUNNEL_ID, STORE_TYPE_ID,camera, CRT_TIME, parent_id, width, height, k, l
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
@@ -56,10 +56,10 @@
             SELECT COMMON_STORE_SEQUENCE.currval from DUAL
         </selectKey>
 		insert into T_COMMON_STORE (ID,name, sn, TUNNEL_ID,
-		STORE_TYPE_ID,camera, CRT_TIME
+		STORE_TYPE_ID,camera, CRT_TIME, k, l
 		)
 		values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{sn,jdbcType=VARCHAR}, #{tunnelId,jdbcType=DECIMAL},
-		#{storeTypeId,jdbcType=DECIMAL},#{camera,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+		#{storeTypeId,jdbcType=DECIMAL},#{camera,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, #{k,jdbcType=DECIMAL}, #{l,jdbcType=DECIMAL}
 		)
 	</insert>
 	<insert id="insertSelective"
@@ -90,11 +90,17 @@
 			<if test="crtTime != null">
 				CRT_TIME,
 			</if>
-			<if test="wigth != null">
-				wigth,
+			<if test="width != null">
+				width,
 			</if>
 			<if test="height != null">
 				height,
+			</if>
+			<if test="k != null">
+				k,
+			</if>
+			<if test="l != null">
+				l,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -122,11 +128,17 @@
 			<if test="crtTime != null">
 				#{crtTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test="wigth != null">
-				#{wigth,jdbcType=DECIMAL},
+			<if test="width != null">
+				#{width,jdbcType=DECIMAL},
 			</if>
 			<if test="height != null">
 				#{height,jdbcType=DECIMAL},
+			</if>
+			<if test="k != null">
+				#{k,jdbcType=DECIMAL},
+			</if>
+			<if test="l != null">
+				#{l,jdbcType=DECIMAL},
 			</if>
 		</trim>
 	</insert>
@@ -155,11 +167,17 @@
 			<if test="crtTime != null">
 				CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
 			</if>
-			<if test="wigth != null">
-				wigth = #{wigth,jdbcType=DECIMAL},
+			<if test="width != null">
+				width = #{width,jdbcType=DECIMAL},
 			</if>
 			<if test="height != null">
 				height = #{height,jdbcType=DECIMAL},
+			</if>
+			<if test="k != null">
+				k = #{k,jdbcType=DECIMAL},
+			</if>
+			<if test="l != null">
+				l = #{l,jdbcType=DECIMAL},
 			</if>
 		</set>
 		where ID = #{id,jdbcType=DECIMAL}

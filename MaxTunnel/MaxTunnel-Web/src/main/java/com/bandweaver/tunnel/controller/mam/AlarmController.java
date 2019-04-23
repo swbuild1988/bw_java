@@ -79,8 +79,8 @@ public class AlarmController {
 	
 	
 	/**接收告警并发送到MQ队列
-	 * @param alarm
-	 * @return  队列消息格式：{"alarmName":"严重级别的告警","alarmDate":1545278730010,"isDistribute":false,"plans":[{"name":"消防预案","id":4001},{"name":"通风预案","id":4003}],"tunnelId":1,"cleaned":false,"objectName":"监测对象2","alarmLevel":3,"id":10481,"objectId":1}
+	 * @param
+	 * @return
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
@@ -92,7 +92,6 @@ public class AlarmController {
 		if(StringTools.isNullOrEmpty(measObj)) {
 			LogUtil.debug("监测对象[ " + measAlarm.getObjectId() + "]不存在");
 			throw new BandWeaverException("监测对象[ " + measAlarm.getObjectId() + "]不存在");
-			
 		}
 		
 		Alarm alarm = new Alarm();

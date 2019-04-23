@@ -353,9 +353,6 @@ export default {
                             }
                         }
                     },
-                    // timer: {
-                    //     interval: 5000
-                    // }
                 }
             },
             toolColumns: [

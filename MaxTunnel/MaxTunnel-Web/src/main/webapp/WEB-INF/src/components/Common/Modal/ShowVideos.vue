@@ -1,7 +1,5 @@
 <template>
-  <Modal
-    v-model="modalPrams.state" :width="modalWidth"
-    title="视频">
+  <Modal v-model="modalPrams.state" :width="modalWidth" title="视频">
     <div class="modal-body" :style="{height:modalHeight+'px'}">
       <slot name="body">
         <div  >

@@ -1,22 +1,30 @@
 
--- ÐÞ¸ÄÁÐÀàÐÍ Í¬ÀàÐÍ×ª»»params [VARCHAR2(200 CHAR) -> VARCHAR2(500 CHAR)]
--- ¿ÉÖ±½ÓÖ´ÐÐ alter table ±í modify(ÁÐÃû VARCHAR2(500 CHAR));
+-- ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Í¬ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½params [VARCHAR2(200 CHAR) -> VARCHAR2(500 CHAR)]
+-- ï¿½ï¿½Ö±ï¿½ï¿½Ö´ï¿½ï¿½ alter table ï¿½ï¿½ modify(ï¿½ï¿½ï¿½ï¿½ VARCHAR2(500 CHAR));
 
 alter table T_OPERATION_LOG modify(params VARCHAR2(500 CHAR));
 alter table T_OPERATION_LOG modify(description VARCHAR2(500 CHAR));
 
--- ÐÞ¸ÄÁÐÀàÐÍ ²»Í¬ÀàÐÍ×ª»»card(number -> varchar2)
--- Ê¹ÓÃ´´½¨ÐÂÁÐÌæ»»¾ÉÁÐµÄ·½·¨£¬ÈçÏÂËùÊ¾
+-- staffï¿½ï¿½ï¿½Þ¸ï¿½
+--ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½Îªï¿½ï¿½
+alter table T_COMMON_STAFF modify DEPT_ID null;
+--ï¿½ï¿½ï¿½ï¿½Ö°Î»ï¿½ï¿½Îªï¿½ï¿½
+alter table T_COMMON_STAFF modify POSITION_ID null;
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½
+alter table T_COMMON_STAFF modify name not null;
 
--- ÖØÃüÃû¾ÉÁÐ
+-- ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½card(number -> varchar2)
+-- Ê¹ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ÐµÄ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 -- alter table T_TEST rename column card to temp;
 
--- ´´½¨ÐÂÁÐ
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 -- alter table T_TEST add card varchar2(50);
 
--- ÐÂÁÐ¸³Öµ
+-- ï¿½ï¿½ï¿½Ð¸ï¿½Öµ
 -- update T_TEST set card = temp;
 -- commit;
 
--- É¾³ý¾ÉÁÐ
+-- É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 -- alter table T_TEST drop column temp;

@@ -26,11 +26,9 @@ public interface InspectionTaskMapper {
 
     List<InspectionTask> getTasksByInspectionPlan2(@Param("planId") String planId);
     
-    int getFinishedInspectionTaskSumByMonth(InspectionVo inspectionVo);
+    int getCountByVo(InspectionVo inspectionVo);
     
-    int getInspectionTaskSumByYear(InspectionVo inspectionVo);
-    
-    int getFinishedInspectionTaskSumByYear(InspectionVo inspectionVo);
+    int getCountByCondition(InspectionVo inspectionVo);
     
     List<InspectionTaskDto> getInspectionTasksByVo(InspectionVo inspectionVo);
     

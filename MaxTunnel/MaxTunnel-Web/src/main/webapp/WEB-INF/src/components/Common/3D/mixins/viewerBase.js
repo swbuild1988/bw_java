@@ -14,19 +14,6 @@ export default ( containerId,viewer,domId,route ) => ({
             type: Boolean,
             default: true
         },
-        cameraPosition: {
-            type: Object,
-            default: () => {
-                return {
-                    longitude: 112.49360922053003,
-                    latitude: 37.71252325043172,
-                    height: -1.0311432831720453,
-                    roll: 2.582822844487964e-12,
-                    pitch: -0.30235173267000404,
-                    heading: 1.716482618088178
-                };
-            }
-        },
         undergroundMode: {
             type: Object,
             default: function () {
@@ -43,8 +30,6 @@ export default ( containerId,viewer,domId,route ) => ({
 
                 let elementChild = [].slice.call( els.children );
                 let [ gis ] = elementChild.filter(el => el.id === domId);
-                // console.log('elementChild',elementChild)
-                // console.log('gis',gis)
                 gis.style.display = "none";
 
                 els.removeChild(gis);
@@ -100,6 +85,7 @@ export default ( containerId,viewer,domId,route ) => ({
             });
         },
         getLayer(){
+            let _this = this;
             if ( Cesium.defined( this.scene ) ){
 
                 try {
@@ -114,7 +100,7 @@ export default ( containerId,viewer,domId,route ) => ({
                                 curBIM => (curBIM._selectEnabled = false)
                             );
                             //设置相机位置、视角，便于观察场景
-                            this.setViewAngle();
+                            _this.setViewAngle();
                         },
                         function(e) {
                             if (widget._showRenderLoopErrors) {
@@ -134,6 +120,8 @@ export default ( containerId,viewer,domId,route ) => ({
         },
         initProps(){
             let _this = this;
+            // 去除login/版本信息
+            _this.viewer._cesiumWidget._creditContainer.style.display = "none";
 
             if ( _this.undergroundMode.enable ) {
                 // 设置是否开启地下场景
@@ -197,11 +185,13 @@ export default ( containerId,viewer,domId,route ) => ({
                 gis.style.display = "block";
 
                 document.body.removeChild(gis);
-                document.getElementById( containerId ).appendChild(gis);
+                // document.getElementById( containerId ).appendChild(gis);
+                let parentElement = document.getElementById( containerId );
+                let firstChild = parentElement.firstChild;
+
+                parentElement.insertBefore( gis,firstChild );
             },100)
-                // console.log('getGis',gis)
-                //
-                // console.log('document.getElementById( containerId )',document.getElementById( containerId ))
+
             // 加载视角
             this.setViewAngle();
         },

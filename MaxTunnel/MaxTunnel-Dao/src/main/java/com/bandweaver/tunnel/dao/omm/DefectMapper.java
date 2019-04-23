@@ -44,18 +44,19 @@ public interface DefectMapper {
      * @return
      */
     List<DefectDto> getDefectsByCondition(DefectVo vo);
-
     /**
-     * 根据管廊和缺陷类型获得缺陷个数
-     *
+     * 根据条件获取缺陷数量
      * @param tunnelId
      * @param typeValue
+     * @param objectId
+     * @param levelValue
+     * @param statusValue
+     * @param startTime
+     * @param endTime
      * @return
      */
-    int getCountOfDefectByTunnelAndType(@Param("tunnelId") Integer tunnelId, @Param("typeValue") Integer typeValue);
-    
-    List<InspectionPlan> getDefectCountByTunnelId();
-    
+    int getCountByCondition(DefectVo vo);
+
     List<DefectDto> getDefects(DefectVo defectVo);
     
 }

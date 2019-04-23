@@ -26,6 +26,8 @@
         xData: [],
         option: {},
         yMin: 0,
+        timerId:null,
+        color:['#C23531','#2F4554','#61A0A8','#D48265','#91C7AE','#749F83'],
       }
     },
     components: {},
@@ -62,6 +64,7 @@
           tooltip: {
             trigger: 'axis'
           },
+          color:_this.color,
           legend: {
             itemHeight: 4,
             orient: "vertical",
@@ -77,7 +80,7 @@
           },
           grid: {
             top: '15%',
-            left: '10%',
+            left: '14%',
             right: '10%',
             bottom: '20%'
           },
@@ -113,7 +116,7 @@
                   } else if (value >= 10000000) {
                     value = value / 10000000 + "千万";
                   }
-                  return value;
+                  return value ;
                 }
 
                 ,
@@ -144,12 +147,19 @@
             _this.serises = [];
             _this.legendData = [];
             _this.xData = [];
-            data.forEach(a => {
+
+            data.forEach((a,index) => {
               var temp = {};
               temp.name = a.key;
               temp.type = 'line';
               temp.smooth = true;
-              _this.legendData.push(a.key);
+
+              _this.legendData.push({
+                  name:a.key,
+                  textStyle:{
+                      color:_this.color[index]
+                  }
+              });
               let tempData = [];
               a.val.filter(b => tempData.push(parseFloat(b.val.toFixed(2))));
               temp.data = tempData;
@@ -177,7 +187,7 @@
       },
       refreshData() {
         let _this = this;
-        setInterval(() => _this.fetchData(_this.requestUrl), 5000)
+        this.timerId = setInterval(() => _this.fetchData(_this.requestUrl), 5000)
       },
       sizeFunction(x) {
         var min = Math.min.apply(null, this.series.map(o1 => {
@@ -210,9 +220,14 @@
 
         return 0;
       }
-    }
-  }
+    },
+      beforeDestroy(){
+          let _this =this;
 
+          clearInterval( _this.timerId )
+      }
+
+  }
 </script>
 
 <style scoped>

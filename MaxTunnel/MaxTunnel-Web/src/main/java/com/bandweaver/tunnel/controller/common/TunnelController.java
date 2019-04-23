@@ -1,17 +1,16 @@
 package com.bandweaver.tunnel.controller.common;
 
-import static org.junit.Assume.assumeFalse;
-
+import java.security.Permission;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.dto.*;
 import com.bandweaver.tunnel.common.biz.itf.*;
 
-import org.activiti.engine.impl.variable.DateType;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.permission.WildcardPermission;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,32 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.TunnelStatus;
-import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
-import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
-import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
-import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
-import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.pojo.common.TunnelRun;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
-import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 import com.bandweaver.tunnel.common.biz.vo.TunnelVo;
-import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
-import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -65,15 +48,12 @@ public class TunnelController extends BaseController<Tunnel> {
     private AreaService areaService;
     @Autowired
     private SectionService sectionService;
-    @Autowired
-    private MeasObjModuleCenter measObjModuleCenter;
-    @Autowired
-    private MeasObjService measObjService;
 
 
     
     /**添加管廊
      * @param name             管廊名称
+     * @param sn
      * @param length           管廊长度（数值）
      * @param responsibilityId 负责人id（员工表）
      * @param constructId      建筑单位id（公司表）
@@ -81,6 +61,10 @@ public class TunnelController extends BaseController<Tunnel> {
      * @param camera           相机视角（字符串）
      * @param maxviewConfigId  二级子系统id
      * @param status           管廊状态
+     * @param crtTime
+     * @param startPoint
+     * @param endTime
+     * @param direction
      * @return {"msg":"请求成功","code":"200","data":{}}
      * @author shaosen
      * @date 2018年7月25日
@@ -114,6 +98,23 @@ public class TunnelController extends BaseController<Tunnel> {
      */
     @RequestMapping(value = "tunnels", method = RequestMethod.GET)
     public JSONObject getList() {
+
+        Subject subject= SecurityUtils.getSubject();
+
+        String msg = "";
+        msg = subject.isPermitted("tunnels:create") ? "可以管廊创建" : "不可以管廊创建";
+        LogUtil.info(msg);
+        msg = subject.isPermitted("tunnels:create:1") ? "可以管廊1创建" : "不可以管廊1创建";
+        LogUtil.info(msg);
+        msg = subject.isPermitted("tunnels:create:2") ? "可以管廊2创建" : "不可以管廊2创建";
+        LogUtil.info(msg);
+        msg = subject.isPermitted("tunnels:*:1") ? "可以管廊1为所欲为" : "不可以管廊1为所欲为";
+        LogUtil.info(msg);
+        msg = subject.isPermitted("tunnels:*:2") ? "可以管廊2为所欲为" : "不可以管廊2为所欲为";
+        LogUtil.info(msg);
+
+
+
         List<TunnelSimpleDto> tunnels = tunnelService.getList();
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, tunnels);
     }
@@ -168,11 +169,7 @@ public class TunnelController extends BaseController<Tunnel> {
     public JSONObject deleteBatch(@PathVariable String ids) {
 
         LogUtil.info("ids : " + ids);
-        String[] arr = ids.split(",");
-        List<Integer> id_list = new ArrayList<>();
-        for (String str : arr) {
-            id_list.add(DataTypeUtil.toInteger(str));
-        }
+        List<Integer> id_list = CommonUtil.convertStringToList(ids);
         tunnelService.deleteBatch(id_list);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.xml.soap.SOAPException;
 
@@ -293,6 +294,18 @@ public class OnvifServiceImpl implements OnvifService {
 	public void delSrcList() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void addSnap() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getSnapJSON(VideoDto dto, Date start, Date end) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -58,6 +58,7 @@ public interface AlarmService {
 	void cleanAlarmBatch(AlarmVo vo);
 
 	int getCountByTunnel(Integer id);
+<<<<<<< HEAD
 
 	List<Alarm> getListFromYear(Date beginDayOfYear);
 
@@ -65,5 +66,14 @@ public interface AlarmService {
 
 	List<Alarm> getAllList();
 
+=======
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
+	List<Alarm> getListFromYear(Date beginDayOfYear);
+
+	int getCountByTime(Date date);
+
+	List<Alarm> getAllList();
+
+	List<AlarmDto> getListByStartTimeAndEndTime(Date startTime,Date endTime);
 }

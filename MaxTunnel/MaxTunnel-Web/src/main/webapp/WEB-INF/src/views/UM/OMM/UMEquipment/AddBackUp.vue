@@ -5,20 +5,35 @@
             <FormItem label="备品名称：" prop="name">
                 <Input type="text" v-model="addBackUp.name"></Input>
             </FormItem>
-            <FormItem label="备品类型：" prop="typeId">
+            <FormItem label="备品所属系统：" prop="typeId">
                 <Select v-model="addBackUp.typeId">
                     <Option v-for="item in backUpTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="备品型号：" prop="modelId">
+            <FormItem label="备品规格型号：" prop="modelId">
                 <Select v-model="addBackUp.modelId">
                     <Option v-for="item in backUpModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
+            </FormItem>
+            <FormItem label="额定电压：" prop="ratedVoltage">
+                <Input v-model="addBackUp.ratedVoltage"></Input>
+            </FormItem>
+            <FormItem label="量程：" prop="range">
+                <Input v-model="addBackUp.range"></Input>
+            </FormItem>
+            <FormItem label="厂家：" prop="factory">
+                <Input v-model="addBackUp.factory"></Input>
+            </FormItem>
+            <FormItem label="品牌：" prop="brand">
+                <Input v-model="addBackUp.brand"></Input>
             </FormItem>
             <FormItem label="供应商：" prop="venderId">
                 <Select v-model="addBackUp.venderId">
                     <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
+            </FormItem>
+            <FormItem label="质保期限：" prop="qaTerm">
+                <Input v-model="addBackUp.qaTerm" placeholder="请输入质保期限"></Input>
             </FormItem>
             <FormItem label="备品数量：">
                 <InputNumber v-model="addBackUp.count" :min="1" style="width: 100%;"></InputNumber>
@@ -46,7 +61,12 @@
                     count: 1,
                     inTime: new Date(),
                     status: true,
-                    venderId: null
+                    venderId: null,
+                    ratedVoltage: null,
+                    range: null,
+                    factory: null,
+                    brand: null,
+                    qaTerm: null
                 },
                 backUpTypes:[],
                 backUpModel:[],
@@ -75,6 +95,21 @@
                     ],
                     venderId: [
                         { type: 'number', required: true, message: '请选择供应商', trigger: 'change' }
+                    ],
+                    ratedVoltage: [
+                        { required: true, message: '额定电压不能为空', trigger: 'blur' }
+                    ],
+                    range: [
+                        { required: true, message: '量程不能为空', trigger: 'blur' }
+                    ],
+                    factory: [
+                        { required: true, message: '厂家不能为空', trigger: 'blur' }
+                    ],
+                    brand: [
+                        { required: true, message: '品牌不能为空', trigger: 'blur' }
+                    ],
+                    qaTerm: [
+                        { required: true, message: '质保期限不能为空', trigger: 'blur' }
                     ]
                 }
             }

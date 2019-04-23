@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.service.common;
 import java.util.List;
 import java.util.Set;
 
+import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,4 +87,8 @@ public class UserServiceImpl implements UserService {
 		return returnData;
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

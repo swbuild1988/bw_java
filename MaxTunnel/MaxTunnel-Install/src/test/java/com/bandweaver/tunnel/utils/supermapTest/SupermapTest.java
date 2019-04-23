@@ -9,8 +9,8 @@ import com.bandweaver.tunnel.utils.supermapCode.Supermap;
  */
 public class SupermapTest {
 	public static void main(String [] args) {
-		String url = "E:\\gcdj\\gcdj.sxwu";
-		String datasource = "古城大街";
+		String url = "F:\\超图发布\\三维服务\\3Dserver\\3Dserver.sxwu";
+		String datasource = "datasources";
 		String dataset = "安全设备";
 		String [] fields = {"X","Y","Z"};
 		Supermap supermap = new Supermap();

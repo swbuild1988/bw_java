@@ -191,11 +191,7 @@ public class SpareController {
 	 */
 	@RequestMapping(value = "spares/{ids}", method = RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable String ids) {
-		String [] ss = ids.split(",");
-		List<Integer> list = new ArrayList<>();
-		for(String s : ss) {
-			list.add(Integer.valueOf(s));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		int i = spareService.deleteByIds(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,i);
 	}
@@ -224,32 +220,34 @@ public class SpareController {
 	 * 批量添加备品出库
 	 * @param ids "1,2,3"
 	 * @param tunnelId 所属管廊，选仪表给0
+	 * @param objId 监测对象id
 	 * @param staffId 取用人id
 	 * @param userId 操作员id
 	 * @param outTime 出库时间
-	 * @param whither 备品去向
+	 * @param whither 备品去向，现在默认去到管廊设备
 	 * @param describe 描述
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月28日
 	 */
-	@RequestMapping(value = "spare-outs/{ids}/tunnels/{tunnelId}", method = RequestMethod.POST)
+	@RequestMapping(value = "spare-outs/{ids}/tunnels/{tunnelId}/objId/{objId}", method = RequestMethod.POST)
 	public JSONObject addBatch(@PathVariable("ids") String ids,
 			@PathVariable("tunnelId") Integer tunnelId,
+			@PathVariable("objId") Integer objId,
 			@RequestBody SpareOut s) {
-		String [] strs = ids.split(",");
+		List<Integer> strs = CommonUtil.convertStringToList(ids);
 		List<SpareOut> list = new ArrayList<>();
-		for(String str : strs) {
+		for(Integer id : strs) {
 			SpareOut out = new SpareOut();
-			out.setId(Integer.valueOf(str));
+			out.setId(id);
 			out.setStaffId(s.getStaffId());
 			out.setOutTime(s.getOutTime());
 			out.setUserId(s.getUserId());
-			out.setWhither(s.getWhither());
+			out.setWhither(SpareWhitherEnum.PIPE.getValue());
 			out.setDescribe(s.getDescribe() == null ? "" : s.getDescribe());
 			list.add(out);
 		}
-		spareOutService.addBatch(list, tunnelId);
+		spareOutService.addBatch(list, tunnelId, objId);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	

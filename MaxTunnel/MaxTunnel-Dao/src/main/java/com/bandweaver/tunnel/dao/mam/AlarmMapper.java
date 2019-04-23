@@ -45,5 +45,5 @@ public interface AlarmMapper {
 
 	int getCountByTime(Date date);
 
-	
+	List<AlarmDto> getListByStartTimeAndEndTime(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

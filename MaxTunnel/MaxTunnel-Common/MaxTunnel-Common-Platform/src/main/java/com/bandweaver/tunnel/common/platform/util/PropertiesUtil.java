@@ -16,43 +16,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import com.alibaba.fastjson.util.TypeUtils;
 
 public class PropertiesUtil  extends PropertyPlaceholderConfigurer{
-	
-	
-/*	public static Properties prop = null;
-	
-	static {
-		InputStream is = null;
-		try {
-			prop = new Properties();
-			is = PropertiesUtil.class.getClassLoader().getResourceAsStream("properties/config.properties");
-			InputStreamReader isr = new InputStreamReader(is, "UTF-8");//解析中文
-			prop.load(isr);
 
-		} catch (IOException e) {
-			throw new BandWeaverException(e.toString());
-		}finally {
-			if(is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	
-	public static Object getValue(String key) {
-		Set<String> keys = prop.stringPropertyNames();
-		for (String str : keys) {
-			if(str.equals(key)) {
-				return prop.getProperty(key);
-			}
-		}
-		return null;
-	}*/
-	
-	
 	private static Map<String, Object> ctxPropertiesMap;
 	 
 	/**

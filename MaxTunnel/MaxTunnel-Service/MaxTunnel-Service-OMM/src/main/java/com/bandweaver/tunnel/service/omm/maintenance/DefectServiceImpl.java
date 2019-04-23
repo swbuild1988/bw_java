@@ -47,15 +47,14 @@ public class DefectServiceImpl implements DefectService {
     }
 
     @Override
-    public int getCountOfDefectByTunnelAndType(Integer tunnelId, Integer typeValue) {
-        return defectMapper.getCountOfDefectByTunnelAndType(tunnelId, typeValue);
+    public int getCountByCondition(DefectVo vo) {
+        return defectMapper.getCountByCondition(vo);
     }
 
     @Override
     public List<DefectDto> getDefectsByCondition(DefectVo vo) {
         return defectMapper.getDefectsByCondition(vo);
     }
-
 
     /**
      * 维修完成后，更改缺陷状态
@@ -69,11 +68,6 @@ public class DefectServiceImpl implements DefectService {
         defect.setStatus(0);
         defectMapper.update(defect);
     }
-
-	@Override
-	public List<InspectionPlan> getDefectCountByTunnelId() {
-		return defectMapper.getDefectCountByTunnelId();
-	}
 
 	@Override
 	public PageInfo<DefectDto> dataGrid(DefectVo vo) {

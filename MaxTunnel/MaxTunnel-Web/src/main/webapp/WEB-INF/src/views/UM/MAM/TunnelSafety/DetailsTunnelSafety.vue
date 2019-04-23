@@ -92,6 +92,7 @@
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
     import Carousel from "../../../../components/Common/Carousel.vue";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
+    import { MeasObjServer } from '../../../../services/MeasObjectSerivers'
 
     export default {
         name: "detail-tunnel-safety",
@@ -145,7 +146,7 @@
         beforeRouteLeave(to, from, next) {
             if (
                 to.name == "设备管理主页" ||
-                to.name == "UMPatrolHomePage" ||
+                to.name == "巡检计划总览" ||
                 to.name == "虚拟巡检" ||
                 to.name == "人员定位详情" ||
                 to.name == "管廊安防监控列表" ||
@@ -316,6 +317,21 @@
 
             //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
+                if(clickStatus === null){
+                    let param = {
+                        id: id,
+                        status: ObjVal ? 1 : 0
+                    }
+                    MeasObjServer.changeEquimentStatus(param).then(
+                        res=>{
+                            this.$Message.info('操作成功')
+                        },
+                        error=>{
+                            this.$Message.error('操作失败')
+                        }
+                    )
+                }
+              
                 if (datatypeId != 1) {
                     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
                 }

@@ -26,11 +26,8 @@ public interface InspectionPlanMapper {
 
 	InspectionPlan getInspectionPlanByProcessInstanceId(String processInstanceId);
 
-	int getInspectionPlanSumByYear(InspectionVo inspectionVo);
-	
-	int getInspectionPlanSumByMonth(InspectionVo inspectionVo);
+	int getCountByCondition(InspectionVo inspectionVo);
 	
 	List<InspectionPlan> getAllInspectionPlan();
 	
-	List<InspectionPlan> getTunnelCountByTunnelId();
 }

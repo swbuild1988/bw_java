@@ -5,7 +5,7 @@ public class Point3D {
     private Double lat;
     private Double height;
 
-    public Point3D(){
+    public Point3D() {
         this.lat = 0.0;
         this.lng = 0.0;
         this.height = 0.0;
@@ -16,7 +16,7 @@ public class Point3D {
     }
 
     public void setLng(Double lng) {
-        this.lng = lng;
+        this.lng = (double) Math.round(lng * 100000000) / 100000000;
     }
 
     public Double getLat() {
@@ -24,7 +24,7 @@ public class Point3D {
     }
 
     public void setLat(Double lat) {
-        this.lat = lat;
+        this.lat = (double) Math.round(lat * 100000000) / 100000000;
     }
 
     public Double getHeight() {

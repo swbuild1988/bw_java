@@ -12,7 +12,7 @@ export default {
   data() {
     return {
         tunnelCustomer:{
-          moduleName:"管廊客户管理",
+          moduleName:"企业客户管理",
           leftTree:[
             {
               id: 1,
@@ -41,6 +41,6 @@ export default {
     goToMoudle(path) {
       this.$router.push(path);
     }
-  }
+  },
 };
 </script>

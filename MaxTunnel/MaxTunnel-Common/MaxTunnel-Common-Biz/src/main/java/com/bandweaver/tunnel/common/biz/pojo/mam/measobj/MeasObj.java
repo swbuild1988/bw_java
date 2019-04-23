@@ -1,7 +1,7 @@
 package com.bandweaver.tunnel.common.biz.pojo.mam.measobj;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Objects;
 
 public class MeasObj implements Serializable {
     /**
@@ -26,6 +26,31 @@ public class MeasObj implements Serializable {
     private String height;
     /** 偏差 */
     private Double deviation;
+
+    /**
+     * 关联的应急预案id
+     */
+    private String planIds;
+    /**
+     * 关联的视频id
+     */
+    private String videoIds;
+
+    public String getPlanIds() {
+        return planIds;
+    }
+
+    public void setPlanIds(String planIds) {
+        this.planIds = planIds;
+    }
+
+    public String getVideoIds() {
+        return videoIds;
+    }
+
+    public void setVideoIds(String videoIds) {
+        this.videoIds = videoIds;
+    }
 
     public Integer getId() {
         return id;
@@ -147,4 +172,33 @@ public class MeasObj implements Serializable {
 				+ objtypeId + ", actived=" + actived + ", description=" + description + ", longitude=" + longitude
 				+ ", latitude=" + latitude + ", height=" + height + ", deviation=" + deviation + "]";
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MeasObj measObj = (MeasObj) o;
+        return actived == measObj.actived &&
+                Objects.equals(id, measObj.id) &&
+                Objects.equals(tunnelId, measObj.tunnelId) &&
+                Objects.equals(storeId, measObj.storeId) &&
+                Objects.equals(areaId, measObj.areaId) &&
+                Objects.equals(sectionId, measObj.sectionId) &&
+                Objects.equals(name, measObj.name) &&
+                Objects.equals(datatypeId, measObj.datatypeId) &&
+                Objects.equals(objtypeId, measObj.objtypeId) &&
+                Objects.equals(description, measObj.description) &&
+                Objects.equals(longitude, measObj.longitude) &&
+                Objects.equals(latitude, measObj.latitude) &&
+                Objects.equals(height, measObj.height) &&
+                Objects.equals(deviation, measObj.deviation) &&
+                Objects.equals(planIds, measObj.planIds) &&
+                Objects.equals(videoIds, measObj.videoIds);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, tunnelId, storeId, areaId, sectionId, name, datatypeId, objtypeId, actived, description, longitude, latitude, height, deviation, planIds, videoIds);
+    }
 }

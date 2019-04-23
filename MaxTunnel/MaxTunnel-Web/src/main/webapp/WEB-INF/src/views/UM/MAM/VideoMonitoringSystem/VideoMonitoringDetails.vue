@@ -1,22 +1,23 @@
 <template>
     <div class="whole">
         <Row class="query">
-            <Col span="9" offset="1">
+            <Col span="10" offset="1">
                  <span style="font-size: 1.66vmin;">区域:</span>
                 <Select v-model="conditions.areaId" style="width:60%;" id="area">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
-            <Col span="9">
+            <Col span="10">
                <span style="font-size: 1.66vmin;">监测仓:</span>
                 <Select v-model="conditions.storeId" style="width:60%;" id="store">
                     <Option value=null key="0">所有</Option>
                     <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
-            <Col span="2" offset="1">
+            <Col span="3">
                 <Button type="primary" icon="ios-search" @click="search" >查询</Button>
+                <!-- <Button type="primary" @click="histories" >一日历史记录</Button> -->
             </Col>
         </Row>
         <Row class="content">
@@ -36,6 +37,7 @@
                     <div style="height: 90%;" class="controlBody">
                         <h2 class="videoName" v-if="!curVideo">请选择摄像机</h2>
                         <h2 v-if="curVideo" class="videoName">{{ curVideo.name }}</h2>
+                        <p v-if="curVideo">{{ curVideo.tunnelName + ' ' + curVideo.areaName + ' ' + curVideo.storeName }}</p>
                         <p v-if="curVideo" >{{ curVideo.description }}</p>
                         <div class="posContent" v-if="curVideo" >
                             <div class="positions" v-for="(pos,index) in perPositions" :key="index">
@@ -73,7 +75,7 @@
                                             <video-component v-bind:video="item" v-bind:id="'camera'+item.id"></video-component>
                                         </div>
                                         <div class="options">
-                                            <div type="primary" @click="history(index)" class="history">历史记录</div>
+                                            <div type="primary" @click="history(item)" class="history">历史记录</div>
                                             <div type="primary" @click="config(item)" class="config">相机设置</div>
                                         </div>
                                     </div>
@@ -180,7 +182,7 @@ export default {
                     _this.init.stores = result;
                 },
                 error => {
-                    console.log(error);
+                    _this.Log.info(error);
                 }
             );
             TunnelService.getAreasByTunnelId(_this.conditions.tunnelId).then(
@@ -188,7 +190,7 @@ export default {
                     _this.init.areas = result;
                 },
                 error => {
-                    console.log(error);
+                    _this.Log.info(error);
                 }
             );
             VideoService.getCamerasByTunnelId(_this.conditions.tunnelId).then(
@@ -204,6 +206,9 @@ export default {
                         temp.areaId = camera.areaId
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
+                        temp.tunnelName = camera.tunnelName ? camera.tunnelName : '';
+                        temp.storeName = camera.storeName ? camera.storeName : '';
+                        temp.areaName = camera.areaName ? camera.areaName : '';
                         _this.cameraList.push(temp);
                     });
                     _this.Log.info("videos:", _this.cameraList);
@@ -234,6 +239,9 @@ export default {
                             temp.positionSupport =
                                 camera.ptzOperationsSupported;
                             temp.description = camera.description;
+                            temp.tunnelName = camera.tunnelName ? camera.tunnelName : '';
+                            temp.storeName = camera.storeName ? camera.storeName : '';
+                            temp.areaName = camera.areaName ? camera.areaName : '';
                             _this.cameraList.push(temp);
                         });
                     }
@@ -243,11 +251,11 @@ export default {
                 }
             );
         },
-        history(index) {
+        history(camera) {
             this.$router.push({
-                name: "历史详情",
+                name: "历史照片",
                 params: {
-                    tunnelId: this.conditions.tunnelId
+                    camera: camera
                 }
             });
         },
@@ -361,6 +369,14 @@ export default {
         },
         up(type){
             this.clicked[type] = false
+        },
+        histories(){
+            this.$router.push({
+                name: "历史照片",
+                params: {
+                    tunnelId: this.conditions.tunnelId
+                }
+            });
         }
     }
 };
@@ -566,6 +582,9 @@ export default {
     font-size: 1.28vmin !important;
     height: 2.6vmin !important;
     line-height: 3.2vmin !important;
+}
+.query >>> .ivu-select-dropdown{
+    max-height: 20vmin !important;
 }
 
 </style>
