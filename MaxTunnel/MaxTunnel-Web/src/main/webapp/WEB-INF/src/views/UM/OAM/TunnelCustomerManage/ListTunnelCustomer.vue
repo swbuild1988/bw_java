@@ -58,7 +58,7 @@
                             </div>
                             <div class="bank">
                                 <Icon type="cash"></Icon>
-                                <span>{{item.bank}}</span>
+                                <span>{{item.bankName}}</span>
                             </div>
                         </div>
                         <div class="crtTime">

@@ -126,7 +126,9 @@ export default {
                 return {state: false, modalInfo: null, planData: null};
             }
         },
-        alarmContainer: []
+        alarmContainer: {
+            type: Object
+        }
     },
     data() {
         return {
@@ -171,12 +173,10 @@ export default {
         },
         'modalPrams.modalInfo': function(newVal, oldVal){
             this.modalPrams.modalInfo = newVal
-            console.log("old", oldVal)
-            console.log("newVal", newVal)
         },
-        'alarmContainer': function(newVal){
-            console.log("childalarmContainer", newVal)
-        }
+        // 'alarmContainer': function(newVal){
+        //     console.log("childalarmContainer", newVal)
+        // }
     },
     mounted() {
         this.setVideoSpan();

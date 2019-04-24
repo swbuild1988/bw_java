@@ -347,22 +347,26 @@ export default {
         },
         //自动生成起点和终点
         autoPoint(){
-            PipeService.autoPoint(this.deleteSelect[0].id).then(
-                result => {
-                        this.$Message.success("成功生成起点和终点")
-                },
-                error => {
-                    if(this.deleteSelect.length==0){
-                        this.$Message.error("请选择管廊")
-                    }else if(this.deleteSelect.length>1&&this.deleteSelect[0].startPoint!=null&&this.deleteSelect[0].endPoint!=null){
-                        this.$Message.error("一次只能选择一条管廊")
-                    }else if((this.deleteSelect.length==1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length==1&&this.deleteSelect[0].endPoint==null)){
-                        this.$Message.error("管廊的起点和终点不能为空")
-                    }else if((this.deleteSelect.length>1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length>1&&this.deleteSelect[0].endPoint==null)){
-                        this.$Message.error("一次只能选择一条管廊,且管廊的起点和终点不能为空")
+            if(this.deleteSelect.length>0){
+                PipeService.autoPoint(this.deleteSelect[0].id).then(
+                    result => {
+                            this.$Message.success("成功生成起点和终点")
+                    },
+                    error => {
+                        if(this.deleteSelect.length==0){
+                            this.$Message.error("请选择管廊")
+                        }else if(this.deleteSelect.length>1&&this.deleteSelect[0].startPoint!=null&&this.deleteSelect[0].endPoint!=null){
+                            this.$Message.error("一次只能选择一条管廊")
+                        }else if((this.deleteSelect.length==1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length==1&&this.deleteSelect[0].endPoint==null)){
+                            this.$Message.error("管廊的起点和终点不能为空")
+                        }else if((this.deleteSelect.length>1&&this.deleteSelect[0].startPoint==null)||(this.deleteSelect.length>1&&this.deleteSelect[0].endPoint==null)){
+                            this.$Message.error("一次只能选择一条管廊,且管廊的起点和终点不能为空")
+                        }
                     }
-                }
-            )
+                )
+            }else{
+                this.$Message.error("请选择所要自动生成起点和终点的管廊")
+            }
         }
     },
     components: {

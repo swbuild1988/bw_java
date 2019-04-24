@@ -85,28 +85,28 @@ export const asyncRouterMap = [{
                     name: '巡检计划总览',
                 }],
             },
-            {
-                path: 'planPatrol',
-                component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/PlanPatrol'], resolve),
-                name: '计划与任务',
-                meta: {
-                    title: 'permission',
-                    roles: ['admin', 'editor'],
-                },
-                children: [{
-                    path: 'queryAnnualPlan',
-                    component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/annualPlan'], resolve),
-                    name: '查询年度计划',
-                }, {
-                    path: 'queryMonthPlan',
-                    component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/monthPlan'], resolve),
-                    name: '查询本月计划',
-                }, {
-                    path: 'patrolDetails',
-                    component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/PatrolDetails'], resolve),
-                    name: '计划详情',
-                }],
-            },
+            // {
+            //     path: 'planPatrol',
+            //     component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/PlanPatrol'], resolve),
+            //     name: '计划与任务',
+            //     meta: {
+            //         title: 'permission',
+            //         roles: ['admin', 'editor'],
+            //     },
+            //     children: [{
+            //         path: 'queryAnnualPlan',
+            //         component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/annualPlan'], resolve),
+            //         name: '查询年度计划',
+            //     }, {
+            //         path: 'queryMonthPlan',
+            //         component: (resolve) => require(['@/views/UM/OMM/PlanPatrol/monthPlan'], resolve),
+            //         name: '查询本月计划',
+            //     }, {
+            //         path: 'patrolDetails',
+            //         component: (resolve) => require(['@/views/UM/OMM/PatrolScheme/PatrolDetails'], resolve),
+            //         name: '计划详情',
+            //     }],
+            // },
             {
                 path: 'patrolTask',
                 component: (resolve) => require(['@/views/UM/OMM/PatrolTask/PatrolTask'], resolve),
@@ -270,6 +270,10 @@ export const asyncRouterMap = [{
                     path: 'categories/:id',
                     component: (resolve) => require(['@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionCategory'], resolve),
                     name: '能耗类别详情',
+                }, {
+                    path: 'substation/:id',
+                    component: (resolve) => require(['@/views/UM/OAM/EnergyConsumptionManage/Substation'], resolve),
+                    name: '变电所信息',
                 }],
             },
             {
@@ -598,7 +602,18 @@ export const asyncRouterMap = [{
                     path: 'execute/:processKey',
                     component: (resolve) => require(['@/views/UM/EM/Plan/ExecutePlan'], resolve),
                     name: '执行预案',
-                }],
+                },
+                {
+                    path: 'personnelOrgStructure',
+                    component: (resolve) => require(['@/views/UM/EM/Plan/PersonnelOrgStructure'], resolve),
+                    name: '人员组织架构'
+                },
+                {
+                    path: 'emerManage',
+                    component: (resolve) => require(['@/views/UM/EM/Plan/EmerManage'], resolve),
+                    name: '应急管理人员管理'
+                }
+            ],
             },
             {
                 path: 'disaster',
@@ -794,6 +809,10 @@ export const asyncRouterMap = [{
             path: 'objPreplan',
             component: (resolve) => require(['@/views/CM/EmPlanControl/ObjPrePlan'], resolve),
             name: '监测对象与应急预案'
+        }, {
+            path: 'powerSubstation',
+            component: (resolve) => require(['@/views/CM/PowerSubstation/PowerSubstationConfig'], resolve),
+            name: '变电所信息配置'
         }],
     },
     {

@@ -247,7 +247,7 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
                 messageType: messageTypes,
                 billboard: {
                     image: image.key,
-                    scaleByDistance: new Cesium.NearFarScalar(0, 1, 3500, 0.8),
+                    scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0),
                 },
                 show: showEntity
             }
@@ -352,7 +352,7 @@ export function getEntitySet(setParam) {
                             billboard: {
                                 image: type.key,
                                 height: 30,
-                                scaleByDistance: ['units'].indexOf(setParam.messageType) != -1 ? new Cesium.NearFarScalar(0, 1, 3500, 0.1) : new Cesium.NearFarScalar(0, 1, 3500, 0.8),
+                                scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0),
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: ['units'].indexOf(setParam.messageType) != -1 ? {

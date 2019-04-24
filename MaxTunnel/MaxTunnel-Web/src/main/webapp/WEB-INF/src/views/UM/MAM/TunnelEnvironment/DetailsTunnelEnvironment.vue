@@ -35,11 +35,8 @@
         <div style="margin: 1vh;">
             <check-select v-bind="storeProp" v-on:toParent="getStoreId"></check-select>
         </div>
-        <Tabs value="table">
-            <TabPane label="table" name="table">
-                <Table :columns="environmentColums" :data="objTableDate"></Table>
-            </TabPane>
-            <TabPane label="card" name="card">
+        <Tabs v-model="choosedTabPane" @on-click="chooseTab">
+            <TabPane label="卡片" name="卡片">
                 <Row :gutter="16">
                     <Col span="12">
                         <div class="data">
@@ -83,6 +80,9 @@
                         </Row>
                     </Col>
                 </Row>
+            </TabPane>
+            <TabPane label="表格" name="表格">
+                <Table :columns="environmentColums" :data="objTableDate"></Table>
             </TabPane>
         </Tabs>
     </div>
@@ -209,6 +209,13 @@
                 deep: true
             }
         },
+        created(){
+            if(localStorage.getItem('choosedTab')){
+                this.choosedTabPane = localStorage.getItem('choosedTab')
+            }else{
+                this.choosedTabPane = '卡片'
+            }
+        },
         beforeRouteLeave(to, from, next) {
             if (
                 to.name == "设备管理主页" ||
@@ -331,8 +338,8 @@
                 //获取监测仓列表
                 TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                     result => {
-                        _this.storeProp.dataList = [{ id: 0, name: "全部" }];
-                        _this.storeProp.dataList = result
+                        var arr = [{ id: 0, name: "全部" }]
+                        _this.storeProp.dataList = arr.concat(result)
                         if(this.$route.query.storeId!=undefined){
                             _this.storeProp.selectObj.selectId = this.$route.query.storeId
                         }else{
@@ -350,10 +357,10 @@
                 //获取区域列表
                 TunnelService.getTunnelArea(_this.tunnelId).then(result => {
                     if (result) {
-                        // _this.areas = [{
-                        //     id: 0,
-                        //     name: "全部"
-                        // }];
+                        _this.areas = [{
+                            id: 0,
+                            name: "全部"
+                        }];
                         result.forEach(a => {
                             var temp = {};
                             temp.name = a.name;
@@ -463,7 +470,6 @@
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
                     result => {
-                        console.log("result", result)
                         _this.objTableDate = result
                         _this.Obj = [];
                         result.forEach(a => {
@@ -519,6 +525,9 @@
             },
             chooseModule(val) {
                 this.curModule = val;
+            },
+            chooseTab(name){
+                localStorage.setItem("choosedTab",name)
             }
         },
         beforeDestroy() {

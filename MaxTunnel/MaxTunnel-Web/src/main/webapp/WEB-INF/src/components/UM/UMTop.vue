@@ -4,9 +4,11 @@
 			<Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
 				<div class="layout-logo"></div>
 				<div class="layout-title">
-					<h1>
-						<a class="mainTitle" @click="goToMoudle({ path: '/UMMain'})">{{title}}</a>
-					</h1>
+					<!-- <h1> -->
+						<a @click="goToMoudle({ path: '/UMMain'})">
+							<img :src="titlePic" class="mainTitle"></img>
+						</a>
+					<!-- </h1> -->
 				</div>
 				<div class="layout-nav">
 					<div style="position: fixed;right: 3.4vmin;">
@@ -69,7 +71,8 @@ export default {
 	data() {
 		return {
 			umImg: Img,
-			title: "综合管廊统一管理平台",
+			// title: "综合管廊统一管理平台",
+			titlePic: require('../../assets/UM/maxTunnelDetails.png'),
 			aboutUs: {
 				show: {
 					state: false
@@ -150,11 +153,6 @@ export default {
 							name: "管廊合同管理",
 							url: "/UM/tunnelContract/list",
 							path: "/UM/tunnelContract/list"
-						},
-						{
-							name: "日志管理",
-							url: "/UM/operationLog/query",
-							path: "/UM/operationLog/query"
 						}
 					]
 				},
@@ -390,13 +388,16 @@ export default {
 }
 
 .mainTitle {
-	color: #fff;
-	font-size: 4vmin;
+	/* color: #fff;
+	font-size: 4vmin; */
+	margin-top: 2.5vh;
+	margin-left: 0.5vw;
+	height: 4vh;
 }
 
-.mainTitle:hover {
+/* .mainTitle:hover {
 	color: #66ccee;
-}
+} */
 
 .ivu-avatar-large {
 	width: 4vmin;

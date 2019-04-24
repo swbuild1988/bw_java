@@ -33,7 +33,7 @@
                                     </Select>
                                 </Col>
                                 <Col span="5"> 
-                                    <Input readonly v-model="equipment.section.name"></Input>
+                                    <Input readonly v-model="equipment.sectionId"></Input>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -152,7 +152,7 @@ export default {
                 statusName: null,
                 obj: { id: null, name: null },
                 objId: 1,
-                section: null,
+                sectionId: null,
                 ratedVoltage: null,
                 range: null,
                 factory: null,
