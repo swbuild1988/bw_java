@@ -87,12 +87,12 @@ var PipeService = {
     },
     autoPoint(id){
         return new Promise((resolve, reject) => {
-            axios.get("areas/auto-point/"+id).then(res=>{
+            axios.get("tunnels/"+id+"/auto-cal-area-section").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
                 }else{
-                    reject(msg+"地址：areas/auto-point/"+id)
+                    reject(msg+"地址：tunnels/"+id+"/auto-cal-area-section")
                 }
             })
         })

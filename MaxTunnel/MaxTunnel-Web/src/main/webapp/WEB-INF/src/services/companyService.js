@@ -20,6 +20,28 @@ var CompanyService = {
 				.catch(error => {
 					reject(error.response.status + '  ' + error.response.data)
 				})
+			// let data = {
+			// 	total: 1,
+			// 	list: [
+			// 	{
+			// 		account: '账户1',
+			// 		address: '浦东新区上科路388号',
+			// 		bank: 1,
+			// 		bankName: '中国建设银行',
+			// 		creditNo: 234245979245,
+			// 		crtTime: 1529596800000,
+			// 		customers: null,
+			// 		id: 1,
+			// 		imgUrl: null,
+			// 		inspectionInfo: null,
+			// 		inspectionNo: null,
+			// 		inspectionTime: null,
+			// 		mail: 'pub@bdw.com',
+			// 		name: "波汇科技",
+			// 		phone: '021-9997932'
+			// 	}
+			// ]}
+			// resolve(data)
 		})
     },
     // 根据Id查企业详情

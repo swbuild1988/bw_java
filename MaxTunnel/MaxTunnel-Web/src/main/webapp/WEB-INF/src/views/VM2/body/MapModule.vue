@@ -149,24 +149,24 @@
                 leaveClass: "animated zoomOut",
                 allVideos: [],
                 searchCamera: {
-                    openSearch: true,
+                    openSearch: false,
                     isShow: true
                 },
                 unitsPosition: {
-                    openPosition: true,
+                    openPosition: false,
                     isShow: true
                 },
                 personnelPosition: {
-                    openPosition: true,
+                    openPosition: false,
                     isShow: true,
                     refreshTime: 10000
                 },
                 defectPosition: {
-                    openPosition: true,
+                    openPosition: false,
                     isShow: true
                 },
                 eventsPosition: {
-                    openPosition: true
+                    openPosition: false
                 },
                 openPlanPosition: {
                     openPosition: true
@@ -192,7 +192,7 @@
         methods: {
             init() {
                 let _this = this;
-                Vue.prototype.MQ.openMQ(this.MQCallback);
+                // Vue.prototype.MQ.openMQ(this.MQCallback);
                 _this.getVideos(); //调用视屏接口
                 _this.eventListener();
                 _this.$refs.smViewer.addIdentifierViewer(); //添加路线

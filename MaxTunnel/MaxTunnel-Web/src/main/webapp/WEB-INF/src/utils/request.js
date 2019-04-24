@@ -16,7 +16,7 @@ export default async () => {
         if (process.env.NODE_ENV == 'development') {
             // 开发环境配置
             // axios.defaults.baseURL = serverconfig.ApiUrl;
-            axios.defaults.baseURL = "/MaxTunnel-Web"
+            axios.defaults.baseURL = "/MaxTunnel-Web";
             Vue.prototype.ServerConfig = '/static';
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
             Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
@@ -30,18 +30,6 @@ export default async () => {
             console.log("进入生产环境配置")
             console.log('axios', axios)
             Vue.prototype.ServerConfig = '/dist/static';
-            // axios.get('dist/static/serverconfig.json').then((result) => {
-            //     Vue.prototype.ApiUrl = result.data.ApiUrl;
-            //     Vue.prototype.ServerConfig = result.data.ApiUrl + '/dist/static';
-            //     Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
-            //     Vue.prototype.flyFilePathes = result.data.flyFilePathes;
-            //     Vue.prototype.VMEntityConfig = result.data.VMEntityConfig;
-            //     Vue.prototype.RouterBase = result.data.RouterBase;
-            //     axios.defaults.baseURL = result.data.ApiUrl;
-            //     sessionStorage.setItem('ServerConfig', result.data.ApiUrl + '/dist/static');
-            // }).catch((error) => {
-            //     console.log("配置生产环境配错误");
-            // });
             let result_config = await axios.get('/dist/static/serverconfig.json');
             Vue.prototype.ApiUrl = result_config.data.ApiUrl;
             Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
@@ -123,11 +111,11 @@ export default async () => {
                 }
             },
             (error) => {
-                console.log('err' + error); // for debug
-                Message.error({
-                    content: error.message,
-                    duration: 5,
-                });
+                // console.log('err' + error); // for debug
+                // Message.error({
+                //     content: error.message,
+                //     duration: 5,
+                // });
                 return Promise.reject(error);
             }
         );

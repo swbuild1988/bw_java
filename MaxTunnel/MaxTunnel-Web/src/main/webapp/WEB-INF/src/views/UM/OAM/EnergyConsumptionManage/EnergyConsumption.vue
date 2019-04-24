@@ -47,7 +47,8 @@
                 temp.id=a.id;
                 temp.name=a.name;
                             temp.childNode= [{id:1,name: '总览 ', url: '/UM/TunnelEnergy/detials/'+a.id},
-                              {id:2,name: '类别详情', url: '/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/'+a.id}
+                              {id:2,name: '类别详情', url: '/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/'+a.id},
+                              {id:3,name: '变电所', url: '/UM/TunnelEnergy/substation/'+a.id}
                               ];
                 _this.eneryScheme.leftTree.push(temp);
               })

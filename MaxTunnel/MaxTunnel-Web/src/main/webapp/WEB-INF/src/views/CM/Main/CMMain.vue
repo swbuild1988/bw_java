@@ -121,6 +121,11 @@ export default {
                         id: 46,
                         name: '监测对象映射配置',
                         url: '/CMMain/MeasObjMap'
+                    },
+                    {
+                        id: 47,
+                        name: '变电所信息配置',
+                        url: '/CMMain/PowerSubstation'
                     }
                 ]
             },
@@ -161,7 +166,7 @@ export default {
                     {
                         id: 71,
                         name: '系统日志管理',
-                        url: '/UM/PersonnelPosition/visitors'
+                        url: '/UM/operationLog/query'
                     }
                 ]
             }

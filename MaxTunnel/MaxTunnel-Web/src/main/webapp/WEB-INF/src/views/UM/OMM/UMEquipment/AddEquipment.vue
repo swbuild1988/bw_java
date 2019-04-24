@@ -70,9 +70,13 @@
                 </Select>
             </FormItem>
             <FormItem label="关联监测对象：" prop="objId">
-                <Select v-model="equipment.objId" @on-change="getObjType">
-                    <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
+                <!-- <Select v-model="equipment.objId" @on-change="getObjType">
+                    <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.id }}</Option>
+                </Select> -->
+                <Input @on-focus="getObjs" v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
+                <ul class="chooseObj" v-show="isShowObjs">
+                    <li v-for="item in objs" :value="item" :key="item" @click="replaceInputValue(item)">{{item}}</li>
+                </ul>
             </FormItem>
             <FormItem label="对象类型：">
                 <div v-for="item in objTypes" :key="item.objtypeId">
@@ -218,7 +222,9 @@ export default {
             stores: [],
             areaId: null,
             storeId: null,
-            sectionName: null
+            sectionName: null,
+            isShowObjs: false,
+            choosedObjId: null
         };
     },
     watch: {
@@ -364,6 +370,29 @@ export default {
                     }
                 )
             }
+        },
+        //objs动态提示框
+        // getObjs(){
+        //     this.isShowObjs = true 
+        // },
+        // hiddenObjs(){
+        //     this.isShowObjs = false
+        // },
+        changeObjId(objId){
+            this.isShowObjs = true 
+            EquipmentService.changeObjId(objId).then(
+                result => {
+                    this.objs = result
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        replaceInputValue(id){
+            this.equipment.objId = id
+            this.isShowObjs = false
+            this.getObjType()
         }
         // //上传图片list
         // handleView (name) {
@@ -456,6 +485,41 @@ export default {
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+}
+.chooseObj{
+    width: 10vw;
+    max-height: 8.1vh;
+    position: relative;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+.chooseObj:before, .chooseObj:after{
+    width: 0vw;
+    height: 0vh;
+    border: transparent solid;
+    position: absolute;
+    bottom: 100%;
+    content: ''
+}
+.chooseObj:before{
+    border-width: 10px;
+    border-bottom-color: #cccccc;
+    left: 20px;
+}
+.chooseObj:after{
+    border-width: 8px;
+    border-bottom-color: #ffffff;
+    left: 22px;
+}
+.chooseObj li{
+    list-style: none;
+    line-height: 2.7vh;
+    padding-left: 1vw;
+    cursor: pointer;
+}
+.chooseObj li:hover{
+    background: #f3f3f3;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

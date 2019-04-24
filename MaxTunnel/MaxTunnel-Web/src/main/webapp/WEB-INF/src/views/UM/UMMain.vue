@@ -8,7 +8,9 @@
 					<Row>
 						<Col span="14">
 							<span class="Icon"></span>
-							<span class="titleName">{{titleName}}</span>
+							<div style="padding-top: 1vh;">
+								<img :src="mainName" style="height: 3vh"> 
+							</div>
 						</Col>
 						<Col span="6" offset="4">
 							<div style="float: right;padding-top: 0px;padding-right: 5px;">
@@ -375,7 +377,7 @@ export default {
 			nowTime: null,
 			nowDate: null,
 			timeSection: null,
-			titleName: "综合管廊智慧管理平台",
+			mainName: require('../../assets/UM/maxTunnelHome.png'),
 			mySize: "1.4rem",
 			smSize: "16px",
 			imgWidth: "52px",
@@ -534,16 +536,6 @@ export default {
 
 
 <style scoped>
-.titleName {
-	width: 15vw;
-	height: 4vh;
-	font-size: 4vmin;
-	padding-top: 0.5vmin;
-	/*background-image: url("../../assets/UM/bordered.png");*/
-	/*background-size: 100% 100%;*/
-	/*-moz-background-size: 100% 100%;*/
-	/*-webkit-background-size: 100% 100%;*/
-}
 
 .ivu-col-span-8, .ivu-col-span-16 {
 	margin-top: 0.5vh;

@@ -43,6 +43,8 @@
         </Col>
         <Col span="6">
             <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
+            <!-- <Button type="primary">批量导入</Button> -->
+            <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
         </Col>
     </Row>
     <div class="list">
@@ -54,8 +56,8 @@
                     添加
                 </Button>
             </Col>
-            <Tabs value="name1" :animated="false" style="border: 1px solid #fff">
-                <TabPane label="card" name="name1">
+            <Tabs :value="chooseEquipmentTabPane" :animated="false" style="border: 1px solid #fff" @on-click="chooseTab">
+                <TabPane label="卡片" name="卡片">
                     <Col span="24">
                         <Row :gutter="16">
                             <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
@@ -94,7 +96,7 @@
                         </Row>
                     </Col>
                 </TabPane>
-                <TabPane label="table" name="name2">
+                <TabPane label="表格" name="表格">
                     <Table :columns='columnsEquipment' :data="equipments"></Table>
                 </TabPane>
             </Tabs>
@@ -236,7 +238,12 @@ export default {
                     title: '安装位置',
                     align: 'center',
                     render: (h, params) => {
-                        let temp = params.row.section.name
+                        let temp = null
+                        if(params.row.section!=null){
+                            temp = params.row.section.name
+                        }else{
+                            temp = ''
+                        }
                         return h('div', temp)
                     }
                 },
@@ -248,7 +255,8 @@ export default {
                         return h('div', temp)
                     }
                 }
-            ]
+            ],
+            chooseEquipmentTabPane: '卡片'
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -258,6 +266,13 @@ export default {
         } else {
             from.meta.keepAlive = false;
             next();
+        }
+    },
+    created(){
+        if(localStorage.getItem('choosedEquipmentTab')){
+            this.chooseEquipmentTabPane = localStorage.getItem('choosedEquipmentTab')
+        }else{
+            this.chooseEquipmentTabPane = '卡片'
         }
     },
     watch: {
@@ -288,59 +303,59 @@ export default {
             return Object.assign({}, param);
         }
     },
-  mounted() {
-    //从数据库读取select的option选项
-    let _this = this;
-    TunnelService.getTunnels().then(
-        result => {
-            _this.tunnels = result;
-            _this.selectedTunnel = _this.tunnels.length > 0 ? _this.tunnels[0] : {};
-            _this.selectedTunnelName = _this.selectedTunnel.name;
-        },
-        error => {
-            _this.Log.info(error);
-        }
-    );
+    mounted() {
+        //从数据库读取select的option选项
+        let _this = this;
+        TunnelService.getTunnels().then(
+            result => {
+                _this.tunnels = result;
+                _this.selectedTunnel = _this.tunnels.length > 0 ? _this.tunnels[0] : {};
+                _this.selectedTunnelName = _this.selectedTunnel.name;
+            },
+            error => {
+                _this.Log.info(error);
+            }
+        );
 
-    //获取type
-    EquipmentService.getEquipmentTypes().then(
-        res=>{
-            this.equipmentType = res
-        },
-        error => {
-            this.Log.info(error);
-        },
-    );
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.equipmentType = res
+            },
+            error => {
+                this.Log.info(error);
+            },
+        );
 
-    //获取model
-    EquipmentService.getEquipmentModels().then(
-        res=>{
-            this.equipmentModel = res
-        },
-        error => {
-            this.Log.info(error)
-        }
-    )
-    //获取供应商
-    EquipmentService.getVenders().then(
-        res=>{
-            this.venders = res
-        },
-        error=>{
-            this.Log.info(error)
-        }
-    ),
-    //设备状态
-    EquipmentService.getStatus().then(
-        res=>{
-            this.equipmentStatus = res
-        },
-        error=>{
-            this.Log.info(error)
-        }
-    )
-    this.showTable();
-  },
+        //获取model
+        EquipmentService.getEquipmentModels().then(
+            res=>{
+                this.equipmentModel = res
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
+        //获取供应商
+        EquipmentService.getVenders().then(
+            res=>{
+                this.venders = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        ),
+        //设备状态
+        EquipmentService.getStatus().then(
+            res=>{
+                this.equipmentStatus = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
+        this.showTable();
+    },
     methods: {
         // type 1:查看， 2：编辑
         goToMoudle: function(index, type) {
@@ -374,6 +389,39 @@ export default {
                     _this.Log.info(error);
                 }
             );
+        },
+        batchAddEquipment(data){
+            var arr = new Array()
+            data.body.forEach(element => {
+                let temp = {
+                    name: element[data.header[0]],
+                    assetNo: element[data.header[1]],
+                    tunnelId: element[data.header[2]],
+                    type: element[data.header[3]],
+                    status: element[data.header[4]],
+                    modelId: element[data.header[5]],
+                    range: element[data.header[6]],
+                    ratedVoltage: element[data.header[7]],
+                    qaTerm: element[data.header[8]],
+                    factory: element[data.header[9]],
+                    brand: element[data.header[10]],
+                    venderId: element[data.header[11]],
+                    runTime: element[data.header[12]],
+                    sectionId: element[data.header[13]],
+                    objId: element[data.header[14]]
+                }
+                arr.push(temp)
+            })
+            EquipmentService.batchAdd(arr).then(
+                result => {
+                    this.$Message.success("批量添加成功！")
+                    this.showTable()
+                },
+                error => {
+                    this.$Message.error("批量添加失败！")
+                    this.Log.info(error)
+                }
+            )
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -422,6 +470,9 @@ export default {
         },
         pickUp() {
             this.showOn = !this.showOn;
+        },
+        chooseTab(name){
+            localStorage.setItem("choosedEquipmentTab",name)
         }
     }
 };
@@ -429,52 +480,52 @@ export default {
 <style scoped>
 
 .equipmentList {
-  font-size: 17px;
-  font-weight: 700;
+    font-size: 17px;
+    font-weight: 700;
 }
 
 .addList {
-  border: 1px dashed #dfdfdf;
-  text-align: center;
-  line-height: 40px;
-  color: #8b8b8b;
-  margin-top: 20px;
-  border-radius: 10px;
-  background: #fff;
-  z-index: 10001;
+    border: 1px dashed #dfdfdf;
+    text-align: center;
+    line-height: 40px;
+    color: #8b8b8b;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: #fff;
+    z-index: 10001;
 }
 
 /*new*/
 .equipentTitle {
-  color: #fff;
-  font-size: 20px;
-  text-align: center;
-  line-height: 10vh;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    line-height: 10vh;
 }
 
 .imgBox {
-  text-align: center;
+    text-align: center;
 }
 
 .table li {
-  list-style: none;
-  width: 80%;
-  margin: 10px auto;
+    list-style: none;
+    width: 80%;
+    margin: 10px auto;
 }
 
 .backGoundBox {
-  position: relative;
-  height: 10vh;
-  width: 100%;
+    position: relative;
+    height: 10vh;
+    width: 100%;
 }
 
 .topBox {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .imgBox img {
@@ -489,31 +540,31 @@ export default {
 }
 
 .detailsBox {
-  border: 1px solid #ebe8e8;
-  padding-top: 20px;
-  background: #fff;
+    border: 1px solid #ebe8e8;
+    padding-top: 20px;
+    background: #fff;
 }
 
 .detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14 {
-  line-height: 35px;
-  padding-left: 20px;
+    line-height: 35px;
+    padding-left: 20px;
 }
 
 .operationSee,
 .operationEdit,
 .operationDel {
-  text-align: center;
-  background: #fff;
-  padding: 5px 0;
-  border-bottom: 1px solid #ebe8e8;
+    text-align: center;
+    background: #fff;
+    padding: 5px 0;
+    border-bottom: 1px solid #ebe8e8;
 }
 
 .operationDel {
-  border-right: 1px solid #ebe8e8;
+    border-right: 1px solid #ebe8e8;
 }
 
 .operationSee {
-  border-left: 1px solid #ebe8e8;
+    border-left: 1px solid #ebe8e8;
 }
 
 .operationSee p,
@@ -522,8 +573,8 @@ export default {
   cursor: pointer;
 }
 .word43{
-  letter-spacing: 0.5em;
-  margin-right:  -0.5em;
+    letter-spacing: 0.5em;
+    margin-right:  -0.5em;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -560,10 +611,10 @@ export default {
         font-size: 1.4vmin;
     }
     .equipentTitle{
-      font-size: 2vmin;
+        font-size: 2vmin;
     }
     .ivu-icon{
-      font-size: 2vmin !important;
+        font-size: 2vmin !important;
     }
 }
 </style>

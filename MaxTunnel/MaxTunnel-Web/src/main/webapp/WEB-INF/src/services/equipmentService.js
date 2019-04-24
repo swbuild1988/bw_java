@@ -599,6 +599,18 @@ var EquipmentService = {
                 }
             })
         })
+    },
+    batchAdd(params){
+        return new Promise((resolve, reject) => {
+            axios.post('equipments/batch', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if(code==200){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：equipments/batch")
+                }
+            })
+        })
     }
 };
 
