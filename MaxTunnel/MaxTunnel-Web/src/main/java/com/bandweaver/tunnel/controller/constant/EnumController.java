@@ -100,6 +100,25 @@ public class EnumController {
 		return CommonUtil.success(list);
 	}
 	
+	
+	/**管廊运行状态枚举
+	 * @author shaosen
+	 * @date 2019年1月10日
+	 * @param   
+	 * @return JSONObject  
+	 */
+	@RequestMapping(value="tunnelstatus-enums",method=RequestMethod.GET)
+	public JSONObject getTunnelStatusList() {
+		List<JSONObject> list = new ArrayList<>();
+		for (TunnelStatus e : TunnelStatus.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getName());
+			obj.put("val", e.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
+	
 	/**监测对象关联其他对象类型（视频和预案）枚举 
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"预案"},{"val":2,"key":"视频"}]}
 	 * @author shaosen

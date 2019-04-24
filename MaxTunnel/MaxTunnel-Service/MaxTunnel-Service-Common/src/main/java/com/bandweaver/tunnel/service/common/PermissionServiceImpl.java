@@ -20,6 +20,61 @@ import com.github.pagehelper.PageInfo;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
+<<<<<<< HEAD
+	
+	@Autowired
+	private PermissionMapper permissionMapper;
+	@Autowired
+	private RolePermissionMapper rolePermissionMapper;
+
+	@Override
+	public void addPermission(Permission permission) {
+		permission.setCrtTime(DateUtil.getCurrentDate());
+		permissionMapper.insertSelective(permission);
+	}
+
+	@Override
+	@Transactional
+	public void deleteBatch(List<Integer> list) {
+		if(list.isEmpty())
+			return;
+		permissionMapper.deleteBatch(list);
+		//同时删除中间表数据
+		rolePermissionMapper.deleteByPIds(list);
+	}
+
+	@Override
+	public void updatePermission(Permission permission) {
+		permissionMapper.updateByPrimaryKeySelective(permission);
+	}
+
+	@Override
+	public Permission getPermission(Integer id) {
+		return permissionMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public PageInfo<Permission> dataGrid(PermissionVo vo) {
+		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
+		List<Permission> list = getByCondition(vo);
+		return new PageInfo<>(list);
+	}
+
+	public List<Permission> getByCondition(PermissionVo vo) {
+		List<Permission> list = permissionMapper.getByCondition(vo);
+		return list == null ? Collections.emptyList() : list;
+	}
+
+	@Override
+	public Set<String> getAllMenuName() {
+		return permissionMapper.getAllMenuName();
+	}
+
+	@Override
+	public List<Permission> getPermissionsByMenu(String menuName) {
+		return permissionMapper.getPermissionsByMenu(menuName);
+	}
+=======
 
     @Autowired
     private PermissionMapper permissionMapper;
@@ -89,5 +144,12 @@ public class PermissionServiceImpl implements PermissionService {
     public List<Permission> getPermissionsByMenuCode(String menuCode) {
         return permissionMapper.getPermissionsByMenuCode(menuCode);
     }
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
+
+	@Override
+	public List<Permission> getPermissionsByRole(Integer rid) {
+		List<Permission> list = permissionMapper.getPermissionsByRole(rid);
+		return list == null ? Collections.emptyList() : list;
+	}
 
 }

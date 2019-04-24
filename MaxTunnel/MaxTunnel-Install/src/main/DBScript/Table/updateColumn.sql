@@ -1,40 +1,40 @@
 
--- ²âÊÔ±íT_TEST
+-- ï¿½ï¿½ï¿½Ô±ï¿½T_TEST
 
--- Ìí¼Ó×Ö¶Î
+-- ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST add age number(3) default 18;
 
--- section±íÌí¼Ó³¤¶Èlength×Ö¶Î
+-- sectionï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½lengthï¿½Ö¶ï¿½
 alter table T_COMMON_SECTION add length number default 300;
 
--- store±íÌí¼Ó¿íwidthºÍ¸ßheight×Ö¶Î
+-- storeï¿½ï¿½ï¿½ï¿½Ó¿ï¿½widthï¿½Í¸ï¿½heightï¿½Ö¶ï¿½
 alter table T_COMMON_STORE add width NUMBER default 2;
 alter table T_COMMON_STORE add height NUMBER default 4;
 
--- staff±íÌí¼Ó×Ö¶Î
+-- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 alter table T_COMMON_STAFF add account VARCHAR2(50);
 alter table T_COMMON_STAFF add sex VARCHAR2(2);
 alter table T_COMMON_STAFF add telphone VARCHAR2(20);
 alter table T_COMMON_STAFF add hire_date DATE;
 
 
--- video±íÌí¼Óvendor,ip,port,username,passwordÎå¸ö×Ö¶Î
+-- videoï¿½ï¿½ï¿½ï¿½ï¿½vendor,ip,port,username,passwordï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 alter table T_MAM_VIDEO add vendor NUMBER;
 alter table T_MAM_VIDEO add ip VARCHAR2(20);
 alter table T_MAM_VIDEO add port NUMBER;
 alter table T_MAM_VIDEO add username VARCHAR2(50);
 alter table T_MAM_VIDEO add password VARCHAR2(50);
 
--- staff±íÌí¼Ó×Ö¶Î
---Ìí¼ÓÁÐ Éí·ÝÖ¤ºÅ
+-- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+--ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
 alter table T_COMMON_STAFF add identityNO VARCHAR2(50);
---Ìí¼ÓÁÐ ÍâÀ´ÈËÔ±±êÊ¶
+--ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Ê¶
 alter table T_COMMON_STAFF add outside number(1) default 1;
 
--- ÐÞ¸Ä×Ö¶Î
+-- ï¿½Þ¸ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST rename column age to ages;
 
--- É¾³ý×Ö¶Î
+-- É¾ï¿½ï¿½ï¿½Ö¶ï¿½
 -- alter table T_TEST drop column ages;
 
 --------------- V110B02 ----------------------------

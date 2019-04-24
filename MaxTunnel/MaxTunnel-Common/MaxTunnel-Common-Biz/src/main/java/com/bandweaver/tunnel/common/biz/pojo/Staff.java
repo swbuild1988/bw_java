@@ -20,10 +20,13 @@ public class Staff implements Serializable{
     private String telphone;
     //入职时间
     private Date hireDate;
+<<<<<<< HEAD
+=======
     //身份证号
     private String identityNO;
     //外来人员
     private Integer outside;
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
     private Integer deptId;
 
@@ -104,6 +107,8 @@ public class Staff implements Serializable{
 		this.hireDate = hireDate;
 	}
 
+<<<<<<< HEAD
+=======
     public String getIdentityNO() {
         return identityNO;
     }
@@ -120,6 +125,7 @@ public class Staff implements Serializable{
 		this.outside = outside;
 	}
 
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 	@Override
 	public String toString() {
 		return "Staff [name=" + name + "]";

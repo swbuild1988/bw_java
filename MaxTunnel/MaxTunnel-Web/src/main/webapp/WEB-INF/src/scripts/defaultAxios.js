@@ -133,8 +133,16 @@ axios.interceptors.response.use(
         })
       }, 500)
     }
+<<<<<<< HEAD
+    return Promise.reject(error.message)   // 返回接口返回的错误信息
+  }
+);
+
+export default axios;
+=======
     return Promise.reject(error.message) // 返回接口返回的错误信息
   }
 );
 
 export default axios;
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e

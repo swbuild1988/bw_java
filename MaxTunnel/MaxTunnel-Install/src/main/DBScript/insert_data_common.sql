@@ -1,1008 +1,1008 @@
---¹ÜÀÈÊý¾Ý
+--ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (1, '¹Å³Ç´ó½Ö', 5000, '02', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:50', 'dd-mm-yyyy hh24:mi:ss'), 1);
+values (1, 'ï¿½Å³Ç´ï¿½ï¿½', 5000, '02', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:50', 'dd-mm-yyyy hh24:mi:ss'), 1);
 
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (2, 'ÊµÑéÂ·', 1000, '03', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
+values (2, 'Êµï¿½ï¿½Â·', 1000, '03', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (3, '¾­ÈýÂ·', 1000, '04', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
+values (3, 'ï¿½ï¿½ï¿½ï¿½Â·', 1000, '04', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (4, '¾­¶þÂ·', 1000, '05', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
+values (4, 'ï¿½ï¿½ï¿½ï¿½Â·', 1000, '05', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (5, 'Î³ÈýÂ·', 5000, '06', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
+values (5, 'Î³ï¿½ï¿½Â·', 5000, '06', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 2);
 
 insert into T_COMMON_TUNNEL (ID, NAME, LENGTH, SN, RESPONSIBILITY_ID, CONSTRUCT_ID, OPERATION_ID, CAMERA, MAXVIEW_CONFIG_ID, CRT_TIME, STATUS)
-values (6, '¼à¿ØÖÐÐÄ', 500, '01', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 1);
+values (6, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 500, '01', 1, 5, 1, null, 1, to_date('30-08-2018 14:44:51', 'dd-mm-yyyy hh24:mi:ss'), 1);
 
 commit;
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1001, 'µçÁ¦²Õ', '02', 1001, 1, 1001, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1001, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', '02', 1001, 1, 1001, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1002, 'µçÁ¦²Õ½ø·ç¿Ú', '12', 1001, 1, 1006, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1002, 'ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', '12', 1001, 1, 1006, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1003, 'µçÁ¦²ÕÅÅ·ç¿Ú', '22', 1001, 1, 1010, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1003, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', '22', 1001, 1, 1010, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1004, '·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', '32', 1004, 1, 1014, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1004, 'ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', '32', 1004, 1, 1014, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1005, 'ÆäËû', '41', 1005, 1, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1005, 'ï¿½ï¿½ï¿½ï¿½', '41', 1005, 1, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1006, 'È¼Æø²Õ', '04', 1006, 1, 1003, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1006, 'È¼ï¿½ï¿½ï¿½ï¿½', '04', 1006, 1, 1003, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1007, 'È¼Æø²Õ½ø·ç¿Ú', '14', 1006, 1, 1008, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1007, 'È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', '14', 1006, 1, 1008, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1008, 'È¼Æø²ÕÅÅ·ç¿Ú', '24', 1006, 1, 1012, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1008, 'È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', '24', 1006, 1, 1012, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1009, 'È¼Æø²ÕÍ¶ÁÏ¾®', '31', 1006, 1, 1013, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1009, 'È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', '31', 1006, 1, 1013, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1010, 'Éè±¸¼ä', '05', 1010, 1, 1004, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1010, 'ï¿½è±¸ï¿½ï¿½', '05', 1010, 1, 1004, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1011, 'ÎÛË®²Õ', '01', 1011, 1, 1000, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1011, 'ï¿½ï¿½Ë®ï¿½ï¿½', '01', 1011, 1, 1000, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1012, 'ÎÛË®²Õ½ø·ç¿Ú', '11', 1011, 1, 1005, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1012, 'ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', '11', 1011, 1, 1005, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1013, 'ÎÛË®²ÕÅÅ·ç¿Ú', '21', 1011, 1, 1009, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1013, 'ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', '21', 1011, 1, 1009, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1014, '×ÛºÏ²Õ', '03', 1014, 1, 1002, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1014, 'ï¿½ÛºÏ²ï¿½', '03', 1014, 1, 1002, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1015, '×ÛºÏ²Õ½ø·ç¿Ú', '13', 1014, 1, 1007, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1015, 'ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', '13', 1014, 1, 1007, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1016, '×ÛºÏ²ÕÅÅ·ç¿Ú', '23', 1014, 1, 1011, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1016, 'ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', '23', 1014, 1, 1011, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_STORE (ID, NAME, SN, PARENT_ID, TUNNEL_ID, STORE_TYPE_ID, CAMERA, CRT_TIME)
-values (1017, 'ÆäËû', '41', 1017, 6, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
+values (1017, 'ï¿½ï¿½ï¿½ï¿½', '41', 1017, 6, 1015, null, to_date('28-11-2018 09:56:10', 'dd-mm-yyyy hh24:mi:ss'));
 
 commit;
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1001, '10Çø', '10', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1001, '10ï¿½ï¿½', '10', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1002, '11Çø', '11', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1002, '11ï¿½ï¿½', '11', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1003, '12Çø', '12', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1003, '12ï¿½ï¿½', '12', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1004, '13Çø', '13', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1004, '13ï¿½ï¿½', '13', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1005, '14Çø', '14', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1005, '14ï¿½ï¿½', '14', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1006, '15Çø', '15', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1006, '15ï¿½ï¿½', '15', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1007, '16Çø', '16', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1007, '16ï¿½ï¿½', '16', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1008, '17Çø', '17', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1008, '17ï¿½ï¿½', '17', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1009, '18Çø', '18', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1009, '18ï¿½ï¿½', '18', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1010, '19Çø', '19', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1010, '19ï¿½ï¿½', '19', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1011, '20Çø', '20', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1011, '20ï¿½ï¿½', '20', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1012, '3Çø', '03', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1012, '3ï¿½ï¿½', '03', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1013, '4Çø', '04', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1013, '4ï¿½ï¿½', '04', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1014, '5Çø', '05', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1014, '5ï¿½ï¿½', '05', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1015, '6Çø', '06', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1015, '6ï¿½ï¿½', '06', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1016, '7Çø', '07', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1016, '7ï¿½ï¿½', '07', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1017, '8Çø', '08', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1017, '8ï¿½ï¿½', '08', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1018, '9Çø', '09', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1018, '9ï¿½ï¿½', '09', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1019, '21Çø', '21', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1019, '21ï¿½ï¿½', '21', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1020, '22Çø', '22', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1020, '22ï¿½ï¿½', '22', null, 1, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_AREA (ID, NAME, SN, LOCATION, TUNNEL_ID, CAMERA, CRT_TIME)
-values (1021, '1Çø', '01', null, 6, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
+values (1021, '1ï¿½ï¿½', '01', null, 6, null, to_date('28-11-2018 09:56:26', 'dd-mm-yyyy hh24:mi:ss'));
 
 commit;
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1200, '3Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1200, '3ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1201, '4Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1201, '4ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1202, '5Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1202, '5ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1203, '6Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1203, '6ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1204, '7Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1204, '7ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1205, '8Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1205, '8ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1206, '9Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1206, '9ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1207, '10Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1207, '10ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1208, '11Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1208, '11ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1209, '12Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1209, '12ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1210, '13Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1210, '13ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1211, '14Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1211, '14ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1212, '15Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1212, '15ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1213, '16Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1213, '16ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1214, '17Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1214, '17ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1215, '18Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1215, '18ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1216, '19Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1216, '19ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1217, '20Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1217, '20ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1218, '21Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1218, '21ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1220, '3Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1220, '3ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1221, '4Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1221, '4ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1011, '14Çø-ÎÛË®²Õ', 1, 1011, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1011, '14ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1013, '16Çø-ÎÛË®²Õ', 1, 1011, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1013, '16ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1014, '17Çø-ÎÛË®²Õ', 1, 1011, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1014, '17ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1017, '20Çø-ÎÛË®²Õ', 1, 1011, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1017, '20ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1019, '22Çø-ÎÛË®²Õ', 1, 1011, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1019, '22ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1020, '3Çø-µçÁ¦²Õ', 1, 1001, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1020, '3ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1025, '8Çø-µçÁ¦²Õ', 1, 1001, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1025, '8ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1026, '9Çø-µçÁ¦²Õ', 1, 1001, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1026, '9ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1041, '4Çø-×ÛºÏ²Õ', 1, 1014, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1041, '4ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1060, '3Çø-È¼Æø²Õ', 1, 1006, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1060, '3ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1061, '4Çø-È¼Æø²Õ', 1, 1006, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1061, '4ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1062, '5Çø-È¼Æø²Õ', 1, 1006, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1062, '5ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1063, '6Çø-È¼Æø²Õ', 1, 1006, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1063, '6ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1091, '14Çø-Éè±¸¼ä', 1, 1010, 1005, 10, 1091, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1091, '14ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1005, 10, 1091, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1093, '16Çø-Éè±¸¼ä', 1, 1010, 1007, 10, 1093, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1093, '16ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1007, 10, 1093, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1094, '17Çø-Éè±¸¼ä', 1, 1010, 1008, 10, 1094, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1094, '17ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1008, 10, 1094, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1095, '18Çø-Éè±¸¼ä', 1, 1010, 1009, 10, 1095, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1095, '18ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1009, 10, 1095, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1109, '12Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1109, '12ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1110, '13Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1110, '13ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1111, '14Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1111, '14ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1112, '15Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1112, '15ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1113, '16Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1113, '16ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1114, '17Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1114, '17ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1115, '18Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1115, '18ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1116, '19Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1116, '19ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1117, '20Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1117, '20ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1118, '21Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1118, '21ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1119, '22Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1119, '22ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1120, '3Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1120, '3ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1012, 10, 1020, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1121, '4Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1121, '4ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1122, '5Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1122, '5ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1123, '6Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1123, '6ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1124, '7Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1124, '7ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1140, '3Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1140, '3ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1141, '4Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1141, '4ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1013, 10, 1041, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1142, '5Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1142, '5ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1143, '6Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1143, '6ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1144, '7Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1144, '7ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1145, '8Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1145, '8ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1146, '9Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1146, '9ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1147, '10Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1147, '10ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1148, '11Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1148, '11ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1149, '12Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1149, '12ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1150, '13Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1150, '13ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1151, '14Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1151, '14ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1152, '15Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1152, '15ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1153, '16Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1153, '16ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1154, '17Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1154, '17ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1155, '18Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1155, '18ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1156, '19Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1156, '19ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1157, '20Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1157, '20ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1158, '21Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1158, '21ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1159, '22Çø-×ÛºÏ²Õ½ø·ç¿Ú', 1, 1015, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1159, '22ï¿½ï¿½-ï¿½ÛºÏ²Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1015, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1160, '3Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1160, '3ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1161, '4Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1161, '4ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1162, '5Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1162, '5ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1163, '6Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1163, '6ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1164, '7Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1164, '7ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1165, '8Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1165, '8ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1166, '9Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1166, '9ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1167, '10Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1167, '10ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1219, '22Çø-µçÁ¦²ÕÅÅ·ç¿Ú', 1, 1003, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1219, '22ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1003, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1222, '5Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1222, '5ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1223, '6Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1223, '6ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1224, '7Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1224, '7ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1225, '8Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1225, '8ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1226, '9Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1226, '9ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1227, '10Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1227, '10ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1228, '11Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1228, '11ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1229, '12Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1229, '12ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1230, '13Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1230, '13ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1231, '14Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1231, '14ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1232, '15Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1232, '15ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1233, '16Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1233, '16ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1234, '17Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1234, '17ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1235, '18Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1235, '18ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1236, '19Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1236, '19ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1237, '20Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1237, '20ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1238, '21Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1238, '21ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1239, '22Çø-×ÛºÏ²ÕÅÅ·ç¿Ú', 1, 1016, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1239, '22ï¿½ï¿½-ï¿½ÛºÏ²ï¿½ï¿½Å·ï¿½ï¿½', 1, 1016, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1240, '3Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1240, '3ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1241, '4Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1241, '4ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1242, '5Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1242, '5ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1014, 10, 1062, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1243, '6Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1243, '6ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1244, '7Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1244, '7ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1245, '8Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1245, '8ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1246, '9Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1246, '9ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1247, '10Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1247, '10ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1248, '11Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1248, '11ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1249, '12Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1249, '12ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1250, '13Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1250, '13ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1251, '14Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1251, '14ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1252, '15Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1252, '15ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1253, '16Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1253, '16ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1254, '17Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1254, '17ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1255, '18Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1255, '18ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1256, '19Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1256, '19ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1257, '20Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1257, '20ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1258, '21Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1258, '21ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1259, '22Çø-È¼Æø²ÕÅÅ·ç¿Ú', 1, 1008, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1259, '22ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1008, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1260, '3Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1260, '3ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1012, 10, 1060, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1261, '4Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1261, '4ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1013, 10, 1061, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1262, '6Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1262, '6ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1015, 10, 1063, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1263, '7Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1263, '7ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1264, '8Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1264, '8ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1265, '9Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1265, '9ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1266, '10Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1266, '10ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1267, '11Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1267, '11ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1268, '12Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1268, '12ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1269, '13Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1269, '13ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1270, '14Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1270, '14ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1271, '16Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1271, '16ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1272, '17Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1272, '17ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1273, '18Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1273, '18ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1274, '19Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1274, '19ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1275, '20Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1275, '20ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1276, '21Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1276, '21ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1277, '22Çø-È¼Æø²ÕÍ¶ÁÏ¾®', 1, 1009, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1277, '22ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1009, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1278, '3Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1012, 10, 1278, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1278, '3ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1012, 10, 1278, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1279, '6Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1015, 10, 1279, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1279, '6ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1015, 10, 1279, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1280, '7Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1016, 10, 1280, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1280, '7ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1016, 10, 1280, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1281, '9Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1018, 10, 1281, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1281, '9ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1018, 10, 1281, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1282, '11Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1002, 10, 1282, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1282, '11ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1002, 10, 1282, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1283, '13Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1004, 10, 1283, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1283, '13ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1004, 10, 1283, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1284, '16Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1007, 10, 1284, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1284, '16ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1007, 10, 1284, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1285, '17Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1008, 10, 1285, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1285, '17ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1008, 10, 1285, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1286, '19Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1010, 10, 1286, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1286, '19ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1010, 10, 1286, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1287, '21Çø-·ÇÈ¼Æø²ÕÍ¶ÁÏ¾®', 1, 1004, 1019, 10, 1287, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1287, '21ï¿½ï¿½-ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ï¾ï¿½', 1, 1004, 1019, 10, 1287, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1288, '1Çø-ÆäËû', 6, 1017, 1021, 10, 1288, null, null, null, to_date('23-12-2018 09:53:51', 'dd-mm-yyyy hh24:mi:ss'));
+values (1288, '1ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½', 6, 1017, 1021, 10, 1288, null, null, null, to_date('23-12-2018 09:53:51', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1016, '19Çø-ÎÛË®²Õ', 1, 1011, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1016, '19ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1000, '3Çø-ÎÛË®²Õ', 1, 1011, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1000, '3ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1001, '4Çø-ÎÛË®²Õ', 1, 1011, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1001, '4ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1002, '5Çø-ÎÛË®²Õ', 1, 1011, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1002, '5ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1003, '6Çø-ÎÛË®²Õ', 1, 1011, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1003, '6ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1004, '7Çø-ÎÛË®²Õ', 1, 1011, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1004, '7ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1005, '8Çø-ÎÛË®²Õ', 1, 1011, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1005, '8ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1006, '9Çø-ÎÛË®²Õ', 1, 1011, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1006, '9ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1007, '10Çø-ÎÛË®²Õ', 1, 1011, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1007, '10ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1008, '11Çø-ÎÛË®²Õ', 1, 1011, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1008, '11ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1009, '12Çø-ÎÛË®²Õ', 1, 1011, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1009, '12ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1010, '13Çø-ÎÛË®²Õ', 1, 1011, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1010, '13ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1012, '15Çø-ÎÛË®²Õ', 1, 1011, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1012, '15ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1015, '18Çø-ÎÛË®²Õ', 1, 1011, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1015, '18ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1018, '21Çø-ÎÛË®²Õ', 1, 1011, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1018, '21ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½', 1, 1011, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1021, '4Çø-µçÁ¦²Õ', 1, 1001, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1021, '4ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1013, 10, 1021, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1022, '5Çø-µçÁ¦²Õ', 1, 1001, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1022, '5ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1014, 10, 1022, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1023, '6Çø-µçÁ¦²Õ', 1, 1001, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1023, '6ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1015, 10, 1023, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1024, '7Çø-µçÁ¦²Õ', 1, 1001, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1024, '7ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1016, 10, 1024, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1027, '10Çø-µçÁ¦²Õ', 1, 1001, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1027, '10ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1028, '11Çø-µçÁ¦²Õ', 1, 1001, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
+values (1028, '11ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:19', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1029, '12Çø-µçÁ¦²Õ', 1, 1001, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1029, '12ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1030, '13Çø-µçÁ¦²Õ', 1, 1001, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1030, '13ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1031, '14Çø-µçÁ¦²Õ', 1, 1001, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1031, '14ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1032, '15Çø-µçÁ¦²Õ', 1, 1001, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1032, '15ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1033, '16Çø-µçÁ¦²Õ', 1, 1001, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1033, '16ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1034, '17Çø-µçÁ¦²Õ', 1, 1001, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1034, '17ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1035, '18Çø-µçÁ¦²Õ', 1, 1001, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1035, '18ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1036, '19Çø-µçÁ¦²Õ', 1, 1001, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1036, '19ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1037, '20Çø-µçÁ¦²Õ', 1, 1001, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1037, '20ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1038, '21Çø-µçÁ¦²Õ', 1, 1001, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1038, '21ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1039, '22Çø-µçÁ¦²Õ', 1, 1001, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1039, '22ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1001, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1040, '3Çø-×ÛºÏ²Õ', 1, 1014, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1040, '3ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1012, 10, 1040, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1042, '5Çø-×ÛºÏ²Õ', 1, 1014, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1042, '5ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1014, 10, 1042, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1043, '6Çø-×ÛºÏ²Õ', 1, 1014, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1043, '6ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1015, 10, 1043, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1044, '7Çø-×ÛºÏ²Õ', 1, 1014, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1044, '7ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1016, 10, 1044, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1045, '8Çø-×ÛºÏ²Õ', 1, 1014, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1045, '8ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1017, 10, 1045, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1046, '9Çø-×ÛºÏ²Õ', 1, 1014, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1046, '9ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1018, 10, 1046, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1047, '10Çø-×ÛºÏ²Õ', 1, 1014, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1047, '10ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1001, 10, 1047, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1048, '11Çø-×ÛºÏ²Õ', 1, 1014, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1048, '11ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1002, 10, 1048, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1049, '12Çø-×ÛºÏ²Õ', 1, 1014, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1049, '12ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1003, 10, 1049, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1050, '13Çø-×ÛºÏ²Õ', 1, 1014, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1050, '13ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1004, 10, 1050, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1051, '14Çø-×ÛºÏ²Õ', 1, 1014, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1051, '14ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1005, 10, 1051, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1052, '15Çø-×ÛºÏ²Õ', 1, 1014, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1052, '15ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1006, 10, 1052, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1053, '16Çø-×ÛºÏ²Õ', 1, 1014, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1053, '16ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1007, 10, 1053, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1054, '17Çø-×ÛºÏ²Õ', 1, 1014, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1054, '17ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1008, 10, 1054, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1055, '18Çø-×ÛºÏ²Õ', 1, 1014, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1055, '18ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1009, 10, 1055, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1056, '19Çø-×ÛºÏ²Õ', 1, 1014, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1056, '19ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1010, 10, 1056, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1057, '20Çø-×ÛºÏ²Õ', 1, 1014, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1057, '20ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1011, 10, 1057, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1058, '21Çø-×ÛºÏ²Õ', 1, 1014, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1058, '21ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1019, 10, 1058, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1059, '22Çø-×ÛºÏ²Õ', 1, 1014, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1059, '22ï¿½ï¿½-ï¿½ÛºÏ²ï¿½', 1, 1014, 1020, 10, 1059, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1064, '7Çø-È¼Æø²Õ', 1, 1006, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1064, '7ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1016, 10, 1064, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1065, '8Çø-È¼Æø²Õ', 1, 1006, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1065, '8ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1017, 10, 1065, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1066, '9Çø-È¼Æø²Õ', 1, 1006, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1066, '9ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1018, 10, 1066, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1067, '10Çø-È¼Æø²Õ', 1, 1006, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1067, '10ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1001, 10, 1067, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1068, '11Çø-È¼Æø²Õ', 1, 1006, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1068, '11ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1069, '12Çø-È¼Æø²Õ', 1, 1006, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1069, '12ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1070, '13Çø-È¼Æø²Õ', 1, 1006, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1070, '13ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1071, '14Çø-È¼Æø²Õ', 1, 1006, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1071, '14ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1072, '15Çø-È¼Æø²Õ', 1, 1006, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1072, '15ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1073, '16Çø-È¼Æø²Õ', 1, 1006, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1073, '16ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1074, '17Çø-È¼Æø²Õ', 1, 1006, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1074, '17ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1075, '18Çø-È¼Æø²Õ', 1, 1006, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1075, '18ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1076, '19Çø-È¼Æø²Õ', 1, 1006, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1076, '19ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1077, '20Çø-È¼Æø²Õ', 1, 1006, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1077, '20ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1078, '21Çø-È¼Æø²Õ', 1, 1006, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1078, '21ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1079, '22Çø-È¼Æø²Õ', 1, 1006, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1079, '22ï¿½ï¿½-È¼ï¿½ï¿½ï¿½ï¿½', 1, 1006, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1080, '3Çø-Éè±¸¼ä', 1, 1010, 1012, 10, 1080, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1080, '3ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1012, 10, 1080, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1081, '4Çø-Éè±¸¼ä', 1, 1010, 1013, 10, 1081, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1081, '4ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1013, 10, 1081, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1082, '5Çø-Éè±¸¼ä', 1, 1010, 1014, 10, 1082, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1082, '5ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1014, 10, 1082, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1083, '6Çø-Éè±¸¼ä', 1, 1010, 1015, 10, 1083, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1083, '6ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1015, 10, 1083, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1084, '7Çø-Éè±¸¼ä', 1, 1010, 1016, 10, 1084, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1084, '7ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1016, 10, 1084, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1085, '8Çø-Éè±¸¼ä', 1, 1010, 1017, 10, 1085, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1085, '8ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1017, 10, 1085, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1086, '9Çø-Éè±¸¼ä', 1, 1010, 1018, 10, 1086, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1086, '9ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1018, 10, 1086, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1087, '10Çø-Éè±¸¼ä', 1, 1010, 1001, 10, 1087, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1087, '10ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1001, 10, 1087, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1088, '11Çø-Éè±¸¼ä', 1, 1010, 1002, 10, 1088, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1088, '11ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1002, 10, 1088, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1089, '12Çø-Éè±¸¼ä', 1, 1010, 1003, 10, 1089, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1089, '12ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1003, 10, 1089, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1090, '13Çø-Éè±¸¼ä', 1, 1010, 1004, 10, 1090, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1090, '13ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1004, 10, 1090, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1092, '15Çø-Éè±¸¼ä', 1, 1010, 1006, 10, 1092, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1092, '15ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1006, 10, 1092, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1096, '19Çø-Éè±¸¼ä', 1, 1010, 1010, 10, 1096, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1096, '19ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1010, 10, 1096, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1097, '20Çø-Éè±¸¼ä', 1, 1010, 1011, 10, 1097, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1097, '20ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1011, 10, 1097, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1098, '21Çø-Éè±¸¼ä', 1, 1010, 1019, 10, 1098, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1098, '21ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1019, 10, 1098, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1099, '22Çø-Éè±¸¼ä', 1, 1010, 1020, 10, 1099, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1099, '22ï¿½ï¿½-ï¿½è±¸ï¿½ï¿½', 1, 1010, 1020, 10, 1099, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1100, '3Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1100, '3ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1101, '4Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1101, '4ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1102, '5Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1102, '5ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1103, '6Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1103, '6ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1104, '7Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1104, '7ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1105, '8Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1105, '8ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1106, '9Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1106, '9ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1107, '10Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1107, '10ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1108, '11Çø-ÎÛË®²Õ½ø·ç¿Ú', 1, 1012, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1108, '11ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1012, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1125, '8Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1125, '8ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1017, 10, 1025, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1126, '9Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1126, '9ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1018, 10, 1026, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1127, '10Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1127, '10ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1001, 10, 1027, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1128, '11Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1128, '11ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1002, 10, 1028, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1129, '12Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1129, '12ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1003, 10, 1029, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1130, '13Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1130, '13ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1004, 10, 1030, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1131, '14Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1131, '14ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1005, 10, 1031, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1132, '15Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1132, '15ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1006, 10, 1032, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1133, '16Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1133, '16ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1007, 10, 1033, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1134, '17Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1134, '17ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1008, 10, 1034, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1135, '18Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1135, '18ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1009, 10, 1035, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1136, '19Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1136, '19ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1010, 10, 1036, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1137, '20Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1137, '20ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1011, 10, 1037, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1138, '21Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1138, '21ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1019, 10, 1038, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1139, '22Çø-µçÁ¦²Õ½ø·ç¿Ú', 1, 1002, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
+values (1139, '22ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1002, 1020, 10, 1039, null, null, null, to_date('23-12-2018 09:53:20', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1168, '11Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1168, '11ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1002, 10, 1068, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1169, '12Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1169, '12ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1003, 10, 1069, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1170, '13Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1170, '13ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1004, 10, 1070, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1171, '14Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1171, '14ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1005, 10, 1071, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1172, '15Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1172, '15ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1006, 10, 1072, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1173, '16Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1173, '16ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1007, 10, 1073, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1174, '17Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1174, '17ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1008, 10, 1074, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1175, '18Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1175, '18ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1009, 10, 1075, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1176, '19Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1176, '19ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1010, 10, 1076, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1177, '20Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1177, '20ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1011, 10, 1077, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1178, '21Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1178, '21ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1019, 10, 1078, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1179, '22Çø-È¼Æø²Õ½ø·ç¿Ú', 1, 1007, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1179, '22ï¿½ï¿½-È¼ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½', 1, 1007, 1020, 10, 1079, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1180, '3Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1180, '3ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1012, 10, 1000, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1181, '4Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1181, '4ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1013, 10, 1001, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1182, '5Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1182, '5ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1014, 10, 1002, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1183, '6Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1183, '6ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1015, 10, 1003, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1184, '7Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1184, '7ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1016, 10, 1004, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1185, '8Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1185, '8ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1017, 10, 1005, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1186, '9Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1186, '9ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1018, 10, 1006, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1187, '10Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1187, '10ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1001, 10, 1007, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1188, '11Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1188, '11ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1002, 10, 1008, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1189, '12Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1189, '12ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1003, 10, 1009, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1190, '13Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1190, '13ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1004, 10, 1010, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1191, '14Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1191, '14ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1005, 10, 1011, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1192, '15Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1192, '15ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1006, 10, 1012, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1193, '16Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1193, '16ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1007, 10, 1013, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1194, '17Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1194, '17ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1008, 10, 1014, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1195, '18Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1195, '18ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1009, 10, 1015, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1196, '19Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1196, '19ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1010, 10, 1016, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1197, '20Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1197, '20ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1011, 10, 1017, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1198, '21Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1198, '21ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1019, 10, 1018, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 insert into T_COMMON_SECTION (ID, NAME, TUNNEL_ID, STORE_ID, AREA_ID, TOTAL_CABLE_NUMBER, PARENT_ID, CAMERA, START_POINT, END_POINT, CRT_TIME)
-values (1199, '22Çø-ÎÛË®²ÕÅÅ·ç¿Ú', 1, 1013, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
+values (1199, '22ï¿½ï¿½-ï¿½ï¿½Ë®ï¿½ï¿½ï¿½Å·ï¿½ï¿½', 1, 1013, 1020, 10, 1019, null, null, null, to_date('23-12-2018 09:53:21', 'dd-mm-yyyy hh24:mi:ss'));
 
 commit;
 
@@ -1013,58 +1013,58 @@ values (1000, 'admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c92
 
 
 
---Ô±¹¤±í
+--Ô±ï¿½ï¿½ï¿½ï¿½
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (1, 'Áõ¶¬Ðõ', 1, 1, to_date('26-06-2018', 'dd-mm-yyyy'));
+values (1, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 1, 1, to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (2, 'ÀîÃÈ', 2, 2,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (2, 'ï¿½ï¿½ï¿½ï¿½', 2, 2,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (3, 'ÍõË§', 3, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (3, 'ï¿½ï¿½Ë§', 3, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID,CRT_TIME)
-values (4, 'ÕÔÏþ¾²', 4, 4,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (4, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 4, 4,to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_staff (ID, NAME, DEPT_ID, POSITION_ID, CRT_TIME)
-values (5, 'Íõ³¬Èº', 1, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
+values (5, 'ï¿½ï¿½ï¿½ï¿½Èº', 1, 3,to_date('26-06-2018', 'dd-mm-yyyy'));
 commit;
 
 
---²¿ÃÅ±í
+--ï¿½ï¿½ï¿½Å±ï¿½
 insert into T_COMMON_DEPT (ID, NAME, CRT_TIME)
-values (1, '²úÆ·²¿', to_date('26-06-2018', 'dd-mm-yyyy'));
+values (1, 'ï¿½ï¿½Æ·ï¿½ï¿½', to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_DEPT (ID, NAME, CRT_TIME)
-values (2, 'ÑÐ·¢²¿', to_date('26-06-2018', 'dd-mm-yyyy'));
+values (2, 'ï¿½Ð·ï¿½ï¿½ï¿½', to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_DEPT (ID, NAME, CRT_TIME)
-values (3, 'ÔËÓª²¿', to_date('26-06-2018', 'dd-mm-yyyy'));
+values (3, 'ï¿½ï¿½Óªï¿½ï¿½', to_date('26-06-2018', 'dd-mm-yyyy'));
 
 insert into T_COMMON_DEPT (ID, NAME, CRT_TIME)
-values (4, 'ÏúÊÛ²¿', to_date('26-06-2018', 'dd-mm-yyyy'));
+values (4, 'ï¿½ï¿½ï¿½Û²ï¿½', to_date('26-06-2018', 'dd-mm-yyyy'));
 commit;
 
 
 
---¹«Ë¾±í
+--ï¿½ï¿½Ë¾ï¿½ï¿½
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (1, '²¨»ã¿Æ¼¼', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (1, 'ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (2, 'ÖÐ¹úÒÆ¶¯', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (2, 'ï¿½Ð¹ï¿½ï¿½Æ¶ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (3, 'ÖÐ¹úÊ¯»¯', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (3, 'ï¿½Ð¹ï¿½Ê¯ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (4, 'ÖÐ¹úµçÐÅ', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (4, 'ï¿½Ð¹ï¿½ï¿½ï¿½ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_company (ID, NAME, CRT_TIME)
-values (5, 'ÖÐÌúÊ®¶þ¾Ö', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (5, 'ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 commit;
 
---¹«Ë¾²¿ÃÅÖÐ¼ä±í
+--ï¿½ï¿½Ë¾ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½
 insert into T_COMMON_company_dept (ID, COMPANY_ID, DEPT_ID)
 values (1, 1, 1);
 
@@ -1078,59 +1078,59 @@ insert into T_COMMON_company_dept (ID, COMPANY_ID, DEPT_ID)
 values (4, 1, 4);
 commit;
 
---Ö°Î»±í
+--Ö°Î»ï¿½ï¿½
 insert into t_common_position (ID, NAME, CRT_TIME)
-values (1, '×Ü¾­Àí', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (1, 'ï¿½Ü¾ï¿½ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_position (ID, NAME, CRT_TIME)
-values (2, '²úÆ·×Ü¼à', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (2, 'ï¿½ï¿½Æ·ï¿½Ü¼ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_position (ID, NAME, CRT_TIME)
-values (3, 'Ö÷¹Ü', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (3, 'ï¿½ï¿½ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_position (ID, NAME, CRT_TIME)
-values (4, 'ÆÕÍ¨Ô±¹¤', to_date('22-06-2018', 'dd-mm-yyyy'));
+values (4, 'ï¿½ï¿½Í¨Ô±ï¿½ï¿½', to_date('22-06-2018', 'dd-mm-yyyy'));
 
 insert into t_common_position (ID, NAME, CRT_TIME)
-values (5, '¼¼Êõ¾­Àí', to_date('18-06-2018', 'dd-mm-yyyy'));
+values (5, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', to_date('18-06-2018', 'dd-mm-yyyy'));
 commit;
 
---schedule_job±í
+--schedule_jobï¿½ï¿½
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (2, 'job2', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjHour', '0 1 0/1 * * ?', 'Í³¼ÆÉÏ¸öÐ¡Ê±×î´ó×îÐ¡Æ½¾ùÖµ');
+values (2, 'job2', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjHour', '0 1 0/1 * * ?', 'Í³ï¿½ï¿½ï¿½Ï¸ï¿½Ð¡Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Æ½ï¿½ï¿½Öµ');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (3, 'job3', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjDay', '0 0 9 * * ?', 'Í³¼Æ×òÌì×î´ó×îÐ¡Æ½¾ùÖµ');
+values (3, 'job3', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjDay', '0 0 9 * * ?', 'Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Æ½ï¿½ï¿½Öµ');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (4, 'job4', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjWeek', '0 0 9 ? * MON', 'Í³¼ÆÉÏÖÜ×î´ó×îÐ¡Æ½¾ùÖµ');
+values (4, 'job4', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjWeek', '0 0 9 ? * MON', 'Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Æ½ï¿½ï¿½Öµ');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (5, 'job5', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjMonth', '0 0 9 1 * ?', 'Í³¼ÆÉÏÔÂ×î´ó×îÐ¡Æ½¾ùÖµ');
+values (5, 'job5', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjMonth', '0 0 9 1 * ?', 'Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Æ½ï¿½ï¿½Öµ');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (6, 'job6', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjYear', '0 0 9 1 1 ? *', 'Í³¼ÆÉÏÄê×î´ó×îÐ¡Æ½¾ùÖµ');
+values (6, 'job6', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'reportMeasObjYear', '0 0 9 1 1 ? *', 'Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Æ½ï¿½ï¿½Öµ');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1, 'job1', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'saveDataScheduleBatch', '0 0/30 * * * ?', '¼à²â¶ÔÏóÊý¾Ý¶¨Ê±±£´æ');
+values (1, 'job1', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'saveDataScheduleBatch', '0 0/30 * * * ?', 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¶ï¿½Ê±ï¿½ï¿½ï¿½ï¿½');
 
 insert into t_common_schedule_job (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (7, 'job7', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'deleteDataSchedule', '0 0 9 * * ?', '¼à²â¶ÔÏóÊý¾Ý¶¨Ê±É¾³ý');
+values (7, 'job7', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'deleteDataSchedule', '0 0 9 * * ?', 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¶ï¿½Ê±É¾ï¿½ï¿½');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1000, 'job8', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'saveToConsumeData', '0 0 1 * * ?', '¶¨Ê±ÈÎÎñÍ³¼ÆÃ¿ÌìµÄÄÜºÄ²¢±£´æµ½ConsumeData±íÖÐ');
+values (1000, 'job8', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'saveToConsumeData', '0 0 1 * * ?', 'ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ÜºÄ²ï¿½ï¿½ï¿½ï¿½æµ½ConsumeDataï¿½ï¿½ï¿½ï¿½');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1001, 'job9', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'heartBeat', '0/5 * * * * ?', 'µÇÂ¼maxviewÖÕ¶ËÖ®ºó£¬³ÖÐø·¢ËÍÐÄÌø ');
+values (1001, 'job9', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'heartBeat', '0/5 * * * * ?', 'ï¿½ï¿½Â¼maxviewï¿½Õ¶ï¿½Ö®ï¿½ó£¬³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1002, 'job10', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'sendTestData', '0/15 * * * * ?', 'Ä£Äâmaxview·¢ËÍÊý¾Ý');
+values (1002, 'job10', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'sendTestData', '0/15 * * * * ?', 'Ä£ï¿½ï¿½maxviewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1003, 'job11', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'sendTestAlarm', '0/30 * * * * ?', 'Ä£Äâmaxview·¢ËÍ¸æ¾¯');
+values (1003, 'job11', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'sendTestAlarm', '0/30 * * * * ?', 'Ä£ï¿½ï¿½maxviewï¿½ï¿½ï¿½Í¸æ¾¯');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1004, 'job12', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'runDaysAutoAdded', '1 0 0 * * ?', '¹ÜÀÈÔËÐÐÊ±¼ä¶¨Ê±×ÔÔö');
+values (1004, 'job12', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'runDaysAutoAdded', '1 0 0 * * ?', 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä¶¨Ê±ï¿½ï¿½ï¿½ï¿½');
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
-values (1005, 'job1005', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'exportExcel', '0 0 6 ? * MON', '±¨±íµ¼³ö');
+values (1005, 'job1005', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'exportExcel', '0 0 6 ? * MON', 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½');
 commit;

@@ -301,4 +301,8 @@ export default {
 .coolBox >>> .ivu-select-dropdown{
     max-height: 20vmin !important;
 }
+.coolBox >>> .ivu-select-selection{
+    height: 2.4vmin;
+} 
+
 </style>

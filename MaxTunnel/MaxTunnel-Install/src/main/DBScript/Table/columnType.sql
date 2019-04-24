@@ -1,30 +1,30 @@
 
--- 修改列类型 同类型转换params [VARCHAR2(200 CHAR) -> VARCHAR2(500 CHAR)]
--- 可直接执行 alter table 表 modify(列名 VARCHAR2(500 CHAR));
+-- 锟睫革拷锟斤拷锟斤拷锟斤拷 同锟斤拷锟斤拷转锟斤拷params [VARCHAR2(200 CHAR) -> VARCHAR2(500 CHAR)]
+-- 锟斤拷直锟斤拷执锟斤拷 alter table 锟斤拷 modify(锟斤拷锟斤拷 VARCHAR2(500 CHAR));
 
 alter table T_OPERATION_LOG modify(params VARCHAR2(500 CHAR));
 alter table T_OPERATION_LOG modify(description VARCHAR2(500 CHAR));
 
--- staff表修改
---所属部门可为空
+-- staff锟斤拷锟睫革拷
+--锟斤拷锟斤拷锟脚匡拷为锟斤拷
 alter table T_COMMON_STAFF modify DEPT_ID null;
---所属职位可为空
+--锟斤拷锟斤拷职位锟斤拷为锟斤拷
 alter table T_COMMON_STAFF modify POSITION_ID null;
---姓名不可为空
+--锟斤拷锟斤拷锟斤拷锟斤拷为锟斤拷
 alter table T_COMMON_STAFF modify name not null;
 
--- 修改列类型 不同类型转换card(number -> varchar2)
--- 使用创建新列替换旧列的方法，如下所示
+-- 锟睫革拷锟斤拷锟斤拷锟斤拷 锟斤拷同锟斤拷锟斤拷转锟斤拷card(number -> varchar2)
+-- 使锟矫达拷锟斤拷锟斤拷锟斤拷锟芥换锟斤拷锟叫的凤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷示
 
--- 重命名旧列
+-- 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 -- alter table T_TEST rename column card to temp;
 
--- 创建新列
+-- 锟斤拷锟斤拷锟斤拷锟斤拷
 -- alter table T_TEST add card varchar2(50);
 
--- 新列赋值
+-- 锟斤拷锟叫革拷值
 -- update T_TEST set card = temp;
 -- commit;
 
--- 删除旧列
+-- 删锟斤拷锟斤拷锟斤拷
 -- alter table T_TEST drop column temp;

@@ -87,5 +87,8 @@ public class UserServiceImpl implements UserService {
 		return returnData;
 	}
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

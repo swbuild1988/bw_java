@@ -84,7 +84,7 @@
         },
         watch:{
             'show.state'(){
-
+                console.log(this.show.state,this.data)
                 this.calcHideHeight();
                 if(!this.show.state){
                     this.arrow.state = false;
@@ -105,7 +105,6 @@
             },
             calcHideHeight(){
                 this.$nextTick(()=>{
-
                     this.bodyHeight = (this.getDOMElement('modal-body-list').children[0].offsetHeight * 5 +(this.borderPadding / 2) ) +'px';
                 })
             },

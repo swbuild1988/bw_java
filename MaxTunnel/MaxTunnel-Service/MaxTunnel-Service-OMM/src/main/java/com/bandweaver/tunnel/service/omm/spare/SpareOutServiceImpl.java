@@ -54,7 +54,11 @@ public class SpareOutServiceImpl implements SpareOutService {
 
 	@Override
 	@Transactional
+<<<<<<< HEAD
+	public int addBatch(List<SpareOut> list, Integer tunnelId) {
+=======
 	public int addBatch(List<SpareOut> list, Integer tunnelId, Integer objId) {
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 		// 备品去向为仪表工具集合
 		List<Instrument> instrumentList = new ArrayList<>();
 		// 备品去向为管廊设备集合
@@ -78,7 +82,10 @@ public class SpareOutServiceImpl implements SpareOutService {
 				eq.setName(dto.getName());
 				eq.setStatus(1);
 				eq.setTunnelId(tunnelId);
+<<<<<<< HEAD
+=======
 				eq.setObjId(objId);
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 				eq.setVenderId(dto.getVenderId());
 				eq.setAlarmNo(0);
 				equipmentList.add(eq);

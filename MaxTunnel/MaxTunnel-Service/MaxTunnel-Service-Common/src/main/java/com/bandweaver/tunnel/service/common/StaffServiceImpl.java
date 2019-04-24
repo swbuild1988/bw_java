@@ -76,6 +76,8 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	@Transactional
 	public void add(Staff staff) {
+<<<<<<< HEAD
+=======
 
 		//判断是否为外来人员，如果是则不生成账号信息
 		if (staff.getOutside() != OutsideEnum.STAFF.getValue()) {
@@ -84,15 +86,22 @@ public class StaffServiceImpl implements StaffService {
 		}
 
 		//如果是内部员工则需要生成账号
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 		
 		//员工表和账号表为一对一关系，他们的id也相同
 		String account = PinyinUtil.ToPinyin(staff.getName());//将员工姓名转换为拼音作为其登陆账号
 
 		//保证账号唯一，如果有姓名相同的员工，把账号+ID作为新员工账号
 		List<Staff> list = staffMapper.getByName(staff.getName());
+<<<<<<< HEAD
+        int maxId = staffMapper.getMaxID();
+        LogUtil.info(list);
+		if(list != null && list.size() > 0) {
+=======
 
 		if(list != null && list.size() > 0) {
 			int maxId = staffMapper.getMaxID();
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 			account = account + ( maxId + 1 );
 		}
 

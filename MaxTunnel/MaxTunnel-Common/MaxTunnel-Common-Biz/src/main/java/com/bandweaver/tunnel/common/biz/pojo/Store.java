@@ -34,6 +34,9 @@ public class Store implements Serializable{
     private Double width;
     
     private Double height;
+<<<<<<< HEAD
+    
+=======
 
     private Double k;
 
@@ -43,6 +46,7 @@ public class Store implements Serializable{
 
     private String endPoint;
 
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     private String camera;
 
     private Date crtTime;
@@ -128,6 +132,9 @@ public class Store implements Serializable{
 		this.height = height;
 	}
 
+<<<<<<< HEAD
+	@Override
+=======
     public Double getK() {
         return k;
     }
@@ -161,6 +168,7 @@ public class Store implements Serializable{
     }
 
     @Override
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     public String toString() {
         return "Store{" +
                 "id=" + id +
@@ -171,10 +179,13 @@ public class Store implements Serializable{
                 ", storeTypeId=" + storeTypeId +
                 ", width=" + width +
                 ", height=" + height +
+<<<<<<< HEAD
+=======
                 ", k=" + k +
                 ", l=" + l +
                 ", startPoint='" + startPoint + '\'' +
                 ", endPoint='" + endPoint + '\'' +
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
                 ", camera='" + camera + '\'' +
                 ", crtTime=" + crtTime +
                 '}';

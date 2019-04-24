@@ -1,4 +1,4 @@
--- ÈëÀÈ¼ÇÂ¼±í
+-- ï¿½ï¿½ï¿½È¼ï¿½Â¼ï¿½ï¿½
 create table T_OAM_REQ_RECORD
 (
   ID         NUMBER NOT NULL,
@@ -31,7 +31,7 @@ end OAM_REQ_RECORD_TG;
 alter trigger OAM_REQ_RECORD_TG enable;
 
 
---ÎÄ¼þµ¼³ö±í
+--ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CREATE TABLE T_COMMON_EXPORT(
   id    number    not null,
   name    varchar2(100) not null,
@@ -61,8 +61,8 @@ end COMMON_EXPORT_TG;
 /
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
- values (1005, 'job1006', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'weekExport', '0 0 7 ? * MON', 'ÖÜ±¨µ¼³ö');
+ values (1005, 'job1006', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'weekExport', '0 0 7 ? * MON', 'ï¿½Ü±ï¿½ï¿½ï¿½ï¿½ï¿½');
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
- values (1006, 'job1007', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'monthExport', '0 0 7 1 * ?', 'ÔÂ±¨µ¼³ö');
+ values (1006, 'job1007', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'monthExport', '0 0 7 1 * ?', 'ï¿½Â±ï¿½ï¿½ï¿½ï¿½ï¿½');
 commit;

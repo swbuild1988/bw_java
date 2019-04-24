@@ -1,6 +1,12 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
+<<<<<<< HEAD
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+=======
 import java.util.*;
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
@@ -210,6 +216,17 @@ public class AlarmServiceImpl implements AlarmService {
 		return alarmMapper.getCountByTime(date);
 	}
 
+<<<<<<< HEAD
+
+	@Override
+	public List<Alarm> getAllList() {
+		List<Alarm> list = alarmMapper.getAllAlarm();
+		return list == null ? Collections.emptyList() : list;
+	}
+
+
+=======
+>>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
 	@Override
 	public List<Alarm> getAllList() {

@@ -25,5 +25,4 @@ public interface UserService {
 
 	JSONObject getUserDet(Integer id);
 
-
 }
