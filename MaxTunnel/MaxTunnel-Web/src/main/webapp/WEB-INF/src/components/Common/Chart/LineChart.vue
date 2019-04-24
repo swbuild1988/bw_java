@@ -35,6 +35,7 @@
       this.init();
       this.resizeChart();
     },
+
     methods: {
       init() {
         this.drawLine();
@@ -51,6 +52,7 @@
       },
       drawLine() {
         let _this = this;
+
         _this.option = {
           title: {
             text: "",
@@ -143,6 +145,7 @@
             code,
             data
           } = result.data;
+
           if (code == 200) {
             _this.serises = [];
             _this.legendData = [];

@@ -203,6 +203,7 @@ export default {
                 var arr1 = []
                 var arr2 = []
                 for (var i = 0; i < res.length; i++) {
+
                     this.corssBarChartData.xData.push(res[i].key)
                     for (var j = 0; j < res[i].val.length; j++) {
                         if (i == 0) {

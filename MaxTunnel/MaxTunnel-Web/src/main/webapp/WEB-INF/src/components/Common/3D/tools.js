@@ -192,6 +192,7 @@ export default {
       });
     },
     addViewerType({ position, ellipse, billboard, label, point, polyline }) {
+
       let viewerPosition =
         position !== undefined
           ? {

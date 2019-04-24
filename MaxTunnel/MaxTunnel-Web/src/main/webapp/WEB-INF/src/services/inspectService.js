@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const isRealData = require("../../static/serverconfig").isRealData;
 
 var InspectService = {

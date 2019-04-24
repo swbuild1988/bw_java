@@ -407,7 +407,6 @@ export default {
                     _this.Log.info(error)
                 }
             )
-            console.log(this.cableLocation.stores,this.cableLocation.areas)
         },
         prev() {
             this.curIndex = this.curIndex - 1

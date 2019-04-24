@@ -537,12 +537,6 @@
     };
 </script>
 
-    .ivu-radio-group-button>>>.ivu-radio-wrapper:hover {
-        color: #fff;
-        background-color: #3dbbcb;
-        font-size: 17px;
-        background-position: 0 -15px;
-    }
 
 <style scoped>
     .ivu-radio-group-button >>> .ivu-radio-wrapper {

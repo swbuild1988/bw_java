@@ -30,6 +30,7 @@ export default ( containerId,viewer,domId,route ) => ({
 
                 let elementChild = [].slice.call( els.children );
                 let [ gis ] = elementChild.filter(el => el.id === domId);
+
                 gis.style.display = "none";
 
                 els.removeChild(gis);
@@ -131,6 +132,7 @@ export default ( containerId,viewer,domId,route ) => ({
                     _this.undergroundMode.distance;
                 var widget = _this.viewer.cesiumWidget;
             }
+
         },
         paramUpdate(){
             let _this = this;

@@ -18,7 +18,7 @@ var EquipmentService = {
                     reject(error.response.status + " " + error.response.data);
                 });
             } else {
-              reject(msg + ",地址:/venders");
+                // 假数据
             }
         });
     },
@@ -58,7 +58,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipmentstatus-enums");
+                // 假数据
             }
         });
     },
@@ -145,7 +145,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipments/datagrid");
+                // 假数据
             }
         });
     },
@@ -165,7 +165,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipments/" + equId);
+                // 假数据
             }
         });
     },
@@ -205,7 +205,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipments/");
+                // 假数据
             }
         });
     },
@@ -225,7 +225,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipments/type/count");
+                // 假数据
             }
         });
     },
@@ -260,7 +260,7 @@ var EquipmentService = {
                     reject(error.response.status + "  " + error.response.data);
                 });
             } else {
-              reject(msg + "地址：/equipments/" + equId);
+                // 假数据
             }
         });
     },

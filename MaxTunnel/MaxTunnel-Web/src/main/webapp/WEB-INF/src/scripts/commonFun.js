@@ -225,6 +225,7 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
         let selectedFeatures = queryEventArgs.originResult.features,
             IM = Vue.prototype.IM,
             entiyParam = null;
+
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures, messageTypes, 'ID');
 
         for (var i = 0; i < selectedFeatures.length; i++) {
@@ -363,6 +364,7 @@ export function getEntitySet(setParam) {
                     }
 
                     if (sqlQueryBIMId.length != 0) {
+
                         doSqlQuery.call(_this, setParam.viewer, 'MOID in ("' + sqlQueryBIMId.toString() + '")', setParam.dataUrl, setParam.onQueryComplete, setParam.processFailed, setParam.typeMode, setParam.messageType, setParam.show)
                     }
 
@@ -596,6 +598,7 @@ export function computeIntersections(coord, startLocation, endLocation) {
  * 添加label实体
  */
 export function addLabel() {
+
     let args = [].slice.call(arguments); //类数组转换成数组
     let [scene, viewer, wait, sqlQuery, dataUrl, onQueryComplete, processFailed, callback] = args; //解析数组内容
     let _this = this;
@@ -726,6 +729,7 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
             moTypeId = null,
             image = null,
             detectionObj = _this.VMConfig.detectionObj;
+
 
         for (let i = 0; i < selectedFeatures.length; i++) {
 
