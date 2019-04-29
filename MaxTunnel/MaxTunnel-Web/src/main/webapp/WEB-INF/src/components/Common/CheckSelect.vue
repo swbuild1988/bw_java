@@ -16,6 +16,7 @@
                 :label="item.id"
                 @click="choose($event)"
             >{{item.name}}</Button>
+            
             <Button
                 type="success"
                 icon="ios-skipforward"
@@ -115,7 +116,8 @@ export default {
             this.setcurList();
         }
     },
-    mounted() {},
+    mounted() {
+    },
     watch: {
         dataList: {
             handler: function(newVal, oldVal) {
@@ -123,7 +125,7 @@ export default {
                     if(this.selectObj.selectId!=null||this.selectObj.selectId!=undefined||this.selectObj.selectId!=''){
                         this.clickId = this.selectObj.selectId;
                     }else{
-                        this.clickId = this.dataList[0].id;
+                        this.clickId = this.dataList[0].value;
                     }
                     this.startIndex = 0;
                     this.endIndex = this.itemLen;

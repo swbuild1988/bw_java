@@ -2,34 +2,38 @@
     <div @click="locationEquimpent">
         <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
             <p slot="title" style="font-size: 1.6vmin">{{Obj.objtypeName}}</p>
-            <!-- 开 -->
-            <img src="../../../assets/UM/lamp-on.png" v-if="Obj.objtypeId==11 && curValue" class="img">
-            <img src="../../../assets/UM/风机gif.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
-            <img src="../../../assets/UM/水泵gif.gif" v-if="Obj.objtypeId==59 && curValue" class="img">
-            <img src="../../../assets/UM/blinds-on.png" v-if="Obj.objtypeId==58 && curValue" class="img">
-            <img src="../../../assets/UM/井盖开.png" v-if="Obj.objtypeId==56 && curValue" class="img">
-            <img src="../../../assets/UM/红外正常gif.gif" v-if="Obj.objtypeId==57 && curValue" class="img">
-            <img src="../../../assets/UM/门-开.png" v-if="Obj.objtypeId==55 && curValue" class="img">
-            <img src="../../../assets/UM/报警-红gif.gif" v-if="Obj.objtypeId==41 && curValue" class="img">
-            <!-- 关 -->
-            <img src="../../../assets/UM/lamp-off.png" v-if="Obj.objtypeId==11 && !curValue" class="img">
-            <img src="../../../assets/UM/风机.png" v-if="Obj.objtypeId==10 && !curValue" class="img">
-            <img src="../../../assets/UM/水泵.png" v-if="Obj.objtypeId==59 && !curValue" class="img">
-            <img src="../../../assets/UM/blinds-off.png" v-if="Obj.objtypeId==58 && !curValue" class="img">
-            <img src="../../../assets/UM/井盖.png" v-if="Obj.objtypeId==56 && !curValue" class="img">
-            <img src="../../../assets/UM/红外.gif" v-if="Obj.objtypeId==57 && !curValue" class="img">
-            <img src="../../../assets/UM/门-关.png" v-if="Obj.objtypeId==55 && !curValue" class="img">
-            <img src="../../../assets/UM/报警.png" v-if="Obj.objtypeId==41 && !curValue" class="img">
+            <div class="equipment_image">
+                <!-- 开 -->
+                <img src="../../../assets/UM/lamp-on.png" v-if="Obj.objtypeId==11 && curValue" class="img">
+                <img src="../../../assets/UM/风机gif.gif" v-if="Obj.objtypeId==10 && curValue" class="img">
+                <img src="../../../assets/UM/水泵gif.gif" v-if="Obj.objtypeId==59 && curValue" class="img">
+                <img src="../../../assets/UM/blinds-on.png" v-if="Obj.objtypeId==58 && curValue" class="img">
+                <img src="../../../assets/UM/井盖开.png" v-if="Obj.objtypeId==56 && curValue" class="img">
+                <img src="../../../assets/UM/红外正常gif.gif" v-if="Obj.objtypeId==57 && curValue" class="img">
+                <img src="../../../assets/UM/门-开.png" v-if="Obj.objtypeId==55 && curValue" class="img">
+                <img src="../../../assets/UM/报警-红gif.gif" v-if="Obj.objtypeId==41 && curValue" class="img">
+                <!-- 关 -->
+                <img src="../../../assets/UM/lamp-off.png" v-if="Obj.objtypeId==11 && !curValue" class="img">
+                <img src="../../../assets/UM/风机.png" v-if="Obj.objtypeId==10 && !curValue" class="img">
+                <img src="../../../assets/UM/水泵.png" v-if="Obj.objtypeId==59 && !curValue" class="img">
+                <img src="../../../assets/UM/blinds-off.png" v-if="Obj.objtypeId==58 && !curValue" class="img">
+                <img src="../../../assets/UM/井盖.png" v-if="Obj.objtypeId==56 && !curValue" class="img">
+                <img src="../../../assets/UM/红外.gif" v-if="Obj.objtypeId==57 && !curValue" class="img">
+                <img src="../../../assets/UM/门-关.png" v-if="Obj.objtypeId==55 && !curValue" class="img">
+                <img src="../../../assets/UM/报警.png" v-if="Obj.objtypeId==41 && !curValue" class="img">
+            </div>
+            
             <!-- 声光报警 41，红外 57，门禁 55-->
-
             <div class="switchContent">
                 <i-switch v-model="curValue" @on-change="confirm" size="large">
                     <span slot="open">开</span>
                     <span slot="close">关</span>
                 </i-switch>
+                <img :src="equipmentState.image" class="equipment_state_image" :title="equipmentState.title">
             </div>
+            
             <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
-            <div style="margin-top: 2vh;font-size: 1.66vmin">{{Obj.ObjName}}</div>
+            <div style="margin-top: -8%;font-size: 1.66vmin">{{Obj.ObjName}}</div>
             <!-- <p slot="title">{{Obj.objtypeName}}</p>
       <div style="background-color:#7D8481;height: 100px; ">
         <span style="float:left;color: #ffffff;margin-top: 3.2vh;width:40%;font-size: 18px; ">{{Obj.ObjName}}</span>
@@ -83,15 +87,27 @@
                 curImgUrl: "",
                 confirmFlag: false,
                 curValue: null,
-                isTimeShow: false
+                isTimeShow: false,
+                equipmentState:{
+                    state:null,
+                    image:'',
+                    title:''
+                }
             };
         },
         components: {
             Light,
             Fans
         },
+        watch:{
+            'equipmentState.state'(){
+                this.transformStateImage();
+                this.transformStateTtile();
+            }
+        },
         methods: {
             confirm(data) {
+                
                 this.$nextTick(() => {
                     this.curValue = !data
                 })
@@ -102,11 +118,21 @@
                         return h('span', text)
                     },
                     onOk: () => {
-                        this.curValue = !this.curValue
+                        this.equipmentState.state = this.curValue = !this.curValue
                         this.change()
                     }
                 })
 
+            },
+            transformStateImage(){
+                let { equipmentState } = this;
+                let image_url = equipmentState.state == 0 ? 'close-state':( equipmentState.state == 1 ? 'open-state':'fault-state' );
+
+                this.equipmentState.image = require('../../../assets/VM/'+ image_url +'.png');
+            },
+            transformStateTtile(){
+                let { equipmentState } = this;
+                this.equipmentState.title = equipmentState.state == 0 ? '关':( equipmentState.state == 1 ? '开':'故障' );
             },
             //定位设备
             locationEquimpent() {
@@ -121,7 +147,8 @@
             if (this.Obj.time != '') {
                 this.isTimeShow = true
             }
-            this.curValue = this.Obj.ObjVal > 0 ? true : false
+            this.equipmentState.state = this.Obj.ObjVal;
+            this.curValue = this.Obj.ObjVal == 0 || this.Obj.ObjVal == 2 ? false : true
         },
     }
 </script>
@@ -142,6 +169,7 @@
         background-color: #9e9e9e;
         height: 2.4vmin;
         line-height: 2.2vmin;
+        margin-top: 9%;
     }
 
     .ivu-switch-checked:after {
@@ -173,22 +201,40 @@
     }
 
     .switchContent {
-        position: relative;
+        width: 50%;
+        position: absolute;
+        right: 0;
         margin-top: 2vh;
     }
 
     .img {
-        width: 28%;
-        height: 28%;
+        width: 70%;
+        height: 65%;
     }
 
     .time {
+        position: absolute;
+        bottom: 0;
+        left: 0;
         margin: 1vh 0;
         font-size: 1.6vmin;
+        width: 100%;
     }
 
     .ivu-card-head p {
         height: 2vmin;
         line-height: 2vmin;
+    }
+    .equipment_image {
+        top: 65%;
+        width: 50%;
+        height: 50%;
+        position: absolute;
+        transform: translate(0,-50%);
+        left: 2%;
+    }
+    .equipment_state_image {
+        width: 70%;
+        height: 70%;
     }
 </style>

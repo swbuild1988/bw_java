@@ -173,6 +173,16 @@ export default {
 							path: "/UM/TunnelSafety"
 						},
 						{
+							name: "管廊机电监测",
+							url: "/UM/TunnelElectromechanical",
+							path: "/UM/TunnelElectromechanical"
+						},
+						{
+							name: "管廊消防监控",
+							url: "/UM/TunnelFire",
+							path: "/UM/TunnelFire"
+						},
+						{
 							name: "数据分析",
 							url: "/UM/DataAnalysis/QueryData",
 							path: "/UM/DataAnalysis/QueryData"

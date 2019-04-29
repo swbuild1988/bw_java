@@ -18,14 +18,14 @@
         </div> -->
         <div class="areas">
             <span>区域:</span>
-            <Select v-model="queryCondition.areaId" style="width:76%" @on-change="changeAreaLocation">
+            <Select v-model="queryCondition.areaId" style="width:200px" @on-change="changeAreaLocation">
                 <Option v-for="item in areas" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
         
         <div class="detectionType">
             <span>检测类型:</span>
-            <Select v-model="queryCondition.curDataType" style="width:76%" @on-change="changeDataType">
+            <Select v-model="queryCondition.curDataType" style="width:200px" @on-change="changeDataType">
                 <Option v-for="item in curDataTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
@@ -51,62 +51,13 @@
         </div> -->
         <div class="detectionBin">
             <span>检测仓:</span>
-            <Select v-model="queryCondition.storeId" style="width:76%" @on-change="getStoreId">
+            <Select v-model="queryCondition.storeId" style="width:200px" @on-change="getStoreId">
                 <Option v-for="item in storeProp.dataList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
-        <div class="area_length"><strong>里程:   </strong>{{ areaLeath }}</div>
-        <!-- <Tabs v-model="choosedTabPane" @on-click="chooseTab">
+        <Tabs v-model="choosedTabPane" @on-click="chooseTab">
             <TabPane label="卡片" name="卡片">
                 <Row :gutter="16">
-                    <Col span="12">
-                        <div class="data">
-                            <div class="titles">
-                                <div
-                                    class="title"
-                                    @click="chooseModule(0)"
-                                    :class="{'active' : curModule === 0}"
-                                >
-                                    <span>
-                                        <Icon type="ios-film" class="icons"></Icon>视频
-                                    </span>
-                                </div>
-                                <div
-                                    class="title"
-                                    @click="chooseModule(1)"
-                                    :class="{'active' : curModule === 1}"
-                                >
-                                    <span>
-                                        <Icon type="map" class="icons"></Icon>管廊模型
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="map">
-                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span="12" class="data" style="overflow-y:auto ">
-                        <Row :gutter="16" style="margin-right: 2px;">
-                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                                <SimulatedData
-                                    v-bind:Obj="item"
-                                    v-if="item.datatypeId==1"
-                                    @changeStatus="changeStatus"
-                                ></SimulatedData>
-                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </TabPane>
-            <TabPane label="表格" name="表格">
-                <Table :columns="environmentColums" :data="objTableDate"></Table>
-            </TabPane>
-        </Tabs> -->
-        <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
-            <Row :gutter="16" v-show="tabs.isShowComponent">
                     <Col span="12">
                         <div class="data">
                             <div class="titles">
@@ -149,8 +100,11 @@
                         </Row>
                     </Col>
                 </Row>
-                <Table :columns="environmentColums" :data="objTableDate" v-show="!tabs.isShowComponent"></Table>
-        </tabs>
+            </TabPane>
+            <TabPane label="表格" name="表格">
+                <Table :columns="environmentColums" :data="objTableDate"></Table>
+            </TabPane>
+        </Tabs>
     </div>
 </template>
 <script>
@@ -168,7 +122,6 @@
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
     import { changStrLength } from "../../../../scripts/commonFun";
     import { MeasObjServer } from '../../../../services/MeasObjectSerivers'
-    import tabs from "../../../../components/Common/Tabs.vue";
 
     export default {
         name: "detail-tunnel-environment",
@@ -258,22 +211,7 @@
                         }
                     }
                 ],
-                objTableDate: [],
-                areaLeath:'',
-                tabs:{
-                    tabIndex: 0,
-                    isShowComponent:true,
-                    tabList: [
-                        {
-                            index: 0,
-                            name: '卡片',
-                        },
-                        {
-                            index: 1,
-                            name: '表格',
-                        }
-                    ]
-                }
+                objTableDate: []
             };
         },
         watch: {
@@ -290,6 +228,12 @@
                     _this.changeStore();
                 },
                 deep: true
+            },
+            Obj:{
+                handler(newval,oldVal){
+                    console.log('newval',newval)
+                },
+                deep:true
             }
         },
         created(){
@@ -327,8 +271,7 @@
             TestSmViewer,
             videoComponent,
             Carousel,
-            checkSelect,
-            tabs
+            checkSelect
         },
         mounted() {
             if(this.$route.query){
@@ -341,9 +284,8 @@
             this.intervalData();
         },
         methods: {
-            changeTabs(tab) {
-                this.tabs.tabIndex = tab.index;
-                this.tabs.isShowComponent = tab.index == 0 ? true : false;
+            changeTabs() {
+                var _this = this;
             },
 
             intervalData() {
@@ -574,7 +516,6 @@
                         _this.Obj = [];
                         result.forEach(a => {
                             let temp = {};
-                            _this.areaLeath = '200';
                             temp.ObjName = a.name;
                             temp.id = a.id;
                             temp.clickStatus = false;
@@ -793,11 +734,5 @@
         width: 20%;
         margin-top: .5%;
         margin-right: 3%;
-    }
-    .area_length{
-        position: absolute;
-        font-size: .9rem;
-        left: 70%;
-        top: 1.9%;
     }
 </style>

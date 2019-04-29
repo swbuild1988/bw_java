@@ -99,6 +99,7 @@ export default {
 						password: sha256(_this.formValidate.passWord)
 					};
 					Cookies.set("userName", loginParams.name);
+					console.log('ss',this.$store)
 					this.$store
 						.dispatch("Login", loginParams)
 						.then(result => {

@@ -353,6 +353,46 @@ export const asyncRouterMap = [{
                 }],
             },
             {
+                path: 'TunnelElectromechanical',
+                name: '管廊机电监控',
+                component: (resolve) => require(['@/views/UM/MAM/TunnelElectromechanical/TunnelElectromechanical'], resolve),
+                children: [{
+                    path: 'list/:id',
+                    component: (resolve) => require(['@/views/UM/MAM/TunnelElectromechanical/ListTunnelElectromechanical'], resolve),
+                    name: '管廊机电监控列表',
+                    meta: {
+                        keepAlive: true, // 需要被缓存
+                    },
+                }, {
+                    path: 'details/:id',
+                    component: (resolve) => require(['@/views/UM/MAM/TunnelElectromechanical/DetailsElectromechanical'], resolve),
+                    name: '管廊机电监控详情',
+                    meta: {
+                        keepAlive: true, // 需要被缓存
+                    },
+                }],
+            },
+            {
+                path: 'TunnelFire',
+                name: '管廊消防监控',
+                component: (resolve) => require(['@/views/UM/MAM/TunnelFire/TunnelFire'], resolve),
+                children: [{
+                    path: 'list/:id',
+                    component: (resolve) => require(['@/views/UM/MAM/TunnelFire/ListTunnelFire'], resolve),
+                    name: '管廊消防监控列表',
+                    meta: {
+                        keepAlive: true, // 需要被缓存
+                    },
+                }, {
+                    path: 'details/:id',
+                    component: (resolve) => require(['@/views/UM/MAM/TunnelFire/DetailsTunnelFire'], resolve),
+                    name: '管廊消防监控详情',
+                    meta: {
+                        keepAlive: true, // 需要被缓存
+                    },
+                }],
+            },
+            {
                 path: 'TunnelSafety',
                 name: '管廊安防监控',
                 component: (resolve) => require(['@/views/UM/MAM/TunnelSafety/TunnelSafety'], resolve),
