@@ -121,7 +121,7 @@ public interface SectionService {
 
 	List<Section> getSectionsByStoreIds(List<Integer> storeIdList);
 
-	boolean calSectionsStartPointAndEndPointByTunnel(int tunnelId);
+	String calSectionsStartPointAndEndPointByTunnel(Integer tunnelId);
 
 
 }

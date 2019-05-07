@@ -1,6 +1,6 @@
 'use strict'
 // Template version: 1.3.1
-// see http://vuejs-templates.github.io/webpack for documentation.
+// see http://vuejs-templates.github.io/webpack for documentation.    和后台分离部署是时配置
 const path = require('path')
 const ApiUrl = require('../static/serverconfig').ApiUrl
 module.exports = {
@@ -46,10 +46,10 @@ module.exports = {
     },
 
     build: {
-        // Template for index.html
+        // Template for index.html  必须是绝对路径
         index: path.resolve(__dirname, '../html/index.html'),
 
-        //  编译输出的静态资源根路径
+        //  编译输出的静态资源根路径 绝对路径
         assetsRoot: path.resolve(__dirname, '../../dist'),
         //编译输出的二级目录
         assetsSubDirectory: 'static',

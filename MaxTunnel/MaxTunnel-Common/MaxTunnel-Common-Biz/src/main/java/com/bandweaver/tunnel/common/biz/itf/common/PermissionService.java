@@ -29,4 +29,6 @@ public interface PermissionService {
 
 
 	List<Permission> getPermissionsByMenuCode(String menuCode);
+
+    List<Permission> getPermissionIdAndPermissionCode();
 }

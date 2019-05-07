@@ -42,13 +42,6 @@ public interface EquipmentService {
 	 */
 	List<Equipment> getListByType(Integer typeId);
 
-	/**
-	 * 获取管廊类的所有设备
-	 * 
-	 * @param tunnelId
-	 * @return
-	 */
-	List<Equipment> getListByTunnel(Integer tunnelId);
 
 	/**
 	 * @Description: 查询符合条件的设备列表
@@ -89,23 +82,7 @@ public interface EquipmentService {
 	 */
 	EquipmentDto getEquipmentById(Integer id);
 
-	/**
-	 * @Description: 批量添加
-	 * @param @param list
-	 * @return void
-	 * @throws @author shaosen
-	 * @date 2018年6月11日
-	 */
-	void addEquipmentBatch(List<Equipment> list);
 
-	/**
-	 * @Description: 选择更新
-	 * @param @param e
-	 * @return void
-	 * @throws @author shaosen
-	 * @date 2018年6月13日
-	 */
-	void updateEquipmentByModelId(Equipment e);
 
 	/**
 	 * @Description: 根据条件统计设备数

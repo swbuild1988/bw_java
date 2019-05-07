@@ -1,7 +1,6 @@
 package com.bandweaver.tunnel.service.omm.equipment;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
@@ -53,11 +52,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public List<Equipment> getListByTunnel(Integer tunnelId) {
-		return equipmentMapper.getListByTunnel(tunnelId);
-	}
-
-	@Override
 	public List<EquipmentDto> getEquipmentListByCondition(EquipmentVo equipmentVo) {
 
 		return equipmentMapper.getEquipmentListByCondition(equipmentVo);
@@ -76,16 +70,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public EquipmentDto getEquipmentById(Integer id) {
 		return equipmentMapper.getEquipmentById(id);
-	}
-
-	@Override
-	public void addEquipmentBatch(List<Equipment> list) {
-		equipmentMapper.addEquipmentBatch(list);
-	}
-
-	@Override
-	public void updateEquipmentByModelId(Equipment e) {
-		equipmentMapper.updateEquipmentByModelId(e);
 	}
 
 	@Override

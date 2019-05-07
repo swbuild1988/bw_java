@@ -26,6 +26,21 @@
             <if test="inTime != null">
                 in_time,
             </if>
+            <if test="qaTerm != null">
+                qa_term,
+            </if>
+            <if test="ratedVoltage != null">
+                rated_voltage,
+            </if>
+            <if test="range != null">
+                range,
+            </if>
+            <if test="factory != null">
+                factory,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name.trim() != ''">
@@ -46,27 +61,24 @@
             <if test="inTime != null">
                 #{inTime},
             </if>
+            <if test="qaTerm != null">
+                #{qaTerm},
+            </if>
+            <if test="ratedVoltage != null">
+                #{ratedVoltage},
+            </if>
+            <if test="range != null">
+                #{range},
+            </if>
+            <if test="factory != null">
+                #{factory},
+            </if>
+            <if test="brand != null">
+                #{brand},
+            </if>
         </trim>
     </insert>
     
-    <insert id="addBatch" useGeneratedKeys="false">
-		insert into t_omm_spare
-		(name,model_id,type_id,vender_id,status,in_time)
-		select a.* from (
-		<foreach collection="list" item="item" index="index" close=")"
-			open="(" separator="union">
-			select
-			#{item.name},
-			#{item.modelId},
-			#{item.typeId},
-			#{item.venderId},
-			#{item.status},
-			#{item.inTime}
-			from dual
-		</foreach>
-		)a
-	</insert>
-
     <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Spare">
         UPDATE t_omm_spare
         <set>
@@ -88,6 +100,21 @@
             <if test="inTime != null">
                 in_time = #{inTime},
             </if>
+            <if test="qaTerm != null">
+                qa_term = #{qaTerm},
+            </if>
+            <if test="ratedVoltage != null">
+                rated_voltage = #{ratedVoltage},
+            </if>
+            <if test="range != null">
+                range = #{range},
+            </if>
+            <if test="factory != null">
+                factory = #{factory},
+            </if>
+            <if test="brand != null">
+                brand = #{brand},
+            </if>
         </set>
         WHERE id = #{id}
     </update>
@@ -98,7 +125,7 @@
         LEFT JOIN t_omm_equipment_model b ON a.model_id = b.id
         LEFT JOIN t_omm_equipment_type c ON a.type_id = c.id
         LEFT JOIN t_omm_equipment_vender d ON a.vender_id = d.id
-        WHERE status = #{status}
+        WHERE a.status = #{status}
     </select>
 	
     <select id="getSpareDtoByCondition" resultMap="spareDtoMap">
@@ -126,6 +153,21 @@
             <if test="status != null">
                 and a.status = #{status}
             </if>
+            <if test="qaTerm != null">
+                and e.qa_term = #{qaTerm}
+            </if>
+            <if test="ratedVoltage != null">
+                and e.rated_voltage = #{ratedVoltage}
+            </if>
+            <if test="range != null">
+                and e.range = #{range}
+            </if>
+            <if test="factory != null">
+                and e.factory = #{factory}
+            </if>
+            <if test="brand != null">
+                and e.brand = #{brand}
+            </if>
             <if test="startTime != null">
                 and a.in_time <![CDATA[>=]]>#{startTime}
             </if>
@@ -133,6 +175,7 @@
                 and a.in_time <![CDATA[<=]]>#{endTime}
             </if>
         </where>
+        order by a.in_time desc
     </select>
 
 	<select id="getSpareDtoById" resultMap="spareDtoMap">
@@ -168,10 +211,15 @@
         <result column="model_name" property="modelName"/>
         <result column="type_name" property="typeName"/>
         <result column="in_time" property="inTime"/>
+        <result column="qa_term" property="qaTerm"/>
+        <result column="rated_voltage" property="ratedVoltage"/>
+        <result column="range" property="range"/>
+        <result column="factory" property="factory"/>
+        <result column="brand" property="brand"/>
     </resultMap>
     
     <delete id="deleteByIds">
-    	delete from t_omm_spare 
+    	delete from t_omm_spare
 		WHERE ID IN
 		<foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}

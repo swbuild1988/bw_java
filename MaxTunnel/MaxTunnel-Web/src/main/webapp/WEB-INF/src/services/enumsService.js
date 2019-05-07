@@ -455,7 +455,75 @@ var EnumsService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
-	}
+	},
+	  // 获取权限模块列表
+	  getModuleList(){
+        return new Promise((resolve,reject)=>{
+            axios.get('shiro/resource-type/enums')
+            .then(res=>{
+                let { msg,data,code } = res.data
+                if(code == 200){
+                    resolve(data)
+                } else {
+                    reject(msg + '地址:shiro/resource-type/enums')
+                }
+            })
+            .catch(error=>{
+                reject(error.response.status + ' ' + error.response.data)
+            })
+            // let data = [
+            //     {
+            //         id: 'user',
+            //         name: '用户管理'
+            //     },
+            //     {
+            //         id: 'energy',
+            //         name: '能耗管理'
+            //     },
+            //     {
+            //         id: 'tunnel',
+            //         name: '管廊管理'
+            //     }
+            // ]
+            // resolve(data)
+        })
+    },
+    // 获取操作列表
+    getActionsList(){
+        return new Promise((resolve,reject)=>{
+            axios.get('shiro/operate-type/enums')
+            .then(res=>{
+                let { msg,data,code } = res.data
+                if(code == 200){
+                    resolve(data)
+                } else {
+                    reject(msg + '地址:shiro/operate-type/enums')
+                }
+            })
+            .catch(error=>{
+                reject(error.response.status + ' ' + error.response.data)
+            })
+            // let data = [
+            //     {
+            //         val: '添加',
+            //         key: 'add'
+            //     },
+            //     {
+            //         val: '列表',
+            //         key: 'list'
+            //     },
+            //     {
+            //         val: '修改',
+            //         key: 'update'
+            //     },
+            //     {
+            //         val: '删除',
+            //         key: 'delete'
+            //     }
+            // ]
+            // resolve(data)
+        })
+    },
 }
 export {
 	EnumsService

@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.common.biz.vo;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class CompanyVo extends BaseVo {
@@ -12,6 +11,8 @@ public class CompanyVo extends BaseVo {
 	private Integer id;
 
     private String name;
+    
+    private Integer bank;
 
     private Date crtTime;
 
@@ -38,4 +39,12 @@ public class CompanyVo extends BaseVo {
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
     }
+
+	public Integer getBank() {
+		return bank;
+	}
+
+	public void setBank(Integer bank) {
+		this.bank = bank;
+	}
 }

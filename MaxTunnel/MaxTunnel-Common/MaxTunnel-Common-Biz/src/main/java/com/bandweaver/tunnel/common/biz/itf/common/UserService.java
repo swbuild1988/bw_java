@@ -19,10 +19,13 @@ public interface UserService {
 
 	JSONObject getPermissions(String name);
 
+	Set<String> getUserPermissions(String name);
+
 	User getByUserName(String name);
 
 	void deleteBatch(List<Integer> list);
 
 	JSONObject getUserDet(Integer id);
+
 
 }

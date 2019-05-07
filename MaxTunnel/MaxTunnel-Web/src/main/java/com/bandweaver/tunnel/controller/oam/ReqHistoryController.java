@@ -3,7 +3,6 @@ package com.bandweaver.tunnel.controller.oam;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,12 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqRecordDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqHistoryService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqRecordService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
@@ -69,13 +66,9 @@ public class ReqHistoryController {
     @Autowired
     private HistoryService historyService;
     @Autowired
-<<<<<<< HEAD
-    private TunnelService tunnelService;
-=======
     private StaffService staffService;
     @Autowired
     private ReqRecordService reqRecordService;
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     
     /**
      * 通过id查询入廊申请记录
@@ -422,45 +415,5 @@ public class ReqHistoryController {
     	List<Staff> dtos = new ArrayList<>(set);
     	ListPageUtil<Staff> page = new ListPageUtil<>(dtos, vo.getPageNum(), vo.getPageSize());
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
-    }
-    
-    /**
-     * 获取每个月【2018-9~2019-1】，每条管廊的入廊次数
-     * @return
-     * @author ya.liu
-     * @Date 2019年1月10日
-     */
-    @RequestMapping(value = "tunnels/enter-count-everymonth", method = RequestMethod.GET)
-    public JSONObject getEnergyByTunnleIds() {
-    	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-    	List<List<JSONObject>> list = new ArrayList<>();
-    	
-		// 获取2018年9月到2019年2月的时间
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date sd = null;
-		Date ed = null;
-		try {
-			sd = sdf.parse("2018-9-1");
-			ed = sdf.parse("2019-1-31");
-		} catch (Exception e) {
-			
-		}
-		while(sd.before(ed)) {
-			List<JSONObject> reqList = new ArrayList<>();
-			// 遍历，获取每个管廊的入廊次数
-	    	for(TunnelSimpleDto dto : tunnelList) {
-				Date nowStart = DateUtil.getBeginDayOfMonth(sd);
-				// 获取入廊次数
-				int sum = (int)(Math.random() * 8 + 10);
-				JSONObject obj = new JSONObject();
-				obj.put("time", nowStart);
-				obj.put("tunnel", dto.getName());
-				obj.put("count", sum);
-				reqList.add(obj);
-			}
-	    	sd.setMonth(sd.getMonth() + 1);
-		list.add(reqList);
-    	}
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
     }
 }

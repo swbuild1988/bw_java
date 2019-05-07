@@ -15,6 +15,8 @@ public interface InspectionTaskMapper {
     int addWithBulk(List<InspectionTask> inspectionTasks);
 
     int update(InspectionTask inspectionTask);
+    
+    int deleteBatch(List<Integer> list);
 
     InspectionTask getTask(@Param("taskId") int taskId);
 

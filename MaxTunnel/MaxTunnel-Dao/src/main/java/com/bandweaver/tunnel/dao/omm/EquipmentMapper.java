@@ -41,14 +41,6 @@ public interface EquipmentMapper {
 	List<Equipment> getListByType(Integer typeId);
 
 	/**
-	 * 获取管廊类的所有设备
-	 * 
-	 * @param tunnelId
-	 * @return
-	 */
-	List<Equipment> getListByTunnel(Integer tunnelId);
-
-	/**
 	 * @Description: 查询符合条件的设备列表
 	 * @param @param tunnelId
 	 * @param @param type
@@ -78,24 +70,6 @@ public interface EquipmentMapper {
 	 */
 	EquipmentDto getEquipmentById(@Param("id") Integer id);
 
-	/**
-	 * @Description: 批量添加
-	 * @param @param list
-	 * @return void
-	 * @throws @author shaosen
-	 * @date 2018年6月11日
-	 */
-	void addEquipmentBatch(List<Equipment> list);
-
-	/**
-	 * @Description: 选择更新
-	 * @param @param e
-	 * @return void
-	 * @throws @author shaosen
-	 * @date 2018年6月13日
-	 */
-	void updateEquipmentByModelId(Equipment e);
-	
 	/**
 	 * 通过对象id更换设备
 	 * @param e

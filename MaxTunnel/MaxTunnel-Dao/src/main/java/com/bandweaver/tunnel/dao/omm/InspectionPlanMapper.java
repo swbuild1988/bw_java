@@ -13,6 +13,8 @@ public interface InspectionPlanMapper {
     int add(InspectionPlan inspectionPlan);
 
     int update(InspectionPlan inspectionPlan);
+    
+    int delete(@Param("planId") String planId);
 
     List<InspectionPlanSimpleDto> getInspectionPlans();
 

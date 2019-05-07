@@ -7,8 +7,6 @@ import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
-import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
-import org.activiti.engine.impl.json.JsonObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +26,6 @@ import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.dao.mam.MeasObjAIMapper;
-import com.bandweaver.tunnel.dao.mam.MeasObjDIMapper;
 import com.bandweaver.tunnel.dao.mam.MeasObjMapper;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import com.github.pagehelper.PageHelper;
@@ -40,8 +37,6 @@ public class MeasObjServiceImpl implements MeasObjService {
     private MeasObjMapper measObjMapper;
     @Autowired
     private MeasObjAIMapper measObjAIMapper;
-    @Autowired
-    private MeasObjDIMapper measObjDIMapper;
     @Autowired
     private MeasValueAIMapper measValueAIMapper;
     @Autowired
@@ -362,10 +357,17 @@ public class MeasObjServiceImpl implements MeasObjService {
             jsonobj.put("val", param.getCv());
             SectionDto dto = sectionService.getSectionById(param.getSectionId());
             jsonobj.put("location", dto == null ? "" : dto.getName());
+            jsonobj.put("storeId", dto == null ? null : dto.getStoreId());
+            jsonobj.put("areaId", dto == null ? null : dto.getAreaId());
+            jsonobj.put("objId", param.getObjId());
             jsonobj.put("unit",ObjectType.getEnum(param.getObjTypeName()).getUnit() );
             list.add(jsonobj);
         }
         return list;
     }
 
+    @Override
+    public List<Integer> getIdList(String id){
+    	return measObjMapper.getIdList(id);
+    }
 }

@@ -14,8 +14,6 @@ public interface SpareMapper {
 
     int update(Spare spare);
 
-    int addBatch(List<Spare> list);
-    
     /**
      * 获取状态备品
      * @return

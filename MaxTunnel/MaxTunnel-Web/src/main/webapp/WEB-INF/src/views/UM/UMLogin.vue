@@ -99,7 +99,6 @@ export default {
 						password: sha256(_this.formValidate.passWord)
 					};
 					Cookies.set("userName", loginParams.name);
-					console.log('ss',this.$store)
 					this.$store
 						.dispatch("Login", loginParams)
 						.then(result => {
@@ -110,6 +109,7 @@ export default {
 							);
 							sessionStorage.setItem("UMUerName",result.token.username)
 							_this.logining = false;
+							this.loading = false;
 
 							_this.$router.push({ path: "/UMmain" });
 						})

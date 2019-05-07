@@ -14,6 +14,8 @@ public interface InspectionTaskService {
     int add(InspectionTask inspectionTask);
 
     int addWithBulk(List<InspectionTask> inspectionTasks);
+    
+    int deleteBatch(List<Integer> list);
 
     InspectionTask getTask(int id);
 

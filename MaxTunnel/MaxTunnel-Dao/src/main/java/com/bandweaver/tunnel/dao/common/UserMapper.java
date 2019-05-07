@@ -31,4 +31,5 @@ public interface UserMapper {
 
 	JSONObject getPermissions(String name);
 
+    Set<String> getUserPermissions(String name);
 }

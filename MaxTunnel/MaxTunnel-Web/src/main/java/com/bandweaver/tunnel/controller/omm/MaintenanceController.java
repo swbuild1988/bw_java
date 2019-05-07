@@ -589,20 +589,20 @@ public class MaintenanceController {
 			
 			for(JSONObject order : orderList) {
 				// 添加假数据
-//				if(order.equals(orderList.get(0)))
-//					order.put("val", (int)(Math.random() * 6 + 16));
-//				else
-//					order.put("val", (int)(Math.random() * 3 + 4));
+				if(order.equals(orderList.get(0)))
+					order.put("val", (int)(Math.random() * 6 + 16));
+				else
+					order.put("val", (int)(Math.random() * 3 + 4));
 				// 真实数据
-				vo.setIsFinished(false);
-				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
-				int count = 0;
-				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
-				for(MaintenanceOrderDto dto : dtoList) {
-					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
-					if(defectDto.getObjectId() != null) count++;
-				}
-				order.put("val", count);
+//				vo.setIsFinished(false);
+//				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+//				int count = 0;
+//				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+//				for(MaintenanceOrderDto dto : dtoList) {
+//					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+//					if(defectDto.getObjectId() != null) count++;
+//				}
+//				order.put("val", count);
 				
 			}
 			obj.put("val", orderList);

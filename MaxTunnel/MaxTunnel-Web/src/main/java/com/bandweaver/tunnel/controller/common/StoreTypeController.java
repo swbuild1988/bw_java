@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.controller.common;
 
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	 * @author shaosen
 	 * @Date 2018年9月17日
 	 */
+	@RequiresPermissions("storetype:add")
 	@RequestMapping(value="store-type",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody StoreType storeType) {
 		if(storeType.getParent() == null) storeType.setParent(storeType.getSn());
@@ -72,6 +74,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	 * @author shaosen
 	 * @Date 2018年9月17日
 	 */
+	@RequiresPermissions("storetype:list")
 	@RequestMapping(value="store-type/list",method=RequestMethod.GET)
 	public JSONObject getList() {
 		List<StoreType> list = storeTypeService.getList();
@@ -84,6 +87,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	 * @author shaosen
 	 * @Date 2018年9月17日
 	 */
+	@RequiresPermissions("storetype:update")
 	@RequestMapping(value="store-type",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody StoreType storeType) {
 		storeTypeService.update(storeType);
@@ -94,6 +98,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	/**
 	 * 删除
 	 */
+	@RequiresPermissions("storetype:delete")
 	@RequestMapping(value="store-type/{id}",method=RequestMethod.DELETE)
 	@Override
 	public JSONObject delete(@PathVariable Integer id) {
@@ -105,6 +110,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("storetype:delete")
 	@Override
 	@RequestMapping(value="store-type/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -124,6 +130,7 @@ public class StoreTypeController extends BaseController<StoreType>{
 	 * @author shaosen
 	 * @Date 2018年9月27日
 	 */
+	@RequiresPermissions("storetype:list")
 	@RequestMapping(value="store-type/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody StoreTypeVo vo) {
 		PageInfo<StoreType> pageInfo = storeTypeService.dataGrid(vo);

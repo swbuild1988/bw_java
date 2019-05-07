@@ -4,13 +4,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.bandweaver.tunnel.common.biz.dto.CompanyDto;
 import com.bandweaver.tunnel.common.biz.pojo.Company;
 import com.bandweaver.tunnel.common.biz.vo.CompanyVo;
 
 public interface CompanyMapper {
     int deleteByPrimaryKey(Integer id);
-
-    int insert(Company record);
 
     int insertSelective(Company record);
 
@@ -18,11 +17,11 @@ public interface CompanyMapper {
 
     int updateByPrimaryKeySelective(Company record);
 
-    int updateByPrimaryKey(Company record);
-
+    CompanyDto getDtoById(Integer id);
+    
 	/**
 	 * @Description: 获取所有公司列表
-	 * @param @return   
+	 * @param
 	 * @return List<Company>  
 	 * @throws
 	 * @author shaosen
@@ -41,6 +40,4 @@ public interface CompanyMapper {
 	void deleteFromOtherTable(@Param("id")Integer id);
 
 	List<Company> getByCondition(CompanyVo vo);
-
-	void deleteBatch(List<Integer> list);
 }

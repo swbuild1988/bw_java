@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.em.EmPlanGroupMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanGroup">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PLAN_ID" jdbcType="DECIMAL" property="planId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId" />
+    <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.em.EmPlanGroupDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="PLAN_ID" jdbcType="DECIMAL" property="planId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId" />
+    <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+    <association property="staff" javaType="com.bandweaver.tunnel.common.biz.pojo.Staff"
+    	column="STAFF_ID" select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, PLAN_ID, NAME, STAFF_ID, TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_EM_PLAN_GROUP
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from T_EM_PLAN_GROUP
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanGroup">
+    insert into T_EM_PLAN_GROUP
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="planId != null">
+        PLAN_ID,
+      </if>
+      <if test="name != null and name.trim() != ''">
+        NAME,
+      </if>
+      <if test="staffId != null">
+        STAFF_ID,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="planId != null">
+        #{planId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        #{name},
+      </if>
+      <if test="staffId != null">
+        #{staffId},
+      </if>
+      <if test="time != null">
+        #{time},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanGroup">
+    update T_EM_PLAN_GROUP
+    <set>
+      <if test="planId != null">
+        PLAN_ID = #{planId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        NAME = #{name},
+      </if>
+      <if test="staffId != null">
+        STAFF_ID = #{staffId},
+      </if>
+      <if test="time != null">
+        TIME = #{time},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getById" resultMap="DtoResultMap">
+  	select * from T_EM_PLAN_GROUP where id = #{id}
+  </select>
+  
+  
+<select id="getByCondition" resultMap="DtoResultMap">
+		select * from T_EM_PLAN_GROUP
+	<where>
+		<if test="id != null">
+	        AND ID = #{id}
+	    </if>
+		<if test="planId != null">
+	        AND PLAN_ID = #{planId}
+	      </if>
+	      <if test="name != null and name.trim() != ''">
+	        AND instr(NAME,#{name}) > 0
+	      </if>
+	      <if test="staffId != null">
+	        AND STAFF_ID = #{staffId}
+	      </if>
+	      <if test="startTime != null">
+	        AND TIME &gt;= #{startTime}
+	      </if>
+	      <if test="endTime != null">
+	        AND TIME &lt;= #{endTime}
+	      </if>
+	</where>
+	order by time desc
+</select>
+  
+</mapper>	

@@ -49,6 +49,41 @@ public class EnumController {
 
 
 	/**
+	 * 资源操作类型
+	 * @return
+	 */
+	@RequestMapping(value = "shiro/operate-type/enums")
+	public JSONObject getShiroOperateTypeList(){
+		List<JSONObject> list = new ArrayList<>();
+		for (ShiroOperateType e : ShiroOperateType.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getKey());
+			obj.put("val", e.getValue());
+			obj.put("name", e.getName());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
+
+	/**
+	 * 操作资源类型
+	 * @return
+	 */
+	@RequestMapping(value = "shiro/resource-type/enums")
+	public JSONObject getShiroResourceTypeList(){
+		List<JSONObject> list = new ArrayList<>();
+		for (ShiroResourceType e : ShiroResourceType.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", e.getKey());
+			obj.put("val", e.getValue());
+			obj.put("name", e.getName());
+			list.add(obj);
+		}
+		return CommonUtil.success(list);
+	}
+
+
+	/**
 	 * 定时任务类型枚举
 	 * @return
 	 */
@@ -73,25 +108,6 @@ public class EnumController {
 	public JSONObject getOfTypeList(){
 		List<JSONObject> list = new ArrayList<>();
 		for (OfTypeEnum e : OfTypeEnum.values()) {
-			JSONObject obj = new JSONObject();
-			obj.put("key", e.getName());
-			obj.put("val", e.getValue());
-			list.add(obj);
-		}
-		return CommonUtil.success(list);
-	}
-	
-	
-	/**管廊运行状态枚举
-	 * @author shaosen
-	 * @date 2019年1月10日
-	 * @param   
-	 * @return JSONObject  
-	 */
-	@RequestMapping(value="tunnelstatus-enums",method=RequestMethod.GET)
-	public JSONObject getTunnelStatusList() {
-		List<JSONObject> list = new ArrayList<>();
-		for (TunnelStatus e : TunnelStatus.values()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
@@ -761,6 +777,24 @@ public class EnumController {
 	public JSONObject getOutsideEnumList() {
 		List<JSONObject> list = new ArrayList<>();
 		for(OutsideEnum s : OutsideEnum.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", s.getName());
+			obj.put("val", s.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 获取银行枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年4月9日
+	 */
+	@RequestMapping(value = "bank-enums", method = RequestMethod.GET)
+	public JSONObject getBank() {
+		List<JSONObject> list = new ArrayList<>();
+		for(BankEnum s : BankEnum.values()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", s.getName());
 			obj.put("val", s.getValue());

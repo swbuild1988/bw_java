@@ -65,19 +65,7 @@ public class ContextUtil {
 	public static HttpSession getSession() {
 		return getRequest().getSession();
 	}
-	
-	/**
-	 * @Description: 获取登录用户角色
-	 * @param @return   
-	 * @return String  
-	 * @throws
-	 * @author shaosen
-	 * @date 2018年5月14日
-	 */
-	public static Set<String> getLoginUserRole() {
-		return  (Set<String>) SecurityUtils.getSubject().getSession().getAttribute(Constants.SESSION_USER_ROLE);
-	}
-	
+
 	
 	/**
 	 * @Description: 获取登录用户权限

@@ -15,11 +15,11 @@ public interface TunnelMapper {
 
 	List<TunnelSimpleDto> getList();
 
-	TunnelSimpleDto getTunnelById(@Param("id") Integer id);
-
 	String getNameById(@Param("id") Integer id);
 
 	TunnelDto getDtoById(Integer id);
+
+	TunnelSimpleDto getSimpleDtoById(Integer id);
 
 	List<TunnelDto> getDtoList();
 
@@ -34,4 +34,6 @@ public interface TunnelMapper {
 	Tunnel getByName(String name);
 
 	Tunnel getBySN(String sn);
+
+    List<Integer> getSubSystemIdList();
 }

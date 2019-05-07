@@ -20,17 +20,17 @@ public class Customer implements Serializable {
 
 	private Integer companyId;
 
-	private String contact;
+	private String contact; // 名字
 
-	private String tel;
+	private String tel; // 手机号
 	
-	private String contact2;
+	private String duty; // 职责
 
-	private String tel2;
+	private String tel2; // 电话
 	
-	private String contact3;
+	private String mail; // 邮箱
 
-	private String tel3;
+	private String type; // 类型：一般联系人/紧急联系人
 
 	private Date crtTime;
 
@@ -55,7 +55,7 @@ public class Customer implements Serializable {
 	}
 
 	public void setContact(String contact) {
-		this.contact = contact == null ? null : contact.trim();
+		this.contact = contact;
 	}
 
 	public String getTel() {
@@ -63,15 +63,15 @@ public class Customer implements Serializable {
 	}
 
 	public void setTel(String tel) {
-		this.tel = tel == null ? null : tel.trim();
+		this.tel = tel;
 	}
 
-	public String getContact2() {
-		return contact2;
+	public String getDuty() {
+		return duty;
 	}
 
-	public void setContact2(String contact2) {
-		this.contact2 = contact2;
+	public void setDuty(String duty) {
+		this.duty = duty;
 	}
 
 	public String getTel2() {
@@ -82,20 +82,20 @@ public class Customer implements Serializable {
 		this.tel2 = tel2;
 	}
 
-	public String getContact3() {
-		return contact3;
+	public String getMail() {
+		return mail;
 	}
 
-	public void setContact3(String contact3) {
-		this.contact3 = contact3;
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
-	public String getTel3() {
-		return tel3;
+	public String getType() {
+		return type;
 	}
 
-	public void setTel3(String tel3) {
-		this.tel3 = tel3;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getCrtTime() {
@@ -104,11 +104,6 @@ public class Customer implements Serializable {
 
 	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
-	}
-
-	@Override
-	public String toString() {
-		return "Customer [contact=" + contact + "]";
 	}
 
 }

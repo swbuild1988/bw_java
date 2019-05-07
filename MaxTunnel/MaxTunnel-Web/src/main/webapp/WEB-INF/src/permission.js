@@ -1,5 +1,6 @@
 import router from './router';
 import store from './store';
+import {Message} from 'iview';
 import NProgress from 'nprogress'; // Progress 进度条
 import 'nprogress/nprogress.css'; // Progress 进度条样式
 import {
@@ -17,7 +18,6 @@ const permission = async () => {
         // console.log(1, to.path);
         if (getToken()) {
             // 如果已经登录
-            // console.log(2, to.path);
             if (to.path.trim().toLowerCase().indexOf('login') > 0) {
                 if (to.path.trim().toLowerCase().indexOf('um') > 0) {
                     next({
@@ -36,19 +36,19 @@ const permission = async () => {
                     });
                     NProgress.done(); // 结束Progress
                 }
-            } else if (!store.getters.role) {
+            } else if (!store.getters.role || store.getters.role.length == 0) {
                 store.dispatch('GetInfo').then(() => {
                     next({
                         ...to,
                     });
+                },
+                error=>{
+                    Message.error({
+                        content: error,
+                        duration: 5,
+                    });
+                    NProgress.done(); 
                 });
-                // setTimeout(()=>{
-                //     store.dispatch('GetInfo').then(() => {
-                //         next({
-                //             ...to,
-                //         });
-                //     });
-                // },0)
             } else {
                 next();
             }

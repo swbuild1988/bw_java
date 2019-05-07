@@ -252,11 +252,7 @@ public class ConsumeDataController {
         	// 往后循环12个月
     		for(int i=0;i<12;i++) {
     			JSONObject obj = new JSONObject();
-<<<<<<< HEAD
-    			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
-=======
     			String time = now.getYear() % 100 + "年" + (now.getMonth() + 1) + "月";
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     			obj.put("key", time);
     			
     			// 真实数据
@@ -267,11 +263,7 @@ public class ConsumeDataController {
 //				vo.setEndTime(nowEnd);
 //				vo.setTunnelId(dto.getId());
 //				// 一个月的总能耗
-<<<<<<< HEAD
-//				Double sum = getSum(vo);
-=======
 //				Double sum = consumeService.getSumByCondition(vo);
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     			
     			// 假数据
     			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
@@ -318,11 +310,7 @@ public class ConsumeDataController {
 				vo.setEndTime(nowEnd);
 				vo.setTunnelId(dto.getId());
 				// 一个月的总能耗
-<<<<<<< HEAD
-				Double sum = getSum(vo);
-=======
 				Double sum = consumeService.getSumByCondition(vo);
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 				//平均每公里的能耗
 				sum = sum / dto.getLength() * 1000;
 				JSONObject obj = new JSONObject();

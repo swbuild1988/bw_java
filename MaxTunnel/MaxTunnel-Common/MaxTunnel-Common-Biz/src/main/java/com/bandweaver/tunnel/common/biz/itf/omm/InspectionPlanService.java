@@ -12,6 +12,8 @@ public interface InspectionPlanService {
     int add(InspectionPlanDto inspectionPlanDto);
 
     int update(InspectionPlanDto inspectionPlanDto);
+    
+    int delete(String planId);
 
     List<InspectionPlanSimpleDto> getInspectionPlans();
 

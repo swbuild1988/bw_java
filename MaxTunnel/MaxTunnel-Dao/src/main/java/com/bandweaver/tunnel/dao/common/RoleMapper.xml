@@ -2,113 +2,119 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.common.RoleMapper">
 
-  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.Role">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-  </resultMap>
-  
-  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.common.RoleDto">
-    <id column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
-    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
-  </resultMap>
-  
-  <sql id="Base_Column_List">
-    ID, ROLE_NAME, CRT_TIME
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.Role">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.common.RoleDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, ROLE_NAME, rout_list, CRT_TIME
   </sql>
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from T_SECURITY_ROLE
-    where ID = #{id,jdbcType=DECIMAL}
-  </select>
-  <delete id="deleteByPrimaryKey" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_SECURITY_ROLE
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey">
     delete from T_SECURITY_ROLE
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
-    insert into T_SECURITY_ROLE (ID, ROLE_NAME, CRT_TIME
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
+    insert into T_SECURITY_ROLE (ID, ROLE_NAME, rout_list, CRT_TIME
       )
-    values (#{id,jdbcType=DECIMAL}, #{roleName,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=DECIMAL}, #{roleName,jdbcType=VARCHAR}, #{routList,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
-    insert into T_SECURITY_ROLE
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ID,
-      </if>
-      <if test="roleName != null">
-        ROLE_NAME,
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=DECIMAL},
-      </if>
-      <if test="roleName != null">
-        #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="crtTime != null">
-        #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
-    update T_SECURITY_ROLE
-    <set>
-      <if test="roleName != null">
-        ROLE_NAME = #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="crtTime != null">
-        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
+    <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
+        insert into T_SECURITY_ROLE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="roleName != null">
+                ROLE_NAME,
+            </if>
+            <if test="routList != null">
+                rout_list,
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="roleName != null">
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="routList != null">
+                #{routList,jdbcType=VARCHAR},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
+        update T_SECURITY_ROLE
+        <set>
+            <if test="roleName != null">
+                ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="routList != null">
+                rout_list = #{routList,jdbcType=VARCHAR},
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.Role">
     update T_SECURITY_ROLE
     set ROLE_NAME = #{roleName,jdbcType=VARCHAR},
-      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
+        rout_list = #{routList,jdbcType=VARCHAR},
+        CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
-  
-  <select id="getAllRoles" resultMap="BaseResultMap">
+
+    <select id="getAllRoles" resultMap="BaseResultMap">
   	select * from T_SECURITY_ROLE order by crt_time desc
   </select>
-  
-  <delete id="deleteRoleBatch">
-  	delete from T_SECURITY_ROLE where id in 
-  	<foreach collection="list" item="item" open="(" separator="," close=")">
-  		#{item}
-  	</foreach>
-  </delete>
-  
-  <select id="getByCondition" resultMap="DtoResultMap">
-  	select * from T_SECURITY_ROLE
-  	<where>
-  		<if test="id != null">
-  			and id = #{id}
-  		</if>
-  		<if test="roleName != null and roleName.trim() != ''">
-  			and instr(role_name,#{roleName})>0
-  		</if>
-  		<if test="startTime != null">
-  			and crt_time &gt; = #{startTime}
-  		</if>
-  		<if test="endTime != null">
-  			and crt_time &lt; = #{endTime}
-  		</if>
-  	</where>
-  	order by crt_time desc
-  </select>
- 
- 
- <select id="getRolesByUser" resultMap="BaseResultMap">
+
+    <delete id="deleteRoleBatch">
+        delete from T_SECURITY_ROLE where id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getByCondition" resultMap="DtoResultMap">
+        select * from T_SECURITY_ROLE
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="roleName != null and roleName.trim() != ''">
+                and instr(role_name,#{roleName})>0
+            </if>
+            <if test="startTime != null">
+                and crt_time &gt; = #{startTime}
+            </if>
+            <if test="endTime != null">
+                and crt_time &lt; = #{endTime}
+            </if>
+        </where>
+        order by crt_time desc
+    </select>
+
+
+    <select id="getRolesByUser" resultMap="BaseResultMap">
  	select r.* from T_SECURITY_ROLE r
  	left join t_security_user_role ur
  	on r.id = ur.r_id 

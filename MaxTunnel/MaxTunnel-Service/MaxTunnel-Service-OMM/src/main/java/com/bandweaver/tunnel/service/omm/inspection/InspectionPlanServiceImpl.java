@@ -74,7 +74,23 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
         return 0;
     }
 
+    @Transactional
     @Override
+	public int delete(String planId) {
+    	InspectionPlanDto dto = inspectionPlanMapper.getInspectionPlanDto(planId);
+    	if(dto == null || !"审批".equals(dto.getProcessStatus())) return 0;
+    	int i = inspectionPlanMapper.delete(planId);
+    	List<Integer> list = new  ArrayList<>();
+    	for(InspectionTaskDto task : dto.getTasks()) {
+    		list.add(task.getId());
+    	}
+    	LogUtil.info(list);
+    	if(list != null && list.size() > 0)
+    		inspectionTaskService.deleteBatch(list);
+		return i;
+	}
+
+	@Override
     public List<InspectionPlanSimpleDto> getInspectionPlans() {
         return inspectionPlanMapper.getInspectionPlans();
     }

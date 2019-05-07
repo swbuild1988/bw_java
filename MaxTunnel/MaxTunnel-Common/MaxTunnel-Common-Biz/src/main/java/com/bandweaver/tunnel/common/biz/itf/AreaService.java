@@ -96,5 +96,5 @@ public interface AreaService {
 
     int getTotalCount();
 
-    boolean calAllAreasStartPointAndEndPointByTunnel(int tunnelId);
+    String calAllAreasStartPointAndEndPointByTunnel(Integer tunnelId);
 }

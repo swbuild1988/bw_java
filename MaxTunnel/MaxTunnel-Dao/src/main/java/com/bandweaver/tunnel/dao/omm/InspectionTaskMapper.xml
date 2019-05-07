@@ -148,6 +148,14 @@
         WHERE id = #{id}
     </update>
 
+	<delete id="deleteBatch">
+		DELETE FROM t_omm_inspection_task
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+        	#{item}
+    	</foreach>
+	</delete>
+
     <select id="getTask" resultMap="inspectionTaskMap">
         SELECT *
         FROM t_omm_inspection_task

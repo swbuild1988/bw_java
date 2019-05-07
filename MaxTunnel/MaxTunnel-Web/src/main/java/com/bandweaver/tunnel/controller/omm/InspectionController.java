@@ -144,6 +144,20 @@ public class InspectionController {
     }
 
     /**
+     * 删除巡检计划，删除连带任务
+     * @param planId 计划id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月8日
+     */
+    @RequestMapping(value = "inspection-plans/{planId}", method = RequestMethod.DELETE)
+    public JSONObject deleteByPlanId(@PathVariable("planId") String planId) {
+    	int i = inspectionPlanService.delete(planId);
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, i);
+    }
+    
+    /**
      * 获取巡检计划
      *
      * @return
@@ -189,7 +203,7 @@ public class InspectionController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "inspection-plans/{id}")
+    @RequestMapping(value = "inspection-plans/{id}", method=RequestMethod.GET)
     public JSONObject getInspectionPlanDto(@PathVariable("id") String id) {
         InspectionPlanDto inspectionPlanDto = inspectionPlanService.getInspectionDto(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, inspectionPlanDto);

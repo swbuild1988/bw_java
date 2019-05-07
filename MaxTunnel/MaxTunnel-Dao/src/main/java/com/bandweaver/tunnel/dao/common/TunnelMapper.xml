@@ -224,6 +224,17 @@
         WHERE id = #{id}
     </select>
 
+
+    <select id="getSimpleDtoById" resultMap="SimpleDtoMap">
+        SELECT
+            id,
+            name,
+            status,
+            length
+        FROM t_common_tunnel
+        WHERE id = #{id}
+    </select>
+
     <select id="getDtoList" resultMap="DtoResultMap">
         SELECT *
         FROM t_common_tunnel
@@ -234,8 +245,15 @@
         select * from t_common_tunnel
         <where>
             <if test="id != null">
-                and = #{id}
+                and id = #{id}
             </if>
+            <if test="ids != null">
+                and id IN
+                <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
             <if test="name != null and name.trim() != ''">
                 and instr(name,#{name})>0
             </if>
@@ -278,6 +296,10 @@
         SELECT *
         FROM t_common_tunnel
         WHERE sn = #{sn}
+    </select>
+
+    <select id="getSubSystemIdList" resultType="Integer">
+        select DISTINCT(maxview_config_id) from t_common_tunnel
     </select>
 
 </mapper>	

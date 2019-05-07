@@ -3,10 +3,7 @@ package com.bandweaver.tunnel.common.biz.vo.oam;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-import com.bandweaver.tunnel.common.biz.constant.oam.CableStatusEnum;
-import com.bandweaver.tunnel.common.biz.constant.oam.ContractStatusEnum;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
 import com.bandweaver.tunnel.common.biz.pojo.oam.CableContract;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
@@ -28,7 +25,17 @@ public class ContractVo extends BaseVo implements Serializable {
 
 	private Date contractEndTime; // 合同结束日期
 
-	private Integer customerId;// 客户信息
+	private Integer companyId;// 企业信息
+
+	/**
+	 * 录入人信息
+	 */
+	private String operateUsername;
+
+	/**
+	 * 附件地址
+	 */
+	private String path;
 
 	// section信息
 	private List<Integer> areaIds;
@@ -51,11 +58,13 @@ public class ContractVo extends BaseVo implements Serializable {
 		cableContract.setId(this.id);
 		cableContract.setName(this.name);
 		cableContract.setPayType(this.payType);
-		cableContract.setCustomerId(this.customerId);
+		cableContract.setCompanyId(this.companyId);
 		cableContract.setContractStatus(this.contractStatus);
 		cableContract.setContractStartTime(this.contractStartTime);
 		cableContract.setContractEndTime(this.contractEndTime);
 		cableContract.setCrtTime(new Date());
+		cableContract.setOperateUsername(this.operateUsername);
+		cableContract.setPath(this.path);
 		return cableContract;
 	}
 
@@ -144,12 +153,12 @@ public class ContractVo extends BaseVo implements Serializable {
 		this.cableStatus = cableStatus;
 	}
 
-	public Integer getCustomerId() {
-		return customerId;
+	public Integer getCompanyId() {
+		return companyId;
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
 	}
 
 	public Integer getPayType() {
@@ -184,4 +193,20 @@ public class ContractVo extends BaseVo implements Serializable {
 		this.contractEndTime = contractEndTime;
 	}
 
+
+	public String getOperateUsername() {
+		return operateUsername;
+	}
+
+	public void setOperateUsername(String operateUsername) {
+		this.operateUsername = operateUsername;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 }

@@ -10,6 +10,8 @@ public class Role implements Serializable{
 
     private String roleName;
 
+    private String routList;
+
     private Date crtTime;
 
     public Integer getId() {
@@ -34,5 +36,23 @@ public class Role implements Serializable{
 
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
+    }
+
+    public String getRoutList() {
+        return routList;
+    }
+
+    public void setRoutList(String routList) {
+        this.routList = routList;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", roleName='" + roleName + '\'' +
+                ", routList='" + routList + '\'' +
+                ", crtTime=" + crtTime +
+                '}';
     }
 }

@@ -6,17 +6,12 @@ export default {
     name: 'tree-chart',
     props: {
         id: null,
-        url: null,
-        data: null,
-        // addInfo: null
+        data: null
     },
     data(){
         return {
             myChart: {},
-            // series: [],
-            option: {
-
-            }
+            option: {}
         }
     },
     watch: {
@@ -77,7 +72,8 @@ export default {
                 ]
             })
             this.myChart.on('click', function(params){
-                console.log("params111", params)
+                // console.l
+                og("params111", params)
             })
         },
         // setPersonInfo(){

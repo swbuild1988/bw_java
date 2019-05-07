@@ -25,14 +25,6 @@ public class StaffDto implements Serializable {
     private Integer id;
 
     private String name;
-    
-    private String account;
-    
-    private String sex;
-    
-    private String telphone;
-    
-    private Date hireDate;
 
     private String account;
 
@@ -176,58 +168,11 @@ public class StaffDto implements Serializable {
 	public void setOutside(Integer outside) {
 		this.outside = outside;
 	}
-	
 
-	public JSONObject getAcctInfo() {
-		return acctInfo;
-	}
-
-	public void setAcctInfo(JSONObject acctInfo) {
-		this.acctInfo = acctInfo;
-	}
-	
-	
-
-	public String getAccount() {
-		return account;
-	}
-
-<<<<<<< HEAD
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getTelphone() {
-		return telphone;
-	}
-
-	public void setTelphone(String telphone) {
-		this.telphone = telphone;
-	}
-
-	public Date getHireDate() {
-		return hireDate;
-	}
-
-	public void setHireDate(Date hireDate) {
-		this.hireDate = hireDate;
-	}
-    
-    
-=======
 	public String getOutsideName() {
 		if(this.getOutside() == null) return null;
 		OutsideEnum e = OutsideEnum.getEnum(this.getOutside());
 		return e == null ? null : e.getName();
 	}
 
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

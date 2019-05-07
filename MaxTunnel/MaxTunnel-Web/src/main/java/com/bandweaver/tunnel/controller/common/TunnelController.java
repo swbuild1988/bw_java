@@ -9,6 +9,7 @@ import com.bandweaver.tunnel.common.biz.dto.*;
 import com.bandweaver.tunnel.common.biz.itf.*;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,23 +99,6 @@ public class TunnelController extends BaseController<Tunnel> {
      */
     @RequestMapping(value = "tunnels", method = RequestMethod.GET)
     public JSONObject getList() {
-
-        Subject subject= SecurityUtils.getSubject();
-
-        String msg = "";
-        msg = subject.isPermitted("tunnels:create") ? "可以管廊创建" : "不可以管廊创建";
-        LogUtil.info(msg);
-        msg = subject.isPermitted("tunnels:create:1") ? "可以管廊1创建" : "不可以管廊1创建";
-        LogUtil.info(msg);
-        msg = subject.isPermitted("tunnels:create:2") ? "可以管廊2创建" : "不可以管廊2创建";
-        LogUtil.info(msg);
-        msg = subject.isPermitted("tunnels:*:1") ? "可以管廊1为所欲为" : "不可以管廊1为所欲为";
-        LogUtil.info(msg);
-        msg = subject.isPermitted("tunnels:*:2") ? "可以管廊2为所欲为" : "不可以管廊2为所欲为";
-        LogUtil.info(msg);
-
-
-
         List<TunnelSimpleDto> tunnels = tunnelService.getList();
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, tunnels);
     }

@@ -3,8 +3,6 @@ package com.bandweaver.tunnel.common.biz.pojo.omm;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * ClassName: Equipment
  * @Description: 设备
@@ -17,8 +15,7 @@ public class Equipment implements Serializable{
 	 */
 	private static final long serialVersionUID = -7268420534954351487L;
 	private Integer id;
-	@JsonIgnore
-    private String assetNo;
+    private String assetNo; // 资产编码
     private String name;
     private Integer type;
     private Date crtTime;
@@ -30,6 +27,13 @@ public class Equipment implements Serializable{
     private Integer modelId;
     private Integer objId;
     private String imgUrl;
+    
+    private Integer sectionId;
+    private String qaTerm; // 质保期限
+    private String ratedVoltage; // 额定电压
+    private String range; // 量程
+    private String factory; // 厂家
+    private String brand; // 品牌
     
     public String getImgUrl() {
 		return imgUrl;
@@ -120,15 +124,15 @@ public class Equipment implements Serializable{
         this.status = status;
     }
 
-    public Integer getTunnelId() {
-        return tunnelId;
-    }
+    public Integer getSectionId() {
+		return sectionId;
+	}
 
-    public void setTunnelId(Integer tunnelId) {
-        this.tunnelId = tunnelId;
-    }
+	public void setSectionId(Integer sectionId) {
+		this.sectionId = sectionId;
+	}
 
-    public Integer getObjId() {
+	public Integer getObjId() {
 		return objId;
 	}
 
@@ -136,12 +140,52 @@ public class Equipment implements Serializable{
 		this.objId = objId;
 	}
 
-	@Override
-	public String toString() {
-		return "Equipment [id=" + id + ", assetNo=" + assetNo + ", name="
-				+ name + ", type=" + type + ", crtTime=" + crtTime
-				+ ", runTime=" + runTime + ", status=" + status + ", tunnelId="
-				+ tunnelId + ", venderId=" + venderId + ", modelId="
-				+ modelId + ", alarmNo=" + alarmNo + ", imgUrl=" + imgUrl + "]";
+	public Integer getTunnelId() {
+		return tunnelId;
 	}
+
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
+
+	public String getQaTerm() {
+		return qaTerm;
+	}
+
+	public void setQaTerm(String qaTerm) {
+		this.qaTerm = qaTerm;
+	}
+
+	public String getRatedVoltage() {
+		return ratedVoltage;
+	}
+
+	public void setRatedVoltage(String ratedVoltage) {
+		this.ratedVoltage = ratedVoltage;
+	}
+
+	public String getRange() {
+		return range;
+	}
+
+	public void setRange(String range) {
+		this.range = range;
+	}
+
+	public String getFactory() {
+		return factory;
+	}
+
+	public void setFactory(String factory) {
+		this.factory = factory;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	
 }

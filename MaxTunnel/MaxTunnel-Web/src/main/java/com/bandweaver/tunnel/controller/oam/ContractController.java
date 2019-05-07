@@ -1,14 +1,23 @@
 package com.bandweaver.tunnel.controller.oam;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
+import com.bandweaver.tunnel.common.biz.itf.FileInfoService;
+import com.bandweaver.tunnel.common.biz.pojo.oam.CableContract;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto;
@@ -19,6 +28,9 @@ import com.bandweaver.tunnel.common.biz.vo.oam.ContractVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 合同管理
@@ -31,14 +43,42 @@ public class ContractController {
 
 	@Autowired
 	private ContractService contractService;
-	
+	@Autowired
+    private FileInfoService fileInfoService;
+
+	private final String ATTACHMENT_PATH = "file.path.contract";
+
+
+    /**
+     * @param file 仅限上传单个文件，支持图片，pdf，不支持word文档
+     * @return 返回上传文件相对路径
+     */
+	@RequestMapping(value = "/contracts/upload",method = RequestMethod.POST)
+	public JSONObject upload(MultipartFile file) throws Exception {
+
+		// 获取合同保存路径
+        String attachmentPath = PropertiesUtil.getString(ATTACHMENT_PATH);
+        fileInfoService.checkPath(attachmentPath,true);
+        String fileName = file.getOriginalFilename();
+        boolean exists = new File(attachmentPath + File.separator + fileName).exists();
+        // 如果存在重复的文件，会加时间戳加以区分
+        if (exists) {
+            fileName = fileName.substring(0,fileName.lastIndexOf(".")) + System.currentTimeMillis() + fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length());
+        }
+        String path = attachmentPath + File.separator + fileName;
+        file.transferTo(new File(path));
+        // 用fileName表示相对路径，读取文件时，加上配置的attachment路径即可
+        return CommonUtil.success(fileName);
+    }
+
+
 	/**
 	 * 新增合同
 	 * @param  name 合同名称
 	 * @param  payType 付款方式（枚举）
 	 * @param  contractStartTime 合同开始日期
 	 * @param  contractEndTime 合同结束日期
-	 * @param  customerId 客户id
+	 * @param  companyId 企业id
 	 * @param 
 	 * @param  cableName 管线名称
 	 * @param  cableLength 管线长度
@@ -52,6 +92,7 @@ public class ContractController {
 	 * @author shaosen
 	 * @Date 2018年7月29日
 	 */
+	@RequiresPermissions("contract:add")
 	@RequestMapping(value="contracts",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody ContractVo vo) {
 		contractService.add(vo);
@@ -72,12 +113,36 @@ public class ContractController {
 		ContractDto dto = contractService.getContractDetById(id);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
 	}
+
+
+    /**
+     * 预览合同
+     *16a91e49fd4b46b8bd1eff9280bd5925
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "contracts/{id}/view", method = RequestMethod.GET)
+    public void view(@PathVariable String id, HttpServletResponse response) throws IOException {
+       CableContract cableContract = contractService.get(id);
+        if (cableContract != null) {
+            String path = cableContract.getPath();
+            File file = new File(PropertiesUtil.getString(ATTACHMENT_PATH) + File.separator + path);
+            if (!file.exists()) {
+                throw new BandWeaverException("没有发现文件：" + path);
+            }
+
+            FileInputStream inputStream = new FileInputStream(file);
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            response.getOutputStream().write(bytes);
+        }
+    }
 	
 	/**
 	 * 合同分页查询
 	 * @param id 合同编号（精确查找）
 	 * @param name 合同名称（支持模糊查询）
-	 * @param customerId 客户id
+	 * @param companyId 企业id
 	 * @param payType 付款方式
 	 * @param contractStatus 合同状态（枚举）
 	 * @param startTime 
@@ -90,6 +155,7 @@ public class ContractController {
 	 * @author shaosen
 	 * @Date 2018年7月29日
 	 */
+	@RequiresPermissions("contract:list")
 	@RequestMapping(value="contracts/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody CableContractVo vo) {
 		PageInfo<CableContractDto> pageInfo = contractService.dataGrid(vo);
@@ -105,6 +171,7 @@ public class ContractController {
 	 * @author shaosen
 	 * @Date 2018年7月30日
 	 */
+	@RequiresPermissions("contract:delete")
 	@RequestMapping(value="contracts/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable String id) {
 		contractService.delete(id);
@@ -120,7 +187,7 @@ public class ContractController {
 	 * @param  contractStatus 合同状态（枚举）
 	 * @param  contractStartTime 合同开始日期
 	 * @param  contractEndTime 合同结束日期
-	 * @param  customerId 客户id
+	 * @param  companyId 企业id
 	 * @param  
 	 * @param  cableInfo -------------------------
 	 * @param  cableId 管线id
@@ -138,6 +205,7 @@ public class ContractController {
 	 * @author shaosen
 	 * @Date 2018年7月30日
 	 */
+	@RequiresPermissions("contract:update")
 	@RequestMapping(value="contracts",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody ContractVo vo) {
 		contractService.update(vo);

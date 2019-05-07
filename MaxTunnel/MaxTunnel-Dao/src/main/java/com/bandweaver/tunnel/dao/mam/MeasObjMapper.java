@@ -85,4 +85,6 @@ public interface MeasObjMapper {
     void updatePlanIdsByObjtypeId(@Param("objtypeId") int objtypeId, @Param("planIds") String planIds);
 
 	void updateVideoIdsByKeyId(@Param("id") int id,@Param("videoIds") String videoIds);
+	
+	List<Integer> getIdList(String id);
 }

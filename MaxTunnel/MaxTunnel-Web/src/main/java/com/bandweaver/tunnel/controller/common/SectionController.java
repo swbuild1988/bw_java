@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.pojo.Store;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +69,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @date 2018年7月25日
      */
+    @RequiresPermissions("section:add")
     @Deprecated
     @RequestMapping(value = "sections", method = RequestMethod.POST)
     public JSONObject add(@RequestBody Section section) {
@@ -76,6 +78,7 @@ public class SectionController extends BaseController<Section>{
 
     }
 
+    @RequiresPermissions("section:add")
     @RequestMapping(value = "sections/create", method = RequestMethod.GET)
     public JSONObject create() {
         List<Store> stores = storeService.getList();
@@ -111,6 +114,7 @@ public class SectionController extends BaseController<Section>{
      * @author ya.liu
      * @Date 2018年12月25日
      */
+    @RequiresPermissions("section:add")
     @RequestMapping(value = "sections/batch", method = RequestMethod.POST)
     public JSONObject createSections(@RequestBody JSONObject obj) {
     	// 获取集合
@@ -168,6 +172,7 @@ public class SectionController extends BaseController<Section>{
      * @author ya.liu
      * @Date 2018年12月27日
      */
+    @RequiresPermissions("section:update")
     @RequestMapping(value="sections/batch",method=RequestMethod.PUT)
     public JSONObject updateBatch(@RequestBody List<Section> list) {
     	for(Section section : list) {
@@ -196,6 +201,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("section:delete")
     @RequestMapping(value = "sections/{id}", method = RequestMethod.DELETE)
     public JSONObject delete(@PathVariable Integer id) {
     	sectionService.delete(id);
@@ -206,6 +212,7 @@ public class SectionController extends BaseController<Section>{
     /**
      * 批量删除
      */
+    @RequiresPermissions("section:delete")
 	@Override
 	@RequestMapping(value="sections/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -221,6 +228,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("section:update")
     @RequestMapping(value="sections",method=RequestMethod.PUT)
     public JSONObject update(@RequestBody Section section) {
     	sectionService.update(section);
@@ -258,6 +266,21 @@ public class SectionController extends BaseController<Section>{
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
     }
 
+    /**
+     * 通过区域和管舱获取section
+     * @param storeId
+     * @param areaId
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月9日
+     */
+    @RequestMapping(value = "stores/{storeId}/areas/{areaId}/sections", method = RequestMethod.GET)
+    public JSONObject getSectionByAreaAndStore(@PathVariable("storeId") Integer storeId,
+    		@PathVariable("areaId") Integer areaId) {
+        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, section);
+    }
+    
     /**通过ids获取dto列表
      * @param ids 管舱段id字符串，格式：1,2,3,4,.....
      * @return dto集合
@@ -351,6 +374,7 @@ public class SectionController extends BaseController<Section>{
      * @throws Exception 
      * @Date 2018年7月27日
      */
+    @RequiresPermissions("section:list")
     @RequestMapping(value = "sections/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody SectionVo vo) throws Exception {
         /*if (vo.getStoreId() == null && vo.getAreaId() == null) {
@@ -468,19 +492,26 @@ public class SectionController extends BaseController<Section>{
     }
 
     /**
-     * section自动生成startPoint和endPoint
-     * @param tunnelId
-     * @return
-     * @author ya.liu
-     * @Date 2019年4月2日
-     */
-    @RequestMapping(value = "sections/auto-point/{tunnelId}", method = RequestMethod.GET)
-    public JSONObject getSectionByPoint(@PathVariable("tunnelId") Integer tunnelId) {
-    	Boolean flag = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
-    	LogUtil.info("section自动生成起点和终点坐标结果： " + flag);
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, flag);
-    }
-
+	 * 区域、section自动生成起点和终点坐标
+	 * @param tunnelId 管廊id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年4月1日
+	 */
+    @RequiresPermissions("section:update")
+	@RequestMapping(value = "tunnels/{tunnelId}/auto-cal-area-section", method=RequestMethod.GET)
+	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
+		// 自动生成区域的起点和终点坐标
+//		String result = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
+//		if(result != null) throw new RuntimeException(result);
+//		
+//		result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
+//		if(result != null) throw new RuntimeException(result);
+		
+    	String result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
+    	if(result != null) throw new RuntimeException(result);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
 	
 
 }

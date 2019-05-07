@@ -28,7 +28,7 @@ public class MAMModuleCenter implements ModuleCenterInterface {
 
     @Override
     public void start() {
-    	alarmModuleCenter.start();
+//    	alarmModuleCenter.start();
         measObjModuleCenter.start();
         videoModuleCenter.start();
         subSystemModuleCenter.start();

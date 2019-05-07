@@ -2,14 +2,17 @@ package com.bandweaver.tunnel.common.biz.vo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-public class TunnelVo extends BaseVo implements Serializable{
+public class TunnelVo extends BaseVo{
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+
+	private List<Integer> ids;
 
     private String name;
 
@@ -118,6 +121,12 @@ public class TunnelVo extends BaseVo implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-    
-	
+
+    public List<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
+    }
 }

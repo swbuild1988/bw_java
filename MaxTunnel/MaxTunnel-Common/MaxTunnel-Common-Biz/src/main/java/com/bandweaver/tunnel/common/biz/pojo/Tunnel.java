@@ -116,11 +116,7 @@ public class Tunnel implements Serializable{
 	public void setMaxviewConfigId(Integer maxviewConfigId) {
 		this.maxviewConfigId = maxviewConfigId;
 	}
-	
-	
 
-<<<<<<< HEAD
-=======
     public Integer getDirection() {
         return direction;
     }
@@ -129,7 +125,6 @@ public class Tunnel implements Serializable{
         this.direction = direction;
     }
 
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
     public Integer getStatus() {
 		return status;
 	}
@@ -138,14 +133,6 @@ public class Tunnel implements Serializable{
 		this.status = status;
 	}
 
-<<<<<<< HEAD
-	@Override
-	public String toString() {
-		return "Tunnel [id=" + id + ", name=" + name + ", sn=" + sn + ", length=" + length + ", responsibilityId="
-				+ responsibilityId + ", constructId=" + constructId + ", operationId=" + operationId + ", camera="
-				+ camera + ", maxviewConfigId=" + maxviewConfigId + ", status=" + status + ", crtTime=" + crtTime + "]";
-	}
-=======
     public String getStartPoint() {
         return startPoint;
     }
@@ -181,5 +168,4 @@ public class Tunnel implements Serializable{
                 ", direction=" + direction +
                 '}';
     }
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

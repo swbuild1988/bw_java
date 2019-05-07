@@ -44,12 +44,17 @@ public class Constants {
     
     //线程
     public static final int THREAD_POOL_SIZE = 5;
+    
+    //访问设置超时时间
+    public static final String INIT_TIMEOUT = "init.timeout";
 
     //excel导出相关参数
     public static final String EXCEL_EXPORT_PATH = "excel.export.path";
 
     //#h5服务拍照的存储位置
     public static final String PATH_SNAP_H5 = "path.snap.h5";
+
+    public static final String SHIRO_PERMISSION_KEY = "permissionSet";
 
 
 

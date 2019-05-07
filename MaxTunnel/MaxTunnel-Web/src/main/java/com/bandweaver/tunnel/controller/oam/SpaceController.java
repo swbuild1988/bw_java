@@ -110,7 +110,7 @@ public class SpaceController {
 			}
 			
 			List<JSONObject> list = new ArrayList<>();
-			int totalCount = section.getTotalCableNumber().intValue();
+			int totalCount = section.getTotalCableNumber() == null ? 0 : section.getTotalCableNumber().intValue();
 			JSONObject json = new JSONObject();
 			json.put("key", "设计管线数");
 			json.put("val", totalCount);

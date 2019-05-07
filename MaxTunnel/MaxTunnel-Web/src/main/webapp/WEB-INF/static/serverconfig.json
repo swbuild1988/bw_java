@@ -1,12 +1,12 @@
 {
-    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
+    "ApiUrl": "http://192.168.6.112:88/MaxTunnel-Web",
     "RouterBase": "/",
     "MQServerAddress": "ws://192.168.6.112:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
-        "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-3Dserver/rest/realspace",
-        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-dataserver/rest/data",
-        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
+        "BIM_SCP": "http://192.168.6.112:8090/iserver/services/3D-3Dserver/rest/realspace",
+        "BIM_DATA": "http://192.168.6.112:8090/iserver/services/data-dataserver/rest/data",
+        "IMG_MAP": "http://192.168.6.112:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
     },
     "VMEntityConfig": {
         "unitEntityParam": [{
@@ -365,9 +365,9 @@
                 "entityExtendParameters": {
                     "polyline": {
                         "position": [{
-                            "Lon": "112.476576",
-                            "Lat": "37.704388"
-                        },
+                                "Lon": "112.476576",
+                                "Lat": "37.704388"
+                            },
                             {
                                 "Lon": "112.481279",
                                 "Lat": "37.716042"
@@ -387,9 +387,9 @@
                 "entityExtendParameters": {
                     "polyline": {
                         "position": [{
-                            "Lon": "112.463756",
-                            "Lat": "37.708431"
-                        },
+                                "Lon": "112.463756",
+                                "Lat": "37.708431"
+                            },
                             {
                                 "Lon": "112.479916",
                                 "Lat": "37.703408"
@@ -409,9 +409,9 @@
                 "entityExtendParameters": {
                     "polyline": {
                         "position": [{
-                            "Lon": "112.473064",
-                            "Lat": "37.712194"
-                        },
+                                "Lon": "112.473064",
+                                "Lat": "37.712194"
+                            },
                             {
                                 "Lon": "112.470590",
                                 "Lat": "37.706263"
@@ -431,9 +431,9 @@
                 "entityExtendParameters": {
                     "polyline": {
                         "position": [{
-                            "Lon": "112.468896",
-                            "Lat": "37.713302"
-                        },
+                                "Lon": "112.468896",
+                                "Lat": "37.713302"
+                            },
                             {
                                 "Lon": "112.466356",
                                 "Lat": "37.707685"

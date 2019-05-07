@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -197,6 +198,7 @@ public class AlarmController {
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
+	@RequiresPermissions("alarm:list")
 	@RequestMapping(value="alarms/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody AlarmVo vo) {
 		PageInfo<AlarmDto> pageInfo = alarmService.dataGrid(vo);

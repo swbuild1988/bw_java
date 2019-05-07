@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +19,6 @@ import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.vo.AreaVo;
-import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -43,14 +41,22 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@Override
+	@RequiresPermissions("area:add")
 	@RequestMapping(value="areas",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Area area) {
 		areaService.addArea(area);
 		return success();
 	}
 
+	@Override
+	public JSONObject delete(Integer id) throws Exception {
+		return null;
+	}
+
 	/**添加区域
 	 */
+	@RequiresPermissions("area:add")
 	@RequestMapping(value="areas/multi",method=RequestMethod.POST)
 	public JSONObject addMulti(@RequestBody List<Area> areas) {
 		for (Area area : areas) {
@@ -79,22 +85,11 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @Date 2018年9月19日
 	 */
+	@Override
+	@RequiresPermissions("area:update")
 	@RequestMapping(value="areas",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody Area area) {
 		areaService.update(area);
-		return success();
-	}
-	
-	/**删除 
-	 * @param id
-	 * @return    {"msg":"请求成功","code":"200","data":{}}  
-	 * @author shaosen
-	 * @Date 2018年9月19日
-	 */
-	@Deprecated
-	@RequestMapping(value="areas/{id}",method=RequestMethod.DELETE)
-	public JSONObject delete(@PathVariable Integer id) {
-		areaService.delete(id);
 		return success();
 	}
 	
@@ -104,6 +99,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@Override
 	@RequestMapping(value="areas/{id}",method=RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
 		AreaDto dto = areaService.getAreasById(id);
@@ -116,6 +112,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@RequiresPermissions("area:list")
 	@RequestMapping(value="tunnels/{id}/areas",method=RequestMethod.GET)
 	public JSONObject getAreasByTunnelId(@PathVariable Integer id) {
 		List<AreaDto> list = areaService.getAreasByTunnelId(id);
@@ -139,6 +136,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@RequiresPermissions("area:list")
 	@RequestMapping(value="areas/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody AreaVo areaVo) {
 		PageInfo<AreaDto> pageInfo = areaService.dataGrid(areaVo);
@@ -149,6 +147,7 @@ public class AreaController extends BaseController<Area>{
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("area:delete")
 	@Override
 	@RequestMapping(value="areas/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -157,17 +156,4 @@ public class AreaController extends BaseController<Area>{
 		return success();
 	}
 
-	/**
-	 * 区域自动生成起点和终点坐标，前提条件：管廊存在起点和终点坐标，区段长度不为零
-	 * @param tunnelId 管廊id
-	 * @return
-	 * @author ya.liu
-	 * @Date 2019年4月1日
-	 */
-	@RequestMapping(value = "areas/auto-point/{tunnelId}", method=RequestMethod.GET)
-	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
-		Boolean flag = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
-		LogUtil.info("区域自动生成起点坐标和终点坐标： " + flag);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,flag);
-	}
 }

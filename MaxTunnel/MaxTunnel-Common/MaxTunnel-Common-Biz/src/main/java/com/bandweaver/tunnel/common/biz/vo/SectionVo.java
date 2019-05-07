@@ -5,6 +5,7 @@ import java.util.Date;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 public class SectionVo extends BaseVo {
+	private static final long serialVersionUID = -7268420534954351487L;
     private Integer id;
     
     private Integer parentId;

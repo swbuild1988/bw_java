@@ -36,4 +36,6 @@ public interface PermissionMapper {
 	List<Permission> getPermissionsByRole(Integer rid);
 
 	List<Permission> getPermissionsByMenuCode(String menuCode);
+
+	List<Permission> getPermissionIdAndPermissionCode();
 }

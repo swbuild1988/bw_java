@@ -96,11 +96,7 @@ public class SubSystemServiceImpl implements SubSystemService {
 				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
 			}
 		} catch (Exception e) {
-<<<<<<< HEAD
-			LogUtil.error("HTTP请求失败，错误信息：" + e.getMessage());
-=======
 			LogUtil.error("HTTP请求失败，错误信息：" + e);
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 		}
 	}
 
@@ -152,8 +148,10 @@ public class SubSystemServiceImpl implements SubSystemService {
 		}else {
 			return false;
 		}
-		
-		
+
+		LogUtil.info("match id:" + masObjId );
+		LogUtil.info("match value:" + measValue );
+
 		String host = "http://" + config.getIp() + ":"+ config.getPort() +"/Handler/CommonService/CommonServiceHandler.ashx";
 		String path = "";
 		Map<String, String> headers = new HashMap<String, String>();
@@ -163,6 +161,8 @@ public class SubSystemServiceImpl implements SubSystemService {
 		bodys.put("measObjId", String.valueOf(masObjId));
 		bodys.put("measValue", String.valueOf(measValue));
 		bodys.put("sessionID", subSystemModuleCenter.getSessionID(config.getId()));
+
+		LogUtil.info("bodys:" + bodys );
 		
 		try {
 			HttpResponse response = HttpUtil.doPost(host, path, POST, headers, querys, bodys);

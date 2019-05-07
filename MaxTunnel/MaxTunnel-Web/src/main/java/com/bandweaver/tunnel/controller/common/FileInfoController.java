@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +61,7 @@ public class FileInfoController {
 	 * @throws Exception 
 	 * @Date 2018年8月27日
 	 */
+	@RequiresPermissions("file:upload")
 	@WriteLog(DescEnum.FILE_UPLOAD)
 	@RequestMapping(value="files/upload",method=RequestMethod.POST)
 	 /*如果只是上传一个文件，则只需要MultipartFile类型接收文件即可，而且无需显式指定@RequestParam注解   
@@ -99,6 +101,7 @@ public class FileInfoController {
 	 * @author shaosen
 	 * @Date 2018年8月28日
 	 */
+	@RequiresPermissions("file:list")
 	@RequestMapping(value="files/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody FileInfoVo vo) {
 		PageInfo<FileInfoDto> pageInfo = fileInfoService.dataGrid(vo);
@@ -113,6 +116,7 @@ public class FileInfoController {
 	 * @throws Exception 
 	 * @Date 2018年8月28日
 	 */
+	@RequiresPermissions("file:download")
 	@WriteLog(DescEnum.FILE_DOWNLOAD)
 	@RequestMapping(value="files/download/{id}",method=RequestMethod.GET)
 	public JSONObject download(@PathVariable("id")Integer id,HttpServletResponse response,HttpServletRequest request) throws Exception {
@@ -135,14 +139,14 @@ public class FileInfoController {
 	 * @throws Exception 
 	 * @Date 2018年8月29日
 	 */
+	@RequiresPermissions("file:delete")
 	@WriteLog(DescEnum.FILE_DELETE)
 	@RequestMapping(value="files/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteFile(@PathVariable("ids")String ids,HttpServletRequest request) throws Exception {
-		String[] arr = ids.split(",");
+		List<Integer> arr = CommonUtil.convertStringToList(ids);
 		String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(Constants.FILE_PATH));
 		fileInfoService.checkPath(diskPath, false);
-		for (String str : arr) {
-			Integer id = DataTypeUtil.toInteger(str);
+		for (Integer id : arr) {
 			fileInfoService.deleteFile(id, diskPath);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);

@@ -4,10 +4,8 @@ package com.bandweaver.tunnel.controller.omm;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +14,10 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +35,6 @@ import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentModelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentVenderService;
-import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
@@ -43,12 +42,9 @@ import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentVender;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.DescEnum;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.log.WriteLog;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -81,11 +77,19 @@ public class EquipmentController {
      * @param venderId 供应商id
      * @param modelId 设备型号id
      * @param objId 关联对象id
+     * @param sectionId 管舱id
+     * @param qaTerm 质保期限
+     * @param assetNo 资产编码
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
      * @return {"msg":"请求成功","code":"200","data":{}}  
      * @throws
      * @author shaosen
      * @date 2018年6月13日
      */
+    @RequiresPermissions("equipment:add")
     @WriteLog(DescEnum.OMM_ADD_EQUIPMENT)
     @RequestMapping(value="equipments",method=RequestMethod.POST)
     public JSONObject addEquipment(@RequestBody Equipment equipment) {
@@ -93,6 +97,23 @@ public class EquipmentController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
+    /**
+     * 批量添加设备
+     * @param 参数参考添加
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月22日
+     */
+	@RequiresPermissions("equipment:add")
+    @Transactional
+    @WriteLog(DescEnum.OMM_ADD_EQUIPMENT)
+    @RequestMapping(value="equipments/batch",method=RequestMethod.POST)
+    public JSONObject addBatch(@RequestBody List<Equipment> list) {
+    	for(Equipment equipment : list) {
+    		equipmentService.addEquipment(equipment);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
     
     /**
      *  分页查询
@@ -102,6 +123,13 @@ public class EquipmentController {
      * @param tunnelId 管廊id
      * @param venderId 供应商id
      * @param modelId 设备型号id
+     * @param sectionId 管舱id
+     * @param qaTerm 质保期限
+     * @param assetNo 资产编码
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
      * @param startTime 开始时间
      * @param endTime 结束时间
      * @param pageNum 必须
@@ -111,10 +139,39 @@ public class EquipmentController {
      * @author shaosen
      * @date 2018年5月29日
      */
+	@RequiresPermissions("equipment:list")
     @RequestMapping(value="equipments/datagrid",method=RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody EquipmentVo vo) {
     	PageInfo<EquipmentDto> pageInfo = equipmentService.dataGrid(vo);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+    }
+    
+    /**
+     *  不分页查询
+     * @param name 设备名称（支持模糊查询）
+     * @param type 设备类型
+     * @param status 设备状态（枚举）
+     * @param sectionId 舱段id
+     * @param venderId 供应商id
+     * @param modelId 设备型号id
+     * @param sectionId 管舱id
+     * @param qaTerm 质保期限
+     * @param assetNo 资产编码
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return {"msg":"请求成功","code":"200","data":{"total":11,"list":[{"id":1,"name":"安全防范设备3","type":1,"typeName":"安全防范","crtTime":1525406400000,"status":1,"statusName":"运行中","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":1,"name":"model-1","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}},{"id":2,"assetNo":"sn001","name":"安全防范设备1","type":1,"typeName":"安全防范","crtTime":1525406400000,"serviceLife":1000,"status":1,"statusName":"运行中","imgUrl":"\\upload\\equipment\\安全防范\\model-2\\testimg.jpg","tunnel":{"id":1,"name":"凤岭北路"},"model":{"id":2,"name":"model-2","crtTime":1531901454000},"vender":{"id":1,"name":"张三","crtTime":1531901454000}}],"pageNum":1,"pageSize":2,"size":2,"startRow":1,"endRow":2,"pages":6,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2,3,4,5,6],"navigateFirstPage":1,"navigateLastPage":6,"firstPage":1,"lastPage":6}}  
+     * @throws
+     * @author ya.liu
+     * @date 2019年4月8日
+     */
+    @RequestMapping(value="equipments/condition",method=RequestMethod.POST)
+    public JSONObject getEquipmentsByCondition(@RequestBody EquipmentVo vo) {
+    	List<EquipmentDto> list = equipmentService.getEquipmentListByCondition(vo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
     
     /**
@@ -153,6 +210,7 @@ public class EquipmentController {
      * @author shaosen
      * @date 2018年5月29日
      */
+	@RequiresPermissions("equipment:update")
     @WriteLog(DescEnum.OMM_UPDATE_EQUIPMENT)
     @RequestMapping(value = "equipments", method=RequestMethod.PUT)
     public JSONObject updateEquipment(@RequestBody Equipment equipment) {
@@ -168,6 +226,7 @@ public class EquipmentController {
      * @author shaosen
      * @date 2018年6月20日
      */
+	@RequiresPermissions("equipment:delete")
     @WriteLog(DescEnum.OMM_DELETE_EQUIPMENT)
     @RequestMapping(value="equipments/{id}",method=RequestMethod.DELETE)
     public JSONObject deleteById(@PathVariable Integer id) {
@@ -180,7 +239,7 @@ public class EquipmentController {
      *  图片上传
      * @param  id 设备id
      * @throws IllegalStateException
-     * @throws IOException   
+     * @throws IOException
      * @return {"msg":"请求成功","code":"200","data":{}}   
      * @throws
      * @author shaosen
@@ -209,7 +268,7 @@ public class EquipmentController {
     	Equipment e = new Equipment();
     	e.setModelId(equipment.getModelId());
     	e.setImgUrl("\\" + "upload\\equipment" + "\\" + equipment.getTypeName() + "\\" + equipment.getModel().getName() + "\\" + originalFilename);
-    	equipmentService.updateEquipmentByModelId(e);
+    	//equipmentService.updateEquipmentByModelId(e);
     	
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

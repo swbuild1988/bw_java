@@ -1,16 +1,12 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
-<<<<<<< HEAD
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-=======
 import java.util.*;
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoService;
@@ -45,6 +41,8 @@ public class AlarmServiceImpl implements AlarmService {
 	private VideoServerService videoServerService;
 	@Autowired
 	private MeasObjService measObjService;
+	@Autowired
+	private SectionService sectionService;
 
 
 	@Override
@@ -57,18 +55,27 @@ public class AlarmServiceImpl implements AlarmService {
 		MeasObj measObj = measObjModuleCenter.getMeasObj(alarm.getObjectId());
 		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(alarm);
 
-		List<JSONObject> planList = new ArrayList<>(10);
-		List<VideoServerDto> videoList = new ArrayList<>(10);
-		List<JSONObject> cvList = new ArrayList<>(10);
-		getPlansAndVideosAndCv(measObj, planList, videoList, cvList);
-		jsonObject.put("plans", planList);
-		jsonObject.put("videos", videoList);
-		jsonObject.put("cvList", cvList);
-		jsonObject.put("sectionId", measObj == null ? null : measObj.getSectionId());
+		if (measObj != null) {
+			Integer sectionId = measObj.getSectionId();
+			SectionDto dto = sectionService.getSectionById(sectionId);
+			String location = dto.getStore().getTunnel().getName() + dto.getStore().getName() + dto.getArea().getName();
 
-		// send to MQ
-		mqService.sendToAlarmUMQueue(jsonObject.toJSONString());
-		mqService.sendToAlarmVMQueue(jsonObject.toJSONString());
+			List<JSONObject> planList = new ArrayList<>(10);
+			List<VideoServerDto> videoList = new ArrayList<>(10);
+			List<JSONObject> cvList = new ArrayList<>(10);
+			getPlansAndVideosAndCv(measObj, planList, videoList, cvList);
+			jsonObject.put("plans", planList);
+			jsonObject.put("videos", videoList);
+			jsonObject.put("cvList", cvList);
+			jsonObject.put("sectionId", sectionId);
+			jsonObject.put("location", location);
+
+			// send to MQ
+			mqService.sendToAlarmUMQueue(jsonObject.toJSONString());
+			mqService.sendToAlarmVMQueue(jsonObject.toJSONString());
+		}
+
+
 	}
 
 	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoServerDto> videoList, List<JSONObject> cvList) {
@@ -216,17 +223,6 @@ public class AlarmServiceImpl implements AlarmService {
 		return alarmMapper.getCountByTime(date);
 	}
 
-<<<<<<< HEAD
-
-	@Override
-	public List<Alarm> getAllList() {
-		List<Alarm> list = alarmMapper.getAllAlarm();
-		return list == null ? Collections.emptyList() : list;
-	}
-
-
-=======
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 
 	@Override
 	public List<Alarm> getAllList() {

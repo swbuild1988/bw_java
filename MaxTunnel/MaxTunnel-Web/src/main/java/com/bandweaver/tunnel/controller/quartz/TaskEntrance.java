@@ -19,7 +19,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
@@ -131,11 +130,11 @@ public class TaskEntrance {
     private OnvifService h5streamService;
     
     /**
-     * 录像视频定时拍照
-     */
-    public void addSnaps() {
-    	h5streamService.addSnap();
-    }
+	 * 录像视频定时拍照
+	 */
+	public void addSnaps() {
+		h5streamService.addSnap();
+	}
 
 	/**
 	 * 月报导出

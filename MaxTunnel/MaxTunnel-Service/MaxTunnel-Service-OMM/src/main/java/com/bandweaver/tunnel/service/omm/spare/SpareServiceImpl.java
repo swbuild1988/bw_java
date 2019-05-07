@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bandweaver.tunnel.common.biz.dto.CommonDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareDto;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareService;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
@@ -31,11 +30,6 @@ public class SpareServiceImpl implements SpareService {
 	@Override
 	public int update(Spare spare) {
 		return spareMapper.update(spare);
-	}
-
-	@Override
-	public int addBatch(List<Spare> list) {
-		return spareMapper.addBatch(list);
 	}
 
 	@Override

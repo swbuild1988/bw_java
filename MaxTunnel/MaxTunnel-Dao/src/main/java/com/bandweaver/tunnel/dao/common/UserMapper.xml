@@ -164,4 +164,17 @@
 		</foreach>
 	</delete>
 
+	<select id="getUserPermissions" resultType="String">
+		SELECT
+		p.permission_code
+		FROM
+		t_security_user u
+		LEFT JOIN t_security_user_role ur ON ur.u_id = u.id
+		left join t_security_role r on ur.r_id = r.id
+		LEFT JOIN t_security_role_permission rp ON r.id = rp.r_id
+		LEFT JOIN t_security_permission p ON rp.p_id = p.id
+		WHERE
+		u.name = #{name}
+	</select>
+
 </mapper>

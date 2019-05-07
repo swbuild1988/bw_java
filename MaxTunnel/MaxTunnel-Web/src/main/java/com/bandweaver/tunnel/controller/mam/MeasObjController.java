@@ -1,15 +1,11 @@
 package com.bandweaver.tunnel.controller.mam;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +45,6 @@ import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
-import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
@@ -69,10 +64,6 @@ public class MeasObjController {
     private MeasObjModuleCenter measObjModuleCenter;
     @Autowired
     private SectionService sectionService;
-    @Autowired
-    private MeasObjAIService measObjAIService;
-    @Autowired
-    private MeasObjSOService measObjSOService;
     @Autowired
     private TunnelService tunnelService;
     @Autowired
@@ -104,6 +95,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年5月28日
      */
+    @RequiresPermissions("measobj:add")
     @RequestMapping(value = "measobjs", method = RequestMethod.POST)
     public JSONObject addObj(@RequestBody MeasObj obj) {
         measObjModuleCenter.insertMeasObj(obj);
@@ -135,6 +127,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年5月30日
      */
+    @RequiresPermissions("measobj:add")
     @RequestMapping(value = "measobjs/batch", method = RequestMethod.POST)
     public JSONObject addObjBatch(@RequestBody List<MeasObj> list) {
         LogUtil.info(list);
@@ -152,6 +145,7 @@ public class MeasObjController {
      * @author shaosen
      * @Date 2018年9月3日
      */
+    @RequiresPermissions("measobj:update")
     @RequestMapping(value = "measobjs", method = RequestMethod.PUT)
     public JSONObject editObj(@RequestBody MeasObj obj) {
         measObjModuleCenter.updateMeasObj(obj);
@@ -182,6 +176,7 @@ public class MeasObjController {
      * @author shaosen
      * @Date 2018年11月8日
      */
+    @RequiresPermissions("measobj:delete")
     @RequestMapping(value = "measobjs/{id}", method = RequestMethod.DELETE)
     public JSONObject deleteObj(@PathVariable Integer id) {
         measObjModuleCenter.deleteObj(id);
@@ -197,6 +192,7 @@ public class MeasObjController {
      * @author shaosen
      * @Date 2018年11月8日
      */
+    @RequiresPermissions("measobj:delete")
     @RequestMapping(value = "measobjs/batch/{ids}", method = RequestMethod.DELETE)
     public JSONObject deleteObjBatch(@PathVariable String ids) {
 
@@ -222,6 +218,7 @@ public class MeasObjController {
      * @author shaosen
      * @date 2018年7月18日
      */
+    @RequiresPermissions("measobj:list")
     @RequestMapping(value = "measobjs/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody MeasObjVo vo) {
         PageInfo<MeasObjDto> pageInfo = measObjService.dataGrid(vo);
@@ -272,6 +269,7 @@ public class MeasObjController {
      * @author shaosen
      * @Date 2018年12月22日
      */
+    @RequiresPermissions("measobj:list")
     @RequestMapping(value = "measobjs/list", method = RequestMethod.POST)
     public JSONObject getObjectListByCondition(@RequestBody JSONObject reqJson) {
         CommonUtil.hasAllRequired(reqJson, "tunnelId");
@@ -340,6 +338,7 @@ public class MeasObjController {
             for (AreaDto area : areas) {
                 if (area.getId().intValue() == measObjDto.getAreaId().intValue()) {
                     json.put("area", area.getName());
+                    json.put("areaLeath", area.getLength());
                 }
             }
             for (Store store : stores) {
@@ -715,7 +714,6 @@ public class MeasObjController {
 		rtdata.add(json_1);
 
 		//获取当前入廊人数
-		//TODO
 		JSONObject json_2 = new JSONObject();
 		json_2.put("name", "在廊人数");
 		json_2.put("value", 2);
@@ -774,10 +772,17 @@ public class MeasObjController {
         return CommonUtil.success(videoList);
     }
 
+    /**
+     * 监测对象id模糊查询
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月15日
+     */
+    @RequestMapping(value = "measobjs/{id}/condition",method = RequestMethod.GET)
+    public JSONObject getMeasobjIdList(@PathVariable("id") String id) {
 
-
+        List<Integer> list = measObjService.getIdList(id);
+        return CommonUtil.success(list);
+    }
 }
-
-
-
-

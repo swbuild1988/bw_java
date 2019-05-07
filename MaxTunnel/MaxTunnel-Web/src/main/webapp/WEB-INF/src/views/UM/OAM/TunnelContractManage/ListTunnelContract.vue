@@ -218,30 +218,17 @@
                                 contractStartTime: new Date(a.contractStartTime).format('yyyy-MM-dd'),
                                 contractEndTime: new Date(a.contractEndTime).format('yyyy-MM-dd'),
                                 crtTime: new Date(a.crtTime).format('yyyy-MM-dd hh:mm:ss'),
-                                // cable: {
-                                //     cableName: null,
-                                //     cableLength: null,
-                                //     cableStatus: null
-                                // }
                             })
-                            // this.contractList.forEach(contract=>{
-                            //     this.axios.get('contracts/' + contract.id).then(res =>{
-                            //         let { code,data } = res.data;
-                            //         contract.cable.cableName = data.cableDto.cableName;
-                            //         contract.cable.length = data.cableDto.cableLength;
-                            //         contract.cable.cableStatus = data.cableDto.cableStatusName;
-                            //     })
-                            // })
                             _this.contractIds.push(a.id)
                             _this.page.pageTotal = result.total
                             
                         })
                     })
             },
-            goToMoudle: function (path) {
+            goToMoudle(path) {
                 this.$router.push(path);
             },
-            goMoudle: function (index,type) {
+            goMoudle(index,type) {
                 if(type == 2){
                     this.$router.push({
                         name: '编辑合同',

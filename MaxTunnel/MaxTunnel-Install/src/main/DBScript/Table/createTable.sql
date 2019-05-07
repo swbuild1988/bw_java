@@ -1,4 +1,4 @@
--- 锟斤拷锟饺硷拷录锟斤拷
+-- 入廊记录表
 create table T_OAM_REQ_RECORD
 (
   ID         NUMBER NOT NULL,
@@ -31,7 +31,7 @@ end OAM_REQ_RECORD_TG;
 alter trigger OAM_REQ_RECORD_TG enable;
 
 
---锟侥硷拷锟斤拷锟斤拷锟斤拷
+--文件导出表
 CREATE TABLE T_COMMON_EXPORT(
   id    number    not null,
   name    varchar2(100) not null,
@@ -60,9 +60,105 @@ begin
 end COMMON_EXPORT_TG;
 /
 
-insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
- values (1005, 'job1006', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'weekExport', '0 0 7 ? * MON', '锟杰憋拷锟斤拷锟斤拷');
+update T_OMM_EQUIPMENT_VENDER set name = '上海波汇科技有限公司' where id = 1;
+update T_OMM_EQUIPMENT_VENDER set name = '安徽波汇智能科技有限公司' where id = 2;
+update T_OMM_EQUIPMENT_VENDER set name = '山西波汇信息技术有限公司' where id = 3;
 
-insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
- values (1006, 'job1007', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'monthExport', '0 0 7 1 * ?', '锟铰憋拷锟斤拷锟斤拷');
-commit;
+-- 变电站表
+create table T_MAM_SUBSTATION
+(
+  ID         NUMBER NOT NULL,
+  TUNNEL_ID  NUMBER NOT NULL,
+  INV_ID  NUMBER NOT NULL,
+  INA_ID  NUMBER NOT NULL,
+  OUTV_ID  NUMBER NOT NULL,
+  OUTA_ID  NUMBER NOT NULL,
+  POWER_ID  NUMBER NOT NULL,
+  ELE_RADIUS   NUMBER,
+  POWER_FACTOR   NUMBER,
+  COMPENSATION_FACTOR  NUMBER,
+  POSITION         VARCHAR2(50),
+  TIME          DATE
+);
+alter table T_MAM_SUBSTATION add constraint MAM_SUBSTATION_ID primary key(ID);
+
+-- create MAM_SUBSTATION_SQ
+create sequence MAM_SUBSTATION_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger MAM_SUBSTATION_TG
+CREATE OR REPLACE TRIGGER MAM_SUBSTATION_TG
+  BEFORE INSERT ON T_MAM_SUBSTATION
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select MAM_SUBSTATION_SQ.nextval into :new.id from dual;
+end MAM_SUBSTATION_TG;
+/
+alter trigger MAM_SUBSTATION_TG enable;
+
+-- 预案-组表
+create table T_EM_PLAN_GROUP
+(
+  ID         NUMBER NOT NULL,
+  PLAN_ID  NUMBER NOT NULL,
+  NAME			VARCHAR2(20),
+  STAFF_ID	NUMBER,
+  TIME          DATE
+);
+alter table T_EM_PLAN_GROUP add constraint EM_PLAN_GROUP_ID primary key(ID);
+
+-- create EM_PLAN_GROUP_SQ
+create sequence EM_PLAN_GROUP_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger EM_PLAN_GROUP_TG
+CREATE OR REPLACE TRIGGER EM_PLAN_GROUP_TG
+  BEFORE INSERT ON T_EM_PLAN_GROUP
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select EM_PLAN_GROUP_SQ.nextval into :new.id from dual;
+end EM_PLAN_GROUP_TG;
+/
+alter trigger EM_PLAN_GROUP_TG enable;
+
+
+-- 预案-成员表
+create table T_EM_PLAN_MEMBER
+(
+  ID         NUMBER NOT NULL,
+  GROUP_ID  NUMBER NOT NULL,
+  STAFF_ID	NUMBER NOT NULL,
+  TEL			VARCHAR2(20),
+  TEL2			VARCHAR2(20),
+  TIME          DATE
+);
+alter table T_EM_PLAN_MEMBER add constraint EM_PLAN_MEMBER_ID primary key(ID);
+
+-- create EM_PLAN_MEMBER_SQ
+create sequence EM_PLAN_MEMBER_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger EM_PLAN_MEMBER_TG
+CREATE OR REPLACE TRIGGER EM_PLAN_MEMBER_TG
+  BEFORE INSERT ON T_EM_PLAN_MEMBER
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select EM_PLAN_MEMBER_SQ.nextval into :new.id from dual;
+end EM_PLAN_MEMBER_TG;
+/
+alter trigger EM_PLAN_MEMBER_TG enable;

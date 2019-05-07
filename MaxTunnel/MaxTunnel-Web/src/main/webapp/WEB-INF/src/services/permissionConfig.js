@@ -16,6 +16,30 @@ var PermissionConfigService = {
             .catch(error=>{
                 reject(error.response.status + ' ' + error.response.data)
             })
+            // let data = {
+            //     total: 4,
+            //     list: [
+            //         {
+            //             "id":1,
+            //             "permissionCode":"tunnel:*:1,2",
+            //             "etc":{
+            //                 "c3":["古城大街","实验路"],
+            //                 "c1":"管廊",
+            //                 "c2":["添加","删除","更新","列表","导出"]
+            //             }
+            //         },
+            //         {
+            //             "id":2,
+            //             "permissionCode":"tunnel:*:1,2",
+            //             "etc":{
+            //                 "c3":[],
+            //                 "c1":"管廊",
+            //                 "c2":["添加","删除","更新","列表","导出"]
+            //             }
+            //         }
+            //     ]
+            // }
+            // resolve(data)
         })
     },
     // 添加权限
@@ -67,6 +91,16 @@ var PermissionConfigService = {
             .catch(error=>{
                 reject(error.response.status + ' ' + error.response.data)
             })
+            // let data = {
+            //     "id":1,
+            //     "permissionCode":"tunnel:*:1,2",
+            //     "etc":{
+            //         "c3":["古城大街","实验路"],
+            //         "c1":"管廊",
+            //         "c2":["添加","删除","更新","列表","导出"]
+            //     }
+            // }
+            // resolve(data)
         })
     },
     // 修改权限
@@ -237,74 +271,6 @@ var PermissionConfigService = {
             .catch(error=>{
                 reject(error.response.status + ' ' + error.response.data)
             })
-        })
-    },
-    // 获取后端模块列表
-    getModuleList(){
-        return new Promise((resolve,reject)=>{
-            // axios.get('permissions/modules')
-            // .then(res=>{
-            //     let { msg,data,code } = res.data
-            //     if(code == 200){
-            //         resolve(data)
-            //     } else {
-            //         reject(msg + '地址:permissions/modules')
-            //     }
-            // })
-            // .catch(error=>{
-            //     reject(error.response.status + ' ' + error.response.data)
-            // })
-            let data = [
-                {
-                    id: 1,
-                    name: '用户管理'
-                },
-                {
-                    id: 2,
-                    name: '能耗管理'
-                },
-                {
-                    id: 3,
-                    name: '管廊管理'
-                }
-            ]
-            resolve(data)
-        })
-    },
-    // 获取操作列表
-    getActionsList(){
-        return new Promise((resolve,reject)=>{
-            // axios.get('permissions/actions')
-            // .then(res=>{
-            //     let { msg,data,code } = res.data
-            //     if(code == 200){
-            //         resolve(data)
-            //     } else {
-            //         reject(msg + '地址:permissions/actions')
-            //     }
-            // })
-            // .catch(error=>{
-            //     reject(error.response.status + ' ' + error.response.data)
-            // })
-            let data = [
-                {
-                    val: '添加',
-                    key: 'add'
-                },
-                {
-                    val: '列表',
-                    key: 'list'
-                },
-                {
-                    val: '修改',
-                    key: 'update'
-                },
-                {
-                    val: '删除',
-                    key: 'delete'
-                }
-            ]
-            resolve(data)
         })
     },
     // 根据模块Id获取资源列表

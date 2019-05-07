@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +73,18 @@ public class VideoController {
     private SectionService sectionService;
     @Resource(name = "H5StreamServiceImpl")
     private OnvifService h5streamService;
+
+
+    /**
+     * 对外提供的接口
+     * http://192.168.0.7:8080/MaxTunnel-Web/api/video/snapshot
+     */
+    @RequestMapping(value = "api/video/snapshot", method = RequestMethod.GET)
+    public JSONObject addSnaps() {
+        h5streamService.addSnap();
+        return CommonUtil.success();
+    }
+
     
     /**
      * 添加视频
@@ -95,6 +110,7 @@ public class VideoController {
      * @Date 2019年2月19日
      */
     @Transactional
+    @RequiresPermissions("video:add")
     @RequestMapping(value = "videos", method = RequestMethod.POST)
     public JSONObject addVideo(@RequestBody Video video) throws Exception {
     	// 添加视频到数据库以及缓存
@@ -165,6 +181,7 @@ public class VideoController {
      * @Date 2019年2月20日
      */
     @Transactional
+    @RequiresPermissions("video:update")
     @RequestMapping(value = "videos", method = RequestMethod.PUT)
     public JSONObject updateVideo(@RequestBody Video video) throws Exception {
     	// 修改视频信息
@@ -192,6 +209,7 @@ public class VideoController {
      * @author ya.liu
      * @Date 2019年2月22日
      */
+    @RequiresPermissions("video:list")
     @RequestMapping(value = "videos/datagrid", method = RequestMethod.POST)
     public JSONObject getVideoDtos(@RequestBody VideoVo vo) {
     	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
@@ -288,6 +306,7 @@ public class VideoController {
      * @author ya.liu
      * @Date 2019年2月20日
      */
+    @RequiresPermissions("video:delete")
     @RequestMapping(value = "videos/{ids}", method = RequestMethod.DELETE)
     public JSONObject deleteVideo(@PathVariable("ids") String ids) throws Exception {
     	List<Integer> ins = CommonUtil.convertStringToList(ids);

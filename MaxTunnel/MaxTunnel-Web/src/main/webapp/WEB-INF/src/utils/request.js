@@ -37,7 +37,7 @@ export default async () => {
             Vue.prototype.flyFilePathes = result_config.data.flyFilePathes;
             Vue.prototype.VMEntityConfig = result_config.data.VMEntityConfig;
             Vue.prototype.RouterBase = result_config.data.RouterBase;
-            sessionStorage.setItem('ServerConfig', result_config.data.ApiUrl + '/dist/static');
+            sessionStorage.setItem('ServerConfig', '/dist/static');
 
             // 获取VM的配置页
             // axios.get('dist/static/VM/js/VMWebConfig.json').then((result) => {

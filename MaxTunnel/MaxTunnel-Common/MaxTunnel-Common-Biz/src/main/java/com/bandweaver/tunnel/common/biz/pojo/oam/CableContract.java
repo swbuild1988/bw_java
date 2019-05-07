@@ -19,7 +19,7 @@ public class CableContract implements Serializable {
 
     private String name;
 
-    private Integer customerId;
+    private Integer companyId;
 
     private Integer payType;
     
@@ -30,6 +30,16 @@ public class CableContract implements Serializable {
     private Date contractEndTime;
     
     private Date crtTime;
+
+	/**
+	 * 录入人信息
+	 */
+	private String operateUsername;
+
+	/**
+	 * 附件地址
+	 */
+	private String path;
 
     public String getId() {
         return id;
@@ -47,15 +57,15 @@ public class CableContract implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
+    public Integer getCompanyId() {
+		return companyId;
+	}
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
 
-    public Integer getPayType() {
+	public Integer getPayType() {
         return payType;
     }
 
@@ -94,5 +104,21 @@ public class CableContract implements Serializable {
 	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
 	}
-    
+
+
+	public String getOperateUsername() {
+		return operateUsername;
+	}
+
+	public void setOperateUsername(String operateUsername) {
+		this.operateUsername = operateUsername;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 }

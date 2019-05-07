@@ -126,7 +126,7 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation') {
-                        pathParams.name = '分配巡检任务'
+                        pathParams.name = '分配巡检任务消息'
                         pathParams.params = {
                             id: task.id
                         }

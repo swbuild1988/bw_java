@@ -16,7 +16,6 @@ public interface SpareService {
 
     int update(Spare spare);
 
-    int addBatch(List<Spare> list);
     /**
      * 获取所有状态的备品
      * @return

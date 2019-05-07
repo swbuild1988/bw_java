@@ -2,7 +2,6 @@ package com.bandweaver.tunnel.common.biz.vo.omm;
 
 import java.util.Date;
 
-import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 
@@ -14,7 +13,8 @@ import com.bandweaver.tunnel.common.biz.vo.BaseVo;
  * @date 2018年5月31日
  */
 public class EquipmentVo extends BaseVo{
-	
+
+	private static final long serialVersionUID = -7268420534954351487L;
 
 	private Integer id;
 	private String assetNo;
@@ -27,10 +27,16 @@ public class EquipmentVo extends BaseVo{
 	private Integer alarmNo;
 	/**设备状态*/
 	private Integer status;
-    
     private Integer tunnelId;
+    private Integer sectionId;
 	private Integer modelId;
 	private Integer venderId;
+	
+	private String qaTerm;
+    private String ratedVoltage;
+    private String range;
+    private String factory;
+    private String brand;
 	
 	public Integer getId() {
 		return id;
@@ -68,11 +74,11 @@ public class EquipmentVo extends BaseVo{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public Integer getTunnelId() {
-		return tunnelId;
+	public Integer getSectionId() {
+		return sectionId;
 	}
-	public void setTunnelId(Integer tunnelId) {
-		this.tunnelId = tunnelId;
+	public void setSectionId(Integer sectionId) {
+		this.sectionId = sectionId;
 	}
 	public Integer getModelId() {
 		return modelId;
@@ -97,6 +103,42 @@ public class EquipmentVo extends BaseVo{
 	}
 	public void setAlarmNo(Integer alarmNo) {
 		this.alarmNo = alarmNo;
+	}
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
+	public String getQaTerm() {
+		return qaTerm;
+	}
+	public void setQaTerm(String qaTerm) {
+		this.qaTerm = qaTerm;
+	}
+	public String getRatedVoltage() {
+		return ratedVoltage;
+	}
+	public void setRatedVoltage(String ratedVoltage) {
+		this.ratedVoltage = ratedVoltage;
+	}
+	public String getRange() {
+		return range;
+	}
+	public void setRange(String range) {
+		this.range = range;
+	}
+	public String getFactory() {
+		return factory;
+	}
+	public void setFactory(String factory) {
+		this.factory = factory;
+	}
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 	
 }

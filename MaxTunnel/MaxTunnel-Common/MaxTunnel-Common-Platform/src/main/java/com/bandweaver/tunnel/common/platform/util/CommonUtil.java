@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 
 public class CommonUtil {
 	
-	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	//private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * 返回格式都是以（code,msg,data）形式返回

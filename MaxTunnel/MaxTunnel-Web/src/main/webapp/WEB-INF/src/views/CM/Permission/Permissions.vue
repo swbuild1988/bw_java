@@ -18,19 +18,22 @@
         ></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
               @on-change="handlePage" show-elevator :style="pageStyle"></Page>
-        <Modal v-model="modal.isShow" :title="modal.title" @on-cancel="handleReset('permissionForm')">
+        <Modal v-model="modal.isShow" :title="modal.title" @on-cancel="handleReset('permissionForm')" :mask-closable="false">
             <Form ref="permissionForm" :model="modal.info" :rules="permissionForm" :label-width="120">
-                <FormItem label="菜单名称：" prop="menuName">
-                    <Input v-model="modal.info.menuName" placeholder="请输入菜单名称，如用户" />
+                <FormItem label="模块：" prop="moduleId">
+                    <Select v-model="modal.info.moduleId" @on-change="getObjects">
+                        <Option v-for="item in selectList.modules" :key="item.val" :value="item.val">{{item.name}}</Option>
+                    </Select>
                 </FormItem>
-                <FormItem label="菜单地址：" prop="menuCode">
-                    <Input v-model="modal.info.menuCode" placeholder="格式为xxx/xxx，如/CM/user" />
+                <FormItem label="操作：" prop="actionIds">
+                    <Select v-model="modal.info.actionIds" multiple>
+                        <Option v-for="item in selectList.actions" :key="item.key" :value="item.val">{{item.name}}</Option>
+                    </Select>
                 </FormItem>
-                <FormItem label="权限名称：" prop="permissionName">
-                    <Input v-model="modal.info.permissionName" placeholder="请输入权限名称,如列表" />
-                </FormItem>
-                <FormItem label="权限匹配：" prop="permissionCode">
-                    <Input v-model="modal.info.permissionCode" placeholder="格式为xxx:xxx，如user:list" />
+                <FormItem label="资源：" prop="objectIds" v-show="modal.info.moduleId === 'tunnel'">
+                    <Select v-model="modal.info.objectIds" multiple>
+                        <Option v-for="item in selectList.objects" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
                 </FormItem>
             </Form>   
             <div slot="footer">
@@ -42,6 +45,8 @@
 
 <script>
 import PermissionConfigService from '../../../services/permissionConfig'
+import { EnumsService } from '../../../services/enumsService'
+import { TunnelService } from '../../../services/tunnelService'
 
     export default {
         data() {
@@ -68,24 +73,32 @@ import PermissionConfigService from '../../../services/permissionConfig'
                         width: 100
                     },
                     {
-                        title: '菜单',
-                        key: 'menuName',
-                        align: 'center'
-                    },
-                    {
-                        title: '菜单地址',
-                        key: 'menuCode',
-                        align: 'center'
+                        title: '模块',
+                        key: 'etc',
+                        align: 'center',
+                        render: (h,param)=>{
+                            return h('span',param.row.etc.c1)
+                        }
                     },
                     {
                         title: '权限',
-                        key: 'permissionName',
-                        align: 'center'
+                        key: 'etc',
+                        align: 'center',
+                        render:  (h,param)=>{
+                            return h('span',param.row.etc.c2.join(' ')) 
+                        }
                     },
                     {
-                        title: '权限匹配',
-                        key: 'permissionCode',
-                        align: 'center'
+                        title: '资源',
+                        key: 'etc',
+                        align: 'center',
+                        render:  (h,param)=>{
+                            if(param.row.etc.c3.length){
+                                return h('div',param.row.etc.c3.join(' '))
+                            } else {
+                                return h('div',param.row.etc.c1 + '所有资源')
+                            }
+                        }
                     },
                     {
                         title: '操作',
@@ -115,36 +128,90 @@ import PermissionConfigService from '../../../services/permissionConfig'
                     isShow: false,
                     title: '添加权限',
                     info: {
-                        menuCode: null,
-                        menuName: null,
-                        permissionName: null,
-                        permissionCode: null
+                        id: null,
+                        moduleId: null,
+                        actionIds: [],
+                        objectIds: [],
                     },
-                    type: 'add'
+                    type: 'add',
+                    permissionCode: ''
                 },
                 permissionForm: {
-                    menuCode: [
-                        { required: true, message: '请输入菜单名称', trigger: 'blur' }
+                    moduleId: [
+                        { required: true, message: '请选择菜单', trigger: 'blur' }
                     ],
-                    menuName: [
-                        { required: true, message: '请输入菜单地址', trigger: 'blur' }
+                    actionIds: [
+                        { required: true, message: '请选择操作', trigger: 'blur' }
                     ],
-                    permissionCode: [
-                        { required: true, message: '请输入权限匹配', trigger: 'blur' }
-                    ],
-                    permissionName: [
-                        {required: true, message: '请输入权限名称', trigger: 'blur' }
+                    objectIds: [
+                        { required: true, message: '请选择资源', trigger: 'blur' }
                     ]
+                },
+                selectList: {
+                    modules: [],
+                    actions: [],
+                    objects: []
                 }
             };
         },
         components: {
            
         },
+        computed:{
+            permissionParam(){
+                let actions = this.modal.info.actionIds.length === this.selectList.actions.length ? '*' : this.modal.info.actionIds.join(',')
+                let objects
+                if(this.modal.info.moduleId === 'tunnel'){
+                    objects = this.modal.info.objectIds.length === this.selectList.objects.length ? '*' : this.modal.info.objectIds.join(',')
+                } else {
+                    objects = '*'
+                }
+                
+                let param
+                if(this.modal.type === 'add'){
+                    param = {
+                        shiroResourceType: this.modal.info.moduleId,
+                        shiroOperateType: actions,
+                        shiroResourceId: objects
+                    }
+                } else {
+                    param = {
+                        id: this.modal.info.id,
+                        shiroResourceType: this.modal.info.moduleId,
+                        shiroOperateType: actions,
+                        shiroResourceId: objects
+                    }
+                }
+                return param
+            }
+        },
         mounted() {
-           this.search()
+            this.init()
+            this.search()
         },
         methods: {
+            init(){
+                EnumsService.getModuleList().then(
+                    res=>{
+                        this.selectList.modules = res
+                    },
+                    error=>{
+                        this.Log.info(error)
+                    }
+                )
+                EnumsService.getActionsList().then(
+                    res=>{
+                        this.selectList.actions = res
+                        this.modal.info.actionIds = []
+                        res.forEach(action=>{
+                            this.modal.info.actionIds.push(action.val)
+                        })
+                    },
+                    error=>{
+                        this.Log.info(error)
+                    }
+                )
+            },
             search(){
                 let params = {
                     pageNum: this.page.pageNum,
@@ -159,16 +226,31 @@ import PermissionConfigService from '../../../services/permissionConfig'
                 )
             },
             add(){
+                this.modal.info.id = null
                 this.modal.isShow = true;
                 this.modal.title = '添加权限';
                 this.modal.type = 'add';
             },
             edit(id){
+                this.modal.info.id = id
                 PermissionConfigService.getPermissionDetail(id).then(
                     res=>{
+                        let string = res.permissionCode.split(':')
                         this.modal.title = '修改权限';
                         this.modal.isShow = true;
-                        this.modal.info = res;
+                        this.modal.info.moduleId = string[0];
+                        if(~string[1].indexOf('*')){
+                            this.modal.info.actionIds = []
+                            this.selectList.actions.forEach(action=>{
+                                this.modal.info.actionIds.push(action.val)
+                            })        
+                        } else {
+                            this.modal.info.actionIds = string[1].split(',')      
+                        }
+                        if(string[0] === 'tunnel'){
+                            this.getObjects()
+                            this.modal.permissionCode = res.permissionCode
+                        }
                         this.modal.type = 'edit';
                     },
                     error=>{
@@ -179,7 +261,7 @@ import PermissionConfigService from '../../../services/permissionConfig'
             save(name){
                 if(this.modal.type === 'add'){
                     let _this = this;
-                    PermissionConfigService.addPermission(this.modal.info).then(
+                    PermissionConfigService.addPermission(this.permissionParam).then(
                         res=>{
                             _this.$Message.success('添加成功');
                             _this.handleReset(name);
@@ -191,7 +273,7 @@ import PermissionConfigService from '../../../services/permissionConfig'
                         }
                     )
                 } else {
-                    PermissionConfigService.editPermission(this.modal.info).then(
+                    PermissionConfigService.editPermission(this.permissionParam).then(
                         res=>{
                             this.$Message.success('修改成功');
                             this.handleReset(name);
@@ -241,6 +323,31 @@ import PermissionConfigService from '../../../services/permissionConfig'
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            getObjects(){
+                if(this.modal.info.moduleId === 'tunnel'){
+                    TunnelService.getTunnels().then(
+                        res=>{
+                            this.selectList.objects = res
+                            let objects = this.modal.permissionCode.split(':')[2]
+                            if(this.modal.type === 'edit' && objects.indexOf('*') < 0){
+                                this.modal.info.objectIds = []
+                                objects.split(',').map(obj=>{
+                                    this.modal.info.objectIds.push(+obj)
+                                })
+                            } else {
+                                this.modal.info.objectIds = []
+                                res.forEach(action=>{
+                                    this.modal.info.objectIds.push(action.id)
+                                })
+                            }
+                            
+                        },
+                        error=>{
+                            this.Log.info(error)
+                        }
+                    )
+                }
             }
         }
     };

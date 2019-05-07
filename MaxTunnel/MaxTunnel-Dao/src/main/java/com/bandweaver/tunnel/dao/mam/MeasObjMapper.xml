@@ -376,4 +376,13 @@
         </set>
         WHERE id = #{id}
     </update>
+    
+    <select id="getIdList" resultType="Integer" parameterType="String">
+    	select id from T_MAM_MEASOBJ
+    	<where>
+    		<if test="_parameter != null">
+               instr(id,#{id})>0
+            </if>
+    	</where>
+    </select>
 </mapper>

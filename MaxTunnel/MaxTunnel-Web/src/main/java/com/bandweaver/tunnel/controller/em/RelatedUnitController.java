@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.em;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,7 @@ public class RelatedUnitController {
 	 * @author shaosen
 	 * @Date 2018年8月30日
 	 */
+	@RequiresPermissions("relatedunit:list")
 	@RequestMapping(value="relatedunits",method=RequestMethod.GET)
 	public JSONObject getAll() {
 		List<RelatedUnitDto> list = relatedUnitService.getDtoListByCondition(new RelatedUnitVo());
@@ -65,6 +67,7 @@ public class RelatedUnitController {
 	 * @author shaosen
 	 * @date 2018年7月9日
 	 */
+	@RequiresPermissions("relatedunit:add")
 	@RequestMapping(value="relatedunits",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody RelatedUnit pojo) {
 		relatedUnitService.add(pojo);
@@ -79,6 +82,7 @@ public class RelatedUnitController {
 	 * @author shaosen
 	 * @date 2018年7月9日
 	 */
+	@RequiresPermissions("relatedunit:delete")
 	@RequestMapping(value="relatedunits/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id ) {
 		relatedUnitService.delete(id);
@@ -93,6 +97,7 @@ public class RelatedUnitController {
 	 * @author shaosen
 	 * @date 2018年7月9日
 	 */
+	@RequiresPermissions("relatedunit:update")
 	@RequestMapping(value="relatedunits",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody RelatedUnit pojo) {
 		relatedUnitService.update(pojo);
@@ -115,6 +120,7 @@ public class RelatedUnitController {
 	 * @author shaosen
 	 * @date 2018年7月9日
 	 */
+	@RequiresPermissions("relatedunit:list")
 	@RequestMapping(value="relatedunits/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody RelatedUnitVo vo) {
 		PageInfo<RelatedUnitDto> pageInfo = relatedUnitService.dataGrid(vo);

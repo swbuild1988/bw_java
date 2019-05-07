@@ -47,6 +47,12 @@ public class InspectionTaskServiceImpl implements InspectionTaskService {
     }
 
     @Override
+	public int deleteBatch(List<Integer> list) {
+		inspectionTaskMapper.deleteBatch(list);
+		return 0;
+	}
+
+	@Override
     public InspectionTask getTask(int id) {
         return inspectionTaskMapper.getTask(id);
     }

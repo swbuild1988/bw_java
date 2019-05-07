@@ -126,6 +126,11 @@ export default {
                         id: 47,
                         name: '变电所信息配置',
                         url: '/CMMain/PowerSubstation'
+                    },
+                    {
+                        id: 48,
+                        name: '预案配置',
+                        url: '/CMMain/planControl'
                     }
                 ]
             },

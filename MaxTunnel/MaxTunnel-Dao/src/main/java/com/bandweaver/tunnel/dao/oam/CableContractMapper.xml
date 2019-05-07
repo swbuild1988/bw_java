@@ -3,30 +3,16 @@
 <mapper namespace="com.bandweaver.tunnel.dao.oam.CableContractMapper">
   <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
     <id column="ID" jdbcType="VARCHAR" property="id" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="CUSTOMER_ID" jdbcType="DECIMAL" property="customerId" />
-    <result column="PAY_TYPE" jdbcType="DECIMAL" property="payType" />
-    <result column="contract_status" jdbcType="DECIMAL" property="contractStatus" />
-    <result column="contract_start_time" jdbcType="TIMESTAMP" property="contractStartTime" />
-    <result column="contract_end_time" jdbcType="TIMESTAMP" property="contractEndTime" />
-    <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
   </resultMap>
   
    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto">
     <id column="ID" jdbcType="VARCHAR" property="id" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="CUSTOMER_ID" jdbcType="DECIMAL" property="customerId" />
-    <result column="PAY_TYPE" jdbcType="DECIMAL" property="payType" />
-    <result column="contract_status" jdbcType="DECIMAL" property="contractStatus" />
-    <result column="contract_start_time" jdbcType="TIMESTAMP" property="contractStartTime" />
-    <result column="contract_end_time" jdbcType="TIMESTAMP" property="contractEndTime" />
-    <result column="crt_time" jdbcType="TIMESTAMP" property="crtTime" />
-    <association property="customer" javaType="com.bandweaver.tunnel.common.biz.dto.oam.CustomerDto" column="CUSTOMER_ID"
-    	select="com.bandweaver.tunnel.dao.oam.CustomerMapper.getDtoById"/>
+    <association property="company" javaType="com.bandweaver.tunnel.common.biz.dto.CompanyDto" column="COMPANY_ID"
+    	select="com.bandweaver.tunnel.dao.common.CompanyMapper.getDtoById"/>
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, NAME, CUSTOMER_ID, PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time
+    ID, NAME, COMPANY_ID, PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time,operate_username,path
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -39,10 +25,10 @@
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
-    insert into T_OAM_CABLE_CONTRACT (ID, NAME, CUSTOMER_ID, 
-      PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{customerId,jdbcType=DECIMAL}, 
-      #{payType,jdbcType=DECIMAL}, #{contractStatus}, #{contractStartTime}, #{contractEndTime},#{crtTime})
+    insert into T_OAM_CABLE_CONTRACT (ID, NAME, COMPANY_ID, 
+      PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time,operate_username,path)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{companyId,jdbcType=DECIMAL}, 
+      #{payType,jdbcType=DECIMAL}, #{contractStatus}, #{contractStartTime}, #{contractEndTime},#{crtTime},#{operateUername},#{path})
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
@@ -51,8 +37,8 @@
       <if test="name != null">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="customerId != null">
-        CUSTOMER_ID = #{customerId,jdbcType=DECIMAL},
+      <if test="companyId != null">
+        COMPANY_ID = #{companyId,jdbcType=DECIMAL},
       </if>
       <if test="payType != null">
         PAY_TYPE = #{payType,jdbcType=DECIMAL},
@@ -69,18 +55,26 @@
       <if test="crtTime != null">
       	crt_time = #{crtTime}
       </if>
+        <if test="operateUsername != null">
+            operate_username = #{operateUsername}
+        </if>
+        <if test="path != null">
+            path = #{path}
+        </if>
     </set>
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
     update T_OAM_CABLE_CONTRACT
     set NAME = #{name,jdbcType=VARCHAR},
-      CUSTOMER_ID = #{customerId,jdbcType=DECIMAL},
+      COMPANY_ID = #{companyId,jdbcType=DECIMAL},
       PAY_TYPE = #{payType,jdbcType=DECIMAL},
       contract_status = #{contractStatus},
       contract_start_time = #{contractStartTime},
       contract_end_time = #{contractEndTime},
-      crt_time = #{crtTime}
+      crt_time = #{crtTime},
+      operate_username = #{operateUsername},
+      path = #{path}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   
@@ -97,8 +91,8 @@
   		<if test="name != null and name.trim() != ''">
   			and instr(name,#{name})>0
   		</if>
-  		<if test="customerId != null">
-  			and customer_id = #{customerId}
+  		<if test="companyId != null">
+  			and COMPANY_ID = #{companyId}
   		</if>
   		<if test="payType != null">
   			and pay_type = #{payType}
@@ -115,6 +109,10 @@
   	</where>
   	order by crt_time desc
   </select>
+
+    <select id="get" resultMap="BaseResultMap">
+        select * from T_OAM_CABLE_CONTRACT where id = #{id}
+    </select>
   
   
 </mapper>

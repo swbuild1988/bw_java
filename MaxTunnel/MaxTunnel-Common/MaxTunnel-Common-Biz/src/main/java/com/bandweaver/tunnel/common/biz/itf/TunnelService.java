@@ -23,6 +23,16 @@ public interface TunnelService {
      */
     List<TunnelSimpleDto> getList();
 
+	/**
+	 * 初始化时获取所有管廊，只可在这个地方使用，其他地方不可使用该接口
+	 * @return
+	 */
+	List<TunnelSimpleDto> getListWithoutPermission();
+
+    TunnelSimpleDto getSimpleDtoById(Integer id);
+
+    TunnelSimpleDto getSimpleDtoByIdWithoutPermissioin(Integer id);
+
     /**
      * @Description: 获取所有管廊列表(详细)
      * @param @return   
@@ -82,4 +92,6 @@ public interface TunnelService {
 	void updateTunnelRunInfo(TunnelRun runInfo);
 
 	void addTunnelRun(TunnelRun tr);
+
+	List<Integer> getSubSystemIdList();
 }

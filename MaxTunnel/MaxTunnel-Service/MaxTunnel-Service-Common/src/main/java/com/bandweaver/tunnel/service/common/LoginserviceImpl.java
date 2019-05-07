@@ -1,9 +1,6 @@
 package com.bandweaver.tunnel.service.common;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.itf.common.PermissionService;
@@ -35,68 +32,65 @@ public class LoginserviceImpl implements Loginservice {
     @Override
     public JSONObject getPermissionListByUserName(String username) {
 
-        JSONObject json = new JSONObject();
+        final String KEY_ADMIN = "admin";
+        final String KEY_MENU_LIST = "menuList";
 
-        //查询用户角色列表
+        JSONObject result = new JSONObject();
         List<Role> roleList = roleService.getRoleByUseName(username);
-
-        if (roleList == null || roleList.isEmpty()) {
-            json.put("rList", new ArrayList<>());
-            json.put("pList", new ArrayList<>());
-            return json;
-
-        } else {
-
-            Set<String> roleNameList = roleList.stream().map(x -> x.getRoleName()).collect(Collectors.toSet());
-            json.put("rList", roleNameList);
-
-            Set<String> menuList = new HashSet<>();
-            //判断是否是admin角色
-            if (roleNameList.contains("admin")) {
-                //获取所有权限列表
-                menuList = permissionService.getAllMenuCode();
-            } else {
-                for (Role role : roleList) {
-                    List<Permission> permissions = permissionService.getPermissionsByRole(role.getId());
-                    if (!permissions.isEmpty()) {
-                        menuList = permissions.stream().map(x -> x.getMenuCode()).collect(Collectors.toSet());
-                    }
-                }
+        if (roleList != null && roleList.size() > 0) {
+            // 如果角色为admin，具有所有权限
+            List<String> roleNameList = roleList.stream().map(Role::getRoleName).collect(Collectors.toList());
+            final String ADMIN = "admin";
+            if (roleNameList.contains(ADMIN)) {
+                result.put(KEY_ADMIN, true);
+                // 如果是admin角色，前端进行判断然后显示所有菜单及按钮权限，为了减少网络传输开销
+                // menuList返回一个空数组即可
+                result.put(KEY_MENU_LIST, new ArrayList<>(0));
+                return result;
             }
 
-
-            List<JSONObject> pList = new ArrayList<>();
-
-            if (!menuList.isEmpty()) {
-
-                for (String menu : menuList) {
-
-                    JSONObject j = new JSONObject();
-                    j.put("menuCode", menu);
-
-                    List<String> pCodeList = new ArrayList<>();
-                    List<Permission> permissionList = permissionService.getPermissionsByMenuCode(menu);
-                    if (!permissionList.isEmpty()) {
-                        List<String> li = permissionList.stream().map(x -> x.getPermissionCode()).collect(Collectors.toList());
-                        //对permissionCode进行字符串截取
-                        for (String pcode : li) {
-                            String substring = pcode.substring(pcode.lastIndexOf(":") + 1);
-                            pCodeList.add(substring);
-                        }
-
-
-                        j.put("pCodeList", pCodeList);
+            // 如果角色不是admin，则查询其所具有的路由菜单及该菜单下所具有的按钮权限
+            List<JSONObject> menuList = new ArrayList<>();
+            for (Role role : roleList) {
+                List<Permission> permissions = permissionService.getPermissionsByRole(role.getId());
+                if (permissions != null && permissions.size() > 0) {
+                    for (Permission permission : permissions) {
+                        JSONObject js = new JSONObject();
+                        js.put("menu", permission.getMenuCode());
+                        List<String> accessList = getAccessList(permission.getPermissionCode());
+                        js.put("access", accessList);
+                        js.put("accessAll", accessList.contains("*") ? true : false);
+                        menuList.add(js);
                     }
-                    j.put("pCodeList", pCodeList);
-                    pList.add(j);
+
                 }
             }
-
-            json.put("pList", pList);
+            result.put(KEY_ADMIN, false);
+            result.put(KEY_MENU_LIST, menuList);
+            return result;
         }
-
-        return json;
+        return null;
     }
+
+
+    private List<String> getAccessList(String permissionCode) {
+        if (permissionCode == null || permissionCode.trim().length() == 0) {
+            return new ArrayList<String>(0);
+        }
+        String[] arr = permissionCode.split(":");
+        String accessStr = arr[1];
+        String[] accessArr = accessStr.split(",");
+        List<String> accessList = Arrays.asList(accessArr);
+        return accessList;
+    }
+
+
+    @Override
+    public List<Role> getUserRoles(String username) {
+        List<Role> list = roleService.getRoleByUseName(username);
+        return list;
+    }
+
 
 
 }

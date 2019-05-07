@@ -32,23 +32,24 @@
         ></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
               @on-change="handlePage" show-elevator :style="pageStyle"></Page>
-        <Modal v-model="modal.isShow" :title="modal.title" @on-cancel="handleReset('roleForm')">
+        <Modal v-model="modal.isShow" :title="modal.title" @on-cancel="handleReset('roleForm')" :mask-closable="false">
             <Form ref="roleForm" :model="modal.info" :rules="roleForm" :label-width="120">
                 <FormItem label="角色名称：" prop="roleName">
                     <Input v-model="modal.info.roleName" placeholder="请输入角色名称" :disabled="modal.type === 'authorize'"/>
                 </FormItem>
-                <div v-if="modal.type === 'authorize'" style="margin:20px;">
-                    <Row v-for="menu in permissionList" :key="menu.menuName">
-                        <Col span="4">{{menu.menuName}}</Col>
-                        <Col span="20">
-                            <CheckboxGroup v-model="checkPerList">
-                                <Checkbox v-for="per in menu.permissionList" 
-                                :key="per.permissionName" :label="per.id">
-                                    <span>{{per.permissionName}}</span>
-                                </Checkbox>
-                            </CheckboxGroup>
-                        </Col>
-                    </Row>
+                <div v-if="modal.type !== 'authorize'">
+                    <span>路由：</span>
+                    <Tree :data="routes" show-checkbox multiple ref="routeTree"></Tree>
+                </div>
+                <div v-else>
+                    <span>操作：</span>
+                    <div v-if="modal.type === 'authorize'" style="margin:20px;">
+                        <Table    
+                        ref="permissionTable" 
+                        :columns="permissionColumns" 
+                        :data="permissionData" 
+                        @on-selection-change="getSelections" ></Table>
+                    </div>
                 </div>
             </Form>   
             <div slot="footer">
@@ -60,6 +61,7 @@
 
 <script>
 import PermissionConfigService from '../../../services/permissionConfig';
+import { asyncRouterMap } from '../../../router'
 
     export default {
         data() {
@@ -91,6 +93,63 @@ import PermissionConfigService from '../../../services/permissionConfig';
                         align: 'center'
                     },
                     {
+                        title: '功能权限',
+                        key: 'routList',
+                        align: 'center',
+                        width: 240,
+                        render: (h,params) => {
+                            if(params.row.roleName === 'admin'){
+                                return h('div','具有所有权限')
+                            } else {
+                                return h('div',params.row.routList)
+                            }
+                        }
+                    },
+                    {
+                        title: '数据权限',
+                        key: 'permissionList',
+                        align: 'center',
+                        width: 500,
+                        render: (h,params) => {
+                            if(params.row.roleName === 'admin'){
+                                return h('div','具有所有权限')
+                            } else {
+                                return h('div',params.row.permissionList.map(item=>{
+                                    return h('div',{
+                                        style: {
+                                            position: 'relative',
+                                            margin: '10px 0'
+                                        }
+                                    },[h('span',{
+                                        style: {
+                                            width: '10%',
+                                            position: 'absolute',
+                                            top: '0',
+                                            left: '0'
+                                        }
+                                    },item.c1),
+                                    h('div',{
+                                        style: {
+                                            margin: '0 18% 0 4%',
+                                            width: '60%',
+                                            overflowX: 'hidden',
+                                            display: 'inline-block'
+                                        }
+                                    },item.c2.join(',')),
+                                    h('span',{
+                                        style: {
+                                            position: 'absolute',
+                                            top: '0',
+                                            right: '0',
+                                            width: '30%'
+                                        }
+                                    },item.c3.length ? item.c3.join(',') : item.c1 + '所有资源')])
+                                }))
+                               
+                            }
+                        }
+                    },
+                    {
                         title: '创建时间',
                         key: 'crtTime',
                         align: 'center',
@@ -98,66 +157,6 @@ import PermissionConfigService from '../../../services/permissionConfig';
                             let crtTime = params.row.crtTime
                             let time = crtTime == null ? '' : new Date(crtTime).format('yyyy-MM-dd hh:mm:ss')
                             return h('div',time)
-                        }
-                    },
-                    {
-                        title: '权限',
-                        key: 'permissionList',
-                        align: 'center',
-                        render: (h,params) => {
-                            if(params.row.roleName === 'admin'){
-                                return h('div','具有所有权限')
-                            } else {
-                                let lists = []
-                                params.row.permissionList.forEach(per=>{
-                                    let menu = lists.find(menu=>{
-                                        return per.menuName == menu.menuName
-                                    }) 
-                                    if(!!menu){
-                                        menu.perList.push(per.permissionName)
-                                    } else {
-                                        let temp = {}
-                                        temp.menuName = per.menuName
-                                        temp.perList = []
-                                        temp.perList.push(per.permissionName)
-                                        lists.push(temp)
-                                    }
-                                })
-                             
-                                return h('ul',{
-                                    style:{
-                                        listStyleType: 'none',
-                                        width: '100%',
-                                        height: '20px'
-                                    }
-                                },lists.map(list=>{
-                                    return h('li',{},[
-                                        h('div',{
-                                            style: {
-                                                float: 'left',
-                                                width: '30%',
-                                                overflow: 'hidden',
-                                                display: 'inline-block'
-                                            }
-                                        },list.menuName),
-                                        h('div',{
-                                            style: {
-                                                float: 'right',
-                                                width: '70%',
-                                                overflow: 'hidden'
-                                            }
-                                        },list.perList.map(per=>{
-                                            return h('span',{
-                                                style: {
-                                                    margin: '0 2px',
-                                                    float: 'left'
-                                                }
-                                            },per)
-                                        }))                                      
-                                    ])
-                                }))
-                               
-                            }
                         }
                     },
                     {
@@ -178,7 +177,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                                             this.edit(params.row.id);
                                         }
                                     }
-                                },'修改'),
+                                },'功能权限配置'),
                                 h('Button',{
                                     props: {
                                         type: "primary",
@@ -189,7 +188,7 @@ import PermissionConfigService from '../../../services/permissionConfig';
                                             this.authorize(params.row.id);
                                         }
                                     }
-                                },'权限配置')
+                                },'数据权限配置')
                             ])
                         }
                     }
@@ -204,7 +203,9 @@ import PermissionConfigService from '../../../services/permissionConfig';
                     isShow: false,
                     title: '添加权限',
                     info: {
+                        id: null,
                         roleName: null,
+                        routList: []
                     },
                     type: 'add'
                 },
@@ -218,8 +219,44 @@ import PermissionConfigService from '../../../services/permissionConfig';
                     startTime: null,
                     endTime: null
                 },
-                permissionList: [],
-                checkPerList: []
+                checkPerList: [],
+                routes: [],
+                permissionColumns: [
+                    {
+                        type: 'selection',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        title: '模块',
+                        key: 'etc',
+                        align: 'center',
+                        render: (h,param)=>{
+                            return h('span',param.row.etc.c1)
+                        }
+                    },
+                    {
+                        title: '权限',
+                        key: 'etc',
+                        align: 'center',
+                        render:  (h,param)=>{
+                            return h('span',param.row.etc.c2.join(' ')) 
+                        }
+                    },
+                    {
+                        title: '资源',
+                        key: 'etc',
+                        align: 'center',
+                        render:  (h,param)=>{
+                            if(param.row.etc.c3.length){
+                                return h('div',param.row.etc.c3.join(' '))
+                            } else {
+                                return h('div',param.row.etc.c1 + '所有资源')
+                            }
+                        }
+                    }
+                ],
+                permissionData: [],
             };
         },
         components: {
@@ -227,8 +264,20 @@ import PermissionConfigService from '../../../services/permissionConfig';
         },
         mounted() {
            this.resetPageSearch()
+           this.routes = this.parseRoute(asyncRouterMap)
         },
         methods: {
+            parseRoute(arr){
+                return arr.reduce((curArr,curVal)=>{   
+                    let obj = {}
+                    obj.title = curVal.name
+                    obj.checked = false
+                    if(curVal.children){
+                        obj.children = this.parseRoute(curVal.children)
+                    }
+                    return curVal.name ? curArr.concat(obj) : curArr
+                },[])
+            },
             search(){
                 let params = {
                     pageNum: this.page.pageNum,
@@ -252,24 +301,40 @@ import PermissionConfigService from '../../../services/permissionConfig';
                         this.modal.title = '权限配置';
                         this.modal.isShow = true;
                         this.modal.info = res[0];
-                        res[0].permissionList.forEach(item=>{
-                            this.checkPerList.push(item.id)
-                        })
                         this.modal.type = 'authorize';
-                        this.permissionList = res[1]
-                        if(this.modal.info.roleName === 'admin'){
-                            res[1].map(item=>{
-                                item.permissionList.map(per=>{
-                                    this.checkPerList.push(per.id)
-                                })
+                        this.permissionData = res[1];
+                        this.$nextTick(()=>{
+                            let list = this.$refs.permissionTable.$refs.tbody.objData
+                            console.log(list)
+                            res[0].permissionList.forEach(per=>{
+                                for(let checkItem in list){
+                                    if(per.id === list[checkItem].id){
+                                        list[checkItem]._isChecked = true
+                                    }
+                                }
                             })
-                        }
+                        })
                     }
                 )
             },
             add(){
                this.modal.isShow = true;
                this.modal.type = 'add';
+               this.modal.info.id = null
+            },
+            initSelectedRoutes(arr,nameArr){
+                arr.map(item=>{
+                    if(item.children){
+                        this.initSelectedRoutes(item.children,nameArr)
+                    } else {
+                        let findFlag = nameArr.find(name=>{
+                            return name === item.title
+                        })
+                        if(findFlag) {
+                            item.checked = true
+                        }
+                    }
+                })
             },
             edit(id){
                 PermissionConfigService.getRoleDetail(id).then(
@@ -278,13 +343,50 @@ import PermissionConfigService from '../../../services/permissionConfig';
                         this.modal.isShow = true;
                         this.modal.info = res;
                         this.modal.type = 'edit';
+                        let nameArr = res.routList.split(',')
+                        this.initSelectedRoutes(this.routes,nameArr)
                     },
                     error=>{
                         this.$Message.error('查询失败');
                     }
                 )
             },
+            getParentTitles(data, id){
+                var titles=[];
+                function loop(json){
+                for(var obj of json){
+                    if(obj.children){
+                        if(JSON.stringify(obj).match(id)) {
+                            titles.push(obj.title);
+                        }
+                        if(obj.id !== id) {
+                            loop(obj.children);
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                }
+                };
+                loop(data);
+                return titles;
+            },
             save(name){
+                if(this.modal.type !== 'authorize'){
+                    const checkedNodes = this.$refs.routeTree.getCheckedNodes();   
+                    let tmpTitles = [];  
+                    checkedNodes.map(item => {
+                        const parents = this.getParentTitles(this.routes, item.id);
+                        tmpTitles = tmpTitles.concat(parents);
+                    });
+                    
+                    checkedNodes.map(item => {
+                        tmpTitles.push(item.title);
+                    });
+                   
+                    this.modal.info.routList = Array.from(new Set(tmpTitles)).join(',') + ',';
+                }
+             
                 switch(this.modal.type){
                     case 'add':
                         PermissionConfigService.addRole(this.modal.info).then(
@@ -373,11 +475,30 @@ import PermissionConfigService from '../../../services/permissionConfig';
                 this.$refs[name].resetFields();
                 if(this.modal.type === 'authorize'){
                     this.checkPerList = []
+                } else {
+                    this.resetSelectRoutes(this.routes)
                 }
+            },
+            resetSelectRoutes(arr){
+                arr.map(item=>{
+                    item.checked = false
+                    
+                    if(item.children){
+                        item.indeterminate = false
+                        item.expand = false
+                        this.resetSelectRoutes(item.children)
+                    }
+                })
             },
             resetPageSearch(){
                 this.page.pageNum = 1;
                 this.search();
+            },
+            getSelections(selection){
+                this.checkPerList = []
+                selection.map(select=>{
+                    this.checkPerList.push(select.id)
+                })
             }
         }
     };
@@ -385,6 +506,9 @@ import PermissionConfigService from '../../../services/permissionConfig';
 
 <style scoped>
     .inputWidth{
+        width: 60%;
+    }
+    .ivu-modal {
         width: 60%;
     }
 </style>

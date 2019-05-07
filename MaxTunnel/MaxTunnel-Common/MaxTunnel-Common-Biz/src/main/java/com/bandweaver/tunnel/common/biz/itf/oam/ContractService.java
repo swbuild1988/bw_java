@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.common.biz.itf.oam;
 
 import com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ContractDto;
+import com.bandweaver.tunnel.common.biz.pojo.oam.CableContract;
 import com.bandweaver.tunnel.common.biz.vo.oam.CableContractVo;
 import com.bandweaver.tunnel.common.biz.vo.oam.ContractVo;
 import com.github.pagehelper.PageInfo;
@@ -27,4 +28,5 @@ public interface ContractService {
 
 	void update(ContractVo vo);
 
+	CableContract get(String id);
 }

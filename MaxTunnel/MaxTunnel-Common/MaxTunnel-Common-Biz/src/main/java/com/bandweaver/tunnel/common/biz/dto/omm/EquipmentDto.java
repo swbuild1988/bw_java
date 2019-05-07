@@ -1,14 +1,14 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentVender;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 /**
@@ -18,95 +18,43 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author shaosen
  * @date 2018年5月31日
  */
-public class EquipmentDto implements Serializable{
+public class EquipmentDto extends Equipment implements Serializable{
 	
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2181426117543507255L;
-	private Integer id;
-	@JsonIgnore
-	private String assetNo;
-	private String name;
 	/**设备类型*/
-	private Integer typeId;
 	private String typeName;
-	private Date crtTime;
-	private Date runTime;
-	private Integer alarmNo;
 	/**设备状态*/
-	private Integer status;
 	private String statusName;
-	@JsonIgnore
-	private String imgUrl;
     
-	/** 管廊名称 */
-	@JsonIgnore
-    private Integer tunnelId;
-	private TunnelSimpleDto tunnel;
+	/** 舱段名称 */
+	private SectionDto section;
 	/** 设备型号名称 */
-	@JsonIgnore
-	private Integer modelId;
 	private EquipmentModel model;
 	/** 供应商名称名称 */
-	@JsonIgnore
-	private Integer venderId;
 	private EquipmentVender vender;
 	
 	/** 设备对应的对象名称 */
-	private Integer objId;
 	private MeasObj obj;
 	
-	public Integer getTypeId() {
-		return typeId;
+	private TunnelSimpleDto tunnel;
+	
+	public TunnelSimpleDto getTunnel() {
+		return tunnel;
 	}
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
+	public void setTunnel(TunnelSimpleDto tunnel) {
+		this.tunnel = tunnel;
 	}
-	public Integer getStatus() {
-		return status;
+	public SectionDto getSection() {
+		return section;
 	}
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-	public Integer getTunnelId() {
-		return tunnelId;
-	}
-	public void setTunnelId(Integer tunnelId) {
-		this.tunnelId = tunnelId;
-	}
-	public Integer getModelId() {
-		return modelId;
-	}
-	public void setModelId(Integer modelId) {
-		this.modelId = modelId;
-	}
-	public Integer getVenderId() {
-		return venderId;
-	}
-	public void setVenderId(Integer venderId) {
-		this.venderId = venderId;
+	public void setSection(SectionDto section) {
+		this.section = section;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getAssetNo() {
-		return assetNo;
-	}
-	public void setAssetNo(String assetNo) {
-		this.assetNo = assetNo;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	/**
 	 * @Description: 获取设备类型名称
 	 * @param @return   
@@ -119,12 +67,6 @@ public class EquipmentDto implements Serializable{
 		return typeName;
 	}
 	
-	public Date getCrtTime() {
-		return crtTime;
-	}
-	public void setCrtTime(Date crtTime) {
-		this.crtTime = crtTime;
-	}
 	/**
 	 * @Description: 获取设备状态
 	 * @param @return   
@@ -134,23 +76,11 @@ public class EquipmentDto implements Serializable{
 	 * @date 2018年5月31日
 	 */
 	public String getStatusName() {
-		EquipmentStatusEnum en = EquipmentStatusEnum.getEnum(status);
-		return en == null ? String.valueOf(status) : en.getName();
+		EquipmentStatusEnum en = EquipmentStatusEnum.getEnum(super.getStatus());
+		return en == null ? String.valueOf(super.getStatus()) : en.getName();
 	}
 	
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
-	public TunnelSimpleDto getTunnel() {
-		return tunnel;
-	}
-	public void setTunnel(TunnelSimpleDto tunnel) {
-		this.tunnel = tunnel;
-	}
 	public EquipmentModel getModel() {
 		return model;
 	}
@@ -163,29 +93,11 @@ public class EquipmentDto implements Serializable{
 	public void setVender(EquipmentVender vender) {
 		this.vender = vender;
 	}
-	public Integer getObjId() {
-		return objId;
-	}
-	public void setObjId(Integer objId) {
-		this.objId = objId;
-	}
 	public MeasObj getObj() {
 		return obj;
 	}
 	public void setObj(MeasObj obj) {
 		this.obj = obj;
-	}
-	public Date getRunTime() {
-		return runTime;
-	}
-	public void setRunTime(Date runTime) {
-		this.runTime = runTime;
-	}
-	public Integer getAlarmNo() {
-		return alarmNo;
-	}
-	public void setAlarmNo(Integer alarmNo) {
-		this.alarmNo = alarmNo;
 	}
 	
 }

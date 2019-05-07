@@ -36,11 +36,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-<<<<<<< HEAD
-	@Transactional
-=======
 	@Transactional(rollbackFor = Exception.class)
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 	public void addRolePermissions(Integer roleId, List<Integer> permissionIds) {
 		//删除旧权限
 		rolePermissionMapper.deleteByRoleId(roleId);
@@ -61,11 +57,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-<<<<<<< HEAD
-	@Transactional
-=======
 	@Transactional(rollbackFor = Exception.class)
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 	public void addUserRole(Integer userId, List<Integer> roleIds) {
 		//删除旧角色
 		userRoleMapper.deleteByUserId(userId);
@@ -81,11 +73,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-<<<<<<< HEAD
-	@Transactional
-=======
 	@Transactional(rollbackFor = Exception.class)
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 	public void deleteRoleBatch(List<Integer> list) {
 		roleMapper.deleteRoleBatch(list);
 		rolePermissionMapper.deleteByRIds(list);
@@ -116,12 +104,9 @@ public class RoleServiceImpl implements RoleService {
 		return list == null ? Collections.emptyList() : list;
 	}
 
-<<<<<<< HEAD
-=======
 	@Override
 	public List<Role> getRoleByUseName(String username) {
 		return roleMapper.getRoleByUseName(username);
 	}
 
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

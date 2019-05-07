@@ -1,9 +1,12 @@
 package com.bandweaver.tunnel.service.common;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
+import com.bandweaver.tunnel.common.biz.constant.ShiroResourceType;
+import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,9 +55,9 @@ public class UserServiceImpl implements UserService {
 		JSONObject permissions = userMapper.getPermissions(name);
 		String roleName = permissions.getString("roleName");
 		if("admin".equals(roleName)) {
-			//get allMenu
+			// get allMenu
 			Set<String> menuList = permissionMapper.getAllMenu();
-			//getAllPermissions
+			// getAllPermissions
 			Set<String> permissionList =permissionMapper.getAllPermission();
 			permissions.put("menuList", menuList);
 			permissions.put("permissionList", permissionList);
@@ -62,6 +65,26 @@ public class UserServiceImpl implements UserService {
 		permissions.put("name", name);
 		
 		return permissions;
+	}
+
+	@Override
+	public Set<String> getUserPermissions(String name) {
+
+		Set<String> userPermissions = new HashSet<>();
+		// 首先查询该用户是否具有admin角色，如果有的话，则具有所有权限
+		List<Role> roleList = roleService.getRoleByUseName(name);
+		if (roleList != null && roleList.size() > 0) {
+			List<String> collect = roleList.stream().map(Role::getRoleName).collect(Collectors.toList());
+			if (collect.contains("admin")) {
+				for (ShiroResourceType shiroResourceType : ShiroResourceType.values()) {
+					userPermissions.add(shiroResourceType.getValue() + ":*:*");
+				}
+			} else {
+				// 查询数据库
+				userPermissions = userMapper.getUserPermissions(name);
+			}
+		}
+		return userPermissions;
 	}
 
 	@Override
@@ -87,8 +110,5 @@ public class UserServiceImpl implements UserService {
 		return returnData;
 	}
 
-<<<<<<< HEAD
-=======
 
->>>>>>> bf512039ff8442b3d1853c03de35f9d29734072e
 }

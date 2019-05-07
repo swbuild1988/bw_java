@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +70,7 @@ public class StaffController {
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("staff:add")
 	@WriteLog(DescEnum.ADD_USER)
 	@RequestMapping(value="staffs",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Staff staff) {
@@ -87,6 +89,7 @@ public class StaffController {
 	 * @author ya.liu
 	 * @Date 2019年3月1日
 	 */
+	@RequiresPermissions("staff:add")
 	@RequestMapping(value="staffs/add-batch",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody List<Staff> list) {
 		for(Staff staff : list) {
@@ -115,6 +118,7 @@ public class StaffController {
 	/**
 	 *批量删除
 	 */
+	@RequiresPermissions("staff:delete")
 	@RequestMapping(value="staffs/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
 		List<Integer> list = CommonUtil.convertStringToList(ids);
@@ -129,6 +133,7 @@ public class StaffController {
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("staff:update")
 	@RequestMapping(value="staffs",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody Staff staff) {
 		staffService.update(staff);
@@ -143,6 +148,7 @@ public class StaffController {
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("staff:list")
 	@RequestMapping(value="staffs",method=RequestMethod.GET)
 	public JSONObject getList() {
 		List<StaffDto> list = staffService.getDtoList();
@@ -200,6 +206,7 @@ public class StaffController {
 	 * @author shaosen
 	 * @Date 2018年9月28日
 	 */
+	@RequiresPermissions("staff:list")
 	@RequestMapping(value="staffs/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody JSONObject reqJson) {
 		CommonUtil.hasAllRequired(reqJson, "pageNum,pageSize");
@@ -219,6 +226,7 @@ public class StaffController {
 	 * @author shaosen
 	 * @Date 2018年12月1日
 	 */
+	@RequiresPermissions("staff:reset")
 	@WriteLog(DescEnum.RESET_PW)
 	@RequestMapping(value="users/init-pw/{id}",method=RequestMethod.GET)
 	public JSONObject resetPw(@PathVariable Integer id) {

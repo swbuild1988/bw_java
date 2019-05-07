@@ -52,14 +52,18 @@ public enum DataType {
 
     public static DataType getEnum(String name){
         for (DataType dl: DataType.values()) {
-            if (dl.getName().equals(name)) return dl;
+            if (dl.getName().equals(name)) {
+                return dl;
+            }
         }
         return null;
     }
 
     public static DataType getEnum(int value){
         for (DataType dl: DataType.values()) {
-            if (dl.getValue() == value) return dl;
+            if (dl.getValue() == value) {
+                return dl;
+            }
         }
         return null;
     }

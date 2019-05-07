@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.mam.SubstationMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.substation.SubstationDto">
+    <id column="ID" property="id" />
+    <result column="TUNNEL_ID" property="tunnelId" />
+    <result column="INV_ID" property="invId" />
+    <result column="INA_ID" property="inaId" />
+    <result column="OUTV_ID" property="outvId" />
+    <result column="OUTA_ID" property="outaId" />
+    <result column="POWER_ID" property="powerId" />
+    <result column="ELE_RADIUS" property="eleRadius" />
+    <result column="POWER_FACTOR" property="powerFactor" />
+    <result column="COMPENSATION_FACTOR" property="compensationFactor" />
+    <result column="POSITION" property="position" />
+    <result column="TIME" property="time" />
+    <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+    	column="TUNNEL_ID" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+  </resultMap>
+  
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select *
+    from T_MAM_SUBSTATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from T_MAM_SUBSTATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation">
+  		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT MAM_SUBSTATION_SQ.currval from DUAL
+        </selectKey>
+    insert into T_MAM_SUBSTATION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tunnelId != null">
+        TUNNEL_ID,
+      </if>
+      <if test="invId != null">
+        INV_ID,
+      </if>
+      <if test="inaId != null">
+        INA_ID,
+      </if>
+      <if test="outvId != null">
+        OUTV_ID,
+      </if>
+      <if test="outaId != null">
+        OUTA_ID,
+      </if>
+      <if test="powerId != null">
+        POWER_ID,
+      </if>
+      <if test="eleRadius != null">
+        ELE_RADIUS,
+      </if>
+      <if test="powerFactor != null">
+        POWER_FACTOR,
+      </if>
+      <if test="compensationFactor != null">
+        COMPENSATION_FACTOR,
+      </if>
+      <if test="position != null">
+        POSITION,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tunnelId != null">
+        #{tunnelId},
+      </if>
+      <if test="invId != null">
+        #{invId},
+      </if>
+      <if test="inaId != null">
+        #{inaId},
+      </if>
+      <if test="outvId != null">
+        #{outvId},
+      </if>
+      <if test="outaId != null">
+        #{outaId},
+      </if>
+      <if test="powerId != null">
+        #{powerId},
+      </if>
+      <if test="eleRadius != null">
+        #{eleRadius},
+      </if>
+      <if test="powerFactor != null">
+        #{powerFactor},
+      </if>
+      <if test="compensationFactor != null">
+        #{compensationFactor},
+      </if>
+      <if test="position != null">
+        #{position},
+      </if>
+      <if test="time != null">
+        #{time},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation">
+    update T_MAM_SUBSTATION
+    <set>
+      <if test="tunnelId != null">
+        TUNNEL_ID = #{tunnelId},
+      </if>
+      <if test="invId != null">
+        INV_ID = #{invId},
+      </if>
+      <if test="inaId != null">
+        INA_ID = #{inaId},
+      </if>
+      <if test="outvId != null">
+        OUTV_ID = #{outvId},
+      </if>
+      <if test="outaId != null">
+        OUTA_ID = #{outaId},
+      </if>
+      <if test="powerId != null">
+        POWER_ID = #{powerId},
+      </if>
+      <if test="eleRadius != null">
+        ELE_RADIUS = #{eleRadius},
+      </if>
+      <if test="powerFactor != null">
+        POWER_FACTOR = #{powerFactor},
+      </if>
+      <if test="compensationFactor != null">
+        COMPENSATION_FACTOR = #{compensationFactor},
+      </if>
+      <if test="position != null">
+        POSITION = #{position},
+      </if>
+      <if test="time != null">
+        TIME = #{time},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getListByCondition" resultMap="BaseResultMap">
+  	select * from T_MAM_SUBSTATION
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="tunnelId != null">
+  			and tunnel_id = #{tunnelId}
+  		</if>
+  		<if test="invId != null">
+  			and inv_id = #{invId}
+  		</if>
+  		<if test="inaId != null">
+  			and ina_id = #{inaId}
+  		</if>
+  		<if test="outvId != null">
+  			and outv_id = #{outvId}
+  		</if>
+  		<if test="outaId != null">
+  			and outa_id = #{outaId}
+  		</if>
+  		<if test="powerId != null">
+  			and power_id = #{powerId}
+  		</if>
+  		<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+  	</where>
+  </select>
+  
+  <select id="getDtoById" resultMap="BaseResultMap">
+  	select * from T_MAM_SUBSTATION
+  	where id = #{id}
+  </select>
+  
+</mapper> 

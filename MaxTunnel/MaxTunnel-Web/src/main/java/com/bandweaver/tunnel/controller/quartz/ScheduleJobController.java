@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.quartz;
 import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.constant.JobType;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,7 @@ public class ScheduleJobController {
 	 * @author shaosen
 	 * @Date 2018年9月7日
 	 */
+	@RequiresPermissions("schedulejob:list")
 	@RequestMapping(value="schedulejobs/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody ScheduleJobVo vo) {
 		PageInfo<ScheduleJobDto> pageInfo = scheduleJobService.dataGrid(vo);
@@ -62,6 +64,7 @@ public class ScheduleJobController {
 	 * @author shaosen
 	 * @Date 2018年9月6日
 	 */
+	@RequiresPermissions("schedulejob:add")
 	@RequestMapping(value = "schedulejobs", method = RequestMethod.POST)
 	public JSONObject add(@RequestBody JSONObject reqJson) throws SchedulerException, ClassNotFoundException {
 
@@ -107,6 +110,7 @@ public class ScheduleJobController {
 	 * @author shaosen
 	 * @Date 2018年9月7日
 	 */
+	@RequiresPermissions("schedulejob:update")
 	@RequestMapping(value="schedulejobs",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody JSONObject reqJson) throws SchedulerException {
 
@@ -130,6 +134,7 @@ public class ScheduleJobController {
 	 * @throws ClassNotFoundException 
 	 * @Date 2018年9月7日
 	 */
+	@RequiresPermissions("schedulejob:update")
 	@RequestMapping(value="schedulejobs/{id}/jobstatus/{jobstatus}",method=RequestMethod.GET)
 	public JSONObject updateJobStatus(@PathVariable("id")Integer id,@PathVariable("jobstatus")Integer jobstatus) throws SchedulerException, ClassNotFoundException {
 		LogUtil.info("禁用/启用Job ");
@@ -158,6 +163,7 @@ public class ScheduleJobController {
 	 * @throws SchedulerException 
 	 * @Date 2018年9月21日
 	 */
+	@RequiresPermissions("schedulejob:delete")
 	@RequestMapping(value="schedulejobs/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id) throws SchedulerException {
 		scheduleJobService.delete(id);
@@ -167,6 +173,7 @@ public class ScheduleJobController {
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("schedulejob:delete")
 	@RequestMapping(value="schedulejobs/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) throws SchedulerException {
 		List<Integer> list = CommonUtil.convertStringToList(ids);

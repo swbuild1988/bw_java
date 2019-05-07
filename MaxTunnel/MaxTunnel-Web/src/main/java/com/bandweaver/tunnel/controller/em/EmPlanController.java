@@ -1,7 +1,9 @@
 package com.bandweaver.tunnel.controller.em;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
@@ -18,13 +20,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
+import com.bandweaver.tunnel.common.biz.dto.em.EmPlanGroupDto;
+import com.bandweaver.tunnel.common.biz.dto.em.EmPlanMemberDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
+import com.bandweaver.tunnel.common.biz.itf.em.EmPlanGroupService;
+import com.bandweaver.tunnel.common.biz.itf.em.EmPlanMemberService;
 import com.bandweaver.tunnel.common.biz.itf.em.EmPlanService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
 import com.bandweaver.tunnel.common.biz.pojo.PageBean;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
+import com.bandweaver.tunnel.common.biz.pojo.em.EmPlanGroup;
+import com.bandweaver.tunnel.common.biz.pojo.em.EmPlanMember;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
+import com.bandweaver.tunnel.common.biz.vo.em.EmPlanGroupVo;
+import com.bandweaver.tunnel.common.biz.vo.em.EmPlanMemberVo;
 import com.bandweaver.tunnel.common.biz.vo.em.EmPlanVo;
 import com.bandweaver.tunnel.common.biz.vo.em.PlanPageVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
@@ -53,6 +64,11 @@ public class EmPlanController extends BaseController<EmPlan> {
     private EmPlanService emPlanService;
     @Autowired
     private SectionService sectionService;
+    
+    @Autowired
+    private EmPlanGroupService emPlanGroupService;
+    @Autowired
+    private EmPlanMemberService emPlanMemberService;
 
 
     /**
@@ -237,7 +253,6 @@ public class EmPlanController extends BaseController<EmPlan> {
      * @param pageSize   必须
      * @param
      * @param
-     * @return {"msg":"请求成功","code":"200","data":{"total":8,"list":[{"id":2,"processKey":"FirePlanProcess","taskKey":"usertask2","taskName":"调用摄像头","targetKey":1,"targetName":"指定对象","targetValue":1,"actionKey":1,"actionName":"提示信息类","actionValue":1,"finishKey":2,"finishName":"半自动","finishValue":1,"isFinished":false,"crtTime":1539100800000},{"id":6,"processKey":"FirePlanProcess","taskKey":"usertask6","taskName":"打开百叶","targetKey":1,"targetName":"指定对象","targetValue":1,"actionKey":1,"actionName":"提示信息类","actionValue":1,"finishKey":1,"finishName":"自动","finishValue":1,"isFinished":false,"crtTime":1539100800000},{"id":5,"processKey":"FirePlanProcess","taskKey":"usertask5","taskName":"打开风阀","targetKey":1,"targetName":"指定对象","targetValue":1,"actionKey":1,"actionName":"提示信息类","actionValue":1,"finishKey":1,"finishName":"自动","finishValue":1,"isFinished":false,"crtTime":1539100800000},{"id":4,"processKey":"FirePlanProcess","taskKey":"usertask4","taskName":"打开风机","targetKey":1,"targetName":"指定对象","targetValue":1,"actionKey":1,"actionName":"提示信息类","actionValue":1,"finishKey":1,"finishName":"自动","finishValue":1,"isFinished":false,"crtTime":1539100800000},{"id":3,"processKey":"FirePlanProcess","taskKey":"usertask3","taskName":"值班人员确认","targetKey":1,"targetName":"指定对象","targetValue":1,"actionKey":1,"actionName":"提示信息类","actionValue":1,"finishKey":3,"finishName":"手动","finishValue":1,"isFinished":false,"crtTime":1539100800000}],"pageNum":1,"pageSize":5,"size":5,"startRow":1,"endRow":5,"pages":2,"prePage":0,"nextPage":2,"isFirstPage":true,"isLastPage":false,"hasPreviousPage":false,"hasNextPage":true,"navigatePages":8,"navigatepageNums":[1,2],"navigateFirstPage":1,"navigateLastPage":2,"firstPage":1,"lastPage":2}}
      * @author shaosen
      * @Date 2018年10月17日
      */
@@ -258,7 +273,7 @@ public class EmPlanController extends BaseController<EmPlan> {
      * @param pageNum           必须
      * @param pageSize          必须
      * @param
-     * @return {"msg":"请求成功","code":"200","data":{"pageNum":1,"pageSize":3,"totalPage":1,"totalCount":1,"list":[{"id":"5","processInstanceId":"5","processDefinitionId":"FirePlanProcess:1:4","processDefinitionKey":null,"processDefinitionName":null,"processDefinitionVersion":null,"deploymentId":null,"startTime":1533870537321,"endTime":null,"durationInMillis":null,"deleteReason":null,"endActivityId":null,"businessKey":null,"startUserId":null,"startActivityId":"startevent1","superProcessInstanceId":null,"tenantId":"","name":null,"localizedName":null,"description":null,"localizedDescription":null,"queryVariables":null,"processVariables":{},"persistentState":{"processDefinitionId":"FirePlanProcess:1:4","durationInMillis":null,"endStateName":null,"deploymentId":null,"businessKey":null,"name":null,"processDefinitionName":null,"endTime":null,"deleteReason":null,"processDefinitionVersion":null,"superProcessInstanceId":null,"processDefinitionKey":null}}]}}
+     * @return
      * @author shaosen
      * @Date 2018年8月10日
      */
@@ -281,7 +296,7 @@ public class EmPlanController extends BaseController<EmPlan> {
      * 获取流程详情
      *
      * @param iid 流程实例id
-     * @return {"msg":"请求成功","code":"200","data":[{"id":"6","processInstanceId":"5","processDefinitionId":"FirePlanProcess:1:4","processDefinitionKey":null,"processDefinitionName":null,"processDefinitionVersion":null,"deploymentId":null,"startTime":1533870537321,"endTime":1533870537398,"durationInMillis":77,"deleteReason":null,"activityId":"startevent1","activityName":"Start","activityType":"startEvent","executionId":"5","assignee":null,"taskId":null,"calledProcessInstanceId":null,"tenantId":"","time":1533870537321,"persistentState":{"executionId":"5","durationInMillis":77,"endTime":1533870537398,"assignee":null,"deleteReason":null}},{"id":"7","processInstanceId":"5","processDefinitionId":"FirePlanProcess:1:4","processDefinitionKey":null,"processDefinitionName":null,"processDefinitionVersion":null,"deploymentId":null,"startTime":1533870537398,"endTime":1533870543081,"durationInMillis":5683,"deleteReason":null,"activityId":"usertask1","activityName":"开启声光报警","activityType":"userTask","executionId":"5","assignee":null,"taskId":"8","calledProcessInstanceId":null,"tenantId":"","time":1533870537398,"persistentState":{"executionId":"5","durationInMillis":5683,"endTime":1533870543081,"assignee":null,"deleteReason":null}},{"id":"10","processInstanceId":"5","processDefinitionId":"FirePlanProcess:1:4","processDefinitionKey":null,"processDefinitionName":null,"processDefinitionVersion":null,"deploymentId":null,"startTime":1533870543081,"endTime":1533870548274,"durationInMillis":5193,"deleteReason":null,"activityId":"usertask2","activityName":"调用摄像头","activityType":"userTask","executionId":"5","assignee":null,"taskId":"11","calledProcessInstanceId":null,"tenantId":"","time":1533870543081,"persistentState":{"executionId":"5","durationInMillis":5193,"endTime":1533870548274,"assignee":null,"deleteReason":null}},{"id":"12","processInstanceId":"5","processDefinitionId":"FirePlanProcess:1:4","processDefinitionKey":null,"processDefinitionName":null,"processDefinitionVersion":null,"deploymentId":null,"startTime":1533870548274,"endTime":null,"durationInMillis":null,"deleteReason":null,"activityId":"usertask3","activityName":"值班人员确认","activityType":"userTask","executionId":"5","assignee":null,"taskId":"13","calledProcessInstanceId":null,"tenantId":"","time":1533870548274,"persistentState":{"executionId":"5","durationInMillis":null,"endTime":null,"assignee":null,"deleteReason":null}}]}
+     * @return
      * @author shaosen
      * @Date 2018年8月10日
      */
@@ -293,4 +308,290 @@ public class EmPlanController extends BaseController<EmPlan> {
     }
 
 
+    
+    
+    //--------------------------------预案-组--------------------------------
+    
+    
+    /**
+     * 添加预案-组
+     * @param planId
+     * @param name
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups", method = RequestMethod.POST)
+    public JSONObject add(@RequestBody EmPlanGroup e) {
+    	emPlanGroupService.insertSelective(e);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改
+     * @param id
+     * @param planId
+     * @param name
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups", method = RequestMethod.PUT)
+    public JSONObject update(@RequestBody EmPlanGroup e) {
+    	emPlanGroupService.updateByPrimaryKeySelective(e);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 通过id获取详情
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups/{id}", method = RequestMethod.GET)
+    public JSONObject getDtoById(@PathVariable("id") Integer id) {
+    	EmPlanGroupDto dto = emPlanGroupService.getById(id);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 条件查询，不分页
+     * @param id
+     * @param planId
+     * @param name 支持模糊查询
+     * @param staffId
+     * @param startTime
+     * @param endTime
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups/condition", method = RequestMethod.POST)
+    public JSONObject getDtoList(@RequestBody(required = false) EmPlanGroupVo vo) {
+    	List<EmPlanGroupDto> list = emPlanGroupService.getByCondition(vo);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 分页查询
+     * @param id
+     * @param planId
+     * @param name 支持模糊查询
+     * @param staffId
+     * @param startTime
+     * @param endTime
+     * @param pageSize 必传
+     * @param pageNum  必传
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups/datagrid", method = RequestMethod.POST)
+    public JSONObject dataGrid(@RequestBody EmPlanGroupVo vo) {
+    	PageInfo<EmPlanGroupDto> list = emPlanGroupService.dataGrid(vo);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 删除
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-groups/{id}", method = RequestMethod.DELETE)
+    public JSONObject deleteById(@PathVariable("id") Integer id) {
+    	emPlanGroupService.deleteByPrimaryKey(id);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    
+    
+//--------------------------------预案-成员--------------------------------
+    
+    
+    /**
+     * 添加预案-成员
+     * @param id
+     * @param groupId
+     * @param staffId
+     * @param tel
+     * @param tel2
+     * @param role 成员所在角色：1为组长；其他为组员
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/{role}", method = RequestMethod.POST)
+    public JSONObject addMember(@PathVariable("role") Integer role, @RequestBody EmPlanMember e) {
+    	emPlanMemberService.insertSelective(e, role);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改
+     * @param id
+     * @param groupId
+     * @param staffId
+     * @param tel
+     * @param tel2
+     * @param role 成员所在角色：1为组长；其他为组员
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/{role}", method = RequestMethod.PUT)
+    public JSONObject update(@PathVariable("role") Integer role, @RequestBody EmPlanMember e) {
+    	emPlanMemberService.updateByPrimaryKeySelective(e, role);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 通过id获取详情
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/{id}", method = RequestMethod.GET)
+    public JSONObject getDtosById(@PathVariable("id") Integer id) {
+    	EmPlanMemberDto dto = emPlanMemberService.getById(id);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 条件查询，不分页
+     * @param id
+     * @param groupId
+     * @param tel 支持模糊查询
+     * @param tel2 支持模糊查询
+     * @param staffId
+     * @param role 成员角色：1为组长，2为组员
+     * @param planId 预案id
+     * @param startTime
+     * @param endTime
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/condition", method = RequestMethod.POST)
+    public JSONObject getDtosList(@RequestBody(required = false) EmPlanMemberVo vo) {
+    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+    	if(vo.getPlanId() != null)
+    		list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
+        if(vo.getRole() != null) {
+        	if(vo.getRole() == 1)
+        		list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        	else
+        		list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        }
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 分页查询
+     * @param id
+     * @param groupId
+     * @param tel 支持模糊查询
+     * @param tel2 支持模糊查询
+     * @param staffId
+     * @param role 成员角色：1为组长，2为组员
+     * @param planId 预案id
+     * @param startTime
+     * @param endTime
+     * @param pageSize 必传
+     * @param pageNum  必传
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/datagrid", method = RequestMethod.POST)
+    public JSONObject memberDataGrid(@RequestBody EmPlanMemberVo vo) {
+    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+    	if(vo.getPlanId() != null)
+    		list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
+        if(vo.getRole() != null) {
+        	if(vo.getRole() == 1)
+        		list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        	else
+        		list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        }
+        ListPageUtil<EmPlanMemberDto> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
+    }
+    
+    /**
+     * 删除
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/{id}", method = RequestMethod.DELETE)
+    public JSONObject deletesById(@PathVariable("id") Integer id) {
+    	emPlanMemberService.deleteByPrimaryKey(id);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 判断某人是否已经加入到某组中
+     * @param groupId
+     * @param staffId
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月24日
+     */
+    @RequestMapping(value = "plan-members/checked", method = RequestMethod.POST)
+    public JSONObject checked(@RequestBody EmPlanMemberVo vo) {
+    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+    	Boolean flag = true;
+    	if(list != null && list.size() > 0) flag = false;
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, flag);
+    }
+    
+    /**
+     * 树形结构查看预案详情
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月25日
+     */
+    @RequestMapping(value = "plan-members/tree", method = RequestMethod.GET)
+    public JSONObject tree() {
+    	List<JSONObject> list = new ArrayList<>();
+    	for(ProcessTypeEnum e : ProcessTypeEnum.getEmPlanList()) {
+    		JSONObject obj = new JSONObject();
+    		obj.put("name", e.getName());
+    		List<JSONObject> children1 = new ArrayList<>();
+    		EmPlanGroupVo vo1 = new EmPlanGroupVo();
+    		vo1.setPlanId(e.getValue());
+    		List<EmPlanGroupDto> groupList = emPlanGroupService.getByCondition(vo1);
+    		for(EmPlanGroupDto dto : groupList) {
+    			EmPlanMemberVo vo2 = new EmPlanMemberVo();
+    			vo2.setGroupId(dto.getId());
+    			List<EmPlanMemberDto> memberList = emPlanMemberService.getByCondition(vo2);
+    			String leader = "-无组长";
+    			JSONObject objGroup = new JSONObject();
+    			List<JSONObject> children2 = new ArrayList<>();
+    			for(EmPlanMemberDto dto2 : memberList) {
+    				String tel = dto2.getTel() == null ? (dto2.getTel2() == null ? "无手机号" : dto2.getTel2()) : dto2.getTel();
+    				if(dto2.getStaffId().equals(dto.getStaffId())) {
+    					leader = "-" + dto.getStaff().getName() + "-" + tel;
+    				} else {
+    					JSONObject objMember = new JSONObject();
+    					objMember.put("name", "组员-" + dto2.getStaff().getName() + "-" + tel);
+    					objMember.put("value", dto2.getId());
+    					children2.add(objMember);
+    				}
+    			}
+    			
+    			objGroup.put("name", dto.getName() + leader);
+    			objGroup.put("children", children2);
+    			children1.add(objGroup);
+    		}
+    		obj.put("children", children1);
+    		list.add(obj);
+    	}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
 }

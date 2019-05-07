@@ -1,40 +1,40 @@
 
--- ï¿½ï¿½ï¿½Ô±ï¿½T_TEST
+-- ²âÊÔ±íT_TEST
 
--- ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+-- Ìí¼Ó×Ö¶Î
 -- alter table T_TEST add age number(3) default 18;
 
--- sectionï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½lengthï¿½Ö¶ï¿½
+-- section±íÌí¼Ó³¤¶Èlength×Ö¶Î
 alter table T_COMMON_SECTION add length number default 300;
 
--- storeï¿½ï¿½ï¿½ï¿½Ó¿ï¿½widthï¿½Í¸ï¿½heightï¿½Ö¶ï¿½
+-- store±íÌí¼Ó¿íwidthºÍ¸ßheight×Ö¶Î
 alter table T_COMMON_STORE add width NUMBER default 2;
 alter table T_COMMON_STORE add height NUMBER default 4;
 
--- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+-- staff±íÌí¼Ó×Ö¶Î
 alter table T_COMMON_STAFF add account VARCHAR2(50);
 alter table T_COMMON_STAFF add sex VARCHAR2(2);
 alter table T_COMMON_STAFF add telphone VARCHAR2(20);
 alter table T_COMMON_STAFF add hire_date DATE;
 
 
--- videoï¿½ï¿½ï¿½ï¿½ï¿½vendor,ip,port,username,passwordï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
+-- video±íÌí¼Óvendor,ip,port,username,passwordÎå¸ö×Ö¶Î
 alter table T_MAM_VIDEO add vendor NUMBER;
 alter table T_MAM_VIDEO add ip VARCHAR2(20);
 alter table T_MAM_VIDEO add port NUMBER;
 alter table T_MAM_VIDEO add username VARCHAR2(50);
 alter table T_MAM_VIDEO add password VARCHAR2(50);
 
--- staffï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
---ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
+-- staff±íÌí¼Ó×Ö¶Î
+--Ìí¼ÓÁÐ Éí·ÝÖ¤ºÅ
 alter table T_COMMON_STAFF add identityNO VARCHAR2(50);
---ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Ê¶
+--Ìí¼ÓÁÐ ÍâÀ´ÈËÔ±±êÊ¶
 alter table T_COMMON_STAFF add outside number(1) default 1;
 
--- ï¿½Þ¸ï¿½ï¿½Ö¶ï¿½
+-- ÐÞ¸Ä×Ö¶Î
 -- alter table T_TEST rename column age to ages;
 
--- É¾ï¿½ï¿½ï¿½Ö¶ï¿½
+-- É¾³ý×Ö¶Î
 -- alter table T_TEST drop column ages;
 
 --------------- V110B02 ----------------------------
@@ -60,4 +60,45 @@ alter table t_mam_measobj add plan_ids varchar2(100);
 
 alter table T_COMMON_SCHEDULE_JOB add job_type number;
 
-----------------------------------------------------
+------------------V110B03----------------------------
+
+alter table T_OMM_EQUIPMENT add section_id NUMBER;
+alter table T_OMM_EQUIPMENT add qa_term VARCHAR2(20);
+alter table T_OMM_EQUIPMENT add rated_voltage VARCHAR2(20);
+alter table T_OMM_EQUIPMENT add range VARCHAR2(20);
+alter table T_OMM_EQUIPMENT add factory VARCHAR2(20);
+alter table T_OMM_EQUIPMENT add brand VARCHAR2(20);
+
+alter table T_OMM_SPARE add qa_term VARCHAR2(20);
+alter table T_OMM_SPARE add rated_voltage VARCHAR2(20);
+alter table T_OMM_SPARE add range VARCHAR2(20);
+alter table T_OMM_SPARE add factory VARCHAR2(20);
+alter table T_OMM_SPARE add brand VARCHAR2(20);
+
+alter table T_COMMON_COMPANY add credit_no VARCHAR2(20);
+alter table T_COMMON_COMPANY add bank NUMBER;
+alter table T_COMMON_COMPANY add account VARCHAR2(20);
+alter table T_COMMON_COMPANY add address VARCHAR2(100);
+alter table T_COMMON_COMPANY add phone VARCHAR2(20);
+alter table T_COMMON_COMPANY add mail VARCHAR2(30);
+
+alter table T_COMMON_COMPANY add inspection_no VARCHAR2(20);
+alter table T_COMMON_COMPANY add inspection_time VARCHAR2(20);
+alter table T_COMMON_COMPANY add inspection_info VARCHAR2(100);
+alter table T_COMMON_COMPANY add img_url VARCHAR2(200);
+
+alter table T_OAM_CUSTOMER rename column contact2 to duty;
+alter table T_OAM_CUSTOMER rename column contact3 to mail;
+alter table T_OAM_CUSTOMER rename column tel3 to type;
+
+
+------------------------V110----------------------------
+alter table T_OAM_CABLE_CONTRACT rename column customer_id to company_id;
+
+alter table T_SECURITY_ROLE add rout_list varchar2(2000);
+alter table T_SECURITY_PERMISSION modify menu_code null;
+alter table T_SECURITY_PERMISSION modify menu_name null;
+alter table T_SECURITY_PERMISSION modify permission_name null;
+
+alter table T_OAM_CABLE_CONTRACT add operate_username varchar2(50);
+alter table T_OAM_CABLE_CONTRACT add path varchar2(200);

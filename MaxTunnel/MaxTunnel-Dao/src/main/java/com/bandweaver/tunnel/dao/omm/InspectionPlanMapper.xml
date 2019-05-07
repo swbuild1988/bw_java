@@ -59,6 +59,11 @@
         where id = #{id}
     </update>
 
+	<delete id="delete">
+		delete from t_omm_inspection_plan
+		where plan_id = #{planId}
+	</delete>
+
     <select id="getInspectionPlans" resultMap="inspectionPlanSimpleDtoMap">
         SELECT
             a.*,

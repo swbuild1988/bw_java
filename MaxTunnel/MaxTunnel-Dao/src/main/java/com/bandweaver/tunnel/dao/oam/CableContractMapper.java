@@ -11,8 +11,6 @@ public interface CableContractMapper {
 
     int insert(CableContract record);
 
-    int insertSelective(CableContract record);
-
     CableContract selectByPrimaryKey(String id);
     
     CableContractDto getDtoById(String id);
@@ -22,4 +20,6 @@ public interface CableContractMapper {
     int updateByPrimaryKey(CableContract record);
 
 	List<CableContractDto> getByCondition(CableContractVo vo);
+
+    CableContract get(String id);
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -65,6 +66,7 @@ public class StoreController {
 	 * @author shaosen
 	 * @date 2018年7月25日
 	 */
+	@RequiresPermissions("store:add")
 	@RequestMapping(value="stores",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Store st) {
 //		StoreVo v = new StoreVo();
@@ -103,6 +105,7 @@ public class StoreController {
 	 * @author shaosen
 	 * @date 2018年7月25日
 	 */
+	@RequiresPermissions("store:add")
 	@RequestMapping(value="stores/multi",method=RequestMethod.POST)
 	public JSONObject addMulti(@RequestBody List<Store> stores) {
 		int i = 0;
@@ -157,6 +160,7 @@ public class StoreController {
 	 * @author shaosen
 	 * @Date 2018年9月19日
 	 */
+	@RequiresPermissions("store:update")
 	@RequestMapping(value="stores",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody Store store) {
 		storeService.update(store);
@@ -167,6 +171,7 @@ public class StoreController {
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("store:delete")
 	@RequestMapping(value="stores/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
 		List<Integer> id_list = new ArrayList<>();
@@ -185,6 +190,7 @@ public class StoreController {
 	 * @author shaosen
 	 * @date 2018年6月21日
 	 */
+	@RequiresPermissions("store:list")
 	@RequestMapping(value="tunnels/{id}/stores",method=RequestMethod.GET)
 	public JSONObject getStoresByTunnelId(@PathVariable Integer id) {
 		List<StoreDto> list = storeService.getStoresByTunnelId(id);
@@ -200,7 +206,6 @@ public class StoreController {
 	 * @author shaosen
 	 * @date 2018年6月21日
 	 */
-//	@RequestMapping(value="stores/{id}",method=RequestMethod.GET)
 	@RequestMapping(value="tunnels/stores/{id}",method=RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
 		StoreDto dto = storeService.getStoreById(id);
@@ -221,7 +226,7 @@ public class StoreController {
 	 * @author shaosen
 	 * @Date 2018年7月26日
 	 */
-//	@RequestMapping(value="stores/datagrid",method=RequestMethod.POST)
+	@RequiresPermissions("store:list")
 	@RequestMapping(value="tunnels/stores/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody StoreVo vo) {
 		PageInfo<StoreDto> pageInfo = storeService.dataGrid(vo);

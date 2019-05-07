@@ -142,4 +142,6 @@ public interface MeasObjService {
 	 * @return
 	 */
 	List<JSONObject> getMeasObjMaxOrMinValue(Integer tunnelId, Integer storeId, Integer areaId);
+	
+	List<Integer> getIdList(String id);
 }

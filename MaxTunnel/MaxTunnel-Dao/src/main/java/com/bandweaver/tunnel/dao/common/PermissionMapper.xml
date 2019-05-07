@@ -169,10 +169,13 @@
   	select p.* from T_SECURITY_PERMISSION p
 	left join t_security_role_permission rp
 	on p.id = rp.p_id 
-	where rp.r_id = #{rid} order by p.menu_name
+	where rp.r_id = #{rid}
   	
   </select>
 
+    <select id="getPermissionIdAndPermissionCode" resultMap="BaseResultMap">
+        select id,permission_code from T_SECURITY_PERMISSION
+    </select>
 
   
 </mapper>

@@ -8,6 +8,7 @@ import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.service.common.export.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 报表导出管理
@@ -61,6 +64,7 @@ public class ExportController {
      * @param response
      * @return
      */
+    @RequiresPermissions("report:download")
     @RequestMapping(value = "reports/download/{id}",method = RequestMethod.GET)
     public void download(@PathVariable("id")Integer id, HttpServletResponse response){
         FileInputStream fis = null;
@@ -107,11 +111,21 @@ public class ExportController {
         Integer ofType = reqJson.getInteger("ofType");
         Integer type = reqJson.getInteger("type");
         List<Export> list = exportService.getListByOfTypeAndType(ofType,type);
+        if (list == null || list.isEmpty()) {
+            return CommonUtil.success();
+        }
+
+        // 排序
+        list = list.stream().sorted(Comparator.comparing(Export::getName)).collect(Collectors.toList());
         return CommonUtil.success(list);
     }
 
 
-    @RequestMapping(value = "test",method = RequestMethod.GET)
+    /**
+     * 手动生成报表
+     * @return
+     */
+    @RequestMapping(value = "reports/mannual",method = RequestMethod.GET)
     public JSONObject test(){
         String fileDirPath = request.getServletContext().getRealPath("files/excel")+ File.separator;
 
