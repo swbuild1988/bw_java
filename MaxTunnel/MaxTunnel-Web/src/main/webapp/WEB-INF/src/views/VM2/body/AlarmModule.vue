@@ -61,7 +61,6 @@
 
 <script>
 	import SimplePieChart from "../../../components/Common/Chart/SimplePieChart";
-	import pileBarChart from "../../../components/Common/Chart/PileBarChart";
 	import ModuleTitle from "../../../components/VM2/ModuleTitle";
 	import {
 		AlarmService
@@ -95,42 +94,13 @@
 				}
 			}
 			},
-			pileBarChart: {
-			id: "alarmsReportBar",
-			requestUrl: "alarms/level-count–everymonth",
-			parameters: {
-				option: {
-				legend: {
-					data: ["严重", "一般", "提示", "致命"],
-					textStyle: {
-					color: "white",
-					fontSize: "10%"
-					},
-					orient: "horizontal",
-					left: 20
-				},
-				xAxis: {
-					axisLabel: {
-					color: "white",
-					fontSize: "8%"
-					}
-				},
-				yAxis: {
-					axisLabel: {
-					color: "white",
-					fontSize: "8%"
-					}
-				}
-				},
-				prams: {}
-			},
-			type: "get"
-			},
 			words: ["暂无告警"],
 			alarmShowData: [],
 			alarmAllData: [],
 			carouselInfo: {
 				intervalId: null,
+				totalId: null,
+				listId: null,
 				totalPage: null,
 				pageSize: 4,
 				curPage: 1,
@@ -145,16 +115,16 @@
 		},
 		components: {
 			simplePiechart:SimplePieChart,
-			pileBarChart,
 			ModuleTitle
 		},
 		mounted() {
 			this.iconSize = window.innerWidth * 0.009;
-			this.init();
+			this.getTotalAlarmCount();
+			this.getAlarmList();
 			let _this = this;
-			this.refresh.intervalId = setInterval(() => {
-				_this.init();
-			}, this.refresh.time);
+			// this.refresh.intervalId = setInterval(() => {
+			// 	_this.init();
+			// }, this.refresh.time);
 			if (this.carouselInfo.isCarousel) {
 				this.carouselInfo.intervalId = setInterval(() => {
 					_this.carousel();
@@ -162,22 +132,29 @@
 			}
 		},
 		methods: {
-			init() {
-				let _this = this;
+			getTotalAlarmCount() {
 				AlarmService.getYearAndMonthAlarmCount().then(result => {
-				result.forEach(item => {
-					if (item.key == "year") {
-					_this.yearTotal.number = item.value;
-					_this.yearTotal.isRise = item.isRise;
-					} else {
-					_this.monthTotal.number = item.value;
-					_this.monthTotal.isRise = item.isRise;
-					}
+					result.forEach(item => {
+						if (item.key == "year") {
+						this.yearTotal.number = item.value;
+						this.yearTotal.isRise = item.isRise;
+						} else {
+						this.monthTotal.number = item.value;
+						this.monthTotal.isRise = item.isRise;
+						}
+					});
+				})
+				.finally(()=>{
+					let _this = this
+					this.refresh.totalId = setTimeout(()=>{
+						_this.getTotalAlarmCount()
+					},_this.refresh.time)
 				});
-				});
+			},
+			getAlarmList(){
 				AlarmService.getNewAlarmsList().then(result => {
 					if (result) {
-						_this.words = [];
+						this.words = [];
 						result.forEach(alarm => {
 						let info =
 							alarm.description +
@@ -187,10 +164,10 @@
 							alarm.location +
 							" " +
 							alarm.alarmTime;
-						_this.words.push(info);
+						this.words.push(info);
 						});
-						_this.alarmAllData = result;
-						_this.alarmAllData.forEach(alarm => {
+						this.alarmAllData = result;
+						this.alarmAllData.forEach(alarm => {
 							alarm.alarmLevel = alarm.alarmLevel.slice(0, 2);
 							alarm.alarmDate = new Date(alarm.alarmDate).format("MM-dd  hh:mm");
 							switch (alarm.alarmLevel) {
@@ -213,13 +190,19 @@
 							}
 						});
 						
-						_this.carouselInfo.totalPage =
-						result.length % _this.carouselInfo.pageSize == 0 ?
-						result.length / _this.carouselInfo.pageSize :
-						parseInt(result.length / _this.carouselInfo.pageSize) + 1;
+						this.carouselInfo.totalPage =
+						result.length % this.carouselInfo.pageSize == 0 ?
+						result.length / this.carouselInfo.pageSize :
+						parseInt(result.length / this.carouselInfo.pageSize) + 1;
 
 					}
-				});
+				})
+				.finally(()=>{
+					let _this = this
+					this.refresh.listId = setTimeout(()=>{
+						_this.getAlarmList()
+					},_this.refresh.time)
+				});;
 			},
 			carousel() {
 				this.alarmShowData = this.alarmAllData.slice(
@@ -242,16 +225,20 @@
 				} else {
 					clearInterval(this.carouselInfo.intervalId);
 					this.carouselInfo.intervalId = null;
-					clearInterval(this.refresh.intervalId);
-					this.refresh.intervalId = null;
+					clearTimeout(this.refresh.totolId);
+					clearTimeout(this.refresh.listId);
+					this.refresh.totolId = null;
+					this.refresh.listId = null;
 				}
 			}
 		},
 		beforeDestroy() {
 			clearInterval(this.carouselInfo.intervalId);
 			this.carouselInfo.intervalId = null;
-			clearInterval(this.refresh.intervalId);
-			this.refresh.intervalId = null;
+			clearTimeout(this.refresh.listId);
+			clearTimeout(this.refresh.totolId);
+			this.refresh.totolId = null;
+			this.refresh.listId = null;
 		}
 	};
 

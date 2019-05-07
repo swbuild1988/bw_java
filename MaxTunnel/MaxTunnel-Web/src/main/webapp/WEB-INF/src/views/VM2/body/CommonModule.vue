@@ -84,7 +84,9 @@
                 },
                 refresh: {
                     time: 300000,
-                    intervalId: null
+                    intervalId: null,
+                    tunnelMessage: null,
+                    runMessage: null
                 }
             };
         },
@@ -95,17 +97,18 @@
             ProgressBarChart
         },
         mounted() {
-            this.init();
+            this.getTunnelMessage();
             let _this = this;
-            this.refresh.intervalId = setInterval(() => {
-                _this.init();
-            }, this.refresh.time);
+            // this.refresh.intervalId = setInterval(() => {
+            //     _this.init();
+            // }, this.refresh.time);
         },
-        beforeDestory() {
-            clearInterval(this.refresh.intervalId);
+        beforeDestroy() {
+            clearTimeout(this.refresh.tunnelMessage);
+            clearTimeout(this.refresh.runMessage);
         },
         methods: {
-            init() {
+            getTunnelMessage() {
                 this.title = "基本信息";
                 TunnelService.getVmTunnelsMessage().then(
                     result => {
@@ -122,8 +125,16 @@
                     error => {
                         this.Log.info(error);
                     }
-                );
-                TunnelService.getVmRunMessage().then(
+                )
+                .finally(()=>{
+                    let _this = this
+                    this.refresh.tunnelMessage = setTimeout(()=>{
+                        _this.getTunnelMessage()
+                    },this.refresh.time)
+                });
+            },
+            getRunMessage(){
+                 TunnelService.getVmRunMessage().then(
                     result => {
                         this.runMessage.total = result.total;
                         this.runMessage.safe = result.safe;
@@ -131,7 +142,13 @@
                     error => {
                         this.Log.info(error);
                     }
-                );
+                )
+                .finally(()=>{
+                    let _this = this
+                    this.refresh.runMessage = setTimeout(()=>{
+                        _this.getRunMessage()
+                    },this.refresh.time)
+                });
             }
         }
     };

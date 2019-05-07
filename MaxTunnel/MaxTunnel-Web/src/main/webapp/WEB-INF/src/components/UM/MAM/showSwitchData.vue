@@ -22,7 +22,7 @@
                 <img src="../../../assets/UM/门-关.png" v-if="Obj.objtypeId==55 && !curValue" class="img">
                 <img src="../../../assets/UM/报警.png" v-if="Obj.objtypeId==41 && !curValue" class="img">
             </div>
-            
+
             <!-- 声光报警 41，红外 57，门禁 55-->
             <div class="switchContent">
                 <i-switch v-model="curValue" @on-change="confirm" size="large">
@@ -31,31 +31,12 @@
                 </i-switch>
                 <img :src="equipmentState.image" class="equipment_state_image" :title="equipmentState.title">
             </div>
-            
+
             <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
             <div style="margin-top: -8%;font-size: 1.66vmin">{{Obj.ObjName}}</div>
-            <!-- <p slot="title">{{Obj.objtypeName}}</p>
-      <div style="background-color:#7D8481;height: 100px; ">
-        <span style="float:left;color: #ffffff;margin-top: 3.2vh;width:40%;font-size: 18px; ">{{Obj.ObjName}}</span>
-        <div style="float:left;position: fixed;margin-left: 120px;margin-top:20px;">
-          <i-switch style="position: fixed; width: 120px;height: 50px;" v-model="Obj.ObjVal" @on-change="change">
-            <span slot="open" style="font-size: 20px;top:15px;position: absolute">ON</span>
-            <span slot="close" style="font-size: 20px;top:15px;position: absolute;left: 48px;">OFF</span>
-          </i-switch>
-        </div> -->
-            <!-- 风机,百叶，水泵，井盖 -->
-            <!--  <div v-if="Obj.objtypeId==10 || 58 || 59 || 56" style="float:right;margin-left: 5px;">
-          <Fans :switchData="Obj.ObjVal" :objId="Obj.objtypeId"></Fans>
-        </div> -->
-            <!-- 灯 -->
-            <!-- <div v-if="Obj.objtypeId==11" style="float:right;margin-left: 5px;">
-          <Light :switchData="Obj.ObjVal"></Light>
-        </div>
-      </div> -->
+
         </Card>
-        <!-- <Modal v-model="confirmFlag" title="确认" @on-ok="open" :styles="{top: '80px', left: '20%',width: '300px'}">
-        <p>确定打开{{ Obj.ObjName }}开关吗</p>
-    </Modal> -->
+
     </div>
 </template>
 
@@ -88,10 +69,10 @@
                 confirmFlag: false,
                 curValue: null,
                 isTimeShow: false,
-                equipmentState:{
-                    state:null,
-                    image:'',
-                    title:''
+                equipmentState: {
+                    state: null,
+                    image: '',
+                    title: ''
                 }
             };
         },
@@ -99,15 +80,23 @@
             Light,
             Fans
         },
-        watch:{
-            'equipmentState.state'(){
-                this.transformStateImage();
-                this.transformStateTtile();
+        watch: {
+            // 'equipmentState.state'(){
+            //     this.transformStateImage();
+            //     this.transformStateTtile();
+            // }
+            Obj: {
+                handler(newVal, oldVal) {
+                    console.log("obj change", this.Obj)
+                    this.transformStateImage();
+                    this.transformStateTtile();
+                },
+                deep: true
             }
         },
         methods: {
             confirm(data) {
-                
+
                 this.$nextTick(() => {
                     this.curValue = !data
                 })
@@ -124,15 +113,16 @@
                 })
 
             },
-            transformStateImage(){
-                let { equipmentState } = this;
-                let image_url = equipmentState.state == 0 ? 'close-state':( equipmentState.state == 1 ? 'open-state':'fault-state' );
+            transformStateImage() {
+                console.log("objvalue", this.Obj.ObjVal)
+                let image_url = this.Obj.ObjVal == 0 ? 'close-state' : (this.Obj.ObjVal == 1 ? 'open-state' :
+                    'fault-state');
+                console.log("url", image_url)
 
-                this.equipmentState.image = require('../../../assets/VM/'+ image_url +'.png');
+                this.equipmentState.image = require('../../../assets/VM/' + image_url + '.png');
             },
-            transformStateTtile(){
-                let { equipmentState } = this;
-                this.equipmentState.title = equipmentState.state == 0 ? '关':( equipmentState.state == 1 ? '开':'故障' );
+            transformStateTtile() {
+                this.equipmentState.title = this.Obj.ObjVal == 0 ? '关' : (this.Obj.ObjVal == 1 ? '开' : '故障');
             },
             //定位设备
             locationEquimpent() {
@@ -148,7 +138,9 @@
                 this.isTimeShow = true
             }
             this.equipmentState.state = this.Obj.ObjVal;
-            this.curValue = this.Obj.ObjVal == 0 || this.Obj.ObjVal == 2 ? false : true
+            this.curValue = this.Obj.ObjVal == 1;
+            this.transformStateImage();
+            this.transformStateTtile();
         },
     }
 </script>
@@ -225,14 +217,16 @@
         height: 2vmin;
         line-height: 2vmin;
     }
+
     .equipment_image {
         top: 65%;
         width: 50%;
         height: 50%;
         position: absolute;
-        transform: translate(0,-50%);
+        transform: translate(0, -50%);
         left: 2%;
     }
+
     .equipment_state_image {
         width: 70%;
         height: 70%;

@@ -22,14 +22,14 @@
                 <Option v-for="item in areas" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
-        
+
         <div class="detectionType">
             <span>检测类型:</span>
             <Select v-model="queryCondition.curDataType" style="width:76%" @on-change="changeDataType">
                 <Option v-for="item in curDataTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
-        
+
         <!-- <div style="margin: 1vh;">
             <RadioGroup
                 v-model="queryCondition.areaId"
@@ -52,10 +52,11 @@
         <div class="detectionBin">
             <span>检测仓:</span>
             <Select v-model="queryCondition.storeId" style="width:76%" @on-change="getStoreId">
-                <Option v-for="item in storeProp.dataList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in storeProp.dataList" :value="item.value" :key="item.value">{{ item.label }}
+                </Option>
             </Select>
         </div>
-        <div class="area_length"><strong>里程:   </strong>{{ areaLeath }}</div>
+        <div class="area_length"><strong>里程: </strong>{{ areaLeath }}</div>
         <!-- <Tabs v-model="choosedTabPane" @on-click="chooseTab">
             <TabPane label="卡片" name="卡片">
                 <Row :gutter="16">
@@ -107,49 +108,39 @@
         </Tabs> -->
         <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="tabs.isShowComponent">
-                    <Col span="12">
-                        <div class="data">
-                            <div class="titles">
-                                <div
-                                    class="title"
-                                    @click="chooseModule(0)"
-                                    :class="{'active' : curModule === 0}"
-                                >
-                                    <span>
-                                        <Icon type="ios-film" class="icons"></Icon>视频
-                                    </span>
-                                </div>
-                                <div
-                                    class="title"
-                                    @click="chooseModule(1)"
-                                    :class="{'active' : curModule === 1}"
-                                >
-                                    <span>
-                                        <Icon type="map" class="icons"></Icon>管廊模型
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="map">
-                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                                <!-- <Table :columns="environmentColums" :data="objTableDate" v-if="curModule === 2"></Table> -->
-                            </div>
+                <Col span="12">
+                <div class="data">
+                    <div class="titles">
+                        <div class="title" @click="chooseModule(0)" :class="{'active' : curModule === 0}">
+                            <span>
+                                <Icon type="ios-film" class="icons"></Icon>视频
+                            </span>
                         </div>
-                    </Col>
-                    <Col span="12" class="data" style="overflow-y:auto ">
-                        <Row :gutter="16" style="margin-right: 2px;">
-                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                                <SimulatedData
-                                    v-bind:Obj="item"
-                                    v-if="item.datatypeId==1"
-                                    @changeStatus="changeStatus"
-                                ></SimulatedData>
-                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                            </Col>
-                        </Row>
+                        <div class="title" @click="chooseModule(1)" :class="{'active' : curModule === 1}">
+                            <span>
+                                <Icon type="map" class="icons"></Icon>管廊模型
+                            </span>
+                        </div>
+                    </div>
+                    <div class="map">
+                        <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
+                        <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj">
+                        </TestSmViewer>
+                        <!-- <Table :columns="environmentColums" :data="objTableDate" v-if="curModule === 2"></Table> -->
+                    </div>
+                </div>
+                </Col>
+                <Col span="12" class="data" style="overflow-y:auto ">
+                <Row :gutter="16" style="margin-right: 2px;">
+                    <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+                    <SimulatedData v-bind:Obj="item" v-if="item.datatypeId==1" @changeStatus="changeStatus">
+                    </SimulatedData>
+                    <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
                     </Col>
                 </Row>
-                <Table :columns="environmentColums" :data="objTableDate" v-show="!tabs.isShowComponent"></Table>
+                </Col>
+            </Row>
+            <Table :columns="environmentColums" :data="objTableDate" v-show="!tabs.isShowComponent"></Table>
         </tabs>
     </div>
 </template>
@@ -159,15 +150,27 @@
     import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
     import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
     import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-    import { TunnelService } from "../../../../services/tunnelService";
-    import { EnumsService } from "../../../../services/enumsService";
-    import { MonitorDataService } from "../../../../services/monitorDataService";
-    import { SuperMapSqlQuery } from "../../../../scripts/three.js";
+    import {
+        TunnelService
+    } from "../../../../services/tunnelService";
+    import {
+        EnumsService
+    } from "../../../../services/enumsService";
+    import {
+        MonitorDataService
+    } from "../../../../services/monitorDataService";
+    import {
+        SuperMapSqlQuery
+    } from "../../../../scripts/three.js";
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
     import Carousel from "../../../../components/Common/Carousel.vue";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
-    import { changStrLength } from "../../../../scripts/commonFun";
-    import { MeasObjServer } from '../../../../services/MeasObjectSerivers'
+    import {
+        changStrLength
+    } from "../../../../scripts/commonFun";
+    import {
+        MeasObjServer
+    } from '../../../../services/MeasObjectSerivers'
     import tabs from "../../../../components/Common/Tabs.vue";
 
     export default {
@@ -178,7 +181,9 @@
                 storeProp: {
                     itemLen: 12,
                     dataList: [],
-                    selectObj: { selectId: "" }
+                    selectObj: {
+                        selectId: ""
+                    }
                 },
                 curCarousel: {
                     videolist: [],
@@ -203,9 +208,8 @@
                 areas: [], //管廊对应区段数据
                 curTunnelName: "",
                 curModule: 0,
-                detectionObj:null,
-                environmentColums: [
-                    {
+                detectionObj: null,
+                environmentColums: [{
                         type: 'index',
                         width: 60,
                         align: 'center'
@@ -227,11 +231,11 @@
                     },
                     {
                         title: '当前值',
-                        align: 'center' ,
+                        align: 'center',
                         render: (h, params) => {
-                            let temp = params.row.curValue+params.row.unit
+                            let temp = params.row.curValue + params.row.unit
                             return h('div', temp)
-                        }   
+                        }
                     },
                     {
                         title: '采集时间',
@@ -245,7 +249,7 @@
                         title: '最小值',
                         align: 'center',
                         render: (h, params) => {
-                            let temp = params.row.minValue+params.row.unit
+                            let temp = params.row.minValue + params.row.unit
                             return h('div', temp)
                         }
                     },
@@ -253,18 +257,17 @@
                         title: '最大值',
                         align: 'center',
                         render: (h, params) => {
-                            let temp = params.row.maxValue+params.row.unit
+                            let temp = params.row.maxValue + params.row.unit
                             return h('div', temp)
                         }
                     }
                 ],
                 objTableDate: [],
-                areaLeath:'',
-                tabs:{
+                areaLeath: '',
+                tabs: {
                     tabIndex: 0,
-                    isShowComponent:true,
-                    tabList: [
-                        {
+                    isShowComponent: true,
+                    tabList: [{
                             index: 0,
                             name: '卡片',
                         },
@@ -277,14 +280,14 @@
             };
         },
         watch: {
-            $route: function() {
+            $route: function () {
                 this.tunnelId = this.$route.params.id || this.$route.query.tunnelId;
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
                 this.getObjDetialData();
             },
             storeProp: {
-                handler: function(newVal, oldVal) {
+                handler: function (newVal, oldVal) {
                     let _this = this;
                     _this.queryCondition.storeId = newVal.selectObj.selectId;
                     _this.changeStore();
@@ -292,10 +295,10 @@
                 deep: true
             }
         },
-        created(){
-            if(localStorage.getItem('choosedTab')){
+        created() {
+            if (localStorage.getItem('choosedTab')) {
                 this.choosedTabPane = localStorage.getItem('choosedTab')
-            }else{
+            } else {
                 this.choosedTabPane = '卡片'
             }
         },
@@ -331,7 +334,7 @@
             tabs
         },
         mounted() {
-            if(this.$route.query){
+            if (this.$route.query) {
                 this.tunnelId = this.$route.query.tunnelId;
                 this.queryCondition.storeId = this.$route.query.storeId
                 this.queryCondition.areaId = this.$route.query.areaId
@@ -358,7 +361,7 @@
                 //获取区段列表
                 let _this = this;
                 //获取位置信息
-                if(this.$route.query.storeId!=undefined){
+                if (this.$route.query.storeId != undefined) {
                     _this.queryCondition.storeId = this.$route.query.storeId
                 }
                 let curView = _this.storeProp.dataList.filter(
@@ -387,17 +390,21 @@
                 //获取监测内容
                 EnumsService.getMonitorType().then(result => {
                     if (result) {
-                        
+
                         result.forEach(a => {
                             if (a.val == _this.queryCondition.monitorType) {
-                                a.objectTypeList.forEach( item => _this.curDataTypeList.push({value:item.val,label:item.key})  )
-                                
-                                if(this.$route.query.objtypeKey===undefined){
+                                a.objectTypeList.forEach(item => _this.curDataTypeList.push({
+                                    value: item.val,
+                                    label: item.key
+                                }))
+
+                                if (this.$route.query.objtypeKey === undefined) {
                                     _this.queryCondition.curDataType = _this.curDataTypeList[0].value;
-                                }else{
-                                    a.objectTypeList.forEach((item, index)=>{
-                                        if(item.key===this.$route.query.objtypeKey){
-                                            _this.queryCondition.curDataType = _this.curDataTypeList[index].value;
+                                } else {
+                                    a.objectTypeList.forEach((item, index) => {
+                                        if (item.key === this.$route.query.objtypeKey) {
+                                            _this.queryCondition.curDataType = _this
+                                                .curDataTypeList[index].value;
                                         }
                                     })
                                 }
@@ -425,29 +432,59 @@
                 //获取监测仓列表
                 TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                     result => {
-                        var arr = [{ value: 0, label: "全部" }];
-                        
-                        let transitionResult = result.map( item => {
-                            let { id,name,camera,crtTime,endPoint,height,k,l,parentId,sn,startPoint,storeType,storeTypeId,tunnel,tunnelId,width } = item;
-                            return {
-                                value:id,
-                                label:name,
+                        var arr = [{
+                            value: 0,
+                            label: "全部"
+                        }];
+
+                        let transitionResult = result.map(item => {
+                            let {
+                                id,
+                                name,
                                 camera,
                                 crtTime,
                                 endPoint,
-                                height,k,l,parentId,sn,startPoint,storeType,storeTypeId,tunnel,tunnelId,width
+                                height,
+                                k,
+                                l,
+                                parentId,
+                                sn,
+                                startPoint,
+                                storeType,
+                                storeTypeId,
+                                tunnel,
+                                tunnelId,
+                                width
+                            } = item;
+                            return {
+                                value: id,
+                                label: name,
+                                camera,
+                                crtTime,
+                                endPoint,
+                                height,
+                                k,
+                                l,
+                                parentId,
+                                sn,
+                                startPoint,
+                                storeType,
+                                storeTypeId,
+                                tunnel,
+                                tunnelId,
+                                width
                             }
                         })
-                        
+
                         _this.storeProp.dataList = arr.concat(transitionResult)
                         // _this.queryCondition.detectionId = _this.storeProp.dataList[0].value;
-                        if(this.$route.query.storeId!=undefined){
+                        if (this.$route.query.storeId != undefined) {
                             _this.storeProp.selectObj.selectId = this.$route.query.storeId
-                        }else{
+                        } else {
                             _this.storeProp.selectObj.selectId = _this.storeProp.dataList[0].value;
                         }
                         _this.queryCondition.storeId = _this.storeProp.selectObj.selectId;
-                    
+
                         _this.getObjDetialData();
                         _this.getvideos();
                     },
@@ -464,7 +501,10 @@
                             label: "全部"
                         }];
                         result.forEach(a => {
-                            _this.areas.push({value:a.id,label:a.name});
+                            _this.areas.push({
+                                value: a.id,
+                                label: a.name
+                            });
                         });
                         _this.queryCondition.areaId = _this.areas[0].value;
 
@@ -500,35 +540,38 @@
 
             //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
-                if(clickStatus === null){
+                if (clickStatus === null) {
                     let param = {
                         id: id,
                         status: ObjVal ? 1 : 0
                     }
                     MeasObjServer.changeEquimentStatus(param).then(
-                        res=>{
+                        res => {
                             this.$Message.info('操作成功')
                         },
-                        error=>{
+                        error => {
                             this.$Message.error('操作失败')
                         }
                     )
                 }
 
-                if( !!id && !!datatypeId ) this.detectionObj = {"id":changStrLength(id,10),"moTypeId":datatypeId };
-                if (datatypeId != 1) {
-                    this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
-                }
+                if (!!id && !!datatypeId) this.detectionObj = {
+                    "id": changStrLength(id, 10),
+                    "moTypeId": datatypeId
+                };
+                // if (datatypeId != 1) {
+                //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
+                // }
                 if (clickStatus) {
                     this.Obj.forEach(b => {
                         if (b.id == id) {
                             b.clickStatus = clickStatus;
                             this.Log.info("click " + b.id);
                             SuperMapSqlQuery(
-                                this.SuperMapConfig.BIM_DATA,
-                                this.VMConfig.queryParam,
-                                "moid = " + b.id
-                            )
+                                    this.SuperMapConfig.BIM_DATA,
+                                    this.VMConfig.queryParam,
+                                    "moid = " + b.id
+                                )
                                 .then(res => {
                                     this.Log.info("查找成功", res);
                                     if (res.length > 0) {
@@ -547,11 +590,11 @@
                             b.clickStatus = !clickStatus;
                         }
                     });
-                    
+
                 }
 
             },
-            getStoreId(data){
+            getStoreId(data) {
                 this.queryCondition.storeId = data
                 this.getObjDetialData()
                 this.getvideos();
@@ -563,7 +606,7 @@
                 if (this.curDataTypeList.length == 0) return;
                 let _this = this;
                 var Params = {
-                    tunnelId:  _this.queryCondition.tunnelId,
+                    tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ? null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ? null : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
@@ -584,7 +627,8 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            temp.time = a.time == undefined || a.time == "" ? "" : new Date(a.time).format("yyyy-MM-dd hh:mm:ss");
+                            temp.time = a.time == undefined || a.time == "" ? "" : new Date(a.time).format(
+                                "yyyy-MM-dd hh:mm:ss");
                             if (a.datatypeId == 1) {
                                 temp.ObjVal = a.curValue.toFixed(2);
                             } else {
@@ -609,18 +653,16 @@
                 let _this = this;
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
-                    storeId:
-                        _this.queryCondition.storeId == 0
-                            ? null
-                            : _this.queryCondition.storeId,
-                    areaId:
-                        _this.queryCondition.areaId == 0
-                            ? null
-                            : _this.queryCondition.areaId
+                    storeId: _this.queryCondition.storeId == 0 ?
+                        null :
+                        _this.queryCondition.storeId,
+                    areaId: _this.queryCondition.areaId == 0 ?
+                        null :
+                        _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
-                        console.log(Params,result)
+                        console.log(Params, result)
                         this.curCarousel.videolist = result;
                     }
                 });
@@ -628,8 +670,8 @@
             chooseModule(val) {
                 this.curModule = val;
             },
-            chooseTab(name){
-                localStorage.setItem("choosedTab",name)
+            chooseTab(name) {
+                localStorage.setItem("choosedTab", name)
             }
         },
         beforeDestroy() {
@@ -641,7 +683,7 @@
 
 
 <style scoped>
-    .ivu-radio-group-button >>> .ivu-radio-wrapper {
+    .ivu-radio-group-button>>>.ivu-radio-wrapper {
         transition: all 0.1s cubic-bezier(0.6, -0.28, 0.74, 0.05);
     }
 
@@ -651,7 +693,7 @@
         background-position: 0 -15px;
     }
 
-    .ivu-radio-group-button >>> .ivu-radio-wrapper:hover {
+    .ivu-radio-group-button>>>.ivu-radio-wrapper:hover {
         color: #fff;
         background-color: #3dbbcb;
         font-size: 17px;
@@ -670,12 +712,12 @@
         padding-bottom: 10px;
     }
 
-    .ivu-modal-wrap > .ivu-modal {
+    .ivu-modal-wrap>.ivu-modal {
         left: 500px;
         top: 500px;
     }
 
-    .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+    .ivu-tabs.ivu-tabs-card>.ivu-tabs-bar .ivu-tabs-tab {
         background: #adb3e2;
         color: #fff;
     }
@@ -777,24 +819,28 @@
         height: 0.2vmin;
         background-color: rgb(45, 140, 240);
     }
+
     .areas {
         margin-top: 0.5%;
         margin-left: 1%;
         width: 19%;
         display: inline-block;
-    }   
+    }
+
     .detectionType {
         display: inline-block;
         width: 21%;
         margin-top: .5%;
     }
+
     .detectionBin {
         display: inline-block;
         width: 20%;
         margin-top: .5%;
         margin-right: 3%;
     }
-    .area_length{
+
+    .area_length {
         position: absolute;
         font-size: .9rem;
         left: 70%;

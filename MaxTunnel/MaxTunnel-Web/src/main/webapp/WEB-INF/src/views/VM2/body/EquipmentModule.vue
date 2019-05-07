@@ -162,6 +162,12 @@
                     }
 
                 })
+                .finally(()=>{
+                    let _this = this
+                    setTimeout(()=>{
+                        _this.init()
+                    },300000)
+                });
             },
             percentage(array,index){
                 let sum = array.reduce((prev,cur) => prev + cur );

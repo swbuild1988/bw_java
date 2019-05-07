@@ -125,7 +125,12 @@ export default {
 					}
 				}
 			],
-			dataInterval: null
+			dataInterval: null,
+			dataTimeout: {
+				todayExtre: null,
+				triggerTimes: null
+			}
+
 		};
 	},
 	components: {
@@ -133,8 +138,9 @@ export default {
 		SimpleGauge
 	},
 	mounted() {
-		this.init();
-		this.fetchData();
+		this.getToDayExtreDatas();
+		this.getTriggerTimes();
+		// this.fetchData();
 	},
 	methods: {
 		fetchData() {
@@ -143,7 +149,7 @@ export default {
 				_this.init();
 			}, _this.fetchTime);
 		},
-		init() {
+		getToDayExtreDatas() {
 			let _this = this;
 
 			MeasObjServer.getToDayExtreDatas().then(
@@ -211,20 +217,40 @@ export default {
 				error => {
 					_this.Log.info(error);
 				}
-			);
+			)
+			.finally(()=>{
+				_this.dataTimeout.todayExtre = setTimeout(()=>{
+					_this.getToDayExtreDatas()
+				},_this.fetchTime)
+			});
+			
+		},
+		getTriggerTimes(){
 			MeasObjServer.getMeasTriggerCounts().then(
 				result => {
-					_this.countData = result;
+					this.countData = result;
 				},
 				error => {
-					_this.Log.info(error);
+					this.Log.info(error);
 				}
-			);
+			)
+			.finally(()=>{
+				let _this = this
+				this.dataTimeout.triggerTimes = setTimeout(()=>{
+					_this.getTriggerTimes()
+				},this.fetchTime)
+			});
 		}
 	},
 	beforeDestroy() {
-		clearInterval(this.dataInterval);
-		this.dataInterval = null;
+		// clearInterval(this.dataInterval);
+		// this.dataInterval = null;
+		clearTimeout(this.dataTimeout.triggerTimes);
+		clearTimeout(this.dataTimeout.todayExtre);
+		this.dataTimeout = {
+			todayExtre: null,
+			triggerTimes: null
+		}
 	}
 };
 </script>

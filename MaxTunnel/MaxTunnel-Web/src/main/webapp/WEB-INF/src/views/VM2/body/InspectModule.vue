@@ -176,7 +176,6 @@ export default {
             let p2 = InspectService.getDefectCount();
             let p3 = InspectService.getMaintenanceCount();
             Promise.all([p1, p2, p3]).then(res => {
-                console.log("res",res)
                 //获取今年的巡检任务总数
                 this.taskCount.nowYearTaskCount = res[0].nowYearTaskCount
                 this.taskCount.isRise = res[0].nowYearTaskCount >= res[0].beforeYearTaskCount ? true : false
@@ -222,7 +221,7 @@ export default {
                 this.corssBarChartData.xData = this.corssBarChartData.xData.reverse()
                 this.corssBarChartData.seriesData.push({ data: arr1 })
                 this.corssBarChartData.seriesData.push({ data: arr2 })
-            });
+            })
             // window.addEventListener('resize',this.getCircleWidth())
         },
         refreshData() {
