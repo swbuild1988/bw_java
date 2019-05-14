@@ -1,3 +1,4 @@
+import { Message } from 'iview';
 var H5StreamPlugIn = {
     preName: 'h5Stream',
 
@@ -22,10 +23,10 @@ var H5StreamPlugIn = {
 
             videoDom = document.createElement("VIDEO");
             videoDom.setAttribute('id', domId);
+            videoDom.classList.add('videos')
             videoDom.autoplay = true;
             videoDom.webkitPlaysinline = true;
             videoDom.playsinline = true;
-            // videoDom.addEventListener('dblclick', 'fullScreen', false);
             videoDom.style.display = "block";
             videoDom.style.width = "100%";
             videoDom.style.height = "100%";
@@ -36,7 +37,7 @@ var H5StreamPlugIn = {
             videoDom.style.left = 0;
             videoDom.style.top = 0;
             videoDom.style.zIndex = 1;
-
+           
             console.log("新建video Dom " + index, videoDom);
             return videoDom;
 
@@ -53,6 +54,36 @@ var H5StreamPlugIn = {
         // 将dom存到body中，并且不显示
         videoDom.style.display = "none";
         document.body.appendChild(videoDom);
+
+    },
+    fullScreen(id){
+        let requestFullscreen =
+            document.body.requestFullscreen ||
+            document.body.webkitRequestFullscreen ||
+            document.body.mozRequestFullScreen ||
+            document.body.msRequestFullscreen;
+        let fullscreenEnabled =
+            document.fullscreenEnabled ||
+            document.mozFullScreenEnabled ||
+            document.webkitFullscreenEnabled ||
+            document.msFullscreenEnabled;
+        if(!!(requestFullscreen && fullscreenEnabled)){
+            let element = document.getElementById(id)
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.webkitRequestFullscreen) {
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                element.msRequestFullscreen();
+            }
+        }else{
+            Message.error({
+                content: "此浏览器不支持或未开启全屏模式",
+                duration: 5
+            });
+        }
 
     }
 };

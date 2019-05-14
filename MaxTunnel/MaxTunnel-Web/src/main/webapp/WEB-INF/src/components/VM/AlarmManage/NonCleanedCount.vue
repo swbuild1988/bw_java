@@ -26,13 +26,22 @@
                 this.getAllNonCleanedAlarm();
             },
             getAllNonCleanedAlarm(){
-                this.timer = setInterval(()=>{  //每秒轮询未清除告警
-                    DataAnalysisService.NonClearAlarms().then( result =>  this.NonCleanedCount = result.length )
-                },1000)
+                // this.timer = setInterval(()=>{  //每秒轮询未清除告警
+                //     DataAnalysisService.NonClearAlarms().then( result =>  this.NonCleanedCount = result.length )
+                // },1000)
+                DataAnalysisService.NonClearAlarms()
+                .then( result =>  this.NonCleanedCount = result.length )
+                .finally(()=>{
+                    let _this = this
+                    this.timer = setTimeout(()=>{
+                        _this.getAllNonCleanedAlarm()
+                    },1000)
+                })
             }
         },
         beforeDestroy(){
-            clearInterval( this.timer );
+            clearTimeout( this.timer );
+            this.timer = null;
             console.log('nonCleanedCount​',document.getElementsByClassName('nonCleanedCount​'))
         }
     }

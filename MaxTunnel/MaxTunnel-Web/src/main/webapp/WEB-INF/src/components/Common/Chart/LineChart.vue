@@ -40,7 +40,7 @@
       init() {
         this.drawLine();
         this.fetchData(this.requestUrl);
-        this.refreshData();
+        // this.refreshData();
       },
       resizeChart() {
         let _this = this;
@@ -187,6 +187,11 @@
             })
           }
         })
+        .finally(()=>{
+          _this.timerId = setTimeout(()=>{
+            _this.fetchData(_this.requestUrl)
+          },5000)
+        })
       },
       refreshData() {
         let _this = this;
@@ -227,7 +232,7 @@
       beforeDestroy(){
           let _this =this;
 
-          clearInterval( _this.timerId )
+          clearTimeout( _this.timerId )
       }
 
   }

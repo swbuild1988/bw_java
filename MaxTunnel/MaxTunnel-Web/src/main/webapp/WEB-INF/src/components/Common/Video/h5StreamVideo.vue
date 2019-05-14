@@ -85,6 +85,12 @@
             // 获取dom
             let videoDom = H5StreamPlugIn.getVideoElement(this.index);
             document.getElementById(this.id).appendChild(videoDom);
+        videoDom.addEventListener('dblclick',function(){
+            H5StreamPlugIn.fullScreen(videoDom.id)
+            let fullScreenStyle = document.createElement('style');
+            fullScreenStyle.innerText='.videos::-webkit-media-controls-panel{display: none;}';
+            document.body.appendChild(fullScreenStyle);
+        })
             // 获取组件的id
             this.videoId = videoDom.id;
             this.Log.info("videoId:", this.videoId);
