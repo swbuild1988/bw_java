@@ -126,7 +126,6 @@
                         <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
                         <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj">
                         </TestSmViewer>
-                        <!-- <Table :columns="environmentColums" :data="objTableDate" v-if="curModule === 2"></Table> -->
                     </div>
                 </div>
                 </Col>
@@ -654,11 +653,9 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
+                        null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId
+                        null : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {

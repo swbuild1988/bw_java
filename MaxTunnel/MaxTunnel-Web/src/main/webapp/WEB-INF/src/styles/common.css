@@ -3,343 +3,361 @@
 } */
 body,
 html {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 @font-face {
-  font-family: UnidreamLED;
-  /*为引入字体命名*/
-  src: url("../../static/VM/font/UnidreamLED.ttf");
-  /*定义要引入字体文件路径*/
+    font-family: UnidreamLED;
+    /*为引入字体命名*/
+    src: url("../../static/VM/font/UnidreamLED.ttf");
+    /*定义要引入字体文件路径*/
 }
 
 .formTitle {
-  text-align: center;
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .allDiv {
-  min-height: 100%;
-  position: relative;
-  padding-bottom: 70px;
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 70px;
 }
 
 .conditions {
-  height: 6vh;
-  line-height: 6vh;
-  background: #fff;
-  padding-left: 10px;
+    height: 6vh;
+    line-height: 6vh;
+    background: #fff;
+    padding-left: 10px;
 }
 
 .queryCondition {
-  height: 10vh;
-  line-height: 4.5vh;
-  background: #fff;
-  padding-left: 10px;
+    height: 10vh;
+    line-height: 4.5vh;
+    background: #fff;
+    padding-left: 10px;
 }
 
 .list {
-  background: #fff;
-  margin-top: 10px;
-  padding: 10px;
-  position: relative;
-  padding-bottom: 50px;
+    background: #fff;
+    margin-top: 10px;
+    padding: 10px;
+    position: relative;
+    padding-bottom: 50px;
 }
 
 .containerBox {
-  min-height: 100%;
-  position: relative;
+    min-height: 100%;
+    position: relative;
 }
 
 .ivu-menu {
-  font-size: 18px !important;
+    font-size: 18px !important;
 }
 
 /*disable*/
 
 .ivu-select-disabled .ivu-select-selection {
-  background-color: #fff;
-  opacity: 1;
-  cursor: not-allowed;
-  color: #495060;
+    background-color: #fff;
+    opacity: 1;
+    cursor: not-allowed;
+    color: #495060;
 }
 
 
 /*可扩展table的字体大小*/
 
 td.ivu-table-expanded-cell {
-  padding: 5px 15px;
-  font-size: 13px;
+    padding: 5px 15px;
+    font-size: 13px;
 }
 
 
 /*form表单*/
 
 .ivu-form.ivu-form-label-top {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 
 /*取消按钮*/
 
 .ivu-btn-ghost {
-  background-color: #f9f7f7;
+    background-color: #f9f7f7;
 }
 
 html,
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  /* font-size: 100%; */
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    /* font-size: 100%; */
 }
 
 @media (min-width: 2200px) {
-  .allDiv {
-    padding-bottom: 4vmin;
-  }
+    .allDiv {
+        padding-bottom: 4vmin;
+    }
 
-  .conditions span {
-    font-size: 1.6vmin;
-  }
+    .conditions span {
+        font-size: 1.6vmin;
+    }
 
-  .ivu-date-picker-cells {
-    width: 21vmin !important;
-  }
+    .ivu-date-picker-cells {
+        width: 21vmin !important;
+    }
 
-  span.ivu-date-picker-cells-cell {
-    width: 2.6vmin;
-    height: 2.6vmin;
-    margin: 0.05vmin;
-  }
+    span.ivu-date-picker-cells-cell {
+        width: 2.6vmin;
+        height: 2.6vmin;
+        margin: 0.05vmin;
+    }
 
-  /* 时间选择器 */
-  .ivu-date-picker-cells span {
-    width: 2.8vmin !important;
-    height: 2.8vmin !important;
-  }
+    /* 时间选择器 */
+    .ivu-date-picker-cells span {
+        width: 2.8vmin !important;
+        height: 2.8vmin !important;
+    }
 
-  .ivu-date-picker-cells span em {
-    width: 2.4vmin !important;
-    height: 2.4vmin !important;
-    line-height: 2.4vmin !important;
-    margin: 0.2vmin !important;
-    border-radius: 0.3vmin !important;
-  }
+    .ivu-date-picker-cells span em {
+        width: 2.4vmin !important;
+        height: 2.4vmin !important;
+        line-height: 2.4vmin !important;
+        margin: 0.2vmin !important;
+        border-radius: 0.3vmin !important;
+    }
 
-  .ivu-date-picker-header {
-    height: 3.2vmin !important;
-    line-height: 3.2vmin !important;
-  }
+    .ivu-date-picker-header {
+        height: 3.2vmin !important;
+        line-height: 3.2vmin !important;
+    }
 
-  .ivu-picker-panel-icon-btn {
-    width: 2vmin;
-    height: 2.4vmin;
-    line-height: 2.6vmin;
-    margin-top: 0.4vmin;
-  }
+    .ivu-picker-panel-icon-btn {
+        width: 2vmin;
+        height: 2.4vmin;
+        line-height: 2.6vmin;
+        margin-top: 0.4vmin;
+    }
 
-  .ivu-picker-panel-icon-btn i {
-    font-size: 1.4vmin;
-  }
+    .ivu-picker-panel-icon-btn i {
+        font-size: 1.4vmin;
+    }
 
-  /* time */
-  .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds {
-    min-width: 21.6vmin;
-  }
+    /* time */
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds {
+        min-width: 21.6vmin;
+    }
 
-  .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list {
-    width: 7.2vmin;
-  }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list {
+        width: 7.2vmin;
+    }
 
-  .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-list ul {
-    padding: 0 0 19.2vmin 0;
-  }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-list ul {
+        padding: 0 0 19.2vmin 0;
+    }
 
-  .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list ul li {
-    padding: 0 0 0 2.8vmin;
-  }
+    .ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds .ivu-time-picker-cells-list ul li {
+        padding: 0 0 0 2.8vmin;
+    }
 
-  .ivu-time-picker-cells-list ul li {
-    height: 2.4vmin;
-    line-height: 2.4vmin;
-    padding: 0 0 0 1.6vmin;
-    font-size: 1.2vmin;
-  }
+    .ivu-time-picker-cells-list ul li {
+        height: 2.4vmin;
+        line-height: 2.4vmin;
+        padding: 0 0 0 1.6vmin;
+        font-size: 1.2vmin;
+    }
 
-  /* 月份 */
-  .ivu-date-picker-cells-month span {
-    width: 4vmin;
-    height: 2.8vmin;
-    line-height: 2.8vmin;
-    margin: 1vmin 1.2vmin;
-    border-radius: 0.3vmin;
-  }
+    /* 月份 */
+    .ivu-date-picker-cells-month span {
+        width: 4vmin;
+        height: 2.8vmin;
+        line-height: 2.8vmin;
+        margin: 1vmin 1.2vmin;
+        border-radius: 0.3vmin;
+    }
 
-  .ivu-date-picker-cells-month span em,
-  .ivu-date-picker-cells-year span em {
-    width: 4vmin !important;
-    height: 2.8vmin !important;
-    line-height: 2.8vmin !important;
-  }
+    .ivu-date-picker-cells-month span em,
+    .ivu-date-picker-cells-year span em {
+        width: 4vmin !important;
+        height: 2.8vmin !important;
+        line-height: 2.8vmin !important;
+    }
 
-  /* 查询按钮 */
-  .ivu-btn,
-  .ivu-btn-small {
-    padding: 0.3vmin 1.2vmin;
-    border-radius: 0.5vmin;
-  }
+    /* 查询按钮 */
+    .ivu-btn,
+    .ivu-btn-small {
+        padding: 0.3vmin 1.2vmin;
+        border-radius: 0.5vmin;
+    }
 
-  .ivu-btn-large {
-    padding: 1vmin 2vmin;
-  }
+    .ivu-btn-large {
+        padding: 1vmin 2vmin;
+    }
 
-  /*textarea*/
-  textarea.ivu-input {
-    min-height: 8vmin;
-  }
+    /*textarea*/
+    textarea.ivu-input {
+        min-height: 8vmin;
+    }
 
-  .ivu-input {
-    border: 0.1vmin solid #dddee1;
-    border-radius: 0.4vmin;
-  }
+    .ivu-input {
+        border: 0.1vmin solid #dddee1;
+        border-radius: 0.4vmin;
+    }
 
-  /*modal*/
-  .ivu-modal {
-    width: 30vw;
-    top: 11vh;
-  }
+    /*modal*/
+    .ivu-modal {
+        width: 30vw;
+        top: 11vh;
+    }
 
-  .ivu-modal-header {
-    border-bottom: 0.1vmin solid #e9eaec;
-    padding: 1.4vmin 1.6vmin;
-  }
+    .ivu-modal-header {
+        border-bottom: 0.1vmin solid #e9eaec;
+        padding: 1.4vmin 1.6vmin;
+    }
 
-  .ivu-modal-confirm-body {
-    padding-left: 4vmin;
-    font-size: 1.7vmin;
-  }
+    .ivu-modal-confirm-body {
+        padding-left: 4vmin;
+        font-size: 1.7vmin;
+    }
 
-  .ivu-modal-confirm-head-title {
-    font-size: 2vmin;
-  }
+    .ivu-modal-confirm-head-title {
+        font-size: 2vmin;
+    }
 
-  .ivu-modal-confirm-body-icon {
-    font-size: 3vmin;
-  }
+    .ivu-modal-confirm-body-icon {
+        font-size: 3vmin;
+    }
 
-  .ivu-modal-header-inner {
-    height: 4vmin;
-    line-height: 4vmin;
-    font-size: 1.6vmin;
-  }
+    .ivu-modal-header-inner {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.6vmin;
+    }
 
-  .ivu-modal-body {
-    padding: 1.4vmin;
-    font-size: 1.4vmin;
-    line-height: 1.5;
-  }
+    .ivu-modal-body {
+        padding: 1.4vmin;
+        font-size: 1.4vmin;
+        line-height: 1.5;
+    }
 
-  .ivu-input-icon {
-    width: 2vmin;
-    height: 2vmin;
-    line-height: 4vmin;
-    font-size: 2vmin;
-  }
+    .ivu-input-icon {
+        width: 2vmin;
+        height: 2vmin;
+        line-height: 4vmin;
+        font-size: 2vmin;
+    }
 
-  .ivu-modal-close .ivu-icon-ios-close-empty {
-    font-size: 3vmin;
-  }
+    .ivu-modal-close .ivu-icon-ios-close-empty {
+        font-size: 3vmin;
+    }
 
-  .ivu-select-arrow {
-    margin-top: -1vmin;
-    font-size: 2vmin;
-  }
+    .ivu-select-arrow {
+        margin-top: -1vmin;
+        font-size: 2vmin;
+    }
 
-  .ivu-modal-footer {
-    padding: 1.2vmin 1.8vmin;
-  }
+    .ivu-modal-footer {
+        padding: 1.2vmin 1.8vmin;
+    }
 
-  /*table*/
-  .ivu-table td,
-  .ivu-table th {
-    width: 4.5vmin;
-    height: 4.8vmin;
-  }
+    /*table*/
+    .ivu-table td,
+    .ivu-table th {
+        width: 4.5vmin;
+        height: 4.8vmin;
+    }
 
-  .ivu-table th {
-    height: 4vmin;
-    border-bottom: 0.1px solid #e9eaec;
-  }
+    .ivu-table th {
+        height: 4vmin;
+        border-bottom: 0.1px solid #e9eaec;
+    }
 
-  /*分页*/
-  .ivu-page-total {
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-    margin-right: 1vmin;
-  }
+    /*分页*/
+    .ivu-page-total {
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+        margin-right: 1vmin;
+    }
 
-  .ivu-page-item-jump-next,
-  .ivu-page-item-jump-prev,
-  .ivu-page-next,
-  .ivu-page-prev,
-  .ivu-page-item,
-  .ivu-page-options-elevator,
-  .ivu-page-options-elevator input,
-  .ivu-select-single .ivu-select-selection {
-    min-width: 3.2vmin;
-    height: 3.2vmin;
-    line-height: 3vmin;
-    color: #666;
-    /* border: 0.1vmin solid #dddee1; */
-  }
+    .ivu-page-item-jump-next,
+    .ivu-page-item-jump-prev,
+    .ivu-page-next,
+    .ivu-page-prev,
+    .ivu-page-item,
+    .ivu-page-options-elevator,
+    .ivu-page-options-elevator input,
+    .ivu-select-single .ivu-select-selection {
+        min-width: 3.2vmin;
+        height: 3.2vmin;
+        line-height: 3vmin;
+        color: #666;
+        /* border: 0.1vmin solid #dddee1; */
+    }
 
-  .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
-  .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
-    height: 3vmin;
-    line-height: 3vmin;
-    font-size: 1.2vmin;
-    padding-left: 0.8vmin;
-    padding-right: 2.4vmin;
-    width: 12vmin;
-  }
+    .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+    .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+        height: 3vmin;
+        line-height: 3vmin;
+        font-size: 1.2vmin;
+        padding-left: 0.8vmin;
+        padding-right: 2.4vmin;
+        width: 12vmin;
+    }
 
-  .ivu-page-next a,
-  .ivu-page-prev a,
-  .ivu-page-options-elevator input {
-    font-size: 1.4vmin;
-  }
+    .ivu-page-next a,
+    .ivu-page-prev a,
+    .ivu-page-options-elevator input {
+        font-size: 1.4vmin;
+    }
 
-  .ivu-form.ivu-form-label-right {
-    padding: 1vmin 2vmin !important;
-  }
+    .ivu-form.ivu-form-label-right {
+        padding: 1vmin 2vmin !important;
+    }
 
-  .ivu-form-item-required .ivu-form-item-label:before {
-    font-size: 1.2vmin;
-  }
-  .ivu-select-dropdown{
-    max-height: 20vmin;
-  }
+    .ivu-form-item-required .ivu-form-item-label:before {
+        font-size: 1.2vmin;
+    }
 
-  /* checkbox */
-  .ivu-checkbox-inner {
-    width: 1.4vmin;
-    height: 1.4vmin;
-    border: 0.1vmin solid #dddee1;
-  }
+    .ivu-select-dropdown {
+        max-height: 20vmin;
+    }
 
-  .ivu-checkbox-inner:after {
-    width: 0.4vmin;
-    height: 0.8vmin;
-    top: 0.1vmin;
-    left: 0.4vmin;
-  }
+    /* checkbox */
+    .ivu-checkbox-inner {
+        width: 1.4vmin;
+        height: 1.4vmin;
+        border: 0.1vmin solid #dddee1;
+    }
 
-  .ivu-checkbox-checked .ivu-checkbox-inner:after {
-    width: 0.4vmin;
-    height: 0.8vmin;
-    top: 0.1vmin;
-    left: 0.4vmin;
-  }
+    .ivu-checkbox-inner:after {
+        width: 0.4vmin;
+        height: 0.8vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
+    }
+
+    .ivu-checkbox-checked .ivu-checkbox-inner:after {
+        width: 0.4vmin;
+        height: 0.8vmin;
+        top: 0.1vmin;
+        left: 0.4vmin;
+    }
+
+
+    .h5videos {
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+        background-color: #000000;
+        object-fit: fill;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+    }
+
+    .h5videos::-webkit-media-controls-panel {
+        display: none;
+    }
 }

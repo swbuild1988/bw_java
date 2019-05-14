@@ -2,11 +2,11 @@
   <Modal v-model="modalPrams.state" :width="modalWidth" title="视频">
     <div class="modal-body" :style="{height:modalHeight+'px'}">
       <slot name="body">
-        <div  >
+        <div>
           <Row :gutter="16">
             <Col :span="videoSpan" v-for="(item,index) in videosList" :key="index" style="margin-top: 16px">
-            <div  :class="{ oneScreen: videoSpan == 24, monitor: videoSpan == 12, fourMonitor: videoSpan ==8 }">
-              <video-component v-bind:video="item" v-bind:id="'camera'+item.id"></video-component>
+            <div :class="{ oneScreen: videoSpan == 24, monitor: videoSpan == 12, fourMonitor: videoSpan ==8 }">
+              <video-component v-bind:video="item" v-bind:id="'camera'+item.id" :index="index"></video-component>
             </div>
             </Col>
           </Row>
@@ -16,7 +16,7 @@
     <div class="modal-footer">
       <slot name="footer">
         <Button type="primary" size="small" @click.native="" v-if="showModelFooter"
-                style="float: right;margin-right: 5%;margin-bottom: 1%">清除告警
+          style="float: right;margin-right: 5%;margin-bottom: 1%">清除告警
         </Button>
       </slot>
       <Button class="modal-default-button" type="info" @click="show.state=false" v-show="showButton">OK</Button>
@@ -33,7 +33,10 @@
       modalPrams: {
         type: Object,
         default: function () {
-          return {state: false, videosList: []};
+          return {
+            state: false,
+            videosList: []
+          };
         }
       },
       bottom: { //鼠标点击位置Bottom
@@ -52,9 +55,9 @@
     },
     data() {
       return {
-        videosList:[],
+        videosList: [],
         curVideo: null,
-        videoNum:0,
+        videoNum: 0,
         modalWidth: 500,
         modalHeight: 500,
         arrow: {
@@ -65,14 +68,13 @@
         videoSpan: 0,
       }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
-      reflashVideo(){
-        var _this=this;
-        _this.videosList=_this.modalPrams.vedioIdList;
-        _this.videoNum=_this.modalPrams.vedioIdList.length;
-        console.log( _this.videosList);
+      reflashVideo() {
+        var _this = this;
+        _this.videosList = _this.modalPrams.vedioIdList;
+        _this.videoNum = _this.modalPrams.vedioIdList.length;
+        console.log(_this.videosList);
         _this.setVideoSpan();
       },
       setVideoSpan() {
@@ -123,7 +125,9 @@
     transition: all .3s ease;
     color: #17233d;
   }
-  .modal-enter .modal-container, .modal-leave .modal-container {
+
+  .modal-enter .modal-container,
+  .modal-leave .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
   }

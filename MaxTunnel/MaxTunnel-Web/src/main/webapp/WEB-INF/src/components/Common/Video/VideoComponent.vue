@@ -2,44 +2,60 @@
     <div class="videoContent">
         <!-- <vlc-video :id= 'id' :video=video'></vlc-video> -->
         <!-- <rtmp-video :id= 'id' :video= 'video'></rtmp-video> -->
-        <h5-stream-video :id='id' :video='video' :text="text"></h5-stream-video>
+        <h5-stream-video :id='id' :index='index' :video='video' :text="text"></h5-stream-video>
         <!-- <hsl-video :id= 'id' :video= 'video'></hsl-video> -->
     </div>
 </template>
 
 <script>
-import VlcVideo from "./vlcVideo";
-import RtmpVideo from "./rtmpVideo";
-import HslVideo from "./hslVideo";
-import H5StreamVideo from "./H5StreamVideo";
+    import VlcVideo from "./vlcVideo";
+    import RtmpVideo from "./rtmpVideo";
+    import HslVideo from "./hslVideo";
+    import H5StreamVideo from "./H5StreamVideo";
 
-export default {
-    name: "video-component",
-    props: {
-        video: {
-            type: Object,
-            required: true
+    export default {
+        name: "video-component",
+        props: {
+            video: {
+                type: Object,
+                required: true
+            },
+            id: {
+                required: true
+            },
+            text: {
+                required: false
+            },
+            index: {
+                default: 0,
+                type: Number
+            }
         },
-        id: {
-            required: true
+        components: {
+            VlcVideo,
+            RtmpVideo,
+            HslVideo,
+            H5StreamVideo
         },
-        text: {
-            required: false
+        mounted() {
+            // this.Log.info("videoComponent mounted!");
+        },
+        beforeMount() {
+            // this.Log.info("videoComponent beforeMount!");
+        },
+        beforeDestroy() {
+            // this.Log.info("videoComponent beforeDestroy!");
+        },
+        destroyed() {
+            // this.Log.info("videoComponent destroyed!");
         }
-    },
-    components: { VlcVideo, RtmpVideo, HslVideo, H5StreamVideo },
-    mounted() {
-        this.Log.info("videoComponent start!");
-    }
-};
+    };
 </script>
 
 <style scoped>
-.videoContent {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
+    .videoContent {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 </style>
-
-

@@ -10,44 +10,44 @@
  
 */
 function H5siOS() {
-    var browserName=platform.os.family;  
-    if(/ios/i.test(browserName) ){  
-        return true;  
-    } 
-	return false;
-}
-
-function H5sChromeBrowser(){  
-    var browserName=platform.name;  
-    if(/chrome/i.test(browserName) ){  
-        return true;  
-    }  
-    return false;
-}  
-
-
-function H5sEdgeBrowser(){  
-    var browserName=platform.name;  
-    if(/edge/i.test(browserName) ){  
-        return true;  
-    }  
-    return false;
-} 
-
-function H5sSafariBrowser(){  
-    var browserName=platform.name;  
-	console.log(browserName);
-    if(/safari/i.test(browserName) ){  
-        return true;  
-    }  
+    var browserName = platform.os.family;
+    if (/ios/i.test(browserName)) {
+        return true;
+    }
     return false;
 }
 
-function H5sAndriodPlatform(){  
-    var browserName=platform.os.family;  
-    if(/android/i.test(browserName) ){  
-        return true;  
-    }  
+function H5sChromeBrowser() {
+    var browserName = platform.name;
+    if (/chrome/i.test(browserName)) {
+        return true;
+    }
+    return false;
+}
+
+
+function H5sEdgeBrowser() {
+    var browserName = platform.name;
+    if (/edge/i.test(browserName)) {
+        return true;
+    }
+    return false;
+}
+
+function H5sSafariBrowser() {
+    var browserName = platform.name;
+    console.log(browserName);
+    if (/safari/i.test(browserName)) {
+        return true;
+    }
+    return false;
+}
+
+function H5sAndriodPlatform() {
+    var browserName = platform.os.family;
+    if (/android/i.test(browserName)) {
+        return true;
+    }
     return false;
 }
 
@@ -55,32 +55,26 @@ function H5sAndriodPlatform(){
  *=================H5Player Create
  *
  */
- 
-function H5sPlayerCreate(conf) {
-	var player;
 
-	if (H5siOS())
-	{
+function H5sPlayerCreate(conf) {
+    var player;
+
+    if (H5siOS()) {
         player = new H5sPlayerRTC(conf);
-	}else{
+    } else {
         player = new H5sPlayerWS(conf);
-	}
-	return player;
+    }
+    return player;
 }
 
 
-function GetURLParameter(sParam)
-{
+function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) 
-    {
+    for (var i = 0; i < sURLVariables.length; i++) {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
+        if (sParameterName[0] == sParam) {
             return sParameterName[1];
         }
     }
 }
- 
-
