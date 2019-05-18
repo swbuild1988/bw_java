@@ -44,8 +44,8 @@ public class SubSystemModuleCenter implements ModuleCenterInterface {
 
 	@Override
 	public void start() {
-	/*	sessionMap = new HashMap<>();
-		List<TunnelSimpleDto> list = tunnelService.getListWithoutPermission();
+		sessionMap = new HashMap<>();
+		/*	List<TunnelSimpleDto> list = tunnelService.getListWithoutPermission();
 		
 		HashSet<Integer> set = new HashSet<>();
 		for (TunnelSimpleDto tunnelSimpleDto : list) {

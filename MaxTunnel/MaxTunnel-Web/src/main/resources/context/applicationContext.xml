@@ -26,7 +26,7 @@
 	<import resource="classpath:spring/spring-tx.xml" />
 	<import resource="classpath:spring/spring-shiro.xml" />
 	<import resource="classpath:spring/spring-rabbitmq.xml" />
-	<!--<import resource="classpath:spring/spring-redis.xml" />-->
+	<import resource="classpath:spring/spring-redis.xml" />
 	<import resource="classpath:spring/spring-activiti.xml" />
 	<import resource="classpath:spring/spring-quartz.xml" />
 

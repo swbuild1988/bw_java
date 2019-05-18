@@ -102,7 +102,7 @@ public class SpareOutServiceImpl implements SpareOutService {
 
 	@Override
 	public ListPageUtil<SpareOutDto> dataGrid(SpareOutVo vo) {
-		List<SpareOutDto> dto = spareOutMapper.getSpareOutDtoByCondition(vo);
+		List<SpareOutDto> dto = getSpareOutDtoByCondition(vo);
 		ListPageUtil<SpareOutDto> page = new ListPageUtil<>(dto, vo.getPageNum(), vo.getPageSize());
 		return page;
 	}

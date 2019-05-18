@@ -16,9 +16,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.omm.SpareWhitherEnum;
 import com.bandweaver.tunnel.common.biz.dto.CommonDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.BuyDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareOutDto;
-
+import com.bandweaver.tunnel.common.biz.itf.omm.BuyService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InstrumentService;
@@ -26,16 +27,17 @@ import com.bandweaver.tunnel.common.biz.itf.omm.InstrumentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareOutService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Buy;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 import com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare_Out;
+import com.bandweaver.tunnel.common.biz.vo.omm.BuyVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InstrumentVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareOutVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.github.pagehelper.PageInfo;
 
@@ -58,6 +60,8 @@ public class SpareController {
 	private EquipmentService equipmentService;
 	@Autowired
 	private InstrumentService instrumentService;
+	@Autowired
+	private BuyService buyService;
 
 	
 	/**
@@ -643,4 +647,107 @@ public class SpareController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
+    
+    
+    
+    
+    // ================================= 采购信息 ============================
+    /**
+     * 添加采购记录
+     * @param typeId
+     * @param worker
+     * @param description
+     * @param buyTime
+     * @param crtTime
+     * @param isFinished
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys",method=RequestMethod.POST)
+    public JSONObject addBuy(@RequestBody Buy buy) {
+		buyService.add(buy);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改采购记录
+     * @param id
+     * @param typeId
+     * @param worker
+     * @param description
+     * @param buyTime
+     * @param isFinished
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys",method=RequestMethod.PUT)
+    public JSONObject updateBuy(@RequestBody Buy buy) {
+		buyService.update(buy);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 删除
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/{id}",method=RequestMethod.DELETE)
+    public JSONObject addBuy(@PathVariable("id") Integer id) {
+		buyService.delete(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取采购详情
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/{id}",method=RequestMethod.GET)
+    public JSONObject getBuyDtoById(@PathVariable("id") Integer id) {
+		BuyDto dto = buyService.getDtoById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 不分页条件查询采购记录
+     * @param typeId
+     * @param worker
+     * @param isFinished
+     * @param startTime
+     * @param endTime
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/condition",method=RequestMethod.POST)
+    public JSONObject getByCondition(@RequestBody(required = false) BuyVo vo) {
+		List<BuyDto> list = buyService.selectByCondition(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 分页条件查询采购记录
+     * @param typeId
+     * @param worker
+     * @param isFinished
+     * @param startTime
+     * @param endTime
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/datagrid",method=RequestMethod.POST)
+    public JSONObject dataGrid(@RequestBody BuyVo vo) {
+		ListPageUtil<BuyDto> list = buyService.dataGrid(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
 }

@@ -192,3 +192,36 @@ begin
 end OMM_INSPECTION_STEP_TG;
 /
 alter trigger OMM_INSPECTION_STEP_TG enable;
+
+
+-- ²É¹º±í
+create table T_OMM_BUY
+(
+  ID         NUMBER NOT NULL,
+  TYPE_ID  NUMBER NOT NULL,
+  WORKER			NUMBER,
+  DESCRIPTION			VARCHAR2(100),
+  BUY_TIME     DATE,
+  CREATE_TIME   DATE,
+  IS_FINISHED    NUMBER
+);
+alter table T_OMM_BUY add constraint OMM_BUY_ID primary key(ID);
+
+-- create OMM_BUY_SQ
+create sequence OMM_BUY_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OMM_BUY_TG
+CREATE OR REPLACE TRIGGER OMM_BUY_TG
+  BEFORE INSERT ON T_OMM_BUY
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_BUY_SQ.nextval into :new.id from dual;
+end OMM_BUY_TG;
+/
+alter trigger OMM_BUY_TG enable;

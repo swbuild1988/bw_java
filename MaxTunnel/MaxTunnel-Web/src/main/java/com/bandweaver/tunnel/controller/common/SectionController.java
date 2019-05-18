@@ -502,13 +502,13 @@ public class SectionController extends BaseController<Section>{
 	@RequestMapping(value = "tunnels/{tunnelId}/auto-cal-area-section", method=RequestMethod.GET)
 	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
 		// 自动生成区域的起点和终点坐标
-//		String result = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
-//		if(result != null) throw new RuntimeException(result);
-//		
-//		result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
-//		if(result != null) throw new RuntimeException(result);
+		String result = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
+		if(result != null) throw new RuntimeException(result);
 		
-    	String result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
+		result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
+		if(result != null) throw new RuntimeException(result);
+		
+    	result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
     	if(result != null) throw new RuntimeException(result);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}

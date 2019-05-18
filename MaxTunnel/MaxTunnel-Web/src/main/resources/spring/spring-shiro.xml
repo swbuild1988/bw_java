@@ -27,7 +27,7 @@
 		<!--&lt;!&ndash;  登陆成功跳转页面设置 &ndash;&gt;-->
 		<!--<property name="successUrl" value="/success" />-->
 	    <!-- 身份认证失败，则跳转到登录页面的配置 -->
-	    <property name="loginUrl" value="/403"/>
+	    <property name="loginUrl" value="/503"/>
 	    <!-- 权限认证失败，则跳转到指定页面 -->
 	    <property name="unauthorizedUrl" value="/unauthor"/>
 	    <!-- Shiro连接约束配置,即过滤链的定义 -->
@@ -37,7 +37,12 @@
 				/ = anon
 				/error = anon
 				/login/** = anon
-
+				/logout/** = anon
+				/measvalue-ai/** = anon
+				/measvalue-di/** = anon
+				/measvalue-si/** = anon
+				/measvalue-so/** = anon
+				
 				<!-- 测试需要，不需要登录，以后改为authc -->
 				/** = authc
 				

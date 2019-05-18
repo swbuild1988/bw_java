@@ -1,10 +1,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-            http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <!-- 配置JedisPoolConfig实例 -->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -20,32 +17,21 @@
         <property name="hostName" value="${redis.host}" />
         <property name="port" value="${redis.port}" />
         <!-- <property name="password" value="${redis.pass}" /> -->
-        <property name="database" value="${redis.dbIndex}" />
+        <!--<property name="database" value="${redis.dbIndex}" />-->
         <property name="poolConfig" ref="poolConfig" />
     </bean>
 
     <!-- 配置RedisTemplate -->
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+    <bean id="redisTemplete" class="org.springframework.data.redis.core.StringRedisTemplate">
         <property name="connectionFactory" ref="jedisConnectionFactory" />
         <property name="keySerializer" ref="stringRedisSerializer" />
         <property name="hashKeySerializer" ref="stringRedisSerializer" />
-    </bean>
-
-    <!-- 配置RedisCacheManager -->
-    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
-        <constructor-arg name="redisOperations" ref="redisTemplate" />
-        <property name="defaultExpiration" value="${redis.expiration}" />
-    </bean>
-
-    <!-- 配置RedisCacheConfig -->
-    <bean id="redisCacheConfig" class="com.bandweaver.tunnel.common.platform.redis.RedisCacheConfig">
-        <constructor-arg ref="jedisConnectionFactory" />
-        <constructor-arg ref="redisTemplate" />
-        <constructor-arg ref="redisCacheManager" />
     </bean>
 
     <!--  配置stringRedisSerializer -->
     <bean id="stringRedisSerializer"
           class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
     <!-- redis config end -->
+
+    <bean id = "redisUtil" class="com.bandweaver.tunnel.common.platform.util.RedisUtil"/>
 </beans>
