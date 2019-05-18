@@ -128,7 +128,7 @@
 			if (this.carouselInfo.isCarousel) {
 				this.carouselInfo.intervalId = setInterval(() => {
 					_this.carousel();
-				}, tparseFloat(this.refreshTime));
+				}, parseFloat(this.refreshTime));
 			}
 		},
 		methods: {

@@ -150,7 +150,7 @@
               .finally(()=>{
                 _this.refresh.timeoutId = setTimeout(()=>{
                   _this.fetchData(_this.requestUrl)
-                },_parseFloat(_this.refreshTime))
+                },parseFloat(_this.refreshTime))
               })
           }
         }

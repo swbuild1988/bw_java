@@ -4,13 +4,6 @@
             <module-title :title="title"></module-title>
         </div>
         <div class="topBox">
-            <!--<div class="simplePieChartBox">-->
-            <!--&lt;!&ndash; <simplePieChart v-bind="simplePieData"></simplePieChart> &ndash;&gt;-->
-            <!--<pie-chart v-bind="pieData"></pie-chart>-->
-            <!--</div>-->
-            <!--<div class="letBottomBox">-->
-            <!--<ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>-->
-            <!--</div>-->
             <ul class="stateLists">
                 <li :key="key" v-for="(item,key) in stateDataLists">
                     <div class="stateList-content" >
@@ -27,12 +20,6 @@
             >
             </stack-chart>
         </div>
-        <!--<div class="stackCrossBox">-->
-        <!--<cross-bar-chart-->
-        <!--v-bind="stackCrossData"-->
-        <!--ref="stackCrossChart"-->
-        <!--&gt;</cross-bar-chart>-->
-        <!--</div>-->
     </div>
 </template>
 
@@ -63,49 +50,10 @@
                     legendData: [],
                     seriesData: []
                 },
-                stateDataLists:[]
-                // simplePieData: {
-                //     id: 'simplePieID',
-                //     requestUrl: '/equipments/instruments/status',
-                //     parameters: {
-                //         option: {
-                //             title: {
-                //                 text: "设备统计",
-                //                 x: "center",
-                //                 textStyle: {
-                //                     color: "white"
-                //                 }
-                //             },
-                //             series: {
-                //                 label: {
-                //                     normal: {
-                //                         textStyle: {
-                //                             fontSize: '15%'
-                //                         }
-                //                     }
-                //                 }
-                //             },
-                //             grid: {
-                //                 top: '8%',
-                //                 left: 0,
-                //                 right: 0
-                //             },
-                //         },
-                //         timer: 1000 * 5 * 60
-                //     },
-                //     titleSize: '7%',
-                //     seriesSize: '4%'
-                // },
-                // ComplexBar: {
-                //     id: "ComplexBarChart",
-                //     // yAxisName: "单位：个",
-                //     requestUrl: "tunnels/equipments/types/test",
-                //     title: "各管廊设备明细",
-                //     color: "#21d6ff",
-                //     bgColor: 'rgb(255,255,255,0.0001)',
-                //     titleColor: '#ccc',
-                //     fontSizeNum: '10%'
-                // },
+                stateDataLists:[],
+                timerId:null
+
+                
             };
         },
         components: {
@@ -126,6 +74,9 @@
                 EquipmentService.getEquipmentTypeAndStatusCount().then(res => {
                     // 柱状图数据
                     var arr = []
+                    this.stackCrossData.legendData = [],
+                    this.stackCrossData.xData = [],
+                    this.stackCrossData.seriesData = []
                     for (var i = 0; i < res.length; i++) {
                         this.stackCrossData.xData.push(res[i].key)
                         var tmp = [];
@@ -147,6 +98,7 @@
                     for (var i = 0; i < this.stackCrossData.legendData.length; i++) {
                         this.pieData.legendData.push(this.stackCrossData.legendData[i]);
                     }
+                    this.pieData.seriesData = [];
                     for (var i = 0; i < arr.length; i++) {
                         this.pieData.seriesData.push(0);
                         for (var j = 0; j < arr[i].length; j++) this.pieData.seriesData[i] += arr[i][j];
@@ -164,10 +116,10 @@
                 })
                 .finally(()=>{
                     let _this = this
-                    setTimeout(()=>{
+                    
+                    this.timerId= setTimeout(()=>{
                         _this.init()
-                    },parseFloat(this.refreshTime)
-                    )
+                    },parseFloat(_this.refreshTime))
                 });
             },
             percentage(array,index){
@@ -179,6 +131,9 @@
                     this.$refs.stackCrossChart.drawBar()
                 }, parseFloat(this.refreshTime))
             }
+        },
+        beforeDestroy(){
+            clearTimeout( this.timerId );
         }
     };
 </script>
