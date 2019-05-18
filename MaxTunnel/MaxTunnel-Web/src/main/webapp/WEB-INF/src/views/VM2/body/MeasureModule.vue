@@ -238,7 +238,7 @@ export default {
 				let _this = this
 				this.dataTimeout.triggerTimes = setTimeout(()=>{
 					_this.getTriggerTimes()
-				},this.fetchTime)
+				},parseFloat(this.refreshTime))
 			});
 		}
 	},

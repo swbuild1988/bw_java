@@ -128,7 +128,7 @@
 			if (this.carouselInfo.isCarousel) {
 				this.carouselInfo.intervalId = setInterval(() => {
 					_this.carousel();
-				}, this.carouselInfo.time);
+				}, tparseFloat(this.refreshTime));
 			}
 		},
 		methods: {
@@ -148,7 +148,7 @@
 					let _this = this
 					this.refresh.totalId = setTimeout(()=>{
 						_this.getTotalAlarmCount()
-					},_this.refresh.time)
+					},parseFloat(this.refreshTime))
 				});
 			},
 			getAlarmList(){
@@ -201,7 +201,7 @@
 					let _this = this
 					this.refresh.listId = setTimeout(()=>{
 						_this.getAlarmList()
-					},_this.refresh.time)
+					},parseFloat(this.refreshTime))
 				});;
 			},
 			carousel() {
@@ -221,7 +221,7 @@
 					let _this = this;
 					this.carouselInfo.intervalId = setInterval(() => {
 						_this.carousel();
-					}, this.carouselInfo.time);
+					}, parseFloat(this.refreshTime));
 				} else {
 					clearInterval(this.carouselInfo.intervalId);
 					this.carouselInfo.intervalId = null;

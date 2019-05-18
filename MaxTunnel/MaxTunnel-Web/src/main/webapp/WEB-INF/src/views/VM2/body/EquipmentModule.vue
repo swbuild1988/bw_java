@@ -166,7 +166,7 @@
                     let _this = this
                     setTimeout(()=>{
                         _this.init()
-                    },300000
+                    },parseFloat(this.refreshTime)
                     )
                 });
             },
@@ -177,7 +177,7 @@
             refreshData() {
                 setInterval(() => {
                     this.$refs.stackCrossChart.drawBar()
-                }, 1000 * 60 * 5)
+                }, parseFloat(this.refreshTime))
             }
         }
     };

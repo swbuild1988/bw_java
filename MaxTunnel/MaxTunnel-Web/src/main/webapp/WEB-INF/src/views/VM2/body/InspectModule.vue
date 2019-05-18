@@ -227,7 +227,7 @@ export default {
         refreshData() {
             setInterval(() => {
                 this.$refs.corssBarChar.drawBar()
-            }, 1000 * 5 * 60)
+            }, parseFloat(this.refreshTime))
         },
         getCircleWidth(){
             this.circleWidth = window.innerHeight/100*6.2

@@ -42,7 +42,7 @@
         option: {},
         total: 0,
         refresh: {
-          time: 5000,
+          time: 1000 * 60,
           timeoutId: null
         }
       }
@@ -150,7 +150,7 @@
               .finally(()=>{
                 _this.refresh.timeoutId = setTimeout(()=>{
                   _this.fetchData(_this.requestUrl)
-                },_this.refresh.time)
+                },_parseFloat(_this.refreshTime))
               })
           }
         }

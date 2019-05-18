@@ -83,7 +83,6 @@
                     safe: 20
                 },
                 refresh: {
-                    time: 300000,
                     intervalId: null,
                     tunnelMessage: null,
                     runMessage: null
@@ -97,6 +96,7 @@
             ProgressBarChart
         },
         mounted() {
+            
             this.getTunnelMessage();
             let _this = this;
             // this.refresh.intervalId = setInterval(() => {
@@ -128,9 +128,10 @@
                 )
                 .finally(()=>{
                     let _this = this
+                   
                     this.refresh.tunnelMessage = setTimeout(()=>{
                         _this.getTunnelMessage()
-                    },this.refresh.time)
+                    },parseFloat(this.refreshTime))
                 });
             },
             getRunMessage(){
@@ -147,7 +148,7 @@
                     let _this = this
                     this.refresh.runMessage = setTimeout(()=>{
                         _this.getRunMessage()
-                    },this.refresh.time)
+                    },parseFloat(this.refreshTime))
                 });
             }
         }
