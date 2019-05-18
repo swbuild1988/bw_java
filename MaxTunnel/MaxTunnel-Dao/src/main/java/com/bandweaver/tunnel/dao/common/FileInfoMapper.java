@@ -9,15 +9,11 @@ import com.bandweaver.tunnel.common.biz.vo.FileInfoVo;
 public interface FileInfoMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(FileInfo record);
-
     int insertSelective(FileInfo record);
 
     FileInfo selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(FileInfo record);
-
-    int updateByPrimaryKey(FileInfo record);
 
 	List<FileInfoDto> getDtoListByCondition(FileInfoVo vo);
 }

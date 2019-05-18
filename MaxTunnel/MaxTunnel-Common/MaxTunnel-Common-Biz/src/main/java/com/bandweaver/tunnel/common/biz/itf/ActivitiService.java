@@ -218,13 +218,13 @@ public interface ActivitiService {
 	 * @param  processInstanceId 流程实例id
 	 * @param @return   
 	 * @return InputStream  
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月10日
 	 */
-	void getImageByProcessInstance(String processInstanceId,HttpServletResponse response) throws FileNotFoundException, IOException;
+	void getImageByProcessInstance(String processInstanceId,HttpServletResponse response) ;
 	
 
 	/**

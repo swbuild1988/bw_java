@@ -194,7 +194,8 @@
 import { getFormatTime } from "../../scripts/DateFormat.js";
 import { LoginService } from "../../services/loginService.js";
 import showAboutUs from "../../components/Common/Modal/ShowAboutUs";
-import { removeToken } from "@/utils/auth"; // 验权
+// import { removeToken } from "@/utils/auth"; // 验权
+import session from '@/utils/auth'
 import Cookies from "js-cookie";
 export default {
 	name: "UmMain",
@@ -254,7 +255,8 @@ export default {
 					LoginService.UMLogout().then(
 						result => {
 							Cookies.remove("userName");
-							removeToken();
+							// removeToken();
+                            session.removeSession();
 							_this.$router.push("/UMlogin");
 						},
 						error => {

@@ -221,6 +221,9 @@
             <if test="assetNo != null">
                 and e.asset_no = #{assetNo}
             </if>
+            <if test="objId != null">
+                and e.obj_id = #{objId}
+            </if>
             <if test="modelId != null">
                 and e.model_id = #{modelId}
             </if>

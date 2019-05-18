@@ -14,8 +14,8 @@ public class TaskCreatedListener implements ActivitiEventListener {
 
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-        LogUtil.info("task created: " + activitiEvent.getType().name());
-        LogUtil.info("excuted Id : " + activitiEvent.getExecutionId());
+        LogUtil.debug("task created: " + activitiEvent.getType().name());
+        LogUtil.debug("excuted Id : " + activitiEvent.getExecutionId());
 
         ActivitiService activitiService = SpringContextHolder.getBean("activitiService");
         EmPlanService emPlanService = SpringContextHolder.getBean("emPlanService");
@@ -24,8 +24,8 @@ public class TaskCreatedListener implements ActivitiEventListener {
         ActivitiEntityEventImpl eventImpl=(ActivitiEntityEventImpl)activitiEvent;
         TaskEntity taskEntity=(TaskEntity)eventImpl.getEntity();
 
-        LogUtil.info("task name: " + taskEntity.getName());
-        LogUtil.info("taskDefinitionKey: " + taskEntity.getTaskDefinitionKey());
+        LogUtil.debug("task name: " + taskEntity.getName());
+        LogUtil.debug("taskDefinitionKey: " + taskEntity.getTaskDefinitionKey());
         // 更新状态
         activitiService.updateProcessBaseStatus(activitiEvent.getProcessDefinitionId(), activitiEvent.getProcessInstanceId(), taskEntity.getName());
         

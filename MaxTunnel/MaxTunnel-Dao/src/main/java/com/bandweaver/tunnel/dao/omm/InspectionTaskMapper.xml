@@ -174,11 +174,16 @@
             d.record_time,
             d.content     AS record_content,
             d.defect_id,
-            d.section_id
+            d.section_id,
+            s.id          AS step_id,
+            s.task_id     AS step_task_id,
+            s.name        AS step_name,
+            s.is_finished AS step_is_finished
         FROM t_omm_inspection_task a
             LEFT JOIN t_omm_inspection_plan b ON a.plan_id = b.plan_id
             LEFT JOIN t_security_user c ON a.inspect_man_id = c.id
             LEFT JOIN t_omm_inspection_record d ON a.id = d.task_id
+            LEFT JOIN t_omm_inspection_step s on a.id = s.task_id
         WHERE a.id = #{id}
     </select>
 
@@ -244,6 +249,12 @@
             <association property="defect" javaType="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto"
                          column="defect_id"
                          select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>
+        </collection>
+        <collection property="steps" ofType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
+            <id column="step_id" property="id"/>
+            <result column="step_name" property="name"/>
+            <result column="step_task_id" property="taskId"/>
+            <result column="step_is_finished" property="isFinished"/>
         </collection>
     </resultMap>
     

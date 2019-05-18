@@ -196,7 +196,7 @@
 
                     }
                 }
-
+                console.log('str',str)
                 return str;
             },
             // comfirm(){
@@ -212,7 +212,7 @@
 
                 let Pointer = 0 ;//默认为0
 
-                str.replace(/[0-9A-Za-z*?]+(?=\s|)/g,key =>{
+                str.replace(/[0-9A-Za-z*?/,]+(?=\s|)/g,key =>{
 
                     this.replaceData( key,Pointer );
 

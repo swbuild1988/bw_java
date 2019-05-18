@@ -59,6 +59,7 @@
             <Tabs :value="chooseEquipmentTabPane" :animated="false" style="border: 1px solid #fff" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
                     <Col span="24">
+                        <div class="nullData" v-show="isNullData">暂无数据</div>
                         <Row :gutter="16">
                             <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
                                 <div :style="backImage" class="backGoundBox">
@@ -69,26 +70,32 @@
                                 </div>
                                 </div>
                                 <Row class="detailsBox">
-                                    <Col span="10">所属管廊：{{item.tunnel.name}}</Col>
-                                    <Col span="14">设备类型：{{ item.typeName }}</Col>
-                                    <Col span="10">供应商：{{item.vender.name}}</Col>
-                                    <Col span="14">所属型号：{{item.model.name}}</Col>
-                                    <Col span="10">设备状态：{{item.statusName}}</Col>
-                                    <Col span="14">启用时间：{{ item.crtTime }}</Col>
+                                    <Col span="12" :title="item.tunnel.name">所属管廊：{{item.tunnel.name}}</Col>
+                                    <Col span="12" :title="item.typeName">设备类型：{{ item.typeName }}</Col>
+                                    <Col span="12" :title="item.vender.name">供应商：{{item.vender.name}}</Col>
+                                    <Col span="12" :title="item.model.name">所属型号：{{item.model.name}}</Col>
+                                    <Col span="12" :title="item.statusName">设备状态：{{item.statusName}}</Col>
+                                    <Col span="12" :title="item.crtTime">启用时间：{{ item.crtTime }}</Col>
                                 </Row>
                                 <div class="operation">
                                 <Row>
                                     <Col span="8" class="operationSee">
-                                        <Icon type="eye" size=20></Icon>
-                                        <p @click="show(index)">查看</p>
+                                        <div @click="show(index)">
+                                            <Icon type="eye" size=20></Icon>
+                                            <p>查看</p>
+                                        </div>
                                     </Col>
                                     <Col span="8" class="operationEdit">
-                                        <Icon type="edit" size=19></Icon>
-                                        <p @click="edit(index)">编辑</p>
+                                        <div @click="edit(index)">
+                                            <Icon type="edit" size=19></Icon>
+                                            <p>编辑</p>
+                                        </div>
                                     </Col>
                                     <Col span="8" class="operationDel">
-                                        <Icon type="trash-a" size=20></Icon>
-                                        <p @click="del(index)">删除</p>
+                                        <div @click="del(index)">
+                                            <Icon type="trash-a" size=20></Icon>
+                                            <p>删除</p>
+                                        </div>
                                     </Col>
                                 </Row>
                                 </div>
@@ -256,7 +263,8 @@ export default {
                     }
                 }
             ],
-            chooseEquipmentTabPane: '卡片'
+            chooseEquipmentTabPane: '卡片',
+            isNullData: false
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -375,15 +383,20 @@ export default {
             }
             EquipmentService.equipmentDatagird(this.params).then(
                 result => {
-                for (let index in result.list) {
-                    result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd hh:mm:s");
-                    // if (result.list[index].imgUrl != null) {
-                    //   result.list[index].imgUrl =
-                    //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
-                    // }
-                }
-                _this.equipments = result.list;
-                _this.page.pageTotal = result.total;
+                    if(result.list.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
+                    for (let index in result.list) {
+                        result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd hh:mm:s");
+                        // if (result.list[index].imgUrl != null) {
+                        //   result.list[index].imgUrl =
+                        //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
+                        // }
+                    }
+                    _this.equipments = result.list;
+                    _this.page.pageTotal = result.total;
                 },
                 error => {
                     _this.Log.info(error);
@@ -391,7 +404,7 @@ export default {
             );
         },
         batchAddEquipment(data){
-            var arr = new Array()
+            let arr = []
             data.body.forEach(element => {
                 let temp = {
                     name: element[data.header[0]],
@@ -545,9 +558,12 @@ export default {
     background: #fff;
 }
 
-.detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14 {
+.detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
     line-height: 35px;
-    padding-left: 20px;
+    padding-left: 2vmin;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .operationSee,

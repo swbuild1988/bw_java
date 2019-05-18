@@ -350,7 +350,7 @@
         position: relative;
     }
     .node-detail-content > strong{
-        width: 73%;
+        width: 64%;
         display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -446,8 +446,8 @@
     }
     .planContent .nodeDetail {
        border-radius: 1rem;
-       padding: 0.55rem  2.2rem  0.3rem 1rem;
-       font-size: 1.9rem;
+       padding: 0.55rem  1rem  0.3rem 1rem;
+       font-size: 1.5rem;
     }
     .tag {
         border: 1rem solid;

@@ -25,6 +25,7 @@
         <div class="list">
             <div v-for="(temp,index) in divName" :key="index">
                 <span class="tabName">{{temp.name}}</span>
+                <div class="nullData" v-show="isNullData">暂无数据</div>
                 <Row>
                     <Col span="4" v-for="(item,index) in myTasks" :key='index' v-if="temp.id==item.processType">
                         <div class="unitBox" v-bind:class="{isFinished: item.isFinished,waitStart:item.status=='未开始'}" @click="goToMoudle(item)">
@@ -60,10 +61,11 @@ export default {
             page:{
                 pageNum: 1,
                 pageSize: 24,
-                pageTotal:null,
+                pageTotal:0,
             },
             userId: null,
             divName:[],
+            isNullData: false
         }
     },
     computed:{
@@ -93,6 +95,11 @@ export default {
             axios.post('users/activiti/allTask/datagrid',(this.params)).then(response=>{
                 let { code, data } = response.data;
                 if (code == 200) {
+                    if(data.pagedList.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     this.myTasks = data.pagedList
                     for(let index in this.myTasks){
                         this.myTasks[index].crtTime = new Date(this.myTasks[index].crtTime).format('yyyy-MM-dd')
@@ -140,7 +147,7 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation'&&task.isFinished == false) {
-                        pathParams.name = '分配巡检任务任务'
+                        pathParams.name = '分配巡检任务'
                         pathParams.params = {
                             id: task.id,
                             isFinished: task.isFinished

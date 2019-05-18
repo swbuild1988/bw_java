@@ -4,8 +4,13 @@
         <h2 class="title">添加文件</h2>
         <div class="content">
             <FormItem label="资料类型：">
-                <Select v-model="addDocument.docType" class="inputWidth">
+                <Select v-model="addDocument.docType" class="inputWidth" @on-change="getSubTypeList">
                     <Option v-for="type in selectList.docTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="项目验收文件类型：" v-show="selectList.subDocTypes.length">
+                <Select v-model="addDocument.docTypeSon" class="inputWidth">
+                    <Option v-for="type in selectList.subDocTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
                 </Select>
             </FormItem>
             <FormItem label="文件类型：">
@@ -35,21 +40,15 @@ export default {
             pageTypes: types.pageType,
             addDocument:{
                 fileType: 1,
-                docType: 1
+                docType: 1,
+                docTypeSon: 1
             },
-            // ruleValidate: {
-            //     fileType: [
-            //         { required: true, message: '请填写文件名称', trigger: 'change' }
-            //     ],
-            //     docType: [
-            //         { required: true, message: '请选择文件类型', trigger: 'change' }
-            //     ]
-            // },
             validateTelRules: true,
             isDisable:false,
             selectList:{
-                docTypes:[],
-                fileTypes:[]
+                docTypes: [],
+                fileTypes: [],
+                subDocTypes: []
             },
             apiUrl: null
         }
@@ -63,15 +62,6 @@ export default {
         //     duration: 10
         // })
     },
-    // watch: {
-    //   '$route': function () {
-    //         this.pageType = 3;
-    //         this.addDocument = {
-    //             fileType: null,
-    //             docType: null
-    //         }
-    //     }
-    // },
     methods:{
         getParams() {
             let _this = this;
@@ -85,6 +75,7 @@ export default {
             EnumsService.getDocType().then(
             function(result){
                     _this.selectList.docTypes = result
+                    _this.getSubTypeList()
                 },
                 function(error){
                   console.log(error)
@@ -117,6 +108,13 @@ export default {
                 duration: 10,
                 top: 600
             })
+        },
+        getSubTypeList(){
+            let doc = this.selectList.docTypes.find(doc=>{
+                return doc.val === this.addDocument.docType
+            })
+            this.selectList.subDocTypes = doc.list
+            this.addDocument.docTypeSon = doc.list.length ? 1 : ''
         }
     }
 }
@@ -145,7 +143,7 @@ h2{
     font-size: 1.8vmin;
 }
 .form >>> .ivu-form-item-label{
-    width: 12vmin;
+    width: 14vmin;
 }
 .inputWidth{
     width: 40vmin;
@@ -167,5 +165,8 @@ h2{
     height: 2.2vmin !important;
     line-height: 2vmin !important;
     width: 90% !important;
+}
+.ivu-upload-list{
+    margin-left: 14vmin;
 }
 </style>

@@ -71,20 +71,14 @@ export default {
                     }
                 ]
             })
-            this.myChart.on('click', function(params){
-                // console.l
-                og("params111", params)
-            })
+            this.myChart.on('click', function(params){})
         },
-        // setPersonInfo(){
-        //     this.myChart = this.$echarts.init(document.getElementById(this.id))
-        // }
     }
 }
 </script>
 <style scope>
 .treeChart{
     width: 100%;
-    height: 85vh;
+    height: 80vh;
 }
 </style>

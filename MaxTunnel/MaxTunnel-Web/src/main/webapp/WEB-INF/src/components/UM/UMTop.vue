@@ -182,6 +182,11 @@ export default {
 							url: "/UM/TunnelFire",
 							path: "/UM/TunnelFire"
 						},
+                        {
+                            name: "管廊管线监控",
+                            url: "/UM/TunnelPipeline",
+                            path: "/UM/TunnelPipeline"
+                        },
 						{
 							name: "数据分析",
 							url: "/UM/DataAnalysis/QueryData",
@@ -225,7 +230,7 @@ export default {
 					children: [
 						{
 							name: "资料管理",
-							url: "/UM/tunnelDocuments/list",
+							url: "/UM/tunnelDocuments/list/1.1",
 							path: "/UM/tunnelDocuments/list"
 						},
 						{
@@ -339,6 +344,7 @@ export default {
 									.toLowerCase()
 									.indexOf(tempUrl[index].toLowerCase()) > -1
 						);
+						
 						// console.log(index, tempUrl[index]);
 						// console.log(temp);
 						if (temp.length > 0) {

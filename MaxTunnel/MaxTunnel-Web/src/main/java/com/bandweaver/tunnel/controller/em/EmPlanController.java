@@ -85,8 +85,8 @@ public class EmPlanController extends BaseController<EmPlan> {
         String[] arr = value.split(",");
         for (String str : arr) {
             ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(DataTypeUtil.toInteger(str));
-            activitiService.deploy((String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
-                    (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()), processTypeEnum.getName());
+            activitiService.deploy(PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
+                     PropertiesUtil.getValue(processTypeEnum.getPngPath()), processTypeEnum.getName());
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

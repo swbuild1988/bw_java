@@ -49,6 +49,7 @@
             </Row>
         </div>
         <div class="list">
+            <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row>
                 <Col span="6" v-for="(item,index) in contractList" :key="index">
                     <div class="contracts">
@@ -140,7 +141,8 @@
                     bottom: '20px',
                     right: '15px'
                 },
-                contractIds:[]
+                contractIds:[],
+                isNullData: false
             }
         },
         components: { CustomerChoose },
@@ -206,6 +208,11 @@
                 ContractService.contractDatagrid(_this.params).then(
                     (result)=>{
                         _this.contractList = [];
+                        if(!result.list.length){
+                            _this.isNullData = true
+                        } else {
+                            _this.isNullData = false
+                        }
                         result.list.forEach(a=>{
                             _this.contractList.push({
                                 id: a.id,

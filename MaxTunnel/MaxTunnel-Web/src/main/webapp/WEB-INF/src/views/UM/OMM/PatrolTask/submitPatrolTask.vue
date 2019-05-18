@@ -21,6 +21,15 @@
             <FormItem label="任务结束时间：">
                 <DatePicker type="datetime" v-model="task.endTime" placeholder="请输入巡检任务结束时间" style="width: 100%" :readonly="this.$route.params.isFinished==true"></DatePicker>
             </FormItem>
+            <FormItem label="巡检步骤：">
+                <ul style="max-height: 100px;overflow-y: auto;">
+                    <li v-for="(item, index) in task.steps" :key="index" class="todoLi">
+                        <Checkbox v-model="item.isFinished"></Checkbox>
+                        <span>{{index+1}}、</span>
+                        <input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
+                    </li>
+                </ul>
+            </FormItem>
             <FormItem label="巡检记录：">
                 <Table :columns="columns10" :data="this.task.records"></Table>
                 <Button type="dashed" long @click="handleAddRecords" icon="plus-round" v-show="this.$route.params.isFinished!=true">添加巡检记录</Button>
@@ -144,7 +153,7 @@
                                     </td>
                                     <td v-show="item.defect.type==2">
                                         <Select v-model="item.defect.objectId">
-                                            <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
+                                            <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                                         </Select>
                                     </td>
                                     <td>
@@ -303,7 +312,8 @@ export default {
             imgName: '',
             visible: false,
             uploadList: [],
-            modalWidth: null
+            modalWidth: null,
+            saveRecords: []
         }    
     },
     mounted(){
@@ -498,11 +508,21 @@ export default {
                     }
                     arr.push(b)
                 }
-                    this.task.records=arr.concat(this.task.records)
+                this.task.records=arr.concat(this.task.records)
             })
         },
         //提交巡检任务执行结果
-        submitTask(){
+        submitTask(){ 
+            if(this.task.records.length>0){
+                this.task.records.forEach(item => {
+                    if(item.id){
+
+                    }else{
+                        this.saveRecords.push(item)
+                    }
+                })
+            }
+            this.task.records = this.saveRecords
             this.axios.put('/inspection-tasks',this.task).then(response=>{
                 if(this.$route.params.isFinished==undefined){
                     this.$router.push('/UM/myNews/queryMyTask');
@@ -559,6 +579,21 @@ export default {
 }
 </script>
 <style scoped>
+.todoLi{
+    line-height: 3.5vh;
+    height: 3.5vh;
+    margin-right: 0.5vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.5vh;
+}
+.todoLi .todoEidt{
+    border: none;
+    box-shadow: 2px 2px 10px 0px #ccc;
+    flex: 1;
+    margin-right: 0.5vw;
+    padding-left: 0.5vw;
+}
 .ivu-form.ivu-form-label-right{
     width: 800px;
     margin: 10px auto;

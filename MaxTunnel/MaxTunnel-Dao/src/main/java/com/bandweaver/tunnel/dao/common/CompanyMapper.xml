@@ -7,7 +7,7 @@
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="CREDIT_NO" jdbcType="VARCHAR" property="creditNo" />
-    <result column="BANK" jdbcType="DECIMAL" property="bank" />
+    <result column="BANK" property="bank" />
     <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
     <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
     <result column="PHONE" jdbcType="VARCHAR" property="phone" />
@@ -22,7 +22,7 @@
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
     <result column="CREDIT_NO" jdbcType="VARCHAR" property="creditNo" />
-    <result column="BANK" jdbcType="DECIMAL" property="bank" />
+    <result column="BANK" property="bank" />
     <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
     <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
     <result column="PHONE" jdbcType="VARCHAR" property="phone" />
@@ -82,7 +82,7 @@
      </selectKey>
     insert into T_COMMON_COMPANY
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         NAME,
       </if>
       <if test="crtTime != null">
@@ -91,7 +91,7 @@
       <if test="creditNo != null">
         CREDIT_NO,
       </if>
-      <if test="bank != null">
+      <if test="bank != null and bank.trim() != ''">
         BANK,
       </if>
       <if test="account != null">
@@ -120,7 +120,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="crtTime != null">
@@ -129,7 +129,7 @@
       <if test="creditNo != null">
         #{creditNo},
       </if>
-      <if test="bank != null">
+      <if test="bank != null and bank.trim() != ''">
         #{bank},
       </if>
       <if test="account != null">
@@ -161,7 +161,7 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Company">
     update T_COMMON_COMPANY
     <set>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
       <if test="crtTime != null">
@@ -170,7 +170,7 @@
       <if test="creditNo != null">
         CREDIT_NO = #{creditNo},
       </if>
-      <if test="bank != null">
+      <if test="bank != null and bank.trim() != ''">
         BANK = #{bank},
       </if>
       <if test="account != null">
@@ -218,8 +218,8 @@
   		<if test="name != null and name.trim() != ''">
   			and instr(name,#{name})>0
   		</if>
-	    <if test="bank != null">
-	        and BANK = #{bank}
+	    <if test="bank != null and bank.trim() != ''">
+	        and instr(bank, #{bank}) > 0
 	    </if>
 	    <if test="startTime != null">
 	        and crt_time &gt;= #{startTime}

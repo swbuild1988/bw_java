@@ -37,30 +37,24 @@
             <Col span="8" class="rightBox">
             <Row>
                 <Col span="12">
-                <!-- <div
-          @click="goToMoudle('/UM/planPatrol/queryAnnualPlan')"
-          class="data-box"
-          style="margin-right: 0"
-        > -->
-                <div class="data-box" style="margin-right: 0">
-                    <DataShow v-bind="yearPlan"></DataShow>
-                </div>
+                    <div class="data-box" style="margin-right: 0" @click="goToPlan('年度巡检计划查询', 1)">
+                        <DataShow v-bind="yearPlan"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <!-- <div @click="goToMoudle('/UM/planPatrol/queryMonthPlan')" class="data-box"> -->
-                <div class="data-box">
-                    <DataShow v-bind="monthPlan"></DataShow>
-                </div>
+                    <div class="data-box" @click="goToPlan('年度巡检计划查询', 2)">
+                        <DataShow v-bind="monthPlan"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <div class="data-box" style="margin-right: 0">
-                    <DataShow v-bind="finishedTask"></DataShow>
-                </div>
+                    <div class="data-box" style="margin-right: 0" @click="goToTask('巡检任务总览', 1)">
+                        <DataShow v-bind="finishedTask"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <div class="data-box">
-                    <DataShow v-bind="unfinishedTask"></DataShow>
-                </div>
+                    <div class="data-box"  @click="goToTask('巡检任务总览', 0)">
+                        <DataShow v-bind="unfinishedTask"></DataShow>
+                    </div>
                 </Col>
             </Row>
             </Col>
@@ -283,6 +277,22 @@
         methods: {
             goToMoudle: function (path) {
                 this.$router.push(path);
+            },
+            goToPlan: function(name, timeType){
+                this.$router.push({
+                    name: name,
+                    params: {
+                        timeType: timeType
+                    }
+                })
+            },
+            goToTask: function(name, taskStatus){
+                this.$router.push({
+                    name: name,
+                    params: {
+                        taskStatus: taskStatus
+                    }
+                })
             },
             goPatrolPlan(id) {
                 this.$router.push({

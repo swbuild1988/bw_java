@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,post } from "../utils/http";
 
 var personnelPositionService = {
 	// 获取入廊人员信息
 	getPersonsInfo: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('req-historys/visitors').then(res => {
+			get('req-historys/visitors').then(res => {
 				let {
 					code,
 					data,
@@ -89,7 +90,7 @@ var personnelPositionService = {
 	// 获取在用设备
 	getActiveLocators: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('actived-locators').then(res => {
+			get('actived-locators').then(res => {
 				let {
 					code,
 					data,
@@ -141,7 +142,7 @@ var personnelPositionService = {
 	// 获取所有设备
 	getAllLocators: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('locators').then(res => {
+			get('locators').then(res => {
 				let {
 					code,
 					data,
@@ -181,7 +182,7 @@ var personnelPositionService = {
 	// 绑定设备
 	bindLocator: function(equipmentId, userParam) {
 		return new Promise((resolve, reject) => {
-			axios.post('locators/' + equipmentId + '/start', userParam).then(res => {
+			post('locators/' + equipmentId + '/start', userParam).then(res => {
 				let {
 					code,
 					data,
@@ -198,7 +199,7 @@ var personnelPositionService = {
 	// 解绑设备
 	unbindLocator: function(equipmentId) {
 		return new Promise((resolve, reject) => {
-			axios.get('locators/' + equipmentId + '/stop').then(res => {
+			get('locators/' + equipmentId + '/stop').then(res => {
 				let {
 					code,
 					data,
@@ -215,7 +216,7 @@ var personnelPositionService = {
 	// 入廊人员分页查询
 	visitorsDatagrid(params) {
 		return new Promise((resolve,reject)=>{
-			axios.post('req-record/datagrid',params)
+			post('req-record/datagrid',params)
 			.then(
 				res=> {
 					let { code,data,msg } = res.data
@@ -260,7 +261,7 @@ var personnelPositionService = {
 	// 根据绑定设备的staffId获取详情
 	getBindDetails(staffId){
 		return new Promise((resolve,reject)=>{
-			axios.get('req-historys/' + staffId + '/staff')
+			get('req-historys/' + staffId + '/staff')
 			.then(
 				result=>{
 					let { code,data,msg } = result.data
@@ -279,7 +280,7 @@ var personnelPositionService = {
 	// 获取历史轨迹
 	getRoutes(params){
 		return new Promise((resolve,reject)=>{
-			axios.post('req-record/condition',params)
+			post('req-record/condition',params)
 			.then(
 				result=>{
 					let { code,data,msg } = result.data

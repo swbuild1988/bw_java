@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var StoreService = {
     //分页查询
     queryStore(params){
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/stores/datagrid",params).then(res=>{
+            post("/tunnels/stores/datagrid",params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -17,7 +18,7 @@ var StoreService = {
     // 获取tunnels
     getTunnels(){
         return new Promise((resolve, reject) => {
-            axios.get("/tunnels").then(res=>{
+            get("/tunnels").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -30,7 +31,7 @@ var StoreService = {
     //获取storeType
     getStoreType(){
         return new Promise((resolve, reject) => {
-            axios.get("/store-type/list").then(res=>{
+            get("/store-type/list").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -43,7 +44,7 @@ var StoreService = {
     //批量删除
     bulkDelete(ids){
         return new Promise((resolve, reject) => {
-            axios.delete("/stores/batch/"+ids).then(res=>{
+            del("/stores/batch/"+ids).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -56,7 +57,7 @@ var StoreService = {
     //保存修改后的store
     saveEditStore(params){
         return new Promise((resolve, reject) => {
-            axios.put("/stores", params).then(res=>{
+            put("/stores", params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -69,7 +70,7 @@ var StoreService = {
     //保存新增的store
     saveAddStore(params){
         return new Promise((resolve, reject) => {
-            axios.post("/stores", params).then(res=>{
+            post("/stores", params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)

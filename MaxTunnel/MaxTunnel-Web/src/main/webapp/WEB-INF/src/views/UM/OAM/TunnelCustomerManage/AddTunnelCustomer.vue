@@ -4,7 +4,7 @@
         <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加企业客户信息</h2>
         <h2 class="formTitle" v-show="pageType==pageTypes.Edit">修改企业客户信息</h2>
         <Row>
-            <Col span="8">
+            <Col span="7">
                 <p class="subTitle">企业基本信息：</p>
                 <FormItem label="企业名称:" prop="company.name" 
                 :rules="{required: true, message: '请输入企业名称', trigger: 'blur'}">
@@ -15,10 +15,8 @@
                     <Input v-model="companyInfo.company.creditNo" placeholder="请输入信用代码" />
                 </FormItem>
                 <FormItem label="开户行:" prop="company.bank"
-                :rules="{ type: 'number', required: true, message: '请选择开户行', trigger: 'change' }">
-                    <Select v-model="companyInfo.company.bank">
-                        <Option v-for="item in selectLists.banks" :value="item.val" :key="item.val">{{ item.key }}</Option>
-                    </Select>
+                :rules="{ required: true, message: '请输入开户行', trigger: 'blur' }">
+                    <Input v-model="companyInfo.company.bank" placeholder="请输入开户行" />
                 </FormItem>
                 <FormItem label="账号:" prop="company.account"
                 :rules="{required: true, message: '请输入账号', trigger: 'blur'}">
@@ -37,6 +35,8 @@
                 :rules="[{required: true, message: '请输入邮箱', trigger: 'blur'},{ validator: validates.validateEmail, trigger: 'blur' }]">
                     <Input v-model="companyInfo.company.mail" placeholder="请输入邮箱" />
                 </FormItem>
+            </Col>
+            <Col span="7" offset="1">
                 <p class="subTitle">一般联系人信息：</p>
                 <FormItem label="姓名:" prop="list[0].contact"
                 :rules="{required: true, message: '请输入一般联系人姓名', trigger: 'blur'}">
@@ -49,8 +49,6 @@
                 :rules="[{required: true, message: '请输入一般联系人手机', trigger: 'blur'},{ validator: validates.validatePhone, trigger: 'blur' }]">
                     <Input v-model="companyInfo.list[0].tel" placeholder="请输入一般联系人手机" />
                 </FormItem>
-            </Col>
-            <Col span="7" offset="1">
                 <FormItem label="电话:" prop="list[0].tel2"
                 :rules="{ validator: validatePhone, trigger: 'blur' }">
                     <Input v-model="companyInfo.list[0].tel2" placeholder="请输入一般联系人电话" />
@@ -79,6 +77,8 @@
                 :rules="{ validator: validateEmail, trigger: 'blur' }">
                     <Input v-model="companyInfo.list[1].mail" placeholder="请输入紧急联系人邮箱" />
                 </FormItem>
+            </Col>
+            <Col span="8" offset="1" class="inspectionItems">
                 <p class="subTitle">固定巡检信息：</p>
                 <FormItem label="周期:" prop="company.inspectionNo"
                 :rules="{required: true, message: '请输入固定巡检周期', trigger: 'blur'}">
@@ -88,8 +88,6 @@
                 :rules="{required: true, message: '请输入固定巡检时间', trigger: 'blur'}">
                     <Input v-model="companyInfo.company.inspectionTime" placeholder="请输入固定巡检时间" />
                 </FormItem>
-            </Col>
-            <Col span="7" offset="1">
                 <p class="subTitle">固定巡检人员备案：</p>
                 <FormItem label="姓名:" prop="company.insName"
                 :rules="{required: true, message: '请输入姓名', trigger: 'blur'}">
@@ -120,15 +118,15 @@
                     <Input placeholder="支持png,jpeg,jpg格式" type="file" @on-change="imgChange" accept="image/png,image/jpeg,image/jpg"/>
                 </FormItem>
                 <FormItem>
-                    <image-from-url v-if="imgPreview.isInit" :url="imgPreview.url" style="width: 24vmin; height: 16vmin"></image-from-url>
-                    <img v-else :src="companyInfo.company.imgUrl" style="width: 24vmin; height: 16vmin">
+                    <image-from-url v-if="imgPreview.isInit" :url="imgPreview.url" style="width: 29.6vmin; height: 16vmin"></image-from-url>
+                    <img v-else :src="companyInfo.company.imgUrl" style="width: 29.6vmin; height: 16vmin">
                 </FormItem>
             </Col>
         </Row>
-        <FormItem style="margin-left: 36%;" class="btn">
+        <div style="margin: 0 auto; width: 14vmin;" class="btn">
             <Button type="primary" @click="submitcompanyInfo('companyInfo')">保存</Button>
             <Button type="ghost"  @click="goBack()" style="margin-right: 8px">返回</Button>
-        </FormItem>
+        </div>
     </Form>
 </div>
 </template>
@@ -218,9 +216,6 @@ export default {
                     }
                 ],
             },
-            selectLists:{
-                banks: []
-            },
             validates: {
                 validateEmail,
                 validatePhone,
@@ -252,7 +247,6 @@ export default {
         }
     },
     mounted(){
-        this.init()
         if(this.$route.params.id){
             this.companyInfo.company.id = this.$route.params.id
         }
@@ -263,16 +257,6 @@ export default {
         ImageFromUrl
     },
     methods:{
-        init(){
-            EnumsService.getBanks().then(
-                response=>{
-                    this.selectLists.banks = response
-                },
-                error=>{
-                    this.Log.info(error)
-                }
-            )
-        },
         submitcompanyInfo(name){
             this.$refs[name].validate((valid)=>{
                 if(valid){
@@ -331,8 +315,8 @@ export default {
                         this.companyInfo.company = response
                         this.imgPreview.url = '/companies/' + this.companyInfo.company.id + '/img'
                         this.imgPreview.isInit = true
-                        let len = response.imgUrl.split('\\').length
-                        this.companyInfo.company.imgUrl = response.imgUrl.split('\\')[len - 1]
+                        // let len = response.imgUrl.split('\\').length
+                        // this.companyInfo.company.imgUrl = response.imgUrl.split('\\')[len - 1]
                         if(response.customers.length){
                             this.companyInfo.list = response.customers
                         } else {
@@ -385,6 +369,9 @@ export default {
 }
 </script>
 <style scoped>
+h2{
+    font-size: 1.8vmin;
+}
 .ivu-form.ivu-form-label-right{
     width: 80%;
     background: #fff;
@@ -396,33 +383,33 @@ export default {
     font-size: 1.66vmin;
     margin-left: 1.6vmin;
 }
+.ivu-form-item{
+    margin-bottom: 2.4vmin;
+}
+.inspectionItems >>> .ivu-form-item{
+    margin-bottom: 1.6vmin;
+}
 @media (min-width: 2200px){
-    h2{
-        font-size: 2.4vmin;
-    }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 11vmin !important;
-        line-height: 4.5vmin;
+        line-height: 3.2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 11vmin !important;
-        line-height: 4.5vmin;
+        line-height: 3.2vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
     {
-        height: 4vmin;
-        line-height: 4vmin;
+        height: 3.6vmin;
+        line-height: 3.6vmin;
         font-size: 1.4vmin;
-    }
-    .ivu-form-item-content{
-        line-height: 6.5vmin;
-    }
-    .btn{
-        margin-left: 20% !important;
     }
     .ivu-form-item-required .ivu-form-item-label:before{
         font-size: 1.6vmin !important;
+    }
+    .ivu-form-item-error-tip{
+        font-size: 1.4vmin;
     }
 }
 </style>

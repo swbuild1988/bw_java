@@ -207,29 +207,45 @@ public class CompanyController {
      */
     @RequestMapping(value = "companies/{id}/img", method = RequestMethod.GET)
     public JSONObject uploadFile(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException {
+        FileInputStream is = null;
+        ByteArrayOutputStream bos = null;
+        ServletOutputStream outputStream = null;
 
-        CompanyDto dto = companyService.getCompanyById(id);
-        if (dto == null) {
-            throw new RuntimeException("没有获取到id=【" + id + "】的设备信息");
+        try {
+            CompanyDto dto = companyService.getCompanyById(id);
+            if (dto == null) {
+                throw new RuntimeException("没有获取到id=【" + id + "】的设备信息");
+            }
+            String imgUrl = dto.getImgUrl();
+            String realPath = ContextUtil.getRequest().getServletContext().getRealPath(imgUrl);
+            is = new FileInputStream(realPath);
+
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            bos = new ByteArrayOutputStream();
+            while ((len = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            bos.flush();
+
+            outputStream = response.getOutputStream();
+            outputStream.write(bos.toByteArray());
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+            if (bos != null) {
+                bos.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
         }
-        String imgUrl = dto.getImgUrl();
-        String realPath = ContextUtil.getRequest().getServletContext().getRealPath(imgUrl);
-        FileInputStream is = new FileInputStream(realPath);
-
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = is.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.flush();
-
-        ServletOutputStream outputStream = response.getOutputStream();
-        outputStream.write(bos.toByteArray());
-
-        is.close();
-        bos.close();
-        outputStream.close();
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 }

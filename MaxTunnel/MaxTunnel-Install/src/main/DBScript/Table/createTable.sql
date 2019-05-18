@@ -162,3 +162,33 @@ begin
 end EM_PLAN_MEMBER_TG;
 /
 alter trigger EM_PLAN_MEMBER_TG enable;
+
+
+-- 巡检计划步骤表
+create table T_OMM_INSPECTION_STEP
+(
+  ID         NUMBER NOT NULL,
+  TASK_ID  VARCHAR2(20) NOT NULL,
+  NAME			VARCHAR2(100),
+  IS_FINISHED    NUMBER
+);
+alter table T_OMM_INSPECTION_STEP add constraint OMM_INSPECTION_STEP_ID primary key(ID);
+
+-- create OMM_INSPECTION_STEP_SQ
+create sequence OMM_INSPECTION_STEP_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OMM_INSPECTION_STEP_TG
+CREATE OR REPLACE TRIGGER OMM_INSPECTION_STEP_TG
+  BEFORE INSERT ON T_OMM_INSPECTION_STEP
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_INSPECTION_STEP_SQ.nextval into :new.id from dual;
+end OMM_INSPECTION_STEP_TG;
+/
+alter trigger OMM_INSPECTION_STEP_TG enable;

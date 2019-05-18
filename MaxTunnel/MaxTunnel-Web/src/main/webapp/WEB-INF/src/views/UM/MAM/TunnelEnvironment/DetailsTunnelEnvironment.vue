@@ -17,14 +17,14 @@
             </RadioGroup>
         </div> -->
         <div class="areas">
-            <span>区域:</span>
+            <span class="common_spen">区域:</span>
             <Select v-model="queryCondition.areaId" style="width:76%" @on-change="changeAreaLocation">
                 <Option v-for="item in areas" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </div>
 
         <div class="detectionType">
-            <span>检测类型:</span>
+            <span class="common_spen">检测类型:</span>
             <Select v-model="queryCondition.curDataType" style="width:76%" @on-change="changeDataType">
                 <Option v-for="item in curDataTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
@@ -50,7 +50,7 @@
             <check-select v-bind="storeProp" v-on:toParent="getStoreId"></check-select>
         </div> -->
         <div class="detectionBin">
-            <span>检测仓:</span>
+            <span class="common_spen">检测仓:</span>
             <Select v-model="queryCondition.storeId" style="width:76%" @on-change="getStoreId">
                 <Option v-for="item in storeProp.dataList" :value="item.value" :key="item.value">{{ item.label }}
                 </Option>
@@ -121,11 +121,22 @@
                                 <Icon type="map" class="icons"></Icon>管廊模型
                             </span>
                         </div>
+                        <div class="screenNumChange">
+                            <Poptip placement="left">
+                                <Icon type="navicon-round" class="button"></Icon>
+                                <div class="api" slot="content">
+                                    <Icon class="screens" type="android-checkbox-outline-blank" @click.native="handleScreensNum(1)"></Icon>
+                                    <Icon class="screens" type="social-windows" @click.native="handleScreensNum(4)"></Icon>
+                                    <Icon class="screens" type="android-apps" @click.native="handleScreensNum(9)"></Icon>
+                                </div>
+                            </Poptip>
+                        </div>
                     </div>
                     <div class="map">
                         <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
                         <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj">
                         </TestSmViewer>
+                        <!-- <Table :columns="environmentColums" :data="objTableDate" v-if="curModule === 2"></Table> -->
                     </div>
                 </div>
                 </Col>
@@ -614,9 +625,10 @@
                     result => {
                         _this.objTableDate = result
                         _this.Obj = [];
+                        // console.log(,result)
                         result.forEach(a => {
                             let temp = {};
-                            _this.areaLeath = '200';
+                            _this.areaLeath = a.areaLeath;
                             temp.ObjName = a.name;
                             temp.id = a.id;
                             temp.clickStatus = false;
@@ -653,9 +665,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                        null :
+                        _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
@@ -669,6 +683,9 @@
             },
             chooseTab(name) {
                 localStorage.setItem("choosedTab", name)
+            },
+            handleScreensNum(num){
+                this.curCarousel.videoNumber = num
             }
         },
         beforeDestroy() {
@@ -698,7 +715,7 @@
     }
 
     .map {
-        width: 42vw;
+        width: 40vw;
         height: calc(65vh);
         margin-left: 10px;
     }
@@ -785,10 +802,12 @@
         position: relative;
         bottom: 0px;
         float: right;
+        position: relative;
     }
 
     .titles {
         margin: 0 0 0.6vmin 1vmin;
+        position: relative;
     }
 
     .title {
@@ -796,6 +815,22 @@
         margin-right: 1vmin;
         cursor: pointer;
         padding-bottom: 0.4vmin;
+    }
+
+    .screenNumChange{
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .screens {
+        padding: 0 10px;
+        cursor: pointer;
+        font-size: 2vmin;
+    }
+    .button {
+        cursor: pointer;
+        font-size: 2vmin;
     }
 
     .icons {
@@ -839,8 +874,29 @@
 
     .area_length {
         position: absolute;
-        font-size: .9rem;
         left: 70%;
-        top: 1.9%;
+    }
+    .common_spen {
+        display: inline-block;
+        transform: translate(0,8%);
+        margin-right: 2%;
+    }
+    @media (min-width: 1921px) {
+        .common_spen {
+            font-size: 1.6rem;
+        }
+        .area_length{
+            font-size: 1.6rem;
+            top: 1.7%;
+        }
+    }
+    @media (max-width: 1920px) {
+        .common_spen {
+            font-size: .7rem;
+        }
+        .area_length{
+            font-size: .7rem;
+            top: 1.7%;
+        }
     }
 </style>

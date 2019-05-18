@@ -35,6 +35,11 @@ export default {
                         id: 11,
                         name: "员工管理",
                         url: "/CMMain/staff"
+                    },
+                    {
+                        id: 12,
+                        name: '巡检小组管理',
+                        url: '/CMMain/group'
                     }
                 ]
             },

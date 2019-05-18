@@ -24,14 +24,14 @@ import java.util.List;
 
 public abstract class BaseTask {
 
-    protected static ExportService exportService;
-    protected static AlarmService alarmService;
-    protected static EquipmentService equipmentService;
-    protected static MeasObjReportService measObjReportService;
-    protected static TunnelService tunnelService;
-    protected static MeasObjService measObjService;
-    protected static ConsumeService consumeService;
-    protected static InspectionTaskService inspectionTaskService;
+    protected static final ExportService exportService;
+    protected static final AlarmService alarmService;
+    protected static final EquipmentService equipmentService;
+    protected static final MeasObjReportService measObjReportService;
+    protected static final TunnelService tunnelService;
+    protected static final MeasObjService measObjService;
+    protected static final ConsumeService consumeService;
+    protected static final InspectionTaskService inspectionTaskService;
 
 
     static {

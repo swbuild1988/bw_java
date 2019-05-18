@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var PermissionConfigService = {
     // 权限分页
     permissionDatagrid(params){
         return new Promise((resolve,reject)=>{
-            axios.post('permissions/datagrid',params)
+            post('permissions/datagrid',params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -45,7 +46,7 @@ var PermissionConfigService = {
     // 添加权限
     addPermission(params){
         return new Promise((resolve,reject)=>{
-            axios.post('permissions',params)
+            post('permissions',params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -62,7 +63,7 @@ var PermissionConfigService = {
     // 批量删除权限
     batchDeletePer(ids){
         return new Promise((resolve,reject)=>{
-            axios.delete('permissions/batch/' + ids)
+            del('permissions/batch/' + ids)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -79,7 +80,7 @@ var PermissionConfigService = {
     // 根据id获取权限详情
     getPermissionDetail(id){
         return new Promise((resolve,reject)=>{
-            axios.get('permissions/' + id)
+            get('permissions/' + id)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -106,7 +107,7 @@ var PermissionConfigService = {
     // 修改权限
     editPermission(params){
         return new Promise((resolve,reject)=>{
-            axios.put('permissions', params)
+            put('permissions', params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -123,7 +124,7 @@ var PermissionConfigService = {
     // 角色分页
     rolesDatagrid(params){
         return new Promise((resolve,reject)=>{
-            axios.post('roles/datagrid', params)
+            post('roles/datagrid', params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -140,7 +141,7 @@ var PermissionConfigService = {
     // 删除角色
     batchDeleteRoles(ids){
         return new Promise((resolve,reject)=>{
-            axios.delete('roles/batch/' + ids)
+            del('roles/batch/' + ids)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -157,7 +158,7 @@ var PermissionConfigService = {
     // 添加角色
     addRole(params){
         return new Promise((resolve,reject)=>{
-            axios.post('roles',params)
+            post('roles',params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -174,7 +175,7 @@ var PermissionConfigService = {
     //  修改角色
     editRole(params){
         return new Promise((resolve,reject)=>{
-            axios.put('roles', params)
+            put('roles', params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -191,7 +192,7 @@ var PermissionConfigService = {
     // 根据id获取角色详情
     getRoleDetail(id){
         return new Promise((resolve,reject)=>{
-            axios.get('roles/' + id)
+            get('roles/' + id)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -208,7 +209,7 @@ var PermissionConfigService = {
     // 获取所有权限
     getAllPermissions(){
         return new Promise((resolve,reject)=>{
-            axios.get('permissions/list')
+            get('permissions/list')
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -225,7 +226,7 @@ var PermissionConfigService = {
     // 给角色赋权
     roleAuthorize(params){
         return new Promise((resolve,reject)=>{
-            axios.post('roles/associate',params)
+            post('roles/associate',params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -242,7 +243,7 @@ var PermissionConfigService = {
     // 获取所有角色(账号分配角色时)
     getAllRoles(){
         return new Promise((resolve,reject)=>{
-            axios.get('roles/list')
+            get('roles/list')
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -259,7 +260,7 @@ var PermissionConfigService = {
     // 账号分配角色
     staffAuthorize(params){
         return new Promise((resolve,reject)=>{
-            axios.post('users/associate',params)
+            post('users/associate',params)
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -276,7 +277,7 @@ var PermissionConfigService = {
     // 根据模块Id获取资源列表
     getObjectsByModuleId(moduleId){
         return new Promise((resolve,reject)=>{
-            // axios.get('permissions/'+ moduleId + '/objects')
+            // get('permissions/'+ moduleId + '/objects')
             // .then(res=>{
             //     let { msg,data,code } = res.data
             //     if(code == 200){

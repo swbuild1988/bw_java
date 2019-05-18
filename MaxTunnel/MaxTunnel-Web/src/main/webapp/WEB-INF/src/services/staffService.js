@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { get,del,post } from "../utils/http";
 const isRealData = require('../../static/serverconfig').isRealData
 
 var StaffService = {
@@ -6,7 +7,7 @@ var StaffService = {
     getPositionList(){ 
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.get('/positions').then(res=>{
+                get('/positions').then(res=>{
                     let { code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -21,7 +22,7 @@ var StaffService = {
     getDepartmentList(){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.get('/departments').then(res=>{
+                get('/departments').then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -36,7 +37,7 @@ var StaffService = {
     getStaffInfo(params){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.post('/staffs/datagrid',params).then(res=>{
+                post('/staffs/datagrid',params).then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -51,7 +52,7 @@ var StaffService = {
     addStaffInfo(params){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.post('staffs',params).then(res=>{
+                post('staffs',params).then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -66,7 +67,7 @@ var StaffService = {
     delStaff(ids){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.delete('staffs/batch/'+ids).then(res=>{
+                del('staffs/batch/'+ids).then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -82,7 +83,7 @@ var StaffService = {
     getStaffInfoById(id){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.get('staffs/'+id).then(res=>{
+                get('staffs/'+id).then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)
@@ -116,7 +117,7 @@ var StaffService = {
     resetPassword(id){
         return new Promise((resolve,reject) => {
             if(isRealData){
-                axios.get('users/init-pw/'+id).then(res=>{
+                get('users/init-pw/'+id).then(res=>{
                     let{ code,data,msg } = res.data
                     if(code==200){
                         resolve(data)

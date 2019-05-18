@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'; // Progress 进度条样式
 import {
     getToken,
 } from '@/utils/auth'; // 验权
+import session from '@/utils/auth';
 
 const permission = async () => {
 
@@ -16,7 +17,8 @@ const permission = async () => {
         console.log("permission中的router.beforeEach， 路由监听", to, from)
         NProgress.start();
         // console.log(1, to.path);
-        if (getToken()) {
+        if (session.getSession()) {
+            
             // 如果已经登录
             if (to.path.trim().toLowerCase().indexOf('login') > 0) {
                 if (to.path.trim().toLowerCase().indexOf('um') > 0) {
@@ -37,6 +39,7 @@ const permission = async () => {
                     NProgress.done(); // 结束Progress
                 }
             } else if (!store.getters.role || store.getters.role.length == 0) {
+
                 store.dispatch('GetInfo').then(() => {
                     next({
                         ...to,

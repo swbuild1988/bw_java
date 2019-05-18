@@ -13,11 +13,11 @@
         data() {
             return {
                 curModule: {
-                    moduleName: "管廊环境监控",
+                    moduleName: "管廊消防监控",
                     leftTree: [],
                     selected: [0, -1]
                 },
-                treeNodeJumpUrl: "/UM/TunnelEnvironment/list/",
+                treeNodeJumpUrl: "/UM/TunnelFire/list/",
             }
         },
         components: {
@@ -36,12 +36,12 @@
                         temp.childNode = [{
                                 id: 21,
                                 name: "监测总览",
-                                url: "/UM/TunnelEnvironment/list/" + a.id,
+                                url: "/UM/TunnelFire/list/" + a.id,
                             },
                             {
                                 id: 22,
                                 name: "监测详情",
-                                url: "/UM/TunnelEnvironment/details/" + a.id,
+                                url: "/UM/TunnelFire/details/" + a.id,
                             }
                         ];
                         _this.curModule.leftTree.push(temp);

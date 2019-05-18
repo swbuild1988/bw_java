@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var MaxViewService = {
 	// MaxView终端配置分页查询
 	TerminalDatagird: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('sub-sys/datagrid', params)
+			post('sub-sys/datagrid', params)
 				.then(
 					res => {
 						let {
@@ -26,7 +27,7 @@ var MaxViewService = {
 	// 添加终端
 	addTerminal: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('sub-sys', params)
+			post('sub-sys', params)
 				.then(
 					res => {
 						let {
@@ -48,7 +49,7 @@ var MaxViewService = {
 	// 根据终端Id获取详情
 	getDetailById: function(terminalId) {
 		return new Promise((resolve, reject) => {
-			axios.get('sub-sys/' + terminalId)
+			get('sub-sys/' + terminalId)
 				.then(
 					res => {
 						let {
@@ -70,7 +71,7 @@ var MaxViewService = {
 	// 更新终端信息
 	updateTerminal: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.put('sub-sys', params)
+			put('sub-sys', params)
 				.then(
 					res => {
 						let {
@@ -92,7 +93,7 @@ var MaxViewService = {
 	// 批量删除终端
 	batchDeleteTerminals: function(ids) {
 		return new Promise((resolve, reject) => {
-			axios.delete('sub-sys/batch/' + ids)
+			del('sub-sys/batch/' + ids)
 				.then(
 					res => {
 						let {

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { get,put,post } from "../utils/http";
+
 const isRealData = require("../../static/serverconfig").isRealData;
 
 var TunnelService = {
@@ -6,7 +8,7 @@ var TunnelService = {
     getTunnels: function () {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/tunnels").then(res => {
+                get("/tunnels").then(res => {
                         let {code,data,msg} = res.data;
                         if (code == 200) {
                             resolve(data);
@@ -43,7 +45,7 @@ var TunnelService = {
     getStoresByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("tunnels/" + tunnelId + "/stores").then(res => {
+                get("tunnels/" + tunnelId + "/stores").then(res => {
                     let {code,data,msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -121,7 +123,7 @@ var TunnelService = {
     getAreasByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("tunnels/" + tunnelId + "/areas").then(res => {
+                get("tunnels/" + tunnelId + "/areas").then(res => {
                     let {code,data,msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -148,7 +150,7 @@ var TunnelService = {
     // 获取所有管廊（树形结构）
     getTunnelsTree: function () {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/tree").then(res => {
+            get("tunnels/tree").then(res => {
                 let {code,data,msg} = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -161,7 +163,7 @@ var TunnelService = {
     // 根据管舱IDs返回管舱详细信息
     getSectionsByIds: function (ids) {
         return new Promise((resolve, reject) => {
-            axios.get("sections/batch/" + ids).then(res => {
+            get("sections/batch/" + ids).then(res => {
                 let {code,data,msg} = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -174,7 +176,7 @@ var TunnelService = {
     // 根据storeId获取管舱区段信息
     getSectionsByStoreId: function (storeId) {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/stores/" + storeId + "/sections").then(res => {
+            get("tunnels/stores/" + storeId + "/sections").then(res => {
                 let {code,data,msg} = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -187,7 +189,7 @@ var TunnelService = {
     // 根据tunnelId获取管廊详细信息
     getTunnelDetailByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/" + tunnelId + "/detail").then(res => {
+            get("tunnels/" + tunnelId + "/detail").then(res => {
                 let {  code,data,msg  } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -200,7 +202,7 @@ var TunnelService = {
     // 根据tunnelID获取该管廊内管舱数
     getStoresCountByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/" + tunnelId + "/stores/count").then(res => {
+            get("tunnels/" + tunnelId + "/stores/count").then(res => {
                 let {  code,data,msg} = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -213,7 +215,7 @@ var TunnelService = {
     // 根据tunnelID获取该管廊内管舱区段数
     getSectionsCountByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/" + tunnelId + "/sections/count").then(res => {
+            get("tunnels/" + tunnelId + "/sections/count").then(res => {
                 let { code,data,msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -226,7 +228,7 @@ var TunnelService = {
     // 获取管廊告警数量
     getTunnelAlarmCount() {
         return new Promise((resolve, reject) => {
-            axios.get("tunnel/alarmcount").then(res => {
+            get("tunnel/alarmcount").then(res => {
                 let {code,data,msg} = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -239,7 +241,7 @@ var TunnelService = {
     // 区域分页查询
     areaDatagird: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/areas/datagrid", params).then(res => {
+            post("/areas/datagrid", params).then(res => {
                     let {code,data,msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -255,7 +257,7 @@ var TunnelService = {
     // 管舱分页查询
     storeDatagrid: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/stores/datagrid", params).then(res => {
+            post("/tunnels/stores/datagrid", params).then(res => {
                     let {
                         code,
                         data,
@@ -275,7 +277,7 @@ var TunnelService = {
     // 获取区域下所有的仓
     getStoresByAreaId: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/stores/sections/condition", params).then(res => {
+            post("/tunnels/stores/sections/condition", params).then(res => {
                     let {
                         code,
                         data,
@@ -296,7 +298,7 @@ var TunnelService = {
     // 根据相机位置获取所处的管仓
     getStorePosition: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/sections/xyz", params).then(res => {
+            post("/sections/xyz", params).then(res => {
                     let {
                         code,
                         data,
@@ -316,7 +318,7 @@ var TunnelService = {
     // 获取管舱类型列表
     getStoreTypeList: function () {
         return new Promise((resolve, reject) => {
-            axios.get("/store-type/list").then(res => {
+            get("/store-type/list").then(res => {
                     let {code,data,msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -332,7 +334,7 @@ var TunnelService = {
     //获取管廊内区域
     getTunnelArea: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/" + tunnelId + "/areas").then(res => {
+            get("tunnels/" + tunnelId + "/areas").then(res => {
                     let {
                         code,
                         data,
@@ -352,7 +354,7 @@ var TunnelService = {
     // 批量添加区段
     batchCreateSections(params) {
         return new Promise((resolve, reject) => {
-            axios.post("sections/batch", params).then(res => {
+            post("sections/batch", params).then(res => {
                     let {
                         code,
                         data,
@@ -372,7 +374,7 @@ var TunnelService = {
     // 批量添加区段经纬度
     batchAddPositions(params) {
         return new Promise((resolve, reject) => {
-            axios.put("sections/batch", params).then(res => {
+            put("sections/batch", params).then(res => {
                     let {
                         code,
                         data,
@@ -409,7 +411,7 @@ var TunnelService = {
         //     percent: '50%'
         // }];
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/message").then(res => {
+            get("tunnels/message").then(res => {
                     let {
                         code,
                         data,
@@ -450,8 +452,7 @@ var TunnelService = {
             }
         ];
         return new Promise((resolve, reject) => {
-            // axios
-            //     .get("lines/message")
+            //     get("lines/message")
             //     .then(res => {
             //         let {
             //             code,
@@ -478,7 +479,7 @@ var TunnelService = {
         //     safe: 14
         // };
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/run-message").then(res => {
+            get("tunnels/run-message").then(res => {
                     let {
                         code,
                         data,
@@ -499,7 +500,7 @@ var TunnelService = {
     //根据areaId和storeId获取section
     getSectionByAreaIdStoreId(storeId,areaId) {
         return new Promise((resolve, reject) => {
-            axios.get("stores/"+storeId+"/areas/"+areaId+"/sections").then(res=>{
+            get("stores/"+storeId+"/areas/"+areaId+"/sections").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)

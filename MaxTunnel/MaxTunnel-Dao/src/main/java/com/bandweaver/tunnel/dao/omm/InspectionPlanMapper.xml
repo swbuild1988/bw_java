@@ -11,12 +11,106 @@
             SELECT OMM_inspection_plan_SEQUENCE.currval from DUAL
         </selectKey>
         INSERT INTO t_omm_inspection_plan
-        (plan_id, name, request_staff_id, approver_id, tunnel_id, group_id, inspect_time, remark,
-         create_time, process_type, process_status, process_instance_id, is_finished)
-        VALUES
-            (#{planId}, #{name}, #{requestStaffId}, #{approverId}, #{tunnelId}, #{groupId},
-                        #{inspectTime}, #{remark},
-                        #{createTime}, #{processType}, #{processStatus}, #{processInstanceId}, #{isFinished})
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="planId != null">
+                plan_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="requestStaffId != null">
+                request_staff_id,
+            </if>
+            <if test="approverId != null">
+                approver_id,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="groupId != null">
+                group_id,
+            </if>
+            <if test="inspectTime != null">
+                inspect_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="processType != null">
+                process_type,
+            </if>
+            <if test="processStatus != null">
+                process_status,
+            </if>
+            <if test="processInstanceId != null">
+                process_instance_id,
+            </if>
+            <if test="isFinished != null">
+                is_finished,
+            </if>
+            <if test="inspectionWay != null">
+                inspection_way,
+            </if>
+            <if test="inspectionObject != null">
+                inspection_object,
+            </if>
+            <if test="inspectionPath != null">
+                inspection_path,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planId != null">
+                #{planId},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="requestStaffId != null">
+                #{requestStaffId},
+            </if>
+            <if test="approverId != null">
+                #{approverId},
+            </if>
+            <if test="tunnelId != null">
+                #{tunnelId},
+            </if>
+            <if test="groupId != null">
+                #{groupId},
+            </if>
+            <if test="inspectTime != null">
+                #{inspectTime},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="processType != null">
+                #{processType},
+            </if>
+            <if test="processStatus != null">
+                #{processStatus},
+            </if>
+            <if test="processInstanceId != null">
+                #{processInstanceId},
+            </if>
+            <if test="isFinished != null">
+                #{isFinished},
+            </if>
+            <if test="inspectionWay != null">
+                #{inspectionWay},
+            </if>
+            <if test="inspectionObject != null">
+                #{inspectionObject},
+            </if>
+            <if test="inspectionPath != null">
+                #{inspectionPath},
+            </if>
+        </trim>
     </insert>
 
     <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan">
@@ -54,6 +148,15 @@
             </if>
             <if test="isFinished != null">
                 is_finished = #{isFinished},
+            </if>
+            <if test="inspectionWay != null">
+                inspection_way = #{inspectionWay},
+            </if>
+            <if test="inspectionObject != null">
+                inspection_object = #{inspectionObject},
+            </if>
+            <if test="inspectionPath != null">
+                inspection_path = #{inspectionPath},
             </if>
         </set>
         where id = #{id}
@@ -177,6 +280,9 @@
     <resultMap id="inspectionPlanMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan">
         <id column="id" property="id"/>
         <result column="plan_id" property="planId"/>
+        <result column="inspection_way" property="inspectionWay"/>
+        <result column="inspection_object" property="inspectionObject"/>
+        <result column="inspection_path" property="inspectionPath"/>
         <result column="name" property="name"/>
         <result column="request_staff_id" property="requestStaffId"/>
         <result column="approver_id" property="approverId"/>
@@ -194,6 +300,9 @@
     <resultMap id="inspectionPlanDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto">
         <id column="id" property="id"/>
         <result column="plan_id" property="planId"/>
+        <result column="inspection_way" property="inspectionWay"/>
+        <result column="inspection_object" property="inspectionObject"/>
+        <result column="inspection_path" property="inspectionPath"/>
         <result column="name" property="name"/>
         <result column="request_staff_id" property="requestStaffId"/>
         <result column="approver_id" property="approverId"/>
@@ -211,6 +320,12 @@
         <association property="inspectionGroup" javaType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto"
                      column="group_id"
                      select="com.bandweaver.tunnel.dao.omm.InspectionGroupMapper.getInspectionGroupDto"/>
+        <association property="requestStaff" javaType="com.bandweaver.tunnel.common.biz.pojo.Staff"
+                     column="request_staff_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+        <association property="approver" javaType="com.bandweaver.tunnel.common.biz.pojo.Staff"
+                     column="approver_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
         <collection property="tasks" ofType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto">
             <id column="task_id" property="id"/>
             <result column="inspect_man_id" property="inspectManId"/>

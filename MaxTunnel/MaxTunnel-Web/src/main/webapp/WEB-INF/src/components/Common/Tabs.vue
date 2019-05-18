@@ -58,9 +58,7 @@ export default {
     cursor: pointer;
  }
  .active {
-    padding: 2% 1%;
-    display: inline-block;
-    border-radius: 7%;
+     display: inline-block;
  }
  .tabs-active {
     background: rgb(29, 95, 135);
@@ -69,5 +67,24 @@ export default {
  .tabs-content {
    padding-right: 4%;
  }
+/* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    .tabs-active{
+        font-size:2rem;
+    }
+    .active{
+        font-size:2rem;
+        padding: 3% 6%;
+        border-radius: 10%;
+    }
+}
+/* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .active{
+        /*font-size: 12px;*/
+        padding: 2% 1%;
+        border-radius: 7%;
+    }
+}
 </style>
 

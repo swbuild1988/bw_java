@@ -8,54 +8,42 @@
 </template>
 
 <script>
-    import VlcVideo from "./vlcVideo";
-    import RtmpVideo from "./rtmpVideo";
-    import HslVideo from "./hslVideo";
-    import H5StreamVideo from "./H5StreamVideo";
+import VlcVideo from "./vlcVideo";
+import RtmpVideo from "./rtmpVideo";
+import HslVideo from "./hslVideo";
+import H5StreamVideo from "./H5StreamVideo";
 
-    export default {
-        name: "video-component",
-        props: {
-            video: {
-                type: Object,
-                required: true
-            },
-            id: {
-                required: true
-            },
-            text: {
-                required: false
-            },
-            index: {
-                default: 0,
-                type: Number
-            }
+export default {
+    name: "video-component",
+    props: {
+        video: {
+            type: Object,
+            required: true
         },
-        components: {
-            VlcVideo,
-            RtmpVideo,
-            HslVideo,
-            H5StreamVideo
+        id: {
+            required: true
         },
-        mounted() {
-            // this.Log.info("videoComponent mounted!");
+        text: {
+            required: false
         },
-        beforeMount() {
-            // this.Log.info("videoComponent beforeMount!");
-        },
-        beforeDestroy() {
-            // this.Log.info("videoComponent beforeDestroy!");
-        },
-        destroyed() {
-            // this.Log.info("videoComponent destroyed!");
+        index: {
+            default: 0,
+            type: Number
         }
-    };
+    },
+    components: { VlcVideo, RtmpVideo, HslVideo, H5StreamVideo },
+    mounted() {
+        this.Log.info("videoComponent start!");
+    }
+};
 </script>
 
 <style scoped>
-    .videoContent {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
+.videoContent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
 </style>
+
+

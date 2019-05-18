@@ -1,139 +1,139 @@
 <template>
-  <div>
-    <Tabs type="card" @on-click="changePane" class="tab">
-      <TabPane label="预案详情" name="detial">
-        <div>
-          <WorkModal v-if="showModal.val!=null" v-bind="showModal"></WorkModal>
-          <Card style="width: 100%;">
-            <Row :gutter="16">
-              <Col span="2">
-                <div class="begin">
-                  <img style="width:3vmin;height:3vmin;" v-bind:src="imgUrl">
-                </div>
-              </Col>
-              <Col span="1">
-                <div class="next">
-                  <img style=" width:3vmin;height:3vmin;" v-bind:src="next">
-                </div>
-              </Col>
-              <div v-for="(item,index) in allSteps">
-                <Col span="2">
-                  <div
-                    style="width: 7vw;height:3vh;margin-top: -10px;"
-                    v-if="index > 0 && allSteps[index - 1].actionKey == 2"
-                    :style="{paddingTop : allSteps[index - 1].toTop ? (item.toTop-1) * 3 + 'vh' : '0'}"
-                  >
-                    <img style="width:5vmin;height:5vmin;" v-bind:src="status">
-                  </div>
-                  <Tooltip placement="bottom" class="toolTip">
-                    <div
-                      :style="{ marginTop : item.toTop  ? (allSteps[index - 1].actionKey == 2 ? (item.toTop > 1 ? '6vh': '2vh') : (item.toTop > 2 ? (item.toTop-1) * 4 + 3 + 'vh' : item.toTop * 4 + 'vh')) : '0'}"
-                      class="border"
-                    >
-                      <Icon type="record" color></Icon>
-                      {{ item.stepName }}
-                    </div>
-                    <div slot="content" class="target">
-                      <p>{{ item.target }}</p>
-                    </div>
-                  </Tooltip>
-                </Col>
-                <Col span="1" v-if="index + 1 != allSteps.length && item.actionKey != 2">
-                  <div
-                    class="next"
-                    :style="{ paddingTop : item.toTop ? (item.toTop > 2 ? (item.toTop-1) * 3 + 6 + 'vh' : (item.toTop-1) * 4 + 5 + 'vh') : '0'}"
-                  >
-                    <img style=" width:3vmin;height:3vmin;" v-bind:src="next">
-                  </div>
-                </Col>
-                <Col span="1" v-if="item.actionKey == 2">
-                  <div :style="{ marginTop: item.toTop ? item.toTop * 4 + 'vh' : '1vh'}">
-                    <img style=" width:5vmin;height:2vmin;" v-bind:src="toUp">
-                    <img style=" width:5vmin;height:2vmin;" v-bind:src="toDown">
-                  </div>
-                </Col>
-              </div>
-            </Row>
-          </Card>
-          <hr class="hr3">
-          <img
-            style="width: 100%;height: 60vh"
-            v-bind:src="queryPram.processKey == 'FirePlanProcess' ? firePlan : windPlan"
-          >
-        </div>
-      </TabPane>
-      <TabPane label="执行记录" name="log">
-        <Row class="top">
-          <Col span="6">
-            <span>开始时间:</span>
-            <DatePicker
-              style="width: 65%;"
-              v-model="queryPram.startTime"
-              format="yyyy年MM月dd日-hh:mm:ss"
-              type="datetime"
-              placeholder="选择时间"
-            ></DatePicker>
-          </Col>
-          <Col span="6">
-            <span>结束时间</span>
-            <DatePicker
-              style="width: 65%;"
-              v-model="queryPram.endTime"
-              format="yyyy年MM月dd日-hh:mm:ss"
-              type="datetime"
-              placeholder="选择时间"
-            ></DatePicker>
-          </Col>
-          <Col span="2" offset="10">
-            <div style="position: relative;float: right;right: 0px;">
-              <Button type="primary" icon="ios-search" @click="queryTable">查询</Button>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col span="24" style="margin-top: 10px;">
-            <hr class="hr1">
-          </Col>
-        </Row>
-        <Row>
-          <Col span="24">
-            <Table
-              :height="tableHeight"
-              stripe
-              border
-              :columns="tableColumns"
-              :data="tableData"
-              style="margin: 1vh;  "
-            ></Table>
-            <Modal width="900px;" title="详细信息:" v-model="showTableDetial" :mask-closable="false">
-              <Table
-                stripe
-                border
-                :columns="detialTableColumns"
-                style="height: 540px;"
-                :data="detialTableData"
-              ></Table>
-            </Modal>
-          </Col>
-        </Row>
-        <div>
-          <Page
-            style="position: relative;float: right;right: 10px;"
-            @on-page-size-change="handlePageSize"
-            :total="pageTotal"
-            :page-size="queryPram.pageSize"
-            :current="queryPram.pageNum"
-            show-total
-            show-elevator
-            show-sizer
-            placement="top"
-            @on-change="changePage"
-          ></Page>
-        </div>
-      </TabPane>
-    </Tabs>
-    <ShowStartPlan v-bind="showModal"></ShowStartPlan>
-  </div>
+	<div>
+		<Tabs type="card" @on-click="changePane" class="tab">
+			<TabPane label="预案详情" name="detial">
+				<div>
+				<WorkModal v-if="showModal.val!=null" v-bind="showModal"></WorkModal>
+				<Card style="width: 100%;">
+					<Row :gutter="16">
+						<Col span="2">
+							<div class="begin">
+								<img style="width:3vmin;height:3vmin;" v-bind:src="imgUrl">
+							</div>
+						</Col>
+						<Col span="1">
+							<div class="next">
+								<img style=" width:3vmin;height:3vmin;" v-bind:src="next">
+							</div>
+						</Col>
+						<div v-for="(item,index) in allSteps" :key="index">
+							<Col span="2">
+								<div
+									style="width: 7vw;height:3vh;margin-top: -10px;"
+									v-if="index > 0 && allSteps[index - 1].actionKey == 2"
+									:style="{paddingTop : allSteps[index - 1].toTop ? (item.toTop-1) * 3 + 'vh' : '0'}"
+								>
+									<img style="width:5vmin;height:5vmin;" v-bind:src="status">
+								</div>
+								<Tooltip placement="bottom" class="toolTip">
+									<div
+										:style="{ marginTop : item.toTop  ? (allSteps[index - 1].actionKey == 2 ? (item.toTop > 1 ? '6vh': '2vh') : (item.toTop > 2 ? (item.toTop-1) * 4 + 3 + 'vh' : item.toTop * 4 + 'vh')) : '0'}"
+										class="border"
+										>
+										<Icon type="record" color></Icon>
+										{{ item.stepName }}
+									</div>
+									<div slot="content" class="target">
+										<p>{{ item.target }}</p>
+									</div>
+								</Tooltip>
+							</Col>
+							<Col span="1" v-if="index + 1 != allSteps.length && item.actionKey != 2">
+								<div
+									class="next"
+									:style="{ paddingTop : item.toTop ? (item.toTop > 2 ? (item.toTop-1) * 3 + 6 + 'vh' : (item.toTop-1) * 4 + 5 + 'vh') : '0'}"
+								>
+									<img style=" width:3vmin;height:3vmin;" v-bind:src="next">
+								</div>
+							</Col>
+							<Col span="1" v-if="item.actionKey == 2">
+								<div :style="{ marginTop: item.toTop ? item.toTop * 4 + 'vh' : '1vh'}">
+									<img style=" width:5vmin;height:2vmin;" v-bind:src="toUp">
+									<img style=" width:5vmin;height:2vmin;" v-bind:src="toDown">
+								</div>
+							</Col>
+						</div>
+					</Row>
+				</Card>
+				<hr class="hr3">
+				<img
+					style="width: 100%;height: 60vh"
+					v-bind:src="queryPram.processKey == 'FirePlanProcess' ? firePlan : windPlan"
+				>
+				</div>
+			</TabPane>
+			<TabPane label="执行记录" name="log">
+				<Row class="top">
+					<Col span="6">
+						<span>开始时间:</span>
+						<DatePicker
+						style="width: 65%;"
+						v-model="queryPram.startTime"
+						format="yyyy年MM月dd日-hh:mm:ss"
+						type="datetime"
+						placeholder="选择时间"
+						></DatePicker>
+					</Col>
+					<Col span="6">
+						<span>结束时间</span>
+						<DatePicker
+						style="width: 65%;"
+						v-model="queryPram.endTime"
+						format="yyyy年MM月dd日-hh:mm:ss"
+						type="datetime"
+						placeholder="选择时间"
+						></DatePicker>
+					</Col>
+					<Col span="2" offset="10">
+						<div style="position: relative;float: right;right: 0px;">
+						<Button type="primary" icon="ios-search" @click="queryTable">查询</Button>
+						</div>
+					</Col>
+				</Row>
+				<Row>
+					<Col span="24" style="margin-top: 10px;">
+						<hr class="hr1">
+					</Col>
+				</Row>
+				<Row>
+					<Col span="24">
+						<Table
+							:height="tableHeight"
+							stripe
+							border
+							:columns="tableColumns"
+							:data="tableData"
+							style="margin: 1vh;"
+						></Table>
+						<Modal width="900px;" title="详细信息:" v-model="showTableDetial" :mask-closable="false">
+						<Table
+							stripe
+							border
+							:columns="detialTableColumns"
+							style="height: 540px;"
+							:data="detialTableData"
+						></Table>
+						</Modal>
+					</Col>
+				</Row>
+				<div>
+					<Page
+						style="position: relative;float: right;right: 10px;"
+						@on-page-size-change="handlePageSize"
+						:total="pageTotal"
+						:page-size="queryPram.pageSize"
+						:current="queryPram.pageNum"
+						show-total
+						show-elevator
+						show-sizer
+						placement="top"
+						@on-change="changePage"
+					></Page>
+				</div>
+			</TabPane>
+		</Tabs>
+		<ShowStartPlan v-bind="showModal"></ShowStartPlan>
+	</div>
 </template>
 
 <script>

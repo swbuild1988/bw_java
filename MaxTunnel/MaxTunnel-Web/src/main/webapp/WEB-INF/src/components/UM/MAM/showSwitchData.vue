@@ -231,4 +231,22 @@
         width: 70%;
         height: 70%;
     }
+    @media (min-width: 1921px) {
+        .equipment_image {
+            top:57%;
+            width:53%
+        }
+        .switchContent{
+            margin-top: 4vh;
+        }
+    }
+    @media (max-width: 1920px) {
+        .equipment_image {
+            top:65%;
+            width:50%;
+        }
+        .switchContent{
+            margin-top: 3vh;
+        }
+    }
 </style>

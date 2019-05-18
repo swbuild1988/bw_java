@@ -673,9 +673,9 @@ export default {
 	height: calc(100vh - 9vh);
 }
 
-.coment >>> .ivu-icon-arrow-right-b{
+/* .coment >>> .ivu-icon-arrow-right-b{
 	display: none;
-}
+} */
 
 .coment >>> .ivu-collapse>.ivu-collapse-item.ivu-collapse-item-active>.ivu-collapse-header>i{
 	transform: rotate(180deg)
@@ -684,7 +684,7 @@ export default {
 .menu-item span {
 	display: inline-block;
 	overflow: hidden;
-	/*width: 160px;*/
+	width: 17.4vmin;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	vertical-align: bottom;
@@ -798,5 +798,9 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 .ivu-menu-vertical .ivu-menu-item,
 .ivu-menu-vertical .ivu-menu-submenu-title {
 	padding: 1.4vmin 2.4vmin;
+}
+
+li.ivu-menu-submenu-has-parent-submenu{
+	border-bottom: 1px solid #938e8e9c;
 }
 </style>

@@ -1,70 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.oam.CableContractMapper">
-  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
-    <id column="ID" jdbcType="VARCHAR" property="id" />
-  </resultMap>
-  
-   <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto">
-    <id column="ID" jdbcType="VARCHAR" property="id" />
-    <association property="company" javaType="com.bandweaver.tunnel.common.biz.dto.CompanyDto" column="COMPANY_ID"
-    	select="com.bandweaver.tunnel.dao.common.CompanyMapper.getDtoById"/>
-  </resultMap>
-  
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <association property="company" javaType="com.bandweaver.tunnel.common.biz.dto.CompanyDto" column="COMPANY_ID"
+                     select="com.bandweaver.tunnel.dao.common.CompanyMapper.getDtoById"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     ID, NAME, COMPANY_ID, PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time,operate_username,path
   </sql>
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from T_OAM_CABLE_CONTRACT
-    where ID = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_OAM_CABLE_CONTRACT
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey">
     delete from T_OAM_CABLE_CONTRACT
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
-    insert into T_OAM_CABLE_CONTRACT (ID, NAME, COMPANY_ID, 
-      PAY_TYPE,contract_status,contract_start_time,contract_end_time,crt_time,operate_username,path)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{companyId,jdbcType=DECIMAL}, 
-      #{payType,jdbcType=DECIMAL}, #{contractStatus}, #{contractStartTime}, #{contractEndTime},#{crtTime},#{operateUername},#{path})
-  </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
-    update T_OAM_CABLE_CONTRACT
-    <set>
-      <if test="name != null">
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="companyId != null">
-        COMPANY_ID = #{companyId,jdbcType=DECIMAL},
-      </if>
-      <if test="payType != null">
-        PAY_TYPE = #{payType,jdbcType=DECIMAL},
-      </if>
-      <if test="contractStatus != null">
-      	contract_status = #{contractStatus},
-      </if>
-      <if test="contractStartTime != null">
-      	contract_start_time = #{contractStartTime},
-      </if>
-      <if test="contractEndTime != null">
-      	contract_end_time = #{contractEndTime},
-      </if>
-      <if test="crtTime != null">
-      	crt_time = #{crtTime}
-      </if>
-        <if test="operateUsername != null">
-            operate_username = #{operateUsername}
-        </if>
-        <if test="path != null">
-            path = #{path}
-        </if>
-    </set>
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
+    <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
+        insert into T_OAM_CABLE_CONTRACT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="companyId != null">
+                company_ID,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="contractStatus != null">
+                contract_status,
+            </if>
+            <if test="contractStartTime != null">
+                contract_start_time,
+            </if>
+            <if test="contractEndTime != null">
+                contract_end_time,
+            </if>
+            <if test="crtTime != null">
+                crt_time,
+            </if>
+            <if test="operateUsername != null">
+                operate_username,
+            </if>
+            <if test="path != null">
+                path
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="companyId != null">
+                #{companyId},
+            </if>
+            <if test="payType != null">
+                #{payType},
+            </if>
+            <if test="contractStatus != null">
+                #{contractStatus},
+            </if>
+            <if test="contractStartTime != null">
+                #{contractStartTime},
+            </if>
+            <if test="contractEndTime != null">
+                #{contractEndTime},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime},
+            </if>
+            <if test="operateUsername != null">
+                #{operateUsername},
+            </if>
+            <if test="path != null">
+                #{path}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
+        update T_OAM_CABLE_CONTRACT
+        <set>
+            <if test="name != null">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID = #{companyId,jdbcType=DECIMAL},
+            </if>
+            <if test="payType != null">
+                PAY_TYPE = #{payType,jdbcType=DECIMAL},
+            </if>
+            <if test="contractStatus != null">
+                contract_status = #{contractStatus},
+            </if>
+            <if test="contractStartTime != null">
+                contract_start_time = #{contractStartTime},
+            </if>
+            <if test="contractEndTime != null">
+                contract_end_time = #{contractEndTime},
+            </if>
+            <if test="crtTime != null">
+                crt_time = #{crtTime},
+            </if>
+            <if test="operateUsername != null">
+                operate_username = #{operateUsername},
+            </if>
+            <if test="path != null">
+                path = #{path}
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.oam.CableContract">
     update T_OAM_CABLE_CONTRACT
     set NAME = #{name,jdbcType=VARCHAR},
       COMPANY_ID = #{companyId,jdbcType=DECIMAL},
@@ -77,42 +138,42 @@
       path = #{path}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
-  
-  <select id="getDtoById" resultMap="DtoResultMap">
+
+    <select id="getDtoById" resultMap="DtoResultMap">
   	select * from T_OAM_CABLE_CONTRACT where id = #{id}
   </select>
-  
-  <select id="getByCondition" resultMap="DtoResultMap">
-  	select * from T_OAM_CABLE_CONTRACT
-  	<where>
-  		<if test="id != null">
-  			and id = #{id}
-  		</if>
-  		<if test="name != null and name.trim() != ''">
-  			and instr(name,#{name})>0
-  		</if>
-  		<if test="companyId != null">
-  			and COMPANY_ID = #{companyId}
-  		</if>
-  		<if test="payType != null">
-  			and pay_type = #{payType}
-  		</if>
-  		<if test="contractStatus != null">
-  			and contract_status = #{contractStatus}
-  		</if>
-  		<if test="startTime != null">
-  			and crt_time &gt; #{startTime}
-  		</if>
-  		<if test="endTime != null">
-  			and crt_time &lt; #{endTime}
-  		</if>
-  	</where>
-  	order by crt_time desc
-  </select>
+
+    <select id="getByCondition" resultMap="DtoResultMap">
+        select * from T_OAM_CABLE_CONTRACT
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name.trim() != ''">
+                and instr(name,#{name})>0
+            </if>
+            <if test="companyId != null">
+                and COMPANY_ID = #{companyId}
+            </if>
+            <if test="payType != null">
+                and pay_type = #{payType}
+            </if>
+            <if test="contractStatus != null">
+                and contract_status = #{contractStatus}
+            </if>
+            <if test="startTime != null">
+                and crt_time &gt; #{startTime}
+            </if>
+            <if test="endTime != null">
+                and crt_time &lt; #{endTime}
+            </if>
+        </where>
+        order by crt_time desc
+    </select>
 
     <select id="get" resultMap="BaseResultMap">
         select * from T_OAM_CABLE_CONTRACT where id = #{id}
     </select>
-  
-  
+
+
 </mapper>

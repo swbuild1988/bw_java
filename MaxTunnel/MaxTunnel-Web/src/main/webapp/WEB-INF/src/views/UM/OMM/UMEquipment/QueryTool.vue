@@ -55,6 +55,7 @@
                 <Button type="error" @click="batchLend()">批量借出</Button>
                 <Button type="success" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
             </div>
+            <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row :gutter="16">
                 <Col span="4" v-for="item in toolData" :key="item.id" style="margin-top: 20px;">
                     <div class="toolBox">
@@ -659,7 +660,8 @@ export default {
                 pageTotal: 0
             },
             modalWidth: null,
-            minModalWidth: null
+            minModalWidth: null,
+            isNullData: false
         }
     },
     computed: {
@@ -771,16 +773,19 @@ export default {
 
             EquipmentService.queryTools(this.params).then(
                 result => {
+                    if(result.pagedList.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     for(let index in result.pagedList){
                         result.pagedList[index].inTime = new Date(result.pagedList[index].inTime).format("yyyy-MM-dd hh:mm:ss");
                         if(result.pagedList[index].status == false){
                             this.isAloneReturn = true
                             this.isAloneBorrow = false
-                            // this.isColor = 'red'
                         }else{
                             this.isAloneBorrow = true
                             this.isAloneReturn = false
-                            // this.isColor = 'green'
                         }
                     }
                     this.toolData = result.pagedList
@@ -1071,7 +1076,7 @@ export default {
 .toolTitle{
     line-height: 50px;
     text-align: center;
-    background: rgba(103, 116, 153, 0.28);
+    background: rgba(249, 249, 255, 0.59);
 }
 .toolInfo{
     width: 90%;
@@ -1094,7 +1099,7 @@ export default {
     margin-right: 5px;
 }
 .operations{
-    background: #c0c6d6;
+    background: rgba(189, 196, 199, 0.47);
 }
 .operation{
     display: inline-block;

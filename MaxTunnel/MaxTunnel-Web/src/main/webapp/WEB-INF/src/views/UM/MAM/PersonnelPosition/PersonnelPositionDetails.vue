@@ -3,74 +3,69 @@
 		<Row class="body">
 			<Button type="primary" class="back" @click="back">返回</Button>
 			<Col span="8">
-			<Card class="persons">
-				<p slot="title">
-					<Icon type="android-contact"></Icon>
-					{{ personnelInfo.name }}
-				</p>
-				<a href="#" slot="extra" @click.prevent="changePosType">
-					历史轨迹
-				</a>
-				<ul>
-					<li>所属公司：{{personnelInfo.companyName}}</li>
-					<li>手机号：{{ personnelInfo.telphone }}</li>
-					<li>身份证号：{{ personnelInfo.identityNO }}</li>
-					<br>
-					<li>入廊目的：{{ personnelInfo.actionName }}</li>
-					<li>入廊时间：{{ personnelInfo.preTime }}</li>
-					<li>行程状态：{{ personnelInfo.processStatus }}</li>
-				</ul>
-				<!-- <div class="options">
+				<Card class="persons">
+					<p slot="title">
+						<Icon type="android-contact"></Icon>
+						{{ personnelInfo.name }}
+					</p>
+					<a href="#" slot="extra" @click.prevent="changePosType">
+						历史轨迹
+					</a>
+					<ul>
+						<li>所属公司：{{personnelInfo.companyName}}</li>
+						<li>手机号：{{ personnelInfo.telphone }}</li>
+						<li>身份证号：{{ personnelInfo.identityNO }}</li>
+						<br>
+						<li>入廊目的：{{ personnelInfo.actionName }}</li>
+						<li>入廊时间：{{ personnelInfo.preTime }}</li>
+						<li>行程状态：{{ personnelInfo.processStatus }}</li>
+					</ul>
+					<!-- <div class="options">
 						<Button type="primary" @click="route.queryShow = true">历史轨迹</Button>
 						<Button type="primary" class="call">通话</Button>
 					</div> -->
-			</Card>
-			<div class="cameras">
-				<Row>
-					<Col span="1" class="slipContent">
-					<Icon type="chevron-left"
-						:class="['slipLeft',{'disabled': cameras.curPage == 1},{'clicked' : clicked.prev && cameras.curPage != 1}]"
-						@click.native="pageChange('prev')" @mousedown.native="down('prev')"
-						@mouseup.native="up('prev')"></Icon>
-					</Col>
-					<Col span="22">
-					<div class="videos">
-						<h1 v-if="cameras.nodata" style="text-align: center;margin-top: 2vmin;">暂无视频</h1>
-						<Row>
-							<Col span="12" v-for="(item, index) in cameras.showList" :key="item.id" class="monitors">
-							<video-component v-bind:video="item" :index="index" v-bind:id="'camera'+item.id">
-							</video-component>
-							</Col>
-						</Row>
-					</div>
-					</Col>
-					<Col span="1" class="slipContent">
-					<Icon type="chevron-right" :class="['slipRight',{'disabled' : cameras.curPage == cameras.totalPage},
-						   {'clicked' : clicked.next && cameras.curPage != cameras.totalPage}]" @click.native="pageChange('next')"
-						@mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
-					</Col>
-				</Row>
-			</div>
+				</Card>
+				<div class="cameras">
+					<Row>
+                        <Col span="1" class="slipContent">
+                            <Icon type="chevron-left" :class="['slipLeft',{'disabled': cameras.curPage == 1},{'clicked' : clicked.prev && cameras.curPage != 1}]" @click.native="pageChange('prev')" @mousedown.native="down('prev')" @mouseup.native="up('prev')"></Icon>
+                        </Col>
+                        <Col span="22">
+                        <div class="videos">
+                            <h1 v-if="cameras.nodata" style="text-align: center;margin-top: 2vmin;">暂无视频</h1>
+                            <Row>
+                                <Col span="12" v-for="item in cameras.showList" :key="item.id" class="monitors">
+                                    <video-component v-bind:video="item" v-bind:id="'camera'+item.id"></video-component>
+                                </Col>
+                            </Row>
+                        </div>
+                        </Col>
+                        <Col span="1"  class="slipContent">
+                           <Icon type="chevron-right" :class="['slipRight',{'disabled' : cameras.curPage == cameras.totalPage},
+						   {'clicked' : clicked.next && cameras.curPage != cameras.totalPage}]" @click.native="pageChange('next')" @mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
+                        </Col>
+                    </Row>
+				</div>
 			</Col>
 			<Col span="15" offset="1" class="view">
-			<div class="query" v-if="route.queryShow">
-				<Row>
-					<Col span="12">
-					<DatePicker type="datetimerange" placeholder="请选择起始时间" @on-change="getRouteList"
-						v-model="route.time"></DatePicker>
-					</Col>
-					<Col span="11" offset="1">
-					<Select v-model="route.curRoute" @on-change="getCurRoute(0)">
-						<Option v-for="route in route.list" :key="route.id" :value="route.id">
-							{{ route.name }}
-						</Option>
-					</Select>
-					</Col>
-				</Row>
-			</div>
-			<!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
-					</sm-viewer>-->
-			<sm-viewer :cameraPosition="VMConfig.CAMERA" ref="positionDetail"></sm-viewer>
+				<div class="query" v-if="route.queryShow">
+					<Row>
+						<Col span="12">
+							<DatePicker type="datetimerange" placeholder="请选择起始时间"
+							@on-change="getRouteList" v-model="route.time"></DatePicker>
+						</Col>
+						<Col span="11" offset="1">
+							<Select v-model="route.curRoute" @on-change="getCurRoute(0)">
+								<Option v-for="route in route.list" :key="route.id" :value="route.id">
+									{{ route.name }}
+								</Option>
+							</Select>
+						</Col>
+					</Row>
+				</div>
+				<!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
+					</sm-viewer>-->				
+				<sm-viewer :cameraPosition="VMConfig.CAMERA" ref="positionDetail"></sm-viewer>
 			</Col>
 		</Row>
 	</div>
@@ -89,7 +84,7 @@
 	//   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
 	import VideoComponent from "../../../../components/Common/Video/VideoComponent"
 	import Vue from 'vue'
-	export default {
+  	export default {
 		data() {
 			return {
 				personnelInfo: {
@@ -128,10 +123,10 @@
 					list: []
 				},
 				curPersonId: null,
-				polylineAttr: {
-					viewer: Vue.prototype.$viewer,
-					id: null,
-					type: 'historyRoute',
+				polylineAttr:{
+					viewer:Vue.prototype.$viewer,
+					id:null,
+					type:'historyRoute',
 				},
 				queryVideos: {
 					longitude: null,
@@ -159,7 +154,7 @@
 			getDetails() {
 				let _this = this
 				personnelPositionService.getBindDetails(this.curPersonId).then(
-					result => {
+					result=>{
 						_this.personnelInfo.name = result.list[0].name
 						_this.personnelInfo.companyName = result.company.name
 						_this.personnelInfo.telphone = result.list[0].telphone
@@ -168,23 +163,23 @@
 						_this.personnelInfo.processStatus = result.processStatus
 						_this.personnelInfo.actionName = result.actionName
 						_this.getRouteList()
-						if (_this.personnelInfo.processStatus === '确认出廊') {
+						if(_this.personnelInfo.processStatus === '确认出廊'){
 							_this.showCurPoint()
 						}
 					},
-					error => {
+					error=>{
 						_this.Log.info(error)
 					}
 				)
 			},
-			getCameraList() {
+			getCameraList(){
 				let _this = this
 				VideoService.getNearbyVideos(this.queryVideos).then(
-					result => {
-						if (result.length !== 0) {
+					result=>{
+						if(result.length !== 0){
 							_this.cameras.nodata = false
 							_this.cameras.allList = result
-							_this.cameras.showList = result.slice(0, 4)
+							_this.cameras.showList = result.slice(0,4)
 							_this.cameras.totalPage = Math.ceil(result.length / 4)
 						} else {
 							_this.cameras.allList = []
@@ -194,117 +189,110 @@
 					}
 				)
 			},
-			showCurPoint() {
+			showCurPoint(){
 				let params = {
 					Id: this.curPersonId
 				}
-				this.$refs.positionDetail.entityFilter(params)
+				this.$refs.positionDetail.entityFilter(params)	
 			},
-			pageChange(type) {
-				switch (type) {
+			pageChange(type){
+				switch(type){
 					case 'prev':
-						if (this.cameras.curPage > 1) {
+						if(this.cameras.curPage > 1){
 							this.cameras.curPage -= 1
 						}
 						break
 					case 'next':
-						if (this.cameras.curPage < this.cameras.totalPage) {
+						if(this.cameras.curPage < this.cameras.totalPage){
 							this.cameras.curPage += 1
 						}
 						break
 				}
-				this.cameras.showList = this.cameras.allList.slice((this.cameras.curPage - 1) * 4, this.cameras.curPage *
-					4)
+				this.cameras.showList = this.cameras.allList.slice((this.cameras.curPage - 1) * 4, this.cameras.curPage * 4)
 			},
-			down(type) {
+			down(type){
 				this.clicked[type] = true
 			},
-			up(type) {
+			up(type){
 				this.clicked[type] = false
 			},
-			changePosType() {
+			changePosType(){
 				this.route.queryShow = !this.route.queryShow
-				if (!this.route.queryShow) {
+				if(!this.route.queryShow){
 					this.getRouteList()
 				}
 			},
 			getCurRoute(routeInfo) {
 				let params = {}
-				if (routeInfo === 0) {
-					let curRoutePos = this.route.list.find(item => {
+				if(routeInfo === 0){
+					let curRoutePos = this.route.list.find(item=>{
 						return item.id == this.route.curRoute
-					})
+					}) 
 					params = {
-						polyline: {
+						polyline:{
 							position: curRoutePos.position,
-							width: 3,
-							color: 'yellow'
+						width: 3,
+                        color: 'yellow'
 						}
 					}
 				} else {
 					params = {
-						polyline: {
+						polyline:{
 							position: routeInfo.positions,
-							// 	position: [
-							//     {"Lon":"112.49687675857342","Lat":"37.70371418429163"},
-							// 	{"Lon":"112.4891505280533","Lat":"37.71366062508612"}
-							// ],
-							width: 3,
-							color: 'yellow'
+						// 	position: [
+                        //     {"Lon":"112.49687675857342","Lat":"37.70371418429163"},
+						// 	{"Lon":"112.4891505280533","Lat":"37.71366062508612"}
+                        // ],
+						width: 3,
+                        color: 'yellow'
 						}
 					}
 				}
 				this.removePolyline();
 
 				this.polylineAttr.id = routeInfo === 0 ? this.route.curRoute : routeInfo.id
-				this.$refs.positionDetail.addPolylineEntity({
-					id: this.polylineAttr.id,
-					messageType: this.polylineAttr.type
-				}, params)
-
+				this.$refs.positionDetail.addPolylineEntity({id:this.polylineAttr.id,messageType:this.polylineAttr.type},params)
+				
 			},
-			removePolyline() {
-				let {
-					polylineAttr
-				} = this;
-
-				if (!!polylineAttr.id) {
-					let entitys = polylineAttr.viewer.entities.getById(polylineAttr.id);
-
-					if (Array.isArray(entitys) && entitys.length) {
+			removePolyline(){
+				let { polylineAttr } = this;
+				
+				if(!!polylineAttr.id){
+					let entitys  = polylineAttr.viewer.entities.getById(polylineAttr.id);
+				
+					if( Array.isArray(entitys) && entitys.length ){
 						entitys.forEach(entity => this.removeCommonEntity)
-					} else {
+					}
+                    else{
 						this.removeCommonEntity(entitys)
 					}
-
+					
 				}
 			},
-			removeCommonEntity(entitys) {
-				let {
-					polylineAttr
-				} = this;
+			removeCommonEntity(entitys){
+				let { polylineAttr } = this;
 
 				return entitys.messageType == polylineAttr.type && polylineAttr.viewer.entities.removeById(polylineAttr.id)
 			},
-			getRouteList() {
+			getRouteList(){
 				let params = {
 					staffId: this.curPersonId,
 					equipmentId: null,
 					startTime: this.route.time ? new Date(this.route.time[0]).getTime() : null,
-					endTime: this.route.time ? new Date(this.route.time[1]).getTime() : null
+					endTime: this.route.time ? new Date(this.route.time[1]).getTime() : null 
 				}
-
+				
 				let _this = this
 				personnelPositionService.getRoutes(params).then(
-					result => {
-						if (_this.route.queryShow) {
+					result=>{
+						if(_this.route.queryShow){
 							_this.route.list = []
-							result.forEach((route, index) => {
+							result.forEach((route,index)=>{
 								let temp = {}
 								temp.id = route.id
 								temp.name = '轨迹' + (index + 1)
 								temp.position = []
-								route.list.forEach(point => {
+								route.list.forEach(point=>{
 									let position = {}
 									position.Lon = point.longitude
 									position.Lat = point.latitude
@@ -312,13 +300,13 @@
 								})
 								_this.route.list.push(temp)
 							})
-							_this.route.curRoute = result[result.length - 1].id
+							_this.route.curRoute = result[result.length - 1].id	
 						} else {
 							let routeIndex = result.length - 1
 							let temp = {}
 							temp.id = result[routeIndex].id
 							temp.positions = []
-							result[routeIndex].list.forEach(point => {
+							result[routeIndex].list.forEach(point=>{
 								let position = {}
 								position.Lon = point.longitude
 								position.Lat = point.latitude
@@ -326,17 +314,17 @@
 							})
 							_this.getCurRoute(temp)
 						}
-
-						if (_this.personnelInfo.processStatus === '确认出廊') {
+						
+						if(_this.personnelInfo.processStatus === '确认出廊'){
 							let routeIndex = result.length - 1
 							let index = result[routeIndex].list.length - 1
-							for (let item in _this.queryVideos) {
+							for(let item in _this.queryVideos){
 								_this.queryVideos[item] = result[routeIndex].list[index][item]
-							}
-							_this.getCameraList()
+							}	
+							_this.getCameraList()	
 						}
 					},
-					error => {
+					error=>{
 						_this.Log.info(error)
 					}
 				)
@@ -345,18 +333,18 @@
 				this.removePolyline();
 				this.$router.push('/UM/PersonnelPosition/visitors')
 			},
-			refreshData() {
+			refreshData(){
 				let _this = this;
 				_this.refresh.id = setInterval(() => {
 					_this.getDetails()
 				}, _this.refresh.time)
 			},
 		},
-		beforeDestroy() {
+		beforeDestroy(){
 			clearInterval(this.refresh.id)
 			this.refresh.id = null;
 		}
-	};
+  	};
 </script>
 <style scoped>
 	.whole {
@@ -365,18 +353,15 @@
 		background-color: white;
 		overflow: hidden;
 	}
-
-	.body {
+	.body{
 		margin: 4vmin 2vmin;
 		position: relative;
 	}
-
-	.back {
+	.back{
 		position: absolute;
 		right: 0vmin;
 		top: -2.8vmin;
 	}
-
 	.view {
 		border: 1px solid #b3b0b0;
 		box-shadow: 0 0 1.3vmin 0.3vmin rgba(0, 0, 0, 0.5);
@@ -384,8 +369,7 @@
 		margin-top: 2.6vh;
 		position: relative;
 	}
-
-	.query {
+	.query{
 		position: absolute;
 		top: 1vmin;
 		left: 30%;
@@ -393,51 +377,42 @@
 		height: 4vmin;
 		z-index: 10;
 	}
-
-	.query>>>.ivu-input {
-		height: 3.2vmin;
-		font-size: 1.28vmin;
-	}
-
-	.options {
+	.query >>> .ivu-input{
+        height: 3.2vmin;
+        font-size: 1.28vmin;
+    }
+	.options{
 		position: absolute;
 		right: 0;
 		bottom: -0.8vmin;
 	}
-
-	.persons {
+	.persons{
 		height: 30vh;
 		width: 100%;
 	}
-
-	.persons .ivu-card-head p {
+	.persons .ivu-card-head p{
 		font-size: 1.8vmin;
 		height: 2vmin;
 		line-height: 2vmin;
 	}
-
-	.persons .ivu-card-extra a {
+	.persons .ivu-card-extra a{
 		font-size: 1.4vmin;
 	}
-
 	.persons ul {
 		list-style-type: none;
 		font-size: 1.6vmin;
 	}
-
-	.cameras {
+	.cameras{
 		margin-top: 1.2vmin;
 		height: 46vh;
 		background-color: #f3e7d1;
 		border-radius: 4px;
 	}
-
 	.slipContent {
 		position: relative;
 		width: 4%;
 		height: 46vh;
 	}
-
 	.slipLeft {
 		position: absolute;
 		top: 46%;
@@ -446,7 +421,6 @@
 		color: #656464;
 		font-size: 2.88vmin;
 	}
-
 	.slipRight {
 		position: absolute;
 		top: 46%;
@@ -455,15 +429,12 @@
 		color: #656464;
 		font-size: 2.88vmin;
 	}
-
 	.disabled {
 		display: none;
 	}
-
 	.clicked {
-		color: rgb(0, 228, 236);
+		color: rgb(0,228,236);
 	}
-
 	.monitors {
 		padding: 1.4vmin 0.6vmin 0vmin 0.6vmin;
 		height: 22.4vh;

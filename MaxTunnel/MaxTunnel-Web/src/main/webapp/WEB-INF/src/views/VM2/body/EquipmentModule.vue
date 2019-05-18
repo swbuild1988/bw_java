@@ -166,7 +166,8 @@
                     let _this = this
                     setTimeout(()=>{
                         _this.init()
-                    },300000)
+                    },300000
+                    )
                 });
             },
             percentage(array,index){

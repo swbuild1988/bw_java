@@ -5,26 +5,24 @@
                 <article>
                     <h2>{{item.objectName}}</h2>
                     <h3>{{item.alarmName}}</h3>
-                </article>
-            </section>
+                </article>    
+            </section>  
             <section class="videoSection">
                 <h4>关联视频</h4>
                 <Row :gutter="16">
                     <Col :span="videoSpan" v-for="(element,index) in item.videos" :key="index" style="margin-top: 16px">
-                    <div class="videoContainer"
-                        :class="{ oneScreen: videoSpan == 24, monitor: videoSpan == 12, fourMonitor: videoSpan ==8 }">
-                        <video-component v-bind:video="element" :index="index" v-bind:id="'camera'+element.id">
-                        </video-component>
-                    </div>
+                        <div class="videoContainer" :class="{ oneScreen: videoSpan == 24, monitor: videoSpan == 12, fourMonitor: videoSpan ==8 }">
+                            <video-component v-bind:video="element" v-bind:id="'camera'+element.id"></video-component>
+                        </div>
                     </Col>
-                </Row>
-            </section>
+                </Row>    
+            </section>  
             <section class="extremeSection">
                 <h4>极值</h4>
                 <Row :gutter="16">
                     <Col span="12" v-for="(temp, index) in item.cvList" :key="index">
-                    <Col span="12">名称：{{temp.key}}</Col>
-                    <Col span="12">极值：{{temp.val}}{{temp.unit}}</Col>
+                        <Col span="12">名称：{{temp.key}}</Col>
+                        <Col span="12">极值：{{temp.val}}{{temp.unit}}</Col>
                     </Col>
                     <!-- <Col span="12" v-for="(item, index) in cvList" :key="index">
                         <Col span="12">名称：{{item.key}}</Col>
@@ -36,10 +34,10 @@
                 <h4>预案</h4>
                 <Row>
                     <Col span="8">
-                    <Button type="default" @click="cancelPlan()">取消</Button>
+                        <Button type="default" @click="cancelPlan()">取消</Button>
                     </Col>
                     <Col span="8" v-for="(ele, index) in item.plans" :key="index">
-                    <Button type="primary" @click="showStep(item.sectionId,ele.id,ele.processKey)">{{ele.name}}</Button>
+                        <Button type="primary" @click="showStep(item.sectionId,ele.id,ele.processKey)">{{ele.name}}</Button>
                     </Col>
                 </Row>
             </section>
@@ -49,12 +47,12 @@
                 <article>
                     <Row>
                         <Col span="24" v-for="(item, index) in planStepData" :key="index">
-                        <Col span="10" class="stepNum">step{{index+1}}：</Col>
-                        <Col span="5" class="stepName">{{item.stepName}}</Col>
-                        <Col span="8" class="stepStatus">{{item.statusStr}}</Col>
+                            <Col span="10" class="stepNum">step{{index+1}}：</Col>
+                            <Col span="5" class="stepName">{{item.stepName}}</Col>
+                            <Col span="8" class="stepStatus">{{item.statusStr}}</Col>
                         </Col>
                     </Row>
-                    <div>
+                    <div >
                         <div class="stepNum"></div>
                         <div class="stepName"></div>
                     </div>
@@ -114,204 +112,180 @@
                     </div>
                 </article>
         </section> -->
-    </Modal>
+    </Modal>    
 </template>
 
 <script>
-    import videoComponent from '../Video/VideoComponent.vue'
-    export default {
-        components: {
-            videoComponent
+import videoComponent from '../Video/VideoComponent.vue'
+export default {
+    components: {videoComponent},
+    props: {
+        modalPrams: {
+            type: Object,
+            default: function () {
+                return {state: false, modalInfo: null, planData: null};
+            }
         },
-        props: {
-            modalPrams: {
-                type: Object,
-                default: function () {
-                    return {
-                        state: false,
-                        modalInfo: null,
-                        planData: null
-                    };
+        alarmContainer: {
+            type: Object
+        }
+    },
+    data() {
+        return {
+            curVideo: null,
+            videoNum:0,
+            modalWidth: 600,
+            videoSpan: 0,
+            isShowStep: false,
+            planStepData: [],
+            cvList: [
+                {
+                    key: '温度',
+                    val: '24',
+                    unit: '℃'
+                },
+                {
+                    key: '温度',
+                    val: '24',
+                    unit: '℃'
+                },{
+                    key: '温度',
+                    val: '24',
+                    unit: '℃'
+                },{
+                    key: '温度',
+                    val: '24',
+                    unit: '℃'
+                },{
+                    key: '温度',
+                    val: '24',
+                    unit: '℃'
                 }
-            },
-            alarmContainer: {
-                type: Object
-            }
-        },
-        data() {
-            return {
-                curVideo: null,
-                videoNum: 0,
-                modalWidth: 600,
-                videoSpan: 0,
-                isShowStep: false,
-                planStepData: [],
-                cvList: [{
-                        key: '温度',
-                        val: '24',
-                        unit: '℃'
-                    },
-                    {
-                        key: '温度',
-                        val: '24',
-                        unit: '℃'
-                    }, {
-                        key: '温度',
-                        val: '24',
-                        unit: '℃'
-                    }, {
-                        key: '温度',
-                        val: '24',
-                        unit: '℃'
-                    }, {
-                        key: '温度',
-                        val: '24',
-                        unit: '℃'
-                    }
-                ]
-            }
-        },
-        watch: {
-            'videoNum'() {
-                this.setVideoSpan();
-            },
-            'modalPrams.planData': function (newVal, oldVal) {
-                this.showStepDetails()
-            },
-            'modalPrams.modalInfo': function (newVal, oldVal) {
-                this.modalPrams.modalInfo = newVal
-            },
-            // 'alarmContainer': function(newVal){
-            //     console.log("childalarmContainer", newVal)
-            // }
-        },
-        mounted() {
+            ]
+        }
+    },
+    watch: {
+        'videoNum'() {
             this.setVideoSpan();
         },
-        methods: {
-            reflashVideo() {
-                var _this = this;
-                _this.videoNum = _this.modalPrams.modalInfo.videos.length;
-                _this.setVideoSpan();
-            },
-            setVideoSpan() {
-                let _this = this;
-                _this.videoSpan = 0;
-                if (_this.videoNum == 1) {
-                    _this.videoSpan = 24;
-                }
-                if (_this.videoNum > 1 && _this.videoNum <= 4) {
-                    _this.videoSpan = 12;
-                }
-                if (_this.videoNum > 4) {
-                    _this.videoSpan = 8;
-                }
-            },
-            //点击预案名称显示预案步骤
-            showStep(sectionId, processValue, processKey) {
-                this.axios.get("emplans/process-key/" + processKey).then(res => {
-                    let {
-                        code,
-                        data
-                    } = res.data
-                    if (code == 200) {
-                        this.axios.post("/emplans/start", {
-                            sectionId: sectionId,
-                            processValue: processValue
-                        }).then()
-                        this.isShowStep = !this.isShowStep
-                        // this.$Message.info("预案开始执行")
-                    } else {
-                        this.Log.info()
-                    }
-                })
-            },
-            showStepDetails() {
-                if (this.modalPrams.planData != null) {
-                    this.modalPrams.planData.process.map(item => {
-                        if (item.status == 1) {
-                            this.modalPrams.planData.nodeList.map(element => {
-                                if (item.node == element.stepName) {
-                                    element.statusStr = '已完成'
-                                }
-                            })
-                        }
-                        this.planStepData = this.modalPrams.planData.nodeList
-                        // this.$Message.info("预案执行完毕")
-                    })
-                }
-            },
-            //点击取消预案
-            cancelPlan() {
-                this.isShowStep = false
+        'modalPrams.planData': function(newVal, oldVal){
+            this.showStepDetails()
+        },
+        'modalPrams.modalInfo': function(newVal, oldVal){
+            this.modalPrams.modalInfo = newVal
+        },
+        // 'alarmContainer': function(newVal){
+        //     console.log("childalarmContainer", newVal)
+        // }
+    },
+    mounted() {
+        this.setVideoSpan();
+    },
+    methods: {
+        reflashVideo(){
+            var _this = this;
+            _this.videoNum = _this.modalPrams.modalInfo.videos.length;
+            _this.setVideoSpan();
+        },
+        setVideoSpan() {
+            let _this = this;
+            _this.videoSpan = 0;
+            if (_this.videoNum == 1) {
+                _this.videoSpan = 24;
+            }
+            if (_this.videoNum > 1 && _this.videoNum <= 4) {
+                _this.videoSpan = 12;
+            }
+            if (_this.videoNum > 4) {
+                _this.videoSpan = 8;
             }
         },
-    }
+        //点击预案名称显示预案步骤
+        showStep(sectionId,processValue,processKey){
+            this.axios.get("emplans/process-key/"+processKey).then(res=>{
+                let{code, data} = res.data
+                if( code == 200 ){
+                    this.axios.post("/emplans/start", {sectionId: sectionId,processValue: processValue}).then()
+                    this.isShowStep = !this.isShowStep
+                    // this.$Message.info("预案开始执行")
+                }else{
+                    this.Log.info()
+                }
+            })
+        },
+        showStepDetails(){
+            if(this.modalPrams.planData!=null){
+                this.modalPrams.planData.process.map(item => {
+                    if(item.status==1){
+                        this.modalPrams.planData.nodeList.map(element=>{
+                            if(item.node == element.stepName){
+                                element.statusStr = '已完成'
+                            }
+                        })
+                    }
+                    this.planStepData = this.modalPrams.planData.nodeList
+                    // this.$Message.info("预案执行完毕")
+                })
+            }
+        },
+        //点击取消预案
+        cancelPlan(){
+            this.isShowStep = false
+        }
+    },
+}
 </script>
 
 <style>
-    section {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin-bottom: 2vmin;
-        padding: 1vmin;
-        -webkit-box-shadow: 0px 3px 3px #c8c8c8;
-        -moz-box-shadow: 0px 3px 3px #c8c8c8;
-        box-shadow: 0px 3px 3px #c8c8c8;
-    }
-
-    .titleSection h2,
-    .detailSection h2 {
-        text-align: center;
-    }
-
-    .titleSection h3 {
-        text-align: right;
-    }
-
-    .ivu-modal-body {
-        max-height: 55vh;
-        overflow-y: auto;
-    }
-
-    .extremeSection .ivu-col.ivu-col-span-12 .ivu-col.ivu-col-span-12 {
-        line-height: 3.6vmin;
-        background: #e0e0e0;
-        margin-bottom: 5px;
-        padding-left: 15px;
-    }
-
-    .videoContainer {
-        height: 20vh;
-    }
-
-    .monitor {
-        height: 20vh;
-        width: 100%;
-    }
-
-    .fourMonitor {
-        height: 33vh;
-    }
-
-    .oneScreen {
-        height: 66vh;
-    }
-
-    .planSection .ivu-col.ivu-col-span-8 {
-        text-align: center;
-        margin-bottom: 1vmin;
-    }
-
-    .detailSection * {
-        line-height: 3.6vmin;
-    }
-
-    .detailSection .stepNum {
-        text-align: right
-    }
-
-    /* .detailSection .stepStatus{
+section{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 2vmin;
+    padding: 1vmin;
+    -webkit-box-shadow: 0px 3px 3px #c8c8c8;
+    -moz-box-shadow: 0px 3px 3px #c8c8c8;
+    box-shadow: 0px 3px 3px #c8c8c8;
+}
+.titleSection h2,.detailSection h2{
+    text-align: center;
+}
+.titleSection h3{
+    text-align: right;
+}
+.ivu-modal-body{
+    max-height: 55vh;
+    overflow-y: auto;
+}
+.extremeSection .ivu-col.ivu-col-span-12 .ivu-col.ivu-col-span-12{
+    line-height: 3.6vmin;
+    background: #e0e0e0;
+    margin-bottom: 5px;
+    padding-left: 15px;
+}
+.videoContainer{
+    height: 20vh;
+}
+.monitor {
+    height: 20vh;
+    width: 100%;
+}
+.fourMonitor {
+    height: 33vh;
+}
+.oneScreen {
+    height: 66vh;
+}
+.planSection .ivu-col.ivu-col-span-8{
+    text-align: center;
+    margin-bottom: 1vmin;
+}
+.detailSection *{
+    line-height: 3.6vmin;
+}
+.detailSection .stepNum{
+    text-align: right
+}
+/* .detailSection .stepStatus{
     text-align: center;
 } */
 </style>

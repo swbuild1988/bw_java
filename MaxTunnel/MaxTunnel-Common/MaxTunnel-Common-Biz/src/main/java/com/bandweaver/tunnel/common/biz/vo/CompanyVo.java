@@ -12,7 +12,7 @@ public class CompanyVo extends BaseVo {
 
     private String name;
     
-    private Integer bank;
+    private String bank;
 
     private Date crtTime;
 
@@ -40,11 +40,11 @@ public class CompanyVo extends BaseVo {
         this.crtTime = crtTime;
     }
 
-	public Integer getBank() {
+	public String getBank() {
 		return bank;
 	}
 
-	public void setBank(Integer bank) {
+	public void setBank(String bank) {
 		this.bank = bank;
 	}
 }

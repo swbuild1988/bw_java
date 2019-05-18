@@ -1,10 +1,11 @@
 import axios from "axios";
+import { get,put,del,post } from "../utils/http";
 
 var PowerSubstationService = {
     // 变电所分页查询
     substationDatagrid(params){
         return new Promise((resolve,reject)=>{
-            axios.post('substations/datagrid',params).then(
+            post('substations/datagrid',params).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {
@@ -88,7 +89,7 @@ var PowerSubstationService = {
     // 添加变电所信息
     addSubstation(params){
         return new Promise((resolve,reject)=>{
-            axios.post('substations',params).then(
+            post('substations',params).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {
@@ -105,7 +106,7 @@ var PowerSubstationService = {
     // 修改变电所信息
     editSubstation(params){
         return new Promise((resolve,reject)=>{
-            axios.put('substations',params).then(
+            put('substations',params).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {
@@ -122,7 +123,7 @@ var PowerSubstationService = {
     // 根据id查变电所详情
     substationDetailById(id){
         return new Promise((resolve,reject)=>{
-            axios.get('substations/'+id).then(
+            get('substations/'+id).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {
@@ -172,7 +173,7 @@ var PowerSubstationService = {
     // 删除变电所信息
     deleteSubstation(id){
         return new Promise((resolve,reject)=>{
-            axios.delete('substations/'+id).then(
+            del('substations/'+id).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {
@@ -189,7 +190,7 @@ var PowerSubstationService = {
     // 条件获取变电所列表
     getSubstationList(params){
         return new Promise((resolve,reject)=>{
-            axios.post('substations/condition',params).then(
+            post('substations/condition',params).then(
                 res=>{
                     let {code,data,msg} = res.data;
                     if (code == 200) {

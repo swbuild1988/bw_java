@@ -1,9 +1,10 @@
 import axios from 'axios'
+import { get,put,post } from "../utils/http";
 
 var SchedulejobService = {
     querySchedule(params){
         return new Promise((resolve, reject) => {
-            axios.post('/schedulejobs/datagrid',params).then(res => {
+            post('/schedulejobs/datagrid',params).then(res => {
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -15,7 +16,7 @@ var SchedulejobService = {
     },
     getObjtype(){
         return new Promise((resolve, reject) => {
-            axios.get('jobtype-enums').then(res=> {
+            get('jobtype-enums').then(res=> {
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -27,7 +28,7 @@ var SchedulejobService = {
     },
     checkJobName(jobName){
         return new Promise((resolve, reject) => {
-            axios.get('/schedulejobs/ajax/'+jobName).then(res=>{
+            get('/schedulejobs/ajax/'+jobName).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -39,7 +40,7 @@ var SchedulejobService = {
     },
     saveSchedule(params){
         return new Promise((resolve, reject) => {
-            axios.post('/schedulejobs', params).then(res=>{
+            post('/schedulejobs', params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -51,7 +52,7 @@ var SchedulejobService = {
     },
     editSchedule(params){
         return new Promise((resolve, reject) => {
-            axios.put('/schedulejobs', params).then(res => {
+            put('/schedulejobs', params).then(res => {
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve( data )
@@ -63,7 +64,7 @@ var SchedulejobService = {
     },
     getSchedule(id){
         return new Promise((resolve, reject) => {
-            axios.get("schedulejobs/"+id).then(res=>{
+            get("schedulejobs/"+id).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve( data )

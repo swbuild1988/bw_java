@@ -64,8 +64,8 @@ export default {
                 {id: 2, val: 0, key: '进行中'}
             ],
             patrolTask:[
-                {id:1,planName: '7月巡检计划',taskPerson: '张三', startTime: 1529596800000,endTime: null,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
-                {id:2,planName: '7月巡检计划',taskPerson: '张三', startTime: null,endTime: 1529596800000,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
+                // {id:1,planName: '7月巡检计划',taskPerson: '张三', startTime: 1529596800000,endTime: null,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
+                // {id:2,planName: '7月巡检计划',taskPerson: '张三', startTime: null,endTime: 1529596800000,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
             ],
             page:{
                 pageSize: 10,
@@ -199,19 +199,25 @@ export default {
     },
     watch:{
         '$route': function () {
-          //2. $route发生变化时再次赋值planId
-          this.tunnelId = this.$route.params.id;
-          this.tunnels.forEach(a => {
-            if (a.id == this.tunnelId) {
-              this.queryConditions();
-              this.isTable = true;
-              this.isSuperCalender = false;
+            //2. $route发生变化时再次赋值planId
+            if(this.$route.params.id){
+                this.tunnelId = this.$route.params.id;
+                this.tunnels.forEach(a => { 
+                    if (a.id == this.tunnelId) {
+                    this.queryConditions();
+                    this.isTable = true;
+                    this.isSuperCalender = false;
+                    }
+                });
             }
-          });
+            this.conditions.finished = this.$route.params.taskStatus
         },
     },
     mounted() {
-        this.tunnelId = this.$route.params.id;
+        if(this.$route.params.id){
+            this.tunnelId = this.$route.params.id;
+        }
+        this.conditions.finished = this.$route.params.taskStatus
         // 从数据库读取select的option选项
         this.axios.get("/tunnels ").then(response => {
             let { code, data } = response.data;

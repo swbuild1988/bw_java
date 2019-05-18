@@ -43,6 +43,7 @@
                 <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
                 批量入库</Button>
             </div>
+            <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row :gutter="8">
                 <Col span="6" v-for="item in equipments" :key="item.id" style="margin-top: 6px;padding: 5px;">
                     <div :style="backImage" class="backGoundBox">
@@ -245,7 +246,8 @@ export default {
             userId: null,
             checkIntime: null,
             areas: null,
-            stores: null
+            stores: null,
+            isNullData: false
         };
     },
     watch: {
@@ -372,6 +374,11 @@ export default {
             }
             EquipmentService.backUpDatagrid(this.params).then(
                 result => {
+                    if(result.list.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     for (let index in result.list) {
                         result.list[index].inTime = new Date(result.list[index].inTime).format("yyyy-MM-dd hh:mm:ss");
                         if (result.list[index].imgUrl != null) {
@@ -682,6 +689,7 @@ export default {
     font-size: 12px;
     color: #ed3f14;
 }
+
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

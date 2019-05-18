@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,del,post } from "../utils/http";
 
 var RelatedUnitService = {
 	// 根据ID获取相关单位信息
 	getRelatedUnitInfoById: function(id) {
 		return new Promise((resolve, reject) => {
-			axios.get('relatedunits/' + id).then(res => {
+			get('relatedunits/' + id).then(res => {
 				let {
 					code,
 					data,
@@ -21,7 +22,7 @@ var RelatedUnitService = {
 	// 添加相关单位
 	addRelatedUnit: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('relatedunits', params).then(res => {
+			post('relatedunits', params).then(res => {
 				let {
 					code,
 					data,
@@ -55,7 +56,7 @@ var RelatedUnitService = {
 	// 相关单位分页查询
 	relatedUnitDataGrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('relatedunits/datagrid', params).then(res => {
+			post('relatedunits/datagrid', params).then(res => {
 				let {
 					code,
 					data,
@@ -72,7 +73,7 @@ var RelatedUnitService = {
 	// 删除相关单位
 	deleteRelatedUnit: function(id) {
 		return new Promise((resolve, reject) => {
-			axios.delete('relatedunits/' + id).then(res => {
+			del('relatedunits/' + id).then(res => {
 				let {
 					code,
 					data,

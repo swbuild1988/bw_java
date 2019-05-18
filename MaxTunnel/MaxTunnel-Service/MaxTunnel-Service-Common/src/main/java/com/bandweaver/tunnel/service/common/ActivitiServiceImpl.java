@@ -151,11 +151,11 @@ public class ActivitiServiceImpl implements ActivitiService {
     }
 
     @Override
-    public void getImageByProcessInstance(String processInstanceId, HttpServletResponse response) throws FileNotFoundException, IOException {
-    	//获取历史流程实例
-	    HistoricProcessInstance processInstance =  historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-		BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
-		
+    public void getImageByProcessInstance(String processInstanceId, HttpServletResponse response) {
+        //获取历史流程实例
+        HistoricProcessInstance processInstance =  historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
+
         Context.setProcessEngineConfiguration(((ProcessEngineImpl) processEngine).getProcessEngineConfiguration());
         ProcessDiagramGenerator processDiagramGenerator = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator();
         ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(processInstance.getProcessDefinitionId());
@@ -176,29 +176,22 @@ public class ActivitiServiceImpl implements ActivitiService {
         LogUtil.info(highLightedActivitis);
         LogUtil.info(highLightedFlows);
 
-        //中文显示的是口口口，设置字体就好了
-        InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitis, highLightedFlows, "宋体", "宋体", null, null, 1.0);
-        
-        //测试：把流程图写到项目固定的路径下
-       /* String path = (String) PropertiesUtil.getValue("activiti.png.webapp.path");
-        String realPath = ContextUtil.getRequest().getServletContext().getRealPath(path);
-        LogUtil.info("realPath:"+realPath);
-        //创建目录
-        String uuid = UUID.randomUUID().toString();
-        String targetPath = realPath + "\\" + uuid + ".png";
-		FileUtil.copyStream(is, new FileOutputStream(targetPath));
-		LogUtil.info("path:"+path+"\\"+uuid+".png");*/
-		
-		byte[] buffer=new byte[1024];
-		int len=0;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();//转化成字节输出流
-		while((len=is.read(buffer))!=-1){
-			bos.write(buffer,0,len);
-		}
-		bos.flush();
-		response.setContentType("image/png");//解决图片乱码问题
-		OutputStream outputStream = response.getOutputStream();
-		outputStream.write(bos.toByteArray());
+        // jdk7以后，使用try-with-resources关闭io
+        try(InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitis, highLightedFlows, "宋体", "宋体", null, null, 1.0);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer=new byte[1024];
+            int len=0;
+            while((len=is.read(buffer))!=-1){
+                bos.write(buffer,0,len);
+            }
+            bos.flush();
+            // 解决图片乱码问题
+            response.setContentType("image/png");
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(bos.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

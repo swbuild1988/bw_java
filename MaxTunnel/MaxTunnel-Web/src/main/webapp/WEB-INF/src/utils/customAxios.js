@@ -84,10 +84,10 @@ Axios.interceptors.response.use(
     },
     (error) => {
         console.log('err' + error); // for debug
-        Message.error({
-            content: error.message,
-            duration: 5,
-        });
+        // Message.error({
+        //     content: error.message,
+        //     duration: 5,
+        // });
         return Promise.reject(error);
     }
 );

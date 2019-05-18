@@ -25,6 +25,7 @@
         <!-- <Table stripe border :columns="columns1" :data="myTasks"></Table> -->
         <div class="list">
             <Row>
+                <div class="nullData" v-show="isNullData">暂无数据</div>
                 <Col span="4" v-for="(item,index) in myTasks" :key='index'>
                     <div class="unitBox" @click="goToMoudle(item)">
                         <div class="title">
@@ -60,6 +61,7 @@ export default {
                 pageSize: 30,
                 pageTotal:null,
             },
+            isNullData: false
         }
     },
     computed:{
@@ -90,8 +92,13 @@ export default {
             axios.post('users/activiti/task/datagrid',(this.params)).then(response=>{
                 let { code, data } = response.data;
                 if (code == 200) {
+                    if(data.pagedList.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     this.myTasks = data.pagedList
-                    this.page.pageTotal = data.length
+                    this.page.pageTotal = data.total
                     for(let index in this.myTasks){
                         this.myTasks[index].crtTime = new Date(this.myTasks[index].crtTime).format('yyyy-MM-dd')
                     }
@@ -116,7 +123,7 @@ export default {
 
                 // 巡检任务提交
                 case 1002:
-                    pathParams.name = '提交巡检任务'
+                    pathParams.name = '提交巡检任务结果'
                     pathParams.params = {
                         id: task.id
                     }
@@ -126,7 +133,8 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation') {
-                        pathParams.name = '分配巡检任务消息'
+                        // pathParams.name = '分配巡检任务消息'
+                        pathParams.name = '分配巡检任务任务'
                         pathParams.params = {
                             id: task.id
                         }

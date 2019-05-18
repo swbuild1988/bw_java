@@ -4,9 +4,9 @@ import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord;
 
-import java.io.Serializable;
-
-public class InspectionRecordDto extends InspectionRecord implements Serializable{
+public class InspectionRecordDto extends InspectionRecord{
+	
+	private static final long serialVersionUID = 1L;
 
     private DefectDto defect;
 

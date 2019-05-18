@@ -1,9 +1,10 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var DataAnalysisService = {
     chooseDown: function(params){
         return new Promise((resolve,reject) => {
-            axios.post('reports/list',params).then(res=>{
+            post('reports/list',params).then(res=>{
                 let{ code,data,msg } = res.data
                 if(code==200){
                     resolve(data)
@@ -15,7 +16,7 @@ var DataAnalysisService = {
     },
     preview: function(id){
         return new Promise((resolve,reject) => {
-            axios.get('reports/preview/'+id).then(res=>{
+            get('reports/preview/'+id).then(res=>{
                 let{ code,data,msg } = res.data
                 if(code==200){
                     resolve(data)
@@ -27,7 +28,7 @@ var DataAnalysisService = {
     },
     download: function(id){
         return new Promise((resolve, reject) => {
-            axios.get('reports/download/'+id).then(res=>{
+            get('reports/download/'+id).then(res=>{
                 let{ code,data,msg } = res.data
                 if(code==200){
                     resolve(data)
@@ -40,7 +41,7 @@ var DataAnalysisService = {
     //时间枚举
     timeEnums: function(){
         return new Promise((resolve, reject) => {
-            axios.get('time-enums').then(res=>{
+            get('time-enums').then(res=>{
                 let{code,data,msg} = res.data
                 if(code==200){
                     resolve(data)

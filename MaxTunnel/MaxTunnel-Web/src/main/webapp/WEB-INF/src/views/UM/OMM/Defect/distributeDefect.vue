@@ -29,8 +29,8 @@
                 </Select>
             </FormItem>
             <FormItem label="对象名：" v-show="defectDetails.type==2">
-                <Select v-model="defectDetails.objId" disabled>
-                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
+                <Select v-model="defectDetails.objectId" disabled>
+                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="危险等级：">
@@ -86,7 +86,7 @@ export default {
                 name: '',
                 createTime: null,
                 type: null,
-                objId: null,
+                objectId: null,
                 level: null,
                 status: null,
                 description: null,

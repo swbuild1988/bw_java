@@ -10,36 +10,43 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+
 @Service
 public class MqServiceImpl implements MqService {
 
-	@Autowired
+    @Autowired
     private AmqpTemplate amqpTemplate;
-	
-	@Override
-	public void sendToAlarmUMQueue(String msg) {
-		LogUtil.info("发送到[UM告警]队列:" + msg );
-		amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_ALARM_UM), msg);
-	}
-	
-	@Override
-	public void sendToAlarmVMQueue(String msg) {
-		LogUtil.info("发送到[VM告警]队列:" + msg );
-		amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_ALARM_VM), msg);
-	}
 
-	@Override
-	public void sendToPlanUMQueue(String msg) {
-		LogUtil.info("发送到[UM应急]队列:" + msg);
-		amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_PLAN_UM), msg);
-	}
+    @Override
+    public void send(String exchange, String routingKey, Object message) {
+        amqpTemplate.convertAndSend(exchange,routingKey,message);
+    }
 
-	@Override
-	public void sendToPlanVMQueue(String msg) {
-		LogUtil.info("发送到[VM应急]队列:" + msg);
-		amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_PLAN_VM), msg);
-	}
-	
+
+    @Override
+    public void sendToAlarmUMQueue(String msg) {
+        LogUtil.info("发送到[UM告警]队列:" + msg);
+        amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_ALARM_UM), msg);
+    }
+
+    @Override
+    public void sendToAlarmVMQueue(String msg) {
+        LogUtil.info("发送到[VM告警]队列:" + msg);
+        amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_ALARM_VM), msg);
+    }
+
+    @Override
+    public void sendToPlanUMQueue(String msg) {
+        LogUtil.info("发送到[UM应急]队列:" + msg);
+        amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_PLAN_UM), msg);
+    }
+
+    @Override
+    public void sendToPlanVMQueue(String msg) {
+        LogUtil.info("发送到[VM应急]队列:" + msg);
+        amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_PLAN_VM), msg);
+    }
+
 }
 
 

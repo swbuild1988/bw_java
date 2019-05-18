@@ -6,33 +6,98 @@
 <mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionGroupMapper">
 <cache/>
     <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup">
-        insert into t_omm_inspection_group (name, leader_id, leader_name)
-                VALUES (#{name}, #{leaderId}, #{leaderName})
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT OMM_inspection_group_SEQUENCE.currval from DUAL
+        </selectKey>
+        insert into t_omm_inspection_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="name != null">
+                name,
+            </if>
+            <if test="leaderId != null">
+                leader_id,
+            </if>
+            <if test="leaderName != null">
+                leader_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="leaderId != null">
+                #{leaderId},
+            </if>
+            <if test="leaderName != null">
+                #{leaderName},
+            </if>
+        </trim>
     </insert>
+    
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup">
+    	update t_omm_inspection_group
+    	<set>
+    		<if test="name != null and name.trim() != ''">
+    		name = #{name},
+    		</if>
+    		<if test="leaderId != null">
+    		leader_id = #{leaderId},
+    		</if>
+    		<if test="leaderName != null">
+    		leader_name = #{leaderName}
+    		</if>
+    	</set>
+    	where id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="int">
+    	delete from t_omm_inspection_group where id = #{id}
+    </delete>
 
     <insert id="addRelation">
         insert into t_omm_inspection_group_user (group_id, user_id)
                 values (#{groupId}, #{userId})
     </insert>
+    
+    <delete id="deleteRelation">
+    	delete from t_omm_inspection_group_user
+    	<where>
+    	 <if test="groupId != null">
+    	 	and group_id = #{groupId}
+    	 </if>
+    	 <if test="userId != null">
+    	 	and user_id = #{userId}
+    	 </if>
+    	</where>
+    </delete>
 
-    <select id="getInspectionGroupDto" parameterType="int" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto" resultMap="inspectionGroupDtoMap">
-        select g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name, u.password as u_password, u.crt_time as u_crtTime
+    <select id="getInspectionGroupDto" parameterType="int" resultMap="inspectionGroupDtoMap">
+        select g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name
         from t_omm_inspection_group g
         LEFT JOIN t_omm_inspection_group_user gu ON g.id = gu.group_id
-        LEFT JOIN t_security_user u on u.id = gu.user_id
+        LEFT JOIN T_COMMON_STAFF u on u.id = gu.user_id
         where g.id = #{id}
     </select>
 
-    <select id="getAllInspectionGroups" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup" resultMap="inspectionGroupMap">
+    <select id="getInspectionGroupsByCondition" resultMap="inspectionGroupMap">
         select * from T_OMM_INSPECTION_GROUP
+        <where>
+        	<if test="name != null and name.trim() != ''">
+        		instr(name, #{name}) > 0
+        	</if>
+        	<if test="leaderId != null">
+        		and leader_id = #{leaderId}
+        	</if>
+        </where>
     </select>
 
 
-    <select id="getAllInspectionGroupDtos" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto" resultMap="inspectionGroupDtoMap">
-        select  g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name, u.password as u_password, u.crt_time as u_crtTime
+    <select id="getAllInspectionGroupDtos" resultMap="inspectionGroupDtoMap">
+        select  g.id, g.name, g.leader_id, g.leader_name, u.id as u_id, u.name as u_name
         from T_OMM_INSPECTION_GROUP g
         LEFT JOIN t_omm_inspection_group_user gu ON g.id = gu.group_id
-        LEFT JOIN t_security_user u on u.id = gu.user_id
+        LEFT JOIN T_COMMON_STAFF u on u.id = gu.user_id
     </select>
 
     <resultMap id="inspectionGroupDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto">
@@ -40,13 +105,11 @@
         <result column="name" property="name"/>
         <result column="leader_id" property="leaderId" />
         <result column="leader_name" property="leaderName" />
-        <association property="leader" javaType="com.bandweaver.tunnel.common.biz.pojo.common.User" column="leader_id"
-                     select="com.bandweaver.tunnel.dao.common.UserMapper.selectByPrimaryKey" />
-        <collection property="members" ofType="com.bandweaver.tunnel.common.biz.pojo.common.User">
+        <association property="leader" javaType="com.bandweaver.tunnel.common.biz.pojo.Staff" column="leader_id"
+                     select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey" />
+        <collection property="members" ofType="com.bandweaver.tunnel.common.biz.pojo.Staff">
             <id column="u_id" property="id" />
             <result column="u_name" property="name" />
-            <result column="u_password" property="password" />
-            <result column="u_crtTime" property="crtTime" />
         </collection>
     </resultMap>
 

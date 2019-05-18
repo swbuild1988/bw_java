@@ -56,7 +56,7 @@ export default {
   },
   mounted() {
     this.init();
-    this.refreshData();
+    // this.refreshData();
   },
   methods: {
     init() {
@@ -140,6 +140,15 @@ export default {
             });
             _this.myChart.setOption(_this.option);
           }
+        })
+        .finally(()=>{
+            if (this.parameters.timer) {
+              setTimeout(() => {
+                _this.option.series[0].data.forEach(a => (a.val = 1));
+                _this.myChart.setOption(_this.option);
+                _this.fetchData(_this.requestUrl);
+              }, this.parameters.timer);
+          }
         });
       } else {
         _this.axios.get(requestUrl).then(result => {
@@ -160,7 +169,16 @@ export default {
             });
             _this.myChart.setOption(_this.option);
           }
-        });
+        })
+        .finally(()=>{
+            if (this.parameters.timer) {
+              setTimeout(() => {
+                _this.option.series[0].data.forEach(a => (a.val = 1));
+                _this.myChart.setOption(_this.option);
+                _this.fetchData(_this.requestUrl);
+              }, this.parameters.timer);
+          }
+        });;
       }
     },
     //定时刷新数据

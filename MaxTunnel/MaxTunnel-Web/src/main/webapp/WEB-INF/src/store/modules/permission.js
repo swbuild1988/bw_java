@@ -15,8 +15,8 @@ function deepCopy(obj) { // 只拷贝对象
 	for (let key in obj) {
 		// 遍历obj,并且判断是obj的属性才拷贝 
 		if (obj.hasOwnProperty(key)) {
-			// 判断属性值的类型，如果是对象递归调用深拷贝 
-			newObj[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
+		// 判断属性值的类型，如果是对象递归调用深拷贝 
+		newObj[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
 		}
 	}
 	return newObj;
@@ -27,20 +27,20 @@ function deepCopy(obj) { // 只拷贝对象
  * @param menus
  */
 function filterAsyncRouter(asyncRouters, routeNames) {
-	return asyncRouters.reduce((prevArr, curVal) => {
+	return asyncRouters.reduce((prevArr,curVal)=>{   
 		let obj = {}
-		let findFlag = routeNames.find(name => {
+		let findFlag = routeNames.find(name=>{
 			return name === curVal.name || curVal.path == '*'
 		})
-		if (!!findFlag) {
+		if(!!findFlag){
 			obj = curVal
-			if (obj.children) {
-				obj.children = filterAsyncRouter(curVal.children, routeNames)
+			if(obj.children){
+				obj.children = filterAsyncRouter(curVal.children,routeNames)
 			}
 		}
-
+		
 		return findFlag ? prevArr.concat(obj) : prevArr
-	}, [])
+	},[])
 }
 
 const permission = {
@@ -56,31 +56,31 @@ const permission = {
 	},
 	actions: {
 		GenerateRoutes({
-			commit,
+		commit,
 		}, userPermission) {
-			// 生成路由
-			return new Promise((resolve) => {
-				let accessedRouters, isAdmin, menus = [];
-				userPermission.forEach(role => {
-					if (role.roleName === 'admin') {
-						isAdmin = true
-					} else {
-						isAdmin = false
-					}
-				})
-				if (!!isAdmin) {
-					accessedRouters = asyncRouterMap;
+		// 生成路由
+		return new Promise((resolve) => {
+			let accessedRouters,isAdmin,menus = [];
+			userPermission.forEach(role=>{
+				if(role.roleName === 'admin'){
+					isAdmin = true
 				} else {
-					userPermission.map(item => {
-						menus = menus.concat(item.routList.split(','))
-					})
-					const tempMap = deepCopy(asyncRouterMap);
-					accessedRouters = filterAsyncRouter(tempMap, Array.from(new Set(menus)));
+					isAdmin = false
 				}
-				// 执行设置路由的方法
-				commit('SET_ROUTERS', accessedRouters);
-				resolve();
-			});
+			})
+			if(!!isAdmin){
+				accessedRouters = asyncRouterMap;
+			} else {
+				userPermission.map(item=>{
+					menus = menus.concat(item.routList.split(','))
+				})
+				const tempMap = deepCopy(asyncRouterMap);
+				accessedRouters = filterAsyncRouter(tempMap, Array.from(new Set(menus)));
+			}
+			// 执行设置路由的方法
+			commit('SET_ROUTERS', accessedRouters);
+			resolve();
+		});
 		},
 	},
 };

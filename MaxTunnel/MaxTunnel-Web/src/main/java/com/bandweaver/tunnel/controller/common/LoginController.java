@@ -135,7 +135,7 @@ public class LoginController {
      * @author shaosen
      * @date 2018年5月22日
      */
-    @RequestMapping(value = "/403", method = RequestMethod.GET)
+    @RequestMapping(value = "/503", method = RequestMethod.GET)
     public JSONObject unlogin() {
         return CommonUtil.returnStatusJson(StatusCodeEnum.E_503);
     }

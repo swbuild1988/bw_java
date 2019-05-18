@@ -48,38 +48,43 @@
                              <Icon type="ios-keypad" style="font-size: 1.5vmin" color="#ff9b00"></Icon>
                             <span>{{cab.name}}</span>
                         </div>
-                        <div class="linesInfo">
-                             <Tooltip placement="bottom">
-                                <!-- <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)" :size="40">
-                                    <span class="demo-Circle-inner" style="font-size:1.66vmin">{{ cab.value[1].val }}</span>
-                                </i-circle> -->
-                                <div slot="content">
-                                   <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
-                                </div>
-                            </Tooltip>
-                        </div>
                         <Row>
-                            <Col :span="cab.equips.length ? '12' : '24'">
-                                <div class="ItemName">
-                                    <p v-for="(line,j) in cab.lines" :key="j" @click="isLineShow = true">{{ line.cableName +' '+ line.contract.customer.company.name}}</p>
+                            <Col span="6">
+                                <div class="linesInfo">
+                                    <Tooltip placement="right">
+                                        <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)">
+                                            <span class="demo-Circle-inner" style="font-size:2.66vmin">{{ parseInt(cab.value[1].val / cab.value[0].val * 100) }}%</span>
+                                        </i-circle>
+                                        <div slot="content">
+                                        <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
+                                        </div>
+                                    </Tooltip>
                                 </div>
                             </Col>
-                            <Col :span="cab.lines.length ? '12' : '24'">
-                                <div class="ItemName">
-                                    <p v-for="equip in cab.equips" :key="equip.id" @click="isEquipShow = true">{{ equip.name }}</p>
-                                </div>
+                            <Col span="18">
+                                  <Row>
+                                    <Col span="24" v-if="cab.lines.length">
+                                        <div class="ItemName">
+                                            <p v-for="(line,j) in cab.lines" :key="j" @click="turnToContractPage(line.contract.id)">{{ line.cableName +' '+ line.contract.company.name}}</p>
+                                        </div>
+                                    </Col>
+                                    <Col span="24" v-if="!cab.lines.length">
+                                        <div class="ItemName">
+                                            <p v-for="equip in cab.equips" :key="equip.id" @click="turnToEquPage(equip.id)">{{ equip.name }}</p>
+                                        </div>
+                                    </Col>
+                                </Row>     
                             </Col>
-                        </Row>     
+                        </Row>
                     </div>
-                    <!-- <list-model v-bind:show="isLineShow" v-bind:list="cab.lines"></list-model> -->
-                    <Modal v-model="isLineShow" :title="line.cableName" :mask-closable="false" style="font-size:1.6vmin"
+                    <!-- <Modal v-model="isLineShow" :title="line.cableName" :mask-closable="false" style="font-size:1.6vmin"
                     v-for="line in cab.lines" :key="line.id" width="300">
                         <p>管线长度：{{ line.cableLength }}</p>
                         <p>管线状态：{{ line.cableStatusName }}</p>
-                        <p>客户名称：{{ line.contract.customer.company.name }}</p>
-                        <p>联系人：{{ line.contract.customer.contact }}</p>
-                        <p>联系电话：{{ line.contract.customer.tel }}</p>
-                    </Modal>
+                        <p>企业客户：{{ line.contract.company.name }}</p>
+                        <p>联系人：{{ line.contract.company.customers[0].contact }}</p>
+                        <p>联系电话：{{ line.contract.company.phone }}</p>
+                    </Modal> -->
                      <Modal v-model="isEquipShow" :title="equip.name" :mask-closable="false" style="font-size:1.6vmin"
                      v-for="equip in cab.equips" :key="equip.id" width="300">
                         <p>安装时间：{{ new Date(equip.runTime).format('yyyy-MM-dd hh:mm:ss') }}</p>
@@ -108,7 +113,6 @@ import { TunnelService } from '../../../../services/tunnelService'
 import { SpaceService } from '../../../../services/spaceService'
 import Enum from "../../../../../static/Enum.json"
 import { EquipmentService } from '../../../../services/equipmentService'
-// import ListModel from '../../../../components/UM/OAM/ListModel'
 
 export default {
     data(){
@@ -145,7 +149,6 @@ export default {
       this.tunnelId = this.$route.params.id;
       this.initData();
     },
-    // components: { ListModel },
     watch: {
       '$route': function () {
         // $route发生变化时再次赋值planId
@@ -283,6 +286,21 @@ export default {
         chooseStore(id) {
             this.query.storeId = id
             this.search()
+        },
+        turnToContractPage(contractId){
+            sessionStorage.setItem("refreshAddress", "/UM/tunnelContract/detail")
+            this.$router.push({
+                name: '合同详情',
+                params: {
+                    contractId: contractId,
+                    type: 1
+                }
+            })
+        },
+        turnToEquPage(equId){
+            sessionStorage.setItem("refreshAddress", "/UM/equipment/details" + equId)
+            sessionStorage.setItem("selectedName", "1-1-1")
+            this.$router.push('/UM/equipment/details/' + equId)
         }
     }
 }
@@ -315,16 +333,20 @@ export default {
 .title{
     padding-left: 14px;
     font-size: 2vmin;
-    display: inline-block;
+    display: block;
     margin: 4px 0;
 }
 .linesInfo{
     text-align: center;
-    float: right;
     width: 40px;
     height: 40px;
     font-size: 1.66vmin;
-    margin: 4px 12px;
+    margin: 2vmin;
+    display: inline-block;
+}
+.linesInfo >>> .ivu-chart-circle{
+    width: 10vmin !important;
+    height: 10vmin !important;
 }
 .option{
     float:right;

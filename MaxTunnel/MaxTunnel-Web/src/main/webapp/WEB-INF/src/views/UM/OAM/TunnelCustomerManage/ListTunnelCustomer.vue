@@ -4,14 +4,11 @@
             <Row>
                 <Col span="4">
                     <span class="conditionTitle">企业名称：</span>
-                     <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%" />
+                    <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%" />
                 </Col>
                 <Col span="4">
                     <span class="conditionTitle">开户行：</span>
-                    <Select v-model="conditions.bank" style="width: 60%"> 
-                        <Option value="null">所有</Option>
-                        <Option v-for="item in selectLists.banks" :value="item.val" :key="item.val">{{ item.key }}</Option>
-                    </Select>
+                    <Input v-model="conditions.bank" placeholder="请输入开户行" style="width: 60%" />
                 </Col>
                 <Col span="4">
                     <span class="conditionTitle">开始时间：</span>
@@ -58,7 +55,7 @@
                             </div>
                             <div class="bank">
                                 <Icon type="cash"></Icon>
-                                <span>{{item.bankName}}</span>
+                                <span>{{item.bank}}</span>
                             </div>
                         </div>
                         <div class="crtTime">
@@ -101,9 +98,6 @@ export default {
                 position: 'absolute',
                 bottom: '20px',
                 right: '15px'
-            },
-            selectLists: {
-                banks: []
             }
         }
     },
@@ -121,14 +115,6 @@ export default {
         }
     },
     mounted(){
-        EnumsService.getBanks().then(
-            response=>{
-                this.selectLists.banks = response
-            },
-            error=>{
-                this.Log.info(error)
-            }
-        )
         this.queryList()
     },
     methods:{

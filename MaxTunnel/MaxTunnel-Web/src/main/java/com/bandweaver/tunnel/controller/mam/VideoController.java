@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -109,7 +108,6 @@ public class VideoController {
      * @author ya.liu
      * @Date 2019年2月19日
      */
-    @Transactional
     @RequiresPermissions("video:add")
     @RequestMapping(value = "videos", method = RequestMethod.POST)
     public JSONObject addVideo(@RequestBody Video video) throws Exception {
@@ -180,7 +178,6 @@ public class VideoController {
      * @author ya.liu
      * @Date 2019年2月20日
      */
-    @Transactional
     @RequiresPermissions("video:update")
     @RequestMapping(value = "videos", method = RequestMethod.PUT)
     public JSONObject updateVideo(@RequestBody Video video) throws Exception {
@@ -345,7 +342,6 @@ public class VideoController {
      * @throws Exception 
      * @Date 2018年12月4日
      */
-    @Transactional
     @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
     public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
     	//删除所有视频源

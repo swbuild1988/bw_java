@@ -102,6 +102,12 @@ export const asyncRouterMap = [{
                         component: resolve =>
                             require(["@/views/UM/OMM/PatrolScheme/PatrolHomePage"], resolve),
                         name: "巡检计划总览"
+                    },
+                    {
+                        path: 'queryAnnualPlan',
+                        component: resolve => 
+                            require(["@/views/UM/OMM/PatrolScheme/QueryAnnualPlan"], resolve),
+                        name: '年度巡检计划查询'
                     }
                 ]
             },
@@ -560,6 +566,31 @@ export const asyncRouterMap = [{
                 ]
             },
             {
+                path: "TunnelPipeline",
+                name: "管廊管线监控",
+                component: resolve =>
+                    require(["@/views/UM/MAM/TunnelPipeline/TunnelPipeline"], resolve),
+                children: [{
+                    path: "list/:id",
+                    component: resolve =>
+                        require(["@/views/UM/MAM/TunnelPipeline/ListTunnelPipeline"], resolve),
+                    name: "管廊管线监控列表",
+                    meta: {
+                        keepAlive: true // 需要被缓存
+                    }
+                },
+                    {
+                        path: "details/:id",
+                        component: resolve =>
+                            require(["@/views/UM/MAM/TunnelPipeline/DetailsTunnelPipeline"], resolve),
+                        name: "管廊管线监控详情",
+                        meta: {
+                            keepAlive: true // 需要被缓存
+                        }
+                    }
+                ]
+            },
+            {
                 path: "TunnelSafety",
                 name: "管廊安防监控",
                 component: resolve =>
@@ -983,7 +1014,7 @@ export const asyncRouterMap = [{
                 component: resolve =>
                     require(["@/views/UM/DM/TunnelDocuments/TunnelDocuments"], resolve),
                 children: [{
-                        path: "list",
+                        path: "list/:id",
                         component: resolve =>
                             require([
                                 "@/views/UM/DM/TunnelDocuments/ListTunnelDocuments"
@@ -1216,6 +1247,11 @@ export const asyncRouterMap = [{
                         "@/views/CM/PowerSubstation/PowerSubstationConfig"
                     ], resolve),
                 name: "变电所信息配置"
+            },
+            {
+                path: 'group',
+                component: resolve => require(['@/views/CM/GroupControl/groupControl'], resolve),
+                name: '巡检小组管理'
             }
         ]
     },

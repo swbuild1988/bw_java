@@ -93,12 +93,90 @@ alter table T_OAM_CUSTOMER rename column tel3 to type;
 
 
 ------------------------V110----------------------------
-alter table T_OAM_CABLE_CONTRACT rename column customer_id to company_id;
-
+-- 修改权限表字段
 alter table T_SECURITY_ROLE add rout_list varchar2(2000);
 alter table T_SECURITY_PERMISSION modify menu_code null;
 alter table T_SECURITY_PERMISSION modify menu_name null;
 alter table T_SECURITY_PERMISSION modify permission_name null;
-
+-- 修改合同表字段
 alter table T_OAM_CABLE_CONTRACT add operate_username varchar2(50);
 alter table T_OAM_CABLE_CONTRACT add path varchar2(200);
+alter table T_OAM_CABLE_CONTRACT rename column customer_id to company_id;
+-- 清除之前的假数据，防止字段对应不上报错
+truncate table T_OAM_CABLE_CONTRACT;
+truncate table T_OAM_CABLE;
+truncate table T_OAM_CABLE_SECTION;
+
+
+
+/*
+创建索引的标准语法:
+CREATE INDEX 索引名 ON 表名 (列名) 
+创建唯一索引:
+CREATE unique INDEX 索引名 ON 表名 (列名) 
+创建组合索引:
+CREATE INDEX 索引名 ON 表名 (列名1,列名2) 
+创建反向键索引:
+CREATE INDEX 索引名 ON 表名 (列名) reverse
+查看表索引：
+select index_name from all_indexes where table_name = 'T_OAM_CABLE_CONTRACT'; 
+注意：
+1.索引的建立依据是建立在选择性高的字段上，比如性别，枚举字段选择性低的不需要建立索引
+2.大字段上不建议建立索引，比如url地址
+*/
+
+--T_COMMON_TUNNEL
+create index tunnel_status_idx on T_COMMON_TUNNEL(status);
+create index tunnel_name_idx on T_COMMON_TUNNEL(name);
+--T_COMMON_STORE
+create index store_tunnel_idx on T_COMMON_STORE(tunnel_id);
+create index store_name_idx on T_COMMON_STORE(name);
+create index store_parent_idx on T_COMMON_STORE(parent_id);
+--T_COMMON_AREA
+create index area_tunnel_idx on T_COMMON_AREA(tunnel_id);
+create index area_name_idx on T_COMMON_AREA(name);
+--T_COMMON_SECTION
+create index section_tunnel_idx on T_COMMON_SECTION(tunnel_id);
+create index section_store_idx on T_COMMON_SECTION(store_id);
+create index section_area_idx on T_COMMON_SECTION(area_id);
+--T_SECURITY_USER
+create index user_name_idx on T_SECURITY_USER(name);
+--T_SECURITY_ROLE
+create index role_name_idx on T_SECURITY_ROLE(role_name);
+--t_security_user_role
+create index ur_u_idx on t_security_user_role(u_id);
+create index ur_r_idx on t_security_user_role(r_id);
+--t_security_role_permission
+create index rp_r_idx on t_security_role_permission(r_id);
+create index rp_p_idx on t_security_role_permission(p_id);
+--t_mam_measobj
+create index measobj_section_idx on t_mam_measobj(section_id);
+create index measobj_objtype_idx on t_mam_measobj(objtype_id);
+--T_MAM_ALARM
+create index alarm_object_idx on T_MAM_ALARM(object_id);
+create index alarm_date_idx on T_MAM_ALARM(alarm_date);
+--T_OAM_CABLE_CONTRACT
+create index contract_pay_idx on T_OAM_CABLE_CONTRACT(pay_type);
+create index contract_company_idx on T_OAM_CABLE_CONTRACT(company_id);
+create index cable_contract_idx on T_OAM_CABLE(contract_id);
+create index c_s_c_idx on T_OAM_CABLE_SECTION(cable_id);
+create index c_s_s_idx on T_OAM_CABLE_SECTION(section_id);
+
+---------------------------V120B01----------------------------
+
+alter table T_OMM_INSPECTION_PLAN add inspection_way NUMBER;
+alter table T_OMM_INSPECTION_PLAN add inspection_object NUMBER;
+alter table T_OMM_INSPECTION_PLAN add inspection_path NUMBER;
+
+alter table T_OMM_INSPECTION_PLAN modify inspect_time null;
+
+alter table T_COMMON_FILE_INFO add doc_type_son number default 0;
+
+-- 修改bank列类型number->varchar2(50)
+alter table T_COMMON_COMPANY rename column bank to temp;
+alter table T_COMMON_COMPANY add bank varchar2(50);
+update T_COMMON_COMPANY set bank = temp;
+commit;
+alter table T_COMMON_COMPANY drop column temp;
+
+

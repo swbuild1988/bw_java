@@ -335,7 +335,7 @@ public class SectionController extends BaseController<Section>{
 
             List<SectionDto> valList = new ArrayList<>();
             for (SectionDto sectionDto : list) {
-                if (sectionDto.getStore().getStoreTypeId() == e.getId()) {
+                if (sectionDto.getStore().getStoreTypeId().intValue() == e.getId()) {
                     valList.add(sectionDto);
                 }
             }

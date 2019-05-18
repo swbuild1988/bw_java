@@ -9,10 +9,10 @@
                 <Input v-model="plans.name" readonly></Input>
             </FormItem>
             <FormItem label="申请人：">
-                <Input v-model="plans.requestStaffId" readonly></Input>
+                <Input v-model="plans.requestStaff.name" readonly></Input>
             </FormItem>
             <FormItem label="审批人：">
-                <Input v-model="plans.approverId" readonly></Input>
+                <Input v-model="plans.approver.name" readonly></Input>
             </FormItem>
             <FormItem label="所属管廊：">
                 <Input v-model="plans.tunnelName" readonly></Input>
@@ -20,8 +20,25 @@
             <FormItem label="责任班组：">
                 <Input v-model="plans.groupName" readonly></Input>
             </FormItem>
+            <FormItem label="巡检方式：">
+                <Input v-model="plans.inspectionWayName" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检路径：">
+                <Input v-model="plans.inspectionPathName" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检对象：">
+                <Input v-model="plans.inspectionObjectName" readonly></Input>
+            </FormItem>
             <FormItem label="创建时间：">
                 <Input v-model="plans.createTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检步骤：">
+                <ul>
+                    <li v-for="(item, index) in plans.steps" :key="index" class="todoLi">
+                        <span>{{index+1}}、</span>
+                        <input class="todoEidt" :value="item.name" placeholder="请输入要执行的计划步骤" />
+                    </li>
+                </ul>
             </FormItem>
             <FormItem label="巡检计划描述：">
                 <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
@@ -40,8 +57,8 @@
                 <Button type="error" style="margin-left: 8px" @click="agree(0)">不同意</Button>
             </FormItem>
             <FormItem label="申请状态：" v-show="this.plans.result!=null">
-                <Button type="success" v-show="this.plans.result=='agree'">同意</Button>
-                <Button type="error" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
+                <Button type="success" class="cancelPoint" v-show="this.plans.result=='agree'">同意</Button>
+                <Button type="error" class="cancelPoint" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
             </FormItem>
             <FormItem style="text-align: center;margin-left: -140px">
                 <Button @click="goBack()" type="gost">返回</Button>
@@ -69,7 +86,13 @@ export default {
                 remark: '1',
                 tasks:[],
                 comment: null,
-                result: null
+                result: null,
+                inspectionWay: null,
+                inspectionPath: null,
+                inspectObject: null,
+                steps: [
+                    { name: null }
+                ]
             },
             columns1: [
                 {
@@ -103,21 +126,21 @@ export default {
         }
     },
     computed:{
-      params() {
-        let param = {
-          remark: this.plans.comment,
-          id: this.plans.id,
-          processInstanceId: this.plans.processInstanceId,
-          value: 1
-        }
+        params() {
+            let param = {
+                remark: this.plans.comment,
+                id: this.plans.id,
+                processInstanceId: this.plans.processInstanceId,
+                value: 1
+            }
         return Object.assign({}, param);
       },
       paramsDis(){
         let param = {
-          remark: this.plans.comment,
-          id: this.plans.id,
-          processInstanceId: this.plans.processInstanceId,
-          value: 0
+            remark: this.plans.comment,
+            id: this.plans.id,
+            processInstanceId: this.plans.processInstanceId,
+            value: 0
         }
         return Object.assign({}, param);
       } 
@@ -169,6 +192,23 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.todoLi{
+    line-height: 3.5vh;
+    height: 3.5vh;
+    margin-right: 0.5vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.5vh;
+}
+.todoLi .todoEidt{
+    border: none;
+    box-shadow: 2px 2px 10px 0px #ccc;
+    flex: 1;
+    padding-left: 0.5vw;
+}
+.cancelPoint{
+    cursor: text;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{

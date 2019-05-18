@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get } from "../utils/http";
 
 var UserService = {
 	// 获取用户消息数
 	getMessageCount: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/users/msg/count')
+			get('/users/msg/count')
 				.then(res => {
 					let {
 						msg,
@@ -25,7 +26,7 @@ var UserService = {
 	//请求入廊信息
 	reqHistorysInfo(requestUrl){
 		return new Promise((resolve, reject) => {
-			axios.get(requestUrl)
+			get(requestUrl)
 				.then(res => {
 					let {
 						msg,

@@ -98,7 +98,7 @@ public class H5StreamServiceImpl implements OnvifService {
                 return session;
             }
         } catch (Exception e) {
-            LogUtil.info("获取server session 出错：" + e.toString());
+            LogUtil.error("获取server session 出错：" + e.toString());
             return null;
         }
 
@@ -169,7 +169,7 @@ public class H5StreamServiceImpl implements OnvifService {
             HttpResponse response = HttpUtil.doGet(server, url, "GET", headers, querys);
 
         } catch (Exception e) {
-            LogUtil.info("start move 出错:" + direction.getName());
+            LogUtil.error("start move 出错:" + direction.getName());
         }
     }
 
@@ -378,7 +378,7 @@ public class H5StreamServiceImpl implements OnvifService {
             HttpEntity entity = response.getEntity();
 
         } catch (Exception e) {
-            LogUtil.info("goto preset 出错：" + presetName);
+            LogUtil.error("goto preset 出错：" + presetName);
         }
     }
 
@@ -397,7 +397,7 @@ public class H5StreamServiceImpl implements OnvifService {
 			try {
 				addSnap(dto);
 			} catch(Exception e) {
-				LogUtil.info("拍照出错： " + e.getMessage());
+				LogUtil.error("拍照出错： " + e.getMessage());
 			}
 			
 		}
@@ -430,7 +430,7 @@ public class H5StreamServiceImpl implements OnvifService {
         	String str = EntityUtils.toString(response.getEntity(), "utf-8");
             return JSONObject.parseObject(str, H5StreamHttpResponseDto.class).isbStatus();
         }else {
-        	LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+        	LogUtil.warn("请求出错：" + response.getStatusLine().getStatusCode() );
         }
 		return false;
 	}
@@ -512,7 +512,7 @@ public class H5StreamServiceImpl implements OnvifService {
 			return EntityUtils.toString(response.getEntity(), "utf-8");
              
         }else {
-        	LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+        	LogUtil.warn("请求出错：" + response.getStatusLine().getStatusCode() );
         }
 		return null;
 	}

@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var ContractService = {
 	// 添加合同
 	addContract: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('contracts', params).then(res => {
+			post('contracts', params).then(res => {
 				let {
 					code,
 					data,
@@ -21,7 +22,7 @@ var ContractService = {
 	// 根据contractId获取该合同详细信息
 	getDetailsByContractId: function(contractId) {
 		return new Promise((resolve, reject) => {
-			axios.get('contracts/' + contractId).then(res => {
+			get('contracts/' + contractId).then(res => {
 				let {
 					code,
 					data,
@@ -38,7 +39,7 @@ var ContractService = {
 	// 修改合同信息
 	updateContract: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.put('contracts', params).then(res => {
+			put('contracts', params).then(res => {
 				let {
 					code,
 					data,
@@ -55,7 +56,7 @@ var ContractService = {
 	// 合同信息分页查询
 	contractDatagrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('contracts/datagrid', params).then(res => {
+			post('contracts/datagrid', params).then(res => {
 				let {
 					code,
 					data,
@@ -72,7 +73,7 @@ var ContractService = {
 	// 删除合同信息
 	delelteContract: function(contractId) {
 		return new Promise((resolve, reject) => {
-			axios.delete('contracts/' + contractId).then(res => {
+			del('contracts/' + contractId).then(res => {
 				let {
 					code,
 					data,
@@ -83,6 +84,48 @@ var ContractService = {
 				} else {
 					reject(msg + '地址：contracts/' + contractId)
 				}
+			})
+		})
+	},
+	// 合同上传文件
+	uploadFile(param,config){
+		return new Promise((resolve, reject) => {
+			post('/contracts/upload',param,config)
+			.then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + '地址：/contracts/upload')
+				}
+			})
+			.catch(error=>{
+				reject(error.response.stauts + ' ' + error.response.data)
+			})
+		})
+	},
+	// 文件预览
+	preViewFile(contractId){
+		return new Promise((resolve, reject) => {
+			get('contracts/'+contractId+'/view')
+			.then(res => {
+				// let {
+				// 	code,
+				// 	data,
+				// 	msg
+				// } = res.data
+				if (res) {
+					resolve(res)
+				} else {
+					reject(msg + '地址：/contracts/'+contractId+'/view')
+				}
+			})
+			.catch(error=>{
+				reject(error.response.stauts + ' ' + error.response.data)
 			})
 		})
 	}

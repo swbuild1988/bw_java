@@ -2,30 +2,23 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="4">
+                <Col span="5">
                     <span class="queryText">文件名称：</span>
-                    <Input v-model="conditions.documentName" placeholder="请输入文件名称" style="width: 60%"></Input>
+                    <Input v-model="conditions.documentName" placeholder="请输入文件名称" style="width: 60%"/>
                 </Col>
-                <Col span="4">
+                <Col span="5">
                     <span class="queryText">文件类型：</span>
                     <Select v-model="conditions.fileType" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option v-for="type in selectList.fileTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
                     </Select>
                 </Col>
-                <Col span="4">
-                    <span class="queryText">资料类型：</span>
-                    <Select v-model="conditions.docType" style="width: 60%">
-                        <Option value="null">所有</Option>
-                        <Option v-for="type in selectList.docTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
-                    </Select>
-                </Col>
-                <Col span="4">
+                <Col span="5">
                     <span class="queryText">开始时间：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime">
                     </DatePicker>
                 </Col>
-                <Col span="4">
+                <Col span="5">
                     <span class="queryText">结束时间：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime">
                     </DatePicker>
@@ -36,6 +29,7 @@
             </Row>
         </div>
         <div class="list">
+            <div class="nullData" v-show="isNullData">暂无数据</div>
         	<Row>
         		<Col span="6" v-for="file in documents" :key="file.id" class="files">
         			<input v-if="showCheckBox" type="checkbox" class="checkbox" :value="file.id" v-model="ids">
@@ -96,11 +90,11 @@ export default {
             	documentName: null,
                 fileType: null,
                 docType: null,
+                docTypeSon: null,
                 startTime: null,
                 endTime: null
             },
             selectList: {
-            	dcvTypes:[],
             	fileTypes:[]
             },
             pageStyle: {
@@ -113,7 +107,16 @@ export default {
             text: null,
             isLoading: false,
             curFile: null,
-            IEbrowser: null
+            IEbrowser: null,
+            isNullData: false
+        }
+    },
+    watch:{
+        '$route': function () {
+            let ids = this.$route.params.id.split('.')
+            this.conditions.docType = ids[0]
+            this.conditions.docTypeSon = ids[1] ? ids[1] : null
+            this.search()
         }
     },
     computed:{
@@ -125,12 +128,16 @@ export default {
                 startTime: new Date(this.conditions.startTime).getTime(),
                 endTime: new Date(this.conditions.endTime).getTime(),
                 fileType: this.conditions.fileType,
-                docType: this.conditions.docType
+                docType: +this.conditions.docType,
+                docTypeSon: +this.conditions.docTypeSon
             }
             return Object.assign({}, param)
         }
     },
     mounted(){
+        let ids = this.$route.params.id.split('.')
+        this.conditions.docType = ids[0]
+        this.conditions.docTypeSon = ids[1] ? ids[1] : null
         this.initData()
         this.search()
         this.getBrowserType()
@@ -141,13 +148,6 @@ export default {
             EnumsService.getFileType().then(
                 function(result){
                     _this.selectList.fileTypes = result
-                },
-                function(error){
-                  console.log(error)
-            })
-            EnumsService.getDocType().then(
-                function(result){
-                    _this.selectList.docTypes = result
                 },
                 function(error){
                   console.log(error)
@@ -166,6 +166,7 @@ export default {
             FileService.filesDataGrid(_this.params).then(
                 function(result){
                     _this.documents = []
+                    _this.isNullData = result.list.length ? false : true
                     _this.documents = result.list
                     _this.page.pageTotal = result.total
                 },

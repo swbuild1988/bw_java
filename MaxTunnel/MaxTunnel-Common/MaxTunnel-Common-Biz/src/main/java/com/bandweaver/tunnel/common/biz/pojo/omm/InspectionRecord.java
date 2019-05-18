@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class InspectionRecord implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
     private Integer id;
     /**
      * 属于哪次任务

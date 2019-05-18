@@ -32,11 +32,11 @@ export default {
                   temp.url="/UM/patrolTask/query/"+a.id;
                   _this.task.leftTree.push(temp);
               })
-              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/patrolTask") < 0) {
-                  _this.goToMoudle({path: _this.task.leftTree[0].url});
-                  sessionStorage.setItem('selectedName','')
-              }
-                sessionStorage.setItem("refreshAddress", "");
+              // if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/patrolTask") < 0) {
+              //     _this.goToMoudle({path: _this.task.leftTree[0].url});
+              //     sessionStorage.setItem('selectedName','')
+              // }
+              //   sessionStorage.setItem("refreshAddress", "");
           },
           (error)=>{
               _this.Log.info(error)

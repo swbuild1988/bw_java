@@ -9,8 +9,8 @@ import org.activiti.engine.delegate.event.ActivitiEventListener;
 public class ProcessCompletedListener implements ActivitiEventListener {
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
-//        LogUtil.info("process completed: " + activitiEvent.getType().name());
-//        LogUtil.info(activitiEvent);
+        LogUtil.debug("process completed: " + activitiEvent.getType().name());
+        LogUtil.debug(activitiEvent);
 
         ActivitiService activitiService = SpringContextHolder.getBean("activitiService");
         activitiService.finishProcessBaseByProcessInstance(activitiEvent.getProcessInstanceId());

@@ -1,11 +1,12 @@
 import axios from 'axios'
+import { get } from "../utils/http";
 const isRealData = require('../../static/serverconfig').isRealData
 
 var EnumsService = {
 	// 获取文件类型
 	getFileType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('filetype-enums')
+			get('filetype-enums')
 				.then(res => {
 					let {
 						code,
@@ -26,7 +27,7 @@ var EnumsService = {
 	// 获取资料类型
 	getDocType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('doctype-enums').then(res => {
+			get('doctype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -43,7 +44,7 @@ var EnumsService = {
 	// 获取单位类型
 	getUnitType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('unittype-enums').then(res => {
+			get('unittype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -60,7 +61,7 @@ var EnumsService = {
 	// 获取监测内容
 	getMonitorType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('monitortype-enums').then(res => {
+			get('monitortype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -77,7 +78,7 @@ var EnumsService = {
 	//获取数据类型
 	getDataType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('datatype-enums').then(res => {
+			get('datatype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -94,7 +95,7 @@ var EnumsService = {
 	// 获取监测对象类型
 	getObjType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('objecttype-enums').then(res => {
+			get('objecttype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -111,7 +112,7 @@ var EnumsService = {
 	//获取监测区域（树型数据）
 	getMonitorZone: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('tunnels/tree ').then(res => {
+			get('tunnels/tree ').then(res => {
 				let {
 					code,
 					data,
@@ -128,7 +129,7 @@ var EnumsService = {
 	// 获取时间周期
 	getTimeCycle: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('time-enums').then(res => {
+			get('time-enums').then(res => {
 				let {
 					code,
 					data,
@@ -145,7 +146,7 @@ var EnumsService = {
 	// 获取入廊行为
 	getEnterActionType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('action-enums').then(res => {
+			get('action-enums').then(res => {
 				let {
 					code,
 					data,
@@ -162,7 +163,7 @@ var EnumsService = {
 	// 获取支付方式
 	getPayType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('paytype-enums').then(res => {
+			get('paytype-enums').then(res => {
 				let {
 					code,
 					data,
@@ -179,7 +180,7 @@ var EnumsService = {
 	// 获取合同状态
 	getContractStatus: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('contractstatus-enums').then(res => {
+			get('contractstatus-enums').then(res => {
 				let {
 					code,
 					data,
@@ -196,7 +197,7 @@ var EnumsService = {
 	// 获取管线状态
 	getCableStatus: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('cablestatus-enums').then(res => {
+			get('cablestatus-enums').then(res => {
 				let {
 					code,
 					data,
@@ -213,7 +214,7 @@ var EnumsService = {
 	// 获取缺陷类型
 	getDefectType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/defectType/enum').then(res => {
+			get('/defectType/enum').then(res => {
 				let {
 					code,
 					data,
@@ -230,7 +231,7 @@ var EnumsService = {
 	// 获取缺陷状态
 	getDefectStatus: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/defectStatus/enum').then(res => {
+			get('/defectStatus/enum').then(res => {
 				let {
 					code,
 					data,
@@ -247,7 +248,7 @@ var EnumsService = {
 	// 获取危险等级
 	getDefectLevel: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/defectLevel/enum').then(res => {
+			get('/defectLevel/enum').then(res => {
 				let {
 					code,
 					data,
@@ -264,7 +265,7 @@ var EnumsService = {
 	// 获取申请状态
 	getReqStatus: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/reqstatus-enums').then(res => {
+			get('/reqstatus-enums').then(res => {
 				let {
 					code,
 					data,
@@ -281,7 +282,7 @@ var EnumsService = {
 	// 预案枚举
 	getPlanType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/plan-enums').then(res => {
+			get('/plan-enums').then(res => {
 				let {
 					code,
 					data,
@@ -312,7 +313,7 @@ var EnumsService = {
 	// 获取开关枚举
 	getSwitch: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('switch-enums')
+			get('switch-enums')
 				.then(res => {
 					let {
 						code,
@@ -333,7 +334,7 @@ var EnumsService = {
 	// 获取应急目标对象列表
 	getEmTargetObjs: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/em/target-enums')
+			get('/em/target-enums')
 				.then(res => {
 					let {
 						code,
@@ -354,7 +355,7 @@ var EnumsService = {
 	// 获取应急行为
 	getEmAction: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/em/action-enums')
+			get('/em/action-enums')
 				.then(res => {
 					let {
 						code,
@@ -375,7 +376,7 @@ var EnumsService = {
 	// 获取应急结束类型
 	getEmFinishType: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/em/finish-enums')
+			get('/em/finish-enums')
 				.then(res => {
 					let {
 						code,
@@ -396,7 +397,7 @@ var EnumsService = {
 	//获取告警级别
 	getAlarmLevelList: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('alarmlevel-enums')
+			get('alarmlevel-enums')
 				.then(res => {
 					let {
 						code,
@@ -417,7 +418,7 @@ var EnumsService = {
 	// 获取状态量监测对象
 	getSwitchObj() {
 		return new Promise((resolve, reject) => {
-			axios.get('datatypeSI-enums')
+			get('datatypeSI-enums')
 				.then(res => {
 					let {
 						code,
@@ -438,7 +439,7 @@ var EnumsService = {
 	// 获取银行
 	getBanks(){
 		return new Promise((resolve, reject) => {
-			axios.get('bank-enums')
+			get('bank-enums')
 				.then(res => {
 					let {
 						code,
@@ -459,7 +460,7 @@ var EnumsService = {
 	  // 获取权限模块列表
 	  getModuleList(){
         return new Promise((resolve,reject)=>{
-            axios.get('shiro/resource-type/enums')
+            get('shiro/resource-type/enums')
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){
@@ -491,7 +492,7 @@ var EnumsService = {
     // 获取操作列表
     getActionsList(){
         return new Promise((resolve,reject)=>{
-            axios.get('shiro/operate-type/enums')
+            get('shiro/operate-type/enums')
             .then(res=>{
                 let { msg,data,code } = res.data
                 if(code == 200){

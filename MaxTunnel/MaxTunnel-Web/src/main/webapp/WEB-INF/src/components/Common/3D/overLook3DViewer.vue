@@ -230,9 +230,9 @@
                 _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
 
                 // 滚轮滑动，获得当前窗口的经纬度，偏移角
-                // _this.handler = new Cesium.ScreenSpaceEventHandler(
-                //     _this.scene.canvas
-                // );
+                _this.handler = new Cesium.ScreenSpaceEventHandler(
+                    _this.scene.canvas
+                );
                 // setInterval(()=>{
                 //     var camera=_this.viewer.scene.camera;
                 //     var position=camera.position;

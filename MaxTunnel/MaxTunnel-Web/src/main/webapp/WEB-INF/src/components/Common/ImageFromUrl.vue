@@ -24,6 +24,9 @@ export default {
             this.loadImage(val);
         }
     },
+    mounted(){
+        this.loadImage(this.url)
+    },
     methods: {
         loadImage(url) {
             axios.get(url, {responseType: "arraybuffer"}).then(response => {

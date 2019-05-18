@@ -63,7 +63,7 @@
 								class="normalBtn"
 								type="info"
 								:disabled="findPath('/UM/tunnelDocuments/list')?false:true"
-								@click="goToMoudle({ path:'/UM/tunnelDocuments/list'})"
+								@click="goToMoudle({ path:'/UM/tunnelDocuments/list/1.1'})"
 							>
 								<div>
 									<img src="../../assets/UM/documents.png" :width="imgWidth">
@@ -321,7 +321,7 @@
 							>
 								<div>
 									<img src="../../assets/UM/enterGallery.png" :width="imgWidth">
-									<div :style="{fontSize:mySize}">人员作业申请</div>
+									<div :style="{fontSize:mySize}">入廊作业管理</div>
 								</div>
 							</Button>
 						</Col>

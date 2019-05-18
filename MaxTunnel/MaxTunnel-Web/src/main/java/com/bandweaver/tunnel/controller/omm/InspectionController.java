@@ -6,11 +6,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
+import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
-import com.bandweaver.tunnel.common.biz.dto.UserDTO;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionGroupDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto;
@@ -36,16 +35,18 @@ import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
-import com.bandweaver.tunnel.common.biz.itf.common.UserService;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionGroupService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionPlanService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionRecordService;
+import com.bandweaver.tunnel.common.biz.itf.omm.InspectionStepService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
+import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
+import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep;
 import com.bandweaver.tunnel.common.biz.vo.AuditVo;
+import com.bandweaver.tunnel.common.biz.vo.StaffVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -62,8 +63,6 @@ public class InspectionController {
     @Autowired
     private InspectionGroupService inspectionGroupService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private InspectionTaskService inspectionTaskService;
     @Autowired
     private InspectionPlanService inspectionPlanService;
@@ -79,32 +78,164 @@ public class InspectionController {
     private StoreService storeService;
     @Autowired
     private TunnelService tunnelService;
+    @Autowired
+    private StaffService staffService;
+    @Autowired
+    private InspectionStepService inspectionStepService;
+
 
     /**
-     * 向数据库内添加模拟数据
-     *
+     * 添加责任班组
+     * @param name
+     * @param leaderId
      * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
      */
-    @RequestMapping(value = "inspection-groups/testadd", method = RequestMethod.GET)
-    public JSONObject testAddInspectionGroup() {
-
-        for (int i = 0; i < 2; i++) {
-            InspectionGroup inspectionGroup = new InspectionGroup();
-            inspectionGroup.setName("group" + i);
-            LogUtil.info("get user by id : " + (i + 3));
-            UserDTO user = userService.getUser(i + 3);
-            LogUtil.info(user);
-            inspectionGroup.setLeaderId(user.getId());
-            inspectionGroup.setLeaderName(user.getName());
-            LogUtil.info(inspectionGroup);
-            inspectionGroupService.add(inspectionGroup);
-            inspectionGroupService.addRelation(i + 1, i + 3);
-            inspectionGroupService.addRelation(i + 1, i + 5);
-        }
-
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    @RequestMapping(value = "inspection-groups", method = RequestMethod.POST)
+    public JSONObject addGroup(@RequestBody InspectionGroup group) {
+    	inspectionGroupService.add(group);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-
+    
+    /**
+     * 修改责任班组
+     * @param id
+     * @param name
+     * @param leaderId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups", method = RequestMethod.PUT)
+    public JSONObject updateGroup(@RequestBody InspectionGroup group) {
+    	inspectionGroupService.update(group);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 删除责任班组
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups/{id}", method = RequestMethod.DELETE)
+    public JSONObject deleteGroup(@PathVariable("id") Integer id) {
+    	inspectionGroupService.delete(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取可以成为组长的员工
+     * @param id 群组id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups/{id}/staffs", method = RequestMethod.GET)
+    public JSONObject getStaff(@PathVariable("id") Integer id) {
+    	StaffVo vo = new StaffVo();
+    	vo.setOutside(1);
+    	List<StaffDto> list = staffService.getDtoListByCondition(vo);
+    	
+    	List<InspectionGroupDto> listDto = inspectionGroupService.getAllInspectionGroupDtos();
+    	for(InspectionGroupDto dto : listDto) {
+    		if(dto == null || id.equals(dto.getId())) continue;
+    		List<Staff> users = dto.getMembers();
+    		for(Staff user : users) {
+        		list = list.stream().filter(a -> !a.getId().equals(user.getId())).collect(Collectors.toList());
+        	}
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 获取不在群组的成员
+     * @param id 群组id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups/staffs", method = RequestMethod.GET)
+    public JSONObject getStaffs() {
+    	StaffVo vo = new StaffVo();
+    	vo.setOutside(1);
+    	List<StaffDto> list = staffService.getDtoListByCondition(vo);
+    	
+    	List<InspectionGroupDto> listDto = inspectionGroupService.getAllInspectionGroupDtos();
+    	for(InspectionGroupDto dto : listDto) {
+    		if(dto == null) continue;
+    		List<Staff> users = dto.getMembers();
+    		for(Staff user : users) {
+        		list = list.stream().filter(a -> !a.getId().equals(user.getId())).collect(Collectors.toList());
+        	}
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 批量添加成员
+     * @param id 群组id
+     * @param ids 成员id  1,2,3
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups/{id}/members/{ids}", method = RequestMethod.GET)
+    public JSONObject addRelation(@PathVariable("id") Integer id, @PathVariable("ids") String ids) {
+    	List<Integer> list = CommonUtil.convertStringToList(ids);
+    	// 删除组员
+    	InspectionGroupDto dto = inspectionGroupService.getInspectionGroupDto(id);
+    	if(dto != null) {
+    		for(Staff s : dto.getMembers()) {
+        		if(dto.getLeaderId().equals(s.getId())) continue;
+        		inspectionGroupService.deleteRelation(id, s.getId());
+        	}
+    	}
+    	// 重新添加
+    	for(Integer member : list) {
+    		inspectionGroupService.addRelation(id, member);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 批量删除成员
+     * @param id 群组id
+     * @param ids 成员id  1,2,3
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月5日
+     */
+    @RequestMapping(value = "inspection-groups/{id}/members/{ids}", method = RequestMethod.DELETE)
+    public JSONObject deleteRelation(@PathVariable("id") Integer id, @PathVariable("ids") String ids) {
+    	List<Integer> list = CommonUtil.convertStringToList(ids);
+    	InspectionGroupDto dto = inspectionGroupService.getInspectionGroupDto(id);
+    	int userId = dto == null ? 0 : dto.getLeaderId();
+    	for(Integer member : list) {
+    		if(userId == member) continue;
+    		inspectionGroupService.deleteRelation(id, member);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 分页获取群组信息
+     * @param name 支持模糊查询
+     * @param leaderId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月6日
+     */
+    @RequestMapping(value = "inspection-groups/datagride", method = RequestMethod.POST)
+    public JSONObject deleteRelation(@RequestBody InspectionVo vo) {
+    	PageInfo<InspectionGroup> page = inspectionGroupService.dataGraid(vo);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
+    }
+    
     /**
      * 获取某个具体的巡检小组
      *
@@ -133,7 +264,19 @@ public class InspectionController {
     /**
      * 新增巡检计划（附带其巡检任务列表）
      *
-     * @param inspectionPlanDto
+     * @param planId
+     * @param name
+     * @param groupId
+     * @param inspectionWay
+     * @param inspectionObject
+     * @param inspectionPath
+     * @param inspectTime
+     * @param tasks [{"taskTime":1551766778000}]
+     * @param approverId
+     * @param tunnelId
+     * @param requestStaffId
+     * @param remark
+     * @param steps [{"name":""}]
      * @return
      */
     @RequestMapping(value = "inspection-plans", method = RequestMethod.POST)
@@ -206,6 +349,11 @@ public class InspectionController {
     @RequestMapping(value = "inspection-plans/{id}", method=RequestMethod.GET)
     public JSONObject getInspectionPlanDto(@PathVariable("id") String id) {
         InspectionPlanDto inspectionPlanDto = inspectionPlanService.getInspectionDto(id);
+        List<InspectionTaskDto> list = inspectionPlanDto.getTasks();
+        if(list != null && list.size() > 0) {
+        	InspectionTaskDto dto = inspectionTaskService.getTaskDto(list.get(0).getId());
+        	inspectionPlanDto.setSteps(dto.getSteps());
+        };
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, inspectionPlanDto);
     }
 
@@ -259,7 +407,7 @@ public class InspectionController {
     public JSONObject updateInspectionTask(@RequestBody InspectionTaskDto inspectionTask) {
         LogUtil.info("task update:" + inspectionTask);
         inspectionTaskService.update(inspectionTask);
-
+        
         // 添加记录
         for (InspectionRecordDto record : inspectionTask.getRecords()) {
         	//通过官仓id和区段id查询官仓段
@@ -269,13 +417,22 @@ public class InspectionController {
             }
         	inspectionRecordService.add(record);
         }
+        
+        // 修改计划步骤
+        boolean flag = true;
+        for(InspectionStep step : inspectionTask.getSteps()) {
+        	inspectionStepService.update(step);
+        	if(!Boolean.TRUE.equals(step.getIsFinished())) flag = false;
+        }
 
-        LogUtil.info("巡检任务结束");
-        // 提交结束，下一步
-        activitiService.completeTaskByProcessIntance(inspectionTask.getProcessInstanceId());
+        if(flag) {
+        	LogUtil.info("巡检任务结束");
+            // 提交结束，下一步
+            activitiService.completeTaskByProcessIntance(inspectionTask.getProcessInstanceId());
 
-        LogUtil.info("更新巡检计划");
-        inspectionPlanService.complete(inspectionTask.getPlanId());
+            LogUtil.info("更新巡检计划");
+            inspectionPlanService.complete(inspectionTask.getPlanId());
+        }
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

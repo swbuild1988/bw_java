@@ -150,7 +150,7 @@ export default {
             this.$emit('childByValue',this.outsidesChoosed)
         },
         delOutside(index){
-            var arr = new Array()
+            let arr = []
             arr = this.outsidesChoosed
             arr.splice(index,1)
             this.outsidesChoosed = arr
@@ -228,7 +228,7 @@ export default {
                     }
                 }
                 if(this.checkStatus == true){
-                    var arr = new Array()
+                    let arr = []
                     for(let index in this.items){
                         if(this.items[index].status==1){
                             arr.push({

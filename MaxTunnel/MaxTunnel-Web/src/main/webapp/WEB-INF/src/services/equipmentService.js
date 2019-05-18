@@ -1,4 +1,5 @@
 import axios from "axios";
+import { get,put,del,post } from "../utils/http";
 const isRealData = require("../../static/serverconfig").isRealData;
 
 var EquipmentService = {
@@ -6,7 +7,7 @@ var EquipmentService = {
     getVenders: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipment-venders").then(res => {
+                get("/equipment-venders").then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -26,7 +27,7 @@ var EquipmentService = {
     getStatus() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipmentstatus-enums").then(res => {
+                get("/equipmentstatus-enums").then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -46,7 +47,7 @@ var EquipmentService = {
     getEquipmentModels: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipment-models").then(res => {
+                get("/equipment-models").then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -66,7 +67,7 @@ var EquipmentService = {
     getEquipmentTypes: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipment-types").then(res => {
+                get("/equipment-types").then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -101,7 +102,7 @@ var EquipmentService = {
     addEquipment: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/equipments", params).then(res => {
+                post("/equipments", params).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -133,7 +134,7 @@ var EquipmentService = {
     equipmentDatagird: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/equipments/datagrid", params).then(res => {
+                post("/equipments/datagrid", params).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -153,7 +154,7 @@ var EquipmentService = {
     getEquDetailByEquId: function(equId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipments/" + equId).then(res => {
+                get("/equipments/" + equId).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -173,7 +174,7 @@ var EquipmentService = {
     updateEquipmentInfo: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.put("/equipments", param).then(res => {
+                put("/equipments", param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -193,7 +194,7 @@ var EquipmentService = {
     getEquTypeAndCount: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("/equipments/type/count").then(res => {
+                get("/equipments/type/count").then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -213,7 +214,7 @@ var EquipmentService = {
     deleteEquipment: function(equId) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.delete("/equipments/" + equId).then(res => {
+                del("/equipments/" + equId).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -233,7 +234,7 @@ var EquipmentService = {
     deSpare: function(ids) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.delete('spares/' + ids).then(res => {
+                del('spares/' + ids).then(res => {
                     let { code, data, msg} = res.data
                     if (code == 200) {
                         resolve(data)
@@ -248,7 +249,7 @@ var EquipmentService = {
     backUpDatagrid: function(params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/spares/datagrid", params).then(res => {
+                post("/spares/datagrid", params).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -267,7 +268,7 @@ var EquipmentService = {
     batchOutBound: function(ids, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/spare-outs/" + ids + "/equipments", param).then(res => {
+                post("/spare-outs/" + ids + "/equipments", param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -285,7 +286,7 @@ var EquipmentService = {
     backUpHistory: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("/spare-outs/datagrid", param).then(res => {
+                post("/spare-outs/datagrid", param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -303,8 +304,7 @@ var EquipmentService = {
     getBackUpTypeHisList: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("spare-outs/type")
+                get("spare-outs/type")
                     .then(res => {
                         let {
                             code,
@@ -327,8 +327,7 @@ var EquipmentService = {
     getBackUpTypeHisDetails: function(id) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios
-                    .get("types/" + id + "/spare-outs")
+                get("types/" + id + "/spare-outs")
                     .then(res => {
                         let {
                             code,
@@ -351,7 +350,7 @@ var EquipmentService = {
     getBackUpBorrowerHisList: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("spare-outs/staff").then(res => {
+                get("spare-outs/staff").then(res => {
                         let { code, data, msg } = res.data;
                         if (code == 200) {
                             resolve(data);
@@ -370,7 +369,7 @@ var EquipmentService = {
     getBackUpBorrowerHisDetails: function(id) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("staffs/" + id + "spare-outs").then(res => {
+                get("staffs/" + id + "spare-outs").then(res => {
                     let { code, data, msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -388,7 +387,7 @@ var EquipmentService = {
     getWhither: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get("sparewhither-enums").then(res => {
+                get("sparewhither-enums").then(res => {
                     let { code, data, msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -406,7 +405,7 @@ var EquipmentService = {
     addTools: function(count, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("instruments/" + count, param).then(res => {
+                post("instruments/" + count, param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -421,7 +420,7 @@ var EquipmentService = {
     queryTools: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("instruments/datagride", param).then(res => {
+                post("instruments/datagride", param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -454,7 +453,7 @@ var EquipmentService = {
     queryHisRecord: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("instrument-records/datagride", param).then(res => {
+                post("instrument-records/datagride", param).then(res => {
                     let { code, data, msg} = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -469,7 +468,7 @@ var EquipmentService = {
     batchLend: function(ids, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("instrument-records/" + ids, param).then(res => {
+                post("instrument-records/" + ids, param).then(res => {
                     let { code, data, msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -484,7 +483,7 @@ var EquipmentService = {
     batchReturn: function(ids, usestatus, param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post("instrument-records/" + ids + "/usestatus/" + usestatus, param).then(res => {
+                post("instrument-records/" + ids + "/usestatus/" + usestatus, param).then(res => {
                     let { code, data,  msg } = res.data;
                     if (code == 200) {
                         resolve(data);
@@ -542,7 +541,7 @@ var EquipmentService = {
     getObj: function() {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get('measobjs').then(res => {
+                get('measobjs').then(res => {
                     let { code, data, msg } = res.data
                     if (code == 200) {
                         resolve(data)
@@ -557,7 +556,7 @@ var EquipmentService = {
     getObjType: function(param) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post('measobjs/datagrid', param).then(res => {
+                post('measobjs/datagrid', param).then(res => {
                     let { code, data, msg } = res.data
                     if (code == 200) {
                         resolve(data.list)
@@ -572,7 +571,7 @@ var EquipmentService = {
     getEquipments(params){
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post('equipments/condition', params)
+                post('equipments/condition', params)
                 .then(res => {
                     let { code, data, msg } = res.data
                     if (code == 200) {
@@ -590,7 +589,7 @@ var EquipmentService = {
     //模糊查询objId
     changeObjId(objId){
         return new Promise((resolve, reject) => {
-            axios.get('measobjs/'+objId+"/condition").then(res=>{
+            get('measobjs/'+objId+"/condition").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -602,7 +601,7 @@ var EquipmentService = {
     },
     batchAdd(params){
         return new Promise((resolve, reject) => {
-            axios.post('equipments/batch', params).then(res=>{
+            post('equipments/batch', params).then(res=>{
                 let{ code, data, msg } = res.data
                 if(code==200){
                     resolve(data)

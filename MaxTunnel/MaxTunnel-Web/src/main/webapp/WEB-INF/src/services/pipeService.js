@@ -1,9 +1,10 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var PipeService = {
     getTunnelInfo(id){
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/"+id).then(res=>{
+            get("tunnels/"+id).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -15,7 +16,7 @@ var PipeService = {
     },
     saveEditTunnelInfo(params){
         return new Promise((resolve, reject) => {
-            axios.put("/tunnels",params).then(res=>{
+            put("/tunnels",params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -27,7 +28,7 @@ var PipeService = {
     },
     queryTunnels(params){
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/datagrid",params).then(res=>{
+            post("/tunnels/datagrid",params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -39,7 +40,7 @@ var PipeService = {
     },
     getCompanies() {
         return new Promise((resolve, reject) => {
-            axios.get("/companies").then(res=>{
+            get("/companies").then(res=>{
                 let { code, data, msg } = res.data;
                 if(code==200){
                     resolve(data)
@@ -51,7 +52,7 @@ var PipeService = {
     },
     getMaxView(){
         return new Promise((resolve, reject) => {
-            axios.get("sub-sys/list").then(res=>{
+            get("sub-sys/list").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -63,7 +64,7 @@ var PipeService = {
     },
     getStaffs(params){
         return new Promise((resolve, reject) => {
-            axios.post("/staffs/conditions",params).then(res=>{
+            post("/staffs/conditions",params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -75,7 +76,7 @@ var PipeService = {
     },
     delTunnels(ids){
         return new Promise((resolve, reject) => {
-            axios.delete("/tunnels/batch/"+ids).then(res=>{
+            del("/tunnels/batch/"+ids).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -87,7 +88,7 @@ var PipeService = {
     },
     autoPoint(id){
         return new Promise((resolve, reject) => {
-            axios.get("tunnels/"+id+"/auto-cal-area-section").then(res=>{
+            get("tunnels/"+id+"/auto-cal-area-section").then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)

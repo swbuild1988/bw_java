@@ -39,7 +39,11 @@ public enum ProcessTypeEnum {
     /**
      * 通风预案
      */
-    WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind", "", 55.5);
+    WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind", "", 55.5),
+    /**
+     * 温湿度SOP
+     */
+    TEMPERATURE_HUMIDITY_ALARM_SOP("温湿度SOP", 4004, "TemperatureAndHumidityAlarmSopProcess", "path.bpmn.activiti.sop", "path.png.activiti.sop", "", null);
 
 
     private String name;

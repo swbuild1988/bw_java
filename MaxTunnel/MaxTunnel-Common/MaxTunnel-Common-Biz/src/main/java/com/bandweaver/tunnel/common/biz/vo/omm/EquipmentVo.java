@@ -31,6 +31,7 @@ public class EquipmentVo extends BaseVo{
     private Integer sectionId;
 	private Integer modelId;
 	private Integer venderId;
+	private Integer objId;
 	
 	private String qaTerm;
     private String ratedVoltage;
@@ -139,6 +140,12 @@ public class EquipmentVo extends BaseVo{
 	}
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+	public Integer getObjId() {
+		return objId;
+	}
+	public void setObjId(Integer objId) {
+		this.objId = objId;
 	}
 	
 }

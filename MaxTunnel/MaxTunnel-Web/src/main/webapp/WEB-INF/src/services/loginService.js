@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { get,post } from "../utils/http";
 import Cookies from 'js-cookie';
 
 const isRealData = require('../../static/serverconfig').isRealData;
@@ -7,7 +8,7 @@ const LoginService = {
     UmLogin: function (params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.post('/login', params)
+            post('/login', params)
                     .then((res) => {
                         const {
                             msg,
@@ -36,8 +37,7 @@ const LoginService = {
     getInfo: function (params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get('/login/' + Cookies.get('userName')).then((res) => {
-
+                get('/login/' + Cookies.get('userName')).then((res) => {
                     const {
                         msg,
                         code,
@@ -52,6 +52,7 @@ const LoginService = {
                         //   pCodeList: ['list', 'add', 'update'],
                         // }];
                         // data.rList = ['admin'];
+                        console.log('getInfo',data)
                         resolve(data);
                     } else {
                         reject(new Error(msg + '地址:/login/' + Cookies.get('userName')));
@@ -64,7 +65,7 @@ const LoginService = {
     UMLogout: function (params) {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                axios.get('/logout')
+                get('/logout')
                     .then((res) => {
                         const {
                             msg,

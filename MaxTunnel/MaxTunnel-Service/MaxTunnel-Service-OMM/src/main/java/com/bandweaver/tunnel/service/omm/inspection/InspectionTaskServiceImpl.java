@@ -6,7 +6,6 @@ import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
-import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.MaintenanceOrderVo;

@@ -38,7 +38,7 @@
             </FormItem>
             <FormItem label="对象名：" v-if="defectDetails.type==2&&this.pageType!=1" prop="objectId">
                 <Select v-model="defectDetails.objectId" @on-change="getObj()">
-                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
+                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="对象名：" v-show="defectDetails.type==2&&this.pageType==1" prop="objectId">

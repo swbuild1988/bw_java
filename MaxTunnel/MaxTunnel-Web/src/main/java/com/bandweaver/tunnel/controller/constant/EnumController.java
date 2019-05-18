@@ -1,7 +1,10 @@
 package com.bandweaver.tunnel.controller.constant;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ import com.bandweaver.tunnel.common.biz.constant.omm.DefectLevel;
 import com.bandweaver.tunnel.common.biz.constant.omm.DefectStatus;
 import com.bandweaver.tunnel.common.biz.constant.omm.DefectType;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionObject;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionPath;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionWay;
 import com.bandweaver.tunnel.common.biz.constant.omm.SpareWhitherEnum;
 import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
@@ -43,7 +49,7 @@ import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 @Controller
 @ResponseBody
 public class EnumController {
-	
+
 	@Autowired
 	private StoreTypeService storeTypeService;
 
@@ -115,13 +121,13 @@ public class EnumController {
 		}
 		return CommonUtil.success(list);
 	}
-	
-	
+
+
 	/**管廊运行状态枚举
 	 * @author shaosen
 	 * @date 2019年1月10日
-	 * @param   
-	 * @return JSONObject  
+	 * @param
+	 * @return JSONObject
 	 */
 	@RequestMapping(value="tunnelstatus-enums",method=RequestMethod.GET)
 	public JSONObject getTunnelStatusList() {
@@ -134,8 +140,8 @@ public class EnumController {
 		}
 		return CommonUtil.success(list);
 	}
-	
-	/**监测对象关联其他对象类型（视频和预案）枚举 
+
+	/**监测对象关联其他对象类型（视频和预案）枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"预案"},{"val":2,"key":"视频"}]}
 	 * @author shaosen
 	 * @Date 2018年12月20日
@@ -151,11 +157,11 @@ public class EnumController {
 		}
 		return CommonUtil.success(list);
 	}
-	
-	
-	
+
+
+
 	/**应急预案列表
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":4001,"processKey":"FirePlanProcess","key":"消防预案"},{"val":4003,"processKey":"WindPlanProcess","key":"通风预案"},{"val":4002,"processKey":"WaterPlanProcess","key":"排水预案"}]} 
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":4001,"processKey":"FirePlanProcess","key":"消防预案"},{"val":4003,"processKey":"WindPlanProcess","key":"通风预案"},{"val":4002,"processKey":"WaterPlanProcess","key":"排水预案"}]}
 	 * @author shaosen
 	 * @Date 2018年11月22日
 	 */
@@ -171,10 +177,10 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	/**开关枚举 
-	 * @return   
+
+
+	/**开关枚举
+	 * @return
 	 * @author shaosen
 	 * @Date 2018年11月22日
 	 */
@@ -189,11 +195,11 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
+
+
 	/**
 	 * 付款方式枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"月付"},{"val":2,"key":"季付"},{"val":3,"key":"年付"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"月付"},{"val":2,"key":"季付"},{"val":3,"key":"年付"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -209,10 +215,10 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
 	 * 入廊行为枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"参观"},{"val":2,"key":"维护"},{"val":3,"key":"安装"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"参观"},{"val":2,"key":"维护"},{"val":3,"key":"安装"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -228,11 +234,11 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
+
+
 	/**
 	 * 入廊申请状态枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"审核中"},{"val":2,"key":"通过"},{"val":3,"key":"拒绝"},{"val":4,"key":"结束"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"审核中"},{"val":2,"key":"通过"},{"val":3,"key":"拒绝"},{"val":4,"key":"结束"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -248,12 +254,12 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 设备状态枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"},{"val":3,"key":"备品"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"},{"val":3,"key":"备品"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -272,7 +278,7 @@ public class EnumController {
 
 	/**
 	 * 单位类别枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"医院"},{"val":2,"key":"学校"},{"val":3,"key":"机关单位"},{"val":4,"key":"商场"},{"val":5,"key":"银行"},{"val":6,"key":"景点"},{"val":7,"key":"火车站/机场"},{"val":8,"key":"其他"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"医院"},{"val":2,"key":"学校"},{"val":3,"key":"机关单位"},{"val":4,"key":"商场"},{"val":5,"key":"银行"},{"val":6,"key":"景点"},{"val":7,"key":"火车站/机场"},{"val":8,"key":"其他"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -288,11 +294,11 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 
 	/**
 	 *dataType枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"list":[{"val":0,"key":"无"}],"key":"无"},{"val":1,"list":[{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":8,"key":"分布式温度"},{"val":21,"key":"液位仪"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"}],"key":"模拟量输入"},{"val":2,"list":[],"key":"开关量输入"},{"val":3,"list":[{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":41,"key":"声光报警"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"},{"val":58,"key":"百叶"},{"val":59,"key":"水泵"}],"key":"状态量输入"},{"val":5,"list":[],"key":"分布式数据"},{"val":7,"list":[{"val":7,"key":"视频"}],"key":"视频"},{"val":97,"list":[{"val":9,"key":"机器人"},{"val":20,"key":"定位设备"},{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"}],"key":"结构化对象"},{"val":103,"list":[],"key":"频谱数据"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"list":[{"val":0,"key":"无"}],"key":"无"},{"val":1,"list":[{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":8,"key":"分布式温度"},{"val":21,"key":"液位仪"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"}],"key":"模拟量输入"},{"val":2,"list":[],"key":"开关量输入"},{"val":3,"list":[{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":41,"key":"声光报警"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"},{"val":58,"key":"百叶"},{"val":59,"key":"水泵"}],"key":"状态量输入"},{"val":5,"list":[],"key":"分布式数据"},{"val":7,"list":[{"val":7,"key":"视频"}],"key":"视频"},{"val":97,"list":[{"val":9,"key":"机器人"},{"val":20,"key":"定位设备"},{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"}],"key":"结构化对象"},{"val":103,"list":[],"key":"频谱数据"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -304,7 +310,7 @@ public class EnumController {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
-			
+
 			List<JSONObject> joList = new ArrayList<>();
 			List<ObjectType> objTypeList = ObjectType.getEnumByDataType(e.getValue());
 			for (ObjectType objectType : objTypeList) {
@@ -314,12 +320,12 @@ public class EnumController {
 				joList.add(jo);
 			}
 			obj.put("list", joList);
-			
+
 			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/** 获取dataType状态量枚举
 	 * @return
 	 * @author ya.liu
@@ -340,7 +346,7 @@ public class EnumController {
 
 	/**
 	 *objectType枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"key":"无"},{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":7,"key":"视频"},{"val":8,"key":"分布式温度"},{"val":9,"key":"机器人"},{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":20,"key":"定位设备"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"},{"val":41,"key":"声光报警"},{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":0,"key":"无"},{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":7,"key":"视频"},{"val":8,"key":"分布式温度"},{"val":9,"key":"机器人"},{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":20,"key":"定位设备"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"},{"val":41,"key":"声光报警"},{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -378,11 +384,11 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
+
+
 	/**
 	 * 管仓类型枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"综合仓"},{"val":2,"key":"电力仓"},{"val":3,"key":"燃气仓"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"综合仓"},{"val":2,"key":"电力仓"},{"val":3,"key":"燃气仓"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -399,10 +405,10 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	/**管线运行状态枚举 
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"}]}  
+
+
+	/**管线运行状态枚举
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"运行中"},{"val":2,"key":"故障"}]}
 	 * @throws
 	 * @author shaosen
 	 * @date 2018年7月26日
@@ -418,9 +424,9 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**合同状态枚举
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"正常"},{"val":2,"key":"过期"}]}  
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"正常"},{"val":2,"key":"过期"}]}
 	 * @throws
 	 * @author shaosen
 	 * @Date 2018年7月29日
@@ -436,11 +442,11 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	
-	
-	/**告警等级枚举 
+
+
+
+
+	/**告警等级枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"提示"},{"val":2,"key":"一般"},{"val":3,"key":"严重"},{"val":4,"key":"致命"}]}
 	 * @author shaosen
 	 * @Date 2018年8月14日
@@ -456,9 +462,9 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	/**监测内容枚举 
+
+
+	/**监测内容枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"objectTypeList":[{"val":1,"key":"温度"},{"val":2,"key":"湿度"},{"val":3,"key":"氧气"},{"val":4,"key":"硫化氢"},{"val":5,"key":"甲烷"},{"val":6,"key":"一氧化碳"},{"val":8,"key":"分布式温度"},{"val":31,"key":"风机类电表"},{"val":32,"key":"灯类电表"},{"val":33,"key":"水泵类电表"},{"val":34,"key":"其他类电表"}],"key":"环境监测"},{"val":2,"objectTypeList":[{"val":51,"key":"沉降"},{"val":52,"key":"伸缩缝"},{"val":53,"key":"应力"},{"val":54,"key":"外水压力"}],"key":"结构监测"},{"val":3,"objectTypeList":[{"val":7,"key":"视频"},{"val":9,"key":"机器人"},{"val":10,"key":"风机"},{"val":11,"key":"灯"},{"val":20,"key":"定位设备"},{"val":41,"key":"声光报警"},{"val":55,"key":"门禁"},{"val":56,"key":"电子井盖"},{"val":57,"key":"红外"}],"key":"安防监测"}]}
 	 * @author shaosen
 	 * @Date 2018年8月16日
@@ -470,7 +476,7 @@ public class EnumController {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
-			
+
 			//get objectTypeList
 			List<JSONObject> objectTypeList = new ArrayList<>();
 			List<ObjectType> eList = ObjectType.getEnumByMonitorType(e.getValue());
@@ -485,10 +491,10 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	/**日期枚举 
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"日"},{"val":2,"key":"周"},{"val":3,"key":"月"}]}  
+
+
+	/**日期枚举
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"日"},{"val":2,"key":"周"},{"val":3,"key":"月"}]}
 	 * @author shaosen
 	 * @Date 2018年8月22日
 	 */
@@ -503,7 +509,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	/**文件类型枚举 
+	/**文件类型枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"type":".txt,.doc,.xml,.xls,.ppt,.docx,.xlsx,.pptx,.zip,.rar,.pdf","key":"文档"},{"val":2,"type":".mp4,.rmvb,.avi,.wmv,.3gp","key":"视频"},{"val":3,"type":".png,.JPEG,.JPG","key":"图片"}]}
 	 * @author shaosen
 	 * @Date 2018年8月28日
@@ -515,14 +521,14 @@ public class EnumController {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
-			obj.put("type", (String)PropertiesUtil.getValue(e.getType()));
+			obj.put("type", PropertiesUtil.getValue(e.getType()));
 			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	/**资料类型枚举 
-	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"管廊本体资料"},{"val":2,"key":"其他资料"}]}
+
+	/**资料类型枚举
+	 * @return
 	 * @author shaosen
 	 * @Date 2018年8月28日
 	 */
@@ -533,12 +539,23 @@ public class EnumController {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());
+
+			// 获取明细
+			List<DocTypeSonEnum> collect = Arrays.stream(DocTypeSonEnum.values()).filter(x -> x.getParentValue() == e.getValue()).collect(Collectors.toList());
+			List<JSONObject> jList = new ArrayList<>();
+			for (DocTypeSonEnum docTypeSonEnum : collect) {
+				JSONObject j = new JSONObject();
+				j.put("key", docTypeSonEnum.getName());
+				j.put("val", docTypeSonEnum.getValue());
+				jList.add(j);
+			}
+			obj.put("list", jList);
 			list.add(obj);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	/**job状态枚举 
+
+	/**job状态枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":0,"key":"禁用"},{"val":1,"key":"启用"}]}
 	 * @author shaosen
 	 * @Date 2018年9月7日
@@ -554,7 +571,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
      * 获取缺陷类型枚举
      * @return
@@ -572,7 +589,7 @@ public class EnumController {
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 获取缺陷状态枚举
      * @return
@@ -590,7 +607,7 @@ public class EnumController {
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 获取缺陷等级枚举
      * @return
@@ -608,8 +625,8 @@ public class EnumController {
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-   
-	
+
+
 	/** 重大事件级别枚举
 	 * @return
 	 * @author ya.liu
@@ -626,7 +643,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/** 应急目标对象枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"指定对象"},{"val":2,"key":"类型"}]}
 	 * @author shaosen
@@ -643,9 +660,9 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	/**应急行为枚举 
-	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"提示信息类"},{"val":2,"key":"通知类"},{"val":3,"key":"联动输出类型"}]}  
+
+	/**应急行为枚举
+	 * @return {"msg":"请求成功","code":"200","data":[{"val":1,"key":"提示信息类"},{"val":2,"key":"通知类"},{"val":3,"key":"联动输出类型"}]}
 	 * @author shaosen
 	 * @Date 2018年10月17日
 	 */
@@ -660,8 +677,8 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	/**应急结束类型枚举 
+
+	/**应急结束类型枚举
 	 * @return   {"msg":"请求成功","code":"200","data":[{"val":1,"key":"自动"},{"val":2,"key":"半自动"},{"val":3,"key":"手动"}]}
 	 * @author shaosen
 	 * @Date 2018年10月17日
@@ -677,7 +694,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
 	 * 获取视频供应商枚举
 	 * @return
@@ -695,7 +712,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
 	 * 获取视频版本枚举
 	 * @return
@@ -713,10 +730,10 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
-	
-	/**获取流程节点状态列表 
-	 * @return  {"msg":"请求成功","code":"200","data":[{"val":1,"key":"已完成"},{"val":2,"key":"进行中"},{"val":3,"key":"待完成"}]} 
+
+
+	/**获取流程节点状态列表
+	 * @return  {"msg":"请求成功","code":"200","data":[{"val":1,"key":"已完成"},{"val":2,"key":"进行中"},{"val":3,"key":"待完成"}]}
 	 * @author shaosen
 	 * @Date 2018年11月14日
 	 */
@@ -731,7 +748,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/** 获取能耗类型枚举
 	 * @return
 	 * @author ya.liu
@@ -748,7 +765,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
 	 * 获取备品去向枚举
 	 * @return
@@ -766,7 +783,7 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
-	
+
 	/**
 	 * 获取人员类型枚举
 	 * @return
@@ -784,17 +801,54 @@ public class EnumController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
+
 	
 	/**
-	 * 获取银行枚举
+	 * 获取巡检方式枚举
 	 * @return
 	 * @author ya.liu
-	 * @Date 2019年4月9日
+	 * @Date 2019年5月6日
 	 */
-	@RequestMapping(value = "bank-enums", method = RequestMethod.GET)
-	public JSONObject getBank() {
+	@RequestMapping(value = "inspectionway-enum", method = RequestMethod.GET)
+	public JSONObject getInspectionWay() {
 		List<JSONObject> list = new ArrayList<>();
-		for(BankEnum s : BankEnum.values()) {
+		for(InspectionWay s : InspectionWay.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", s.getName());
+			obj.put("val", s.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 获取巡检对象枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年5月6日
+	 */
+	@RequestMapping(value = "inspectionobject-enum", method = RequestMethod.GET)
+	public JSONObject getInspectionObject() {
+		List<JSONObject> list = new ArrayList<>();
+		for(InspectionObject s : InspectionObject.values()) {
+			JSONObject obj = new JSONObject();
+			obj.put("key", s.getName());
+			obj.put("val", s.getValue());
+			list.add(obj);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 获取巡检路径枚举
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年5月6日
+	 */
+	@RequestMapping(value = "inspectionpath-enum", method = RequestMethod.GET)
+	public JSONObject getInspectionPath() {
+		List<JSONObject> list = new ArrayList<>();
+		for(InspectionPath s : InspectionPath.values()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", s.getName());
 			obj.put("val", s.getValue());

@@ -187,11 +187,37 @@
     background-color: #fff;
     line-height: 5vh;
     padding-left: 5px;
+    font-size: 1.6vmin;
   }
 
   .planDec {
     padding: 4px;
     font-size: 14px;
     float: left;
+  }
+  .top >>> .ivu-input{
+    height: 3.2vmin;
+    font-size: 1.2vmin;
+  }
+  .top >>> .ivu-switch-large{
+    width: 8vmin;
+  }
+  .top >>> .ivu-switch{
+    height: 2.4vmin;
+    line-height: 2.2vmin;
+  }
+  .top >>> .ivu-switch-inner{
+    font-size: 1.2vmin;
+    left: 2.5vmin;
+  }
+  .top >>> .ivu-switch:after{
+    width: 2vmin;
+    height: 2vmin;
+  }
+  .top >>>.ivu-switch-large.ivu-switch-checked:after{
+    left: 5.6vmin;
+  }
+  .top >>> .ivu-switch-large:active:after{
+    width: 3.2vmin;
   }
 </style>

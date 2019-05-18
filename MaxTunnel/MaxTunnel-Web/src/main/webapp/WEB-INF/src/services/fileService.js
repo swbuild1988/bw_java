@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,del,post } from "../utils/http";
 
 var FileService = {
 	// 文件信息分页查询
 	filesDataGrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('files/datagrid', params).then(res => {
+			post('files/datagrid', params).then(res => {
 				let {
 					code,
 					data,
@@ -21,7 +22,7 @@ var FileService = {
 	// 删除文件
 	deleteFiles: function(ids) {
 		return new Promise((resolve, reject) => {
-			axios.delete('files/' + ids).then(res => {
+			del('files/' + ids).then(res => {
 				let {
 					code,
 					data,
@@ -38,7 +39,7 @@ var FileService = {
 	// 下载文件
 	downloadFile: function(id) {
 		return new Promise((resolve, reject) => {
-			axios.get('files/download/' + id, {
+			get('files/download/' + id, {
 				responseType: "arraybuffer"
 			}).then(res => {
 				if (res.code && res.code != 200) {

@@ -4,67 +4,108 @@
 		<h2 class="formTitle" style="color: white">制定巡检计划</h2>
 		<Row>
 			<Col span="12" class="leftForm">
-			<div class="planContainer leftContainer" prop="planId">
-			<FormItem label="计划编号：" prop="planId">
-				<Input v-model="uploadPlan.planId"></Input>
-			</FormItem>
-			<FormItem label="计划名称：" prop="name">
-				<Input v-model="uploadPlan.name"></Input>
-			</FormItem>
-			<FormItem label="所属管廊：" prop="tunnelId">
-				<Select v-model="uploadPlan.tunnelId" readonly>
-				<Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-				</Select>
-			</FormItem>
-			<FormItem label="责任班组：" prop="groupId">
-				<Select v-model="uploadPlan.groupId">
-				<Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
-				</Select>
-			</FormItem>
-			<FormItem label="申请人：">
-				<Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
-				<div class="inputStyle">{{requestStaffName}}</div>
-			</FormItem>
-			<FormItem label="审批人：">
-				<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
-				<Input v-model="approver.name" readonly></Input>
-			</FormItem>
-			<FormItem label="计划描述：" prop="remark">
-				<Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}" placeholder="请输入计划描述"></Input>
-			</FormItem>
-			</div>
+                <div class="planContainer leftContainer" prop="planId">
+                    <FormItem label="计划编号：" prop="planId">
+                        <Input v-model="uploadPlan.planId"></Input>
+                    </FormItem>
+                    <FormItem label="计划名称：" prop="name">
+                        <Input v-model="uploadPlan.name"></Input>
+                    </FormItem>
+                    <FormItem label="所属管廊：" prop="tunnelId">
+                        <Select v-model="uploadPlan.tunnelId" readonly>
+                        <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="责任班组：" prop="groupId">
+                        <Select v-model="uploadPlan.groupId">
+                        	<Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </FormItem>
+					<FormItem label="巡检方式：" prop="inspectionWay">
+						<Select v-model="uploadPlan.inspectionWay">
+							<Option v-for="(item, index) in inspectWay" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="巡检路径：" prop="inspectionPath">
+						<Select v-model="uploadPlan.inspectionPath">
+							<Option v-for="(item, index) in inspectPath" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="巡检对象：" prop="inspectionObject">
+						<Select v-model="uploadPlan.inspectionObject">
+							<Option v-for="(item, index) in inspectObject" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+                    <FormItem label="申请人：">
+                        <Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
+                        <Input v-model="requestStaffName" readonly></Input>
+                    </FormItem>
+                    <FormItem label="审批人：">
+                        <Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
+                        <Input v-model="approver.name" readonly></Input>
+                    </FormItem>
+                    <FormItem label="计划步骤：">
+                        <ul style="max-height: 100px;overflow-y: auto;">
+                            <li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
+                                <span>{{index+1}}、</span>
+                                <input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
+                                <Button class="todoButton" type="error" size="small" style="margin-right: 5px" :disabled="index==0" @click="delList(index)">删除</Button>
+                                <Button class="todoButton" type="primary" size="small" style="margin-right: 5px" @click="addList(index)">添加</Button>
+                            </li>
+                        </ul>
+                    </FormItem>
+                </div>
 			</Col>
 			<Col span="12" class="rightForm">
-			<div class="planContainer rightContainer">
-			<FormItem label="巡检月份：" prop="inspectTime">
-				<DatePicker type="month" placeholder="请选择巡检月份" style="width: 100%" v-model="uploadPlan.inspectTime"
-				@on-change="getChooseMonth()"></DatePicker>
-			</FormItem>
-			<FormItem label="巡检日期安排：">
-				<Tabs value="name1">
-					<TabPane label="间隔模式" name="name1">
-						<div>
-						开始日期：
-						<input v-model="intervalMode.startDay" type="number" min="1" max="31">
-						结束日期：<input v-model="intervalMode.endDay" type="number" min="1" max="31">
-						间隔天数：
-						<input v-model="intervalMode.interval" type="number" min="1" max="31">
-						<Button type="default" @click="getDay" class="tabBtn">确定</Button>
-						<Button type="default" @click="defaultBtn" class="tabBtn">重置</Button>
-						</div>
-					</TabPane>
-					<TabPane label="星期模式" name="name2">
-						<Checkbox v-for="(item, index) in weekDay" v-model="item.value" :value='item.value' :key='index'
-						@on-change="getWeek">{{item.name}}</Checkbox>
-					</TabPane>
-					<TabPane label="自定义" name="name3" style="text-align: center">
-						请根据您的需求自由选择日期
-					</TabPane>
-				</Tabs>
-				<calender ref="calender" :currentMonth="currMonth" :currentYear="currYear" v-on:childByValue="getActiveText"
-				style="margin: 10px auto;margin-bottom: 0px;"></calender>
-			</FormItem>
-			</div>
+                <div class="planContainer rightContainer">
+					<FormItem label="计划描述：" prop="remark">
+						<Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}" placeholder="请输入计划描述"></Input>
+					</FormItem>
+					<Tabs type="card" @on-click="clearInput">
+						<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
+							<FormItem label="巡检年份：">
+								<Input placeholder="请选择巡检年份" style="width: 100%;"></Input>
+								<yearCalender ref="getYearChild" v-on:getYearChild="getActiveYearText"></yearCalender>
+							</FormItem>
+						</TabPane>
+						<TabPane label="月份" name="name2" style="padding-left: 1vmin;">
+							<FormItem label="巡检月份：">
+								<Input placeholder="请选择巡检月份" style="width: 100%"></Input>
+								<monthCalender ref="getMonthChild" v-on:getMonthChild="getActiveMonthText"></monthCalender>
+							</FormItem>
+						</TabPane>
+						<TabPane label="日期" name="name3" style="padding-left: 1vmin;">
+							<FormItem label="巡检月份：">
+								<DatePicker type="month" placeholder="请选择巡检月份" style="width: 100%" v-model="uploadPlan.inspectTime"
+								@on-change="getChooseMonth()"></DatePicker>
+							</FormItem>
+							<FormItem label="巡检日期安排：">
+								<Tabs value="name1">
+									<TabPane label="间隔模式" name="name1">
+										<div>
+										开始日期：
+										<input v-model="intervalMode.startDay" type="number" min="1" max="31">
+										结束日期：<input v-model="intervalMode.endDay" type="number" min="1" max="31">
+										间隔天数：
+										<input v-model="intervalMode.interval" type="number" min="1" max="31">
+										<Button type="default" @click="getDay" class="tabBtn">确定</Button>
+										<Button type="default" @click="defaultBtn" class="tabBtn">重置</Button>
+										</div>
+									</TabPane>
+									<TabPane label="星期模式" name="name2">
+										<Checkbox v-for="(item, index) in weekDay" v-model="item.value" :value='item.value' :key='index'
+										@on-change="getWeek">{{item.name}}</Checkbox>
+									</TabPane>
+									<TabPane label="自定义" name="name3" style="text-align: center">
+										请根据您的需求自由选择日期
+									</TabPane>
+								</Tabs>
+								<calender ref="calender" :currentMonth="currMonth" :currentYear="currYear" v-on:childByValue="getActiveText"
+								style="margin: 10px auto;margin-bottom: 0px;"></calender>
+							</FormItem>
+						</TabPane>
+					</Tabs>
+                </div>
 			</Col>
 		</Row>
 		<FormItem style="text-align: center;margin-bottom: 0px">
@@ -77,13 +118,27 @@
 
 <script>
 import calender from "../../../Common/calender.vue";
+import yearCalender from "../../../Common/yearCalender.vue"
+import monthCalender from "../../../Common/monthCalender.vue"
 import types from "../../../../../static/Enum.json";
+import { PatrolService } from '@/services/patrolService'
+import { GroupServices } from '@/services/groupService.js'
+import { TunnelService } from '@/services/tunnelService'
 export default {
     name: "plans",
     components: {
-      	calender
+      	calender,
+		yearCalender,
+		monthCalender
     },
     data() {
+		const validatePlanId = (rule, value, callback) => {
+			if(value==null||value==''){
+				callback(new Error('计划编号不能为空'))
+			}else{
+				callback()
+			}
+		}
 		return {
 			// 页面类型 1：查看 2：编辑 3：新增
 			pageType: 1,
@@ -93,53 +148,33 @@ export default {
 			requestStaffName: '',
 			approver: {},
 			uploadPlan: {
-			planId: new Date().getTime(),
-			name: "",
-			groupId: null,
-			inspectTime: "",
-			tasks: [],
-			approverId: 1,
-			tunnelId: null,
-			requestStaffId: null,
-			remark: '',
-
+                planId: new Date().getTime(),
+                name: "",
+				groupId: null,
+				inspectionWay: null,
+				inspectionPath: null,
+				inspectionObject: null,
+                inspectTime: null,
+                tasks: [],
+                approverId: 1,
+                tunnelId: null,
+                requestStaffId: null,
+                remark: '',
+                steps: [
+                    { name: '' }
+                ]
 			},
-			groups: [{
-				"id": 1,
-				"name": "group1",
-				"leaderId": 1,
-				"leaderName": "l1"
-			}],
+			groups: [],
 			selectedMode: "",
 			tunnels: [],
-			weekDay: [{
-				name: "星期日",
-				value: false
-			},
-			{
-				name: "星期一",
-				value: false
-			},
-			{
-				name: "星期二",
-				value: false
-			},
-			{
-				name: "星期三",
-				value: false
-			},
-			{
-				name: "星期四",
-				value: false
-			},
-			{
-				name: "星期五",
-				value: false
-			},
-			{
-				name: "星期六",
-				value: false
-			}
+			weekDay: [
+                { name: "星期日", value: false },
+                { name: "星期一", value: false },
+                { name: "星期二", value: false },
+                { name: "星期三", value: false },
+                { name: "星期四", value: false },
+                { name: "星期五", value: false },
+                { name: "星期六", value: false }
 			],
 			intervalMode: {
 				startDay: 1,
@@ -150,7 +185,8 @@ export default {
 			isDisable: false,
 			ruleValidate: {
 				planId: [
-					{ required: true, message: '请填写计划编号', trigger: 'blur' }
+					// { required: true, message: '请填写计划编号', trigger: 'blur' },
+					{ validator: validatePlanId, trigger: 'blur' }
 				],
 				name: [
 					{ required: true, message: '请填写计划名称', trigger: 'blur'	}
@@ -165,7 +201,16 @@ export default {
 					{ required: true, message: '请输入计划描述', trigger: 'blur'}
 					],
 				inspectTime: [
-					{ type: 'date', required: true, message: '请选择巡检月份', trigger: 'change'}
+					{ type: 'array', required: true, message: '请选择巡检月份', trigger: 'change'}
+				],
+				inspectionWay: [
+					{ type: 'number', required: true, message: '巡检方式不能为空', trigger: 'change'}
+				],
+				inspectionPath: [
+					{ type: 'number', required: true, message: '巡检路径不能为空', trigger: 'change'}
+				],
+				inspectionObject: [
+					{ type: 'number', required: true, message: '巡检对象不能为空', trigger: 'change'}
 				]
 			},
 			backStyle: {
@@ -175,7 +220,10 @@ export default {
 				backgroundSize: 'cover',
 				minHeight: '100%',
 				paddingTop: '10px'
-			}
+			},
+			inspectWay: [],
+			inspectPath: [],
+			inspectObject: []
 		};
     },
     watch: {
@@ -194,31 +242,65 @@ export default {
     mounted() {
       	this.pageType = this.$route.params.type;
 		//从数据库读取所属管廊select的option选项
-		this.axios.get("/tunnels ").then(response => {
-			let {code,data} = response.data;
-			if (code == 200) {
-				this.tunnels = data;
+		TunnelService.getTunnels().then(
+			result => {
+				this.tunnels = result
+			},
+			error => {
+				this.Log.info(error)
 			}
-		});
-		//从数据库读取责任班组select的option选项
-		this.axios.get("/inspection-groups").then(response => {
-			let {code,data} = response.data;
-			if (code == 200) {
-			this.groups = data;
-			}
-		});
+		)
 		this.getChooseMonth()
 		this.getSessionUserName()
 		//获取审批人
-		this.axios.get('roles/users').then(res => {
-			let {code,data} = res.data
-			if (code == 200) {
-				this.approver = data[0]
-				this.uploadPlan.approverId = data[0].id
+		PatrolService.getApprover().then(
+			result => {
+				this.approver = result[0]
+				this.uploadPlan.approverId = result[0].id
+			},
+			error => {
+				this.Log.info(error)
 			}
-		})
+		)
+		//获取责任班组
+		GroupServices.getGroups().then(
+			result => {
+				this.groups = result
+			},
+			error => {
+				this.Log.info(error)
+			}
+		)
+		// 获取巡检方式
+		PatrolService.getInspectWay().then(
+			result => {
+				this.inspectWay = result
+			},
+			error => {
+				this.Log.info(error)
+			}
+		)
+		//获取巡检路径
+		PatrolService.getInspectionPath().then(
+			result => {
+				this.inspectPath = result
+			},
+			error => {
+				this.Log.info(error)
+			}
+		)
+		//获取巡检对象
+		PatrolService.getInspectionObjects().then(
+			result => {
+				this.inspectObject = result
+			},
+			error => {
+				this.Log.info(error)
+			}
+		)
     },
     methods: {
+		//提交巡检计划
 		submitPlan(name) {
 			this.isDisable = true
 			//提交数据
@@ -226,29 +308,33 @@ export default {
 				this.isDisable = false
 				this.$refs[name].validate((valid) => {
 					if (valid) {
-						this.axios.post("/inspection-plans", this.uploadPlan).then(response => {
-							this.$router.push("/UM/patrol/query/" + this.uploadPlan.tunnelId);
-						})
-						.catch(function (error) {
-							console.log(error);
-						});
+						PatrolService.submitPlan(this.uploadPlan).then(
+							result => {
+								this.$router.push("/UM/patrol/query/" + this.uploadPlan.tunnelId);
+							},
+							error => {
+								this.Log.info(error)
+							}
+						)
 					} else {
 						this.$Message.error("请填写正确的巡检计划信息")
 					}
 				})
 			}, 2000)
 		},
+		//表单重置
 		handleReset(name) {
 			this.$refs[name].resetFields()
 		},
+
 		getChooseMonth() {
 			if (this.currMonth == undefined || this.currMonth == null || this.currMonth == '' || this.currYear == undefined ||
 			this.currYear == null || this.currYear == '') {
-			this.currMonth = new Date().getMonth() + 1
-			this.currYear = new Date().getFullYear()
+				this.currMonth = new Date().getMonth() + 1
+				this.currYear = new Date().getFullYear()
 			} else {
-			this.currMonth = this.uploadPlan.inspectTime.getMonth() + 1
-			this.currYear = this.uploadPlan.inspectTime.getFullYear()
+				this.currMonth = this.uploadPlan.inspectTime.getMonth() + 1
+				this.currYear = this.uploadPlan.inspectTime.getFullYear()
 			}
 		},
 		getDay() {
@@ -261,25 +347,46 @@ export default {
 			}
 			this.$refs.calender.outputHeighLight();
 		},
+		//日期重置
 		defaultBtn() {
 			this.$refs.calender.cancelActive();
 			this.$refs.calender.outputHeighLight();
 		},
+		//星期模式
 		getWeek() {
 			this.$refs.calender.cancelActive();
 			var week = [];
 			for (let index = 0; index < this.weekDay.length; index++) {
-			if (this.weekDay[index].value) week.push(index);
+				if (this.weekDay[index].value) week.push(index);
 			}
 			this.$refs.calender.chooseWeek(week);
 			this.$refs.calender.outputHeighLight();
 		},
+		//拿到选择的yyyy
+		getActiveYearText(childValue){
+			this.uploadPlan.tasks = [];
+			for (var i = 0; i < childValue.length; i++) {
+				this.uploadPlan.tasks.push({
+					taskTime: childValue[i]
+				})
+			}
+		},
+		//拿到选择的yyyy-MM-dd
 		getActiveText(childValue) {
 			this.uploadPlan.tasks = [];
 			for (var i = 0; i < childValue.length; i++) {
-			this.uploadPlan.tasks.push({
-				taskTime: childValue[i]
-			})
+				this.uploadPlan.tasks.push({
+					taskTime: childValue[i]
+				})
+			}
+		},
+		//拿到选择的yyyy-MM
+		getActiveMonthText(childValue){
+			this.uploadPlan.tasks = [];
+			for (var i = 0; i < childValue.length; i++) {
+				this.uploadPlan.tasks.push({
+					taskTime: childValue[i]
+				})
 			}
 		},
 		getSessionUserName: function () {
@@ -289,6 +396,29 @@ export default {
 		//返回
 		goBack() {
 			this.$router.back(-1);
+        },
+        //添加todoList
+        addList(index){
+            this.uploadPlan.steps.push(
+                { name: '' }
+            )
+		},
+		//删除todoList
+        delList(index){
+            this.$Modal.confirm({
+                title: '删除计划步骤',
+                content: '<p>确定要删除这条计划步骤吗</p>',
+                onOk: () => {
+                    this.uploadPlan.steps.splice(index, 1)
+                },
+                onCancel: () => {}
+            })
+		},
+		clearInput(name){
+			this.uploadPlan.inspectTime = null
+			this.$refs.calender.cancelActive();
+			this.$refs.getYearChild.cancelActive();
+			this.$refs.getMonthChild.cancelActive();
 		}
     }
 }
@@ -296,6 +426,21 @@ export default {
 </script>
 
 <style scoped>
+    .todoLi{
+        line-height: 3.5vh;
+        height: 3.5vh;
+        margin-right: 0.5vw;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 0.5vh;
+    }
+    .todoLi .todoEidt{
+        border: none;
+        box-shadow: 2px 2px 10px 0px #ccc;
+        flex: 1;
+        margin-right: 0.5vw;
+        padding-left: 0.5vw;
+    }
 	input[type='number'] {
 		display: inline-block;
 		height: 27px;

@@ -199,8 +199,8 @@ export default {
                 this.$refs[name].validate((valid) => {
                     if(valid){
                         if(this.isVisitorNames == false){
-                            var arr = new Array()
-                            var formInfo = {
+                            let arr = []
+                            let formInfo = {
                                 staffId: parseInt(this.addEnterGalleryApplication.staffId),
                                 approverId: parseInt(this.addEnterGalleryApplication.approverId),
                                 tunnelId: parseInt(this.addEnterGalleryApplication.tunnelId),
@@ -256,7 +256,7 @@ export default {
             this.$router.back(-1);
         },
         childByValue(childByValue){
-            var arr = new Array()
+            var arr = []
             var str = ''
             var names = ''
             arr = childByValue

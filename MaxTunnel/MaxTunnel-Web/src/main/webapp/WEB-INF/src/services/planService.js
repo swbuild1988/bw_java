@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var PlanService = {
   // 手动确认预案流程
     ConfirmStep: function(instanceId, objectId, isConfirm) {
         return new Promise((resolve, reject) => {
-            axios.get('emplans/confirm/processInstanceId/' + instanceId + '/result/' + isConfirm + '/objectId/' + objectId).then(res => {
+            get('emplans/confirm/processInstanceId/' + instanceId + '/result/' + isConfirm + '/objectId/' + objectId).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data)
@@ -17,7 +18,7 @@ var PlanService = {
     // 预案分页查询
     emPlansDatagrid: function(params) {
         return new Promise((resolve, reject) => {
-            axios.post('/emplans/datagrid', params).then(res => {
+            post('/emplans/datagrid', params).then(res => {
                 let { code,data,msg} = res.data
                 if (code == 200) {
                     resolve(data)
@@ -33,7 +34,7 @@ var PlanService = {
     // 添加应急预案
     addEMPlanNode: function(params) {
         return new Promise((resolve, reject) => {
-            axios.post('/emplans', params).then(res => {
+            post('/emplans', params).then(res => {
                 let { code, data, msg} = res.data
                 if (code == 200) {
                     resolve(data)
@@ -49,7 +50,7 @@ var PlanService = {
     // 批量删除应急预案
     batchDeletePlans: function(ids) {
         return new Promise((resolve, reject) => {
-            axios.delete('/emplans/batch/' + ids).then(res => {
+            del('/emplans/batch/' + ids).then(res => {
                 let { code, data, msg } = res.data
                 if (code == 200) {
                     resolve(data)
@@ -65,7 +66,7 @@ var PlanService = {
     // 根据planId获取节点详情
     getNodeDetailById: function(id) {
         return new Promise((resolve, reject) => {
-            axios.get('emplans/' + id).then(res => {
+            get('emplans/' + id).then(res => {
                 let { code,data,msg} = res.data
                 if (code == 200) {
                     resolve(data)
@@ -81,7 +82,7 @@ var PlanService = {
     // 更新预案节点
     updateEMPlanNode(params) {
         return new Promise((resolve, reject) => {
-            axios.put('emplans', params).then(res => {
+            put('emplans', params).then(res => {
                 let {code,data,msg} = res.data
                 if (code == 200) {
                     resolve(data)
@@ -97,7 +98,7 @@ var PlanService = {
     // 部署预案
     publishPlans: function(vals) {
         return new Promise((resolve, reject) => {
-            axios.get('emplans/deploy/batch/' + vals).then(res => {
+            get('emplans/deploy/batch/' + vals).then(res => {
                 let { code,data, msg} = res.data
                 if (code == 200) {
                     resolve(data)
@@ -113,7 +114,7 @@ var PlanService = {
     //获取预案状态类型
     getNodeListStatus() {
         return new Promise((resolve, reject) => {
-        axios.get('nodestatus-enums').then(res => {
+        get('nodestatus-enums').then(res => {
             let {code, data, msg} = res.data;
             if (code == 200) {
             resolve(data)
@@ -126,7 +127,7 @@ var PlanService = {
     //根据key获取预案流程
     getAllSteps(processKey) {
         return new Promise((resolve, reject) => {
-            axios.get('emplans/process-key/'+processKey).then(res => {
+            get('emplans/process-key/'+processKey).then(res => {
                 let {code, data, msg} = res.data;
                 if (code == 200) {
                     resolve(data)
@@ -139,7 +140,7 @@ var PlanService = {
     //启动预案
     startPlan(params){
         return new Promise((resolve, reject) => {
-            axios.post('emplans/start',params).then(res => {
+            post('emplans/start',params).then(res => {
                 let {code, data, msg} = res.data;
                 if (code == 200) {
                     resolve(data)

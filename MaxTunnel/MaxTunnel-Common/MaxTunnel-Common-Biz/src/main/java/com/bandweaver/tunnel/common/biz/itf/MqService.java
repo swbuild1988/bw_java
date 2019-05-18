@@ -4,7 +4,9 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 
 public interface MqService {
 
-	void sendToAlarmUMQueue(String msg);
+    void send(String exchange, String routingKey, Object message);
+
+    void sendToAlarmUMQueue(String msg);
 
 	void sendToAlarmVMQueue(String msg);
 

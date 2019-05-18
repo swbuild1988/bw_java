@@ -1,12 +1,12 @@
 import axios from 'axios'
-
+import { get,put,post,del } from "../utils/http";
 const isRealData = require('../../static/serverconfig').isRealData
 
 var VideoService = {
 	// 获取告警关联视频对象路由表
 	getAlarmVideoRouter: function(id) {
 		return new Promise((resolve, reject) => {
-			axios.get("object-bind/" + id + "/videos")
+			get("object-bind/" + id + "/videos")
 				.then(res => {
 					let {
 						code,
@@ -27,7 +27,7 @@ var VideoService = {
     // 根据tunnelId获取该管廊内的摄像头
     getCamerasByTunnelId: function(tunnelId) {
 		return new Promise((resolve, reject) => {
-			axios.get('tunnels/' + tunnelId + '/videos')
+			get('tunnels/' + tunnelId + '/videos')
 				.then(res => {
 					let {
 						code,
@@ -49,7 +49,7 @@ var VideoService = {
     getCamerasByConditions: function(condition) {
 		return new Promise((resolve, reject) => {
 			if (isRealData) {
-				axios.post('videos/condition', condition)
+				post('videos/condition', condition)
 				.then(res => {
 					let {
 					code,
@@ -98,7 +98,7 @@ var VideoService = {
     // 摄像头开始移动
     cameraMove: function(videoId, direction) {
 		return new Promise((resolve, reject) => {
-			axios.get('videos/' + videoId + '/move/' + direction)
+			get('videos/' + videoId + '/move/' + direction)
 				.then(res => {
 					let {
 						code,
@@ -119,7 +119,7 @@ var VideoService = {
     // 摄像头停止移动
     cameraStop: function(videoId) {
 		return new Promise((resolve, reject) => {
-			axios.get('videos/' + videoId + '/stop')
+			get('videos/' + videoId + '/stop')
 				.then(res => {
 					let {
 						code,
@@ -141,7 +141,7 @@ var VideoService = {
     getPresetsByCameraId: function(cameraId) {
 		return new Promise((resolve, reject) => {
 			if (isRealData) {
-				axios.get('videos/' + cameraId + '/presets')
+				get('videos/' + cameraId + '/presets')
 				.then(res => {
 					let {
 					code,
@@ -168,7 +168,7 @@ var VideoService = {
     // 摄像头到达预置位
     goToPreset: function(cameraId, presetName) {
 		return new Promise((resolve, reject) => {
-			axios.get('videos/' + cameraId + '/presets/' + presetName + '/goto')
+			get('videos/' + cameraId + '/presets/' + presetName + '/goto')
 				.then(res => {
 					resolve(res.data)
 				})
@@ -180,7 +180,7 @@ var VideoService = {
     // 新增预置位
     addPreset: function(cameraId, params) {
 		return new Promise((resolve, reject) => {
-			axios.post('videos/' + cameraId + '/presets', params)
+			post('videos/' + cameraId + '/presets', params)
 				.then(res => {
 					let {
 						code,
@@ -201,7 +201,7 @@ var VideoService = {
     // 编辑预置位摄像头位置
     editPreset: function(cameraId, params) {
 		return new Promise((resolve, reject) => {
-			axios.put('videos/' + cameraId + '/presets', params)
+			put('videos/' + cameraId + '/presets', params)
 				.then(res => {
 					let {
 						code,
@@ -222,7 +222,7 @@ var VideoService = {
   	// 删除预置位
     deletePreset: function(cameraId) {
 		return new Promise((resolve, reject) => {
-			axios.delete('videos/' + cameraId + '/presets', {
+			del('videos/' + cameraId + '/presets', {
 				data: param
 				}).then(res => {
 					let {
@@ -244,7 +244,7 @@ var VideoService = {
     // 根据3d位置获取对应虚拟巡检中的摄像头
     getVICameras: function(position) {
 		return new Promise((resolve, reject) => {
-			axios.post('virual-inspection/video', position)
+			post('virual-inspection/video', position)
 				.then(res => {
 					let {
 						code,
@@ -265,7 +265,7 @@ var VideoService = {
     // 根据相机获取section信息
     getSections: function(position) {
 		return new Promise((resolve, reject) => {
-			axios.post('sections/gps', position)
+			post('sections/gps', position)
 				.then(res => {
 					let {
 						code,
@@ -286,7 +286,7 @@ var VideoService = {
     // 摄像机预置位和3d位置匹配
     matchPresetAnd3D: function(videoPreset) {
 		return new Promise((resolve, reject) => {
-			axios.post('preset-3d', videoPreset)
+			post('preset-3d', videoPreset)
 				.then(res => {
 					let {
 						code,
@@ -307,7 +307,7 @@ var VideoService = {
     // 批量添加h5Stream配置
     batchAddH5StreamConfig: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('h5/api/addsrc', params)
+			post('h5/api/addsrc', params)
 				.then(res => {
 					let {
 						code,
@@ -328,7 +328,7 @@ var VideoService = {
     // 获取当前位置附近视频
     getNearbyVideos(params){
 		return new Promise((resolve,reject)=>{
-			axios.post('videos/gps',params)
+			post('videos/gps',params)
 			.then(
 				result=>{
 					let { code,data,msg } = result.data
@@ -347,7 +347,7 @@ var VideoService = {
 	// 历史照片分页
 	historyPhotosDatagrid(params){
 		return new Promise((resolve,reject)=>{
-			axios.post('snaps/datagrid',params)
+			post('snaps/datagrid',params)
 			.then(
 				result=>{
 					let { code,data,msg } = result.data
@@ -387,7 +387,7 @@ var VideoService = {
 	// 历史照片全部
 	allHistoryPhotoes(params){
 		return new Promise((resolve,reject)=>{
-			axios.post('snaps/condition',params)
+			post('snaps/condition',params)
 			.then(
 				result=>{
 					let { code,data,msg } = result.data
@@ -406,7 +406,7 @@ var VideoService = {
 	// 获取 预览和下载图片
 	getPhoto(param){
 		return new Promise((resolve,reject)=>{
-			axios.post('snaps/tp',param,
+			post('snaps/tp',param,
 			{responseType: "arraybuffer"})
 			.then(
 				result=>{

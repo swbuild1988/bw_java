@@ -20,8 +20,8 @@
                 <Input v-model="distributeTask.remark" type="textarea" :rows="4" placeholder="请输入备注"></Input>
             </FormItem>
             <FormItem style="text-align: center;">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitTask">提交</Button>
-                <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>  
     </div>
@@ -32,7 +32,7 @@ export default {
     data(){
         return{
             distributeTask:{
-                id: 1,
+                // id: 1,
                 planName: '',
                 startTime: null,
                 endTime: null,
@@ -70,25 +70,30 @@ export default {
                 }
             PatrolService.getStaffs().then(
                 (result)=>{
-                    _this.liable = result
+                    this.liable = result
                 },
                 (error)=>{
-                    _this.Log.info(error)
+                    this.Log.info(error)
                 }
             )
         },
         submitTask(){
             let _this = this
-            PatrolService.distributeTask().then(
-                (result)=>{
+            PatrolService.distributeTask(this.distributeTask.id, this.distributeTask.accountId).then(
+                result=>{
+                    this.distributeTask = result
                     _this.Log.info('success')
                 },
-                (error)=>{
+                error=>{
                     _this.Log.info(error)
                 })
             // this.axios.get('maintenance-order/' + this.distributeTask.id + '/maintenance-person/' + this.distributeTask.accountId).then(response=>{
             // });
 
+        },
+        //返回
+        goBack(){
+            this.$router.back(-1);
         }
     }
 }

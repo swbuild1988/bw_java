@@ -1,7 +1,6 @@
 package com.bandweaver.tunnel.common.biz.pojo.omm;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class InspectionGroup implements Serializable{
 

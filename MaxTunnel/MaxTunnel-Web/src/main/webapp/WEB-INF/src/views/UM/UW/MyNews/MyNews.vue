@@ -31,11 +31,11 @@ export default {
     };
   },
   created(){
-    if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/myNews") < 0) {
-          this.goToMoudle({path: this.myNews.leftTree[0].url});
-          sessionStorage.setItem('selectedName','')
-      }
-        sessionStorage.setItem("refreshAddress", "");
+    // if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/myNews") < 0) {
+    //       this.goToMoudle({path: this.myNews.leftTree[0].url});
+    //       sessionStorage.setItem('selectedName','')
+    //   }
+    //     sessionStorage.setItem("refreshAddress", "");
   },
   methods: {
     goToMoudle(path) {

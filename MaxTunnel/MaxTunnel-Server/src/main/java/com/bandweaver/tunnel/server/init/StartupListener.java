@@ -44,12 +44,14 @@ public class StartupListener implements ApplicationContextAware {
         LogUtil.info("版本号：" + version);
         LogUtil.info("耗  时：" + (endTime - beginTime) + "ms");
         LogUtil.info("----------------------------------------------------");
-        LogUtil.info("\t    ╭┘└┘└╮");
-        LogUtil.info("\t    └┐．．┌┘────╮");
-        LogUtil.info("\t    ╭┴──┤          ├╮");
-        LogUtil.info("\t    │ｏ　ｏ│          │ ●");
-        LogUtil.info("\t    ╰─┬─╯          │");
-        LogUtil.info("\t    牛魔王保佑,代码永无BUG ");
+
+
+        LogUtil.info("\n" +
+                "  __  __   _   __  __  _____ _   _ _  _ _  _ ___ _    \n" +
+                " |  \\/  | /_\\  \\ \\/ / |_   _| | | | \\| | \\| | __| |   \n" +
+                " | |\\/| |/ _ \\  >  <    | | | |_| | .` | .` | _|| |__ \n" +
+                " |_|  |_/_/ \\_\\/_/\\_\\   |_|  \\___/|_|\\_|_|\\_|___|____|\n" +
+                "                                                      \n");
 
     }
 }

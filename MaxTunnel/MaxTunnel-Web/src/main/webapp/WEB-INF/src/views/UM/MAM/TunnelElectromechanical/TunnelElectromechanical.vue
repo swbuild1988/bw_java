@@ -13,11 +13,11 @@
         data() {
             return {
                 curModule: {
-                    moduleName: "管廊环境监控",
+                    moduleName: "管廊机电监控",
                     leftTree: [],
                     selected: [0, -1]
                 },
-                treeNodeJumpUrl: "/UM/TunnelEnvironment/list/",
+                treeNodeJumpUrl: "/UM/TunnelElectromechanical/list/",
             }
         },
         components: {
@@ -36,18 +36,18 @@
                         temp.childNode = [{
                                 id: 21,
                                 name: "监测总览",
-                                url: "/UM/TunnelEnvironment/list/" + a.id,
+                                url: "/UM/TunnelElectromechanical/list/" + a.id,
                             },
                             {
                                 id: 22,
                                 name: "监测详情",
-                                url: "/UM/TunnelEnvironment/details/" + a.id,
+                                url: "/UM/TunnelElectromechanical/details/" + a.id,
                             }
                         ];
                         _this.curModule.leftTree.push(temp);
                     })
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
-                            "/UM/TunnelEnvironment") < 0) {
+                            "/UM/TunnelElectromechanical") < 0) {
                         _this.goToMoudle({
                             path: _this.curModule.leftTree[0].childNode[0].url
                         });

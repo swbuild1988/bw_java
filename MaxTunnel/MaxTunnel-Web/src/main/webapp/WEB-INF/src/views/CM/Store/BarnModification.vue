@@ -112,7 +112,8 @@ export default {
                 width: null,
                 height: null,
                 l: null,
-                k: null
+                k: null,
+                id: null
             },
             ruleValidate:{
                 name:[
@@ -159,7 +160,8 @@ export default {
                 width: this.formValidate.width,
                 height: this.formValidate.height,
                 l: this.formValidate.l,
-                k: this.formValidate.k
+                k: this.formValidate.k,
+                id: this.formValidate.id
             }
             return Object.assign({}, param);
         }

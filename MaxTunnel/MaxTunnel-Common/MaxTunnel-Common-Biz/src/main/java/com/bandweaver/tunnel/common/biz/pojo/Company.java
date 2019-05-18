@@ -17,7 +17,7 @@ public class Company implements Serializable{
     
     private String creditNo;
     private String account;
-    private Integer bank;
+    private String bank;
     private String address;
     private String phone;
     private String mail;
@@ -67,11 +67,11 @@ public class Company implements Serializable{
 		this.account = account;
 	}
 
-	public Integer getBank() {
+	public String getBank() {
 		return bank;
 	}
 
-	public void setBank(Integer bank) {
+	public void setBank(String bank) {
 		this.bank = bank;
 	}
 
