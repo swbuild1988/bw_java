@@ -1,109 +1,32 @@
 <template>
     <div class="whole">
-       <Row class="conditions">
-            <Col span="8" offset="3">
-            <span>监测仓:</span>
-                <Select style="width:20vw;" v-model="query.storeId">
-                  <Option value="null">全部</Option>
-                  <Option v-for="item in stores" :value="item.id" :key="item.name">{{ item.name }}
-                  </Option>
-                </Select>
-            </Col>
-            <Col span="8">
-             <span>区域:</span>
-                <Select style="width:20vw;" v-model="query.areaId">
-                  <Option value="null">全部</Option>
-                  <Option v-for="item in areas" :value="item.id" :key="item.name">{{ item.name }}</Option>
-                </Select>
-            </Col>
-            <Col span="2">
-                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
-            </Col>
-            <Col span="2" offset="1" v-if="!init">
-                <Button type="ghost" @click="init = true">返回</Button>
-            </Col>
-        </Row>
-        <Row class="storeInfo" v-if="init">
+        <Row class="storeInfo">
             <Col span="12" v-for="(store,index) in stores" :key="index">
                 <div class="storeCard">
                     <div class="innerCard">
-                        <div class="storeName" @click="chooseStore(store.id)">
-                            <Icon type="cube"></Icon>
-                            <span>{{store.name}}</span>
-                        </div>
-                        <div class="storeLineCount">
-                            <p v-for="(line,i) in store.value" :key="i" class="lines">{{ line.key }}:{{ line.val }}</p>
-                            <!-- <Progress :percent="parseInt(store.value[1].val / store.value[2].val * 100)" class="progress"></Progress> -->
-                        </div>
-                    </div>
-                </div>
-            </Col>
-        </Row>
-        <Row v-if="!init">
-            <Col span="24" class="sectionsInfo">
-                <Row>
-                    <Col span="8" v-for="(cab,index) in cables" :key="index" class="left">
-                    <div class="card">
-                        <div class="title">
-                             <Icon type="ios-keypad" style="font-size: 1.5vmin" color="#ff9b00"></Icon>
-                            <span>{{cab.name}}</span>
-                        </div>
                         <Row>
-                            <Col span="6">
-                                <div class="linesInfo">
-                                    <Tooltip placement="right">
-                                        <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)">
-                                            <span class="demo-Circle-inner" style="font-size:2.66vmin">{{ parseInt(cab.value[1].val / cab.value[0].val * 100) }}%</span>
-                                        </i-circle>
-                                        <div slot="content">
-                                        <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
-                                        </div>
-                                    </Tooltip>
+                            <Col span="12">
+                                <div class="storeName" @click="chooseStore(store)">
+                                    <Icon type="cube"></Icon>
+                                    <span>{{store.name}}</span>
+                                </div>
+                                <div class="utilization" v-if="store.values[2].val">
+                                    <i-circle :percent="parseInt(store.values[1].val / store.values[2].val * 100)">
+                                        <span class="demo-Circle-inner" style="font-size:2.66vmin">{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
+                                    </i-circle>
                                 </div>
                             </Col>
-                            <Col span="18">
-                                  <Row>
-                                    <Col span="24" v-if="cab.lines.length">
-                                        <div class="ItemName">
-                                            <p v-for="(line,j) in cab.lines" :key="j" @click="turnToContractPage(line.contract.id)">{{ line.cableName +' '+ line.contract.company.name}}</p>
-                                        </div>
-                                    </Col>
-                                    <Col span="24" v-if="!cab.lines.length">
-                                        <div class="ItemName">
-                                            <p v-for="equip in cab.equips" :key="equip.id" @click="turnToEquPage(equip.id)">{{ equip.name }}</p>
-                                        </div>
-                                    </Col>
-                                </Row>     
+                            <Col span="12">
+                                <div class="storeLineCount" v-if="store.values[2].val">
+                                    <p v-for="(line,i) in store.values" :key="i" class="lines">{{ line.key }}:{{ line.val }}</p>
+                                </div>
+                                <div :class="['equCount',{'noLines': !store.values[2].val}]" @click="turnToEquPage(store.id)">
+                                    <span>{{'现存放设备' + store.equCount +'个'}}</span>
+                                </div>
                             </Col>
                         </Row>
                     </div>
-                    <!-- <Modal v-model="isLineShow" :title="line.cableName" :mask-closable="false" style="font-size:1.6vmin"
-                    v-for="line in cab.lines" :key="line.id" width="300">
-                        <p>管线长度：{{ line.cableLength }}</p>
-                        <p>管线状态：{{ line.cableStatusName }}</p>
-                        <p>企业客户：{{ line.contract.company.name }}</p>
-                        <p>联系人：{{ line.contract.company.customers[0].contact }}</p>
-                        <p>联系电话：{{ line.contract.company.phone }}</p>
-                    </Modal> -->
-                     <Modal v-model="isEquipShow" :title="equip.name" :mask-closable="false" style="font-size:1.6vmin"
-                     v-for="equip in cab.equips" :key="equip.id" width="300">
-                        <p>安装时间：{{ new Date(equip.runTime).format('yyyy-MM-dd hh:mm:ss') }}</p>
-                        <p>规格型号：{{ equip.model.name }}</p>
-                        <p>所属系统：{{ equip.typeName }}</p>
-                        <p>设备状态：{{ equip.statusName }}</p>
-                        <p>厂家：{{ equip.factory }}</p>
-                        <p>品牌：{{ equip.brand }}</p>
-                        <p>额定电压：{{ equip.ratedVoltage }}</p>
-                        <p>质保期限：{{ equip.qaTerm }}</p>
-                    </Modal>
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
-        <Row>
-            <Col span="24" class="page">
-                <Page v-if="!init" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
-                </Page>
+                </div>
             </Col>
         </Row>
     </div>
@@ -117,30 +40,10 @@ import { EquipmentService } from '../../../../services/equipmentService'
 export default {
     data(){
         return{
-           tunnelId:'',
-           stores:[],
-           areas:[],
-           sections:[],
-           query:{
-            storeId:'null',
-            areaId:'null',
-            sectionId:''
-           },
-           page:{
-                pageNum: 1,
-                pageSize: 10,
-                pageTotal: null,
-            },
-            ids:[],
-            cables:[],
-            init: true,
+            tunnelId:'',
+            stores:[],
             curDetailIndex: '',
             curDetailId: '',
-            pageStyle: {
-                backgroundColor: 'white',
-                textAlign: 'right',
-                padding: '12px'
-            },
             isLineShow: false,
             isEquipShow: false
         }
@@ -152,155 +55,70 @@ export default {
     watch: {
       '$route': function () {
         // $route发生变化时再次赋值planId
-        this.tunnelId = this.$route.params.id;
-        this.initData();
-        this.cables='';
-        this.init = true;
-        this.stores = [];
-        this.query.areaId = 'null';
-        this.query.storeId = 'null'
-        },
-        'page.pageNum': function(){
-            this.page.pageNum = 1
+            this.tunnelId = this.$route.params.id;
+            this.initData();
+            this.stores = [];
         }
     },
     methods:{
         initData() {
             let _this = this
-            Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId)])
+            Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId),
+            EquipmentService.getEquipmentCount(this.tunnelId)])
             .then(result=>{
-                let store = result[0]
+                let store = result[0],lineList = result[1],equList = result[2]
                 if(store.length > 0){
-                    // _this.query.storeId = store[0].id;
                     store.forEach(a=>{
-                        let temp = {};
-                        temp.id = a.id;
-                        temp.name = a.name;
-                        temp.typeId = a.storeTypeId;
-                        temp.value = [];
-                        _this.stores.push(temp);
-                    })
-                    _this.stores.forEach(store=>{
-                        result[1].forEach(name => {
-                            if(store.name == name.key){
-                              for(let item in name){
-                                if(item != 'key'){
-                                    let temp = {};
-                                    temp.key = item.slice(0,5);
-                                    temp.val = name[item];
-                                    store.value.push(temp)
-                                }
-                              }
-                            }
+                        let lines = []
+                        let usage = lineList.find(name=>{
+                            return name.key === a.name
                         })
+                        let equ = equList.find(count=>{
+                            return count.id === a.id
+                        })
+                        for(let item in usage){
+                            if(item != 'key'){
+                                lines.push({
+                                    key: item.slice(0,5),
+                                    val: usage[item]
+                                })
+                                if(lines.length === Object.keys(usage).length - 1){
+                                    if(lines.length){
+                                        _this.stores.push({
+                                            id: a.id,
+                                            name: a.name,
+                                            values: lines,
+                                            equCount: equ.val
+                                        })
+                                    }
+                                }
+                            } 
+                        }
                     })
                 }
             },
             error=>{
                 _this.Log.info(error)
             })
-
-            TunnelService.getAreasByTunnelId(this.tunnelId).then(
-                result=>{
-                    _this.areas = result
-                },
-                error=>{
-                    _this.Log.info(error)
-                })
         },
-        search(){
-            if(!this.query.storeId && !this.query.areaId){
-               this.$Message.error("请至少选择一个监测仓或区域");
-            }
-            let params = {
-                storeId: this.query.storeId,
-                areaId: this.query.areaId,
-                id: this.query.sectionId,
-                pageNum: this.page.pageNum,
-                pageSize: this.page.pageSize,
-                name:''
-            };
-            let _this = this
-            SpaceService.sectionsDatagrid(params).then(
-                result=>{
-                    _this.init = false;
-                    _this.cables = [];
-                    _this.ids = [];
-                    _this.page.pageTotal = result.total
-                    result.list.forEach((a,index)=>{
-                        _this.ids.push(a.id);
-                      
-                        EquipmentService.getEquipments({sectionId: a.id}).then(
-                            res=>{
-                                _this.cables.push({
-                                    name:a.area.name+a.store.name,
-                                    id: a.id,
-                                    value: null,
-                                    lines: [], 
-                                    equips: res == null ? [] : res
-                                })
-                            },
-                            error=>{
-                                _this.Log.info(error)
-                            }
-                        )
-                       
-                    })
-                    SpaceService.getCableCountBysectionIds(_this.ids).then(
-                        result=>{
-                            result.forEach(a=>{
-                                _this.cables.forEach(b=>{
-                                    if(b.id==a.id){
-                                        b.value=a.val;
-                                    }
-                                })
-                            })
-
-                            _this.cables.forEach(a=>{
-                                SpaceService.getCableInfo(a.id).then(
-                                    result=>{
-                                        a.lines = result
-                                    },
-                                    error=>{
-                                        _this.Log.info(error)
-                                    })
-                            })
-                        },
-                        error=>{
-                            _this.Log.info(error)
-                        })
-                })
-        },
-         handlePage(value) {
-            this.page.pageNum = value;
-            this.search();
-        },
-        handlePageSize(value) {
-            this.page.pageSize = value;
-            this.search();
-        },
-        showDetails(id,index) {
-            this.curDetailId = id;
-            this.curDetailIndex = index;
-        },
-        chooseStore(id) {
-            this.query.storeId = id
-            this.search()
-        },
-        turnToContractPage(contractId){
-            sessionStorage.setItem("refreshAddress", "/UM/tunnelContract/detail")
+        chooseStore(store) {
             this.$router.push({
-                name: '合同详情',
+                name: '管廊空间详情',
                 params: {
-                    contractId: contractId,
-                    type: 1
+                    store
                 }
             })
         },
-        turnToEquPage(equId){
-            sessionStorage.setItem("refreshAddress", "/UM/equipment/details" + equId)
+        turnToEquPage(storeId){
+            sessionStorage.setItem("refreshAddress", "/UM/equipment/queryequipment")
             sessionStorage.setItem("selectedName", "1-1-1")
-            this.$router.push('/UM/equipment/details/' + equId)
+            this.$router.push({
+                name:'管廊设备',
+                params: {
+                    storeId,
+                    tunnelId: this.tunnelId
+                }
+            })
         }
     }
 }
@@ -310,71 +128,38 @@ export default {
     min-height: 100%;
     position: relative;
 }
-.sectionsInfo{
-    padding: 2vh 0;
-    margin-top: 2vh;
-    background-color: white;
-    height: 74vh;
-    overflow-y: auto;
-}
-.left{
-    position:relative;
-}
-.card{
-    border: 1px solid #dddfe1;
-    width: 80%;
-    margin: 10px 10%;
-    padding: 5px 0px;
-    border-radius: 4px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
-    height: 20vh;
-    overflow:auto;
-}
-.title{
-    padding-left: 14px;
-    font-size: 2vmin;
-    display: block;
-    margin: 4px 0;
-}
-.linesInfo{
-    text-align: center;
-    width: 40px;
-    height: 40px;
-    font-size: 1.66vmin;
-    margin: 2vmin;
-    display: inline-block;
-}
-.linesInfo >>> .ivu-chart-circle{
-    width: 10vmin !important;
-    height: 10vmin !important;
-}
-.option{
-    float:right;
-    padding: 0px 10px 0px 0px;
+
+.innerCard >>> .ivu-chart-circle{
+    width: 12vmin !important;
+    height: 12vmin !important;
 }
 .storeInfo{
-    margin-top: 10px;
+    padding-top: 10px;
     padding: 30px;
     background-color: white;
 }
 .storeName{
     font-size: 3vmin;
-    position: absolute;
     font-weight: bold;
-    top: 36%;
-    left: 14%;
+    cursor: pointer;
+    margin: 4vmin 0 2vmin 10vmin;
+}
+.utilization{
+    margin-left: 18vmin;
+}
+.equCount{
+    font-size: 2.66vmin;
+    margin-top: 2vmin;
+    margin-left: 4vmin;
     cursor: pointer;
 }
-.conditions span{
-    font-size: 1.66vmin;
+.noLines{
+    margin: 12vmin auto;
 }
 .storeCard{
     margin: 10px 7%;
     height: 28vh;
     width: 86%;
-    /*background-color: rgb(244,217,164);*/
-   /* border: 1px solid #fff;
-    border-radius: 8px;*/
     color: #c6cdd2;
 }
 .innerCard{
@@ -392,96 +177,18 @@ export default {
 }
 .lines{
     padding: 6px;
-    font-size: 1.66vmin;
+    font-size: 2vmin;
 }
-.bim{
-    margin-top: 40px;
-    height: 60vh;
-}
-.ItemName{
-    font-size: 1.8vmin;
-    text-align: center;
-    cursor:pointer;
-    margin-top: 10px;
-}
-.pop{
-    position:absolute;
-    left: 10px;
-    top: 0px;
-    width: 200px;
-    height: 230px;
-    background-color: rgb(204, 153, 102);
-    padding: 10px;
-    z-index: 1;
-}
-.name{
-    text-align: center;
-    margin:10px;
-}
-.close{
-    float:right;
-    cursor: pointer;
-}
+
 .storeLineCount{
-    position: absolute;
-    top: 22%;
-    right: 22%;
     font-size: 17px;
     text-align: center;
-
-}
-.progress{
-    width: 60%;
-    margin-left: 10%;
-    margin-top: 20px;
+    margin-top: 4vmin;
+    margin-right: 12vmin;
 }
 
 .linesInfo >>> .ivu-tooltip-inner{
     font-size: 1.66vmin;
 }
 
-.conditions >>> .ivu-select-selection{
-    height: 3.2vmin;
-}
-
-.conditions >>> .ivu-select-selected-value{
-    font-size: 1.66vmin;
-    line-height: 3vmin;
-    height: 3vmin;
-}
-.conditions >>> .ivu-select-dropdown{
-    max-height: 20vmin;
-}
-/*分页样式*/
-.page >>> .ivu-select-selection{
-    height: 3.2vmin;
-}
-.page >>> .ivu-select-selected-value{
-    font-size: 1.2vmin;
-    height: 3vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-page-options-elevator input{
-    font-size: 1.2vmin;
-    height: 3vmin;
-}
-.page >>> .ivu-page-options-elevator{
-    display: inline-block;
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-}
-.page >>> .ivu-page-next{
-    height: 3.2vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-page-next .ivu-icon{
-    font-size: 1.6vmin;
-}
-.page >>> .ivu-page-prev{
-    height: 3.2vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-page-prev .ivu-icon{
-    font-size: 1.6vmin;
-}
 </style>

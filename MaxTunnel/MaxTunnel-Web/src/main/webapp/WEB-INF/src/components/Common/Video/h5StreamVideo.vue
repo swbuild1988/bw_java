@@ -69,26 +69,13 @@ export default {
         }
     },
     watch: {
-        // 'config':function(newValue,oldValue){
-        //     if(this.curVideo){
-        //         this.disconnectVideo()
-        //         this.curVideo = H5sPlayerCreate(newValue);
-        //         this.curVideo.connect();
-        //     } 
-        // },
-        // deep: true
     },
     mounted() {
         this.Log.info("h5stream mounted!")
         // 获取dom
         let videoDom = H5StreamPlugIn.getVideoElement(this.index);
         document.getElementById(this.id).appendChild(videoDom);
-        videoDom.addEventListener('dblclick',function(){
-            H5StreamPlugIn.fullScreen(videoDom.id)
-            let fullScreenStyle = document.createElement('style');
-            fullScreenStyle.innerText='.videos::-webkit-media-controls-panel{display: none;}';
-            document.body.appendChild(fullScreenStyle);
-        })
+        this.addDblClick(videoDom)
         // 获取组件的id
         this.videoId = videoDom.id;
         this.Log.info("videoId:", this.videoId);
@@ -96,13 +83,18 @@ export default {
         this.connectVideo(this.config);
         this.isTextShow = this.text ? true : false
     },
+    beforeUpdate(){
+         this.connectVideo(this.config)
+    },
     beforeDestroy() {
         this.disconnectVideo()
     },
     methods: {
         connectVideo(config){
-            this.curVideo = H5sPlayerCreate(config);
-            this.curVideo.connect();
+            if (this.config.token){
+                this.curVideo = H5sPlayerCreate(config);
+                this.curVideo.connect();
+            }
         },
         disconnectVideo(){
             if(!this.curVideo) return
@@ -121,6 +113,14 @@ export default {
         },
         hide() {
             this.controlFlag = false
+        },
+        addDblClick(videoDom){
+            videoDom.addEventListener('dblclick',function(){
+                H5StreamPlugIn.fullScreen(videoDom.id)
+                let fullScreenStyle = document.createElement('style');
+                fullScreenStyle.innerText='.videos::-webkit-media-controls-panel{display: none;}';
+                document.body.appendChild(fullScreenStyle);
+            })
         }
     }
 };

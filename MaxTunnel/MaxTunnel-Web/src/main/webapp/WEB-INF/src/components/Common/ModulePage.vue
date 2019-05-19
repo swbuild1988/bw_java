@@ -21,9 +21,9 @@
 							<Icon type="ios-navigate" class="icons"></Icon>
 							<span>{{moduleName}}</span>
 						</template>
-						<div v-for="(item,index) in leftTree" :key="item.key">
+						<div v-for="(item,index) in leftTree" :key="item.key" class="menuList">
 							<div v-if="item.childNode && item.childNode.length>0">
-								<Submenu :name="'1-'+ index">
+								<Submenu :name="'1-'+ index" class="menuItem">
 									<template slot="title">
 										<Icon type="ios-paper" class="icons"></Icon>
 										<span>{{ item.name}}</span>
@@ -33,7 +33,6 @@
 										:key="child.id"
 										:name="'1-'+index+'-'+ childIndex"
 										@click.native="goToMoudle({ path:child.url},index,childIndex)"
-										:class="{itemActive:(index==selectedActive[0] &&　childIndex == selectedActive[1])}"
 									>
 										<span>{{child.name}}</span>
 									</MenuItem>
@@ -43,7 +42,6 @@
 								<MenuItem
 									:name="'1-'+ index"
 									@click.native="goToMoudle({ path:item.url},index,-1)"
-									:class="{itemActive:index==selectedActive[0]}"
 								>
 									<span>{{item.name}}</span>
 								</MenuItem>
@@ -565,7 +563,7 @@ export default {
 }
 .ivu-menu >>> .ivu-menu-item {
 	padding-left: 36px !important;
-	font-size: 1.66vmin !important;
+	/* font-size: 1.66vmin !important; */
 	/* border-bottom: 1px solid #aaa;*/
 }
 
@@ -657,7 +655,7 @@ export default {
 	right: 2vmin;
 	color: #464d4f;
 	line-height: 5vmin;
-	font-size: 2.4vmin;
+	/* font-size: 2.4vmin; */
 	z-index: 10001;
 }
 
@@ -800,7 +798,12 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 	padding: 1.4vmin 2.4vmin;
 }
 
-li.ivu-menu-submenu-has-parent-submenu{
-	border-bottom: 1px solid #938e8e9c;
+.menuList >>> .ivu-menu-item{
+	font-size: 2vmin;
+	border: 1px solid #938e8e9c;
+}
+.menuItem >>> .ivu-menu-item{
+	font-size: 1.66vmin;
+	border: 0px solid #938e8e9c;
 }
 </style>

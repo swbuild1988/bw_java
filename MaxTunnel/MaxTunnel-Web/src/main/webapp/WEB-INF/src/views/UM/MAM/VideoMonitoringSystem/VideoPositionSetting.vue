@@ -100,8 +100,10 @@ export default {
     },
     components: { VideoControl,VideoComponent },
     mounted(){
-  		  this.curVideo.tunnelId = this.$route.params.camera.tunnelId 
-        console.log(this.curVideo.tunnelId)
+        this.curVideo.tunnelId = this.$route.params.camera.tunnelId
+        this.curVideo.id = this.$route.params.camera.id
+        this.curVideo.url = this.$route.params.camera.url
+        // console.log(this.curVideo.tunnelId)
         let camera = this.$route.params.camera
         this.isDisabled = !camera.positionSupport
         this.getAreaAndStores()
