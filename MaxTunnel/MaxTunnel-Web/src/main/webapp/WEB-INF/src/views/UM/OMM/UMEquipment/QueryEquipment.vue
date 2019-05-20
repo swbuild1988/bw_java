@@ -377,10 +377,11 @@ export default {
                 _this.tunnels = result;
                 if(_this.$route.params.tunnelId){
                     _this.conditions.tunnelId = +_this.$route.params.tunnelId
+                    // _this.conditions.storeId = +_this.$route.params.storeId
                     _this.getStores()
+                } else {
+                    _this.showTable();
                 }
-                _this.showTable();
-                
             },
             error => {
                 _this.Log.info(error);
@@ -512,12 +513,14 @@ export default {
         },
         getStores(){
             if(this.conditions.tunnelId){
-                this.conditions.storeId = null
                 TunnelService.getStoresByTunnelId(this.conditions.tunnelId).then(
                     res=>{
                         this.stores = res
                         if(this.$route.params.storeId && res.length){
-                             this.conditions.storeId = +this.$route.params.storeId
+                            this.conditions.storeId = +this.$route.params.storeId
+                            this.showTable()
+                        } else {
+                            this.conditions.storeId = null
                         }
                     },
                     err=>{
