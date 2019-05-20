@@ -1,8 +1,0 @@
-com.bandweaver.tunnel.controller.common
-com.bandweaver.tunnel.controller.constant
-com.bandweaver.tunnel.controller.em
-com.bandweaver.tunnel.controller.external
-com.bandweaver.tunnel.controller.mam
-com.bandweaver.tunnel.controller.oam
-com.bandweaver.tunnel.controller.omm
-com.bandweaver.tunnel.controller.quartz
