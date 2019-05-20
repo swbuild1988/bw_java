@@ -590,35 +590,7 @@ export const asyncRouterMap = [{
                     }
                 ]
             },
-            {
-                path: "TunnelSafety",
-                name: "管廊安防监控",
-                component: resolve =>
-                    require(["@/views/UM/MAM/TunnelSafety/TunnelSafety"], resolve),
-                children: [{
-                        path: "list/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/MAM/TunnelSafety/ListTunnelSafety"
-                            ], resolve),
-                        name: "管廊安防监控列表",
-                        meta: {
-                            keepAlive: true // 需要被缓存
-                        }
-                    },
-                    {
-                        path: "details/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/MAM/TunnelSafety/DetailsTunnelSafety"
-                            ], resolve),
-                        name: "管廊安防监控详情",
-                        meta: {
-                            keepAlive: true // 需要被缓存
-                        }
-                    }
-                ]
-            },
+            
             // {
             //     path: 'PipelineSupervise',
             //     name: '管线本体监控',

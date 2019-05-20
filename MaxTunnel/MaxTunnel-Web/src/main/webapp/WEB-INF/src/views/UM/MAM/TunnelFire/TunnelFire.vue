@@ -47,7 +47,8 @@
                         _this.curModule.leftTree.push(temp);
                     })
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
-                            "/UM/TunnelEnvironment") < 0) {
+                            "/UM/TunnelFire") < 0) {
+                                console.log('sssssss',_this.curModule.leftTree[0].childNode[0].url)
                         _this.goToMoudle({
                             path: _this.curModule.leftTree[0].childNode[0].url
                         });

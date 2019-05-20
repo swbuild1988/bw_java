@@ -431,7 +431,8 @@ export default {
 					"1-" + index + "-" + childIndex
 				);
 			}
-
+			console.log('path',path)
+			console.log('this.$route.path',this.$route.path)
 			if (path.path == this.$route.path) {
 				this.$router.replace({
 					path: "/refresh",

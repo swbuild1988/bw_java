@@ -61,7 +61,7 @@
                                     <Icon type="clipboard" :size="iconSize"></Icon>
                                     {{item.key}}
                                 </Col>
-                                <Col span="9" class="MaxValCol" >
+                                <Col span="9" class="MaxValCol" v-if="item.key != '手报'">
                                     <div  @click="goToDetails(item.key, item.areaId, item.storeId)">
                                     <Icon type="ios-pulse" :size="iconSize"></Icon>
                                     <!-- <button> -->
@@ -69,9 +69,15 @@
                                     <!-- </button> -->
                                     </div>
                                 </Col>
-                                <Col span="9" class="MaxValCol" color="#de8d1b">
+                                <Col span="9" class="MaxValCol" v-else>
+                                开 ：{{item.open}}
+                                </Col>
+                                <Col span="9" class="MaxValCol" color="#de8d1b" v-if="item.key != '手报'">
                                     <Icon type="android-locate" :size="iconSize"></Icon>
                                     {{item.location}}
+                                </Col>
+                                 <Col span="9" class="MaxValCol" v-else>
+                                 关 : {{item.close}}
                                 </Col>
                             </div>
                         </Row>
@@ -184,7 +190,7 @@
         },
         mounted() {
             this.fentchData();
-            this.getMonitorData();
+            this.getMonitorData('1');
             // 设置表格高度
             this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
             this.iconSize = window.innerHeight * 0.02;
@@ -215,7 +221,7 @@
             changeStore() {
                 //获取区段列表
                 let _this = this;
-                this.getMonitorData();
+                this.getMonitorData('2');
                 //获取位置信息
                 let cur = this.storeList.filter(
                     a => a.id == _this.queryCondition.storeId
@@ -226,7 +232,7 @@
             },
             //变更区段
             updateArea() {
-                this.getMonitorData();
+                this.getMonitorData('3');
             },
             //获取数据
             fentchData() {
@@ -302,7 +308,8 @@
                 );
             },
             //根据监测类型获取数据
-            getMonitorData() {
+            getMonitorData(num) {
+                console.log('num',num)
                 let _this = this;
 
                 let parms = {
@@ -317,7 +324,25 @@
 
                 MonitorDataService.getMaxMonitorData(parms).then(
                     result => {
-                        _this.tunnelProps = result
+                        console.log('result',result)
+                        // _this.tunnelProps = result
+                        _this.tunnelProps = [
+                            {
+                                key:'烟感',
+                                location:'19-电力舱',
+                                val:'56.1'
+                            },
+                            {
+                                key:'温感',
+                                location:'19-电力舱',
+                                val:'71.1'
+                            },
+                            {
+                                key:'手报',
+                                open:0,
+                                close:0
+                            }
+                        ]
                 });
             },
             goToDetails(key, areaId, storeId){
@@ -345,7 +370,7 @@
                 // $route发生变化时再次赋值
                 this.queryCondition.tunnelId = this.tunnelId;
                 this.fentchData();
-                this.getMonitorData();
+                this.getMonitorData('4');
             },
             storeProp: {
                 handler: function (newVal, oldVal) {

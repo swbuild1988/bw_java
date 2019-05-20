@@ -56,13 +56,13 @@
           <div style="margin: 10px;">
             <div class="Security">
               <p>
-              <h2 style="margin-left: 10px;">安防统计:</h2>
+              <h2 style="margin-left: 10px;font-size:2.5vmin">安防统计:</h2>
               </p>
               <div>
                 <Row style="color: #fff">
-                  <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw;    background: #a8d5de;"
+                  <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw; border:1px solid #fff;border-radius:5%;font-size:1.5vmin"
                        v-for="(item,index) in tunnelProps" :key="index">
-                  <span style="padding-left: 8px; font-size: 18px;"> {{item.name}}</span>
+                  <span style="padding-left: 8px;"> {{item.name}}</span>
                   <div style="">
                     <Row>
                       <Col span="10" style="margin-top: 14px;" offset="2" v-for="(item2,index) in item.data"
@@ -291,10 +291,9 @@
 
       //根据监测类型获取数据
       getMonitorData() {
-        {
           this.tunnelProps = [];
-          this.axios.get(" ").then(result => {
-            let {code, data} = result.data;
+          // this.axios.get(" ").then(result => {
+          //   let {code, data} = result.data;
             // if (code == 200) {
             // let tempData = data;
             let tempData = [
@@ -330,8 +329,7 @@
               this.tunnelProps.push(temp);
             });
             // }
-          });
-        }
+          // });
       },
 
     },

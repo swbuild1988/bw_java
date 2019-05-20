@@ -306,6 +306,7 @@ export default {
 						this.$route.path.lastIndexOf("/")
 					);
 					if (target != curPath) {
+							
 						this.$router.push(path);
 					}
 				}
