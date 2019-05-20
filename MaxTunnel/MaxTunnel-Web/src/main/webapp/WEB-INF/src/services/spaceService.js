@@ -111,6 +111,27 @@ var SpaceService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
+	},
+	// 根据管舱id获取该管舱已布管线信息
+	getCableList(storeId){
+		return new Promise((resolve, reject) => {
+			get('tunnels/stores/'+storeId+'/cables')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ',地址:tunnels/stores/' + storeId + '/cables')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
 	}
 }
 

@@ -710,6 +710,13 @@ export const asyncRouterMap = [{
                             "@/views/UM/OAM/OperatingSpace/operatingSpaceTunnel"
                         ], resolve),
                     name: "管廊空间管理"
+                },{
+                    path: "detail/:id",
+                    component: resolve =>
+                        require([
+                            "@/views/UM/OAM/OperatingSpace/operatingSpaceDetail"
+                        ], resolve),
+                    name: "管廊空间详情"
                 }]
             },
             {

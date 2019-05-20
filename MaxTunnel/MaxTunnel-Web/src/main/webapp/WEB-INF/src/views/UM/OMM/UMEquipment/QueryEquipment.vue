@@ -42,6 +42,20 @@
             <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
         </Col>
         <Col span="6">
+            <Span>所属管廊</Span><span>：</span>
+            <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
+                <Option value=null key="0">所有</Option>
+                <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <Span>所属管舱</Span><span>：</span>
+            <Select v-model="conditions.storeId" style="width:60%">
+                <Option value=null key="0">所有</Option>
+                <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
             <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
             <!-- <Button type="primary">批量导入</Button> -->
             <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
@@ -128,6 +142,7 @@ export default {
             showOn: true,
             equipments: [],
             tunnels: [],
+            stores: [],
             tunnelId: 1,
             equipmentTypes: [],
             deleteEquipmentInfo: [], //要删除的设备
@@ -138,7 +153,9 @@ export default {
                 status: null,
                 venderId: null,
                 startTime: null,
-                endTime: null
+                endTime: null,
+                tunnelId: null,
+                storeId: null
             },
             equipmentStatus: [],
             pagingList: [],
@@ -305,6 +322,8 @@ export default {
                 modelId: this.conditions.modelId,
                 startTime: this.conditions.startTime,
                 endTime: this.conditions.endTime,
+                storeId: this.conditions.storeId,
+                tunnelId: this.conditions.tunnelId,
                 pageNum: this.page.pageNum,
                 pageSize: this.page.pageSize
             };
@@ -314,16 +333,6 @@ export default {
     mounted() {
         //从数据库读取select的option选项
         let _this = this;
-        TunnelService.getTunnels().then(
-            result => {
-                _this.tunnels = result;
-                _this.selectedTunnel = _this.tunnels.length > 0 ? _this.tunnels[0] : {};
-                _this.selectedTunnelName = _this.selectedTunnel.name;
-            },
-            error => {
-                _this.Log.info(error);
-            }
-        );
 
         //获取type
         EquipmentService.getEquipmentTypes().then(
@@ -362,7 +371,21 @@ export default {
                 this.Log.info(error)
             }
         )
-        this.showTable();
+
+        TunnelService.getTunnels().then(
+            result => {
+                _this.tunnels = result;
+                if(_this.$route.params.tunnelId){
+                    _this.conditions.tunnelId = +_this.$route.params.tunnelId
+                    _this.getStores()
+                }
+                _this.showTable();
+                
+            },
+            error => {
+                _this.Log.info(error);
+            }
+        );
     },
     methods: {
         // type 1:查看， 2：编辑
@@ -383,19 +406,19 @@ export default {
             }
             EquipmentService.equipmentDatagird(this.params).then(
                 result => {
-                    if(result.list.length==0){
+                    if(result.pagedList.length==0){
                         this.isNullData = true
                     }else{
                         this.isNullData = false
                     }
-                    for (let index in result.list) {
-                        result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd hh:mm:s");
+                    for (let index in result.pagedList) {
+                        result.pagedList[index].crtTime = new Date(result.pagedList[index].crtTime).format("yyyy-MM-dd hh:mm:s");
                         // if (result.list[index].imgUrl != null) {
                         //   result.list[index].imgUrl =
                         //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
                         // }
                     }
-                    _this.equipments = result.list;
+                    _this.equipments = result.pagedList;
                     _this.page.pageTotal = result.total;
                 },
                 error => {
@@ -486,12 +509,30 @@ export default {
         },
         chooseTab(name){
             localStorage.setItem("choosedEquipmentTab",name)
+        },
+        getStores(){
+            if(this.conditions.tunnelId){
+                this.conditions.storeId = null
+                TunnelService.getStoresByTunnelId(this.conditions.tunnelId).then(
+                    res=>{
+                        this.stores = res
+                        if(this.$route.params.storeId && res.length){
+                             this.conditions.storeId = +this.$route.params.storeId
+                        }
+                    },
+                    err=>{
+                        this.Log.info(err)
+                    }
+                )
+            } 
         }
     }
 };
 </script>
 <style scoped>
-
+.queryCondition{
+    height: 14vh;
+}
 .equipmentList {
     font-size: 17px;
     font-weight: 700;

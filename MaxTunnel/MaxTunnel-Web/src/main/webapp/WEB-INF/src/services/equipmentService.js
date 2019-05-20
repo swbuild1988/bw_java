@@ -610,6 +610,27 @@ var EquipmentService = {
                 }
             })
         })
+    },
+    // 根据管廊id获取各管舱设备总数
+    getEquipmentCount(tunnelId){
+        return new Promise((resolve, reject) => {
+			get('tunnels/'+tunnelId+'/stores/equipments/count')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ',地址:tunnels/'+tunnelId+'/stores/equipments/count')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
     }
 };
 

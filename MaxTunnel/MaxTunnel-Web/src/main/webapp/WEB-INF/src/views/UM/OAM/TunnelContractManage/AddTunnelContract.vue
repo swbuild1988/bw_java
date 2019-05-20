@@ -123,7 +123,7 @@
 			</FormItem>
 			<FormItem label="管线位置：">
 				<Row style="width: 45vmin;margin-left: 14vmin">
-				<Col span="7">
+				<Col span="12">
 					<Select v-model="contractInfo.tunnelId" v-show="!read" @on-change="tunnelChange">
 					<!--   <Option disabled value="0">管廊</Option> -->
 					<Option
@@ -139,7 +139,7 @@
 					>{{ item.name }}</span>
 					<div class="ivu-form-item-error-tip location" v-if="checkCable.tunnel">请选择管廊</div>
 				</Col>
-				<Col span="7">
+				<Col span="12">
 					<Select v-model="contractInfo.storeId" @on-change="check('store')" v-if="!read">
 					<Option
 						v-for="(item,index) in cableLocation.stores"
@@ -154,7 +154,7 @@
 					>{{ item.name }}</span>
 					<div class="ivu-form-item-error-tip location" v-if="checkCable.store">请选择仓</div>
 				</Col>
-				<Col span="10">
+				<!-- <Col span="10">
 					<Select
 					multiple
 					v-model="contractInfo.areaIds"
@@ -173,7 +173,7 @@
 						:key="index"
 					>{{ item.name }}</p>
 					<div class="ivu-form-item-error-tip location" v-if="checkCable.area">请选择区域</div>
-				</Col>
+				</Col> -->
 				</Row>
 			</FormItem>
 			</Col>
@@ -431,7 +431,7 @@ export default {
 				let check =
 				this.contractInfo.companyId &&
 				this.contractInfo.tunnelId &&
-				this.contractInfo.areaIds &&
+				// this.contractInfo.areaIds &&
 				this.contractInfo.storeId;
 				if (valid && check) {
 				if (
@@ -499,7 +499,7 @@ export default {
 				
 					_this.customerName = result.cableDto.contract.company.name.toString();
 					_this.getStoreAndAreas();
-					_this.contractInfo.areaIds = result.areaIds;
+					// _this.contractInfo.areaIds = result.areaIds;
 					_this.contractInfo.storeId = result.storeId;
 				},
 				error => {
@@ -513,7 +513,7 @@ export default {
 				let check =
 				this.contractInfo.companyId &&
 				this.contractInfo.tunnelId &&
-				this.contractInfo.areaIds &&
+				// this.contractInfo.areaIds &&
 				this.contractInfo.storeId;
 				if (valid && check) {
 				if (
@@ -590,11 +590,11 @@ export default {
 				} else {
 					this.checkCable.store = false;
 				}
-				if (!this.contractInfo.areaIds[0]) {
-					this.checkCable.area = true;
-				} else {
-					this.checkCable.area = false;
-				}
+				// if (!this.contractInfo.areaIds[0]) {
+				// 	this.checkCable.area = true;
+				// } else {
+				// 	this.checkCable.area = false;
+				// }
 			}
 		}
 		},
