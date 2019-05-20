@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.util.TypeUtils;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -117,20 +118,26 @@ public class EmPlanServiceImpl implements EmPlanService {
         }
 
         // 第二步：做什么事情
+        Boolean trueOrFalse = false;
+
         ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
         if (ActionEnum.METION == actionEnum) {
-            LogUtil.info("提示信息为：" + emPlan.getActionValue());
             //TODO
         }
-        if (ActionEnum.NOTICE == actionEnum) {
-            Integer unitTypeId = DataTypeUtil.toInteger(emPlan.getActionValue());
-            LogUtil.info("通知单位类型为：" + UnitTypeEnum.getEnum(unitTypeId).getName());
-            //TODO
+
+        if (ActionEnum.METHOD == actionEnum) {
+            // todo
+            trueOrFalse = false;
         }
+
+
+        if (ActionEnum.NONE == actionEnum) {
+            trueOrFalse = TypeUtils.castToBoolean(emPlan.getActionValue());
+        }
+
         if (ActionEnum.SWITCH == actionEnum) {
             Integer inputValue = DataTypeUtil.toInteger(emPlan.getActionValue());
             for (MeasObj measObj : list) {
-//                if (ObjectType.getEnum(measObj.getObjtypeId()) == ObjectType.FAN) {continue;}
                 boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
                 LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果[" + flag + "]");
             }
@@ -138,6 +145,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         ContextUtil.getSession().setAttribute("emPlan", emPlan);
         ContextUtil.getSession().setAttribute("measObjList", list);
+        ContextUtil.getSession().setAttribute("nextFlag", trueOrFalse);
     }
 
 
