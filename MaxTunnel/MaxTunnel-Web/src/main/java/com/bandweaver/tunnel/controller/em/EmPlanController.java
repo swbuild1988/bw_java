@@ -1,5 +1,7 @@
 package com.bandweaver.tunnel.controller.em;
 
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +15,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.NativeHistoricProcessInstanceQuery;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -83,9 +86,34 @@ public class EmPlanController extends BaseController<EmPlan> {
     private SubSystemService subSystemService;
 
 
-    @RequestMapping(value = "emplans/png/{pid}",method = RequestMethod.GET)
-    public void getPng(@PathVariable("pid") String pid, HttpServletResponse response) {
-        activitiService.getImageByProcessInstance(pid, response);
+    /**获取流程执行过程的png图片
+     * @param processInstanceId 流程实例id
+     * @param response
+     */
+    @RequestMapping(value = "emplans/png/{processInstanceId}",method = RequestMethod.GET)
+    public void getynaDmicPng(@PathVariable("processInstanceId") String processInstanceId, HttpServletResponse response) {
+        activitiService.getImageByProcessInstance(processInstanceId, response);
+    }
+
+
+    /**获取流程静态图片
+     * @param processValue 4003
+     * @param response
+     */
+    @RequestMapping(value = "emplans/png/static/{processValue}",method = RequestMethod.GET)
+    public void getStaticPng(@PathVariable("processValue") int processValue, HttpServletResponse response) {
+        String pngPath = PropertiesUtil.getString(ProcessTypeEnum.getEnum(processValue).getPngPath());
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(pngPath); OutputStream os = response.getOutputStream();){
+            response.setContentType("image/png");
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            os.write(bytes);
+            os.flush();
+        } catch (IOException e) {
+            LogUtil.error(ExceptionUtils.getStackTrace(e));
+        }
+
+
     }
 
 
@@ -113,7 +141,7 @@ public class EmPlanController extends BaseController<EmPlan> {
     /**
      * 手动执行预案
      *
-     * @param sectionId
+     * @param
      * @param processValue 应急预案类型
      * @return
      * @author shaosen
@@ -122,16 +150,17 @@ public class EmPlanController extends BaseController<EmPlan> {
     @RequestMapping(value = "emplans/start", method = RequestMethod.POST)
     public JSONObject startPlan(@RequestBody JSONObject reqJson) {
 
-        CommonUtil.hasAllRequired(reqJson, "sectionId,processValue");
-        Integer sectionId = reqJson.getInteger("sectionId");
+        CommonUtil.hasAllRequired(reqJson, "areaId,storeId,processValue");
+        Integer areaId = reqJson.getInteger("areaId");
+        Integer storeId = reqJson.getInteger("storeId");
         Integer processValue = reqJson.getInteger("processValue");
-        SectionDto section = sectionService.getSectionById(sectionId);
 
+        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
         if (section == null) {
             throw new BandWeaverException("section不存在");
         }
         // 查询仓以及仓关联的进气出气仓等
-        List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
+        List<Section> sectionList = sectionService.getSectionListByParentId(section.getId());
         emPlanService.start(sectionList, processValue);
 
         // 最后再查一次

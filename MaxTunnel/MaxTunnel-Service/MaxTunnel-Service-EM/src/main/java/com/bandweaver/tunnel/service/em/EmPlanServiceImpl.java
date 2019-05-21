@@ -254,7 +254,6 @@ public class EmPlanServiceImpl implements EmPlanService {
             e.printStackTrace();
         }
 
-
         double longitude = 0, latitude = 0;
         // 获取指定仓
         Section section = null;
@@ -288,7 +287,7 @@ public class EmPlanServiceImpl implements EmPlanService {
             latitude = MathUtil.div(MathUtil.add(latitude_, _latitude), 2.0, 6);
         }
 
-        //获取当前流程节点列表
+        // 获取当前流程节点列表
         List<JSONObject> processList = new ArrayList<>();
         List<EmPlanDto> eList = getListByProcessKey(emPlan.getProcessKey());
         eList = eList.stream().filter(e -> emPlan.getTaskKey().compareTo(e.getTaskKey()) >= 0).collect(Collectors.toList());
@@ -297,7 +296,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         for (EmPlanDto e : eList) {
 
-            //获取该节点关联的监测对象及状态
+            // 获取该节点关联的监测对象及状态
             List<JSONObject> objJsonList = getMeasObjJsonList(sectionList, allMeasObjList, e);
 
             JSONObject json = new JSONObject();
@@ -308,7 +307,7 @@ public class EmPlanServiceImpl implements EmPlanService {
             processList.add(json);
         }
 
-        //获取section视频列表
+        // 获取section视频列表
         List<VideoDto> videos = new ArrayList<>();
         sectionList.forEach(s -> {
             videos.addAll(videoServerService.getVideosBySection(s.getId()));
@@ -316,15 +315,15 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(emPlan.getProcessKey());
         JSONObject json = new JSONObject();
-        json.put("processName", processTypeEnum.getName());
-        json.put("processKey", emPlan.getProcessKey());
+//        json.put("processName", processTypeEnum.getName());
+//        json.put("processKey", emPlan.getProcessKey());
         json.put("processInstanceId", processInstanceId);
-        json.put("range", processTypeEnum.getRange());
-        json.put("process", processList);
-        json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(), sectionList));
-        json.put("longitude", longitude);
-        json.put("latitude", latitude);
-        json.put("videos", videos);
+//        json.put("range", processTypeEnum.getRange());
+//        json.put("process", processList);
+//        json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(), sectionList));
+//        json.put("longitude", longitude);
+//        json.put("latitude", latitude);
+//        json.put("videos", videos);
 
         //发送到队列
         mqService.sendToPlanUMQueue(json.toJSONString());
@@ -340,19 +339,19 @@ public class EmPlanServiceImpl implements EmPlanService {
     @Override
     public void start(List<Section> sectionList, Integer processValue) {
 
-        ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
+    ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
         LogUtil.info("开始启动【" + processTypeEnum.getName() + "】");
 
-        Map<String, Object> variables = new HashMap<>(3);
+    Map<String, Object> variables = new HashMap<>(3);
         variables.put("sectionList", sectionList);
 
-        ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition(PropertiesUtil.getString(processTypeEnum.getBpmnPath()));
-        ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(), variables);
+    ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition(PropertiesUtil.getString(processTypeEnum.getBpmnPath()));
+    ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(), variables);
         LogUtil.info("Get processInstance:" + processInstance.getId());
         ContextUtil.getSession().setAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID, processInstance.getId());
-        nextTask(processInstance.getId(), sectionList);
+    nextTask(processInstance.getId(), sectionList);
 
-    }
+}
 
 
     @Override
