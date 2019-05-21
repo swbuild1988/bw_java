@@ -58,5 +58,15 @@ public class Constants {
 
 
 
+    // 应急预案常量
+    public final static String EMPLAN_NEXT_TASK_VALUE_KEY = "next_task_value";
+    public final static String EMPLAN_OBJ_KEY = "emPlan";
+    public final static String EMPLAN_OBJ_LIST_KEY = "measobj_list";
+    public final static String EMPLAN_PROCESSINSTANCE_ID = "processInstanceId";
+
+
+
+
+
 
 }

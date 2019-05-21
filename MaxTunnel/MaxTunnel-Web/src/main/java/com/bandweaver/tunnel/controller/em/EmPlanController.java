@@ -5,9 +5,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.NativeHistoricProcessInstanceQuery;
+import org.activiti.engine.task.Task;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +54,8 @@ import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 应急预案管理
  *
@@ -69,6 +77,16 @@ public class EmPlanController extends BaseController<EmPlan> {
     private EmPlanGroupService emPlanGroupService;
     @Autowired
     private EmPlanMemberService emPlanMemberService;
+    @Autowired
+    private ProcessEngine processEngine;
+    @Autowired
+    private SubSystemService subSystemService;
+
+
+    @RequestMapping(value = "emplans/png/{pid}",method = RequestMethod.GET)
+    public void getPng(@PathVariable("pid") String pid, HttpServletResponse response) {
+        activitiService.getImageByProcessInstance(pid, response);
+    }
 
 
     /**
@@ -117,9 +135,9 @@ public class EmPlanController extends BaseController<EmPlan> {
         emPlanService.start(sectionList, processValue);
 
         // 最后再查一次
-        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-        String processInstanceId = (String) ContextUtil.getSession().getAttribute("processInstanceId");
-        Set<MeasObj> measObjList = (Set<MeasObj>) ContextUtil.getSession().getAttribute("measObjList");
+        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
+        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
+        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
         emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList);
         return CommonUtil.success();
     }
@@ -220,14 +238,6 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "emplans/process-key/{processKey}", method = RequestMethod.GET)
     public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
-
-        // 方案1
-//		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
-//		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
-//		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
-//		return CommonUtil.success(taskNameList);
-
-        // 方案2
         List<JSONObject> list = emPlanService.getNodeListByProcessKeyAndSection(processKey, null);
         JSONObject returnData = new JSONObject();
         returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());

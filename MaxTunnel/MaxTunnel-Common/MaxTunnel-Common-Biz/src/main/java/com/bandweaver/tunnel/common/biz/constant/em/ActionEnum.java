@@ -9,21 +9,21 @@ package com.bandweaver.tunnel.common.biz.constant.em;
 public enum ActionEnum {
 
     /**
-     * 提示信息类，有返回结果的
+     * 自动联动控制
      */
-    METION("提示信息类", 1),
+    SWITCH("自动联动控制", 1),
     /**
-     * 方法类
+     * 不需要结果
      */
-    METHOD("方法类", 2),
+    NONE("不需要结果", 2),
     /**
-     * 联动输出类型
+     * 需要结果
      */
-    SWITCH("联动输出类型", 3),
+    CHECK("需要结果", 3),
     /**
-     * 直接跳过
+     * 手动联动控制
      */
-    NONE("直接跳过", 4);
+    MANNUL_SWITCH("手动联动控制", 4);
 
     private String name;
     private int value;

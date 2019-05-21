@@ -178,19 +178,19 @@ public class MeasObjServiceImpl implements MeasObjService {
     }
 
     @Override
-    public Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
+    public List<MeasObj> getMeasObjsByTargetValAndSection(String targetValue, List<Section> sectionList) {
         Integer objectTypeId = DataTypeUtil.toInteger(targetValue);
 
-        Set<MeasObj> set = new HashSet<>();
+        List<MeasObj> ls = new ArrayList<>();
         //查询所有仓里指定类型的监测对象
         for (Section section : sectionList) {
             List<MeasObj> list = measObjMapper.getListBySectionIDAndObjectTypeID(section.getId(), objectTypeId);
             LogUtil.info("所在区段:" + section.getName() + "\n"
                     + "监测类型：" + ObjectType.getEnum(objectTypeId).getName() + "\n"
                     + "结果列表：" + list);
-            set.addAll(list);
+            ls.addAll(list);
         }
-        return set;
+        return ls;
     }
 
 

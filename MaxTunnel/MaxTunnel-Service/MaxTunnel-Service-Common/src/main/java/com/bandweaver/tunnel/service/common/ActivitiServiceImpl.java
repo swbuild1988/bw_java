@@ -205,8 +205,8 @@ public class ActivitiServiceImpl implements ActivitiService {
     public int completeTaskByProcessIntance(String processIntanceId) {
         Task task = taskService.createTaskQuery().processInstanceId(processIntanceId).singleResult();
 
-        if(task == null) 
-        	throw new RuntimeException("No task with processInstanceId ["+ processIntanceId +"]!");
+        if(task == null){
+        	throw new RuntimeException("No task with processInstanceId ["+ processIntanceId +"]!");}
 
         LogUtil.info("TASK[" + task.getId() + "]已完成，进行下一个任务");
         taskService.complete(task.getId());
@@ -225,7 +225,9 @@ public class ActivitiServiceImpl implements ActivitiService {
         Task task = taskService.createTaskQuery().processInstanceId(processIntanceId).singleResult();
 
         // 这个流程已经没有任务了
-        if (task == null) return 0;
+        if (task == null) {
+            return 0;
+        }
 
         taskService.complete(task.getId(), map);
         LogUtil.info("next task, current task is：" + task.getId());
