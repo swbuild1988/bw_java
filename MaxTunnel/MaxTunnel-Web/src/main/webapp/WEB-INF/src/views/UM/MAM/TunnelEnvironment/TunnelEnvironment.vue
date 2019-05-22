@@ -14,16 +14,19 @@
             return {
                 curModule: {
                     moduleName: "管廊环境监控",
-                    leftTree: [],
+                    leftTree: [{
+                        id:'001',
+                        name:'总览'
+                    }],
                     selected: [0, -1]
                 },
-                treeNodeJumpUrl: "/UM/TunnelEnvironment/list/",
             }
         },
         components: {
             ModulePage
         },
         created() {
+            console.log('jici')
             this.curModule.leftTree = [];
             let _this = this;
 
@@ -49,9 +52,10 @@
                     })
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
                             "/UM/TunnelEnvironment") < 0) {
-                        _this.goToMoudle({
-                            path: _this.curModule.leftTree[0].childNode[0].url
-                        });
+                        
+                        // _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+                        
+
                         sessionStorage.setItem('selectedName', '')
                     }
                     sessionStorage.setItem("refreshAddress", "");

@@ -17,7 +17,6 @@
                     leftTree: [],
                     selected: [0, -1]
                 },
-                treeNodeJumpUrl: "/UM/TunnelElectromechanical/list/",
             }
         },
         components: {
@@ -48,10 +47,9 @@
                     })
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
                             "/UM/TunnelElectromechanical") < 0) {
-                                
-                        _this.goToMoudle({
-                            path: _this.curModule.leftTree[0].childNode[0].url
-                        });
+
+                            _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+
                         sessionStorage.setItem('selectedName', '')
                     }
                     sessionStorage.setItem("refreshAddress", "");

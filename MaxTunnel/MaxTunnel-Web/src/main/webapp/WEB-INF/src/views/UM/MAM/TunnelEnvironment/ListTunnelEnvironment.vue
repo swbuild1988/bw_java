@@ -154,34 +154,34 @@
                 } //当前监测仓数据
             };
         },
-        beforeRouteLeave(to, from, next) {
-            if (
-                to.name == "巡检计划总览" ||
-                to.name == "设备管理主页" ||
-                to.name == "人员定位详情" ||
-                to.name == "虚拟巡检" ||
-                to.name == "管廊安防监控列表" ||
-                to.name == "管廊环境监控详情" ||
-                to.name == "管廊环境监控" ||
-                from.name == "管廊环境监控列表" ||
-                from.name == "巡检计划总览" ||
-                from.name == "设备管理主页" ||
-                from.name == "人员定位详情" ||
-                from.name == "虚拟巡检" ||
-                from.name == "管廊安防监控列表" ||
-                from.nmae == "管廊环境监控详情"
-            ) {
-                from.meta.keepAlive = true;
-                to.meta.keepAlive = true;
-                this.$destroy();
-                next();
-            } else {
-                from.meta.keepAlive = false;
-                to.meta.keepAlive = false;
-                this.$destroy();
-                next();
-            }
-        },
+        // beforeRouteLeave(to, from, next) {
+        //     if (
+        //         to.name == "巡检计划总览" ||
+        //         to.name == "设备管理主页" ||
+        //         to.name == "人员定位详情" ||
+        //         to.name == "虚拟巡检" ||
+        //         to.name == "管廊安防监控" ||
+        //         to.name == "管廊机电监控" ||
+        //         to.name == "管廊消防监控" ||
+        //         to.name == "管廊管线监控" ||
+        //         from.name == "巡检计划总览" ||
+        //         from.name == "设备管理主页" ||
+        //         from.name == "人员定位详情" ||
+        //         from.name == "虚拟巡检" ||
+        //         from.name == "管廊环境监控" ||
+        //         from.name == "管廊环境监控详情"
+        //     ) {
+        //         from.meta.keepAlive = true;
+        //         to.meta.keepAlive = true;
+        //         this.$destroy();
+        //         next();
+        //     } else {
+        //         from.meta.keepAlive = false;
+        //         to.meta.keepAlive = false;
+        //         this.$destroy();
+        //         next();
+        //     }
+        // },
         mounted() {
             this.fentchData();
             this.getMonitorData();

@@ -289,6 +289,7 @@ export default {
 			});
 		},
 		goToMoudle(path) {
+			
 			if (
 				String(this.$router.history.current.fullPath).indexOf(
 					String(path.path)
@@ -309,6 +310,7 @@ export default {
 							
 						this.$router.push(path);
 					}
+					this.$router.push(path);
 				}
 			}
 		},

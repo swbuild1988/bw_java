@@ -14,11 +14,10 @@ const permission = async () => {
 
     const whiteList = ['/404', '/umlogin', '/vmlogin', '/cmlogin']; // 白名单,不需要登录的路由
     router.beforeEach((to, from, next) => {
-        console.log("permission中的router.beforeEach， 路由监听", to, from)
+       
         NProgress.start();
-        // console.log(1, to.path);
+        console.log('session.getSession',session.getSession());
         if (session.getSession()) {
-            
             // 如果已经登录
             if (to.path.trim().toLowerCase().indexOf('login') > 0) {
                 if (to.path.trim().toLowerCase().indexOf('um') > 0) {
@@ -39,10 +38,12 @@ const permission = async () => {
                     NProgress.done(); // 结束Progress
                 }
             } else if (!store.getters.role || store.getters.role.length == 0) {
-
+                console.log('to2',to)
+                console.log('from2',from)
                 store.dispatch('GetInfo').then(() => {
                     next({
                         ...to,
+                        replace: true
                     });
                 },
                 error=>{
@@ -53,6 +54,8 @@ const permission = async () => {
                     NProgress.done(); 
                 });
             } else {
+                console.log('to3',to)
+                console.log('from3',from)
                 next();
             }
         } else if (whiteList.indexOf(to.path.toLowerCase()) !== -1) {
