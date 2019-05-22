@@ -29,7 +29,7 @@ public interface EmPlanService {
 	 * @author shaosen
 	 * @Date 2018年10月16日
 	 */
-	void sendMsg(EmPlan emPlan, String processInstanceId,List<Section> sectionList,Set<MeasObj> measObjList);
+	void sendMsg(EmPlan emPlan, String processInstanceId,List<Section> sectionList,List<MeasObj> measObjList);
 
 	/**启动预案 
 	 * @param sectionId

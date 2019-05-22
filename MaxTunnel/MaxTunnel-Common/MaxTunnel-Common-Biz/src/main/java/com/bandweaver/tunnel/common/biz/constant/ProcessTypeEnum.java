@@ -39,7 +39,7 @@ public enum ProcessTypeEnum {
     /**
      * 通风预案
      */
-    WIND_PLAN("通风预案", 4003, "WindPlanProcess", "path.bpmn.activiti.wind", "path.png.activiti.wind", "", 55.5),
+    WIND_PLAN("通风预案", 4003, "VentilationPlanSOP_KEY", "path.bpmn.activiti.wind", "path.png.activiti.wind", "", 55.5),
     /**
      * 温湿度SOP
      */
@@ -125,7 +125,6 @@ public enum ProcessTypeEnum {
 
     public static ProcessTypeEnum[] getEmPlanList() {
         return new ProcessTypeEnum[]{
-                FIRE_PLAN,
                 WATER_PLAN,
                 WIND_PLAN
         };

@@ -1,131 +1,3 @@
-<template>
-	<div class="layout">
-		<Layout class="coment">
-			<Sider
-				:width="screenWidth"
-				collapsible
-				:collapsed-width="minScreenWidth"
-				v-model="isCollapsed"
-				style="background-color: #1D5F87"
-			>
-				<Menu
-					:active-name="selectedName"
-					width="auto"
-					:class="menuitemClasses"
-					:open-names="openNames"
-					accordion
-					ref="leftMenu"
-				>
-					<Submenu name="1">
-						<template slot="title">
-							<Icon type="ios-navigate" class="icons"></Icon>
-							<span>{{moduleName}}</span>
-						</template>
-						<div v-for="(item,index) in leftTree" :key="item.key" class="menuList">
-							<div v-if="item.childNode && item.childNode.length>0">
-								<Submenu :name="'1-'+ index" class="menuItem">
-									<template slot="title">
-										<Icon type="ios-paper" class="icons"></Icon>
-										<span>{{ item.name}}</span>
-									</template>
-									<MenuItem
-										v-for="(child,childIndex) in item.childNode"
-										:key="child.id"
-										:name="'1-'+index+'-'+ childIndex"
-										@click.native="goToMoudle({ path:child.url},index,childIndex)"
-									>
-										<span>{{child.name}}</span>
-									</MenuItem>
-								</Submenu>
-							</div>
-							<div v-else>
-								<MenuItem
-									:name="'1-'+ index"
-									@click.native="goToMoudle({ path:item.url},index,-1)"
-								>
-									<span>{{item.name}}</span>
-								</MenuItem>
-							</div>
-						</div>
-					</Submenu>
-				</Menu>
-			</Sider>
-			<Layout>
-				<Content
-					style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;"
-				>
-					<router-view></router-view>
-					<!-- <showVideo v-bind="videoModal" ref="video"></showVideo> -->
-					<showAlarm v-bind="videoModal" ref="video"></showAlarm>
-				</Content>
-				<Collapse v-model="showalarm" @on-change="changestatu">
-					<!-- <Panel name="alarm">
-						<Icon type="arrow-up-b"></Icon>
-						<alarm v-bind="alarmModal"></alarm>
-						<Row type="flex" align="top" class="code-row-bg" slot="content">
-							<Col span="6" v-for="(item,index) in alarmData" :key="index">
-								<div class="unitBox">
-									<div class="title">
-										<span>{{item.alarmName}}</span>
-										<span class="unitType">{{item.unitTypeName}}</span>
-									</div>
-									<div class="address">
-										<Icon type="ios-location" style="font-size: 1.5vmin"></Icon>
-										{{item.location}}
-									</div>
-									<div class="contact">
-										<div class="contactName">
-											<span>
-												<Icon type="stats-bars" style="font-size: 1.5vmin"></Icon>
-											</span>
-											<span>{{item.alarmLevel}}</span>
-										</div>
-										<div class="contactTel">
-											<span>
-												<Icon type="ios-pricetags" style="font-size: 1.5vmin"></Icon>
-											</span>
-											<span>{{item.relatedObjectName}}</span>
-										</div>
-										<div class="sections">
-											<span>
-												<Icon type="document-text" style="font-size: 1.5vmin"></Icon>
-											</span>
-											{{item.description}}
-										</div>
-									</div>
-									<div class="option">
-										<div style="position: relative;float: right">
-											<Button type="primary" size="small" @click="showAlarmDetial(index)">详情</Button>
-											<Button type="error" size="small" @click="confirmAlarm(index)">确认</Button>
-										</div>
-										<div class="crtTime">
-											<span>
-												<Icon type="android-time"></Icon>
-												{{item.alatmTime}}
-											</span>
-										</div>
-									</div>
-								</div>
-							</Col>
-						</Row>
-					</Panel> -->
-					<Footer class="layout-footer-center">2009-2018 &copy; Bandweaver</Footer>
-				</Collapse>
-				<ShowStartPlan v-bind="showModal"></ShowStartPlan>
-				<div style="position: fixed;float: right;right: 0px; bottom: 48px; " v-show="showPage">
-					<Page
-						:current="page.current"
-						:total="page.total"
-						:page-size="4"
-						simple
-						@on-change="alarmDataChangePage"
-					></Page>
-				</div>
-			</Layout>
-		</Layout>
-	</div>
-</template>
-
 <script>
 import alarm from "../Common/AlarmDetial";
 import { VideoService } from "../../services/videoService.js";
@@ -136,6 +8,7 @@ import showAlarm from '@/components/Common/Modal/showAlarms'
 import { EnumsService } from "../../services/enumsService.js";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";
 // import { getFormatTime } from "@/scripts/DateFormat.js";
+import { Layout,Menu,Sider,Submenu,Icon,Content,Collapse,MenuItem,Footer,Page } from 'iview'
 
 export default {
 	name: "mudulePage",
@@ -199,59 +72,12 @@ export default {
 			alarmLevel: [],
 			tempAlarm: null,
 			isCollapsed: false,
-			alarmModal: {
-				show: {
-					state: false
-				},
-				alarmData: null
-			},
 			screenWidth: 300,
 			minScreenWidth: 300,
 			screenHeight: 900,
 			childValue: "",
 			showalarm: "1",
 			showPage: false,
-			alarmData: [
-				{
-					id: 101,
-					alarmName: "温度告警",
-					location: "监测仓",
-					alarmType: "event",
-					relatedObjectName: "温度",
-					ObjectNo: "111",
-					description: "温度过高",
-					alatmTime: "2018-08-10",
-					alarmLevel: "危急",
-					alarmScore: "234米"
-				},
-				{
-					alarmlevel: "一般",
-					id: 102,
-					relatedObjectName: "氧气浓度",
-					alarmName: "湿度告警",
-					location: "电力仓区段二",
-					description: "湿度过高",
-					alatmTime: "2018-08-11"
-				},
-				{
-					id: 103,
-					alarmName: "温度告警2",
-					location: "监测仓",
-					relatedObjectName: "温度",
-					description: "温度过高",
-					alatmTime: "2018-08-10",
-					alarmLevel: "危急"
-				},
-				{
-					id: 104,
-					alarmName: "温度告警3",
-					location: "监测仓",
-					relatedObjectName: "温度",
-					description: "温度过高",
-					alatmTime: "2018-08-10",
-					alarmLevel: "危急"
-				}
-			],
 			page: {
 				total: 20,
 				current: 1
@@ -262,7 +88,8 @@ export default {
 				position: "relative"
 			},
 			selectedName: null,
-			openNames: ["1"]
+			openNames: ["1"],
+			menu: null
 		};
 	},
 	mounted() {
@@ -365,6 +192,53 @@ export default {
 			}
 		}
 	},
+	render(){
+		const menuList = this.generateMenu(this.leftTree,'1')
+		return (
+			<div class="layout">
+				<Layout class="coment">
+					<Sider
+						width={this.screenWidth}
+						collapsible
+						collapsed-width={this.minScreenWidth}
+						v-model="isCollapsed"
+						style="background-color: #1D5F87"
+					>
+						<Menu
+							active-name={this.selectedName}
+							width="auto"
+							class={this.menuitemClasses}
+							open-names={this.openNames}
+							accordion
+							ref="leftMenu"
+						>
+							<Submenu name="1">
+								<template slot="title">
+									<div style={{paddingLeft:`2vmin !important`,display: 'inline-block'}}>
+										<Icon type="ios-navigate" class="icons"></Icon>
+										<span>{this.moduleName}</span>
+									</div>
+								</template>
+								{menuList}
+							</Submenu>
+						</Menu>
+					</Sider>
+					<Layout>
+						<Content
+							style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;"
+						>
+							<router-view></router-view>
+							<showAlarm modalPrams={this.videoModal.modalPrams} alarmContainer={this.videoModal.alarmContainer} ref="video"></showAlarm>
+						</Content>
+						<Collapse v-model="showalarm" onOn-change="changestatu">
+							<Footer class="layout-footer-center">2009-2018 &copy; Bandweaver</Footer>
+						</Collapse>
+						<ShowStartPlan modalPrams={this.showModal.modalPrams}></ShowStartPlan>
+					</Layout>
+				</Layout>
+			</div>
+		)
+	},
 	methods: {
 		//手动开启预案
 		// startPlan(alarm) {
@@ -452,27 +326,6 @@ export default {
 		alarmDataChangePage(index) {
 			this.page.current = index;
 		},
-		//获取告警分页数据
-		// getAlatmPageData() {
-		// 	let pram = {};
-		// 	let _this = this;
-		// 	pram.pagesize = 4;
-		// 	pram.current = this.page.current;
-		// 	this.post("").then(result => {
-		// 		let { code, data } = result.data;
-		// 		if (code == 200) {
-		// 			console.log("data", data)
-		// 			_this.alarmData = data;
-		// 			_this.page.total = data.total;
-		// 		}
-		// 	});
-		// },
-
-		//点击告警详情按钮
-		showAlarmDetial(index) {
-			this.alarmModal.alarmData = this.alarmData[index];
-			this.alarmModal.show.state = true;
-		},
 
 		//确认告警
 		confirmAlarm(index) {
@@ -548,11 +401,60 @@ export default {
 			})
 			this.videoModal.modalPrams.state = !this.videoModal.modalPrams.state;
 		},
+		generateMenu(arr,level){
+			const hasChild = arr.find(item=>{
+				return item.childNode && item.childNode.length
+			})
+			return arr.map((item,index)=>{
+				const curLevel = level + '-' + index
+				const left = curLevel.split('-').length * 0.8 + 1.2
+				if(hasChild){
+					if(item.childNode && item.childNode.length){
+						const children = this.generateMenu(item.childNode,curLevel) 
+							return (
+								<Submenu name={curLevel}>
+									<template slot="title">
+										<div 
+										style={{paddingLeft:`${left}vmin !important`,display: 'inline-block'}}>
+											<Icon type="ios-paper" class="icons"></Icon>
+											<span>{item.name}</span>
+										</div>
+									</template>
+									{ children }
+								</Submenu>
+						)
+					} else {
+						return (
+							<div class="menuList">
+								<MenuItem name={curLevel}
+								nativeOnClick={()=>this.goToMoudle({ path:item.url},index,-1)}>
+									<div style={{paddingLeft:`${left}vmin !important`,display: 'inline-block'}}>
+										<Icon type="ios-paper" class="icons"></Icon>
+										<span>{item.name}</span>
+									</div>
+								</MenuItem>
+							</div>
+						)
+					}
+				} else {
+					return (
+						<MenuItem
+							name={level + '-' + index}
+							nativeOnClick={()=>this.goToMoudle({ path:item.url},index,-1)}
+						>
+							<span style="font-size: 1.66vmin !important">{item.name}</span>
+						</MenuItem>
+					)
+				}
+	
+			})
+		}
 	},
 	components: {
 		alarm,
 		ShowStartPlan,
-		showAlarm
+		showAlarm,
+		Layout,Menu,Sider,Submenu,Icon,Content,Collapse,MenuItem,Footer,Page
 	}
 };
 </script>
@@ -578,7 +480,7 @@ export default {
 }
 
 .ivu-menu-submenu >>> .ivu-menu-submenu-title {
-	padding-left: 20px !important;
+	padding-left: 0 !important;
 	/*border-radius: 10px;
     background-color: rgba(23, 67, 160, 0.3);
     border: 1px solid rgba(224, 180, 23, 0.9);*/
@@ -800,11 +702,15 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 }
 
 .menuList >>> .ivu-menu-item{
-	font-size: 2vmin;
+	font-size: 2vmin ;
+	padding-left: 0 !important;
 	border: 1px solid #938e8e9c;
 }
 .menuItem >>> .ivu-menu-item{
 	font-size: 1.66vmin;
 	border: 0px solid #938e8e9c;
+}
+.icons{
+	margin-right: 0.8vmin;
 }
 </style>

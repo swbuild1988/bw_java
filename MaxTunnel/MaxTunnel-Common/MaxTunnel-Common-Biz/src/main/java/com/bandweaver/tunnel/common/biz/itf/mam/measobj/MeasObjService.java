@@ -112,7 +112,7 @@ public interface MeasObjService {
 
 	List<MeasObj> getMeasObjByTargetVal(String targetValue);
 
-	Set<MeasObj> getMeasObjsByTargetValAndSection(String targetValue,List<Section> sectionList);
+	List<MeasObj> getMeasObjsByTargetValAndSection(String targetValue,List<Section> sectionList);
 
 	/**
 	 * 绑定预案

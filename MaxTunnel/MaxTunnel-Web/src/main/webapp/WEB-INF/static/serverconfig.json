@@ -343,20 +343,9 @@
         ]
     },
     "flyFilePathes": [{
-        "id": 1,
-        "name": "飞行路线_1",
-        "path": "/VM/font/jump.fpf",
-        "isFlyLoop": "false"
-    }, {
-        "id": 2,
-        "name": "飞行路线_2",
-        "path": "/VM/font/flytest2.fpf",
-        "isFlyLoop": "false",
-        "waitTime": 0
-    }, {
         "id": 3,
-        "name": "飞行路线_3",
-        "path": "/VM/font/flytest3.fpf",
+        "name": "飞行路线_1",
+        "path": "/VM/font/storeAcross.fpf",
         "isFlyLoop": "true",
         "playRate": "0.05"
     }],

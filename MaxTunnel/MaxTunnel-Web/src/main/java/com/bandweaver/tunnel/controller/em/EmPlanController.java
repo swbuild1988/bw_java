@@ -1,13 +1,22 @@
 package com.bandweaver.tunnel.controller.em;
 
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.NativeHistoricProcessInstanceQuery;
+import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +57,8 @@ import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 应急预案管理
  *
@@ -69,6 +80,41 @@ public class EmPlanController extends BaseController<EmPlan> {
     private EmPlanGroupService emPlanGroupService;
     @Autowired
     private EmPlanMemberService emPlanMemberService;
+    @Autowired
+    private ProcessEngine processEngine;
+    @Autowired
+    private SubSystemService subSystemService;
+
+
+    /**获取流程执行过程的png图片
+     * @param processInstanceId 流程实例id
+     * @param response
+     */
+    @RequestMapping(value = "emplans/png/{processInstanceId}",method = RequestMethod.GET)
+    public void getynaDmicPng(@PathVariable("processInstanceId") String processInstanceId, HttpServletResponse response) {
+        activitiService.getImageByProcessInstance(processInstanceId, response);
+    }
+
+
+    /**获取流程静态图片
+     * @param processValue 4003
+     * @param response
+     */
+    @RequestMapping(value = "emplans/png/static/{processValue}",method = RequestMethod.GET)
+    public void getStaticPng(@PathVariable("processValue") int processValue, HttpServletResponse response) {
+        String pngPath = PropertiesUtil.getString(ProcessTypeEnum.getEnum(processValue).getPngPath());
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(pngPath); OutputStream os = response.getOutputStream();){
+            response.setContentType("image/png");
+            byte[] bytes = new byte[inputStream.available()];
+            inputStream.read(bytes);
+            os.write(bytes);
+            os.flush();
+        } catch (IOException e) {
+            LogUtil.error(ExceptionUtils.getStackTrace(e));
+        }
+
+
+    }
 
 
     /**
@@ -95,7 +141,7 @@ public class EmPlanController extends BaseController<EmPlan> {
     /**
      * 手动执行预案
      *
-     * @param sectionId
+     * @param
      * @param processValue 应急预案类型
      * @return
      * @author shaosen
@@ -104,22 +150,23 @@ public class EmPlanController extends BaseController<EmPlan> {
     @RequestMapping(value = "emplans/start", method = RequestMethod.POST)
     public JSONObject startPlan(@RequestBody JSONObject reqJson) {
 
-        CommonUtil.hasAllRequired(reqJson, "sectionId,processValue");
-        Integer sectionId = reqJson.getInteger("sectionId");
+        CommonUtil.hasAllRequired(reqJson, "areaId,storeId,processValue");
+        Integer areaId = reqJson.getInteger("areaId");
+        Integer storeId = reqJson.getInteger("storeId");
         Integer processValue = reqJson.getInteger("processValue");
-        SectionDto section = sectionService.getSectionById(sectionId);
 
+        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
         if (section == null) {
             throw new BandWeaverException("section不存在");
         }
         // 查询仓以及仓关联的进气出气仓等
-        List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
+        List<Section> sectionList = sectionService.getSectionListByParentId(section.getId());
         emPlanService.start(sectionList, processValue);
 
         // 最后再查一次
-        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-        String processInstanceId = (String) ContextUtil.getSession().getAttribute("processInstanceId");
-        Set<MeasObj> measObjList = (Set<MeasObj>) ContextUtil.getSession().getAttribute("measObjList");
+        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
+        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
+        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
         emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList);
         return CommonUtil.success();
     }
@@ -220,14 +267,6 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "emplans/process-key/{processKey}", method = RequestMethod.GET)
     public JSONObject getNodeListByProcessKey(@PathVariable String processKey) {
-
-        // 方案1
-//		List<EmPlanDto> list = emPlanService.getListByProcessKey(processKey);
-//		list = list.stream().sorted(Comparator.comparing(EmPlanDto::getTaskKey)).collect(Collectors.toList());
-//		List<String> taskNameList = list.stream().map(e -> e.getTaskName()).collect(Collectors.toList());
-//		return CommonUtil.success(taskNameList);
-
-        // 方案2
         List<JSONObject> list = emPlanService.getNodeListByProcessKeyAndSection(processKey, null);
         JSONObject returnData = new JSONObject();
         returnData.put("processName", ProcessTypeEnum.getEnum(processKey).getName());
