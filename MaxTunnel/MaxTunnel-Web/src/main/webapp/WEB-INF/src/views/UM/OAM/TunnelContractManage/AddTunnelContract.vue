@@ -1,19 +1,16 @@
 <template>
 	<div :style="backStyle">
 		<Form ref="contractInfo" :model="contractInfo" :rules="ruleValidate" class="form">
-		<p v-if="pageType!=pageTypes.Edit && pageType!=pageTypes.Read" class="title">添加合同信息</p>
-		<p v-if="pageType==pageTypes.Edit" class="title">修改合同信息</p>
-		<p v-if="pageType==pageTypes.Read" class="title">合同信息详情</p>
+		<p class="title">{{title}}</p>
 		<Row>
 			<Col span="12">
 			<FormItem label="合同名称：" prop="name">
 				<Input
 					v-model="contractInfo.name"
 					placeholder="请输入合同名称"
-					v-if="!read"
+					:readonly="read"
 					class="inputWidth"
-				></Input>
-				<span v-if="read">{{ contractInfo.name }}</span>
+				/>
 			</FormItem>
 			<FormItem label="合同开始日期：" prop="contractStartTime">
 				<DatePicker
@@ -21,11 +18,8 @@
 					placeholder="请选择合同开始日期"
 					v-model="contractInfo.contractStartTime"
 					class="inputWidth"
-					v-if="!read"
+					:readonly="read"
 				></DatePicker>
-				<span
-				v-if="read"
-				>{{ new Date(contractInfo.contractStartTime).format('yyyy-MM-dd hh-mm-s') }}</span>
 			</FormItem>
 			<FormItem label="合同结束日期：" :prop="read ? null : 'contractEndTime'">
 				<DatePicker
@@ -33,75 +27,54 @@
 					placeholder="请选择合同结束日期"
 					v-model="contractInfo.contractEndTime"
 					class="inputWidth"
-					v-if="!read"
+					:readonly="read"
 				></DatePicker>
-				<span
-				v-if="read"
-				>{{ new Date(contractInfo.contractEndTime).format('yyyy-MM-dd hh-mm-s') }}</span>
 			</FormItem>
 			<FormItem label="付款方式：" prop="payType">
-				<Select v-model="contractInfo.payType" v-if="!read" class="inputWidth">
+				<Select v-model="contractInfo.payType" :disabled="read" class="inputWidth">
 				<Option
 					v-for="(item,index) in payTypes"
 					:value="item.val.toString()"
 					:key="index"
 				>{{ item.key }}</Option>
 				</Select>
-				<span
-					v-if="read && item.val == contractInfo.payType"
-					v-for="(item,index) in payTypes"
-					:key="index"
-				>{{ item.key }}</span>
 			</FormItem>
 			<FormItem label="合同状态：" v-if="pageType==pageTypes.Edit || read">
-				<Select v-model="contractInfo.contractStatus" v-if="!read" class="inputWidth">
+				<Select v-model="contractInfo.contractStatus" :disabled="read" class="inputWidth">
 				<Option
 					v-for="(item,index) in contractStatus"
 					:value="item.val.toString()"
 					:key="index"
 				>{{ item.key }}</Option>
 				</Select>
-				<span
-					v-if="read && item.val == contractInfo.contractStatus"
-					v-for="(item,index) in contractStatus"
-					:key="index"
-				>{{ item.key }}</span>
 			</FormItem>
 			<FormItem label="管线名称：" prop="cableName">
 				<Input
 					v-model="contractInfo.cableName"
 					placeholder="请输入管线名称"
-					v-if="!read"
+					:readonly="read"
 					class="inputWidth"
 				/>
-				<span v-else>{{ contractInfo.cableName }}</span>
 			</FormItem>
 			<FormItem label="管线长度：" prop="cableLength">
 				<Input
 					v-model="contractInfo.cableLength"
 					placeholder="请输入管线长度"
-					v-if="!read"
+					:readonly="read"
 					class="inputWidth"
 				/>
-				<span v-else>{{ contractInfo.cableLength }}</span>
 			</FormItem>
 			<FormItem label="管线状态：" v-if="pageType==pageTypes.Edit || read">
-				<Select v-model="contractInfo.cableStatus" v-if="!read" class="inputWidth">
+				<Select v-model="contractInfo.cableStatus" :disabled="read" class="inputWidth">
 				<Option
 					v-for="(item,index) in cableStatus"
 					:value="item.val.toString()"
 					:key="index"
 				>{{ item.key }}</Option>
 				</Select>
-				<span
-					v-if="read && item.val == contractInfo.cableStatus"
-					v-for="(item,index) in cableStatus"
-					:key="index"
-				>{{ item.key }}</span>
 			</FormItem>
 			<FormItem label="录入人：">
-				<Input v-model="editor.name" v-if="!read" class="inputWidth" readonly/>
-				<span v-else>{{ contractInfo.operateUsername }}</span>
+				<Input v-model="editor.name" class="inputWidth" readonly/>
 			</FormItem>
 			<FormItem label="企业：" :prop="read ? null : 'companyId'">
 				<Poptip placement="top">
@@ -109,7 +82,6 @@
 					v-model="customerName"
 					placeholder="请选择企业"
 					class="inputWidth"
-					v-if="!read"
 					readonly
 				/>
 				<div class="pop" slot="content" v-show="pageType != pageTypes.Read">
@@ -119,12 +91,11 @@
 					></customer-choose>
 				</div>
 				</Poptip>
-				<span v-if="read">{{ customerName }}</span>
 			</FormItem>
 			<FormItem label="管线位置：">
 				<Row style="width: 45vmin;margin-left: 14vmin">
 				<Col span="12">
-					<Select v-model="contractInfo.tunnelId" v-show="!read" @on-change="tunnelChange">
+					<Select v-model="contractInfo.tunnelId" :disabled="read" @on-change="tunnelChange">
 					<!--   <Option disabled value="0">管廊</Option> -->
 					<Option
 						v-for="item in cableLocation.tunnels"
@@ -132,26 +103,16 @@
 						:key="item.id"
 					>{{ item.name }}</Option>
 					</Select>
-					<span
-					v-if="read && item.id == contractInfo.tunnelId"
-					v-for="(item,index) in cableLocation.tunnels"
-					:key="index"
-					>{{ item.name }}</span>
 					<div class="ivu-form-item-error-tip location" v-if="checkCable.tunnel">请选择管廊</div>
 				</Col>
 				<Col span="12">
-					<Select v-model="contractInfo.storeId" @on-change="check('store')" v-if="!read">
+					<Select v-model="contractInfo.storeId" @on-change="check('store')" :disabled="read">
 					<Option
 						v-for="(item,index) in cableLocation.stores"
 						:value="item.id"
 						:key="index"
 					>{{ item.name }}</Option>
 					</Select>
-					<span
-						v-if="read && item.id == contractInfo.storeId"
-						v-for="item in cableLocation.stores"
-						:key="item.id"
-					>{{ item.name }}</span>
 					<div class="ivu-form-item-error-tip location" v-if="checkCable.store">请选择仓</div>
 				</Col>
 				<!-- <Col span="10">
@@ -178,7 +139,7 @@
 			</FormItem>
 			</Col>
 			<Col span="12">
-			<FormItem label="合同文件:" prop="file">
+			<FormItem label="合同文件:" prop="file" v-show="!read">
 				<Input
 					placeholder="暂时只支持pdf格式"
 					type="file"
@@ -214,13 +175,6 @@
 				type="ghost"
 				@click="handleReset('contractInfo')"
 				style="margin-left: 8px"
-				v-if="pageType != pageTypes.Read"
-			>取消</Button>
-			<Button
-				type="ghost"
-				@click="handleReset('contractInfo')"
-				style="margin-left: 8px"
-				v-if="read"
 			>返回</Button>
 		</div>
 		</Form>
@@ -340,7 +294,8 @@ export default {
 				typeFlag: false,
 				curPage: 1,
 				totalPage: 1
-			}
+			},
+			title: null
 		};
 	},
 	components: { CustomerChoose,pdf },
@@ -356,9 +311,21 @@ export default {
 		}
 	
 		this.pageType = this.$route.params.type;
-		if (this.pageType == this.pageTypes.Read) {
-			this.read = true;
+		switch(this.pageType){
+			case this.pageTypes.Read:
+				this.title = '合同信息详情'
+				this.read = true
+				break
+			case this.pageTypes.Edit:
+				this.title = '修改合同信息'
+				this.read = false
+				break
+			default:
+				this.title = '添加合同信息'
+				this.read = false
+				break
 		}
+		
 		this.getInitData();
 		this.getParams();
 	},

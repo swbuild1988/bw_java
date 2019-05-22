@@ -1,5 +1,5 @@
 {
-    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
+    "ApiUrl": "http://192.168.0.7:8080/MaxTunnel-Web",
     "RouterBase": "/",
     "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
@@ -149,27 +149,6 @@
             }
         ],
         "linearEntityParam": [{
-                "entityBaseParameters": {
-                    "id": 1,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.484733",
-                                "Lat": "37.715056"
-                            },
-                            {
-                                "Lon": "112.5251257936025",
-                                "Lat": "37.70375614400991"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
-            },
-            {
 
                 "entityBaseParameters": {
                     "id": 2,
@@ -233,93 +212,6 @@
                         "width": 5,
                         "color": "red",
                         "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 9,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.516801",
-                                "Lat": "37.6972593"
-                            },
-                            {
-                                "Lon": "112.47843",
-                                "Lat": "37.709596"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 10,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.489179",
-                                "Lat": "37.713805"
-                            },
-                            {
-                                "Lon": "112.483704",
-                                "Lat": "37.702281"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    },
-                    "entityBaseParameters": {
-                        "messageType": "linear"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 11,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.492891",
-                                "Lat": "37.712722"
-                            },
-                            {
-                                "Lon": "112.487448",
-                                "Lat": "37.701182"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 12,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.500104",
-                                "Lat": "37.710666"
-                            },
-                            {
-                                "Lon": "112.496759",
-                                "Lat": "37.703691"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
                     }
                 }
             },
@@ -454,7 +346,13 @@
         "path": "/VM/font/storeAcross.fpf",
         "isFlyLoop": "true",
         "playRate": "0.05"
+    }, {
+        "id": 2,
+        "name": "飞行路线_2",
+        "path": "/VM/font/flytest2.fpf",
+        "isFlyLoop": "true",
+        "waitTime": 0
     }],
-    "refreshTime":"60000"
-    
+    "refreshTime": "60000"
+
 }
