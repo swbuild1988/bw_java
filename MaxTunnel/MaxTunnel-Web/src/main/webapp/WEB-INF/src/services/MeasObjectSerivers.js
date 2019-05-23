@@ -429,50 +429,58 @@ var MeasObjServer = {
 		})
 	},
 	// 根据storeId，areaId获取所有监测对象
-	getMeasObjects(params) {
+	getMeasObjects(storeId, areaId) {
 		return new Promise((resolve, reject) => {
-			// post('measobjs/'+storeId+'/'+areaId+'/videos')
-			// .then(res=>{
-			// 	let{ code, data, msg } = res.data
-			// 	if( code == 200 ){
-			// 		resolve(data)
-			// 	}else{
-			// 		reject(msg+"地址：")
-			// 	}
-			// })
-			// .catch(err=>{
-			// 	reject(err.response.status + ' ' +err.response.data)
-			// })
-			let data = [{
-					id: 1,
-					name: '监测对象1',
-					cv: '23%',
-					time: '2019-09-12',
-					type: 1
-				},
-				{
-					id: 2,
-					name: '监测对象2',
-					cv: 2,
-					time: '2019-09-12',
-					type: 2
-				},
-				{
-					id: 3,
-					name: '监测对象3',
-					cv: 1,
-					time: '2019-09-12',
-					type: 2
-				},
-				{
-					id: 4,
-					name: '监测对象4',
-					cv: 0,
-					time: '2019-09-12',
-					type: 2
-				},
-			]
-			resolve(data)
+			get('/stores/' + storeId + '/areas/' + areaId + '/measobjs')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：/stores/' + storeId + '/areas/' + areaId + '/measobjs')
+					}
+				})
+				.catch(err => {
+					reject(err.response.status + ' ' + err.response.data)
+				})
+			// let data = [{
+			// 		curValue: 0,
+			// 		datatypeId: 3,
+			// 		id: 222113201,
+			// 		maxValue: null,
+			// 		minValue: null,
+			// 		name: "声光报警器",
+			// 		store: "污水舱进风口",
+			// 		time: 1558602699682,
+			// 		unit: ""
+			// 	},
+			// 	{
+			// 		id: 2,
+			// 		name: '监测对象2',
+			// 		cv: 2,
+			// 		time: '2019-09-12',
+			// 		type: 2
+			// 	},
+			// 	{
+			// 		id: 3,
+			// 		name: '监测对象3',
+			// 		cv: 1,
+			// 		time: '2019-09-12',
+			// 		type: 2
+			// 	},
+			// 	{
+			// 		id: 4,
+			// 		name: '监测对象4',
+			// 		cv: 0,
+			// 		time: '2019-09-12',
+			// 		type: 2
+			// 	},
+			// ]
+			// resolve(data)
 		})
 	}
 };

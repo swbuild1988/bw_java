@@ -41,7 +41,7 @@
         <hr class="hr3">
         <Row>
             <Col span="12" style="position: relative;padding: 10px;">
-                <Card :bordered="false" style="height: 77vmin" class="card">
+                <Card :bordered="false" style="height: 77vmin" class="processCard">
                     <p slot="title" style="font-size: 1.66vmin;">执行日志</p>
                     <div v-if="nodePicState === 2" style="height:69vmin;max-width:54vmin">
                         <image-from-url :url="processPicSrc"></image-from-url>
@@ -58,24 +58,25 @@
                 </div>
             </Col>
             <Col span="12" style="padding: 10px;">
-                <Card :bordered="false" style="height: 41.8vmin" class="card">
+                <Card :bordered="false" style="height: 41.8vmin" class="objCard">
                     <p slot="title" style="font-size: 1.66vmin;">监测对象列表</p>
-                    <Row style="overflow-y: auto">
+                    <span v-if="!nodePicState" style="font-size: 2.8vmin;">未开启预案</span>
+                    <Row v-else>
                         <Col span="8" v-for="obj in objList" :key="obj.id">
                             <div class="objWrapper">
-                                <p>{{obj.name + ' ' + obj.id}}</p>
+                                <p class="objName">{{obj.name + ' ' + obj.id}}</p>
                                 <p
-                                    v-if="obj.type === 1"
+                                    v-if="obj.datatypeId === 1"
                                     style="font-size: 3vmin;padding: 1.6vmin 0;"
-                                >{{obj.cv}}</p>
+                                >{{obj.curValue + obj.unit}}</p>
                                 <div style="margin:0 auto;" v-else>
                                     <img
                                         style="width: 7vmin;height:7vmin"
                                         :src="obj.image"
-                                        :title="obj.cv == 0 ? '关' : (obj.cv == 1 ? '开' : '故障')"
+                                        :title="obj.curValue == 0 ? '关' : (obj.curValue == 1 ? '开' : '故障')"
                                     >
                                 </div>
-                                <span>时间：{{obj.time}}</span>
+                                <span>{{ new Date(obj.time).format("yyyy-MM-dd hh:mm:ss")}}</span>
                             </div>
                         </Col>
                     </Row>
@@ -87,6 +88,7 @@
 
 <script>
 import { PlanService } from "../../../../services/planService";
+import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
 import { MeasObjServer } from "../../../../services/MeasObjectSerivers.js";
 import { EnumsService } from "../../../../services/enumsService";
@@ -151,7 +153,6 @@ export default {
                     this.Log.info(err);
                 }
             );
-            this.getMeasObjs();
         },
         handleTunnelChange() {
             TunnelService.getStoresByTunnelId(this.condition.tunnelId).then(
@@ -176,6 +177,7 @@ export default {
                 this.$Message.success("预案已开启！");
             });
             this.acceptPlanData();
+            this.getVideoList();
         },
         // 连接成功回调函数
         callback(respond) {
@@ -193,25 +195,48 @@ export default {
             var _this = this;
             _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
             this.nodePicState = 1;
+            this.getMeasObjs();
         },
         getMeasObjs() {
-            MeasObjServer.getMeasObjects(this.condition).then(
+            MeasObjServer.getMeasObjects(
+                this.condition.storeId,
+                this.condition.areaId
+            )
+                .then(
+                    res => {
+                        this.objList = res;
+                        this.objList.forEach(obj => {
+                            if (obj.datatypeId !== 1) {
+                                let image_url =
+                                    obj.curValue == 0
+                                        ? "close-state"
+                                        : obj.curValue == 1
+                                        ? "open-state"
+                                        : "fault-state";
+                                obj.image = require("../../../../assets/VM/" +
+                                    image_url +
+                                    ".png");
+                            }
+                        });
+                    },
+                    err => {
+                        this.Log.info(err);
+                    }
+                )
+                .finally(() => {
+                    let _this = this;
+                    this.getObjsTimer = setTimeout(() => {
+                        _this.getMeasObjs();
+                    }, 5000);
+                });
+        },
+        getVideoList() {
+            VideoService.getVideoList(
+                this.condition.storeId,
+                this.condition.areaId
+            ).then(
                 res => {
-                    this.objList = res;
-                    this.objList.forEach(obj => {
-                        if (obj.type === 2) {
-                            let image_url =
-                                obj.cv == 0
-                                    ? "close-state"
-                                    : obj.cv == 1
-                                    ? "open-state"
-                                    : "fault-state";
-                            obj.image = require("../../../../assets/VM/" +
-                                image_url +
-                                ".png");
-                        }
-                    });
-                    console.log(this.objList);
+                    this.curCarousel.videolist = res;
                 },
                 err => {
                     this.Log.info(err);
@@ -221,6 +246,7 @@ export default {
     },
     beforeDestroy() {
         clearTimeout(this.timer);
+        clearTimeout(this.getObjsTimer);
     },
     components: { Carousel, ImageFromUrl }
 };
@@ -232,25 +258,10 @@ export default {
     width: 11vmin;
 }
 
-.border {
-    box-shadow: 5px 5px 15px #cdf5ff inset;
-    border: 1px solid #d9fff1;
-    border-radius: 8px;
-    color: #fff;
-}
-
 .hr3 {
     height: 7px;
     border: none;
     border-top: 5px ridge #45d6d8;
-}
-
-.hr1 {
-    margin: 0 auto;
-    border: 0;
-    height: 5px;
-    background: #333;
-    background-image: linear-gradient(to right, #ccc, #333, #ccc);
 }
 
 .ivu-steps >>> .ivu-steps-title {
@@ -271,9 +282,14 @@ export default {
     box-shadow: 0 0 13px 3px rgba(0, 0, 0, 0.5);
 }
 
-.card >>> .ivu-card-head p {
+.processCard >>> .ivu-card-head p,
+.objCard >>> .ivu-card-head p {
     height: 2vmin;
     line-height: 2vmin;
+}
+.objCard >>> .ivu-card-body {
+    height: 36vmin;
+    overflow-y: auto;
 }
 .objWrapper {
     margin: 1vmin;
@@ -282,6 +298,12 @@ export default {
     text-align: center;
     border-radius: 10px;
     font-size: 1.58vmin;
-    height: 14vmin;
+    height: 16vmin;
+}
+.objName {
+    /* overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; */
+    height: 4.4vmin;
 }
 </style>
