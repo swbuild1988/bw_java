@@ -1,7 +1,7 @@
 {
-    "ApiUrl": "http://192.168.0.7:8080/MaxTunnel-Web",
+    "ApiUrl": "http://192.168.0.156:8080/MaxTunnel-Web",
     "RouterBase": "/",
-    "MQServerAddress": "ws://192.168.0.7:15674/ws",
+    "MQServerAddress": "ws://192.168.0.156:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
         "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-3Dserver/rest/realspace",

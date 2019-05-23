@@ -1,14 +1,15 @@
 <template>
     <div>
         <Modal
-            :styles="{top: '30%'}"
+            :styles="{top: '8vmin'}"
             width="30vw;"
             style="z-index: 1001; "
-            v-model="nodeModal.showFlag"
+            v-model="nodesModal.showFlag"
             title="执行日志"
+            class="processModal"
         >
-            <div>
-                <image-from-url :url="imgUrl"></image-from-url>
+            <div style="height: 70vmin">
+                <image-from-url :url="nodesModal.imgUrl"></image-from-url>
             </div>
             <div slot="footer">
                 <Button type="parimay" @click="confirmPlan()">确定</Button>
@@ -21,15 +22,17 @@
 import ImageFromUrl from "../ImageFromUrl";
 
 export default {
-    name: "show-start-plan",
+    name: "show-nodes-pic",
     props: {
-        showFlag: {
-            required: true,
-            type: Boolean
-        },
-        imgUrl: {
-            required: true,
-            type: String
+        nodesModal: {
+            showFlag: {
+                required: true,
+                type: Boolean
+            },
+            imgUrl: {
+                required: true,
+                type: String
+            }
         }
     },
     data() {
@@ -42,9 +45,13 @@ export default {
         }
     },
     watch: {},
-    mounted() {}
+    mounted() {},
+    components: { ImageFromUrl }
 };
 </script>
 
 <style scoped>
+.processModal >>> .ivu-modal-body {
+    max-height: 76vh;
+}
 </style>

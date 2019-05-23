@@ -60,24 +60,24 @@
             <Col span="12" style="padding: 10px;">
                 <Card :bordered="false" style="height: 41.8vmin" class="card">
                     <p slot="title" style="font-size: 1.66vmin;">监测对象列表</p>
-                    <Row style="line-height: 3vmin;font-size: 1.66vmin;overflow-y: auto;">
-                        <div v-for="item in equipmentList" :key="item.name">
-                            <Col span="12" style="padding: 10px;font-size: 1.8vmin;">
-                                <span>{{item.name}}</span>
-                                <div style="float: right;">
-                                    <img :src="item.url" style="width: 40px;">
+                    <Row style="overflow-y: auto">
+                        <Col span="8" v-for="obj in objList" :key="obj.id">
+                            <div class="objWrapper">
+                                <p>{{obj.name + ' ' + obj.id}}</p>
+                                <p
+                                    v-if="obj.type === 1"
+                                    style="font-size: 3vmin;padding: 1.6vmin 0;"
+                                >{{obj.cv}}</p>
+                                <div style="margin:0 auto;" v-else>
+                                    <img
+                                        style="width: 7vmin;height:7vmin"
+                                        :src="obj.image"
+                                        :title="obj.cv == 0 ? '关' : (obj.cv == 1 ? '开' : '故障')"
+                                    >
                                 </div>
-                                <i-Switch
-                                    :value="item.cv"
-                                    size="large"
-                                    @on-change="changeStatus(item.id,item.cv)"
-                                    style="float:right;margin-right: 50px;margin-top: 5px;"
-                                >
-                                    <span slot="open">开</span>
-                                    <span slot="close">关</span>
-                                </i-Switch>
-                            </Col>
-                        </div>
+                                <span>时间：{{obj.time}}</span>
+                            </div>
+                        </Col>
                     </Row>
                 </Card>
             </Col>
@@ -91,12 +91,6 @@ import { TunnelService } from "../../../../services/tunnelService";
 import { MeasObjServer } from "../../../../services/MeasObjectSerivers.js";
 import { EnumsService } from "../../../../services/enumsService";
 import Carousel from "../../../../components/Common/Carousel.vue";
-import fenClose from "../../../../assets/UM/fanClose.png";
-import fenOpen from "../../../../assets/UM/fenOpen.gif";
-import closeLamp from "../../../../assets/UM/照明-关.png";
-import openLamp from "../../../../assets/UM/照明-开.png";
-import openBlinds from "../../../../assets/UM/百叶-开.png";
-import closeBlinds from "../../../../assets/UM/百叶-关.png";
 import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
 
 export default {
@@ -106,14 +100,6 @@ export default {
             curCarousel: {
                 videolist: []
             },
-            fenOpen: fenOpen,
-            fenClose: fenClose,
-            openLamp: openLamp,
-            closeLamp: closeLamp,
-            closeBlinds: closeBlinds,
-            openBlinds: openBlinds,
-            img: { open: "", close: "" },
-            equipmentList: [],
             processPicSrc: null,
             timer: null,
             condition: {
@@ -127,7 +113,8 @@ export default {
                 areas: [],
                 stores: []
             },
-            nodePicState: 0
+            nodePicState: 0,
+            objList: []
         };
     },
 
@@ -135,15 +122,7 @@ export default {
         this.init();
     },
 
-    computed: {
-        startParams() {
-            let params = {
-                storeId: this.condition.storeId,
-                areaId: this.condition.areaId,
-                processValue: this.condition.processValue
-            };
-        }
-    },
+    computed: {},
 
     watch: {
         $route: function() {
@@ -172,6 +151,7 @@ export default {
                     this.Log.info(err);
                 }
             );
+            this.getMeasObjs();
         },
         handleTunnelChange() {
             TunnelService.getStoresByTunnelId(this.condition.tunnelId).then(
@@ -214,59 +194,29 @@ export default {
             _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
             this.nodePicState = 1;
         },
-
-        //获取设备状态图片
-        getStatusUrl(dataTypeId, cv) {
-            var _this = this;
-            var imgUrl = "";
-            switch (dataTypeId) {
-                // 灯
-                case 11: {
-                    if (cv > 0) {
-                        imgUrl = _this.openLamp;
-                    } else {
-                        imgUrl = _this.closeLamp;
-                    }
-                    return imgUrl;
+        getMeasObjs() {
+            MeasObjServer.getMeasObjects(this.condition).then(
+                res => {
+                    this.objList = res;
+                    this.objList.forEach(obj => {
+                        if (obj.type === 2) {
+                            let image_url =
+                                obj.cv == 0
+                                    ? "close-state"
+                                    : obj.cv == 1
+                                    ? "open-state"
+                                    : "fault-state";
+                            obj.image = require("../../../../assets/VM/" +
+                                image_url +
+                                ".png");
+                        }
+                    });
+                    console.log(this.objList);
+                },
+                err => {
+                    this.Log.info(err);
                 }
-                //风机
-                case 10: {
-                    if (cv > 0) {
-                        imgUrl = _this.fenOpen;
-                    } else {
-                        imgUrl = _this.fenClose;
-                    }
-                    return imgUrl;
-                }
-                //百叶
-                case 58: {
-                    if (cv > 0) {
-                        imgUrl = _this.openBlinds;
-                    } else {
-                        imgUrl = _this.closeBlinds;
-                    }
-                    return imgUrl;
-                }
-            }
-        },
-
-        // 变更设备状态
-        changeStatus(id, cv) {
-            var _this = this;
-            var params = { id: id, status: cv };
-            _this.equipmentList.forEach(a => {
-                if (a.id == id) {
-                    a.status = !a.status;
-                    a.cv = a.cv == 0 ? 1 : 0;
-                    a.url = _this.getStatusUrl(a.objtypeId, a.cv);
-                }
-            });
-            MeasObjServer.changeEquimentStatus(params).then();
-        },
-
-        //切换路由
-        goToMoudle(path) {
-            this.$router.push(path);
+            );
         }
     },
     beforeDestroy() {
@@ -324,5 +274,14 @@ export default {
 .card >>> .ivu-card-head p {
     height: 2vmin;
     line-height: 2vmin;
+}
+.objWrapper {
+    margin: 1vmin;
+    border: 1px solid #cecfd2;
+    padding: 1vmin;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 1.58vmin;
+    height: 14vmin;
 }
 </style>

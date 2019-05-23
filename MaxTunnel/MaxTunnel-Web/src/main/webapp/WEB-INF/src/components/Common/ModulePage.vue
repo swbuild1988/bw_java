@@ -105,7 +105,8 @@ export default {
             nodesModal: {
                 showFlag: false,
                 imgUrl: null
-            }
+            },
+            planTimer: null
         };
     },
     mounted() {
@@ -153,6 +154,7 @@ export default {
     },
     beforeDestroy() {
         // this.closedMQ();
+        clearTimeout(this.planTimer);
         this.$Notice.destroy();
     },
     watch: {
