@@ -31,7 +31,7 @@ export const flyManagerMinix = {
     methods: {
         // 飞行管理
         flyManager(id) {
-
+            
             if (!global.Cesium || id == null) return;
 
             let {
