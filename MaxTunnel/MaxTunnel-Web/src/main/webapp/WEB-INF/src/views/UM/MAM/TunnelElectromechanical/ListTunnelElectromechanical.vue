@@ -17,7 +17,7 @@
       </RadioGroup>
     </div>
         <div style="margin: 1vh;">
-            <check-select v-bind="storeProp"></check-select>
+            <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
     <Row>
       <Col span="18" style="padding-left: 10px;padding-right: 10px">
@@ -88,25 +88,19 @@
   import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
   import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
   import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-  import { TunnelService } from '../../../../services/tunnelService'
-  import { EnumsService } from '../../../../services/enumsService'
   import { MonitorDataService } from '../../../../services/monitorDataService'
-  import {SuperMapSqlQuery, lookAt} from "../../../../scripts/three.js";
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
- import checkSelect from "../../../../components/Common/CheckSelect.vue";
+  import checkSelect from "../../../../components/Common/CheckSelect.vue";
+  import { commonFlyFn } from '../Minxis/unit'
 
   export default {
-    name:"list-tunnel-safety",
+    name:"list-tunnel-ele",
+    mixins:[commonFlyFn],
     data() {
       return {
         curHeight: 450,
         iconSize:16,
         scene: null,
-                storeProp: {
-                    itemLen: 12,
-                    dataList: [],
-                    selectObj: { selectId: "" }
-                },
         modelProp: {
           show: {
             //默认隐藏
@@ -121,58 +115,9 @@
             { key: "湿度", val: "30%" }
           ] //属性集
         },
-        queryCondition: {
-          tunnelId: null, //监测仓ID
-          storeId: null, //监测区段ID
-          areaId: null,
-        },
-        curName: "",
-        tunnels: [],
-        storeList: [],
-        areaList: [], //管廊对应区段数据
         tunnelProps: [], //管廊统计数据
-        curTunnel: {
-          storeNum: 3,
-          constructionUnit: "中建一局",
-          operationUnit: "波汇科技",
-          areaNum: 10
-        },
-        curSotre: {
-          id: "",
-          name: ""
-        }, //当前监测仓数据
       };
     },
-
-    // beforeRouteLeave(to, from, next) {
-    //   if (
-    //     to.name == "巡检计划总览" ||
-    //     to.name == "设备管理主页" ||
-    //     to.name == "人员定位详情" ||
-    //     to.name == "虚拟巡检" ||
-    //     to.name == "管廊安防监控" ||
-    //     to.name == "管廊消防监控" ||
-    //     to.name == "管廊管线监控" ||
-    //     to.name == "管廊环境监控" ||
-    //     from.name == "巡检计划总览" ||
-    //     from.name == "设备管理主页" ||
-    //     from.name == "人员定位详情" ||
-    //     from.name == "虚拟巡检" ||
-    //     from.name == "管廊机电监控" ||
-    //     from.name == "管廊机电监控详情" 
-    //   ) {
-    //     from.meta.keepAlive = true;
-    //     to.meta.keepAlive = true;
-    //     this.$destroy();
-    //     next();
-    //   } else {
-    //     from.meta.keepAlive = false;
-    //     to.meta.keepAlive = false;
-    //     this.$destroy();
-    //     next();
-    //   }
-    // },
-
     mounted() {
       this.fentchData();
       this.getMonitorData();
@@ -191,159 +136,36 @@
       checkSelect
     },
     methods: {
-      //变更模型视角
-      changeArea(area) {
-        let _this = this;
-        try {
-          let location = area.split("/");
-          _this.scene.camera.flyTo({
-            destination: new Cesium.Cartesian3.fromDegrees(
-              parseFloat(location[0]),
-              parseFloat(location[1]),
-              parseFloat(location[2])
-            ),
-            orientation: {
-              heading: parseFloat(location[3]),
-              pitch: parseFloat(location[4]),
-              roll: parseFloat(location[5])
-            }
-          });
-        } catch (e) {}
-      },
-      //变更监测仓
-      changeStore() {
-        //获取区段列表
-        let _this = this;
-        //获取位置信息
-               let cur = this.storeList.filter(
-                    a => a.id == _this.queryCondition.storeId
-                )[0];
-                if (cur) {
-                    this.changeArea(cur.camera);
-                }
-        this.getMonitorData();
-      },
-      //变更区段
-      updateArea() {
-        this.getMonitorData();
-      },
-
-      //获取数据
-      fentchData() {
-        //获取管廊列表
-        let _this = this;
-        _this.queryCondition.tunnelId =parseInt( _this.$route.params.id);
-        TunnelService.getTunnels().then(
-          result => {
-            _this.tunnels = result;
-            _this.tunnels.forEach(a => {
-              if (a.id == _this.queryCondition.tunnelId) {
-                _this.curName = a.name;
-              }
-            });
-          },
-          error => {
-            console.log(error);
-          }
-        );
-        //获取管廊详细信息
-        TunnelService.getTunnelDetailByTunnelId(_this.queryCondition.tunnelId).then(
-          result => {
-            _this.curTunnel.areaNum = result.areaCount;
-            _this.curTunnel.storeNum = result.storeCount;
-            _this.curTunnel.constructionUnit = result.construct;
-            _this.curTunnel.operationUnit = result.operation;
-          },
-          error => {
-            console.log(error);
-          }
-        );
-        //获取管仓列表
-        TunnelService.getStoresByTunnelId(_this.queryCondition.tunnelId).then(
-                result => {
-                        _this.storeProp.dataList = [{ id: 0, name: "全部" }];
-                        result.forEach((a, index) => {
-                            let temp = {};
-                            temp.id = a.id;
-                            temp.name = a.name;
-                            _this.storeProp.dataList.push(temp);
-                        });
-                        _this.storeProp.selectObj.selectId =
-                            _this.storeProp.dataList[0].id;
-                    },
-          error => {
-            console.log(error);
-          }
-        );
-
-        //获取区域
-        TunnelService.getTunnelArea(_this.queryCondition.tunnelId).then(result => {
-          if (result) {
-            _this.areaList = [{id:0,name:"全部"}];
-            result.forEach(a => {
-              var temp = {};
-              temp.name = a.name;
-              temp.id = a.id;
-              _this.areaList.push(temp);
-            });
-            _this.queryCondition.areaId=_this.areaList[0].id;
-          }
-        });
-      },
-
       //根据监测类型获取数据
       getMonitorData() {
-          this.tunnelProps = [];
-          // this.axios.get(" ").then(result => {
-          //   let {code, data} = result.data;
-            // if (code == 200) {
-            // let tempData = data;
-            let tempData = [
-              {
-                name: "风机",
-                data: [
-                  {key: "开", val: "120"},
-                  {key: "关", val: "10"},
-                  {key: "故障", val: "0"}
-                ]
-              },
-              {
-                name: "百叶",
-                data: [
-                  {key: "开", val: "4"},
-                  {key: "关", val: "81"},
-                  {key: "故障", val: "0"}
-                ]
-              },
-              {
-                name: "水泵",
-                data: [
-                  {key: "开", val: "10"},
-                  {key: "关", val: "108"},
-                  {key: "故障", val: "0"}
-                ]
-              }
-            ];
-            tempData.forEach(a => {
-              let temp = {};
-              temp.name = a.name;
-              temp.data = a.data;
-              this.tunnelProps.push(temp);
-            });
-            // }
-          // });
+          let { queryCondition } = this;
+          !queryCondition.areaId && (queryCondition.areaId = queryCondition.storeId = null)
+          let parms = {
+              tunnelId: queryCondition.tunnelId,
+              storeId: queryCondition.storeId,
+              areaId:  queryCondition.areaId
+          };
+
+          MonitorDataService.getMeasStatusCounts(parms).then(
+              result => {
+                  this.tunnelProps = result
+          });
       },
 
     },
     watch:{
-               storeProp: {
-                handler: function(newVal, oldVal) {
-                    let _this = this;
-                    _this.queryCondition.storeId = newVal.selectObj.selectId;
-                    _this.changeStore();
-                },
-                deep: true
-            }
+      $route: function () {
+                // $route发生变化时再次赋值
+                this.queryCondition.tunnelId = this.tunnelId;
+                this.fentchData();
+                this.getMonitorData();
+            },
+      storeProp: {
+          handler: function (newVal, oldVal) {
+              this.updateStores(newVal.selectObj.selectId)
+          },
+          deep: true
+      }
     }
   };
 </script>

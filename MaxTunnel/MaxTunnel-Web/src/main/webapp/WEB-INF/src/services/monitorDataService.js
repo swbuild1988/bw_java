@@ -20,6 +20,40 @@ var MonitorDataService = {
             })
         })
     },
+    getMeasStatusCounts(parms){
+        return new Promise((resolve, reject) => {
+            
+            post('meas-status-counts',parms).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject(msg + 'meas-status-counts')
+                }
+            })
+        })
+    },
+    getMeasFireCounts(parms){
+        return new Promise((resolve, reject) => {
+        
+            post('meas-fire-counts',parms).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject(msg + 'meas-fire-counts')
+                }
+            })
+        })
+    },
     // 获取监测数据
     getMonitorMaxData: function() {
         return new Promise((resolve, reject) => {

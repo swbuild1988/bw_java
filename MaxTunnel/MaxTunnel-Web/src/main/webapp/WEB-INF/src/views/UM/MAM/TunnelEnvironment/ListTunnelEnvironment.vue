@@ -17,7 +17,7 @@
             </RadioGroup>
         </div>
         <div style="margin: 1vh;">
-            <check-select v-bind="storeProp"></check-select>
+            <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
         <Row>
             <Col span="18" style="padding-left: 10px;padding-right: 10px">
@@ -26,11 +26,11 @@
             </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
-            <div :style="{height:curHeight+'px'}">
-                <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
-                    <div style="margin: 10px;">
-                        <span style="font-size: 2.5vmin">{{curName}}</span>
-                        <Row :gutter="16" style="padding: 2px;">
+            <div :style="{height:curHeight+'px'}" class="overview-context" >
+                <div style="height: calc(30vh - 10px);overflow-y: auto;color: #f9f8f6">
+                    <div style="margin: 0 10px;">
+                        <span class = "monitor-tunnel-title">{{curName}}</span>
+                        <Row :gutter="16" style="padding: 0 2vim;padding:0 1rem;margin-left:0;margin-right:0">
                             <Col span="24" class="descCol">
                             <span>区段数：</span>
                             <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -50,9 +50,9 @@
                         </Row>
                     </div>
                 </div>
-                <div class="borde_rhadow" style="height:46vh; overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
-                    <div style="margin: 10px;">
-                        <span style="font-size: 2.5vmin;">极值数据统计
+                <div class="borde_rhadow monitor-tunnel-number" style="height:46vh; overflow-y: auto;margin-top: 10px;color: #f9f8f6">
+                    <div style="margin: 0 10px;">
+                        <span class = "monitor-tunnel-title">极值数据统计
                             <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
                         </span>
                         <Row :gutter="16">
@@ -88,25 +88,20 @@
     import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
     import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
     import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-    import {TunnelService} from "../../../../services/tunnelService";
     import {MonitorDataService} from "../../../../services/monitorDataService";
     import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
     import checkSelect from "../../../../components/Common/CheckSelect.vue";
+    import { commonFlyFn } from '../Minxis/unit'
+
 
     export default {
         name: "tunnel-list-tunnel-environment",
+        mixins:[commonFlyFn],
         data() {
             return {
                 curHeight: 450,
                 iconSize: 12,
                 scene: null,
-                storeProp: {
-                    itemLen: 12,
-                    dataList: [],
-                    selectObj: {
-                        selectId: ""
-                    }
-                },
                 modelProp: {
                     show: {
                         //默认隐藏
@@ -132,56 +127,9 @@
                         }
                     ] //属性集
                 },
-                queryCondition: {
-                    tunnelId: null, //监测仓ID
-                    storeId: null, //监测区段ID
-                    areaId: null
-                },
-                curName: "",
-                tunnels: [],
-                storeList: [],
-                areaList: [], //管廊对应区段数据
                 tunnelProps: [], //管廊统计数据
-                curTunnel: {
-                    storeNum: 3,
-                    constructionUnit: "中建一局",
-                    operationUnit: "波汇科技",
-                    areaNum: 10
-                },
-                curSotre: {
-                    id: "",
-                    name: ""
-                } //当前监测仓数据
             };
         },
-        // beforeRouteLeave(to, from, next) {
-        //     if (
-        //         to.name == "巡检计划总览" ||
-        //         to.name == "设备管理主页" ||
-        //         to.name == "人员定位详情" ||
-        //         to.name == "虚拟巡检" ||
-        //         to.name == "管廊安防监控" ||
-        //         to.name == "管廊机电监控" ||
-        //         to.name == "管廊消防监控" ||
-        //         to.name == "管廊管线监控" ||
-        //         from.name == "巡检计划总览" ||
-        //         from.name == "设备管理主页" ||
-        //         from.name == "人员定位详情" ||
-        //         from.name == "虚拟巡检" ||
-        //         from.name == "管廊环境监控" ||
-        //         from.name == "管廊环境监控详情"
-        //     ) {
-        //         from.meta.keepAlive = true;
-        //         to.meta.keepAlive = true;
-        //         this.$destroy();
-        //         next();
-        //     } else {
-        //         from.meta.keepAlive = false;
-        //         to.meta.keepAlive = false;
-        //         this.$destroy();
-        //         next();
-        //     }
-        // },
         mounted() {
             this.fentchData();
             this.getMonitorData();
@@ -192,127 +140,14 @@
             // this.setGIS();
         },
         methods: {
-            //变更模型视角
-            changeArea(area) {
-                let _this = this;
-                try {
-                    let location = area.split("/");
-                    _this.scene.camera.flyTo({
-                        destination: new Cesium.Cartesian3.fromDegrees(
-                            parseFloat(location[0]),
-                            parseFloat(location[1]),
-                            parseFloat(location[2])
-                        ),
-                        orientation: {
-                            heading: parseFloat(location[3]),
-                            pitch: parseFloat(location[4]),
-                            roll: parseFloat(location[5])
-                        }
-                    });
-                } catch (e) {}
-            },
-            //变更监测仓
-            changeStore() {
-                //获取区段列表
-                let _this = this;
-                this.getMonitorData();
-                //获取位置信息
-                let cur = this.storeList.filter(
-                    a => a.id == _this.queryCondition.storeId
-                )[0];
-                if (cur) {
-                    this.changeArea(cur.camera);
-                }
-            },
-            //变更区段
-            updateArea() {
-                this.getMonitorData();
-            },
-            //获取数据
-            fentchData() {
-                //获取管廊列表
-                let _this = this;
-                _this.queryCondition.tunnelId = parseInt(_this.$route.params.id);
-                TunnelService.getTunnels().then(
-                    result => {
-                        _this.tunnels = result;
-                        _this.tunnels.forEach(a => {
-                            if (a.id == _this.queryCondition.tunnelId) {
-                                _this.curName = a.name;
-                            }
-                        });
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                );
-                //获取管廊详细信息
-                TunnelService.getTunnelDetailByTunnelId(
-                    _this.queryCondition.tunnelId
-                ).then(
-                    result => {
-                        _this.curTunnel.areaNum = result.areaCount;
-                        _this.curTunnel.storeNum = result.storeCount;
-                        _this.curTunnel.constructionUnit = result.construct;
-                        _this.curTunnel.operationUnit = result.operation;
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                );
-                //获取管仓列表
-                TunnelService.getStoresByTunnelId(
-                    _this.queryCondition.tunnelId
-                ).then(
-                    result => {
-                        _this.storeProp.dataList = [{
-                            id: 0,
-                            name: "全部"
-                        }];
-                        result.forEach((a, index) => {
-                            let temp = {};
-                            temp.id = a.id;
-                            temp.name = a.name;
-                            _this.storeProp.dataList.push(temp);
-                        });
-                        _this.storeProp.selectObj.selectId =
-                            _this.storeProp.dataList[0].id;
-                    },
-                    error => {
-                        console.log(error);
-                    }
-                );
-                //获取区域
-                TunnelService.getTunnelArea(_this.queryCondition.tunnelId).then(
-                    result => {
-                        if (result) {
-                            _this.areaList = [{
-                                id: 0,
-                                name: "全部"
-                            }];
-                            result.forEach(a => {
-                                var temp = {};
-                                temp.name = a.name;
-                                temp.id = a.id;
-                                _this.areaList.push(temp);
-                            });
-                            _this.queryCondition.areaId = _this.areaList[0].id;
-                        }
-                    }
-                );
-            },
             //根据监测类型获取数据
             getMonitorData() {
-                let _this = this;
-
+                let { queryCondition } = this;
+                !queryCondition.areaId && (queryCondition.areaId = queryCondition.storeId = null)
                 let parms = {
-                    tunnelId: _this.queryCondition.tunnelId,
-                    storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
-                    areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId
+                    tunnelId: queryCondition.tunnelId,
+                    storeId: queryCondition.storeId,
+                    areaId:  queryCondition.areaId
                 };
 
                 MonitorDataService.getMaxMonitorData(parms).then(
@@ -349,9 +184,7 @@
             },
             storeProp: {
                 handler: function (newVal, oldVal) {
-                    let _this = this;
-                    _this.queryCondition.storeId = newVal.selectObj.selectId;
-                    _this.changeStore();
+                    this.updateStores(newVal.selectObj.selectId)
                 },
                 deep: true
             }
@@ -370,7 +203,7 @@
     }
 
     .descCol {
-        margin-top: 1vh;
+        margin-top: 1.2vh;
         font-size: 1.66vmin;
     }
 
@@ -381,8 +214,6 @@
     }
 
     .borde_rhadow {
-        border: 1px solid #b3b0b0;
-        border-radius: 8px;
         box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
         border-color: #eee;
     }
@@ -445,5 +276,21 @@
 
     .inline-box div {
         display: inline-block;
+    }
+    .overview-context {
+        background-color: #163069;
+    }
+    .monitor-tunnel-title {
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+        font-size: 2.5vmin;
+        background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat ;
+        background-size: cover;
+        padding-bottom:.4rem;
+    }
+    .monitor-tunnel-number {
+        background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat ;
+        background-size: 100% 100%;
     }
 </style>

@@ -53,7 +53,7 @@
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
                             "/UM/TunnelEnvironment") < 0) {
                         
-                        // _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+                        _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
                         
 
                         sessionStorage.setItem('selectedName', '')

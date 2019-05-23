@@ -28,7 +28,6 @@
 
             TunnelService.getTunnels().then(
                 (result) => {
-                    console.log('sddds',result)
                     result.forEach(a => {
                         let temp = {};
                         temp.id = a.id;
