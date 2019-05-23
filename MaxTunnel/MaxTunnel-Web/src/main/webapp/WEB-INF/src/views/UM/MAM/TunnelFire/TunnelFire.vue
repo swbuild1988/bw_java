@@ -17,7 +17,6 @@
                     leftTree: [],
                     selected: [0, -1]
                 },
-                treeNodeJumpUrl: "/UM/TunnelFire/list/",
             }
         },
         components: {
@@ -29,6 +28,7 @@
 
             TunnelService.getTunnels().then(
                 (result) => {
+                    console.log('sddds',result)
                     result.forEach(a => {
                         let temp = {};
                         temp.id = a.id;
@@ -43,15 +43,13 @@
                                 name: "监测详情",
                                 url: "/UM/TunnelFire/details/" + a.id,
                             }
-                        ];
-                        _this.curModule.leftTree.push(temp);
+                        ];  
+                        _this.curModule.leftTree.push(temp);    
                     })
                     if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf(
                             "/UM/TunnelFire") < 0) {
-                                console.log('sssssss',_this.curModule.leftTree[0].childNode[0].url)
-                        _this.goToMoudle({
-                            path: _this.curModule.leftTree[0].childNode[0].url
-                        });
+                            _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+
                         sessionStorage.setItem('selectedName', '')
                     }
                     sessionStorage.setItem("refreshAddress", "");

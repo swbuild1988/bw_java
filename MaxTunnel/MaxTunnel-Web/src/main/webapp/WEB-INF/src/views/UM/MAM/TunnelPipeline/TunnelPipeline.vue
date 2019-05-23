@@ -24,6 +24,7 @@
             ModulePage
         },
         created() {
+            console.log('你猜我走了几次')
             this.curModule.leftTree = [];
             let _this = this;
 

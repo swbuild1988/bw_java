@@ -1,15 +1,15 @@
 {
-    "ApiUrl": "http://192.168.0.35:8080/MaxTunnel-Web",
-    "RouterBase": "/MaxTunnel-Web/",
-    "MQServerAddress": "ws://192.168.6.112:15674/ws",
+    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
+    "RouterBase": "/",
+    "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
-        "BIM_SCP": "http://192.168.0.35:8099/iserver/services/3D-gcdj/rest/realspace",
-        "BIM_DATA": "http://192.168.0.35:8099/iserver/services/data-gcdj/rest/data",
-        "IMG_MAP": "http://192.168.0.35:8099/iserver/services/map-ugcv5-taiyuanmap/rest/maps/taiyuan_map"
+        "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-3Dserver/rest/realspace",
+        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-dataserver/rest/data",
+        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
     },
     "VMEntityConfig": {
-        "entityParam": [{
+        "unitEntityParam": [{
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49948864664668",
@@ -73,7 +73,8 @@
                     },
                     "label": {
                         "text": "晋源区政府",
-                        "fontSize": "40"
+                        "fontSize": "40",
+                        "color": "yellow"
                     }
                 }
             },
@@ -90,7 +91,8 @@
                     },
                     "label": {
                         "text": "太原古县城",
-                        "fontSize": "30"
+                        "fontSize": "30",
+                        "color": "yellow"
                     }
                 }
             },
@@ -144,32 +146,46 @@
                         "fontSize": "30"
                     }
                 }
-            },
-            {
-                "entityExtendParameters": {
+            }
+        ],
+        "linearEntityParam": [{
+                "entityBaseParameters": {
                     "id": 1,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.484733",
-                            "startLat": "37.715056",
-                            "endLon": "112.5251257936025",
-                            "endLat": "37.70375614400991"
-                        },
+                        "position": [{
+                                "Lon": "112.484733",
+                                "Lat": "37.715056"
+                            },
+                            {
+                                "Lon": "112.5251257936025",
+                                "Lat": "37.70375614400991"
+                            }
+                        ],
                         "width": 5,
                         "color": "black"
                     }
                 }
             },
             {
-                "entityExtendParameters": {
+
+                "entityBaseParameters": {
                     "id": 2,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.46497321322141",
-                            "startLat": "37.721283776953875",
-                            "endLon": "112.48469357685028",
-                            "endLat": "37.715046725374094"
-                        },
+                        "position": [{
+                                "Lon": "112.468313",
+                                "Lat": "37.720247"
+                            },
+                            {
+                                "Lon": "112.48469357685028",
+                                "Lat": "37.715046725374094"
+                            }
+                        ],
                         "width": 5,
                         "color": "red",
                         "lineType": "DottedLine"
@@ -177,15 +193,21 @@
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 3,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.5200631521748",
-                            "startLat": "37.70063791320829",
-                            "endLon": "112.46357985311712",
-                            "endLat": "37.71795847249162"
-                        },
+                        "position": [{
+                                "Lon": "112.520063",
+                                "Lat": "37.700637"
+                            },
+                            {
+                                "Lon": "112.478020",
+                                "Lat": "37.713441"
+                            }
+                        ],
                         "width": 5,
                         "color": "red",
                         "lineType": "DottedLine"
@@ -193,15 +215,21 @@
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 4,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.47854790079535",
-                            "startLat": "37.70960497901218",
-                            "endLon": "112.4649725227166",
-                            "endLat": "37.71379327381019"
-                        },
+                        "position": [{
+                                "Lon": "112.47854790079535",
+                                "Lat": "37.70960497901218"
+                            },
+                            {
+                                "Lon": "112.4649725227166",
+                                "Lat": "37.71379327381019"
+                            }
+                        ],
                         "width": 5,
                         "color": "red",
                         "lineType": "DottedLine"
@@ -209,145 +237,211 @@
                 }
             },
             {
-                "entityExtendParameters": {
-                    "id": 5,
-                    "polyline": {
-                        "position": {
-                            "startLon": "112.47579980976145",
-                            "startLat": "37.71784195637116",
-                            "endLon": "112.47268569619781",
-                            "endLat": "37.71144926093433"
-                        },
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "id": 6,
-                    "polyline": {
-                        "position": {
-                            "startLon": "112.47171890502153",
-                            "startLat": "37.719147063429226",
-                            "endLon": "112.46859753846694",
-                            "endLat": "37.71267458641243"
-                        },
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "id": 7,
-                    "polyline": {
-                        "position": {
-                            "startLon": "112.46768743847105",
-                            "startLat": "37.72042316810289",
-                            "endLon": "112.46609860824107",
-                            "endLat": "37.71716704813495"
-                        },
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "id": 8,
-                    "polyline": {
-                        "position": {
-                            "startLon": "112.46610374123236",
-                            "startLat": "37.71718326599255",
-                            "endLon": "112.46535031570014",
-                            "endLat": "37.71373758919339"
-                        },
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 9,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.51680183531995",
-                            "startLat": "37.69725933134812",
-                            "endLon": "112.47858912680177",
-                            "endLat": "37.70961032274356"
-                        },
+                        "position": [{
+                                "Lon": "112.516801",
+                                "Lat": "37.6972593"
+                            },
+                            {
+                                "Lon": "112.47843",
+                                "Lat": "37.709596"
+                            }
+                        ],
                         "width": 5,
                         "color": "black"
                     }
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 10,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.4861289080373",
-                            "startLat": "37.70717648445315",
-                            "endLon": "112.4891505280533",
-                            "endLat": "37.71366062508612"
-                        },
+                        "position": [{
+                                "Lon": "112.489179",
+                                "Lat": "37.713805"
+                            },
+                            {
+                                "Lon": "112.483704",
+                                "Lat": "37.702281"
+                            }
+                        ],
                         "width": 5,
                         "color": "black"
+                    },
+                    "entityBaseParameters": {
+                        "messageType": "linear"
                     }
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 11,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.48979050202126",
-                            "startLat": "37.70622446119728",
-                            "endLon": "112.49283104238542",
-                            "endLat": "37.71257066663909"
-                        },
+                        "position": [{
+                                "Lon": "112.492891",
+                                "Lat": "37.712722"
+                            },
+                            {
+                                "Lon": "112.487448",
+                                "Lat": "37.701182"
+                            }
+                        ],
                         "width": 5,
                         "color": "black"
                     }
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 12,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "startLon": "112.49687675857342",
-                            "startLat": "37.70371418429163",
-                            "endLon": "112.50007681125537",
-                            "endLat": "37.71055990337609"
-                        },
+                        "position": [{
+                                "Lon": "112.500104",
+                                "Lat": "37.710666"
+                            },
+                            {
+                                "Lon": "112.496759",
+                                "Lat": "37.703691"
+                            }
+                        ],
                         "width": 5,
                         "color": "black"
                     }
                 }
             },
             {
-                "entityExtendParameters": {
+                "entityBaseParameters": {
                     "id": 13,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
                     "polyline": {
-                        "position": {
-                            "northWestLon": "112.473979",
-                            "northWestLat": "37.730763",
-                            "northEasternLon": "112.486287",
-                            "northEasternLat": "37.729025",
-                            "southWestLon": "112.472079",
-                            "southWestLat": "37.725140",
-                            "southEasternLon": "112.484655",
-                            "southEasternLat": "37.722883"
-                        },
+
+                        "position": [{
+                                "Lon": "112.493083",
+                                "Lat": "37.730319"
+                            },
+                            {
+                                "Lon": "112.480216",
+                                "Lat": "37.732412"
+                            },
+                            {
+                                "Lon": "112.477995",
+                                "Lat": "37.725628"
+                            },
+                            {
+                                "Lon": "112.491123",
+                                "Lat": "37.723368"
+                            },
+                            {
+                                "Lon": "112.493083",
+                                "Lat": "37.730319"
+                            }
+                        ],
                         "width": 5,
                         "color": "blue"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 14,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.476576",
+                                "Lat": "37.704388"
+                            },
+                            {
+                                "Lon": "112.481279",
+                                "Lat": "37.716042"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 15,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.463756",
+                                "Lat": "37.708431"
+                            },
+                            {
+                                "Lon": "112.479916",
+                                "Lat": "37.703408"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 16,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.473064",
+                                "Lat": "37.712194"
+                            },
+                            {
+                                "Lon": "112.470590",
+                                "Lat": "37.706263"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 17,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.468896",
+                                "Lat": "37.713302"
+                            },
+                            {
+                                "Lon": "112.466356",
+                                "Lat": "37.707685"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
                     }
                 }
             }
@@ -357,19 +451,21 @@
     "flyFilePathes": [{
         "id": 1,
         "name": "飞行路线_1",
-        "path": "/VM/font/flytest.fpf",
-        "isFlyLoop": "true"
+        "path": "/VM/font/jump.fpf",
+        "isFlyLoop": "false"
     }, {
         "id": 2,
         "name": "飞行路线_2",
         "path": "/VM/font/flytest2.fpf",
-        "isFlyLoop": "true",
-        "waitTime": 30
+        "isFlyLoop": "false",
+        "waitTime": 0
     }, {
         "id": 3,
         "name": "飞行路线_3",
         "path": "/VM/font/flytest3.fpf",
         "isFlyLoop": "true",
         "playRate": "0.05"
-    }]
+    }],
+    "refreshTime":"60000"
+    
 }

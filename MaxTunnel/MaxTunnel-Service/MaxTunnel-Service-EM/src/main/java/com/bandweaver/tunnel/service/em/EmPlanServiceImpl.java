@@ -1,15 +1,12 @@
 package com.bandweaver.tunnel.service.em;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.util.TypeUtils;
+import com.bandweaver.tunnel.common.biz.constant.em.*;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -17,19 +14,12 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ls.LSInput;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.NodeStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
-import com.bandweaver.tunnel.common.biz.constant.em.ActionEnum;
-import com.bandweaver.tunnel.common.biz.constant.em.FinishEnum;
-import com.bandweaver.tunnel.common.biz.constant.em.TargetEnum;
-import com.bandweaver.tunnel.common.biz.constant.em.UnitTypeEnum;
-import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
-import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.em.EmPlanDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
@@ -41,7 +31,6 @@ import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
 import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
-import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.em.EmPlan;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -83,6 +72,8 @@ public class EmPlanServiceImpl implements EmPlanService {
     @Autowired
     private VideoServerService videoServerService;
 
+    private final static String KEY_LINE = "message";
+
     @Override
     public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
 
@@ -117,27 +108,74 @@ public class EmPlanServiceImpl implements EmPlanService {
         }
 
         // 第二步：做什么事情
+        String nextTaskValue = "-1";
         ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
-        if (ActionEnum.METION == actionEnum) {
-            LogUtil.info("提示信息为：" + emPlan.getActionValue());
-            //TODO
+        /**
+         * 不需要结果
+         */
+        if (ActionEnum.NONE == actionEnum) {
+            // 什么都不做
         }
-        if (ActionEnum.NOTICE == actionEnum) {
-            Integer unitTypeId = DataTypeUtil.toInteger(emPlan.getActionValue());
-            LogUtil.info("通知单位类型为：" + UnitTypeEnum.getEnum(unitTypeId).getName());
-            //TODO
+
+
+        /**
+         * 需要结果
+         */
+        if (ActionEnum.CHECK == actionEnum) {
+            Integer integer = TypeUtils.castToInt(emPlan.getActionValue());
+            CheckTypeEnum checkTypeEnum = CheckTypeEnum.getEnum(integer);
+            switch (checkTypeEnum) {
+                case CHECK_FAN:
+                    nextTaskValue = checkFanOpen();
+                    break;
+                case CHECK_VALUE:
+                    nextTaskValue = checkValue();
+                    break;
+                case CHECK_LOUVER:
+                    nextTaskValue = checkLouverOpen();
+                    break;
+                default:
+                    break;
+            }
+
         }
+
+        /**
+         * 自动联动控制
+         */
         if (ActionEnum.SWITCH == actionEnum) {
-            Integer inputValue = DataTypeUtil.toInteger(emPlan.getActionValue());
+            Integer inputValue = TypeUtils.castToInt(emPlan.getActionValue());
             for (MeasObj measObj : list) {
-//                if (ObjectType.getEnum(measObj.getObjtypeId()) == ObjectType.FAN) {continue;}
                 boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
                 LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果[" + flag + "]");
             }
         }
 
-        ContextUtil.getSession().setAttribute("emPlan", emPlan);
-        ContextUtil.getSession().setAttribute("measObjList", list);
+
+        /**
+         * 手动联动控制
+         */
+        if (ActionEnum.MANNUL_SWITCH == actionEnum) {
+            // 什么都不做，在前端页面控制，但是需要把检测对象id传过去
+        }
+
+        ContextUtil.getSession().setAttribute(Constants.EMPLAN_OBJ_KEY, emPlan);
+        ContextUtil.getSession().setAttribute(Constants.EMPLAN_OBJ_LIST_KEY, list);
+        ContextUtil.getSession().setAttribute(Constants.EMPLAN_NEXT_TASK_VALUE_KEY, nextTaskValue);
+    }
+
+    private String checkValue() {
+        return "0";
+    }
+
+    private String checkLouverOpen() {
+        // todo
+        return "0";
+    }
+
+    private String checkFanOpen() {
+        // todo
+        return "1";
     }
 
 
@@ -146,42 +184,68 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         boolean isFinished = false;
         while (!isFinished) {
-            EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute("emPlan");
-            Set<MeasObj> measObjList = (Set<MeasObj>) ContextUtil.getSession().getAttribute("measObjList");
-            LogUtil.debug("Get emPlan from session:" + emPlan + "\n"
-                    + "Get emPlan from session:" + measObjList);
 
+            // 从session获取数据
+            EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
+            List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
+            String nextTaskValue = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_NEXT_TASK_VALUE_KEY);
+
+            // 控制跳出循环
             if (emPlan == null) {
+                // 流程节点未配置
                 isFinished = true;
-                throw new BandWeaverException("流程节点未配置");
             } else if (emPlan != null && (emPlan.getFinishKey() == FinishEnum.MANUAL.getValue())) {
+                // 当结束类型为手动时，跳出循环
                 isFinished = true;
             } else {
+                // 当流程结束时跳出循环
                 isFinished = emPlan.getIsFinished();
             }
 
             // 第三步：怎样结束
             FinishEnum finishEnum = FinishEnum.getEnum(emPlan.getFinishKey());
-            if (FinishEnum.AUTO == finishEnum) {
-                LogUtil.info("自动结束");
-                sendMsg(emPlan, processInstanceId, sectionList, measObjList);
-                activitiService.completeTaskByProcessIntance(processInstanceId);
-                continue;
+
+            Map<String, Object> map = new HashMap<>(3);
+            map.put(KEY_LINE, nextTaskValue);
+
+            if (Objects.equals("-1", nextTaskValue)) {
+                if (FinishEnum.AUTO == finishEnum) {
+                    // 自动结束
+                    sendMsg(emPlan, processInstanceId, sectionList, measObjList);
+                    activitiService.completeTaskByProcessIntance(processInstanceId);
+                    continue;
+                }
+
+            } else {
+                if (FinishEnum.AUTO == finishEnum) {
+                    // 自动结束
+                    sendMsg(emPlan, processInstanceId, sectionList, measObjList);
+                    activitiService.completeTaskByProcessIntance(processInstanceId, map);
+                    continue;
+                }
+
             }
+
             if (FinishEnum.MANUAL == finishEnum) {
-                LogUtil.info("手动结束,需要确认");
+                // 手动结束
                 sendMsg(emPlan, processInstanceId, sectionList, measObjList);
-                continue;
+                break;
             }
 
         }
     }
 
 
-    /*
+    /**
      * 发送消息到MQ队列
+     *
+     * @param emPlan
+     * @param processInstanceId
+     * @param sectionList
+     * @param measObjList
      */
-    public void sendMsg(EmPlan emPlan, String processInstanceId, List<Section> sectionList, Set<MeasObj> measObjList) {
+    @Override
+    public void sendMsg(EmPlan emPlan, String processInstanceId, List<Section> sectionList, List<MeasObj> measObjList) {
 
         // sleep一段时间为了更好的看到效果
         try {
@@ -189,7 +253,6 @@ public class EmPlanServiceImpl implements EmPlanService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
 
         double longitude = 0, latitude = 0;
         // 获取指定仓
@@ -205,8 +268,8 @@ public class EmPlanServiceImpl implements EmPlanService {
             if (!StringTools.isNullOrEmpty(startPoint)) {
                 String[] startPointArr = startPoint.split(",");
                 if (startPointArr.length == 3) {
-                    longitude_ = DataTypeUtil.toDouble(startPointArr[0]);
-                    latitude_ = DataTypeUtil.toDouble(startPointArr[1]);
+                    longitude_ = TypeUtils.castToDouble(startPointArr[0]);
+                    latitude_ = TypeUtils.castToDouble(startPointArr[1]);
                 }
             }
 
@@ -215,8 +278,8 @@ public class EmPlanServiceImpl implements EmPlanService {
             if (!StringTools.isNullOrEmpty(endPoint)) {
                 String[] endPointArr = endPoint.split(",");
                 if (endPointArr.length == 3) {
-                    _longitude = DataTypeUtil.toDouble(endPointArr[0]);
-                    _latitude = DataTypeUtil.toDouble(endPointArr[1]);
+                    _longitude = TypeUtils.castToDouble(endPointArr[0]);
+                    _latitude = TypeUtils.castToDouble(endPointArr[1]);
                 }
             }
 
@@ -224,7 +287,7 @@ public class EmPlanServiceImpl implements EmPlanService {
             latitude = MathUtil.div(MathUtil.add(latitude_, _latitude), 2.0, 6);
         }
 
-        //获取当前流程节点列表
+        // 获取当前流程节点列表
         List<JSONObject> processList = new ArrayList<>();
         List<EmPlanDto> eList = getListByProcessKey(emPlan.getProcessKey());
         eList = eList.stream().filter(e -> emPlan.getTaskKey().compareTo(e.getTaskKey()) >= 0).collect(Collectors.toList());
@@ -233,7 +296,7 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         for (EmPlanDto e : eList) {
 
-            //获取该节点关联的监测对象及状态
+            // 获取该节点关联的监测对象及状态
             List<JSONObject> objJsonList = getMeasObjJsonList(sectionList, allMeasObjList, e);
 
             JSONObject json = new JSONObject();
@@ -244,7 +307,7 @@ public class EmPlanServiceImpl implements EmPlanService {
             processList.add(json);
         }
 
-        //获取section视频列表
+        // 获取section视频列表
         List<VideoDto> videos = new ArrayList<>();
         sectionList.forEach(s -> {
             videos.addAll(videoServerService.getVideosBySection(s.getId()));
@@ -252,15 +315,15 @@ public class EmPlanServiceImpl implements EmPlanService {
 
         ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(emPlan.getProcessKey());
         JSONObject json = new JSONObject();
-        json.put("processName", processTypeEnum.getName());
-        json.put("processKey", emPlan.getProcessKey());
+//        json.put("processName", processTypeEnum.getName());
+//        json.put("processKey", emPlan.getProcessKey());
         json.put("processInstanceId", processInstanceId);
-        json.put("range", processTypeEnum.getRange());
-        json.put("process", processList);
-        json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(), sectionList));
-        json.put("longitude", longitude);
-        json.put("latitude", latitude);
-        json.put("videos", videos);
+//        json.put("range", processTypeEnum.getRange());
+//        json.put("process", processList);
+//        json.put("nodeList", getNodeListByProcessKeyAndSection(emPlan.getProcessKey(), sectionList));
+//        json.put("longitude", longitude);
+//        json.put("latitude", latitude);
+//        json.put("videos", videos);
 
         //发送到队列
         mqService.sendToPlanUMQueue(json.toJSONString());
@@ -276,19 +339,19 @@ public class EmPlanServiceImpl implements EmPlanService {
     @Override
     public void start(List<Section> sectionList, Integer processValue) {
 
-        ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
+    ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processValue);
         LogUtil.info("开始启动【" + processTypeEnum.getName() + "】");
 
-        Map<String, Object> variables = new HashMap<>(16);
+    Map<String, Object> variables = new HashMap<>(3);
         variables.put("sectionList", sectionList);
 
-        ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition(PropertiesUtil.getString(processTypeEnum.getBpmnPath()));
-        ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(), variables);
-        LogUtil.debug("Get processInstance:" + processInstance);
-        ContextUtil.getSession().setAttribute("processInstanceId", processInstance.getId());
-        nextTask(processInstance.getId(), sectionList);
+    ProcessDefinition processDefinition = activitiService.getLastestProcessDefinition(PropertiesUtil.getString(processTypeEnum.getBpmnPath()));
+    ProcessInstance processInstance = activitiService.startProcessInstanceById(processDefinition.getId(), variables);
+        LogUtil.info("Get processInstance:" + processInstance.getId());
+        ContextUtil.getSession().setAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID, processInstance.getId());
+    nextTask(processInstance.getId(), sectionList);
 
-    }
+}
 
 
     @Override
