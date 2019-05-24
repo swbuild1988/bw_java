@@ -148,8 +148,7 @@
                 }
             }
         ],
-        "linearEntityParam": [
-            {
+        "linearEntityParam": [{
 
                 "entityBaseParameters": {
                     "id": 2,
@@ -213,7 +212,7 @@
                     }
                 }
             },
-            
+
             {
                 "entityBaseParameters": {
                     "id": 13,
@@ -336,19 +335,20 @@
         ]
     },
     "flyFilePathes": [{
-        "id": 3,
-        "name": "飞行路线_1",
-        "path": "/VM/font/storeAcross.fpf",
-        "isFlyLoop": "true",
-        "playRate": "0.05"
-    },
-    {
-        "id": 2,
-        "name": "飞行路线_2",
-        "path": "/VM/font/flytest2.fpf",
-        "isFlyLoop": "false",
-        "waitTime": 0
-    }],
-    "refreshTime":"60000"
-    
+            "id": 3,
+            "name": "飞行路线_1",
+            "path": "/VM/font/storeAcross.fpf",
+            "isFlyLoop": "true",
+            "playRate": "0.05"
+        },
+        {
+            "id": 2,
+            "name": "飞行路线_2",
+            "path": "/VM/font/flytest2.fpf",
+            "isFlyLoop": "false",
+            "waitTime": 0
+        }
+    ],
+    "refreshTime": "60000"
+
 }

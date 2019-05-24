@@ -6,19 +6,19 @@
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
         <Modal v-model="isShow" :title=title>
-            <Form ref="groupInfo" :model="groupInfo" :label-width="80">
-                <FormItem label="名称：">
+            <Form ref="groupInfo" :model="groupInfo" :label-width="80" :rules="rulesGroup">
+                <FormItem label="名称：" prop="name">
                     <Input v-model="groupInfo.name"></Input>
                 </FormItem>
-                <FormItem label="负责人：">
+                <FormItem label="负责人：" prop="leaderId">
                     <Select v-model="groupInfo.leaderId">
                         <Option v-for="item in leaders" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
             </Form>
             <div slot="footer">
-                <Button type="primary" @click="addGroup" v-show="isAdd">确定1</Button>
-                <Button type="primary" @click="editGroup" v-show="isEdit">确定2</Button>
+                <Button type="primary" @click="addGroup('groupInfo')" v-show="isAdd">确定</Button>
+                <!-- <Button type="primary" @click="editGroup('groupInfo')" v-show="isEdit">确定2</Button> -->
             </div>
         </Modal>
         <Modal v-model="isTransfer" title="小组成员管理">
@@ -47,7 +47,9 @@ export default {
             },
             groupInfo: {
                 name: null,
-                leaderId: null
+                leaderId: null,
+                leaderName: null,
+                leader: null
             },
             groupColums: [
                 {
@@ -70,20 +72,20 @@ export default {
                     align: 'center',
                     render: (h, params) => {
                         return h('div', [
-                            h('Button',{
-                                props: {
-                                    type: "primary",
-                                    size: "small"
-                                },
-                                style: {
-                                    marginRight: "5px"
-                                },
-                                on: {
-                                    click: () => {
-                                        this.eidt(params.row.id);
-                                    }
-                                }
-                            },'修改'),
+                            // h('Button',{
+                            //     props: {
+                            //         type: "primary",
+                            //         size: "small"
+                            //     },
+                            //     style: {
+                            //         marginRight: "5px"
+                            //     },
+                            //     on: {
+                            //         click: () => {
+                            //             this.eidt(params.row.id);
+                            //         }
+                            //     }
+                            // },'修改'),
                             h('Button', {
                                 props: {
                                     type: 'info',
@@ -123,17 +125,24 @@ export default {
             groupId: null,
             isAdd: false,
             isEdit: false,
-            title: null
+            title: null,
+            rulesGroup: {
+                name: [
+                    { required: true, message: '名称不能为空', trigger: 'blur' }
+                ],
+                leaderId: [
+                    { type: 'number', required: true, message: '负责人不能为空', trigger: 'blur' }
+                ]
+            }
         }
     },
     mounted(){
         this.getGroupsDatagrid()
+        this.getStaff()
     },
     methods:{
         getGroupsDatagrid(){
             var param = {
-                // name: this.groupInfo.name,
-                // leaderId: this.groupInfo.leaderId,
                 pageNum: this.page.pageNum,
                 pageSize: this.page.pageSize
             }
@@ -159,17 +168,26 @@ export default {
             this.isEdit = false
             this.title = '新增责任班组'
         },
-        addGroup(){
-            GroupServices.addGroup(this.groupInfo).then(
-                result => {
-                    this.$Message.success('添加成功！')
-                    this.getGroupsDatagrid()
-                    this.isShow = false
-                },
-                error => {
-                    this.$Message.error('添加失败')
+        addGroup(name){
+            this.$refs[name].validate((valid) => {
+                if(valid){
+                    var param = {
+                        name: this.groupInfo.name,
+                        leaderId: this.groupInfo.leaderId
+                    }
+                    GroupServices.addGroup(param).then(
+                        result => {
+                            this.$Message.success('添加成功！')
+                            this.getGroupsDatagrid()
+                            this.isShow = false
+                            this.handleReset(name)
+                        },
+                        error => {
+                            this.$Message.error('添加失败')
+                        }
+                    )
                 }
-            )
+            })
         },
         //添加员工时使用,选择leader
         getStaff(){
@@ -194,7 +212,8 @@ export default {
         getLeaderInEidt(id){
             GroupServices.getLeaderInEidt(id).then(
                 result => {
-                    this.leaders = result
+                    this.leaders = result.leader
+                    this.groupInfo = result
                 },
                 error => {
                     this.Log.info(error)
@@ -202,22 +221,34 @@ export default {
             )
         },
         eidt(id){
-            this.getLeaderInEidt(id)
-            this.isShow = true
-            this.isAdd = false
-            this.isEdit = true
-            this.title = '修改责任班组'
-        },
-        editGroup(){
-            GroupServices.editGroup(this.groupInfo).then(
+            GroupServices.getInspectionGroup(id).then(
                 result => {
-                    this.$Message.success('修改成功')
-                    this.getGroupsDatagrid()
+                    this.groupInfo = result
                 },
                 error => {
                     this.Log.info(error)
                 }
             )
+            this.isShow = true
+            this.isAdd = false
+            this.isEdit = true
+            this.title = '修改责任班组'
+        },
+        editGroup(name){
+            this.$refs[name].validate((valid) => {
+                if(valid){
+                    GroupServices.editGroup(this.groupInfo).then(
+                        result => {
+                            this.$Message.success('修改成功')
+                            this.getGroupsDatagrid()
+                            this.handleReset(name)
+                        },
+                        error => {
+                            this.Log.info(error)
+                        }
+                    )
+                }
+            })
         },
         del(id){
             this.$Modal.confirm({
@@ -304,6 +335,9 @@ export default {
             }else{
                 this.$Message.info("请选择小组成员！")
             }
+        },
+        handleReset (name) {
+            this.$refs[name].resetFields();
         }
     }
 }

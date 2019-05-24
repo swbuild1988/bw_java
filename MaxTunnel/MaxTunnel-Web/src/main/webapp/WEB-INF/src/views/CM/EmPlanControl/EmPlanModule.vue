@@ -37,14 +37,15 @@
                     </Select>
                 </FormItem>
                 <FormItem label="应急行为" prop="actionValue">
-                    <Input placeholder="请输入新应急行为" class="InputWidth" v-if="!formValidate.actionKey"/>
+                    <Input placeholder="请输入新应急行为" class="InputWidth" v-model="formValidate.actionValue"/>
+                    <!-- <Input placeholder="请输入新应急行为" class="InputWidth" v-if="!formValidate.actionKey"/>
                     <Input v-model="formValidate.actionValue" placeholder="请输入新应急行为" class="InputWidth" v-if="formValidate.actionKey == 1"/>
                     <Select v-model="formValidate.actionValue" placeholder="请选择单位类型" class="InputWidth" v-if="formValidate.actionKey == 2"> 
                         <Option v-for="item in unitTypeEnums" :value="item.val+''" :key="item.key">{{item.key}}</Option>
                     </Select>
                     <Select v-model="formValidate.actionValue" placeholder="请选择开关类型" class="InputWidth" v-if="formValidate.actionKey == 3"> 
                         <Option v-for="item in switchEnums" :value="item.val+''" :key="item.key">{{item.key}}</Option>
-                    </Select>
+                    </Select> -->
                 </FormItem>
                 <FormItem label="应急结束类型" prop="finishKey">
                     <Select v-model="formValidate.finishKey" placeholder="请选择应急结束类型" class="InputWidth">

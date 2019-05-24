@@ -293,4 +293,9 @@
         background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat ;
         background-size: 100% 100%;
     }
+    .ivu-radio-group-button .ivu-radio-wrapper {
+        background: transparent;
+        border: 1px solid #59b4e3;
+        box-shadow: 0px 0px 0.1px 0.1px rgba(89,180,227,0.5);
+    }
 </style>
