@@ -6,12 +6,13 @@
                 type="button"
                 @on-change="updateArea"
                 size="large"
+                class="stores"
             >
                 <Radio
                     v-for="(item) in areaList"
                     :key="item.id"
                     :label="item.id"
-                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;border: 1px solid #266fbd;"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;border: 1px solid #266fbd;color:white;"
                     :class="{select_radio:queryCondition.areaId==item.id}"
                 >{{item.name}}</Radio>
             </RadioGroup>
@@ -28,7 +29,7 @@
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
                 <div :style="{height:curHeight+'px'}" class="overview-context">
                     <div class="monitor-tunnel-overview">
-                        <div style="margin: 0 10px;">
+                        <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
                             <Row
                                 :gutter="16"
@@ -57,7 +58,7 @@
                         class="borde_rhadow monitor-tunnel-number"
                         style="height:46vh; overflow-y: auto;margin-top: 10px;color: #f9f8f6"
                     >
-                        <div style="margin: 0 10px;">
+                        <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
@@ -190,6 +191,49 @@ export default {
             this.queryCondition.tunnelId = this.tunnelId;
             this.fentchData();
             this.getMonitorData();
+            // 设置表格高度
+            this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+            this.iconSize = window.innerHeight * 0.02;
+            //3D加载
+            // this.setGIS();
+        },
+        methods: {
+            //根据监测类型获取数据
+            getMonitorData() {
+                let { queryCondition } = this;
+                !queryCondition.areaId &&
+                    (queryCondition.areaId = queryCondition.storeId = null);
+                let parms = {
+                    tunnelId: queryCondition.tunnelId,
+                    storeId: queryCondition.storeId,
+                    areaId: queryCondition.areaId
+                };
+
+                MonitorDataService.getMaxMonitorData(parms).then(result => {
+                    this.tunnelProps = result;
+                });
+            },
+            goToDetails(key, areaId, storeId) {
+                this.$router.push({
+                    path:
+                        "/UM/TunnelEnvironment/details/" +
+                        this.$route.params.id,
+                    query: {
+                        objtypeKey: key,
+                        areaId: areaId,
+                        storeId: storeId,
+                        tunnelId: this.$route.params.id
+                    }
+                });
+            }
+        },
+        components: {
+            SimulatedData,
+            showSwitchData,
+            Modal,
+            EnvironmentShow,
+            TestSmViewer,
+            checkSelect
         },
         storeProp: {
             handler: function(newVal, oldVal) {
@@ -229,7 +273,7 @@ export default {
 
 .select_radio {
     color: #fff;
-    background-color: #869bcb;
+    background-color: #869bcb !important;
     background-position: 0 -15px;
 }
 
@@ -254,6 +298,7 @@ export default {
 .gis {
     position: relative;
     border: 1px solid #00ffff;
+    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
 }
 
 .Section #pageBox {
@@ -309,5 +354,17 @@ export default {
     color: #f9f8f6;
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
+}
+.inline-box div {
+    display: inline-block;
+}
+
+.ivu-radio-group-button .ivu-radio-wrapper {
+    background: transparent;
+    border: 1px solid #59b4e3;
+    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
+}
+.stores >>> .ivu-radio-inner {
+    border: 1px solid #266fbd;
 }
 </style>

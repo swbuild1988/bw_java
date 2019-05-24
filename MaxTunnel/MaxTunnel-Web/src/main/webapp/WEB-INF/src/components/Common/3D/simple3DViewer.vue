@@ -50,12 +50,12 @@
                 type: Object,
                 default: () => {
                     return {
-                        longitude: 112.49251199291591,
-                        latitude: 37.71266240923646,
-                        height: -3.9149718474130935,
-                        roll: 6.283185289911254,
-                        pitch: -0.07663067161166559,
-                        heading: 5.061426494322545
+                        longitude: 112.524061,
+                        latitude: 37.703678,
+                        height: -2.349999,
+                        roll: 2.582822,
+                        pitch: -0.302351,
+                        heading: 1.716482
                     };
                 }
             },

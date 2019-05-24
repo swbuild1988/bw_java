@@ -1,18 +1,18 @@
 <template>
     <div class="allDiv">
         <Row class="conditions">
-            <Col span="4">
+            <Col span="6">
                 流程状态：
                 <Select v-model="conditions.finished" style="width:60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in workOrderStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
                 </Select>
             </Col>
-            <Col span="4">
+            <Col span="6">
                 <span>开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="conditions.startTime=$event"></DatePicker>
             </Col>
-            <Col span="4">
+            <Col span="6">
                 <span>结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="conditions.startTime=$event"></DatePicker>
             </Col>
@@ -173,7 +173,7 @@ export default {
             if (day < 10) {
                 day = '0' + day
             }
-            return date.getFullYear() + '-' + month + '-' + day +"T23:59:59.000Z";
+            return date.getFullYear() + '-' + month + '-' + day +"T16:59:59.000Z";
         },
         //查看详情
         enterDetails(id){

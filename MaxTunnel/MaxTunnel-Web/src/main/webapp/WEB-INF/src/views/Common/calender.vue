@@ -60,7 +60,9 @@ export default {
         currentMonth: null,
         currentYear: null,
         isCur: false,
-        cur: ''
+        cur: '',
+        tasks: Array,
+        type: String
     },
     watch:{
         'currentMonth':function(curVal,oldVal){
@@ -71,6 +73,11 @@ export default {
         'currentYear': function(curVal,oldVal){
             if(curVal){
                 this.initData(null)
+            }
+        },
+        'tasks': function(newVal, oldVal){
+            if(this.type=='name3'){
+                this.shwoActiveDate(newVal)
             }
         }
     },
@@ -187,13 +194,16 @@ export default {
         //回显选中的日期
         shwoActiveDate(inspectionTimeCon){
             this.$nextTick(()=>{
+                var list = []
+                for(let k = 0; k<inspectionTimeCon.length; k++){
+                    list.push(new Date(inspectionTimeCon[k].taskTime).getDate())
+                }
                 var arr = this.$refs.dayLi;          
-                var arrLength = arr.length
-                for (var i = 0; i < arrLength; i++) {
-                    let t = new Date(this.currentYear, this.currentMonth-1, Number(arr[i].innerText));
-                    // 判断当前星期在不在列表中        
-                    if (inspectionTimeCon.indexOf(t.format('yyyy-MM-dd')) != -1) {
-                        arr[i].setAttribute("class", "active");
+                for (let i = 0; i < arr.length; i++) {
+                    for(let j = 0 ; j<list.length; j++){
+                        if(arr[i].innerText==list[j]){
+                            arr[i].setAttribute("class", "active");
+                        }
                     }
                 }
             })
