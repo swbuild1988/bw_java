@@ -805,11 +805,6 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 .ivu-menu-vertical.ivu-menu-light:after {
     background: transparent;
 }
-.ivu-radio-group-button .ivu-radio-wrapper {
-    background: transparent;
-    border: 1px solid #59b4e3;
-    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
-}
 .ivu-collapse {
     background: transparent;
 }

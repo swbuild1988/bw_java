@@ -6,7 +6,7 @@
     border-radius: 4px;
     overflow: hidden;
     background: url('../../assets/UM/UmLayoutBg.png') no-repeat;
-    /* background-size: 100% 100%; */
+    background-size: 100% 100%;
 
   }
 

@@ -360,9 +360,18 @@ export default {
 }
 
 .ivu-radio-group-button .ivu-radio-wrapper {
+    color: #fff;
     background: transparent;
     border: 1px solid #59b4e3;
+    border-right: none;
     box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
+}
+.ivu-radio-group-button .ivu-radio-wrapper:last-child {
+    border-right: 1px solid #59b4e3;
+}
+.ivu-radio-group-button .ivu-radio-wrapper:after,
+.ivu-radio-group-button .ivu-radio-wrapper:before {
+    background: transparent;
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
