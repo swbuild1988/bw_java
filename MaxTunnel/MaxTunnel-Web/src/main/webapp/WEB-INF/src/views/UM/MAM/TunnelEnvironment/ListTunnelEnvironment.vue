@@ -12,7 +12,7 @@
                     v-for="(item) in areaList"
                     :key="item.id"
                     :label="item.id"
-                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;border: 1px solid #266fbd;color:white;"
                     :class="{select_radio:queryCondition.areaId==item.id}"
                 >{{item.name}}</Radio>
             </RadioGroup>
@@ -21,7 +21,7 @@
             <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
         <Row>
-            <Col span="18" style="padding-left: 10px;padding-right: 10px">
+            <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top:0.4vmin;">
                 <div class="gis" :style="{height:curHeight+'px'}">
                     <test-sm-viewer ref="smViewer"></test-sm-viewer>
                 </div>
@@ -31,10 +31,7 @@
                     <div class="monitor-tunnel-overview">
                         <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
-                            <Row
-                                :gutter="16"
-                                style="padding: 0 2vim;padding:0 1rem;margin-left:0;margin-right:0"
-                            >
+                            <Row :gutter="16" style="padding: 0 2vim;padding:0 1rem;">
                                 <Col span="24" class="descCol">
                                     <span>区段数：</span>
                                     <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -63,7 +60,7 @@
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
                             </span>
-                            <Row :gutter="16">
+                            <Row style="margin-left: 2vmin">
                                 <div v-for="(item,index) in tunnelProps" :key="index">
                                     <Col span="6" class="MaxValCol">
                                         <Icon type="clipboard" :size="iconSize"></Icon>
@@ -144,7 +141,7 @@ export default {
         this.fentchData();
         this.getMonitorData();
         // 设置表格高度
-        this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+        this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
         this.iconSize = window.innerHeight * 0.02;
         //3D加载
         // this.setGIS();
@@ -192,7 +189,7 @@ export default {
             this.fentchData();
             this.getMonitorData();
             // 设置表格高度
-            this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+            this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
             this.iconSize = window.innerHeight * 0.02;
             //3D加载
             // this.setGIS();
@@ -333,7 +330,7 @@ export default {
     display: inline-block;
 }
 .overview-context {
-    /* background-color: #163069; */
+    /* margin-top: -1vmin; */
 }
 .monitor-tunnel-title {
     text-align: center;
@@ -375,15 +372,5 @@ export default {
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
-}
-.ivu-btn-success[disabled] {
-    background: transparent;
-    border-color: #266fbd;
-    color: #fff;
-}
-.ivu-btn-success {
-    color: #fff;
-    background-color: transparent;
-    border-color: #266fbd;
 }
 </style>
