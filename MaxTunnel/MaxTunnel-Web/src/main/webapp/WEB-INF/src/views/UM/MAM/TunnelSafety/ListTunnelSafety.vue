@@ -29,8 +29,8 @@
       </Col>
       <Col span="6" style="padding-left: 10px;padding-right: 10px;">
       <div :style="{height:curHeight+'px'}">
-        <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
-          <div style="margin: 10px;">
+        <div class="monitor-tunnel-overview">
+          <div style="margin: 3vmin 10px;">
             <span style="font-size: 2.5vmin">{{curName}}</span>
             <Row :gutter="16" style="padding: 2px;">
               <Col span="24" class="descCol">
@@ -202,6 +202,8 @@
 </script>
 
 <style scoped>
+  @import '../CommonCss/ComStyle.css';
+
   .Security {
     border: 1px solid #b3b0b0;
     border-radius: 8px;
@@ -217,7 +219,6 @@
     color: #fff;
   }
 
-  .gis,
   .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -225,9 +226,7 @@
     width: 100%;
   }
 
-  .gis {
-    position: relative;
-  }
+
   .Section #pageBox {
     border: 1px solid #b3b0b0;
     bottom: 0px;
@@ -295,7 +294,7 @@
     background: #adb3e2;
     color: #fff;
   }
-  .gis,
+
   .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -332,5 +331,16 @@
 
   .inline-box div {
     display: inline-block;
+  }
+  .monitor-tunnel-number {
+    background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+    background-size: 100% 100%;
+  }
+  .monitor-tunnel-overview {
+      height: calc(30vh - 10px);
+      overflow-y: auto;
+      color: #f9f8f6;
+      background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+      background-size: 100% 100%;
   }
 </style>

@@ -246,6 +246,8 @@ export default {
 </script>
 
 <style scoped>
+@import '../CommonCss/ComStyle.css';
+
 .ivu-select-single .ivu-select-selection {
     height: 100px;
 }
@@ -271,11 +273,11 @@ export default {
     border-color: #eee;
 }
 
-.select_radio {
+/* .select_radio {
     color: #fff;
     background-color: #869bcb !important;
     background-position: 0 -15px;
-}
+} */
 
 .ivu-modal-wrap > .ivu-modal {
     left: 500px;
@@ -286,8 +288,6 @@ export default {
     background: #adb3e2;
     color: #fff;
 }
-
-.gis,
 .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -295,11 +295,13 @@ export default {
     width: 100%;
 }
 
-.gis {
+/* .gis {
     position: relative;
+    width: 100%;
     border: 1px solid #00ffff;
     box-shadow: 0px 0px 1px 1px rgba(89, 180, 227, 1);
-}
+
+} */
 
 .Section #pageBox {
     border: 1px solid #b3b0b0;
@@ -359,7 +361,7 @@ export default {
     display: inline-block;
 }
 
-.ivu-radio-group-button .ivu-radio-wrapper {
+/* .ivu-radio-group-button .ivu-radio-wrapper {
     color: #fff;
     background: transparent;
     border: 1px solid #59b4e3;
@@ -375,6 +377,6 @@ export default {
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
-}
+} */
 
 </style>
