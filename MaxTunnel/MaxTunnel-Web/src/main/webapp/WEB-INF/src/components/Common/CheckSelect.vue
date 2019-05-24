@@ -11,12 +11,11 @@
             <Button
                 :key="key"
                 v-for="(item,key) in curList"
-                :class="{select_radio:clickId==item.id}"
-                style="font-size:1.22vmin;height:3.5vmin;"
+                :class="['selectButtons',{select_radio:clickId==item.id}]"
                 :label="item.id"
                 @click="choose($event)"
             >{{item.name}}</Button>
-            
+
             <Button
                 type="success"
                 icon="ios-skipforward"
@@ -70,7 +69,7 @@ export default {
                     _this.clickId = a.id;
                 }
             });
-            this.$emit("toParent",this.clickId)
+            this.$emit("toParent", this.clickId);
         },
         setLast() {
             if (this.startIndex > 0) {
@@ -116,15 +115,18 @@ export default {
             this.setcurList();
         }
     },
-    mounted() {
-    },
+    mounted() {},
     watch: {
         dataList: {
             handler: function(newVal, oldVal) {
                 if (newVal.length > 0) {
-                    if(this.selectObj.selectId!=null||this.selectObj.selectId!=undefined||this.selectObj.selectId!=''){
+                    if (
+                        this.selectObj.selectId != null ||
+                        this.selectObj.selectId != undefined ||
+                        this.selectObj.selectId != ""
+                    ) {
                         this.clickId = this.selectObj.selectId;
-                    }else{
+                    } else {
                         this.clickId = this.dataList[0].value;
                     }
                     this.startIndex = 0;
@@ -140,8 +142,14 @@ export default {
 
 <style scoped>
 .select_radio {
-    color: #fff;
-    background-color: #869bcb;
+    background: #869bcb !important;
     background-position: 0 -15px;
+}
+.selectButtons {
+    font-size: 1.22vmin;
+    height: 3.5vmin;
+    border: 1px solid #266fbd;
+    background: transparent;
+    color: white;
 }
 </style>
