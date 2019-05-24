@@ -152,7 +152,7 @@
 
                 MonitorDataService.getMaxMonitorData(parms).then(
                     result => {
-                        _this.tunnelProps = result
+                        this.tunnelProps = result
                 });
             },
             goToDetails(key, areaId, storeId){

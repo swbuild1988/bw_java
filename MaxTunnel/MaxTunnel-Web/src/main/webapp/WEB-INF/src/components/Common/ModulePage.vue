@@ -202,7 +202,7 @@ export default {
 						collapsible
 						collapsed-width={this.minScreenWidth}
 						v-model="isCollapsed"
-						style="background-color: #1D5F87"
+						style="background-color: transparent"
 					>
 						<Menu
 							active-name={this.selectedName}
@@ -225,7 +225,7 @@ export default {
 					</Sider>
 					<Layout>
 						<Content
-							style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: #ececec;"
+							style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background: transparent;"
 						>
 							<router-view></router-view>
 							<showAlarm modalPrams={this.videoModal.modalPrams} alarmContainer={this.videoModal.alarmContainer} ref="video"></showAlarm>
@@ -516,7 +516,7 @@ export default {
 }
 
 .contact {
-	background: #f5f5f5;
+	background: transparent;
 	line-height: 3.5vmin;
 	margin: 1vmin 0;
 	padding: 0 1vmin;
@@ -563,7 +563,7 @@ export default {
 }
 
 .layout {
-	background: #f5f7f9;
+	background: transparent;
 	position: relative;
 	border-radius: 2px;
 	overflow: hidden;
@@ -613,9 +613,9 @@ export default {
 
 .layout-footer-center {
 	text-align: center;
-	background: none;
+	background: transparent;
 	color: #fff;
-	background: #357aa1;
+	/* background: #357aa1; */
 	height: 5vh;
 }
 
@@ -626,11 +626,11 @@ h1 {
 }
 
 .ivu-layout-sider >>> .ivu-layout-sider-trigger {
-	background: #1c5d85;
+	background: transparent;
 }
 
 .ivu-layout {
-	background: #fff;
+	background: transparent;
 }
 
 .ivu-layout-footer {
@@ -639,7 +639,7 @@ h1 {
 }
 
 .ivu-menu-light {
-	background: #1c5d85;
+	background: transparent;
 }
 
 .ivu-menu-submenu >>> .ivu-menu {
@@ -648,7 +648,7 @@ h1 {
 
 .ivu-menu-item:hover {
 	color: #595c56;
-	background-color: #fff;
+	background-color: transparent;
 }
 
 .ivu-menu {
@@ -661,13 +661,13 @@ h1 {
 li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 .ivu-menu-light >>> .ivu-menu-submenu-title:hover {
 	color: #1c5d85;
-	background-color: #fff;
+	background-color: transparent;
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
 	/*background: #fff;*/
 	/*color: #1d5f87 !important;*/
-	background: #15252f45;
+	/* background: #15252f45; */
 	color: #fff;
 	/* box-shadow: 0px 0px 15px 7px rgb(121, 170, 220) inset;*/
 }
@@ -713,4 +713,13 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 .icons{
 	margin-right: 0.8vmin;
 }
+.ivu-menu-vertical.ivu-menu-light:after {
+	background: transparent
+}
+.ivu-radio-group-button .ivu-radio-wrapper {
+	background: transparent;
+	border: 1px solid #59b4e3;
+	box-shadow: 0px 0px 0.1px 0.1px rgba(89,180,227,0.5);
+}
+
 </style>

@@ -11,14 +11,14 @@
 					<!-- </h1> -->
 				</div>
 				<div class="layout-nav">
-					<div style="position: fixed;right: 3.4vmin;">
+					<div style="position: fixed;right: 3.4vmin;height:6%">
 						<MenuItem v-for="module in modules" :key="module.name" :name="module.name">
 							<Dropdown placement="bottom-start">
-								<Button type="primary">
+								<div class="topBtn">
 									<Icon :type="module.frontIcon"></Icon>
-									{{module.name}}
+									<span>{{module.name}}</span>
 									<Icon :type="module.endIcon"></Icon>
-								</Button>
+								</div>
 								<DropdownMenu slot="list" :id="module.id">
 									<DropdownItem
 										v-for="child in module.children"
@@ -375,7 +375,10 @@ export default {
 <style scoped>
 .ivu-layout-header,
 .ivu-menu-light {
-	background: #357aa1;
+	background: transparent;
+}
+.ivu-btn-primary {
+	border-color: transparent;
 }
 
 .layout-logo {
@@ -399,6 +402,7 @@ export default {
 	width: calc(98vw - 300px);
 	position: fixed;
 	top: 0;
+	
 }
 
 .ivu-menu-horizontal {
@@ -432,9 +436,15 @@ export default {
 	padding: 0.4vmin 0.6vmin;
 }
 
-.layout-nav >>> .ivu-btn {
+.layout-nav  .topBtn {
 	padding: 0.6vmin 1.5vmin;
 	font-size: 1.66vmin;
+	background: url("../../assets/UM/UmTopBg.png") no-repeat center;
+	background-size: 100% 100%;
+	top: 15%;
+    position: relative;
+    width: 100%;
+    height: 70%;
 }
 
 .layout-nav >>> .ivu-dropdown-item {
@@ -449,8 +459,15 @@ export default {
     height: 0.5vmin;
     display: block;
     margin: 0 -1.6vmin;
-    background-color: #fff;
+    background-color : transparent;
     position: relative;
     top: -0.7vmin;
+}
+.ivu-menu-horizontal.ivu-menu-light:after {
+	background: transparent
+}
+.ivu-radio-group-button .ivu-radio-wrapper:after,
+.ivu-radio-group-button .ivu-radio-wrapper:before {
+	background: #59b4e3;
 }
 </style>

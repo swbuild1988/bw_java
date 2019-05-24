@@ -1,10 +1,12 @@
 <style scoped>
   .layout {
     border: 0px solid #d7dde4;
-    background: #f5f7f9;
+    /* background: #f5f7f9; */
     position: relative;
     border-radius: 4px;
     overflow: hidden;
+    background: url('../../assets/UM/UmLayoutBg.png') no-repeat;
+    /* background-size: 100% 100%; */
 
   }
 

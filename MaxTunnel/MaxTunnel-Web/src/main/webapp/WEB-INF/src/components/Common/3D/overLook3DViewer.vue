@@ -116,12 +116,12 @@
                 type: Object,
                 default: () => {
                     return {
-                        longitude: 112.49802091380211,
-                        latitude: 37.70768364078975,
-                        height: 4999.577866952712,
+                        longitude: 112.498020,
+                        latitude: 37.707683,
+                        height: 4999.577866,
                         roll: 0,
-                        pitch: -1.5383928532641606,
-                        heading: 0.3732143574336426
+                        pitch: -1.538392,
+                        heading: 0.373214
                     };
                 }
             }
