@@ -216,7 +216,7 @@
                 >返回</Button>
             </div>
         </Form>
-        <Button
+        <!-- <Button
             type="primary"
             @click="prev"
             v-if="pageType!=pageTypes.Add && curIndex > 0"
@@ -227,13 +227,14 @@
             @click="next"
             v-if="pageType!=pageTypes.Add && curIndex < contractIds.length"
             class="next"
-        >下一页</Button>
+        >下一页</Button>-->
     </div>
 </template>
 <script>
 import { EnumsService } from "../../../../services/enumsService";
 import { TunnelService } from "../../../../services/tunnelService";
 import { ContractService } from "../../../../services/contractService";
+import { PatrolService } from "../../../../services/patrolService";
 import types from "../../../../../static/Enum.json";
 import CustomerChoose from "../../../../components/UM/OAM/CustomerChoose";
 import pdf from "vue-pdf";
@@ -364,13 +365,14 @@ export default {
     mounted() {
         if (this.$route.params.contractId) {
             this.contractInfo.id = this.$route.params.contractId;
-        } else {
-            if (this.$route.params.curIndex != null) {
-                this.curIndex = this.$route.params.curIndex;
-                this.contractIds = this.$route.params.contractIds;
-                this.contractInfo.id = this.contractIds[this.curIndex];
-            }
         }
+        // else {
+        //     if (this.$route.params.curIndex != null) {
+        //         this.curIndex = this.$route.params.curIndex;
+        //         this.contractIds = this.$route.params.contractIds;
+        //         this.contractInfo.id = this.contractIds[this.curIndex];
+        //     }
+        // }
 
         this.pageType = this.$route.params.type;
         switch (this.pageType) {
@@ -447,13 +449,15 @@ export default {
                     _this.Log.info(error);
                 }
             );
-            this.axios.get("roles/users").then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.editor = data[0];
-                    this.contractInfo.operateUsername = data[0].name;
+            PatrolService.getApprover().then(
+                res => {
+                    _this.editor = res[0];
+                    _this.contractInfo.operateUsername = res[0].name;
+                },
+                err => {
+                    _this.Log.info(err);
                 }
-            });
+            );
         },
         submitcontractInfo(name) {
             this.$refs[name].validate(valid => {
@@ -512,19 +516,20 @@ export default {
                 this.pageType == this.pageTypes.Read
             ) {
                 let _this = this;
+                let id = _this.contractInfo.id;
                 let url =
                     "/" +
                     _this.ApiUrl.split("/")[3] +
                     "/contracts/" +
-                    _this.contractInfo.id +
+                    id +
                     "/view";
                 this.file.src = pdf.createLoadingTask({ url: url });
-                ContractService.getDetailsByContractId(
-                    _this.contractInfo.id
-                ).then(
+                console.log(this.file.src);
+                ContractService.getDetailsByContractId(id).then(
                     result => {
                         _this.file.editInit = true;
                         _this.contractInfo = {
+                            id,
                             name: result.cableDto.contract.name,
                             contractStartTime: new Date(
                                 result.cableDto.contract.contractStartTime
