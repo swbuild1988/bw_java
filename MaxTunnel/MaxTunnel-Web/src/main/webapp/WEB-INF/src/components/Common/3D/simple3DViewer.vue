@@ -97,19 +97,6 @@
             }
         },
         mounted() {
-            setInterval(()=>{
-                    var camera=this.viewer.scene.camera;
-                    var position=camera.position;
-                    //将笛卡尔坐标化为经纬度坐标
-                    var cartographic = Cesium.Cartographic.fromCartesian(position);
-                    var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-                    var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                    var height = cartographic.height;
-                    console.log(longitude+"/"+latitude+"/"+height);
-                    console.log('pitch'+camera.pitch)
-                    console.log('roll'+camera.roll)
-                    console.log('heading'+camera.heading)
-                },10000)
         },
         methods: {
             // 初始化
