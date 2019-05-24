@@ -7,11 +7,11 @@
                 <Col span="24">
                 <div class="GISbox">
                     <TestSmViewer ref="TestSmViewer" :openImageryProvider="true"></TestSmViewer>
-                    <div class="tunnelProfile">
+                    <!-- <div class="tunnelProfile">
                         <div>巡检计划执行概况</div>
                         <div>本月总计划：{{this.monthPlan.value}}</div>
                         <div>发现缺陷数：{{this.defectCount}}</div>
-                    </div>
+                    </div> -->
                 </div>
                 </Col>
                 <Col span="11" style="margin-top: 1vh">
@@ -47,12 +47,12 @@
                     </div>
                 </Col>
                 <Col span="12">
-                    <div class="data-box" style="margin-right: 0" @click="goToTask('巡检任务总览', 1)">
+                    <div class="data-box" style="margin-right: 0" @click="goToTask('巡检任务完成情况', 1)">
                         <DataShow v-bind="finishedTask"></DataShow>
                     </div>
                 </Col>
                 <Col span="12">
-                    <div class="data-box"  @click="goToTask('巡检任务总览', 0)">
+                    <div class="data-box"  @click="goToTask('巡检任务完成情况', 0)">
                         <DataShow v-bind="unfinishedTask"></DataShow>
                     </div>
                 </Col>
@@ -61,12 +61,12 @@
         </Row>
         <Row>
             <Col span="7">
-            <div style="width: 24vw; height:22vh;" class="equipmentChartBox">
+            <div style="width: 24vw; height:22vh;background: #ff990024" class="equipmentChartBox">
                 <simple-bar v-bind="equipmentChart"></simple-bar>
             </div>
             </Col>
             <Col span="7">
-            <div style="width:24vw; height:22vh;" class="equipmentChartDoubleColor">
+            <div style="width:24vw; height:22vh;background: #8a84bf4a" class="equipmentChartDoubleColor">
                 <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
             </div>
             </Col>
@@ -93,25 +93,21 @@
 </template>
 
 <script>
-    import DataBox from "../../../../components/Common/Box/DataBox";
-    import DataShow from "../../../../components/Common/DataShow";
-    import SimpleBar from "../../../../components/Common/Chart/SimpleBarChart";
-    import SimplePie from "../../../../components/Common/Chart/SimplePieChart";
-    import Ring from "../../../../components/Common/Chart/RingChart";
-    import TestSmViewer from "../../../../components/Common/3D/overLook3DViewer";
-    import ProcessRing from "../../../../components/Common/ProcessRing";
-    import annualPlan from "../../../../assets/UM/annualPlan.png";
-    import curMonthPlan from "../../../../assets/UM/curMonthPlan.png";
-    import processedPlan from "../../../../assets/UM/processedPlan.png";
-    import pendingPlan from "../../../../assets/UM/pendingPlan.png";
-    import {
-        PatrolService
-    } from "../../../../services/patrolService";
-    import {
-        DefectService
-    } from "../../../../services/defectService";
+    import DataBox from "@/components/Common/Box/DataBox";
+    import DataShow from "@/components/Common/DataShow";
+    import SimpleBar from "@/components/Common/Chart/SimpleBarChart";
+    import SimplePie from "@/components/Common/Chart/SimplePieChart";
+    import Ring from "@/components/Common/Chart/RingChart";
+    import TestSmViewer from "@/components/Common/3D/overLook3DViewer";
+    import ProcessRing from "@/components/Common/ProcessRing";
+    import annualPlan from "@/assets/UM/annualPlan.png";
+    import curMonthPlan from "@/assets/UM/curMonthPlan.png";
+    import processedPlan from "@/assets/UM/processedPlan.png";
+    import pendingPlan from "@/assets/UM/pendingPlan.png";
+    import { PatrolService } from "../../../../services/patrolService";
+    import { DefectService } from "../../../../services/defectService";
     import Enum from "../../../../../static/Enum.json";
-
+    import Vue from 'vue'
     export default {
         name: "equipmentMain",
 
@@ -196,7 +192,12 @@
                         key: "statusName"
                     }
                 ],
-                listHeight: 0
+                listHeight: 0,
+                polylineAttr:{
+					viewer:Vue.prototype.$viewer,
+					id:null,
+					type:'patrolShemeRoute',
+				}
             };
         },
         components: {
@@ -270,8 +271,8 @@
                     _this.Log.info(error);
                 }
             );
-
-            _this.$refs.TestSmViewer.showCheckPointEntity();
+            _this.getRouteList()
+            // _this.$refs.TestSmViewer.showCheckPointEntity();
         },
 
         methods: {
@@ -311,9 +312,81 @@
                         type: Enum.pageType.Read
                     }
                 });
-            }
-        },
+            },
+            removePolyline(){
+				let { polylineAttr } = this;
+				
+				if(!!polylineAttr.id){
+					let entitys  = polylineAttr.viewer.entities.getById(polylineAttr.id);
+				
+					if( Array.isArray(entitys) && entitys.length ){
+						entitys.forEach(entity => this.removeCommonEntity)
+					}
+                    else{
+						this.removeCommonEntity(entitys)
+					}
+					
+				}
+			},
+			removeCommonEntity(entitys){
+				let { polylineAttr } = this;
 
+				return entitys.messageType == polylineAttr.type && polylineAttr.viewer.entities.removeById(polylineAttr.id)
+            },
+            getRouteList(){
+                let params = {}
+                PatrolService.getInspectionPlanPath(params).then(
+                    result => {
+                        result.forEach(item=>{
+                            let temp = {}
+                            temp.id = item.id
+                            temp.name = item. name
+                            temp.positions = []
+                            let arr = item.others
+                            for(let i = 0; i<arr.length; i++ ){
+                                let startPointPosition = {}
+                                let startPointArr = arr[0].startPoint.split(',')
+                                startPointPosition.Lon = startPointArr[0]
+                                startPointPosition.Lat = startPointArr[1]
+                                temp.positions.push(startPointPosition)
+                                let endPointPosition = {}
+                                if(arr.length==1){
+                                    let endPointArr = arr[0].endPoint.split(',')
+                                    endPointPosition.Lon = endPointArr[0]
+                                    endPointPosition.Lat = endPointArr[1]
+                                    temp.positions.push(endPointPosition)
+                                }else{
+                                    let endPointArr = arr[item.others.length-1].endPoint.split(',')
+                                    endPointPosition.Lon = endPointArr[0]
+                                    endPointPosition.Lat = endPointArr[1]
+                                    temp.positions.push(endPointPosition)
+                                }
+                            }
+                            this.getCurRoute(temp)
+                        })
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            },
+            getCurRoute(routeInfo) {
+
+				let params = {}
+				params = {
+                    polyline:{
+                        position: routeInfo.positions,
+                        width: 5,
+                        color: 'blue'
+                    }
+                }
+
+				this.removePolyline();
+
+				this.$refs.TestSmViewer.addPolylineEntity({id:routeInfo.id,messageType:this.polylineAttr.type},params)
+				
+            }
+        }
     };
 </script>
 <style scoped>

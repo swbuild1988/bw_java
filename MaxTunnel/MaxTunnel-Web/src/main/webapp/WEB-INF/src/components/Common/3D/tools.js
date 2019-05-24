@@ -295,6 +295,8 @@ export default {
           return Cesium.Color.BLUE;
       }else if(color == "yellow"){
           return Cesium.Color.YELLOW
+      }else if(color == 'green'){
+          return Cesium.Color.GREEN
       }else {
           return Cesium.Color.RED;
       }
