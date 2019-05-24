@@ -63,7 +63,7 @@
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
                             </span>
-                            <Row :gutter="16">
+                            <Row style="margin-left:1rem;margin-right:0">
                                 <div v-for="(item,index) in tunnelProps" :key="index">
                                     <Col span="6" class="MaxValCol">
                                         <Icon type="clipboard" :size="iconSize"></Icon>
@@ -298,7 +298,7 @@ export default {
 .gis {
     position: relative;
     border: 1px solid #00ffff;
-    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
+    box-shadow: 0px 0px 1px 1px rgba(89, 180, 227, 1);
 }
 
 .Section #pageBox {
@@ -376,14 +376,5 @@ export default {
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
 }
-.ivu-btn-success[disabled] {
-    background: transparent;
-    border-color: #266fbd;
-    color: #fff;
-}
-.ivu-btn-success {
-    color: #fff;
-    background-color: transparent;
-    border-color: #266fbd;
-}
+
 </style>
