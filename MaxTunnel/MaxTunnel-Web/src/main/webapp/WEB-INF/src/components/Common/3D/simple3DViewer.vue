@@ -50,12 +50,12 @@
                 type: Object,
                 default: () => {
                     return {
-                        longitude: 112.524061,
-                        latitude: 37.703678,
-                        height: -2.349999,
-                        roll: 2.582822,
-                        pitch: -0.302351,
-                        heading: 1.716482
+                        longitude: 112.52407930589152,
+                        latitude: 37.703675232475895,
+                        height: -2.4658494805836857,
+                        roll: 2.5845992013273644e-12,
+                        pitch: -0.3023515684457794,
+                        heading: 1.7164828118850437
                     };
                 }
             },
@@ -97,6 +97,19 @@
             }
         },
         mounted() {
+            setInterval(()=>{
+                    var camera=this.viewer.scene.camera;
+                    var position=camera.position;
+                    //将笛卡尔坐标化为经纬度坐标
+                    var cartographic = Cesium.Cartographic.fromCartesian(position);
+                    var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                    var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                    var height = cartographic.height;
+                    console.log(longitude+"/"+latitude+"/"+height);
+                    console.log('pitch'+camera.pitch)
+                    console.log('roll'+camera.roll)
+                    console.log('heading'+camera.heading)
+                },10000)
         },
         methods: {
             // 初始化
