@@ -387,9 +387,12 @@ export default {
 	border-radius: 3px;
 	position: relative;
 	background: url("../../assets/UM/Maxview.png") no-repeat center;
-	background-size: 100% 100%;
 	float: left;
 	top: 1.2vh;
+}
+
+.ivu-menu-light.ivu-menu-horizontal .ivu-menu-item{
+	color: #fff;
 }
 
 .layout-title {
@@ -437,10 +440,10 @@ export default {
 }
 
 .layout-nav  .topBtn {
-	padding: 0.6vmin 1.5vmin;
+	padding: 1.7vmin 2.5vmin 0.6vmin 2.5vmin;
 	font-size: 1.66vmin;
 	background: url("../../assets/UM/UmTopBg.png") no-repeat center;
-	background-size: 100% 100%;
+	background-size: contain;
 	top: 15%;
     position: relative;
     width: 100%;
