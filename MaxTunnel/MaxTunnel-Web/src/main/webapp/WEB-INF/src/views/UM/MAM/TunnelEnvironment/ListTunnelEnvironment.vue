@@ -12,7 +12,7 @@
                     v-for="(item) in areaList"
                     :key="item.id"
                     :label="item.id"
-                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;border: 1px solid #266fbd;color:white;"
+                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;"
                     :class="{select_radio:queryCondition.areaId==item.id}"
                 >{{item.name}}</Radio>
             </RadioGroup>
@@ -162,7 +162,7 @@ export default {
             };
 
             MonitorDataService.getMaxMonitorData(parms).then(result => {
-                _this.tunnelProps = result;
+                this.tunnelProps = result;
             });
         },
         goToDetails(key, areaId, storeId) {
@@ -375,5 +375,15 @@ export default {
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
+}
+.ivu-btn-success[disabled] {
+    background: transparent;
+    border-color: #266fbd;
+    color: #fff;
+}
+.ivu-btn-success {
+    color: #fff;
+    background-color: transparent;
+    border-color: #266fbd;
 }
 </style>
