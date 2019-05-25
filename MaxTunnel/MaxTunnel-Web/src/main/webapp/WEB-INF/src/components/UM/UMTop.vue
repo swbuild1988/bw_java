@@ -414,11 +414,9 @@ export default {
 }
 
 .mainTitle {
-	/* color: #fff;
-	font-size: 4vmin; */
-	margin-top: 2.5vh;
-	margin-left: 0.5vw;
-	height: 4vh;
+	margin-top: 3.5vh;
+    margin-left: 0.8vw;
+    height: 4.5vh;
 }
 
 /* .mainTitle:hover {
