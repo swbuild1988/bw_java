@@ -27,19 +27,30 @@ html {
 .conditions {
   height: 6vh;
   line-height: 6vh;
-  background: #fff;
+  /* background: #fff; */
   padding-left: 10px;
+}
+
+.conditions span {
+  font-size: 1.4vmin;
+  color: #fff;
+}
+
+.conditions>>>.ivu-input {
+  background: transparent;
+  border-radius: 10px;
+  color: #fff;
 }
 
 .queryCondition {
   height: 10vh;
   line-height: 4.5vh;
-  background: #fff;
+  /* background: #fff; */
   padding-left: 10px;
 }
 
 .list {
-  background: #fff;
+  /* background: #fff; */
   margin-top: 10px;
   padding: 10px;
   position: relative;
@@ -95,7 +106,7 @@ body {
   /* font-size: 100%; */
 }
 
-.nullData{
+.nullData {
   font-size: 1.6vmin;
   text-align: center;
 }
@@ -103,10 +114,6 @@ body {
 @media (min-width: 2200px) {
   .allDiv {
     padding-bottom: 4vmin;
-  }
-
-  .conditions span {
-    font-size: 1.6vmin;
   }
 
   .ivu-date-picker-cells {
@@ -323,7 +330,8 @@ body {
   .ivu-form-item-required .ivu-form-item-label:before {
     font-size: 1.2vmin;
   }
-  .ivu-select-dropdown{
+
+  .ivu-select-dropdown {
     max-height: 20vmin;
   }
 

@@ -3,15 +3,15 @@
         <div class="conditions">
             <Row>
                 <Col span="4">
-                    <span class="conditionTitle">企业名称：</span>
+                    <span>企业名称：</span>
                     <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%"/>
                 </Col>
                 <Col span="4">
-                    <span class="conditionTitle">开户行：</span>
+                    <span>开户行：</span>
                     <Input v-model="conditions.bank" placeholder="请输入开户行" style="width: 60%"/>
                 </Col>
                 <Col span="4">
-                    <span class="conditionTitle">开始时间：</span>
+                    <span>开始时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择开始时间"
@@ -20,7 +20,7 @@
                     ></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span class="conditionTitle">结束时间：</span>
+                    <span>结束时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择结束时间"
@@ -33,7 +33,7 @@
                 </Col>
             </Row>
         </div>
-        <div class="list" style="background: #fff;margin-top: 10px;padding: 10px 0;">
+        <div class="list" style="margin-top: 10px;padding: 10px 0;">
             <!-- <Button class="add" type="info" @click="goToMoudle({ path:'/UM/tunnelcompany/add'})"><Icon type="plus-round" color="#fff"></Icon>添加</Button> -->
             <Row>
                 <Col span="6" v-for="(item,index) in companyList" :key="index">
@@ -254,6 +254,11 @@ export default {
 .ivu-icon {
     margin-right: 5px;
     color: #ff9b00;
+}
+.conditions >>> .ivu-input {
+    background: transparent;
+    border-radius: 10px;
+    color: #fff;
 }
 @media (min-width: 2200px) {
     .company {
