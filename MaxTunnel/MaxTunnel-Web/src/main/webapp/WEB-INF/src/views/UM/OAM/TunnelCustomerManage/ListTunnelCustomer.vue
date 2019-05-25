@@ -265,6 +265,9 @@ export default {
     margin-right: 5px;
     color: #f4ea2a;
 }
+.conditions .ivu-input-icon {
+    line-height: 3vmin;
+}
 .edit {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
@@ -284,19 +287,14 @@ export default {
     font-size: 1.4vmin !important;
 }
 
-@media (min-width: 2200px) {
-    .ivu-select,
-    .ivu-select >>> .ivu-select-selection,
-    .ivu-input-wrapper >>> .ivu-input,
-    .ivu-date-picker >>> .ivu-input,
-    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,
-    .ivu-select.ivu-select-single >>> .ivu-select-placeholder {
-        height: 4vmin;
-        line-height: 4vmin;
-        font-size: 1.4vmin;
-    }
-    .infoList {
-        width: 82%;
-    }
+.ivu-select,
+.ivu-select >>> .ivu-select-selection,
+.ivu-input-wrapper >>> .ivu-input,
+.ivu-date-picker >>> .ivu-input,
+.ivu-select.ivu-select-single >>> .ivu-select-selected-value,
+.ivu-select.ivu-select-single >>> .ivu-select-placeholder {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.24vmin;
 }
 </style>
