@@ -71,12 +71,13 @@ html {
 	border-radius: 1vmin;
 }
 
-.queryCondition .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+.queryCondition .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+.ivu-select-arrow {
 	color: #fff;
 }
 
-.queryCondition .ivu-select-arrow {
-	color: #fff;
+.queryCondition .ivu-select-selection {
+	border-radius: 1vmin;
 }
 
 .list {
@@ -149,7 +150,9 @@ body {
 }
 
 .allDiv .ivu-select,
-.allDiv .ivu-page-options-elevator input {
+.allDiv .ivu-page-options-elevator input,
+.allDiv .ivu-page-next a,
+.allDiv .ivu-page-prev a {
 	color: #fff;
 }
 
