@@ -56,23 +56,20 @@
                             </Row>
                         </div>
                     </div>
-                    <div
-                        class="borde_rhadow"
-                        style="height:calc(46vh ); overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6"
-                    >
+                    <div class="monitor-tunnel-overview" style="height:calc(47vh );">
                         <div style="margin: 10px;">
-                            <div class="Security">
-                                <h2 class="monitor-tunnel-title">机电统计:</h2>
+                            <div>
+                                <h2 class="monitor-tunnel-title">机电统计</h2>
                                 <div>
                                     <Row style="color: #fff">
                                         <Col
                                             span="22"
-                                            style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw; border:1px solid #fff;border-radius:5%"
+                                            style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw;font-size:1.5vmin"
                                             v-for="(item,index) in tunnelProps"
                                             :key="index"
                                         >
                                             <span
-                                                style="padding-left: 8px; font-size: 18px;"
+                                                style="width:100%;display:inline-block;text-align:center"
                                             >{{item.name}}</span>
                                             <div style>
                                                 <Row>
@@ -82,7 +79,12 @@
                                                         offset="2"
                                                         v-for="(item2,index) in item.data"
                                                         :key="index"
-                                                    >{{item2.key}}：{{item2.val}}</Col>
+                                                    >
+                                                        <img src="../../../../assets/UM/status-open.png" class="open-status-img" v-if="item2.key ==('开' || '正常')">
+                                                        <img src="../../../../assets/UM/status-close.png" class="open-status-img" v-if="item2.key ==('关' || '入侵')">
+                                                        <img src="../../../../assets/UM/status-alarm.png" class="open-status-img" v-if="item2.key =='故障'">
+                                                        {{item2.key}}：{{item2.val}}
+                                                    </Col>
                                                 </Row>
                                             </div>
                                         </Col>
@@ -158,37 +160,12 @@ export default {
             let parms = {
                 tunnelId: queryCondition.tunnelId,
                 storeId: queryCondition.storeId,
-                areaId: queryCondition.areaId
+                areaId: queryCondition.areaId,
+                monitorType:4
             };
 
             MonitorDataService.getMeasStatusCounts(parms).then(result => {
-                let tempData = [
-                    {
-                        name: "门禁",
-                        data: [
-                            { key: "开", val: "120" },
-                            { key: "关", val: "10" },
-                            { key: "告警", val: "2" }
-                        ]
-                    },
-                    {
-                        name: "电子井盖",
-                        data: [
-                            { key: "开", val: "4" },
-                            { key: "关", val: "81" },
-                            { key: "告警", val: "3" }
-                        ]
-                    },
-                    {
-                        name: "红外",
-                        data: [
-                            { key: "正常", val: "70" },
-                            { key: "入侵", val: "7" },
-                            { key: "告警", val: "3" }
-                        ]
-                    }
-                ];
-                this.tunnelProps = tempData;
+                this.tunnelProps = result;
             });
         }
     },
@@ -211,12 +188,6 @@ export default {
 
 <style scoped>
 @import "../CommonCss/ComStyle.css";
-.Security {
-    border: 1px solid #b3b0b0;
-    border-radius: 8px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
-}
 
 .details {
     display: inline-block;
@@ -232,12 +203,6 @@ export default {
     text-align: center;
     overflow-x: hidden;
 }
-/* .borde_rhadow {
-    border: 1px solid #b3b0b0;
-    border-radius: 8px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
-  } */
 .showSection ul li {
     display: inline-block;
     border-right: 1px solid #b3b0b0;
@@ -245,9 +210,6 @@ export default {
     text-align: center;
     width: 100px;
 }
-/* .showSection ul li {
-    width: 100px;
-  } */
 .inline-box div {
     display: inline-block;
 }
@@ -315,5 +277,18 @@ export default {
     color: #f9f8f6;
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
+}
+.ivu-col-span-10 {
+    display: block;
+    width: 33%;
+    text-align: center;
+}
+.open-status-img,
+.close-status-img {
+    width: 2.1vmin;
+    float: left;
+}
+.ivu-col-offset-2 {
+  margin-left: 0;
 }
 </style>

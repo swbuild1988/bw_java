@@ -56,10 +56,10 @@
                             </Row>
                         </div>
                     </div>
-                    <div class="monitor-tunnel-overview" style="height:calc(48vh );">
+                    <div class="monitor-tunnel-overview" style="height:calc(47vh );">
                         <div style="margin: 10px;">
                             <div>
-                                <h2 class="monitor-tunnel-title">安防统计:</h2>
+                                <h2 class="monitor-tunnel-title">安防统计</h2>
                                 <div>
                                     <Row style="color: #fff">
                                         <Col
@@ -79,9 +79,10 @@
                                                         offset="2"
                                                         v-for="(item2,index) in item.data"
                                                         :key="index"
-                                                        v-updateStatusImg:item="item2.key"
                                                     >
-                                                        <img :src="ImgName" class="open-status-img">
+                                                        <img src="../../../../assets/UM/status-open.png" class="open-status-img" v-if="item2.key ==('开' || '正常')">
+                                                        <img src="../../../../assets/UM/status-close.png" class="open-status-img" v-if="item2.key ==('关' || '入侵')">
+                                                        <img src="../../../../assets/UM/status-alarm.png" class="open-status-img" v-if="item2.key =='告警'">
                                                         {{item2.key}}：{{item2.val}}
                                                     </Col>
                                                 </Row>
@@ -133,15 +134,7 @@ export default {
                 ] //属性集
             },
             tunnelProps: [], //管廊统计数据
-            ImgName: ""
         };
-    },
-    directives: {
-        updateStatusImg: {
-            update(el, status) {
-                this.changStatusImg(status.value);
-            }
-        }
     },
     mounted() {
         this.fentchData();
@@ -163,55 +156,21 @@ export default {
     methods: {
         //根据监测类型获取数据
         getMonitorData() {
-            this.tunnelProps = [];
-            // this.axios.get(" ").then(result => {
-            //   let {code, data} = result.data;
-            // if (code == 200) {
-            // let tempData = data;
-            let tempData = [
-                {
-                    name: "门禁",
-                    data: [
-                        { key: "开", val: "120" },
-                        { key: "关", val: "10" },
-                        { key: "告警", val: "2" }
-                    ]
-                },
-                {
-                    name: "电子井盖",
-                    data: [
-                        { key: "开", val: "4" },
-                        { key: "关", val: "81" },
-                        { key: "告警", val: "3" }
-                    ]
-                },
-                {
-                    name: "红外",
-                    data: [
-                        { key: "正常", val: "70" },
-                        { key: "入侵", val: "7" },
-                        { key: "告警", val: "3" }
-                    ]
-                }
-            ];
-            tempData.forEach(a => {
-                let temp = {};
-                temp.name = a.name;
-                temp.data = a.data;
-                this.tunnelProps.push(temp);
+            let { queryCondition } = this;
+            !queryCondition.areaId &&
+                (queryCondition.areaId = queryCondition.storeId = null);
+            let parms = {
+                tunnelId: queryCondition.tunnelId,
+                storeId: queryCondition.storeId,
+                areaId: queryCondition.areaId,
+                monitorType:3 
+            };
+
+            MonitorDataService.getMeasStatusCounts(parms).then(result => {
+                this.tunnelProps = result;
+                console.log('',this.tunnelProps)
             });
-            // }
-            // });
         },
-        changStatusImg(status) {
-            let ImgName =
-                status == "开" || "正常"
-                    ? "status-open"
-                    : status == "关" || "入侵"
-                    ? "status-open"
-                    : "status-alarm";
-            this.ImgName = require(`../../../../assets/UM/${ImgName}.png`);
-        }
     },
     watch: {
         $route() {
@@ -233,36 +192,6 @@ export default {
 <style scoped>
 @import "../CommonCss/ComStyle.css";
 
-/* .Security {
-    border: 1px solid #b3b0b0;
-    border-radius: 8px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
-  } */
-.ivu-modal-wrap > .ivu-modal {
-    left: 500px;
-    top: 500px;
-}
-.ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-    background: #adb3e2;
-    color: #fff;
-}
-
-.details {
-    display: inline-block;
-    border: 1px solid #b3b0b0;
-    vertical-align: top;
-    width: 100%;
-}
-
-.Section #pageBox {
-    border: 1px solid #b3b0b0;
-    bottom: 0px;
-    width: 83.5vw;
-    left: 0px;
-    text-align: center;
-    overflow-x: hidden;
-}
 .showSection ul li {
     display: inline-block;
     border-right: 1px solid #b3b0b0;
@@ -271,16 +200,6 @@ export default {
 }
 .showSection ul li {
     width: 100px;
-}
-.tunnelsInfo div,
-.environmentalMonitoring div,
-.theFireWarning div,
-.monitoringSituation div {
-    line-height: 5vh;
-    font-size: 14px;
-}
-.inline-box div {
-    display: inline-block;
 }
 .ivu-select-single .ivu-select-selection {
     height: 100px;
@@ -369,6 +288,8 @@ export default {
 .close-status-img {
     width: 2.1vmin;
     float: left;
-    margin-right: 0.5vmin;
+}
+.ivu-col-offset-2 {
+  margin-left: 0;
 }
 </style>

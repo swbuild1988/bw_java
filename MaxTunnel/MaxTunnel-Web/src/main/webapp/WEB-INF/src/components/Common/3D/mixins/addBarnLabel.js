@@ -35,7 +35,7 @@ const addBarnLabel = {
             _this.timer.timeoutId = setTimeout(() => {
                 _this._getSection()
                     .then(result => {
-
+                        console.log('result',result)
                         if (result.moInfo) {
 
                             _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
@@ -44,7 +44,7 @@ const addBarnLabel = {
                             result.moInfo.forEach(label => _this.labelsArray.push(label));
 
                             let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
-
+console.log('lablesIDArray',lablesIDArray)
                             let { startPoint,endPoint } = result.sectionInfo;
 
                             sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
@@ -153,7 +153,7 @@ const addBarnLabel = {
                     var geographic=computeIntersections({x:_getFieldValues(selectedFeatures[i],'X'),y:_getFieldValues(selectedFeatures[i],'Y'),z:_getFieldValues(selectedFeatures[i],'Z')},startLocation,endLocation);//得到点到直线的垂直交点经纬度
 
                     let entityProp = _this._judgeEntityType(labels,selectedFeatures[i],geographic);
-
+                   console.log('entityProp',entityProp)
                     entityProp &&　addEntity( entityProp );
                 }
             }

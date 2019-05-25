@@ -35,7 +35,7 @@
                     <div class="monitor-tunnel-overview">
                         <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
-                            <Row :gutter="16" style="padding: 0 2vim;">
+                            <Row :gutter="16" style="margin-left: 0; margin-right:0;  padding: 0 2vmin;">
                                 <Col span="24" class="descCol">
                                     <span>区段数：</span>
                                     <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -192,49 +192,7 @@ export default {
             this.queryCondition.tunnelId = this.tunnelId;
             this.fentchData();
             this.getMonitorData();
-            // 设置表格高度
-            this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
-            this.iconSize = window.innerHeight * 0.02;
-            //3D加载
-            // this.setGIS();
-        },
-        methods: {
-            //根据监测类型获取数据
-            getMonitorData() {
-                let { queryCondition } = this;
-                !queryCondition.areaId &&
-                    (queryCondition.areaId = queryCondition.storeId = null);
-                let parms = {
-                    tunnelId: queryCondition.tunnelId,
-                    storeId: queryCondition.storeId,
-                    areaId: queryCondition.areaId
-                };
 
-                MonitorDataService.getMaxMonitorData(parms).then(result => {
-                    this.tunnelProps = result;
-                });
-            },
-            goToDetails(key, areaId, storeId) {
-                this.$router.push({
-                    path:
-                        "/UM/TunnelEnvironment/details/" +
-                        this.$route.params.id,
-                    query: {
-                        objtypeKey: key,
-                        areaId: areaId,
-                        storeId: storeId,
-                        tunnelId: this.$route.params.id
-                    }
-                });
-            }
-        },
-        components: {
-            SimulatedData,
-            showSwitchData,
-            Modal,
-            EnvironmentShow,
-            TestSmViewer,
-            checkSelect
         },
         storeProp: {
             handler: function(newVal, oldVal) {
@@ -242,7 +200,7 @@ export default {
             },
             deep: true
         }
-    }
+    },
 };
 </script>
 
@@ -274,12 +232,6 @@ export default {
     border-color: #eee;
 }
 
-/* .select_radio {
-    color: #fff;
-    background-color: #869bcb !important;
-    background-position: 0 -15px;
-} */
-
 .ivu-modal-wrap > .ivu-modal {
     left: 500px;
     top: 500px;
@@ -295,14 +247,6 @@ export default {
     vertical-align: top;
     width: 100%;
 }
-
-/* .gis {
-    position: relative;
-    width: 100%;
-    border: 1px solid #00ffff;
-    box-shadow: 0px 0px 1px 1px rgba(89, 180, 227, 1);
-
-} */
 
 .Section #pageBox {
     border: 1px solid #b3b0b0;
@@ -332,21 +276,9 @@ export default {
     font-size: 14px;
 }
 
-.inline-box div {
-    display: inline-block;
-}
 .overview-context {
     /* margin-top: -1vmin; */
 }
-/* .monitor-tunnel-title {
-    text-align: center;
-    width: 100%;
-    display: inline-block;
-    font-size: 2.5vmin; */
-/* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
-/* background-size: cover;
-    padding-bottom: 0.4rem;
-} */
 .monitor-tunnel-number {
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
@@ -361,22 +293,4 @@ export default {
 .inline-box div {
     display: inline-block;
 }
-
-/* .ivu-radio-group-button .ivu-radio-wrapper {
-    color: #fff;
-    background: transparent;
-    border: 1px solid #59b4e3;
-    border-right: none;
-    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
-}
-.ivu-radio-group-button .ivu-radio-wrapper:last-child {
-    border-right: 1px solid #59b4e3;
-}
-.ivu-radio-group-button .ivu-radio-wrapper:after,
-.ivu-radio-group-button .ivu-radio-wrapper:before {
-    background: transparent;
-}
-.stores >>> .ivu-radio-inner {
-    border: 1px solid #266fbd;
-} */
 </style>

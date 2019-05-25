@@ -263,12 +263,13 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
 export function addEntity(entiyParam) {
 
     if (typeof entiyParam != 'object') return;
-
+    
     let width = entiyParam.billboard.width || 30,
         height = entiyParam.billboard.height || 40,
         moId = entiyParam.moId || '0',
         Z = entiyParam.Z || Vue.prototype.VMConfig.entityHeight,
         show = entiyParam.show || false;
+        // console.log('entiyParam',entiyParam)
 
     let billboard = entiyParam.billboard != undefined ? {
             image: require('../assets/VM/' + entiyParam.billboard.image + '.png'),
@@ -299,6 +300,7 @@ export function addEntity(entiyParam) {
         label,
         show
     })
+    // console.log(entiyParam.viewer.entities)
 }
 /**
  * 获取实体集
