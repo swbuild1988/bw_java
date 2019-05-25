@@ -216,7 +216,7 @@
                 >返回</Button>
             </div>
         </Form>
-        <!-- <Button
+        <Button
             type="primary"
             @click="prev"
             v-if="pageType!=pageTypes.Add && curIndex > 0"
@@ -227,7 +227,7 @@
             @click="next"
             v-if="pageType!=pageTypes.Add && curIndex < contractIds.length"
             class="next"
-        >下一页</Button>-->
+        >下一页</Button>
     </div>
 </template>
 <script>
@@ -365,14 +365,13 @@ export default {
     mounted() {
         if (this.$route.params.contractId) {
             this.contractInfo.id = this.$route.params.contractId;
+        } else {
+            if (this.$route.params.curIndex != null) {
+                this.curIndex = this.$route.params.curIndex;
+                this.contractIds = this.$route.params.contractIds;
+                this.contractInfo.id = this.contractIds[this.curIndex];
+            }
         }
-        // else {
-        //     if (this.$route.params.curIndex != null) {
-        //         this.curIndex = this.$route.params.curIndex;
-        //         this.contractIds = this.$route.params.contractIds;
-        //         this.contractInfo.id = this.contractIds[this.curIndex];
-        //     }
-        // }
 
         this.pageType = this.$route.params.type;
         switch (this.pageType) {
@@ -524,7 +523,6 @@ export default {
                     id +
                     "/view";
                 this.file.src = pdf.createLoadingTask({ url: url });
-                console.log(this.file.src);
                 ContractService.getDetailsByContractId(id).then(
                     result => {
                         _this.file.editInit = true;

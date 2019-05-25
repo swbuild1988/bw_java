@@ -109,7 +109,7 @@
                                     <div class="buttons">
                                         <Icon
                                             type="android-list"
-                                            @click.native="read(item.id)"
+                                            @click.native="read(index)"
                                             color="rgb(198,206,230)"
                                             class="icons"
                                         ></Icon>
@@ -119,7 +119,7 @@
                                     <div class="buttons">
                                         <Icon
                                             type="edit"
-                                            @click.native="edit(item.id)"
+                                            @click.native="edit(index)"
                                             class="icons"
                                             color="rgb(198,206,230)"
                                         ></Icon>
@@ -301,20 +301,18 @@ export default {
                 this.$router.push({
                     name: "编辑合同",
                     params: {
-                        // contractIds: this.contractIds,
-                        // curIndex: index,
-                        type: type,
-                        contractId: index
+                        contractIds: this.contractIds,
+                        curIndex: index,
+                        type: type
                     }
                 });
             } else if (type == 1) {
                 this.$router.push({
                     name: "合同详情",
                     params: {
-                        // contractIds: this.contractIds,
-                        // curIndex: index,
-                        type: type,
-                        contractId: index
+                        contractIds: this.contractIds,
+                        curIndex: index,
+                        type: type
                     }
                 });
             }
