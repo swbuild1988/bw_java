@@ -39,44 +39,58 @@
                 <Col span="6" v-for="(item,index) in companyList" :key="index">
                     <div class="infoList">
                         <div class="company">
-                            <Icon type="star"></Icon>
+                            <Icon type="android-bookmark"></Icon>
                             <span>{{item.name}}</span>
                         </div>
                         <div class="conta-ctInfo">
                             <Row>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="1" class="columns">
                                     <Icon type="ios-home"></Icon>
                                     <span>{{item.address}}</span>
                                 </Col>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="2" class="columns">
                                     <Icon type="android-call"></Icon>
                                     <span>{{item.phone}}</span>
                                 </Col>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="1" class="columns">
                                     <Icon type="card"></Icon>
                                     <span>{{item.account}}</span>
                                 </Col>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="2" class="columns">
                                     <Icon type="android-mail"></Icon>
                                     <span>{{item.mail}}</span>
                                 </Col>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="1" class="columns">
                                     <Icon type="ios-barcode"></Icon>
                                     <span>{{item.creditNo}}</span>
                                 </Col>
-                                <Col span="12" class="columns">
+                                <Col span="10" offset="2" class="columns">
                                     <Icon type="cash"></Icon>
                                     <span>{{item.bank}}</span>
                                 </Col>
+                                <Col span="10" offset="1">
+                                    <div class="option">
+                                        <Button
+                                            type="primary"
+                                            size="small"
+                                            @click="edit(item.id)"
+                                            class="edit"
+                                        >编辑</Button>
+                                        <Button
+                                            type="error"
+                                            size="small"
+                                            @click="instance(item.id)"
+                                            class="del"
+                                        >删除</Button>
+                                    </div>
+                                </Col>
+                                <Col span="10" offset="2">
+                                    <div class="crtTime">
+                                        <Icon type="android-time"></Icon>
+                                        <span>{{item.crtTime}}</span>
+                                    </div>
+                                </Col>
                             </Row>
-                        </div>
-                        <div class="crtTime">
-                            <Icon type="android-time"></Icon>
-                            <span>{{item.crtTime}}</span>
-                        </div>
-                        <div class="option">
-                            <Button type="primary" size="small" @click="edit(item.id)">编辑</Button>
-                            <Button type="error" size="small" @click="instance(item.id)">删除</Button>
                         </div>
                     </div>
                 </Col>
@@ -120,7 +134,8 @@ export default {
             pageStyle: {
                 position: "absolute",
                 bottom: "20px",
-                right: "15px"
+                right: "15px",
+                color: "#fff"
             }
         };
     },
@@ -155,7 +170,7 @@ export default {
                     for (let index in result.list) {
                         result.list[index].crtTime = new Date(
                             result.list[index].crtTime
-                        ).format("yyyy-MM-dd hh:mm:s");
+                        ).format("yyyy-MM-dd");
                     }
                     _this.companyList = result.list;
                     _this.page.pageTotal = result.total;
@@ -214,38 +229,33 @@ export default {
 </script>
 <style scoped>
 .infoList {
-    border: 1px solid#dddfe1;
     width: 80%;
     margin: 10px auto;
     padding: 5px 0px;
-    border-radius: 4px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    background: url("../../../../assets/UM/companyBg.png") no-repeat;
+    background-size: 100% 100%;
 }
 .company {
-    padding-left: 10px;
-    font-size: 22px;
+    text-align: center;
+    font-size: 2.2vmin;
+    line-height: 4.4vmin;
 }
 .columns {
-    padding-left: 10px;
-    line-height: 34px;
+    line-height: 3.2vmin;
     font-size: 1.4vmin;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin: 0.4vmin 0;
+    /* margin: 0.4vmin 0; */
 }
-.crtTime,
-.option {
-    display: inline-block;
-}
+
 .crtTime {
-    float: right;
-    padding: 0px 5px 0px 0px;
-    font-size: 12px;
-    line-height: 35px;
+    font-size: 1.2vmin;
+    line-height: 4.4vmin;
 }
 .option {
-    padding: 0px 0px 0px 10px;
+    line-height: 4.4vmin;
 }
 .add {
     width: 100px;
@@ -253,31 +263,28 @@ export default {
 }
 .ivu-icon {
     margin-right: 5px;
-    color: #ff9b00;
+    color: #f4ea2a;
 }
-.conditions >>> .ivu-input {
-    background: transparent;
-    border-radius: 10px;
-    color: #fff;
+.edit {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
 }
+.del {
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+}
+
 @media (min-width: 2200px) {
-    .company {
-        font-size: 1.8vmin;
-    }
-    .contact,
-    .tel,
-    .crtTime,
-    .account,
-    .email,
-    .bank,
-    .creditNo {
-        font-size: 1.4vmin;
-    }
-    .company,
-    .conta-ctInfo,
-    .crtTime {
-        line-height: 4vh;
-    }
     .ivu-select,
     .ivu-select >>> .ivu-select-selection,
     .ivu-input-wrapper >>> .ivu-input,
