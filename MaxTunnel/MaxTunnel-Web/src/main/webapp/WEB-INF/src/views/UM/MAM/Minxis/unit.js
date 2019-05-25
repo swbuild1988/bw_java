@@ -1,10 +1,16 @@
-import { AreaService } from '@/services/areaService'
-import { flyToMyLocation } from '../../../../scripts/commonFun'
-import { TunnelService } from "@/services/tunnelService";
+import {
+    AreaService
+} from '@/services/areaService'
+import {
+    flyToMyLocation
+} from '../../../../scripts/commonFun'
+import {
+    TunnelService
+} from "@/services/tunnelService";
 import Vue from 'vue'
 
 export const commonFlyFn = {
-    data(){
+    data() {
         return {
             storeProp: {
                 itemLen: 12,
@@ -18,7 +24,7 @@ export const commonFlyFn = {
                 tunnelId: null, //监测仓ID
                 storeId: null, //监测区段ID
                 areaId: null,
-              },
+            },
             tunnels: [],
             curTunnel: {
                 storeNum: 3,
@@ -26,10 +32,14 @@ export const commonFlyFn = {
                 operationUnit: "波汇科技",
                 areaNum: 10
             },
-            curName:''
+            curName: '',
+            note: {
+                areaName: null,
+                storeName: null
+            }
         }
     },
-    methods:{
+    methods: {
         //获取数据
         fentchData() {
             //获取管廊列表
@@ -105,48 +115,71 @@ export const commonFlyFn = {
         },
         //变更区段
         updateArea() {
-                
-            let { areaId,storeId } = this.queryCondition;
+
+            let {
+                areaId,
+                storeId
+            } = this.queryCondition;
             //storeId =0 || null 
-            storeId ? TunnelService.getSectionByAreaIdStoreId(storeId,areaId).then(result => this.intercept( result ))
-                    : AreaService.getAreaInfo(areaId).then( areaInfo =>this.intercept( areaInfo ))
+            storeId ? TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result)) :
+                AreaService.getAreaInfo(areaId).then(areaInfo => this.intercept(areaInfo))
 
             this.getMonitorData();
+            this.changePositionNote();
         },
         //变更舱
-        updateStores(storeId){
-            let { queryCondition,storeProp,areaList } = this ;
-            
-            if( !areaList.length ) return;
+        updateStores(storeId) {
+            let {
+                queryCondition,
+                storeProp,
+                areaList
+            } = this;
+
+            if (!areaList.length) return;
             queryCondition.areaId = queryCondition.areaId || areaList[1].id;
-            
+
             queryCondition.storeId = storeId || storeProp.dataList[1].id;
-            
-            TunnelService.getSectionByAreaIdStoreId(storeId,queryCondition.areaId).then(result => this.intercept( result ))    
+
+            TunnelService.getSectionByAreaIdStoreId(storeId, queryCondition.areaId).then(result => this.intercept(result))
             this.getMonitorData();
+            this.changePositionNote();
         },
         //用于判断返回结果不为undefined
-        intercept(info){
-            if(!info || !info.startPoint || !info.endPoint) return
+        intercept(info) {
+            if (!info || !info.startPoint || !info.endPoint) return
             this.perspective(info)
         },
-        perspective({startPoint,endPoint}){
-            if(!startPoint || !endPoint) return
+        perspective({
+            startPoint,
+            endPoint
+        }) {
+            if (!startPoint || !endPoint) return
 
-            let [ startLon,startLan,startHeight  ] = startPoint.split(',');
-            let [ endLon,endLan  ] = endPoint.split(',');
-            
+            let [startLon, startLan, startHeight] = startPoint.split(',');
+            let [endLon, endLan] = endPoint.split(',');
+
             let position = {
-                longitude:(Number(startLon)+Number(endLon)) / 2,
-                latitude:(Number(startLan)+Number(endLan)) / 2,
-                height:Number(startHeight)
+                longitude: (Number(startLon) + Number(endLon)) / 2,
+                latitude: (Number(startLan) + Number(endLan)) / 2,
+                height: Number(startHeight)
             }
 
             flyToMyLocation({
-                scene:Vue.prototype['$simpleViewer'],
+                scene: Vue.prototype['$simpleViewer'],
                 position
             })
 
         },
+        changePositionNote() {
+            let curArea = this.areaList.find(area => {
+                return area.id === this.queryCondition.areaId
+            })
+            let curStore = this.storeProp.dataList.find(store => {
+                return store.id === this.queryCondition.storeId
+            })
+            this.note.storeName = curStore.name
+            this.note.areaName = curArea.name
+            console.log(this.note)
+        }
     },
 }

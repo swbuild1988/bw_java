@@ -149,8 +149,8 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        this.acceptPlanData();
-        this.acceptAlarmData();
+        // this.acceptPlanData();
+        // this.acceptAlarmData();
     },
     beforeDestroy() {
         // this.closedMQ();
@@ -763,7 +763,6 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 
 .ivu-menu-light.ivu-menu-vertical
     .ivu-menu-item-active:not(.ivu-menu-submenu)::after {
-    /*background: #1a4e6e;*/
     content: "";
     width: 0;
     height: 0;
@@ -773,7 +772,7 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
     transform: translate(0, -50%);
     border-top: 0.8vmin solid transparent;
     border-bottom: 0.8vmin solid transparent;
-    border-left: 1vmin solid #1a4e6e;
+    /* border-left: 1vmin solid #1a4e6e; */
 }
 
 /*去除footer的白边*/

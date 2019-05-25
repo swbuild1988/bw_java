@@ -21,9 +21,13 @@
             <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
         <Row>
-            <Col span="18" style="padding-left: 10px;padding-right: 10px">
+            <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top:0.4vmin;">
                 <div class="gis" :style="{height:curHeight+'px'}">
                     <test-sm-viewer ref="smViewer"></test-sm-viewer>
+                    <div
+                        class="positionNote"
+                        v-if="note.areaName && note.storeName"
+                    >{{note.areaName + " " + note.storeName}}</div>
                 </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
@@ -31,10 +35,7 @@
                     <div class="monitor-tunnel-overview">
                         <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
-                            <Row
-                                :gutter="16"
-                                style="padding: 0 2vim;padding:0 1rem;margin-left:0;margin-right:0"
-                            >
+                            <Row :gutter="16" style="padding: 0 2vim;">
                                 <Col span="24" class="descCol">
                                     <span>区段数：</span>
                                     <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -63,7 +64,7 @@
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
                             </span>
-                            <Row :gutter="16">
+                            <Row style="margin-left: 2vmin">
                                 <div v-for="(item,index) in tunnelProps" :key="index">
                                     <Col span="6" class="MaxValCol">
                                         <Icon type="clipboard" :size="iconSize"></Icon>
@@ -144,7 +145,7 @@ export default {
         this.fentchData();
         this.getMonitorData();
         // 设置表格高度
-        this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+        this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
         this.iconSize = window.innerHeight * 0.02;
         //3D加载
         // this.setGIS();
@@ -162,7 +163,7 @@ export default {
             };
 
             MonitorDataService.getMaxMonitorData(parms).then(result => {
-                _this.tunnelProps = result;
+                this.tunnelProps = result;
             });
         },
         goToDetails(key, areaId, storeId) {
@@ -192,7 +193,7 @@ export default {
             this.fentchData();
             this.getMonitorData();
             // 设置表格高度
-            this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
+            this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
             this.iconSize = window.innerHeight * 0.02;
             //3D加载
             // this.setGIS();
@@ -246,6 +247,8 @@ export default {
 </script>
 
 <style scoped>
+@import "../CommonCss/ComStyle.css";
+
 .ivu-select-single .ivu-select-selection {
     height: 100px;
 }
@@ -271,11 +274,11 @@ export default {
     border-color: #eee;
 }
 
-.select_radio {
+/* .select_radio {
     color: #fff;
     background-color: #869bcb !important;
     background-position: 0 -15px;
-}
+} */
 
 .ivu-modal-wrap > .ivu-modal {
     left: 500px;
@@ -286,8 +289,6 @@ export default {
     background: #adb3e2;
     color: #fff;
 }
-
-.gis,
 .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -295,11 +296,13 @@ export default {
     width: 100%;
 }
 
-.gis {
+/* .gis {
     position: relative;
+    width: 100%;
     border: 1px solid #00ffff;
-    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
-}
+    box-shadow: 0px 0px 1px 1px rgba(89, 180, 227, 1);
+
+} */
 
 .Section #pageBox {
     border: 1px solid #b3b0b0;
@@ -333,17 +336,17 @@ export default {
     display: inline-block;
 }
 .overview-context {
-    /* background-color: #163069; */
+    /* margin-top: -1vmin; */
 }
-.monitor-tunnel-title {
+/* .monitor-tunnel-title {
     text-align: center;
     width: 100%;
     display: inline-block;
-    font-size: 2.5vmin;
-    /* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
-    background-size: cover;
+    font-size: 2.5vmin; */
+/* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
+/* background-size: cover;
     padding-bottom: 0.4rem;
-}
+} */
 .monitor-tunnel-number {
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
@@ -359,7 +362,7 @@ export default {
     display: inline-block;
 }
 
-.ivu-radio-group-button .ivu-radio-wrapper {
+/* .ivu-radio-group-button .ivu-radio-wrapper {
     color: #fff;
     background: transparent;
     border: 1px solid #59b4e3;
@@ -375,5 +378,5 @@ export default {
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
-}
+} */
 </style>

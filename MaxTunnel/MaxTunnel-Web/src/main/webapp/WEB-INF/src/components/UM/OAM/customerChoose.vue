@@ -25,7 +25,7 @@
                     <div class="infoList" @click="getCustomerId(item.id,item.name)">
                         <!-- <input type="radio" class="radio" name="customers" :checked="item.id == customerId" @change="getCustomerId(item.id,item.contact)"> -->
                         <div class="company">
-                            <Icon type="star"></Icon>
+                            <Icon type="android-bookmark"></Icon>
                             <span>{{item.name}}</span>
                         </div>
                         <div>
@@ -66,7 +66,7 @@
                 placement="top"
                 @on-change="handlePage"
                 show-elevator
-                style="text-align: right;margin-top: 20px;"
+                style="text-align: right;margin-top: 20px;color:#fff"
             ></Page>
         </div>
     </div>
@@ -174,11 +174,15 @@ export default {
 .company {
     padding-left: 1vmin;
     font-size: 2vmin;
+    margin: 0.8vmin;
+}
+.company span {
+    font-size: 2vmin;
 }
 .contactInfoItem {
     padding-left: 10px;
-    line-height: 1.66vmin;
-    font-size: 1.4vmin;
+    line-height: 1.4vmin;
+    font-size: 1.2vmin;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -195,7 +199,7 @@ export default {
 }
 .ivu-icon {
     margin-right: 0.5vmin;
-    color: #ff9b00;
+    color: #f4ea2a;
 }
 .checkBox {
     position: absolute;

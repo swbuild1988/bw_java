@@ -109,7 +109,7 @@
                                     <div class="buttons">
                                         <Icon
                                             type="android-list"
-                                            @click.native="read(item.id)"
+                                            @click.native="read(index)"
                                             color="rgb(198,206,230)"
                                             class="icons"
                                         ></Icon>
@@ -119,7 +119,7 @@
                                     <div class="buttons">
                                         <Icon
                                             type="edit"
-                                            @click.native="edit(item.id)"
+                                            @click.native="edit(index)"
                                             class="icons"
                                             color="rgb(198,206,230)"
                                         ></Icon>
@@ -189,7 +189,8 @@ export default {
             pageStyle: {
                 position: "absolute",
                 bottom: "20px",
-                right: "15px"
+                right: "15px",
+                color: "#fff"
             },
             contractIds: [],
             isNullData: false
@@ -301,20 +302,18 @@ export default {
                 this.$router.push({
                     name: "编辑合同",
                     params: {
-                        // contractIds: this.contractIds,
-                        // curIndex: index,
-                        type: type,
-                        contractId: index
+                        contractIds: this.contractIds,
+                        curIndex: index,
+                        type: type
                     }
                 });
             } else if (type == 1) {
                 this.$router.push({
                     name: "合同详情",
                     params: {
-                        // contractIds: this.contractIds,
-                        // curIndex: index,
-                        type: type,
-                        contractId: index
+                        contractIds: this.contractIds,
+                        curIndex: index,
+                        type: type
                     }
                 });
             }
@@ -364,7 +363,6 @@ export default {
 }
 .list {
     margin-top: 10px;
-    background-color: white;
     padding: 20px 0 24px 0;
 }
 .pop {
@@ -503,6 +501,9 @@ export default {
 }
 .queryCondition >>> .ivu-select-dropdown {
     max-height: 30vmin;
+}
+.queryCondition .ivu-poptip-inner {
+    background-color: 485463;
 }
 .icons {
     font-size: 2.4vmin;

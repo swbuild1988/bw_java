@@ -145,11 +145,19 @@ export default {
     background: #869bcb !important;
     background-position: 0 -15px;
 }
-.selectButtons {
+.selectButtons,
+.ivu-btn-success[disabled],
+.ivu-btn-success  {
     font-size: 1.22vmin;
     height: 3.5vmin;
-    border: 1px solid #266fbd;
+    color: #fff;
     background: transparent;
-    color: white;
+    border: 1px solid #59b4e3;
+    border-right: none;
+    box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
 }
+.ivu-btn-success {
+    border-right: 1px solid #59b4e3;
+}
+
 </style>
