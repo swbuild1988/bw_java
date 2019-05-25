@@ -31,7 +31,7 @@
                     <div class="monitor-tunnel-overview">
                         <div style="margin: 3vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
-                            <Row :gutter="16" style="padding: 0 2vim;padding:0 1rem;">
+                            <Row :gutter="16" style="padding: 0 2vim;">
                                 <Col span="24" class="descCol">
                                     <span>区段数：</span>
                                     <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -243,6 +243,8 @@ export default {
 </script>
 
 <style scoped>
+@import '../CommonCss/ComStyle.css';
+
 .ivu-select-single .ivu-select-selection {
     height: 100px;
 }
@@ -268,11 +270,11 @@ export default {
     border-color: #eee;
 }
 
-.select_radio {
+/* .select_radio {
     color: #fff;
     background-color: #869bcb !important;
     background-position: 0 -15px;
-}
+} */
 
 .ivu-modal-wrap > .ivu-modal {
     left: 500px;
@@ -283,8 +285,6 @@ export default {
     background: #adb3e2;
     color: #fff;
 }
-
-.gis,
 .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -292,11 +292,13 @@ export default {
     width: 100%;
 }
 
-.gis {
+/* .gis {
     position: relative;
+    width: 100%;
     border: 1px solid #00ffff;
     box-shadow: 0px 0px 1px 1px rgba(89, 180, 227, 1);
-}
+
+} */
 
 .Section #pageBox {
     border: 1px solid #b3b0b0;
@@ -332,15 +334,15 @@ export default {
 .overview-context {
     /* margin-top: -1vmin; */
 }
-.monitor-tunnel-title {
+/* .monitor-tunnel-title {
     text-align: center;
     width: 100%;
     display: inline-block;
-    font-size: 2.5vmin;
+    font-size: 2.5vmin; */
     /* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
-    background-size: cover;
+    /* background-size: cover;
     padding-bottom: 0.4rem;
-}
+} */
 .monitor-tunnel-number {
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
@@ -356,7 +358,7 @@ export default {
     display: inline-block;
 }
 
-.ivu-radio-group-button .ivu-radio-wrapper {
+/* .ivu-radio-group-button .ivu-radio-wrapper {
     color: #fff;
     background: transparent;
     border: 1px solid #59b4e3;
@@ -372,5 +374,5 @@ export default {
 }
 .stores >>> .ivu-radio-inner {
     border: 1px solid #266fbd;
-}
+} */
 </style>

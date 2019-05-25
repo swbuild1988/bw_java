@@ -11,7 +11,7 @@
           v-for="(item,key) in areaList"
           :key="key"
           :label="item.id"
-          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
+          style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin;margin-top: 0.4vmin;"
           :class="{select_radio:queryCondition.areaId==item.id}"
         >{{item.name}}</Radio>
       </RadioGroup>
@@ -29,10 +29,10 @@
       </Col>
       <Col span="6" style="padding-left: 10px;padding-right: 10px;">
       <div :style="{height:curHeight+'px'}">
-        <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
-          <div style="margin: 10px;">
-            <span style="font-size: 2.5vmin">{{curName}}</span>
-            <Row :gutter="16" style="padding: 2px;">
+        <div class="monitor-tunnel-overview">
+          <div style="margin: 3vmin 10px;">
+            <span class="monitor-tunnel-title" >{{curName}}</span>
+            <Row :gutter="16" style="padding: 0px 2vmin;">
               <Col span="24" class="descCol">
               <span>区段数：</span>
               <div style="float: right">  {{curTunnel.areaNum}}</div>
@@ -52,17 +52,17 @@
             </Row>
           </div>
         </div>
-        <div class="borde_rhadow" style="height:calc(46vh ); overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
+        <div class="monitor-tunnel-overview" style="height:calc(48vh );">
           <div style="margin: 10px;">
-            <div class="Security">
+            <div>
               <p>
-              <h2 style="margin-left: 10px;font-size:2.5vmin">安防统计:</h2>
+              <h2 class="monitor-tunnel-title">安防统计:</h2>
               </p>
               <div>
                 <Row style="color: #fff">
-                  <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw; border:1px solid #fff;border-radius:5%;font-size:1.5vmin"
+                  <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw;font-size:1.5vmin"
                        v-for="(item,index) in tunnelProps" :key="index">
-                  <span style="padding-left: 8px;"> {{item.name}}</span>
+                  <span style="width:100%;display:inline-block;text-align:center"> {{item.name}}</span>
                   <div style="">
                     <Row>
                       <Col span="10" style="margin-top: 14px;" offset="2" v-for="(item2,index) in item.data"
@@ -202,12 +202,14 @@
 </script>
 
 <style scoped>
-  .Security {
+  @import '../CommonCss/ComStyle.css';
+
+  /* .Security {
     border: 1px solid #b3b0b0;
     border-radius: 8px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
     border-color: #eee;
-  }
+  } */
   .ivu-modal-wrap > .ivu-modal {
     left: 500px;
     top: 500px;
@@ -217,7 +219,6 @@
     color: #fff;
   }
 
-  .gis,
   .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -225,9 +226,7 @@
     width: 100%;
   }
 
-  .gis {
-    position: relative;
-  }
+
   .Section #pageBox {
     border: 1px solid #b3b0b0;
     bottom: 0px;
@@ -235,12 +234,6 @@
     left: 0px;
     text-align: center;
     overflow-x: hidden;
-  }
-  .borde_rhadow {
-    border: 1px solid #b3b0b0;
-    border-radius: 8px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
   }
   .showSection ul li {
     display: inline-block;
@@ -276,12 +269,6 @@
     background-color: #44c3ee;
     cursor:pointer
   }
-  .borde_rhadow {
-    border: 1px solid #b3b0b0;
-    border-radius: 8px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
-    border-color: #eee;
-  }
   .select_radio {
     color: #fff;
     background-color: #869bcb;
@@ -295,7 +282,7 @@
     background: #adb3e2;
     color: #fff;
   }
-  .gis,
+
   .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
@@ -332,5 +319,21 @@
 
   .inline-box div {
     display: inline-block;
+  }
+  .monitor-tunnel-number {
+    background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+    background-size: 100% 100%;
+  }
+  .monitor-tunnel-overview {
+      height: calc(30vh - 10px);
+      overflow-y: auto;
+      color: #f9f8f6;
+      background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+      background-size: 100% 100%;
+  }
+  .ivu-col-span-10 {
+      display: block;
+      width: 33%;
+      text-align: center;
   }
 </style>

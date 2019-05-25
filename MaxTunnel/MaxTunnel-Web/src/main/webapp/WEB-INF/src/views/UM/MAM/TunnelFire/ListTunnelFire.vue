@@ -20,17 +20,17 @@
             <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
         <Row>
-            <Col span="18" style="padding-left: 10px;padding-right: 10px">
+            <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top: 0.4vmin;">
             <div class="gis" :style="{height:curHeight+'px'}">
                 <test-sm-viewer ref="smViewer"></test-sm-viewer>
             </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
             <div :style="{height:curHeight+'px'}">
-                <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
-                    <div style="margin: 10px;">
-                        <span style="font-size: 2.5vmin">{{curName}}</span>
-                        <Row :gutter="16" style="padding: 2px;">
+                <div class="monitor-tunnel-overview">
+                    <div style="margin: 3vmin 10px;">
+                        <span class="monitor-tunnel-title">{{curName}}</span>
+                        <Row :gutter="16" style="padding: 0px 2vmin;">
                             <Col span="24" class="descCol">
                             <span>区段数：</span>
                             <div style="float: right">{{curTunnel.areaNum}}</div>
@@ -50,12 +50,13 @@
                         </Row>
                     </div>
                 </div>
-                <div class="borde_rhadow" style="height:46vh; overflow-y: auto;background-color: #5c7b8e;margin-top: 10px;color: #f9f8f6">
+                <div class="monitor-tunnel-number" 
+                     style="height:46vh; overflow-y: auto;margin-top: 10px;color: #f9f8f6">
                     <div style="margin: 10px;">
-                        <span style="font-size: 2.5vmin;">极值数据统计
+                        <span class="monitor-tunnel-title">极值数据统计
                             <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
                         </span>
-                        <Row :gutter="16">
+                        <Row :gutter="16" style="margin-left: 2vmin;">
                             <div v-for="(item,index) in tunnelProps" :key="index">
                                 <Col span="6" class="MaxValCol">
                                     <Icon type="clipboard" :size="iconSize"></Icon>
@@ -70,14 +71,17 @@
                                     </div>
                                 </Col>
                                 <Col span="9" class="MaxValCol" v-else>
-                                开 ：{{item.open}}
+                                    <img class="open-status-img" src="../../../../assets/UM/status-open.png"><span>开 ：{{item.open}}</span>
+
                                 </Col>
                                 <Col span="9" class="MaxValCol" color="#de8d1b" v-if="item.key != '手报'">
                                     <Icon type="android-locate" :size="iconSize"></Icon>
                                     {{item.location}}
                                 </Col>
                                  <Col span="9" class="MaxValCol" v-else>
-                                 关 : {{item.close}}
+                                    <img class="close-status-img" src="../../../../assets/UM/status-close.png"><span>关 : {{item.close}}</span>
+
+                                    
                                 </Col>
                             </div>
                         </Row>
@@ -201,6 +205,8 @@
 </script>
 
 <style scoped>
+     @import '../CommonCss/ComStyle.css';
+
     .ivu-select-single .ivu-select-selection {
         height: 100px;
     }
@@ -244,16 +250,11 @@
         color: #fff;
     }
 
-    .gis,
     .details {
         display: inline-block;
         border: 1px solid #b3b0b0;
         vertical-align: top;
         width: 100%;
-    }
-
-    .gis {
-        position: relative;
     }
 
     .Section #pageBox {
@@ -286,5 +287,22 @@
 
     .inline-box div {
         display: inline-block;
+    }
+    .monitor-tunnel-number {
+        background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+        background-size: 100% 100%;
+    }
+    .monitor-tunnel-overview {
+        height: calc(30vh - 10px);
+        overflow-y: auto;
+        color: #f9f8f6;
+        background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+        background-size: 100% 100%;
+    }
+    .open-status-img,
+    .close-status-img {
+        width: 2.1vmin;
+        float: left;
+        margin-right: .5vmin;
     }
 </style>

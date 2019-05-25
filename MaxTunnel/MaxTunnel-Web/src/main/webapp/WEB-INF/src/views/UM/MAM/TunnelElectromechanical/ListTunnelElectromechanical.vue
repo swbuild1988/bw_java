@@ -20,7 +20,7 @@
             <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
     <Row>
-      <Col span="18" style="padding-left: 10px;padding-right: 10px">
+      <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top: 0.4vmin;">
         <div class="gis" :style="{height:curHeight+'px'}">
           <!-- <sm-viewer :id="mapId" ref="smViewer">
           </sm-viewer> -->
@@ -29,10 +29,10 @@
       </Col>
       <Col span="6" style="padding-left: 10px;padding-right: 10px;">
       <div :style="{height:curHeight+'px'}">
-        <div class="borde_rhadow" style="height: calc(30vh - 10px);overflow-y: auto;background-color: #5c7b8e;color: #f9f8f6">
-          <div style="margin: 10px;">
-            <span style="font-size: 2.5vmin">{{curName}}</span>
-            <Row :gutter="16" style="padding: 2px;">
+        <div class="monitor-tunnel-overview">
+          <div style="margin: 3vmin 10px;">
+            <span class="monitor-tunnel-title">{{curName}}</span>
+            <Row :gutter="16" style="padding: 0px 2vmin;">
               <Col span="24" class="descCol">
               <span>区段数：</span>
               <div style="float: right">  {{curTunnel.areaNum}}</div>
@@ -56,7 +56,7 @@
           <div style="margin: 10px;">
             <div class="Security">
               <p>
-              <h2 style="margin-left: 10px;">机电统计:</h2>
+              <h2 class="monitor-tunnel-title">机电统计:</h2>
               </p>
               <div>
                 <Row style="color: #fff">
@@ -92,6 +92,7 @@
   import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
   import checkSelect from "../../../../components/Common/CheckSelect.vue";
   import { commonFlyFn } from '../Minxis/unit'
+  
 
   export default {
     name:"list-tunnel-ele",
@@ -148,7 +149,33 @@
 
           MonitorDataService.getMeasStatusCounts(parms).then(
               result => {
-                  this.tunnelProps = result
+                let tempData = [
+              {
+                name: "门禁",
+                data: [
+                  {key: "开", val: "120"},
+                  {key: "关", val: "10"},
+                  {key: "告警", val: "2"}
+                ]
+              },
+              {
+                name: "电子井盖",
+                data: [
+                  {key: "开", val: "4"},
+                  {key: "关", val: "81"},
+                  {key: "告警", val: "3"}
+                ]
+              },
+              {
+                name: "红外",
+                data: [
+                  {key: "正常", val: "70"},
+                  {key: "入侵", val: "7"},
+                  {key: "告警", val: "3"}
+                ]
+              }
+            ];
+                  this.tunnelProps = tempData
           });
       },
 
@@ -171,31 +198,19 @@
 </script>
 
 <style scoped>
+  @import '../CommonCss/ComStyle.css';
   .Security {
     border: 1px solid #b3b0b0;
     border-radius: 8px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
     border-color: #eee;
   }
-  .ivu-modal-wrap > .ivu-modal {
-    left: 500px;
-    top: 500px;
-  }
-  .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-    background: #adb3e2;
-    color: #fff;
-  }
 
-  .gis,
   .details {
     display: inline-block;
     border: 1px solid #b3b0b0;
     vertical-align: top;
     width: 100%;
-  }
-
-  .gis {
-    position: relative;
   }
   .Section #pageBox {
     border: 1px solid #b3b0b0;
@@ -205,28 +220,22 @@
     text-align: center;
     overflow-x: hidden;
   }
-  .borde_rhadow {
+  /* .borde_rhadow {
     border: 1px solid #b3b0b0;
     border-radius: 8px;
     box-shadow: 5px 6px 4px rgba(0, 0, 0, 0.2);
     border-color: #eee;
-  }
+  } */
   .showSection ul li {
     display: inline-block;
     border-right: 1px solid #b3b0b0;
     line-height: 35px;
     text-align: center;
-  }
-  .showSection ul li {
     width: 100px;
   }
-  .tunnelsInfo div,
-  .environmentalMonitoring div,
-  .theFireWarning div,
-  .monitoringSituation div {
-    line-height: 5vh;
-    font-size: 14px;
-  }
+  /* .showSection ul li {
+    width: 100px;
+  } */
   .inline-box div {
     display: inline-block;
   }
@@ -264,21 +273,6 @@
     background: #adb3e2;
     color: #fff;
   }
-  .gis,
-  .details {
-    display: inline-block;
-    border: 1px solid #b3b0b0;
-    vertical-align: top;
-    width: 100%;
-  }
-  .Section #pageBox {
-    border: 1px solid #b3b0b0;
-    bottom: 0px;
-    width: 83.5vw;
-    left: 0px;
-    text-align: center;
-    overflow-x: hidden;
-  }
 
   .tunnelsInfo,
   .environmentalMonitoring,
@@ -298,8 +292,15 @@
     line-height: 5vh;
     font-size: 14px;
   }
-
-  .inline-box div {
-    display: inline-block;
+  .monitor-tunnel-number {
+      background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+      background-size: 100% 100%;
+  }
+  .monitor-tunnel-overview {
+      height: calc(30vh - 10px);
+      overflow-y: auto;
+      color: #f9f8f6;
+      background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+      background-size: 100% 100%;
   }
 </style>
