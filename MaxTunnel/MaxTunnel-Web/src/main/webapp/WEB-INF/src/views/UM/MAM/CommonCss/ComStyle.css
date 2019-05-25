@@ -5,16 +5,20 @@
     border-right: none;
     box-shadow: 0px 0px 0.1px 0.1px rgba(89, 180, 227, 0.5);
 }
+
 .ivu-radio-group-button .ivu-radio-wrapper:last-child {
     border-right: 1px solid #59b4e3;
 }
+
 .ivu-radio-group-button .ivu-radio-wrapper:after,
 .ivu-radio-group-button .ivu-radio-wrapper:before {
     background: transparent;
 }
-.stores >>> .ivu-radio-inner {
+
+.stores>>>.ivu-radio-inner {
     border: 1px solid #266fbd;
 }
+
 .gis {
     position: relative;
     width: 100%;
@@ -27,6 +31,7 @@
     background-color: #869bcb !important;
     background-position: 0 -15px;
 }
+
 .monitor-tunnel-title {
     text-align: center;
     width: 100%;
@@ -35,4 +40,18 @@
     /* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
     background-size: cover;
     padding-bottom: 0.4rem;
+}
+
+.positionNote {
+    position: absolute;
+    width: 22vmin;
+    height: 5vmin;
+    top: 0;
+    left: 0;
+    background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+    background-size: 100% 100%;
+    font-size: 2vmin;
+    text-align: center;
+    padding-top: 1vmin;
+    color: #fff;
 }

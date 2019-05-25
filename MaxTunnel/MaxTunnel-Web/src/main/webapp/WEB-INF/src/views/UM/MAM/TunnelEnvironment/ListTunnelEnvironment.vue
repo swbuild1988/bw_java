@@ -24,6 +24,10 @@
             <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top:0.4vmin;">
                 <div class="gis" :style="{height:curHeight+'px'}">
                     <test-sm-viewer ref="smViewer"></test-sm-viewer>
+                    <div
+                        class="positionNote"
+                        v-if="note.areaName && note.storeName"
+                    >{{note.areaName + " " + note.storeName}}</div>
                 </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
@@ -243,7 +247,7 @@ export default {
 </script>
 
 <style scoped>
-@import '../CommonCss/ComStyle.css';
+@import "../CommonCss/ComStyle.css";
 
 .ivu-select-single .ivu-select-selection {
     height: 100px;
@@ -339,8 +343,8 @@ export default {
     width: 100%;
     display: inline-block;
     font-size: 2.5vmin; */
-    /* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
-    /* background-size: cover;
+/* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
+/* background-size: cover;
     padding-bottom: 0.4rem;
 } */
 .monitor-tunnel-number {

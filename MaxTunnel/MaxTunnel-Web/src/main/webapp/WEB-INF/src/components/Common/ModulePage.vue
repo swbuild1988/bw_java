@@ -149,8 +149,8 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        this.acceptPlanData();
-        this.acceptAlarmData();
+        // this.acceptPlanData();
+        // this.acceptAlarmData();
     },
     beforeDestroy() {
         // this.closedMQ();
