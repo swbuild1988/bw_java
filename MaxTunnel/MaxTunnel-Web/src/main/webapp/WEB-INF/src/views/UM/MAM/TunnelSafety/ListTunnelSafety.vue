@@ -61,13 +61,13 @@
               <div>
                 <Row style="color: #fff">
                   <Col span="22" style="margin-top: 1vh;margin-bottom: 1vh; margin-left: 1vw;font-size:1.5vmin"
-                       v-for="(item,index) in tunnelProps" :key="index">
+                       v-for="(item,index) in tunnelProps" :key="index" v-updateStatusImg>
                   <span style="width:100%;display:inline-block;text-align:center"> {{item.name}}</span>
                   <div style="">
                     <Row>
                       <Col span="10" style="margin-top: 14px;" offset="2" v-for="(item2,index) in item.data"
                            :key="index">
-                      {{item2.key}}：{{item2.val}}
+                          <img class="open-status-img" :src="ImgName" ><span>{{item2.key}}：{{item2.val}}</span>
                       </Col>
                     </Row>
                   </div>
@@ -118,9 +118,16 @@
           ] //属性集
         },
         tunnelProps: [], //管廊统计数据
+        updateImg:''
       };
     },
-
+    directives:{
+      updateStatusImg:{
+        update(el,status){
+          console.log('status',status)
+        }
+      }
+    },
     mounted() {
       this.fentchData();
       this.getMonitorData();
@@ -182,6 +189,10 @@
             // }
           // });
       },
+      changStatusImg(status){
+        let ImgName  = status == '开'|| '正常' ? 'status-open' :(status == '关'|| '入侵' ? 'status-open' : 'status-alarm');
+        this.ImgName = require(`../../../../assets/UM/${ ImgName }.png`)
+      }
 
     },
     watch:{
@@ -335,5 +346,11 @@
       display: block;
       width: 33%;
       text-align: center;
+  }
+  .open-status-img,
+  .close-status-img {
+      width: 2.1vmin; 
+      float: left;
+      margin-right: .5vmin;
   }
 </style>
