@@ -189,7 +189,8 @@ export default {
             pageStyle: {
                 position: "absolute",
                 bottom: "20px",
-                right: "15px"
+                right: "15px",
+                color: "#fff"
             },
             contractIds: [],
             isNullData: false
@@ -362,7 +363,6 @@ export default {
 }
 .list {
     margin-top: 10px;
-    background-color: white;
     padding: 20px 0 24px 0;
 }
 .pop {
@@ -501,6 +501,9 @@ export default {
 }
 .queryCondition >>> .ivu-select-dropdown {
     max-height: 30vmin;
+}
+.queryCondition .ivu-poptip-inner {
+    background-color: 485463;
 }
 .icons {
     font-size: 2.4vmin;
