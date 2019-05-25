@@ -27,3 +27,12 @@
     background-color: #869bcb !important;
     background-position: 0 -15px;
 }
+.monitor-tunnel-title {
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    font-size: 2.5vmin;
+    /* background: url("../../../../assets/UM/monitor-tunnel-title.png") no-repeat; */
+    background-size: cover;
+    padding-bottom: 0.4rem;
+}

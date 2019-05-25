@@ -20,7 +20,7 @@
             <check-select v-bind="storeProp" @toParent="updateStores"></check-select>
         </div>
     <Row>
-      <Col span="18" style="padding-left: 10px;padding-right: 10px">
+      <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top: 0.4vmin;">
         <div class="gis" :style="{height:curHeight+'px'}">
           <!-- <sm-viewer :id="mapId" ref="smViewer">
           </sm-viewer> -->
@@ -31,8 +31,8 @@
       <div :style="{height:curHeight+'px'}">
         <div class="monitor-tunnel-overview">
           <div style="margin: 3vmin 10px;">
-            <span style="font-size: 2.5vmin">{{curName}}</span>
-            <Row :gutter="16" style="padding: 2px;">
+            <span class="monitor-tunnel-title">{{curName}}</span>
+            <Row :gutter="16" style="padding: 0px 2vmin;">
               <Col span="24" class="descCol">
               <span>区段数：</span>
               <div style="float: right">  {{curTunnel.areaNum}}</div>
@@ -56,7 +56,7 @@
           <div style="margin: 10px;">
             <div class="Security">
               <p>
-              <h2 style="margin-left: 10px;">机电统计:</h2>
+              <h2 class="monitor-tunnel-title">机电统计:</h2>
               </p>
               <div>
                 <Row style="color: #fff">
