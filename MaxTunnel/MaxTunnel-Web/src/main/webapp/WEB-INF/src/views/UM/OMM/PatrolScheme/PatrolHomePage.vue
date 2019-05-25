@@ -252,7 +252,7 @@
         },
         mounted() {
             let _this = this;
-            _this.radius = window.innerHeight * 0.18;
+            _this.radius = window.innerHeight * 0.19;
             PatrolService.getPatrolCounts().then(
                 result => {
                     _this.yearPlan.value = result.yearPlanCount;
