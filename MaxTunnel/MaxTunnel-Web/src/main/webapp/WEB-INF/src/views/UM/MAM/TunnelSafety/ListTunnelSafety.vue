@@ -79,7 +79,11 @@
                                                         offset="2"
                                                         v-for="(item2,index) in item.data"
                                                         :key="index"
-                                                    >{{item2.key}}：{{item2.val}}</Col>
+                                                        v-updateStatusImg:item="item2.key"
+                                                    >
+                                                        <img :src="ImgName" class="open-status-img">
+                                                        {{item2.key}}：{{item2.val}}
+                                                    </Col>
                                                 </Row>
                                             </div>
                                         </Col>
@@ -129,15 +133,15 @@ export default {
                 ] //属性集
             },
             tunnelProps: [], //管廊统计数据
-            ImgName:''
+            ImgName: ""
         };
     },
-    directives:{
-      updateStatusImg:{
-        update(el,status){
-          console.log('status',status)
+    directives: {
+        updateStatusImg: {
+            update(el, status) {
+                this.changStatusImg(status.value);
+            }
         }
-      }
     },
     mounted() {
         this.fentchData();
@@ -197,13 +201,17 @@ export default {
                 this.tunnelProps.push(temp);
             });
             // }
-          // });
-      },
-      changStatusImg(status){
-        let ImgName  = status == '开'|| '正常' ? 'status-open' :(status == '关'|| '入侵' ? 'status-open' : 'status-alarm');
-        this.ImgName = require(`../../../../assets/UM/${ ImgName }.png`)
-      }
-
+            // });
+        },
+        changStatusImg(status) {
+            let ImgName =
+                status == "开" || "正常"
+                    ? "status-open"
+                    : status == "关" || "入侵"
+                    ? "status-open"
+                    : "status-alarm";
+            this.ImgName = require(`../../../../assets/UM/${ImgName}.png`);
+        }
     },
     watch: {
         $route() {
@@ -344,23 +352,23 @@ export default {
 .monitor-tunnel-number {
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
     background-size: 100% 100%;
-  }
-  .monitor-tunnel-overview {
-      height: calc(30vh - 10px);
-      overflow-y: auto;
-      color: #f9f8f6;
-      background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
-      background-size: 100% 100%;
-  }
-  .ivu-col-span-10 {
-      display: block;
-      width: 33%;
-      text-align: center;
-  }
-  .open-status-img,
-  .close-status-img {
-      width: 2.1vmin; 
-      float: left;
-      margin-right: .5vmin;
-  }
+}
+.monitor-tunnel-overview {
+    height: calc(30vh - 10px);
+    overflow-y: auto;
+    color: #f9f8f6;
+    background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.ivu-col-span-10 {
+    display: block;
+    width: 33%;
+    text-align: center;
+}
+.open-status-img,
+.close-status-img {
+    width: 2.1vmin;
+    float: left;
+    margin-right: 0.5vmin;
+}
 </style>
