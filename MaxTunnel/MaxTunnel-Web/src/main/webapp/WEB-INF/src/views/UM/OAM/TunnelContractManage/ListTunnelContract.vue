@@ -104,7 +104,12 @@
                                     <div class="info">{{ item.payType }}</div>
                                 </div>
                             </div>
-                            <div class="option">
+                            <div>
+                                <Button size="small" @click="edit(item.id)" class="edit">编辑</Button>
+                                <Button size="small" @click="read(item.id)" class="read">详情</Button>
+                                <Button size="small" @click="del(item.id)" class="del">删除</Button>
+                            </div>
+                            <!-- <div class="option">
                                 <Tooltip content="详情">
                                     <div class="buttons">
                                         <Icon
@@ -133,7 +138,7 @@
                                     class="icons"
                                     color="rgb(162, 77, 72)"
                                 ></Icon>
-                            </Tooltip>
+                            </Tooltip>-->
                         </div>
                     </div>
                 </Col>
@@ -376,7 +381,7 @@ export default {
     margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    background-image: url("../../../../assets/UM/border2.png");
+    background-image: url("../../../../assets/UM/companyBg.png");
     background-size: 100% 100%;
     display: table;
 }
@@ -394,7 +399,7 @@ export default {
     cursor: pointer;
 }
 .contactInfo {
-    padding-bottom: 30px;
+    /* padding-bottom: 30px; */
 }
 .red {
     color: rgb(255, 102, 0);
@@ -404,9 +409,6 @@ export default {
     background-color: rgb(245, 245, 245);
     padding: 4px 0 4px 0;
 }
-.cableInfo {
-    padding: 0 8px;
-}
 .ivu-poptip {
     width: 100%;
 }
@@ -414,20 +416,33 @@ export default {
     width: 60%;
 }
 .del {
-    position: absolute;
-    bottom: 8%;
-    right: 6%;
-    cursor: pointer;
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
 }
-.buttons {
-    /* width: 26px;
-    height: 26px;
-    background-color: rgb(86,149,185);
-    border-radius: 50%;
-    text-align: center;
-    padding: 4px;*/
-    cursor: pointer;
+.edit {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
 }
+.read {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
+}
+.del,
+.read,
+.edit {
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+    margin: 0.6vmin 1vmin;
+}
+
 .item {
     margin: 10px;
 }
@@ -502,13 +517,9 @@ export default {
 .queryCondition >>> .ivu-select-dropdown {
     max-height: 30vmin;
 }
-.queryCondition .ivu-poptip-inner {
-    background-color: 485463;
+.queryCondition >>> .ivu-poptip-inner {
+    background-color: #485463;
 }
-.icons {
-    font-size: 2.4vmin;
-}
-
 .page >>> .ivu-select-selection {
     height: 3.2vmin !important;
 }
