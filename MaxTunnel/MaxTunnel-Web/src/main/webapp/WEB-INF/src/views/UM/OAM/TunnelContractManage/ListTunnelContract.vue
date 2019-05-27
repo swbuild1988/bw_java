@@ -3,11 +3,11 @@
         <div class="queryCondition">
             <Row>
                 <Col span="6">
-                    <span>合同编号：</span>
+                    <span class="conditionTitle">合同编号：</span>
                     <Input v-model="conditions.contractId" placeholder="请输入合同编号" style="width: 60%"></Input>
                 </Col>
                 <Col span="6">
-                    <span>合同名称：</span>
+                    <span class="conditionTitle">合同名称：</span>
                     <Input
                         v-model="conditions.contractName"
                         placeholder="请输入合同名称"
@@ -15,7 +15,7 @@
                     ></Input>
                 </Col>
                 <Col span="6">
-                    <span>付款方式：</span>
+                    <span class="conditionTitle">付款方式：</span>
                     <Select v-model="conditions.payment" style="width: 60%" id="payment">
                         <Option value="null">所有</Option>
                         <Option
@@ -26,7 +26,7 @@
                     </Select>
                 </Col>
                 <Col span="6">
-                    <span>合同状态：</span>
+                    <span  class="conditionTitle">合同状态：</span>
                     <Select v-model="conditions.contractStatus" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option
@@ -37,7 +37,7 @@
                     </Select>
                 </Col>
                 <Col span="6">
-                    <span>开始时间：</span>
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择开始时间"
@@ -46,7 +46,7 @@
                     ></DatePicker>
                 </Col>
                 <Col span="6">
-                    <span>结束时间：</span>
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择结束时间"
@@ -56,7 +56,7 @@
                 </Col>
                 <Col span="6">
                     <Poptip placement="bottom">
-                        <span>企业客户：</span>
+                        <span class="conditionTitle">企业客户：</span>
                         <Input v-model="customerName" placeholder="请选择客户" id="cusInput"/>
                         <div class="pop" slot="content">
                             <customer-choose
@@ -104,7 +104,12 @@
                                     <div class="info">{{ item.payType }}</div>
                                 </div>
                             </div>
-                            <div class="option">
+                            <div>
+                                <Button size="small" @click="edit(item.id)" class="edit">编辑</Button>
+                                <Button size="small" @click="read(item.id)" class="read">详情</Button>
+                                <Button size="small" @click="del(item.id)" class="del">删除</Button>
+                            </div>
+                            <!-- <div class="option">
                                 <Tooltip content="详情">
                                     <div class="buttons">
                                         <Icon
@@ -133,7 +138,7 @@
                                     class="icons"
                                     color="rgb(162, 77, 72)"
                                 ></Icon>
-                            </Tooltip>
+                            </Tooltip>-->
                         </div>
                     </div>
                 </Col>
@@ -376,7 +381,7 @@ export default {
     margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    background-image: url("../../../../assets/UM/border2.png");
+    background-image: url("../../../../assets/UM/companyBg.png");
     background-size: 100% 100%;
     display: table;
 }
@@ -393,9 +398,6 @@ export default {
     color: rgb(252, 252, 255);
     cursor: pointer;
 }
-.contactInfo {
-    padding-bottom: 30px;
-}
 .red {
     color: rgb(255, 102, 0);
 }
@@ -404,9 +406,6 @@ export default {
     background-color: rgb(245, 245, 245);
     padding: 4px 0 4px 0;
 }
-.cableInfo {
-    padding: 0 8px;
-}
 .ivu-poptip {
     width: 100%;
 }
@@ -414,20 +413,33 @@ export default {
     width: 60%;
 }
 .del {
-    position: absolute;
-    bottom: 8%;
-    right: 6%;
-    cursor: pointer;
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
 }
-.buttons {
-    /* width: 26px;
-    height: 26px;
-    background-color: rgb(86,149,185);
-    border-radius: 50%;
-    text-align: center;
-    padding: 4px;*/
-    cursor: pointer;
+.edit {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
 }
+.read {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
+}
+.del,
+.read,
+.edit {
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+    margin: 0.6vmin 1vmin;
+}
+
 .item {
     margin: 10px;
 }
@@ -473,6 +485,27 @@ export default {
     font-size: 1.66vmin;
 }
 
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+
 @media (min-width: 1921px) {
     .queryCondition >>> .ivu-date-picker-cells {
         width: 15vmin;
@@ -502,13 +535,9 @@ export default {
 .queryCondition >>> .ivu-select-dropdown {
     max-height: 30vmin;
 }
-.queryCondition .ivu-poptip-inner {
-    background-color: 485463;
+.queryCondition >>> .ivu-poptip-inner {
+    background-color: #485463;
 }
-.icons {
-    font-size: 2.4vmin;
-}
-
 .page >>> .ivu-select-selection {
     height: 3.2vmin !important;
 }

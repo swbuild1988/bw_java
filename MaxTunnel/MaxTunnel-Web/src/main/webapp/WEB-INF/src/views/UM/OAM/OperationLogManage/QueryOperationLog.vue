@@ -201,6 +201,9 @@ export default {
         letter-spacing: 0.25em;
         margin-right: -0.25em;
     }
+    .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+        color: #fff;
+    }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
         .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

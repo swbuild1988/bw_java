@@ -2,54 +2,54 @@
   <div class="allDiv">
     <Row class="queryCondition">
         <Col span="6">
-            <span>设备名称</span><span>：</span>
+            <span class="conditionTitle">设备名称</span><span class="conditionTitle">：</span>
             <Input v-model="conditions.name" style="width:60%"></Input>
         </Col>
         <Col span="6">
-            <span>设备类型：</span>
+            <span class="conditionTitle">设备类型：</span>
             <Select v-model="conditions.typeId" style="width: 60%">
                 <Option value=null key=0>所有</Option>
                 <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>设备型号：</span>
+            <span class="conditionTitle">设备型号：</span>
             <Select v-model="conditions.modelId" style="width: 60%">
                 <Option value=null key=0>所有</Option>
                 <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>设备状态：</span>
+            <span class="conditionTitle">设备状态：</span>
             <Select v-model="conditions.status" style="width:60%">
             <Option value=null key="0">所有</Option>
             <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <Span class="word43">供应商</Span><span>：</span>
+            <Span class="word43 conditionTitle">供应商</Span><span class="conditionTitle">：</span>
             <Select v-model="conditions.venderId" style="width:60%">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>开始时间：</span>
+            <span class="conditionTitle">开始时间：</span>
             <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
         </Col>
         <Col span="6">
-            <span>结束时间：</span>
+            <span class="conditionTitle">结束时间：</span>
             <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
         </Col>
         <Col span="6">
-            <Span>所属管廊</Span><span>：</span>
+            <span class="conditionTitle">所属管廊</span><span class="conditionTitle">：</span>
             <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <Span>所属管舱</Span><span>：</span>
+            <span class="conditionTitle">所属管舱</span><span class="conditionTitle">：</span>
             <Select v-model="conditions.storeId" style="width:60%">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>
@@ -70,7 +70,7 @@
                     添加
                 </Button>
             </Col>
-            <Tabs :value="chooseEquipmentTabPane" :animated="false" style="border: 1px solid #fff" @on-click="chooseTab">
+            <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
                     <Col span="24">
                         <div class="nullData" v-show="isNullData">暂无数据</div>
@@ -635,6 +635,27 @@ export default {
 .word43{
     letter-spacing: 0.5em;
     margin-right:  -0.5em;
+}
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+.navigation{
+    color: #fff;
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
