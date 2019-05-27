@@ -139,7 +139,7 @@ let PatrolService = {
     //获取巡检方式
     getInspectWay(){
         return new Promise((resolve, reject) => {
-            axios.get('inspectionway-enum').then(res=>{
+            get('inspectionway-enum').then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -152,7 +152,7 @@ let PatrolService = {
     //获取巡检对象
     getInspectionObjects(){
         return new Promise((resolve, reject) => {
-            axios.get('inspectionobject-enum').then(res=>{
+            get('inspectionobject-enum').then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -165,7 +165,7 @@ let PatrolService = {
     //获取巡检路径
     getInspectionPath(){
         return new Promise((resolve, reject) => {
-            axios.get('inspectionpath-enum').then(res=>{
+            get('inspectionpath-enum').then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -178,7 +178,7 @@ let PatrolService = {
     // 获取审批人
     getApprover(){
         return new Promise((resolve, reject) => {
-            axios.get('roles/users').then(res=>{
+            get('roles/users').then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
@@ -191,12 +191,25 @@ let PatrolService = {
     //提交巡检计划
     submitPlan(params){
         return new Promise((resolve, reject) => {
-            axios.post('/inspection-plans', params).then(res=>{
+            post('/inspection-plans', params).then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)
                 }else{
                     reject(msg+"地址：/inspection-plans")
+                }
+            })
+        })
+    },
+    //获取巡检计划路径
+    getInspectionPlanPath(params){
+        return new Promise((resolve, reject) =>{
+            post('inspection-plans/condition', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-plans/condition")
                 }
             })
         })
