@@ -105,8 +105,7 @@ export default {
             nodesModal: {
                 showFlag: false,
                 imgUrl: null
-            },
-            planTimer: null
+            }
         };
     },
     mounted() {
@@ -149,12 +148,11 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        // this.acceptPlanData();
-        // this.acceptAlarmData();
+        this.acceptPlanData();
+        this.acceptAlarmData();
     },
     beforeDestroy() {
         // this.closedMQ();
-        clearTimeout(this.planTimer);
         this.$Notice.destroy();
     },
     watch: {
@@ -296,11 +294,11 @@ export default {
                 // _this.showPlanTip();
                 this.nodesModal.imgUrl = null;
                 let _this = this;
-                let planTimer = setTimeout(() => {
+                this.$nextTick(() => {
                     _this.nodesModal.imgUrl =
                         "/emplans/png/" + result.processInstanceId;
                     _this.nodesModal.showFlag = true;
-                }, 500);
+                });
             }
         },
         //获取MQ推送的预案消息
