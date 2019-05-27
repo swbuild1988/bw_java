@@ -22,7 +22,7 @@
     import  viewerBaseConfig  from "./mixins/viewerBase";
 
     export default {
-        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',3)],
+        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',1)],
         props: {
             detectionObjInfor:{
                 type:Object,

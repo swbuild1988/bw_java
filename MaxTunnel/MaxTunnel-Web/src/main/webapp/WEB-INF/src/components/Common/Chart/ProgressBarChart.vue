@@ -139,7 +139,7 @@
                   show: true,
                   position: 'inside',
                   formatter: '{c}%' ,
-                  fontSize:_this.getFontSize('12%'),
+                  fontSize:_this.getFontSize('9%'),
                 }
               },
             },

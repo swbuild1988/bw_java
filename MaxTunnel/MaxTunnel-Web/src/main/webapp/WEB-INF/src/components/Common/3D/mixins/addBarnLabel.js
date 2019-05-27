@@ -35,7 +35,7 @@ const addBarnLabel = {
             _this.timer.timeoutId = setTimeout(() => {
                 _this._getSection()
                     .then(result => {
-                        console.log('result',result)
+                        
                         if (result.moInfo) {
 
                             _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
@@ -44,7 +44,7 @@ const addBarnLabel = {
                             result.moInfo.forEach(label => _this.labelsArray.push(label));
 
                             let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
-console.log('lablesIDArray',lablesIDArray)
+
                             let { startPoint,endPoint } = result.sectionInfo;
 
                             sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
@@ -68,10 +68,6 @@ console.log('lablesIDArray',lablesIDArray)
                 var longitude = Cesium.Math.toDegrees(cartographic.longitude);
                 var latitude = Cesium.Math.toDegrees(cartographic.latitude);
                 var height = cartographic.height;
-
-                if (height < 0) {
-                    height = 0;
-                }
 
                 _this.axios.post('/sections/gps',
                     {longitude, latitude, height})
@@ -108,7 +104,7 @@ console.log('lablesIDArray',lablesIDArray)
                                 let {code, data} = result.data;
                                 if (code == 200) {
                                     let [ updateObj ] = data;
-
+                                    console.log('datadata',data)
                                     if (this.detectionObj.analog.indexOf( updateObj.objtypeId ) != -1 &&
                                         updateObj.cv.toFixed(2) != updateLabel._label._text._value) { //模拟量
 
@@ -147,20 +143,22 @@ console.log('lablesIDArray',lablesIDArray)
 
             return function (queryEventArgs) {
                 var selectedFeatures = queryEventArgs.originResult.features;
-                console.log('selectedFeatures',selectedFeatures)
+                
                 for(let i=0;i<selectedFeatures.length;i++){
 
                     var geographic=computeIntersections({x:_getFieldValues(selectedFeatures[i],'X'),y:_getFieldValues(selectedFeatures[i],'Y'),z:_getFieldValues(selectedFeatures[i],'Z')},startLocation,endLocation);//得到点到直线的垂直交点经纬度
 
                     let entityProp = _this._judgeEntityType(labels,selectedFeatures[i],geographic);
-                   console.log('entityProp',entityProp)
+                  
                     entityProp &&　addEntity( entityProp );
                 }
             }
         },
         //判断实体类型
         _judgeEntityType(labels,selectedFeatures,geographic){
-
+            console.log('labels',labels)
+            console.log('selectedFeatures',selectedFeatures)
+            console.log('geographic',geographic)
             if( !labels.length ) return false;
             let moTypeId = _getFieldValues(selectedFeatures,'MOTYPEID');
 
