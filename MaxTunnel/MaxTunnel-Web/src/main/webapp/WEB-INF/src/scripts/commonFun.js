@@ -263,12 +263,13 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
 export function addEntity(entiyParam) {
 
     if (typeof entiyParam != 'object') return;
-
+    
     let width = entiyParam.billboard.width || 30,
         height = entiyParam.billboard.height || 40,
         moId = entiyParam.moId || '0',
         Z = entiyParam.Z || Vue.prototype.VMConfig.entityHeight,
         show = entiyParam.show || false;
+        // console.log('entiyParam',entiyParam)
 
     let billboard = entiyParam.billboard != undefined ? {
             image: require('../assets/VM/' + entiyParam.billboard.image + '.png'),
@@ -282,6 +283,7 @@ export function addEntity(entiyParam) {
         label = entiyParam.label != undefined ? {
             text: entiyParam.label.text,
             font: '20px Helvetica',
+            showbackground:true,
             fillColor: Cesium.Color.WHITE,
             outlineColor: Cesium.Color.WHITE,
             verticalOrigin: entiyParam.label.verticalOrigin != undefined ? entiyParam.label.verticalOrigin : Cesium.VerticalOrigin.CENTER,
@@ -299,6 +301,7 @@ export function addEntity(entiyParam) {
         label,
         show
     })
+    // console.log(entiyParam.viewer.entities)
 }
 /**
  * 获取实体集
@@ -533,7 +536,7 @@ export function getEntityProperty() {
         if (Cesium.defined(pickedObject)) {
             // 获取当前点的实体
             let entity = pickedObject.id;
-
+            console.log('entity',entity)
             IM.searchInformation(entity, modelProp);
             _monitor(scene, Cesium, scenePosition, dom); //注册监听函数
         }

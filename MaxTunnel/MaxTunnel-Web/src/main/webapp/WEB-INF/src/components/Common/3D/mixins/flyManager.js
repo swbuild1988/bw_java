@@ -45,6 +45,7 @@ export const flyManagerMinix = {
             let curRoute = this.flyFilePathes.find(route => {
                 return route.id == id
             })
+            if(!curRoute) return;
 
             routes.fromFile(this.ServerConfig + curRoute.path);
 
@@ -127,13 +128,14 @@ export const flyManagerMinix = {
         },
         // 获取飞行路径
         getRoutes() {
-            return this.flyFilePathes
+            return this.flyFilePathes.filter( flyRoute => flyRoute.virtualInspection == "true" ? true : false)
         },
         getStopsList(id) {
             let stops = []
             if (id == 0) {
                 // 获取所有飞行路径的站点
                 for (let i = 1; i <= this.flyFilePathes.length; i++) {
+                    
                     this.flyManager(i)
                     let flyManager = this.flyManagerAttr.flyManager
                     flyManager.readyPromise.then(() => {

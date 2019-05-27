@@ -181,17 +181,14 @@ export default {
         //回显选中的日期 月份
         showActiveMonth(list, month){
             this.$nextTick(()=>{   
-                if(month<10){
-                    month = month.substring(1,2)
-                }
                 for (let i = 1; i <= list.length; i++) {
                     if (i==month) {
-                        list[i-1].setAttribute("class", "active");
+                        list[i].setAttribute("class", "active");
                     }
                 }
             })
         },
-        //回显选中的日期 年份、日期
+        //回显选中的日期
         shwoActiveDate(list,day){
             this.$nextTick(()=>{ 
                 for (let i = 0; i < list.length; i++) {

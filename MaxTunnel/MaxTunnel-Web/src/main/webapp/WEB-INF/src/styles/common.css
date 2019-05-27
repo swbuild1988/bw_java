@@ -38,8 +38,8 @@ html {
 	padding-left: 10px;
 }
 
-.conditions span,
-.queryCondition span {
+.conditions .conditionTitle,
+.queryCondition .conditionTitle {
 	font-size: 1.4vmin;
 	color: #fff;
 }
@@ -154,6 +154,23 @@ body {
 .allDiv .ivu-page-next a,
 .allDiv .ivu-page-prev a {
 	color: #fff;
+}
+
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list .ivu-table-wrapper{
+    border: none;
+}
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
 }
 
 @media (min-width: 2200px) {
@@ -327,7 +344,7 @@ body {
 
 	.ivu-table th {
 		height: 4vmin;
-		border-bottom: 0.1px solid #e9eaec;
+		border-bottom: none;
 	}
 
 	/*分页*/

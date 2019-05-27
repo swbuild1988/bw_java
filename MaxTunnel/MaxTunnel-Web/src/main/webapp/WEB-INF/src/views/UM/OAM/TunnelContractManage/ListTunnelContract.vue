@@ -3,11 +3,11 @@
         <div class="queryCondition">
             <Row>
                 <Col span="6">
-                    <span>合同编号：</span>
+                    <span class="conditionTitle">合同编号：</span>
                     <Input v-model="conditions.contractId" placeholder="请输入合同编号" style="width: 60%"></Input>
                 </Col>
                 <Col span="6">
-                    <span>合同名称：</span>
+                    <span class="conditionTitle">合同名称：</span>
                     <Input
                         v-model="conditions.contractName"
                         placeholder="请输入合同名称"
@@ -15,7 +15,7 @@
                     ></Input>
                 </Col>
                 <Col span="6">
-                    <span>付款方式：</span>
+                    <span class="conditionTitle">付款方式：</span>
                     <Select v-model="conditions.payment" style="width: 60%" id="payment">
                         <Option value="null">所有</Option>
                         <Option
@@ -26,7 +26,7 @@
                     </Select>
                 </Col>
                 <Col span="6">
-                    <span>合同状态：</span>
+                    <span  class="conditionTitle">合同状态：</span>
                     <Select v-model="conditions.contractStatus" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option
@@ -37,7 +37,7 @@
                     </Select>
                 </Col>
                 <Col span="6">
-                    <span>开始时间：</span>
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择开始时间"
@@ -46,7 +46,7 @@
                     ></DatePicker>
                 </Col>
                 <Col span="6">
-                    <span>结束时间：</span>
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择结束时间"
@@ -56,7 +56,7 @@
                 </Col>
                 <Col span="6">
                     <Poptip placement="bottom">
-                        <span>企业客户：</span>
+                        <span class="conditionTitle">企业客户：</span>
                         <Input v-model="customerName" placeholder="请选择客户" id="cusInput"/>
                         <div class="pop" slot="content">
                             <customer-choose
@@ -398,9 +398,6 @@ export default {
     color: rgb(252, 252, 255);
     cursor: pointer;
 }
-.contactInfo {
-    /* padding-bottom: 30px; */
-}
 .red {
     color: rgb(255, 102, 0);
 }
@@ -486,6 +483,27 @@ export default {
 
 .queryCondition >>> .ivu-date-picker-header-label {
     font-size: 1.66vmin;
+}
+
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 
 @media (min-width: 1921px) {

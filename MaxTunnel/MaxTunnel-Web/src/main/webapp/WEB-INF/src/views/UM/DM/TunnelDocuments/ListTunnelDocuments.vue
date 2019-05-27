@@ -3,23 +3,23 @@
         <div class="conditions">
             <Row>
                 <Col span="5">
-                    <span class="queryText">文件名称：</span>
+                    <span class="conditionTitle">文件名称：</span>
                     <Input v-model="conditions.documentName" placeholder="请输入文件名称" style="width: 60%"/>
                 </Col>
                 <Col span="5">
-                    <span class="queryText">文件类型：</span>
+                    <span class="conditionTitle">文件类型：</span>
                     <Select v-model="conditions.fileType" style="width: 60%">
                         <Option value="null">所有</Option>
                         <Option v-for="type in selectList.fileTypes" :value="type.val" :key="type.val">{{ type.key }}</Option>
                     </Select>
                 </Col>
                 <Col span="5">
-                    <span class="queryText">开始时间：</span>
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime">
                     </DatePicker>
                 </Col>
                 <Col span="5">
-                    <span class="queryText">结束时间：</span>
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime">
                     </DatePicker>
                 </Col>
@@ -324,9 +324,6 @@ export default {
     font-size: 2.5vmin;
 }
 
-.queryText{
-    /*font-size: 16px;*/
-}
 /*select*/
 .conditions >>> .ivu-select-selected-value{
     font-size: 1.28vmin !important;

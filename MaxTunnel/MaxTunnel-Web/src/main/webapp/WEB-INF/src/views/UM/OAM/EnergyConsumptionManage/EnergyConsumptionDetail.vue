@@ -346,11 +346,14 @@
 	.top-div >>> .ivu-picker-panel-body{
 		font-size: 1.2vmin;
 	}
-  .top-div >>> .ivu-input{
-    height: 3.2vmin;
-    font-size: 1.2vmin;
-  }
-  .top-div >>> .ivu-picker-panel-body{
-    font-size: 1.2vmin;
-  }
+	.top-div >>> .ivu-input{
+		height: 3.2vmin;
+		font-size: 1.2vmin;
+  	}
+	.top-div >>> .ivu-picker-panel-body{
+		font-size: 1.2vmin;
+	}
+  	.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+		color: #fff;
+	}
 </style>

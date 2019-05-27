@@ -6,25 +6,25 @@
         <Col span="12" style="height: 41vh;margin-left: 0.5vw;margin-bottom: 1vh">
             <div class="queryCondition">
                 <div class="conWidth">
-                    设备名称：
+                    <span class="conditionTitle">设备名称：</span>
                     <Input v-model="conditions.name" style="width: 60%"></Input>
                 </div>
                 <div class="conWidth">
-                    所属管廊：
+                    <span class="conditionTitle">所属管廊：</span>
                     <Select v-model="conditions.tunnelId" style="width: 60%">
                         <Option value=null>所有</Option>                    
                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </div>
                 <div class="conWidth">
-                    设备类型：
+                    <span class="conditionTitle">设备类型：</span>
                     <Select v-model="conditions.typeId" style="width: 60%">
                         <Option value=null>所有</Option>
                         <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </div>
                 <div class="conWidth">
-                    设备型号：
+                    <span class="conditionTitle">设备型号：</span>
                     <Select v-model="conditions.modelId" style="width: 60%">
                         <Option value=null>所有</Option>
                         <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -255,6 +255,9 @@ export default {
     .conWidth{
         width: 32%;
         display: inline-block;
+    }
+    .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+        color: #fff;
     }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

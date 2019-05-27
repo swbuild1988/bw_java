@@ -153,7 +153,7 @@
                     isShow: true
                 },
                 unitsPosition: {
-                    openPosition: false,
+                    openPosition: true,
                     isShow: true
                 },
                 personnelPosition: {
