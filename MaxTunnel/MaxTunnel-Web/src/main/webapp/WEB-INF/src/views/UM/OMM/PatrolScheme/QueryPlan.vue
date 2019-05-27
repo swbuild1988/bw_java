@@ -37,36 +37,30 @@
                     <div class="everyList">
                         <div class="detailsInfo">
                             <div class="details">
-                                <div class="icon">
-                                    <Icon type="leaf" size="24" color="#fff"></Icon>
-                                </div>
-                                <div class="details-top">
-                                <!-- <div class="tunnelName">{{item.tunnelName}}</div> -->
-                                <div class="planName">{{item.name}}</div>
-                                </div>
-                                <div class="details-bottom">
-                                <div>
-                                    <p class="planStatus">流程状态</p>
-                                    <p class="planStatusDec">{{item.processStatus}}</p>
-                                </div>
-                                <div>
-                                    <p class="patrolGroup">责任班组</p>
-                                    <p class="patrolGroupName">{{item.groupName}}</p>
-                                </div>
-                                </div>
+                                <div class="details-top">{{item.name}}</div>
+                                <Row style="margin-bottom: 1vmin;">
+                                    <Col span="7" offset="5">
+                                        <p class="planStatus">流程状态</p>
+                                        <p class="planStatusDec">{{item.processStatus}}</p>
+                                    </Col>
+                                    <Col span="12">
+                                        <p class="patrolGroup">责任班组</p>
+                                        <p class="patrolGroupName">{{item.groupName}}</p>
+                                    </Col>
+                                    <Col span="19" offset="5">
+                                        <Col span="6">
+                                            <div class="detailsBtn showBtn" @click="show(index)">详情</div>
+                                        </Col>
+                                        <Col span="6">
+                                            <div class="detailsBtn delBtn" @click="delPlan(item.planId,item.processStatus)">删除</div>
+                                        </Col>
+                                        <Col span="12">
+                                            <div class="createTime">{{item.createTime}}</div>
+                                        </Col>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
-                        <Row class="option">
-                            <Col span="6">
-                                <span @click="show(index)">详情</span>
-                            </Col>
-                            <Col span="6">
-                                <span  @click="delPlan(item.planId,item.processStatus)">删除</span>
-                            </Col>
-                            <Col span="12" class="timeContainer">
-                                <div>{{item.createTime}}</div>
-                            </Col>
-                        </Row>
                     </div>
                 </Col>
             </Row>
@@ -258,16 +252,13 @@ export default {
     margin-right: 5px;
 }
 .detailsList .everyList{
-    border: 1px solid #1c5d853d;
     width: 82%;
     margin-bottom: 20px;
-    border-radius: 4px;
+    background: url("../../../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%;
 }
 .detailsInfo{
     height: 80%;
-}
-.icon,.details,.details-bottom div{
-    display: inline-block;
 }
 .icon{
     background-color: #009DFF;
@@ -283,44 +274,19 @@ export default {
     margin-left: 5px;
     margin-top: 1px;
 }
+.details{
+    padding-top: 1vmin;
+}
 .details-top{
-    font-size: 16px;
+    font-size: 3.5vmin;
     font-weight: 700;
-    line-height: 48px;
-    padding-top: 5px;
-    display: inline-block;
-    margin-left: 5px;
+    text-align: center;
+    color: #fff;
 }
-.planStatusDec,.patrolGroupName{
-    font-size: 1.8vmin;
-}
-.details-bottom div{
-    margin: 10px;
-}
-.planStatus,.patrolGroup{
-    color:#a4a4a4;
+.planStatus,.patrolGroup,.planStatusDec,.patrolGroupName{
+    color:#fff;
     font-size: 1.4vmin;
-    margin-bottom: 2px;
-}
-.option{
-    background: #F7F9FA;
-    line-height: 30px;
-    font-size: 1.66vmin;
-    color: #979696;
-    border-top: 1px solid #e8e8e8
-}
-.option .ivu-col-span-6{
-    border-right: 1px solid #e8e8e8;
-    margin: 5px 0px;
-    text-align: center;
-    cursor: pointer;
-}
-.timeContainer{
-    width: 50%;
-    font-size: 1.3vmin;
-    color: orange;
-    line-height: 40px;
-    text-align: center;
+    line-height: 4.5vmin;
 }
 .page >>> .ivu-select-selection{
     height: 3.2vmin;
@@ -359,6 +325,10 @@ export default {
     font-size: 1.6vmin;
 }
 
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+
  /*日期选择*/
 .conditions >>> .ivu-date-picker-header {
     height: 3.2vmin;
@@ -374,6 +344,24 @@ export default {
 .conditions >>> .ivu-date-picker-header-label{
     font-size: 1.66vmin;
 }
+
+.detailsBtn{
+    color: #fff;
+    border-radius: 0.5vmin;
+    line-height: 3.5vmin;
+    text-align: center;
+    width: 5vmin;
+}
+.showBtn{
+    background: linear-gradient(to top right, #2734e1, #b195ed)
+}
+.delBtn{
+    background: linear-gradient(to top right, #f61a1a, #fa8785)
+}
+.createTime{
+    color: #fff;
+}
+
 
 @media (min-width: 1921px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -393,23 +381,6 @@ export default {
     }
     .conditions >>> .ivu-date-picker-cells-header span{
         padding-right: 2.5rem;
-    }
-    .detailsInfo{
-      padding: 1vmin;
-    }
-    .option,.timeContainer{
-      line-height: 4vmin;
-      font-size: 1.6vmin;
-    }
-    .detailsList .everyList{
-      border: 0.1vmin solid #ccc;
-      border-radius: 0.5vmin;
-    }
-    .planName{
-      font-size: 2.2vmin;
-    }
-    .icon,.details,.details-bottom div{
-      line-height: 1.9
     }
 }
 </style>

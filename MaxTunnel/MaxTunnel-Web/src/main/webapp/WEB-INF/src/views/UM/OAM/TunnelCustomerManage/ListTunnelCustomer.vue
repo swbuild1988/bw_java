@@ -297,4 +297,7 @@ export default {
     line-height: 3.2vmin;
     font-size: 1.24vmin;
 }
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
 </style>

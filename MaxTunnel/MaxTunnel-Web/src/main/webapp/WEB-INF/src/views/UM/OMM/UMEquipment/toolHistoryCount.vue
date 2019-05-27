@@ -405,6 +405,9 @@ export default {
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
 }
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

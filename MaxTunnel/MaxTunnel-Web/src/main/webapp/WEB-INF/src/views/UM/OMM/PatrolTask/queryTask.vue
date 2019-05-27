@@ -318,6 +318,7 @@ export default {
 <style scoped>
 .navigation{
     line-height: 35px;
+    color: #fff;
 }
 .navigation div{
     display: inline;
@@ -344,6 +345,9 @@ export default {
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

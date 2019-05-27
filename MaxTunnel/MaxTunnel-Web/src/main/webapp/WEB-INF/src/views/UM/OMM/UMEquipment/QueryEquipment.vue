@@ -70,7 +70,7 @@
                     添加
                 </Button>
             </Col>
-            <Tabs :value="chooseEquipmentTabPane" :animated="false" style="border: 1px solid #fff" @on-click="chooseTab">
+            <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
                     <Col span="24">
                         <div class="nullData" v-show="isNullData">暂无数据</div>
@@ -650,6 +650,12 @@ export default {
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
+}
+.navigation{
+    color: #fff;
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

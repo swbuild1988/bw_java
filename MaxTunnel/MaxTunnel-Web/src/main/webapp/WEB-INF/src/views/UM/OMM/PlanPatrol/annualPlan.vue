@@ -179,4 +179,7 @@ export default {
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
 }
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
 </style>

@@ -398,9 +398,6 @@ export default {
     color: rgb(252, 252, 255);
     cursor: pointer;
 }
-.contactInfo {
-    /* padding-bottom: 30px; */
-}
 .red {
     color: rgb(255, 102, 0);
 }
@@ -503,6 +500,10 @@ export default {
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
+}
+
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 
 @media (min-width: 1921px) {
