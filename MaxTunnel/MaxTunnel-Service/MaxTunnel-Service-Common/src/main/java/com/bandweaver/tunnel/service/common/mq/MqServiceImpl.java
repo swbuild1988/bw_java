@@ -1,12 +1,11 @@
 package com.bandweaver.tunnel.service.common.mq;
 
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
-import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
@@ -16,12 +15,23 @@ public class MqServiceImpl implements MqService {
 
     @Autowired
     private AmqpTemplate amqpTemplate;
+    @Autowired
+    private ConnectionFactory connectionFactory;
 
     @Override
-    public void send(String exchange, String routingKey, Object message) {
-        amqpTemplate.convertAndSend(exchange,routingKey,message);
+    public void send(String message) {
+        amqpTemplate.send(PropertiesUtil.getString(Constants.QUEUE_EXCHANGE), "", new Message(message.getBytes(), new MessageProperties()));
     }
 
+    @Override
+    public String createQueue() {
+        try {
+            String queue = connectionFactory.createConnection().createChannel(false).queueDeclare().getQueue();
+            return queue;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     @Override
     public void sendToAlarmUMQueue(String msg) {

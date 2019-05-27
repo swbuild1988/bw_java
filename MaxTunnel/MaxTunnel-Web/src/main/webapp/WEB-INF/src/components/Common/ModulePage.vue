@@ -3,12 +3,10 @@ import alarm from "../Common/AlarmDetial";
 import { VideoService } from "../../services/videoService.js";
 import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
 import UMCustom from "../../styles/UMCustom.css";
-// import showVideo from "../../components/Common/Modal/ShowVideos.vue";
 import showAlarm from "@/components/Common/Modal/showAlarms";
 import { EnumsService } from "../../services/enumsService.js";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";
 import ShowNodesPic from "../Common/Modal/ShowNodesPic";
-// import { getFormatTime } from "@/scripts/DateFormat.js";
 import {
     Layout,
     Menu,
@@ -150,7 +148,7 @@ export default {
             });
         }
         // this.acceptPlanData();
-        // this.acceptAlarmData();
+        this.acceptAlarmData();
     },
     beforeDestroy() {
         // this.closedMQ();
@@ -262,6 +260,7 @@ export default {
                             <Footer class="layout-footer-center">
                                 2009-2018 &copy; Bandweaver
                             </Footer>
+                            <button onClick={this.testAlarm}>测试告警</button>
                         </Collapse>
                         <ShowStartPlan modalPrams={this.showModal.modalPrams} />
                         <ShowNodesPic
@@ -320,6 +319,11 @@ export default {
             console.log("getMessageCallback-respond", respond);
         },
 
+        testAlarm() {
+            let _this = this;
+            this.Log.info("test")
+            _this.MQ._sendMessage("queue/QUEUE_ALARM_UM", _this.getMessageCallback)
+        },
         //开启告警队列监听
         //接受告警队列推送的数据
         acceptAlarmData() {
@@ -477,10 +481,10 @@ export default {
                                         }}
                                     >
                                         <Icon type="ios-paper" class="icons" />
-                                        <span>{item.name}</span>
-                                    </div>
-                                </template>
-                                {children}
+                                        <span> {item.name} </span>{" "}
+                                    </div>{" "}
+                                </template>{" "}
+                                {children}{" "}
                             </Submenu>
                         );
                     } else {
@@ -490,7 +494,9 @@ export default {
                                     name={curLevel}
                                     nativeOnClick={() =>
                                         this.goToMoudle(
-                                            { path: item.url },
+                                            {
+                                                path: item.url
+                                            },
                                             index,
                                             -1
                                         )
@@ -503,9 +509,9 @@ export default {
                                         }}
                                     >
                                         <Icon type="ios-paper" class="icons" />
-                                        <span>{item.name}</span>
-                                    </div>
-                                </MenuItem>
+                                        <span> {item.name} </span>{" "}
+                                    </div>{" "}
+                                </MenuItem>{" "}
                             </div>
                         );
                     }
@@ -514,12 +520,19 @@ export default {
                         <MenuItem
                             name={level + "-" + index}
                             nativeOnClick={() =>
-                                this.goToMoudle({ path: item.url }, index, -1)
+                                this.goToMoudle(
+                                    {
+                                        path: item.url
+                                    },
+                                    index,
+                                    -1
+                                )
                             }
                         >
                             <span style="font-size: 1.66vmin !important">
-                                {item.name}
-                            </span>
+                                {" "}
+                                {item.name}{" "}
+                            </span>{" "}
                         </MenuItem>
                     );
                 }
@@ -549,6 +562,7 @@ export default {
 .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
     width: 8vmin;
 }
+
 .ivu-menu >>> .ivu-menu-item {
     padding-left: 36px !important;
     /* font-size: 1.66vmin !important; */
@@ -794,16 +808,20 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
     padding-left: 0 !important;
     border: 1px solid #938e8e9c;
 }
+
 .menuItem >>> .ivu-menu-item {
     font-size: 1.66vmin;
     border: 0px solid #938e8e9c;
 }
+
 .icons {
     margin-right: 0.8vmin;
 }
+
 .ivu-menu-vertical.ivu-menu-light:after {
     background: transparent;
 }
+
 .ivu-collapse {
     background: transparent;
 }

@@ -33,6 +33,9 @@ public class Constants {
     
     //文件管理上传路径
     public static final String FILE_PATH = "path.file.upload";
+
+    // MQ Exchange
+    public static final String QUEUE_EXCHANGE = "mq.exchange";
     
     //MQ队列
     public static final String QUEUE_ALARM_UM = "mq.queue.alarm.um";
