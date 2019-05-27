@@ -2,14 +2,14 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="4">
+                <Col class="conditionTitle" span="4">
                     <span class="conditionTitle">入廊目的：</span>
                     <Select v-model="conditions.actionId"  style="width:60%">
                         <Option value=null>所有</Option>
                         <Option v-for="(item,index) in actions" :value="item.val" :key="index">{{ item.key }}</Option>
                     </Select>
                 </Col>
-                <Col span="4">
+                <Col class="conditionTitle" span="4">
                     <span class="conditionTitle">是否完成：</span>
                     <Select v-model="conditions.isFinished" style="width:60%">
                         <Option value=null>所有</Option>
@@ -17,11 +17,11 @@
                     </Select>
                 </Col>
 
-                <Col span="4">
+                <Col class="conditionTitle" span="4">
                     <span class="conditionTitle">开始时间：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" style="width: 60%" v-model="conditions.startTime"></DatePicker>
                 </Col>
-                <Col span="4">
+                <Col class="conditionTitle" span="4">
                     <span class="conditionTitle">结束时间：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" style="width: 60%" v-model="conditions.endTime"></DatePicker>
                 </Col>
@@ -464,6 +464,22 @@ export default {
 };
 </script>
 <style scoped>
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

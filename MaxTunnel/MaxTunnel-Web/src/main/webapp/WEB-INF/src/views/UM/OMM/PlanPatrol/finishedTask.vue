@@ -2,11 +2,11 @@
     <div class="allDiv">
         <Row class="conditions">
             <Col span="6">
-                <span>所属计划：</span>
+                <span class="conditionTitle">所属计划：</span>
                 <Input type="text" style="width: 60%" v-model="conditions.planName"></Input>
             </Col>
             <Col span="6">
-                <span>巡检人：</span>
+                <span class="conditionTitle">巡检人：</span>
                 <Input type="text" style="width: 60%" v-model="conditions.name"></Input>
             </Col>
         </Row>

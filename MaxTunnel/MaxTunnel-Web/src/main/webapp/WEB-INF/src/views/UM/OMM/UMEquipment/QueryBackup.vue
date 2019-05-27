@@ -2,36 +2,36 @@
     <div class="allDiv">
         <Row class="queryCondition">
             <Col span="6">
-                备品名称：
+                <span class="conditionTitle">备品名称：</span>
                 <Input v-model="conditions.name" style="width: 60%"></Input>
             </Col>
             <Col span="6">
-                备品类别：
+                <span class="conditionTitle">备品类别：</span>
                 <Select v-model="conditions.typeId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                备品型号：
+                <span class="conditionTitle">备品型号：</span>
                 <Select v-model="conditions.modelId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                备品状态：
+                <span class="conditionTitle">备品状态：</span>
                 <Select style="width: 60%" v-model="conditions.isInStorage">
                     <!-- <Option v-for="item in status" :key="item.id" :value="item.isInStorage">{{item.name}}</Option> -->
                     <Option v-for="item in status" :key="item.key" :value="item.key">{{item.val}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                开始时间：
+                <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                结束时间：
+                <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">

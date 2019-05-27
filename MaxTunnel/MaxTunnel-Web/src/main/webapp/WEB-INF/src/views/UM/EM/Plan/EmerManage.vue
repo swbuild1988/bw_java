@@ -1,28 +1,28 @@
 <template>
     <div class="allDiv">
         <Row class="conditions">
-            <Col span="4">
+            <Col class="conditionTitle" span="4">
                 姓名：
                 <Select v-model="queryCondition.staffId" class="queryConditionWidth">
                     <Option value=null>所有</Option>
                     <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
-            <Col span="4">
+            <Col class="conditionTitle" span="4">
                 负责预案：
                 <Select v-model="queryCondition.planId" class="queryConditionWidth">
                     <Option value=null>所有</Option>
                     <Option v-for="item in plans" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </Col>
-            <Col span="4">
+            <Col class="conditionTitle" span="4">
                 所属小组：
                 <Select v-model="queryCondition.groupId" class="queryConditionWidth">
                     <Option value=null>所有</Option>
                     <Option v-for="item in groups" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
-            <Col span="4">
+            <Col class="conditionTitle" span="4">
                 角色：
                 <Select v-model="queryCondition.role" class="queryConditionWidth">
                     <Option value=null>所有</Option>
@@ -30,7 +30,7 @@
                     <Option value=2>组员</Option>
                 </Select>
             </Col>
-            <Col span="4">
+            <Col class="conditionTitle" span="4">
                 联系方式：
                 <Input v-model="queryCondition.tel" class="queryConditionWidth"></Input>
             </Col>
@@ -433,6 +433,22 @@ export default {
 }
 </script>
 <style scoped>
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
 .queryConditionWidth{
     width: 60%;
 }

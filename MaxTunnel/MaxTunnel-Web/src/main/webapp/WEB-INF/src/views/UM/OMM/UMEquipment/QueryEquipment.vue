@@ -2,54 +2,54 @@
   <div class="allDiv">
     <Row class="queryCondition">
         <Col span="6">
-            <span>设备名称</span><span>：</span>
+            <span class="conditionTitle">设备名称</span><span class="conditionTitle">：</span>
             <Input v-model="conditions.name" style="width:60%"></Input>
         </Col>
         <Col span="6">
-            <span>设备类型：</span>
+            <span class="conditionTitle">设备类型：</span>
             <Select v-model="conditions.typeId" style="width: 60%">
                 <Option value=null key=0>所有</Option>
                 <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>设备型号：</span>
+            <span class="conditionTitle">设备型号：</span>
             <Select v-model="conditions.modelId" style="width: 60%">
                 <Option value=null key=0>所有</Option>
                 <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>设备状态：</span>
+            <span class="conditionTitle">设备状态：</span>
             <Select v-model="conditions.status" style="width:60%">
             <Option value=null key="0">所有</Option>
             <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <Span class="word43">供应商</Span><span>：</span>
+            <Span class="word43 conditionTitle">供应商</Span><span class="conditionTitle">：</span>
             <Select v-model="conditions.venderId" style="width:60%">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <span>开始时间：</span>
+            <span class="conditionTitle">开始时间：</span>
             <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
         </Col>
         <Col span="6">
-            <span>结束时间：</span>
+            <span class="conditionTitle">结束时间：</span>
             <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
         </Col>
         <Col span="6">
-            <Span>所属管廊</Span><span>：</span>
+            <span class="conditionTitle">所属管廊</span><span class="conditionTitle">：</span>
             <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
             </Select>
         </Col>
         <Col span="6">
-            <Span>所属管舱</Span><span>：</span>
+            <span class="conditionTitle">所属管舱</span><span class="conditionTitle">：</span>
             <Select v-model="conditions.storeId" style="width:60%">
                 <Option value=null key="0">所有</Option>
                 <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>

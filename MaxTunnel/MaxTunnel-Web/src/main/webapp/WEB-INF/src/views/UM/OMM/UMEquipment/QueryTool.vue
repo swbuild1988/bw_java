@@ -2,46 +2,46 @@
     <div class="allDiv">
         <Row class="queryCondition">
             <Col span="6">
-                <span>仪表工具类型</span><span>：</span>
+                <span class="conditionTitle">仪表工具类型</span><span class="conditionTitle">：</span>
                 <Select v-model="toolsConditions.typeId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span>仪表工具型号</span><span>：</span>
+                <span class="conditionTitle">仪表工具型号</span><span class="conditionTitle">：</span>
                 <Select v-model="toolsConditions.modelId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word64">使用状态</span><span>：</span>
+                <span class="word64 conditionTitle">使用状态</span><span class="conditionTitle">：</span>
                 <Select v-model="toolsConditions.usingStatusId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in usingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word63">供应商</span><span>：</span>
+                <span class="word63 conditionTitle">供应商</span><span class="conditionTitle">：</span>
                 <Select v-model="toolsConditions.venderId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word64">库存状态</span><span>：</span>
+                <span class="word64 conditionTitle">库存状态</span><span class="conditionTitle">：</span>
                 <Select v-model="toolsConditions.ventoryStatusId" style="width: 60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in inventoryStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                入库开始时间：
+                <span class="conditionTitle">入库开始时间：</span>
                 <DatePicker type="datetime" v-model="toolsConditions.InStorageStartTime" placeholder="请输入入库开始时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                入库结束时间：
+                <span class="conditionTitle">入库结束时间：</span>
                 <DatePicker type="datetime" v-model="toolsConditions.InStorageEndTime" placeholder="请输入入库结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">

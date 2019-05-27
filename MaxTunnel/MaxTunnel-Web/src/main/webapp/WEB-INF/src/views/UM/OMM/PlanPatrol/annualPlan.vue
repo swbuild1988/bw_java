@@ -2,22 +2,22 @@
 <div class="allDiv">
     <Row class="conditions">
         <Col span="6">
-            计划名称：
+            <span class="conditionTitle">计划名称：</span>
             <Input v-model="conditions.name" style="width: 60%"></Input>
         </Col>
         <Col span="6">
-            所属管廊：
+            <span class="conditionTitle">所属管廊：</span>
             <Select v-model='conditions.tunnelId' style="width: 60%">
                 <Option key="0" value=null>所有</Option>
                 <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
         </Col>
         <Col span="6">
-            巡检开始时间：
+            <span class="conditionTitle">巡检开始时间：</span>
             <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入巡检开始时间" style="width: 60%"></DatePicker>
         </Col>
         <Col span="6">
-            巡检结束时间：
+            <span class="conditionTitle">巡检结束时间：</span>
             <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入巡检开始时间" style="width: 60%"></DatePicker>            
         </Col>
     </Row>

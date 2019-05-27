@@ -1,54 +1,54 @@
 <template>
     <Row>
         <Col span="24">
-            <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
+            <Row class="queryCondition" style="line-height: 37px;padding-left: 5px;">
                 <Col span="4">
-                    <span>仪表工具名称</span><span>：</span>
+                    <span class="conditionTitle">仪表工具名称</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    仪表工具类型：
+                    <span class="conditionTitle">仪表工具类型：</span>
                     <Select v-model="toolConditions.typeId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span>仪表工具型号</span><span>：</span>
+                    <span class="conditionTitle">仪表工具型号</span><span class="conditionTitle">：</span>
                     <Select v-model="toolConditions.modelId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span class="word63">借用人</span><span>：</span>
+                    <span class="word63 conditionTitle">借用人</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    <span class="word63">归还人</span><span>：</span>
+                    <span class="word63 conditionTitle">归还人</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    <span>使用状态</span><span>：</span>
+                    <span class="conditionTitle">使用状态</span><span class="conditionTitle">：</span>
                     <Select v-model="toolConditions.useStatus" style="width: 60%">
                         <Option value=null key="2">所有</Option>
                         <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span>借用开始时间</span><span>：</span>
+                    <span class="conditionTitle">借用开始时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>借用结束时间</span><span>：</span>
+                    <span class="conditionTitle">借用结束时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>归还开始时间</span><span>：</span>
+                    <span class="conditionTitle">归还开始时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.retStartTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>归还结束时间</span><span>：</span>
+                    <span class="conditionTitle">归还结束时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
@@ -389,6 +389,21 @@ export default {
     width: 49.5%;
     height: 40vh;
     margin: 5px 5px 5px 0px;
+}
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

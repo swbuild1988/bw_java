@@ -38,8 +38,8 @@ html {
 	padding-left: 10px;
 }
 
-.conditions span,
-.queryCondition span {
+.conditions .conditionTitle,
+.queryCondition .conditionTitle {
 	font-size: 1.4vmin;
 	color: #fff;
 }

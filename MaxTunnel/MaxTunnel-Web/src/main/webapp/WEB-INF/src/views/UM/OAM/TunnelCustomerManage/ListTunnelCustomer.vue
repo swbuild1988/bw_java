@@ -3,15 +3,15 @@
         <div class="conditions">
             <Row>
                 <Col span="4">
-                    <span>企业名称：</span>
+                    <span class="conditionTitle">企业名称：</span>
                     <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%"/>
                 </Col>
                 <Col span="4">
-                    <span>开户行：</span>
+                    <span class="conditionTitle">开户行：</span>
                     <Input v-model="conditions.bank" placeholder="请输入开户行" style="width: 60%"/>
                 </Col>
                 <Col span="4">
-                    <span>开始时间：</span>
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择开始时间"
@@ -20,7 +20,7 @@
                     ></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>结束时间：</span>
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker
                         type="datetime"
                         placeholder="请选择结束时间"
