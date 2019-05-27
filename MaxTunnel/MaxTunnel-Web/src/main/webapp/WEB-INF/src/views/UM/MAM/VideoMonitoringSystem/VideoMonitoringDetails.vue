@@ -2,22 +2,40 @@
     <div class="whole">
         <Row class="query">
             <Col span="10" offset="2">
-                 <span style="font-size: 1.66vmin;">区域:</span>
-                <Select v-model="conditions.areaId" style="width:60%;" id="area" @on-change="search">
-                    <Option value=null key="0">所有</Option>
-                    <Option v-for="item in init.areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                <span style="font-size: 1.66vmin;">区域:</span>
+                <Select
+                    v-model="conditions.areaId"
+                    style="width:60%;"
+                    id="area"
+                    @on-change="search"
+                >
+                    <Option value="null" key="0">所有</Option>
+                    <Option
+                        v-for="item in init.areas"
+                        :value="item.id"
+                        :key="item.id"
+                    >{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="10" offset="2">
-               <span style="font-size: 1.66vmin;">监测仓:</span>
-                <Select v-model="conditions.storeId" style="width:60%;" id="store" @on-change="search">
-                    <Option value=null key="0">所有</Option>
-                    <Option v-for="item in init.stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                <span style="font-size: 1.66vmin;">监测仓:</span>
+                <Select
+                    v-model="conditions.storeId"
+                    style="width:60%;"
+                    id="store"
+                    @on-change="search"
+                >
+                    <Option value="null" key="0">所有</Option>
+                    <Option
+                        v-for="item in init.stores"
+                        :value="item.id"
+                        :key="item.id"
+                    >{{ item.name }}</Option>
                 </Select>
             </Col>
             <!-- <Col span="3">
                 <Button type="primary" icon="ios-search" @click="search" >查询</Button>
-            </Col> -->
+            </Col>-->
         </Row>
         <Row class="content">
             <Col span="5">
@@ -26,7 +44,11 @@
                     <Row class="controlBody" style="height: 20vh">
                         <Col span="24">
                             <div class="controlContent">
-                            <video-control @startDirectCtrl="start" @stopDirectCtrl="stop" v-bind:isDisabled="isDisabled"></video-control>
+                                <video-control
+                                    @startDirectCtrl="start"
+                                    @stopDirectCtrl="stop"
+                                    v-bind:isDisabled="isDisabled"
+                                ></video-control>
                             </div>
                         </Col>
                     </Row>
@@ -35,13 +57,23 @@
                     <h2 class="title">摄像头信息</h2>
                     <div style="height: 90%;" class="controlBody">
                         <h2 class="videoName" v-if="!curVideo">请选择摄像机</h2>
-                        <h2 v-if="curVideo" class="videoName">{{ curVideo.name + ' ' + curVideo.id }}</h2>
-                        <p v-if="curVideo">{{ curVideo.tunnelName + ' ' + curVideo.areaName + ' ' + curVideo.storeName }}</p>
-                        <p v-if="curVideo" >{{ curVideo.description }}</p>
-                        <div class="posContent" v-if="curVideo" >
+                        <h2
+                            v-if="curVideo"
+                            class="videoName"
+                        >{{ curVideo.name + ' ' + curVideo.id }}</h2>
+                        <p
+                            v-if="curVideo"
+                        >{{ curVideo.tunnelName + ' ' + curVideo.areaName + ' ' + curVideo.storeName }}</p>
+                        <p v-if="curVideo">{{ curVideo.description }}</p>
+                        <div class="posContent" v-if="curVideo">
                             <div class="positions" v-for="(pos,index) in perPositions" :key="index">
                                 <span class="name">{{ pos }}</span>
-                                <Button type="primary" size="small" @click="set(pos)" class="option">设置</Button>
+                                <Button
+                                    type="primary"
+                                    size="small"
+                                    @click="set(pos)"
+                                    class="option"
+                                >设置</Button>
                             </div>
                         </div>
                     </div>
@@ -54,36 +86,80 @@
                         <Poptip placement="left">
                             <Icon type="navicon-round" class="button" color="#fff"></Icon>
                             <div class="api" slot="content">
-                                <Icon class="screens" type="android-checkbox-outline-blank" @click.native="handleScreensNum(1)"></Icon>
-                                <Icon class="screens" type="social-windows" @click.native="handleScreensNum(4)"></Icon>
-                                <Icon class="screens" type="android-apps" @click.native="handleScreensNum(9)"></Icon>
+                                <Icon
+                                    class="screens"
+                                    type="android-checkbox-outline-blank"
+                                    @click.native="handleScreensNum(1)"
+                                ></Icon>
+                                <Icon
+                                    class="screens"
+                                    type="social-windows"
+                                    @click.native="handleScreensNum(4)"
+                                ></Icon>
+                                <Icon
+                                    class="screens"
+                                    type="android-apps"
+                                    @click.native="handleScreensNum(9)"
+                                ></Icon>
                             </div>
                         </Poptip>
                     </div>
                     <Row style="width: 94%;margin-left: 3%;">
                         <Col span="1" class="slipContent">
-                            <Icon type="chevron-left" :class="['slipLeft',{'disabled': curPage == 1},{'clicked' : clicked.prev && curPage != 1}]" @click.native="pageChange('prev')" @mousedown.native="down('prev')" @mouseup.native="up('prev')"></Icon>
+                            <Icon
+                                type="chevron-left"
+                                :class="['slipLeft',{'disabled': curPage == 1},{'clicked' : clicked.prev && curPage != 1}]"
+                                @click.native="pageChange('prev')"
+                                @mousedown.native="down('prev')"
+                                @mouseup.native="up('prev')"
+                            ></Icon>
                         </Col>
                         <Col span="22">
-                        <div class="videos">
-                            <h1 v-if="nodata" style="text-align: center;">暂无数据</h1>
-                            <Row>
-                                <Col :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)" v-for="(item,index) in showVideosList" :key="item.id" :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]">
-                                    <div @click="selectScene(item)">
-                                    <div :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]" v-if="videoStyle.show">
-                                            <video-component :index="index" :video="item" :id="'camera'+item.id"></video-component>
+                            <div class="videos">
+                                <h1 v-if="nodata" style="text-align: center;">暂无数据</h1>
+                                <Row>
+                                    <Col
+                                        :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)"
+                                        v-for="(item,index) in showVideosList"
+                                        :key="item.id"
+                                        :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]"
+                                    >
+                                        <div @click="selectScene(item)">
+                                            <div
+                                                :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]"
+                                                v-if="videoStyle.show"
+                                            >
+                                                <video-component
+                                                    :index="index"
+                                                    :video="item"
+                                                    :id="'camera'+item.id"
+                                                ></video-component>
+                                            </div>
+                                            <div class="options">
+                                                <div
+                                                    type="primary"
+                                                    @click="history(item)"
+                                                    class="history"
+                                                >历史记录</div>
+                                                <div
+                                                    type="primary"
+                                                    @click="config(item)"
+                                                    class="config"
+                                                >相机设置</div>
+                                            </div>
                                         </div>
-                                        <div class="options">
-                                            <div type="primary" @click="history(item)" class="history">历史记录</div>
-                                            <div type="primary" @click="config(item)" class="config">相机设置</div>
-                                        </div>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
                         </Col>
-                        <Col span="1"  class="slipContent">
-                           <Icon type="chevron-right" :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]" @click.native="pageChange('next')" @mousedown.native="down('next')" @mouseup.native="up('next')"></Icon>
+                        <Col span="1" class="slipContent">
+                            <Icon
+                                type="chevron-right"
+                                :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]"
+                                @click.native="pageChange('next')"
+                                @mousedown.native="down('next')"
+                                @mouseup.native="up('next')"
+                            ></Icon>
                         </Col>
                     </Row>
                 </div>
@@ -92,10 +168,10 @@
     </div>
 </template>
 <script>
-import { TunnelService } from "../../../../services/tunnelService"
-import { VideoService } from "../../../../services/videoService"
-import VideoControl from "../../../../components/UM/MAM/videoControls/VideoControl"
-import VideoComponent from "../../../../components/Common/Video/VideoComponent"
+import { TunnelService } from "../../../../services/tunnelService";
+import { VideoService } from "../../../../services/videoService";
+import VideoControl from "../../../../components/UM/MAM/videoControls/VideoControl";
+import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 
 export default {
     data() {
@@ -137,8 +213,8 @@ export default {
             this.curVideo = null;
             this.search();
             this.isDisabled = true;
-            this.conditions.storeId = null
-            this.conditions.areaId = null
+            this.conditions.storeId = null;
+            this.conditions.areaId = null;
         }
     },
     computed: {
@@ -200,14 +276,18 @@ export default {
                         temp.id = camera.id;
                         temp.name = camera.name;
                         temp.url = camera.url;
-                        temp.tunnelId = _this.conditions.tunnelId
-                        temp.storeId = camera.storeId
-                        temp.areaId = camera.areaId
+                        temp.tunnelId = _this.conditions.tunnelId;
+                        temp.storeId = camera.storeId;
+                        temp.areaId = camera.areaId;
                         temp.positionSupport = camera.ptzOperationsSupported;
                         temp.description = camera.description;
-                        temp.tunnelName = camera.tunnelName ? camera.tunnelName : '';
-                        temp.storeName = camera.storeName ? camera.storeName : '';
-                        temp.areaName = camera.areaName ? camera.areaName : '';
+                        temp.tunnelName = camera.tunnelName
+                            ? camera.tunnelName
+                            : "";
+                        temp.storeName = camera.storeName
+                            ? camera.storeName
+                            : "";
+                        temp.areaName = camera.areaName ? camera.areaName : "";
                         _this.cameraList.push(temp);
                     });
                     _this.Log.info("videos:", _this.cameraList);
@@ -238,10 +318,14 @@ export default {
                                 areaId: camera.areaId,
                                 positionSupport: camera.ptzOperationsSupported,
                                 description: camera.description,
-                                tunnelName: camera.tunnelName ? camera.tunnelName : '',
-                                storeName: camera.storeName ? camera.storeName : '',
-                                areaName: camera.areaName ? camera.areaName : ''
-                            })
+                                tunnelName: camera.tunnelName
+                                    ? camera.tunnelName
+                                    : "",
+                                storeName: camera.storeName
+                                    ? camera.storeName
+                                    : "",
+                                areaName: camera.areaName ? camera.areaName : ""
+                            });
                         });
                     }
                 },
@@ -263,31 +347,32 @@ export default {
             // this.videoStyle.show = false
             this.curPage = 1;
 
-            if(num == 1){
-                this.curVideo = null
-                this.curVideo = this.showVideosList[0]
+            if (num == 1) {
+                this.curVideo = null;
+                this.curVideo = this.showVideosList[0];
             }
         },
         selectScene(camera) {
-            if(this.curVideo && this.curVideo.id == camera.id){
-                this.curVideo = null
-                this.isDisabled = true
-            }else{
-                this.curVideo = null
-                this.curVideo = camera
-                let _this = this
+            if (this.curVideo && this.curVideo.id == camera.id) {
+                this.curVideo = null;
+                this.isDisabled = true;
+            } else {
+                this.curVideo = null;
+                this.curVideo = camera;
+                let _this = this;
                 VideoService.getPresetsByCameraId(this.curVideo.id).then(
-                    result=>{
-                        _this.perPositions = []
-                        _this.perPositions = result
+                    result => {
+                        _this.perPositions = [];
+                        _this.perPositions = result;
                     },
-                    error=>{
-                        _this.Log.info(error)
-                    })
+                    error => {
+                        _this.Log.info(error);
+                    }
+                );
                 if (camera.positionSupport) {
-                    this.isDisabled = false
+                    this.isDisabled = false;
                 } else {
-                    this.isDisabled = true
+                    this.isDisabled = true;
                 }
             }
         },
@@ -302,10 +387,7 @@ export default {
         start(data) {
             if (this.curVideo.id) {
                 let _this = this;
-                VideoService.cameraMove(
-                    _this.curVideo.id,
-                    data.direction
-                ).then(
+                VideoService.cameraMove(_this.curVideo.id, data.direction).then(
                     result => {
                         _this.Log.info("move success");
                     },
@@ -333,49 +415,49 @@ export default {
                 );
             }
         },
-        pageChange(type){
-            let changed = false
-            switch(type){
-                case 'prev':
-                    if(this.curPage > 1){
-                        this.curPage -= 1
-                        changed = true
+        pageChange(type) {
+            let changed = false;
+            switch (type) {
+                case "prev":
+                    if (this.curPage > 1) {
+                        this.curPage -= 1;
+                        changed = true;
                     }
-                    break
-                case 'next':
-                    if(this.curPage < this.totalPage){
-                        this.curPage += 1
-                        changed = true
+                    break;
+                case "next":
+                    if (this.curPage < this.totalPage) {
+                        this.curPage += 1;
+                        changed = true;
                     }
-                    break
+                    break;
             }
-            if(changed && this.videoNum == 1){
-                this.curVideo = this.showVideosList[0]
+            if (changed && this.videoNum == 1) {
+                this.curVideo = this.showVideosList[0];
             }
         },
         set(name) {
-          let _this = this
-          VideoService.goToPreset(_this.curVideo.id,name).then(
-              result=>{
-                  _this.Log.info('setted')
-              },
-              error=>{
-                _this.Log.info(error)
-              })
+            let _this = this;
+            VideoService.goToPreset(_this.curVideo.id, name).then(
+                result => {
+                    _this.Log.info("setted");
+                },
+                error => {
+                    _this.Log.info(error);
+                }
+            );
         },
-        down(type){
-            this.clicked[type] = true
+        down(type) {
+            this.clicked[type] = true;
         },
-        up(type){
-            this.clicked[type] = false
+        up(type) {
+            this.clicked[type] = false;
         }
     }
 };
 </script>
 <style scoped>
-.whole{
+.whole {
     background-size: 100% 100%;
-    background-color: rgb(2,23,47);
     min-height: 100%;
     position: relative;
 }
@@ -390,7 +472,7 @@ export default {
 }
 .title {
     padding: 1vmin;
-    background: url('../../../../assets/UM/title4.png') no-repeat;
+    background: url("../../../../assets/UM/title4.png") no-repeat;
     background-size: 100% 100%;
     color: #fff;
     text-align: center;
@@ -420,12 +502,12 @@ export default {
     padding: 1vmin;
     overflow-y: auto;
     margin-left: 1vmin;
-    background: url('../../../../assets/UM/videosBg.png') no-repeat;
+    background: url("../../../../assets/UM/videosBg.png") no-repeat;
     background-size: 100% 100%;
 }
 .monitors {
     padding: 1.4vmin 0.6vmin 0.6vmin 0.6vmin;
-   /* margin-top: 10px;*/
+    /* margin-top: 10px;*/
     height: 34vh;
 }
 .monitor {
@@ -434,17 +516,17 @@ export default {
     height: 28vh;
     cursor: pointer;
 }
-.oneSBody{
+.oneSBody {
     height: 69vh;
 }
-.nineSBody{
-   height: 23vh;
- }
+.nineSBody {
+    height: 23vh;
+}
 .oneScreen {
     height: 62vh;
     margin-top: 1vmin;
 }
-.nineScreen{
+.nineScreen {
     height: 16vh;
 }
 .options {
@@ -462,7 +544,7 @@ export default {
 .more {
     text-align: right;
     height: 20px;
-   /* width: 100%;*/
+    /* width: 100%;*/
     position: relative;
     margin-right: 3%;
     margin-top: 0.2%;
@@ -478,7 +560,7 @@ export default {
 }
 .config {
     margin: 0 10px;
-    background: url('../../../../assets/UM/button2.png');
+    background: url("../../../../assets/UM/button2.png");
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
@@ -487,8 +569,8 @@ export default {
     cursor: pointer;
     font-size: 1.28vmin;
 }
-.history{
-    background: url('../../../../assets/UM/button2.png');
+.history {
+    background: url("../../../../assets/UM/button2.png");
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
@@ -523,16 +605,16 @@ export default {
     display: none;
 }
 .clicked {
-    color: rgb(0,228,236);
+    color: rgb(0, 228, 236);
 }
-.controlContent{
+.controlContent {
     padding-top: 1.6vmin;
     margin: 0 auto;
     height: 18vh;
     width: 78%;
 }
-.positions{
-    background-color: rgb(53,122,163);
+.positions {
+    background-color: rgb(53, 122, 163);
     padding: 10px;
     color: #fff;
     margin: 1vmin 0 1vmin 6%;
@@ -542,14 +624,14 @@ export default {
     font-size: 1.4vmin;
     width: 88%;
 }
-.posContent{
+.posContent {
     max-height: 34vh;
     overflow-y: auto;
 }
-.option{
+.option {
     float: right;
 }
-.listTitle{
+.listTitle {
     color: #fff;
     font-weight: bold;
     font-size: 1.66vmin;
@@ -557,26 +639,26 @@ export default {
     top: 4px;
     left: 5%;
 }
-.controlBody{
-    background: url('../../../../assets/UM/videoListBody.png') no-repeat;
+.controlBody {
+    background: url("../../../../assets/UM/videoListBody.png") no-repeat;
     background-size: 100% 100%;
     color: #fff;
 }
 
-.query >>> .ivu-select-selection{
+.query >>> .ivu-select-selection {
     height: 3.2vmin;
 }
 
-.videos{
+.videos {
     margin-top: 2vh !important;
 }
-.query >>> .ivu-select-placeholder, .ivu-select-selected-value{
+.query >>> .ivu-select-placeholder,
+.ivu-select-selected-value {
     font-size: 1.28vmin !important;
     height: 2.6vmin !important;
     line-height: 3.2vmin !important;
 }
-.query >>> .ivu-select-dropdown{
+.query >>> .ivu-select-dropdown {
     max-height: 20vmin !important;
 }
-
 </style>
