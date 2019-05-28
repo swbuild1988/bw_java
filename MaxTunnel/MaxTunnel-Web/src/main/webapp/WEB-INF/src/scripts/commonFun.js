@@ -536,7 +536,6 @@ export function getEntityProperty() {
         if (Cesium.defined(pickedObject)) {
             // 获取当前点的实体
             let entity = pickedObject.id;
-            console.log('entity',entity)
             IM.searchInformation(entity, modelProp);
             _monitor(scene, Cesium, scenePosition, dom); //注册监听函数
         }

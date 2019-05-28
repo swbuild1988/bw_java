@@ -522,6 +522,18 @@ var TunnelService = {
                 }
             })
         })
+    },
+    getRelatedUnits(){
+        return new Promise((resolve, reject) => {
+            get('relatedunits').then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"getRelatedUnits")
+                }
+            })
+        })
     }
 };
 export {

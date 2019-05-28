@@ -21,6 +21,7 @@ const MQServerAddress = require('../../static/serverconfig').MQServerAddress;
  *  flaw : 缺陷信息队列
  *  alarm : 告警信息队列
  *  events : 重大时间队列
+ *  unitPlace : 单位队列
  */
 class InformationManagement {
 
@@ -31,6 +32,7 @@ class InformationManagement {
     this.flaw = [];
     this.alarm = [];
     this.events = [];
+    this.unitPlace = []
   }
   getInformation(informationType) {
     if (typeof informationType != 'string') return
@@ -77,7 +79,7 @@ class InformationManagement {
     modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
     let informations = this.getInformation(entity._messageType);
-
+console.log('informations',informations)
     if (informations !== undefined && informations.length !== 0 && Array.isArray(informations)) {
 
       informations.forEach(information => {
@@ -139,7 +141,7 @@ class InformationManagement {
           this._getInformation(information[details], entity, modelProp)
         }
         let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'], details, information);
-
+console.log('processObj',processObj)
         processObj && modelProp.data.push({
           key: processObj.key,
           val: processObj.val
