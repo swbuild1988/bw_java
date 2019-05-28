@@ -4,6 +4,7 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.List;
 import java.util.Set;
 
+import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import org.apache.shiro.SecurityUtils;
@@ -42,6 +43,8 @@ public class LoginController {
 
     @Autowired
     private Loginservice loginservice;
+    @Autowired
+    private MqService mqService;
 
 
     /**
@@ -67,9 +70,13 @@ public class LoginController {
         Session session = subject.getSession();
         User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
 
+        // 登陆的时候创建一个消息队列并将名字返回给前端
+        String queueName = mqService.createQueue();
+
         JSONObject json = new JSONObject();
         json.put("token", token);
         json.put("userId", user.getId());
+        json.put("queueName", queueName);
 
         return CommonUtil.success(json);
 

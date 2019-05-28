@@ -1,7 +1,6 @@
 <template>
-	<div :style="backStyle">
-		<Button class="createTempBtn" @click="importTemplate">导入模板</Button>
-		<Form ref="uploadPlan" :model="uploadPlan" label-position="top" :rules="ruleValidate" @submit.native.prevent>
+	<div>
+		<Form class="formBG" ref="uploadPlan" :model="uploadPlan" :label-width="120" :rules="ruleValidate" @submit.native.prevent>
 			<h2 class="formTitle" style="color: white">制定巡检计划</h2>
 			<Row>
 				<Col span="12" class="leftForm">
@@ -10,7 +9,7 @@
 							<Input v-model="uploadPlan.planId"></Input>
 						</FormItem>
 						<FormItem label="计划名称：" prop="name">
-							<Input v-model="uploadPlan.name"></Input>
+							<Input v-model="uploadPlan.name" placeholder="请输入计划名称"></Input>
 						</FormItem>
 						<FormItem label="所属管廊：" prop="tunnelId">
 							<Select v-model="uploadPlan.tunnelId" @on-change="getInfo()">
@@ -52,10 +51,10 @@
 						<FormItem label="计划步骤：">
 							<ul style="max-height: 100px;overflow-y: auto;">
 								<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
-									<span>{{index+1}}、</span>
+									<span style="color: #fff">{{index+1}}、</span>
 									<input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
-									<Button class="todoButton" type="error" size="small" style="margin-right: 5px" :disabled="index==0" @click="delList(index)">删除</Button>
-									<Button class="todoButton" type="primary" size="small" style="margin-right: 5px" @click="addList(index)">添加</Button>
+									<div class="todoButton delBtn" :disabled="index==0" @click="delList(index)">删除</div>
+									<div class="todoButton showBtn" @click="addList(index)">添加</div>
 								</li>
 							</ul>
 						</FormItem>
@@ -66,7 +65,7 @@
 						<FormItem label="计划描述：" prop="remark">
 							<Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}" placeholder="请输入计划描述"></Input>
 						</FormItem>
-						<Tabs type="card" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
+						<Tabs class="moduleStyle" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
 							<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
 								<FormItem label="巡检年份：">
 									<Input placeholder="请选择巡检年份" style="width: 100%;"></Input>
@@ -85,7 +84,7 @@
 									@on-change="getChooseMonth()"></DatePicker>
 								</FormItem>
 								<FormItem label="巡检日期安排：">
-									<Tabs v-model="uploadPlan.dateType" @click="chooseDate">
+									<Tabs class="moduleStyle" v-model="uploadPlan.dateType" @click="chooseDate">
 										<TabPane label="间隔模式" name="intervalType">
 											<div>
 												开始日期：
@@ -114,9 +113,10 @@
 				</Col>
 			</Row>
 			<FormItem style="text-align: center;margin-bottom: 0px">
-				<Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
-				<Button type="primary" style="margin-right: 8px" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</Button>
-				<Button type="info" @click="createTemplate">生成模板</Button>
+				<div class="planBtn backBtn" @click="goBack()">返回</div>
+				<div class="planBtn submitBtn" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</div>
+				<div class="planBtn importantBtn" @click="importTemplate">导入模板</div>
+				<div class="planBtn createBtn" @click="createTemplate">生成模板</div>
 			</FormItem>
 		</Form>
 		<!-- 模板名称提交 -->
@@ -285,14 +285,6 @@ export default {
 				inspectionObject: [
 					{ type: 'number', required: true, message: '巡检对象不能为空', trigger: 'change'}
 				]
-			},
-			backStyle: {
-				backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",
-				position: 'relative',
-				backgroundAttachment: 'fixed',
-				backgroundSize: 'cover',
-				minHeight: '100%',
-				paddingTop: '10px'
 			},
 			inspectWay: [],
 			inspectPath: [],
@@ -821,15 +813,8 @@ export default {
 		padding: 4px 7px;
 	}
 
-	.ivu-form.ivu-form-label-right {
-		margin: 10px auto;
-		background: #fff;
-		padding: 10px 20px;
-	}
-
 	.planContainer {
 		width: 80%;
-		background: #fff;
 		padding: 10px 20px;
 		border-radius: 8px;
 	}
@@ -882,11 +867,78 @@ export default {
 		width: 30%;
 	}
 
-	@media (min-width: 2200px) {
-		.ivu-form.ivu-form-label-right {
-			width: 50%;
-		}
+	.formBG{
+		background: url("../../../../assets/UM/infoBox.png") no-repeat;
+		background-size: 100% 100%;
+		padding-top: 3vmin;
+		padding-bottom: 3vmin;
+	}
 
+	.formBG >>> .ivu-form-item-label{
+		color: #fff;
+	}
+
+	.formBG >>> .ivu-form-item-required .ivu-form-item-label:before, .formBG >>>.ivu-form-item-label:before {
+		color: #00fff6;
+		content: '★';
+		display: inline-block;
+		margin-right: 4px;
+		line-height: 1;
+		font-family: SimSun;
+		font-size: 12px;
+	}
+
+	.detailsBtn{
+		color: #fff;
+		border-radius: 0.5vmin;
+		line-height: 3.5vmin;
+		text-align: center;
+		width: 5vmin;
+	}
+	.showBtn{
+		background: linear-gradient(to top right, #2734e1, #b195ed)
+	}
+	.delBtn{
+		background: linear-gradient(to top right, #f61a1a, #fa8785);
+		margin-right: 5px;
+	}
+	.todoButton{
+		color: #fff;
+		border-radius: 0.5vmin;
+		line-height: 3.5vmin;
+		text-align: center;
+		width: 5vmin;
+		cursor: pointer;
+	}
+	.moduleStyle>>>.ivu-tabs-tab,.moduleStyle{
+		color: #fff;
+	}
+	.moduleStyle>>>.ivu-tabs-nav .ivu-tabs-tab-active{
+		color: #2d8cf0
+	}
+	.planBtn{
+		display: inline-block;
+		margin-right: 0.8vmin;
+		padding: 0.1vmin 2vmin;
+		color: #fff;
+		border-radius: 4px;
+		border: 1px solid  #00ffff;
+		cursor: pointer;
+	}
+	.backBtn{
+		background: linear-gradient(to right, #f68380, #f61a1a)
+	}
+	.submitBtn{
+		background: linear-gradient(to right, #b195ed, #2734e1)
+	}
+	.importantBtn{
+		background: linear-gradient(to right, #e4e884, #eef61a)
+	}
+	.createBtn{
+		background: linear-gradient(to right, #a7ecd7, #1af6b0)
+	}
+
+	@media (min-width: 2200px) {
 		h2 {
 			font-size: 2.4vmin;
 		}

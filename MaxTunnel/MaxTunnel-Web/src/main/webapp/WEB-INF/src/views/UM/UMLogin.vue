@@ -111,6 +111,11 @@ export default {
 							_this.logining = false;
 							this.loading = false;
 
+							// 获取队列名
+							let queueName = result.queueName;
+							this.MQ.setQueueName(queueName);
+							this.MQ.openMQ();
+
 							_this.$router.push({ path: "/UMmain" });
 						})
 						.catch(() => {

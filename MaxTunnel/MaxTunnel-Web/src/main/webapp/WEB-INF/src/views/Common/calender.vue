@@ -227,14 +227,16 @@ body {
 }
 
 #calendar {
-    width: 350px;
+    /* width: 350px; */
     margin-top: 20px;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.12); */
+    background: url("../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%; 
 }
 
 .month {
     width: 100%;
-    background: #1d5f87;
+    /* background: #1d5f87; */
 }
 
 .month ul {
@@ -292,7 +294,7 @@ body {
 
 .days {
     padding: 0;
-    background: #ffffff;
+    /* background: #ffffff; */
     margin: 0;
     display: flex;
     flex-wrap: wrap;
@@ -302,17 +304,17 @@ body {
 .days li {
     list-style-type: none;
     display: inline-block;
-    width: 50px;
+    width: 45px;
     text-align: center;
-    line-height: 50px;
+    line-height: 45px;
     font-size: 1rem;
-    color: #000;
+    color: #FFF;
     cursor: pointer;
 }
 
 .days li .curDay {
     border-radius: 50%;
-    color: #1d5f87;
+    color: #009bfc;
     font-weight: 700
 }
 
@@ -325,13 +327,12 @@ body {
     width: 32px;
     line-height: 32px;
     margin-top: 7px;
-    margin-left: 10px;
-    margin-bottom: 11px;
+    margin-left: 7px;
 }
 
 .days li .other-month {
     padding: 5px;
-    color: gainsboro;
+    color: #827979;
 }
 @media (min-width: 2200px){
     #calendar{

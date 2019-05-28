@@ -280,7 +280,7 @@ ul li{
     list-style: none;
 }
 .top .curYear{
-    color: #1d5f87;
+    color: #247aaf;
     font-size: 1.6vmin;
     font-weight: 700;
 }
@@ -297,6 +297,7 @@ ul li{
 }
 .top li,.year .eveYear{
     flex: 0 0 33.33333%;
+    color: #fff;
 }
 .year .eveYear .yearContent, .monthParent .monthChild .monthContent,.dayParent .dayChild .dayContent{
     width: 5.5vh;
@@ -317,7 +318,7 @@ ul li{
     border-radius: 4px;
 }
 .monthParent, .dayParent{
-    width: 20vw;
+    /* width: 20vw; */
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
@@ -329,5 +330,11 @@ ul li{
 }
 .dayChild{
     flex: 0 0 10%;
+}
+.yearCalender,.monthSelect,.daySelect{
+    background: url("../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%; 
+    color: #fff;
+    width: auto;
 }
 </style>

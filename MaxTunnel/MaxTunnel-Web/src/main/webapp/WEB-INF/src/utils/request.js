@@ -25,6 +25,7 @@ export default async () => {
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
             Vue.prototype.RouterBase = serverconfig.RouterBase;
+            Vue.prototype.MQServerAddress = serverconfig.MQServerAddress;
             sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
         } else {
             // 生产环境配置
@@ -39,6 +40,7 @@ export default async () => {
             Vue.prototype.refreshTime = result_config.data.refreshTime;
             Vue.prototype.VMEntityConfig = result_config.data.VMEntityConfig;
             Vue.prototype.RouterBase = result_config.data.RouterBase;
+            Vue.prototype.MQServerAddress = result_config.data.MQServerAddress;
             sessionStorage.setItem('ServerConfig', '/dist/static');
 
             // 获取VM的配置页
