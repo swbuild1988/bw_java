@@ -1,67 +1,93 @@
 <template>
-
-  <div v-bind:style="{height:'11vh',backgroundColor: backGroundColor, width:'100%',position: 'relative'}" class="boxBody">
-    <div style="position: absolute; top: 0.8vh; right: 0.4vw">
-      <Icon type="ios-arrow-thin-up" style="font-size: 7vmin" color="#fff"></Icon>
-      <p style="color: white; padding: 0.2vmin;font-size: 1.66vmin">{{ unit }}</p>
+    <div class="boxBody">
+        <div :style="wrapperBgStyle" class="dataWrapper">
+            <div style="width: 100%;text-align:center;align-self:center;">
+                <img :src="imgSrc" style="height:5vmin;width:5vmin;vertical-align: middle;">
+                <span>{{label}}</span>
+                <span style="font-size: 2.6vmin;">{{value}}</span>
+                <span>{{unit}}</span>
+            </div>
+        </div>
     </div>
-    <!-- <div style="position: relative; float: right;color: #fff;margin: 7px;">
-      <ul style="list-style-type:none; text-align: right;">
-        <li style="font-size: x-large">{{value}}</li>
-        <li style="width:'10%'">{{unit}}</li>
-      </ul>
-    </div> -->
-    <p style="position: absolute;top: 50%;left: 50%;font-size: 3vmin;transform: translate(-50%,-50%);">
-      {{value}} 
-    </p>
-    <div>
-      <img :src="imgSrc" style="height: 7vh; padding-left:1vmin;top:0.5vmin; "/>
-    </div>
-    <Tag :style="{background:tagColor,height:'3vh',width:'30%',minWidth:'8vmin',fontSize:'1.6vmin'}">{{label}}</Tag>
-  </div>
-
 </template>
 
 <script>
 export default {
-  name: 'dataBox2',
-  props: {
-    minWidth: {
-      default: 120
+    name: "dataBox2",
+    props: {
+        minWidth: {
+            default: 120
+        },
+        maxWidth: {
+            default: 280
+        },
+        backGroundColor1: {
+            default: "#ffce2d"
+        },
+        backGroundColor2: {
+            default: "#ffce2d"
+        },
+        value: {
+            default: 0.0
+        },
+        unit: {
+            default: "千瓦时"
+        },
+        label: {
+            default: "label"
+        },
+        imgSrc: {
+            default: ""
+        }
     },
-    maxWidth: {
-      default: 280
-    },
-    backGroundColor: {
-      default: '#ffce2d'
-    },
-    value: {
-      default: 0.0
-    },
-    unit:{
-      default:"千瓦时"
-    },
-    label: {
-      default: "label"
-    },
-    tagColor:{
-      default: '#0a3420'
-    },
-    imgSrc: {
-      default: ""
+    data() {
+        return {
+            wrapperBgStyle: {
+                background:
+                    "-webkit-linear-gradient(top" +
+                    this.backGroundColor1 +
+                    ", " +
+                    this.backGroundColor2 +
+                    ")",
+                background:
+                    "-o-linear-gradient(bottom, " +
+                    this.backGroundColor1 +
+                    ", " +
+                    this.backGroundColor2 +
+                    ")",
+                background:
+                    "-moz-linear-gradient(bottom, " +
+                    this.backGroundColor1 +
+                    ", " +
+                    this.backGroundColor2 +
+                    ")",
+                background:
+                    "linear-gradient(to bottom, " +
+                    this.backGroundColor1 +
+                    " , " +
+                    this.backGroundColor2 +
+                    ")"
+            }
+        };
     }
-  },
-}
+};
 </script>
 
 <style scoped>
-  .boxBody{
-    border: 1px solid#dddfe1;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
-  }
-  .boxBody >>> .ivu-tag{
-    line-height: 2.3vmin;
-    height: 2.2vmin;
-  }
+.boxBody {
+    height: 11vh;
+    background: url("../../../assets/UM/dataBox2Bg.png") no-repeat;
+    width: 100%;
+    background-size: 100% 100%;
+    color: #fff;
+    font-size: 1.8vmin;
+    overflow: hidden;
+}
+.dataWrapper {
+    height: 96%;
+    width: 98%;
+    display: flex;
+    margin: 0.6% auto;
+}
 </style>
 
