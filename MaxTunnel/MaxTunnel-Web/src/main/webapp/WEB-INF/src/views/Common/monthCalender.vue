@@ -223,7 +223,7 @@ ul li{
     list-style: none;
 }
 .top .curYear{
-    color: #1d5f87;
+    color: ##4dbcff;
     font-size: 1.6vmin;
     font-weight: 700;
 }
@@ -258,7 +258,6 @@ ul li{
     border-radius: 4px;
 }
 .dayParent{
-    width: 20vw;
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
@@ -267,5 +266,11 @@ ul li{
 }
 .dayChild{
     flex: 0 0 10%;
+}
+.monthCalender,.daySelect{
+    background: url("../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%; 
+    color: #fff;
+    width: auto;
 }
 </style>
