@@ -4,23 +4,11 @@
             <Col span="12" v-for="(store,index) in stores" :key="index">
                 <div class="storeCard">
                     <div class="innerCard">
+                        <div class="storeName" @click="chooseStore(store)">
+                            <Icon type="ios-flag" style="font-size: 3.6vmin;margin-right: 0.6vmin;"></Icon>
+                            <span>{{store.name}}</span>
+                        </div>
                         <Row>
-                            <Col span="12">
-                                <div class="storeName" @click="chooseStore(store)">
-                                    <Icon type="cube"></Icon>
-                                    <span>{{store.name}}</span>
-                                </div>
-                                <div class="utilization" v-if="store.values[2].val">
-                                    <i-circle
-                                        :percent="parseInt(store.values[1].val / store.values[2].val * 100)"
-                                    >
-                                        <span
-                                            class="demo-Circle-inner"
-                                            style="font-size:2.66vmin"
-                                        >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
-                                    </i-circle>
-                                </div>
-                            </Col>
                             <Col span="12">
                                 <div class="storeLineCount" v-if="store.values[2].val">
                                     <p
@@ -28,6 +16,19 @@
                                         :key="i"
                                         class="lines"
                                     >{{ line.key }}:{{ line.val }}</p>
+                                </div>
+                            </Col>
+                            <Col :span="store.values[2].val ? '12' : '24'">
+                                <div class="utilization" v-if="store.values[2].val">
+                                    <i-circle
+                                        :percent="parseInt(store.values[1].val / store.values[2].val * 100)"
+                                        stroke-color="#1dffe2"
+                                    >
+                                        <span
+                                            class="demo-Circle-inner"
+                                            style="font-size:2.66vmin"
+                                        >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
+                                    </i-circle>
                                 </div>
                                 <div
                                     :class="['equCount',{'noLines': !store.values[2].val}]"
@@ -159,40 +160,47 @@ export default {
     height: 12vmin !important;
 }
 .storeInfo {
-    padding-top: 10px;
-    padding: 30px;
-    background-color: white;
+    padding: 3vmin;
+    background: url("../../../../assets/UM/bodyBg.png") no-repeat;
+    background-size: 100% 100%;
+    overflow-y: auto;
+    height: 86vh;
 }
 .storeName {
     font-size: 3vmin;
     font-weight: bold;
     cursor: pointer;
-    margin: 4vmin 0 2vmin 10vmin;
+    margin: 3vmin 0 1vmin 0;
+    text-align: center;
 }
 .utilization {
-    margin-left: 18vmin;
+    margin-top: 2vmin;
+    text-align: center;
 }
 .equCount {
     font-size: 2.66vmin;
     margin-top: 2vmin;
-    margin-left: 4vmin;
+    text-align: center;
     cursor: pointer;
 }
 .noLines {
-    margin: 12vmin auto;
+    margin-top: 8vmin;
+    font-size: 4vmin;
 }
 .storeCard {
-    margin: 10px 7%;
-    height: 28vh;
-    width: 86%;
-    color: #c6cdd2;
+    margin: 2.3vmin 10%;
+    height: 36vh;
+    width: 80%;
+    color: #eaeef2;
 }
 .innerCard {
-    background: url("../../../../assets/UM/bodyI.png") no-repeat;
+    background: url("../../../../assets/UM/border2.png") no-repeat;
     background-size: 100% 100%;
     width: 100%;
     height: 100%;
     position: relative;
+    margin: 2vmin 0;
+    overflow: hidden;
 }
 .green {
     /* color:rgb(25,190,107);*/
@@ -202,14 +210,14 @@ export default {
 }
 .lines {
     padding: 6px;
-    font-size: 2vmin;
+    font-size: 2.4vmin;
+    line-height: 5.4vmin;
 }
 
 .storeLineCount {
     font-size: 17px;
     text-align: center;
-    margin-top: 4vmin;
-    margin-right: 12vmin;
+    margin-top: 1vmin;
 }
 
 .linesInfo >>> .ivu-tooltip-inner {
@@ -219,5 +227,6 @@ export default {
     font-size: 3.4vmin;
     text-align: center;
     padding-top: 4vmin;
+    color: #eaeef2;
 }
 </style>

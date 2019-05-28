@@ -103,7 +103,6 @@ export default {
                 videolist: []
             },
             processPicSrc: null,
-            timer: null,
             condition: {
                 areaId: null,
                 tunnelId: null,
@@ -184,11 +183,11 @@ export default {
             let result = JSON.parse(respond.body);
             this.processPicSrc = null;
             let _this = this;
-            this.timer = setTimeout(() => {
+            this.$nextTick(() => {
                 _this.processPicSrc =
                     "/emplans/png/" + result.processInstanceId;
                 _this.nodePicState = 2;
-            }, 400);
+            });
         },
         //获取MQ推送的预案消息
         acceptPlanData() {
@@ -245,7 +244,6 @@ export default {
         }
     },
     beforeDestroy() {
-        clearTimeout(this.timer);
         clearTimeout(this.getObjsTimer);
     },
     components: { Carousel, ImageFromUrl }

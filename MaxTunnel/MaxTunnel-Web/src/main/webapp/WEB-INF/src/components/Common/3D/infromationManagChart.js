@@ -71,5 +71,11 @@ export const infromationManagDetails =
                         key: '访客联系方式',val: owner => owner.telphone,
                     }
                 }
+            ],
+        unitPlaceInfromations:
+            [
+                {
+                    key:"name",val:'单位'
+                }
             ]
     }

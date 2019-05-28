@@ -181,17 +181,14 @@ export default {
         //回显选中的日期 月份
         showActiveMonth(list, month){
             this.$nextTick(()=>{   
-                if(month<10){
-                    month = month.substring(1,2)
-                }
                 for (let i = 1; i <= list.length; i++) {
                     if (i==month) {
-                        list[i-1].setAttribute("class", "active");
+                        list[i].setAttribute("class", "active");
                     }
                 }
             })
         },
-        //回显选中的日期 年份、日期
+        //回显选中的日期
         shwoActiveDate(list,day){
             this.$nextTick(()=>{ 
                 for (let i = 0; i < list.length; i++) {
@@ -226,7 +223,7 @@ ul li{
     list-style: none;
 }
 .top .curYear{
-    color: #1d5f87;
+    color: ##4dbcff;
     font-size: 1.6vmin;
     font-weight: 700;
 }
@@ -261,7 +258,6 @@ ul li{
     border-radius: 4px;
 }
 .dayParent{
-    width: 20vw;
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
@@ -270,5 +266,11 @@ ul li{
 }
 .dayChild{
     flex: 0 0 10%;
+}
+.monthCalender,.daySelect{
+    background: url("../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%; 
+    color: #fff;
+    width: auto;
 }
 </style>

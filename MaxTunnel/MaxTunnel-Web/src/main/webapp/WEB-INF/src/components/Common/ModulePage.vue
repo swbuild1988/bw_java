@@ -103,8 +103,7 @@ export default {
             nodesModal: {
                 showFlag: false,
                 imgUrl: null
-            },
-            planTimer: null
+            }
         };
     },
     mounted() {

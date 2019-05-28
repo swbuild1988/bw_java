@@ -78,29 +78,29 @@
         <Col span="12" style="margin-top: 1.5vh"  >
             <Row class="queryCondition">
                 <Col span="8">
-                    备品名称：
+                    <span class="conditionTitle">备品名称：</span>
                     <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
                 </Col>
                 <Col span="8">
-                    备品类别：
+                    <span class="conditionTitle">备品类别：</span>
                     <Select v-model="outStorageConditions.typeId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
                 <Col span="8">
-                    备品型号：
+                    <span class="conditionTitle">备品型号：</span>
                     <Select v-model="outStorageConditions.modelId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
                 <Col span="8">
-                    开始时间：
+                    <span class="conditionTitle">开始时间：</span>
                     <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="8">
-                    结束时间：
+                    <span class="conditionTitle">结束时间：</span>
                     <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="8">
@@ -678,6 +678,9 @@ export default {
 }
 .borrowName{
     width: 130px;
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

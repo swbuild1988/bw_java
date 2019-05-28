@@ -3,7 +3,7 @@
     <div class="queryCondition">
       <Row>
         <Col span="6">
-        所属管廊:
+        <span class="conditionTitle">所属管廊:</span>
         <Select v-model="conditions.tunnelId" style="width:60%">
           <Option value=null key="0">所有</Option>
           <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>

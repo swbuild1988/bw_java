@@ -1,5 +1,5 @@
 {
-    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web/",
+    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
     "RouterBase": "/",
     "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
@@ -10,6 +10,9 @@
     },
     "VMEntityConfig": {
         "unitEntityParam": [{
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49948864664668",
@@ -27,6 +30,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49506",
@@ -44,6 +50,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.499595",
@@ -61,6 +70,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.477914",
@@ -79,6 +91,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.4858731580146",
@@ -97,6 +112,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.52207233753701",
@@ -114,6 +132,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.51743415066589",
@@ -131,6 +152,9 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "messageType": "unitPlace"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.51382289846887",
@@ -335,18 +359,20 @@
         ]
     },
     "flyFilePathes": [{
-            "id": 3,
+            "id": 1,
             "name": "飞行路线_1",
             "path": "/VM/font/storeAcross.fpf",
             "isFlyLoop": "true",
-            "playRate": "0.05"
+            "playRate": "0.05",
+            "virtualInspection":"true"
         },
         {
             "id": 2,
             "name": "飞行路线_2",
             "path": "/VM/font/flytest2.fpf",
             "isFlyLoop": "false",
-            "waitTime": 0
+            "waitTime": 0,
+            "virtualInspection":"false"
         }
     ],
     "refreshTime": "60000"

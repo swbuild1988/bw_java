@@ -134,7 +134,7 @@ export const commonFlyFn = {
                 storeProp,
                 areaList
             } = this;
-
+            
             if (!areaList.length) return;
             queryCondition.areaId = queryCondition.areaId || areaList[1].id;
 
@@ -177,9 +177,12 @@ export const commonFlyFn = {
             let curStore = this.storeProp.dataList.find(store => {
                 return store.id === this.queryCondition.storeId
             })
+
+            if(!curArea|| !curStore) return
+            
             this.note.storeName = curStore.name
             this.note.areaName = curArea.name
-            console.log(this.note)
+            
         }
     },
 }

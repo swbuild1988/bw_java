@@ -11,7 +11,9 @@
         <vm-select id="area-dropdown" :optionList="areaList" :selectStyle="{ left:'15.5%' }" @getSelectVal="getStores"></vm-select>
         <vm-select id="store-dropdown" :optionList="storeList" :selectStyle="{ left:'29%' }" @getSelectVal="changeStore"></vm-select>
         <show-store-position v-bind:currPosition="storePosition"></show-store-position>
-        <move-control v-show="showControlPanel"></move-control>
+        <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="playFly"></Button>
+        <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn"  style="right:4vmin" icon="stop" @click="stopFly"></Button>
+        <!-- <move-control v-show="showControlPanel"></move-control> -->
     </div>
 </template>
 
@@ -57,6 +59,11 @@
                 },
                 showControlPanel: true,
                 screenWidth: 1920,
+                playOrPause: {
+                    isPlay: false,
+                    text: "开始"
+                },
+                showControlBtn:false
             }
         },
         components: {
@@ -67,9 +74,16 @@
             MoveControl
         },
         mounted() {
+            let _this =this;
+
             this.init();
             this.addEvents().addMouseEnter();
             this.addEvents().addMouseLeave();
+            this.listenerWindowSize();
+            
+            window.onresize = function(){
+                _this.listenerWindowSize();
+            }
         },
         methods: {
             init() {
@@ -201,10 +215,16 @@
                 this.storePosition = position;
             },
             playFly() {
-                this.$refs.smViewer.playFly();
+                if (this.playOrPause.isPlay) {
+                    this.$refs.smViewer.pauseFly();
+                } else {
+                    this.$refs.smViewer.playFly();
+                }
+                this.playOrPause.isPlay = !this.playOrPause.isPlay;
             },
             stopFly() {
                 this.$refs.smViewer.stopFly();
+                this.playOrPause.isPlay = false;
             },
             destroyViewer() {
                 this.$refs.smViewer.destory3D();
@@ -252,6 +272,9 @@
 
                 return eventListener;
             },
+            listenerWindowSize(){
+               this.showControlBtn = window.innerWidth > 1440 ? true : false;
+            }
         },
         beforeDestroy() {
             // console.log("3d module beforedestory")
@@ -304,6 +327,15 @@
 
     .Main>>>.moveControlPanel {
         display: none;
+    }
+    .contorlBtn {
+        position: absolute;
+        right: 8vmin;
+        background: transparent;
+        top: 8.5vmin;
+        border: 1px solid rgba(16,159,181,.5);
+        -webkit-box-shadow: 0 0 1rem #109FB5 inset;
+        box-shadow: 0 0 1rem #109FB5 inset;
     }
 </style>
 <style>

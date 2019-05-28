@@ -509,6 +509,31 @@ var TunnelService = {
                 }
             })
         })
+    },
+    //根据
+    getAreaInfo(id){
+        return new Promise((resolve, reject) => {
+            get('areas/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：")
+                }
+            })
+        })
+    },
+    getRelatedUnits(){
+        return new Promise((resolve, reject) => {
+            get('relatedunits').then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"getRelatedUnits")
+                }
+            })
+        })
     }
 };
 export {

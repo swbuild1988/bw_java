@@ -19,6 +19,7 @@ import createProxy from './createProxy'
  *  flaw : 缺陷信息队列
  *  alarm : 告警信息队列
  *  events : 重大时间队列
+ *  unitPlace : 单位队列
  */
 class InformationManagement {
 
@@ -75,7 +76,7 @@ class InformationManagement {
         modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
         let informations = this.getInformation(entity._messageType);
-
+        console.log('informations', informations)
         if (informations !== undefined && informations.length !== 0 && Array.isArray(informations)) {
 
             informations.forEach(information => {
@@ -144,8 +145,13 @@ class InformationManagement {
                 });
             }
         }
+        let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'], details, information);
+        console.log('processObj', processObj)
+        processObj && modelProp.data.push({
+            key: processObj.key,
+            val: processObj.val
+        });
     }
-
 }
 
 Vue.prototype.IM = new InformationManagement(); //实例化InformationManagement , 挂载到Vue原型上
@@ -319,7 +325,7 @@ class MQ {
         });
     }
 
-    _MQCallback(data){
+    _MQCallback(data) {
         console.log("收到消息：", data.body);
         console.log("this", _this)
         // if (_this.listener) _this.listener(data.body);
@@ -329,7 +335,7 @@ class MQ {
         let [callback] = args;
         let _this = this;
 
-        return function(conn) {
+        return function (conn) {
             _this.client.subscribe(_this.queueName, callback);
         }
     }

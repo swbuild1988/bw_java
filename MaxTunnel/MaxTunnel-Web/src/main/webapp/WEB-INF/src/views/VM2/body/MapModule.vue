@@ -120,7 +120,6 @@
     import Vue from "vue";
     import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
     import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
-
     export default {
         data() {
             return {

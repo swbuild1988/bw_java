@@ -142,7 +142,7 @@ export default ( containerId,viewer,domId,route ) => ({
         },
         setViewAngle() {
             let { scene, cameraPosition } = this;
-            console.log('cameraPosition',this.cameraPosition)
+            
             if ( Cesium.defined( scene ) ) {
                 scene.camera.setView({
                     destination: new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height),

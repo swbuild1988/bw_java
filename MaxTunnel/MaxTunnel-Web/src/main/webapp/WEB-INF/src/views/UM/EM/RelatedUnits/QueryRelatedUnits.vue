@@ -2,31 +2,31 @@
     <div class="allDiv">
         <Row class="queryCondition">
             <Col span="6">
-                <span>所属管仓段：</span>
+                <span class="conditionTitle">所属管仓段：</span>
                 <Input type="text" icon="arrow-down-b" style="width: 60%" :value="sectionName" @click="showTree" readonly></Input>
                 <Tree class="tree"  :data="treeList" show-checkbox ref="tree" @on-check-change="choiceAll" v-show="isShow"></Tree>
             </Col>
             <Col span="6">
-                <span>单位名称：</span>
+                <span class="conditionTitle">单位名称：</span>
                 <Input type="text" v-model="conditions.name" id="getW"  style="width:60%"></Input>
             </Col>
             <Col span="6">
-                <span>联系人：</span>
+                <span class="conditionTitle">联系人：</span>
                 <Input type="text" v-model="conditions.contact"  style="width:60%"></Input>
             </Col>
             <Col span="6">
-                <span>单位类别：</span>
+                <span class="conditionTitle">单位类别：</span>
                 <Select v-model="conditions.unitType"  style="width:60%">
                     <Option value=null>所有</Option>
                     <Option v-for="(item,index) in unitType" :value="item.val" :key="index">{{ item.key }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word025">开始时间：</span>
+                <span class="word025 conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" placeholder="请选择开始时间"  style="width: 60%" v-model="conditions.startTime"></DatePicker>
             </Col>
             <Col span="6">
-                <span>结束时间：</span>
+                <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" placeholder="请选择结束时间"  style="width: 60%" v-model="conditions.endTime"></DatePicker>
             </Col>
             <Col span="6">

@@ -83,7 +83,7 @@ export default {
         return {
             umImg: Img,
             // title: "综合管廊统一管理平台",
-            titlePic: require("../../assets/UM/maxTunnelDetails.png"),
+            titlePic: require("../../assets/UM/maxTunnelHome.png"),
             aboutUs: {
                 show: {
                     state: false
@@ -446,19 +446,18 @@ export default {
 }
 
 .layout-nav .topBtn {
-    padding: 1.7vmin 2.5vmin 0.6vmin 2.5vmin;
+    padding: 1.7vmin 2.5vmin 0vmin 2.5vmin;
     font-size: 1.66vmin;
     background: url("../../assets/UM/UmTopBg.png") no-repeat center;
     background-size: contain;
     top: 15%;
     position: relative;
     width: 100%;
-    height: 70%;
 }
 
 .layout-nav >>> .ivu-dropdown-item {
     font-size: 1.6vmin !important;
-    margin-top: 0.5vmin;
+    /* margin-top: 0.5vmin; */
     padding: 0.7vmin 1.6vmin;
     border-top: 0.1vmin solid #e9eaec;
 }

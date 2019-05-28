@@ -1,8 +1,10 @@
 <template>
     <div :style="backStyle">
         <Form ref="companyInfo" :model="companyInfo" :label-width="140">
-            <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加企业客户信息</h2>
-            <h2 class="formTitle" v-show="pageType==pageTypes.Edit">修改企业客户信息</h2>
+            <h2
+                class="formTitle"
+                v-show="pageType!=pageTypes.Edit"
+            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : '添加企业客户信息' }}</h2>
             <Row>
                 <Col span="7">
                     <p class="subTitle">企业基本信息：</p>
@@ -11,35 +13,55 @@
                         prop="company.name"
                         :rules="{required: true, message: '请输入企业名称', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.name" placeholder="请输入企业名称"/>
+                        <Input
+                            v-model="companyInfo.company.name"
+                            placeholder="请输入企业名称"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="信用代码:"
                         prop="company.creditNo"
                         :rules="{required: true, message: '请输入信用代码', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.creditNo" placeholder="请输入信用代码"/>
+                        <Input
+                            v-model="companyInfo.company.creditNo"
+                            placeholder="请输入信用代码"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="开户行:"
                         prop="company.bank"
                         :rules="{ required: true, message: '请输入开户行', trigger: 'blur' }"
                     >
-                        <Input v-model="companyInfo.company.bank" placeholder="请输入开户行"/>
+                        <Input
+                            v-model="companyInfo.company.bank"
+                            placeholder="请输入开户行"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="账号:"
                         prop="company.account"
                         :rules="{required: true, message: '请输入账号', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.account" placeholder="请输入账号"/>
+                        <Input
+                            v-model="companyInfo.company.account"
+                            placeholder="请输入账号"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="注册地址:"
                         prop="company.address"
                         :rules="{required: true, message: '请输入地址', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.address" placeholder="请输入注册地址信息"/>
+                        <Input
+                            v-model="companyInfo.company.address"
+                            placeholder="请输入注册地址信息"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="注册电话:"
@@ -47,14 +69,22 @@
                         :rules="[{required: true, message: '请输入注册电话', trigger: 'blur'},{ validator: validates.registerTel, trigger: 'blur' },
                     ]"
                     >
-                        <Input v-model="companyInfo.company.phone" placeholder="请输入注册电话"/>
+                        <Input
+                            v-model="companyInfo.company.phone"
+                            placeholder="请输入注册电话"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="邮箱:"
                         prop="company.mail"
                         :rules="[{required: true, message: '请输入邮箱', trigger: 'blur'},{ validator: validates.validateEmail, trigger: 'blur' }]"
                     >
-                        <Input v-model="companyInfo.company.mail" placeholder="请输入邮箱"/>
+                        <Input
+                            v-model="companyInfo.company.mail"
+                            placeholder="请输入邮箱"
+                            class="input"
+                        />
                     </FormItem>
                 </Col>
                 <Col span="7" offset="1">
@@ -64,27 +94,47 @@
                         prop="list[0].contact"
                         :rules="{required: true, message: '请输入一般联系人姓名', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.list[0].contact" placeholder="请输入一般联系人姓名"/>
+                        <Input
+                            v-model="companyInfo.list[0].contact"
+                            placeholder="请输入一般联系人姓名"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem label="职责:">
-                        <Input v-model="companyInfo.list[0].duty" placeholder="请输入一般联系人职责"/>
+                        <Input
+                            v-model="companyInfo.list[0].duty"
+                            placeholder="请输入一般联系人职责"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="手机:"
                         prop="list[0].tel"
                         :rules="[{required: true, message: '请输入一般联系人手机', trigger: 'blur'},{ validator: validates.validatePhone, trigger: 'blur' }]"
                     >
-                        <Input v-model="companyInfo.list[0].tel" placeholder="请输入一般联系人手机"/>
+                        <Input
+                            v-model="companyInfo.list[0].tel"
+                            placeholder="请输入一般联系人手机"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="电话:"
                         prop="list[0].tel2"
                         :rules="{ validator: validatePhone, trigger: 'blur' }"
                     >
-                        <Input v-model="companyInfo.list[0].tel2" placeholder="请输入一般联系人电话"/>
+                        <Input
+                            v-model="companyInfo.list[0].tel2"
+                            placeholder="请输入一般联系人电话"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
-                        <Input v-model="companyInfo.list[0].mail" placeholder="请输入一般联系人邮箱"/>
+                        <Input
+                            v-model="companyInfo.list[0].mail"
+                            placeholder="请输入一般联系人邮箱"
+                            class="input"
+                        />
                     </FormItem>
                     <p class="subTitle">紧急联系人信息：</p>
                     <FormItem
@@ -92,27 +142,47 @@
                         prop="list[1].contact"
                         :rules="{required: true, message: '请输入紧急联系人姓名', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.list[1].contact" placeholder="请输入紧急联系人姓名"/>
+                        <Input
+                            v-model="companyInfo.list[1].contact"
+                            placeholder="请输入紧急联系人姓名"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem label="职责:">
-                        <Input v-model="companyInfo.list[1].duty" placeholder="请输入紧急联系人职责"/>
+                        <Input
+                            v-model="companyInfo.list[1].duty"
+                            placeholder="请输入紧急联系人职责"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="手机:"
                         prop="list[1].tel"
                         :rules="[{required: true, message: '请输入一般联系人手机', trigger: 'blur'},{ validator: validates.validatePhone, trigger: 'blur' }]"
                     >
-                        <Input v-model="companyInfo.list[1].tel" placeholder="请输入紧急联系人手机"/>
+                        <Input
+                            v-model="companyInfo.list[1].tel"
+                            placeholder="请输入紧急联系人手机"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="电话:"
                         prop="list[1].tel2"
                         :rules="{ validator: validatePhone, trigger: 'blur' }"
                     >
-                        <Input v-model="companyInfo.list[1].tel2" placeholder="请输入紧急联系人电话"/>
+                        <Input
+                            v-model="companyInfo.list[1].tel2"
+                            placeholder="请输入紧急联系人电话"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
-                        <Input v-model="companyInfo.list[1].mail" placeholder="请输入紧急联系人邮箱"/>
+                        <Input
+                            v-model="companyInfo.list[1].mail"
+                            placeholder="请输入紧急联系人邮箱"
+                            class="input"
+                        />
                     </FormItem>
                 </Col>
                 <Col span="8" offset="1" class="inspectionItems">
@@ -122,7 +192,11 @@
                         prop="company.inspectionNo"
                         :rules="{required: true, message: '请输入固定巡检周期', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.inspectionNo" placeholder="请输入固定巡检周期"/>
+                        <Input
+                            v-model="companyInfo.company.inspectionNo"
+                            placeholder="请输入固定巡检周期"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="时间:"
@@ -132,6 +206,7 @@
                         <Input
                             v-model="companyInfo.company.inspectionTime"
                             placeholder="请输入固定巡检时间"
+                            class="input"
                         />
                     </FormItem>
                     <p class="subTitle">固定巡检人员备案：</p>
@@ -140,7 +215,11 @@
                         prop="company.insName"
                         :rules="{required: true, message: '请输入姓名', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.insName" placeholder="请输入固定巡检人员姓名"/>
+                        <Input
+                            v-model="companyInfo.company.insName"
+                            placeholder="请输入固定巡检人员姓名"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="身份证号:"
@@ -150,6 +229,7 @@
                         <Input
                             v-model="companyInfo.company.insIdentity"
                             placeholder="请输入固定巡检人员身份证号"
+                            class="input"
                         />
                     </FormItem>
                     <FormItem
@@ -157,14 +237,22 @@
                         prop="company.insDuty"
                         :rules="{required: true, message: '请输入职责', trigger: 'blur'}"
                     >
-                        <Input v-model="companyInfo.company.insDuty" placeholder="请输入固定巡检人员职责"/>
+                        <Input
+                            v-model="companyInfo.company.insDuty"
+                            placeholder="请输入固定巡检人员职责"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="手机："
                         prop="company.insPhone"
                         :rules="[{required: true, message: '请输入手机', trigger: 'blur'},{ validator: validates.validatePhone, trigger: 'blur' }]"
                     >
-                        <Input v-model="companyInfo.company.insPhone" placeholder="请输入固定巡检人员电话"/>
+                        <Input
+                            v-model="companyInfo.company.insPhone"
+                            placeholder="请输入固定巡检人员电话"
+                            class="input"
+                        />
                     </FormItem>
                     <FormItem
                         label="资格证类型:"
@@ -174,6 +262,7 @@
                         <Input
                             v-model="companyInfo.company.insQualification"
                             placeholder="请输入固定巡检人员资格证类型"
+                            class="input"
                         />
                     </FormItem>
                     <FormItem
@@ -184,6 +273,7 @@
                         <Input
                             v-model="companyInfo.company.qualificationNo"
                             placeholder="请输入资格证编号"
+                            class="input"
                         />
                     </FormItem>
                     <FormItem
@@ -196,25 +286,28 @@
                             type="file"
                             @on-change="imgChange"
                             accept="image/png, image/jpeg, image/jpg"
+                            class="imgInput"
                         />
                     </FormItem>
                     <FormItem>
-                        <image-from-url
-                            v-if="imgPreview.isInit"
-                            :url="imgPreview.url"
-                            style="width: 29.6vmin; height: 16vmin"
-                        ></image-from-url>
-                        <img
-                            v-else
-                            :src="companyInfo.company.imgUrl"
-                            style="width: 29.6vmin; height: 16vmin"
-                        >
+                        <div class="imgReview">
+                            <image-from-url
+                                v-show="imgPreview.isInit"
+                                :url="imgPreview.url"
+                                style="width: 100%; height: 100%"
+                            ></image-from-url>
+                            <img
+                                v-show="!imgPreview.isInit && companyInfo.company.imgUrl"
+                                :src="companyInfo.company.imgUrl"
+                                style="width: 100%; height: 100%"
+                            >
+                        </div>
                     </FormItem>
                 </Col>
             </Row>
-            <div style="margin: 0 auto; width: 14vmin;" class="btn">
-                <Button type="primary" @click="submitcompanyInfo('companyInfo')">保存</Button>
-                <Button type="ghost" @click="goBack()" style="margin-right: 8px">返回</Button>
+            <div class="btn">
+                <Button type="primary" @click="submitcompanyInfo('companyInfo')" class="save">保存</Button>
+                <Button type="ghost" @click="goBack()" class="back">返回</Button>
             </div>
         </Form>
     </div>
@@ -328,14 +421,17 @@ export default {
             },
             isDisable: false,
             backStyle: {
-                backgroundImage:
-                    "url(" + require("../../../../assets/UM/backImg.jpg") + ")",
-                height: "100%",
+                background:
+                    "url(" +
+                    require("../../../../assets/UM/itemPageBg.png") +
+                    ") no-repeat",
+                height: "96%",
                 position: "relative",
-                backgroundAttachment: "fixed",
-                backgroundSize: "cover",
-                minHeight: "100%",
-                paddingTop: "40px"
+                // backgroundAttachment: "fixed",
+                backgroundSize: "100% 100%",
+                minHeight: "96%",
+                marginTop: "2%",
+                color: "#49d9fe"
             },
             uploadImageParam: null,
             imgPreview: {
@@ -384,7 +480,6 @@ export default {
                         case this.pageTypes.Add:
                             CompanyService.addCompany(this.companyInfo).then(
                                 response => {
-                                    console.log(response);
                                     if (response.id) {
                                         CompanyService.uploadQualification(
                                             response.id,
@@ -510,10 +605,10 @@ export default {
 <style scoped>
 h2 {
     font-size: 1.8vmin;
+    margin-top: -1.4vmin;
 }
 .ivu-form.ivu-form-label-right {
-    width: 80%;
-    background: #fff;
+    width: 96%;
     padding: 10px 20px;
     border-radius: 4px;
     margin: 0 auto;
@@ -525,8 +620,61 @@ h2 {
 .ivu-form-item {
     margin-bottom: 2.4vmin;
 }
+.ivu-form >>> .ivu-form-item-label {
+    color: #eaeef2;
+}
 .inspectionItems >>> .ivu-form-item {
-    margin-bottom: 1.6vmin;
+    margin-bottom: 2.2vmin;
+}
+.ivu-form >>> .ivu-input {
+    background: transparent;
+    color: #eaeef2;
+    border-radius: 1vmin;
+}
+.ivu-form >>> .ivu-input::-webkit-input-placeholder {
+    color: #eaeef2;
+}
+.input {
+    width: 76%;
+}
+.imgInput {
+    width: 76%;
+}
+.imgInput >>> .ivu-input {
+    border: 0px;
+}
+.btn {
+    position: absolute;
+    width: 16vmin;
+    bottom: 4vmin;
+    left: 44%;
+}
+.save {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    margin-right: 1vmin;
+}
+.back {
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+}
+.imgReview {
+    background-color: #385691;
+    border: 1px solid #83a6ed;
+    border-radius: 1vmin;
+    width: 29.6vmin;
+    height: 16vmin;
 }
 @media (min-width: 2200px) {
     .ivu-form-item >>> .ivu-form-item-label {
