@@ -1,5 +1,7 @@
 package com.bandweaver.tunnel.service.common.mq;
 
+import com.rabbitmq.client.Channel;
+import org.activiti.engine.repository.ModelQuery;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 
+import java.util.Date;
+
 @Service
 public class MqServiceImpl implements MqService {
 
@@ -17,17 +21,34 @@ public class MqServiceImpl implements MqService {
     private AmqpTemplate amqpTemplate;
     @Autowired
     private ConnectionFactory connectionFactory;
+    @Autowired
+    private MqModuleCenter mqModuleCenter;
 
     @Override
     public void send(String message) {
-        amqpTemplate.send(PropertiesUtil.getString(Constants.QUEUE_EXCHANGE), "", new Message(message.getBytes(), new MessageProperties()));
+        try {
+//        amqpTemplate.send(PropertiesUtil.getString(Constants.QUEUE_EXCHANGE), "", new Message(message.getBytes(), new MessageProperties()));
+            Channel channel = mqModuleCenter.getChannel();
+            channel.basicPublish(PropertiesUtil.getString(Constants.QUEUE_EXCHANGE), "", null, message.getBytes("UTF-8"));
+
+            LogUtil.info("发送消息：" + message);
+        } catch (Exception e) {
+            LogUtil.error(e);
+        }
     }
 
     @Override
     public String createQueue() {
         try {
-            String queue = connectionFactory.createConnection().createChannel(false).queueDeclare().getQueue();
-            return queue;
+            Channel channel = mqModuleCenter.getChannel();
+            String queueName = "tunnel-" + (new Date()).getTime();
+            boolean durable = true;
+            boolean exclusive = false;
+            boolean auto_delete = false;
+            channel.queueDeclare(queueName, durable, exclusive, auto_delete, null);
+            channel.queueBind(queueName, PropertiesUtil.getString(Constants.QUEUE_EXCHANGE), "");
+
+            return queueName;
         } catch (Exception e) {
             return null;
         }

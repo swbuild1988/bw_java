@@ -9,10 +9,7 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
-import com.bandweaver.tunnel.common.biz.itf.AreaService;
-import com.bandweaver.tunnel.common.biz.itf.SectionService;
-import com.bandweaver.tunnel.common.biz.itf.StoreService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
+import com.bandweaver.tunnel.common.biz.itf.*;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
@@ -69,6 +66,8 @@ public class TestController {
     private TunnelService tunnelService;
     @Autowired
     private MeasObjService measObjService;
+    @Autowired
+    private MqService mqService;
 
     /**
      * 测试添加每个管廊的moid和总能耗
@@ -227,6 +226,13 @@ public class TestController {
     		//添加
     		consumeDataService.insert(data);
     	}
+    }
+
+    @RequestMapping(value = "test/mqmessage", method = RequestMethod.GET)
+    public JSONObject sendMQMessage() {
+        mqService.send("hhahahahahahahaha");
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
     
 }

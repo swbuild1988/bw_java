@@ -99,7 +99,9 @@
 							WEB-INF/static/**,
 							WEB-INF/*.babelrc,
 							WEB-INF/*.js,
-							WEB-INF/*.json
+							WEB-INF/*.json,
+							dist/**,
+							index.html
 						</packagingExcludes>
 						<!--<warName>MaxTunnel</warName>-->
 						<outputDirectory>target</outputDirectory>

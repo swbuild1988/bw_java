@@ -147,11 +147,11 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        // this.acceptPlanData();
-        this.acceptAlarmData();
+        
+        this.startListenMQ();
     },
     beforeDestroy() {
-        // this.closedMQ();
+        this.stopListenMQ();
         clearTimeout(this.planTimer);
         this.$Notice.destroy();
     },
@@ -260,7 +260,6 @@ export default {
                             <Footer class="layout-footer-center">
                                 2009-2018 &copy; Bandweaver
                             </Footer>
-                            <button onClick={this.testAlarm}>测试告警</button>
                         </Collapse>
                         <ShowStartPlan modalPrams={this.showModal.modalPrams} />
                         <ShowNodesPic
@@ -273,76 +272,37 @@ export default {
         );
     },
     methods: {
-        //手动开启预案
-        // startPlan(alarm) {
-        // 	var _this = this;
-        // 	if (_this.selectPlan) {
-        // 		_this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
-        // 		_this.showModal.modalPrams.selectPlan = _this.selectPlan;
-        // 	}
-        // },
+
+        startListenMQ() {
+            this.Log.info("添加监听器到MQ")
+            this.MQ.addListener(callback);
+        },
+
+        stopListenMQ(){
+            this.Log.info("移除监听器")
+            this.MQ.deleteListener();
+        },
 
         // 连接成功回调函数
         callback(respond) {
-            let result = JSON.parse(respond.body);
-            //将数据保存在vuex中
-            // _this.videoModal.modalPrams.planData = result;
-            // _this.planData = result;
-            if (
-                this.$router.history.current.path.indexOf("/UM/plans/execute") <
-                0
-            ) {
-                // _this.showPlanTip();
-                this.nodesModal.imgUrl = null;
-                let _this = this;
-                let planTimer = setTimeout(() => {
-                    _this.nodesModal.imgUrl =
-                        "/emplans/png/" + result.processInstanceId;
-                    _this.nodesModal.showFlag = true;
-                }, 500);
-            }
-        },
-        //获取MQ推送的预案消息
-        acceptPlanData() {
-            var _this = this;
-            _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
-            this.planQueue = _this.MQ.client;
-        },
-        alarmCallback(respond) {
-            let _this = this;
-            let result = JSON.parse(respond.body);
-            _this.videoModal.modalPrams.modalInfo = result;
-            _this.showAlarmDetails();
-            _this.warningNotice(result);
-        },
-        getMessageCallback(respond) {
-            console.log("getMessageCallback-respond", respond);
-        },
-
-        testAlarm() {
-            let _this = this;
-            this.Log.info("test")
-            _this.MQ._sendMessage("queue/QUEUE_ALARM_UM", _this.getMessageCallback)
-        },
-        //开启告警队列监听
-        //接受告警队列推送的数据
-        acceptAlarmData() {
-            var _this = this;
-            _this.MQ._InitMQ(
-                1,
-                "/queue/QUEUE_ALARM_UM",
-                "",
-                _this.alarmCallback
-            );
-            this.alarmQueue = _this.MQ.client;
-            console.log("this.alarmQueue", this.alarmQueue);
-            // _this.MQ._sendMessage("queue/QUEUE_ALARM_UM", _this.getMessageCallback)
-        },
-        closedMQ() {
-            var _this = this;
-            console.log(_this.alarmQueue, this.planQueue, this.MQ);
-            this.alarmQueue.disconnect();
-            _this.planQueue.disconnect();
+            this.Log.info("收到回调:", respond)
+            // let result = JSON.parse(respond.body);
+            // //将数据保存在vuex中
+            // // _this.videoModal.modalPrams.planData = result;
+            // // _this.planData = result;
+            // if (
+            //     this.$router.history.current.path.indexOf("/UM/plans/execute") <
+            //     0
+            // ) {
+            //     // _this.showPlanTip();
+            //     this.nodesModal.imgUrl = null;
+            //     let _this = this;
+            //     let planTimer = setTimeout(() => {
+            //         _this.nodesModal.imgUrl =
+            //             "/emplans/png/" + result.processInstanceId;
+            //         _this.nodesModal.showFlag = true;
+            //     }, 500);
+            // }
         },
         goToMoudle(path, index, childIndex) {
             this.selectedActive[0] = index;
