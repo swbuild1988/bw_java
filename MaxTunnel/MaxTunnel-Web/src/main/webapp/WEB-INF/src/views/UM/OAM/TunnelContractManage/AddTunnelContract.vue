@@ -1,7 +1,7 @@
 <template>
     <div :style="backStyle">
+        <p class="title">{{title}}</p>
         <Form ref="contractInfo" :model="contractInfo" :rules="ruleValidate" class="form">
-            <p class="title">{{title}}</p>
             <Row>
                 <Col span="12">
                     <FormItem label="合同名称：" prop="name">
@@ -166,7 +166,7 @@
                             placeholder="暂时只支持pdf格式"
                             type="file"
                             @on-change="fileChange"
-                            class="inputWidth"
+                            class="fileInput"
                             accept="application/pdf"
                         />
                         <div class="ivu-form-item-error-tip" v-show="file.typeFlag">请选择pdf文件</div>
@@ -180,39 +180,44 @@
                             @loaded="loadPdfHandler"
                             :src="file.src"
                         ></pdf>
-                        <div style="margin-left: 20vmin;">
+                        <div style="margin-left: 14vmin;">
                             <Button
                                 type="primary"
                                 @click="changePdfPage(0)"
                                 size="small"
+                                class="save"
                                 v-show="file.src && file.curPage > 1"
                             >上一页</Button>
                             <Button
                                 type="primary"
                                 @click="changePdfPage(1)"
                                 size="small"
-                                style="float:right;margin: 0.4vmin 5vmin"
+                                class="save"
+                                style="float:right;margin: 0.4vmin 6vmin"
                                 v-show="file.src && file.curPage < file.totalPage"
                             >下一页</Button>
                         </div>
                     </FormItem>
                 </Col>
             </Row>
-            <div style="text-align: center">
+            <div style="text-align: center;margin-top:6vmin;">
                 <Button
                     type="primary"
                     @click="submitcontractInfo('contractInfo')"
                     v-if="pageType!=pageTypes.Edit && pageType != pageTypes.Read"
+                    class="save"
                 >提交</Button>
                 <Button
                     type="primary"
                     @click="submitEditContractInfo('contractInfo')"
                     v-if="pageType==pageTypes.Edit"
+                    class="save"
                 >更新</Button>
                 <Button
                     type="ghost"
                     @click="handleReset('contractInfo')"
                     style="margin-left: 8px"
+                    class="back"
                 >返回</Button>
             </div>
         </Form>
@@ -242,15 +247,16 @@ export default {
     data() {
         return {
             backStyle: {
-                backgroundImage:
-                    "url(" + require("../../../../assets/UM/backImg.jpg") + ")",
+                background:
+                    "url(" +
+                    require("../../../../assets/UM/itemPageBg.png") +
+                    ") no-repeat",
+                height: "96%",
                 position: "relative",
-                paddingTop: "20px",
-                paddingBottom: "20px",
-                height: "100%",
-                backgroundRepeat: "no-repeat",
                 backgroundSize: "100% 100%",
-                position: "relative"
+                minHeight: "96%",
+                marginTop: "2%",
+                color: "#49d9fe"
             },
             pageType: 3,
             pageTypes: types.pageType,
@@ -732,14 +738,9 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right {
-    width: 74%;
-    margin: 2vh auto;
-    background: #fff;
+    width: 78%;
+    margin: 4.6vh auto;
     padding: 1vmin 2vmin;
-}
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
 }
 .pop {
     max-height: 300px;
@@ -762,23 +763,86 @@ h2 {
     right: 2vw;
 }
 .title {
-    font-size: 2.5vmin;
+    font-size: 2.2vmin;
     text-align: center;
+    margin-top: -2vmin;
 }
 .inputWidth {
     width: 45vmin;
 }
 .pdfContent {
     width: 44vmin;
-    height: 48vmin;
+    height: 44vmin;
     margin-left: 14vmin;
+    background-color: #38569173;
+    border: 1px solid #83a6ed;
+    border-radius: 1vmin;
 }
 .pdfOverflow {
     overflow-y: auto;
     overflow-x: hidden;
 }
+.pdfOverflow::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.pdfOverflow::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.pdfOverflow::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background: #ededed;
+}
 .form >>> .ivu-form-item {
     margin-bottom: 2.4vmin;
+}
+.ivu-form >>> .ivu-form-item-label {
+    color: #eaeef2;
+}
+.ivu-form >>> .ivu-input {
+    font-size: 1.2vmin;
+    height: 3.2vmin;
+    background: transparent;
+    color: #eaeef2;
+    border-radius: 1vmin;
+}
+.ivu-form >>> .ivu-input-icon {
+    color: #eaeef2;
+}
+.ivu-form >>> .ivu-input::-webkit-input-placeholder {
+    color: #eaeef2;
+}
+.save {
+    background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    margin-right: 1vmin;
+}
+.back {
+    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+}
+.fileInput {
+    width: 74%;
+}
+.fileInput >>> .ivu-input {
+    border: 0px;
 }
 @media (min-width: 2000px) {
     .form >>> .ivu-form-item-content {
@@ -788,6 +852,9 @@ h2 {
 /*select*/
 .form >>> .ivu-select-selection {
     height: 3.2vmin !important;
+    background: transparent;
+    color: #eaeef2;
+    border-radius: 1vmin;
 }
 .form >>> .ivu-select-multiple .ivu-select-selection {
     height: 3.2vmin !important;
@@ -801,6 +868,7 @@ h2 {
     font-size: 1.26vmin !important;
     padding-top: 0.2vmin !important;
     width: 90% !important;
+    color: #eaeef2;
 }
 .form >>> .ivu-select-multiple .ivu-select-placeholder {
     line-height: 3.2vmin !important;
@@ -817,12 +885,6 @@ h2 {
 }
 .form >>> .location {
     left: 0;
-}
-
-/*input*/
-.form >>> .ivu-input {
-    font-size: 1.4vmin;
-    height: 3.2vmin;
 }
 
 /*datepicker*/

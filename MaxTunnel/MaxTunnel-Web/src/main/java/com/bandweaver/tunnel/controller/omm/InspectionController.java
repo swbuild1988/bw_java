@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionPath;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
@@ -29,6 +31,7 @@ import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTemplateDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
@@ -40,13 +43,17 @@ import com.bandweaver.tunnel.common.biz.itf.omm.InspectionPlanService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionRecordService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionStepService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
+import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTemplateService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep;
+import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTemplate;
 import com.bandweaver.tunnel.common.biz.vo.AuditVo;
+import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.biz.vo.StaffVo;
+import com.bandweaver.tunnel.common.biz.vo.omm.InspectionTemplateVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -82,6 +89,8 @@ public class InspectionController {
     private StaffService staffService;
     @Autowired
     private InspectionStepService inspectionStepService;
+    @Autowired
+    private InspectionTemplateService inspectionTemplateService;
 
 
     /**
@@ -308,6 +317,50 @@ public class InspectionController {
     @RequestMapping(value = "inspection-plans", method = RequestMethod.GET)
     public JSONObject getAllInspectionPlans() {
         List<InspectionPlanSimpleDto> inspectionPlans = inspectionPlanService.getInspectionPlans();
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, inspectionPlans);
+    }
+    
+    /**
+     * 
+     * @param inspectionVo
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月23日
+     */
+    @RequestMapping(value = "inspection-plans/condition", method = RequestMethod.POST)
+    public JSONObject getAllInspectionPlans(@RequestBody(required = false) InspectionVo inspectionVo) {
+        List<InspectionPlanSimpleDto> inspectionPlans = inspectionPlanService.getInspectionPlansByVo(inspectionVo);
+        for(InspectionPlanSimpleDto dto : inspectionPlans) {
+        	List<JSONObject> json = new ArrayList<>();
+        	
+        	Integer path = dto.getInspectionPath();
+        	List<Integer> ids = CommonUtil.convertStringToList(dto.getOtherIds());
+        	if(ids != null && ids.size() > 0) {
+        		if(InspectionPath.CABIN.getValue().equals(path)) {
+        			Integer storeId = ids.get(0);
+        			List<SectionDto> sections = sectionService.getSectionsByStoreId(storeId);
+        			if(sections != null && sections.size() > 0) {
+	        			JSONObject obj = new JSONObject();
+	        			obj.put("name", sections.get(0).getStore().getName());
+	        			obj.put("startPoint", sections.get(0).getStartPoint());
+	        			obj.put("endPoint", sections.get(sections.size() - 1).getEndPoint());
+	        			json.add(obj);
+        			}
+        		}
+        		if(InspectionPath.RANGE.getValue().equals(path)) {
+        			for(Integer id : ids) {
+        				AreaDto area = areaService.getAreasById(id);
+        				JSONObject obj = new JSONObject();
+	        			obj.put("name", area.getName());
+	        			obj.put("startPoint", area.getStartPoint());
+	        			obj.put("endPoint", area.getEndPoint());
+	        			json.add(obj);
+        			}
+        		}
+        	}
+        	dto.setOthers(json);
+        }
+        
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, inspectionPlans);
     }
 
@@ -618,6 +671,67 @@ public class InspectionController {
     		obj.put("val", monthList);
     		list.add(obj);
     	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    // ================================巡检模板===========================
+    /**
+     * 添加巡检模板
+     * @param name
+     * @param info
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "inspection-template", method = RequestMethod.POST)
+    public JSONObject addInspectionTemplate(@RequestBody JSONObject map) {
+    	InspectionTemplate temp = new InspectionTemplate();
+    	temp.setName(map.getString("name"));
+    	temp.setInfo(JSON.toJSONString(map.get("info")));
+    	inspectionTemplateService.add(temp);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 通过id获取巡检模板详情
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "inspection-template/{id}", method = RequestMethod.GET)
+    public JSONObject getInspectionTemplate(@PathVariable("id") Integer id) {
+    	InspectionTemplateDto dto = inspectionTemplateService.getDtoById(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 删除巡检模板
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "inspection-template/{id}", method = RequestMethod.DELETE)
+    public JSONObject addInspectionTemplate(@PathVariable("id") Integer id) {
+    	inspectionTemplateService.delete(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取巡检模板列表
+     * @param id
+     * @param staffId
+     * @param name 支持模糊查询
+     * @param startTime
+     * @param endTime
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "inspection-template/condition", method = RequestMethod.POST)
+    public JSONObject addInspectionTemplate(@RequestBody(required = false) InspectionTemplateVo vo) {
+    	List<InspectionTemplateDto> list = inspectionTemplateService.getListByCondition(vo);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 }

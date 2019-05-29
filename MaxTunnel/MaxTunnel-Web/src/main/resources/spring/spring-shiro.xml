@@ -42,6 +42,7 @@
 				/measvalue-di/** = anon
 				/measvalue-si/** = anon
 				/measvalue-so/** = anon
+				/test/** = anon
 				
 				<!-- 测试需要，不需要登录，以后改为authc -->
 				/** = authc

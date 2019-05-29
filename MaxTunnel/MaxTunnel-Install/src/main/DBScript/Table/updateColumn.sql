@@ -179,4 +179,11 @@ update T_COMMON_COMPANY set bank = temp;
 commit;
 alter table T_COMMON_COMPANY drop column temp;
 
+update T_COMMON_SECTION set total_cable_number = 0 where store_id not in ( 1001,1011,1006,1014);
+commit;
+
+alter table T_OMM_INSPECTION_PLAN add other_ids varchar2(50);
+
+alter table T_EM_RELATED_UNIT add unit_level number;
+
 

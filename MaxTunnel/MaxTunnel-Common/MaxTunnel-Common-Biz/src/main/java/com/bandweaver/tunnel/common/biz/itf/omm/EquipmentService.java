@@ -119,5 +119,7 @@ public interface EquipmentService {
 	void updateEquipmentOfObj(Equipment e);
 
 	List<JSONObject> getEquipmentExcel(Date startTime, Date endTime);
+	
+	int getCountBySectionId(Integer sectionId);
 
 }

@@ -603,7 +603,7 @@ export default {
 };
 </script>
 <style scoped>
-h2 {
+.formTitle {
     font-size: 1.8vmin;
     margin-top: -1.4vmin;
 }
@@ -650,7 +650,7 @@ h2 {
     left: 44%;
 }
 .save {
-    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);
     background: linear-gradient(to right, #7c83f2, #2734e1);
@@ -660,7 +660,7 @@ h2 {
     margin-right: 1vmin;
 }
 .back {
-    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
     background: -o-linear-gradient(right, #e49b9b, #f61a1a);
     background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
     background: linear-gradient(to right, #e49b9b, #f61a1a);
@@ -670,7 +670,7 @@ h2 {
     color: #fff;
 }
 .imgReview {
-    background-color: #385691;
+    background-color: #38569173;
     border: 1px solid #83a6ed;
     border-radius: 1vmin;
     width: 29.6vmin;

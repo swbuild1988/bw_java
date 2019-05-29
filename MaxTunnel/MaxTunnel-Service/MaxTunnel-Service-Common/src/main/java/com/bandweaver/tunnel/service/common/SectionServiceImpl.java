@@ -400,9 +400,12 @@ public class SectionServiceImpl implements SectionService {
             section.setStartPoint(startPointString);
             section.setEndPoint(endPointString);
 
-            // 设置相机的camera：pitch为俯仰角，默认为0；heading(yaw)为偏航角，正北方向为0；roll为翻滚角，默认为90
+            // 设置相机的camera：pitch为俯仰角，默认为45；heading(yaw)为偏航角，正北方向为0；roll为翻滚角，默认为90
+            Double cameraLng = MathUtil.div(MathUtil.add(outStartP.getLng(), outEndP.getLng()), 2.0);
+            Double cameraLat = MathUtil.div(MathUtil.add(outStartP.getLat(), outEndP.getLat()), 2.0);
+            String cameraPointString = PointUtil.get3DPointString(cameraLng, cameraLat, outStartP.getHeight());
             
-            section.setCamera(startPointString + ",0," + angle + ",90");
+            section.setCamera(cameraPointString + ",45," + angle + ",90");
             sectionMapper.updateByPrimaryKeySelective(section);
 
         }

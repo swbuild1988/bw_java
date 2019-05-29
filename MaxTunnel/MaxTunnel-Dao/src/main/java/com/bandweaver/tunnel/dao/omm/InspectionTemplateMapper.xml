@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionTemplateMapper">
+<cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTemplate">
+    	insert into T_OMM_INSPECTION_TEMPLATE
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+    		<if test="staffId != null">
+    			staff_id,
+    		</if>
+    		<if test="name != null and name.trim() != ''">
+    			name,
+    		</if>
+    		<if test="info != null and info.trim() != ''">
+    			info,
+    		</if>
+    		<if test="crtTime != null">
+    			create_time,
+    		</if>
+    	</trim>
+    	<trim prefix="values(" suffix=")" suffixOverrides=",">
+    		<if test="staffId != null">
+    			#{staffId},
+    		</if>
+    		<if test="name != null and name.trim() != ''">
+    			#{name},
+    		</if>
+    		<if test="info != null and info.trim() != ''">
+    			#{info},
+    		</if>
+    		<if test="crtTime != null">
+    			#{crtTime},
+    		</if>
+    	</trim>
+    </insert>
+
+	<delete id="delete" parameterType="int">
+		delete from T_OMM_INSPECTION_TEMPLATE WHERE ID = #{id}
+	</delete>
+	
+	<select id="getDtoById" parameterType="int" resultMap="DtoResultMap">
+		select t.*,s.name as staff_name
+		from T_OMM_INSPECTION_TEMPLATE t
+		left join T_COMMON_STAFF s ON t.staff_id = s.id
+		where t.id = #{id}
+	</select>
+	
+	<select id="getListByCondition" resultMap="DtoResultMap">
+		select t.*,s.name as staff_name
+		from T_OMM_INSPECTION_TEMPLATE t
+		left join T_COMMON_STAFF s ON t.staff_id = s.id
+		<where>
+			<if test="id != null">
+				and t.id = #{id}
+			</if>
+			<if test="staffId != null">
+				and t.staff_id = #{staffId}
+			</if>
+			<if test="name != null and name.trim() != ''">
+    			and instr(t.name,#{name}) > 0
+    		</if>
+			<if test="startTime != null">
+                and t.create_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and t.create_time <![CDATA[<=]]>#{endTime}
+            </if>
+		</where>
+	</select>
+
+	<resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTemplateDto">
+		<id column="id" property="id"/>
+		<result column="staff_id" property="staffId"/>
+		<result column="staff_name" property="staffName"/>
+		<result column="name" property="name"/>
+		<result column="info" property="info"/>
+		<result column="create_time" property="crtTime"/>
+	</resultMap>
+</mapper>

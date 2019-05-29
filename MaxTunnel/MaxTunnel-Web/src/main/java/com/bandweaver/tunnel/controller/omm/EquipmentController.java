@@ -6,9 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
@@ -27,13 +25,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
+import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
+import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentModelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentVenderService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
@@ -44,7 +47,6 @@ import com.bandweaver.tunnel.common.platform.log.DescEnum;
 import com.bandweaver.tunnel.common.platform.log.WriteLog;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
-import com.github.pagehelper.PageInfo;
 
 /**
  * 设备管理
@@ -65,6 +67,10 @@ public class EquipmentController {
     private EquipmentModelService equipmentModelService;
     @Autowired
     private EquipmentTypeService equipmentTypeService;
+    @Autowired
+    private StoreService storeService;
+    @Autowired
+    private SectionService sectionService;
 
 
     /**
@@ -144,8 +150,12 @@ public class EquipmentController {
     @RequiresPermissions("equipment:list")
     @RequestMapping(value = "equipments/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody EquipmentVo vo) {
-        PageInfo<EquipmentDto> pageInfo = equipmentService.dataGrid(vo);
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageInfo);
+    	List<EquipmentDto> list = equipmentService.getEquipmentListByCondition(vo);
+    	if(vo.getStoreId() != null)
+    		list = list.stream().filter(a -> vo.getStoreId().equals(a.getSection() == null ? null : a.getSection().getStoreId())).collect(Collectors.toList());
+        
+    	ListPageUtil<EquipmentDto> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
     }
 
     /**
@@ -157,7 +167,6 @@ public class EquipmentController {
      * @param sectionId    舱段id
      * @param venderId     供应商id
      * @param modelId      设备型号id
-     * @param sectionId    管舱id
      * @param qaTerm       质保期限
      * @param assetNo      资产编码
      * @param ratedVoltage 额定电压
@@ -639,9 +648,9 @@ public class EquipmentController {
     @RequestMapping(value = "tunnels/equipments/count", method = RequestMethod.GET)
     public JSONObject getTunnelEquipmentCount() {
         List<TunnelSimpleDto> tunnelList = tunnelService.getList();
-        List<Map<String, Object>> list = new ArrayList<>();
+        List<JSONObject> list = new ArrayList<>();
         for (TunnelSimpleDto tunnel : tunnelList) {
-            Map<String, Object> map = new HashMap<>();
+        	JSONObject map = new JSONObject();
             map.put("key", tunnelService.getNameById(tunnel.getId()));
             map.put("val", equipmentService.getCountByCondition(tunnel.getId(), null, null));
             list.add(map);
@@ -734,5 +743,34 @@ public class EquipmentController {
     public JSONObject updateEquipmentOfObj(@RequestBody Equipment equipment) {
         equipmentService.updateEquipmentOfObj(equipment);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取某条管廊各舱的设备数目
+     * @param tunnelId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "tunnels/{tunnelId}/stores/equipments/count", method = RequestMethod.GET)
+    public JSONObject getEquipmentCountByStoreId(@PathVariable("tunnelId") Integer tunnelId) {
+    	List<StoreDto> stores =  storeService.getStoresByTunnelId(tunnelId);
+        List<JSONObject> list = new ArrayList<>();
+        for (StoreDto dto : stores) {
+        	JSONObject map = new JSONObject();
+            map.put("id", dto.getId());
+            map.put("name", dto.getName());
+            Integer sum = 0;
+            List<Integer> storeIds = new ArrayList<>();
+            storeIds.add(dto.getId());
+            List<Section> sections = sectionService.getSectionsByStoreIds(storeIds);
+            for(Section section : sections) {
+            	int count = equipmentService.getCountBySectionId(section.getId());
+            	sum += count;
+            }
+            map.put("val", sum);
+            list.add(map);
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 }

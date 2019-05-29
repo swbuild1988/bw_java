@@ -6,6 +6,7 @@ import {
   _getFieldValues
 } from "../../../scripts/commonFun";
 import eventBus from "../../../assets/Bus";
+import { TunnelService } from '../../../services/tunnelService'
 
 export default {
   data() {
@@ -178,9 +179,11 @@ export default {
       };
     },
     addPolylineEntity(baseParams,PolylineParams){
+      
       let viewerType = this.addViewerType(PolylineParams);
 
       this.viewer.entities.add(Object.assign({},baseParams, viewerType));
+      
     },
     parametersFilter(parameters) {
       return [].map.call(parameters, (key, val) => {
@@ -552,17 +555,50 @@ export default {
 
       return canvas;
     },
-      entityFilter(filterParams){
-          if( typeof filterParams !=='object' ) return;
-          let messageType = filterParams.messageType || 'personnel';
+    entityFilter(filterParams){
+        if( typeof filterParams !=='object' ) return;
+        let messageType = filterParams.messageType || 'personnel';
 
-          let entities = filterParams.Id && this.viewer.entities._entities._array.filter(entitie => entitie._moId === filterParams.Id);
-          if( entities.length ){
+        let entities = filterParams.Id && this.viewer.entities._entities._array.filter(entitie => entitie._moId === filterParams.Id);
+        if( entities.length ){
 
-              entities.forEach(entitie => {
-                  if (entitie._messageType === messageType) entitie._show = !entitie._show
-              })
-          }
-      }
+            entities.forEach(entitie => {
+                if (entitie._messageType === messageType) entitie._show = !entitie._show
+            })
+        }
+    },
+    addRelatedUnits(){
+      
+      TunnelService.getRelatedUnits().then( result => {
+        if( !result.units.length ) return;
+
+        let IM = Vue.prototype.IM,
+            units = result.units;
+        
+        IM.deleteInformation(units,'unitPlace', 'id');
+        
+        for(let i=0;i<units.length ;i++){
+
+            IM.addInformation('unitPlace', units[i]); //缓存信息
+            
+            this.addPolylineEntity({
+              messageType: "unitPlace",
+              moId: units[i].id,
+            },{
+              position:{
+                X: units[i].longitude,
+                Y: units[i].latitude,
+                Z: "50"
+              },
+              point: {
+                outlineWidth: "6",
+                pixelSize: "20"
+              },
+            });
+            
+        }
+    })
+    }
+
   }
 };

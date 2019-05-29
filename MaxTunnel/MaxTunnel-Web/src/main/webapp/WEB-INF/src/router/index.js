@@ -105,7 +105,7 @@ export const asyncRouterMap = [{
                     },
                     {
                         path: 'queryAnnualPlan',
-                        component: resolve => 
+                        component: resolve =>
                             require(["@/views/UM/OMM/PatrolScheme/QueryAnnualPlan"], resolve),
                         name: '年度巡检计划查询'
                     }
@@ -340,14 +340,14 @@ export const asyncRouterMap = [{
                             ], resolve),
                         name: "管廊能耗主页"
                     },
-                    {
-                        path: "detials/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetail"
-                            ], resolve),
-                        name: "管廊能耗详情"
-                    },
+                    // {
+                    //     path: "detials/:id",
+                    //     component: resolve =>
+                    //         require([
+                    //             "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetail"
+                    //         ], resolve),
+                    //     name: "管廊能耗详情"
+                    // },
                     {
                         path: "EnergyConsumptionDetailLevel1/:id",
                         component: resolve =>
@@ -356,30 +356,30 @@ export const asyncRouterMap = [{
                             ], resolve),
                         name: "管廊能耗详情层级1"
                     },
-                    {
-                        path: "EnergyConsumptionDetailLevel2/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetailLevel2"
-                            ], resolve),
-                        name: "管廊能耗详情层级2"
-                    },
-                    {
-                        path: "EnergyConsumptionDetailLevel3/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetailLevel3"
-                            ], resolve),
-                        name: "管廊能耗详情层级3"
-                    },
-                    {
-                        path: "categories/:id",
-                        component: resolve =>
-                            require([
-                                "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionCategory"
-                            ], resolve),
-                        name: "能耗类别详情"
-                    },
+                    // {
+                    //     path: "EnergyConsumptionDetailLevel2/:id",
+                    //     component: resolve =>
+                    //         require([
+                    //             "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetailLevel2"
+                    //         ], resolve),
+                    //     name: "管廊能耗详情层级2"
+                    // },
+                    // {
+                    //     path: "EnergyConsumptionDetailLevel3/:id",
+                    //     component: resolve =>
+                    //         require([
+                    //             "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionDetailLevel3"
+                    //         ], resolve),
+                    //     name: "管廊能耗详情层级3"
+                    // },
+                    // {
+                    //     path: "categories/:id",
+                    //     component: resolve =>
+                    //         require([
+                    //             "@/views/UM/OAM/EnergyConsumptionManage/EnergyConsumptionCategory"
+                    //         ], resolve),
+                    //     name: "能耗类别详情"
+                    // },
                     {
                         path: "substation/:id",
                         component: resolve =>
@@ -515,14 +515,14 @@ export const asyncRouterMap = [{
                 component: resolve =>
                     require(["@/views/UM/MAM/TunnelSafety/TunnelSafety"], resolve),
                 children: [{
-                    path: "list/:id",
-                    component: resolve =>
-                        require(["@/views/UM/MAM/TunnelSafety/ListTunnelSafety"], resolve),
-                    name: "管廊安防监控列表",
-                    meta: {
-                        keepAlive: true // 需要被缓存
-                    }
-                },
+                        path: "list/:id",
+                        component: resolve =>
+                            require(["@/views/UM/MAM/TunnelSafety/ListTunnelSafety"], resolve),
+                        name: "管廊安防监控列表",
+                        meta: {
+                            keepAlive: true // 需要被缓存
+                        }
+                    },
                     {
                         path: "details/:id",
                         component: resolve =>
@@ -596,14 +596,14 @@ export const asyncRouterMap = [{
                 component: resolve =>
                     require(["@/views/UM/MAM/TunnelPipeline/TunnelPipeline"], resolve),
                 children: [{
-                    path: "list/:id",
-                    component: resolve =>
-                        require(["@/views/UM/MAM/TunnelPipeline/ListTunnelPipeline"], resolve),
-                    name: "管廊管线监控列表",
-                    meta: {
-                        keepAlive: true // 需要被缓存
-                    }
-                },
+                        path: "list/:id",
+                        component: resolve =>
+                            require(["@/views/UM/MAM/TunnelPipeline/ListTunnelPipeline"], resolve),
+                        name: "管廊管线监控列表",
+                        meta: {
+                            keepAlive: true // 需要被缓存
+                        }
+                    },
                     {
                         path: "details/:id",
                         component: resolve =>
@@ -615,7 +615,7 @@ export const asyncRouterMap = [{
                     }
                 ]
             },
-            
+
             // {
             //     path: 'PipelineSupervise',
             //     name: '管线本体监控',
@@ -735,7 +735,7 @@ export const asyncRouterMap = [{
                             "@/views/UM/OAM/OperatingSpace/operatingSpaceTunnel"
                         ], resolve),
                     name: "管廊空间管理"
-                },{
+                }, {
                     path: "detail/:id",
                     component: resolve =>
                         require([

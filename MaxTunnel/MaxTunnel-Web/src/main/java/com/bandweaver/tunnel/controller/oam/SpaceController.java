@@ -29,6 +29,7 @@ import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
+import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
@@ -78,6 +79,35 @@ public class SpaceController {
 
     }
 
+    /**
+     * 通过管舱id获取管线信息
+     * @param storeId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月19日
+     */
+    @RequestMapping(value = "tunnels/stores/{storeId}/cables", method = RequestMethod.GET)
+    public JSONObject getCableIdsBySectionIds(@PathVariable Integer storeId) {
+    	List<CableDto> dtoList = new ArrayList<>();
+    	
+    	SectionVo vo = new SectionVo();
+    	vo.setStoreId(storeId);
+    	List<SectionDto> section = sectionService.getSectionsByCondition(vo);
+    	if(section != null && section.size() > 0) {
+    		List<Integer> sectionIds = new ArrayList<>();
+    		for(SectionDto dto : section) {
+    			sectionIds.add(dto.getId());
+    		}
+    		if(sectionIds.size() > 0) {
+    			List<String> cableIds = cableService.getCableIdsBySectionIds(sectionIds);
+    			if(cableIds != null && cableIds.size() > 0) {
+    				dtoList = cableService.getListByIds(cableIds);
+    			}
+    		}
+    	}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dtoList);
+
+    }
 
     /**
      * 获取若干个section可用管线数统计
@@ -156,26 +186,44 @@ public class SpaceController {
             JSONObject json = new JSONObject();
             json.put("key", storeDto.getName());
 
-            int totalCableNumberSum = 0;
-            int usedCountSum = 0;
-            int availableCountSum = 0;
             List<SectionDto> sectionList = sectionService.getSectionsByStoreId(storeDto.getId());
-            for (SectionDto sectionDto : sectionList) {
+            // 每个section计算一根管线
+//            int totalCableNumberSum = 0;
+//            int usedCountSum = 0;
+//            int availableCountSum = 0;
+//            for (SectionDto sectionDto : sectionList) {
+//                //设计管线数
+//                int totalCableNumber = sectionDto.getTotalCableNumber() == null ? 0 : sectionDto.getTotalCableNumber();
+//                //已用管线数
+//                int usedCount = cableSectionService.getCountBySectionId(sectionDto.getId());
+//                //可用管线数
+//                int availableCount = totalCableNumber - usedCount;
+//
+//                totalCableNumberSum += totalCableNumber;
+//                usedCountSum += usedCount;
+//                availableCountSum += availableCount;
+//
+//            }
+//            json.put("设计管线数统计", totalCableNumberSum);
+//            json.put("已用管线数统计", usedCountSum);
+//            json.put("可用管线数统计", availableCountSum);
+            
+            // 每个舱计算一根管线
+            int totalCableNumber = 0;
+            int usedCount = 0;
+            int availableCount = 0;
+            if(sectionList != null && sectionList.size() > 0) {
+            	SectionDto sectionDto = sectionList.get(0);
                 //设计管线数
-                int totalCableNumber = sectionDto.getTotalCableNumber() == null ? 0 : sectionDto.getTotalCableNumber();
+                totalCableNumber = sectionDto.getTotalCableNumber() == null ? 0 : sectionDto.getTotalCableNumber();
                 //已用管线数
-                int usedCount = cableSectionService.getCountBySectionId(sectionDto.getId());
+                usedCount = cableSectionService.getCountBySectionId(sectionDto.getId());
                 //可用管线数
-                int availableCount = totalCableNumber - usedCount;
-
-                totalCableNumberSum += totalCableNumber;
-                usedCountSum += usedCount;
-                availableCountSum += availableCount;
-
+                availableCount = totalCableNumber - usedCount;
             }
-            json.put("设计管线数统计", totalCableNumberSum);
-            json.put("已用管线数统计", usedCountSum);
-            json.put("可用管线数统计", availableCountSum);
+            json.put("设计管线数统计", totalCableNumber);
+            json.put("已用管线数统计", usedCount);
+            json.put("可用管线数统计", availableCount);
             result.add(json);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
@@ -203,7 +251,7 @@ public class SpaceController {
 
             List<Section> sectionList = new ArrayList<>();
 
-            List<Cable> cableList = new ArrayList<>();
+            List<CableDto> cableList = new ArrayList<>();
             List<Store> tmpStoreList = sList.stream().filter(s -> s.getStoreTypeId().intValue() == storeType.getId().intValue()).collect(Collectors.toList());
             if (tmpStoreList != null && tmpStoreList.size() > 0) {
                 List<Integer> storeIdList = tmpStoreList.stream().map(s -> s.getId()).collect(Collectors.toList());
@@ -231,7 +279,7 @@ public class SpaceController {
             }
 
             Double totalLength = 0.00;
-            for (Cable cable : cableList) {
+            for (CableDto cable : cableList) {
                 totalLength = MathUtil.add(totalLength, cable.getCableLength());
             }
             json.put("value", MathUtil.div(totalLength, (double) 1000.00, 2));

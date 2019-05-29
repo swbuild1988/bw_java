@@ -25,8 +25,13 @@ export default {
 			default: "5%",
 			type: String
 		},
+<<<<<<< HEAD
 		titleColor: {
 			default: '#fff',
+=======
+		legendTextSize: {
+			default: '5%',
+>>>>>>> 2f44632622e59a16e387fd62a2d1a5fc4a7d0892
 			type: String
 		},
 		seriesSize: {
@@ -55,8 +60,7 @@ export default {
 				{
 					type: "pie",
 					radius: "65%",
-					roseType: "radius",
-					center: ["65%", "60%"],
+					center: ["62%", "58%"],
 					data: [],
 					color: this.seriesColor
 				}
@@ -98,7 +102,7 @@ export default {
 					left: 20,
 					textStyle: {
 						color: _this.legendColor,
-						fontSize: _this.getFontSize(_this.titleSize)
+						fontSize: _this.getFontSize(this.legendTextSize)
 					}
 				},
 				series: {

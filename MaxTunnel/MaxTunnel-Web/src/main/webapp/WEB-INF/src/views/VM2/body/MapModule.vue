@@ -109,7 +109,6 @@
             :openPlanPosition="openPlanPosition" :openVideoLinkage="true" :infoBox="false" :navigation="false"
             :openImageryProvider="true" :openSpinShow="false"></sm-viewer>
     </div>
-    <!--@replaceVideoUrl="replaceVideoUrl"-->
 </template>
 
 <script>
@@ -120,7 +119,6 @@
     import Vue from "vue";
     import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
     import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
-
     export default {
         data() {
             return {
@@ -153,7 +151,7 @@
                     isShow: true
                 },
                 unitsPosition: {
-                    openPosition: true,
+                    openPosition: false,
                     isShow: true
                 },
                 personnelPosition: {
@@ -229,18 +227,6 @@
                         });
                     }
                 });
-            },
-            replaceVideoUrl(videoId) {
-                let vlc = document.getElementById(this.VMConfig.VLC.VLC_ID);
-
-                let [video] = this.allVideos.filter(video => video.MOID == videoId);
-                if (video == undefined) {
-                    this.$store.commit("startVideoLoop"); //开启视屏监控轮播模式
-                    return;
-                }
-                let mrl = video.url;
-
-                vlc.playlist.playItem(vlc.playlist.add(mrl)); //动态修改vlc播放路径
             },
             MQCallback(message) {
                 let result = JSON.parse(message.body);

@@ -28,6 +28,7 @@ public class EquipmentVo extends BaseVo{
 	/**设备状态*/
 	private Integer status;
     private Integer tunnelId;
+    private Integer storeId;
     private Integer sectionId;
 	private Integer modelId;
 	private Integer venderId;
@@ -146,6 +147,12 @@ public class EquipmentVo extends BaseVo{
 	}
 	public void setObjId(Integer objId) {
 		this.objId = objId;
+	}
+	public Integer getStoreId() {
+		return storeId;
+	}
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 	
 }

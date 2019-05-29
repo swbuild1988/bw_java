@@ -22,6 +22,7 @@ public class InspectionPlan extends ProcessBase implements Serializable{
     private Integer inspectionWay;
     private Integer inspectionObject;
     private Integer inspectionPath;
+    private String otherIds;
 
     public InspectionPlan() {
         super();
@@ -116,6 +117,14 @@ public class InspectionPlan extends ProcessBase implements Serializable{
 		this.inspectionPath = inspectionPath;
 	}
 
+	public String getOtherIds() {
+		return otherIds;
+	}
+
+	public void setOtherIds(String otherIds) {
+		this.otherIds = otherIds;
+	}
+
 	@Override
     public String toString() {
         return "InspectionPlan{" +
@@ -130,6 +139,7 @@ public class InspectionPlan extends ProcessBase implements Serializable{
                 ", inspectionWay=" + inspectionWay +
                 ", inspectionObject=" + inspectionObject +
                 ", inspectionPath=" + inspectionPath +
+                ", otherIds=" + otherIds +
                 "} " + super.toString();
     }
 }

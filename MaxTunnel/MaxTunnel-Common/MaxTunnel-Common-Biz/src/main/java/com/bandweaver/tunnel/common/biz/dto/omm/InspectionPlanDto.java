@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.InspectionObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.InspectionPath;
 import com.bandweaver.tunnel.common.biz.constant.omm.InspectionWay;
@@ -33,6 +34,8 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
     private String inspectionPathName; // 巡检路径
     
     private List<InspectionStep> steps;
+    
+    private List<JSONObject> others;
 
     public InspectionPlanDto() {
         super();
@@ -125,6 +128,14 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
 		this.approver = approver;
 	}
 
+	public List<JSONObject> getOthers() {
+		return others;
+	}
+
+	public void setOthers(List<JSONObject> others) {
+		this.others = others;
+	}
+
 	/**
      * 将其转为原型
      * @return
@@ -167,6 +178,7 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
                 ", tasks=" + tasks +
                 ", requestStaff=" + requestStaff +
                 ", approver=" + approver +
+                ", others=" + others +
                 "} " + super.toString();
     }
 }
