@@ -25,13 +25,19 @@ export default {
 			default: "5%",
 			type: String
 		},
+		titleColor: {
+			default: '#fff',
+			type: String
+		},
 		seriesSize: {
 			default: "6%",
 			type: String
 		},
 		seriesColor: {
-			default: ['#C23531','#2F4554','#61A0A8','#D48265','#91C7AE','#749F83'],
-			type: Array
+			type: Array,
+			default: function(){
+				return ['#C23531','#2F4554','#61A0A8','#D48265','#91C7AE','#749F83']
+			}
 		},
 		legendColor: {
 			default: '#cccc',
@@ -75,10 +81,10 @@ export default {
 			_this.myChart.setOption({
 				title: {
 					left: "top",
-					top: "0%",
+					top: "2%",
 					textStyle: {
 						fontSize: _this.getFontSize(this.titleSize),
-						color: _this.legendColor
+						color: _this.titleColor
 					}
 				},
 				legend: {
@@ -138,7 +144,6 @@ export default {
 							name: curObj.key
 						};
 					});
-					console.log('_this.option.series[0]111', _this.option.series[0])
 					_this.myChart.setOption(_this.option);
 				}
 			})
@@ -168,7 +173,6 @@ export default {
 						name: curObj.key
 					};
 				});
-				console.log('_this.option.series[0]222', _this.option.series[0])
 				_this.myChart.setOption(_this.option);
 			}
 			})
@@ -202,15 +206,13 @@ export default {
 		}
 		},
 		sizeFunction(x) {
-		var min = Math.min.apply(
-			null,
-			this.series.map(o1 => {
-			return Math.min.apply(
-				null,
-				o1.map(o2 => {
-				return parseFloat(o2[2]);
-				})
-			);
+			var min = Math.min.apply( null, this.series.map(o1 => {
+				return Math.min.apply(
+					null,
+					o1.map(o2 => {
+					return parseFloat(o2[2]);
+					})
+				);
 			})
 		);
 		var max = Math.max.apply(

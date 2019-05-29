@@ -61,57 +61,57 @@
             <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
         </Col>
     </Row>
-    <div class="list">
+    <div class="list listBG">
         <Row>
             <h1 class="equipmentList">设备列表</h1>
-            <Col span="24">
+            <!-- <Col span="24">
                 <Button class="addList" @click="add({path: '/UM/equipment/add'})" long>
                     <Icon type="plus-round"></Icon>
                     添加
                 </Button>
-            </Col>
+            </Col> -->
             <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
                     <Col span="24">
                         <div class="nullData" v-show="isNullData">暂无数据</div>
                         <Row :gutter="16">
                             <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
-                                <div :style="backImage" class="backGoundBox">
-                                <div class="topBox">
-                                    <a class="ivu-modal-close" style="right: 8px;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
-                                    <p class="equipentTitle">{{ item.name }}</p>
-                                    <div class="imgBox"><img :src="imgUrl"></div>
-                                </div>
-                                </div>
-                                <Row class="detailsBox">
-                                    <Col span="12" :title="item.tunnel.name">所属管廊：{{item.tunnel.name}}</Col>
-                                    <Col span="12" :title="item.typeName">设备类型：{{ item.typeName }}</Col>
-                                    <Col span="12" :title="item.vender.name">供应商：{{item.vender.name}}</Col>
-                                    <Col span="12" :title="item.model.name">所属型号：{{item.model.name}}</Col>
-                                    <Col span="12" :title="item.statusName">设备状态：{{item.statusName}}</Col>
-                                    <Col span="12" :title="item.crtTime">启用时间：{{ item.crtTime }}</Col>
-                                </Row>
-                                <div class="operation">
-                                <Row>
-                                    <Col span="8" class="operationSee">
-                                        <div @click="show(index)">
-                                            <Icon type="eye" size=20></Icon>
-                                            <p>查看</p>
-                                        </div>
-                                    </Col>
-                                    <Col span="8" class="operationEdit">
-                                        <div @click="edit(index)">
-                                            <Icon type="edit" size=19></Icon>
-                                            <p>编辑</p>
-                                        </div>
-                                    </Col>
-                                    <Col span="8" class="operationDel">
-                                        <div @click="del(index)">
-                                            <Icon type="trash-a" size=20></Icon>
-                                            <p>删除</p>
-                                        </div>
-                                    </Col>
-                                </Row>
+                                <div  class="infoBox">
+                                    <div class="topBox">
+                                        <a class="ivu-modal-close" style="right: 2vmin;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
+                                        <p class="equipentTitle">{{ item.name }}</p>
+                                        <div class="imgBox"><img :src="imgUrl"></div>
+                                    </div>
+                                    <Row class="detailsBox">
+                                        <Col span="12" :title="item.tunnel.name">所属管廊：{{item.tunnel.name}}</Col>
+                                        <Col span="12" :title="item.typeName">设备类型：{{ item.typeName }}</Col>
+                                        <Col span="12" :title="item.vender.name">供应商：{{item.vender.name}}</Col>
+                                        <Col span="12" :title="item.model.name">所属型号：{{item.model.name}}</Col>
+                                        <Col span="12" :title="item.statusName">设备状态：{{item.statusName}}</Col>
+                                        <Col span="12" :title="item.crtTime">启用时间：{{ item.crtTime }}</Col>
+                                    </Row>
+                                    <div class="operation">
+                                    <Row>
+                                        <Col span="8" class="operationSee">
+                                            <div @click="show(index)">
+                                                <Icon type="eye" size=20></Icon>
+                                                <p>查看</p>
+                                            </div>
+                                        </Col>
+                                        <Col span="8" class="operationEdit">
+                                            <div @click="edit(index)">
+                                                <Icon type="edit" size=19></Icon>
+                                                <p>编辑</p>
+                                            </div>
+                                        </Col>
+                                        <Col span="8" class="operationDel">
+                                            <div @click="del(index)">
+                                                <Icon type="trash-a" size=20></Icon>
+                                                <p>删除</p>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    </div>
                                 </div>
                             </Col>
                         </Row>
@@ -407,6 +407,7 @@ export default {
             }
             EquipmentService.equipmentDatagird(this.params).then(
                 result => {
+                    console.log("result", result)
                     if(result.pagedList.length==0){
                         this.isNullData = true
                     }else{
@@ -420,6 +421,7 @@ export default {
                         // }
                     }
                     _this.equipments = result.pagedList;
+                    console.log('_this.equipments', _this.equipments)
                     _this.page.pageTotal = result.total;
                 },
                 error => {
@@ -539,6 +541,7 @@ export default {
 .equipmentList {
     font-size: 17px;
     font-weight: 700;
+    color: #fff;
 }
 
 .addList {
@@ -557,7 +560,9 @@ export default {
     color: #fff;
     font-size: 20px;
     text-align: center;
-    line-height: 10vh;
+    line-height: 12vh;
+    margin-left: 12vh;
+    height: 7vh;
 }
 
 .imgBox {
@@ -570,19 +575,11 @@ export default {
     margin: 10px auto;
 }
 
-.backGoundBox {
-    position: relative;
-    height: 10vh;
-    width: 100%;
-}
-
 .topBox {
-    position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.3);
 }
 
 .imgBox img {
@@ -591,15 +588,8 @@ export default {
     border-radius: 5vh;
     position: absolute;
     z-index: 5;
-    left: 50%;
-    top: 70%;
-    margin-left: -2.5vh
-}
-
-.detailsBox {
-    border: 1px solid #ebe8e8;
-    padding-top: 20px;
-    background: #fff;
+    top: 8%;
+    margin-left: -2.5vh;
 }
 
 .detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
@@ -608,25 +598,16 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: #fff;
 }
 
 .operationSee,
 .operationEdit,
 .operationDel {
     text-align: center;
-    background: #fff;
     padding: 5px 0;
-    border-bottom: 1px solid #ebe8e8;
+    color: #fff;
 }
-
-.operationDel {
-    border-right: 1px solid #ebe8e8;
-}
-
-.operationSee {
-    border-left: 1px solid #ebe8e8;
-}
-
 .operationSee p,
 .operationEdit p,
 .operationDel p {
@@ -656,6 +637,15 @@ export default {
 }
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
+}
+.listBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 3vmin;
+}
+.infoBox{
+    background: url("../../../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
