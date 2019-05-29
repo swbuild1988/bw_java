@@ -60,6 +60,9 @@
             <if test="inspectionPath != null">
                 inspection_path,
             </if>
+            <if test="otherIds != null and otherIds.trim() != ''">
+                other_ids,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planId != null">
@@ -110,6 +113,9 @@
             <if test="inspectionPath != null">
                 #{inspectionPath},
             </if>
+            <if test="otherIds != null and otherIds.trim() != ''">
+                #{otherIds},
+            </if>
         </trim>
     </insert>
 
@@ -157,6 +163,9 @@
             </if>
             <if test="inspectionPath != null">
                 inspection_path = #{inspectionPath},
+            </if>
+            <if test="otherIds != null and otherIds.trim() != ''">
+                other_ids = #{otherIds},
             </if>
         </set>
         where id = #{id}
@@ -283,6 +292,7 @@
         <result column="inspection_way" property="inspectionWay"/>
         <result column="inspection_object" property="inspectionObject"/>
         <result column="inspection_path" property="inspectionPath"/>
+        <result column="other_ids" property="otherIds"/>
         <result column="name" property="name"/>
         <result column="request_staff_id" property="requestStaffId"/>
         <result column="approver_id" property="approverId"/>
@@ -303,6 +313,7 @@
         <result column="inspection_way" property="inspectionWay"/>
         <result column="inspection_object" property="inspectionObject"/>
         <result column="inspection_path" property="inspectionPath"/>
+        <result column="other_ids" property="otherIds"/>
         <result column="name" property="name"/>
         <result column="request_staff_id" property="requestStaffId"/>
         <result column="approver_id" property="approverId"/>
@@ -344,6 +355,10 @@
         <result column="approver_id" property="approverId"/>
         <result column="tunnel_id" property="tunnelId"/>
         <result column="tunnel_name" property="tunnelName"/>
+        <result column="inspection_way" property="inspectionWay"/>
+        <result column="inspection_object" property="inspectionObject"/>
+        <result column="inspection_path" property="inspectionPath"/>
+        <result column="other_ids" property="otherIds"/>
         <result column="group_id" property="groupId"/>
         <result column="group_name" property="groupName"/>
         <result column="create_time" property="createTime"/>

@@ -9,6 +9,7 @@
     <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
     <result column="TEL" jdbcType="VARCHAR" property="tel" />
     <result column="UNIT_TYPE" jdbcType="DECIMAL" property="unitType" />
+    <result column="UNIT_LEVEL" jdbcType="DECIMAL" property="unitLevel" />
     <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
     <result column="longitude" jdbcType="VARCHAR" property="longitude" />
     <result column="latitude" jdbcType="VARCHAR" property="latitude" />
@@ -22,6 +23,7 @@
     <result column="CONTACT" jdbcType="VARCHAR" property="contact" />
     <result column="TEL" jdbcType="VARCHAR" property="tel" />
     <result column="UNIT_TYPE" jdbcType="DECIMAL" property="unitType" />
+    <result column="UNIT_LEVEL" jdbcType="DECIMAL" property="unitLevel" />
     <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
     <result column="longitude" jdbcType="VARCHAR" property="longitude" />
     <result column="latitude" jdbcType="VARCHAR" property="latitude" />
@@ -30,7 +32,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    ID, NAME, CONTACT, TEL, UNIT_TYPE, ADDRESS,longitude,latitude, SECTION_IDS, CRT_TIME
+    ID, NAME, CONTACT, TEL, UNIT_TYPE, ADDRESS,longitude,latitude, SECTION_IDS, CRT_TIME, UNIT_LEVEL
   </sql>
   <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
     select 
@@ -45,11 +47,11 @@
   <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
     insert into T_EM_RELATED_UNIT (ID, NAME, CONTACT, 
       TEL, UNIT_TYPE, ADDRESS, longitude,latitude,
-      SECTION_IDS, CRT_TIME)
+      SECTION_IDS, CRT_TIME, UNIT_LEVEL)
     values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{tel,jdbcType=VARCHAR}, #{unitType,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, 
        #{longitude,jdbcType=VARCHAR},  #{latitude,jdbcType=VARCHAR}, 
-      #{sectionIds,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP})
+      #{sectionIds,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}, #{unitLevel,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit">
     insert into T_EM_RELATED_UNIT
@@ -68,6 +70,9 @@
       </if>
       <if test="unitType != null">
         UNIT_TYPE,
+      </if>
+      <if test="unitLevel != null">
+        UNIT_LEVEL,
       </if>
       <if test="address != null">
         ADDRESS,
@@ -101,6 +106,9 @@
       <if test="unitType != null">
         #{unitType,jdbcType=DECIMAL},
       </if>
+      <if test="unitLevel != null">
+        #{unitLevel},
+      </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
       </if>
@@ -133,6 +141,9 @@
       <if test="unitType != null">
         UNIT_TYPE = #{unitType,jdbcType=DECIMAL},
       </if>
+      <if test="unitLevel != null">
+        UNIT_LEVEL = #{unitLevel,jdbcType=DECIMAL},
+      </if>
       <if test="address != null">
         ADDRESS = #{address,jdbcType=VARCHAR},
       </if>
@@ -157,6 +168,7 @@
       CONTACT = #{contact,jdbcType=VARCHAR},
       TEL = #{tel,jdbcType=VARCHAR},
       UNIT_TYPE = #{unitType,jdbcType=DECIMAL},
+      UNIT_LEVEL = #{unitLevel,jdbcType=DECIMAL},
       ADDRESS = #{address,jdbcType=VARCHAR},
       longitude = #{longitude,jdbcType=VARCHAR},
       latitude = #{latitude,jdbcType=VARCHAR},
@@ -183,6 +195,9 @@
   		</if>
   		<if test="unitType != null">
   			and unit_type = #{unitType}
+  		</if>
+  		<if test="unitLevel != null">
+  			and unit_level = #{unitLevel}
   		</if>
   		<if test="sectionIds != null and sectionIds.trim() != ''">
   			and instr(section_ids,#{sectionIds})>0

@@ -225,3 +225,34 @@ begin
 end OMM_BUY_TG;
 /
 alter trigger OMM_BUY_TG enable;
+
+
+-- Ñ²¼ìÄ£°å±í
+create table T_OMM_INSPECTION_TEMPLATE
+(
+  ID         NUMBER NOT NULL,
+  STAFF_ID  NUMBER NOT NULL,
+  NAME			VARCHAR2(20) NOT NULL,
+  INFO			VARCHAR2(2000),
+  CREATE_TIME   DATE
+);
+alter table T_OMM_INSPECTION_TEMPLATE add constraint OMM_INSPECTION_TEMPLATE_ID primary key(ID);
+
+-- create OMM_INSPECTION_TEMPLATE_SQ
+create sequence OMM_INSPECTION_TEMPLATE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OMM_INSPECTION_TEMPLATE_TG
+CREATE OR REPLACE TRIGGER OMM_INSPECTION_TEMPLATE_TG
+  BEFORE INSERT ON T_OMM_INSPECTION_TEMPLATE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_INSPECTION_TEMPLATE_SQ.nextval into :new.id from dual;
+end OMM_INSPECTION_TEMPLATE_TG;
+/
+alter trigger OMM_INSPECTION_TEMPLATE_TG enable;

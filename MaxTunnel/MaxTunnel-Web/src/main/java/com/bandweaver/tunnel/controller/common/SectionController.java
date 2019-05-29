@@ -508,8 +508,6 @@ public class SectionController extends BaseController<Section>{
 		result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
 		if(result != null) throw new RuntimeException(result);
 		
-    	result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
-    	if(result != null) throw new RuntimeException(result);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	

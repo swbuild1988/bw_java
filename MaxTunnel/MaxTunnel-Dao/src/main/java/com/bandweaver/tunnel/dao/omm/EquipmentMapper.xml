@@ -365,4 +365,9 @@
         WHERE
             e.obj_id = #{objId}
     </select>
+    
+    <select id="getCountBySectionId" resultType="Integer">
+        select count(1) from t_omm_equipment
+        where section_id = #{sectionId}
+    </select>
 </mapper>

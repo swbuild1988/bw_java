@@ -29,6 +29,8 @@ public class RelatedUnitDto implements Serializable {
     //单位类别：枚举
     private Integer unitType;
     private String unitTypeName;
+    // 单位级别
+    private Integer unitLevel;
     //单位地址
     private String address;
     //经度
@@ -140,8 +142,14 @@ public class RelatedUnitDto implements Serializable {
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
+
+	public Integer getUnitLevel() {
+		return unitLevel;
+	}
+
+	public void setUnitLevel(Integer unitLevel) {
+		this.unitLevel = unitLevel;
+	}
 	
-	
-    
     
 }

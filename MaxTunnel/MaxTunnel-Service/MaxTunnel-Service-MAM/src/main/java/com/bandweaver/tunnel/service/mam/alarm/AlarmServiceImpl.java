@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.service.mam.alarm;
 
 import java.util.*;
 
+import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
@@ -108,7 +109,7 @@ public class AlarmServiceImpl implements AlarmService {
 			}
 
 			// 获取监测极值
-			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId());
+			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId(), MonitorTypeEnum.ENVIRONMENTAL.getValue());
 
 		}
 

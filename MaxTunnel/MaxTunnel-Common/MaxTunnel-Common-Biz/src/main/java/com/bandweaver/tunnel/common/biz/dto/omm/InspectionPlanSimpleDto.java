@@ -1,8 +1,9 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
 import java.io.Serializable;
+import java.util.List;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
 
@@ -16,6 +17,8 @@ public class InspectionPlanSimpleDto extends InspectionPlan implements Serializa
     private String tunnelName;
     private String requestStatusName;
     private Staff staff;
+    
+    private List<JSONObject> others;
 
     public String getGroupName() {
         return groupName;
@@ -52,9 +55,18 @@ public class InspectionPlanSimpleDto extends InspectionPlan implements Serializa
 		this.staff = staff;
 	}
 
+	public List<JSONObject> getOthers() {
+		return others;
+	}
+
+	public void setOthers(List<JSONObject> others) {
+		this.others = others;
+	}
+
 	@Override
 	public String toString() {
-		return "InspectionPlanSimpleDto [groupName=" + groupName + ", tunnelName=" + tunnelName + ", requestStatusName="
-				+ requestStatusName + ", staff=" + staff + "]";
+		return "InspectionPlanSimpleDto [groupName=" + groupName + ", tunnelName="
+				+ tunnelName + ", requestStatusName=" + requestStatusName
+				+ ", staff=" + staff + ", others=" + others + "]";
 	}
 }
