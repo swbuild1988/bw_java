@@ -58,7 +58,7 @@
                         class="monitor-tunnel-number"
                         style="height:46vh; overflow-y: auto;margin-top: 10px;color: #f9f8f6"
                     >
-                        <div style="margin: 10px;">
+                        <div style="margin:  3vmin 10px;">
                             <span class="monitor-tunnel-title">
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
