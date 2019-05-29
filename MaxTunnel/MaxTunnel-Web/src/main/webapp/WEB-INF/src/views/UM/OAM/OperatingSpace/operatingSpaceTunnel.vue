@@ -1,6 +1,6 @@
 <template>
-    <div class="whole">
-        <Row class="storeInfo" v-if="stores.length">
+    <div class="whole" v-if="!none">
+        <Row class="storeInfo">
             <Col span="12" v-for="(store,index) in stores" :key="index">
                 <div class="storeCard">
                     <div class="innerCard">
@@ -42,7 +42,9 @@
                 </div>
             </Col>
         </Row>
-        <div v-else class="noData">建设中</div>
+    </div>
+    <div v-else class="noData">
+        <span>建设中</span>
     </div>
 </template>
 <script>
@@ -59,7 +61,8 @@ export default {
             curDetailIndex: "",
             curDetailId: "",
             isLineShow: false,
-            isEquipShow: false
+            isEquipShow: false,
+            none: false
         };
     },
     mounted() {
@@ -117,6 +120,8 @@ export default {
                                 }
                             }
                         });
+                    } else {
+                        _this.none = true;
                     }
                 },
                 error => {
@@ -224,9 +229,16 @@ export default {
     font-size: 1.66vmin;
 }
 .noData {
-    font-size: 3.4vmin;
     text-align: center;
-    padding-top: 4vmin;
-    color: #eaeef2;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    background: url("../../../../assets/UM/bodyBg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.noData span {
+    font-size: 4vmin;
+    color: #fff;
+    align-self: center;
 }
 </style>

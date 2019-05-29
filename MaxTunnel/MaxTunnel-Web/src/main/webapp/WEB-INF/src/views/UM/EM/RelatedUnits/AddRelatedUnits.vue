@@ -7,8 +7,10 @@
             :rules="ruleValidate"
             @submit.native.prevent
         >
-            <h2 class="formTitle" v-show="pageType!=pageTypes.Edit">添加相关单位</h2>
-            <h2 class="formTitle" v-show="pageType==pageTypes.Edit">更新相关单位信息</h2>
+            <p
+                class="formTitle"
+                v-show="pageType!=pageTypes.Edit"
+            >{{pageType==pageTypes.Edit ? '更新相关单位信息' : '添加相关单位'}}</p>
             <FormItem label="单位名称：" prop="name">
                 <Input type="text" v-model="addRelatedUnitsInfo.name"/>
             </FormItem>
@@ -34,10 +36,10 @@
             <FormItem label="单位地址：" prop="address">
                 <Input type="text" v-model="addRelatedUnitsInfo.address"/>
             </FormItem>
-            <FormItem label="地址经度：" prop="longitude">
+            <FormItem label="坐标经度：" prop="longitude">
                 <Input type="text" v-model="addRelatedUnitsInfo.longitude"/>
             </FormItem>
-            <FormItem label="地址纬度：" prop="latitude">
+            <FormItem label="坐标纬度：" prop="latitude">
                 <Input type="text" v-model="addRelatedUnitsInfo.latitude"/>
             </FormItem>
             <FormItem label="重要级别：" prop="unitLevel">
@@ -63,20 +65,24 @@
                 ></Tree>
                 <div class="ivu-form-item-error-tip" v-show="validateSectionName==true">请选择所属仓段</div>
             </FormItem>
-            <div style="text-align: center">
-                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
+            <div style="text-align: center;margin-top: 8vmin;">
                 <Button
                     type="primary"
                     @click="submit('addRelatedUnitsInfo')"
                     v-show="pageType!=pageTypes.Edit"
                     :disabled="isDisable"
+                    style="margin-right: 2vmin"
+                    class="save"
                 >提交</Button>
                 <Button
                     type="primary"
                     @click="update('addRelatedUnitsInfo')"
                     v-show="pageType==pageTypes.Edit"
                     :disabled="isDisable"
+                    style="margin-right: 8px"
+                    class="save"
                 >更新</Button>
+                <Button type="ghost" @click="goBack()" class="back">返回</Button>
             </div>
         </Form>
     </div>
@@ -168,28 +174,29 @@ export default {
                 latitude: [
                     {
                         required: true,
-                        message: "请填写地址纬度",
+                        message: "请填写坐标纬度",
                         trigger: "blur"
                     }
                 ],
                 longitude: [
                     {
                         required: true,
-                        message: "请填写地址经度",
+                        message: "请填写坐标经度",
                         trigger: "blur"
                     }
                 ]
             },
             validateSectionName: false,
             backStyle: {
-                backgroundImage:
-                    "url(" + require("../../../../assets/UM/backImg.jpg") + ")",
-                height: "100%",
+                background:
+                    "url(" +
+                    require("../../../../assets/UM/itemPageBg.png") +
+                    ") no-repeat",
+                height: "96%",
                 position: "relative",
-                backgroundAttachment: "fixed",
-                backgroundSize: "cover",
-                minHeight: "100%",
-                paddingTop: "40px"
+                backgroundSize: "100% 100%",
+                minHeight: "96%",
+                marginTop: "2%"
             },
             levels: [
                 {
@@ -351,9 +358,6 @@ export default {
                     }
                 });
             }, 2000);
-            // axios.post('/relatedunits',this.addRelatedUnitsInfo).then(response=>{
-            //     this.$router.push("/UM/relatedUnits/query");
-            // })
         },
         update(name) {
             this.isDisable = true;
@@ -382,9 +386,8 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right {
-    width: 680px;
+    width: 68vmin;
     margin: 0px auto;
-    background: #fff;
     padding: 10px 20px;
 }
 .tree {
@@ -392,49 +395,69 @@ export default {
     z-index: 2;
     border: 1px solid #cccccc;
 }
-.goBack {
-    position: absolute;
-    bottom: 2vh;
-    right: 3vw;
+.formTitle {
+    text-align: center;
+    margin-bottom: 4vmin;
+    margin-top: -1vmin;
+    font-size: 1.8vmin;
+    color: #49d9fe;
+}
+.save {
+    background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    margin-right: 1vmin;
+}
+.back {
+    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+}
+.ivu-form-item >>> .ivu-form-item-label {
+    width: 12vmin !important;
+    line-height: 2vmin;
+    color: #fff;
+}
+.ivu-form >>> .ivu-input,
+.ivu-form >>> .ivu-select-selection {
+    background: transparent;
+    color: #fff;
+    border-radius: 1vmin;
+}
+
+.ivu-form >>> .ivu-input::-webkit-input-placeholder,
+.ivu-form >>> .ivu-select-selection .ivu-select-placeholder,
+.ivu-form >>> .ivu-input-icon {
+    color: #fff;
+}
+.ivu-form-item >>> .ivu-form-item-content {
+    margin-left: 15vmin !important;
+    line-height: 3.2vmin;
+}
+.ivu-select,
+.ivu-select >>> .ivu-select-selection,
+.ivu-input-wrapper >>> .ivu-input,
+.ivu-date-picker >>> .ivu-input,
+.ivu-select.ivu-select-single >>> .ivu-select-selected-value,
+.ivu-select.ivu-select-single >>> .ivu-select-placeholder {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.4vmin;
 }
 @media (min-width: 2200px) {
-    .planContainer {
-        width: 70%;
-    }
-    .ivu-form.ivu-form-label-right {
-        width: 50%;
-    }
-    h2 {
-        font-size: 2.4vmin;
-    }
-    .ivu-form-item >>> .ivu-form-item-label {
-        width: 15vmin !important;
-        line-height: 4.5vmin;
-    }
-    .ivu-form-item >>> .ivu-form-item-content {
-        margin-left: 15vmin !important;
-        line-height: 4.5vmin;
-    }
-    .ivu-select,
-    .ivu-select >>> .ivu-select-selection,
-    .ivu-input-wrapper >>> .ivu-input,
-    .ivu-date-picker >>> .ivu-input,
-    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,
-    .ivu-select.ivu-select-single >>> .ivu-select-placeholder {
-        height: 4vmin;
-        line-height: 4vmin;
-        font-size: 1.4vmin;
-    }
-    .ivu-form-item-content {
-        line-height: 6.5vmin;
-    }
-    .btn {
-        margin-left: 20% !important;
-    }
     .ivu-input-number,
     .ivu-input-number >>> .ivu-input-number-input {
-        height: 4vmin;
-        line-height: 4vmin;
+        height: 3.2vmin;
+        line-height: 3.2vmin;
         font-size: 1.4vmin;
     }
     input[type="number"] {
