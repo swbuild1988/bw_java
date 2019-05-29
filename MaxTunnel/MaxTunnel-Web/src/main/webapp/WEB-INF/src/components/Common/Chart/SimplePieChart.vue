@@ -25,13 +25,12 @@ export default {
 			default: "5%",
 			type: String
 		},
-<<<<<<< HEAD
 		titleColor: {
 			default: '#fff',
-=======
+			type: String
+		},	
 		legendTextSize: {
 			default: '5%',
->>>>>>> 2f44632622e59a16e387fd62a2d1a5fc4a7d0892
 			type: String
 		},
 		seriesSize: {
