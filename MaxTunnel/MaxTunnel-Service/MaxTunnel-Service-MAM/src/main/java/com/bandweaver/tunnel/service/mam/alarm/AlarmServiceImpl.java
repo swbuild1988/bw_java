@@ -47,10 +47,6 @@ public class AlarmServiceImpl implements AlarmService {
 
 	@Override
 	public void add(Alarm alarm) {
-		
-		// save to DB
-		alarm.setCleaned(false);
-		alarmMapper.insertSelective(alarm);
 
 		MeasObj measObj = measObjModuleCenter.getMeasObj(alarm.getObjectId());
 		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(alarm);
@@ -74,6 +70,9 @@ public class AlarmServiceImpl implements AlarmService {
 			mqService.sendByType("Alarm", jsonObject.toJSONString());
 		}
 
+		// save to DB
+		alarm.setCleaned(false);
+		alarmMapper.insertSelective(alarm);
 
 	}
 

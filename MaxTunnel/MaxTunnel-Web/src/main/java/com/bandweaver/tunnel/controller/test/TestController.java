@@ -75,16 +75,17 @@ public class TestController {
 
     /**
      * 测试添加每个管廊的moid和总能耗
+     *
      * @return
      */
     @RequestMapping(value = "test/add-consume", method = RequestMethod.GET)
     public JSONObject addTestConsumes() {
-    	List<TunnelSimpleDto> tunnels = tunnelService.getList();
-    	// 循环添加每个管廊的moid（只用于能耗）和能耗
-    	for(TunnelSimpleDto dto : tunnels) {
-    		String tmp_id = dto.getId() + "0008";
-    		MeasObj measObj = new MeasObj();
-    		measObj.setId(Integer.parseInt(tmp_id));
+        List<TunnelSimpleDto> tunnels = tunnelService.getList();
+        // 循环添加每个管廊的moid（只用于能耗）和能耗
+        for (TunnelSimpleDto dto : tunnels) {
+            String tmp_id = dto.getId() + "0008";
+            MeasObj measObj = new MeasObj();
+            measObj.setId(Integer.parseInt(tmp_id));
             measObj.setTunnelId(dto.getId());
             measObj.setAreaId(0);
             measObj.setStoreId(0);
@@ -102,17 +103,18 @@ public class TestController {
             consume.setEnergyType(0);
             consume.setObjectId(measObj.getId());
             consumeService.insert(consume);
-    	}
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
     /**
      * 每半天查看一次电表，并将数值保存到measValueAI中
+     *
      * @return
      */
     @RequestMapping(value = "test/add-value", method = RequestMethod.GET)
     public JSONObject addTestValue() {
-    	// 设置存储数据的开始和结束时间
+        // 设置存储数据的开始和结束时间
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date sd = null;
         Date ed = null;
@@ -122,7 +124,7 @@ public class TestController {
         } catch (Exception e) {
 
         }
-        
+
         // 获取每个管廊的用于能耗的mo
         MeasObjVo vo = new MeasObjVo();
         vo.setObjtypeId(31);
@@ -134,26 +136,26 @@ public class TestController {
         List<Double> cvList = new ArrayList<>();
         // 获取管廊信息
         List<TunnelDto> tunnelList = new ArrayList<>();
-        for (int i=0;i<objList.size();i++) {
-        	cvList.add(0.0);
-        	TunnelDto dto = tunnelService.getDtoById(objList.get(i).getTunnelId());
-        	tunnelList.add(dto);
+        for (int i = 0; i < objList.size(); i++) {
+            cvList.add(0.0);
+            TunnelDto dto = tunnelService.getDtoById(objList.get(i).getTunnelId());
+            tunnelList.add(dto);
         }
-        
+
         while (sd.before(ed)) {
             //LogUtil.info("before add time : " + sd);
-        	// 遍历每个管廊的mo，保存数据
-            for (int i=0;i<objList.size();i++) {
-            	// 获取[8,12]随机数
-            	double random = Math.random() * 4 + 8;
-            	double sum = random * tunnelList.get(i).getLength() / 100 + cvList.get(i);
-            	// 保留两位小数
-            	BigDecimal bg = new BigDecimal(sum);
-            	sum = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            	// 保存电表读数
-            	cvList.set(i, sum);
-            	LogUtil.info("cvList.get(" + i + ") : " + cvList.get(i));
-            	
+            // 遍历每个管廊的mo，保存数据
+            for (int i = 0; i < objList.size(); i++) {
+                // 获取[8,12]随机数
+                double random = Math.random() * 4 + 8;
+                double sum = random * tunnelList.get(i).getLength() / 100 + cvList.get(i);
+                // 保留两位小数
+                BigDecimal bg = new BigDecimal(sum);
+                sum = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                // 保存电表读数
+                cvList.set(i, sum);
+                LogUtil.info("cvList.get(" + i + ") : " + cvList.get(i));
+
                 MeasValueAI measValueAI = new MeasValueAI();
                 measValueAI.setTime(sd);
                 measValueAI.setObjectId(objList.get(i).getId());
@@ -169,14 +171,15 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-    
+
     /**
      * 查看每天的能耗，并保存到consumeData表中
+     *
      * @return
      */
     @RequestMapping(value = "test/add-consumedata", method = RequestMethod.GET)
     public JSONObject addTestConsumeData() {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date sd = null;
         Date ed = null;
         try {
@@ -186,65 +189,71 @@ public class TestController {
 
         }
         while (sd.before(ed)) {
-        	getDatas(sd);
+            getDatas(sd);
             sd = new Date(sd.getTime() + 24 * 60 * 60 * 1000);
         }
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     private void getDatas(Date time) {
-    	// 获取昨天开始时间
-		Date startTime = DateUtil.getDayStartTime(DateUtil.getFrontDay(time,1));
-    	// 获取今天的开始时间
-		Date endTime = DateUtil.getDayStartTime(time);
-    	
-    	// 获取consume表所有电表(包括不存在的电表)
-    	List<ConsumeDto> consumes = consumeService.getConsumes();
-    	// for循环插入数据
-    	for(ConsumeDto dto : consumes) {
-    		ConsumeData data = new ConsumeData();
-    		data.setId(dto.getId());
-    		data.setTime(startTime);
-    		Double sum = 0.0;
-    		// 判断是否存在电表
-    		if(dto.getObjectId() != null) {
-    			List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(dto.getObjectId(), startTime, endTime);
-    			//统计aiValue表中某一电表一天内的能耗
-    			if(ais.size() > 0)
-    				sum = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
-    			data.setDirect(sum);
-    		}
-    		else if(dto.getCompute() != null) {
-    			String [] s = dto.getCompute().split(",");
-    			//统计没有电表时一天内的合计能耗
-    			for(String ss : s) {
-    				List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(Integer.valueOf(ss), startTime, endTime);
-    				//统计aiValue表中某一电表一天内的能耗
-    				if(ais.size() > 0) {
-    					Double sum1 = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
-    					sum = MathUtil.add(sum, sum1);
-    				}
-    			}
-    			data.setIndirect(sum);
-    		}
-    		//添加
-    		consumeDataService.insert(data);
-    	}
+        // 获取昨天开始时间
+        Date startTime = DateUtil.getDayStartTime(DateUtil.getFrontDay(time, 1));
+        // 获取今天的开始时间
+        Date endTime = DateUtil.getDayStartTime(time);
+
+        // 获取consume表所有电表(包括不存在的电表)
+        List<ConsumeDto> consumes = consumeService.getConsumes();
+        // for循环插入数据
+        for (ConsumeDto dto : consumes) {
+            ConsumeData data = new ConsumeData();
+            data.setId(dto.getId());
+            data.setTime(startTime);
+            Double sum = 0.0;
+            // 判断是否存在电表
+            if (dto.getObjectId() != null) {
+                List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(dto.getObjectId(), startTime, endTime);
+                //统计aiValue表中某一电表一天内的能耗
+                if (ais.size() > 0)
+                    sum = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
+                data.setDirect(sum);
+            } else if (dto.getCompute() != null) {
+                String[] s = dto.getCompute().split(",");
+                //统计没有电表时一天内的合计能耗
+                for (String ss : s) {
+                    List<MeasValueAI> ais = measValueAIMapper.getListByObjectIdAndTime(Integer.valueOf(ss), startTime, endTime);
+                    //统计aiValue表中某一电表一天内的能耗
+                    if (ais.size() > 0) {
+                        Double sum1 = MathUtil.sub(ais.get(0).getCv(), ais.get(ais.size() - 1).getCv());
+                        sum = MathUtil.add(sum, sum1);
+                    }
+                }
+                data.setIndirect(sum);
+            }
+            //添加
+            consumeDataService.insert(data);
+        }
     }
 
     @RequestMapping(value = "test/add_alarm", method = RequestMethod.GET)
     public JSONObject sendMQMessage() {
         Alarm alarm = new Alarm();
+        alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
         alarm.setAlarmLevel(1);
         alarm.setAlarmName("温度测试告警");
-        alarm.setId(11111);
         alarm.setObjectId(222032401);
         alarm.setObjectName("温度检测仪");
         alarm.setTunnelId(1);
+        alarm.setAlarmSource("");
+        alarm.setCleaned(false);
+        alarm.setIsDistribute(false);
+        alarm.setCleanedDate(new Date());
+        alarm.setDescription("");
+        alarm.setLatitude("");
+        alarm.setLongitude("");
         alarmService.add(alarm);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
 }
