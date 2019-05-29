@@ -82,7 +82,7 @@
 			pieChart: {
 			requestUrl: "tunnels/alarm-count",
 			id: "tunnelAlarmPieChart",
-			titleSize: "9%",
+			legendTextSize: "9%",
 			seriesSize: "9%",
 			parameters: {
 				option: {

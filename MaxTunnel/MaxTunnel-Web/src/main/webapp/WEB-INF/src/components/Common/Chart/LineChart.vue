@@ -59,7 +59,7 @@
             top: "left",
             left: "center",
             textStyle: {
-              // color: "#fff",
+            //   color: "#fff",
               fontSize: window.innerHeight * 0.018,
             },
           },
