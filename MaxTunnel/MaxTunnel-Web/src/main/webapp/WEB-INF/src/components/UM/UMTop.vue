@@ -291,7 +291,7 @@ export default {
                             sessionStorage.removeItem("UMUser");
                             Cookies.remove("userName");
                             // MQ 退出连接
-                            this.MQ.closeMQ();
+                            _this.MQ.closeMQ();
                             _this.$router.push("/UMlogin");
                         })
                         .catch(() => {
