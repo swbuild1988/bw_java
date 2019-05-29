@@ -10,12 +10,14 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.*;
+import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
@@ -68,6 +70,8 @@ public class TestController {
     private MeasObjService measObjService;
     @Autowired
     private MqService mqService;
+    @Autowired
+    private AlarmService alarmService;
 
     /**
      * 测试添加每个管廊的moid和总能耗
@@ -228,9 +232,17 @@ public class TestController {
     	}
     }
 
-    @RequestMapping(value = "test/mqmessage", method = RequestMethod.GET)
+    @RequestMapping(value = "test/add_alarm", method = RequestMethod.GET)
     public JSONObject sendMQMessage() {
-        mqService.send("hhahahahahahahaha");
+        Alarm alarm = new Alarm();
+        alarm.setAlarmDate(new Date());
+        alarm.setAlarmLevel(1);
+        alarm.setAlarmName("温度测试告警");
+        alarm.setId(11111);
+        alarm.setObjectId(222032401);
+        alarm.setObjectName("温度检测仪");
+        alarm.setTunnelId(1);
+        alarmService.add(alarm);
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

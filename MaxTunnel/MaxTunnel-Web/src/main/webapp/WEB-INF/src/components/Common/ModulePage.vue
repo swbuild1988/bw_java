@@ -274,12 +274,12 @@ export default {
 
         startListenMQ() {
             this.Log.info("添加监听器到MQ")
-            this.MQ.addListener(callback);
+            this.TransferStation.addListener("ModulePage", this.callback);
         },
 
         stopListenMQ(){
             this.Log.info("移除监听器")
-            this.MQ.deleteListener();
+            this.TransferStation.deleteListener("ModulePage");
         },
 
         // 连接成功回调函数

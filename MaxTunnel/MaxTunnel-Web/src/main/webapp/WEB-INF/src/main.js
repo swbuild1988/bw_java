@@ -83,6 +83,12 @@ main_init().then(res => {
         render: h => h(App)
     });
 
+    // 窗口关闭前断掉MQ连接
+    window.onbeforeunload = function(){
+        let MQ = Vue.prototype.MQ;
+        MQ.closeMQ();
+    }
+
 }).catch(err => {
     console.log("初始化异常", err)
 })
