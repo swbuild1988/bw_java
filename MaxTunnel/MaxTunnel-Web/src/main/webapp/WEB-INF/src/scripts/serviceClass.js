@@ -278,25 +278,53 @@ class DateManage {
 
 Vue.prototype.DM = new DateManage(); //实例化DateManage , 挂载到Vue原型上
 
+// MQ消息队列中转站
+var TransferStation = {
+    listeners: new Map(),
+
+    updateData: function (data) {
+        console.log("中转站更新数据", data)
+        console.log("listeners", this.listeners)
+
+        for (let [key, listener] of this.listeners) {
+            listener(data);
+        }
+    },
+
+    addListener: function (key, listener) {
+        this.listeners.set(key, listener)
+    },
+
+    deleteListener: function (key) {
+        this.listeners.delete(key)
+    }
+}
+
 /**
  *
  * 初始化并连接MQ服务器
  *
- * opreationId : 1 = 订阅消息，2 = 发送消息
- * targetUrl : 订阅或者发送消息的地址
- * data : 发送消息的内容
  */
-
 class MQ {
     constructor() {
         this.client = null;
         this.ws = null;
-        this.listener = null;
+        this.listeners = null;
         this.queueName = "";
+
     };
 
     setQueueName(_queueName) {
         this.queueName = "/queue/" + _queueName;
+    }
+
+    getQueueName(){
+        return this.queueName;
+    }
+
+
+    addListeners(listener) {
+        this.listener.push(listener)
     }
 
     addListener(_listener) {
@@ -325,10 +353,14 @@ class MQ {
         });
     }
 
-    _MQCallback(data) {
-        console.log("收到消息：", data.body);
-        console.log("this", _this)
-        // if (_this.listener) _this.listener(data.body);
+    _MQCallback() {
+        let _this = this;
+        return function (data) {
+            console.log("this", _this)
+            TransferStation.updateData(data.body)
+        }
+
+        // this.listener.forEach( i )
     }
 
     _onConnect(args) {
@@ -336,7 +368,7 @@ class MQ {
         let _this = this;
 
         return function (conn) {
-            _this.client.subscribe(_this.queueName, callback);
+            _this.client.subscribe(_this.queueName, callback.apply(_this));
         }
     }
 
@@ -369,3 +401,4 @@ class MQ {
 }
 
 Vue.prototype.MQ = new MQ(); //实例化MQ , 挂载到Vue原型上
+Vue.prototype.TransferStation = TransferStation;

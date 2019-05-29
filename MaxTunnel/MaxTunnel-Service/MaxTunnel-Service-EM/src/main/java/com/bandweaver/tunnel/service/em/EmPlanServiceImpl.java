@@ -325,9 +325,8 @@ public class EmPlanServiceImpl implements EmPlanService {
 //        json.put("latitude", latitude);
 //        json.put("videos", videos);
 
-        //发送到队列
-        mqService.sendToPlanUMQueue(json.toJSONString());
-        mqService.sendToPlanVMQueue(json.toJSONString());
+        // 将消息广播出去
+        mqService.sendByType("Plan", json.toJSONString());
     }
 
 

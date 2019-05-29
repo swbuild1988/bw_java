@@ -31,19 +31,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
+import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
+import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.biz.vo.StoreVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoVo;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
@@ -72,6 +76,8 @@ public class VideoController {
     private SectionService sectionService;
     @Resource(name = "H5StreamServiceImpl")
     private OnvifService h5streamService;
+    @Autowired
+    private StoreService storeService;
 
 
     /**
@@ -231,6 +237,37 @@ public class VideoController {
 
     	ListPageUtil<VideoDto> list = new ListPageUtil<>(videoDtos, vo.getPageNum(), vo.getPageSize());
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 通过管舱以及父类、区段获取视频
+     * @param storeId
+     * @param areaId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月23日
+     */
+    @RequiresPermissions("video:list")
+    @RequestMapping(value = "stores/{storeId}/areas/{areaId}/videos", method = RequestMethod.GET)
+    public JSONObject getVideoDtosByStoreIdAndAreaId(@PathVariable("storeId") Integer storeId, @PathVariable("areaId") Integer areaId) {
+    	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+        
+    	if (storeId != null) {
+    		List<Integer> storeIds = new ArrayList<>();
+        	StoreDto store = storeService.getStoreById(storeId);
+        	if(storeId.equals(store.getParentId())) {
+        		StoreVo vo = new StoreVo();
+        		vo.setParentId(storeId);
+        		List<StoreDto> storeList = storeService.getStoresByCondition(vo);
+        		storeList.forEach(a -> storeIds.add(a.getId()));
+        	} else
+        		storeIds.add(storeId);
+        	videoDtos = videoDtos.stream().filter(a -> storeIds.contains(a.getStoreId())).collect(Collectors.toList());
+        }
+        if (areaId != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId).collect(Collectors.toList());
+
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
     }
     
     /**

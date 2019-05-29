@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="monitor-tunnel-overview" style="height:calc(47vh );">
-                        <div style="margin: 10px;">
+                        <div style="margin: 3vmin 10px;">
                             <div>
                                 <h2 class="monitor-tunnel-title">机电统计</h2>
                                 <div>

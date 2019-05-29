@@ -1,5 +1,4 @@
 <script>
-import alarm from "../Common/AlarmDetial";
 import { VideoService } from "../../services/videoService.js";
 import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
 import UMCustom from "../../styles/UMCustom.css";
@@ -274,34 +273,37 @@ export default {
 
         startListenMQ() {
             this.Log.info("添加监听器到MQ")
-            this.MQ.addListener(callback);
+            this.TransferStation.addListener("ModulePage", this.callback);
         },
 
         stopListenMQ(){
             this.Log.info("移除监听器")
-            this.MQ.deleteListener();
+            this.TransferStation.deleteListener("ModulePage");
         },
 
         // 连接成功回调函数
         callback(respond) {
-            this.Log.info("收到回调:", respond)
-            // let result = JSON.parse(respond.body);
-            // //将数据保存在vuex中
-            // // _this.videoModal.modalPrams.planData = result;
-            // // _this.planData = result;
-            // if (
-            //     this.$router.history.current.path.indexOf("/UM/plans/execute") <
-            //     0
-            // ) {
-            //     // _this.showPlanTip();
-            //     this.nodesModal.imgUrl = null;
-            //     let _this = this;
-            //     let planTimer = setTimeout(() => {
-            //         _this.nodesModal.imgUrl =
-            //             "/emplans/png/" + result.processInstanceId;
-            //         _this.nodesModal.showFlag = true;
-            //     }, 500);
-            // }
+            let result = JSON.parse(respond);
+            if (result.type && result.type == "Alarm"){
+                let content = result.content;
+                this.Log.info("ModulePage收到回调:", content)
+                //将数据保存在vuex中
+                // _this.videoModal.modalPrams.planData = content;
+                // _this.planData = content;
+                if (
+                    this.$router.history.current.path.indexOf("/UM/plans/execute") <
+                    0
+                ) {
+                    // _this.showPlanTip();
+                    this.nodesModal.imgUrl = null;
+                    let _this = this;
+                    let planTimer = setTimeout(() => {
+                        _this.nodesModal.imgUrl =
+                            "/emplans/png/" + content.processInstanceId;
+                        _this.nodesModal.showFlag = true;
+                    }, 500);
+                }
+            }
         },
         goToMoudle(path, index, childIndex) {
             this.selectedActive[0] = index;
@@ -499,7 +501,6 @@ export default {
         }
     },
     components: {
-        alarm,
         ShowStartPlan,
         showAlarm,
         Layout,

@@ -165,9 +165,16 @@
 	</delete>
 	
 	
-	<select id="getListByIds" resultMap="BaseResultMap">
+	<select id="getListByIds" resultMap="DtoResultMap">
 		select * from t_oam_cable where id in
 		<foreach collection="list" item="item"  close=")" 	open="(" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getCableIdsBySectionIds" resultType="String">
+		select distinct cable_id from T_OAM_CABLE_SECTION where section_id in
+		<foreach collection="list" item="item" open="(" close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>

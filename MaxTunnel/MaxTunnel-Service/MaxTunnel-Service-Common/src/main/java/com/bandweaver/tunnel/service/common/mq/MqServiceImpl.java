@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.common.mq;
 
+import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
 import org.activiti.engine.repository.ModelQuery;
 import org.springframework.amqp.core.*;
@@ -35,6 +36,21 @@ public class MqServiceImpl implements MqService {
         } catch (Exception e) {
             LogUtil.error(e);
         }
+    }
+
+    /**
+     * 发送消息，带上类型
+     *
+     * @param type
+     * @param message
+     */
+    @Override
+    public void sendByType(String type, String message) {
+        JSONObject object = new JSONObject();
+        object.put("type", type);
+        object.put("content", message);
+
+        send(object.toJSONString());
     }
 
     @Override

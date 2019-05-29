@@ -126,4 +126,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 		}
 		return list;
 	}
+	
+	@Override
+	public int getCountBySectionId(Integer sectionId) {
+		
+		return equipmentMapper.getCountBySectionId(sectionId);
+	}
 }
