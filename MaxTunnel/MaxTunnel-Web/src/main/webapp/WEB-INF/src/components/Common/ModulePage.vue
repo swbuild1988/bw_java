@@ -1,14 +1,11 @@
 <script>
-import alarm from "../Common/AlarmDetial";
 import { VideoService } from "../../services/videoService.js";
 import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
 import UMCustom from "../../styles/UMCustom.css";
-// import showVideo from "../../components/Common/Modal/ShowVideos.vue";
 import showAlarm from "@/components/Common/Modal/showAlarms";
 import { EnumsService } from "../../services/enumsService.js";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";
 import ShowNodesPic from "../Common/Modal/ShowNodesPic";
-// import { getFormatTime } from "@/scripts/DateFormat.js";
 import {
     Layout,
     Menu,
@@ -148,11 +145,12 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        this.acceptPlanData();
-        this.acceptAlarmData();
+        
+        this.startListenMQ();
     },
     beforeDestroy() {
-        // this.closedMQ();
+        this.stopListenMQ();
+        clearTimeout(this.planTimer);
         this.$Notice.destroy();
     },
     watch: {
@@ -272,71 +270,40 @@ export default {
         );
     },
     methods: {
-        //手动开启预案
-        // startPlan(alarm) {
-        // 	var _this = this;
-        // 	if (_this.selectPlan) {
-        // 		_this.showModal.modalPrams.state = !_this.showModal.modalPrams.state;
-        // 		_this.showModal.modalPrams.selectPlan = _this.selectPlan;
-        // 	}
-        // },
+
+        startListenMQ() {
+            this.Log.info("添加监听器到MQ")
+            this.TransferStation.addListener("ModulePage", this.callback);
+        },
+
+        stopListenMQ(){
+            this.Log.info("移除监听器")
+            this.TransferStation.deleteListener("ModulePage");
+        },
 
         // 连接成功回调函数
         callback(respond) {
-            let result = JSON.parse(respond.body);
-            //将数据保存在vuex中
-            // _this.videoModal.modalPrams.planData = result;
-            // _this.planData = result;
-            if (
-                this.$router.history.current.path.indexOf("/UM/plans/execute") <
-                0
-            ) {
-                // _this.showPlanTip();
-                this.nodesModal.imgUrl = null;
-                let _this = this;
-                this.$nextTick(() => {
-                    _this.nodesModal.imgUrl =
-                        "/emplans/png/" + result.processInstanceId;
-                    _this.nodesModal.showFlag = true;
-                });
+            let result = JSON.parse(respond);
+            if (result.type && result.type == "Alarm"){
+                let content = result.content;
+                this.Log.info("ModulePage收到回调:", content)
+                //将数据保存在vuex中
+                // _this.videoModal.modalPrams.planData = content;
+                // _this.planData = content;
+                if (
+                    this.$router.history.current.path.indexOf("/UM/plans/execute") <
+                    0
+                ) {
+                    // _this.showPlanTip();
+                    this.nodesModal.imgUrl = null;
+                    let _this = this;
+                    let planTimer = setTimeout(() => {
+                        _this.nodesModal.imgUrl =
+                            "/emplans/png/" + content.processInstanceId;
+                        _this.nodesModal.showFlag = true;
+                    }, 500);
+                }
             }
-        },
-        //获取MQ推送的预案消息
-        acceptPlanData() {
-            var _this = this;
-            _this.MQ._InitMQ(1, "/queue/QUEUE_PLAN_UM", "", _this.callback);
-            this.planQueue = _this.MQ.client;
-        },
-        alarmCallback(respond) {
-            let _this = this;
-            let result = JSON.parse(respond.body);
-            _this.videoModal.modalPrams.modalInfo = result;
-            _this.showAlarmDetails();
-            _this.warningNotice(result);
-        },
-        getMessageCallback(respond) {
-            console.log("getMessageCallback-respond", respond);
-        },
-
-        //开启告警队列监听
-        //接受告警队列推送的数据
-        acceptAlarmData() {
-            var _this = this;
-            _this.MQ._InitMQ(
-                1,
-                "/queue/QUEUE_ALARM_UM",
-                "",
-                _this.alarmCallback
-            );
-            this.alarmQueue = _this.MQ.client;
-            console.log("this.alarmQueue", this.alarmQueue);
-            // _this.MQ._sendMessage("queue/QUEUE_ALARM_UM", _this.getMessageCallback)
-        },
-        closedMQ() {
-            var _this = this;
-            console.log(_this.alarmQueue, this.planQueue, this.MQ);
-            this.alarmQueue.disconnect();
-            _this.planQueue.disconnect();
         },
         goToMoudle(path, index, childIndex) {
             this.selectedActive[0] = index;
@@ -475,10 +442,10 @@ export default {
                                         }}
                                     >
                                         <Icon type="ios-paper" class="icons" />
-                                        <span>{item.name}</span>
-                                    </div>
-                                </template>
-                                {children}
+                                        <span> {item.name} </span>{" "}
+                                    </div>{" "}
+                                </template>{" "}
+                                {children}{" "}
                             </Submenu>
                         );
                     } else {
@@ -488,7 +455,9 @@ export default {
                                     name={curLevel}
                                     nativeOnClick={() =>
                                         this.goToMoudle(
-                                            { path: item.url },
+                                            {
+                                                path: item.url
+                                            },
                                             index,
                                             -1
                                         )
@@ -501,9 +470,9 @@ export default {
                                         }}
                                     >
                                         <Icon type="ios-paper" class="icons" />
-                                        <span>{item.name}</span>
-                                    </div>
-                                </MenuItem>
+                                        <span> {item.name} </span>{" "}
+                                    </div>{" "}
+                                </MenuItem>{" "}
                             </div>
                         );
                     }
@@ -512,12 +481,19 @@ export default {
                         <MenuItem
                             name={level + "-" + index}
                             nativeOnClick={() =>
-                                this.goToMoudle({ path: item.url }, index, -1)
+                                this.goToMoudle(
+                                    {
+                                        path: item.url
+                                    },
+                                    index,
+                                    -1
+                                )
                             }
                         >
                             <span style="font-size: 1.66vmin !important">
-                                {item.name}
-                            </span>
+                                {" "}
+                                {item.name}{" "}
+                            </span>{" "}
                         </MenuItem>
                     );
                 }
@@ -525,7 +501,6 @@ export default {
         }
     },
     components: {
-        alarm,
         ShowStartPlan,
         showAlarm,
         Layout,
@@ -547,6 +522,7 @@ export default {
 .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
     width: 8vmin;
 }
+
 .ivu-menu >>> .ivu-menu-item {
     padding-left: 36px !important;
     /* font-size: 1.66vmin !important; */
@@ -792,16 +768,20 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
     padding-left: 0 !important;
     border: 1px solid #938e8e9c;
 }
+
 .menuItem >>> .ivu-menu-item {
     font-size: 1.66vmin;
     border: 0px solid #938e8e9c;
 }
+
 .icons {
     margin-right: 0.8vmin;
 }
+
 .ivu-menu-vertical.ivu-menu-light:after {
     background: transparent;
 }
+
 .ivu-collapse {
     background: transparent;
 }

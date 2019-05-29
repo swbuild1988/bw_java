@@ -51,15 +51,20 @@ Vue.prototype.Log = {
 async function main_init() {
     console.log("开始初始化")
     try {
-        console.log("引入request")
+        console.log("------------------- 引入request -------------------")
         let request = (await import("@/utils/request.js")).default;
         console.log("request", request)
         await request();
 
-        console.log("引入permission")
+        console.log("------------------- 引入permission -------------------")
         let permission = (await import("@/permission")).permission;
         console.log("permission", permission)
         await permission();
+
+        // console.log("------------------- 加载连接RabbitMQ -------------------")
+        // let MQ = Vue.prototype.MQ;
+        // MQ.openMQ();
+        // console.log("MQ", MQ);
 
         return "success"
     } catch (err) {
@@ -77,6 +82,12 @@ main_init().then(res => {
         store,
         render: h => h(App)
     });
+
+    // 窗口关闭前断掉MQ连接
+    window.onbeforeunload = function(){
+        let MQ = Vue.prototype.MQ;
+        MQ.closeMQ();
+    }
 
 }).catch(err => {
     console.log("初始化异常", err)

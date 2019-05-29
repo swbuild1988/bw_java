@@ -1,6 +1,9 @@
 import router from './router';
 import store from './store';
-import {Message} from 'iview';
+import Vue from "vue";
+import {
+    Message
+} from 'iview';
 import NProgress from 'nprogress'; // Progress 进度条
 import 'nprogress/nprogress.css'; // Progress 进度条样式
 import {
@@ -14,10 +17,21 @@ const permission = async () => {
 
     const whiteList = ['/404', '/umlogin', '/vmlogin', '/cmlogin']; // 白名单,不需要登录的路由
     router.beforeEach((to, from, next) => {
-       
+
         NProgress.start();
-        console.log('session.getSession',session.getSession());
+        console.log('session.getSession', session.getSession());
+        console.log("MQ", Vue.prototype.MQ)
+
         if (session.getSession()) {
+            
+            // 如果已登录且MQ尚未连接，连接MQ
+            let mq = Vue.prototype.MQ;
+            if (mq.getQueueName() == "") {
+                let tmp = JSON.parse(session.getSession())
+                mq.setQueueName(tmp.queueName);
+                mq.openMQ();
+            }
+
             // 如果已经登录
             if (to.path.trim().toLowerCase().indexOf('login') > 0) {
                 if (to.path.trim().toLowerCase().indexOf('um') > 0) {
@@ -38,26 +52,27 @@ const permission = async () => {
                     NProgress.done(); // 结束Progress
                 }
             } else if (!store.getters.role || store.getters.role.length == 0) {
-                console.log('to2',to)
-                console.log('from2',from)
+                console.log('to2', to)
+                console.log('from2', from)
                 store.dispatch('GetInfo').then(() => {
-                    next({
-                        ...to,
-                        replace: true
+                        next({
+                            ...to,
+                            replace: true
+                        });
+                    },
+                    error => {
+                        Message.error({
+                            content: error,
+                            duration: 5,
+                        });
+                        NProgress.done();
                     });
-                },
-                error=>{
-                    Message.error({
-                        content: error,
-                        duration: 5,
-                    });
-                    NProgress.done(); 
-                });
             } else {
-                console.log('to3',to)
-                console.log('from3',from)
+                console.log('to3', to)
+                console.log('from3', from)
                 next();
             }
+
         } else if (whiteList.indexOf(to.path.toLowerCase()) !== -1) {
             // 如果前往的路径是白名单内的,就可以直接前往
             next();
