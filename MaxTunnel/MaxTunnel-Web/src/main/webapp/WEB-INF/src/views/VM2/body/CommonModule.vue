@@ -98,6 +98,7 @@
         mounted() {
             
             this.getTunnelMessage();
+            this.getRunMessage();
             let _this = this;
             // this.refresh.intervalId = setInterval(() => {
             //     _this.init();

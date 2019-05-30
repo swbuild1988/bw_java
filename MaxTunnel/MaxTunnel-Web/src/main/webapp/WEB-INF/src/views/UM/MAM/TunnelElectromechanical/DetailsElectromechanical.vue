@@ -568,43 +568,46 @@
                     )
                 }
 
-                if (!!id && !!datatypeId) this.detectionObj = {
-                    "id": changStrLength(id, 10),
-                    "moTypeId": datatypeId
-                };
+                if (!!id && !!datatypeId) {
+                    this.detectionObj = {
+                        "id": changStrLength(id, 10),
+                        "moTypeId": datatypeId
+                    };
+                }
                 // if (datatypeId != 1) {
                 //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
                 // }
-                if (clickStatus) {
-                    this.Obj.forEach(b => {
-                        if (b.id == id) {
-                            b.clickStatus = clickStatus;
-                            this.Log.info("click " + b.id);
-                            SuperMapSqlQuery(
-                                this.SuperMapConfig.BIM_DATA,
-                                this.VMConfig.queryParam,
-                                "moid = " + b.id
-                            )
-                                .then(res => {
-                                    this.Log.info("查找成功", res);
-                                    if (res.length > 0) {
-                                        this.$refs.smViewer.LookAt1(
-                                            res[0],
-                                            50,
-                                            -10,
-                                            5
-                                        );
-                                    }
-                                })
-                                .then(res => {
-                                    this.Log.info("查找失败", res);
-                                });
-                        } else {
-                            b.clickStatus = !clickStatus;
-                        }
-                    });
+                
+                // if (clickStatus) {
+                //     this.Obj.forEach(b => {
+                //         if (b.id == id) {
+                //             b.clickStatus = clickStatus;
+                //             this.Log.info("click " + b.id);
+                //             SuperMapSqlQuery(
+                //                 this.SuperMapConfig.BIM_DATA,
+                //                 this.VMConfig.queryParam,
+                //                 "moid = " + b.id
+                //             )
+                //                 .then(res => {
+                //                     this.Log.info("查找成功", res);
+                //                     if (res.length > 0) {
+                //                         this.$refs.smViewer.LookAt1(
+                //                             res[0],
+                //                             50,
+                //                             -10,
+                //                             5
+                //                         );
+                //                     }
+                //                 })
+                //                 .then(res => {
+                //                     this.Log.info("查找失败", res);
+                //                 });
+                //         } else {
+                //             b.clickStatus = !clickStatus;
+                //         }
+                //     });
 
-                }
+                // }
 
             },
             getStoreId(data) {

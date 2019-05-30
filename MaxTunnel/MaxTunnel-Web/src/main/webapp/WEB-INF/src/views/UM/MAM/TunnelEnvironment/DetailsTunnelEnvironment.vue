@@ -312,29 +312,6 @@
                 this.choosedTabPane = '卡片'
             }
         },
-        // beforeRouteLeave(to, from, next) {
-        //     if (
-        //         to.name == "设备管理主页" ||
-        //         to.name == "巡检计划总览" ||
-        //         to.name == "虚拟巡检" ||
-        //         to.name == "人员定位详情" ||
-        //         to.name == "管廊安防监控列表" ||
-        //         to.name == "管廊环境监控列表" ||
-        //         to.name == "管廊机电监控列表" ||
-        //         to.name == "管廊消防监控列表" ||
-        //         to.name == "管廊管线监控列表" 
-        //     ) {
-        //         from.meta.keepAlive = true;
-        //         to.meta.keepAlive = true;
-        //         this.$destroy();
-        //         next();
-        //     } else {
-        //         to.meta.keepAlive = false;
-        //         from.meta.keepAlive = false;
-        //         this.$destroy();
-        //         next();
-        //     }
-        // },
         components: {
             SimulatedData,
             showSwitchData,
@@ -575,36 +552,6 @@
                 // if (datatypeId != 1) {
                 //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
                 // }
-                if (clickStatus) {
-                    this.Obj.forEach(b => {
-                        if (b.id == id) {
-                            b.clickStatus = clickStatus;
-                            this.Log.info("click " + b.id);
-                            SuperMapSqlQuery(
-                                    this.SuperMapConfig.BIM_DATA,
-                                    this.VMConfig.queryParam,
-                                    "moid = " + b.id
-                                )
-                                .then(res => {
-                                    this.Log.info("查找成功", res);
-                                    if (res.length > 0) {
-                                        this.$refs.smViewer.LookAt1(
-                                            res[0],
-                                            50,
-                                            -10,
-                                            5
-                                        );
-                                    }
-                                })
-                                .then(res => {
-                                    this.Log.info("查找失败", res);
-                                });
-                        } else {
-                            b.clickStatus = !clickStatus;
-                        }
-                    });
-
-                }
 
             },
             getStoreId(data) {

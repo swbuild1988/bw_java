@@ -409,6 +409,7 @@ export function switchShowEntity(swtichParam) {
 export function doSqlQuery() {
     let args = [].slice.call(arguments); //类数组转换成数组
     let [viewer, SQL, dataUrl, onQueryComplete, processFailed, startLocation, endLocation, labels] = args; //解析数组内容,startLocation,endLocation主要用于section中label location计算
+    console.log(SQL)
     if (typeof onQueryComplete != 'function' || typeof processFailed != 'function') {
         return
     }
@@ -714,7 +715,7 @@ export function getSection(scene, viewer) {
                 ) {
                     //缓存sectionId用于判断下次取到section是否一致
                     _this.timer.sectionId = data.sectionInfo.id;
-
+                    
                     resolve(data)
                 }
             })
