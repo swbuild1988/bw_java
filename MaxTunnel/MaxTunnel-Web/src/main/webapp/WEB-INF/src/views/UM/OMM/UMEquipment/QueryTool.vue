@@ -57,8 +57,8 @@
             </div>
             <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row :gutter="16">
-                <Col span="4" v-for="item in toolData" :key="item.id" style="margin-top: 20px;">
-                    <div class="toolBox">
+                <Col span="6" v-for="item in toolData" :key="item.id" style="margin-top: 20px;">
+                    <div class="toolBox boxBG">
                         <h2 class="toolTitle">{{item.name}}</h2>
                         <div class="toolInfo">
                             <p>仪表工具类型：{{item.typeName}}</p>
@@ -73,9 +73,15 @@
                             <p>入库时间：{{item.inTime}}</p>
                         </div>
                         <div class="operations">
-                            <div class="operation" @click="borrowSubmit(item.id)" v-show="item.status">借出</div>
-                            <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">归还</div>
-                            <div class="operation" @click="showHistory(item.id)">历史记录</div>
+                            <div class="operation" @click="borrowSubmit(item.id)" v-show="item.status">
+                                <span class="operationBtn borrow">借出</span>
+                            </div>
+                            <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">
+                                <span class="operationBtn return">归还</span>
+                            </div>
+                            <div class="operation" @click="showHistory(item.id)">
+                                <span class="operationBtn history">历史记录</span>
+                            </div>
                             <!-- <div class="operation">删除</div> -->
                         </div>
                     </div>
@@ -1068,18 +1074,10 @@ export default {
     padding-left: 5px;
 }
 .toolBox{
-    border: 1px solid #eee;
-    border-radius: 4px;
-    background: rgba(103, 116, 153, 0.18);
-    color: #3a4646;
-}
-.toolTitle{
-    line-height: 50px;
-    text-align: center;
-    background: rgba(249, 249, 255, 0.59);
+    color: #fff;
 }
 .toolInfo{
-    width: 90%;
+    width: 75%;
     margin: 0 auto;
 }
 .toolInfo p{
@@ -1092,14 +1090,11 @@ export default {
     display: inline-block;
     font-size: 22px;
     font-weight: 600;
-    color: #357aa1;
+    color: #fff;
 }
 .toolBtn button{
     float: right;
     margin-right: 5px;
-}
-.operations{
-    background: rgba(189, 196, 199, 0.47);
 }
 .operation{
     display: inline-block;
@@ -1129,6 +1124,36 @@ export default {
 }
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
+}
+.ivu-btn-success{
+    background: linear-gradient(to left, #2734e1, #b195ed);
+    border-color: #2734e1;
+}
+.ivu-btn-error{
+    background: linear-gradient(to left, #f61a1a, #f68380);
+    border-color: #f61a1a;
+}
+.ivu-btn-info{
+    background: linear-gradient(to left, #1af6b0, #a7ecd7);
+    border-color: #1af6b0;
+}
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.toolTitle{
+    text-align: center;
+    padding-top: 2vmin;
+}
+.operationBtn{
+    padding: 0.7vmin 1vmin;
+    border-radius: 1.2vmin;
+}
+.operationBtn.return,.operationBtn.borrow{
+    background: linear-gradient(to left, #2734e1, #7c83f2)
+}
+.operationBtn.history{
+    background: linear-gradient(to left, #1fed2d, #8de391)
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

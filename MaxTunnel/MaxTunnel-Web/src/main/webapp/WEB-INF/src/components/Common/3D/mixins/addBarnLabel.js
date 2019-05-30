@@ -30,30 +30,29 @@ const addBarnLabel = {
             let { viewer } = this;
             let _this = this;
 
-            clearTimeout(_this.timer.timeoutId);
             clearInterval(_this.timer.intervalId);//清除定时更新label集
-            _this.timer.timeoutId = setTimeout(() => {
-                _this._getSection()
-                    .then(result => {
-                        
-                        if (result.moInfo) {
+            
+            _this._getSection()
+                .then(result => {
+                    
+                    if (result.moInfo) {
 
-                            _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
-                            _this.labelsArray.splice(0);//清空当前所有展示label
+                        _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
+                        _this.labelsArray.splice(0);//清空当前所有展示label
 
-                            result.moInfo.forEach(label => _this.labelsArray.push(label));
+                        result.moInfo.forEach(label => _this.labelsArray.push(label));
 
-                            let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
+                        let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
 
-                            let { startPoint,endPoint } = result.sectionInfo;
+                        let { startPoint,endPoint } = result.sectionInfo;
 
-                            sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
+                        sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
 
-                            //更新label值
-                            _this._updateEntityVal();
-                        }
-                    });
-            }, wait)
+                        //更新label值
+                        _this._updateEntityVal();
+                    }
+                });
+
         },
         //得到当前section
         _getSection() {
