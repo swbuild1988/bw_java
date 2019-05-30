@@ -80,7 +80,7 @@ export default {
 <style scoped>
 .title {
 	font-size: 2.8vmin;
-	color: #13278e;
+	color: #fff;
 	margin-left: 1vmin;
 }
 .dateBox,
@@ -89,17 +89,17 @@ export default {
 	float: left;
 	height: 80vh;
 	overflow: auto;
+	color: #fff;
 }
 .dateBox {
-	width: 20%;
+	width: 27%;
 }
 .showReport {
-	width: 80%;
+	width: 73%;
 }
 .itemBox {
 	line-height: 4vmin;
 	margin: 0.5vmin;
-	background: #0c77b717;
 	padding-right: 0.5vmin;
 	min-height: 25px;
 }
@@ -115,10 +115,14 @@ export default {
 }
 .itemContent {
 	font-size: 1.5vmin;
+	color: #fff;
 }
 .btnBox {
 	float: right;
 	width: 33%;
+}
+.dateBox .ivu-tabs>>>.ivu-tabs-nav{
+	color: #fff;
 }
 @media (min-width: 2200px) {
 	.ivu-btn,

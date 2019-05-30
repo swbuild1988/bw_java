@@ -55,18 +55,20 @@
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
-            <div>
+            <div class="tableBG">
                 <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
                 <div class="pageContainer" ref="pageContainer">
-                    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    <div class="pageBox">
+                        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                        show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    </div>
                 </div>
             </div>
         </Col>
-        <Col span="12" class="chartBox">
+        <Col span="11" class="chartBox">
             <MultiBarChart v-bind="toolStatic"></MultiBarChart>
         </Col>
-        <Col span="12" class="chartBox" style="margin-left: 5px;">
+        <Col span="11" offset="2" class="chartBox" style="margin-left: 10vw;">
             <MulitBarPosiNega v-bind="inventory"></MulitBarPosiNega>
         </Col>
     </Row>    
@@ -206,13 +208,7 @@ export default {
                     }
                 }
             ],
-            toolData: [
-                { id: 1, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 2, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 3, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 4, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 5, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' }
-            ],
+            toolData: [],
             page:{
                 pageSize: 6,
                 pageTotal: 0,
@@ -241,16 +237,17 @@ export default {
                 title: '仪表工具状态',
                 parameters: {
                     option: {
-                        backgroundColor: '#E8E8FF',
-                        color: ['#006699', '#e5323e'],
+                        color: ['#25cef3', '#d01864'],
                         title: {
                             text: "仪表工具状态",
                             textStyle: {
-                                color: "#161139"
+                                color: "#fff"
                             }
                         }
                     },
-                }
+                },
+                textColor: '#fff',
+                lineColor: '#25cef3'
             },
             inventory: {
                 id: 'inventoryId',
@@ -259,11 +256,10 @@ export default {
                 legendData: ['在库','出库'],
                 parameters: {
                     option: {
-                        backgroundColor: '#FBFBEA',
                         title: {
                             text: '仪表工具库存状态',
                             textStyle: {
-                                color: '#161139'
+                                color: '#fff'
                             }
                         },
                         legend: {
@@ -271,12 +267,22 @@ export default {
                             textStyle: {
                                 color: '#161139'
                             }
-                        },
+                        }
                     },
                     timer: {
                         interval: 5000
                     }
-                }
+                },
+                chartType: 'line',
+                titlePosition: 'center',
+                xSplitLine:{  
+                    show:true,
+                    lineStyle:{
+                        color:'#4b5177',
+                        type:'dashed'
+                    }
+                },
+                lineColor: '#4b5177'
             },
             toolsType: [],
             toolsModel: [],
@@ -367,7 +373,7 @@ export default {
             this.showTable()
         },
         getTableHeight(){
-            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-30
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-40
         }
     }
 }
@@ -386,27 +392,47 @@ export default {
     margin-right: -1.5em;
 }
 .chartBox{
-    width: 49.5%;
+    width: 37vw;
     height: 40vh;
     margin: 5px 5px 5px 0px;
 }
-.list .ivu-table-wrapper>>>.ivu-table{
+.ivu-table-wrapper{
+    border: none;
+}
+.ivu-table-wrapper>>>.ivu-table{
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
 }
-.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+.ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
     background-color: #fffdfd00 !important;
 }
-.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+.ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
     border-bottom: none;
 }
-.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
-    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
-    border: none
-}
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
+}
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.tableBG{
+    background: url("../../../../assets/UM/tableBG.png") no-repeat;
+	background-size: 100% 100%;
+}
+.ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+    border-right: none;
+}
+.ivu-select,.ivu-select >>> .ivu-select-selection {
+    background-color: #fffdfd00 !important;
+}
+.queryCondition .ivu-select{
+    color: #fff;
+}
+.pageBox{
+    padding-right: 1vmin;
+    padding-bottom: 1vmin;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

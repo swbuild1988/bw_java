@@ -26,31 +26,46 @@
         legendData: [],
         series: [],
         option: {
-          title: {
-            text: ''
-          },
-          tooltip: {
-            trigger: 'axis'
-          },
-          legend: {
-            data: [],
-          },
-          grid: {},
-          toolbox: {
-            show: true,
-            feature: {
-              saveAsImage: {}
-            }
-          },
-          xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: []
-          },
-          yAxis: {
-            type: 'value',
-          },
-          series: []
+			title: {
+				text: ''
+			},
+			tooltip: {
+				trigger: 'axis'
+			},
+			legend: {
+				data: [],
+				textStyle: { 
+					color: '#fff'
+				}
+			},
+			grid: {},
+			toolbox: {
+				show: true,
+				feature: {
+				saveAsImage: {}
+				}
+			},
+			xAxis: {
+				type: 'category',
+				boundaryGap: false,
+				data: [],
+				axisLabel: {
+					show: true,
+					textStyle: {
+						color: '#fff'
+					},                            
+				}
+          	},
+			yAxis: {
+				type: 'value',
+				axisLabel: {
+					show: true,
+					textStyle: {
+						color: '#fff'
+					},                            
+				}
+			},
+          	series: []
         },
       }
     },
@@ -82,7 +97,6 @@
         if (_this.parameters.queryPram) {
           var prams = _this.parameters.queryPram;
           prams.requestUrl = _this.requestUrl;
-          console.log(prams);
           ChartService.getMulitLineData(prams).then((result) => {
             if (result) {
               _this.series = [];

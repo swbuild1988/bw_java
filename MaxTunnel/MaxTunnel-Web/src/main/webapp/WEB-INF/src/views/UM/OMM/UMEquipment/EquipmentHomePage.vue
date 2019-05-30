@@ -161,7 +161,7 @@
                                 text: "设备故障统计",
                                 x: "left",
                                 textStyle: {
-                                    color: "#2e739b"
+                                    color: "#fff"
                                 }
                             }
                         }
@@ -175,7 +175,10 @@
                     parameters: {
                         option: {
                             title: {
-                                text: "各类型故障占比"
+                                text: "各类型故障占比",
+                                textStyle: {
+                                    color: "#2e739b"
+                                }
                             }
                         }
                     }
@@ -457,6 +460,14 @@
 
         h1 {
             font-size: 2.8vmin;
+        }
+
+        .card .title{
+            font-size: 1.8vmin;
+        }
+
+        .card .details{
+            font-size: 1.6vmin;
         }
     }
 </style>

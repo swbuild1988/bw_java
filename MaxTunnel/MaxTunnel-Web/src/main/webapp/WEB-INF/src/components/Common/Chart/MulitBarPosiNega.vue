@@ -45,7 +45,17 @@ export default {
         titlePosition: {
             default: 'left',
             type: String
-        }
+        },
+        chartType: {
+            default: 'bar',
+            type: String
+        },
+        xSplitLine: {
+            default: {
+                show: false
+            },
+            type: Object
+        },
     },
     data() {
         return{
@@ -77,8 +87,7 @@ export default {
                         fontSize: this.getFontSize('5%'),
                         color: this.textColor
                     },
-                    x: this.titlePosition,
-
+                    x: this.titlePosition
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -110,9 +119,7 @@ export default {
                     {
                         type: 'category',
                         data: [],
-                        splitLine: {
-                            show: false
-                        },
+                        splitLine: this.xSplitLine,
                         axisLine: {
                             show: false
                         },
@@ -150,9 +157,7 @@ export default {
                             type:'dashed',
                             color: this.lineColor
                         }
-
                     }
-                        
                 }],
                 
                 series: []
@@ -174,7 +179,7 @@ export default {
                     let series = [
                         {
                             name: this.option.legend.data[0],
-                            type: 'bar',
+                            type: this.chartType,
                             barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
@@ -184,7 +189,7 @@ export default {
                             data: yData1,
                         },{
                             name: this.option.legend.data[1],
-                            type: 'bar',
+                            type: this.chartType,
                             barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
