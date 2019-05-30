@@ -1,9 +1,9 @@
 <template>
-    <Row>
-        <Col span="12" style="height: 42vh;width: 42vw;">
+    <Row :gutter="16">
+        <Col span="12" class="boxBG" style="height: 42vh;width: 42vw;">
             <MulitBarPosiNega v-bind="chartData"></MulitBarPosiNega>
         </Col>
-        <Col span="12" style="height: 41vh;margin-left: 0.5vw;margin-bottom: 1vh">
+        <Col span="12" class="boxBG" style="height: 42vh;position: relative;padding: 1vmin;">
             <div class="queryCondition">
                 <div class="conWidth">
                     <span class="conditionTitle">设备名称：</span>
@@ -41,7 +41,7 @@
                     show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
         </Col>
-        <Col span="24" style="height: 40vh;width: 86vw;margin-top: 1vh;">
+        <Col span="24" class="boxBG" style="height: 40vh;width: 86vw;margin-top: 1vh;">
             <ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>
         </Col>
     </Row>
@@ -62,13 +62,13 @@ export default {
                 title: '管廊设备状态统计',
                 legendData: ['正常','故障'],
                 parameters: {
-                    option: {
-                        backgroundColor: '#FBFBEA',
-                    },
                     timer: {
                         interval: 5000
                     }
-                }
+                },
+                lineColor: '#25cef3',
+                textColor: '#fff',
+                titlePosition: 'center'
             },
             ComplexBar: {
                 id: "ComplexBarChart",
@@ -76,7 +76,8 @@ export default {
                 requestUrl: "tunnels/equipments/types",
                 title: "管廊设备明细",
                 color: "#21d6ff",
-                gridTop: '15%'
+                gridTop: '15%',
+                // itemStyleList: ['#b945ef', '#f8a42b', '#38db2c', '#45ef8d', '#2734e1', '#ef45d9']
             },
             conditions: {
                 name: null,
@@ -159,9 +160,9 @@ export default {
                 pageSize: 5
             },
             pageStyle: {
-                background: '#fff',
-                textAlign: 'right',
-                lineHeight: '4vh'
+                position: 'absolute',
+                right: '0.7vmin',
+                bottom: '0.7vmin'
             },
             tableHeight: null
         }
@@ -256,7 +257,34 @@ export default {
         width: 32%;
         display: inline-block;
     }
-    .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    .ivu-table-wrapper{
+        border: none;
+    }
+    .ivu-table-wrapper>>>.ivu-table{
+        color: #ffffff !important;
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+        background-color: #fffdfd00 !important;
+        border-bottom: none;
+    }
+    .pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+        color: #fff;
+    }
+    .boxBG{
+        background: url("../../../../assets/UM/chartBG.png") no-repeat;
+        background-size: 100% 100%;
+    }
+    .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+        border-right: none;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection {
+        background-color: #fffdfd00 !important;
+    }
+    .queryCondition .ivu-select{
         color: #fff;
     }
     @media (min-width: 2200px){

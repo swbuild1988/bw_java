@@ -17,7 +17,7 @@
                     :r="option.radius"
                     :cx="option.cx"
                     :cy="option.cy"
-                    stroke="#dddddd"
+                    stroke="#fff"
                     :stroke-width="option.strokeWidth"
                     fill="none"
                     stroke-linecap="round"/>
@@ -157,6 +157,7 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   line-height: 1;
+  color: #fff;
 }
 .ProcessRing .ring-circle .Mask p {
   font-size: 2.1vmin;

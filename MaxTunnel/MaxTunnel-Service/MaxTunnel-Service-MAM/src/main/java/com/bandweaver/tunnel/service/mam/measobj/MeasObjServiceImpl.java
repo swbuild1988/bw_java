@@ -227,7 +227,7 @@ public class MeasObjServiceImpl implements MeasObjService {
     }
 
     @Override
-    public List<JSONObject> getMeasObjMaxOrMinValue(Integer tunnelId, Integer storeId, Integer areaId) {
+    public List<JSONObject> getMeasObjMaxOrMinValue(Integer tunnelId, Integer storeId, Integer areaId, Integer monitorType) {
         List<MeasObjAI> measObjAIList = measObjModuleCenter.getMeasObjAIs();
         if (tunnelId != null) {
             measObjAIList = measObjAIList.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
@@ -237,6 +237,12 @@ public class MeasObjServiceImpl implements MeasObjService {
         }
         if (areaId != null) {
             measObjAIList = measObjAIList.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
+        }
+        if (monitorType != null) {
+        	List<ObjectType> eList = ObjectType.getEnumByMonitorType(monitorType);
+        	List<Integer> objTypeIds = new ArrayList<>();
+        	eList.forEach(a -> objTypeIds.add(a.getValue()));
+        	measObjAIList = measObjAIList.stream().filter(a -> objTypeIds.contains(a.getObjtypeId())).collect(Collectors.toList());
         }
 
 
@@ -248,6 +254,9 @@ public class MeasObjServiceImpl implements MeasObjService {
             MeasObjAIParam h2s = new MeasObjAIParam(Double.MIN_VALUE);
             MeasObjAIParam ch4 = new MeasObjAIParam(Double.MIN_VALUE);
             MeasObjAIParam co = new MeasObjAIParam(Double.MIN_VALUE);
+            // 消防监测的烟感和温感极值
+            MeasObjAIParam smokeSensation = new MeasObjAIParam(Double.MIN_VALUE);
+            MeasObjAIParam warmSensation = new MeasObjAIParam(Double.MIN_VALUE);
 
             for (ObjectType objType : ObjectType.values()) {
                 int typeId = objType.getValue();
@@ -320,6 +329,26 @@ public class MeasObjServiceImpl implements MeasObjService {
                             co.setSectionId(measObjAi.getSectionId());
                         }
                         break;
+                    case SMOKE_SENSATION:// 烟感
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        if(!tmps.isEmpty()) {
+                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            smokeSensation.setCv(measObjAi.getCv());
+                            smokeSensation.setObjId(measObjAi.getId());
+                            smokeSensation.setObjTypeName(objType.getName());
+                            smokeSensation.setSectionId(measObjAi.getSectionId());
+                        }
+                        break;
+                    case WARM_SENSATION:// 温感
+                        tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
+                        if(!tmps.isEmpty()) {
+                            measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+                            warmSensation.setCv(measObjAi.getCv());
+                            warmSensation.setObjId(measObjAi.getId());
+                            warmSensation.setObjTypeName(objType.getName());
+                            warmSensation.setSectionId(measObjAi.getSectionId());
+                        }
+                        break;
 
                     default:
                         break;
@@ -333,11 +362,13 @@ public class MeasObjServiceImpl implements MeasObjService {
             paramList.add(h2s);
             paramList.add(ch4);
             paramList.add(co);
+            paramList.add(smokeSensation);
+            paramList.add(warmSensation);
 
             List<JSONObject> list = getJsonObjList(paramList);
             return list;
         }
-        return Collections.emptyList();
+        return new ArrayList<JSONObject>();
     }
 
 

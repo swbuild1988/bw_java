@@ -108,4 +108,6 @@ public interface EquipmentMapper {
 	 * @Date 2018年9月4日
 	 */
 	List<EquipmentDto> getEquipmentListByObj(@Param("objId") Integer objId);
+	
+	Integer getCountBySectionId(@Param("sectionId") Integer sectionId);
 }

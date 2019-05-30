@@ -410,6 +410,7 @@ export default {
     float: left;
     top: 1vh;
     color: #fff;
+    height: 100%;
 }
 
 .layout-nav {
@@ -424,7 +425,7 @@ export default {
 }
 
 .mainTitle {
-	margin-top: 3.5vh;
+    margin-top: 3.5vh;
     margin-left: 0.8vw;
     height: 4.5vh;
 }

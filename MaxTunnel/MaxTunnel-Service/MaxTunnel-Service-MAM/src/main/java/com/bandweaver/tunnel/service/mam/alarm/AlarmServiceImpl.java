@@ -1,7 +1,9 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
@@ -13,6 +15,7 @@ import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
+import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +41,8 @@ public class AlarmServiceImpl implements AlarmService {
 	@Autowired
 	private MeasObjModuleCenter measObjModuleCenter;
 	@Autowired
+	private VideoModuleCenter videoModuleCenter;
+	@Autowired
 	private VideoServerService videoServerService;
 	@Autowired
 	private MeasObjService measObjService;
@@ -57,7 +62,7 @@ public class AlarmServiceImpl implements AlarmService {
 			String location = dto.getStore().getTunnel().getName() + dto.getStore().getName() + dto.getArea().getName();
 
 			List<JSONObject> planList = new ArrayList<>(10);
-			List<VideoServerDto> videoList = new ArrayList<>(10);
+			List<VideoDto> videoList = new ArrayList<>(10);
 			List<JSONObject> cvList = new ArrayList<>(10);
 			getPlansAndVideosAndCv(measObj, planList, videoList, cvList);
 			jsonObject.put("plans", planList);
@@ -76,7 +81,7 @@ public class AlarmServiceImpl implements AlarmService {
 
 	}
 
-	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoServerDto> videoList, List<JSONObject> cvList) {
+	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoDto> videoList, List<JSONObject> cvList) {
 		if (measObj != null) {
 			// 获取监测对象绑定的预案
 			String planIds = measObj.getPlanIds();
@@ -94,21 +99,21 @@ public class AlarmServiceImpl implements AlarmService {
 			List<Integer> videoIdList = CommonUtil.convertStringToList(videoIds);
 			// 如果没有关联任何视频，则默认查找监测对象所在section的所有视频
 			if (videoIdList.isEmpty()) {
-				List<VideoDto> videoDtoList = videoServerService.getVideosBySection(measObj.getSectionId());
+				List<VideoDto> videoDtoList = videoModuleCenter.getVideoDtos().stream()
+						.filter(v -> v.getSectionId().intValue() == measObj.getSectionId().intValue()).collect(Collectors.toList());
 				for (VideoDto videoDto : videoDtoList) {
-					videoList.add(videoDto.getVideoServerDto());
+					videoList.add(videoDto);
 				}
-
 			} else {
 				// 查找绑定的视频
 				for (Integer videoId : videoIdList) {
-					VideoServerDto videoServer = videoServerService.getVideoServer(videoId);
+					VideoDto videoServer = videoModuleCenter.getVideoDto(videoId);
 					videoList.add(videoServer);
 				}
 			}
 
 			// 获取监测极值
-			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId());
+			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId(), MonitorTypeEnum.ENVIRONMENTAL.getValue());
 
 		}
 

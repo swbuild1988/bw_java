@@ -1,6 +1,6 @@
 <template>
     <div class="detailWrapper">
-        <p class="detailTitle">{{store.name + '管线详情'}}</p>
+        <p class="detailTitle">{{curTunnel.name + curStore.name + '管线详情'}}</p>
         <Button class="back" type="primary" @click="back">返回</Button>
         <div class="lineTable">
             <Table :columns="columns" :data="linesInfo"></Table>
@@ -10,11 +10,16 @@
 
 <script>
 import { SpaceService } from "../../../../services/spaceService";
+import { TunnelService } from "../../../../services/tunnelService";
 export default {
     name: "operatingSpaceDetail",
     data() {
         return {
-            store: null,
+            curStore: null,
+            curTunnel: {
+                id: null,
+                name: ""
+            },
             linesInfo: [],
             columns: [
                 {
@@ -96,12 +101,13 @@ export default {
         };
     },
     mounted() {
-        this.store = this.$route.params.store;
+        this.curTunnel.id = this.$route.params.id;
+        this.curStore = this.$route.params.store;
         this.getData();
     },
     methods: {
         getData() {
-            SpaceService.getCableList(this.store.id).then(
+            SpaceService.getCableList(this.curStore.id).then(
                 res => {
                     this.linesInfo = res;
                 },
@@ -109,6 +115,12 @@ export default {
                     this.Log.info(err);
                 }
             );
+            TunnelService.getTunnels().then(res => {
+                let curTunnel = res.find(tunnel => {
+                    return tunnel.id == this.curTunnel.id;
+                });
+                this.curTunnel.name = curTunnel.name;
+            });
         },
         turnToContractPage(contractId) {
             sessionStorage.setItem(
@@ -140,19 +152,32 @@ export default {
     color: #fff;
 }
 .detailTitle {
-    font-size: 2vmin;
-    margin: 2vmin;
+    font-size: 2.4vmin;
+    margin: 4vmin;
+    text-align: center;
 }
 .lineTable {
     margin: 0 2vmin;
 }
 .back {
     position: absolute;
-    top: 2vmin;
-    right: 2vmin;
+    top: 4vmin;
+    right: 4vmin;
+    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
 }
 .lineTable .ivu-table-wrapper {
     border: none;
+}
+.lineTable .ivu-table-wrapper >>> .ivu-table:before,
+.lineTable .ivu-table-wrapper >>> .ivu-table:after {
+    background-color: #fffdfd00 !important;
 }
 .lineTable .ivu-table-wrapper >>> .ivu-table {
     color: #ffffff !important;

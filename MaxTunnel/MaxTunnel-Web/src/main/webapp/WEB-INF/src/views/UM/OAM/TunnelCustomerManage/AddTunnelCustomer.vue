@@ -603,7 +603,7 @@ export default {
 };
 </script>
 <style scoped>
-h2 {
+.formTitle {
     font-size: 1.8vmin;
     margin-top: -1.4vmin;
 }

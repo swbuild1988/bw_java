@@ -248,6 +248,7 @@
     <select id="getSectionsByCondition" resultMap="DtoResultMap">
         select t.* from T_COMMON_SECTION t
         left join T_COMMON_STORE s on t.store_id = s.id
+        left join t_common_area a on a.id = t.area_id
         <where>
             <if test="id != null">
                 and t.id = #{id}
@@ -275,7 +276,7 @@
                 and t.crt_time &lt;= #{endTime}
             </if>
         </where>
-        order by s.sn
+        order by s.sn, a.sn
     </select>
 
     <select id="getAllSections" resultMap="DtoResultMap">
@@ -292,7 +293,7 @@
     </select>
 
     <select id="getSectionListByStoreAndArea" resultMap="BaseResultMap">
-        select t.id,t.name from t_common_section t
+        select * from t_common_section t
         <where>
             <if test="storeId != null">
                 and t.store_id = #{storeId}

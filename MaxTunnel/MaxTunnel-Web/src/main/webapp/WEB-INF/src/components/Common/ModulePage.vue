@@ -65,14 +65,13 @@ export default {
             showModal: {
                 modalPrams: {
                     state: false,
-                    selectPlan: ""
+                    selectPlan: null,
                 }
             },
             selectPlan: null,
             videoModal: {
                 modalPrams: {
                     state: false,
-                    modalInfo: null,
                     planData: null
                 },
                 alarmContainer: []
@@ -284,25 +283,31 @@ export default {
         // 连接成功回调函数
         callback(respond) {
             let result = JSON.parse(respond);
+            let _this = this;
             if (result.type && result.type == "Alarm"){
-                let content = result.content;
+                let content = JSON.parse(result.content);
                 this.Log.info("ModulePage收到回调:", content)
-                //将数据保存在vuex中
-                // _this.videoModal.modalPrams.planData = content;
+
+                // 显示alarm modal框
+                _this.videoModal.modalPrams.state = true;
+                _this.videoModal.alarmContainer.push(content);
+                
+
+                // 将数据保存在vuex中
                 // _this.planData = content;
-                if (
-                    this.$router.history.current.path.indexOf("/UM/plans/execute") <
-                    0
-                ) {
-                    // _this.showPlanTip();
-                    this.nodesModal.imgUrl = null;
-                    let _this = this;
-                    let planTimer = setTimeout(() => {
-                        _this.nodesModal.imgUrl =
-                            "/emplans/png/" + content.processInstanceId;
-                        _this.nodesModal.showFlag = true;
-                    }, 500);
-                }
+                // if (
+                //     this.$router.history.current.path.indexOf("/UM/plans/execute") <
+                //     0
+                // ) {
+                //     // _this.showPlanTip();
+                //     this.nodesModal.imgUrl = null;
+                //     let _this = this;
+                //     let planTimer = setTimeout(() => {
+                //         _this.nodesModal.imgUrl =
+                //             "/emplans/png/" + content.processInstanceId;
+                //         _this.nodesModal.showFlag = true;
+                //     }, 500);
+                // }
             }
         },
         goToMoudle(path, index, childIndex) {

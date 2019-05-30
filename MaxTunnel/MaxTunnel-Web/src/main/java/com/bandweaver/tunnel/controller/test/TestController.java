@@ -2,9 +2,6 @@ package com.bandweaver.tunnel.controller.test;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
-import com.bandweaver.tunnel.common.biz.dto.AreaDto;
-import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
@@ -14,21 +11,21 @@ import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
-import com.bandweaver.tunnel.common.biz.pojo.Section;
-import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
+import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
+import com.bandweaver.tunnel.common.biz.pojo.xml.EquipmentTypeFile;
+import com.bandweaver.tunnel.common.biz.pojo.xml.TunnelParam;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.dao.mam.MeasObjAIMapper;
+import com.bandweaver.tunnel.common.platform.util.XMLUtil;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,17 +46,9 @@ import java.util.List;
 @ResponseBody
 public class TestController {
     @Autowired
-    private StoreService storeService;
-    @Autowired
-    private AreaService areaService;
-    @Autowired
-    private SectionService sectionService;
-    @Autowired
     private ConsumeService consumeService;
     @Autowired
     private MeasObjModuleCenter measObjModuleCenter;
-    @Autowired
-    private MeasObjAIMapper measObjAIMapper;
     @Autowired
     private MeasValueAIMapper measValueAIMapper;
     @Autowired
@@ -69,10 +58,27 @@ public class TestController {
     @Autowired
     private MeasObjService measObjService;
     @Autowired
-    private MqService mqService;
-    @Autowired
     private AlarmService alarmService;
 
+    @RequestMapping(value = "config/xml", method = RequestMethod.GET)
+    public JSONObject testareas() {
+    	String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
+    	System.out.println(path);
+    	Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
+    	if(config == null) {
+    		TunnelParam tunnelParam = new TunnelParam(0,0,0,0,0,0,0,0);
+    		EquipmentTypeFile typeFile1 = new EquipmentTypeFile("01", "设备", 0);
+    		EquipmentTypeFile typeFile2 = new EquipmentTypeFile("02", "设备", 0);
+    		List<EquipmentTypeFile> typeFiles = new ArrayList<>();
+    		typeFiles.add(typeFile1);
+    		typeFiles.add(typeFile2);
+    		config = new Config(tunnelParam, typeFiles);
+    		XMLUtil.convertToXml(config, path);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, config);
+    }
+    
+    
     /**
      * 测试添加每个管廊的moid和总能耗
      *
@@ -108,23 +114,23 @@ public class TestController {
     }
 
     /**
-     * 每半天查看一次电表，并将数值保存到measValueAI中
+     * 每八小时查看一次电表，并将数值保存到measValueAI中
      *
      * @return
      */
     @RequestMapping(value = "test/add-value", method = RequestMethod.GET)
     public JSONObject addTestValue() {
-        // 设置存储数据的开始和结束时间
+    	// 设置存储数据的开始和结束时间
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date sd = null;
         Date ed = null;
         try {
-            sd = sdf.parse("2018-9-1");
-            ed = sdf.parse("2019-2-1");
+            sd = sdf.parse("2018-6-1");
+            ed = sdf.parse("2019-6-1");
         } catch (Exception e) {
 
         }
-
+        
         // 获取每个管廊的用于能耗的mo
         MeasObjVo vo = new MeasObjVo();
         vo.setObjtypeId(31);
@@ -163,7 +169,7 @@ public class TestController {
                 measValueAIMapper.addMeasValueAI(measValueAI);
             }
 
-            sd = new Date(sd.getTime() + 12 * 60 * 60 * 1000);
+            sd = new Date(sd.getTime() + 8 * 60 * 60 * 1000);
             //LogUtil.info("after add time : " + sd);
         }
 
@@ -183,8 +189,8 @@ public class TestController {
         Date sd = null;
         Date ed = null;
         try {
-            sd = sdf.parse("2018-9-2");
-            ed = sdf.parse("2019-2-2");
+            sd = sdf.parse("2018-6-2");
+            ed = sdf.parse("2019-6-2");
         } catch (Exception e) {
 
         }

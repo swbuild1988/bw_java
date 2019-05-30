@@ -2,14 +2,16 @@ package com.bandweaver.tunnel.common.biz.constant;
 
 
 
-/**开关枚举
+/**状态量枚举
  * @author shaosen
  * @date 2018年11月22日
  */
 public enum SwitchEnum {
 	
 	CLOSE("关",0),
-	OPEN("开",1);
+	OPEN("开",1),
+	FAULT("故障",2),
+	ALARM("告警",3);
 	
 	private String name;
 	private int value;

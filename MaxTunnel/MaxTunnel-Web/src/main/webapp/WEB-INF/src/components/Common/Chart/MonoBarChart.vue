@@ -18,10 +18,10 @@ export default {
         parameters: {
             type: Object
         },
-        xAxisRotate: {
-            default: 0,
-            type: String
-        },
+        // xAxisRotate: {
+        //     default: 0,
+        //     type: String
+        // },
         titleColor: {
             default: '#fff',
             type: String
@@ -30,18 +30,13 @@ export default {
             default: '#fff',
             type: String
         },
-        seriesColorList: {
-            type: Array,
-            default: function(){
-                return [
-                    // [ '#fed601', '#fed601' ],
-                    // [ '#fc9501', '#fc9501' ],
-                    // [ '#0ee622', '#3ce94c' ],
-                    // [ '#eb1818', '#ed4a49' ],
-                    // [ '#00fc7c', '#61eba5' ],
-                    // [ '#fe411b', '#fe9b1a' ]
-                ]
-            }
+        splitLineColor: {
+            default: '#fff',
+            type: String
+        },
+        barColor: {
+            default: '#fff',
+            type: String
         }
     },
     data() {
@@ -55,7 +50,6 @@ export default {
             }
         };
     },
-    components: {},
     mounted() {
         this.init();
         this.refreshData();
@@ -73,31 +67,16 @@ export default {
                 document.getElementById(_this.id)
             );
 
-            var itemStyle = {
-                normal: {
-                    color: function(params){
-                        var index=params.dataIndex;
-                        if(params.dataIndex >= _this.seriesColorList.length){
-                                index=params.dataIndex-_this.seriesColorList.length;
-                        }
-                        return new _this.$echarts.graphic.LinearGradient(0, 0, 0, 1,
-　　　　　　　　　　　　　[
-                            {offset: 0, color: _this.seriesColorList[index][0]},
-                            {offset: 1, color: _this.seriesColorList[index][1]}
-                        ]);
-                    }
-                }
-            }
-
             // 加载默认参数
             _this.option = {
                 color: ["#61a0a8"],
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('6%'),
+                        fontSize: this.getFontSize('5%'),
                         color: this.titleColor
-                    }
+                    },
+                    top: "2%"
                 },
                 tooltip: {
                     trigger: "axis",
@@ -110,7 +89,7 @@ export default {
                     left: "3%",
                     right: "4%",
                     bottom: "5%",
-                    top: '11%',
+                    top: '15%',
                     containLabel: true
                 },
                 xAxis: [
@@ -120,20 +99,21 @@ export default {
                         axisLabel: {
                             interval: 0,
                             boundaryGap: [0,0.01],
-                            rotate: this.xAxisRotate,
+                            // rotate: this.xAxisRotate,
                             show: true,
                             textStyle: {
                                 fontSize : this.getFontSize('5%'),      //更改坐标轴文字大小
                                 color: this.lineColor
                             },                            
                         },
-                        axisTick: {
-                            alignWithLabel: true
+                        splitLine: {
+                            show: false
                         },
-                        axisLine:{
-                            lineStyle:{
-                                color: this.lineColor,
-                            }
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
                         },
                     }
                 ],
@@ -148,17 +128,32 @@ export default {
                                 color: this.lineColor
                             }
                         },
-                        axisLine:{
+                        axisLine: {
+                            show: false,
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: true,
                             lineStyle:{
-                                color: this.lineColor
+                                type:'dashed',
+                                color: this.splitLineColor
                             }
-                        }       
+
+                        }
+
                     }
                 ],
                 series: [
                     {
                         type: "bar",
-                        itemStyle: itemStyle
+                        itemStyle: {
+                            borderWidth: 2,
+                            opacity: 1,
+                            color: this.barColor
+                        },
+                        barWidth: this.getFontSize(10)
                     }
                 ]
             }

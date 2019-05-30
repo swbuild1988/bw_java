@@ -15,8 +15,10 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ContractDto;
+import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ContractService;
+import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
 import com.bandweaver.tunnel.common.biz.pojo.oam.CableContract;
@@ -39,6 +41,8 @@ public class ContractServiceImpl implements ContractService {
 	private CableSectionMapper cableSectionMapper;
 	@Autowired
 	private SectionService sectionService;
+	@Autowired
+	private AreaService areaService;
 	
 	@Transactional(rollbackFor = Exception.class)
 	@Override
@@ -59,17 +63,14 @@ public class ContractServiceImpl implements ContractService {
 		
 		// 获取section信息
 		Integer storeId = vo.getStoreId();
-		List<Integer> areaIds = vo.getAreaIds();
-		for (Integer areaId : areaIds) {
-			Section section = sectionService.getSectionByStoreAndArea(storeId,areaId);
+		for(Area area : areaService.getList()) {
+			Section section = sectionService.getSectionByStoreAndArea(storeId,area.getId());
+			if(section == null) continue;
 			CableSection cableSection = new CableSection();
 			cableSection.setSectionId(section.getId());
 			cableSection.setCableId(cable.getId());
 			cableSectionMapper.insert(cableSection);
 		}
-		
-		
-		
 		
 	}
 
@@ -144,10 +145,9 @@ public class ContractServiceImpl implements ContractService {
 		}*/
 		
 		Integer storeId = vo.getStoreId();
-		List<Integer> areaIds = vo.getAreaIds();
-		for (Integer areaId : areaIds) {
-			Section section = sectionService.getSectionByStoreAndArea(storeId,areaId);
-			
+		for(Area area : areaService.getList()) {
+			Section section = sectionService.getSectionByStoreAndArea(storeId,area.getId());
+			if(section == null) continue;
 			CableSection cableSection = new CableSection();
 			cableSection.setSectionId(section.getId());
 			cableSection.setCableId(cable.getId());
