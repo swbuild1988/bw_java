@@ -43,7 +43,6 @@
             </section>
             <section class="detailSection" v-show="isShowPlan">
                 <h4>预案步骤</h4>
-                <h2>{{planStepData.processName}}</h2>
                 <div style="height:69vmin;max-width:54vmin">
                     <image-from-url :url="processPicSrc"></image-from-url>
                 </div>
@@ -54,9 +53,11 @@
 
 <script>
     import videoComponent from '../Video/VideoComponent.vue'
+    import ImageFromUrl from "../../Common/ImageFromUrl"
     export default {
         components: {
-            videoComponent
+            videoComponent,
+            ImageFromUrl
         },
         props: {
             modalPrams: {
@@ -151,7 +152,7 @@
                 let result = JSON.parse(data);
                 if (result.type && result.type == "Plan") {
                     let content = JSON.parse(result.content);
-                    this.Log.info("ShowAlarm", content)
+                    this.Log.info("ShowAlarm收到预案回调", content)
                     this.processPicSrc = null;
                     let _this = this;
                     this.$nextTick(() => {
