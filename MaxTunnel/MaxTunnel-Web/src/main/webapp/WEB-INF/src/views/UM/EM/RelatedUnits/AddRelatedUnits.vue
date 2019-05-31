@@ -425,6 +425,7 @@ export default {
 .ivu-form-item >>> .ivu-form-item-label {
     width: 12vmin !important;
     line-height: 2vmin;
+    font-size: 1.4vmin;
     color: #fff;
 }
 .ivu-form >>> .ivu-input,

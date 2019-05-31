@@ -15,7 +15,9 @@ export default {
     name: "operatingSpaceDetail",
     data() {
         return {
-            curStore: null,
+            curStore: {
+                name: null
+            },
             curTunnel: {
                 id: null,
                 name: ""

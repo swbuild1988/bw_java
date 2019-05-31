@@ -16,7 +16,7 @@
             <!-- 管廊能耗统计 饼图 -->
             <Col span="9">
                 <div class="pie">
-                    <pie-chart v-bind="pieChart"></pie-chart>
+                    <pie-chart v-bind="pieChart" style="width:58vmin;height: 34vh"></pie-chart>
                 </div>
             </Col>
             <Col span="14" offset="1">
@@ -97,7 +97,11 @@
                             >{{ item.key }}</Option>
                         </Select>
                     </div>
-                    <line-chart style="width:100%;height:100%" v-bind="lineChart" ref="childChart"></line-chart>
+                    <line-chart
+                        style="width:90vmin;height:100%"
+                        v-bind="lineChart"
+                        ref="childChart"
+                    ></line-chart>
                 </div>
             </Col>
         </Row>
@@ -141,6 +145,10 @@ h1 {
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
     border-bottom: none;
+}
+.table .ivu-table-wrapper >>> .ivu-table:before,
+.table .ivu-table-wrapper >>> .ivu-table:after {
+    background-color: #fffdfd00 !important;
 }
 .table .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {
@@ -200,7 +208,7 @@ h1 {
     font-size: 1.4vmin;
 }
 .lineChartWrapper {
-    width: 47.4vw;
+    width: 100%;
     height: 34vh;
     color: #fff;
     background: url("../../../../assets/UM/energyBorder2.png") no-repeat;
