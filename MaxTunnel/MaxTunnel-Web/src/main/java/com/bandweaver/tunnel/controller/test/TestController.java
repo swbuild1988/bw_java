@@ -63,7 +63,6 @@ public class TestController {
     @RequestMapping(value = "config/xml", method = RequestMethod.GET)
     public JSONObject testareas() {
     	String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
-    	System.out.println(path);
     	Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
     	if(config == null) {
     		TunnelParam tunnelParam = new TunnelParam(0,0,0,0,0,0,0,0);
