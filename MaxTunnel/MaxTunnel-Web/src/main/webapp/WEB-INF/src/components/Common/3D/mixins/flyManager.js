@@ -45,10 +45,11 @@ export const flyManagerMinix = {
             let curRoute = this.flyFilePathes.find(route => {
                 return route.id == id
             })
+           
             if(!curRoute) return;
 
             routes.fromFile(this.ServerConfig + curRoute.path);
-
+console.log(routes)
             //初始化飞行管理
             flyManagerAttr.flyManager = new Cesium.FlyManager({
                 scene: scene,
