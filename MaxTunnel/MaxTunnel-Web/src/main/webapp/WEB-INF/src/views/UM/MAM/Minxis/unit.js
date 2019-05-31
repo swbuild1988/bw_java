@@ -125,18 +125,18 @@ export const commonFlyFn = {
                 AreaService.getAreaInfo(areaId).then(areaInfo => this.intercept(areaInfo))
 
             this.getMonitorData();
-            this.changePositionNote();
+            this.changePositionNote(); 
         },
         //变更舱
         updateStores(storeId) {
             let {
                 queryCondition,
                 storeProp,
-                areaList
+                // areaList
             } = this;
             
-            if (!areaList.length) return;
-            queryCondition.areaId = queryCondition.areaId || areaList[1].id;
+            // if (!areaList.length) return;
+            queryCondition.areaId = queryCondition.areaId || 0;
 
             queryCondition.storeId = storeId || storeProp.dataList[1].id;
 

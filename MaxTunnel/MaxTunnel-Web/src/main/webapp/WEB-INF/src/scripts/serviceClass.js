@@ -30,6 +30,8 @@ class InformationManagement {
         this.flaw = [];
         this.alarm = [];
         this.events = [];
+        this.unitPlace = [];
+
     }
     getInformation(informationType) {
         if (typeof informationType != 'string') return
@@ -76,7 +78,7 @@ class InformationManagement {
         modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
         let informations = this.getInformation(entity._messageType);
-        
+
         if (informations !== undefined && informations.length !== 0 && Array.isArray(informations)) {
 
             informations.forEach(information => {
@@ -299,7 +301,7 @@ var TransferStation = {
         this.listeners.delete(key)
     },
 
-    getListener: function(key){
+    getListener: function (key) {
         this.listeners.get(key);
     }
 }
@@ -322,7 +324,7 @@ class MQ {
         this.queueName = "/queue/" + _queueName;
     }
 
-    getQueueName(){
+    getQueueName() {
         return this.queueName;
     }
 
