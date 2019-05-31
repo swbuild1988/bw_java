@@ -1,50 +1,46 @@
 <!--数据查询-->
 <template>
     <div>
-        <Row class="top" style="margin-bottom: 0px;">
-            <Col span="6" class="col">
-                <span class="planDec">对象类型:</span>
+        <Row class="queryCondition">
+            <Col span="6">
+                <span class="conditionTitle">监测对象：</span>
+                <Input v-model="queryPrams.id " @on-blur="queryObject" style="width: 65%;"></Input>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">所属管廊：</span>
+                <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
+                    <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">数据类型：</span>
+                <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
+                    <Option v-for="item in dataTypeEnum" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">对象类型：</span>
                 <Select v-model="queryPrams.objtypeIds" style="width:65%" multiple>
                     <OptionGroup v-for="(group, index) in objectList" :label="group.key" :key="index" style="font-size: 1.4vmin;">
                     <Option v-for="item in group.objectTypeList" :value="item.val" :key="item.val" style="font-size: 1.2vmin;line-height: 5vmin;height: 5vmin">{{ item.key }}</Option>
                     </OptionGroup>
                 </Select>
             </Col>
-            <Col span="6" class="col">
-                <span class="planDec">所属管廊:</span>
-                <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
-                    <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-            </Col>
-            <Col span="6" class="col">
-                <span class="planDec">数据类型:</span>
-                <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
-                    <Option v-for="item in dataTypeEnum" :value="item.val" :key="item.val">{{ item.key }}</Option>
-                </Select>
-            </Col>
-        </Row>
-        <Row class="top" style="margin-top: 0px;">
-            <Col span="6" class=" col">
-                <span class="planDec">监测对象:</span>
-                <Input v-model="queryPrams.id "  style="width: 65%;">
-                    <Button slot="append" icon="ios-search" style="height: 4vmin;" @click="queryObject"></Button>
-                </Input>
-            </Col>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==1">
-                    <Col span="10" class="col">
-                        <span class="planDec">取整范围:</span>
-                        <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最小值</span>
+                    <Col span="10">
+                        <span class="conditionTitle">取整范围：</span>
+                        <span style="color: #fff">最小值</span>
                         <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-                        <span style=" padding: 5px;  font-size: 1.6vmin; line-height: 3.2vmin;height: 3.2vmin;">最大值</span>
+                        <span style="color: #fff">最大值</span>
                         <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
                     </Col>
                 </div>
             </transition>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==2">
-                    <Col span="10" class="col">
-                        <span class="planDec">开关状态:</span>
+                    <Col span="10">
+                        <span class="conditionTitle">开关状态:</span>
                         <CheckboxGroup v-model="queryPrams.dataRangeGroup" style="position: relative;float: left;left:8px;top:6px;"
                                         size="large">
                             <Checkbox label="1">开</Checkbox>
@@ -55,15 +51,15 @@
             </transition>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==4||queryPrams.datatypeId==5">
-                    <Col span="10" class="col">
-                        <span class="planDec">监测位置:</span>
+                    <Col span="10">
+                        <span class="conditionTitle">监测位置:</span>
                         <Input v-model="queryPrams.pleace" style="width: 120px;margin-left: 8px;  "></Input>
                         （米）
                     </Col>
                 </div>
             </transition>
-            <Col span="2" style="position: relative;float: right;right: -20px;top:-20px;">
-                <Button type="primary"  icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
+            <Col span="2">
+                <Button type="primary" size="samll" icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
             </Col>
             <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
         </Row>
@@ -71,11 +67,13 @@
             <div v-if="!viewHistory">
                 <Row style="margin: 0 9px 0 9px">
                     <Col span="24">
-                        <Table :height="tableHeight" stripe border :columns="tableColumn" :data="tableData" ref="selection" :loading="tableload" @on-selection-change="selectionClick"></Table>
+                        <div class="boxBG">
+                            <Table :height="tableHeight" :columns="tableColumn" :data="tableData" ref="selection" :loading="tableload" @on-selection-change="selectionClick"></Table>
+                        </div>
                         <div class="historyDiv">
                             <Button type="primary" shape="circle" icon="forward" size="large" title="历史数据"
                                     @click="viewHistoryData">历史数据</Button>
-                            <Button type="primary" shape="circle" icon="ios-cloud-download" size="large" title="导出"
+                            <Button type="info" shape="circle" icon="ios-cloud-download" size="large" title="导出"
                                     @click="exportData">导出</Button>
                             <Page class="nextPage" :total="queryPrams.total" :current="queryPrams.pageNum" :page-size="queryPrams.pageSize" show-sizer show-total
                                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator></Page>
@@ -91,7 +89,7 @@
                         <div class="chartSize">
                             <MultiLineChart style="width: 100%;" v-bind="curlineChart" ref="multiLine"></MultiLineChart>
                         </div>
-                        <div style="height: 5.8vh;background-color: #fff;padding: 0.8vh;margin-top: 1vh;">
+                        <div class="chooseBox">
                             <div style="position: relative;float: left;font-size: 1.66vmin;line-height: 4vmin;">
                                 <span>时间周期:</span>
                                 <Select v-model="historyPrams.dateType" style="width:12vw;margin-right: 4px;margin-left: 4px;"
@@ -109,11 +107,11 @@
                                             placement="top"
                                             style="width:12vw;margin-right: 14px;"></DatePicker>
                             </div>
-                            <div  style="position:relative;float: right;right: 0px;">
-                                <Button type="primary" shape="circle" @click="queryHistoryData" icon="ios-search" size="large" v-if="viewHistory"
-                                        title="历史数据">历史数据</Button>
-                                <Button type="primary" shape="circle" @click="backToCurPage" icon="reply" size="large"
-                                        title="返回">返回</Button>
+                            <div class="btnBox">
+                                <Button type="primary" shape="circle" icon="forward" size="large"
+                                   @click="queryHistoryData" v-if="viewHistory">历史数据</Button>
+                                <Button type="info" shape="circle" icon="ios-cloud-download" size="large" title="导出"
+                                    @click="backToCurPage">导出</Button>
                             </div>
                         </div>
                     </Col>
@@ -141,12 +139,13 @@
             tunnelList: [],
             tableHeight: 450,
             curlineChart: {
-            id: "historyDataChart",
-            requestUrl: 'data-analyse/measvalue/history/diagram',
-            parameters: {
-                option: {},
-                queryPram: {startTime: "", endTime: "", ids: "",},
-            },
+                id: "historyDataChart",
+                requestUrl: 'data-analyse/measvalue/history/diagram',
+                parameters: {
+                    option: {},
+                    queryPram: {startTime: "", endTime: "", ids: "",},
+                },
+                title: '历史数据'
             },
             queryPrams: {
                 tunnelId: null,
@@ -369,7 +368,7 @@
     mounted() {
         this.inItData();
         // 设置表格高度
-        this.tableHeight = window.innerHeight * 0.67;
+        this.tableHeight = window.innerHeight * 0.65;
     },
     watch: {
         "dataObjectSelect.selectData.idList": function () {
@@ -381,73 +380,106 @@
 </script>
 
 <style scoped>
-  .col {
-    height: 6vmin;
-    padding-top: 10px;
-  }
-  .planDec {
-    padding: 4px;
-    font-size: 1.6vmin;
-    line-height: 3.2vmin;
-    height: 3.2vmin;
-    float: left;
-  }
-  .top {
-    margin: 10px;
-    background-color: #fff;
-    padding-left: 10px;
-  }
-  .nextPage {
-    position: relative;
-    bottom: 0px;
-    right: 7px;
-    float: right;
-  }
-  .slide-fade-enter-active {
-    transition: all .5s ease;
-  }
-  .slide-fade-leave-active {
-    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(10px);
-    opacity: 0;
-  }
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 1.66vmin;
-  }
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 1.66vmin;
-  }
-  .chartSize {
-    height: 64vh;
-    margin-bottom: 1vh;
-    width: 100%;
-  }
-  .historyDiv {
-    position: relative;
-    line-height: 40px;
-    background-color: #fff;
-    margin-top: 0.5vh;
-  }
+    .nextPage {
+        position: relative;
+        bottom: 0px;
+        right: 7px;
+        float: right;
+    }
+    .slide-fade-enter-active {
+        transition: all .5s ease;
+    }
+    .slide-fade-leave-active {
+        transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    .slide-fade-enter, .slide-fade-leave-to {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+    .ivu-select-single >>> .ivu-select-selection >>> .ivu-select-selected-value {
+        font-size: 1.66vmin;
+    }
+    .ivu-select-single >>> .ivu-select-selection >>> .ivu-select-placeholder {
+        font-size: 1.66vmin;
+    }
+    .chartSize {
+        height: 64vh;
+        margin-bottom: 1vh;
+        width: 100%;
+    }
+    .historyDiv {
+        position: relative;
+        line-height: 40px;
+        margin-top: 0.5vh;
+    }
 
-  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
-  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
- .ivu-select-multiple >>> .ivu-select-placeholder
-  {
-    height: 4vmin;
-    line-height: 4vmin;
-    font-size: 1.4vmin;
-  }
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+    .ivu-select-multiple >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+        color: #fff;
+        background-color: #fffdfd00 !important;
+    }
 
-  .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-    font-size: 1.2vmin;
-  }
-  .ivu-select-group-wrap >>> .ivu-select-group-title{
-    height: 3.8vmin;
-    line-height: 3.2vmin;
-    font-size: 1.6vmin;
-  }
+    .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+        font-size: 1.2vmin;
+    }
+    .ivu-select-group-wrap >>> .ivu-select-group-title{
+        height: 3.8vmin;
+        line-height: 3.2vmin;
+        font-size: 1.6vmin;
+    }
+    .ivu-table-wrapper{
+        border: none;
+    }
+    .ivu-table-wrapper>>>.ivu-table{
+        color: #ffffff !important;
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+        background-color: #fffdfd00 !important;
+        border-bottom: none;
+    }
+    .nextPage .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.nextPage.ivu-page>>>.ivu-page-total{
+        color: #fff;
+    }
+    .boxBG{
+        background: url("../../../../assets/UM/infoBox.png") no-repeat;
+        background-size: 100% 100%;
+        padding: 2vmin 4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+        border-right: none;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection {
+        background-color: #fffdfd00 !important;
+    }
+    .queryCondition .ivu-select{
+        color: #fff;
+    }
+    .btnBox{
+        position:relative;
+        float: right;
+        right: 0px;
+    }
+    .btnBox .ivu-btn-primary,.historyDiv .ivu-btn-primary{
+        background: linear-gradient(to left, #2734e1, #b195ed)
+    }
+    .btnBox .ive-btn-info,.historyDiv .ive-btn-info{
+        background: linear-gradient(to left, #1af6b0, #a7ecd7)
+    }
+    .chooseBox{
+        height: 5.8vh;
+        padding: 0.8vh;
+        margin-top: 1vh;
+        color: #fff;
+    }
 </style>

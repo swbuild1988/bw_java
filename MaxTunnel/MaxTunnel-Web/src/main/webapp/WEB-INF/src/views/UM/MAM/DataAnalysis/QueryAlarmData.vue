@@ -1,433 +1,448 @@
 <!--告警数据查询-->
 <template>
-  <div class="queryAlarm">
-    <Row class="top">
-      <Col span="6">
-      <span class="planDec">告警状态：</span>
-      <Select v-model="queryPrams.cleaned" style="width:65%">
-        <Option v-for="item in alarmStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      </Col>
-      <Col span="6">
-      <span class="planDec">所属管廊：</span>
-      <Select v-model="queryPrams.tunnelId" style="width:64%">
-        <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-      </Select>
-      </Col>
-      <Col span="6">
-      <span class="planDec">告警级别：</span>
-      <Select v-model="queryPrams.alarmLevel" style="width:65%">
-        <Option v-for="item in enumData.alarmLevel" :value="item.key" :key="item.key">{{ item.value }}</Option>
-      </Select>
-      </Col>
-      <Col span="6">
-      <span class="planDec" style="padding-top: 3px;">监测对象：</span>
-      <Input v-model="queryPrams.objectId"  style="width: 65%;margin-top:14px;">
-      <Button slot="append" icon="ios-search" style="height:4vmin;" @click="queryObject"></Button>
-      </Input>
-      </Col>
-      <Col span="6">
-      <span class="planDec">时间类型：</span>
-      <Select v-model="queryPrams.alarmTimeType" style="width:65%" @on-change="changeAlarmType">
-        <Option v-for="item in enumData.timeType" :value="item.key" :key="item.key">{{ item.value }}</Option>
-      </Select>
-      </Col>
-      <Col span="6" class="planDec">
-      <span class="planDec">开始时间：</span>
-      <DatePicker :readonly="isReady" v-model="queryPrams.startTime" type="datetime" placeholder="选择结束时间"
-                  style="width: 65%;"></DatePicker>
-      </Col>
-      <Col span="6">
-      <span class="planDec">结束时间：</span>
-      <DatePicker :readonly="isReady" v-model="queryPrams.endTime" type="datetime" placeholder="选择结束时间"
-                  style="width: 65%;"></DatePicker>
-      </Col>
-      <Col span="6">
-        <Button type="primary"  @click="queryAlarmData" icon="ios-search"  style="font-size: 1.7vmin">查询告警</Button>
-        <Button type="primary"  @click="clearAlarms" icon="ios-trash-outline"  style="font-size: 1.7vmin">清除告警</Button>
-      </Col>
-    </Row>
-    <Row style="padding-top: 0px;padding-right: 9px;padding-left: 9px;">
-      <Col span="24">
-      <div style="position:absolute; height: 40px;right: 5px;top:-55px;z-index: 10001">
-        <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
-        <ClearAlarm v-bind="alarmsClear"></ClearAlarm>
-      </div>
-        <Table :height="tableHeight" stripe border :columns="tableColumn" :data="tableData" ref="selection"
-               :loading="tableLoad"
-               @on-selection-change="selectionClick"></Table>
-      </Col>
-    </Row>
-    <div style="height: 5vh;margin-top:0.5vh;margin-left:10px;background-color: #fff;position: absolute;width: 99%">
-      <div style="position:absolute;height: 100%;">
-        <div style="margin-left:8px;float: left;height: 100%">
-          <div class="alarmCircle" style="background-color: #0066ff;">提示</div>
-          <span class="alarmCircleText">{{alarmLevelCount[0]}}</span>
-        </div>
-        <div style="margin-left:80px;    float: left;">
-          <div class="alarmCircle" style="background-color: #ffff00; ">一般</div>
-          <span class="alarmCircleText">{{alarmLevelCount[1]}}</span>
-        </div>
-        <div style="margin-left:80px;    float: left;">
-          <div class="alarmCircle" style="background-color: #ffae00; ">严重</div>
-          <span class="alarmCircleText">{{alarmLevelCount[2]}}</span>
-        </div>
-        <div style="margin-left:80px; float: left;">
-          <div class="alarmCircle" style="background-color: #ff0000;">危急</div>
-          <span class="alarmCircleText">{{alarmLevelCount[3]}}</span>
-        </div>
-      </div>
-      <Page class="nextPage" @on-change="changePage" @on-page-size-change="handlePageSize"
-            :total="queryPrams.total" :page-size-opts=[12,24,36]
-            show-total show-elevator show-sizer placement="top"
-            :page-size="queryPrams.pageSize"></Page>
-    </div>
-  </div>
+	<div class="queryAlarm">
+		<Row class="queryCondition">
+			<Col span="6">
+				<span class="conditionTitle">告警状态：</span>
+				<Select v-model="queryPrams.cleaned" style="width:65%">
+					<Option v-for="item in alarmStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+				</Select>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">所属管廊：</span>
+				<Select v-model="queryPrams.tunnelId" style="width:64%">
+					<Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+				</Select>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">告警级别：</span>
+				<Select v-model="queryPrams.alarmLevel" style="width:65%">
+					<Option v-for="item in enumData.alarmLevel" :value="item.key" :key="item.key">{{ item.value }}</Option>
+				</Select>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">监测对象：</span>
+				<Input v-model="queryPrams.objectId" @on-blur="queryObject" style="width: 65%;margin-top:14px;"></Input>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">时间类型：</span>
+				<Select v-model="queryPrams.alarmTimeType" style="width:65%" @on-change="changeAlarmType">
+					<Option v-for="item in enumData.timeType" :value="item.key" :key="item.key">{{ item.value }}</Option>
+				</Select>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">开始时间：</span>
+				<DatePicker :readonly="isReady" v-model="queryPrams.startTime" type="datetime" placeholder="选择结束时间"
+							style="width: 65%;"></DatePicker>
+			</Col>
+			<Col span="6">
+				<span class="conditionTitle">结束时间：</span>
+				<DatePicker :readonly="isReady" v-model="queryPrams.endTime" type="datetime" placeholder="选择结束时间"
+							style="width: 65%;"></DatePicker>
+			</Col>
+			<Col span="6">
+				<Button type="primary"  @click="queryAlarmData" icon="ios-search"  style="font-size: 1.7vmin">查询告警</Button>
+				<Button type="info"  @click="clearAlarms" icon="ios-trash-outline"  style="font-size: 1.7vmin">清除告警</Button>
+			</Col>
+		</Row>
+		<Row>
+			<Col span="24">
+				<div style="position:absolute; height: 40px;right: 5px;top:-55px;z-index: 10001">
+					<ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
+					<ClearAlarm v-bind="alarmsClear"></ClearAlarm>
+				</div>
+				<div class="boxBG">
+					<Table :height="tableHeight" stripe border :columns="tableColumn" :data="tableData" ref="selection"
+						:loading="tableLoad"
+						@on-selection-change="selectionClick"></Table>
+				</div>
+			</Col>
+		</Row>
+		<div>
+			<div style="float: left">
+				<div class="tipBox">
+					<Icon class="iconSize" type="information-circled" color="#00fff6" size="30"></Icon>
+					<span class="alarmCircleText">提示：{{alarmLevelCount[0]}}</span>
+				</div>
+				<div class="tipBox">
+					<Icon class="iconSize" type="checkmark-circled" color="#2cec47" size="30"></Icon>
+					<span class="alarmCircleText">一般：{{alarmLevelCount[1]}}</span>
+				</div>
+				<div class="tipBox">
+					<img :src='iconWarning' style="width: 28px">
+					<span class="alarmCircleText">严重：{{alarmLevelCount[2]}}</span>
+				</div>
+				<div class="tipBox">
+					<Icon class="iconSize" type="close-circled" color="#d81e06" size="30"></Icon>
+					<span class="alarmCircleText">危急：{{alarmLevelCount[3]}}</span>
+				</div>
+			</div>
+			<Page class="nextPage" @on-change="changePage" @on-page-size-change="handlePageSize"
+					:total="queryPrams.total" :page-size-opts=[12,24,36]
+					show-total show-elevator show-sizer placement="top"
+					:page-size="queryPrams.pageSize"></Page>
+		</div>
+	</div>
 </template>
 
 <script>
-  import {EnumsService} from '../../../../services/enumsService.js'
-  import {TunnelService} from '../../../../services/tunnelService.js'
-  import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
-  import ClearAlarm from '../../../../components/Common/Modal/ClearAlarm'
-  import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
+	import {EnumsService} from '../../../../services/enumsService.js'
+	import {TunnelService} from '../../../../services/tunnelService.js'
+	import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
+	import ClearAlarm from '../../../../components/Common/Modal/ClearAlarm'
+	import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
+	import iconWarning from "@/assets/UM/tipWarning.png";
 
-  export default {
-    name: "query-alarm-data",
-    data() {
-      return {
-        tableHeight:450,
-        selectSelection: null,
-        tableLoad: true,
-        isReady: true,
-        tunnelList: [],
-        dataObjectSelect: {
-          show: {state: false},
-          selectObjects: {},
-          selectData: {idList: ""},
-        },
-        alarmsClear: {
-          modalPrams: {state: false, ids: [],},
-        },
-        curlineChart: {
-          id: "historyDataChart",
-          requestUrl: 'lineChart',
-          titleName: '23',
-          title: "历史数据",
-          titleColor: '#030303',
-          intervalTime: 1000,
-        },
-        queryPrams: {
-          cleaned: -1,
-          tunnelId: -1,
-          alarmLevel: -1,
-          objectId: "",
-          alarmTimeType: 1,
-          monitorZone: "",
-          endTime: "",
-          startTime: "",
-          total: 0,
-          pageSize: 12,
-          pageNum: 10,
-        },
-        enumData: {
-          alarmLevel: [{key: -1, value: "全部"}, {key: 1, value: "提示"}, {key: 2, value: "一般"}, {
-            key: 3,
-            value: "严重"
-          }, {key: 4, value: "危急"}],
-          timeType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {key: 4, value: "自定义"}],
-        },
-        dataTypeEnum: [],
-        alarmStatusList: [{value: -1, label: "全部"}, {value: 1, label: "已清除"}, {value: 0, label: "未清除"}],
-        alarmLevelCount: [0, 0, 0, 0],
-        tableColumn: [
-          {type: 'selection', width: 60, align: 'center'},
-          {title: 'Id', key: 'id', width: 80,},
-          {title: '所属管廊', key: 'tuunelName',},
-          {title: '监测对象名', key: 'objectName',},
-          {title: '告警级别', key: 'alarmLevel',},
-          // {title: '告警类型', key: 'alarmType',},
-          {title: '描述', key: 'description',},
-          {title: '告警时间', key: 'alarmTime',},
-          {title: '告警次数', key: 'alarmCount',},
-          {title: '是否清除', key: 'isClear',},
-          {title: '清除时间', key: 'clearTime',},
-          {
-            title: '操作',
-            key: 'action',
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'success',
-                    size: 'default'
-                  },
-                  style: {
-                    marginRight: '5px',
-                    display: (params.row.isClear == "已清除") ? "none" : "inline-block",
-                  },
-                  on: {
-                    click: () => {
-                      this.clearAlarms(params.index)
-                    }
-                  }
-                }, '清除')
-              ]);
-            }
-          },
-        ],
-        tableData: [],
-      }
-    },
-    methods: {
-      //查询监测对象
-      queryObject() {
-        let _this = this;
-        _this.dataObjectSelect.show.state = !_this.dataObjectSelect.show.state;
-      },
+	export default {
+		name: "query-alarm-data",
+		data() {
+			return {
+				tableHeight:450,
+				selectSelection: null,
+				tableLoad: true,
+				isReady: true,
+				tunnelList: [],
+				dataObjectSelect: {
+					show: {state: false},
+					selectObjects: {},
+					selectData: {idList: ""},
+				},
+				alarmsClear: {
+					modalPrams: {state: false, ids: [],},
+				},
+				curlineChart: {
+					id: "historyDataChart",
+					requestUrl: 'lineChart',
+					titleName: '23',
+					title: "历史数据",
+					titleColor: '#030303',
+					intervalTime: 1000,
+				},
+				queryPrams: {
+					cleaned: -1,
+					tunnelId: -1,
+					alarmLevel: -1,
+					objectId: "",
+					alarmTimeType: 1,
+					monitorZone: "",
+					endTime: "",
+					startTime: "",
+					total: 0,
+					pageSize: 12,
+					pageNum: 10,
+				},
+				enumData: {
+					alarmLevel: [{key: -1, value: "全部"}, {key: 1, value: "提示"}, {key: 2, value: "一般"}, 
+					{key: 3,value: "严重"}, {key: 4, value: "危急"}],
+					timeType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {key: 4, value: "自定义"}],
+				},
+				dataTypeEnum: [],
+				alarmStatusList: [{value: -1, label: "全部"}, {value: 1, label: "已清除"}, {value: 0, label: "未清除"}],
+				alarmLevelCount: [0, 0, 0, 0],
+				tableColumn: [
+					{type: 'selection', width: 60, align: 'center'},
+					{title: 'Id', key: 'id', width: 80,},
+					{title: '所属管廊', key: 'tuunelName',},
+					{title: '监测对象名', key: 'objectName',},
+					{title: '告警级别', key: 'alarmLevel',},
+					// {title: '告警类型', key: 'alarmType',},
+					{title: '描述', key: 'description',},
+					{title: '告警时间', key: 'alarmTime',},
+					{title: '告警次数', key: 'alarmCount',},
+					{title: '是否清除', key: 'isClear',},
+					{title: '清除时间', key: 'clearTime',},
+					{
+						title: '操作',
+						key: 'action',
+						align: 'center',
+						render: (h, params) => {
+						return h('div', [
+							h('Button', {
+							props: {
+								type: 'success',
+								size: 'default'
+							},
+							style: {
+								marginRight: '5px',
+								display: (params.row.isClear == "已清除") ? "none" : "inline-block",
+							},
+							on: {
+								click: () => {
+								this.clearAlarms(params.index)
+								}
+							}
+							}, '清除')
+						]);
+						}
+					},
+				],
+				tableData: [],
+				iconWarning: iconWarning
+			}
+		},
+		methods: {
+			//查询监测对象
+			queryObject() {
+				let _this = this;
+				_this.dataObjectSelect.show.state = !_this.dataObjectSelect.show.state;
+			},
 
-      //初始化查询条件下拉列表数据
-      inItData() {
-        var _this = this;
-        EnumsService.getMonitorType().then((result) => {
-          _this.objectList = result;
-        });
-        EnumsService.getDataType().then((result) => {
-          _this.dataTypeEnum = result;
-        });
-        TunnelService.getTunnels().then((result) => {
-          _this.tunnelList = [{id: -1, name: "全部"}];
-          result.reduce((a,b)=>{
-            _this.tunnelList.push(b);
-          }, _this.tunnelList)
-        });
-        DataAnalysisService.getAlarmCountByAlarmLevel().then((result) => {
-          if (result) {
-            _this.alarmLevelCount = [];
-            result.forEach(a => {
-              _this.alarmLevelCount.push(a.val);
-            })
+			//初始化查询条件下拉列表数据
+			inItData() {
+				var _this = this;
+				EnumsService.getMonitorType().then((result) => {
+				_this.objectList = result;
+				});
+				EnumsService.getDataType().then((result) => {
+				_this.dataTypeEnum = result;
+				});
+				TunnelService.getTunnels().then((result) => {
+				_this.tunnelList = [{id: -1, name: "全部"}];
+				result.reduce((a,b)=>{
+					_this.tunnelList.push(b);
+				}, _this.tunnelList)
+				});
+				DataAnalysisService.getAlarmCountByAlarmLevel().then((result) => {
+				if (result) {
+					_this.alarmLevelCount = [];
+					result.forEach(a => {
+					_this.alarmLevelCount.push(a.val);
+					})
 
-          }
-        });
-      },
+				}
+				});
+			},
 
-      queryAlarmData() {
-        var _this = this;
-        if(new Date(_this.queryPrams.startTime)>new Date(_this.queryPrams.endTime)){
-          _this.$Message.error('开始时间必须小于结束时间！');
-          return;
-        }
-        var prams = {};
-        _this.tableLoad = true;
-        prams.startTime = _this.queryPrams.startTime != "" ? new Date(_this.queryPrams.startTime).getTime() : 0
-        prams.endTime = _this.queryPrams.endTime != "" ? new Date(_this.queryPrams.endTime).getTime() : 0
-        prams.tunnelId = _this.queryPrams.tunnelId !=-1 ? _this.queryPrams.tunnelId : ""
-        prams.cleaned = _this.queryPrams.cleaned !=-1 ? _this.queryPrams.cleaned : ""
-        prams.alarmLevel = _this.queryPrams.alarmLevel !=-1 ? _this.queryPrams.alarmLevel : ""
-        prams.pageNum = _this.queryPrams.pageNum
-        prams.pageSize = _this.queryPrams.pageSize
-        DataAnalysisService.getAlarmData(prams).then((result) => {
-          if (result) {
-            _this.tableData = [];
-            _this.queryPrams.total = result.total;
-            result.list.forEach(a => {
-              let temp = {};
-              temp.id = a.id;
-              temp.tuunelName = a.tunnel.name;
-              temp.alarmLevel = a.alarmLevelName;
-              temp.objectName = a.objectName;
-              temp.description = a.description;
-              temp.alarmCount = 1;
-              temp.isClear = a.cleaned ? "已清除" : "未清除";
-              temp.alarmTime = new Date(a.alarmDate).format("yyyy-MM-dd hh:mm:ss");
-              temp.clearTime = a.cleanedDate != null ? new Date(a.cleanedDate).format("yyyy-MM-dd hh:mm:ss") : "";
-              _this.tableData.push(temp);
-            })
-          }
-        }).then(() => {
-          _this.tableLoad = false;
-        })
-      },
-      //勾选数据行
-      selectionClick(arr) {
-        var _this = this;
-        _this.selectSelection = arr;
-        if (arr.length > 0) {
-          _this.alarmsClear.modalPrams.ids = [];
-          arr.forEach(a => {
-            _this.alarmsClear.modalPrams.ids.push(a.id);
-          })
-        }
-      },
-      //更改告警时间类型
-      changeAlarmType(index) {
-        var _this = this;
-        var date = new Date();
-        if (index == 1) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24);
-          _this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
-        }
-        else if (index == 2) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-          _this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
-        }
-        else if (index == 3) {
-          date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-          _this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-          _this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-          _this.isReady = true;
-        }
-        else {
-          _this.isReady = false;
-          _this.queryPrams.startTime = "";
-          _this.queryPrams.endTime = "";
-        }
-      },
-      //切换页面
-      changePage(index) {
-        let _this = this;
-        _this.queryPrams.pageNum = index;
-        _this.queryAlarmData();
-      },
-      //切换页码数
-      handlePageSize(value) {
-        this.queryPrams.pageSize = value;
-        this.queryAlarmData();
-      },
+			queryAlarmData() {
+				var _this = this;
+				if(new Date(_this.queryPrams.startTime)>new Date(_this.queryPrams.endTime)){
+				_this.$Message.error('开始时间必须小于结束时间！');
+				return;
+				}
+				var prams = {};
+				_this.tableLoad = true;
+				prams.startTime = _this.queryPrams.startTime != "" ? new Date(_this.queryPrams.startTime).getTime() : 0
+				prams.endTime = _this.queryPrams.endTime != "" ? new Date(_this.queryPrams.endTime).getTime() : 0
+				prams.tunnelId = _this.queryPrams.tunnelId !=-1 ? _this.queryPrams.tunnelId : ""
+				prams.cleaned = _this.queryPrams.cleaned !=-1 ? _this.queryPrams.cleaned : ""
+				prams.alarmLevel = _this.queryPrams.alarmLevel !=-1 ? _this.queryPrams.alarmLevel : ""
+				prams.pageNum = _this.queryPrams.pageNum
+				prams.pageSize = _this.queryPrams.pageSize
+				DataAnalysisService.getAlarmData(prams).then((result) => {
+				if (result) {
+					_this.tableData = [];
+					_this.queryPrams.total = result.total;
+					result.list.forEach(a => {
+					let temp = {};
+					temp.id = a.id;
+					temp.tuunelName = a.tunnel.name;
+					temp.alarmLevel = a.alarmLevelName;
+					temp.objectName = a.objectName;
+					temp.description = a.description;
+					temp.alarmCount = 1;
+					temp.isClear = a.cleaned ? "已清除" : "未清除";
+					temp.alarmTime = new Date(a.alarmDate).format("yyyy-MM-dd hh:mm:ss");
+					temp.clearTime = a.cleanedDate != null ? new Date(a.cleanedDate).format("yyyy-MM-dd hh:mm:ss") : "";
+					_this.tableData.push(temp);
+					})
+				}
+				}).then(() => {
+				_this.tableLoad = false;
+				})
+			},
+			//勾选数据行
+			selectionClick(arr) {
+				var _this = this;
+				_this.selectSelection = arr;
+				if (arr.length > 0) {
+				_this.alarmsClear.modalPrams.ids = [];
+				arr.forEach(a => {
+					_this.alarmsClear.modalPrams.ids.push(a.id);
+				})
+				}
+			},
+			//更改告警时间类型
+			changeAlarmType(index) {
+				var _this = this;
+				var date = new Date();
+				if (index == 1) {
+				date.setTime(date.getTime() - 3600 * 1000 * 24);
+				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+				_this.isReady = true;
+				}
+				else if (index == 2) {
+				date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+				_this.isReady = true;
+				}
+				else if (index == 3) {
+				date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+				_this.isReady = true;
+				}
+				else {
+				_this.isReady = false;
+				_this.queryPrams.startTime = "";
+				_this.queryPrams.endTime = "";
+				}
+			},
+			//切换页面
+			changePage(index) {
+				let _this = this;
+				_this.queryPrams.pageNum = index;
+				_this.queryAlarmData();
+			},
+			//切换页码数
+			handlePageSize(value) {
+				this.queryPrams.pageSize = value;
+				this.queryAlarmData();
+			},
 
-      //清除勾选告警
-      clearAlarms(index) {
-        var _this = this;
-        if (typeof (index) === "number") {
-          _this.alarmsClear.modalPrams.ids = [_this.tableData[index].id];
-        }
-        _this.alarmsClear.modalPrams.state = !_this.alarmsClear.modalPrams.state;
-      },
-    },
-    components: {
-      ShowMonitorObjectSelect,
-      ClearAlarm
-    },
-    watch: {
-      "dataObjectSelect.selectData.idList": function () {
-        this.queryPrams.objectId = this.dataObjectSelect.selectData.idList;
-      },
-      "alarmsClear.modalPrams.state": function () {
-        if (!this.alarmsClear.modalPrams.state && this.alarmsClear.modalPrams.ids.length > 0) {
-          this.queryAlarmData();
-        }
+			//清除勾选告警
+			clearAlarms(index) {
+				var _this = this;
+				if (typeof (index) === "number") {
+				_this.alarmsClear.modalPrams.ids = [_this.tableData[index].id];
+				}
+				_this.alarmsClear.modalPrams.state = !_this.alarmsClear.modalPrams.state;
+			},
+		},
+		components: {
+			ShowMonitorObjectSelect,
+			ClearAlarm
+		},
+		watch: {
+			"dataObjectSelect.selectData.idList": function () {
+				this.queryPrams.objectId = this.dataObjectSelect.selectData.idList;
+			},
+			"alarmsClear.modalPrams.state": function () {
+				if (!this.alarmsClear.modalPrams.state && this.alarmsClear.modalPrams.ids.length > 0) {
+				this.queryAlarmData();
+				}
 
-      }
-    },
-    mounted() {
-      this.tableHeight = window.innerHeight * 0.655;
-      this.inItData();
-      this.changeAlarmType(this.queryPrams.alarmTimeType);
-      this.queryAlarmData();
-    },
-  }
+			}
+		},
+		mounted() {
+			this.tableHeight = window.innerHeight * 0.64;
+			this.inItData();
+			this.changeAlarmType(this.queryPrams.alarmTimeType);
+			this.queryAlarmData();
+		}
+	}
 </script>
 
 <style scoped>
-  .planDec {
-    padding-right: 5px;
-    font-size: 1.66vmin;
-    float: left;
-  }
-  .top {
-    margin: 10px;
-    height: 12vmin;
-    line-height: 5vmin;
-    background: #fff;
-    padding-left: 10px;
-  }
-  .queryHis {
-    padding-right: 5px;
-    background-color: #e5eae99c;
-    line-height: 50px;
-    font-size: 16px;
-  }
+	.queryHis {
+		padding-right: 5px;
+		background-color: #e5eae99c;
+		line-height: 50px;
+		font-size: 16px;
+	}
 
-  .queryEquipment {
-    position: relative;
-    min-height: 100%;
-    padding-bottom: 50px;
-  }
+	.queryEquipment {
+		position: relative;
+		min-height: 100%;
+		padding-bottom: 50px;
+	}
 
-  .nextPage {
-    float: right;
-    position: relative;
-    top: 8px;
-    right: 8px;
-  }
+	.nextPage {
+		float: right;
+		position: relative;
+		top: 8px;
+		right: 8px;
+	}
 
-  .slide-fade-enter-active {
-    transition: all .5s ease;
-  }
+	.slide-fade-enter-active {
+		transition: all .5s ease;
+	}
 
-  .slide-fade-leave-active {
-    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
+	.slide-fade-leave-active {
+		transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+	}
 
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(10px);
-    opacity: 0;
-  }
+	.slide-fade-enter, .slide-fade-leave-to {
+		transform: translateX(10px);
+		opacity: 0;
+	}
 
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-selected-value {
-    font-size: 1.4vmin;
-  }
+	.ivu-select-single >>> .ivu-select-selection >>> .ivu-select-selected-value {
+		font-size: 1.4vmin;
+	}
 
-  .ivu-select-single > > > .ivu-select-selection > > > .ivu-select-placeholder {
-    font-size: 1.4vmin;
-  }
-  .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
-  .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
-  .ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
-  {
-    height: 4vmin;
-    line-height: 4vmin;
-    font-size: 1.4vmin;
-  }
-  .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-    font-size: 1.2vmin;
-  }
-  .queryAlarm {
-    position: relative;
-    min-height: 96%;
-    padding-bottom: 40px;
-  }
+	.ivu-select-single >>> .ivu-select-selection >>> .ivu-select-placeholder {
+		font-size: 1.4vmin;
+	}
+	.ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+	.ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
+	.ivu-select-multiple.ivu-select-selection >>> .ivu-select-placeholder
+	{
+		height: 4vmin;
+		line-height: 4vmin;
+		font-size: 1.4vmin;
+	}
+	.ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
+		height: 3.2vmin;
+		line-height: 3.2vmin;
+		font-size: 1.2vmin;
+	}
+	.queryAlarm {
+		position: relative;
+		min-height: 96%;
+		padding-bottom: 40px;
+	}
 
-  .alarmCircle {
-    width: 4vmin;
-    font-size:1.66vmin;
-    line-height:4vmin;
-    color: #a79d9d;
-    border-radius: 100%;
-    display: flex;
-    -moz-box-shadow: 2px 3px 12px #5DA0AD;
-    -webkit-box-shadow: 2px 3px 12px #5DA0AD;
-    box-shadow: 2px 3px 12px #5DA0AD;
-    justify-content: center;
-    align-items: Center;
-    margin-top: 10px;
-    float: left;
-  }
+	.alarmCircle {
+		float: left;
+	}
 
-  .alarmCircleText {
-    margin-left: 0.5vh;
-    margin-top: 0.2vh;
-    font-size:2vmin;
-    line-height:6vmin;
-    color: #a79d9d;
-  }
+	.alarmCircleText {
+		margin-left: 1.5vh;
+		color: #fff;
+		margin-right: 2vmin;
+	}
+  	.ivu-table-wrapper{
+        border: none;
+    }
+    .ivu-table-wrapper>>>.ivu-table{
+        color: #ffffff !important;
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+        background-color: #fffdfd00 !important;
+        border-bottom: none;
+    }
+    .nextPage .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.nextPage.ivu-page>>>.ivu-page-total{
+        color: #fff;
+    }
+    .boxBG{
+        background: url("../../../../assets/UM/infoBox.png") no-repeat;
+        background-size: 100% 100%;
+        padding: 2vmin 4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+        border-right: none;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection {
+        background-color: #fffdfd00 !important;
+    }
+    .queryCondition .ivu-select{
+        color: #fff;
+	}
+	.iconSize{
+		width: 3vh;
+		height: 3vh;
+	}
+	.tipBox{
+		display: inline-block;
+	}
+	.queryCondition .ivu-btn-info{
+		background: linear-gradient(to left, #f61a1a, #f68380)
+	}
 </style>
 

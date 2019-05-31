@@ -58,4 +58,11 @@ public enum ActionEnum {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "ActionEnum{" +
+                "name='" + name + '\'' +
+                ", value=" + value +
+                "} " + super.toString();
+    }
 }

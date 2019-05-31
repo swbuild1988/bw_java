@@ -171,9 +171,9 @@ public class EmPlanController extends BaseController<EmPlan> {
             secId = sectionId.intValue();
         }
 
-        // 启动预案
-        startPlanBySectionId(secId, processValue.intValue());
-        return CommonUtil.success();
+        // 启动预案,获得实例ID
+        String processInstanceId = startPlanBySectionId(secId, processValue.intValue());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, processInstanceId);
     }
 
     /**
@@ -182,16 +182,17 @@ public class EmPlanController extends BaseController<EmPlan> {
      * @param sectionId
      * @param processValue
      */
-    private void startPlanBySectionId(int sectionId, int processValue) {
+    private String startPlanBySectionId(int sectionId, int processValue) {
         // 查询仓以及仓关联的进气出气仓等
         List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
-        emPlanService.start(sectionList, processValue);
+        String processInstanceId = emPlanService.start(sectionList, processValue);
+        return processInstanceId;
 
         // 最后再查一次
-        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
-        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
-        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
-        emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList);
+//        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
+//        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
+//        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
+//        emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList)
     }
 
 

@@ -82,10 +82,10 @@ public class ActivitiServiceImpl implements ActivitiService {
                 .addClasspathResource(pngPath)
                 .name(processName)
                 .deploy();
-        
+
         LogUtil.info("流程部署成功!\n"
-        		+ "发布的编号：" + deployment.getId() + "\n"
-        		+ "发布的名称：" + deployment.getName());
+                + "发布的编号：" + deployment.getId() + "\n"
+                + "发布的名称：" + deployment.getName());
 
         // 流程定义
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
@@ -126,14 +126,14 @@ public class ActivitiServiceImpl implements ActivitiService {
     public String startProcessInstance(ProcessTypeEnum processTypeEnum, int... var) {
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processTypeEnum.getProcessKey()).singleResult();
-        
+
         String processDefinitionId = "";
         if (processDefinition == null) {
         	/*LogUtil.info(" start deploy : =============");
         	LogUtil.info(" get bpmnPath : " + (String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
         	LogUtil.info(" get pngPath : " + (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()));
         	LogUtil.info(" get name : " + processTypeEnum.getName());*/
-        	
+
             processDefinitionId = deploy((String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
                     (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()),
                     processTypeEnum.getName());
@@ -153,7 +153,7 @@ public class ActivitiServiceImpl implements ActivitiService {
     @Override
     public void getImageByProcessInstance(String processInstanceId, HttpServletResponse response) {
         //获取历史流程实例
-        HistoricProcessInstance processInstance =  historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+        HistoricProcessInstance processInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processInstance.getProcessDefinitionId());
 
         Context.setProcessEngineConfiguration(((ProcessEngineImpl) processEngine).getProcessEngineConfiguration());
@@ -177,12 +177,12 @@ public class ActivitiServiceImpl implements ActivitiService {
         LogUtil.info(highLightedFlows);
 
         // jdk7以后，使用try-with-resources关闭io
-        try(InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitis, highLightedFlows, "宋体", "宋体", null, null, 1.0);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            byte[] buffer=new byte[1024];
-            int len=0;
-            while((len=is.read(buffer))!=-1){
-                bos.write(buffer,0,len);
+        try (InputStream is = processDiagramGenerator.generateDiagram(bpmnModel, "png", highLightedActivitis, highLightedFlows, "宋体", "宋体", null, null, 1.0);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
             }
             bos.flush();
             // 解决图片乱码问题
@@ -205,8 +205,9 @@ public class ActivitiServiceImpl implements ActivitiService {
     public int completeTaskByProcessIntance(String processIntanceId) {
         Task task = taskService.createTaskQuery().processInstanceId(processIntanceId).singleResult();
 
-        if(task == null){
-        	throw new RuntimeException("No task with processInstanceId ["+ processIntanceId +"]!");}
+        if (task == null) {
+            throw new RuntimeException("No task with processInstanceId [" + processIntanceId + "]!");
+        }
 
         LogUtil.info("TASK[" + task.getId() + "]已完成，进行下一个任务");
         taskService.complete(task.getId());
@@ -233,6 +234,20 @@ public class ActivitiServiceImpl implements ActivitiService {
         LogUtil.info("next task, current task is：" + task.getId());
         LogUtil.info("参数" + map);
         return 1;
+    }
+
+    /**
+     * 判断流程是否已经结束
+     *
+     * @param processInstanceId
+     * @return
+     */
+    @Override
+    public boolean isProccessInstanceFinished(String processInstanceId) {
+        ProcessInstance p = processEngine.getRuntimeService().createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
+
+        return p == null;
     }
 
     /**
@@ -263,7 +278,7 @@ public class ActivitiServiceImpl implements ActivitiService {
         List<Task> tasks = query.list();
         return tasks;
     }
-    
+
     /**
      * 获取用户的历史任务
      *
@@ -276,7 +291,7 @@ public class ActivitiServiceImpl implements ActivitiService {
         List<HistoricTaskInstance> historyTasks = history.list();
         return historyTasks;
     }
-    
+
     @Override
     public List<HistoricTaskInstance> getAllActiveTasks() {
         HistoricTaskInstanceQuery history = historyService.createHistoricTaskInstanceQuery();
@@ -314,7 +329,7 @@ public class ActivitiServiceImpl implements ActivitiService {
         ProcessTypeEnum type = ProcessTypeEnum.getEnum(processDefinition.getKey());
         return type;
     }
-    
+
     /**
      * 根据历史任务实例获得流程类型
      *
@@ -323,7 +338,7 @@ public class ActivitiServiceImpl implements ActivitiService {
      */
     public ProcessTypeEnum getHistoryProcessType(HistoricTaskInstance task) {
         ProcessDefinition processDefinition = repositoryService
-        		.getProcessDefinition(task.getProcessDefinitionId());
+                .getProcessDefinition(task.getProcessDefinitionId());
 
         ProcessTypeEnum type = ProcessTypeEnum.getEnum(processDefinition.getKey());
         return type;
@@ -339,11 +354,11 @@ public class ActivitiServiceImpl implements ActivitiService {
     public ProcessTypeEnum getProcessTypeByProcessInstance(String processInstanceId) {
         ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
         HistoricProcessInstance hisProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-        String definitionId = 
-        		null == processInstance
-        		? hisProcessInstance.getProcessDefinitionId()
-        				: processInstance.getProcessDefinitionId();
-        
+        String definitionId =
+                null == processInstance
+                        ? hisProcessInstance.getProcessDefinitionId()
+                        : processInstance.getProcessDefinitionId();
+
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionId(definitionId).singleResult();
         ProcessTypeEnum type = ProcessTypeEnum.getEnum(processDefinition.getKey());
@@ -466,17 +481,18 @@ public class ActivitiServiceImpl implements ActivitiService {
 
         return getProcessBaseByProcessInstance(task.getProcessInstanceId());
     }
-    
-    
+
+
     /**
-	 * 根据历史任务实例，获取最基本的流程信息（我们表中存储的）
-	 * @param taskId
-	 * @return
-	 */
+     * 根据历史任务实例，获取最基本的流程信息（我们表中存储的）
+     *
+     * @param taskId
+     * @return
+     */
     @Override
-    public ProcessBase getProcessBaseByHistoryTask(ProcessTypeEnum processTypeEnum,HistoricTaskInstance task) {
-		return processBaseService.getProcessBaseByTypeAndProcessInstance(processTypeEnum, task.getProcessInstanceId());
-	}
+    public ProcessBase getProcessBaseByHistoryTask(ProcessTypeEnum processTypeEnum, HistoricTaskInstance task) {
+        return processBaseService.getProcessBaseByTypeAndProcessInstance(processTypeEnum, task.getProcessInstanceId());
+    }
 
     /**
      * 根据流程实例获取基础的流程信息
@@ -565,14 +581,13 @@ public class ActivitiServiceImpl implements ActivitiService {
         taskService.complete(task.getId());
         LogUtil.info("申请完毕，待审核");
     }*/
-
     @Override
     public Integer getStaffId() {
         //获取登录用户
         User user = ContextUtil.getLoginUser();
-        if(StringTools.isNullOrEmpty(user))
-        	return null;
-        
+        if (StringTools.isNullOrEmpty(user))
+            return null;
+
         return user.getId();
     }
 
@@ -581,7 +596,6 @@ public class ActivitiServiceImpl implements ActivitiService {
         List<Task> list = taskService.createTaskQuery().taskAssignee(String.valueOf(staffId)).list();    // 正在执行的任务列表
         return list;
     }
-
 
 
     /**
@@ -636,97 +650,98 @@ public class ActivitiServiceImpl implements ActivitiService {
         return highFlows;
     }
 
-	@Override
-	public ProcessDefinition getLastestProcessDefinition(String bpmnPath) {
-	
-		//获取最新发布的流程
-		List<ProcessDefinition> list = processEngine.getRepositoryService()
-				.createProcessDefinitionQuery()
-				.processDefinitionResourceName(bpmnPath)
-				.orderByProcessDefinitionVersion()
-				.desc()
-				.list();
-		if(list == null || list.size() <= 0) {
-			throw new RuntimeException("流程尚未发布！");
-		}
-		LogUtil.info(" get lastest version : " + list.get(0).getVersion() );
-		
-		return list.get(0);
-	}
+    @Override
+    public ProcessDefinition getLastestProcessDefinition(String bpmnPath) {
 
-	@Override
-	public ProcessInstance startProcessInstanceById(String pid) {
-		return runtimeService.startProcessInstanceById(pid);
-		
-	}
-	@Override
-	public ProcessInstance startProcessInstanceById(String pid,Map<String,Object> variables) {
-		return runtimeService.startProcessInstanceById(pid, variables);
-	}
+        //获取最新发布的流程
+        List<ProcessDefinition> list = processEngine.getRepositoryService()
+                .createProcessDefinitionQuery()
+                .processDefinitionResourceName(bpmnPath)
+                .orderByProcessDefinitionVersion()
+                .desc()
+                .list();
+        if (list == null || list.size() <= 0) {
+            throw new RuntimeException("流程尚未发布！");
+        }
+        LogUtil.info(" get lastest version : " + list.get(0).getVersion());
 
-	@Override
-	public List<HistoricTaskInstance> getHistoricTaskInstanceListByInstanceId(String iid) {
-		//查询流程执行过程
-		List<HistoricTaskInstance> list = processEngine.getHistoryService()
-				.createHistoricTaskInstanceQuery()
-				.processInstanceId(iid)
-				.orderByTaskCreateTime()
-				.asc()
-				.list();
-		return list;
-	}
+        return list.get(0);
+    }
 
-	@Override
-	public ProcessEngine getProcessEngine() {
-		return processEngine;
-		
-	}
+    @Override
+    public ProcessInstance startProcessInstanceById(String pid) {
+        return runtimeService.startProcessInstanceById(pid);
 
-	@Override
-	public List<HistoricActivityInstance> getHisActInstListByProcessInstanceId(String iid) {
-		List<HistoricActivityInstance> list = historyService
-				.createHistoricActivityInstanceQuery()
-				.processInstanceId(iid)
-				.orderByHistoricActivityInstanceStartTime()
-				.asc()
-				.list();
-		LogUtil.info(" get HistoricActivityInstance list : " + list);
-		return list;
-	}
+    }
 
-	@Override
-	public NativeHistoricProcessInstanceQuery createHisProcInstDefIdNameLikeQuery(PlanPageVo vo) {
-		
-		StringBuffer wheresql = new StringBuffer() ;
-		
-		if(vo.getProcessKey() != null && vo.getProcessKey().trim().length() > 0 ) {
-			wheresql.append(" and t.proc_def_id_ like #{procDefId} ");
-		}
-		if(vo.getProcessInstanceId() != null && vo.getProcessInstanceId().trim().length() > 0) {
-			wheresql.append(" and t.proc_inst_id_ = #{processInstanceId}");
-		}
-		if(vo.getStartTime() != null ) {
-			wheresql.append(" and t.start_time_ >= cast( #{startTime} as Date) ");
-		}
-		if(vo.getEndTime() != null ) {
-			wheresql.append(" and t.start_time_ <= cast( #{endTime} as Date) ");
-		}
-		
-		NativeHistoricProcessInstanceQuery query = historyService
-				.createNativeHistoricProcessInstanceQuery()
-				.sql("select * from  ACT_HI_PROCINST t where 1 = 1  " + wheresql.toString() + " order by t.start_time_ desc")
-				.parameter("procDefId", "%" + vo.getProcessKey() + "%")
-				.parameter("processInstanceId", vo.getProcessInstanceId())
-				.parameter("startTime", vo.getStartTime())
-				.parameter("endTime", vo.getEndTime());
-		
-		return query;
-	}
+    @Override
+    public ProcessInstance startProcessInstanceById(String pid, Map<String, Object> variables) {
+        return runtimeService.startProcessInstanceById(pid, variables);
+    }
 
-	@Override
-	public ProcessDefinitionQuery createProcessDefinitionQuery() {
-		return repositoryService.createProcessDefinitionQuery();
-	}
+    @Override
+    public List<HistoricTaskInstance> getHistoricTaskInstanceListByInstanceId(String iid) {
+        //查询流程执行过程
+        List<HistoricTaskInstance> list = processEngine.getHistoryService()
+                .createHistoricTaskInstanceQuery()
+                .processInstanceId(iid)
+                .orderByTaskCreateTime()
+                .asc()
+                .list();
+        return list;
+    }
+
+    @Override
+    public ProcessEngine getProcessEngine() {
+        return processEngine;
+
+    }
+
+    @Override
+    public List<HistoricActivityInstance> getHisActInstListByProcessInstanceId(String iid) {
+        List<HistoricActivityInstance> list = historyService
+                .createHistoricActivityInstanceQuery()
+                .processInstanceId(iid)
+                .orderByHistoricActivityInstanceStartTime()
+                .asc()
+                .list();
+        LogUtil.info(" get HistoricActivityInstance list : " + list);
+        return list;
+    }
+
+    @Override
+    public NativeHistoricProcessInstanceQuery createHisProcInstDefIdNameLikeQuery(PlanPageVo vo) {
+
+        StringBuffer wheresql = new StringBuffer();
+
+        if (vo.getProcessKey() != null && vo.getProcessKey().trim().length() > 0) {
+            wheresql.append(" and t.proc_def_id_ like #{procDefId} ");
+        }
+        if (vo.getProcessInstanceId() != null && vo.getProcessInstanceId().trim().length() > 0) {
+            wheresql.append(" and t.proc_inst_id_ = #{processInstanceId}");
+        }
+        if (vo.getStartTime() != null) {
+            wheresql.append(" and t.start_time_ >= cast( #{startTime} as Date) ");
+        }
+        if (vo.getEndTime() != null) {
+            wheresql.append(" and t.start_time_ <= cast( #{endTime} as Date) ");
+        }
+
+        NativeHistoricProcessInstanceQuery query = historyService
+                .createNativeHistoricProcessInstanceQuery()
+                .sql("select * from  ACT_HI_PROCINST t where 1 = 1  " + wheresql.toString() + " order by t.start_time_ desc")
+                .parameter("procDefId", "%" + vo.getProcessKey() + "%")
+                .parameter("processInstanceId", vo.getProcessInstanceId())
+                .parameter("startTime", vo.getStartTime())
+                .parameter("endTime", vo.getEndTime());
+
+        return query;
+    }
+
+    @Override
+    public ProcessDefinitionQuery createProcessDefinitionQuery() {
+        return repositoryService.createProcessDefinitionQuery();
+    }
 
 
 }

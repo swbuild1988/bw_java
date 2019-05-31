@@ -58,7 +58,7 @@
             </Row>
             </Col>
         </Row>
-        <Row>
+        <Row style="margin-top: 1vh;">
             <Col span="7">
                 <div style="width: 24vw; height:22vh;" class="equipmentChartBox boxBG">
                     <simple-bar v-bind="equipmentChart"></simple-bar>
@@ -150,7 +150,10 @@
                     parameters: {
                         option: {
                             title: {
-                                text: "各管廊巡检计划数"
+                                text: "各管廊巡检计划数",
+                                textStyle: {
+                                    color: "#fff"
+                                }
                             }
                         }
                     },
@@ -359,26 +362,28 @@
                             temp.name = item. name
                             temp.positions = []
                             let arr = item.others
-                            for(let i = 0; i<arr.length; i++ ){
-                                let startPointPosition = {}
-                                let startPointArr = arr[0].startPoint.split(',')
-                                startPointPosition.Lon = startPointArr[0]
-                                startPointPosition.Lat = startPointArr[1]
-                                temp.positions.push(startPointPosition)
-                                let endPointPosition = {}
-                                if(arr.length==1){
-                                    let endPointArr = arr[0].endPoint.split(',')
-                                    endPointPosition.Lon = endPointArr[0]
-                                    endPointPosition.Lat = endPointArr[1]
-                                    temp.positions.push(endPointPosition)
-                                }else{
-                                    let endPointArr = arr[item.others.length-1].endPoint.split(',')
-                                    endPointPosition.Lon = endPointArr[0]
-                                    endPointPosition.Lat = endPointArr[1]
-                                    temp.positions.push(endPointPosition)
+                            if(arr.length>0){
+                                for(let i = 0; i<arr.length; i++ ){
+                                    let startPointPosition = {}
+                                    let startPointArr = arr[0].startPoint.split(',')
+                                    startPointPosition.Lon = startPointArr[0]
+                                    startPointPosition.Lat = startPointArr[1]
+                                    temp.positions.push(startPointPosition)
+                                    let endPointPosition = {}
+                                    if(arr.length==1){
+                                        let endPointArr = arr[0].endPoint.split(',')
+                                        endPointPosition.Lon = endPointArr[0]
+                                        endPointPosition.Lat = endPointArr[1]
+                                        temp.positions.push(endPointPosition)
+                                    }else{
+                                        let endPointArr = arr[item.others.length-1].endPoint.split(',')
+                                        endPointPosition.Lon = endPointArr[0]
+                                        endPointPosition.Lat = endPointArr[1]
+                                        temp.positions.push(endPointPosition)
+                                    }
                                 }
+                                this.getCurRoute(temp)
                             }
-                            this.getCurRoute(temp)
                         })
                     },
                     error => {
@@ -512,11 +517,15 @@
     @media (min-width: 2200px) {
 
         .goDetail {
-            font-size: 1.4vmin;
+            font-size: 1.6vmin;
         }
 
         .defaultListTime {
-            font-size: 1.2vmin;
+            font-size: 1.4vmin;
+        }
+
+        .card .title{
+            font-size: 1.8vmin;
         }
     }
 </style>

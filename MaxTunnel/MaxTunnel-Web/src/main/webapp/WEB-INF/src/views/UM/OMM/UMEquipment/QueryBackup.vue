@@ -44,40 +44,42 @@
                 批量入库</Button>
             </div>
             <div class="nullData" v-show="isNullData">暂无数据</div>
-            <Row :gutter="8">
+            <Row :gutter="16">
                 <Col span="6" v-for="item in equipments" :key="item.id" style="margin-top: 6px;padding: 5px;">
-                    <div :style="backImage" class="backGoundBox">
-                        <div class="topBox">
-                            <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
-                            <p class="equipentTitle">{{ item.name }}</p>
-                            <div class="imgBox"><img :src="imgUrl"></div>
+                    <div class="boxBG">
+                        <div class="backGoundBox">
+                            <div class="topBox">
+                                <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
+                                <p class="equipentTitle">{{ item.name }}</p>
+                                <div class="imgBox"><img :src="imgUrl"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detailsBox">
-                        <div>
-                            <div class="backUpInfo" style="width: 44%">设备类型：{{ item.typeName }}</div>
-                            <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
+                        <div class="detailsBox">
+                            <div>
+                                <div class="backUpInfo" style="width: 44%">设备类型：{{ item.typeName }}</div>
+                                <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
+                            </div>
+                            <div>
+                                <div class="backUpInfo" style="width: 44%">设备型号：{{ item.modelName }}</div>
+                                <div class="backUpInfo">入库时间：{{ item.inTime }}</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="backUpInfo" style="width: 44%">设备型号：{{ item.modelName }}</div>
-                            <div class="backUpInfo">入库时间：{{ item.inTime }}</div>
+                        <div class="operation">
+                            <Row>
+                                <Col span="12" class="operationSee">
+                                    <Icon type="reply" size=20></Icon>
+                                    <div class="borrowBox">
+                                        <Button class="borrowBtn" @click="show(item.id, item.inTime)" :disabled="item.status==false">取用出库</Button>
+                                    </div>
+                                </Col>
+                                <Col span="12" class="operationDel">
+                                    <Icon type="trash-a" size=20></Icon>
+                                    <div class="borrowBox">
+                                        <Button class="borrowBtn" @click="del(item.id)" :disabled="item.status==false">删除</Button>
+                                    </div>
+                                </Col>
+                            </Row>
                         </div>
-                    </div>
-                    <div class="operation">
-                        <Row>
-                            <Col span="12" class="operationSee">
-                                <Icon type="reply" size=20></Icon>
-                                <div class="borrowBox">
-                                    <Button class="borrowBtn" @click="show(item.id, item.inTime)" :disabled="item.status==false">取用出库</Button>
-                                </div>
-                            </Col>
-                            <Col span="12" class="operationDel">
-                                <Icon type="trash-a" size=20></Icon>
-                                <div class="borrowBox">
-                                    <Button class="borrowBtn" @click="del(item.id)" :disabled="item.status==false">删除</Button>
-                                </div>
-                            </Col>
-                        </Row>
                     </div>
                 </col>
             </Row>
@@ -173,9 +175,6 @@ export default {
                 startTime: null,
                 endTime: null,
                 isInStorage: null,
-            },
-            backImage: {
-                backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
             },
             status:[
                 { key: 0, val: '出库' },
@@ -588,7 +587,10 @@ export default {
 };
 </script>
 <style scoped>
-
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
+}
 .backGoundBox {
     position: relative;
     height: 10vh;
@@ -597,9 +599,14 @@ export default {
 
 .equipentTitle{
     color: #fff;
-    font-size: 20px;
+    font-size: 2.4vmin;
     text-align: center;
     line-height: 10vh;
+    margin-left: 6vh;
+}
+
+.detailsBox{
+    color: #fff;
 }
 
 .imgBox img {
@@ -607,34 +614,19 @@ export default {
     height: 5vh;
     border-radius: 5vh;
     position: absolute;
-    z-index: 5;
-    left: 50%;
-    top: 70%;
-    margin-left: -2.5vh
-}
-
-.detailsBox {
-    border: 1px solid #ebe8e8;
-    padding-top: 20px;
-    background: #fff;
+    left: 35%;
+    top: 50%;
+    margin-top: -2.5vh;
 }
 
 .operationSee,
 .operationEdit,
 .operationDel {
     text-align: center;
-    background: #fff;
     padding: 5px 0;
-    border-bottom: 1px solid #ebe8e8;
+    color: #fff;
 }
 
-.operationDel {
-    border-right: 1px solid #ebe8e8;
-}
-
-.operationSee {
-    border-left: 1px solid #ebe8e8;
-}
 
 .operationSee p,
 .operationEdit p,
@@ -645,7 +637,7 @@ export default {
 .backUpInfo{
     display: inline-block;
     line-height: 36px;
-    padding-left: 5px;
+    padding-left: 2vmin;
 }
 .purpose{
     display: inline-block;
@@ -669,7 +661,7 @@ export default {
     font-size: 12px !important;
     border: none;
     background: none;
-    color: #495060;
+    color: #fff;
 }
 .trueStatus{
     color: green
