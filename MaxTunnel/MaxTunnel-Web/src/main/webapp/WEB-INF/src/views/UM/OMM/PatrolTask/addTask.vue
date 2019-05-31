@@ -1,6 +1,6 @@
 <template>
-    <div :style="backStyle">
-        <Form :model="task" :label-width="140">
+    <div class="formBG">
+        <Form  :model="task" :label-width="140">
             <h2 class="formTitle" v-show="this.pageType==4">提交任务执行结果</h2>
             <h2 class="formTitle" v-show="this.pageType==1">巡检任务详情</h2>
             <FormItem label="所属计划：">
@@ -295,8 +295,10 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 780px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
+}
+.formTitle{
+    color: #fff;
 }
 .adddefect,.addRecords{
     width: 100%;
@@ -318,6 +320,26 @@ export default {
 .addRecords{
     margin: 5px;
 }
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+		color: #00fff6;
+		content: '★';
+		display: inline-block;
+		margin-right: 4px;
+		line-height: 1;
+		font-family: SimSun;
+		font-size: 12px;
+	}
+
 @media (min-width: 2200px){
     .formTitle{
         font-size: 2.8vmin;

@@ -9,6 +9,7 @@
                             v-model="contractInfo.name"
                             placeholder="请输入合同名称"
                             :readonly="read"
+                            type="text"
                             class="inputWidth"
                         />
                     </FormItem>
@@ -57,6 +58,7 @@
                             v-model="contractInfo.cableName"
                             placeholder="请输入管线名称"
                             :readonly="read"
+                            type="text"
                             class="inputWidth"
                         />
                     </FormItem>
@@ -65,6 +67,7 @@
                             v-model="contractInfo.cableLength"
                             placeholder="请输入管线长度"
                             :readonly="read"
+                            type="text"
                             class="inputWidth"
                         />
                     </FormItem>
@@ -82,7 +85,7 @@
                         </Select>
                     </FormItem>
                     <FormItem label="录入人：">
-                        <Input v-model="editor.name" class="inputWidth" readonly/>
+                        <Input v-model="editor.name" class="inputWidth" type="text" readonly/>
                     </FormItem>
                     <FormItem label="企业：" :prop="read ? null : 'companyId'">
                         <Poptip placement="top">
@@ -90,6 +93,7 @@
                                 v-model="customerName"
                                 placeholder="请选择企业"
                                 class="inputWidth"
+                                type="text"
                                 readonly
                             />
                             <div class="pop" slot="content" v-show="pageType != pageTypes.Read">
@@ -185,14 +189,14 @@
                                 type="primary"
                                 @click="changePdfPage(0)"
                                 size="small"
-                                class="save"
+                                class="pageTurner"
                                 v-show="file.src && file.curPage > 1"
                             >上一页</Button>
                             <Button
                                 type="primary"
                                 @click="changePdfPage(1)"
                                 size="small"
-                                class="save"
+                                class="pageTurner"
                                 style="float:right;margin: 0.4vmin 6vmin"
                                 v-show="file.src && file.curPage < file.totalPage"
                             >下一页</Button>
@@ -200,7 +204,7 @@
                     </FormItem>
                 </Col>
             </Row>
-            <div style="text-align: center;margin-top:6vmin;">
+            <div style="text-align: center;margin-top:3vmin;">
                 <Button
                     type="primary"
                     @click="submitcontractInfo('contractInfo')"
@@ -226,13 +230,13 @@
             @click="prev"
             v-if="pageType!=pageTypes.Add && curIndex > 0"
             class="prev"
-        >上一页</Button>
+        >上一个</Button>
         <Button
             type="primary"
             @click="next"
             v-if="pageType!=pageTypes.Add && curIndex < contractIds.length"
             class="next"
-        >下一页</Button>
+        >下一个</Button>
     </div>
 </template>
 <script>
@@ -784,19 +788,19 @@ export default {
 }
 .pdfOverflow::-webkit-scrollbar {
     /*滚动条整体样式*/
-    width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
-    height: 1px;
+    width: 1vmin; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 0.2vmin;
 }
 .pdfOverflow::-webkit-scrollbar-thumb {
     /*滚动条里面小方块*/
-    border-radius: 10px;
+    border-radius: 1vmin;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #83a6ed;
 }
 .pdfOverflow::-webkit-scrollbar-track {
     /*滚动条里面轨道*/
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+    border-radius: 1vmin;
     background: #ededed;
 }
 .form >>> .ivu-form-item {
@@ -818,7 +822,8 @@ export default {
 .ivu-form >>> .ivu-input::-webkit-input-placeholder {
     color: #eaeef2;
 }
-.save {
+.save,
+.pageTurner {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);

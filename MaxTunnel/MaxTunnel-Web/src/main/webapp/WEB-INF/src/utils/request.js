@@ -16,6 +16,9 @@ export default async () => {
         if (process.env.NODE_ENV == 'development') {
             // 开发环境配置
             // axios.defaults.baseURL = serverconfig.ApiUrl;
+            // Vue.prototype.ServerConfig = '/dist/static';
+            // let result_config = await axios.get('/dist/static/serverconfig.json');
+            // console.log('result_config', result_config)
             axios.defaults.baseURL = "/MaxTunnel-Web";
             Vue.prototype.ServerConfig = '/static';
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
@@ -33,8 +36,9 @@ export default async () => {
             console.log('axios', axios)
             Vue.prototype.ServerConfig = '/dist/static';
             let result_config = await axios.get('/dist/static/serverconfig.json');
+            console.log('result_config', result_config)
             Vue.prototype.ApiUrl = result_config.data.ApiUrl;
-            Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
+            // Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
             Vue.prototype.SuperMapConfig = result_config.data.SuperMapConfig;
             Vue.prototype.flyFilePathes = result_config.data.flyFilePathes;
             Vue.prototype.refreshTime = result_config.data.refreshTime;

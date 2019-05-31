@@ -423,7 +423,7 @@ var VideoService = {
 	// 获取 预览和下载图片
 	getPhoto(param) {
 		return new Promise((resolve, reject) => {
-			post('snaps/tp', param, {
+			axios.post('snaps/tp', param, {
 					responseType: "arraybuffer"
 				})
 				.then(

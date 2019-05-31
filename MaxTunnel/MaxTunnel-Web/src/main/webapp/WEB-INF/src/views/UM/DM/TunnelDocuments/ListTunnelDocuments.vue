@@ -68,9 +68,7 @@
                         v-model="ids"
                     >
                     <div class="fileItem">
-                        <div
-                            style="display: table-cell;vertical-align: middle;text-align: center;color:#fff;"
-                        >
+                        <div style="display: table-cell;text-align: center;color:#fff;">
                             <div class="name">
                                 <Icon
                                     :type="file.fileTypeName == '文档' ? 'document' : (file.fileTypeName == '视频' ? 'ios-videocam' : 'image')"
@@ -322,7 +320,7 @@ export default {
     display: table;
 }
 .name {
-    /*margin-top: 56px;*/
+    margin: 2.8vmin;
     text-align: center;
     font-size: 2vmin;
     font-weight: bold;

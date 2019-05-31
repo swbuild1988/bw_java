@@ -1,7 +1,8 @@
 <template>
-  <div @click="locationEquimpent">
-    <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'#fff'}">
+  <div @click="locationEquimpent" class="detailContext">
+    <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'transparent'}">
       <p slot="title" style="font-size: 1.66vmin;height: 1.7vmin;line-height: 1.66vmin">{{Obj.objtypeName}}</p>
+      <div class="monitorType">{{Obj.ObjName}}</div>
       <!-- 数值正常时 -->
       <img src="../../../assets/UM/temp-normal.png" v-if="Obj.objtypeId==1 && normal || Obj.objtypeId==8 && normal" class="img">
       <img src="../../../assets/UM/humidity-normal.png" v-if="Obj.objtypeId==2 && normal" class="img">
@@ -30,7 +31,6 @@
           <span>{{Obj.maxValue}}</span>
         </div>
       </div>
-      <div style="font-size: 1.66vmin">{{Obj.ObjName}}</div>
     </Card>
   </div>
 </template>
@@ -101,6 +101,10 @@
 </script>
 
 <style scoped>
+  .detailContext{
+    background: url('../../../assets/UM/detailsBg.png') no-repeat;
+    background-size: 100% 100%; 
+  }
   .valueclass {
     float: left;
     z-index: 1001;
@@ -153,5 +157,25 @@
   .time{
     margin: 0.4vh 0;
     font-size: 1.6vmin;
+  }
+  .monitorType {
+      font-size: 1.66vmin;
+      position: absolute;
+      top: 4.5vmin;
+      text-align: center;
+      width: 82%;
+      color: #fff;
+  }
+  .ivu-card-bordered >>> .ivu-card-head {
+    border-bottom: none;
+  }
+  .ivu-card-bordered {
+    border:none;
+  }
+  .ivu-card-head p {
+    color: #fff;
+  }
+  .ivu-card-bordered >>> .ivu-card-body {
+    color: #fff;
   }
 </style>
