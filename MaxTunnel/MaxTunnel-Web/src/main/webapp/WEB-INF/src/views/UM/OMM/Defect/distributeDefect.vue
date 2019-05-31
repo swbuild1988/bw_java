@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form :model="defectDetails" ref="defectDetails" :label-width="100" :rules="ruleValidate" @submit.native.prevent>
             <h2 class="formTitle">指派维修工单</h2>
             <FormItem label="所属管廊：">
@@ -109,15 +109,6 @@ export default {
             objs:[],
             processInstanceId: null,
             typeKey: null,
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             isSubmit: false
         }    
     },
@@ -272,7 +263,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 680px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
 }
 .goBack{
@@ -280,13 +270,32 @@ export default {
     bottom: 2vh;
     right: 3vw;
 }
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+}
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;

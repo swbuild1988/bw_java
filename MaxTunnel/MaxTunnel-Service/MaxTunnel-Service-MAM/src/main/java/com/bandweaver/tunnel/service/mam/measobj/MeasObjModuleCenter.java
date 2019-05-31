@@ -207,12 +207,14 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         if (!measObjHashMap.containsKey(measObj.getId())) {return;}
 
         // 先更新数据库
-        Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-        if (section != null) {
-            measObj.setSectionId(section.getId());
-        } else {
-            measObj.setSectionId(-1);
-        }
+        if(measObj.getStoreId() != null && measObj != null) {
+        	Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
+            if (section != null) {
+                measObj.setSectionId(section.getId());
+            } else {
+                measObj.setSectionId(-1);
+            }
+        } else measObj.setSectionId(null);
         measObjMapper.updateByPrimaryKeySelective(measObj);
 
         // 再更新缓存

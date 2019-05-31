@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form ref="equipment" :model="equipment" :label-width="120" :rules="validateRules" @submit.native.prevent>
             <h1 class="formTitle">添加管廊设备</h1>
             <FormItem label="设备名称：" prop="name">
@@ -439,7 +439,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 700px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
@@ -521,6 +520,25 @@ export default {
 .chooseObj li:hover{
     background: #f3f3f3;
 }
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -534,7 +552,7 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;

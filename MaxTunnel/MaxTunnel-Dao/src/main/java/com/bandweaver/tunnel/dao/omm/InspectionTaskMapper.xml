@@ -265,11 +265,11 @@
 	        	and a.is_finished = #{isFinished}
 	        </if>
 	        <if test="startTime != null">
-                and a.create_time <![CDATA[>=]]>
+                and a.task_time <![CDATA[>=]]>
                 #{startTime}
             </if>
             <if test="endTime != null">
-                and a.create_time <![CDATA[<=]]>
+                and a.task_time <![CDATA[<=]]>
                 #{endTime}
             </if>
     	</where>

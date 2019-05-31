@@ -128,34 +128,9 @@ export default {
                     title: '巡检描述',
                     key: 'content'
                 },
-                // {
-                //     title: '操作',
-                //     render: (h,params) => {
-                //         return h('Button',{
-                //             props: {
-                //                 type: 'error',
-                //                 size: 'small'
-                //             },
-                //             on: {
-                //                 click: () => {
-                //                     this.remove(params.index)
-                //                 }
-                //             }
-                //         },'删除')
-                //     }
-                // }
             ],
             areas:[],
-            stores:[], 
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            }
+            stores:[]
         }    
     },
     mounted(){
@@ -331,14 +306,14 @@ export default {
     color: #fff;
 }
 .formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
-		color: #00fff6;
-		content: '★';
-		display: inline-block;
-		margin-right: 4px;
-		line-height: 1;
-		font-family: SimSun;
-		font-size: 12px;
-	}
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+}
 
 @media (min-width: 2200px){
     .formTitle{
@@ -349,7 +324,7 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;

@@ -30,8 +30,10 @@
     props: {
         modalPrams: {
             type: Object,
-            state: false,
-            selectPlan:0
+            default: () => {
+                state: false;
+                selectPlan:0
+            }
         }
     },
     data() {
@@ -138,7 +140,7 @@
     },
     components: {
         Treeselect
-    },
+    }
   }
 </script>
 

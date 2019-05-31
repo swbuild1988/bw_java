@@ -36,22 +36,22 @@
             <Col span="8" class="rightBox">
             <Row>
                 <Col span="12">
-                    <div class="data-box" style="margin-right: 0" @click="goToPlan('年度巡检计划查询', 1)">
+                    <div class="data-box" style="margin-right: 0">
                         <DataShow v-bind="yearPlan"></DataShow>
                     </div>
                 </Col>
                 <Col span="12">
-                    <div class="data-box" @click="goToPlan('年度巡检计划查询', 2)">
+                    <div class="data-box">
                         <DataShow v-bind="monthPlan"></DataShow>
                     </div>
                 </Col>
                 <Col span="12">
-                    <div class="data-box" style="margin-right: 0" @click="goToTask('巡检任务完成情况', 1)">
+                    <div class="data-box" style="margin-right: 0">
                         <DataShow v-bind="finishedTask"></DataShow>
                     </div>
                 </Col>
                 <Col span="12">
-                    <div class="data-box"  @click="goToTask('巡检任务完成情况', 0)">
+                    <div class="data-box">
                         <DataShow v-bind="unfinishedTask"></DataShow>
                     </div>
                 </Col>
@@ -72,7 +72,7 @@
             <Col span="5">
                 <div class="circleBox boxBG">
                     <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="finishedYearPlanRatio"
-                        stroke-linecap="square" stroke-color="#fff">
+                        stroke-linecap="square" stroke-color="#fc9694">
                         <p class="demo-Circle-inner">年度完成任务占比</p>
                         <p class="demo-Circle-inner">{{this.finishedYearPlanRatio}}%</p>
                     </i-circle>
@@ -81,8 +81,8 @@
             <Col span="5">
                 <div class="circleBox boxBG">
                     <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="currMonthRatio" 
-                        stroke-linecap="square" stroke-color="#fff">
-                        <p class="demo-Circle-inner">本月计划占比</p>
+                        stroke-linecap="square" stroke-color="#b195ed">
+                        <p class="demo-Circle-inner">本月任务占比</p>
                         <p class="demo-Circle-inner">{{this.currMonthRatio}}%</p>
                     </i-circle>
                 </div>
@@ -116,14 +116,14 @@
                     id: "ViewId"
                 },
                 yearPlan: {
-                    label: "年度计划",
+                    label: "年度任务",
                     value: 365,
                     imgSrc: annualPlan,
                     imgBac: "#8C91A7",
                     showDataColor: '#249cf9'
                 },
                 monthPlan: {
-                    label: "本月计划",
+                    label: "本月任务",
                     value: 87,
                     imgSrc: curMonthPlan,
                     imgBac: "#7ca9a9",
@@ -182,35 +182,13 @@
                     legendColor: '#ffffff'
                 },
                 //本月计划占比
-                currMonthRatio: 0,
+                currMonthRatio: null,
                 //年度计划占比
-                finishedYearPlanRatio: 0,
+                finishedYearPlanRatio: null,
                 faultInfoList: [],
                 tunnelInfoList: [],
                 radius: 100,
                 defectCount: 0,
-                columns2: [{
-                        type: "index",
-                        width: 60,
-                        align: "center"
-                    },
-                    {
-                        title: "所属管廊",
-                        key: "tunnelName"
-                    },
-                    {
-                        title: "缺陷类型",
-                        key: "typeName"
-                    },
-                    {
-                        title: "对象名",
-                        key: "objName"
-                    },
-                    {
-                        title: "状态",
-                        key: "statusName"
-                    }
-                ],
                 listHeight: 0,
                 polylineAttr:{
 					viewer:Vue.prototype.$viewer,
@@ -227,7 +205,6 @@
             DataShow,
             TestSmViewer,
             ProcessRing
-            // FeatureSample
         },
         beforeRouteLeave(to, from, next) {
             if (
@@ -258,14 +235,20 @@
             _this.radius = window.innerHeight * 0.19;
             PatrolService.getPatrolCounts().then(
                 result => {
-                    _this.yearPlan.value = result.yearPlanCount;
-                    _this.monthPlan.value = result.monthPlanCount;
-                    _this.finishedTask.value = result.finfinfinishTaskCount;
+                    //本年任务数
+                    _this.yearPlan.value = result.yearTaskCount;
+                    //本月任务数
+                    _this.monthPlan.value = result.monthTaskCount;
+                    // 本月已完成任务数
+                    _this.finishedTask.value = result.finishTaskCount;
+                    // 本月未完成任务数
                     _this.unfinishedTask.value = result.unfinishTaskCount;
                     _this.tunnelInfoList = result.listPlan;
-                    _this.currMonthRatio = result.yearPlanCount != 0 ? parseFloat(result.monthPlanCount / result.yearPlanCount *
+                    //本月任务占比
+                    _this.currMonthRatio = result.yearPlanCount != 0 ? parseFloat(result.monthTaskCount / result.yearTaskCount *
                         100).toFixed(2) : 0;
-                    _this.finishedYearPlanRatio = result.yearTaskCount != 0 ? parseFloat(result.finishTaskCount /
+
+                    _this.finishedYearPlanRatio = result.finYearTaskCount != 0 ? parseFloat(result.finYearTaskCount /
                         result.yearTaskCount * 100).toFixed(2) : 0;
                 },
                 error => {
@@ -291,7 +274,6 @@
                 }
             );
             _this.getRouteList()
-            // _this.$refs.TestSmViewer.showCheckPointEntity();
         },
 
         methods: {
