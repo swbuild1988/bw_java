@@ -370,9 +370,9 @@ h3 {
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
 }
-.ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+/* .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
     background-color: #fffdfd00 !important;
-}
+} */
 .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
     border-bottom: none;

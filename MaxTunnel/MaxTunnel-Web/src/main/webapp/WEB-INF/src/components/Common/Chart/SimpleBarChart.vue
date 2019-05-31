@@ -19,7 +19,7 @@ export default {
             type: Object
         },
         xAxisRotate: {
-            default: 0,
+            default: '0',
             type: String
         },
         titleColor: {
@@ -33,14 +33,7 @@ export default {
         seriesColorList: {
             type: Array,
             default: function(){
-                return [
-                    // [ '#fed601', '#fed601' ],
-                    // [ '#fc9501', '#fc9501' ],
-                    // [ '#0ee622', '#3ce94c' ],
-                    // [ '#eb1818', '#ed4a49' ],
-                    // [ '#00fc7c', '#61eba5' ],
-                    // [ '#fe411b', '#fe9b1a' ]
-                ]
+                return []
             }
         }
     },
@@ -255,7 +248,7 @@ export default {
                 }, intervalTime);
 
             }
-            }
+        }
     }
 };
 </script>

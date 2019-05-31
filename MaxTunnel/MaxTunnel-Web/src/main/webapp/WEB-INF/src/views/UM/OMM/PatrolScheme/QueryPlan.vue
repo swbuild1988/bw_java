@@ -351,6 +351,7 @@ export default {
     line-height: 3.5vmin;
     text-align: center;
     width: 5vmin;
+    cursor: pointer;
 }
 .showBtn{
     background: linear-gradient(to top right, #2734e1, #b195ed)
