@@ -1,46 +1,48 @@
 <template>
     <div class="whole" v-if="!none">
         <Row class="storeInfo">
-            <Col span="12" v-for="(store,index) in stores" :key="index">
-                <div class="storeCard">
-                    <div class="innerCard">
-                        <div class="storeName" @click="chooseStore(store)">
-                            <Icon type="ios-flag" style="font-size: 3.6vmin;margin-right: 0.6vmin;"></Icon>
-                            <span>{{store.name}}</span>
-                        </div>
-                        <Row>
-                            <Col span="12">
-                                <div class="storeLineCount" v-if="store.values[2].val">
-                                    <p
-                                        v-for="(line,i) in store.values"
-                                        :key="i"
-                                        class="lines"
-                                    >{{ line.key }}:{{ line.val }}</p>
-                                </div>
-                            </Col>
-                            <Col :span="store.values[2].val ? '12' : '24'">
-                                <div class="utilization" v-if="store.values[2].val">
-                                    <i-circle
-                                        :percent="parseInt(store.values[1].val / store.values[2].val * 100)"
-                                        stroke-color="#1dffe2"
+            <div class="storeItemsWrapper">
+                <Col span="12" v-for="(store,index) in stores" :key="index">
+                    <div class="storeCard">
+                        <div class="innerCard">
+                            <div class="storeName" @click="chooseStore(store)">
+                                <Icon type="ios-flag" style="font-size: 3.6vmin;margin-right: 0.6vmin;"></Icon>
+                                <span>{{store.name}}</span>
+                            </div>
+                            <Row>
+                                <Col span="12">
+                                    <div class="storeLineCount" v-if="store.values[2].val">
+                                        <p
+                                            v-for="(line,i) in store.values"
+                                            :key="i"
+                                            class="lines"
+                                        >{{ line.key }}:{{ line.val }}</p>
+                                    </div>
+                                </Col>
+                                <Col :span="store.values[2].val ? '12' : '24'">
+                                    <div class="utilization" v-if="store.values[2].val">
+                                        <i-circle
+                                            :percent="parseInt(store.values[1].val / store.values[2].val * 100)"
+                                            stroke-color="#1dffe2"
+                                        >
+                                            <span
+                                                class="demo-Circle-inner"
+                                                style="font-size:2.66vmin"
+                                            >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
+                                        </i-circle>
+                                    </div>
+                                    <div
+                                        :class="['equCount',{'noLines': !store.values[2].val}]"
+                                        @click="turnToEquPage(store.id)"
                                     >
-                                        <span
-                                            class="demo-Circle-inner"
-                                            style="font-size:2.66vmin"
-                                        >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
-                                    </i-circle>
-                                </div>
-                                <div
-                                    :class="['equCount',{'noLines': !store.values[2].val}]"
-                                    @click="turnToEquPage(store.id)"
-                                >
-                                    <span>{{'现存放设备' + store.equCount +'个'}}</span>
-                                </div>
-                            </Col>
-                        </Row>
+                                        <span>{{'现存放设备' + store.equCount +'个'}}</span>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
-                </div>
-            </Col>
+                </Col>
+            </div>
         </Row>
     </div>
     <div v-else class="noData">
@@ -166,10 +168,10 @@ export default {
 }
 .storeInfo {
     padding: 3vmin;
+    
+    height: 86vh;
     background: url("../../../../assets/UM/bodyBg.png") no-repeat;
     background-size: 100% 100%;
-    overflow-y: auto;
-    height: 86vh;
 }
 .storeName {
     font-size: 3vmin;
@@ -236,18 +238,23 @@ export default {
     color: #fff;
     align-self: center;
 }
-.storeInfo::-webkit-scrollbar {
+.storeItemsWrapper{
+    overflow-y: auto;
+    margin: 0.2vmin;
+    height: 80vh;
+}
+.storeItemsWrapper::-webkit-scrollbar {
     /*滚动条整体样式*/
     width: 1vmin; /*高宽分别对应横竖滚动条的尺寸*/
     height: 0.2vmin;
 }
-.storeInfo::-webkit-scrollbar-thumb {
+.storeItemsWrapper::-webkit-scrollbar-thumb {
     /*滚动条里面小方块*/
     border-radius: 1vmin;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #83a6ed;
 }
-.storeInfo::-webkit-scrollbar-track {
+.storeItemsWrapper::-webkit-scrollbar-track {
     /*滚动条里面轨道*/
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 1vmin;

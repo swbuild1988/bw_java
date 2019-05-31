@@ -105,7 +105,7 @@
                         </Poptip>
                     </FormItem>
                     <FormItem label="管线位置：">
-                        <Row style="width: 45vmin;margin-left: 14vmin">
+                        <Row style="width: 38vmin;margin-left: 15vmin">
                             <Col span="12">
                                 <Select
                                     v-model="contractInfo.tunnelId"
@@ -754,7 +754,7 @@ export default {
     width: 100vmin;
 }
 .form >>> .ivu-form-item-label {
-    width: 14vmin;
+    width: 15vmin;
 }
 .prev {
     position: absolute;
@@ -772,7 +772,7 @@ export default {
     margin-top: -2vmin;
 }
 .inputWidth {
-    width: 45vmin;
+    width: 38vmin;
 }
 .pdfContent {
     width: 44vmin;
@@ -804,7 +804,7 @@ export default {
     background: #ededed;
 }
 .form >>> .ivu-form-item {
-    margin-bottom: 2.4vmin;
+    margin-bottom: 1.4vmin;
 }
 .ivu-form >>> .ivu-form-item-label {
     color: #eaeef2;
@@ -886,7 +886,9 @@ export default {
     margin: 0.3vmin 0.4vmin 0.3vmin 0;
 }
 .form >>> .ivu-form-item-error-tip {
-    left: 14vmin;
+    left: 15vmin;
+    padding-top: 0.2vmin;
+    font-size: 1.2vmin;
 }
 .form >>> .location {
     left: 0;

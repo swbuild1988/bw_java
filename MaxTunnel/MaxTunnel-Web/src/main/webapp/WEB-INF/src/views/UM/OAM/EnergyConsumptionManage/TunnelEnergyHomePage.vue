@@ -189,6 +189,23 @@ h1 {
 .table >>> .ivu-date-picker-header-label {
     font-size: 1.66vmin;
 }
+.table >>> .ivu-table-overflowY::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 1vmin; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 0.2vmin;
+}
+.table >>> .ivu-table-overflowY::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.table >>> .ivu-table-overflowY::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
 .search {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
@@ -309,8 +326,18 @@ export default {
             radarChart: {
                 requestUrl: "tunnels/total-avg/2/consume-datas",
                 id: "tunnelEnergyRadarChart",
+                titleSize: '6%',
                 parameters: {
-                    option: {}
+                    option: {
+                        title: {
+                            text: "管廊平均能耗",
+                            textStyle: {
+                                fontWeight: "normal",
+                                color: "#fff"
+                            },
+                            top: "6%"
+                        }
+                    }
                 }
             },
             tableColumn: [
@@ -418,7 +445,7 @@ export default {
         //导出表数据
         exportData() {
             this.$refs.table.exportCsv({
-                filename: "Sorting and filtering data",
+                filename: "各管廊能耗统计" + new Date(Date.now()).format('yyyy-MM-dd'),
                 original: false
             });
         },
