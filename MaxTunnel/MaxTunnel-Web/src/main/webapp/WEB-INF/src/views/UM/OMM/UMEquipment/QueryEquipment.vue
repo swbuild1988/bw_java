@@ -58,7 +58,9 @@
         <Col span="6">
             <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
             <!-- <Button type="primary">批量导入</Button> -->
-            <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
+            <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备
+                <!-- <button class="addEquipmentBtn">批量导入管廊设备</button>     -->
+            </vue-xlsx-table>
         </Col>
     </Row>
     <div class="list listBG">
@@ -645,6 +647,14 @@ export default {
 .list .ivu-tabs>>>.ivu-tabs-nav{
 	color: #fff;
 }
+.vue-xlsx-container>>>.xlsx-button {
+    padding: 0.6vmin 1.5vmin;
+    font-size: 1.2vmin;
+    border-radius: 0.4vmin;
+    color: #fff;
+    line-height: 1.5;
+    background: linear-gradient(to left, #2734e1, #7c83f2);
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -668,12 +678,17 @@ export default {
     }
     .operation{
         font-size: 1.4vmin;
+        padding-bottom: 1vmin;
     }
     .equipentTitle{
         font-size: 2vmin;
     }
     .ivu-icon{
         font-size: 2vmin !important;
+    }
+    .detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
+        line-height: 3.5vmin;
+        font-size: 1.6vmin !important;
     }
 }
 </style>

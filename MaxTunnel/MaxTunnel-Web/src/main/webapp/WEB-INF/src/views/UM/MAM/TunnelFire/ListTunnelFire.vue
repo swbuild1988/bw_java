@@ -163,7 +163,7 @@ export default {
     },
     mounted() {
         this.fentchData();
-        this.getMonitorData();
+        // this.getMonitorData();
         // 设置表格高度
         this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
         this.iconSize = window.innerHeight * 0.02;
@@ -174,8 +174,8 @@ export default {
         //根据监测类型获取数据
         getMonitorData() {
             let { queryCondition } = this;
-            !queryCondition.areaId &&
-                (queryCondition.areaId = queryCondition.storeId = null);
+            !queryCondition.areaId && (queryCondition.areaId = null);
+            !queryCondition.storeId && (queryCondition.storeId = null);
             let parms = {
                 tunnelId: queryCondition.tunnelId,
                 storeId: queryCondition.storeId,

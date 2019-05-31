@@ -2,23 +2,22 @@
     <div class="allDiv">
         <Row class="conditions">
             <Col span="6">
-                流程状态：
+                <span class="conditionTitle">流程状态：</span>
                 <Select v-model="conditions.finished" style="width:60%">
                     <Option value=null>所有</Option>
                     <Option v-for="item in workOrderStatus" :value="item.key" :key="item.key">{{ item.value }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span>开始时间：</span>
+                <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%" @on-change="conditions.startTime=$event"></DatePicker>
             </Col>
             <Col span="6">
-                <span>结束时间：</span>
+                <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%" @on-change="conditions.startTime=$event"></DatePicker>
             </Col>
         </Row>
         <div class="list">
-            <div class="nullData" v-show="isNullData">暂无数据</div>
             <Table :columns="planColumus" :data="planData"></Table>
             <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -47,7 +46,6 @@ export default {
                 right: '15px',
             },
             timeType: null,
-            isNullData: false, 
             planColumus: [
                 {
                     type: 'index',
@@ -124,11 +122,6 @@ export default {
                 result => {
                     this.planData = result.list
                     this.page.pageTotal = result.total
-                    if(this.planData.length==0){
-                        this.isNullData = true
-                    }else{
-                        this.isNullData = false
-                    }
                 },
                 error => {
                     this.Log.info(error)
@@ -189,5 +182,22 @@ export default {
 }
 </script>
 <style scoped>
-
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
 </style>

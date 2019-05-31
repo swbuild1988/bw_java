@@ -530,7 +530,6 @@ public class InspectionController {
     	Date endYear = DateUtil.getEndDayOfYear();
     	vo1.setStartTime(startYear);
     	vo1.setEndTime(endYear);
-    	int yearPlanCount = inspectionPlanService.getCountByCondition(vo1);
     	int yearTaskCount = inspectionTaskService.getCountByVo(vo1);
     	vo1.setFinished(true);
     	int finYearTaskCount = inspectionTaskService.getCountByVo(vo1);
@@ -540,7 +539,7 @@ public class InspectionController {
     	Date endMonth = DateUtil.getEndDayOfMonth();
     	vo2.setStartTime(startMonth);
     	vo2.setEndTime(endMonth);
-    	int monthPlanCount = inspectionPlanService.getCountByCondition(vo2);
+    	int monthTaskCount = inspectionTaskService.getCountByVo(vo2);
     	vo2.setFinished(true);
     	int finishTaskCount = inspectionTaskService.getCountByVo(vo2);
     	vo2.setFinished(false);
@@ -548,8 +547,7 @@ public class InspectionController {
     	
     	List<InspectionPlan> listPlan = inspectionPlanService.getAllInspectionPlan();
     	
-    	map.put("yearPlanCount", yearPlanCount);
-    	map.put("monthPlanCount", monthPlanCount);
+    	map.put("monthTaskCount", monthTaskCount);
     	map.put("finishTaskCount", finishTaskCount);
     	map.put("unfinishTaskCount", unfinishTaskCount);
     	map.put("yearTaskCount", yearTaskCount);

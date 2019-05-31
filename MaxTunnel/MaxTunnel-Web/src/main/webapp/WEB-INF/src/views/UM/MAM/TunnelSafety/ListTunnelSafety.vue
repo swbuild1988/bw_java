@@ -80,9 +80,21 @@
                                                         v-for="(item2,index) in item.data"
                                                         :key="index"
                                                     >
-                                                        <img src="../../../../assets/UM/status-open.png" class="open-status-img" v-if="item2.key ==('开' || '正常')">
-                                                        <img src="../../../../assets/UM/status-close.png" class="open-status-img" v-if="item2.key ==('关' || '入侵')">
-                                                        <img src="../../../../assets/UM/status-alarm.png" class="open-status-img" v-if="item2.key =='告警'">
+                                                        <img
+                                                            src="../../../../assets/UM/status-open.png"
+                                                            class="open-status-img"
+                                                            v-if="item2.key ==('开' || '正常')"
+                                                        >
+                                                        <img
+                                                            src="../../../../assets/UM/status-close.png"
+                                                            class="open-status-img"
+                                                            v-if="item2.key ==('关' || '入侵')"
+                                                        >
+                                                        <img
+                                                            src="../../../../assets/UM/status-alarm.png"
+                                                            class="open-status-img"
+                                                            v-if="item2.key =='告警'"
+                                                        >
                                                         {{item2.key}}：{{item2.val}}
                                                     </Col>
                                                 </Row>
@@ -133,12 +145,12 @@ export default {
                     { key: "湿度", val: "30%" }
                 ] //属性集
             },
-            tunnelProps: [], //管廊统计数据
+            tunnelProps: [] //管廊统计数据
         };
     },
     mounted() {
         this.fentchData();
-        this.getMonitorData();
+        // this.getMonitorData();
         // 设置表格高度
         this.curHeight = window.innerHeight * 0.76; //将85vh转为数值
         this.iconSize = window.innerHeight * 0.02;
@@ -157,20 +169,20 @@ export default {
         //根据监测类型获取数据
         getMonitorData() {
             let { queryCondition } = this;
-            !queryCondition.areaId &&
-                (queryCondition.areaId = queryCondition.storeId = null);
+            !queryCondition.areaId && (queryCondition.areaId = null);
+            !queryCondition.storeId && (queryCondition.storeId = null);
             let parms = {
                 tunnelId: queryCondition.tunnelId,
                 storeId: queryCondition.storeId,
                 areaId: queryCondition.areaId,
-                monitorType:3 
+                monitorType: 3
             };
 
             MonitorDataService.getMeasStatusCounts(parms).then(result => {
                 this.tunnelProps = result;
-                console.log('',this.tunnelProps)
+                console.log("", this.tunnelProps);
             });
-        },
+        }
     },
     watch: {
         $route() {
@@ -290,6 +302,6 @@ export default {
     float: left;
 }
 .ivu-col-offset-2 {
-  margin-left: 0;
+    margin-left: 0;
 }
 </style>

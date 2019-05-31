@@ -8,6 +8,7 @@ import {
     TunnelService
 } from "@/services/tunnelService";
 import Vue from 'vue'
+import Axios from 'axios';
 
 export const commonFlyFn = {
     data() {
@@ -72,77 +73,70 @@ export const commonFlyFn = {
                     console.log(error);
                 }
             );
-            //获取管仓列表
-            TunnelService.getStoresByTunnelId(
-                _this.queryCondition.tunnelId
-            ).then(
-                result => {
-                    _this.storeProp.dataList = [{
-                        id: 0,
-                        name: "全部"
-                    }];
-                    result.forEach((a, index) => {
-                        let temp = {};
-                        temp.id = a.id;
-                        temp.name = a.name;
-                        _this.storeProp.dataList.push(temp);
-                    });
-                    _this.storeProp.selectObj.selectId =
-                        _this.storeProp.dataList[0].id;
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-            //获取区域
-            TunnelService.getTunnelArea(_this.queryCondition.tunnelId).then(
-                result => {
-                    if (result) {
-                        _this.areaList = [{
-                            id: 0,
-                            name: "全部"
-                        }];
-                        result.forEach(a => {
-                            var temp = {};
-                            temp.name = a.name;
-                            temp.id = a.id;
-                            _this.areaList.push(temp);
-                        });
-                        _this.queryCondition.areaId = _this.areaList[0].id;
-                    }
-                }
-            );
+            Axios.all([TunnelService.getStoresByTunnelId(_this.queryCondition.tunnelId),
+                TunnelService.getTunnelArea(_this.queryCondition.tunnelId)
+            ]).then(res => {
+                this.Log.info("获取仓和区", res)
+                let stores = res[0];
+                let areas = res[1];
+
+                // 更新仓列表
+                _this.storeProp.dataList = [{
+                    id: 0,
+                    name: "全部"
+                }];
+                stores.forEach((a, index) => {
+                    let temp = {};
+                    temp.id = a.id;
+                    temp.name = a.name;
+                    _this.storeProp.dataList.push(temp);
+                });
+                _this.storeProp.selectObj.selectId = _this.storeProp.dataList[0].id;
+
+                // 更新区域列表
+                _this.areaList = [{
+                    id: 0,
+                    name: "全部"
+                }];
+                areas.forEach(a => {
+                    var temp = {};
+                    temp.name = a.name;
+                    temp.id = a.id;
+                    _this.areaList.push(temp);
+                });
+
+                _this.queryCondition.areaId = _this.areaList[0].id;
+
+                // 更新数据、位置等
+                _this.changeAreaOrStore();
+            })
         },
         //变更区段
         updateArea() {
-
+            this.changeAreaOrStore();
+        },
+        //变更舱
+        updateStores(storeId) {
+            this.queryCondition.storeId = storeId;
+            this.changeAreaOrStore();
+        },
+        changeAreaOrStore() {
             let {
                 areaId,
                 storeId
             } = this.queryCondition;
-            //storeId =0 || null 
-            storeId ? TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result)) :
-                AreaService.getAreaInfo(areaId).then(areaInfo => this.intercept(areaInfo))
-
-            this.getMonitorData();
-            this.changePositionNote(); 
-        },
-        //变更舱
-        updateStores(storeId) {
-            let {
-                queryCondition,
-                storeProp,
-                // areaList
-            } = this;
             
-            // if (!areaList.length) return;
-            queryCondition.areaId = queryCondition.areaId || 0;
-
-            queryCondition.storeId = storeId || storeProp.dataList[1].id;
-
-            TunnelService.getSectionByAreaIdStoreId(storeId, queryCondition.areaId).then(result => this.intercept(result))
+            this.change3DPosition(areaId, storeId);
             this.getMonitorData();
-            this.changePositionNote();
+            this.changePositionNote(areaId, storeId);
+        },
+        // 改变3D的位置
+        change3DPosition(areaId, storeId) {
+            if (!areaId) areaId = this.areaList[1].id;
+            if (!storeId) storeId = this.storeProp.dataList[1].id
+
+            console.log('_this.queryCondition.areaId',this.queryCondition.areaId)
+            TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result))
         },
         //用于判断返回结果不为undefined
         intercept(info) {
@@ -170,19 +164,22 @@ export const commonFlyFn = {
             })
 
         },
-        changePositionNote() {
+        changePositionNote(areaId, storeId) {
+            if (!areaId) areaId = this.areaList[1].id;
+            if (!storeId) storeId = this.storeProp.dataList[1].id
+
             let curArea = this.areaList.find(area => {
-                return area.id === this.queryCondition.areaId
+                return area.id === areaId
             })
             let curStore = this.storeProp.dataList.find(store => {
-                return store.id === this.queryCondition.storeId
+                return store.id === storeId
             })
 
-            if(!curArea|| !curStore) return
-            
+            if (!curArea || !curStore) return
+
             this.note.storeName = curStore.name
             this.note.areaName = curArea.name
-            
+
         }
     },
 }
