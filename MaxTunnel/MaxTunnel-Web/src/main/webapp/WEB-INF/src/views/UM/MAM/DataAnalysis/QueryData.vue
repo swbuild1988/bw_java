@@ -30,9 +30,9 @@
                 <div v-if="queryPrams.datatypeId==1">
                     <Col span="10">
                         <span class="conditionTitle">取整范围：</span>
-                        <span style="color: #fff">最小值</span>
+                        <span style="color: #fff;font-size: 1.6vmin">最小值</span>
                         <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-                        <span style="color: #fff">最大值</span>
+                        <span style="color: #fff; font-size: 1.6vmin">最大值</span>
                         <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
                     </Col>
                 </div>

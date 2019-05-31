@@ -139,15 +139,6 @@ export default {
                 description:[
                     { required: true, message: '请输入缺陷描述', trigger: 'blur' }
                 ]
-            },
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
             }
         }    
     },
@@ -324,6 +315,15 @@ export default {
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+}
 @media (min-width: 2200px){
     .formTitle{
         font-size: 2.8vmin;
@@ -334,7 +334,7 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;

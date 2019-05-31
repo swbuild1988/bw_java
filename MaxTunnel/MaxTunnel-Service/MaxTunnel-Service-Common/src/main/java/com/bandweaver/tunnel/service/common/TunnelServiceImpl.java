@@ -164,7 +164,7 @@ public class TunnelServiceImpl implements TunnelService {
                 idList.add(simpleDto.getId());
             }
         }
-        vo.setIds(idList);
+        if(idList.size() > 0) vo.setIds(idList);
 
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<TunnelDto> list = tunnelMapper.getByCondition(vo);

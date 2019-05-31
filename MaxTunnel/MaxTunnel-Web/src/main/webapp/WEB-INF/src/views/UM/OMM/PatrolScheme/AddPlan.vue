@@ -922,7 +922,6 @@ export default {
 		padding: 0.1vmin 2vmin;
 		color: #fff;
 		border-radius: 4px;
-		border: 1px solid  #00ffff;
 		cursor: pointer;
 	}
 	.backBtn{
@@ -945,7 +944,7 @@ export default {
 
 		.ivu-form-item>>>.ivu-form-item-label {
 			/* width: 15vmin !important; */
-			line-height: 4.5vmin;
+			line-height: 2.5vmin;
 		}
 
 		.ivu-form-item>>>.ivu-form-item-content {

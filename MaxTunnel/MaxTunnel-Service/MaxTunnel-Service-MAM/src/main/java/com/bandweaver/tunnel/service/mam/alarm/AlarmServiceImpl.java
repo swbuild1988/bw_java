@@ -113,7 +113,7 @@ public class AlarmServiceImpl implements AlarmService {
 			}
 
 			// 获取监测极值
-			cvList = measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId(), MonitorTypeEnum.ENVIRONMENTAL.getValue());
+			cvList.addAll(measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId(), MonitorTypeEnum.ENVIRONMENTAL.getValue()));
 
 		}
 
