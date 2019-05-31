@@ -1,6 +1,6 @@
 <template>
     <Modal v-model="modalPrams.state" :width="modalWidth" title="告警信息">
-        <section v-for="(item,index1) in alarmContainer" :key="index1">
+        <section v-for="(item,index1) in alarms" :key="index1">
             <section class="titleSection">
                 <article>
                     <h2>{{item.objectName}}</h2>
@@ -101,7 +101,8 @@
                         val: '24',
                         unit: '℃'
                     }
-                ]
+                ],
+                alarms: null
             }
         },
         watch: {
@@ -110,6 +111,7 @@
             }
         },
         mounted() {
+            this.alarms = this.alarmContainer
             this.setVideoSpan();
         },
         methods: {
@@ -136,16 +138,16 @@
                     processValue: processValue
                 }).then(res => {
                     _this.Log.info("收到启动预案结果：", res)
-                    alarm.plan = {
+                    this.$set(alarm,'plan',{
                         processInstanceId: res.data.data,
                         status: "预案已启动",
                         isFinished: false,
                         processPicSrc: null
-                    }
+                    })
 
                     // 启动预案监听
                     _this.acceptPlanData();
-                    _this.Log.info("alarmContainer", _this.alarmContainer);
+                    // _this.Log.info("alarmContainer", _this.alarmContainer);
                 });
 
             },
@@ -160,22 +162,24 @@
                         // 没启动预案，直接过
                         if (!alarm.plan) continue;
 
-                        this.Log.info("alarmContainer1", this.alarmContainer);
+                        // this.Log.info("alarmContainer1", this.alarmContainer);
                         // 找到收到预案消息对应的告警
-                        if (alarm.plan.processInstanceId == content.processInstanceId) {
-                            alarm.plan.isFinished = content.status == "finished";
-                            alarm.plan.status = content.status == "finished" ? "预案进行中" : "预案已完成";
+                        let curPlan = alarm.plan
+                        if (curPlan.processInstanceId == content.processInstanceId) {
+                            this.$set(curPlan,'processPicSrc',null)
+                            curPlan.isFinished = content.status == "finished";
+                            curPlan.status = content.status == "finished" ? "预案已完成" : "预案进行中";
+                            let _this = this
                             this.$nextTick(() => {
-                                alarm.plan.processPicSrc =
-                                    "/emplans/png/" + content.processInstanceId;
+                                _this.$set(curPlan,'processPicSrc',"/emplans/png/" + content.processInstanceId)
                             });
                         }
-                        this.Log.info("alarmContainer2", this.alarmContainer);
-                        if (alarm.plan.isFinished) {
+                        // this.Log.info("alarmContainer2", this.alarmContainer);
+                        if (curPlan.isFinished) {
                             // 如果所有的启动了的预案都已经结束了，关掉预案
                             if (this.isAllAlarmsPlanFinished()) this.stopPlan();
                         }
-                        this.Log.info("alarmContainer3", this.alarmContainer);
+                        // this.Log.info("alarmContainer3", this.alarmContainer);
                     }
                 }
             },

@@ -53,7 +53,7 @@ export default {
 
             _this.option = {
                 title: {
-                    x: "right",
+                    x: "left",
                     textStyle: {
                         fontSize: _this.getFontSize(_this.titleSize)
                         // color: "#000"

@@ -492,7 +492,7 @@ export default {
     margin: 0; 
     padding: 0; 
     top: 8.2vh !important;
-    left: 3.2vmin !important;
+    left: 2vmin !important;
 }
 .layout-nav >>> .ivu-dropdown-item-divided{
     margin-top: 0;
