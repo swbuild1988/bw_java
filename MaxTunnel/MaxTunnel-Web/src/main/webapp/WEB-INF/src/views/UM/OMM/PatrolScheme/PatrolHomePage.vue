@@ -182,35 +182,13 @@
                     legendColor: '#ffffff'
                 },
                 //本月计划占比
-                currMonthRatio: 0,
+                currMonthRatio: null,
                 //年度计划占比
-                finishedYearPlanRatio: 0,
+                finishedYearPlanRatio: null,
                 faultInfoList: [],
                 tunnelInfoList: [],
                 radius: 100,
                 defectCount: 0,
-                columns2: [{
-                        type: "index",
-                        width: 60,
-                        align: "center"
-                    },
-                    {
-                        title: "所属管廊",
-                        key: "tunnelName"
-                    },
-                    {
-                        title: "缺陷类型",
-                        key: "typeName"
-                    },
-                    {
-                        title: "对象名",
-                        key: "objName"
-                    },
-                    {
-                        title: "状态",
-                        key: "statusName"
-                    }
-                ],
                 listHeight: 0,
                 polylineAttr:{
 					viewer:Vue.prototype.$viewer,
@@ -227,7 +205,6 @@
             DataShow,
             TestSmViewer,
             ProcessRing
-            // FeatureSample
         },
         beforeRouteLeave(to, from, next) {
             if (
@@ -297,7 +274,6 @@
                 }
             );
             _this.getRouteList()
-            // _this.$refs.TestSmViewer.showCheckPointEntity();
         },
 
         methods: {
