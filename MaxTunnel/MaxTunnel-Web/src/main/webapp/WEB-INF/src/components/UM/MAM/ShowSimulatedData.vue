@@ -168,6 +168,7 @@
   }
   .ivu-card-bordered >>> .ivu-card-head {
     border-bottom: none;
+    padding: 1.4vmin 1.6vmin;
   }
   .ivu-card-bordered {
     border:none;
@@ -177,5 +178,6 @@
   }
   .ivu-card-bordered >>> .ivu-card-body {
     color: #fff;
+    padding:2.6vmin;
   }
 </style>
