@@ -685,6 +685,9 @@ export default {
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
 }
+.list .ivu-btn-primary{
+    background: linear-gradient(to left, #2734e1, #b195ed)
+}
 
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

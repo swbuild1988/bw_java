@@ -64,12 +64,10 @@
     <div class="list listBG">
         <Row>
             <h1 class="equipmentList">设备列表</h1>
-            <!-- <Col span="24">
-                <Button class="addList" @click="add({path: '/UM/equipment/add'})" long>
-                    <Icon type="plus-round"></Icon>
-                    添加
-                </Button>
-            </Col> -->
+            <Button class="addList" @click="add({path: '/UM/equipment/add'})">
+                <Icon type="plus-round"></Icon>
+                添加
+            </Button>
             <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
                     <Col span="24">
@@ -545,14 +543,11 @@ export default {
 }
 
 .addList {
-    border: 1px dashed #dfdfdf;
-    text-align: center;
-    line-height: 40px;
-    color: #8b8b8b;
-    margin-top: 20px;
-    border-radius: 10px;
-    background: #fff;
-    z-index: 10001;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(to left, #1af6b0, #a7ecd7);
+    color: #fff
 }
 
 /*new*/
@@ -647,6 +642,9 @@ export default {
     background: url("../../../../assets/UM/cardBG.png") no-repeat;
     background-size: 100% 100%;
 }
+.list .ivu-tabs>>>.ivu-tabs-nav{
+	color: #fff;
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -660,16 +658,6 @@ export default {
     }
     .equipmentList{
         font-size: 2.5vmin;
-    }
-    .addList {
-        border: 0.2min dashed #dfdfdf;
-        text-align: center;
-        line-height: 4min;
-        color: #8b8b8b;
-        margin-top: 20px;
-        border-radius: 10px;
-        background: #fff;
-        z-index: 10001;
     }
     .detailsBox{
         padding-top: 2vh;

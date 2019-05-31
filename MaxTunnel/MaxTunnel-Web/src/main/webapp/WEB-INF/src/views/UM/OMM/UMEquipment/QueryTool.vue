@@ -51,9 +51,9 @@
         <div class="list">
             <div class="toolBtn">
                 <p>仪表工具</p>
-                <Button type="primary" @click="batchReturn()">批量归还</Button>
+                <Button type="success"  @click="batchReturn()">批量归还</Button>
                 <Button type="error" @click="batchLend()">批量借出</Button>
-                <Button type="success" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
+                <Button type="primary" @click="add({path: '/UM/equipment/addTools'})">批量添加</Button>
             </div>
             <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row :gutter="16">
@@ -1125,7 +1125,7 @@ export default {
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
 }
-.ivu-btn-success{
+.ivu-btn-primary{
     background: linear-gradient(to left, #2734e1, #b195ed);
     border-color: #2734e1;
 }
@@ -1133,7 +1133,7 @@ export default {
     background: linear-gradient(to left, #f61a1a, #f68380);
     border-color: #f61a1a;
 }
-.ivu-btn-info{
+.ivu-btn-success{
     background: linear-gradient(to left, #1af6b0, #a7ecd7);
     border-color: #1af6b0;
 }

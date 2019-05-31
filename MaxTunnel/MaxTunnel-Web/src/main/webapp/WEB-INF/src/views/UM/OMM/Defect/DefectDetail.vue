@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form ref="defectDetails" :model="defectDetails" :rules="validateRules" :label-width="120" @submit.native.prevent>
             <h2 class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</h2>
             <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
@@ -305,7 +305,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 700px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
@@ -314,6 +313,16 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .formTitle{
