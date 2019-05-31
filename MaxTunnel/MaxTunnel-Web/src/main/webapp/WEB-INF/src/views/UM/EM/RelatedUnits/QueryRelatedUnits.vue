@@ -66,48 +66,37 @@
                 <Col span="6" v-for="(item,index) in unitInfo" :key="index">
                     <div class="unitBox">
                         <div class="title">
-                            <span>{{item.name}}&nbsp;/</span>
-                            <span class="unitType">{{item.unitTypeName}}</span>
+                            <Icon type="star" style="font-size: 2vmin;"></Icon>
+                            {{ item.name + ' / ' + item.unitTypeName }}
                         </div>
-                        <div class="address">
-                            <Icon type="ios-location" size="15"></Icon>
+                        <div class="unitItem">
+                            <Icon type="ios-location"></Icon>
                             {{item.address}}
                         </div>
-                        <div class="contact">
-                            <div class="contactName">
-                                <span>
-                                    <Icon type="android-person" size="15"></Icon>
-                                </span>
-                                <span>{{item.contact}}</span>
-                            </div>
-                            <div class="contactTel">
-                                <span>
-                                    <Icon type="ios-telephone" size="15"></Icon>
-                                </span>
-                                <span>{{item.tel}}</span>
-                            </div>
-                            <div class="sections">
-                                <div class="sectionTitle">管仓区段：</div>
-                                <span
-                                    class="showSectionsName"
-                                    v-for="(item,index) in sections"
-                                    :key="index"
-                                >{{item.name}}</span>
-                                <div
-                                    class="sectionName"
-                                    :title="item.sectionIds"
-                                >{{item.sectionIds}}</div>
-                            </div>
+                        <div class="unitItem">
+                            <Icon type="android-person"></Icon>
+                            {{item.contact}}
                         </div>
-                        <div class="option">
+                        <div class="unitItem">
+                            <Icon type="ios-telephone"></Icon>
+                            {{item.tel}}
+                        </div>
+                        <div class="unitItem">
+                            <Icon type="star"></Icon>
+                            <span
+                                class="showSectionsName"
+                                v-for="(item,index) in sections"
+                                :key="index"
+                            >{{item.name}}</span>
+                            <span class="sectionName" :title="item.sectionIds">{{item.sectionIds}}</span>
+                        </div>
+                        <div class="unitItem">
+                            <Icon type="android-time"></Icon>
+                            {{item.crtTime}}
+                        </div>
+                        <div style="text-align: center;margin:1vmin">
                             <Button size="small" type="primary" @click="edit(index)" class="edit">编辑</Button>
                             <Button size="small" type="error" @click="del(index)" class="del">删除</Button>
-                            <div class="crtTime">
-                                <span>
-                                    <Icon type="android-time"></Icon>
-                                    {{item.crtTime}}
-                                </span>
-                            </div>
                         </div>
                     </div>
                 </Col>
@@ -364,44 +353,26 @@ export default {
 </script>
 <style scoped>
 .unitBox {
-    background: url("../../../../assets/UM/companyBg.png") no-repeat;
+    background: url("../../../../assets/UM/energyBorder2.png") no-repeat;
     background-size: 100% 100%;
     width: 85%;
     margin: 10px auto;
-    padding: 5px 0px;
+    padding: 0.4vmin 2vmin;
     color: #fff;
+    font-size: 1.4vmin;
 }
 .title {
-    font-size: 20px;
-    padding: 0px 10px;
+    font-size: 1.8vmin;
+    text-align: center;
+    padding: 1vmin 0 2vmin 0;
 }
-.address {
-    color: #fff;
-    padding: 1vmin;
+.unitItem {
+    padding: 0.4vmin 1vmin;
 }
-.contact {
-    /* background: #f5f5f5; */
-    line-height: 35px;
-    margin: 10px 0px;
-    padding: 0px 10px;
-}
-.contactName,
-.contactTel {
-    display: inline-block;
-}
-.contactName {
-    width: 41%;
-}
-.crtTime {
-    float: right;
-    font-size: 12px;
-}
-.option {
-    padding: 0px 4px;
-}
+
 .ivu-icon {
     margin-right: 5px;
-    color: #f4ea2a;
+    color: #00fff6;
 }
 .sectionTitle {
     float: left;
@@ -425,6 +396,9 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    width: 90%;
+    display: inline-block;
+    vertical-align: middle;
 }
 .edit {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
@@ -433,7 +407,8 @@ export default {
     background: linear-gradient(to right, #7c83f2, #2734e1);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.4vmin !important;
+    font-size: 1.3vmin !important;
+    margin-right: 1vmin;
 }
 .del {
     background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
@@ -442,7 +417,7 @@ export default {
     background: linear-gradient(to right, #e49b9b, #f61a1a);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.4vmin !important;
+    font-size: 1.3vmin !important;
 }
 @media (min-width: 2200px) {
     .ivu-select,

@@ -537,14 +537,12 @@ export default {
     background-color: rgba(25, 190, 107, 0.4);
 }
 .query {
-    /*background-color: rgb(5,25,45);*/
     padding: 2vh 0;
     color: #fff;
 }
 .more {
     text-align: right;
     height: 20px;
-    /* width: 100%;*/
     position: relative;
     margin-right: 3%;
     margin-top: 0.2%;
@@ -564,7 +562,6 @@ export default {
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
-    /*color: rgb(130,199,255);*/
     color: #fff;
     cursor: pointer;
     font-size: 1.28vmin;
@@ -574,7 +571,6 @@ export default {
     background-size: 100% 100%;
     display: inline-block;
     padding: 10px 20px;
-    /*color: rgb(130,199,255);*/
     color: #fff;
     cursor: pointer;
     font-size: 1.28vmin;
@@ -601,7 +597,6 @@ export default {
     font-size: 2.88vmin;
 }
 .disabled {
-    /* color: #656464; */
     display: none;
 }
 .clicked {
@@ -647,6 +642,8 @@ export default {
 
 .query >>> .ivu-select-selection {
     height: 3.2vmin;
+    border-radius: 1vmin;
+    background: transparent;
 }
 
 .videos {
@@ -657,6 +654,7 @@ export default {
     font-size: 1.28vmin !important;
     height: 2.6vmin !important;
     line-height: 3.2vmin !important;
+    color: #fff;
 }
 .query >>> .ivu-select-dropdown {
     max-height: 20vmin !important;

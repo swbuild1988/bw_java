@@ -57,55 +57,6 @@
             </Select>
         </div>
         <div class="area_length"><strong>里程: </strong>{{ areaLeath }}</div>
-        <!-- <Tabs v-model="choosedTabPane" @on-click="chooseTab">
-            <TabPane label="卡片" name="卡片">
-                <Row :gutter="16">
-                    <Col span="12">
-                        <div class="data">
-                            <div class="titles">
-                                <div
-                                    class="title"
-                                    @click="chooseModule(0)"
-                                    :class="{'active' : curModule === 0}"
-                                >
-                                    <span>
-                                        <Icon type="ios-film" class="icons"></Icon>视频
-                                    </span>
-                                </div>
-                                <div
-                                    class="title"
-                                    @click="chooseModule(1)"
-                                    :class="{'active' : curModule === 1}"
-                                >
-                                    <span>
-                                        <Icon type="map" class="icons"></Icon>管廊模型
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="map">
-                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span="12" class="data" style="overflow-y:auto ">
-                        <Row :gutter="16" style="margin-right: 2px;">
-                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                                <SimulatedData
-                                    v-bind:Obj="item"
-                                    v-if="item.datatypeId==1"
-                                    @changeStatus="changeStatus"
-                                ></SimulatedData>
-                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </TabPane>
-            <TabPane label="表格" name="表格">
-                <Table :columns="environmentColums" :data="objTableDate"></Table>
-            </TabPane>
-        </Tabs> -->
         <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="tabs.isShowComponent">
                 <Col span="12">

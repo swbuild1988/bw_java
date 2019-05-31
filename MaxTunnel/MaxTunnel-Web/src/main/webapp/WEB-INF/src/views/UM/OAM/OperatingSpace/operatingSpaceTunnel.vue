@@ -207,12 +207,7 @@ export default {
     margin: 2vmin 0;
     overflow: hidden;
 }
-.green {
-    /* color:rgb(25,190,107);*/
-}
-.red {
-    /* color:rgb(255, 102, 0);*/
-}
+
 .lines {
     padding: 6px;
     font-size: 2.4vmin;
@@ -240,5 +235,22 @@ export default {
     font-size: 4vmin;
     color: #fff;
     align-self: center;
+}
+.storeInfo::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 1vmin; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 0.2vmin;
+}
+.storeInfo::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.storeInfo::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 </style>

@@ -155,9 +155,7 @@ const addBarnLabel = {
         },
         //判断实体类型
         _judgeEntityType(labels,selectedFeatures,geographic){
-            console.log('labels',labels)
-            console.log('selectedFeatures',selectedFeatures)
-            console.log('geographic',geographic)
+            
             if( !labels.length ) return false;
             let moTypeId = _getFieldValues(selectedFeatures,'MOTYPEID');
 
@@ -165,7 +163,8 @@ const addBarnLabel = {
 
             let { viewer } = this;
             let [ currLabel ] = labels.filter( label => changStrLength(label.id,10) == _getFieldValues(selectedFeatures,'MOID')); //获取当前的label
-
+            if( !currLabel ) return;
+            
             let object = {
                 viewer,
                 id:currLabel.id,
