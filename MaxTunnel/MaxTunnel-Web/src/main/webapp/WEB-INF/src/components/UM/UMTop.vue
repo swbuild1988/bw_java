@@ -464,6 +464,9 @@ export default {
     padding: 0.7vmin 1.6vmin;
     border-top: 0.1vmin solid #e9eaec;
 }
+.layout-nav >>> .ivu-dropdown-item:first-child{
+    border-top: none;
+}
 
 .ivu-dropdown-item-divided:before {
     content: "";
@@ -485,4 +488,13 @@ export default {
     border-bottom: 0px;
     color: transparent;
 } */
+.layout-nav >>> .ivu-select-dropdown{
+    margin: 0; 
+    padding: 0; 
+    top: 8.2vh !important;
+    left: 3.2vmin !important;
+}
+.layout-nav >>> .ivu-dropdown-item-divided{
+    margin-top: 0;
+}
 </style>
