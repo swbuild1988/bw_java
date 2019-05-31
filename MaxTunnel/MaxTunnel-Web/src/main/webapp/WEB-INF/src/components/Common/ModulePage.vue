@@ -71,8 +71,7 @@ export default {
             selectPlan: null,
             videoModal: {
                 modalPrams: {
-                    state: false,
-                    planData: null
+                    state: false
                 },
                 alarmContainer: []
             },

@@ -36,15 +36,14 @@
                     <Button type="default" @click="cancelPlan()">取消</Button>
                     </Col>
                     <Col span="8" v-for="(ele, index) in item.plans" :key="index">
-                    <Button type="primary"
-                        @click="startPlan(item.sectionId, ele.id, ele.processKey)">{{ele.name}}</Button>
+                    <Button type="primary" @click="startPlan(item, ele.id, ele.processKey)">{{ele.name}}</Button>
                     </Col>
                 </Row>
             </section>
-            <section class="detailSection" v-show="isShowPlan">
+            <section class="detailSection" v-if="item.plan">
                 <h4>预案步骤</h4>
                 <div style="height:69vmin;max-width:54vmin">
-                    <image-from-url :url="processPicSrc"></image-from-url>
+                    <image-from-url :url="item.plan.processPicSrc"></image-from-url>
                 </div>
             </section>
         </section>
@@ -70,17 +69,15 @@
                 }
             },
             alarmContainer: {
-                type: Object
+                type: Array
             }
         },
         data() {
             return {
-                processPicSrc: null,
                 curVideo: null,
                 videoNum: 0,
                 modalWidth: 600,
                 videoSpan: 0,
-                isShowPlan: false,
                 planStepData: [],
                 cvList: [{
                         key: '温度',
@@ -130,39 +127,69 @@
                 }
             },
             //点击预案名称显示预案步骤
-            startPlan(sectionId, processValue, processKey) {
+            startPlan(alarm, processValue, processKey) {
 
-                // 启动预案监听
-                this.acceptPlanData();
+                let _this = this;
                 // 启动预案
                 this.axios.post("/emplans/start", {
-                    sectionId: sectionId,
+                    sectionId: alarm.sectionId,
                     processValue: processValue
                 }).then(res => {
-                    this.$Message.info("预案执行完成")
-                }).finally(() => {
-                    this.stopPlan();
+                    _this.Log.info("收到启动预案结果：", res)
+                    alarm.plan = {
+                        processInstanceId: res.data.data,
+                        status: "预案已启动",
+                        isFinished: false,
+                        processPicSrc: null
+                    }
+
+                    // 启动预案监听
+                    _this.acceptPlanData();
+                    _this.Log.info("alarmContainer", _this.alarmContainer);
                 });
-                this.isShowPlan = !this.isShowPlan;
 
             },
             // 连接成功回调函数
             callback(data) {
-                this.Log.info("ShowAlarm", data)
                 let result = JSON.parse(data);
                 if (result.type && result.type == "Plan") {
                     let content = JSON.parse(result.content);
                     this.Log.info("ShowAlarm收到预案回调", content)
-                    this.processPicSrc = null;
-                    let _this = this;
-                    this.$nextTick(() => {
-                        _this.processPicSrc =
-                            "/emplans/png/" + content.processInstanceId;
-                    });
+
+                    for (const alarm of this.alarmContainer) {
+                        // 没启动预案，直接过
+                        if (!alarm.plan) continue;
+
+                        this.Log.info("alarmContainer1", this.alarmContainer);
+                        // 找到收到预案消息对应的告警
+                        if (alarm.plan.processInstanceId == content.processInstanceId) {
+                            alarm.plan.isFinished = content.status == "finished";
+                            alarm.plan.status = content.status == "finished" ? "预案进行中" : "预案已完成";
+                            this.$nextTick(() => {
+                                alarm.plan.processPicSrc =
+                                    "/emplans/png/" + content.processInstanceId;
+                            });
+                        }
+                        this.Log.info("alarmContainer2", this.alarmContainer);
+                        if (alarm.plan.isFinished) {
+                            // 如果所有的启动了的预案都已经结束了，关掉预案
+                            if (this.isAllAlarmsPlanFinished()) this.stopPlan();
+                        }
+                        this.Log.info("alarmContainer3", this.alarmContainer);
+                    }
                 }
+            },
+            // 判断所有的告警的预案是不是都已经结束了
+            isAllAlarmsPlanFinished() {
+                for (const alarm of this.alarmContainer) {
+                    if (alarm.plan && !alarm.plan.isFinished) return false;
+                }
+                return true;
             },
             //获取MQ推送的预案消息
             acceptPlanData() {
+                // 如果已经有监听了，就不要坚挺了
+                if (this.TransferStation.getListener("ShowAlarm")) return;
                 this.Log.info("添加监听器到MQ")
                 this.TransferStation.addListener("ShowAlarm", this.callback);
                 this.nodePicState = 1;
@@ -174,7 +201,7 @@
             },
             //点击取消预案
             cancelPlan() {
-                this.isShowPlan = false
+                // 关掉这个告警
             }
         },
     }

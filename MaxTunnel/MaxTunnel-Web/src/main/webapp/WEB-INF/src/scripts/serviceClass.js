@@ -297,6 +297,10 @@ var TransferStation = {
 
     deleteListener: function (key) {
         this.listeners.delete(key)
+    },
+
+    getListener: function(key){
+        this.listeners.get(key);
     }
 }
 
