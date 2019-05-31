@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form :model="task" :label-width="140">
             <h2 class="formTitle" v-show="this.$route.params.isFinished!=true">提交任务执行结果</h2>
             <h2 class="formTitle" v-show="this.$route.params.isFinished==true">任务执行结果详情</h2>
@@ -290,15 +290,6 @@ export default {
             type: [],
             objs:[],
             defectLevel:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             defaultList: [
                 {
                     'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -677,6 +668,25 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{

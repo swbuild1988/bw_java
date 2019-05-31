@@ -922,7 +922,6 @@ export default {
 		padding: 0.1vmin 2vmin;
 		color: #fff;
 		border-radius: 4px;
-		border: 1px solid  #00ffff;
 		cursor: pointer;
 	}
 	.backBtn{

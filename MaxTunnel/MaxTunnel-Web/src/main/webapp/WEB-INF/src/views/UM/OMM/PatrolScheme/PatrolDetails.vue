@@ -1,12 +1,12 @@
 <template>
 	<div style="margin: 24px">
-		<Row>
-		<h2 style="margin-bottom: 10px;">巡检计划详情</h2>
-			<Col span="12" style="padding-right: 20px;background: #fff;">
+		<Row class="formBG">
+		<h2 style="margin-bottom: 10px;color: #fff; margin-left: 3vmin;">巡检计划详情</h2>
+			<Col span="12" style="padding-right: 20px;">
 				<div class="leftContainer">
 					<Form :model="plan" :label-width="100" @submit.native.prevent>
 						<Col span="12">
-							<FormItem label="计划编号：" style="background: #fff">
+							<FormItem label="计划编号：">
 								<Input v-model='plan.planId' disabled></Input>
 							</FormItem>
 						</Col>
@@ -68,7 +68,7 @@
 							<FormItem label="计划步骤：">
 								<ul style="max-height: 100px;overflow-y: auto;">
 									<li v-for="(item, index) in plan.steps" :key="index" class="todoLi">
-										<span>{{index+1}}、</span>
+										<span style="color: #fff">{{index+1}}、</span>
 										<input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
 									</li>
 								</ul>
@@ -95,7 +95,7 @@
 					<ul class="patrolRecordUl">
 						<li v-for="item in patrolRecords" :value="item.id" :key="item.id" :class="[item.taskType==1?'noFinish':(item.taskType==2?'isFinish':'') ]">{{item.id}}</li>
 					</ul>
-					<Table border stripe :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
+					<Table :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
 					<Col span="24" v-show="pageType==pageTypes.Edit" style="text-align: right;margin-top: 20px;">
 						<Button type="primary" @click="submit()">确定</Button>
 						<Button type="primary">取消</Button>
@@ -321,7 +321,6 @@ todoLi{
 }
 .leftContainer,
 .rightContainer {
-	background: #fff;
 	padding: 20px;
 	min-height: 40vh;
 }
@@ -356,6 +355,27 @@ h3 {
     position: absolute;
     bottom: 7vh;
     right: 3vw;
+}
+.formBG{
+	background: url("../../../../assets/UM/infoBox.png") no-repeat;
+	background-size: 100% 100%;
+	padding-top: 3vmin;
+	padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.rightContainer h3, .rightContainer ul{
+	color: #fff;
+}
+.ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
 }
 @media (min-width: 2200px){
     /* .ivu-form.ivu-form-label-right{

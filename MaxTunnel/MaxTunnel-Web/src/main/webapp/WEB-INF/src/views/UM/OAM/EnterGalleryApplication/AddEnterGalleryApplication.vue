@@ -1,5 +1,5 @@
 <template>
-<div :style="backStyle">
+<div class="formBG">
     <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="160" :rules="ruleValidate" @submit.native.prevent>
         <h2 class="formTitle">添加入廊申请</h2>
         <FormItem label="申请人所属公司：" prop="staffCompany">
@@ -70,15 +70,6 @@ export default {
     components: {outSiders},
     data(){ 
         return{
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             approver:{},
             addEnterGalleryApplication:{
                 staffCompany: null,
@@ -282,7 +273,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 740px;
     margin: 20px auto;
-    background: #fff;
     padding: 10px 20px;
 }
 ul li{
@@ -300,6 +290,26 @@ ul li{
     font-size: 12px;
     color: #ed3f14;
 }
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+}
+
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;

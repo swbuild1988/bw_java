@@ -138,8 +138,9 @@ body {
 }
 
 .nullData {
-	font-size: 1.6vmin;
-	text-align: center;
+	font-size: 2.6vmin;
+    text-align: center;
+    color: #fff;
 }
 
 .allDiv .ivu-page-next,

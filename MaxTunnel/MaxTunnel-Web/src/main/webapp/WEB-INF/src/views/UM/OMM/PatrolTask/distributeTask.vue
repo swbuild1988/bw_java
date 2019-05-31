@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div>
         <Form :model="distributeTask" :label-width="100">
             <h2 class="formTitle">分配巡检任务</h2>
             <FormItem label="所属计划：">
@@ -40,28 +40,13 @@ export default {
                 accountId: 1,
                 remark: ''
             },
-            liable:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            }
+            liable:[]
         }
     },
     mounted(){
         this.distributeTask.id =  this.$route.params.id;
         let _this = this
         this.getStaff()
-        // this.axios.get('/staffs').then(response=>{
-            //     let{ code,data } = response.data
-        //     if(code==200){
-            //         this.liable = data
-        //     }
-        // })
     },
     methods:{
         getStaff(){
@@ -87,9 +72,6 @@ export default {
                 error=>{
                     _this.Log.info(error)
                 })
-            // this.axios.get('maintenance-order/' + this.distributeTask.id + '/maintenance-person/' + this.distributeTask.accountId).then(response=>{
-            // });
-
         },
         //返回
         goBack(){
@@ -105,6 +87,25 @@ export default {
         background: #fff;
         padding: 10px 20px;
     }
+    .formBG{
+        background: url("../../../../assets/UM/infoBox.png") no-repeat;
+        background-size: 100% 100%;
+        padding-top: 3vmin;
+        padding-bottom: 3vmin;
+    }
+
+    .formBG >>> .ivu-form-item-label{
+        color: #fff;
+    }
+    .formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+		color: #00fff6;
+		content: '★';
+		display: inline-block;
+		margin-right: 4px;
+		line-height: 1;
+		font-family: SimSun;
+		font-size: 12px;
+	}
     @media (min-width: 2200px){
         .ivu-form.ivu-form-label-right{
             width: 50%;

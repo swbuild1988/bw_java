@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form ref="tools" :model="tools" :rules="validateRules" :label-width="140" @submit.native.prevent>
             <h1 class="formTitle">批量添加仪表工具</h1>
             <FormItem label="仪表工具名称：" prop="name">
@@ -63,15 +63,6 @@ export default {
                 // { val: '损坏', key: 0}
             ],
             toolsModel:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             validateRules: {
                 name: [
                     { required: true, message: '请输入仪表工具名称', trigger: 'blur'  }
@@ -166,7 +157,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 700px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
@@ -175,6 +165,25 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
