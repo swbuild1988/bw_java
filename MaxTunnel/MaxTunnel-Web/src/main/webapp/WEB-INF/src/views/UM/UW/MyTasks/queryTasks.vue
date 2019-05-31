@@ -257,6 +257,7 @@ export default {
         font-size: 18px;
         padding: 5px;
         border-bottom: 2px solid #357aa1;
+        color: #fff;
     }
     .workDetails{
         font-size: 18px;

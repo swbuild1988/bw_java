@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form ref="submitOverhaulDate" :model="submitOverhaulDate" :label-width="140" :rules="validateOverhaul">
             <h2 class="formTitle" v-show="this.pageType==4">提交维修结果</h2>
             <h2 class="formTitle" v-show="this.pageType==1">维修工单详情</h2>
@@ -82,15 +82,6 @@ export default {
             typeKey: null,
             isDisable: false,
             tip: null,
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '30px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             validateOverhaul: {
                 startTime: [
                     { type: 'date', required: true, message: '维修开始时间不能为空', trigger: 'change' }
@@ -189,13 +180,22 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 700px;
     margin: 0px auto;
-    background: #fff;
     padding: 10px 20px;
 }
 .goBack{
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
