@@ -118,6 +118,7 @@ export default {
             })
         },        
         goToMoudle: function (task) {
+            console.log("task", task)
             let pathParams = {
                 name:'',
                 params:null
@@ -192,6 +193,15 @@ export default {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,
                             isFinished: task.isFinished,
+                            id: task.id
+                        }
+                    }
+                    //确认出廊
+                    if(task.taskKey=='leave'&&task.isFinished==false){
+                        pathParams.name = '确认出廊'
+                        pathParams.params = {
+                            processInstanceId: task.processInstanceId,
+                            processType: task.processType,
                             id: task.id
                         }
                     }

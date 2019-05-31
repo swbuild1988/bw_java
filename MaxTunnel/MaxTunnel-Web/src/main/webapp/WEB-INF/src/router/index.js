@@ -887,6 +887,15 @@ export const asyncRouterMap = [{
                             require(["@/views/UM/UW/MyNews/ExamineApprove"], resolve),
                         name: "入廊申请审批"
                     },
+                    {
+                        // 确认出廊
+                        path: "examineApprove/:processInstanceId/:processType",
+                        component: resolve =>
+                            require([
+                                "@/views/UM/UW/MyApplication/ApplicationExamineApprove"
+                            ], resolve),
+                        name: "确认出廊"
+                    },
                     // 提交巡检任务结果、
                     {
                         path: "submitPatralTask/:id",

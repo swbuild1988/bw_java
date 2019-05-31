@@ -155,16 +155,6 @@ export default {
                     this.Log.info(err);
                 }
             );
-        },
-        handleTunnelChange() {
-            TunnelService.getStoresByTunnelId(this.condition.tunnelId).then(
-                res => {
-                    this.selectList.stores = res;
-                },
-                err => {
-                    this.Log.info(err);
-                }
-            );
             TunnelService.getAreasByTunnelId(this.condition.tunnelId).then(
                 res => {
                     this.selectList.areas = res;

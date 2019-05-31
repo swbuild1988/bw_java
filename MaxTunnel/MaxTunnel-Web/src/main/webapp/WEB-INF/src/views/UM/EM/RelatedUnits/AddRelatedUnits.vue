@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
         <Form
             ref="addRelatedUnitsInfo"
             :model="addRelatedUnitsInfo"
@@ -187,17 +187,6 @@ export default {
                 ]
             },
             validateSectionName: false,
-            backStyle: {
-                background:
-                    "url(" +
-                    require("../../../../assets/UM/itemPageBg.png") +
-                    ") no-repeat",
-                height: "96%",
-                position: "relative",
-                backgroundSize: "100% 100%",
-                minHeight: "96%",
-                marginTop: "2%"
-            },
             levels: [
                 {
                     key: "低级",
@@ -399,8 +388,8 @@ export default {
     text-align: center;
     margin-bottom: 4vmin;
     margin-top: -1vmin;
-    font-size: 1.8vmin;
-    color: #49d9fe;
+    font-size: 3.2vmin;
+    color: #fff;
 }
 .save {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
@@ -423,7 +412,7 @@ export default {
     color: #fff;
 }
 .ivu-form-item >>> .ivu-form-item-label {
-    width: 12vmin !important;
+    width: 15vmin !important;
     line-height: 2vmin;
     font-size: 1.4vmin;
     color: #fff;
@@ -453,6 +442,25 @@ export default {
     height: 3.2vmin;
     line-height: 3.2vmin;
     font-size: 1.4vmin;
+}
+.formBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
 }
 @media (min-width: 2200px) {
     .ivu-input-number,

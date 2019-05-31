@@ -1,0 +1,34 @@
+.ivu-table-wrapper>>>.ivu-table td,
+.ivu-table-wrapper>>>.ivu-table th,
+.ivu-table-wrapper>>>.ivu-table:after,
+.ivu-table-wrapper>>>.ivu-table:before,
+.ivu-table-wrapper>>>.ivu-table {
+    background: transparent;
+    color: #fff;
+}
+
+.ivu-table-wrapper>>>.ivu-table th,
+.ivu-table-wrapper>>>.ivu-table td {
+    border-bottom: none;
+}
+
+.common_spen {
+    display: inline-block;
+    transform: translate(0, 8%);
+    margin-right: 2%;
+    color: #fff;
+}
+
+.ivu-select>>>.ivu-select-selection {
+    background-color: transparent;
+}
+
+.ivu-select {
+    color: #fff;
+}
+
+.area_length {
+    position: absolute;
+    left: 70%;
+    color: #fff;
+}
