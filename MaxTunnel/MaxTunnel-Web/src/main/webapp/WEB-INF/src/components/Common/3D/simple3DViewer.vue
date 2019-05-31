@@ -41,7 +41,7 @@
                 type: Object,
                 default: function () {
                     return {
-                        enable: false,
+                        enable: true,
                         interval: 1000
                     };
                 }
@@ -105,30 +105,6 @@
 
                 _this.initUpdate( _this.viewer,_this.scene );
 
-                //滚轮滑动，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.WHEEL);
-                //鼠标左键松开，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.LEFT_UP)
-
-                // _this.handler.setInputAction(e=>{
-                //     var position=_this.scene.pickPosition(e.position)
-                //     var camera=_this.viewer.scene.camera;
-                //     var cartographic = Cesium.Cartographic.fromCartesian(position)
-                //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-                //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                //     var height = cartographic.height;
-                //
-                //     console.log(longitude+"/"+latitude+"/"+height);
-                //     console.log('pitch'+camera.pitch)
-                //     console.log('roll'+camera.roll)
-                //     console.log('heading'+camera.heading)
-                // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
-
-
             },
             initUpdate( viewer,scene ){
                 let _this = this;
@@ -154,7 +130,7 @@
             // 相机位置刷新
             cameraPositionRefresh() {
                 let _this = this;
-
+               
                 setTimeout(() => {
                     try {
                         // 如果刷新相机位置不可用，则退出
@@ -195,6 +171,8 @@
                         };
                         if (!cameraPosition.equals(_this.prePosition)) {
                             _this.prePosition = cameraPosition;
+
+                            _this.addLabel(_this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
 
                             _this.$emit("refreshCameraPosition", cameraPosition);
                         }
@@ -257,7 +235,7 @@
                 }
             },
             processFailed(queryEventArgs) {
-                console.log('查询失败！');
+                console.log('查询失败！sss');
             }
         },
         beforeDestroy() {

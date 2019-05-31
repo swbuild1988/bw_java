@@ -76,7 +76,7 @@ class InformationManagement {
         modelProp.showModelFooter = ['alarm'].indexOf(entity._messageType) !== -1 ? true : false; //用于切换footer插槽
 
         let informations = this.getInformation(entity._messageType);
-        console.log('informations', informations)
+        
         if (informations !== undefined && informations.length !== 0 && Array.isArray(informations)) {
 
             informations.forEach(information => {

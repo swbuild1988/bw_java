@@ -57,55 +57,6 @@
             </Select>
         </div>
         <div class="area_length"><strong>里程: </strong>{{ areaLeath }}</div>
-        <!-- <Tabs v-model="choosedTabPane" @on-click="chooseTab">
-            <TabPane label="卡片" name="卡片">
-                <Row :gutter="16">
-                    <Col span="12">
-                        <div class="data">
-                            <div class="titles">
-                                <div
-                                    class="title"
-                                    @click="chooseModule(0)"
-                                    :class="{'active' : curModule === 0}"
-                                >
-                                    <span>
-                                        <Icon type="ios-film" class="icons"></Icon>视频
-                                    </span>
-                                </div>
-                                <div
-                                    class="title"
-                                    @click="chooseModule(1)"
-                                    :class="{'active' : curModule === 1}"
-                                >
-                                    <span>
-                                        <Icon type="map" class="icons"></Icon>管廊模型
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="map">
-                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span="12" class="data" style="overflow-y:auto ">
-                        <Row :gutter="16" style="margin-right: 2px;">
-                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                                <SimulatedData
-                                    v-bind:Obj="item"
-                                    v-if="item.datatypeId==1"
-                                    @changeStatus="changeStatus"
-                                ></SimulatedData>
-                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </TabPane>
-            <TabPane label="表格" name="表格">
-                <Table :columns="environmentColums" :data="objTableDate"></Table>
-            </TabPane>
-        </Tabs> -->
         <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="tabs.isShowComponent">
                 <Col span="12">
@@ -312,29 +263,6 @@
                 this.choosedTabPane = '卡片'
             }
         },
-        // beforeRouteLeave(to, from, next) {
-        //     if (
-        //         to.name == "设备管理主页" ||
-        //         to.name == "巡检计划总览" ||
-        //         to.name == "虚拟巡检" ||
-        //         to.name == "人员定位详情" ||
-        //         to.name == "管廊安防监控列表" ||
-        //         to.name == "管廊环境监控列表" ||
-        //         to.name == "管廊机电监控列表" ||
-        //         to.name == "管廊消防监控列表" ||
-        //         to.name == "管廊管线监控列表" 
-        //     ) {
-        //         from.meta.keepAlive = true;
-        //         to.meta.keepAlive = true;
-        //         this.$destroy();
-        //         next();
-        //     } else {
-        //         to.meta.keepAlive = false;
-        //         from.meta.keepAlive = false;
-        //         this.$destroy();
-        //         next();
-        //     }
-        // },
         components: {
             SimulatedData,
             showSwitchData,
@@ -575,36 +503,6 @@
                 // if (datatypeId != 1) {
                 //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
                 // }
-                if (clickStatus) {
-                    this.Obj.forEach(b => {
-                        if (b.id == id) {
-                            b.clickStatus = clickStatus;
-                            this.Log.info("click " + b.id);
-                            SuperMapSqlQuery(
-                                    this.SuperMapConfig.BIM_DATA,
-                                    this.VMConfig.queryParam,
-                                    "moid = " + b.id
-                                )
-                                .then(res => {
-                                    this.Log.info("查找成功", res);
-                                    if (res.length > 0) {
-                                        this.$refs.smViewer.LookAt1(
-                                            res[0],
-                                            50,
-                                            -10,
-                                            5
-                                        );
-                                    }
-                                })
-                                .then(res => {
-                                    this.Log.info("查找失败", res);
-                                });
-                        } else {
-                            b.clickStatus = !clickStatus;
-                        }
-                    });
-
-                }
 
             },
             getStoreId(data) {

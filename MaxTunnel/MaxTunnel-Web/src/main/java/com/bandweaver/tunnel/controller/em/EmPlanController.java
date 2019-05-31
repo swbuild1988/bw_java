@@ -75,7 +75,7 @@ public class EmPlanController extends BaseController<EmPlan> {
     private EmPlanService emPlanService;
     @Autowired
     private SectionService sectionService;
-    
+
     @Autowired
     private EmPlanGroupService emPlanGroupService;
     @Autowired
@@ -86,24 +86,28 @@ public class EmPlanController extends BaseController<EmPlan> {
     private SubSystemService subSystemService;
 
 
-    /**获取流程执行过程的png图片
+    /**
+     * 获取流程执行过程的png图片
+     *
      * @param processInstanceId 流程实例id
      * @param response
      */
-    @RequestMapping(value = "emplans/png/{processInstanceId}",method = RequestMethod.GET)
+    @RequestMapping(value = "emplans/png/{processInstanceId}", method = RequestMethod.GET)
     public void getynaDmicPng(@PathVariable("processInstanceId") String processInstanceId, HttpServletResponse response) {
         activitiService.getImageByProcessInstance(processInstanceId, response);
     }
 
 
-    /**获取流程静态图片
+    /**
+     * 获取流程静态图片
+     *
      * @param processValue 4003
      * @param response
      */
-    @RequestMapping(value = "emplans/png/static/{processValue}",method = RequestMethod.GET)
+    @RequestMapping(value = "emplans/png/static/{processValue}", method = RequestMethod.GET)
     public void getStaticPng(@PathVariable("processValue") int processValue, HttpServletResponse response) {
         String pngPath = PropertiesUtil.getString(ProcessTypeEnum.getEnum(processValue).getPngPath());
-        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(pngPath); OutputStream os = response.getOutputStream();){
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(pngPath); OutputStream os = response.getOutputStream();) {
             response.setContentType("image/png");
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes);
@@ -132,7 +136,7 @@ public class EmPlanController extends BaseController<EmPlan> {
         for (String str : arr) {
             ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(DataTypeUtil.toInteger(str));
             activitiService.deploy(PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
-                     PropertiesUtil.getValue(processTypeEnum.getPngPath()), processTypeEnum.getName());
+                    PropertiesUtil.getValue(processTypeEnum.getPngPath()), processTypeEnum.getName());
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
@@ -142,7 +146,6 @@ public class EmPlanController extends BaseController<EmPlan> {
      * 手动执行预案
      *
      * @param
-     * @param processValue 应急预案类型
      * @return
      * @author shaosen
      * @Date 2018年12月20日
@@ -150,25 +153,46 @@ public class EmPlanController extends BaseController<EmPlan> {
     @RequestMapping(value = "emplans/start", method = RequestMethod.POST)
     public JSONObject startPlan(@RequestBody JSONObject reqJson) {
 
-        CommonUtil.hasAllRequired(reqJson, "areaId,storeId,processValue");
+        CommonUtil.hasAllRequired(reqJson, "processValue");
         Integer areaId = reqJson.getInteger("areaId");
         Integer storeId = reqJson.getInteger("storeId");
+        Integer sectionId = reqJson.getInteger("sectionId");
         Integer processValue = reqJson.getInteger("processValue");
 
-        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
-        if (section == null) {
-            throw new BandWeaverException("section不存在");
+        int secId = 0;
+        if (sectionId == null) {
+            if (storeId == null || areaId == null) throw new BandWeaverException("缺少必填参数:areaId 或 storeId");
+
+            Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+            if (section == null) throw new BandWeaverException("section不存在");
+            secId = section.getId().intValue();
+
+        } else {
+            secId = sectionId.intValue();
         }
+
+        // 启动预案,获得实例ID
+        String processInstanceId = startPlanBySectionId(secId, processValue.intValue());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, processInstanceId);
+    }
+
+    /**
+     * 启动某section的processValue预案
+     *
+     * @param sectionId
+     * @param processValue
+     */
+    private String startPlanBySectionId(int sectionId, int processValue) {
         // 查询仓以及仓关联的进气出气仓等
-        List<Section> sectionList = sectionService.getSectionListByParentId(section.getId());
-        emPlanService.start(sectionList, processValue);
+        List<Section> sectionList = sectionService.getSectionListByParentId(sectionId);
+        String processInstanceId = emPlanService.start(sectionList, processValue);
+        return processInstanceId;
 
         // 最后再查一次
-        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
-        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
-        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
-        emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList);
-        return CommonUtil.success();
+//        EmPlan emPlan = (EmPlan) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_KEY);
+//        String processInstanceId = (String) ContextUtil.getSession().getAttribute(Constants.EMPLAN_PROCESSINSTANCE_ID);
+//        List<MeasObj> measObjList = (List<MeasObj>) ContextUtil.getSession().getAttribute(Constants.EMPLAN_OBJ_LIST_KEY);
+//        emPlanService.sendMsg(emPlan, processInstanceId, sectionList, measObjList)
     }
 
 
@@ -347,13 +371,12 @@ public class EmPlanController extends BaseController<EmPlan> {
     }
 
 
-    
-    
     //--------------------------------预案-组--------------------------------
-    
-    
+
+
     /**
      * 添加预案-组
+     *
      * @param planId
      * @param name
      * @return
@@ -362,12 +385,13 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-groups", method = RequestMethod.POST)
     public JSONObject add(@RequestBody EmPlanGroup e) {
-    	emPlanGroupService.insertSelective(e);
+        emPlanGroupService.insertSelective(e);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 修改
+     *
      * @param id
      * @param planId
      * @param name
@@ -377,12 +401,13 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-groups", method = RequestMethod.PUT)
     public JSONObject update(@RequestBody EmPlanGroup e) {
-    	emPlanGroupService.updateByPrimaryKeySelective(e);
+        emPlanGroupService.updateByPrimaryKeySelective(e);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 通过id获取详情
+     *
      * @param id
      * @return
      * @author ya.liu
@@ -390,15 +415,16 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-groups/{id}", method = RequestMethod.GET)
     public JSONObject getDtoById(@PathVariable("id") Integer id) {
-    	EmPlanGroupDto dto = emPlanGroupService.getById(id);
+        EmPlanGroupDto dto = emPlanGroupService.getById(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
     }
-    
+
     /**
      * 条件查询，不分页
+     *
      * @param id
      * @param planId
-     * @param name 支持模糊查询
+     * @param name      支持模糊查询
      * @param staffId
      * @param startTime
      * @param endTime
@@ -408,32 +434,34 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-groups/condition", method = RequestMethod.POST)
     public JSONObject getDtoList(@RequestBody(required = false) EmPlanGroupVo vo) {
-    	List<EmPlanGroupDto> list = emPlanGroupService.getByCondition(vo);
+        List<EmPlanGroupDto> list = emPlanGroupService.getByCondition(vo);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 分页查询
+     *
      * @param id
      * @param planId
-     * @param name 支持模糊查询
+     * @param name      支持模糊查询
      * @param staffId
      * @param startTime
      * @param endTime
-     * @param pageSize 必传
-     * @param pageNum  必传
+     * @param pageSize  必传
+     * @param pageNum   必传
      * @return
      * @author ya.liu
      * @Date 2019年4月24日
      */
     @RequestMapping(value = "plan-groups/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody EmPlanGroupVo vo) {
-    	PageInfo<EmPlanGroupDto> list = emPlanGroupService.dataGrid(vo);
+        PageInfo<EmPlanGroupDto> list = emPlanGroupService.dataGrid(vo);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 删除
+     *
      * @param id
      * @return
      * @author ya.liu
@@ -441,53 +469,55 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-groups/{id}", method = RequestMethod.DELETE)
     public JSONObject deleteById(@PathVariable("id") Integer id) {
-    	emPlanGroupService.deleteByPrimaryKey(id);
+        emPlanGroupService.deleteByPrimaryKey(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
-    
-    
+
+
 //--------------------------------预案-成员--------------------------------
-    
-    
+
+
     /**
      * 添加预案-成员
+     *
      * @param id
      * @param groupId
      * @param staffId
      * @param tel
      * @param tel2
-     * @param role 成员所在角色：1为组长；其他为组员
+     * @param role    成员所在角色：1为组长；其他为组员
      * @return
      * @author ya.liu
      * @Date 2019年4月24日
      */
     @RequestMapping(value = "plan-members/{role}", method = RequestMethod.POST)
     public JSONObject addMember(@PathVariable("role") Integer role, @RequestBody EmPlanMember e) {
-    	emPlanMemberService.insertSelective(e, role);
+        emPlanMemberService.insertSelective(e, role);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 修改
+     *
      * @param id
      * @param groupId
      * @param staffId
      * @param tel
      * @param tel2
-     * @param role 成员所在角色：1为组长；其他为组员
+     * @param role    成员所在角色：1为组长；其他为组员
      * @return
      * @author ya.liu
      * @Date 2019年4月24日
      */
     @RequestMapping(value = "plan-members/{role}", method = RequestMethod.PUT)
     public JSONObject update(@PathVariable("role") Integer role, @RequestBody EmPlanMember e) {
-    	emPlanMemberService.updateByPrimaryKeySelective(e, role);
+        emPlanMemberService.updateByPrimaryKeySelective(e, role);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 通过id获取详情
+     *
      * @param id
      * @return
      * @author ya.liu
@@ -495,19 +525,20 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-members/{id}", method = RequestMethod.GET)
     public JSONObject getDtosById(@PathVariable("id") Integer id) {
-    	EmPlanMemberDto dto = emPlanMemberService.getById(id);
+        EmPlanMemberDto dto = emPlanMemberService.getById(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
     }
-    
+
     /**
      * 条件查询，不分页
+     *
      * @param id
      * @param groupId
-     * @param tel 支持模糊查询
-     * @param tel2 支持模糊查询
+     * @param tel       支持模糊查询
+     * @param tel2      支持模糊查询
      * @param staffId
-     * @param role 成员角色：1为组长，2为组员
-     * @param planId 预案id
+     * @param role      成员角色：1为组长，2为组员
+     * @param planId    预案id
      * @param startTime
      * @param endTime
      * @return
@@ -516,52 +547,54 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-members/condition", method = RequestMethod.POST)
     public JSONObject getDtosList(@RequestBody(required = false) EmPlanMemberVo vo) {
-    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
-    	if(vo.getPlanId() != null)
-    		list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
-        if(vo.getRole() != null) {
-        	if(vo.getRole() == 1)
-        		list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
-        	else
-        		list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+        if (vo.getPlanId() != null)
+            list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
+        if (vo.getRole() != null) {
+            if (vo.getRole() == 1)
+                list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+            else
+                list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
         }
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
-    
+
     /**
      * 分页查询
+     *
      * @param id
      * @param groupId
-     * @param tel 支持模糊查询
-     * @param tel2 支持模糊查询
+     * @param tel       支持模糊查询
+     * @param tel2      支持模糊查询
      * @param staffId
-     * @param role 成员角色：1为组长，2为组员
-     * @param planId 预案id
+     * @param role      成员角色：1为组长，2为组员
+     * @param planId    预案id
      * @param startTime
      * @param endTime
-     * @param pageSize 必传
-     * @param pageNum  必传
+     * @param pageSize  必传
+     * @param pageNum   必传
      * @return
      * @author ya.liu
      * @Date 2019年4月24日
      */
     @RequestMapping(value = "plan-members/datagrid", method = RequestMethod.POST)
     public JSONObject memberDataGrid(@RequestBody EmPlanMemberVo vo) {
-    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
-    	if(vo.getPlanId() != null)
-    		list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
-        if(vo.getRole() != null) {
-        	if(vo.getRole() == 1)
-        		list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
-        	else
-        		list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+        List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+        if (vo.getPlanId() != null)
+            list = list.stream().filter(e -> vo.getPlanId().equals(e.getGroup().getPlanId())).collect(Collectors.toList());
+        if (vo.getRole() != null) {
+            if (vo.getRole() == 1)
+                list = list.stream().filter(e -> e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
+            else
+                list = list.stream().filter(e -> !e.getStaffId().equals(e.getGroup().getStaffId())).collect(Collectors.toList());
         }
         ListPageUtil<EmPlanMemberDto> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
     }
-    
+
     /**
      * 删除
+     *
      * @param id
      * @return
      * @author ya.liu
@@ -569,12 +602,13 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-members/{id}", method = RequestMethod.DELETE)
     public JSONObject deletesById(@PathVariable("id") Integer id) {
-    	emPlanMemberService.deleteByPrimaryKey(id);
+        emPlanMemberService.deleteByPrimaryKey(id);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 判断某人是否已经加入到某组中
+     *
      * @param groupId
      * @param staffId
      * @return
@@ -583,54 +617,55 @@ public class EmPlanController extends BaseController<EmPlan> {
      */
     @RequestMapping(value = "plan-members/checked", method = RequestMethod.POST)
     public JSONObject checked(@RequestBody EmPlanMemberVo vo) {
-    	List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
-    	Boolean flag = true;
-    	if(list != null && list.size() > 0) flag = false;
+        List<EmPlanMemberDto> list = emPlanMemberService.getByCondition(vo);
+        Boolean flag = true;
+        if (list != null && list.size() > 0) flag = false;
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, flag);
     }
-    
+
     /**
      * 树形结构查看预案详情
+     *
      * @return
      * @author ya.liu
      * @Date 2019年4月25日
      */
     @RequestMapping(value = "plan-members/tree", method = RequestMethod.GET)
     public JSONObject tree() {
-    	List<JSONObject> list = new ArrayList<>();
-    	for(ProcessTypeEnum e : ProcessTypeEnum.getEmPlanList()) {
-    		JSONObject obj = new JSONObject();
-    		obj.put("name", e.getName());
-    		List<JSONObject> children1 = new ArrayList<>();
-    		EmPlanGroupVo vo1 = new EmPlanGroupVo();
-    		vo1.setPlanId(e.getValue());
-    		List<EmPlanGroupDto> groupList = emPlanGroupService.getByCondition(vo1);
-    		for(EmPlanGroupDto dto : groupList) {
-    			EmPlanMemberVo vo2 = new EmPlanMemberVo();
-    			vo2.setGroupId(dto.getId());
-    			List<EmPlanMemberDto> memberList = emPlanMemberService.getByCondition(vo2);
-    			String leader = "-无组长";
-    			JSONObject objGroup = new JSONObject();
-    			List<JSONObject> children2 = new ArrayList<>();
-    			for(EmPlanMemberDto dto2 : memberList) {
-    				String tel = dto2.getTel() == null ? (dto2.getTel2() == null ? "无手机号" : dto2.getTel2()) : dto2.getTel();
-    				if(dto2.getStaffId().equals(dto.getStaffId())) {
-    					leader = "-" + dto.getStaff().getName() + "-" + tel;
-    				} else {
-    					JSONObject objMember = new JSONObject();
-    					objMember.put("name", "组员-" + dto2.getStaff().getName() + "-" + tel);
-    					objMember.put("value", dto2.getId());
-    					children2.add(objMember);
-    				}
-    			}
-    			
-    			objGroup.put("name", dto.getName() + leader);
-    			objGroup.put("children", children2);
-    			children1.add(objGroup);
-    		}
-    		obj.put("children", children1);
-    		list.add(obj);
-    	}
+        List<JSONObject> list = new ArrayList<>();
+        for (ProcessTypeEnum e : ProcessTypeEnum.getEmPlanList()) {
+            JSONObject obj = new JSONObject();
+            obj.put("name", e.getName());
+            List<JSONObject> children1 = new ArrayList<>();
+            EmPlanGroupVo vo1 = new EmPlanGroupVo();
+            vo1.setPlanId(e.getValue());
+            List<EmPlanGroupDto> groupList = emPlanGroupService.getByCondition(vo1);
+            for (EmPlanGroupDto dto : groupList) {
+                EmPlanMemberVo vo2 = new EmPlanMemberVo();
+                vo2.setGroupId(dto.getId());
+                List<EmPlanMemberDto> memberList = emPlanMemberService.getByCondition(vo2);
+                String leader = "-无组长";
+                JSONObject objGroup = new JSONObject();
+                List<JSONObject> children2 = new ArrayList<>();
+                for (EmPlanMemberDto dto2 : memberList) {
+                    String tel = dto2.getTel() == null ? (dto2.getTel2() == null ? "无手机号" : dto2.getTel2()) : dto2.getTel();
+                    if (dto2.getStaffId().equals(dto.getStaffId())) {
+                        leader = "-" + dto.getStaff().getName() + "-" + tel;
+                    } else {
+                        JSONObject objMember = new JSONObject();
+                        objMember.put("name", "组员-" + dto2.getStaff().getName() + "-" + tel);
+                        objMember.put("value", dto2.getId());
+                        children2.add(objMember);
+                    }
+                }
+
+                objGroup.put("name", dto.getName() + leader);
+                objGroup.put("children", children2);
+                children1.add(objGroup);
+            }
+            obj.put("children", children1);
+            list.add(obj);
+        }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
 }

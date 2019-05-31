@@ -52,8 +52,7 @@ const permission = async () => {
                     NProgress.done(); // 结束Progress
                 }
             } else if (!store.getters.role || store.getters.role.length == 0) {
-                console.log('to2', to)
-                console.log('from2', from)
+                
                 store.dispatch('GetInfo').then(() => {
                         next({
                             ...to,
@@ -68,8 +67,6 @@ const permission = async () => {
                         NProgress.done();
                     });
             } else {
-                console.log('to3', to)
-                console.log('from3', from)
                 next();
             }
 

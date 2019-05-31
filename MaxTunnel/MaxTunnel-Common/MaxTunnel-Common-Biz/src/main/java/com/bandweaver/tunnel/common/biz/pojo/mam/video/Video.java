@@ -97,14 +97,20 @@ public class Video extends MeasObj {
 		this.password = password;
 	}
 
-	@Override
-	public String toString() {
-		return "Video [serverId=" + serverId + ", videoSceneId=" + videoSceneId
-				+ ", videoExtendSceneId=" + videoExtendSceneId + ", channelNo="
-				+ channelNo + ", vendor=" + vendor + ", ip=" + ip + ", port="
-				+ port + ", username=" + username + ", password=" + password
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "Video{" +
+                "serverId=" + serverId +
+                ", videoSceneId=" + videoSceneId +
+                ", videoExtendSceneId=" + videoExtendSceneId +
+                ", channelNo=" + channelNo +
+                ", vendor=" + vendor +
+                ", ip='" + ip + '\'' +
+                ", port=" + port +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                "} " + super.toString();
+    }
 
 
 }
