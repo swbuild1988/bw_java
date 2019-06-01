@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.common.biz.pojo.xml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,11 +19,19 @@ public class Config implements Serializable{
 	
 	private List<RelatedUnit> units;
 	
-	public Config() {}
-	
-	public Config(TunnelParam tunnelParam, List<EquipmentTypeFile> typeFiles) {
-		this.tunnelParam = tunnelParam;
-		this.typeFiles = typeFiles;
+	public void init(){
+		if(this.tunnelParam == null)
+			this.tunnelParam = new TunnelParam(0, 0, 0, 0, 0, 0, 0, 0);
+		if(this.units == null || this.units.size() < 1) {
+			List<RelatedUnit> units = new ArrayList<>();
+			units.add(new RelatedUnit(1, "112", "37"));
+			this.units = units;
+		}
+		if(this.typeFiles == null || this.typeFiles.size() < 1) {
+			List<EquipmentTypeFile> typeFiles = new ArrayList<>();
+    		typeFiles.add(new EquipmentTypeFile("01", "…Ë±∏", 0));
+    		this.typeFiles = typeFiles;
+		}
 	}
 	
 	public TunnelParam getTunnelParam() {

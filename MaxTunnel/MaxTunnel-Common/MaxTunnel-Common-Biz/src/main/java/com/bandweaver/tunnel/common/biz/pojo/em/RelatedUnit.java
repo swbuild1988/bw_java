@@ -35,8 +35,17 @@ public class RelatedUnit implements Serializable {
     private String sectionIds;
     
     private Date crtTime;
+    
+    public RelatedUnit() {}
 
-    public Integer getId() {
+    public RelatedUnit(Integer id, String longitude, String latitude) {
+		super();
+		this.id = id;
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
+
+	public Integer getId() {
         return id;
     }
 

@@ -3,10 +3,8 @@ package com.bandweaver.tunnel.common.platform.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
  
@@ -30,7 +28,7 @@ public class XMLUtil {
 	 * @Date 2019年5月27日
 	 */
 	public static void convertToXml(Object obj, String path) {
-		FileWriter fw = null;
+		FileOutputStream fos = null;
 		try {
 			// 利用jdk中自带的转换类实现
 			JAXBContext context = JAXBContext.newInstance(obj.getClass());
@@ -41,15 +39,15 @@ public class XMLUtil {
 					Boolean.TRUE);
 			// 将对象转换成输出流形式的xml
 			// 创建输出流
-			fw = new FileWriter(path);
-			marshaller.marshal(obj, fw);
+			fos = new FileOutputStream(new File(path));
+			marshaller.marshal(obj, fos);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				fw.close();
+				fos.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -67,20 +65,20 @@ public class XMLUtil {
 	@SuppressWarnings("unchecked")
 	public static Object convertXmlFileToObject(Class clazz, String xmlPath) {
 		Object xmlObject = null;
-		FileReader fr = null;
+		FileInputStream fis = null;
 		try {
 			JAXBContext context = JAXBContext.newInstance(clazz);
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
-			fr = new FileReader(xmlPath);
-			xmlObject = unmarshaller.unmarshal(fr);
+			fis = new FileInputStream(new File(xmlPath));
+			xmlObject = unmarshaller.unmarshal(fis);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				fr.close();
+				fis.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
