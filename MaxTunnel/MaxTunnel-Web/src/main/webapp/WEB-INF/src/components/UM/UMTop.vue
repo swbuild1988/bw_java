@@ -2,13 +2,13 @@
     <Layout>
         <Header :style="{position: 'fixed', width: '100%',zIndex:999,padding:'0',color:'#1b1754'}">
             <Menu mode="horizontal" active-name="1" :style="{color:'#1b1754'}">
-                <div class="layout-logo"></div>
-                <div class="layout-title">
-                    <!-- <h1> -->
-                    <a @click="goToMoudle({ path: '/UMMain'})">
-                        <img :src="titlePic" class="mainTitle">
-                    </a>
-                    <!-- </h1> -->
+                <div class="layoutLeft">
+                    <div class="layout-logo"></div>
+                    <div class="layout-title">
+                        <a @click="goToMoudle({ path: '/UMMain'})">
+                            <img :src="titlePic" class="mainTitle">
+                        </a>
+                    </div>
                 </div>
                 <div class="layout-nav">
                     <div style="position: fixed;right: 3.4vmin;height:6%">
@@ -33,7 +33,7 @@
                         </MenuItem>
                         <!-- 人物圆点 -->
                         <div style="position:relative;float: right;margin-left: 6.25rem;">
-                            <Dropdown>
+                            <Dropdown style="left: -7vmin !important;">
                                 <a href="javascript:void(0)">
                                     <Badge :count="countNum">
                                         <Avatar
@@ -44,7 +44,7 @@
                                         ></Avatar>
                                     </Badge>
                                 </a>
-                                <DropdownMenu slot="list">
+                                <DropdownMenu slot="list" class="select-dropdown">
                                     <DropdownItem
                                         @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})"
                                     >我的消息</DropdownItem>
@@ -83,7 +83,7 @@ export default {
         return {
             umImg: Img,
             // title: "综合管廊统一管理平台",
-            titlePic: require("../../assets/UM/maxTunnelHome.png"),
+            titlePic: require("../../assets/UM/umToptitle.png"),
             aboutUs: {
                 show: {
                     state: false
@@ -391,15 +391,17 @@ export default {
 .ivu-btn-primary {
     border-color: transparent;
 }
-
-.layout-logo {
-    height: 6vh;
-    width: 4vw;
-    border-radius: 3px;
-    position: relative;
-    background: url("../../assets/UM/Maxview.png") no-repeat center;
+.layoutLeft {
+    float:left;
+    height:100%;
+}
+.layoutLeft .layout-logo {
+    height: 6vmin;
+    margin-top: 4%;
+    width: 6.5vmin;
+    background: url("../../assets/UM/Maxview.png") no-repeat;
+    background-size: 100% 100%;
     float: left;
-    top: 1.2vh;
 }
 
 .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item {
@@ -425,7 +427,7 @@ export default {
 }
 
 .mainTitle {
-    margin-top: 3.5vh;
+    margin-top: 3vh;
     margin-left: 0.8vw;
     height: 4.5vh;
 }
@@ -463,6 +465,13 @@ export default {
     /* margin-top: 0.5vmin; */
     padding: 0.7vmin 1.6vmin;
     border-top: 0.1vmin solid #e9eaec;
+    color: #fff;
+    text-align: center;
+    
+}
+.layout-nav >>> .ivu-dropdown-item:hover {
+    color: #000;
+    background: rgba(255,255,255,.6);
 }
 .layout-nav >>> .ivu-dropdown-item:first-child{
     border-top: none;
@@ -492,9 +501,15 @@ export default {
     margin: 0; 
     padding: 0; 
     top: 8.2vh !important;
-    left: 2vmin !important;
+    left: 3.4vmin !important;
+    background-color: rgba(50,103,156,.5);
+    box-shadow: 0 0px 8px 0 rgba(57, 123, 187, .5), 0 1px 0px 0 rgba(57, 123, 187, .6)
 }
 .layout-nav >>> .ivu-dropdown-item-divided{
     margin-top: 0;
 }
+.select-dropdown {
+    left: -7vmin !important;
+}
+
 </style>

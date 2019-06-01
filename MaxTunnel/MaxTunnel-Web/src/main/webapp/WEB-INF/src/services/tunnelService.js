@@ -525,7 +525,7 @@ var TunnelService = {
     },
     getRelatedUnits(){
         return new Promise((resolve, reject) => {
-            get('config/xml').then(res=>{
+            get('config/xml/units').then(res=>{
                 let{ code, data, msg } = res.data
                 if( code == 200 ){
                     resolve(data)

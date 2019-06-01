@@ -570,10 +570,10 @@ export default {
     addRelatedUnits(){
       
       TunnelService.getRelatedUnits().then( result => {
-        if( !result.units.length ) return;
+        if( !result.length ) return;
 
         let IM = Vue.prototype.IM,
-            units = result.units;
+            units = result;
         
         IM.deleteInformation(units,'unitPlace', 'id');
         
