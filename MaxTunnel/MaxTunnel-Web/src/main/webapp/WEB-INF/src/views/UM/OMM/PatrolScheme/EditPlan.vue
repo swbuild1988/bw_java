@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div>
         <Form :model="uploadPlan"  label-position="top" @submit.native.prevent>
             <h2 class="formTitle" style="color: #fff">修改巡检计划</h2>
             <Row>
@@ -150,14 +150,6 @@ export default {
             interval: 3
         },
         inspectTimeContainer:[],
-        backStyle:{
-            backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-            position: 'relative',
-            backgroundAttachment: 'fixed',
-            backgroundSize: 'cover',
-            minHeight: '100%',
-            paddingTop: '20px'
-        }
     };
   },
   watch: {

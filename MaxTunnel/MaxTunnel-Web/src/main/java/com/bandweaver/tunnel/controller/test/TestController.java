@@ -16,16 +16,12 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
-import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
-import com.bandweaver.tunnel.common.biz.pojo.xml.EquipmentTypeFile;
-import com.bandweaver.tunnel.common.biz.pojo.xml.TunnelParam;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.common.platform.util.XMLUtil;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,24 +56,6 @@ public class TestController {
     @Autowired
     private AlarmService alarmService;
 
-    @RequestMapping(value = "config/xml", method = RequestMethod.GET)
-    public JSONObject testareas() {
-    	String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
-    	Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
-    	if(config == null) {
-    		TunnelParam tunnelParam = new TunnelParam(0,0,0,0,0,0,0,0);
-    		EquipmentTypeFile typeFile1 = new EquipmentTypeFile("01", "设备", 0);
-    		EquipmentTypeFile typeFile2 = new EquipmentTypeFile("02", "设备", 0);
-    		List<EquipmentTypeFile> typeFiles = new ArrayList<>();
-    		typeFiles.add(typeFile1);
-    		typeFiles.add(typeFile2);
-    		config = new Config(tunnelParam, typeFiles);
-    		XMLUtil.convertToXml(config, path);
-    	}
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, config);
-    }
-    
-    
     /**
      * 测试添加每个管廊的moid和总能耗
      *

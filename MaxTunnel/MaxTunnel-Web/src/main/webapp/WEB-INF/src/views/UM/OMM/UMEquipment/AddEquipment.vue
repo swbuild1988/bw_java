@@ -168,15 +168,6 @@ export default {
             //监测对象
             objs: [],
             objTypes: [],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             //图片上传
             defaultList: [
                 // {

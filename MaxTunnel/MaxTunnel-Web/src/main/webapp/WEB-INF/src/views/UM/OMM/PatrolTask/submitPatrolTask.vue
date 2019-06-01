@@ -25,14 +25,14 @@
                 <ul style="max-height: 100px;overflow-y: auto;">
                     <li v-for="(item, index) in task.steps" :key="index" class="todoLi">
                         <Checkbox v-model="item.isFinished"></Checkbox>
-                        <span>{{index+1}}、</span>
+                        <span style="color: #fff">{{index+1}}、</span>
                         <input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
                     </li>
                 </ul>
             </FormItem>
             <FormItem label="巡检记录：">
                 <Table :columns="columns10" :data="this.task.records"></Table>
-                <Button type="dashed" long @click="handleAddRecords" icon="plus-round" v-show="this.$route.params.isFinished!=true">添加巡检记录</Button>
+                <Button type="dashed" long @click="handleAddRecords" icon="plus-round" v-show="this.$route.params.isFinished!=true" style="color: #fff">添加巡检记录</Button>
             </FormItem>
             <FormItem label="巡检图片">
                 <div class="demo-upload-list" v-for="item in uploadList" :key="item.id">
@@ -588,7 +588,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 800px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
     margin-top: 40px;
 }
