@@ -35,7 +35,7 @@
             <FormItem label="巡检步骤：">
                 <ul>
                     <li v-for="(item, index) in plans.steps" :key="index" class="todoLi">
-                        <span>{{index+1}}、</span>
+                        <span style="color: #fff">{{index+1}}、</span>
                         <input class="todoEidt" :value="item.name" placeholder="请输入要执行的计划步骤" />
                     </li>
                 </ul>

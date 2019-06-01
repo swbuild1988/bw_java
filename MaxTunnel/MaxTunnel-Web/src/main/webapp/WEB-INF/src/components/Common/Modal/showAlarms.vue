@@ -5,6 +5,7 @@
                 <article>
                     <h2>{{item.objectName}}</h2>
                     <h3>{{item.alarmName}}</h3>
+                    <div>{{item.location}}</div>
                 </article>
             </section>
             <section class="videoSection">
@@ -53,6 +54,7 @@
 <script>
     import videoComponent from '../Video/VideoComponent.vue'
     import ImageFromUrl from "../../Common/ImageFromUrl"
+    import UmLayoutBg from '@/assets/UM/UmLayoutBg.png'
     export default {
         components: {
             videoComponent,
@@ -112,6 +114,7 @@
         },
         mounted() {
             this.alarms = this.alarmContainer
+            console.log('this.alarms', this.alarms)
             this.setVideoSpan();
         },
         methods: {

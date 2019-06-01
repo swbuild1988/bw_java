@@ -89,12 +89,6 @@ export default {
                 total: 20,
                 current: 1
             },
-            backStyle: {
-                backgroundImage:
-                    "url(" + require("../../assets/UM/bgCloudWhite.png") + ")",
-                height: "100%",
-                position: "relative"
-            },
             selectedName: null,
             openNames: ["1"],
             nodesModal: {
