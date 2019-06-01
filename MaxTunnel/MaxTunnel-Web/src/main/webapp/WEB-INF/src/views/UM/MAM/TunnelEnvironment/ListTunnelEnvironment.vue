@@ -144,14 +144,13 @@
                 let {
                     queryCondition
                 } = this;
-                !queryCondition.areaId &&
-                    (queryCondition.areaId = null);
+                let areaId = !queryCondition.areaId ? null : queryCondition.areaId ;
                 !queryCondition.storeId &&
                     (queryCondition.storeId = null);
                 let parms = {
                     tunnelId: queryCondition.tunnelId,
                     storeId: queryCondition.storeId,
-                    areaId: queryCondition.areaId
+                    areaId: areaId
                 };
 
                 MonitorDataService.getMaxMonitorData(parms).then(result => {

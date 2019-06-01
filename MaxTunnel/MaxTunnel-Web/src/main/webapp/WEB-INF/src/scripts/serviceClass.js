@@ -147,12 +147,6 @@ class InformationManagement {
                 });
             }
         }
-        let processObj = this._processInformation(infromationManagDetails[entity._messageType + 'Infromations'], details, information);
-        console.log('processObj', processObj)
-        processObj && modelProp.data.push({
-            key: processObj.key,
-            val: processObj.val
-        });
     }
 }
 

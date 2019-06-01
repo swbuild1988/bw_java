@@ -135,7 +135,6 @@ export const commonFlyFn = {
             if (!areaId) areaId = this.areaList[1].id;
             if (!storeId) storeId = this.storeProp.dataList[1].id
 
-            console.log('_this.queryCondition.areaId',this.queryCondition.areaId)
             TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result))
         },
         //用于判断返回结果不为undefined

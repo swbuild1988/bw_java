@@ -167,12 +167,12 @@ export default {
         //根据监测类型获取数据
         getMonitorData() {
             let { queryCondition } = this;
-            !queryCondition.areaId && (queryCondition.areaId = null);
+            let areaId = !queryCondition.areaId ? null : queryCondition.areaId ;
             !queryCondition.storeId && (queryCondition.storeId = null);
             let parms = {
                 tunnelId: queryCondition.tunnelId,
                 storeId: queryCondition.storeId,
-                areaId: queryCondition.areaId,
+                areaId: areaId,
                 monitorType: 4
             };
 
