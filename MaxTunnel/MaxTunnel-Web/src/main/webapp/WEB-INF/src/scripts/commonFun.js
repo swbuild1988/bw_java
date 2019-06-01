@@ -284,8 +284,8 @@ export function addEntity(entiyParam) {
             text: entiyParam.label.text,
             font: '20px Helvetica',
             showbackground:true,
-            fillColor: Cesium.Color.WHITE,
-            outlineColor: Cesium.Color.WHITE,
+            fillColor: Cesium.Color.BLUE,
+            outlineColor: Cesium.Color.BLUE,
             verticalOrigin: entiyParam.label.verticalOrigin != undefined ? entiyParam.label.verticalOrigin : Cesium.VerticalOrigin.CENTER,
             scaleByDistance: entiyParam.label.scaleByDistance != undefined ? entiyParam.label.scaleByDistance : new Cesium.NearFarScalar(0, 1, 25, 0),
         } : undefined;
