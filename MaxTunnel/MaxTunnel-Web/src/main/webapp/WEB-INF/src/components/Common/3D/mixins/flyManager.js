@@ -49,7 +49,7 @@ export const flyManagerMinix = {
             if(!curRoute) return;
 
             routes.fromFile(this.ServerConfig + curRoute.path);
-console.log(routes)
+
             //初始化飞行管理
             flyManagerAttr.flyManager = new Cesium.FlyManager({
                 scene: scene,
@@ -84,9 +84,10 @@ console.log(routes)
             let {
                 flyManagerAttr
             } = this;
-
+            
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
+                
             }
         },
         // 暂停飞行

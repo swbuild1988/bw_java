@@ -281,7 +281,7 @@ export default {
         },
     },
     beforeDestroy(){
-        this.stop();
+        this.stop();    
     }
 };
 </script>

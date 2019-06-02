@@ -114,6 +114,8 @@
                     this.cameraPositionRefresh();
                 }
 
+                _this.flyManager(1);
+
                 _this.handler = new Cesium.ScreenSpaceEventHandler(
                     scene.canvas
                 );
@@ -235,7 +237,7 @@
                 }
             },
             processFailed(queryEventArgs) {
-                console.log('查询失败！sss');
+                console.log('查询失败！');
             }
         },
         beforeDestroy() {

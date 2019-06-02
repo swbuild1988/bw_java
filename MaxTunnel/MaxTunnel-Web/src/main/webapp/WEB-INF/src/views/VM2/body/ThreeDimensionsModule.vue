@@ -13,7 +13,7 @@
         <show-store-position v-bind:currPosition="storePosition"></show-store-position>
         <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="playFly"></Button>
         <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn"  style="right:4vmin" icon="stop" @click="stopFly"></Button>
-        <!-- <move-control v-show="showControlPanel"></move-control> -->
+    
     </div>
 </template>
 
@@ -22,7 +22,6 @@
     import ModuleTitle from "../../../components/VM2/ModuleTitle";
     import Vue from 'vue'
     import showStorePosition from '../../../components/Common/Modal/showStorePosition'
-    import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
     import {
         TunnelService,
     } from '../../../services/tunnelService'
@@ -71,14 +70,11 @@
             showStorePosition,
             ModuleTitle,
             vmSelect,
-            MoveControl
         },
         mounted() {
             let _this =this;
 
             this.init();
-            this.addEvents().addMouseEnter();
-            this.addEvents().addMouseLeave();
             this.listenerWindowSize();
             
             window.onresize = function(){
@@ -194,23 +190,6 @@
             getValByArray([firstVal, ...otherVal]) {
                 return firstVal;
             },
-            sendAlarms() {
-
-                setTimeout(() => {
-                    this.axios.post('/alarms', {
-                            time: +new Date(),
-                            alarmName: 'sad',
-                            objectId: 222022501,
-                            latitude: "112.49069725638859",
-                            longitude: "37.71331808517105",
-                            description: 'sad',
-                            alarmSeverity: 1,
-                            additionalText: '',
-                            alarmSource: ''
-                        })
-                        .then(err => console.log(err)).catch(err => console.log('err2', err))
-                }, 1000)
-            },
             showStorePosition(position) {
                 this.storePosition = position;
             },
@@ -219,6 +198,7 @@
                     this.$refs.smViewer.pauseFly();
                 } else {
                     this.$refs.smViewer.playFly();
+                    console.log('ssssssss')
                 }
                 this.playOrPause.isPlay = !this.playOrPause.isPlay;
             },
@@ -228,49 +208,6 @@
             },
             destroyViewer() {
                 this.$refs.smViewer.destory3D();
-            },
-            addEvents() {
-                let eventListener = {
-                    screenWidth: 1920,
-                    _getDOM(className) {
-                        return document.getElementsByClassName(className)[0];
-                    },
-                    _getClassName(target) {
-                        return true;
-                    },
-                    _showDOM() {
-                        let _this = this;
-
-                        return function (e) {
-                            if (_this._getClassName(e.target) && window.innerWidth > this.screenWidth) {
-                                _this._getDOM('LLPanel').style.display = 'block';
-                            }
-                        }
-                    },
-                    hiddenDOM() {
-                        let _this = this;
-
-                        return function (e) {
-                            if (_this._getClassName(e.target) && window.innerWidth < _this.screenWidth) return;
-                            _this._getDOM('LLPanel').style.display = 'none';
-                        }
-
-                    },
-                    addMouseEnter() {
-                        this._getDOM('ThreeDMain').addEventListener('mousemove', this._showDOM.call(this))
-                    },
-                    addMouseLeave() {
-                        this._getDOM('ThreeDMain').addEventListener('mouseout', this.hiddenDOM.call(this))
-                    },
-                    removeMouseEnter() {
-                        this._getDOM('ThreeDMain').removeEventListener('mousemove', this._showDOM.call(this))
-                    },
-                    removeMouseLeave() {
-                        this._getDOM('ThreeDMain').removeEventListener('mouseout', this.hiddenDOM.call(this))
-                    }
-                };
-
-                return eventListener;
             },
             listenerWindowSize(){
                this.showControlBtn = window.innerWidth > 1440 ? true : false;
