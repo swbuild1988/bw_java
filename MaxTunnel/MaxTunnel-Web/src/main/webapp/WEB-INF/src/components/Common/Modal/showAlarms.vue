@@ -1,58 +1,59 @@
 <template>
     <Modal class="forBG" v-model="modalPrams.state" :width="modalWidth" title="告警信息">
-        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1">
+        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1">   
+            <!-- title -->
             <section class="titleSection">
                 <article>
                     <h2>{{item.location}}-{{item.objectName}}</h2>
                     <h3>{{item.alarmName}}</h3>
                 </article>
             </section>
-            <section>
-                <h4>关联视频</h4>
-                <div class="videoSection">
-                    <div class="leftIcon" @click="prevPic">
-                        <Icon type="chevron-left"></Icon>
-                    </div>
-                    <ul :gutter="16" class="videoBox" style="left: -38vw;">
-                        <li 
-                            :span="videoSpan" v-for="(element,index2) in item.videos" :key="index2"
-                            class="videoContainer"
-                            :class="{ oneScreen: videoSpan == 24}">
-                            <video-component :index="'modal_alarm'+index1+'_video'+index2" :video="element"
-                                :id="'camera'+element.id"></video-component>
-                        </li>
-                    </ul>
-                    <div class="rightIcon" @click="nextPic">
-                        <Icon type="chevron-right"></Icon>
+            <div class="box">
+                <div class="column">
+                    <!-- video -->
+                    <section class="videoSection item">
+                        <h4>关联视频</h4>
+                        <div style="height: 100%">
+                            <CarouselVideo :videolist="item.videos" :isloop='false' :preIndex="'modal_alamr'+index1+'_video'"></CarouselVideo>
+                        </div>
+                    </section>
+                    <div class="item">
+                        <div class="rightBox">
+                            <!-- 极值 -->
+                            <section class="extremeSection">
+                                <h4>极值</h4>
+                                <Row :gutter="16">
+                                    <Col span="24" v-for="(temp, index) in item.cvList" :key="index">
+                                        <Col span="12">{{temp.key}}：</Col>
+                                        <Col span="12">{{temp.val}}{{temp.unit}}</Col>
+                                    </Col>
+                                </Row>
+                            </section>
+                            <!-- 预案 -->
+                            <section class="planSection">
+                                <h4>预案</h4>
+                                <Row>
+                                    <Col span="12">
+                                        <Button type="default" @click="cancelPlan()">取消</Button>
+                                    </Col>
+                                    <Col span="12" v-for="(ele, index) in item.plans" :key="index">
+                                        <Button type="primary" @click="startPlan(item, ele.id, ele.processKey)">{{ele.name}}</Button>
+                                    </Col>
+                                </Row>
+                            </section>
+                        </div>
                     </div>
                 </div>
-            </section>
-            <section>
-                <h4>极值</h4>
-                <Row :gutter="16" class="extremeSection">
-                    <Col span="4" v-for="(temp, index) in item.cvList" :key="index">
-                        <Col span="12">{{temp.key}}：</Col>
-                        <Col span="12">{{temp.val}}{{temp.unit}}</Col>
-                    </Col>
-                </Row>
-            </section>
-            <section>
-                <h4>预案</h4>
-                <Row class="planSection">
-                    <Col span="8">
-                    <Button type="default" @click="cancelPlan()">取消</Button>
-                    </Col>
-                    <Col span="8" v-for="(ele, index) in item.plans" :key="index">
-                    <Button type="primary" @click="startPlan(item, ele.id, ele.processKey)">{{ele.name}}</Button>
-                    </Col>
-                </Row>
-            </section>
-            <section v-if="item.plan">
-                <h4>预案步骤</h4>
-                <div class="detailSection"  style="height:69vmin;max-width:54vmin">
-                    <image-from-url :url="item.plan.processPicSrc"></image-from-url>
+                <div class="column">
+                    <!-- 执行步骤 -->
+                    <section class="item" v-if="item.plan">
+                        <h4>预案步骤</h4>
+                        <div class="detailSection"  style="height:69vmin;max-width:54vmin">
+                            <image-from-url :url="item.plan.processPicSrc"></image-from-url>
+                        </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         </section>
     </Modal>
 </template>
@@ -61,10 +62,12 @@
     import videoComponent from '../Video/VideoComponent.vue'
     import ImageFromUrl from "../../Common/ImageFromUrl"
     import UmLayoutBg from '@/assets/UM/UmLayoutBg.png'
+    import CarouselVideo from '@/components/Common/Carousel.vue'
     export default {
         components: {
             videoComponent,
-            ImageFromUrl
+            ImageFromUrl,
+            CarouselVideo
         },
         props: {
             modalPrams: {
@@ -111,9 +114,8 @@
                     }
                 ],
                 alarms: null,
-                currentIndex: 1,
-                distance: -38,
-                videoBoxWidth: 38
+                alarmVideoList: [],
+                alarmPerIndex: ''
             }
         },
         computed: {
@@ -129,12 +131,9 @@
             }
         },
         mounted() {
+            this.modalWidth = window.innerWidth * 0.6
             this.alarms = this.alarmContainer
             this.setVideoSpan();
-            this.alarms.forEach(element => {
-                this.videoBoxWidth = element.videos.length*'38'+'vw'
-            });
-            console.log('this.videoBoxWidth', this.videoBoxWidth)
         },
         methods: {
             setVideoSpan() {
@@ -228,46 +227,21 @@
             //点击取消预案
             cancelPlan() {
                 // 关掉这个告警
-            },
-            nextPic() {
-                var wrap = document.querySelector(".videoBox");
-                // var newLeft = parseInt(wrap.style.left)-38;
-                // wrap.style.left = newLeft + "vw";
-                var newLeft;
-                if(wrap.style.left === "-114vw"){
-                    newLeft = -38;
-                }else{
-                    newLeft = parseInt(wrap.style.left)-38;
-                }
-                wrap.style.left = newLeft + "vw";
-            },
-            prevPic() {
-                var wrap = document.querySelector(".videoBox");
-                var newLeft;
-                if(wrap.style.left === "0vw"){
-                    newLeft = -114;
-                }else{
-                    newLeft = parseInt(wrap.style.left)+38;
-                }
-                wrap.style.left = newLeft + "vw";
             }
-        },
+        }
     }
 </script>
 
 <style scoped>
-    .setionBox, .videoSection, .extremeSection, .planSection, .detailSection {
-        border: 1px solid #ccc;
-        border-radius: 8px;
+    .setionBox,.videoSection,.extremeSection, .planSection, .detailSection {
         margin-bottom: 2vmin;
         padding: 1vmin;
-        -webkit-box-shadow: 0px 3px 3px #c8c8c8;
-        -moz-box-shadow: 0px 3px 3px #c8c8c8;
-        box-shadow: 0px 3px 3px #c8c8c8;
     }
 
-    .setionBox,.videoSection{
+    .setionBox{
         padding: 1vmin;
+        border: 1px solid #ffffff;
+        border-radius: 4px;
     }
 
     .titleSection{
@@ -288,43 +262,6 @@
         overflow-y: auto;
     }
 
-    .extremeSection .ivu-col.ivu-col-span-4 .ivu-col.ivu-col-span-4 {
-        line-height: 3.6vmin;
-        margin-bottom: 5px;
-        padding-left: 15px;
-    }
-
-    .videoContainer {
-        height: 20vh;
-        width: 38vw;
-    }x
-
-    .monitor {
-        height: 20vh;
-        width: 100%;
-    }
-
-    .fourMonitor {
-        height: 33vh;
-    }
-
-    .oneScreen {
-        height: 66vh;
-    }
-
-    .planSection .ivu-col.ivu-col-span-8 {
-        text-align: center;
-        margin-bottom: 1vmin;
-    }
-
-    .detailSection * {
-        line-height: 3.6vmin;
-    }
-
-    .detailSection .stepNum {
-        text-align: right
-    }
-
     .forBG>>>.ivu-modal-content{
         background: url("../../../assets/UM/alarmBG.png") no-repeat;
         background-size: 100% 100%;
@@ -335,35 +272,45 @@
     }    
     /* 图片1轮播 */
     .videoSection{
-        width: 38vw;
-        height: 21vh;
-        position: relative;
-        overflow: hidden;
+        height: 40vh;
+        width: 100%;
     }
-    .videoBox {
-        position: absolute;
-        width: 152vw;
-        height: 21vh;
-        z-index: 1;
-        left: 1vmin;
-        right: 1vmin;
+    .planSection .ivu-btn-primary{
+        background: linear-gradient(to left, #2734e1, #b195ed);
+        border: none;
     }
-    .videoSection .videoBox li {
-        float: left;
-        width: 38vw;
-        height: 21vh;
-        list-style: none;
+    .planSection .ivu-btn-default{
+        background: linear-gradient(to left, #8241a2, #bb92bae0);
+        color: #fff;
+        border: none;
     }
-    .leftIcon, .rightIcon{
-        position: absolute;
-        height: auto;
-        z-index: 999;
-        top: 10vh
+    .box {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: space-between;
     }
-    .leftIcon{
-        left: 0
+
+    .column {
+        flex-basis: 100%;
+        display: flex;
+        justify-content: space-between;
     }
-    .rightIcon{
-        right: 0
+    .rightBox{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    .extremeSection,.planSection{
+        height: 20vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 100%;
+    }
+    .extremeSection .ivu-row .ivu-col.ivu-col-span-24{
+        line-height: 3.5vmin;
+    }
+    .planSection .ivu-row .ivu-col.ivu-col-span-12{
+        line-height: 7vmin;
     }
 </style>
