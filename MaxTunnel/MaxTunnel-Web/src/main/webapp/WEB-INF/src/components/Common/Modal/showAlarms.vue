@@ -1,38 +1,44 @@
 <template>
-    <Modal v-model="modalPrams.state" :width="modalWidth" title="告警信息">
-        <section v-for="(item,index1) in alarms" :key="index1">
+    <Modal class="forBG" v-model="modalPrams.state" :width="modalWidth" title="告警信息">
+        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1">
             <section class="titleSection">
                 <article>
-                    <h2>{{item.objectName}}</h2>
+                    <h2>{{item.location}}-{{item.objectName}}</h2>
                     <h3>{{item.alarmName}}</h3>
-                    <div>{{item.location}}</div>
                 </article>
             </section>
-            <section class="videoSection">
+            <section>
                 <h4>关联视频</h4>
-                <Row :gutter="16">
-                    <Col :span="videoSpan" v-for="(element,index2) in item.videos" :key="index2"
-                        style="margin-top: 16px">
-                    <div class="videoContainer"
-                        :class="{ oneScreen: videoSpan == 24, monitor: videoSpan == 12, fourMonitor: videoSpan ==8 }">
-                        <video-component :index="'modal_alarm'+index1+'_video'+index2" :video="element"
-                            :id="'camera'+element.id"></video-component>
+                <div class="videoSection">
+                    <div class="leftIcon" @click="prevPic">
+                        <Icon type="chevron-left"></Icon>
                     </div>
-                    </Col>
-                </Row>
+                    <ul :gutter="16" class="videoBox" style="left: -38vw;">
+                        <li 
+                            :span="videoSpan" v-for="(element,index2) in item.videos" :key="index2"
+                            class="videoContainer"
+                            :class="{ oneScreen: videoSpan == 24}">
+                            <video-component :index="'modal_alarm'+index1+'_video'+index2" :video="element"
+                                :id="'camera'+element.id"></video-component>
+                        </li>
+                    </ul>
+                    <div class="rightIcon" @click="nextPic">
+                        <Icon type="chevron-right"></Icon>
+                    </div>
+                </div>
             </section>
-            <section class="extremeSection">
+            <section>
                 <h4>极值</h4>
-                <Row :gutter="16">
-                    <Col span="12" v-for="(temp, index) in item.cvList" :key="index">
-                    <Col span="12">名称：{{temp.key}}</Col>
-                    <Col span="12">极值：{{temp.val}}{{temp.unit}}</Col>
+                <Row :gutter="16" class="extremeSection">
+                    <Col span="4" v-for="(temp, index) in item.cvList" :key="index">
+                        <Col span="12">{{temp.key}}：</Col>
+                        <Col span="12">{{temp.val}}{{temp.unit}}</Col>
                     </Col>
                 </Row>
             </section>
-            <section class="planSection">
+            <section>
                 <h4>预案</h4>
-                <Row>
+                <Row class="planSection">
                     <Col span="8">
                     <Button type="default" @click="cancelPlan()">取消</Button>
                     </Col>
@@ -41,9 +47,9 @@
                     </Col>
                 </Row>
             </section>
-            <section class="detailSection" v-if="item.plan">
+            <section v-if="item.plan">
                 <h4>预案步骤</h4>
-                <div style="height:69vmin;max-width:54vmin">
+                <div class="detailSection"  style="height:69vmin;max-width:54vmin">
                     <image-from-url :url="item.plan.processPicSrc"></image-from-url>
                 </div>
             </section>
@@ -104,7 +110,17 @@
                         unit: '℃'
                     }
                 ],
-                alarms: null
+                alarms: null,
+                currentIndex: 1,
+                distance: -38,
+                videoBoxWidth: 38
+            }
+        },
+        computed: {
+            containerStyle(){
+                return {
+                    transform:`translate3d(${this.distance}vw, 0, 0)`
+                }
             }
         },
         watch: {
@@ -114,8 +130,11 @@
         },
         mounted() {
             this.alarms = this.alarmContainer
-            console.log('this.alarms', this.alarms)
             this.setVideoSpan();
+            this.alarms.forEach(element => {
+                this.videoBoxWidth = element.videos.length*'38'+'vw'
+            });
+            console.log('this.videoBoxWidth', this.videoBoxWidth)
         },
         methods: {
             setVideoSpan() {
@@ -209,13 +228,35 @@
             //点击取消预案
             cancelPlan() {
                 // 关掉这个告警
+            },
+            nextPic() {
+                var wrap = document.querySelector(".videoBox");
+                // var newLeft = parseInt(wrap.style.left)-38;
+                // wrap.style.left = newLeft + "vw";
+                var newLeft;
+                if(wrap.style.left === "-114vw"){
+                    newLeft = -38;
+                }else{
+                    newLeft = parseInt(wrap.style.left)-38;
+                }
+                wrap.style.left = newLeft + "vw";
+            },
+            prevPic() {
+                var wrap = document.querySelector(".videoBox");
+                var newLeft;
+                if(wrap.style.left === "0vw"){
+                    newLeft = -114;
+                }else{
+                    newLeft = parseInt(wrap.style.left)+38;
+                }
+                wrap.style.left = newLeft + "vw";
             }
         },
     }
 </script>
 
-<style>
-    section {
+<style scoped>
+    .setionBox, .videoSection, .extremeSection, .planSection, .detailSection {
         border: 1px solid #ccc;
         border-radius: 8px;
         margin-bottom: 2vmin;
@@ -223,6 +264,14 @@
         -webkit-box-shadow: 0px 3px 3px #c8c8c8;
         -moz-box-shadow: 0px 3px 3px #c8c8c8;
         box-shadow: 0px 3px 3px #c8c8c8;
+    }
+
+    .setionBox,.videoSection{
+        padding: 1vmin;
+    }
+
+    .titleSection{
+        border: none;
     }
 
     .titleSection h2,
@@ -239,16 +288,16 @@
         overflow-y: auto;
     }
 
-    .extremeSection .ivu-col.ivu-col-span-12 .ivu-col.ivu-col-span-12 {
+    .extremeSection .ivu-col.ivu-col-span-4 .ivu-col.ivu-col-span-4 {
         line-height: 3.6vmin;
-        background: #e0e0e0;
         margin-bottom: 5px;
         padding-left: 15px;
     }
 
     .videoContainer {
         height: 20vh;
-    }
+        width: 38vw;
+    }x
 
     .monitor {
         height: 20vh;
@@ -276,7 +325,45 @@
         text-align: right
     }
 
-    /* .detailSection .stepStatus{
-    text-align: center;
-} */
+    .forBG>>>.ivu-modal-content{
+        background: url("../../../assets/UM/alarmBG.png") no-repeat;
+        background-size: 100% 100%;
+        color: #ffffff;
+    } 
+    .forBG>>>.ivu-modal-header-inner,.forBG>>>.ivu-modal-close .ivu-icon-ios-close-empty{
+        color: #ffffff;
+    }    
+    /* 图片1轮播 */
+    .videoSection{
+        width: 38vw;
+        height: 21vh;
+        position: relative;
+        overflow: hidden;
+    }
+    .videoBox {
+        position: absolute;
+        width: 152vw;
+        height: 21vh;
+        z-index: 1;
+        left: 1vmin;
+        right: 1vmin;
+    }
+    .videoSection .videoBox li {
+        float: left;
+        width: 38vw;
+        height: 21vh;
+        list-style: none;
+    }
+    .leftIcon, .rightIcon{
+        position: absolute;
+        height: auto;
+        z-index: 999;
+        top: 10vh
+    }
+    .leftIcon{
+        left: 0
+    }
+    .rightIcon{
+        right: 0
+    }
 </style>
