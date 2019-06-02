@@ -39,6 +39,7 @@ import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.controller.xml.XMLController;
 
 
 /**
@@ -480,6 +481,10 @@ public class EnumController {
 			//get objectTypeList
 			List<JSONObject> objectTypeList = new ArrayList<>();
 			List<ObjectType> eList = ObjectType.getEnumByMonitorType(e.getValue());
+			// 获取配置文件中所有的objectTypeId
+			List<Integer> objectTypeIds = new XMLController().getXMLAllInfo().getObjectTypeIds();
+			eList = eList.stream().filter(a -> objectTypeIds.contains(a.getValue())).collect(Collectors.toList());
+			
 			for (ObjectType objectType : eList) {
 				JSONObject json = new JSONObject();
 				json.put("key", objectType.getName());

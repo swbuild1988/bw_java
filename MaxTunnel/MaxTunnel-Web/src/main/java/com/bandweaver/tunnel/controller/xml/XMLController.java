@@ -26,7 +26,7 @@ public class XMLController {
 	 * @author ya.liu
 	 * @Date 2019年6月1日
 	 */
-	private Config getXMLAllInfo() {
+	public Config getXMLAllInfo() {
 		String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
     	Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
     	if(config == null) {

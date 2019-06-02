@@ -12,12 +12,14 @@ import com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit;
 public class Config implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
+	// 批量导入监测对象所需管廊参数
 	private TunnelParam tunnelParam;
-	
+	// 批量导入监测对象所需设备参数
 	private List<EquipmentTypeFile> typeFiles;
-	
+	// 大屏地图各点位置
 	private List<RelatedUnit> units;
+	// 
+	private List<Integer> objectTypeIds;
 	
 	public void init(){
 		if(this.tunnelParam == null)
@@ -29,8 +31,13 @@ public class Config implements Serializable{
 		}
 		if(this.typeFiles == null || this.typeFiles.size() < 1) {
 			List<EquipmentTypeFile> typeFiles = new ArrayList<>();
-    		typeFiles.add(new EquipmentTypeFile("01", "�豸", 0));
+    		typeFiles.add(new EquipmentTypeFile("01", "设备", 0));
     		this.typeFiles = typeFiles;
+		}
+		if(this.objectTypeIds == null || this.objectTypeIds.size() < 1) {
+			List<Integer> objectTypeIds = new ArrayList<>();
+			objectTypeIds.add(0);
+			this.objectTypeIds = objectTypeIds;
 		}
 	}
 	
@@ -56,6 +63,14 @@ public class Config implements Serializable{
 
 	public void setUnits(List<RelatedUnit> units) {
 		this.units = units;
+	}
+
+	public List<Integer> getObjectTypeIds() {
+		return objectTypeIds;
+	}
+
+	public void setObjectTypeIds(List<Integer> objectTypeIds) {
+		this.objectTypeIds = objectTypeIds;
 	}
 	
 }

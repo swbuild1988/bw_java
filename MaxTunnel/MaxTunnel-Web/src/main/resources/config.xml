@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Config>
+		<objectTypeIds>0</objectTypeIds>
+		<objectTypeIds>1</objectTypeIds>
+		<objectTypeIds>2</objectTypeIds>
+		<objectTypeIds>3</objectTypeIds>
+		<objectTypeIds>4</objectTypeIds>
+		<objectTypeIds>5</objectTypeIds>
+		<objectTypeIds>7</objectTypeIds>
+		<objectTypeIds>9</objectTypeIds>
+		<objectTypeIds>10</objectTypeIds>
+		<objectTypeIds>11</objectTypeIds>
+		<objectTypeIds>20</objectTypeIds>
+		<objectTypeIds>21</objectTypeIds>
+		<objectTypeIds>31</objectTypeIds>
+		<objectTypeIds>32</objectTypeIds>
+		<objectTypeIds>33</objectTypeIds>
+		<objectTypeIds>34</objectTypeIds>
+		<objectTypeIds>35</objectTypeIds>
+		<objectTypeIds>36</objectTypeIds>
+		<objectTypeIds>37</objectTypeIds>
+		<objectTypeIds>41</objectTypeIds>
+		<objectTypeIds>51</objectTypeIds>
+		<objectTypeIds>52</objectTypeIds>
+		<objectTypeIds>53</objectTypeIds>
+		<objectTypeIds>54</objectTypeIds>
+		<objectTypeIds>55</objectTypeIds>
+		<objectTypeIds>56</objectTypeIds>
+		<objectTypeIds>57</objectTypeIds>
+		<objectTypeIds>58</objectTypeIds>
+		<objectTypeIds>59</objectTypeIds>
+		<objectTypeIds>60</objectTypeIds>
+		<objectTypeIds>61</objectTypeIds>
+		<objectTypeIds>62</objectTypeIds>
     <tunnelParam>
         <areaLength>2</areaLength>
         <areaNumber>2</areaNumber>
