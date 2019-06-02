@@ -277,13 +277,9 @@
             }
         },
         beforeDestroy() {
-            // console.log("3d module beforedestory")
-            // this.destroyViewer();
-            // this.addEvents().removeMouseEnter();
-            // this.addEvents().removeMouseLeave();
+            this.stopFly();
         },
         destroyed() {
-            // console.log("3D module destory")
         },
     }
 </script>
