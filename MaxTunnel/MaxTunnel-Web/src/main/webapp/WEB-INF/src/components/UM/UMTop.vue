@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="layout-nav">
-                    <div style="position: fixed;right: 3.4vmin;height:6%">
+                    <div style="position: absolute;right: 18vmin;height:6%">
                         <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
                             <Dropdown placement="bottom-start">
                                 <div class="topBtn">
@@ -31,9 +31,11 @@
                                 </DropdownMenu>
                             </Dropdown>
                         </MenuItem>
-                        <!-- 人物圆点 -->
-                        <div style="position:relative;float: right;margin-left: 6.25rem;">
-                            <Dropdown style="left: -7vmin !important;">
+                        
+                    </div>
+                    <!-- 人物圆点 -->
+                        <div class="select-dropdown">
+                            <Dropdown>
                                 <a href="javascript:void(0)">
                                     <Badge :count="countNum">
                                         <Avatar
@@ -44,7 +46,7 @@
                                         ></Avatar>
                                     </Badge>
                                 </a>
-                                <DropdownMenu slot="list" class="select-dropdown">
+                                <DropdownMenu slot="list" >
                                     <DropdownItem
                                         @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})"
                                     >我的消息</DropdownItem>
@@ -62,7 +64,6 @@
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
-                    </div>
                 </div>
             </Menu>
         </Header>
@@ -416,7 +417,7 @@ export default {
 }
 
 .layout-nav {
-    width: calc(98vw - 300px);
+    width: 100%;
     position: fixed;
     top: 0;
 }
@@ -501,7 +502,6 @@ export default {
     margin: 0; 
     padding: 0; 
     top: 8.2vh !important;
-    left: 3.4vmin !important;
     background-color: rgba(50,103,156,.5);
     box-shadow: 0 0px 8px 0 rgba(57, 123, 187, .5), 0 1px 0px 0 rgba(57, 123, 187, .6)
 }
@@ -509,7 +509,26 @@ export default {
     margin-top: 0;
 }
 .select-dropdown {
-    left: -7vmin !important;
+    position:fixed;
+    right: 6vmin;
 }
-
+    /* 小屏幕（显示器，小于等于 1920px） */
+@media (max-width: 1920px) {
+    .layout-nav >>> .ivu-select-dropdown{
+        left: 3.4vmin !important;
+    }
+    .select-dropdown >>> .ivu-select-dropdown {
+        left: -4vmin !important;
+    }
+    
+}
+    /* 大屏幕（显示器，大于等于 1920px） */
+@media (min-width: 1921px) {
+    .layout-nav >>> .ivu-select-dropdown{
+        left: 2vmin !important;
+    }
+    .select-dropdown >>> .ivu-select-dropdown {
+        left: 0vmin !important;
+    }
+}
 </style>
