@@ -5,6 +5,7 @@
 .ivu-table-wrapper>>>.ivu-table {
     background: transparent;
     color: #fff;
+    padding-left: 3vmin;
 }
 
 .ivu-table-wrapper>>>.ivu-table th,

@@ -7,7 +7,7 @@
             <Col :span="videoNumber === 1 ? '24' : ( videoNumber === 4 ? '12' : '8')" v-for="(video,index) in curVideoList" 
             :key="video.id" :style="{height: wrapperHeight}">
                 <div :class="['videoWrapper',{'oneVideo' : videoNumber === 1}]">
-                    <video-component :index="index" :video="video" :id="'curLoopSceneVideo'+video.id"></video-component>
+                    <video-component :index="preIndex+index" :video="video" :id="'curLoopSceneVideo'+video.id"></video-component>
                 </div>
             </Col>
         </Row>
@@ -37,6 +37,10 @@ export default {
         videoNumber: {
             type: Number,
             default: 1
+        },
+        preIndex: {
+            type: String,
+            default: ''
         }
     },
     data(){
@@ -123,17 +127,21 @@ export default {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    position: relative;
 }
 .videosContent .commonButton {
     position: absolute;
     z-index: 1001;
     border-radius: 50%;
     top: 50%;
+    -webkit-transition: .2s;
     transition: .2s;
-    color: #fff;
+    color: #252527;
     text-align: center;
     font-family: inherit;
-    line-height: inherit;
+    height: 4vmin;
+    width: 4vmin;
+    margin-top: -2vmin;
 }
 .videosContent .left {
     left: 2%;
@@ -162,21 +170,21 @@ export default {
 
 
     /* 小屏幕（显示器，小于等于 1920px） */
-@media (max-width: 1920px) {
+/* @media (max-width: 1920px) {
     .videosContent .commonButton {
         width: 6%;
         height: 8%;
         font-size: 1rem;
     }
-}
+} */
     /* 大屏幕（显示器，大于等于 1920px） */
-@media (min-width: 1921px) {
+/* @media (min-width: 1921px) {
     .videosContent .commonButton {
         width: 10%;
         height: 11%;
         font-size: 3rem;
     }
-}
+} */
 </style>
 
 

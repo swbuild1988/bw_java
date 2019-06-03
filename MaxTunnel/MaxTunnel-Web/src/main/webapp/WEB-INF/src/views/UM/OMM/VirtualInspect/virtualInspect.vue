@@ -72,7 +72,9 @@
                         @refreshCameraPosition="refreshCameraPosition"
                         ref="smViewer"
                         :openImageryProvider="false"
+                        @showStorePosition="showStorePosition"
                     ></TestSmViewer>
+                    <show-store-position v-bind:currPosition="storePosition"></show-store-position>
                 </div>
             </Col>
             <Col span="12">
@@ -93,6 +95,7 @@ import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import { _getFieldValues } from "../../../../scripts/commonFun";
+import showStorePosition from '../../../../components/Common/Modal/showStorePosition'
 export default {
     data() {
         return {
@@ -126,7 +129,12 @@ export default {
                 data: null
             },
             isManual: false,
-            defaultOptionFlag: 0 // 0 代表全部，1代表单一
+            defaultOptionFlag: 0, // 0 代表全部，1代表单一
+            storePosition: {
+                tunnelName: '',
+                areaName: '',
+                storeName: ''
+            },
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -166,7 +174,8 @@ export default {
     components: {
         // SmViewer,
         TestSmViewer,
-        VideoComponent
+        VideoComponent,
+        showStorePosition
     },
     methods: {
         getStopsList() {
@@ -266,7 +275,13 @@ export default {
         speedDown() {
             this.Log.info("减速");
             this.$refs.smViewer.speedDown();
-        }
+        },
+        showStorePosition(position) {
+            this.storePosition = position;
+        },
+    },
+    beforeDestroy(){
+        this.stop();    
     }
 };
 </script>
@@ -341,5 +356,10 @@ export default {
 }
 .coolBox >>> .ivu-select-dropdown {
     max-height: 20vmin !important;
+}
+.coolBox >>> .positionInformation {
+    font-size: 1vmin;
+    width:14%;
+    right: 6%;
 }
 </style>

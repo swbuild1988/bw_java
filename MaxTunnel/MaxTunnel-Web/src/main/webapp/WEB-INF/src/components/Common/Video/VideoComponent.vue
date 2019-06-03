@@ -27,8 +27,7 @@ export default {
             required: false
         },
         index: {
-            default: 0,
-            type: Number
+            default: 0
         }
     },
     components: { VlcVideo, RtmpVideo, HslVideo, H5StreamVideo },
