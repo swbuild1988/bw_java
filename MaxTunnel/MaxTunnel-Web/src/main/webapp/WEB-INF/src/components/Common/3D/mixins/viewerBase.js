@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { flyManagerMinix } from "./flyManager";
 
+
 const stateQuantity = '状态量输入';
 
 export default ( containerId,viewer,domId,route ) => ({
