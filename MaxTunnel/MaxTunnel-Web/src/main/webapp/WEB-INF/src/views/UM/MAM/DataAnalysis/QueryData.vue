@@ -91,18 +91,18 @@
                         </div>
                         <div class="chooseBox">
                             <div style="position: relative;float: left;font-size: 1.66vmin;line-height: 4vmin;">
-                                <span>时间周期:</span>
+                                <span class="timeTitle">时间周期:</span>
                                 <Select v-model="historyPrams.dateType" style="width:12vw;margin-right: 4px;margin-left: 4px;"
                                         @on-change="changeAlarmType" placement="top">
                                     <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
                                 </Select>
                             </div>
                             <div style="  position: relative;float: left; font-size: 1.66vmin;line-height: 4vmin;">
-                                <span>开始时间:</span>
+                                <span class="timeTitle">开始时间:</span>
                                 <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
                                             placement="top"
                                             style="width: 12vw;margin-right: 4px;"></DatePicker>
-                                <span>结束时间:</span>
+                                <span class="timeTitle">结束时间:</span>
                                 <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
                                             placement="top"
                                             style="width:12vw;margin-right: 14px;"></DatePicker>
@@ -480,6 +480,9 @@
         height: 5.8vh;
         padding: 0.8vh;
         margin-top: 1vh;
+        /* color: #fff; */
+    }
+    .timeTitle{
         color: #fff;
     }
 </style>

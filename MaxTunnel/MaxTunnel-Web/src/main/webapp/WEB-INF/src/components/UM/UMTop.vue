@@ -59,6 +59,8 @@
                                     <DropdownItem
                                         @click.native="goToMoudle({ path: '/UM/personCenter/editPass'})"
                                     >个人中心</DropdownItem>
+                                    <DropdownItem
+                                        @click.native="isShowAlarm">告警</DropdownItem>
                                     <!--<showUserInfo v-bind="userself"></showUserInfo>-->
                                     <DropdownItem divided @click.native="logout">注销</DropdownItem>
                                 </DropdownMenu>
@@ -67,6 +69,7 @@
                 </div>
             </Menu>
         </Header>
+        <showAlarm :modalPrams = videoModal.modalPrams :alarmContainer = videoModal.alarmContainer ref="video"></showAlarm>
     </Layout>
 </template>
 
@@ -78,6 +81,11 @@ import { EnterGalleryService } from "../../services/enterGalleryService.js";
 import showAboutUs from "../../components/Common/Modal/ShowAboutUs";
 import Img from "../../assets/UM/UMIcon.png";
 import Cookies from "js-cookie";
+import showAlarm from "@/components/Common/Modal/showAlarms";
+import ShowStartPlan from "../Common/Modal/ShowStartPlan";
+import { VideoService } from "../../services/videoService.js";
+import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
+import ShowNodesPic from "../Common/Modal/ShowNodesPic";
 export default {
     name: "UMTop",
     data() {
@@ -253,13 +261,40 @@ export default {
                     ]
                 }
             ],
-            countNum: 1
+            countNum: 1,
+            showalarm: "1",
+            alarmQueue: null,
+            planQueue: null,
+            selectPlan: null,
+            videoModal: {
+                modalPrams: {
+                    state: false
+                },
+                alarmContainer: []
+            },
+            saveAlarmContainer: [],
+            alarmRouterList: [],
+            alarmLevel: [],
+            tempAlarm: null
         };
+    },
+    components: {
+        showAboutUs,
+        showAlarm,
+        ShowStartPlan
     },
     computed: {
         routers: {
             get() {
                 return this.$store.getters.permission_routers;
+            }
+        },
+        planData: {
+            get() {
+                return this.$store.getters.getPlanData;
+            },
+            set(value) {
+                this.$store.commit("setPlanData", value);
             }
         }
     },
@@ -267,6 +302,8 @@ export default {
         this.getCountInfoNum();
         /**.比较浪费带宽 先注释掉 方法可以使用 */
         // setInterval(this.getCountInfoNum,1000)
+        this.startListenMQ();
+        this.noticeTop = window.innerHeight - window.innerHeight*0.15
     },
     methods: {
         setUserself() {
@@ -376,10 +413,146 @@ export default {
             });
             // console.log(result);
             return result;
+        },
+        startListenMQ() {
+            this.Log.info("添加监听器到MQ")
+            this.TransferStation.addListener("ModulePage", this.callback);
+        },
+
+        stopListenMQ(){
+            this.Log.info("移除监听器")
+            this.TransferStation.deleteListener("ModulePage");
+        },
+        // 连接成功回调函数
+        callback(respond) {
+            let result = JSON.parse(respond);
+            let _this = this;
+            if (result.type && result.type == "Alarm"){
+                let content = JSON.parse(result.content);
+                this.Log.info("ModulePage收到回调:", content)
+
+                // 显示alarm modal框
+                // _this.videoModal.modalPrams.state = true;
+                // _this.videoModal.alarmContainer.push(content);
+
+                //显示右下角提示框
+                this.warningNotice(content)
+            }
+        },
+        //设置告警面板中分页按钮的显隐
+        changestatu() {
+            this.showPage = !this.showPage;
+        },
+        //点击告警中的分页按钮
+        alarmDataChangePage(index) {
+            this.page.current = index;
+        },
+        confirmPlan() {
+            this.nodesModal.showFlag = false;
+        },
+        warningNotice(alarm) {
+            var _this = this;
+            var des = "";
+            _this.videoModal.alarmContainer.unshift(alarm);
+            _this.saveAlarmContainer.unshift(alarm)
+            var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
+            if (plans && plans.length) {
+                _this.selectPlan = plans[0].id;
+            }
+            _this.alarmLevel.forEach(a => {
+                if (a.val == alarm.alarmLevel) {
+                    des = a.key;
+                }
+            });
+            var config = {
+                title: alarm.alarmName,
+                desc: alarm.objectName + alarm.location,
+                duration: 0,
+                onClose: function(){
+                    let index = _this.videoModal.alarmContainer.indexOf(alarm)
+                    if(index>-1){
+                        _this.videoModal.alarmContainer.splice(index, 1)
+                    }
+                    if(_this.videoModal.alarmContainer.length==0){
+                        _this.videoModal.modalPrams.state = false
+                    }
+                }
+            };
+            //详情按钮
+            if (plans && plans.length > 0) {
+                config.render = (h, params) => {
+                    return h("div", [
+                        h('span',
+                        {
+                            style: {
+                                fontSize: '1.6vmin'
+                            }
+                        },
+                        alarm.location),
+                        h(
+                            "Button",
+                            {
+                                props: {
+                                    type: "primary",
+                                    size: "small"
+                                },
+                                style: {
+                                    marginLeft: '1vmin'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.showAlarmDetails(alarm.id);
+                                    }
+                                }
+                            },
+                            "详情"
+                        )
+                    ]);
+                };
+            }
+            switch (alarm.alarmLevel) {
+                case 1: {
+                    this.$Notice.info(config);
+                    break;
+                }
+                case 2: {
+                    this.$Notice.success(config);
+                    break;
+                }
+                case 3: {
+                    this.$Notice.warning(config);
+                    break;
+                }
+                case 4: {
+                    this.$Notice.error(config);
+                    break;
+                }
+            }
+        },
+        showAlarmDetails(id) {
+            if (this.videoModal.alarmContainer.length > 21) {
+                this.videoModal.alarmContainer.splice(
+                    this.videoModal.alarmContainer.length - 1,
+                    1
+                );
+            }
+            this.saveAlarmContainer.map(item => {
+                if (item.id == id) {
+                    this.videoModal.modalPrams.state = false
+                    this.videoModal.alarmContainer = []
+                    this.videoModal.alarmContainer.push(item);
+                }
+            });
+            this.videoModal.modalPrams.state = true;
+        },
+        isShowAlarm(){
+            this.videoModal.modalPrams.state = true
         }
     },
-    components: {
-        showAboutUs
+    beforeDestroy() {
+        this.stopListenMQ();
+        clearTimeout(this.planTimer);
+        this.$Notice.destroy();
     }
 };
 </script>
@@ -433,10 +606,6 @@ export default {
     height: 4.5vh;
 }
 
-/* .mainTitle:hover {
-	color: #66ccee;
-} */
-
 .ivu-avatar-large {
     width: 4vmin;
     height: 4vmin;
@@ -463,7 +632,6 @@ export default {
 
 .layout-nav >>> .ivu-dropdown-item {
     font-size: 1.6vmin !important;
-    /* margin-top: 0.5vmin; */
     padding: 0.7vmin 1.6vmin;
     border-top: 0.1vmin solid #e9eaec;
     color: #fff;
@@ -494,10 +662,6 @@ export default {
 .ivu-radio-group-button .ivu-radio-wrapper:before {
     background: #59b4e3;
 }
-/* .ivu-menu-item:hover {
-    border-bottom: 0px;
-    color: transparent;
-} */
 .layout-nav >>> .ivu-select-dropdown{
     margin: 0; 
     padding: 0; 
@@ -512,6 +676,7 @@ export default {
     position:fixed;
     right: 6vmin;
 }
+
     /* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {
     .layout-nav >>> .ivu-select-dropdown{
@@ -530,5 +695,13 @@ export default {
     .select-dropdown >>> .ivu-select-dropdown {
         left: 0vmin !important;
     }
+}
+</style>
+<style>
+/* 提示框超出出现滚动条 */
+.ivu-notice{
+    bottom: 1vmin;
+    overflow-y: auto;
+    width: 18%;
 }
 </style>

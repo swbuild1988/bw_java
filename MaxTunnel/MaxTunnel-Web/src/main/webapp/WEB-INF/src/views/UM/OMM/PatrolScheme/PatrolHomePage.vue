@@ -161,7 +161,7 @@
                     lineColor: '#708acc',
                     seriesColorList: [
                         [ '#fed701', '#fc9501' ],
-                        [ '#f3cb7c', '#fed601' ],
+                        [ '#caa2cc', '#c25dc5' ],
                         [ '#3ce94c', '#0ee622' ],
                         [ '#ed4a49', '#eb1818' ],
                         [ '#61eba5', '#00fc7c' ],

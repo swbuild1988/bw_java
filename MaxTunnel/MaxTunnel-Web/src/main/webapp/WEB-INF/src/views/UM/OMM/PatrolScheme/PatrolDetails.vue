@@ -305,10 +305,12 @@ todoLi{
 }
 .todoLi .todoEidt{
 	border: none;
-	box-shadow: 2px 2px 10px 0px #ccc;
+	/* box-shadow: 2px 2px 10px 0px #ccc; */
 	flex: 1;
 	margin-right: 0.5vw;
 	padding-left: 0.5vw;
+	width: 90%;
+	margin-bottom: 1vmin;
 }
 .patrolRecordUl li {
 	list-style: none;

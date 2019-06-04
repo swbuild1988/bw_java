@@ -39,11 +39,11 @@
                             <div class="details">
                                 <div class="details-top">{{item.name}}</div>
                                 <Row style="margin-bottom: 1vmin;">
-                                    <Col span="7" offset="5">
+                                    <Col span="10" offset="4">
                                         <p class="planStatus">流程状态</p>
                                         <p class="planStatusDec">{{item.processStatus}}</p>
                                     </Col>
-                                    <Col span="12">
+                                    <Col span="10">
                                         <p class="patrolGroup">责任班组</p>
                                         <p class="patrolGroupName">{{item.groupName}}</p>
                                     </Col>
@@ -352,6 +352,7 @@ export default {
     text-align: center;
     width: 5vmin;
     cursor: pointer;
+    font-size: 1.6vmin
 }
 .showBtn{
     background: linear-gradient(to top right, #2734e1, #b195ed)
@@ -361,6 +362,8 @@ export default {
 }
 .createTime{
     color: #fff;
+    font-size: 1.6vmin;
+    line-height: 3.5vmin;
 }
 
 

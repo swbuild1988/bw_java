@@ -2,9 +2,7 @@
 import { VideoService } from "../../services/videoService.js";
 import { MeasObjServer } from "../../services/MeasObjectSerivers.js";
 import UMCustom from "../../styles/UMCustom.css";
-import showAlarm from "@/components/Common/Modal/showAlarms";
 import { EnumsService } from "../../services/enumsService.js";
-import ShowStartPlan from "../Common/Modal/ShowStartPlan";
 import ShowNodesPic from "../Common/Modal/ShowNodesPic";
 import {
     Layout,
@@ -83,7 +81,6 @@ export default {
             minScreenWidth: 300,
             screenHeight: 900,
             childValue: "",
-            showalarm: "1",
             showPage: false,
             page: {
                 total: 20,
@@ -91,10 +88,6 @@ export default {
             },
             selectedName: null,
             openNames: ["1"],
-            nodesModal: {
-                showFlag: false,
-                imgUrl: null
-            }
         };
     },
     mounted() {
@@ -103,9 +96,6 @@ export default {
             if (result) {
                 _this.alarmLevel = result;
             }
-        });
-        this.$Notice.config({
-            top: 100
         });
         this.screenWidth = window.innerWidth * 0.14; //就是将14vh转为数字
         this.minScreenWidth = window.innerWidth * 0.03;
@@ -137,13 +127,6 @@ export default {
                 this.$refs.leftMenu.updateOpened();
             });
         }
-        
-        this.startListenMQ();
-    },
-    beforeDestroy() {
-        this.stopListenMQ();
-        clearTimeout(this.planTimer);
-        this.$Notice.destroy();
     },
     watch: {
         leftTree: function(newValue, oldValue) {
@@ -188,14 +171,6 @@ export default {
         },
         selectedActive: function() {
             return this.selected;
-        },
-        planData: {
-            get() {
-                return this.$store.getters.getPlanData;
-            },
-            set(value) {
-                this.$store.commit("setPlanData", value);
-            }
         }
     },
     render() {
@@ -240,69 +215,18 @@ export default {
                     <Layout>
                         <Content style="overflow-y: auto;overflow-x: hidden;height: 200px;background-size: cover;background:transparent;">
                             <router-view />
-                            <showAlarm
-                                modalPrams={this.videoModal.modalPrams}
-                                alarmContainer={this.videoModal.alarmContainer}
-                                ref="video"
-                            />
                         </Content>
-                        <Collapse v-model="showalarm" onOn-change="changestatu">
+                        <Collapse>
                             <Footer class="layout-footer-center">
                                 2009-2018 &copy; Bandweaver
                             </Footer>
                         </Collapse>
-                        <ShowStartPlan modalPrams={this.showModal.modalPrams} />
-                        <ShowNodesPic
-                            nodesModal={this.nodesModal}
-                            confirmPlan={this.confirmPlan}
-                        />
                     </Layout>
                 </Layout>
             </div>
         );
     },
     methods: {
-
-        startListenMQ() {
-            this.Log.info("添加监听器到MQ")
-            this.TransferStation.addListener("ModulePage", this.callback);
-        },
-
-        stopListenMQ(){
-            this.Log.info("移除监听器")
-            this.TransferStation.deleteListener("ModulePage");
-        },
-
-        // 连接成功回调函数
-        callback(respond) {
-            let result = JSON.parse(respond);
-            let _this = this;
-            if (result.type && result.type == "Alarm"){
-                let content = JSON.parse(result.content);
-                this.Log.info("ModulePage收到回调:", content)
-
-                // 显示alarm modal框
-                _this.videoModal.modalPrams.state = true;
-                _this.videoModal.alarmContainer.push(content);
-                
-
-                // 将数据保存在vuex中
-                // _this.planData = content;
-                // if (
-                //     this.$router.history.current.path.indexOf("/UM/plans/execute") <
-                //     0
-                // ) {
-                //     // _this.showPlanTip();
-                //     this.nodesModal.imgUrl = null;
-                //     let _this = this;
-                //     let planTimer = setTimeout(() => {
-                //         _this.nodesModal.imgUrl =
-                //             "/emplans/png/" + content.processInstanceId;
-                //         _this.nodesModal.showFlag = true;
-                //     }, 500);
-                // }
-            }
-        },
         goToMoudle(path, index, childIndex) {
             this.selectedActive[0] = index;
             this.selectedActive[1] = childIndex;
@@ -328,94 +252,6 @@ export default {
             }
 
             this.$emit("childByValue", path);
-        },
-        //设置告警面板中分页按钮的显隐
-        changestatu() {
-            this.showPage = !this.showPage;
-        },
-        //点击告警中的分页按钮
-        alarmDataChangePage(index) {
-            this.page.current = index;
-        },
-
-        confirmPlan() {
-            console.log("this plan is confirmed!");
-            this.nodesModal.showFlag = false;
-        },
-
-        warningNotice(alarm) {
-            var _this = this;
-            var des = "";
-            this.videoModal.alarmContainer.unshift(alarm);
-            var plans = alarm.plans; //[{"name":"通风预案","id":4003}]
-            if (plans && plans.length) {
-                _this.selectPlan = plans[0].id;
-            }
-            _this.alarmLevel.forEach(a => {
-                if (a.val == alarm.alarmLevel) {
-                    des = a.key;
-                }
-            });
-            var config = {
-                title: des + "告警",
-                desc: alarm.objectName + alarm.alarmName,
-                duration: 0
-                // onClose: _this.startPlan(alarm)
-            };
-            if (plans && plans.length > 0) {
-                config.render = (h, params) => {
-                    return h("div", [
-                        h(
-                            "Button",
-                            {
-                                props: {
-                                    type: "primary",
-                                    size: "small"
-                                },
-                                on: {
-                                    click: () => {
-                                        this.showAlarmDetails(alarm.id);
-                                    }
-                                }
-                            },
-                            "详情"
-                        )
-                    ]);
-                };
-            }
-            switch (alarm.alarmLevel) {
-                case 1: {
-                    this.$Notice.info(config);
-                    break;
-                }
-                case 2: {
-                    this.$Notice.success(config);
-                    break;
-                }
-                case 3: {
-                    this.$Notice.warning(config);
-                    break;
-                }
-                case 4: {
-                    this.$Notice.error(config);
-                    break;
-                }
-            }
-        },
-        showAlarmDetails(id) {
-            if (this.videoModal.alarmContainer.length > 21) {
-                this.videoModal.alarmContainer.splice(
-                    this.videoModal.alarmContainer.length - 1,
-                    1
-                );
-            }
-            this.videoModal.alarmContainer.map(item => {
-                if (item.id == id) {
-                    this.videoModal.modalPrams.modalInfo = item;
-                }
-            });
-            this.videoModal.modalPrams.state = !this.videoModal.modalPrams
-                .state;
         },
         generateMenu(arr, level) {
             const hasChild = arr.find(item => {
@@ -499,8 +335,6 @@ export default {
         }
     },
     components: {
-        ShowStartPlan,
-        showAlarm,
         Layout,
         Menu,
         Sider,
