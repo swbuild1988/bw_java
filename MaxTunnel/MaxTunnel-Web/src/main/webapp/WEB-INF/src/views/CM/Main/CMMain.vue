@@ -1,8 +1,8 @@
 <!--后台管理主页-->
 <template>
-  <div>
-    <CModulePage v-bind="curpage"></CModulePage>
-  </div>
+    <div>
+        <CModulePage v-bind="curpage"></CModulePage>
+    </div>
 </template>
 
 <script>
@@ -38,8 +38,8 @@ export default {
                     },
                     {
                         id: 12,
-                        name: '巡检小组管理',
-                        url: '/CMMain/group'
+                        name: "巡检小组管理",
+                        url: "/CMMain/group"
                     }
                 ]
             },
@@ -124,18 +124,18 @@ export default {
                     },
                     {
                         id: 46,
-                        name: '监测对象映射配置',
-                        url: '/CMMain/MeasObjMap'
+                        name: "监测对象映射配置",
+                        url: "/CMMain/MeasObjMap"
                     },
                     {
                         id: 47,
-                        name: '变电所信息配置',
-                        url: '/CMMain/PowerSubstation'
+                        name: "变电所信息配置",
+                        url: "/CMMain/PowerSubstation"
                     },
                     {
                         id: 48,
-                        name: '预案配置',
-                        url: '/CMMain/planControl'
+                        name: "预案配置",
+                        url: "/CMMain/planControl"
                     }
                 ]
             },
@@ -163,20 +163,20 @@ export default {
                     },
                     {
                         id: 62,
-                        name: '监测对象与应急预案',
-                        url: '/CMMain/objPreplan'
+                        name: "监测对象与应急预案",
+                        url: "/CMMain/objPreplan"
                     }
                 ]
             },
             {
                 id: 7,
-                name: '日志管理',
-                typeName: 'medkit',
+                name: "日志管理",
+                typeName: "medkit",
                 childNode: [
                     {
                         id: 71,
-                        name: '系统日志管理',
-                        url: '/UM/operationLog/query'
+                        name: "系统日志管理",
+                        url: "/CMMain/operationLog"
                     }
                 ]
             }
