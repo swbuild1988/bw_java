@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SceneRoute xmlns="http://www.supermap.com.cn/ugc60">
-<route name="飞行路线_1" speed="13.888888888889" lineType="0" showroutestop="True" showrouteline="True" altitudefree="False" headingfree="False" tiltfree="False" flycircle="False" alongline="False">
+<route name="飞行路线_1" speed="200" lineType="0" showroutestop="True" showrouteline="True" altitudefree="False" headingfree="False" tiltfree="False" flycircle="False" alongline="False">
 <style>
 <geostyle3d>
 <linecolor>RGBA(147,112,219,255)</linecolor>
@@ -11,8 +11,8 @@
 </style>
 <routestop name="Stop1" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.51407500000001</longitude>
-<latitude>37.706609999999998</latitude>
+<longitude>112.51658666</longitude>
+<latitude>37.70587508</latitude>
 <altitude>-2</altitude>
 <heading>123.83696816872023</heading>
 <tilt>75.186663999999993</tilt>
@@ -37,8 +37,8 @@
 </routestop>
 <routestop name="Stop2" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.51489599999999</longitude>
-<latitude>37.706372000000002</latitude>
+<longitude>112.51845836</longitude>
+<latitude>37.70533258</latitude>
 <altitude>-2</altitude>
 <heading>123.83744972518971</heading>
 <tilt>72.187353755496105</tilt>
@@ -63,8 +63,8 @@
 </routestop>
 <routestop name="Stop3" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.514869</longitude>
-<latitude>37.706349000000003</latitude>
+<longitude>112.51844605</longitude>
+<latitude>37.70530576</latitude>
 <altitude>-2</altitude>
 <heading>123.83744699999998</heading>
 <tilt>72.187353999999999</tilt>
@@ -89,8 +89,8 @@
 </routestop>
 <routestop name="Stop4" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.516593</longitude>
-<latitude>37.705849000000001</latitude>
+<longitude>112.52031775</longitude>
+<latitude>37.70476326</latitude>
 <altitude>-2</altitude>
 <heading>123.83848081540428</heading>
 <tilt>72.188414433086976</tilt>
@@ -115,8 +115,8 @@
 </routestop>
 <routestop name="Stop5" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.516587</longitude>
-<latitude>37.705812999999999</latitude>
+<longitude>112.52030544</longitude>
+<latitude>37.70473644</latitude>
 <altitude>-2</altitude>
 <heading>123.83847244600582</heading>
 <tilt>72.188414433178551</tilt>
@@ -141,8 +141,8 @@
 </routestop>
 <routestop name="Stop6" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.517565</longitude>
-<latitude>37.705530000000003</latitude>
+<longitude>112.52217714</longitude>
+<latitude>37.70419394</latitude>
 <altitude>-2</altitude>
 <heading>123.83905154077561</heading>
 <tilt>72.189306227088792</tilt>
@@ -167,9 +167,9 @@
 </routestop>
 <routestop name="Stop7" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.51760899999999</longitude>
-<latitude>37.705495999999997</latitude>
-<altitude>-2</altitude>
+<longitude>112.52216852</longitude>
+<latitude>37.704175165</latitude>
+<altitude>-1.5</altitude>
 <heading>123.83904044659853</heading>
 <tilt>72.189306447806658</tilt>
 <altitudeMode>Absolute</altitudeMode>
@@ -190,14 +190,13 @@
 <pauseTime>0</pauseTime>
 <angularSpeed>1</angularSpeed>
 </setting>
-</routestop>
-<routestop name="Stop8" speed="0" excluded="False" viewType="camera">
+</routestop><routestop name="Stop8" speed="0" excluded="False" viewType="camera">
 <camera>
-<longitude>112.518468</longitude>
-<latitude>37.705247999999997</latitude>
-<altitude>-2</altitude>
-<heading>123.83950638762839</heading>
-<tilt>72.189765056959544</tilt>
+<longitude>112.52310427</longitude>
+<latitude>37.70390401</latitude>
+<altitude>-1.5</altitude>
+<heading>123.83904044659853</heading>
+<tilt>72.189306447806658</tilt>
 <altitudeMode>Absolute</altitudeMode>
 </camera>
 <style>
