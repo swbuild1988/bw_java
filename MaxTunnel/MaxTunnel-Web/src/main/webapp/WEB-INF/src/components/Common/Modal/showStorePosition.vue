@@ -33,6 +33,7 @@ export default {
             Title:'当前位置',
         }
     },
+
     watch:{
     }
 }
@@ -65,11 +66,11 @@ export default {
         color: rgba(0, 255, 255, 0.8);
     }
       /* 小屏幕（显示器，小于等于 1920px） */
-@media (max-width: 1920px) {
+/* @media (max-width: 1920px) {
     .positionInformation {
         display: none;
     }
-}
+} */
 </style>
 
 
