@@ -129,7 +129,6 @@
         data() {
             return {
                 handler: null,
-                prePosition: null,
                 personnelPositionTimerId: null,
                 spin: {
                     spinShow: this.openSpinShow,
@@ -178,30 +177,6 @@
                     this.modelProp.show.state = false;
                 }
 
-            },
-            'prePosition': {
-                handler({
-                    longitude,
-                    latitude,
-                    height
-                }) {
-
-                    TunnelService.getStorePosition({
-                            longitude,
-                            latitude,
-                            height
-                        })
-                        .then(storePosition => {
-                            if (!storePosition) return;
-
-                            this.$emit("showStorePosition", {
-                                areaName: storePosition.area.name,
-                                storeName: storePosition.name,
-                                tunnelName: storePosition.store.tunnel.name
-                            });
-                        })
-                },
-                deep: true
             },
         },
         components: {
@@ -295,6 +270,7 @@
                     _this.refreshPersonnelPosition();
 
                 }
+
                 if (_this.defectPosition.openPosition) {
                     //开启缺陷定位
                     getEntitySet.call(this, {
@@ -312,6 +288,11 @@
                 if (_this.eventsPosition.openPosition) {
                     //开启事件定位
                     this.eventNotie();
+                }
+
+                if ( _this.refreshCameraPosition.enable ) {
+                    //开启相机定位
+                    this.cameraPositionRefresh();
                 }
 
                 getEntityProperty.call(_this, scene, Cesium, _this.modelProp, 'model-content')
@@ -419,6 +400,8 @@
 
             clearInterval(this.personnelPositionTimerId);
             clearTimeout(this.spin.spinTimer);
+
+            this.stopCameraPositionRefresh();
 
         },
     };

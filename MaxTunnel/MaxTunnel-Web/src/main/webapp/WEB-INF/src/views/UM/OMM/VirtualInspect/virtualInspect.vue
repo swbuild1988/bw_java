@@ -1,8 +1,5 @@
 <template>
     <div class="container">
-        <!--<Button @click="edit">编辑</Button>-->
-        <!--<Tabs value="manual">-->
-        <!--<TabPane label="手动巡检" name="manual">-->
         <div class="coolBox" style="height: 5vmin;padding: 1vmin;color: #fff;font-size: 1.66vmin;">
             <Row>
                 <Col span="9">
@@ -37,11 +34,6 @@
                     </Select>
                 </Col>
                 <Col span="6" style="text-align: right;margin-top: -0.5vmin;">
-                    <!--<i-Switch size="large">-->
-                    <!--<span slot="open">手动</span>-->
-                    <!--<span slot="close">自动</span>-->
-                    <!--</i-Switch>-->
-                    <!-- <Button type="primary" icon="ios-search">查询</Button> -->
                     <Button type="primary" @click="isManual = false">手动</Button>
                     <Button type="primary" @click="isManual = true">自动</Button>
                     <Button type="primary" icon="compose" @click="edit">编辑</Button>
@@ -67,7 +59,6 @@
                             @click="speedUp"
                         ></Button>
                     </div>
-                    <!-- <sm-viewer id="virtualSmViewer" @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer> -->
                     <TestSmViewer
                         @refreshCameraPosition="refreshCameraPosition"
                         ref="smViewer"
@@ -79,7 +70,11 @@
             </Col>
             <Col span="12">
                 <div class="manualShowInspect coolBox" style="color: #fff">
-                    <video-component v-bind:video="curVideo" v-bind:id="'vitrulInspect'"></video-component>
+                    <video-component
+                        v-bind:video="curVideo"
+                        :id="'vitrulInspect'+curVideo.id"
+                        :index="0"
+                    ></video-component>
                 </div>
             </Col>
         </Row>
@@ -89,13 +84,12 @@
 </template>
 
 <script>
-// import SmViewer from "../../../../components/Common/3D/3DViewer";
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import { _getFieldValues } from "../../../../scripts/commonFun";
-import showStorePosition from '../../../../components/Common/Modal/showStorePosition'
+import showStorePosition from "../../../../components/Common/Modal/showStorePosition";
 export default {
     data() {
         return {
@@ -131,10 +125,10 @@ export default {
             isManual: false,
             defaultOptionFlag: 0, // 0 代表全部，1代表单一
             storePosition: {
-                tunnelName: '',
-                areaName: '',
-                storeName: ''
-            },
+                tunnelName: "",
+                areaName: "",
+                storeName: ""
+            }
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -189,7 +183,7 @@ export default {
                 this.defaultOptionFlag = 1;
                 this.conditions.stopIndex = "0";
             }
-            // this.handleStopChanged();
+            this.handleStopChanged();
         },
         handleStopChanged() {
             if (this.conditions.stopIndex != null) {
@@ -278,10 +272,10 @@ export default {
         },
         showStorePosition(position) {
             this.storePosition = position;
-        },
+        }
     },
-    beforeDestroy(){
-        this.stop();    
+    beforeDestroy() {
+        this.stop();
     }
 };
 </script>
@@ -289,13 +283,12 @@ export default {
 .container {
     height: 91vh;
     padding: 1vmin;
-    /*background: #fff;*/
-    background: linear-gradient(
+    /* background: linear-gradient(
         to bottom,
         #16a8c9 0%,
         #ffffff 50%,
         #16a8c9 100%
-    );
+    ); */
 }
 
 .mainInfo {
@@ -353,13 +346,15 @@ export default {
 }
 .coolBox >>> .ivu-select-selection {
     height: 2.4vmin;
+    background: transparent;
+    color: #fff;
 }
 .coolBox >>> .ivu-select-dropdown {
     max-height: 20vmin !important;
 }
 .coolBox >>> .positionInformation {
     font-size: 1vmin;
-    width:14%;
+    width: 20%;
     right: 6%;
 }
 </style>

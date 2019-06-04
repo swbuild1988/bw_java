@@ -448,22 +448,6 @@ export const asyncRouterMap = [{
                     }
                 ]
             },
-            {
-                path: "operationLog",
-                name: "操作日志管理",
-                component: resolve =>
-                    require([
-                        "@/views/UM/OAM/OperationLogManage/OperationLogManage"
-                    ], resolve),
-                children: [{
-                    path: "query",
-                    component: resolve =>
-                        require([
-                            "@/views/UM/OAM/OperationLogManage/QueryOperationLog"
-                        ], resolve),
-                    name: "查询操作日志"
-                }]
-            },
             // {
             //     path: 'TunnelSupervise',
             //     name: '管廊本体监控',
@@ -1265,7 +1249,15 @@ export const asyncRouterMap = [{
                 path: 'group',
                 component: resolve => require(['@/views/CM/GroupControl/groupControl'], resolve),
                 name: '巡检小组管理'
-            }
+            },
+             {
+                path: "operationLog",
+                name: "操作日志管理",
+                component: resolve =>
+                    require([
+                        "@/views/UM/OAM/OperationLogManage/QueryOperationLog"
+                    ], resolve)
+            },
         ]
     },
     {

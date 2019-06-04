@@ -18,11 +18,11 @@
     } from "../../../scripts/commonFun.js";
     // import { lookAt } from "../../../scripts/three";
     import { addBarnLabel } from "./mixins/addBarnLabel";
-    import { TunnelService } from '../../../services/tunnelService'
+    // import { TunnelService } from '../../../services/tunnelService'
     import  viewerBaseConfig  from "./mixins/viewerBase";
 
     export default {
-        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',1)],
+        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',1,this.listenPosition)],
         props: {
             detectionObjInfor:{
                 type:Object,
@@ -37,15 +37,15 @@
                 type: Boolean,
                 default: false
             },
-            refreshCameraPosition: {
-                type: Object,
-                default: function () {
-                    return {
-                        enable: true,
-                        interval: 1000
-                    };
-                }
-            },
+            // refreshCameraPosition: {
+            //     type: Object,
+            //     default: function () {
+            //         return {
+            //             enable: true,
+            //             interval: 1000
+            //         };
+            //     }
+            // },
             cameraPosition: {
                 type: Object,
                 default: () => {
@@ -63,7 +63,7 @@
         data() {
             return {
                 handler: null,
-                prePosition: null,
+                // prePosition: null,
             };
         },
         watch: {
@@ -78,23 +78,6 @@
                 },
                 deep: true
             },
-            'prePosition': {
-                handler({ longitude, latitude, height }) {
-
-                    TunnelService.getStorePosition({ longitude, latitude, height })
-                        .then( storePosition => {
-
-                            if ( !storePosition ) return;
-
-                            this.$emit("showStorePosition", {
-                                areaName: storePosition.area.name,
-                                storeName: storePosition.name,
-                                tunnelName: storePosition.store.tunnel.name
-                            });
-                        })
-                },
-                deep: true
-            }
         },
         mounted() {
         },
@@ -120,71 +103,7 @@
                     scene.canvas
                 );
             },
-            // 开始相机位置刷新
-            startCameraPositionRefresh() {
-                this.refreshCameraPosition.enable = true;
-                this.cameraPositionRefresh();
-            },
-            // 停止相机位置刷新
-            stopCameraPositionRefresh() {
-                this.refreshCameraPosition.enable = false;
-            },
-            // 相机位置刷新
-            cameraPositionRefresh() {
-                let _this = this;
-               
-                setTimeout(() => {
-                    try {
-                        // 如果刷新相机位置不可用，则退出
-                        if (!_this.refreshCameraPosition.enable) return;
-
-                        var camera = _this.scene.camera;
-                        var position = camera.position;
-                        //将笛卡尔坐标化为经纬度坐标
-                        var cartographic = Cesium.Cartographic.fromCartesian(
-                            position
-                        );
-                        var longitude = Cesium.Math.toDegrees(
-                            cartographic.longitude
-                        );
-                        var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                        var height = cartographic.height;
-
-                        var cameraPosition = {
-                            longitude: longitude,
-                            latitude: latitude,
-                            height: height,
-                            pitch: camera.pitch,
-                            roll: camera.roll,
-                            heading: camera.heading,
-                            equals: function (o) {
-                                if (o == null) return false;
-                                return (
-                                    Math.abs(o.longitude - this.longitude) <
-                                    0.000001 &&
-                                    Math.abs(o.latitude - this.latitude) <
-                                    0.000001 &&
-                                    Math.abs(o.height - this.height) < 0.000001 &&
-                                    Math.abs(o.pitch - this.pitch) < 0.000001 &&
-                                    Math.abs(o.roll - this.roll) < 0.000001 &&
-                                    Math.abs(o.heading - this.heading) < 0.000001
-                                );
-                            }
-                        };
-                        if (!cameraPosition.equals(_this.prePosition)) {
-                            _this.prePosition = cameraPosition;
-
-                            _this.addLabel(_this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
-
-                            _this.$emit("refreshCameraPosition", cameraPosition);
-                        }
-                    } catch (error) {
-                        console.warn('error'+ error);
-                    }
-
-                    _this.cameraPositionRefresh();
-                }, _this.refreshCameraPosition.interval);
-            },
+            
             LookAt1(obj, heading, pitch, range) {
                 let target = Cesium.Cartesian3.fromDegrees(
                     obj.longitude,
@@ -238,12 +157,11 @@
             },
             processFailed(queryEventArgs) {
                 console.log('查询失败！');
-            }
+            },
         },
         beforeDestroy() {
-            let { handler, refreshCameraPosition, timer } = this;
+            let { handler, timer } = this;
 
-            refreshCameraPosition.enable = false;
             clearInterval(timer.timeoutId);
             clearInterval(timer.intervalId);
 

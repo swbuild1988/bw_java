@@ -10,7 +10,7 @@
         <vm-select id="list-dropdown" :optionList="optionList" @getSelectVal="getAreas"></vm-select>
         <vm-select id="area-dropdown" :optionList="areaList" :selectStyle="{ left:'15.5%' }" @getSelectVal="getStores"></vm-select>
         <vm-select id="store-dropdown" :optionList="storeList" :selectStyle="{ left:'29%' }" @getSelectVal="changeStore"></vm-select>
-        <show-store-position v-bind:currPosition="storePosition"></show-store-position>
+        <show-store-position v-bind:currPosition="storePosition" v-show="showPositionPanel"></show-store-position>
         <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="playFly"></Button>
         <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn"  style="right:4vmin" icon="stop" @click="stopFly"></Button>
     
@@ -62,7 +62,8 @@
                     isPlay: false,
                     text: "开始"
                 },
-                showControlBtn:false
+                showControlBtn:false,
+                showPositionPanel:false
             }
         },
         components: {
@@ -210,7 +211,7 @@
                 this.$refs.smViewer.destory3D();
             },
             listenerWindowSize(){
-               this.showControlBtn = window.innerWidth > 1440 ? true : false;
+               this.showPositionPanel = this.showControlBtn = window.innerWidth > 1440 ? true : false;
             }
         },
         beforeDestroy() {

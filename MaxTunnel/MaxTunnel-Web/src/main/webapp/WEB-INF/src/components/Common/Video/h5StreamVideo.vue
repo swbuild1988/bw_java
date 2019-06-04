@@ -4,16 +4,21 @@
         <div v-if="isTextShow" class="text">
             <p style="padding: 10%">{{text}}</p>
         </div>
-        <div :class="['embedControl', controlFlag ? '' : 'trsp']" @mousemove="show" @mouseout="hide" ref="embedControl">
-            <embeded-control v-bind:camera = "video" v-bind:isShow="controlFlag"></embeded-control>
+        <div
+            :class="['embedControl', controlFlag ? '' : 'trsp']"
+            @mousemove="show"
+            @mouseout="hide"
+            ref="embedControl"
+        >
+            <embeded-control v-bind:camera="video" v-bind:isShow="controlFlag"></embeded-control>
         </div>
         <!-- <div class="playPause"></div> -->
     </div>
 </template>
 
 <script>
-import embededControl from '../../UM/MAM/videoControls/embededControl'
-import { H5StreamPlugIn } from './h5StreamPlugIn'
+import embededControl from "../../UM/MAM/videoControls/embededControl";
+import { H5StreamPlugIn } from "./h5StreamPlugIn";
 
 export default {
     name: "h5-stream-video",
@@ -49,7 +54,7 @@ export default {
             curVideo: null,
             controlFlag: false,
             isTextShow: false,
-            videoId: '',
+            videoId: ""
         };
     },
     components: {
@@ -57,7 +62,7 @@ export default {
     },
     computed: {
         config() {
-            return  {
+            return {
                 videoid: this.videoId,
                 protocol: window.location.protocol, //http: or https:
                 host: this.video.url,
@@ -65,62 +70,70 @@ export default {
                 token: this.video.id,
                 hlsver: "v1", //v1 is for ts, v2 is for fmp4
                 session: "c1782caf-b670-42d8-ba90-2244d0b0ee83" //session got from login
-            }
+            };
         }
     },
-    watch: {
-    },
+    watch: {},
     mounted() {
-        this.Log.info("h5stream mounted!")
-        // 获取dom
-        let videoDom = H5StreamPlugIn.getVideoElement(this.index);
-        document.getElementById(this.id).appendChild(videoDom);
-        this.addDblClick(videoDom)
-        // 获取组件的id
-        this.videoId = videoDom.id;
-        this.Log.info("videoId:", this.videoId);
-
-        this.connectVideo(this.config);
-        this.isTextShow = this.text ? true : false
+        this.Log.info("h5stream mounted!");
+        this.getVideoDom();
+        this.isTextShow = this.text ? true : false;
     },
-    beforeUpdate(){
-         this.connectVideo(this.config)
+    updated() {
+        this.disconnectVideo();
+        // this.connectVideo(this.config);
+        this.getVideoDom();
     },
     beforeDestroy() {
-        this.disconnectVideo()
+        this.disconnectVideo();
     },
     methods: {
-        connectVideo(config){
-            if (this.config.token){
+        getVideoDom() {
+            // 获取dom
+            let videoDom = H5StreamPlugIn.getVideoElement(this.index);
+            document.getElementById(this.id).appendChild(videoDom);
+            this.addDblClick(videoDom);
+            // 获取组件的id
+            this.videoId = videoDom.id;
+            this.Log.info("videoId:", this.videoId);
+            this.connectVideo(this.config);
+        },
+        connectVideo(config) {
+            if (this.config.token) {
                 this.curVideo = H5sPlayerCreate(config);
                 this.curVideo.connect();
             }
         },
-        disconnectVideo(){
-            if(!this.curVideo) return
-            this.curVideo.disconnect()
-            delete this.curVideo
-            this.curVideo = null
+        disconnectVideo() {
+            if (!this.curVideo) return;
+            this.curVideo.disconnect();
+            delete this.curVideo;
+            this.curVideo = null;
         },
         show() {
-            let width = document.getElementsByClassName('h5StreamVideo')[0].offsetWidth
-            let height = document.getElementsByClassName('h5StreamVideo')[0].offsetHeight
-            if(width > 800 && height > 800 && this.video.positionSupport){
-                this.controlFlag = true
-                let height = document.getElementsByClassName('embedControl')[0].offsetHeight
-                document.getElementsByClassName('embedControl')[0].style.width = height + 'px'
+            let width = document.getElementsByClassName("h5StreamVideo")[0]
+                .offsetWidth;
+            let height = document.getElementsByClassName("h5StreamVideo")[0]
+                .offsetHeight;
+            if (width > 800 && height > 800 && this.video.positionSupport) {
+                this.controlFlag = true;
+                let height = document.getElementsByClassName("embedControl")[0]
+                    .offsetHeight;
+                document.getElementsByClassName("embedControl")[0].style.width =
+                    height + "px";
             }
         },
         hide() {
-            this.controlFlag = false
+            this.controlFlag = false;
         },
-        addDblClick(videoDom){
-            videoDom.addEventListener('dblclick',function(){
-                H5StreamPlugIn.fullScreen(videoDom.id)
-                let fullScreenStyle = document.createElement('style');
-                fullScreenStyle.innerText='.videos::-webkit-media-controls-panel{display: none;}';
+        addDblClick(videoDom) {
+            videoDom.addEventListener("dblclick", function() {
+                H5StreamPlugIn.fullScreen(videoDom.id);
+                let fullScreenStyle = document.createElement("style");
+                fullScreenStyle.innerText =
+                    ".videos::-webkit-media-controls-panel{display: none;}";
                 document.body.appendChild(fullScreenStyle);
-            })
+            });
         }
     }
 };
@@ -157,7 +170,7 @@ export default {
     top: 0;
     z-index: 1;
 }
-.videos::-webkit-media-controls-panel{
+.videos::-webkit-media-controls-panel {
     display: none;
 }
 
@@ -171,40 +184,40 @@ export default {
 /*:-webkit-full-screen video{ 
     max-width: 600px;
     max-height: 400px;
-}*/ 
-:fullscreen { 
-    background-color: rgba(0,0,0,0.1);
+}*/
+:fullscreen {
+    background-color: rgba(0, 0, 0, 0.1);
 }
-::backdrop { 
+::backdrop {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.embedControl{
+.embedControl {
     position: absolute;
     height: 30%;
     min-height: 100px;
     min-width: 98px;
     max-width: 240px;
     max-height: 240px;
-   /* width: 98px;
+    /* width: 98px;
     height: 100px;*/
     bottom: 0;
     left: 50%;
     transform: translate(-70%);
     z-index: 999;
 }
-.trsp{
+.trsp {
     opacity: 0;
 }
-.text{
+.text {
     position: absolute;
     top: 0;
     left: 0;
     width: 40%;
     height: 20%;
-   /* background-color: white;*/
+    /* background-color: white;*/
     z-index: 999;
     font-size: 20px;
     /*text-align: center;*/
