@@ -37,9 +37,7 @@
             </Row>
         </Row>
         <div class="list">
-            <Row>
-                <Table class="tableStyle" :columns='columns' :data="defects"></Table>
-            </Row>
+            <Table :columns='columns' :data="defects"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
         placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -156,27 +154,12 @@ export default {
                                 style: {
                                     marginRight: '5px'
                                 },
-                                class: 'btnShow',
                                 on: {
                                     click: () => {
                                         this.enterOrder(params.index)
                                     }
                                 }
                             }, '查看'),
-                            // h('Button',{
-                            //     props: {
-                            //         type: 'success',
-                            //         size: 'small'
-                            //     },
-                            //     style: {
-                            //         marginRight: '5px'
-                            //     },
-                            //     on: {
-                            //         click: ()=> {
-                            //             this.edit(params.index)
-                            //         }
-                            //     }
-                            // },'编辑'),
                              h('Button',{
                                 props: {
                                     type: 'info',
@@ -193,9 +176,7 @@ export default {
                     }
                 }
             ],
-            defects:[
-                // {id:1,tunnelName:'凤岭北路',createTime:1529596800000,typeName:'电力故障',objName:'凤岭北路电力故障',levelName:'二级',statusName:'未解决'}
-            ],
+            defects:[],
             tunnels: [],
             defectType: [],
             defectLevel: [],
@@ -222,13 +203,13 @@ export default {
     },
     watch:{
         '$route': function () {
-          //2. $route发生变化时再次赋值planId
-          this.tunnelId = this.$route.params.id;
-          this.tunnels.forEach(a => {
-            if (a.id == this.tunnelId) {
-              this.queryCondition();
-            }
-          });
+            //2. $route发生变化时再次赋值planId
+            this.tunnelId = this.$route.params.id;
+            this.tunnels.forEach(a => {
+                if (a.id == this.tunnelId) {
+                    this.queryCondition();
+                }
+            });
         },
     },
     computed: {
@@ -354,6 +335,9 @@ export default {
 }
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
+}
+.list .ivu-table-wrapper>>>.ivu-table-tip table{
+    width: auto;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-i.nput-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

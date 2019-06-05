@@ -119,17 +119,17 @@
 					intervalTime: 1000,
 				},
 				queryPrams: {
-					cleaned: -1,
-					tunnelId: -1,
-					alarmLevel: -1,
-					objectId: "",
+					cleaned: 0,
+					tunnelId: null,
+					alarmLevel: null,
+					objectId: null,
 					alarmTimeType: 1,
-					monitorZone: "",
-					endTime: "",
-					startTime: "",
+					monitorZone: null,
+					endTime: null,
+					startTime: null,
 					total: 0,
 					pageSize: 12,
-					pageNum: 10,
+					pageNum: 1,
 				},
 				enumData: {
 					alarmLevel: [{key: -1, value: "全部"}, {key: 1, value: "提示"}, {key: 2, value: "一般"}, 
@@ -140,17 +140,71 @@
 				alarmStatusList: [{value: -1, label: "全部"}, {value: 1, label: "已清除"}, {value: 0, label: "未清除"}],
 				alarmLevelCount: [0, 0, 0, 0],
 				tableColumn: [
-					{type: 'selection', width: 60, align: 'center'},
-					{title: 'Id', key: 'id', width: 80,},
-					{title: '所属管廊', key: 'tuunelName',},
-					{title: '监测对象名', key: 'objectName',},
-					{title: '告警级别', key: 'alarmLevel',},
-					// {title: '告警类型', key: 'alarmType',},
-					{title: '描述', key: 'description',},
-					{title: '告警时间', key: 'alarmTime',},
-					{title: '告警次数', key: 'alarmCount',},
-					{title: '是否清除', key: 'isClear',},
-					{title: '清除时间', key: 'clearTime',},
+					{
+						type: 'selection', 
+						width: 60, 
+						align: 'center'
+					},
+					{
+						title: 'Id',
+						key: 'id', 
+						width: 80,
+						align: 'center'
+					},
+					{
+						title: '告警名称',
+						key: 'alarmName',
+						align: 'center'
+					},
+					{
+						title: '所属管廊', 
+						key: 'tunnel',
+						render: (h, params) => {
+							return h('span', params.row.tunnel.name)
+						},
+						align: 'center'
+					},
+					{
+						title: '监测对象名', 
+						key: 'objectName',
+						align: 'cenetr'
+					},
+					{
+						title: '告警级别', 
+						key: 'alarmLevelName',
+						align: 'center'	
+					},
+					{
+						title: '告警时间', 
+						key: 'alarmDate',
+						align: 'center',
+						render: (h, params) => {
+							return h('span', new Date(params.row.alarmDate).format('yyyy-MM-dd hh:mm:s'))
+						}
+					},
+					{
+						title: '是否清除', 
+						key: 'cleaned',
+						align: 'center',
+						render: (h, params) => {
+							let temp = null
+							if(params.row.cleaned==true){
+								temp = '已清除'
+							}else{
+								temp = '未清除'
+							}
+							return h('span', temp)
+						}
+					},
+					{
+						title: '清除时间', 
+						key: 'cleanedDate',
+						align: 'center',
+						render: (h, params) => {
+							console.log('params.row.cleanedDate', params.row.cleanedDate)
+							return h('span', new Date(params.row.cleanedDate).format('yyyy-MM-dd hh:mm:s'))
+						}
+					},
 					{
 						title: '操作',
 						key: 'action',
@@ -158,19 +212,18 @@
 						render: (h, params) => {
 						return h('div', [
 							h('Button', {
-							props: {
-								type: 'success',
-								size: 'default'
-							},
-							style: {
-								marginRight: '5px',
-								display: (params.row.isClear == "已清除") ? "none" : "inline-block",
-							},
-							on: {
-								click: () => {
-								this.clearAlarms(params.index)
+								props: {
+									type: 'success',
+									size: 'default'
+								},
+								style: {
+									display: (params.row.cleaned == true) ? "none" : "inline-block",
+								},
+								on: {
+									click: () => {
+										this.clearAlarms(params.index)
+									}
 								}
-							}
 							}, '清除')
 						]);
 						}
@@ -191,63 +244,51 @@
 			inItData() {
 				var _this = this;
 				EnumsService.getMonitorType().then((result) => {
-				_this.objectList = result;
+					_this.objectList = result;
 				});
 				EnumsService.getDataType().then((result) => {
-				_this.dataTypeEnum = result;
+					_this.dataTypeEnum = result;
 				});
 				TunnelService.getTunnels().then((result) => {
-				_this.tunnelList = [{id: -1, name: "全部"}];
-				result.reduce((a,b)=>{
-					_this.tunnelList.push(b);
-				}, _this.tunnelList)
+					_this.tunnelList = [{id: -1, name: "全部"}];
+					result.reduce((a,b)=>{
+						_this.tunnelList.push(b);
+					}, _this.tunnelList)
 				});
 				DataAnalysisService.getAlarmCountByAlarmLevel().then((result) => {
-				if (result) {
-					_this.alarmLevelCount = [];
-					result.forEach(a => {
-					_this.alarmLevelCount.push(a.val);
-					})
-
-				}
+					if (result) {
+						_this.alarmLevelCount = [];
+						result.forEach(a => {
+							_this.alarmLevelCount.push(a.val);
+						})
+					}
 				});
 			},
 
 			queryAlarmData() {
 				var _this = this;
 				if(new Date(_this.queryPrams.startTime)>new Date(_this.queryPrams.endTime)){
-				_this.$Message.error('开始时间必须小于结束时间！');
-				return;
+					_this.$Message.error('开始时间必须小于结束时间！');
+					return;
 				}
-				var prams = {};
 				_this.tableLoad = true;
-				prams.startTime = _this.queryPrams.startTime != "" ? new Date(_this.queryPrams.startTime).getTime() : 0
-				prams.endTime = _this.queryPrams.endTime != "" ? new Date(_this.queryPrams.endTime).getTime() : 0
-				prams.tunnelId = _this.queryPrams.tunnelId !=-1 ? _this.queryPrams.tunnelId : ""
-				prams.cleaned = _this.queryPrams.cleaned !=-1 ? _this.queryPrams.cleaned : ""
-				prams.alarmLevel = _this.queryPrams.alarmLevel !=-1 ? _this.queryPrams.alarmLevel : ""
-				prams.pageNum = _this.queryPrams.pageNum
-				prams.pageSize = _this.queryPrams.pageSize
+				let prams = {
+					startTime: new Date(_this.queryPrams.startTime),
+					endTime: new Date(_this.queryPrams.endTime),
+					tunnelId: _this.queryPrams.tunnelId,
+					cleaned: _this.queryPrams.cleaned,
+					alarmLevel: _this.queryPrams.alarmLevel,
+					pageNum: _this.queryPrams.pageNum,
+					pageSize: _this.queryPrams.pageSize
+				};
 				DataAnalysisService.getAlarmData(prams).then((result) => {
 				if (result) {
-					_this.tableData = [];
+					console.log('result', result)
 					_this.queryPrams.total = result.total;
-					result.list.forEach(a => {
-					let temp = {};
-					temp.id = a.id;
-					temp.tuunelName = a.tunnel.name;
-					temp.alarmLevel = a.alarmLevelName;
-					temp.objectName = a.objectName;
-					temp.description = a.description;
-					temp.alarmCount = 1;
-					temp.isClear = a.cleaned ? "已清除" : "未清除";
-					temp.alarmTime = new Date(a.alarmDate).format("yyyy-MM-dd hh:mm:ss");
-					temp.clearTime = a.cleanedDate != null ? new Date(a.cleanedDate).format("yyyy-MM-dd hh:mm:ss") : "";
-					_this.tableData.push(temp);
-					})
+					_this.tableData = result.list
 				}
 				}).then(() => {
-				_this.tableLoad = false;
+					_this.tableLoad = false;
 				})
 			},
 			//勾选数据行
@@ -266,27 +307,27 @@
 				var _this = this;
 				var date = new Date();
 				if (index == 1) {
-				date.setTime(date.getTime() - 3600 * 1000 * 24);
-				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-				_this.isReady = true;
+					date.setTime(date.getTime() - 3600 * 1000 * 24);
+					_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+					_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+					_this.isReady = true;
 				}
 				else if (index == 2) {
-				date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-				_this.isReady = true;
+					date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+					_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+					_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+					_this.isReady = true;
 				}
 				else if (index == 3) {
-				date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-				_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-				_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-				_this.isReady = true;
+					date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+					_this.queryPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+					_this.queryPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+					_this.isReady = true;
 				}
 				else {
-				_this.isReady = false;
-				_this.queryPrams.startTime = "";
-				_this.queryPrams.endTime = "";
+					_this.isReady = false;
+					_this.queryPrams.startTime = "";
+					_this.queryPrams.endTime = "";
 				}
 			},
 			//切换页面
@@ -320,7 +361,7 @@
 			},
 			"alarmsClear.modalPrams.state": function () {
 				if (!this.alarmsClear.modalPrams.state && this.alarmsClear.modalPrams.ids.length > 0) {
-				this.queryAlarmData();
+					this.queryAlarmData();
 				}
 
 			}
