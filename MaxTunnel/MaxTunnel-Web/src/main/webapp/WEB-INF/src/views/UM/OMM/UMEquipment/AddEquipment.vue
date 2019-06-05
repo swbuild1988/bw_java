@@ -73,7 +73,7 @@
                 <!-- <Select v-model="equipment.objId" @on-change="getObjType">
                     <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.id }}</Option>
                 </Select> -->
-                <Input @on-focus="getObjs" v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
+                <Input v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
                 <ul class="chooseObj" v-show="isShowObjs">
                     <li v-for="item in objs" :value="item" :key="item" @click="replaceInputValue(item)">{{item}}</li>
                 </ul>
@@ -362,13 +362,6 @@ export default {
                 )
             }
         },
-        //objs动态提示框
-        // getObjs(){
-        //     this.isShowObjs = true 
-        // },
-        // hiddenObjs(){
-        //     this.isShowObjs = false
-        // },
         changeObjId(objId){
             this.isShowObjs = true 
             EquipmentService.changeObjId(objId).then(

@@ -90,10 +90,18 @@
 					<h3>巡检记录：（
 						流程未结束：<div class="finish noFinish"></div>
 						流程结束：<div class="finish isFinish"></div>
+						巡检计划被拒绝：<div class="finish rejectPlan"></div>
 					）
 					</h3>
 					<ul class="patrolRecordUl">
-						<li v-for="item in patrolRecords" :value="item.id" :key="item.id" :class="[item.taskType==1?'noFinish':(item.taskType==2?'isFinish':'') ]">{{item.id}}</li>
+						<li v-for="item in patrolRecords" :value="item.id" :key="item.id" 
+						:class = "[
+							plan.isFinished==true&&item.taskType==1?'rejectPlan':
+							(
+								plan.isFinished==false&&item.taskType==1?'noFinish':(plan.isFinished==true&&item.taskType==2?'isFinish':'')
+							)
+						]">{{item.id}}
+						</li>
 					</ul>
 					<Table :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
 					<Col span="24" v-show="pageType==pageTypes.Edit" style="text-align: right;margin-top: 20px;">
@@ -275,9 +283,9 @@ export default {
 				id: i,
 				taskType: 0,
 				getColor: function(type) {
-					if (type == 1) return "noFinish";
+					if(this.plan.isFinished==true&&type == 1) return 'rejectPlan'
+					if(this.plan.isFinished==false&&type == 1) return "noFinish";
 					if (type == 2) return "isFinish";
-					// return "#fff";
 				}
 				});
 			}
@@ -335,6 +343,10 @@ h3 {
 }
 .isFinish {
 	background: #8524c6b3;
+	color: #fff;
+}
+.rejectPlan{
+	background: #c31f1f;;
 	color: #fff;
 }
 .noFinish {
