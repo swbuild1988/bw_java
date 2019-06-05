@@ -43,7 +43,7 @@
         total: 0,
         refresh: {
           time: 1000 * 60,
-          timeoutId: null
+          flag: true
         }
       }
     },
@@ -148,9 +148,11 @@
                 this.Log.info(error)
               })
               .finally(()=>{
-                _this.refresh.timeoutId = setTimeout(()=>{
-                  _this.fetchData(_this.requestUrl)
-                },parseFloat(_this.refreshTime))
+                if(_this.refresh.flag){
+					setTimeout(()=>{
+						_this.fetchData(_this.requestUrl)
+					},parseFloat(_this.refreshTime))
+				}
               })
           }
         }
@@ -188,9 +190,11 @@
             }
           })
           .finally(()=>{
-            _this.refresh.timeoutId = setTimeout(()=>{
-              _this.fetchData(_this.requestUrl)
-            },_this.refresh.time)
+            if(_this.refresh.flag){
+				setTimeout(()=>{
+					_this.fetchData(_this.requestUrl)
+				},parseFloat(_this.refreshTime))
+			}
           })
         }
       },
@@ -230,7 +234,7 @@
       }
     },
     beforeDestroy(){
-      clearTimeout(this.refresh.timeoutId)
+      this.refresh.flag = false
     }
   }
 

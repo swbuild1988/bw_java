@@ -225,6 +225,9 @@ export default {
         });
       });
     }
+  },
+  beforeDestory(){
+    clearInterval(this.currShowVideo.showVideoTimer)
   }
 };
 </script>
@@ -240,8 +243,17 @@ export default {
   background-size: 100% 100%;
 }
 .camera {
-  margin: 1% 7%;
-  width: 84%;
-  height: 86%;
+    position: absolute;
+    width: 98%;
+    height: 85%;
+    top: 14%;
+    left: 1%;
+}
+.VideoModule .Title {
+    width: 100%;
+    height: 15%;
+}
+.camera >>> .videoWrapper {
+  width: 100%;
 }
 </style>

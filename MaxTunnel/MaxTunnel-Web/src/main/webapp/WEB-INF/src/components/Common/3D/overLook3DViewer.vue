@@ -200,9 +200,9 @@
                     _this.showSpin();
                 }
                 this.initUpdate(_this.viewer,_this.scene);
-                _this.addRelatedUnits();
+                // _this.addRelatedUnits();
                 _this.switchCameraAngle();
-                // _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
+                _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
 
                 // 滚轮滑动，获得当前窗口的经纬度，偏移角
                 _this.handler = new Cesium.ScreenSpaceEventHandler(

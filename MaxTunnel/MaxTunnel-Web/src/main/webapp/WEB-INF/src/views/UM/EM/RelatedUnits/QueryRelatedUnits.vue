@@ -62,45 +62,71 @@
             </Col>
         </Row>
         <div class="list">
-            <Row type="flex" align="top" class="code-row-bg">
-                <Col span="6" v-for="(item,index) in unitInfo" :key="index">
-                    <div class="unitBox">
-                        <div class="title">
-                            <Icon type="star" style="font-size: 2vmin;"></Icon>
-                            {{ item.name + ' / ' + item.unitTypeName }}
-                        </div>
-                        <div class="unitItem">
-                            <Icon type="ios-location"></Icon>
-                            {{item.address}}
-                        </div>
-                        <div class="unitItem">
-                            <Icon type="android-person"></Icon>
-                            {{item.contact}}
-                        </div>
-                        <div class="unitItem">
-                            <Icon type="ios-telephone"></Icon>
-                            {{item.tel}}
-                        </div>
-                        <div class="unitItem">
-                            <Icon type="star"></Icon>
-                            <span
-                                class="showSectionsName"
-                                v-for="(item,index) in sections"
-                                :key="index"
-                            >{{item.name}}</span>
-                            <span class="sectionName" :title="item.sectionIds">{{item.sectionIds}}</span>
-                        </div>
-                        <div class="unitItem">
-                            <Icon type="android-time"></Icon>
-                            {{item.crtTime}}
-                        </div>
-                        <div style="text-align: center;margin:1vmin">
-                            <Button size="small" type="primary" @click="edit(index)" class="edit">编辑</Button>
-                            <Button size="small" type="error" @click="del(index)" class="del">删除</Button>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+            <Tabs value="card">
+                <TabPane label="卡片" name="card">
+                    <Row type="flex" align="top" class="code-row-bg">
+                        <Col span="6" v-for="(item,index) in unitInfo" :key="index">
+                            <div class="unitBox">
+                                <div class="title">
+                                    <Icon type="star" style="font-size: 2vmin;"></Icon>
+                                    {{ item.name + ' / ' + item.unitTypeName }}
+                                </div>
+                                <div class="unitItem">
+                                    <Icon type="ios-location"></Icon>
+                                    {{item.address}}
+                                </div>
+                                <div class="unitItem">
+                                    <Icon type="android-person"></Icon>
+                                    {{item.contact}}
+                                </div>
+                                <div class="unitItem">
+                                    <Icon type="ios-telephone"></Icon>
+                                    {{item.tel}}
+                                </div>
+                                <div class="unitItem">
+                                    <Icon type="star"></Icon>
+                                    <span
+                                        class="showSectionsName"
+                                        v-for="(item,index) in sections"
+                                        :key="index"
+                                    >{{item.name}}</span>
+                                    <span
+                                        class="sectionName"
+                                        :title="item.sectionIds"
+                                    >{{item.sectionIds}}</span>
+                                </div>
+                                <div class="unitItem">
+                                    <Icon type="android-time"></Icon>
+                                    {{item.crtTime}}
+                                </div>
+                                <div style="text-align: center;margin:1vmin">
+                                    <Button
+                                        size="small"
+                                        type="primary"
+                                        @click="edit(index)"
+                                        class="edit"
+                                    >编辑</Button>
+                                    <Button
+                                        type="primary"
+                                        size="small"
+                                        @click="read(index)"
+                                        class="read"
+                                    >详情</Button>
+                                    <Button
+                                        size="small"
+                                        type="error"
+                                        @click="del(index)"
+                                        class="del"
+                                    >删除</Button>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </TabPane>
+                <TabPane label="表格" name="table" class="table">
+                    <Table :columns="unitColumn" :data="unitData"></Table>
+                </TabPane>
+            </Tabs>
         </div>
         <Page
             :total="page.pageTotal"
@@ -154,7 +180,115 @@ export default {
                 right: "15px",
                 color: "#fff"
             },
-            align: "center"
+            align: "center",
+            unitColumn: [
+                {
+                    title: "单位名称",
+                    key: "name",
+                    align: "center"
+                },
+                {
+                    title: "单位类型",
+                    key: "unitTypeName",
+                    align: "center"
+                },
+                {
+                    title: "地址",
+                    key: "address",
+                    align: "center"
+                },
+                {
+                    title: "联系人",
+                    key: "contact",
+                    align: "center"
+                },
+                {
+                    title: "管舱区段",
+                    align: "center",
+                    render: (h, params) => {
+                        let sections = [];
+                        params.row.sectionList.forEach(section => {
+                            sections.push(section.name);
+                        });
+                        return h("div", sections.join(","));
+                    }
+                },
+                {
+                    title: "创建时间",
+                    align: "center",
+                    render: (h, params) => {
+                        return h(
+                            "div",
+                            new Date(params.row.crtTime).format(
+                                "yyyy-MM-dd hh:mm:ss"
+                            )
+                        );
+                    }
+                },
+                {
+                    title: "操作",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    class: "edit",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.index);
+                                        }
+                                    }
+                                },
+                                "编辑"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "read",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.read(params.index);
+                                        }
+                                    }
+                                },
+                                "详情"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "del",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.del(params.index);
+                                        }
+                                    }
+                                },
+                                "删除"
+                            )
+                        ]);
+                    }
+                }
+            ],
+            unitData: []
         };
     },
     watch: {
@@ -280,6 +414,7 @@ export default {
                             }
                         }
                     }
+                    _this.unitData = _this.unitInfo;
                 },
                 function(error) {
                     console.log(error);
@@ -319,6 +454,9 @@ export default {
         },
         edit(index) {
             this.goToMoudle(index, Enum.pageType.Edit);
+        },
+        read(index) {
+            this.goToMoudle(index, Enum.pageType.Read);
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -400,7 +538,8 @@ export default {
     display: inline-block;
     vertical-align: middle;
 }
-.edit {
+.edit,
+.table >>> .ivu-btn:first-child {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);
@@ -408,13 +547,23 @@ export default {
     border-color: #3e4f61;
     border-radius: 1vmin;
     font-size: 1.3vmin !important;
-    margin-right: 1vmin;
 }
-.del {
+.del,
+.table >>> .ivu-btn:last-child {
     background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
     background: -o-linear-gradient(right, #e49b9b, #f61a1a);
     background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
     background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.3vmin !important;
+}
+.read,
+.table >>> .ivu-btn:nth-child(2) {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
     border-color: #3e4f61;
     border-radius: 1vmin;
     font-size: 1.3vmin !important;
@@ -426,44 +575,25 @@ export default {
     .ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,
     .ivu-select.ivu-select-single >>> .ivu-select-placeholder {
-        height: 4vmin;
-        line-height: 4vmin;
-        font-size: 1.4vmin;
-    }
-    .queryCondition {
-        font-size: 1.4vmin;
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+        font-size: 1.2vmin;
+        border-radius: 1vmin;
     }
     .unitBox {
-        border: 0.1vmin solid#dddfe1;
         margin: 1vmin auto;
         padding: 0.5vmin 0px;
-        border-radius: 0.4vmin;
-        box-shadow: 0.5vmin 0.6vmin 0.4vmin rgba(0, 0, 0, 0.2);
-    }
-    .title {
-        font-size: 2vmin;
-        padding: 0px 1vmin;
-    }
-    .address {
-        padding: 0px 1vmin;
     }
     .contact {
         line-height: 3.5vmin;
         margin: 1vmin 0px;
         padding: 0px 1vmin;
     }
-    .crtTime {
-        font-size: 1.6vmin;
-        line-height: 4vmin;
-    }
     .option {
         padding: 0px 0.4vmin;
     }
     .ivu-icon {
         margin-right: 0.5vmin;
-    }
-    .sectionName {
-        margin-left: 7.7vmin;
     }
     .ivu-dropdown-item >>> .ivu-select-dropdown {
         margin-left: 1.4vmin;
@@ -472,7 +602,6 @@ export default {
         margin-left: 7.5vmin;
         border: 0.1vmin solid #cccccc;
     }
-    .address,
     .contact {
         font-size: 1.4vmin;
     }
@@ -491,5 +620,29 @@ export default {
         border: 0.1vmin solid #dddee1;
         border-radius: 0.2vmin;
     }
+}
+.list .ivu-table-wrapper {
+    border: none;
+}
+.list .ivu-table-wrapper >>> .ivu-table {
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper >>> .ivu-table th,
+.ivu-table-wrapper >>> .ivu-table td {
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.list .ivu-table-wrapper >>> .ivu-btn-primary,
+.ivu-table-wrapper >>> .ivu-btn-info {
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none;
+}
+.list .ivu-table-wrapper >>> .ivu-table:before,
+.list .ivu-table-wrapper >>> .ivu-table:after {
+    background-color: #fffdfd00 !important;
+}
+.ivu-tabs {
+    color: #fff;
 }
 </style>

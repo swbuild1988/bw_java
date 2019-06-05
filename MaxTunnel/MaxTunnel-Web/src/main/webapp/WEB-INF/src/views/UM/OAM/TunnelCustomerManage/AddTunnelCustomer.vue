@@ -3,8 +3,7 @@
         <Form ref="companyInfo" :model="companyInfo" :label-width="140">
             <h2
                 class="formTitle"
-                v-show="pageType!=pageTypes.Edit"
-            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : '添加企业客户信息' }}</h2>
+            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : (pageType === pageTypes.Read ? '企业客户信息详情' : '添加企业客户信息') }}</h2>
             <Row>
                 <Col span="7">
                     <p class="subTitle">企业基本信息：</p>
@@ -17,6 +16,7 @@
                             v-model="companyInfo.company.name"
                             placeholder="请输入企业名称"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -28,6 +28,7 @@
                             v-model="companyInfo.company.creditNo"
                             placeholder="请输入信用代码"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -39,6 +40,7 @@
                             v-model="companyInfo.company.bank"
                             placeholder="请输入开户行"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -50,6 +52,7 @@
                             v-model="companyInfo.company.account"
                             placeholder="请输入账号"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -61,6 +64,7 @@
                             v-model="companyInfo.company.address"
                             placeholder="请输入注册地址信息"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -73,6 +77,7 @@
                             v-model="companyInfo.company.phone"
                             placeholder="请输入注册电话"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -84,6 +89,7 @@
                             v-model="companyInfo.company.mail"
                             placeholder="请输入邮箱"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                 </Col>
@@ -98,6 +104,7 @@
                             v-model="companyInfo.list[0].contact"
                             placeholder="请输入一般联系人姓名"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="职责:">
@@ -105,6 +112,7 @@
                             v-model="companyInfo.list[0].duty"
                             placeholder="请输入一般联系人职责"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -116,6 +124,7 @@
                             v-model="companyInfo.list[0].tel"
                             placeholder="请输入一般联系人手机"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -127,6 +136,7 @@
                             v-model="companyInfo.list[0].tel2"
                             placeholder="请输入一般联系人电话"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
@@ -134,6 +144,7 @@
                             v-model="companyInfo.list[0].mail"
                             placeholder="请输入一般联系人邮箱"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <p class="subTitle">紧急联系人信息：</p>
@@ -146,6 +157,7 @@
                             v-model="companyInfo.list[1].contact"
                             placeholder="请输入紧急联系人姓名"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="职责:">
@@ -153,6 +165,7 @@
                             v-model="companyInfo.list[1].duty"
                             placeholder="请输入紧急联系人职责"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -164,6 +177,7 @@
                             v-model="companyInfo.list[1].tel"
                             placeholder="请输入紧急联系人手机"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -175,6 +189,7 @@
                             v-model="companyInfo.list[1].tel2"
                             placeholder="请输入紧急联系人电话"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
@@ -182,6 +197,7 @@
                             v-model="companyInfo.list[1].mail"
                             placeholder="请输入紧急联系人邮箱"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                 </Col>
@@ -196,6 +212,7 @@
                             v-model="companyInfo.company.inspectionNo"
                             placeholder="请输入固定巡检周期"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -207,6 +224,7 @@
                             v-model="companyInfo.company.inspectionTime"
                             placeholder="请输入固定巡检时间"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <p class="subTitle">固定巡检人员备案：</p>
@@ -219,6 +237,7 @@
                             v-model="companyInfo.company.insName"
                             placeholder="请输入固定巡检人员姓名"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -230,6 +249,7 @@
                             v-model="companyInfo.company.insIdentity"
                             placeholder="请输入固定巡检人员身份证号"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -241,6 +261,7 @@
                             v-model="companyInfo.company.insDuty"
                             placeholder="请输入固定巡检人员职责"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -252,6 +273,7 @@
                             v-model="companyInfo.company.insPhone"
                             placeholder="请输入固定巡检人员电话"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -263,6 +285,7 @@
                             v-model="companyInfo.company.insQualification"
                             placeholder="请输入固定巡检人员资格证类型"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -274,6 +297,7 @@
                             v-model="companyInfo.company.qualificationNo"
                             placeholder="请输入资格证编号"
                             class="input"
+                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -287,6 +311,7 @@
                             @on-change="imgChange"
                             accept="image/png, image/jpeg, image/jpg"
                             class="imgInput"
+                            v-show="pageType != pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem>
@@ -306,7 +331,12 @@
                 </Col>
             </Row>
             <div class="btn">
-                <Button type="primary" @click="submitcompanyInfo('companyInfo')" class="save">保存</Button>
+                <Button
+                    type="primary"
+                    @click="submitcompanyInfo('companyInfo')"
+                    class="save"
+                    v-show="pageType != pageTypes.Read"
+                >保存</Button>
                 <Button type="ghost" @click="goBack()" class="back">返回</Button>
             </div>
         </Form>
@@ -503,31 +533,46 @@ export default {
                                     }
                                 },
                                 error => {
-                                    this.Log.info("添加失败");
+                                    this.$Message.error("添加失败");
                                 }
                             );
                             break;
                         case this.pageTypes.Edit:
-                            Promise.all([
-                                CompanyService.editCompany(this.companyInfo),
-                                CompanyService.uploadQualification(
-                                    this.companyInfo.company.id,
-                                    this.uploadImageParam,
-                                    config
-                                )
-                            ]).then(
-                                response => {
+                            if (this.uploadImageParam) {
+                                Promise.all([
+                                    CompanyService.editCompany(
+                                        this.companyInfo
+                                    ),
+                                    CompanyService.uploadQualification(
+                                        this.companyInfo.company.id,
+                                        this.uploadImageParam,
+                                        config
+                                    )
+                                ]).then(
+                                    response => {
+                                        this.$Message.success("修改成功");
+                                        this.$nextTick(() => {
+                                            this.$router.push(
+                                                "/UM/tunnelCustomer/list"
+                                            );
+                                        });
+                                    },
+                                    error => {
+                                        this.Log.info("修改失败");
+                                    }
+                                );
+                            } else {
+                                CompanyService.editCompany(
+                                    this.companyInfo
+                                ).then(res => {
                                     this.$Message.success("修改成功");
                                     this.$nextTick(() => {
                                         this.$router.push(
                                             "/UM/tunnelCustomer/list"
                                         );
                                     });
-                                },
-                                error => {
-                                    this.Log.info("修改失败");
-                                }
-                            );
+                                });
+                            }
                             break;
                     }
                 } else {
@@ -536,7 +581,10 @@ export default {
             });
         },
         getParams() {
-            if (this.pageType == this.pageTypes.Edit) {
+            if (
+                this.pageType == this.pageTypes.Edit ||
+                this.pageType == this.pageTypes.Read
+            ) {
                 CompanyService.getcompanyDetail(
                     this.companyInfo.company.id
                 ).then(

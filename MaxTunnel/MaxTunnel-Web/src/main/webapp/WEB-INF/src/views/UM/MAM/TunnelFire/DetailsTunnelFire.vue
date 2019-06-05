@@ -124,8 +124,8 @@
                 <Table :columns="environmentColums" :data="objTableDate"></Table>
             </TabPane>
         </Tabs>-->
-        <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
-            <Row :gutter="16" v-show="tabs.isShowComponent">
+        <tabs :tabList="tabs.tabList" :tabIndex="tabsIndex" @changeTab="changeTabs">
+            <Row :gutter="16" v-show="isShowComponent">
                 <Col span="12">
                     <div class="data">
                         <div class="titles">
@@ -194,7 +194,7 @@
                     </Row>
                 </Col>
             </Row>
-            <Table :columns="environmentColums" :data="objTableDate" v-show="!tabs.isShowComponent"></Table>
+            <Table :columns="environmentColums" :data="objTableDate" v-show="!isShowComponent"></Table>
         </tabs>
     </div>
 </template>
@@ -217,6 +217,14 @@ import tabs from "../../../../components/Common/Tabs.vue";
 
 export default {
     name: "detail-tunnel-environment",
+    computed:{
+        isShowComponent(){
+            return this.$store.state.UMstate.tabelCrad.isShowCardComponent
+        },
+        tabsIndex(){
+            return this.$store.state.UMstate.tabelCrad.buttomIndex
+        }
+    },
     data() {
         return {
             tabName: "",
@@ -311,7 +319,6 @@ export default {
             areaLeath: "",
             tabs: {
                 tabIndex: 0,
-                isShowComponent: true,
                 tabList: [
                     {
                         index: 0,
@@ -348,29 +355,6 @@ export default {
             this.choosedTabPane = "卡片";
         }
     },
-    // beforeRouteLeave(to, from, next) {
-    //     if (
-    //         to.name == "设备管理主页" ||
-    //         to.name == "巡检计划总览" ||
-    //         to.name == "虚拟巡检" ||
-    //         to.name == "人员定位详情" ||
-    //         to.name == "管廊安防监控列表" ||
-    //         to.name == "管廊环境监控列表" ||
-    //         to.name == "管廊机电监控列表" ||
-    //         to.name == "管廊消防监控列表" ||
-    //         to.name == "管廊管线监控列表"
-    //     ) {
-    //         from.meta.keepAlive = true;
-    //         to.meta.keepAlive = true;
-    //         this.$destroy();
-    //         next();
-    //     } else {
-    //         to.meta.keepAlive = false;
-    //         from.meta.keepAlive = false;
-    //         this.$destroy();
-    //         next();
-    //     }
-    // },
     components: {
         SimulatedData,
         showSwitchData,
@@ -383,6 +367,7 @@ export default {
         tabs
     },
     mounted() {
+        console.log('消防isShowComponent',this.isShowComponent)
         if (this.$route.query) {
             this.tunnelId = this.$route.query.tunnelId;
             this.queryCondition.storeId = this.$route.query.storeId;
@@ -394,8 +379,10 @@ export default {
     },
     methods: {
         changeTabs(tab) {
-            this.tabs.tabIndex = tab.index;
-            this.tabs.isShowComponent = tab.index == 0 ? true : false;
+            this.$store.commit("changeCardStatus",{
+                status: tab.index == 0 ? true : false,
+                index:tab.index,
+            }); //保存当前按钮状态
         },
 
         intervalData() {
@@ -735,7 +722,6 @@ export default {
             };
             MonitorDataService.getdataVideos(Params).then(result => {
                 if (result && result.length > 0) {
-                    console.log(Params, result);
                     this.curCarousel.videolist = result;
                 }
             });
@@ -753,7 +739,8 @@ export default {
     beforeDestroy() {
         clearInterval(this.dataInterval);
         this.dataInterval = null;
-    }
+    },
+
 };
 </script>
 
@@ -933,7 +920,6 @@ export default {
     margin-top: 0.5%;
     margin-right: 3%;
 }
-
 @media (min-width: 1921px) {
     .common_spen {
         font-size: 1.6rem;

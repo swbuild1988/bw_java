@@ -133,7 +133,7 @@
                     </Select>
                 </FormItem>
                 <FormItem label="对象类型：" v-show="borrow.objId">
-                    <div v-for="item in objTypes" :key="item.objtypeId">
+                    <div v-for="(item, index) in objTypes" :key="index">
                         <Input :value="item.objtypeName" readonly></Input>
                     </div>
                 </FormItem>
