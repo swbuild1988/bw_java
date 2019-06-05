@@ -62,6 +62,10 @@ const UMstate = {
             token: null,
             intervalId: null,
         },
+        tabelCrad:{
+            isShowCardComponent:true,
+            buttomIndex:0
+        }
     },
     // 2. getters
     getters: {
@@ -108,6 +112,12 @@ const UMstate = {
         stopInterval(state) {
             state.communication.intervalId = null;
         },
+        changeCardStatus(state,{status,index}){
+            
+            state.tabelCrad.isShowCardComponent = status;
+            state.tabelCrad.buttomIndex = index;
+            
+        }
     },
 };
 

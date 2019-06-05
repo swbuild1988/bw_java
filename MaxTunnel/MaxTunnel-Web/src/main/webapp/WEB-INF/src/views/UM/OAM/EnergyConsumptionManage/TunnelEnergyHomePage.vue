@@ -326,7 +326,7 @@ export default {
             radarChart: {
                 requestUrl: "tunnels/total-avg/2/consume-datas",
                 id: "tunnelEnergyRadarChart",
-                titleSize: '6%',
+                titleSize: "6%",
                 parameters: {
                     option: {
                         title: {
@@ -445,7 +445,9 @@ export default {
         //导出表数据
         exportData() {
             this.$refs.table.exportCsv({
-                filename: "各管廊能耗统计" + new Date(Date.now()).format('yyyy-MM-dd'),
+                filename:
+                    "各管廊能耗统计" +
+                    new Date(Date.now()).format("yyyy-MM-dd"),
                 original: false
             });
         },
