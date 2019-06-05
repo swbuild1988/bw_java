@@ -1,6 +1,8 @@
 <template>
     <Modal class="forBG" v-model="modalPrams.state" :width="modalWidth" title="告警信息">
-        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1">   
+        <div class="noneData" v-show="alarms&&alarms.length==0">暂无告警信息</div>
+        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1" :id="'sectionId'+index1"> 
+            <Icon type="close" class="closeIcon" @click="closeCurAlarm(index1)"></Icon>
             <!-- title -->
             <section class="titleSection">
                 <article>
@@ -54,11 +56,15 @@
                     </section>
                 </div>
             </div>
+            <Icon type="chevron-down" class="downIcon" color="#fff" @click="pickUp('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'down'+index1"></Icon> 
+            <Icon type="chevron-up" class="upIcon" color="#fff" @click="pickDown('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'up'+index1"></Icon> 
         </section>
+        <div slot="footer">
+        </div>
     </Modal>
 </template>
 
-<script>
+<script> 
     import videoComponent from '../Video/VideoComponent.vue'
     import ImageFromUrl from "../../Common/ImageFromUrl"
     import UmLayoutBg from '@/assets/UM/UmLayoutBg.png'
@@ -118,20 +124,16 @@
                 alarmPerIndex: ''
             }
         },
-        computed: {
-            containerStyle(){
-                return {
-                    transform:`translate3d(${this.distance}vw, 0, 0)`
-                }
-            }
-        },
         watch: {
             'videoNum'() {
                 this.setVideoSpan();
+            },
+            'alarmContainer': function(newVal, oldVal){
+                this.alarms = newVal
             }
         },
         mounted() {
-            this.modalWidth = window.innerWidth * 0.6
+            this.modalWidth = window.innerWidth * 0.58
             this.alarms = this.alarmContainer
             this.setVideoSpan();
         },
@@ -227,6 +229,30 @@
             //点击取消预案
             cancelPlan() {
                 // 关掉这个告警
+            },
+            //收起
+            pickUp(id, upId, downId){
+                document.getElementById(id).style.height = 'auto'
+                document.getElementById(upId).style.display = 'none'
+                document.getElementById(downId).style.display = 'block'
+            },
+            //展开
+            pickDown(id, upId, downId){
+                document.getElementById(id).style.height = '11vh'
+                document.getElementById(upId).style.display = 'block'
+                document.getElementById(downId).style.display = 'none'
+            },
+            //关闭当前告警
+            closeCurAlarm(index){
+                this.$Modal.confirm({
+                    title: '告警管理',
+                    content: '<p>确定删除该告警吗</p>',
+                    onOk: () => {
+                        this.alarms.splice(index, 1)
+                        this.$Message.success('删除成功！')
+                    },
+                    onCancel: () => {}
+                })
             }
         }
     }
@@ -242,6 +268,8 @@
         padding: 1vmin;
         border: 1px solid #ffffff;
         border-radius: 4px;
+        position: relative;
+        overflow: hidden;
     }
 
     .titleSection{
@@ -267,6 +295,12 @@
         background-size: 100% 100%;
         color: #ffffff;
     } 
+    .forBG>>>.ivu-modal-content .ivu-modal-body{
+
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
     .forBG>>>.ivu-modal-header-inner,.forBG>>>.ivu-modal-close .ivu-icon-ios-close-empty{
         color: #ffffff;
     }    
@@ -312,5 +346,23 @@
     }
     .planSection .ivu-row .ivu-col.ivu-col-span-12{
         line-height: 7vmin;
+    }
+    .closeIcon{
+        font-size: 2vmin;
+        position: absolute;
+        right: 1vmin;
+    }
+    .downIcon,.upIcon{
+        font-size: 2vmin;
+        position: absolute;
+        right: 1vmin;
+        bottom: 1vmin;
+    }
+    .downIcon{
+        display: none;
+    }
+    .noneData{
+        text-align: center;
+        font-size: 2vmin;
     }
 </style>

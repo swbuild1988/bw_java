@@ -138,6 +138,7 @@
   }
   .ivu-notice{
       width: 11%;
+      border: 1px solid green;
   }
   .ivu-notice  .ivu-notice-notice {
       margin-bottom: 10px;

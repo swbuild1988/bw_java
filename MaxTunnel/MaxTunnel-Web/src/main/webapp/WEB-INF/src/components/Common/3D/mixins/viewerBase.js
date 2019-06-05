@@ -18,7 +18,7 @@ export default ( containerId,viewer,domId,route ) => ({
         },
         navigation: {
             type: Boolean,
-            default: true
+            default: false
         },
         undergroundMode: {
             type: Object,
@@ -244,7 +244,6 @@ export default ( containerId,viewer,domId,route ) => ({
         // 停止相机位置刷新
         stopCameraPositionRefresh() {
             this.refreshCameraPosition.enable = false;
-            console.log('停止相机位置刷新',this.refreshCameraPosition.enable)
         },
         // 相机位置刷新
         cameraPositionRefresh() {

@@ -354,7 +354,7 @@ export default {
 }
 .coolBox >>> .positionInformation {
     font-size: 1vmin;
-    width: 14%;
+    width: 20%;
     right: 6%;
 }
 </style>

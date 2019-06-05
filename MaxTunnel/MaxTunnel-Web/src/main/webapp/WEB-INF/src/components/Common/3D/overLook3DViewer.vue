@@ -129,7 +129,6 @@
         data() {
             return {
                 handler: null,
-                prePosition: null,
                 personnelPositionTimerId: null,
                 spin: {
                     spinShow: this.openSpinShow,
@@ -178,30 +177,6 @@
                     this.modelProp.show.state = false;
                 }
 
-            },
-            'prePosition': {
-                handler({
-                    longitude,
-                    latitude,
-                    height
-                }) {
-
-                    TunnelService.getStorePosition({
-                            longitude,
-                            latitude,
-                            height
-                        })
-                        .then(storePosition => {
-                            if (!storePosition) return;
-
-                            this.$emit("showStorePosition", {
-                                areaName: storePosition.area.name,
-                                storeName: storePosition.name,
-                                tunnelName: storePosition.store.tunnel.name
-                            });
-                        })
-                },
-                deep: true
             },
         },
         components: {
