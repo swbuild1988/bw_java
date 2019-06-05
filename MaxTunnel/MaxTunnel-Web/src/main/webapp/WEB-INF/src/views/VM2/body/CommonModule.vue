@@ -83,9 +83,8 @@
                     safe: 20
                 },
                 refresh: {
-                    intervalId: null,
-                    tunnelMessage: null,
-                    runMessage: null
+                    tunnelMessageFlag: true,
+                    runMessageFlag: true
                 }
             };
         },
@@ -99,14 +98,10 @@
             
             this.getTunnelMessage();
             this.getRunMessage();
-            let _this = this;
-            // this.refresh.intervalId = setInterval(() => {
-            //     _this.init();
-            // }, this.refresh.time);
         },
         beforeDestroy() {
-            clearTimeout(this.refresh.tunnelMessage);
-            clearTimeout(this.refresh.runMessage);
+            this.refresh.tunnelMessage = false
+            this.refresh.runMessage = false
         },
         methods: {
             getTunnelMessage() {
@@ -128,11 +123,12 @@
                     }
                 )
                 .finally(()=>{
-                    let _this = this
-                   
-                    this.refresh.tunnelMessage = setTimeout(()=>{
-                        _this.getTunnelMessage()
-                    },parseFloat(this.refreshTime))
+                    if(this.tunnelMessageFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getTunnelMessage()
+                        },parseFloat(this.refreshTime))
+                    }
                 });
             },
             getRunMessage(){
@@ -146,10 +142,12 @@
                     }
                 )
                 .finally(()=>{
-                    let _this = this
-                    this.refresh.runMessage = setTimeout(()=>{
-                        _this.getRunMessage()
-                    },parseFloat(this.refreshTime))
+                    if(this.runMessageFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getRunMessage()
+                        },parseFloat(this.refreshTime))
+                    }
                 });
             }
         }

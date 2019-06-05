@@ -225,6 +225,9 @@ export default {
         });
       });
     }
+  },
+  beforeDestory(){
+    clearInterval(this.currShowVideo.showVideoTimer)
   }
 };
 </script>
