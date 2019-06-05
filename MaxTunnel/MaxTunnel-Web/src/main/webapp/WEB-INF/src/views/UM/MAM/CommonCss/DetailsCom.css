@@ -5,7 +5,7 @@
 .ivu-table-wrapper>>>.ivu-table {
     background: transparent;
     color: #fff;
-    padding-left: 3vmin;
+    margin-left: 2.5vmin;
 }
 
 .ivu-table-wrapper>>>.ivu-table th,
@@ -32,4 +32,8 @@
     position: absolute;
     left: 70%;
     color: #fff;
+}
+.ivu-table-wrapper>>>.ivu-table-tip,
+.ivu-table-wrapper>>>.ivu-table-overflowX {
+    overflow-x: hidden;
 }

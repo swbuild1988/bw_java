@@ -129,6 +129,7 @@ export default {
                 } else {
                     this.selectedName = sessionStorage.getItem("selectedName");
                     let index = this.selectedName.lastIndexOf("-");
+                    console.log('this.selectedName.slice(0, index)',this.selectedName.slice(0, index))
                     this.openNames.push(this.selectedName.slice(0, index));
                 }
             }
@@ -304,6 +305,7 @@ export default {
             }
         },
         goToMoudle(path, index, childIndex) {
+            console.log('childIndex',childIndex)
             this.selectedActive[0] = index;
             this.selectedActive[1] = childIndex;
             if (childIndex < 0) {

@@ -190,7 +190,7 @@
         .finally(()=>{
           _this.timerId = setTimeout(()=>{
             _this.fetchData(_this.requestUrl)
-          },5000)
+          },1000 * 60 * 60)
         })
       },
       refreshData() {

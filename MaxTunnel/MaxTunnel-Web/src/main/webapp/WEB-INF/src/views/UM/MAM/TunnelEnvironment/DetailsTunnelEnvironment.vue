@@ -75,8 +75,8 @@
             <strong>里程:</strong>
             {{ areaLeath }}
         </div>
-        <tabs :tabList="tabs.tabList" :tabIndex="tabs.tabIndex" @changeTab="changeTabs">
-            <Row :gutter="16" v-show="tabs.isShowComponent">
+        <tabs :tabList="tabs.tabList" :tabIndex="tabsIndex" @changeTab="changeTabs">
+            <Row :gutter="16" v-show="isShowComponent">
                 <Col span="12">
                     <div class="data">
                         <div class="titles">
@@ -145,7 +145,7 @@
                     </Row>
                 </Col>
             </Row>
-            <Table :columns="environmentColums" :data="objTableDate" v-show="!tabs.isShowComponent"></Table>
+            <Table :columns="environmentColums" :data="objTableDate" v-show="!isShowComponent"></Table>
         </tabs>
     </div>
 </template>
@@ -168,6 +168,14 @@ import tabs from "../../../../components/Common/Tabs.vue";
 
 export default {
     name: "detail-tunnel-environment",
+    computed:{
+        isShowComponent(){
+            return this.$store.state.UMstate.tabelCrad.isShowCardComponent
+        },
+        tabsIndex(){
+            return this.$store.state.UMstate.tabelCrad.buttomIndex
+        }
+    },
     data() {
         return {
             tabName: "",
@@ -261,8 +269,6 @@ export default {
             objTableDate: [],
             areaLeath: "",
             tabs: {
-                tabIndex: 0,
-                isShowComponent: true,
                 tabList: [
                     {
                         index: 0,
@@ -293,6 +299,7 @@ export default {
         }
     },
     created() {
+        
         if (localStorage.getItem("choosedTab")) {
             this.choosedTabPane = localStorage.getItem("choosedTab");
         } else {
@@ -311,6 +318,8 @@ export default {
         tabs
     },
     mounted() {
+        console.log('isShowComponent',this.isShowComponent)
+        console.log('tabsIndex',this.tabsIndex)
         if (this.$route.query) {
             this.tunnelId = this.$route.query.tunnelId;
             this.queryCondition.storeId = this.$route.query.storeId;
@@ -322,8 +331,10 @@ export default {
     },
     methods: {
         changeTabs(tab) {
-            this.tabs.tabIndex = tab.index;
-            this.tabs.isShowComponent = tab.index == 0 ? true : false;
+            this.$store.commit("changeCardStatus",{
+                status: tab.index == 0 ? true : false,
+                index:tab.index,
+            }); //保存当前按钮状态
         },
 
         intervalData() {
@@ -653,7 +664,8 @@ export default {
     beforeDestroy() {
         clearInterval(this.dataInterval);
         this.dataInterval = null;
-    }
+    },
+
 };
 </script>
 

@@ -502,7 +502,7 @@ export default {
     margin: 0; 
     padding: 0; 
     top: 8.2vh !important;
-    background-color: rgba(50,103,156,.5);
+    background-color: rgba(50,103,156,.7);
     box-shadow: 0 0px 8px 0 rgba(57, 123, 187, .5), 0 1px 0px 0 rgba(57, 123, 187, .6)
 }
 .layout-nav >>> .ivu-dropdown-item-divided{
