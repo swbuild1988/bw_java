@@ -9,19 +9,27 @@
         >
             <p
                 class="formTitle"
-                v-show="pageType!=pageTypes.Edit"
-            >{{pageType==pageTypes.Edit ? '更新相关单位信息' : '添加相关单位'}}</p>
+            >{{pageType==pageTypes.Edit ? '更新相关单位信息' : (pageType == pageTypes.Read ? '相关单位详情' : '添加相关单位')}}</p>
             <FormItem label="单位名称：" prop="name">
-                <Input type="text" v-model="addRelatedUnitsInfo.name"/>
+                <Input
+                    type="text"
+                    v-model="addRelatedUnitsInfo.name"
+                    :readonly="pageType == pageTypes.Read"
+                />
             </FormItem>
             <FormItem label="联系人：" prop="contact">
-                <Input type="text" v-model="addRelatedUnitsInfo.contact"/>
+                <Input
+                    type="text"
+                    v-model="addRelatedUnitsInfo.contact"
+                    :readonly="pageType == pageTypes.Read"
+                />
             </FormItem>
             <FormItem label="联系方式：" prop="tel">
                 <Input
                     type="text"
                     v-model="addRelatedUnitsInfo.tel"
                     placeholder="XXXXXXXXXXX或者000-0000000或者0000-0000000"
+                    :readonly="pageType == pageTypes.Read"
                 ></Input>
             </FormItem>
             <FormItem label="单位类别：" prop="unitType">
@@ -34,13 +42,25 @@
                 </Select>
             </FormItem>
             <FormItem label="单位地址：" prop="address">
-                <Input type="text" v-model="addRelatedUnitsInfo.address"/>
+                <Input
+                    type="text"
+                    v-model="addRelatedUnitsInfo.address"
+                    :readonly="pageType == pageTypes.Read"
+                />
             </FormItem>
             <FormItem label="坐标经度：" prop="longitude">
-                <Input type="text" v-model="addRelatedUnitsInfo.longitude"/>
+                <Input
+                    type="text"
+                    v-model="addRelatedUnitsInfo.longitude"
+                    :readonly="pageType == pageTypes.Read"
+                />
             </FormItem>
             <FormItem label="坐标纬度：" prop="latitude">
-                <Input type="text" v-model="addRelatedUnitsInfo.latitude"/>
+                <Input
+                    type="text"
+                    v-model="addRelatedUnitsInfo.latitude"
+                    :readonly="pageType == pageTypes.Read"
+                />
             </FormItem>
             <FormItem label="重要级别：" prop="unitLevel">
                 <Select v-model="addRelatedUnitsInfo.unitLevel">
@@ -69,7 +89,7 @@
                 <Button
                     type="primary"
                     @click="submit('addRelatedUnitsInfo')"
-                    v-show="pageType!=pageTypes.Edit"
+                    v-show="pageType==pageTypes.Add"
                     :disabled="isDisable"
                     style="margin-right: 2vmin"
                     class="save"
@@ -443,19 +463,20 @@ export default {
     line-height: 3.2vmin;
     font-size: 1.4vmin;
 }
-.formBG{
+.formBG {
     background: url("../../../../assets/UM/infoBox.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
 }
 
-.formBG >>> .ivu-form-item-label{
+.formBG >>> .ivu-form-item-label {
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>> .ivu-form .ivu-form-item-required .ivu-form-item-label:before,
+.formBG .ivu-form >>> .ivu-form-item-label:before {
     color: #00fff6;
-    content: '★';
+    content: "★";
     display: inline-block;
     margin-right: 4px;
     line-height: 1;

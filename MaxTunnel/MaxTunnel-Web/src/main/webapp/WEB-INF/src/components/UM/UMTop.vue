@@ -31,39 +31,38 @@
                                 </DropdownMenu>
                             </Dropdown>
                         </MenuItem>
-                        
                     </div>
                     <!-- 人物圆点 -->
-                        <div class="select-dropdown">
-                            <Dropdown>
-                                <a href="javascript:void(0)">
-                                    <Badge :count="countNum">
-                                        <Avatar
-                                            :style="{background:'#f56a00'}"
-                                            size="large"
-                                            shape="circle"
-                                            :src="umImg"
-                                        ></Avatar>
-                                    </Badge>
-                                </a>
-                                <DropdownMenu slot="list" >
-                                    <DropdownItem
-                                        @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})"
-                                    >我的消息</DropdownItem>
-                                    <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
-                                    <DropdownItem
-                                        @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
-                                    >我的任务</DropdownItem>
-                                    <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
-                                    <showAboutUs v-bind="aboutUs"></showAboutUs>
-                                    <DropdownItem
-                                        @click.native="goToMoudle({ path: '/UM/personCenter/editPass'})"
-                                    >个人中心</DropdownItem>
-                                    <!--<showUserInfo v-bind="userself"></showUserInfo>-->
-                                    <DropdownItem divided @click.native="logout">注销</DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </div>
+                    <div class="select-dropdown">
+                        <Dropdown>
+                            <a href="javascript:void(0)">
+                                <Badge :count="countNum">
+                                    <Avatar
+                                        :style="{background:'#f56a00'}"
+                                        size="large"
+                                        shape="circle"
+                                        :src="umImg"
+                                    ></Avatar>
+                                </Badge>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem
+                                    @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})"
+                                >我的消息</DropdownItem>
+                                <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
+                                <DropdownItem
+                                    @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
+                                >我的任务</DropdownItem>
+                                <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
+                                <showAboutUs v-bind="aboutUs"></showAboutUs>
+                                <DropdownItem
+                                    @click.native="goToMoudle({ path: '/UM/personCenter/editPass'})"
+                                >个人中心</DropdownItem>
+                                <!--<showUserInfo v-bind="userself"></showUserInfo>-->
+                                <DropdownItem divided @click.native="logout">注销</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
                 </div>
             </Menu>
         </Header>
@@ -393,8 +392,8 @@ export default {
     border-color: transparent;
 }
 .layoutLeft {
-    float:left;
-    height:100%;
+    float: left;
+    height: 100%;
 }
 .layoutLeft .layout-logo {
     height: 6vmin;
@@ -468,13 +467,12 @@ export default {
     border-top: 0.1vmin solid #e9eaec;
     color: #fff;
     text-align: center;
-    
 }
 .layout-nav >>> .ivu-dropdown-item:hover {
     color: #000;
-    background: rgba(255,255,255,.6);
+    background: rgba(255, 255, 255, 0.6);
 }
-.layout-nav >>> .ivu-dropdown-item:first-child{
+.layout-nav >>> .ivu-dropdown-item:first-child {
     border-top: none;
 }
 
@@ -498,33 +496,33 @@ export default {
     border-bottom: 0px;
     color: transparent;
 } */
-.layout-nav >>> .ivu-select-dropdown{
-    margin: 0; 
-    padding: 0; 
+.layout-nav >>> .ivu-select-dropdown {
+    margin: 0;
+    padding: 0;
     top: 8.2vh !important;
-    background-color: rgba(50,103,156,.5);
-    box-shadow: 0 0px 8px 0 rgba(57, 123, 187, .5), 0 1px 0px 0 rgba(57, 123, 187, .6)
+    background-color: rgba(50, 103, 156, 0.9);
+    box-shadow: 0 0px 8px 0 rgba(57, 123, 187, 0.5),
+        0 1px 0px 0 rgba(57, 123, 187, 0.6);
 }
-.layout-nav >>> .ivu-dropdown-item-divided{
+.layout-nav >>> .ivu-dropdown-item-divided {
     margin-top: 0;
 }
 .select-dropdown {
-    position:fixed;
+    position: fixed;
     right: 6vmin;
 }
-    /* 小屏幕（显示器，小于等于 1920px） */
+/* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {
-    .layout-nav >>> .ivu-select-dropdown{
+    .layout-nav >>> .ivu-select-dropdown {
         left: 3.4vmin !important;
     }
     .select-dropdown >>> .ivu-select-dropdown {
         left: -4vmin !important;
     }
-    
 }
-    /* 大屏幕（显示器，大于等于 1920px） */
+/* 大屏幕（显示器，大于等于 1920px） */
 @media (min-width: 1921px) {
-    .layout-nav >>> .ivu-select-dropdown{
+    .layout-nav >>> .ivu-select-dropdown {
         left: 2vmin !important;
     }
     .select-dropdown >>> .ivu-select-dropdown {
