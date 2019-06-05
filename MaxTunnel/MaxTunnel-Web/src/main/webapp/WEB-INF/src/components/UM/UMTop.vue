@@ -707,4 +707,7 @@ export default {
     overflow-y: auto;
     width: 18%;
 }
+.ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title{
+    font-size: 2.1vmin !important;
+}
 </style>

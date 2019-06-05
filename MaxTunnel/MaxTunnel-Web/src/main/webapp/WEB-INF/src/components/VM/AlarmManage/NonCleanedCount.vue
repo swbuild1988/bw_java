@@ -15,7 +15,7 @@
                 Title:'未清除告警总数',
                 NonCleanedCount:0,
                 unit:'条',
-                timer:null,
+                refreshFlag: true
             }
         },
         mounted(){
@@ -32,16 +32,17 @@
                 DataAnalysisService.NonClearAlarms()
                 .then( result =>  this.NonCleanedCount = result.length )
                 .finally(()=>{
-                    let _this = this
-                    this.timer = setTimeout(()=>{
-                        _this.getAllNonCleanedAlarm()
-                    },1000)
+                    if(this.refreshFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getAllNonCleanedAlarm()
+                        },1000)
+                    }
                 })
             }
         },
         beforeDestroy(){
-            clearTimeout( this.timer );
-            this.timer = null;
+            this.refreshFlag = false
             console.log('nonCleanedCount​',document.getElementsByClassName('nonCleanedCount​'))
         }
     }

@@ -72,6 +72,11 @@ export default {
                     align: 'center'
                 },
                 {
+                    title: '工单进程',
+                    key: 'processStatus',
+                    align: 'center'
+                },
+                {
                     title: '维修开始时间',
                     key: 'overhaulTime',
                     align: 'center',
@@ -168,12 +173,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/tunnels').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.tunnels = data
-        //     }
-        // })
         this.getList()
     },
     methods:{
@@ -192,16 +191,6 @@ export default {
                 (error)=>{
                     _this.Log.info(error)
                 })
-            // this.axios.post('/orders/datagird',(this.params)).then(response=>{
-            //     let{ code,data } = response.data
-            //     if(code==200){
-            //         this.overhaulData = data.list
-            //         this.page.pageTotal = data.total
-            //     }
-            // })
-            // .catch(function(error){
-            //     console.log(error)
-            // })
         },
         handlePage(value) {
             this.page.pageNum = value;

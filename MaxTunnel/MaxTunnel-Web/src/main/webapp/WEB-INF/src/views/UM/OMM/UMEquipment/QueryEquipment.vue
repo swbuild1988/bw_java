@@ -407,7 +407,6 @@ export default {
             }
             EquipmentService.equipmentDatagird(this.params).then(
                 result => {
-                    console.log("result", result)
                     if(result.pagedList.length==0){
                         this.isNullData = true
                     }else{
@@ -421,7 +420,6 @@ export default {
                         // }
                     }
                     _this.equipments = result.pagedList;
-                    console.log('_this.equipments', _this.equipments)
                     _this.page.pageTotal = result.total;
                 },
                 error => {

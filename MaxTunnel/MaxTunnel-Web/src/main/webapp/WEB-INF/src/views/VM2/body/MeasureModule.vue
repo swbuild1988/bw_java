@@ -127,8 +127,8 @@ export default {
 			],
 			dataInterval: null,
 			dataTimeout: {
-				todayExtre: null,
-				triggerTimes: null
+				todayExtreFlag: null,
+				triggerTimesFlag: null
 			}
 
 		};
@@ -219,9 +219,11 @@ export default {
 				}
 			)
 			.finally(()=>{
-				_this.dataTimeout.todayExtre = setTimeout(()=>{
-					_this.getToDayExtreDatas()
-				},_this.fetchTime)
+				if(_this.dataTimeout.todayExtreFlag){
+					setTimeout(()=>{
+						_this.getToDayExtreDatas()
+					},_this.fetchTime)
+				}
 			});
 			
 		},
@@ -235,22 +237,18 @@ export default {
 				}
 			)
 			.finally(()=>{
-				let _this = this
-				this.dataTimeout.triggerTimes = setTimeout(()=>{
-					_this.getTriggerTimes()
-				},parseFloat(this.refreshTime))
+				if(this.dataTimeout.triggerTimesFlag){
+					let _this = this
+					setTimeout(()=>{
+						_this.getTriggerTimes()
+					},parseFloat(this.refreshTime))
+				}
 			});
 		}
 	},
 	beforeDestroy() {
-		// clearInterval(this.dataInterval);
-		// this.dataInterval = null;
-		clearTimeout(this.dataTimeout.triggerTimes);
-		clearTimeout(this.dataTimeout.todayExtre);
-		this.dataTimeout = {
-			todayExtre: null,
-			triggerTimes: null
-		}
+		this.dataTimeout.triggerTimesFlag = false
+		this.dataTimeout.todayExtreFlag = false
 	}
 };
 </script>
