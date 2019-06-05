@@ -3,7 +3,7 @@
         <Form ref="companyInfo" :model="companyInfo" :label-width="140">
             <h2
                 class="formTitle"
-            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : (pageType === pageTypes.Read ? '添加企业客户信息' : '企业客户信息详情') }}</h2>
+            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : (pageType === pageTypes.Read ? '企业客户信息详情' : '添加企业客户信息') }}</h2>
             <Row>
                 <Col span="7">
                     <p class="subTitle">企业基本信息：</p>
