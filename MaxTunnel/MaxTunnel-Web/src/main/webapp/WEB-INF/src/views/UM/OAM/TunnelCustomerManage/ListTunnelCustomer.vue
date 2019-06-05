@@ -2,15 +2,11 @@
     <div class="allDiv">
         <div class="conditions">
             <Row>
-                <Col span="4">
+                <Col span="6">
                     <span class="conditionTitle">企业名称：</span>
                     <Input v-model="conditions.name" placeholder="请输入企业名称" style="width: 60%"/>
                 </Col>
-                <Col span="4">
-                    <span class="conditionTitle">开户行：</span>
-                    <Input v-model="conditions.bank" placeholder="请输入开户行" style="width: 60%"/>
-                </Col>
-                <Col span="4">
+                <Col span="6">
                     <span class="conditionTitle">开始时间：</span>
                     <DatePicker
                         type="datetime"
@@ -19,7 +15,7 @@
                         v-model="conditions.startTime"
                     ></DatePicker>
                 </Col>
-                <Col span="4">
+                <Col span="6">
                     <span class="conditionTitle">结束时间：</span>
                     <DatePicker
                         type="datetime"
@@ -28,73 +24,85 @@
                         v-model="conditions.endTime"
                     ></DatePicker>
                 </Col>
-                <Col span="4">
+                <Col span="6">
                     <Button type="primary" icon="ios-search" @click="queryList()">查询</Button>
                 </Col>
             </Row>
         </div>
         <div class="list" style="margin-top: 10px;padding: 10px 0;">
-            <!-- <Button class="add" type="info" @click="goToMoudle({ path:'/UM/tunnelcompany/add'})"><Icon type="plus-round" color="#fff"></Icon>添加</Button> -->
-            <Row>
-                <Col span="6" v-for="(item,index) in companyList" :key="index">
-                    <div class="infoList">
-                        <div class="company">
-                            <Icon type="android-bookmark"></Icon>
-                            <span>{{item.name}}</span>
-                        </div>
-                        <div class="conta-ctInfo">
-                            <Row>
-                                <Col span="10" offset="1" class="columns">
-                                    <Icon type="ios-home"></Icon>
-                                    <span>{{item.address}}</span>
-                                </Col>
-                                <Col span="10" offset="2" class="columns">
-                                    <Icon type="android-call"></Icon>
-                                    <span>{{item.phone}}</span>
-                                </Col>
-                                <Col span="10" offset="1" class="columns">
-                                    <Icon type="card"></Icon>
-                                    <span>{{item.account}}</span>
-                                </Col>
-                                <Col span="10" offset="2" class="columns">
-                                    <Icon type="android-mail"></Icon>
-                                    <span>{{item.mail}}</span>
-                                </Col>
-                                <Col span="10" offset="1" class="columns">
-                                    <Icon type="ios-barcode"></Icon>
-                                    <span>{{item.creditNo}}</span>
-                                </Col>
-                                <Col span="10" offset="2" class="columns">
-                                    <Icon type="cash"></Icon>
-                                    <span>{{item.bank}}</span>
-                                </Col>
-                                <Col span="10" offset="1">
-                                    <div class="option">
-                                        <Button
-                                            type="primary"
-                                            size="small"
-                                            @click="edit(item.id)"
-                                            class="edit"
-                                        >编辑</Button>
-                                        <Button
-                                            type="error"
-                                            size="small"
-                                            @click="instance(item.id)"
-                                            class="del"
-                                        >删除</Button>
-                                    </div>
-                                </Col>
-                                <Col span="10" offset="2">
-                                    <div class="crtTime">
-                                        <Icon type="android-time"></Icon>
-                                        <span>{{item.crtTime}}</span>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+            <Tabs value="card">
+                <TabPane label="卡片" name="card">
+                    <Row>
+                        <Col span="6" v-for="(item,index) in companyList" :key="index">
+                            <div class="infoList">
+                                <div class="company">
+                                    <Icon type="android-bookmark"></Icon>
+                                    <span>{{item.name}}</span>
+                                </div>
+                                <div class="conta-ctInfo">
+                                    <Row>
+                                        <Col span="10" offset="1" class="columns">
+                                            <Icon type="ios-home"></Icon>
+                                            <span>{{item.address}}</span>
+                                        </Col>
+                                        <Col span="10" offset="2" class="columns">
+                                            <Icon type="android-call"></Icon>
+                                            <span>{{item.phone}}</span>
+                                        </Col>
+                                        <Col span="10" offset="1" class="columns">
+                                            <Icon type="card"></Icon>
+                                            <span>{{item.account}}</span>
+                                        </Col>
+                                        <Col span="10" offset="2" class="columns">
+                                            <Icon type="android-mail"></Icon>
+                                            <span>{{item.mail}}</span>
+                                        </Col>
+                                        <Col span="10" offset="1" class="columns">
+                                            <Icon type="ios-barcode"></Icon>
+                                            <span>{{item.creditNo}}</span>
+                                        </Col>
+                                        <Col span="10" offset="2" class="columns">
+                                            <Icon type="cash"></Icon>
+                                            <span>{{item.bank}}</span>
+                                        </Col>
+                                        <Col span="10" offset="1">
+                                            <div class="option">
+                                                <Button
+                                                    type="primary"
+                                                    size="small"
+                                                    @click="edit(item.id)"
+                                                    class="edit"
+                                                >编辑</Button>
+                                                <Button
+                                                    type="primary"
+                                                    size="small"
+                                                    @click="read(item.id)"
+                                                    class="read"
+                                                >详情</Button>
+                                                <Button
+                                                    type="error"
+                                                    size="small"
+                                                    @click="instance(item.id)"
+                                                    class="del"
+                                                >删除</Button>
+                                            </div>
+                                        </Col>
+                                        <Col span="10" offset="2">
+                                            <div class="crtTime">
+                                                <Icon type="android-time"></Icon>
+                                                <span>{{item.crtTime}}</span>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </TabPane>
+                <TabPane label="表格" name="table" class="table">
+                    <Table :columns="companyColumn" :data="companyData"></Table>
+                </TabPane>
+            </Tabs>
         </div>
         <Page
             :total="page.pageTotal"
@@ -136,7 +144,107 @@ export default {
                 bottom: "20px",
                 right: "15px",
                 color: "#fff"
-            }
+            },
+            companyColumn: [
+                {
+                    title: "企业名称",
+                    key: "name",
+                    align: "center"
+                },
+                {
+                    title: "信用代码",
+                    key: "creditNo",
+                    align: "center"
+                },
+                {
+                    title: "开户行",
+                    key: "bank",
+                    align: "center"
+                },
+                {
+                    title: "账号",
+                    key: "account",
+                    align: "center"
+                },
+                {
+                    title: "注册地址",
+                    key: "address",
+                    align: "center"
+                },
+                {
+                    title: "注册电话",
+                    key: "phone",
+                    align: "center"
+                },
+                {
+                    title: "邮箱",
+                    key: "mail",
+                    align: "center"
+                },
+                {
+                    title: "操作",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    class: "edit",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.row.id);
+                                        }
+                                    }
+                                },
+                                "编辑"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "read",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.read(params.row.id);
+                                        }
+                                    }
+                                },
+                                "详情"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "del",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.del(params.row.id);
+                                        }
+                                    }
+                                },
+                                "删除"
+                            )
+                        ]);
+                    }
+                }
+            ],
+            companyData: []
         };
     },
     computed: {
@@ -173,6 +281,7 @@ export default {
                         ).format("yyyy-MM-dd");
                     }
                     _this.companyList = result.list;
+                    _this.companyData = result.list;
                     _this.page.pageTotal = result.total;
                 },
                 error => {
@@ -194,6 +303,9 @@ export default {
         },
         edit(id) {
             this.goMoudle(id, types.pageType.Edit);
+        },
+        read(id) {
+            this.goMoudle(id, types.pageType.Read);
         },
         ok() {
             this.delIt = true;
@@ -268,7 +380,8 @@ export default {
 .conditions .ivu-input-icon {
     line-height: 3vmin;
 }
-.edit {
+.edit,
+.table >>> .ivu-btn:first-child {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);
@@ -277,11 +390,22 @@ export default {
     border-radius: 1vmin;
     font-size: 1.4vmin !important;
 }
-.del {
+.del,
+.table >>> .ivu-btn:last-child {
     background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
     background: -o-linear-gradient(right, #e49b9b, #f61a1a);
     background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
     background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+}
+.read,
+.table >>> .ivu-btn:nth-child(2) {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
     border-color: #3e4f61;
     border-radius: 1vmin;
     font-size: 1.4vmin !important;
@@ -297,7 +421,38 @@ export default {
     line-height: 3.2vmin;
     font-size: 1.24vmin;
 }
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.ivu-page >>> .ivu-page-total,
+.ivu-page >>> .ivu-page-options-elevator {
     color: #fff;
+}
+.table {
+    padding-right: 4vmin;
+}
+.table .ivu-table-wrapper {
+    border: none;
+}
+.table .ivu-table-wrapper >>> .ivu-table {
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.table .ivu-table-wrapper >>> .ivu-table th,
+.ivu-table-wrapper >>> .ivu-table td {
+    background-color: #fffdfd00 !important;
+    border-bottom: none;
+}
+.table .ivu-table-wrapper >>> .ivu-btn-primary,
+.ivu-table-wrapper >>> .ivu-btn-info {
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none;
+}
+.table .ivu-table-wrapper >>> .ivu-table:before,
+.table .ivu-table-wrapper >>> .ivu-table:after {
+    background-color: #fffdfd00 !important;
+}
+.ivu-tabs {
+    color: #fff;
+}
+.ivu-table-cell:last-child {
+    width: 20vmin;
 }
 </style>

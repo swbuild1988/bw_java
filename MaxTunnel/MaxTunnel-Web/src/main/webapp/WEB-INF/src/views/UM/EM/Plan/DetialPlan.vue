@@ -14,7 +14,7 @@
                             </Col>
                             <Col span="12">
                                 <div>
-                                    <img style="margin-top: 4vmin;" v-bind:src="bgImg">
+                                    <img style="margin-top: 4vmin;height: 70vh;" v-bind:src="bgImg">
                                 </div>
                             </Col>
                         </Row>

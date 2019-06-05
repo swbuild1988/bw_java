@@ -72,77 +72,56 @@
             </Row>
         </div>
         <div class="list">
-            <div class="nullData" v-show="isNullData">暂无数据</div>
-            <Row>
-                <Col span="6" v-for="(item,index) in contractList" :key="index">
-                    <div class="contracts">
-                        <div style="display: table-cell;vertical-align: middle;text-align: center;">
-                            <div class="contractName" @click="edit(index)">
-                                <span>{{item.name}}</span>
-                            </div>
-                            <div class="contactInfo">
-                                <div class="item">
-                                    <div class="title">公司：</div>
-                                    <div class="info">{{ item.companyName }}</div>
-                                </div>
-                                <div class="item">
-                                    <div class="title">联系方式：</div>
-                                    <div class="info">{{ item.tel }}</div>
-                                </div>
-                                <div class="item">
-                                    <div class="title">合同状态：</div>
-                                    <div
-                                        :class="['info',{'red': item.contractStatus === '过期'}]"
-                                    >{{ item.contractStatus }}</div>
-                                </div>
-                                <div class="item">
-                                    <div class="title">创建时间：</div>
-                                    <div class="info">{{ item.crtTime }}</div>
-                                </div>
-                                <div class="item">
-                                    <div class="title">付款方式：</div>
-                                    <div class="info">{{ item.payType }}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <Button size="small" @click="edit(index)" class="edit">编辑</Button>
-                                <Button size="small" @click="read(index)" class="read">详情</Button>
-                                <Button size="small" @click="del(item.id)" class="del">删除</Button>
-                            </div>
-                            <!-- <div class="option">
-                                <Tooltip content="详情">
-                                    <div class="buttons">
-                                        <Icon
-                                            type="android-list"
-                                            @click.native="read(index)"
-                                            color="rgb(198,206,230)"
-                                            class="icons"
-                                        ></Icon>
+            <Tabs value="card">
+                <TabPane label="卡片" name="card">
+                    <div class="nullData" v-show="isNullData">暂无数据</div>
+                    <Row>
+                        <Col span="6" v-for="(item,index) in contractList" :key="index">
+                            <div class="contracts">
+                                <div
+                                    style="display: table-cell;vertical-align: middle;text-align: center;"
+                                >
+                                    <div class="contractName" @click="edit(index)">
+                                        <span>{{item.name}}</span>
                                     </div>
-                                </Tooltip>
-                                <Tooltip content="编辑">
-                                    <div class="buttons">
-                                        <Icon
-                                            type="edit"
-                                            @click.native="edit(index)"
-                                            class="icons"
-                                            color="rgb(198,206,230)"
-                                        ></Icon>
+                                    <div class="contactInfo">
+                                        <div class="item">
+                                            <div class="title">公司：</div>
+                                            <div class="info">{{ item.companyName }}</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="title">联系方式：</div>
+                                            <div class="info">{{ item.tel }}</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="title">合同状态：</div>
+                                            <div
+                                                :class="['info',{'red': item.contractStatus === '过期'}]"
+                                            >{{ item.contractStatus }}</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="title">创建时间：</div>
+                                            <div class="info">{{ item.crtTime }}</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="title">付款方式：</div>
+                                            <div class="info">{{ item.payType }}</div>
+                                        </div>
                                     </div>
-                                </Tooltip>
+                                    <div>
+                                        <Button size="small" @click="edit(index)" class="edit">编辑</Button>
+                                        <Button size="small" @click="read(index)" class="read">详情</Button>
+                                        <Button size="small" @click="del(item.id)" class="del">删除</Button>
+                                    </div>
+                                </div>
                             </div>
-                            <Tooltip content="删除" class="del">
-                                <Icon
-                                    type="trash-a"
-                                    @click.native="del(item.id)"
-                                    class="icons"
-                                    color="rgb(162, 77, 72)"
-                                ></Icon>
-                            </Tooltip>-->
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+                        </Col>
+                    </Row>
+                </TabPane>
+                <TabPane label="表格" name="table" class="table">
+                    <Table :columns="contractColumn" :data="contractData"></Table>
+                </TabPane>
+            </Tabs>
         </div>
         <div class="page">
             <Page
@@ -198,7 +177,113 @@ export default {
                 color: "#fff"
             },
             contractIds: [],
-            isNullData: false
+            isNullData: false,
+            contractColumn: [
+                {
+                    title: "合同名称",
+                    key: "name",
+                    align: "center"
+                },
+                {
+                    title: "企业名称",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", {}, params.row.company.name);
+                    }
+                },
+                {
+                    title: "联系方式",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", params.row.company.phone);
+                    }
+                },
+                {
+                    title: "合同状态",
+                    key: "contractStatusName",
+                    align: "center"
+                },
+                {
+                    title: "付款方式",
+                    key: "payTypeName",
+                    align: "center"
+                },
+                {
+                    title: "创建时间",
+                    align: "center",
+                    render: (h, params) => {
+                        return h(
+                            "div",
+                            new Date(params.row.crtTime).format(
+                                "yyyy-MM-dd hh:mm:ss"
+                            )
+                        );
+                    }
+                },
+                {
+                    title: "操作",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    class: "edit",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.edit(params.index);
+                                        }
+                                    }
+                                },
+                                "编辑"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "read",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "0.4vmin"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.read(params.index);
+                                        }
+                                    }
+                                },
+                                "详情"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    class: "del",
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.del(params.row.id);
+                                        }
+                                    }
+                                },
+                                "删除"
+                            )
+                        ]);
+                    }
+                }
+            ],
+            contractData: []
         };
     },
     components: { CustomerChoose },
@@ -270,6 +355,7 @@ export default {
             }
             ContractService.contractDatagrid(_this.params).then(result => {
                 _this.contractList = [];
+                _this.contractData = result.list;
                 if (!result.list.length) {
                     _this.isNullData = true;
                 } else {
@@ -412,19 +498,22 @@ export default {
 #cusInput {
     width: 60%;
 }
-.del {
+.del,
+.table >>> .ivu-btn:last-child {
     background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
     background: -o-linear-gradient(right, #e49b9b, #f61a1a);
     background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
     background: linear-gradient(to right, #e49b9b, #f61a1a);
 }
-.edit {
+.edit,
+.table >>> .ivu-btn:first-child {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);
     background: linear-gradient(to right, #7c83f2, #2734e1);
 }
-.read {
+.read,
+.table >>> .ivu-btn:nth-child(2) {
     background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
     background: -o-linear-gradient(right, #dcd77c, #cabf11);
     background: -moz-linear-gradient(right, #dcd77c, #cabf11);
@@ -432,7 +521,10 @@ export default {
 }
 .del,
 .read,
-.edit {
+.edit,
+.table >>> .ivu-btn:last-child,
+.table >>> .ivu-btn:first-child,
+.table >>> .ivu-btn:nth-child(2) {
     border-color: #3e4f61;
     border-radius: 1vmin;
     font-size: 1.4vmin !important;
@@ -506,7 +598,8 @@ export default {
 }
 
 .ivu-page >>> .ivu-page-total,
-.ivu-page >>> .ivu-page-options-elevator {
+.ivu-page >>> .ivu-page-options-elevator,
+.ivu-tabs {
     color: #fff;
 }
 
