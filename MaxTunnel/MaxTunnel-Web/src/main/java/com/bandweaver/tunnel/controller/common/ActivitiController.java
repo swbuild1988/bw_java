@@ -1,11 +1,15 @@
 package com.bandweaver.tunnel.controller.common;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
@@ -307,4 +311,28 @@ public class ActivitiController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, count);
     }
 
+    /**
+     * 通过流程定义key获取所有任务节点信息
+     * @param processKey 流程定义key
+     * @return
+     * @author ya.liu
+     * @Date 2019年6月4日
+     */
+    @RequestMapping(value = "activiti/process-key/{processKey}", method = RequestMethod.GET)
+    public JSONObject getUserTask(@PathVariable("processKey") String processKey) {
+    	ProcessTypeEnum processTypeEnum = ProcessTypeEnum.getEnum(processKey);
+    	String processDefinitionId = activitiService.getProcessDefinition(processTypeEnum);
+    	// 获取属于任务节点的信息
+    	BpmnModel bpmn = repositoryService.getBpmnModel(processDefinitionId);
+    	List<FlowElement> list = new ArrayList<>();
+    	if(bpmn != null) {
+    		Collection<FlowElement> fs = bpmn.getMainProcess().getFlowElements();
+    		for (FlowElement e : fs) {
+    			if(e instanceof UserTask) {
+    				list.add(e);
+    			}
+			}
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
 }

@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
@@ -40,6 +41,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO;
+import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
@@ -190,22 +192,38 @@ public class TaskEntrance {
      * @Date 2018年12月8日
      */
     public void sendTestAlarm() throws Exception {
-    	int level = MathUtil.getRandomInt(1, 2);
-    	MeasAlarm measAlarm = new MeasAlarm();
-    	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
-    	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
-    	measAlarm.setObjectId(203012401);
-    	measAlarm.setAlarmSeverity(level);
-    	measAlarm.setAdditionalText(null);
-    	measAlarm.setAlarmSource(null);
-    	measAlarm.setLongitude(null);
-    	measAlarm.setLatitude(null);
+    	int i = MathUtil.getRandomInt(0, 1);
     	
-    	String host = "http://localhost:8080/MaxTunnel-Web";
+    	List<JSONObject> list = new ArrayList<>();
+    	JSONObject obj2 = new JSONObject();
+    	obj2.put("id", 218214200);
+    	obj2.put("aname", "电动百叶告警");
+    	obj2.put("oname", "电动百叶");list.add(obj2);
+    	JSONObject obj3 = new JSONObject();
+    	obj3.put("id", 218214200);
+    	obj3.put("aname", "排水泵告警");
+    	obj3.put("oname", "排水泵");list.add(obj3);
+			
+		Alarm alarm = new Alarm();
+		alarm.setId((int) ((new Date()).getTime() % 1000000));
+		alarm.setAlarmDate(new Date());
+		alarm.setAlarmLevel(1);
+		alarm.setAlarmName(list.get(i).getString("aname"));
+		alarm.setObjectId(list.get(i).getInteger("id"));
+		alarm.setObjectName(list.get(i).getString("oname"));
+		alarm.setTunnelId(1);
+		alarm.setAlarmSource("");
+		alarm.setCleaned(false);
+		alarm.setIsDistribute(false);
+		alarm.setDescription("");
+		alarm.setLatitude("");
+		alarm.setLongitude("");
+		
+		String host = "http://localhost:8080/MaxTunnel-Web";
 		String path = "/alarms";
 		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, String> querys = new HashMap<String, String>();
-		String body = JSON.toJSONString(measAlarm);
+		String body = JSON.toJSONString(alarm);
 		httpPost(host, path, headers, querys, body);
     }
     

@@ -95,14 +95,15 @@ public class ActivitiServiceImpl implements ActivitiService {
     }
 
     /**
-     * 新的
-     *
+     * 获取流程定义id
      * @param processTypeEnum
      * @return
+     * @author ya.liu
+     * @Date 2019年6月4日
      */
     @Override
-    public String startProcessInstance(ProcessTypeEnum processTypeEnum) {
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+    public String getProcessDefinition(ProcessTypeEnum processTypeEnum) {
+    	ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(processTypeEnum.getProcessKey()).singleResult();
 
         String processDefinitionId = "";
@@ -113,6 +114,19 @@ public class ActivitiServiceImpl implements ActivitiService {
         } else {
             processDefinitionId = processDefinition.getId();
         }
+        
+        return processDefinitionId;
+    }
+    
+    /**
+     * 新的
+     *
+     * @param processTypeEnum
+     * @return
+     */
+    @Override
+    public String startProcessInstance(ProcessTypeEnum processTypeEnum) {
+        String processDefinitionId = getProcessDefinition(processTypeEnum);
         ProcessInstance processInstance = runtimeService.startProcessInstanceById(processDefinitionId);
         return processInstance.getId();
     }
@@ -124,22 +138,7 @@ public class ActivitiServiceImpl implements ActivitiService {
      */
     @Override
     public String startProcessInstance(ProcessTypeEnum processTypeEnum, int... var) {
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(processTypeEnum.getProcessKey()).singleResult();
-
-        String processDefinitionId = "";
-        if (processDefinition == null) {
-        	/*LogUtil.info(" start deploy : =============");
-        	LogUtil.info(" get bpmnPath : " + (String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()));
-        	LogUtil.info(" get pngPath : " + (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()));
-        	LogUtil.info(" get name : " + processTypeEnum.getName());*/
-
-            processDefinitionId = deploy((String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
-                    (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()),
-                    processTypeEnum.getName());
-        } else {
-            processDefinitionId = processDefinition.getId();
-        }
+    	String processDefinitionId = getProcessDefinition(processTypeEnum);
 
         Map<String, Object> vars = new HashMap<>();
         for (int i = 0; i < var.length; i++) {

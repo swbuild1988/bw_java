@@ -230,7 +230,7 @@ public class TestController {
         alarm.setAlarmSource("");
         alarm.setCleaned(false);
         alarm.setIsDistribute(false);
-        alarm.setCleanedDate(new Date());
+        //alarm.setCleanedDate(new Date());
         alarm.setDescription("");
         alarm.setLatitude("");
         alarm.setLongitude("");

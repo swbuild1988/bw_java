@@ -103,9 +103,9 @@ alter table T_OAM_CABLE_CONTRACT add operate_username varchar2(50);
 alter table T_OAM_CABLE_CONTRACT add path varchar2(200);
 alter table T_OAM_CABLE_CONTRACT rename column customer_id to company_id;
 -- 清除之前的假数据，防止字段对应不上报错
-truncate table T_OAM_CABLE_CONTRACT;
-truncate table T_OAM_CABLE;
-truncate table T_OAM_CABLE_SECTION;
+-- truncate table T_OAM_CABLE_CONTRACT;
+-- truncate table T_OAM_CABLE;
+-- truncate table T_OAM_CABLE_SECTION;
 
 
 

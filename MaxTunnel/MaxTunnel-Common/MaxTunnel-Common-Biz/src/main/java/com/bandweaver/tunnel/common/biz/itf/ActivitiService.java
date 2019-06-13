@@ -36,7 +36,7 @@ public interface ActivitiService {
      */
     String deploy(String bpmnPath, String pngPath, String processName);
 
-
+    String getProcessDefinition(ProcessTypeEnum processTypeEnum);
     /**
      * @param processTypeEnum
      * @return
