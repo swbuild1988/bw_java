@@ -110,7 +110,7 @@ public class LocatorController {
             Locator locator = (Locator) JSONObject.parseObject(measObjSO.getCv(), Locator.class);
             object.put("owner", locator.getOwner());
             object.put("type", 0);
-            object.put("longitude", locator.getPosition() == null ? 0 : locator.getPosition().getLng());
+            object.put("longitude", locator.getPosition() == null ? 0 : locator.getPosition().getLon());
             object.put("latitude", locator.getPosition() == null ? 0 : locator.getPosition().getLat());
             object.put("height", locator.getPosition() == null ? 0 : locator.getPosition().getHeight());
         }

@@ -394,14 +394,14 @@ public class SectionServiceImpl implements SectionService {
             // 获取section的起点和终点坐标
             getSectionStartPointAndEedPoint(startP, endP, k, l, s1, s2, tunnel_dir, outStartP, outEndP);
 
-            String startPointString = PointUtil.get3DPointString(outStartP.getLng(), outStartP.getLat(), outStartP.getHeight());
-            String endPointString = PointUtil.get3DPointString(outEndP.getLng(), outEndP.getLat(), outEndP.getHeight());
+            String startPointString = PointUtil.get3DPointString(outStartP.getLon(), outStartP.getLat(), outStartP.getHeight());
+            String endPointString = PointUtil.get3DPointString(outEndP.getLon(), outEndP.getLat(), outEndP.getHeight());
             // 设置起点终点坐标
             section.setStartPoint(startPointString);
             section.setEndPoint(endPointString);
 
             // 设置相机的camera：pitch为俯仰角，默认为45；heading(yaw)为偏航角，正北方向为0；roll为翻滚角，默认为90
-            Double cameraLng = MathUtil.div(MathUtil.add(outStartP.getLng(), outEndP.getLng()), 2.0);
+            Double cameraLng = MathUtil.div(MathUtil.add(outStartP.getLon(), outEndP.getLon()), 2.0);
             Double cameraLat = MathUtil.div(MathUtil.add(outStartP.getLat(), outEndP.getLat()), 2.0);
             String cameraPointString = PointUtil.get3DPointString(cameraLng, cameraLat, outStartP.getHeight());
             
@@ -423,8 +423,8 @@ public class SectionServiceImpl implements SectionService {
         outEndP.setHeight(endP.getHeight().doubleValue() + k);
 
         // 经纬度坐标转墨卡托坐标
-        Point2D sp = GPSUtil.convertLL2MC(startP.getLng(), startP.getLat());
-    	Point2D ep = GPSUtil.convertLL2MC(endP.getLng(), endP.getLat());
+        Point2D sp = GPSUtil.convertLL2MC(startP.getLon(), startP.getLat());
+    	Point2D ep = GPSUtil.convertLL2MC(endP.getLon(), endP.getLat());
         Point2D out_sp = new Point2D(0, 0);
         Point2D out_ep = new Point2D(0, 0);
         //根据l求出对应的管仓的起点和终点二维
@@ -457,9 +457,9 @@ public class SectionServiceImpl implements SectionService {
         out_ep = GPSUtil.convertMC2LL(out_ep.getX(), out_ep.getY());
 
         // 将结果赋值给原来的
-        outStartP.setLng(out_sp.getX());
+        outStartP.setLon(out_sp.getX());
         outStartP.setLat(out_sp.getY());
-        outEndP.setLng(out_ep.getX());
+        outEndP.setLon(out_ep.getX());
         outEndP.setLat(out_ep.getY());
     }
     
@@ -471,8 +471,8 @@ public class SectionServiceImpl implements SectionService {
     	Point3D tunnelStart3D = PointUtil.get3DPoint(tunnel.getStartPoint());
         Point3D tunnelEnd3D = PointUtil.get3DPoint(tunnel.getEndPoint());
         // 把经纬度转换成平面坐标
-        Point2D tunnelStart2D = GPSUtil.MillierConvertion(tunnelStart3D.getLng(), tunnelStart3D.getLat());
-        Point2D tunnelEnd2D = GPSUtil.MillierConvertion(tunnelEnd3D.getLng(), tunnelEnd3D.getLat());
+        Point2D tunnelStart2D = GPSUtil.MillierConvertion(tunnelStart3D.getLon(), tunnelStart3D.getLat());
+        Point2D tunnelEnd2D = GPSUtil.MillierConvertion(tunnelEnd3D.getLon(), tunnelEnd3D.getLat());
         // 斜率
         double lv = (tunnelEnd2D.getY() - tunnelStart2D.getY()) / (tunnelEnd2D.getX() - tunnelStart2D.getX());
         // 反正切的角度值

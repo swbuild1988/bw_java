@@ -7,6 +7,7 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.*;
+import com.bandweaver.tunnel.common.biz.itf.common.TunnelLightService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
@@ -55,6 +56,8 @@ public class TestController {
     private MeasObjService measObjService;
     @Autowired
     private AlarmService alarmService;
+    @Autowired
+    private TunnelLightService tunnelLightService;
 
     /**
      * 测试添加每个管廊的moid和总能耗
@@ -97,7 +100,7 @@ public class TestController {
      */
     @RequestMapping(value = "test/add-value", method = RequestMethod.GET)
     public JSONObject addTestValue() {
-    	// 设置存储数据的开始和结束时间
+        // 设置存储数据的开始和结束时间
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date sd = null;
         Date ed = null;
@@ -107,7 +110,7 @@ public class TestController {
         } catch (Exception e) {
 
         }
-        
+
         // 获取每个管廊的用于能耗的mo
         MeasObjVo vo = new MeasObjVo();
         vo.setObjtypeId(31);
@@ -235,6 +238,20 @@ public class TestController {
         alarm.setLatitude("");
         alarm.setLongitude("");
         alarmService.add(alarm);
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+
+
+    @RequestMapping(value = "test/add_lights", method = RequestMethod.GET)
+    public JSONObject createTunnelLights() {
+        int tunnelId = 1;
+        List<Integer> storeIds = new ArrayList<>();
+        storeIds.add(1014);
+
+        for (int i = 0; i < storeIds.size(); i++) {
+            tunnelLightService.createTunnelLights(tunnelId, null, storeIds.get(i));
+        }
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

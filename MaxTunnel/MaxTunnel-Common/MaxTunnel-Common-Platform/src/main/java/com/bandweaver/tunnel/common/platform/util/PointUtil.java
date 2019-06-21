@@ -16,7 +16,7 @@ public class PointUtil {
         List<String> strList = Arrays.asList(point.split(","));
         if (strList.size() < 3) return null;
 
-        res.setLng(DataTypeUtil.toDouble(strList.get(0)));
+        res.setLon(DataTypeUtil.toDouble(strList.get(0)));
         res.setLat(DataTypeUtil.toDouble(strList.get(1)));
         res.setHeight(DataTypeUtil.toDouble(strList.get(2)));
 

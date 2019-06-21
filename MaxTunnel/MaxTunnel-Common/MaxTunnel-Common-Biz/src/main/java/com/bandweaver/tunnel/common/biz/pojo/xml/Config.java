@@ -18,8 +18,16 @@ public class Config implements Serializable{
 	private List<EquipmentTypeFile> typeFiles;
 	// 大屏地图各点位置
 	private List<RelatedUnit> units;
+<<<<<<< Updated upstream
 	// 
 	private List<Integer> objectTypeIds;
+=======
+
+	/**
+	 * 管廊内灯光的距离
+	 */
+	private double lightDistance;
+>>>>>>> Stashed changes
 	
 	public void init(){
 		if(this.tunnelParam == null)
@@ -31,7 +39,11 @@ public class Config implements Serializable{
 		}
 		if(this.typeFiles == null || this.typeFiles.size() < 1) {
 			List<EquipmentTypeFile> typeFiles = new ArrayList<>();
+<<<<<<< Updated upstream
     		typeFiles.add(new EquipmentTypeFile("01", "设备", 0));
+=======
+    		typeFiles.add(new EquipmentTypeFile("01", "�豸", 0));
+>>>>>>> Stashed changes
     		this.typeFiles = typeFiles;
 		}
 		if(this.objectTypeIds == null || this.objectTypeIds.size() < 1) {
@@ -65,6 +77,7 @@ public class Config implements Serializable{
 		this.units = units;
 	}
 
+<<<<<<< Updated upstream
 	public List<Integer> getObjectTypeIds() {
 		return objectTypeIds;
 	}
@@ -73,4 +86,13 @@ public class Config implements Serializable{
 		this.objectTypeIds = objectTypeIds;
 	}
 	
+=======
+	public double getLightDistance() {
+		return lightDistance;
+	}
+
+	public void setLightDistance(double lightDistance) {
+		this.lightDistance = lightDistance;
+	}
+>>>>>>> Stashed changes
 }

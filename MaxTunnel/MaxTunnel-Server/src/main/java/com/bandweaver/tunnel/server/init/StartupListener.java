@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.server.init;
 
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,11 +24,14 @@ public class StartupListener implements ApplicationContextAware {
     private MAMModuleCenter mamModuleCenter;
     @Autowired
     private COMModuleCenter comModuleCenter;
+    @Autowired
+    private XMLService xmlService;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
         long beginTime = System.currentTimeMillis();
+        xmlService.getXMLAllInfo();
         mamModuleCenter.start();
         comModuleCenter.start();
         long endTime = System.currentTimeMillis();

@@ -185,7 +185,7 @@ public class AreaServiceImpl implements AreaService {
         for (int i = 0; i < areas.size(); i++) {
 
             // 计算区的起始
-            double tmp_lon = getMiddleX(tunnel_start_point.getLng(), tunnel_end_point.getLng(), total_len, pre_len);
+            double tmp_lon = getMiddleX(tunnel_start_point.getLon(), tunnel_end_point.getLon(), total_len, pre_len);
             double tmp_lat = getMiddleX(tunnel_start_point.getLat(), tunnel_end_point.getLat(), total_len, pre_len);
             double tmp_hei = getMiddleX(tunnel_start_point.getHeight(), tunnel_end_point.getHeight(), total_len, pre_len);
             Area area = (Area) areas.get(i);
@@ -193,7 +193,7 @@ public class AreaServiceImpl implements AreaService {
 
             // 计算区的结束位置
             pre_len += area.getLength().doubleValue();
-            tmp_lon = getMiddleX(tunnel_start_point.getLng(), tunnel_end_point.getLng(), total_len, pre_len);
+            tmp_lon = getMiddleX(tunnel_start_point.getLon(), tunnel_end_point.getLon(), total_len, pre_len);
             tmp_lat = getMiddleX(tunnel_start_point.getLat(), tunnel_end_point.getLat(), total_len, pre_len);
             tmp_hei = getMiddleX(tunnel_start_point.getHeight(), tunnel_end_point.getHeight(), total_len, pre_len);
             area.setEndPoint(PointUtil.get3DPointString(tmp_lon, tmp_lat, tmp_hei));

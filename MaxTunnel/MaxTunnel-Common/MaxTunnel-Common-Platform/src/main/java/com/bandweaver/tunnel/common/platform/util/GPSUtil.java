@@ -6,7 +6,7 @@ import javafx.geometry.Point2D;
 public class GPSUtil {
 
     private static final double EARTH_RADIUS = 6378137;// 赤道半径(单位m)
-    
+
     // 
     private static Double[] MCBAND = {12890594.86, 8362377.87, 5591021d, 3481989.83, 1678043.12, 0d};
     private static Double[] LLBAND = {75d, 60d, 45d, 30d, 15d, 0d};
@@ -79,6 +79,7 @@ public class GPSUtil {
 
     /**
      * 米勒投影法，将x，y转化成经纬度
+     *
      * @param x
      * @param y
      * @return
@@ -88,7 +89,7 @@ public class GPSUtil {
         double W = L;// 平面展开后，x轴等于周长
         double H = L / 2;// y轴约等于周长一半
         double mill = 2.3;// 米勒投影中的一个常数，范围大约在正负2.3之间
-        double lat =0;
+        double lat = 0;
         lat = ((H / 2 - y) * 2 * mill) / (1.25 * H);
         lat = ((Math.atan(Math.exp(lat)) - 0.25 * Math.PI) * 180) / (0.4 * Math.PI);
         double lon = 0;
@@ -98,6 +99,7 @@ public class GPSUtil {
 
     /**
      * 墨卡托坐标转经纬度坐标
+     *
      * @param x
      * @param y
      * @return
@@ -112,12 +114,13 @@ public class GPSUtil {
                 break;
             }
         }
-        
+
         return converter(x, y, cF);
     }
 
     /**
      * 经纬度坐标转墨卡托坐标
+     *
      * @param lng
      * @param lat
      * @return
@@ -132,7 +135,7 @@ public class GPSUtil {
                 break;
             }
         }
-        if (cE!=null) {
+        if (cE != null) {
             for (int i = LLBAND.length - 1; i >= 0; i--) {
                 if (lat <= -LLBAND[i]) {
                     cE = LL2MC[i];
@@ -140,8 +143,9 @@ public class GPSUtil {
                 }
             }
         }
-        return converter(lng,lat, cE);
+        return converter(lng, lat, cE);
     }
+
     private static Point2D converter(Double x, Double y, Double[] cE) {
         Double xTemp = cE[0] + cE[1] * Math.abs(x);
         Double cC = Math.abs(y) / cE[9];
@@ -150,6 +154,7 @@ public class GPSUtil {
         yTemp *= (y < 0 ? -1 : 1);
         return new Point2D(xTemp, yTemp);
     }
+
     private static Double getLoop(Double lng, Integer min, Integer max) {
         while (lng > max) {
             lng -= max - min;
@@ -159,6 +164,7 @@ public class GPSUtil {
         }
         return lng;
     }
+
     private static Double getRange(Double lat, Integer min, Integer max) {
         if (min != null) {
             lat = Math.max(lat, min);
@@ -168,11 +174,11 @@ public class GPSUtil {
         }
         return lat;
     }
-    
+
     private static double getMiddleX(double x1, double x2, double total, double index) {
         return (double) Math.round((x1 + (x2 - x1) / total * index) * 100000000) / 100000000;
     }
-    
+
     public static void main(String[] args) {
 //    	for(int i=0;i<4;i++) {
 //    		
@@ -181,25 +187,25 @@ public class GPSUtil {
 //    		Point2D p1 = convertMC2LL(p.getX() - i, p.getY() - i);
 //    		System.out.println(p1);
 //    	}
-    	
-    	int len = 0;
-    	for(int i=1;i<21;i++) {
-    		// 经纬度坐标转墨卡托坐标
-        	Point2D sp = convertLL2MC(112.4873583,37.7142528);
-        	Point2D ep = convertLL2MC(112.5247583,37.7033389);
-        	
-        	double tmp_x = getMiddleX(sp.getX(), ep.getX(), 40000, len);
-        	double tmp_y = getMiddleX(sp.getY(), ep.getY(), 40000, len);
+
+        int len = 0;
+        for (int i = 1; i < 21; i++) {
+            // 经纬度坐标转墨卡托坐标
+            Point2D sp = convertLL2MC(112.4873583, 37.7142528);
+            Point2D ep = convertLL2MC(112.5247583, 37.7033389);
+
+            double tmp_x = getMiddleX(sp.getX(), ep.getX(), 40000, len);
+            double tmp_y = getMiddleX(sp.getY(), ep.getY(), 40000, len);
             //System.out.println(tmp_x,);
-        	// 墨卡托坐标转经纬度坐标
-        	Point2D tmp_sp = convertMC2LL(tmp_x, tmp_y);
-        	System.out.print(tmp_sp);
-        	len += 200 * i;
-        	tmp_x = getMiddleX(sp.getX(), ep.getX(), 40000, len);
-        	tmp_y = getMiddleX(sp.getY(), ep.getY(), 40000, len);
-        	
-        	Point2D tmp_ep = convertMC2LL(tmp_x, tmp_y);
-        	System.out.println("---" + tmp_ep);
-    	}
+            // 墨卡托坐标转经纬度坐标
+            Point2D tmp_sp = convertMC2LL(tmp_x, tmp_y);
+            System.out.print(tmp_sp);
+            len += 200 * i;
+            tmp_x = getMiddleX(sp.getX(), ep.getX(), 40000, len);
+            tmp_y = getMiddleX(sp.getY(), ep.getY(), 40000, len);
+
+            Point2D tmp_ep = convertMC2LL(tmp_x, tmp_y);
+            System.out.println("---" + tmp_ep);
+        }
     }
 }

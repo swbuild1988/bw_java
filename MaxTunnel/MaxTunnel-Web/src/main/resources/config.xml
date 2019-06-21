@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Config>
+<<<<<<< Updated upstream
 		<objectTypeIds>0</objectTypeIds>
 		<objectTypeIds>1</objectTypeIds>
 		<objectTypeIds>2</objectTypeIds>
@@ -32,6 +33,9 @@
 		<objectTypeIds>60</objectTypeIds>
 		<objectTypeIds>61</objectTypeIds>
 		<objectTypeIds>62</objectTypeIds>
+=======
+    <lightDistance>50.0</lightDistance>
+>>>>>>> Stashed changes
     <tunnelParam>
         <areaLength>2</areaLength>
         <areaNumber>2</areaNumber>

@@ -2,6 +2,8 @@ package com.bandweaver.tunnel.controller.xml;
 
 import java.util.List;
 
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,12 +22,16 @@ import com.bandweaver.tunnel.common.platform.util.XMLUtil;
 @ResponseBody
 public class XMLController {
 
+	@Autowired
+	private XMLService xmlService;
+
 	/**
 	 * 获取config.xml文件的所有信息
 	 * @return
 	 * @author ya.liu
 	 * @Date 2019年6月1日
 	 */
+<<<<<<< Updated upstream
 	public Config getXMLAllInfo() {
 		String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
     	Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
@@ -35,7 +41,12 @@ public class XMLController {
     	config.init();
     	XMLUtil.convertToXml(config, path);
     	return config;
+=======
+	private Config getXMLAllInfo() {
+		return xmlService.getXMLAllInfo();
+>>>>>>> Stashed changes
 	}
+
 	/**
 	 * 获取xml中的所有信息
 	 * @return
