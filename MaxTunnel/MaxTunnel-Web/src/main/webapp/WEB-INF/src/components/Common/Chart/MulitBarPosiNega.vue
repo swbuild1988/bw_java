@@ -87,7 +87,8 @@ export default {
                         fontSize: this.getFontSize('5%'),
                         color: this.textColor
                     },
-                    x: this.titlePosition
+                    x: this.titlePosition,
+                    top: "2%"
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -101,7 +102,7 @@ export default {
                 grid: {
                     left: "3%",
                     right: "3%",
-                    bottom: "2%",
+                    bottom: "4%",
                     top: '15%',
                     containLabel: true
                 },

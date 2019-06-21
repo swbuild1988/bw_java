@@ -35,21 +35,21 @@
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" icon="ios-search"  @click="showTable()">查询</Button>
+                <Button type="primary" icon="ios-search"  @click="showTable()" style="margin-right: 2vmin">查询</Button>
+                <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
+                批量入库</Button>
             </Col>
         </Row>
         <div class="list">
-            <div style="text-align: right">
-                <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
-                批量入库</Button>
-            </div>
+            <!-- <div style="text-align: right">
+            </div> -->
             <div class="nullData" v-show="isNullData">暂无数据</div>
             <Row :gutter="16">
                 <Col span="6" v-for="item in equipments" :key="item.id" style="margin-top: 6px;padding: 5px;">
                     <div class="boxBG">
                         <div class="backGoundBox">
                             <div class="topBox">
-                                <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
+                                <!-- <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a> -->
                                 <p class="equipentTitle">{{ item.name }}</p>
                                 <div class="imgBox"><img :src="imgUrl"></div>
                             </div>
@@ -98,31 +98,31 @@
                 </FormItem>
                 <FormItem label="安装位置：" class="location">
                     <Row :gutter="8">
-                        <Col span="5">  
+                        <Col span="7">  
                             <FormItem prop="tunnelId">
                                 <Select v-model="borrow.tunnelId" @on-change="changeTunnelId(borrow.tunnelId)">
                                     <Option v-for="(item, index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
                                 </Select>
                             </FormItem>  
                         </Col>
-                        <Col span="5">
+                        <Col span="7">
                             <FormItem prop="areaId">
                                 <Select v-model="borrow.areaId" @on-change="changeSection()">
                                     <Option v-for="(item, index) in areas" :value="item.id" :key="index">{{ item.name }}</Option>
                                 </Select>
                             </FormItem>
                         </Col>
-                        <Col span="5">
+                        <Col span="7">
                             <FormItem prop="storeId">
                                 <Select v-model="borrow.storeId" @on-change="changeSection()">
                                     <Option v-for="(item, index) in stores" :value="item.id" :key="index">{{ item.name }}</Option>
                                 </Select>
                             </FormItem>
                         </Col>
-                        <Col span="5">
-                            <FormItem prop="sectionName">
+                        <Col span="5" v-show="false">
+                            <FormItem>
                                 <Input v-model="borrow.sectionId" v-show="false"></Input>
-                                <Input v-model="borrow.sectionName" readonly></Input>
+                                <!-- <Input v-model="borrow.sectionName" readonly></Input> -->
                             </FormItem>
                         </Col>
                     </Row>
@@ -192,9 +192,9 @@ export default {
                 pageTotal: 0
             },
             pageStyle: {
-              position: "absolute",
-              bottom: "20px",
-              right: "15px"
+                position: 'absolute',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             staffs:[],
             borrow:{
@@ -207,7 +207,7 @@ export default {
                 assetNo: null,
                 areaId: null,
                 storeId: null,
-                sectionName: null
+                // sectionName: null
             },
             aloneBorrowId: null,
             isBorrow: false,
@@ -231,9 +231,9 @@ export default {
                 storeId: [
                     { type: 'number', required: true, message: '所属管仓不能为空', trigger: 'change' }
                 ],
-                sectionName: [
-                    { validator: this.checkSection, trigger: 'change' }
-                ],
+                // sectionName: [
+                //     { validator: this.checkSection, trigger: 'change' }
+                // ],
                 assetNo: [
                     { required: true, message:'资产编码不能为空', trigger: 'blur' }
                 ]
@@ -263,7 +263,7 @@ export default {
             this.borrow.areaId = null
             this.borrow.storeId = null
             this.borrow.sectionId = null
-            this.borrow.sectionName = null
+            // this.borrow.sectionName = null
             this.changeTunnelId(newVal)
         }
     },
@@ -565,9 +565,7 @@ export default {
                     result => {
                         if(result!=null){
                             this.borrow.sectionId = result.id
-                            this.borrow.sectionName = result.name
-                        }else{
-                            this.borrow.sectionName = null
+                            // this.borrow.sectionName = result.name
                         }
                     },
                     error => {
@@ -576,13 +574,13 @@ export default {
                 )
             }
         },
-        checkSection(rule, value, callback){
-            if(value==null){
-                callback(new Error("所属区段不能为空"))
-            }else{
-                callback()
-            }
-        }
+        // checkSection(rule, value, callback){
+        //     if(value==null){
+        //         callback(new Error("所属区段不能为空"))
+        //     }else{
+        //         callback()
+        //     }
+        // }
     },
 };
 </script>
@@ -623,7 +621,7 @@ export default {
 .operationEdit,
 .operationDel {
     text-align: center;
-    padding: 5px 0;
+    padding: 1vmin 0;
     color: #fff;
 }
 
@@ -675,18 +673,37 @@ export default {
 .location >>> .ivu-form-item-label:before {
     content: '*';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
     color: #ed3f14;
 }
 
 .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
 }
+.list{
+    height: 66vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 .list .ivu-btn-primary{
     background: linear-gradient(to left, #2734e1, #b195ed)
+}
+.list::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.list::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.list::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 
 @media (min-width: 2200px){
@@ -705,18 +722,21 @@ export default {
     }
     .backUpInfo{
         line-height: 4vh;
-        font-size: 1.3vmin;
+        font-size: 1.6vmin;
     }
     .operation,.borrowBtn{
         font-size: 1.4vmin !important;
     }
     .ivu-form-item >>> .ivu-form-item-label{
-        width: 11vmin !important;
+        width: 13vmin !important;
         line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 11vmin !important;
+        margin-left: 13vmin !important;
         line-height: 4.5vmin;
+    }
+    .location >>> .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 0px !important;
     }
     .equipentTitle{
         font-size: 2vmin;

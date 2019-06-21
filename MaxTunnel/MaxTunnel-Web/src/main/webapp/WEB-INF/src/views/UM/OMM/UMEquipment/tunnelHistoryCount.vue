@@ -1,9 +1,9 @@
 <template>
-    <Row :gutter="16">
-        <Col span="12" class="boxBG" style="height: 42vh;width: 42vw;">
+    <div>
+        <div class="boxBG smallBox">
             <MulitBarPosiNega v-bind="chartData"></MulitBarPosiNega>
-        </Col>
-        <Col span="12" class="boxBG" style="height: 42vh;position: relative;padding: 1vmin;">
+        </div>
+        <div class="boxBG smallBox" style="padding: 1vmin;width: 43vw;">
             <div class="queryCondition">
                 <div class="conWidth">
                     <span class="conditionTitle">设备名称：</span>
@@ -40,11 +40,11 @@
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
                     show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
-        </Col>
-        <Col span="24" class="boxBG" style="height: 40vh;width: 86vw;margin-top: 1vh;">
+        </div>
+        <div class="boxBG" style="height: 40vh;width: 85.5vw;margin-top: 1vh;">
             <ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>
-        </Col>
-    </Row>
+        </div>
+    </div>
 </template>
 <script>
 // import ComparisonBarChart from "../../../../components/Common/Chart/ComparisonBarChart";
@@ -218,7 +218,7 @@ export default {
         showTable(){
             EquipmentService.equipmentDatagird(this.params).then(
                 result=>{
-                    this.breakData = result.list
+                    this.breakData = result.pagedList
                     this.page.pageTotal = result.total
                 },
                 error => {
@@ -247,7 +247,7 @@ export default {
             this.goToMoudle1(id, types.pageType.Read);
         },
         getTableHieght(){
-            this.tableHeight = document.body.offsetHeight/100*28
+            this.tableHeight = document.body.offsetHeight/100*26
         }
     }
 }
@@ -269,14 +269,37 @@ export default {
     }
     .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
         background-color: #fffdfd00 !important;
-        border-bottom: none;
+        border-bottom: 1px solid #7d7d7d;
     }
     .pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
         color: #fff;
     }
+    .ivu-table-wrapper>>>.ivu-table-overflowY{
+        overflow-x: hidden;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
+    }
     .boxBG{
         background: url("../../../../assets/UM/chartBG.png") no-repeat;
         background-size: 100% 100%;
+    }
+    .smallBox{
+        height: 42vh;
+        width: 42vw;
+        display: inline-block;
+        vertical-align: top;
     }
     .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
         border-right: none;

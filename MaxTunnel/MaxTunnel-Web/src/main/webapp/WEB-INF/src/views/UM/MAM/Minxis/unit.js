@@ -37,7 +37,9 @@ export const commonFlyFn = {
             note: {
                 areaName: null,
                 storeName: null
-            }
+            },
+            sectionDetailsData: [],
+            showDetailsModel: false
         }
     },
     methods: {
@@ -179,6 +181,15 @@ export const commonFlyFn = {
             this.note.storeName = curStore.name
             this.note.areaName = curArea.name
 
+        },
+        getSectionDetails(data) {
+            // this.sectionDetailsData.splice(0);//清空数组
+            if (data) {
+                this.showDetailsModel = true;
+                this.sectionDetailsData = data.moInfo;
+            }else {
+                this.showDetailsModel = false;
+            }
         }
     },
 }

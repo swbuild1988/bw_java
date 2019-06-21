@@ -1,7 +1,8 @@
 <template>
     <div class="formBG">
+        <div class="formTitle">指派维修工单</div>
+        <div class="formHeight">
         <Form :model="defectDetails" ref="defectDetails" :label-width="100" :rules="ruleValidate" @submit.native.prevent>
-            <h2 class="formTitle">指派维修工单</h2>
             <FormItem label="所属管廊：">
                 <Select v-model="defectDetails.tunnelId" disabled>
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
@@ -59,6 +60,7 @@
                 <Button type="primary" style="margin-left: 8px" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
             </FormItem>
         </Form> 
+        </div>
     </div>
 </template>
 <script>
@@ -271,7 +273,7 @@ export default {
     right: 3vw;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -284,10 +286,32 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    margin-top: -3vh;
+}
+.formHeight{
+    height: 75vh;
+    overflow-y: auto;
+}
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
@@ -307,9 +331,6 @@ export default {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
     textarea.ivu-input{
         height: 5.5vmin !important;

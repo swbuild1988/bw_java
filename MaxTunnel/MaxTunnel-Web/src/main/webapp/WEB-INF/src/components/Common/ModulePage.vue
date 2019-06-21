@@ -63,7 +63,7 @@ export default {
             showModal: {
                 modalPrams: {
                     state: false,
-                    selectPlan: null,
+                    selectPlan: null
                 }
             },
             selectPlan: null,
@@ -87,7 +87,7 @@ export default {
                 current: 1
             },
             selectedName: null,
-            openNames: ["1"],
+            openNames: ["1"]
         };
     },
     mounted() {
@@ -104,7 +104,7 @@ export default {
                 this.leftTree[0].childNode &&
                 this.leftTree[0].childNode.length > 0
             ) {
-                if (sessionStorage.getItem("selectedName") == "") {
+                if (!sessionStorage.getItem("selectedName")) {
                     this.selectedName = "1-0-0";
                     this.openNames = ["1", "1-0"];
                 } else {
@@ -113,13 +113,12 @@ export default {
                     this.openNames.push(this.selectedName.slice(0, index));
                 }
             } else {
-                if (sessionStorage.getItem("selectedName") == "") {
+                if (!sessionStorage.getItem("selectedName")) {
                     this.selectedName = "1-0";
                     this.openNames = ["1"];
                 } else {
                     this.selectedName = sessionStorage.getItem("selectedName");
                     let index = this.selectedName.lastIndexOf("-");
-                    console.log('this.selectedName.slice(0, index)',this.selectedName.slice(0, index))
                     this.openNames.push(this.selectedName.slice(0, index));
                 }
             }
@@ -133,7 +132,7 @@ export default {
         leftTree: function(newValue, oldValue) {
             if (newValue.length > 0) {
                 if (newValue[0].childNode && newValue[0].childNode.length > 0) {
-                    if (sessionStorage.getItem("selectedName") == "") {
+                    if (!sessionStorage.getItem("selectedName")) {
                         this.selectedName = "1-0-0";
                         this.openNames = ["1", "1-0"];
                     } else {
@@ -148,7 +147,7 @@ export default {
                         this.$refs.leftMenu.updateOpened();
                     });
                 } else {
-                    if (sessionStorage.getItem("selectedName") == "") {
+                    if (!sessionStorage.getItem("selectedName")) {
                         this.selectedName = "1-0";
                         this.openNames = ["1"];
                     } else {
@@ -169,9 +168,6 @@ export default {
     computed: {
         menuitemClasses: function() {
             return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-        },
-        selectedActive: function() {
-            return this.selected;
         }
     },
     render() {
@@ -228,20 +224,9 @@ export default {
         );
     },
     methods: {
-        goToMoudle(path, index, childIndex) {
-            console.log('childIndex',childIndex)
-            this.selectedActive[0] = index;
-            this.selectedActive[1] = childIndex;
-            if (childIndex < 0) {
-                sessionStorage.setItem("selectedName", "1-" + index);
-            } else {
-                sessionStorage.setItem(
-                    "selectedName",
-                    "1-" + index + "-" + childIndex
-                );
-            }
-            console.log("path", path);
-            console.log("this.$route.path", this.$route.path);
+        goToMoudle(path, name) {
+            sessionStorage.setItem("selectedName", name);
+            sessionStorage.setItem("refreshAddress", path.path);
             if (path.path == this.$route.path) {
                 this.$router.replace({
                     path: "/refresh",
@@ -294,8 +279,7 @@ export default {
                                             {
                                                 path: item.url
                                             },
-                                            index,
-                                            -1
+                                            curLevel
                                         )
                                     }
                                 >
@@ -321,8 +305,7 @@ export default {
                                     {
                                         path: item.url
                                     },
-                                    index,
-                                    -1
+                                    level + "-" + index
                                 )
                             }
                         >
@@ -544,8 +527,8 @@ h1 {
 }
 
 .ivu-menu-item:hover {
-    color: #595c56;
-    background-color: transparent;
+    /* color: #595c56; */
+    background-color: rgba(50, 103, 156, 0.5);
 }
 
 .ivu-menu {
@@ -557,12 +540,12 @@ h1 {
 
 li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 .ivu-menu-light >>> .ivu-menu-submenu-title:hover {
-    color: #1c5d85;
+    color: #6ea4c5;
     background-color: transparent;
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
-    /*background: #fff;*/
+    background: #269cdaad;
     /*color: #1d5f87 !important;*/
     /* background: #15252f45; */
     color: #fff;
@@ -580,7 +563,7 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
     transform: translate(0, -50%);
     border-top: 0.8vmin solid transparent;
     border-bottom: 0.8vmin solid transparent;
-    /* border-left: 1vmin solid #1a4e6e; */
+    border-left: 1vmin solid #269cdaad;
 }
 
 /*去除footer的白边*/
@@ -618,5 +601,19 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 
 .ivu-collapse {
     background: transparent;
+}
+.ivu-layout-content::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+.ivu-layout-content::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+}
+.ivu-layout-content::-webkit-scrollbar-track {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1);
 }
 </style>

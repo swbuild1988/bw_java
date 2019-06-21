@@ -1,8 +1,8 @@
 <template>
-  <div style="background: #fff">
+  <div class="detailsBG">
     <Row>
         <Col span="12">
-            <div style="overflow-y:auto;height: 86vh;padding: 5px;">
+            <div style="overflow-y:auto;height: 78vh;padding: 5px;">
                 <Form :model="equipment" :label-width="130" @submit.native.prevent>
                     <Col span="12">
                         <FormItem label="设备名称：">
@@ -55,7 +55,7 @@
                     </Col>
                     <Col span="12">
                         <FormItem label="安装时间：">
-                            <DatePicker type="datetime" placeholder="请选择投运时间" :readonly=isReadonly v-model="equipment.runTime" style="width: 100%;" @on-change="getHours(equipment.runTime)"></DatePicker>
+                            <DatePicker type="datetime" placeholder="请选择安装时间" :readonly=isReadonly v-model="equipment.runTime" style="width: 100%;"></DatePicker>
                         </FormItem>
                     </Col>
                     <Col span="12">
@@ -121,7 +121,7 @@
                 </div>
             </div>
         </Col>
-        <Col span="12" style="height:86vh;" ref="gisBox">
+        <Col span="12" style="height:78vh;" ref="gisBox">
             <TestSmViewer ref="smViewer" :openImageryProvider="false"></TestSmViewer>
         </Col>
     </Row>
@@ -276,7 +276,7 @@ export default {
                     this.equipment = data;
                     this.areaId = data.section.area.id
                     this.storeId = data.section.store.id
-                    this.getHours(data.runTime);
+                    // this.getHours(data.runTime);
                     this.equipment.runTime = new Date(data.runTime).format("yyyy-MM-dd hh:mm:s");
                     if (this.equipment.objId != null) {
                         this.getObjType();
@@ -341,15 +341,15 @@ export default {
                 }
             });
         },
-        getHours(time) {
-            var dataEnd = new Date();
-            var dataStart = new Date(time);
-            var dataDiff = dataEnd.getTime() - dataStart.getTime();
-            var leaver1 = dataDiff % (24 * 3600 * 1000);
-            var hours = Math.floor(dataDiff / (3600 * 1000));
-            this.runTimeCount = hours;
-            return this.runTimeCount;
-        },
+        // getHours(time) {
+        //     var dataEnd = new Date();
+        //     var dataStart = new Date(time);
+        //     var dataDiff = dataEnd.getTime() - dataStart.getTime();
+        //     var leaver1 = dataDiff % (24 * 3600 * 1000);
+        //     var hours = Math.floor(dataDiff / (3600 * 1000));
+        //     this.runTimeCount = hours;
+        //     return this.runTimeCount;
+        // },
         //返回
         goBack() {
             this.$router.back(-1);
@@ -405,6 +405,14 @@ export default {
 
 .record li {
   list-style: none;
+}
+.detailsBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 3vmin;
+}
+.detailsBG >>> .ivu-form-item-label{
+    color: #fff;
 }
 @media (min-width: 2200px) {
   h2 {

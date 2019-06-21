@@ -27,11 +27,12 @@
                 </Col>
                 <Col span="4">
                     <Button type="primary" icon="ios-search" @click="queryRecords()">查询</Button>
+                    <Button type="primary" icon="plus-round" @click="goToMoudle('/UM/enterGalleryApplication/add')">制定</Button>
                 </Col>
             </Row>
         </div>
         <div class="list">
-            <Table :columns="columns1" :data="applicationRecordList"></Table>
+            <Table :columns="columns1" :data="applicationRecordList" :height="tableHeight"></Table>
             <Modal
                 title="参观人员信息"
                 v-model="modal10"
@@ -337,15 +338,16 @@ export default {
       tunnelId: null,
       pageStyle: {
           position: 'absolute',
-          bottom: '20px',
-          right: '15px'
+          bottom: '1vmin',
+          right: '2.5vmin'
       },
       isFinished:[
         {key: 1, val: '是'},
         {key: 0, val: '否'}
       ],
       modalWidth: null,
-      tableWidth: null
+      tableWidth: null,
+      tableHeight: null
     };
   },
   watch: {
@@ -459,12 +461,21 @@ export default {
     getModalWidth(){
       this.modalWidth = document.body.offsetWidth*0.4
       this.tableWidth = this.modalWidth - 100
+      this.tableHeight = window.innerHeight/100*65
+    },
+    goToMoudle: function(path) {
+        this.$router.push(path);
     }
   }
 };
 </script>
 <style scoped>
 /* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
 .list .ivu-table-wrapper>>>.ivu-table{
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
@@ -474,14 +485,31 @@ export default {
 }
 .list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
 }
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.ivu-select.ivu-select-single >>> .ivu-select-selected-value{
     color: #fff;
+}
+.ivu-table-wrapper>>>.ivu-table-tip{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

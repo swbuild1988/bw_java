@@ -175,16 +175,21 @@ export default {
             );
         },
         startPlan() {
-            PlanService.startPlan(this.condition)
-                .then(res => {
-                    this.$Message.success("预案已完成！");
-                })
-                .finally(() => {
-                    this.stopPlan();
-                });
-            this.acceptPlanData();
-            this.getVideoList();
-            this.getMeasObjs();
+            // PlanService.startPlan(this.condition)
+            //     .then(res => {
+            //         this.$Message.success("预案已完成！");
+            //     })
+            //     .finally(() => {
+            //         this.stopPlan();
+            //     });
+            let _this = this;
+            PlanService.startPlan(_this.condition).then(res => {
+                _this.$Message.success("预案已启动！");
+                _this.acceptPlanData();
+                _this.getVideoList();
+                _this.getMeasObjs();
+                _this.processInstanceId = res;
+            });
         },
         // 连接成功回调函数
         callback(data) {
@@ -193,6 +198,8 @@ export default {
             if (result.type && result.type == "Plan") {
                 let content = JSON.parse(result.content);
                 this.Log.info("executPlan收到回调", content);
+                // 如果返回的预案实例不是这个页面调用的预案实例
+                if (content.processInstanceId != this.processInstanceId) return;
                 this.processPicSrc = null;
                 let _this = this;
                 this.$nextTick(() => {
@@ -200,6 +207,11 @@ export default {
                         "/emplans/png/" + content.processInstanceId;
                     _this.nodePicState = 2;
                 });
+                // 如果预案结束
+                if (content.status == "finished") {
+                    this.stopPlan();
+                    this.$Message.success("预案执行结束");
+                }
             }
         },
         //获取MQ推送的预案消息

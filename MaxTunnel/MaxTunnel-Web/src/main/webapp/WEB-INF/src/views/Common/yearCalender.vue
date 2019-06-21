@@ -24,7 +24,7 @@
         <ul class="monthParent">
             <li class="monthChild" v-for="(item, index) in monthSelect" :key="index">
                 <div ref="monthContent" class="monthContent" @click="chooseMonth">
-                        {{item.monthText}}
+                    {{item.monthText}}
                 </div>
             </li>
         </ul>  
@@ -85,10 +85,11 @@ export default {
         },
         //选择年份
         chooseYear(event){
-            if(event.currentTarget.getAttribute("class") == "active"){
-                event.currentTarget.className = "yearContent"
+            let currentYear = event.currentTarget
+            if(currentYear.getAttribute("class") == "active"){
+                currentYear.className = "yearContent"
             }else{
-                event.currentTarget.className = "active"
+                currentYear.className = "active"
             }
             // this.outputHeighLight(yearContent)
         },
@@ -152,8 +153,9 @@ export default {
         },
         //选择月份
         chooseMonth(event){
-            if(event.currentTarget.getAttribute("class") == "active"){
-                event.currentTarget.className = "monthContent"
+            let currentMonth = event.currentTarget
+            if(currentMonth.getAttribute("class") == "active"){
+                currentMonth.className = "monthContent"
             }else{
                 this.$nextTick(()=>{
                     var arr = this.$refs.monthContent;
@@ -162,14 +164,15 @@ export default {
                             arr[i].className = "monthContent"
                         }
                     }
-                    event.currentTarget.className = "active"
+                    currentMonth.className = "active"
                 })
             }
         },
         // 选择天
         chhoseDay(event){
-            if(event.currentTarget.getAttribute("class") == "active"){
-                event.currentTarget.className = "dayContent"
+            let currentDay = event.currentTarget
+            if(currentDay.getAttribute("class") == "active"){
+                currentDay.className = "dayContent"
             }else{
                 this.$nextTick(()=>{
                     let arr = this.$refs.dayContent;
@@ -178,7 +181,7 @@ export default {
                             arr[i].className = "dayContent"
                         }
                     }
-                    event.currentTarget.className = "active"
+                    currentDay.className = "active"
                 })
             }
             this.dayInnerText = event

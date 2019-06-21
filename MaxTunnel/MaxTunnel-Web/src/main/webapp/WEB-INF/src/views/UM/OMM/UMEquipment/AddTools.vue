@@ -1,7 +1,7 @@
 <template>
     <div class="formBG">
+        <div class="formTitle">批量添加仪表工具</div>
         <Form ref="tools" :model="tools" :rules="validateRules" :label-width="140" @submit.native.prevent>
-            <h1 class="formTitle">批量添加仪表工具</h1>
             <FormItem label="仪表工具名称：" prop="name">
                 <Input v-model='tools.name'></Input>
             </FormItem>
@@ -31,7 +31,7 @@
             <FormItem label="入库时间：" prop="inTime">
                 <DatePicker type="datetime" v-model="tools.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
-            <div style="text-align: center">
+            <div style="text-align: center;margin-left: 10vmin;">
                 <Button type="default" @click="goBack()" style="margin-right: 10px;" >返回</Button>
                 <Button type="primary" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
             </div>
@@ -166,11 +166,32 @@ export default {
     bottom: 2vh;
     right: 3vw;
 }
+.formTitle{
+    margin-top: -3.5vh;
+    font-size: 2.2vmin;
+}
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
+    height: 83vh;
+    overflow-y: auto;
+}
+
+.formBG::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formBG::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formBG::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 
 .formBG >>> .ivu-form-item-label,.formTitle{
@@ -180,10 +201,10 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

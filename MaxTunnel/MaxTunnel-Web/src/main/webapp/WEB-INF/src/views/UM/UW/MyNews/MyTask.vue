@@ -227,6 +227,23 @@ export default {
     .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
         color: #fff;
     }
+    .list{
+        overflow-y: auto;
+    }
+    .list::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .list::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .list::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
+    }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
         .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

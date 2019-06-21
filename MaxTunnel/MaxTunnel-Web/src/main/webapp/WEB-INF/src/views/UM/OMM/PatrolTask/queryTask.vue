@@ -30,7 +30,7 @@
             </Col>
         </Row>
         <div class="list">
-            <Table :columns='columns'  :data="patrolTask"></Table>
+            <Table :columns='columns'  :data="patrolTask" :height="tableHeight"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -74,8 +74,8 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '10px',
-                right: '15px',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             columns:[
                 {
@@ -194,7 +194,8 @@ export default {
             firstDay: null,
             lastDay: null,
             isTable: true,
-            isSuperCalender: false
+            isSuperCalender: false,
+            tableHeight: 400
         }
     },
     watch:{
@@ -214,6 +215,7 @@ export default {
         },
     },
     mounted() {
+        this.tableHeight = window.innerHeight/100*67
         if(this.$route.params.id){
             this.tunnelId = this.$route.params.id;
         }
@@ -331,6 +333,11 @@ export default {
     border-bottom: 2px solid #357aa1;
 }
 /* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
 .list .ivu-table-wrapper>>>.ivu-table{
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
@@ -340,14 +347,34 @@ export default {
 }
 .list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
 }
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.ivu-select.ivu-select-single >>> .ivu-select-selected-value{
     color: #fff;
+}
+.list .ivu-table-wrapper>>>.ivu-table-tip table{
+    width: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

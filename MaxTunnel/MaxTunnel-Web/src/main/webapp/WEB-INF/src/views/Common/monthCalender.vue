@@ -69,10 +69,11 @@ export default {
         },
         //选择年份
         chooseMonth(event){
-            if(event.currentTarget.getAttribute("class") == "active"){
-                event.currentTarget.className = "monthContent"
+            let current = event.currentTarget
+            if(current.getAttribute("class") == "active"){
+                current.className = "monthContent"
             }else{
-                event.currentTarget.className = "active"
+                current.className = "active"
             }
             // this.outputHeighLight()
         },
@@ -121,8 +122,9 @@ export default {
         },
         // 选择天
         chhoseDay(event){
-            if(event.currentTarget.getAttribute("class") == "active"){
-                event.currentTarget.className = "dayContent"
+            let current = event.currentTarget
+            if(current.getAttribute("class") == "active"){
+                current.className = "dayContent"
             }else{
                 this.$nextTick(()=>{
                     var arr = this.$refs.dayContent;
@@ -131,7 +133,7 @@ export default {
                             arr[i].className = "dayContent"
                         }
                     }
-                    event.currentTarget.className = "active"
+                    current.className = "active"
                 })
             }
             this.dayInnerText = event

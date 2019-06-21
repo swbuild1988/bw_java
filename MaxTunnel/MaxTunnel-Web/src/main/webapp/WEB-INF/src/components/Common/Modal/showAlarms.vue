@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="column">
-                    <!-- 执行步骤 -->
+                    <!-- 执行步骤 --> 
                     <section class="item" v-if="item.plan">
                         <h4>预案步骤</h4>
                         <div class="detailSection"  style="height:69vmin;max-width:54vmin">

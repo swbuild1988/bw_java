@@ -1,7 +1,7 @@
 <template>
 	<div style="margin: 24px">
+		<h2 style="color: #fff; text-align: center">巡检计划详情</h2>
 		<Row class="formBG">
-		<h2 style="margin-bottom: 10px;color: #fff; margin-left: 3vmin;">巡检计划详情</h2>
 			<Col span="12" style="padding-right: 20px;">
 				<div class="leftContainer">
 					<Form :model="plan" :label-width="100" @submit.native.prevent>
@@ -66,7 +66,7 @@
 						</Col>
 						<Col span="24">
 							<FormItem label="计划步骤：">
-								<ul style="max-height: 100px;overflow-y: auto;">
+								<ul class="stepsBox">
 									<li v-for="(item, index) in plan.steps" :key="index" class="todoLi">
 										<span style="color: #fff">{{index+1}}、</span>
 										<input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
@@ -103,7 +103,7 @@
 						]">{{item.id}}
 						</li>
 					</ul>
-					<Table :columns="columns1" :data="plan.tasks" style="margin: 20px auto;" height:440></Table>
+					<Table :columns="columns1" :data="plan.tasks" style="margin: 20px auto;"></Table>
 					<Col span="24" v-show="pageType==pageTypes.Edit" style="text-align: right;margin-top: 20px;">
 						<Button type="primary" @click="submit()">确定</Button>
 						<Button type="primary">取消</Button>
@@ -127,66 +127,66 @@ export default {
 	name: "plans",
 	data() {
 		return {
-		// 页面类型 1：查看 2：编辑 3：新增
-		pageType: 1,
-		pageTypes: types.pageType,
-		plan: {
-			planId: null,
-			name: null,
-			tunnelId: null,
-			processStatus: null,
-			groupId: null,
-			createTime: null,
-			inspectTime: null,
-			tasks: [],
-			remark: null,
-			inspectionGroup: {
-				leader: {name: null}
+			// 页面类型 1：查看 2：编辑 3：新增
+			pageType: 1,
+			pageTypes: types.pageType,
+			plan: {
+				planId: null,
+				name: null,
+				tunnelId: null,
+				processStatus: null,
+				groupId: null,
+				createTime: null,
+				inspectTime: null,
+				tasks: [],
+				remark: null,
+				inspectionGroup: {
+					leader: {name: null}
+				},
+				inspectionObjectName: null,
+				inspectionPathName: null,
+				inspectionWayName: null,
+				steps: []
 			},
-			inspectionObjectName: null,
-			inspectionPathName: null,
-			inspectionWayName: null,
-			steps: []
-		},
-		reqstatus: [],
-		// 管廊
-		tunnels: [],
-		groups: [
-			{
-				id: 1,
-				name: "group1",
-				leader: {
-					id: 0,
-					name: ""
+			reqstatus: [],
+			// 管廊
+			tunnels: [],
+			groups: [
+				{
+					id: 1,
+					name: "group1",
+					leader: {
+						id: 0,
+						name: ""
+					}
 				}
-			}
-		],
-		patrolRecords: [],
-		columns1: [
-			{
-				type: 'index',
-				width: 70,
-				align: "center"
-			},
-			{
-				title: "巡检人",
-				key: "inspectManName",
-				align: "center"
-			},
-			{
-				title: "巡检日期",
-				key: "taskTime",
-				align: "center"
-			},
-			{
-				title: "流程状态",
-				key: "processStatus",
-				align: "center"
-			}
-		],
-		year: 1,
-		month: 1,
-		days: 1
+			],
+			patrolRecords: [],
+			columns1: [
+				{
+					type: 'index',
+					width: 70,
+					align: "center"
+				},
+				{
+					title: "巡检人",
+					key: "inspectManName",
+					align: "center"
+				},
+				{
+					title: "巡检日期",
+					key: "taskTime",
+					align: "center"
+				},
+				{
+					title: "流程状态",
+					key: "processStatus",
+					align: "center"
+				}
+			],
+			year: 1,
+			month: 1,
+			days: 1
 		};
 	},
 	components: {
@@ -303,7 +303,7 @@ export default {
 </script>
 
 <style  scoped>
-todoLi{
+.todoLi{
 	line-height: 3.5vh;
 	height: 3.5vh;
 	margin-right: 0.5vw;
@@ -331,7 +331,7 @@ todoLi{
 }
 .leftContainer,
 .rightContainer {
-	padding: 20px;
+	padding: 2vmin;
 	min-height: 40vh;
 }
 h3 {
@@ -371,10 +371,13 @@ h3 {
     right: 3vw;
 }
 .formBG{
-	background: url("../../../../assets/UM/infoBox.png") no-repeat;
+	background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
 	background-size: 100% 100%;
 	padding-top: 3vmin;
 	padding-bottom: 3vmin;
+	height: 80vh;
+    overflow-y: auto;
+    margin-top: -3vh;
 }
 
 .formBG >>> .ivu-form-item-label,.rightContainer h3, .rightContainer ul{
@@ -390,6 +393,30 @@ h3 {
 .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
     border-bottom: none;
+}
+.stepsBox{
+	max-height: 100px;
+	overflow-y: auto;
+}
+.formBG::-webkit-scrollbar,.stepsBox::-webkit-scrollbar{
+	width: 4px;
+	height: 4px;
+}
+.formBG::-webkit-scrollbar-thumb,.stepsBox::-webkit-scrollbar-thumb{
+	border-radius: 5px;
+	-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+	background: rgba(0, 0, 0, 0.2)
+}
+.formBG::-webkit-scrollbar-track,.stepsBox::-webkit-scrollbar-track{
+	border-radius: 0;
+	-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+	background: rgba(0, 0, 0, 0.1)
+}
+.rightContainer .ivu-table-wrapper>>>.ivu-table-overflowX{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper >>> .ivu-table-tip{
+	overflow-x: hidden;
 }
 @media (min-width: 2200px){
     /* .ivu-form.ivu-form-label-right{

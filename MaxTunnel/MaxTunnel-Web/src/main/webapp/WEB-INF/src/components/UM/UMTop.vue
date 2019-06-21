@@ -218,12 +218,12 @@ export default {
                             name: "视频监控系统",
                             url: "/UM/VideoMonitoring/details/1",
                             path: "/UM/VideoMonitoring/details"
+                        },
+                        {
+                            name: "人员定位",
+                            url: "/UM/PersonnelPosition/visitors",
+                            path: "/UM/PersonnelPosition/visitors"
                         }
-                        // {
-                        // 	name: "人员定位",
-                        // 	url: "/UM/PersonnelPosition/visitors",
-                        // 	path: "/UM/PersonnelPosition/visitors"
-                        // }
                     ]
                 },
                 {
@@ -439,6 +439,19 @@ export default {
 
                 //显示右下角提示框
                 this.warningNotice(content);
+                /* 滚动条以及不被遮挡 */
+                if (document.getElementsByClassName("ivu-notice-notice")) {
+                    let h =
+                        document.getElementsByClassName("ivu-notice")[0]
+                            .offsetHeight +
+                        document.getElementsByClassName("ivu-notice-notice")[0]
+                            .offsetHeight;
+                    if (h > window.innerHeight) {
+                        document.getElementsByClassName(
+                            "ivu-notice"
+                        )[0].style.bottom = "2vmin";
+                    }
+                }
             }
         },
         //设置告警面板中分页按钮的显隐
@@ -477,6 +490,22 @@ export default {
                     }
                     if (_this.videoModal.alarmContainer.length == 0) {
                         _this.videoModal.modalPrams.state = false;
+                    }
+                    /* 滚动条以及不被遮挡 */
+                    if (document.getElementsByClassName("ivu-notice-notice")) {
+                        let h =
+                            document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            )[0].offsetHeight *
+                            (document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            ).length -
+                                1);
+                        if (h < window.innerHeight) {
+                            document.getElementsByClassName(
+                                "ivu-notice"
+                            )[0].style.bottom = "";
+                        }
                     }
                 }
             };
@@ -669,9 +698,10 @@ export default {
     margin: 0;
     padding: 0;
     top: 8.2vh !important;
-    background-color: rgba(50, 103, 156, 0.9);
+    background-color: rgb(50, 103, 156);
     box-shadow: 0 0px 8px 0 rgba(57, 123, 187, 0.5),
         0 1px 0px 0 rgba(57, 123, 187, 0.6);
+    z-index: 1100;
 }
 .layout-nav >>> .ivu-dropdown-item-divided {
     margin-top: 0;
@@ -703,11 +733,26 @@ export default {
 <style>
 /* 提示框超出出现滚动条 */
 .ivu-notice {
-    bottom: 1vmin;
     overflow-y: auto;
-    width: 18%;
 }
-.ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title{
+.ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title {
     font-size: 2.1vmin !important;
+}
+.ivu-notice::-webkit-scrollbar,
+.stepsBox::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+.ivu-notice::-webkit-scrollbar-thumb,
+.stepsBox::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+}
+.ivu-notice::-webkit-scrollbar-track,
+.stepsBox::-webkit-scrollbar-track {
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1);
 }
 </style>

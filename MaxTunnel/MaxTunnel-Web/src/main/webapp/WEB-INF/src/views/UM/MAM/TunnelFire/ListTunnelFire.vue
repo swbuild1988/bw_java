@@ -22,11 +22,15 @@
         <Row>
             <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top: 0.4vmin;">
                 <div class="gis" :style="{height:curHeight+'px'}">
-                    <test-sm-viewer ref="smViewer"></test-sm-viewer>
+                    <test-sm-viewer ref="smViewer" @sendSectionDetails="getSectionDetails"></test-sm-viewer>
                     <div
                         class="positionNote"
                         v-if="note.areaName && note.storeName"
                     >{{note.areaName + " " + note.storeName}}</div>
+                    <ShowSectionDetailData
+                        :showDetailsModel="showDetailsModel"
+                        :dataDetails="sectionDetailsData"
+                    ></ShowSectionDetailData>  
                 </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
@@ -120,6 +124,7 @@ import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 import checkSelect from "../../../../components/Common/CheckSelect.vue";
+import ShowSectionDetailData from "../../../../components/Common/Modal/ShowSectionDetailData.vue";
 import { commonFlyFn } from "../Minxis/unit";
 import { flyToMyLocation } from "../../../../scripts/commonFun";
 import Vue from "vue";
@@ -204,7 +209,8 @@ export default {
         Modal,
         EnvironmentShow,
         TestSmViewer,
-        checkSelect
+        checkSelect,
+        ShowSectionDetailData
     },
     watch: {
         $route: function() {

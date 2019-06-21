@@ -26,43 +26,44 @@ export default {
             {
                 id: 0,
                 name: "总能耗分析",
-                url: "/UM/TunnelEnergy/homePage",
-                child: [{}]
+                url: "/UM/TunnelEnergy/homePage"
+                // child: []
             }
         ];
         let _this = this;
-        // let temp = {};
-        // temp.id = 1;
-        // temp.name = "管廊1";
-        // temp.childNode = [{id: 1, name: '总览 ', url: '/UM/TunnelEnergy/detials/' + temp.id},
-        //   {id: 2, name: '类别详情', url: '/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/' + temp.id}
-        // ];
-        // _this.eneryScheme.leftTree.push(temp);
         TunnelService.getTunnels().then(
             result => {
                 result.forEach(a => {
                     let temp = {};
                     temp.id = a.id;
                     temp.name = a.name;
-                    temp.childNode = [
-                        // {id:1,name: '总览 ', url: '/UM/TunnelEnergy/detials/'+a.id},
-                        {
-                            id: 1,
-                            name: "类别详情",
-                            url:
-                                "/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/" +
-                                a.id
-                        },
-                        {
-                            id: 2,
-                            name: "变电所",
-                            url: "/UM/TunnelEnergy/substation/" + a.id
-                        }
-                    ];
+                    temp.url =
+                        "/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/" +
+                        a.id;
+                    // temp.childNode = [
+                    //     // {id:1,name: '总览 ', url: '/UM/TunnelEnergy/detials/'+a.id},
+                    //     {
+                    //         id: 1,
+                    //         name: "类别详情",
+                    //         url:
+                    //             "/UM/TunnelEnergy/EnergyConsumptionDetailLevel1/" +
+                    //             a.id
+                    //     },
+                    //     {
+                    //         id: 2,
+                    //         name: "变电所",
+                    //         url: "/UM/TunnelEnergy/substation/" + a.id
+                    //     }
+                    // ];
                     _this.eneryScheme.leftTree.push(temp);
                 });
+                _this.eneryScheme.leftTree.push({
+                    id: _this.eneryScheme.leftTree[result.length - 1].id + 1,
+                    name: "变电所",
+                    url: "/UM/TunnelEnergy/substation"
+                });
                 if (
-                    sessionStorage["refreshAddress"] == "" ||
+                    !sessionStorage["refreshAddress"] ||
                     sessionStorage["refreshAddress"].indexOf(
                         "/UM/TunnelEnergy"
                     ) < 0
@@ -72,7 +73,7 @@ export default {
                     });
                     sessionStorage.setItem("selectedName", "");
                 }
-                sessionStorage.setItem("refreshAddress", "");
+                // sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 console.log(error);

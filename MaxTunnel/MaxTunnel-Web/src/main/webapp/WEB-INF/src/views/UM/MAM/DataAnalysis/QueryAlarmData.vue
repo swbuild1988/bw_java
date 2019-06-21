@@ -201,8 +201,9 @@
 						key: 'cleanedDate',
 						align: 'center',
 						render: (h, params) => {
-							console.log('params.row.cleanedDate', params.row.cleanedDate)
-							return h('span', new Date(params.row.cleanedDate).format('yyyy-MM-dd hh:mm:s'))
+							if(params.row.cleanedDate!=null){
+								return h('span', new Date(params.row.cleanedDate).format('yyyy-MM-dd hh:mm:s'))
+							}
 						}
 					},
 					{
@@ -443,6 +444,7 @@
 		margin-left: 1.5vh;
 		color: #fff;
 		margin-right: 2vmin;
+		font-size: 1.8vmin;
 	}
   	.ivu-table-wrapper{
         border: none;
@@ -456,8 +458,25 @@
     }
     .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
         background-color: #fffdfd00 !important;
-        border-bottom: none;
+        border-bottom: 1px solid #7d7d7d;
     }
+	.ivu-table-wrapper>>>.ivu-table-tip{
+		overflow-x: hidden;
+	}
+	.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+		width: 0.4vmin;
+		height: 0.4vmin;
+	}
+	.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+		border-radius: 1vmin;
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: #83a6ed;
+	}
+	.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		border-radius: 1vmin;
+		background: #ededed;
+	}
     .nextPage .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.nextPage.ivu-page>>>.ivu-page-total{
         color: #fff;
     }
@@ -478,6 +497,7 @@
 	.iconSize{
 		width: 3vh;
 		height: 3vh;
+		margin-top: 0.5vmin;
 	}
 	.tipBox{
 		display: inline-block;

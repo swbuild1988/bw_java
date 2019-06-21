@@ -1,7 +1,8 @@
 <template>
     <div  class="formBG">
+        <h2 class="formTitle">审批巡检计划</h2> 
+        <div class="formHeight">
         <Form :model="plans" :label-width="140" @submit.native.prevent>
-            <h2 class="formTitle">审批巡检计划</h2>  
             <FormItem label="计划编号：">
                 <Input v-model="plans.id" readonly></Input>
             </FormItem>
@@ -36,16 +37,16 @@
                 <ul>
                     <li v-for="(item, index) in plans.steps" :key="index" class="todoLi">
                         <span style="color: #fff">{{index+1}}、</span>
-                        <input class="todoEidt" :value="item.name" placeholder="请输入要执行的计划步骤" />
+                        <input class="todoEidt" :value="item.name" placeholder="请输入要执行的计划步骤" readonly/>
                     </li>
                 </ul>
             </FormItem>
             <FormItem label="巡检计划描述：">
-                <Input type="textarea" v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
+                <Input type="textarea" readonly v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
             </FormItem>
-            <FormItem label="巡检时间：">
+            <!-- <FormItem label="巡检时间：">
                 <Input v-model="plans.inspectTime" readonly></Input>
-            </FormItem>
+            </FormItem> -->
             <FormItem label="巡检计划：">
                 <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
             </FormItem>
@@ -64,6 +65,7 @@
                 <Button @click="goBack()" type="gost">返回</Button>
             </FormItem>
         </Form>
+        </div> 
         <!-- <Icon class="goBack" type="chevron-left" size="30"  title="" color="#fff"></Icon> -->
     </div>
 </template>
@@ -81,7 +83,7 @@ export default {
                 tunnelName: null,
                 groupName: null,
                 createTime: null,
-                inspectTime: null,
+                // inspectTime: null,
                 processInstanceId: null,
                 remark: '1',
                 tasks:[],
@@ -142,7 +144,7 @@ export default {
             if(code=200){
                 this.plans = data
                 this.plans.createTime = new Date(data.createTime).format('yyyy-MM-dd hh:mm:s')
-                this.plans.inspectTime = new Date(data.inspectTime).format('yyyy-MM-dd hh:mm:s')
+                // this.plans.inspectTime = new Date(data.inspectTime).format('yyyy-MM-dd hh:mm:s')
             }
         })
     },
@@ -201,7 +203,7 @@ export default {
     cursor: text;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -210,14 +212,35 @@ export default {
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formTitle{
+    margin-top: -3.2vmin;
+}
+.formHeight{
+    height: 75vh;
+    overflow-y: auto;
+}
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
@@ -240,7 +263,7 @@ export default {
         font-size: 1.4vmin;
     }
     .formTitle{
-        font-size: 2.5vmin;
+        font-size: 2.2vmin;
     }
     textarea.ivu-input{
         height: 5.5vmin !important;

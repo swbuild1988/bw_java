@@ -1,21 +1,5 @@
 <template>
     <div>
-        <!-- <div style="margin: 1vh;">
-            <RadioGroup
-                v-model="queryCondition.curDataType"
-                type="button"
-                @on-change="changeDataType"
-                size="large"
-            >
-                <Radio
-                    v-for="(item,index) in curDataTypeList"
-                    :key="index"
-                    :label="item.val"
-                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-                    :class="{select_radio:queryCondition.curDataType==item.val}"    
-                >{{item.key}}</Radio>
-            </RadioGroup>
-        </div>-->
         <div class="areas">
             <span class="common_spen">区域:</span>
             <Select
@@ -41,26 +25,6 @@
                 >{{ item.label }}</Option>
             </Select>
         </div>
-
-        <!-- <div style="margin: 1vh;">
-            <RadioGroup
-                v-model="queryCondition.areaId"
-                type="button"
-                @on-change="changeAreaLocation"
-                size="large"
-            >
-                <Radio
-                    v-for="(item,key) in areas"
-                    :key="key"
-                    :label="item.id"
-                    style="font-size: 1.5vmin;height: 3vmin;line-height: 3vmin"
-                    :class="{select_radio:queryCondition.areaId==item.id}"
-                >{{item.name}}</Radio>
-            </RadioGroup>
-        </div>-->
-        <!-- <div style="margin: 1vh;">
-            <check-select v-bind="storeProp" v-on:toParent="getStoreId"></check-select>
-        </div>-->
         <div class="detectionBin">
             <span class="common_spen">检测仓:</span>
             <Select v-model="queryCondition.storeId" style="width:76%" @on-change="getStoreId">
@@ -74,56 +38,8 @@
         <div class="area_length">
             <strong>里程:</strong>
             {{ areaLeath }}
+            <strong v-if="areaLeath">{{areaLeathUnit}}</strong>
         </div>
-        <!-- <Tabs v-model="choosedTabPane" @on-click="chooseTab">
-            <TabPane label="卡片" name="卡片">
-                <Row :gutter="16">
-                    <Col span="12">
-                        <div class="data">
-                            <div class="titles">
-                                <div
-                                    class="title"
-                                    @click="chooseModule(0)"
-                                    :class="{'active' : curModule === 0}"
-                                >
-                                    <span>
-                                        <Icon type="ios-film" class="icons"></Icon>视频
-                                    </span>
-                                </div>
-                                <div
-                                    class="title"
-                                    @click="chooseModule(1)"
-                                    :class="{'active' : curModule === 1}"
-                                >
-                                    <span>
-                                        <Icon type="map" class="icons"></Icon>管廊模型
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="map">
-                                <Carousel v-bind="curCarousel" v-if="curModule === 0"></Carousel>
-                                <TestSmViewer ref="smViewer" v-if="curModule === 1" :detectionObjInfor="detectionObj"></TestSmViewer>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col span="12" class="data" style="overflow-y:auto ">
-                        <Row :gutter="16" style="margin-right: 2px;">
-                            <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                                <SimulatedData
-                                    v-bind:Obj="item"
-                                    v-if="item.datatypeId==1"
-                                    @changeStatus="changeStatus"
-                                ></SimulatedData>
-                                <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </TabPane>
-            <TabPane label="表格" name="表格">
-                <Table :columns="environmentColums" :data="objTableDate"></Table>
-            </TabPane>
-        </Tabs>-->
         <tabs :tabList="tabs.tabList" :tabIndex="tabsIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="isShowComponent">
                 <Col span="12">
@@ -317,6 +233,7 @@ export default {
             ],
             objTableDate: [],
             areaLeath: "",
+            areaLeathUnit:'米',
             tabs: {
                 tabIndex: 0,
                 tabList: [
@@ -913,7 +830,6 @@ export default {
     width: 21%;
     margin-top: 0.5%;
 }
-
 .detectionBin {
     display: inline-block;
     width: 20%;
@@ -921,34 +837,14 @@ export default {
     margin-right: 3%;
 }
 @media (min-width: 1921px) {
-    .common_spen {
-        font-size: 1.6rem;
-    }
+    
     .area_length {
-        font-size: 1.9rem;
-        top: 1.9%;
-    }
-    .common_spen {
-        font-size: 1.6rem;
-    }
-    .area_length {
-        font-size: 1.9rem;
         top: 1.9%;
     }
 }
 @media (max-width: 1920px) {
-    .common_spen {
-        font-size: 0.7rem;
-    }
+    
     .area_length {
-        font-size: 0.7rem;
-        top: 1.6%;
-    }
-    .common_spen {
-        font-size: 0.7rem;
-    }
-    .area_length {
-        font-size: 0.7rem;
         top: 1.6%;
     }
 }

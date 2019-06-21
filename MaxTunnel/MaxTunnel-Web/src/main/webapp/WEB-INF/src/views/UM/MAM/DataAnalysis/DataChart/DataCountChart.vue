@@ -3,23 +3,22 @@
 		<h2 class="title">监测明细报表</h2>
 		<div>
 			<div class="dateBox">
-				<Tabs v-model="type" @on-click="currentTabPane(type)">
-					<TabPane
-						v-for="(item,index) in timeContainer"
-						:key="index"
-						:label="`${item.key}报`"
-						:name="`${item.val}`"
-					>
-						<div class="itemBox" v-for="(item,index) in cycleReport" :key="index">
-							<span class="leftBox"></span>
-							<span class="itemContent">{{item.name}}</span>
-							<div class="btnBox">
-								<Button type="primary" size="small" @click="previewCycle(item.id)">预览</Button>
-								<Button type="primary" size="small" @click="downloadCycle(item.id,item.name)">下载</Button>
-							</div>
+				<div class="navigation">
+					<div @click="showWeek()" :class="{'activeWeek': isWeek}">周报</div>
+					<div @click="showMonth()" :class="{'activeMonth': isMonth}">月报</div>
+					<div @click="showYear()" :class="{'activeYear': isYear}">年报</div>
+				</div>
+				<div class="nullDate" v-if="cycleReport.length==undefined">暂无数据</div>
+				<div class="dataBox">
+					<div class="itemBox" v-for="(item,index) in cycleReport" :key="index">
+						<span class="leftBox"></span>
+						<span class="itemContent">{{item.name}}</span>
+						<div class="btnBox">
+							<Button type="primary" size="small" @click="previewCycle(item.id)">预览</Button>
+							<Button type="primary" size="small" @click="downloadCycle(item.id,item.name)">下载</Button>
 						</div>
-					</TabPane>
-				</Tabs>
+					</div>
+				</div>
 			</div>
 			<div class="showReport">
 				<PDF ref="pdf"></PDF>
@@ -38,7 +37,10 @@ export default {
 			cycleReport: [],
 			ofType: 5,
 			type: 3,
-			timeContainer: []
+			timeContainer: [],
+			isWeek: true,
+			isMonth: false,
+			isYear: false
 		};
 	},
 	mounted() {
@@ -48,6 +50,27 @@ export default {
 		});
 	},
 	methods: {
+		showWeek(){
+			this.type = 3
+			this.isWeek = true
+			this.isMonth = false
+			this.isYear = false
+			this.cycleDown()
+		},
+		showMonth(){
+			this.type = 4
+			this.isWeek = false
+			this.isMonth = true
+			this.isYear = false
+			this.cycleDown()
+		},
+		showYear(){
+			this.type = 5
+			this.isWeek = false
+			this.isMonth = false
+			this.isYear = true
+			this.cycleDown()
+		},
 		cycleDown() {
 			var params = {
 				ofType: this.ofType,
@@ -56,10 +79,6 @@ export default {
 			DataAnalysisService.chooseDown(params).then(res => {
 				this.cycleReport = res;
 			});
-		},
-		currentTabPane(value) {
-			this.type = value;
-			this.cycleDown();
 		},
 		//预览
 		previewCycle(id) {
@@ -87,8 +106,6 @@ export default {
 .showReport {
 	padding: 2vmin;
 	float: left;
-	height: 80vh;
-	overflow: auto;
 	color: #fff;
 }
 .dateBox {
@@ -123,6 +140,45 @@ export default {
 }
 .dateBox .ivu-tabs>>>.ivu-tabs-nav{
 	color: #fff;
+}
+.navigation{
+    line-height: 3.5vmin;
+    color: #fff;
+	margin-bottom: 1vmin;
+	border-bottom: 0.2vmin solid #fff;
+}
+.navigation div{
+    display: inline;
+    line-height: 3.5vmin;
+    cursor: pointer;
+    padding: 0.9vmin 3vmin;
+    font-size: 1.5vmin;
+}
+.navigation div:hover,.activeWeek,.activeMonth,.activeYear{
+    border-bottom: 0.4vmin solid #1798e0;
+}
+.nullDate{
+	text-align: center;
+    margin-top: 2vmin;
+    font-size: 2vmin;
+}
+.dataBox{
+	height: 70vh;    
+	overflow-y: auto;
+}
+.dataBox::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.dataBox::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.dataBox::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 @media (min-width: 2200px) {
 	.ivu-btn,

@@ -33,15 +33,12 @@
                     >{{ item.name }}</Option>
                 </Select>
             </Col>
-            <!-- <Col span="3">
-                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
-            </Col>-->
         </Row>
         <Row class="content">
             <Col span="5">
                 <div class="control">
                     <h2 class="title">云台控制</h2>
-                    <Row class="controlBody" style="height: 20vh">
+                    <Row class="controlBody">
                         <Col span="24">
                             <div class="controlContent">
                                 <video-control
@@ -55,7 +52,7 @@
                 </div>
                 <div class="lists">
                     <h2 class="title">摄像头信息</h2>
-                    <div style="height: 90%;" class="controlBody">
+                    <div style="height: 90%;" class="cameraDetail">
                         <h2 class="videoName" v-if="!curVideo">请选择摄像机</h2>
                         <h2
                             v-if="curVideo"
@@ -155,7 +152,7 @@
                         <Col span="1" class="slipContent">
                             <Icon
                                 type="chevron-right"
-                                :class="['slipRight',{'disabled' : curPage == totalPage},{'clicked' : clicked.next && curPage != totalPage}]"
+                                :class="['slipRight',{'disabled' : curPage >= totalPage},{'clicked' : clicked.next && curPage != totalPage}]"
                                 @click.native="pageChange('next')"
                                 @mousedown.native="down('next')"
                                 @mouseup.native="up('next')"
@@ -208,10 +205,10 @@ export default {
     watch: {
         $route: function() {
             this.conditions.tunnelId = this.$route.params.id;
+            this.clearStateParams();
             this.initData();
             this.videoNum = 4;
             this.curVideo = null;
-            this.search();
             this.isDisabled = true;
             this.conditions.storeId = null;
             this.conditions.areaId = null;
@@ -247,55 +244,47 @@ export default {
     mounted() {
         this.conditions.tunnelId = this.$route.params.id;
         this.initData();
-        // document.getElementsByClassName('whole')[0].style.height = window.innerHeight - window.innerHeight * 16 / 100
     },
     methods: {
         initData() {
-            let _this = this;
-            TunnelService.getStoresByTunnelId(_this.conditions.tunnelId).then(
-                result => {
-                    _this.init.stores = result;
+            Promise.all([
+                TunnelService.getAreasByTunnelId(this.conditions.tunnelId),
+                TunnelService.getStoresByTunnelId(this.conditions.tunnelId)
+            ]).then(
+                res => {
+                    this.init.areas = res[0];
+                    this.init.stores = res[1];
+                    this.getStateParams();
+                    this.search();
                 },
-                error => {
-                    _this.Log.info(error);
+                err => {
+                    this.Log.info(err);
                 }
             );
-            TunnelService.getAreasByTunnelId(_this.conditions.tunnelId).then(
-                result => {
-                    _this.init.areas = result;
-                },
-                error => {
-                    _this.Log.info(error);
-                }
-            );
-            VideoService.getCamerasByTunnelId(_this.conditions.tunnelId).then(
-                result => {
-                    _this.cameraList = [];
-                    result.forEach(camera => {
-                        let temp = {};
-                        temp.id = camera.id;
-                        temp.name = camera.name;
-                        temp.url = camera.url;
-                        temp.tunnelId = _this.conditions.tunnelId;
-                        temp.storeId = camera.storeId;
-                        temp.areaId = camera.areaId;
-                        temp.positionSupport = camera.ptzOperationsSupported;
-                        temp.description = camera.description;
-                        temp.tunnelName = camera.tunnelName
-                            ? camera.tunnelName
-                            : "";
-                        temp.storeName = camera.storeName
-                            ? camera.storeName
-                            : "";
-                        temp.areaName = camera.areaName ? camera.areaName : "";
-                        _this.cameraList.push(temp);
-                    });
-                    _this.Log.info("videos:", _this.cameraList);
-                },
-                error => {
-                    console.log(error);
-                }
-            );
+        },
+        getStateParams() {
+            if (this.$store.state.UMstate.videoDetailParams) {
+                let setting = this.$store.state.UMstate.videoDetailParams;
+                this.conditions.storeId = setting.storeId;
+                this.conditions.areaId = setting.areaId;
+                this.videoNum = setting.videoNum;
+            }
+        },
+        clearStateParams() {
+            let data = {
+                storeId: null,
+                areaId: null,
+                videoNum: 4
+            };
+            this.$store.commit("setVideoDetailParams", data);
+        },
+        setStateParams() {
+            let data = {
+                storeId: this.conditions.storeId,
+                areaId: this.conditions.areaId,
+                videoNum: this.videoNum
+            };
+            this.$store.commit("setVideoDetailParams", data);
         },
         search() {
             let _this = this;
@@ -335,6 +324,7 @@ export default {
             );
         },
         history(camera) {
+            this.setStateParams();
             this.$router.push({
                 name: "历史照片",
                 params: {
@@ -377,6 +367,7 @@ export default {
             }
         },
         config(camera) {
+            this.setStateParams();
             this.$router.push({
                 name: "预置位",
                 params: {
@@ -612,16 +603,33 @@ export default {
     background-color: rgb(53, 122, 163);
     padding: 10px;
     color: #fff;
-    margin: 1vmin 0 1vmin 6%;
+    margin: 1vmin;
     position: relative;
     border-radius: 6px;
     line-height: 2.6vmin;
     font-size: 1.4vmin;
     width: 88%;
+    min-height: 4vmin;
 }
 .posContent {
-    max-height: 34vh;
+    max-height: 31vh;
     overflow-y: auto;
+    width: 90%;
+    margin: 0 auto;
+}
+.posContent::-webkit-scrollbar {
+    width: 1vmin;
+    height: 0.2vmin;
+}
+.posContent::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.posContent::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 .option {
     float: right;
@@ -638,6 +646,14 @@ export default {
     background: url("../../../../assets/UM/videoListBody.png") no-repeat;
     background-size: 100% 100%;
     color: #fff;
+    margin-top: 1vmin;
+    height: 20vh;
+}
+.cameraDetail {
+    background: url("../../../../assets/UM/videoDetailBg.png") no-repeat;
+    background-size: 100% 100%;
+    color: #fff;
+    margin-top: 1vmin;
 }
 
 .query >>> .ivu-select-selection {
@@ -650,7 +666,7 @@ export default {
     margin-top: 2vh !important;
 }
 .query >>> .ivu-select-placeholder,
-.ivu-select-selected-value {
+.query >>> .ivu-select-selected-value {
     font-size: 1.28vmin !important;
     height: 2.6vmin !important;
     line-height: 3.2vmin !important;

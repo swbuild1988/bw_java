@@ -188,7 +188,7 @@ export default {
 .lineTable .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .lineTable .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {

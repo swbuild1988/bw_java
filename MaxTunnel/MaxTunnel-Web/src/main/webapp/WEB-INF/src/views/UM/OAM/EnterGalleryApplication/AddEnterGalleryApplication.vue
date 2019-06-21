@@ -1,7 +1,8 @@
 <template>
 <div class="formBG">
+    <div class="formTitle">添加入廊申请</div>
+    <div class="formHeight">
     <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="160" :rules="ruleValidate" @submit.native.prevent>
-        <h2 class="formTitle">添加入廊申请</h2>
         <FormItem label="申请人所属公司：" prop="staffCompany">
             <Select v-model="addEnterGalleryApplication.staffCompany" @on-change="chooseDeptment()">
                 <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -58,6 +59,7 @@
             <Button type="primary" @click="submitEnterGalleryApplication('addEnterGalleryApplication')" :disabled="isDisable">提交</Button>
         </div>
     </Form>
+    </div>
 </div>    
 </template>
 <script>
@@ -291,23 +293,47 @@ ul li{
     color: #ed3f14;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
 }
 
+.formHeight{
+    height: 75vh;
+    overflow-y: auto;
+}
+
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
+}
+
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    margin-top: -3vh;
 }
 .formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 
 @media (min-width: 2200px){
@@ -318,11 +344,11 @@ ul li{
         font-size: 2.4vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
-        width: 15vmin !important;
+        width: 16vmin !important;
         line-height: 6.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 15vmin !important;
+        margin-left: 16vmin !important;
         line-height: 6.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

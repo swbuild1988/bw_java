@@ -90,6 +90,9 @@ export default {
 						color: _this.titleColor
 					}
 				},
+				tooltip: {
+					trigger: "item"
+				},
 				legend: {
 					data: [],
 					margin: _this.getFontSize(1),

@@ -57,9 +57,7 @@
         </Col>
         <Col span="6">
             <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
-            <!-- <Button type="primary">批量导入</Button> -->
             <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备
-                <!-- <button class="addEquipmentBtn">批量导入管廊设备</button>     -->
             </vue-xlsx-table>
         </Col>
     </Row>
@@ -72,15 +70,15 @@
             </Button>
             <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
                 <TabPane label="卡片" name="卡片">
-                    <Col span="24">
+                    <Col class="cardStyle" span="24" :style="{height: cardHeight}" style="overflow-y: auto,overflow-x: hidden">
                         <div class="nullData" v-show="isNullData">暂无数据</div>
                         <Row :gutter="16">
                             <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
                                 <div  class="infoBox">
                                     <div class="topBox">
-                                        <a class="ivu-modal-close" style="right: 2vmin;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
+                                        <!-- <a class="ivu-modal-close" style="right: 2vmin;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(item.id)"></i></a> -->
                                         <p class="equipentTitle">{{ item.name }}</p>
-                                        <div class="imgBox"><img :src="imgUrl"></div>
+                                        <!-- <div class="imgBox"><img :src="imgUrl"></div> -->
                                     </div>
                                     <Row class="detailsBox">
                                         <Col span="12" :title="item.tunnel.name">所属管廊：{{item.tunnel.name}}</Col>
@@ -105,7 +103,7 @@
                                             </div>
                                         </Col>
                                         <Col span="8" class="operationDel">
-                                            <div @click="del(index)">
+                                            <div @click="del(item.id)">
                                                 <Icon type="trash-a" size=20></Icon>
                                                 <p>删除</p>
                                             </div>
@@ -118,7 +116,7 @@
                     </Col>
                 </TabPane>
                 <TabPane label="表格" name="表格">
-                    <Table :columns='columnsEquipment' :data="equipments"></Table>
+                    <Table :columns='columnsEquipment' :data="equipments" :height="tableHeight"></Table>
                 </TabPane>
             </Tabs>
         </Row>
@@ -165,9 +163,9 @@ export default {
                 pageTotal: 0
             },
             pageStyle: {
-                position: "absolute",
-                bottom: "20px",
-                right: "15px"
+                position: 'absolute',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             equipmentType: [],
             equipmentModel: [],
@@ -281,7 +279,9 @@ export default {
                 }
             ],
             chooseEquipmentTabPane: '卡片',
-            isNullData: false
+            isNullData: false,
+            cardHeight: 600,
+            tableHeight: 600
         };
     },
     beforeRouteLeave(to, from, next) {
@@ -333,6 +333,9 @@ export default {
     mounted() {
         //从数据库读取select的option选项
         let _this = this;
+
+        _this.cardHeight = window.innerHeight/100*50 + 'px'
+        _this.tableHeight = window.innerHeight/100*50
 
         //获取type
         EquipmentService.getEquipmentTypes().then(
@@ -474,16 +477,16 @@ export default {
         edit(index) {
             this.goToMoudle(index, types.pageType.Edit);
         },
-        del(index) {
+        del(id) {
             let _this = this;
-            EquipmentService.equipmentDatagird(this.params).then(
-                result => {
-                    _this.deleteEquipmentInfo = result.list[index];
-                },
-                error => {
-                    _this.Log.info(error);
-                }
-            );
+            // EquipmentService.equipmentDatagird(this.params).then(
+            //     result => {
+            //         _this.deleteEquipmentInfo = result.list[index];
+            //     },
+            //     error => {
+            //         _this.Log.info(error);
+            //     }
+            // );
 
             this.$Modal.confirm({
                 title: "删除",
@@ -491,7 +494,7 @@ export default {
                 content: "<p>确认删除吗?</p>",
                 onOk: () => {
                     let _this = this;
-                    EquipmentService.deleteEquipment(this.deleteEquipmentInfo.id).then(
+                    EquipmentService.deleteEquipment(id).then(
                         result => {
                             _this.showTable();
                         },
@@ -555,9 +558,7 @@ export default {
     color: #fff;
     font-size: 20px;
     text-align: center;
-    line-height: 12vh;
-    margin-left: 12vh;
-    height: 7vh;
+    line-height: 7vh;
 }
 
 .imgBox {
@@ -577,7 +578,7 @@ export default {
     right: 0;
 }
 
-.imgBox img {
+/* .imgBox img {
     width: 5vh;
     height: 5vh;
     border-radius: 5vh;
@@ -585,7 +586,7 @@ export default {
     z-index: 5;
     top: 8%;
     margin-left: -2.5vh;
-}
+} */
 
 .detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
     line-height: 35px;
@@ -621,7 +622,7 @@ export default {
 }
 .list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
@@ -637,6 +638,7 @@ export default {
     background: url("../../../../assets/UM/infoBox.png") no-repeat;
     background-size: 100% 100%;
     padding: 3vmin;
+    height: 63vh;
 }
 .infoBox{
     background: url("../../../../assets/UM/cardBG.png") no-repeat;
@@ -646,12 +648,33 @@ export default {
 	color: #fff;
 }
 .vue-xlsx-container>>>.xlsx-button {
-    padding: 0.6vmin 1.5vmin;
+    padding: 0.6vmin 1vmin;
     font-size: 1.2vmin;
-    border-radius: 0.4vmin;
+    border-radius: 0.8vmin;
     color: #fff;
     line-height: 1.5;
     background: linear-gradient(to left, #2734e1, #7c83f2);
+}
+.ivu-table-wrapper>>>.ivu-table-tip{
+    overflow-x: hidden;
+}
+.cardStyle{
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar,.cardStyle::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb,.cardStyle::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track,.cardStyle::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -667,9 +690,9 @@ export default {
     .equipmentList{
         font-size: 2.5vmin;
     }
-    .detailsBox{
+    /* .detailsBox{
         padding-top: 2vh;
-    }
+    } */
     .detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14{
         line-height: 4vmin;
         font-size: 1.3vmin;

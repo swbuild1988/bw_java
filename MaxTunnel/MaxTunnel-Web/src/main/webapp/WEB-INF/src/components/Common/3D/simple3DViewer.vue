@@ -1,9 +1,10 @@
 
 <template>
     <div class="content"
-         id="simpleGISbox"
-         v-cancellation>
+        id="simpleGISbox"
+        v-cancellation>
     </div>
+    
 </template>
 
 <script>
@@ -37,15 +38,6 @@
                 type: Boolean,
                 default: false
             },
-            // refreshCameraPosition: {
-            //     type: Object,
-            //     default: function () {
-            //         return {
-            //             enable: true,
-            //             interval: 1000
-            //         };
-            //     }
-            // },
             cameraPosition: {
                 type: Object,
                 default: () => {
@@ -139,9 +131,8 @@
                 return function (queryEventArgs) {
 
                     let [ selectedFeatures ] = queryEventArgs.originResult.features;
-
                     let entity = _this.viewer.entities.add({
-                        id: _this.detectionObj.id,
+                        id: _this.detectionObjInfor.id,
                         position: Cesium.Cartesian3.fromDegrees(parseFloat(_getFieldValues(selectedFeatures,'X')), parseFloat(_getFieldValues(selectedFeatures,'Y')), parseFloat(_getFieldValues(selectedFeatures,'Z'))),
                         label:{
                             text:''

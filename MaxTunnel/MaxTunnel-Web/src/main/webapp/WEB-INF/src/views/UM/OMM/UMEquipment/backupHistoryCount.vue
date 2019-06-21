@@ -1,7 +1,7 @@
 <!--备品历史统计-->
 <template>
     <div style="padding: 5px;">
-        <Row >
+        <Row>
             <Col span="12">
                 <div>
                     <Row >
@@ -15,8 +15,8 @@
                                 </a>
                                 </div>
                                 <div>
-                                <ul v-for="(item,index) in backupTakeData" :key="index">
-                                    <li class="takeBackUpList">
+                                <ul>
+                                    <li class="takeBackUpList" v-for="(item,index) in backupTakeData" :key="index">
                                         <Icon type="star" color="#00ffe4"></Icon>
                                         {{item.name}}
                                         <span style="position: relative;float: right;">
@@ -38,8 +38,8 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <ul v-for="(item,index) in takeUserData" :key="index">
-                                        <li class="takeBackUpList">
+                                    <ul class="takeBackUpUl">
+                                        <li class="takeBackUpList" v-for="(item,index) in takeUserData" :key="index">
                                             <Icon type="star" color="#15ffe4"></Icon>
                                             {{item.name}}
                                             <span style="position: relative;float: right;">
@@ -65,7 +65,7 @@
                 </div>
             </Col>
             <Col span="12" style="margin-top: 1.5vh">
-                <div class="boxBG" style="width:42vw;height: 54vh;" ref="MultiBarChartBox">
+                <div class="boxBG" style="width:42vw;height: 53vh;" ref="MultiBarChartBox">
                     <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
                 </div>
             </Col>
@@ -636,8 +636,7 @@ export default {
         },
         getModalWidth(){
             this.modalWidth = document.body.offsetWidth *0.55
-            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-document.body.offsetHeight/100*7
-            console.log('this.tableHeight', this.tableHeight)
+            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-document.body.offsetHeight/100*5.5
         }
     }
 };
@@ -664,9 +663,27 @@ export default {
     text-align: right;
 }
 .takeBackUpList{
-    margin-top: 3px;
-    line-height: 24px;
+    line-height: 4.5vmin;
     list-style-type:none;
+}
+.takeBackUpUl{
+    height: 26vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.takeBackUpUl::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.takeBackUpUl::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.takeBackUpUl::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 .listUpdate{
     position: relative;
@@ -690,7 +707,7 @@ export default {
 }
 .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
@@ -703,6 +720,20 @@ export default {
 }
 .queryCondition .ivu-select{
     color: #fff;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -717,7 +748,6 @@ export default {
     }
     .takeBackUpList{
         font-size: 1.4vmin;
-        line-height: 3.5vmin;
     }
     .datapanle,.listUpdate{
         font-size: 1.5vmin;

@@ -1,9 +1,9 @@
 <template>
     <div class="formBG">
+        <div class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</div>
+        <div class="formTitle" v-show="this.pageType==1">缺陷详情</div>
+        <div class="formTitle" v-show="this.pageType==2">编辑缺陷详情</div>
         <Form ref="defectDetails" :model="defectDetails" :rules="validateRules" :label-width="120" @submit.native.prevent>
-            <h2 class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</h2>
-            <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
-            <h2 class="formTitle" v-show="this.pageType==2">编辑缺陷详情</h2>
             <FormItem label="所属管廊：" prop="tunnelId">
                 <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1" @on-change="changeTunnel()">
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
@@ -57,12 +57,12 @@
             <FormItem label="缺陷描述：" prop="description">
                 <Input v-model="defectDetails.description" type="textarea" :rows="4" placeholder="请输入缺陷描述" :readonly=this.isTrue></Input>
             </FormItem>
-            <div style="text-align: center;" v-show="this.pageType!=1&&this.pageType!=2">
+            <div style="text-align: center;margin-left: 10vmin;" v-show="this.pageType!=1&&this.pageType!=2">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
             </div>
-            <div style="text-align: center;" v-show="this.pageType==1">
-                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
+            <div style="text-align: center;margin-left: 100px" v-show="this.pageType==1">
+                <Button type="ghost" @click="goBack()">返回</Button>
             </div>
         </Form> 
     </div>   
@@ -70,6 +70,7 @@
 <script>
 import types from '../../../../../static/Enum.json'
 import { TunnelService } from '../../../../services/tunnelService'
+import { DefectService } from '../../../../services/defectService'
 export default {
     data(){
         return {
@@ -168,9 +169,15 @@ export default {
         storeId(curVal,oldVal){
             this.defectDetails.store.id = curVal
             this.getObj()
-        }
+        },
+        '$route': function () {
+			this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
+		}
     },
     mounted(){
+        if(this.$route.params.type==4){
+            this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
+        }
         this.defectDetails.id =  this.$route.params.id;
         this.pageType = this.$route.params.type;
         if(this.pageType == 1){
@@ -261,12 +268,20 @@ export default {
                 this.isDisable = false
                 this.$refs[name].validate((valid)=>{
                     if(valid){
-                        this.axios.post('defects',(this.defectDetails)).then(response=>{
-                            this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
-                        })
-                        .catch(function(error) {
-                            console.log(error);
-                        });
+                        DefectService.addDefect(this.defectDetails).then(
+                            result => {
+                                this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                        // this.axios.post('defects',(this.defectDetails)).then(response=>{
+                        //     this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
+                        // })
+                        // .catch(function(error) {
+                        //     console.log(error);
+                        // });
                     }
                 })
             },2000)
@@ -294,11 +309,11 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 700px;
-    margin: 10px auto;
-    padding: 10px 20px;
-    margin-top: 30px;
-    border-radius: 4px;
+    width: 33vw;
+    margin: 1vmin auto;
+    padding: 1vmin 2vmin;
+    margin-top: 3vmin;
+    border-radius: 0.4vmin;
 }
 .goBack{
     position: absolute;
@@ -306,7 +321,7 @@ export default {
     right: 3vw;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -319,15 +334,23 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    width: auto;
+    text-align: center;
+    margin-left: 45%;
+    margin-right: 45%;
+    font-size: 2.2vmin;
+    margin-top: -3.2vmin;
+}
+.ivu-form-item{
+    margin-bottom: 2.4vmin;
 }
 @media (min-width: 2200px){
-    .formTitle{
-        font-size: 2.8vmin;
-    }
     .ivu-form.ivu-form-label-right{
         width: 50%;
         padding: 1vmin 2vmin;

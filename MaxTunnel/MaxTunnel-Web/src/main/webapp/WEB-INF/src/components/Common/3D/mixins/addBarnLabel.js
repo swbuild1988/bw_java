@@ -12,7 +12,7 @@ const addBarnLabel = {
             timer:{
                 timeoutId : null,
                 intervalId : null,
-                sectionId : null, //保留上次section
+                // sectionId : null, //保留上次section
             },
             labelsArray : []
         }
@@ -34,7 +34,7 @@ const addBarnLabel = {
             
             _this._getSection()
                 .then(result => {
-                    
+                    console.log(result)
                     if (result.moInfo) {
 
                         _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
@@ -49,7 +49,7 @@ const addBarnLabel = {
                         sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
 
                         //更新label值
-                        _this._updateEntityVal();
+                        // _this._updateEntityVal(); 后端接口找不到
                     }
                 });
 
@@ -73,15 +73,24 @@ const addBarnLabel = {
                     .then(result => {
                         let {code, data} = result.data;
 
-                        if (code == 200
-                            && data != null
-                            && _this.timer.sectionId !== data.sectionInfo.id
-                        ) {
-                            //缓存sectionId用于判断下次取到section是否一致
-                            _this.timer.sectionId = data.sectionInfo.id;
+                        if (code == 200) {
 
-                            resolve(data)
+                            _this.$emit('sendSectionDetails',data);
+
+                            data && resolve(data)
                         }
+
+                        // if (code == 200
+                        //     // && data != null
+                        //     // && _this.timer.sectionId !== data.sectionInfo.id
+                        // ) {
+                        //     //缓存sectionId用于判断下次取到section是否一致
+                        //     // _this.timer.sectionId = data.sectionInfo.id;
+
+                        //     _this.$emit('sendSectionDetails',data);
+
+                        //     resolve(data)
+                        // }
                     })
             })
         },

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SceneRoute xmlns="http://www.supermap.com.cn/ugc60">
+<route name="飞行路线_3" speed="44.123821666667" lineType="0" showroutestop="True" showrouteline="True" altitudefree="False" headingfree="False" tiltfree="False" flycircle="False" alongline="False">
+<style>
+<geostyle3d>
+<linecolor>RGBA(147,112,219,255)</linecolor>
+<linewidth>2</linewidth>
+<altitudeMode>Absolute</altitudeMode>
+<bottomAltitude>0.00</bottomAltitude>
+</geostyle3d>
+</style>
+<routestop name="Stop1" speed="0" excluded="False" viewType="camera">
+<camera>
+<longitude>112.52100900000001</longitude>
+<latitude>37.704977</latitude>
+<altitude>-1.5</altitude>
+<heading>92.056791057630576</heading>
+<tilt>93.329737405101085</tilt>
+<altitudeMode>Absolute</altitudeMode>
+</camera>
+<style>
+<geostyle3d>
+<icon/>
+<markersize>4.8</markersize>
+<markericonscale>1</markericonscale>
+<markercolor>RGBA(255,255,255,255)</markercolor>
+</geostyle3d>
+</style>
+<setting>
+<turnTime>1.5</turnTime>
+<turnSlowly>False</turnSlowly>
+<stopPlayMode>StopPause</stopPlayMode>
+<autoPlay>False</autoPlay>
+<pauseTime>0</pauseTime>
+<angularSpeed>1</angularSpeed>
+</setting>
+</routestop>
+<routestop name="Stop2" speed="0" excluded="False" viewType="camera">
+<camera>
+<longitude>112.52502800000001</longitude>
+<latitude>37.703798999999997</latitude>
+<altitude>-1.5</altitude>
+<heading>92</heading>
+<tilt>93</tilt>
+<altitudeMode>Absolute</altitudeMode>
+</camera>
+<style>
+<geostyle3d>
+<icon/>
+<markersize>4.8</markersize>
+<markericonscale>1</markericonscale>
+<markercolor>RGBA(255,255,255,255)</markercolor>
+</geostyle3d>
+</style>
+<setting>
+<turnTime>1.5</turnTime>
+<turnSlowly>False</turnSlowly>
+<stopPlayMode>StopPause</stopPlayMode>
+<autoPlay>False</autoPlay>
+<pauseTime>0</pauseTime>
+<angularSpeed>1</angularSpeed>
+</setting>
+</routestop>
+</route>
+</SceneRoute>

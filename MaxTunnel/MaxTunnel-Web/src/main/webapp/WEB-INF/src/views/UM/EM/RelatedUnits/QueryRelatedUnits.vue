@@ -62,9 +62,9 @@
             </Col>
         </Row>
         <div class="list">
-            <Tabs value="card">
+            <Tabs value="card" :animated="false">
                 <TabPane label="卡片" name="card">
-                    <Row type="flex" align="top" class="code-row-bg">
+                    <Row type="flex" align="top" class="code-row-bg cardStyle">
                         <Col span="6" v-for="(item,index) in unitInfo" :key="index">
                             <div class="unitBox">
                                 <div class="title">
@@ -124,7 +124,7 @@
                     </Row>
                 </TabPane>
                 <TabPane label="表格" name="table" class="table">
-                    <Table :columns="unitColumn" :data="unitData"></Table>
+                    <Table :columns="unitColumn" :data="unitData" :height="tableHeight"></Table>
                 </TabPane>
             </Tabs>
         </div>
@@ -176,8 +176,8 @@ export default {
             isShow: false,
             pageStyle: {
                 position: "absolute",
-                bottom: "20px",
-                right: "15px",
+                bottom: "1vmin",
+                right: "2.5vmin",
                 color: "#fff"
             },
             align: "center",
@@ -288,7 +288,8 @@ export default {
                     }
                 }
             ],
-            unitData: []
+            unitData: [],
+            tableHeight: null
         };
     },
     watch: {
@@ -336,6 +337,7 @@ export default {
     },
     mounted() {
         let _this = this;
+        _this.tableHeight = (window.innerHeight / 100) * 58;
         TunnelService.getTunnelsTree().then(
             function(result) {
                 result.forEach(element => {
@@ -523,13 +525,39 @@ export default {
     margin-right: -0.25em;
 }
 .tree {
-    background: #fff;
-    z-index: 2;
+    background: rgba(50, 103, 156);
+    z-index: 6;
     position: absolute;
     margin-left: 75px;
     border: 1px solid #cccccc;
     width: 60%;
+    height: 40vmin;
+    overflow-y: auto;
 }
+.tree::-webkit-scrollbar {
+    width: 1vmin;
+    height: 0.2vmin;
+}
+.tree::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.tree::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
+.tree >>> .ivu-tree-title,
+.tree >>> .ivu-tree-arrow {
+    color: #fff;
+}
+.tree >>> .ivu-tree-title:hover,
+.tree >>> .ivu-tree-title-selected {
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+}
+
 .sectionName {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -567,6 +595,39 @@ export default {
     border-color: #3e4f61;
     border-radius: 1vmin;
     font-size: 1.3vmin !important;
+}
+.list {
+    height: 67vh;
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
+.list >>> .ivu-tabs-content {
+    height: 59vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.cardStyle {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 60vh;
+}
+.list >>> .ivu-tabs-content::-webkit-scrollbar,
+.cardStyle::-webkit-scrollbar {
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.list >>> .ivu-tabs-content::-webkit-scrollbar-thumb,
+.cardStyle::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.list >>> .ivu-tabs-content::-webkit-scrollbar-track,
+.cardStyle::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px) {
     .ivu-select,
@@ -608,7 +669,7 @@ export default {
     .ivu-icon {
         font-size: 1.5vmin !important;
     }
-    .ivu-tree ul {
+    .ivu-tree >>> ul {
         font-size: 1.4vmin;
     }
     .ivu-tree-arrow {
@@ -631,7 +692,7 @@ export default {
 .list .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {

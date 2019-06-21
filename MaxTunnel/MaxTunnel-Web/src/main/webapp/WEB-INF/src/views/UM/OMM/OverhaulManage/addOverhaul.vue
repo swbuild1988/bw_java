@@ -1,8 +1,8 @@
 <template>
     <div class="formBG">
+        <div class="formTitle" v-show="this.pageType==4">提交维修结果</div>
+        <div class="formTitle" v-show="this.pageType==1">维修工单详情</div>
         <Form ref="submitOverhaulDate" :model="submitOverhaulDate" :label-width="140" :rules="validateOverhaul">
-            <h2 class="formTitle" v-show="this.pageType==4">提交维修结果</h2>
-            <h2 class="formTitle" v-show="this.pageType==1">维修工单详情</h2>
             <FormItem label="所属管廊：">   
                 <Input type="text" v-model="overhaulData.tunnelName" readonly></Input>
             </FormItem>
@@ -34,13 +34,13 @@
             <FormItem label="维修描述：">
                 <Input v-model="submitOverhaulDate.describe" type="textarea" :rows="4" placeholder="请输入检修描述" :readonly="this.pageType==1||this.typeKey=='complete'"></Input>
             </FormItem>
-            <FormItem v-show="this.pageType==4" style="text-align: center;margin-left: -140px;">
+            <div v-show="this.pageType==4" style="text-align: center;margin-left: -140px;">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitOrder('submitOverhaulDate')" :disabled="isDisable">提交</Button>
-            </FormItem>
-            <FormItem v-show="this.pageType==1" style="text-align: center;margin-left: -140px;">
-                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
-            </FormItem>
+            </div>
+            <div v-show="this.pageType==1" style="margin-left: 15vmin;text-align: center;">
+                <Button type="ghost" @click="goBack()">返回 </Button>
+            </div>
         </Form>    
     </div>
 </template>
@@ -178,9 +178,11 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 700px;
-    margin: 0px auto;
-    padding: 10px 20px;
+    width: 33vw;
+    margin: 1vmin auto;
+    padding: 1vmin 2vmin;
+    margin-top: 3vmin;
+    border-radius: 0.4vmin;
 }
 .goBack{
     position: absolute;
@@ -188,7 +190,7 @@ export default {
     right: 3vw;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -196,6 +198,23 @@ export default {
 
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    width: auto;
+    text-align: center;
+    margin-left: 40%;
+    margin-right: 40%;
+    font-size: 2.2vmin;
+    margin-top: -3.5vmin;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
@@ -218,9 +237,6 @@ export default {
     }
     .ivu-icon-chevron-left{
         font-size: 3vmin;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
 }
 </style>

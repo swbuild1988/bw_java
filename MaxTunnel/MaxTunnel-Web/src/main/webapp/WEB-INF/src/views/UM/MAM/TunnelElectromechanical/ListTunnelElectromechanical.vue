@@ -24,11 +24,15 @@
                 <div class="gis" :style="{height:curHeight+'px'}">
                     <!-- <sm-viewer :id="mapId" ref="smViewer">
                     </sm-viewer>-->
-                    <TestSmViewer ref="smViewer" :openImageryProvider="false"></TestSmViewer>
+                    <TestSmViewer ref="smViewer" :openImageryProvider="false"  @sendSectionDetails="getSectionDetails"></TestSmViewer>
                     <div
                         class="positionNote"
                         v-if="note.areaName && note.storeName"
                     >{{note.areaName + " " + note.storeName}}</div>
+                    <ShowSectionDetailData
+                        :showDetailsModel="showDetailsModel"
+                        :dataDetails="sectionDetailsData"
+                    ></ShowSectionDetailData>
                 </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
@@ -119,6 +123,7 @@ import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 import checkSelect from "../../../../components/Common/CheckSelect.vue";
+import ShowSectionDetailData from "../../../../components/Common/Modal/ShowSectionDetailData.vue";
 import { commonFlyFn } from "../Minxis/unit";
 
 export default {
@@ -161,7 +166,8 @@ export default {
         EnvironmentShow,
         // SmViewer
         TestSmViewer,
-        checkSelect
+        checkSelect,
+        ShowSectionDetailData
     },
     methods: {
         //根据监测类型获取数据

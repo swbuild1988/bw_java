@@ -43,7 +43,11 @@ export default {
         this.init();
         this.resizeChart();
     },
-
+    watch: {
+        requestUrl() {
+            this.init();
+        }
+    },
     methods: {
         init() {
             this.drawLine();

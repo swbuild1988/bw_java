@@ -62,7 +62,7 @@ export default {
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('5%')
+                        fontSize: this.getFontSize('4%')
                     },
                     x: this.titlePosition,
                     padding: 15
@@ -84,7 +84,7 @@ export default {
                     data: this.legendData,
                     x:'right',
                     textStyle: { 
-                        fontSize: _this.getFontSize('5%') ,
+                        fontSize: _this.getFontSize('3%') ,
                         color: this.textColor
                     },
                     padding: _this.getFontSize('6%')
@@ -105,7 +105,7 @@ export default {
                         axisLabel: {
                             show: true,
                             textStyle: {
-                                fontSize : this.getFontSize('5%'),      //更改坐标轴文字大小
+                                fontSize : this.getFontSize('3%'),      //更改坐标轴文字大小
                                 color: this.textColor
                             },                            
                         },
@@ -120,7 +120,7 @@ export default {
                         axisLabel:{   
                             show: true, 
                             textStyle: {
-                                fontSize : _this.getFontSize('4%'),      //更改坐标轴文字大小
+                                fontSize : _this.getFontSize('3%'),      //更改坐标轴文字大小
                                 fontWeight:  this.getFontSize('10%'),
                                 color: this.textColor
                             },                

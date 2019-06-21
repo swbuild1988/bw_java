@@ -92,15 +92,35 @@
 
             <!-- 声光报警 41，红外 57，门禁 55-->
             <div class="switchContent">
-                <i-switch v-model="curValue" @on-change="confirm" size="large">
-                    <span slot="open">开</span>
-                    <span slot="close">关</span>
-                </i-switch>
-                <img
-                    :src="equipmentState.image"
-                    class="equipment_state_image"
-                    :title="equipmentState.title"
-                >
+                <div class="switchBtn">
+                    <i-switch v-model="curValue" @on-change="confirm" size="large" v-if="Obj.control">
+                        <span slot="open">开</span>
+                        <span slot="close">关</span>
+                    </i-switch>
+                </div>
+                <div class="switchImg">
+                    <img
+                        :src="equipmentState.closeImage"
+                        class="equipment_state_image"
+                        :title="equipmentState.closeTitle"
+                    >
+                    <img
+                        :src="equipmentState.openImage"
+                        class="equipment_state_image"
+                        :title="equipmentState.openTitle"
+                    >
+                    <img
+                        :src="equipmentState.faultImage"
+                        class="equipment_state_image"
+                        :title="equipmentState.faultTitle"
+                    >
+                </div>
+                <div class="switchText">
+                    <span>{{equipmentState.closeTitle}}</span>
+                    <span>{{equipmentState.openTitle}}</span>
+                    <span>{{equipmentState.faultTitle}}</span>
+                </div>
+                
             </div>
 
             <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
@@ -128,7 +148,8 @@ export default {
                 imgUrl: "",
                 objtypeId: "",
                 clickStatus: false,
-                datatypeId: ""
+                datatypeId: "",
+                control:true
             }
         }
     },
@@ -140,9 +161,43 @@ export default {
             isTimeShow: false,
             equipmentState: {
                 state: null,
-                image: "",
-                title: ""
-            }
+                closeImage: "",
+                openImage:"",
+                faultImage:"",
+                openTitle:'开',
+                closeTitle:'关',
+                faultTitle:'故障' 
+
+            },
+            imageState:[
+                {
+                    key:'closeState',
+                    val:[
+                        {key:'closeImage',val:'close-open-state'},
+                        {key:'openImage',val:'open-close-state'},
+                        {key:'faultImage',val:'fault-close-state'}
+                    ]
+                },
+                {
+                    key:'openState',
+                    val:[
+                        {key:'closeImage',val:'close-close-state'},
+                        {key:'openImage',val:'open-open-state'},
+                        {key:'faultImage',val:'fault-close-state'}
+                    ]
+                },
+                {
+                    key:'faultState',
+                    val:[
+                        {key:'closeImage',val:'close-close-state'},
+                        {key:'openImage',val:'open-close-state'},
+                        {key:'faultImage',val:'fault-open-state'}
+                    ]
+                },
+
+
+            ],
+            
         };
     },
     components: {
@@ -150,15 +205,9 @@ export default {
         Fans
     },
     watch: {
-        // 'equipmentState.state'(){
-        //     this.transformStateImage();
-        //     this.transformStateTtile();
-        // }
         Obj: {
             handler(newVal, oldVal) {
-                console.log("obj change", this.Obj);
                 this.transformStateImage();
-                this.transformStateTtile();
             },
             deep: true
         }
@@ -185,26 +234,15 @@ export default {
             });
         },
         transformStateImage() {
-            console.log("objvalue", this.Obj.ObjVal);
-            let image_url =
-                this.Obj.ObjVal == 0
-                    ? "close-state"
-                    : this.Obj.ObjVal == 1
-                    ? "open-state"
-                    : "fault-state";
-            console.log("url", image_url);
 
-            this.equipmentState.image = require("../../../assets/VM/" +
-                image_url +
-                ".png");
+            (this.imageState[this.Obj.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
+            
         },
-        transformStateTtile() {
-            this.equipmentState.title =
-                this.Obj.ObjVal == 0
-                    ? "关"
-                    : this.Obj.ObjVal == 1
-                    ? "开"
-                    : "故障";
+        replaceImage(replaceStr,replceImg){
+
+                this.equipmentState[replaceStr] = require("../../../assets/UM/" +
+                    replceImg +
+                    ".png");
         },
         //定位设备
         locationEquimpent() {
@@ -326,8 +364,9 @@ export default {
 }
 
 .equipment_state_image {
-    width: 70%;
-    height: 70%;
+    width: 3.5vmin;
+    height: 3.5vmin;
+    margin-top: 2vmin;
 }
 .ivu-card-bordered >>> .ivu-card-head {
     border-bottom: none;
@@ -342,6 +381,15 @@ export default {
 .ivu-card-bordered >>> .ivu-card-body {
     color: #fff;
     padding: 2.6vmin;
+}
+.switchText {
+    font-size: 1.4vmin;
+    margin-top: .5vmin;
+}
+.switchText > span {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
 }
 @media (min-width: 1921px) {
     .equipment_image {

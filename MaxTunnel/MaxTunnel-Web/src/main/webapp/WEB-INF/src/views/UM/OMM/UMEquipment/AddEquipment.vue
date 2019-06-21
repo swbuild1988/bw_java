@@ -1,7 +1,8 @@
 <template>
     <div class="formBG">
+        <div class="formTitle">添加管廊设备</div>
+        <div class="formHeight">
         <Form ref="equipment" :model="equipment" :label-width="120" :rules="validateRules" @submit.native.prevent>
-            <h1 class="formTitle">添加管廊设备</h1>
             <FormItem label="设备名称：" prop="name">
                 <Input v-model='equipment.name'></Input>
             </FormItem>
@@ -10,28 +11,28 @@
             </FormItem>
             <FormItem label="安装位置：" prop="tunnelId">
                 <Row :gutter="4">
-                    <Col span="5">    
+                    <Col span="7">    
                         <Select v-model='equipment.tunnelId' @on-change="changeTunnelId(equipment.tunnelId)">
                             <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                         </Select>
                     </Col>
-                    <Col span="5">
+                    <Col span="7">
                         <Select v-model="areaId" @on-change="changeSection()">
                             <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
                         </Select>
                     </Col>
-                    <Col span="5">
+                    <Col span="7">
                         <Select v-model="storeId" @on-change="changeSection()">
                             <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                         </Select>
                     </Col>
-                    <Col span="5">
+                    <Col span="5" style="display: none">
                         <Input v-model="equipment.sectionId" v-show="false"></Input>
-                        <Input v-model="sectionName" readonly></Input>
+                        <!-- <Input v-model="sectionName" readonly></Input> -->
                     </Col>
                 </Row>
             </FormItem>
-            <FormItem label="安装时间：" prop="runTime">
+            <FormItem label="投运时间：" prop="runTime">
                 <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
             </FormItem>
             <FormItem label="设备所属系统：" prop="type">
@@ -126,6 +127,7 @@
                 <Button type="primary" @click="submitEquipment('equipment')" :disabled="isDisable">提交</Button>
             </div>
         </Form>
+        </div>
     </div>
 </template>
 <script>
@@ -213,7 +215,7 @@ export default {
             stores: [],
             areaId: null,
             storeId: null,
-            sectionName: null,
+            // sectionName: null,
             isShowObjs: false,
             choosedObjId: null
         };
@@ -223,7 +225,7 @@ export default {
             this.areaId = null
             this.storeId = null
             this.equipment.sectionId = null
-            this.sectionName = null
+            // this.sectionName = null
             this.changeTunnelId(newVal)
         }
     },
@@ -354,7 +356,7 @@ export default {
                 TunnelService.getSectionByAreaIdStoreId(this.storeId, this.areaId).then(
                     result => {
                         this.equipment.sectionId = result.id
-                        this.sectionName = result.name
+                        // this.sectionName = result.name
                     },
                     error => {
                         this.Log.info(error)
@@ -505,10 +507,30 @@ export default {
     background: #f3f3f3;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
+}
+
+.formHeight{
+    height: 76vh;
+    overflow-y: auto;
+}
+
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 
 .formBG >>> .ivu-form-item-label,.formTitle{
@@ -518,10 +540,14 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    margin-top: -3.5vh;
+    font-size: 2.2vmin
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -541,9 +567,6 @@ export default {
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
         line-height: 4.5vmin;
-    }
-    .formTitle{
-        font-size: 2.4vmin;
     }
 }
 </style>

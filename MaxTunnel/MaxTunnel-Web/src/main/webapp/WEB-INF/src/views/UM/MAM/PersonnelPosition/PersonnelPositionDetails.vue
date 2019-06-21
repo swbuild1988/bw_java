@@ -2,74 +2,7 @@
     <div class="whole">
         <Row class="body">
             <Button type="primary" class="back" @click="back">返回</Button>
-            <Col span="8">
-                <Card class="persons">
-                    <p slot="title">
-                        <Icon type="android-contact"></Icon>
-                        {{ personnelInfo.name }}
-                    </p>
-                    <a href="#" slot="extra" @click.prevent="changePosType">历史轨迹</a>
-                    <ul>
-                        <li>所属公司：{{personnelInfo.companyName}}</li>
-                        <li>手机号：{{ personnelInfo.telphone }}</li>
-                        <li>身份证号：{{ personnelInfo.identityNO }}</li>
-                        <br>
-                        <li>入廊目的：{{ personnelInfo.actionName }}</li>
-                        <li>入廊时间：{{ personnelInfo.preTime }}</li>
-                        <li>行程状态：{{ personnelInfo.processStatus }}</li>
-                    </ul>
-                    <!-- <div class="options">
-						<Button type="primary" @click="route.queryShow = true">历史轨迹</Button>
-						<Button type="primary" class="call">通话</Button>
-                    </div>-->
-                </Card>
-                <div class="cameras">
-                    <Row>
-                        <Col span="1" class="slipContent">
-                            <Icon
-                                type="chevron-left"
-                                :class="['slipLeft',{'disabled': cameras.curPage == 1},{'clicked' : clicked.prev && cameras.curPage != 1}]"
-                                @click.native="pageChange('prev')"
-                                @mousedown.native="down('prev')"
-                                @mouseup.native="up('prev')"
-                            ></Icon>
-                        </Col>
-                        <Col span="22">
-                            <div class="videos">
-                                <h1
-                                    v-if="cameras.nodata"
-                                    style="text-align: center;margin-top: 2vmin;"
-                                >暂无视频</h1>
-                                <Row>
-                                    <Col
-                                        span="12"
-                                        v-for="(item,index) in cameras.showList"
-                                        :key="item.id"
-                                        class="monitors"
-                                    >
-                                        <video-component
-                                            v-bind:video="item"
-                                            v-bind:id="'camera'+item.id"
-                                            :index="index"
-                                        ></video-component>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </Col>
-                        <Col span="1" class="slipContent">
-                            <Icon
-                                type="chevron-right"
-                                :class="['slipRight',{'disabled' : cameras.curPage == cameras.totalPage},
-						   {'clicked' : clicked.next && cameras.curPage != cameras.totalPage}]"
-                                @click.native="pageChange('next')"
-                                @mousedown.native="down('next')"
-                                @mouseup.native="up('next')"
-                            ></Icon>
-                        </Col>
-                    </Row>
-                </div>
-            </Col>
-            <Col span="15" offset="1" class="view">
+            <Col span="15" class="view">
                 <div class="query" v-if="route.queryShow">
                     <Row>
                         <Col span="12">
@@ -91,9 +24,70 @@
                         </Col>
                     </Row>
                 </div>
-                <!-- <sm-viewer id="personnelPositionSMViewer" :cameraPosition="VMConfig.CAMERA"  :personnelPosition="personnelPosition" @onload="onload" style="height:74vh">
-                </sm-viewer>-->
                 <sm-viewer :cameraPosition="VMConfig.CAMERA" ref="positionDetail"></sm-viewer>
+            </Col>
+            <Col span="8" offset="1">
+                <div class="persons">
+                    <p slot="title">
+                        <Icon type="android-contact"></Icon>
+                        {{ personnelInfo.name }}
+                    </p>
+                    <Button @click="changePosType" type="primary" class="history">历史轨迹</Button>
+                    <ul>
+                        <li>所属公司：{{personnelInfo.companyName}}</li>
+                        <li>手机号：{{ personnelInfo.telphone }}</li>
+                        <li>身份证号：{{ personnelInfo.identityNO }}</li>
+                        <li>入廊目的：{{ personnelInfo.actionName }}</li>
+                        <li>入廊时间：{{ personnelInfo.preTime }}</li>
+                        <li>行程状态：{{ personnelInfo.processStatus }}</li>
+                    </ul>
+                </div>
+                <div class="cameras">
+                    <Row>
+                        <Col span="1" class="slipContent">
+                            <Icon
+                                type="arrow-left-b"
+                                :class="['slipLeft',{'disabled': cameras.curPage == 1},{'clicked' : clicked.prev && cameras.curPage != 1}]"
+                                @click.native="pageChange('prev')"
+                                @mousedown.native="down('prev')"
+                                @mouseup.native="up('prev')"
+                            ></Icon>
+                        </Col>
+                        <Col span="22">
+                            <div class="videos">
+                                <h1
+                                    v-if="cameras.nodata"
+                                    style="text-align: center;margin-top: 2vmin;color:#fff"
+                                >暂无视频</h1>
+                                <Row>
+                                    <Col
+                                        span="12"
+                                        v-for="(item,index) in cameras.showList"
+                                        :key="item.id"
+                                    >
+                                        <div class="monitors">
+                                            <video-component
+                                                v-bind:video="item"
+                                                v-bind:id="'camera'+item.id"
+                                                :index="index"
+                                            ></video-component>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </Col>
+                        <Col span="1" class="slipContent">
+                            <Icon
+                                type="arrow-right-b"
+                                :class="['slipRight',{'disabled' : cameras.curPage == cameras.totalPage},
+						   {'clicked' : clicked.next && cameras.curPage != cameras.totalPage}]"
+                                @click.native="pageChange('next')"
+                                @mousedown.native="down('next')"
+                                @mouseup.native="up('next')"
+                            ></Icon>
+                        </Col>
+                    </Row>
+                </div>
             </Col>
         </Row>
     </div>
@@ -103,7 +97,6 @@ import { personnelPositionService } from "../../../../services/personnelPosition
 import SmViewer from "../../../../components/Common/3D/overLook3DViewer";
 import { TunnelService } from "../../../../services/tunnelService";
 import { VideoService } from "../../../../services/videoService";
-//   import { setViewAngle ,bubble ,doSqlQuery , addBillboard,processFailed,getEntitySet,switchShowEntity,getEntityProperty  } from '../../../../scripts/commonFun'
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 import Vue from "vue";
 export default {
@@ -130,7 +123,7 @@ export default {
             cameras: {
                 allList: [],
                 showList: [],
-                nodata: false,
+                nodata: true,
                 totalPage: 1,
                 curPage: 1
             },
@@ -199,7 +192,7 @@ export default {
         getCameraList() {
             let _this = this;
             VideoService.getNearbyVideos(this.queryVideos).then(result => {
-                if (result.length !== 0) {
+                if (result.length && result.length !== 0) {
                     _this.cameras.nodata = false;
                     _this.cameras.allList = result;
                     _this.cameras.showList = result.slice(0, 4);
@@ -389,7 +382,6 @@ export default {
 .whole {
     min-height: 100%;
     position: relative;
-    background-color: white;
     overflow: hidden;
 }
 .body {
@@ -400,12 +392,19 @@ export default {
     position: absolute;
     right: 0vmin;
     top: -2.8vmin;
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    font-size: 1.3vmin !important;
 }
 .view {
-    border: 1px solid #b3b0b0;
-    box-shadow: 0 0 1.3vmin 0.3vmin rgba(0, 0, 0, 0.5);
-    height: 74vh;
-    margin-top: 2.6vh;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1vmin;
+    height: 78vh;
     position: relative;
 }
 .query {
@@ -419,6 +418,20 @@ export default {
 .query >>> .ivu-input {
     height: 3.2vmin;
     font-size: 1.28vmin;
+    background: transparent;
+    border-radius: 1vmin;
+    color: #fff;
+}
+
+.query >>> .ivu-select-selection {
+    background: transparent;
+    border-radius: 1vmin;
+    color: #fff;
+}
+.query >>> .ivu-input::-webkit-input-placeholder,
+.query >>> .ivu-select-placeholder,
+.query >>> .ivu-input-icon {
+    color: #fff;
 }
 .options {
     position: absolute;
@@ -428,24 +441,52 @@ export default {
 .persons {
     height: 30vh;
     width: 100%;
+    color: #fff;
+    position: relative;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
+    margin-top: 1vmin;
+    padding: 2vmin;
 }
-.persons .ivu-card-head p {
+
+.persons p {
     font-size: 1.8vmin;
     height: 2vmin;
     line-height: 2vmin;
+    color: #fff;
 }
-.persons .ivu-card-extra a {
+.persons >>> .ivu-icon {
+    font-size: 2.6vmin;
+    color: #1296db;
+}
+.history {
     font-size: 1.4vmin;
+    position: absolute;
+    top: 2vmin;
+    right: 2vmin;
+    background: -webkit-linear-gradient(left, #98bee6, #007bfc);
+    background: -o-linear-gradient(right, #98bee6, #007bfc);
+    background: -moz-linear-gradient(right, #98bee6, #007bfc);
+    background: linear-gradient(to right, #98bee6, #007bfc);
+    border-color: #33525a;
+    border-radius: 1vmin;
 }
 .persons ul {
     list-style-type: none;
     font-size: 1.6vmin;
+    margin-top: 2vmin;
+    overflow: hidden;
+}
+.persons ul li {
+    margin: 0.6vmin 0;
 }
 .cameras {
     margin-top: 1.2vmin;
     height: 46vh;
-    background-color: #f3e7d1;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
     border-radius: 4px;
+    padding: 1vmin;
 }
 .slipContent {
     position: relative;
@@ -457,7 +498,7 @@ export default {
     top: 46%;
     left: 4px;
     cursor: pointer;
-    color: #656464;
+    color: #fff;
     font-size: 2.88vmin;
 }
 .slipRight {
@@ -465,7 +506,7 @@ export default {
     top: 46%;
     right: 4px;
     cursor: pointer;
-    color: #656464;
+    color: #fff;
     font-size: 2.88vmin;
 }
 .disabled {
@@ -475,7 +516,11 @@ export default {
     color: rgb(0, 228, 236);
 }
 .monitors {
-    padding: 1.4vmin 0.6vmin 0vmin 0.6vmin;
-    height: 22.4vh;
+    padding: 0.6vmin;
+    height: 21.4vh;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
+    width: 96%;
+    margin: 0.2vmin auto;
 }
 </style>

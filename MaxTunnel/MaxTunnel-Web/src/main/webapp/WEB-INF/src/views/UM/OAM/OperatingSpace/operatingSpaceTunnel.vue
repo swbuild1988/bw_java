@@ -6,7 +6,10 @@
                     <div class="storeCard">
                         <div class="innerCard">
                             <div class="storeName" @click="chooseStore(store)">
-                                <Icon type="ios-flag" style="font-size: 3.6vmin;margin-right: 0.6vmin;"></Icon>
+                                <Icon
+                                    type="ios-flag"
+                                    style="font-size: 3.6vmin;margin-right: 0.6vmin;"
+                                ></Icon>
                                 <span>{{store.name}}</span>
                             </div>
                             <Row>
@@ -168,9 +171,9 @@ export default {
 }
 .storeInfo {
     padding: 3vmin;
-    
+
     height: 86vh;
-    background: url("../../../../assets/UM/bodyBg.png") no-repeat;
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
     background-size: 100% 100%;
 }
 .storeName {
@@ -238,7 +241,7 @@ export default {
     color: #fff;
     align-self: center;
 }
-.storeItemsWrapper{
+.storeItemsWrapper {
     overflow-y: auto;
     margin: 0.2vmin;
     height: 80vh;

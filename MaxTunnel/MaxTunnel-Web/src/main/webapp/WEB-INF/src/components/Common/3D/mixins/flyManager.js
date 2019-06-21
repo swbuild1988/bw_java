@@ -7,6 +7,7 @@ export const flyManagerMinix = {
                 flyManager: null,
             },
             inspectflyPathes: this.flyFilePathes.filter( flyRoute => flyRoute.virtualInspection == "true" ? true : false)
+            // inspectflyPathes: this.inspectionFlyFiles
             // 飞行文件
             // flyFilePath: this.ServerConfig + "/VM/font/flytest.fpf",
 
@@ -138,13 +139,10 @@ export const flyManagerMinix = {
                     flyManager.readyPromise.then(() => {
                         let route = flyManager.routes.routes
                         route[0].stopCollection.forEach((stop, index) => {
-                            if (stop.index != 0 || i != 1) {
-                                let temp1 = {}
-                                temp1.stopIndex = i + ',' + stop.index
-                                temp1.stopName = '飞行路线' + i + ' - ' +
-                                    stop.stopName.replace('Stop', '站点')
-                                stops.push(temp1)
-                            }
+                            stops.push({
+                                stopIndex: i + ',' + stop.index,
+                                stopName: stop.stopName
+                            })
                         })
                     })
                 }
@@ -157,12 +155,10 @@ export const flyManagerMinix = {
                 flyManager.readyPromise.then(() => {
                     let route = flyManager.routes.routes
                     route[0].stopCollection.forEach(stop => {
-                        if (stop.index != 0) {
-                            let temp = {}
-                            temp.stopIndex = stop.index
-                            temp.stopName = stop.stopName.replace('Stop', '站点')
-                            stops.push(temp)
-                        }
+                        stops.push({
+                            stopIndex: stop.index,
+                            stopName: stop.stopName
+                        }) 
                     })
                 })
             }

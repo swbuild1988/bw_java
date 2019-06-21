@@ -100,10 +100,6 @@
                         placeholder="请填写预置位名称"
                     />
                 </Modal>
-                <!-- <Input type="text" v-model="name" class="text" v-if="isAdd" placeholder="请填写预置位名称"/>
-    		<br>
-			<Button type="primary" @click="addConfirm" v-if="isAdd" class="btn">确定</Button>
-                <Button type="ghost" @click="cancel" class="cancel" v-if="isAdd">取消</Button>-->
             </Col>
         </Row>
         <Modal
@@ -349,13 +345,20 @@ export default {
 .camera {
     margin-top: 30px;
     padding: 6%;
-    background: url("../../../../assets/UM/videoSettingBody.png") no-repeat;
+    background: url("../../../../assets/UM/videoWrapper.png") no-repeat;
     background-size: 100% 100%;
     height: 66vh;
 }
 .backBtn {
     margin: 10px;
     cursor: pointer;
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+    color: #fff;
 }
 .positions {
     /*background-color: rgb(53,122,163);*/
@@ -380,12 +383,26 @@ export default {
     margin-left: 0.8vmin;
 }
 .posContent {
-    margin-top: 5vh;
+    margin-top: 8vmin;
     margin-bottom: 10px;
-    max-height: 40vh;
+    max-height: 38vh;
     overflow-y: auto;
     width: 88%;
     margin-left: 6%;
+}
+.posContent::-webkit-scrollbar {
+    width: 1vmin;
+    height: 0.2vmin;
+}
+.posContent::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.posContent::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 .set {
     float: right;
@@ -397,13 +414,17 @@ export default {
 .add {
     float: right;
     margin: 5% 5% 0 0;
+    background: -webkit-linear-gradient(left, #98bee6, #007bfc);
+    background: -o-linear-gradient(right, #98bee6, #007bfc);
+    background: -moz-linear-gradient(right, #98bee6, #007bfc);
+    background: linear-gradient(to right, #98bee6, #007bfc);
+    border-color: #33525a;
+    border-radius: 1vmin;
 }
 .titlePos {
     margin: 10px;
     font-size: 1.8vmin;
     font-weight: bold;
-    background: url("../../../../assets/UM/title.png") no-repeat;
-    background-size: 100% 100%;
     color: #fff;
     text-align: center;
     position: absolute;
@@ -420,10 +441,10 @@ export default {
     position: absolute;
     width: 42%;
     height: 4vmin;
-    top: -20px;
+    top: -1.4vmin;
     left: -10px;
-    background: url("../../../../assets/UM/title.png") no-repeat;
-    background-size: 100% 100%;
+    /* background: url("../../../../assets/UM/title.png") no-repeat;
+    background-size: 100% 100%; */
     color: #fff;
     text-align: center;
     padding: 8px 0;
@@ -450,7 +471,7 @@ export default {
     height: 6vh;
     padding: 1.2vmin;
     /* width: 60%;*/
-    background: url("../../../../assets/UM/title.png") no-repeat;
+    background: url("../../../../assets/UM/videoSettingList.png") no-repeat;
     background-size: 100% 100%;
     text-align: center;
 }
@@ -461,8 +482,12 @@ export default {
     width: 10vw;
     z-index: 9999;
 }
+.select >>> .ivu-select-selection {
+    background: transparent;
+    border-radius: 1vmin;
+}
 .posBox {
-    background: url("../../../../assets/UM/videoSettingBody.png") no-repeat;
+    background: url("../../../../assets/UM/wrapper2.png") no-repeat;
     background-size: 100% 100%;
     margin-top: 10px;
     border-radius: 6px;
@@ -482,7 +507,7 @@ export default {
 .controls {
     /*background-color: rgba(37,81,153,0.3);*/
     /*background-color: #f0f0f0;*/
-    background: url("../../../../assets/UM/videoSettingBody.png") no-repeat;
+    background: url("../../../../assets/UM/wrapper1.png") no-repeat;
     background-size: 100% 100%;
     height: 24vh;
     position: relative;
@@ -499,6 +524,7 @@ export default {
     line-height: 2vmin !important;
     padding-top: 0.64vmin !important;
     width: 90% !important;
+    color: #fff;
 }
 .cameraList >>> .ivu-select-placeholder {
     font-size: 1.28vmin !important;

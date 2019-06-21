@@ -1,5 +1,9 @@
 import axios from "axios";
-import { get,put,post } from "../utils/http";
+import {
+    get,
+    put,
+    post
+} from "../utils/http";
 
 const isRealData = require("../../static/serverconfig").isRealData;
 
@@ -9,7 +13,11 @@ var TunnelService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 get("/tunnels").then(res => {
-                        let {code,data,msg} = res.data;
+                        let {
+                            code,
+                            data,
+                            msg
+                        } = res.data;
                         if (code == 200) {
                             resolve(data);
                         } else {
@@ -46,7 +54,11 @@ var TunnelService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 get("tunnels/" + tunnelId + "/stores").then(res => {
-                    let {code,data,msg} = res.data;
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -124,7 +136,11 @@ var TunnelService = {
         return new Promise((resolve, reject) => {
             if (isRealData) {
                 get("tunnels/" + tunnelId + "/areas").then(res => {
-                    let {code,data,msg} = res.data;
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -151,7 +167,11 @@ var TunnelService = {
     getTunnelsTree: function () {
         return new Promise((resolve, reject) => {
             get("tunnels/tree").then(res => {
-                let {code,data,msg} = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -164,7 +184,11 @@ var TunnelService = {
     getSectionsByIds: function (ids) {
         return new Promise((resolve, reject) => {
             get("sections/batch/" + ids).then(res => {
-                let {code,data,msg} = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -177,7 +201,11 @@ var TunnelService = {
     getSectionsByStoreId: function (storeId) {
         return new Promise((resolve, reject) => {
             get("tunnels/stores/" + storeId + "/sections").then(res => {
-                let {code,data,msg} = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -190,7 +218,11 @@ var TunnelService = {
     getTunnelDetailByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
             get("tunnels/" + tunnelId + "/detail").then(res => {
-                let {  code,data,msg  } = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -203,7 +235,11 @@ var TunnelService = {
     getStoresCountByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
             get("tunnels/" + tunnelId + "/stores/count").then(res => {
-                let {  code,data,msg} = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -216,7 +252,11 @@ var TunnelService = {
     getSectionsCountByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
             get("tunnels/" + tunnelId + "/sections/count").then(res => {
-                let { code,data,msg } = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -229,7 +269,11 @@ var TunnelService = {
     getTunnelAlarmCount() {
         return new Promise((resolve, reject) => {
             get("tunnel/alarmcount").then(res => {
-                let {code,data,msg} = res.data;
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -242,7 +286,11 @@ var TunnelService = {
     areaDatagird: function (params) {
         return new Promise((resolve, reject) => {
             post("/areas/datagrid", params).then(res => {
-                    let {code,data,msg} = res.data;
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -319,7 +367,11 @@ var TunnelService = {
     getStoreTypeList: function () {
         return new Promise((resolve, reject) => {
             get("/store-type/list").then(res => {
-                    let {code,data,msg} = res.data;
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
@@ -498,43 +550,85 @@ var TunnelService = {
         });
     },
     //根据areaId和storeId获取section
-    getSectionByAreaIdStoreId(storeId,areaId) {
+    getSectionByAreaIdStoreId(storeId, areaId) {
         return new Promise((resolve, reject) => {
-            get("stores/"+storeId+"/areas/"+areaId+"/sections").then(res=>{
-                let{ code, data, msg } = res.data
-                if( code == 200 ){
+            get("stores/" + storeId + "/areas/" + areaId + "/sections").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
                     resolve(data)
-                }else{
-                    reject(msg+"地址：")
+                } else {
+                    reject(msg + "地址：")
                 }
             })
         })
     },
     //根据
-    getAreaInfo(id){
+    getAreaInfo(id) {
         return new Promise((resolve, reject) => {
-            get('areas/'+id).then(res=>{
-                let{ code, data, msg } = res.data
-                if( code == 200 ){
+            get('areas/' + id).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
                     resolve(data)
-                }else{
-                    reject(msg+"地址：")
+                } else {
+                    reject(msg + "地址：")
                 }
             })
         })
     },
-    getRelatedUnits(){
+    getRelatedUnits() {
         return new Promise((resolve, reject) => {
-            get('config/xml/units').then(res=>{
-                let{ code, data, msg } = res.data
-                if( code == 200 ){
+            get('config/xml/units').then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
                     resolve(data)
-                }else{
-                    reject(msg+"getRelatedUnits")
+                } else {
+                    reject(msg + "getRelatedUnits")
                 }
             })
         })
-    }
+    },
+    getPointLinghtData() {
+        return new Promise((resolve, reject) => {
+            // tunnel_lights
+            get('tunnel_lights').then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + "getRelatedUnits")
+                    }
+                })
+                .catch(() => {
+                    resolve([{
+                            lon: 112.524040,
+                            lat: 37.703632,
+                            height: -1.35,
+                        },
+                        {
+                            lon: 112.524040,
+                            lat: 37.703632,
+                            height: -4.35,
+                        }
+                    ])
+                })
+        })
+    },
 };
 export {
     TunnelService

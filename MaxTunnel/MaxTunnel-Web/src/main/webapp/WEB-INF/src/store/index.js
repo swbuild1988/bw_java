@@ -65,6 +65,11 @@ const UMstate = {
         tabelCrad:{
             isShowCardComponent:true,
             buttomIndex:0
+        },
+        videoDetailParams: {
+            storeId: null,
+            areaId: null,
+            videoNum: 4
         }
     },
     // 2. getters
@@ -117,6 +122,13 @@ const UMstate = {
             state.tabelCrad.isShowCardComponent = status;
             state.tabelCrad.buttomIndex = index;
             
+        },
+        setVideoDetailParams(state,data){
+            state.videoDetailParams = {
+                storeId: data.storeId,
+                areaId: data.areaId,
+                videoNum: data.videoNum
+            }
         }
     },
 };

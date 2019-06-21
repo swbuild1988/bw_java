@@ -63,12 +63,12 @@
                         <div class="toolInfo">
                             <p>仪表工具类型：{{item.typeName}}</p>
                             <p>仪表工具型号：{{item.modelName}}</p>
-                            <p>使用状态：{{item.useStatusName}}</p>
-                            <p>库存状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">
+                            <Col span="12">使用状态：{{item.useStatusName}}</Col>
+                            <Col span="12">库存状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">
                                             <span v-if="item.status==true">在库</span>
                                             <span v-if="item.status==false">出库</span>
                                         </span>
-                            </p>
+                            </Col>
                             <p>供应商：{{item.venderName}}</p>
                             <p>入库时间：{{item.inTime}}</p>
                         </div>
@@ -398,9 +398,9 @@ export default {
             },
             toolData: [],
             pageStyle: {
-                position: "absolute",
-                bottom: "20px",
-                right: "15px"
+                position: 'absolute',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             page: {
                 pageTotal: 0,
@@ -1154,6 +1154,28 @@ export default {
 }
 .operationBtn.history{
     background: linear-gradient(to left, #1fed2d, #8de391)
+}
+.list{
+    height: 66vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.list .ivu-btn-primary{
+    background: linear-gradient(to left, #2734e1, #b195ed)
+}
+.list::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.list::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.list::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

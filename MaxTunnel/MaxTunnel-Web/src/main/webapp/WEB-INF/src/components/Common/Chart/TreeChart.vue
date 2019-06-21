@@ -52,7 +52,8 @@ export default {
                                 position: 'top',
                                 verticalAlign: 'middle',
                                 align: 'center',
-                                fontSize: 16
+                                fontSize: 16,
+                                color: '#ccc'
                             }
                         },
 

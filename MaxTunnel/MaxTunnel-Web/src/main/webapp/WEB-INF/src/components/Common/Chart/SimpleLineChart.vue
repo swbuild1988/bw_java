@@ -1,5 +1,5 @@
 <template>
-  <div class='SimpleLine' :id=id></div>
+    <div class="SimpleLine" :id="id"></div>
 </template>
 
 <script>
@@ -19,6 +19,11 @@ export default {
             type: String
         }
     },
+    watch: {
+        title() {
+            this.redraw();
+        }
+    },
     data() {
         return {
             myChart: {},
@@ -27,7 +32,7 @@ export default {
             series: [],
             option: {
                 title: {
-                    text: this.title,
+                    text: this.title
                 },
                 textStyle: {
                     color: "rgba(255, 255, 255, 0.3)"
@@ -77,12 +82,17 @@ export default {
     components: {},
     mounted() {
         this.init();
-        this.refreshData();
     },
     methods: {
         init() {
             this.drawSimpleLine();
-            this.fetchData(this.requestUrl);
+            this.fetchData();
+            window.addEventListener("resize", this.myChart.resize);
+            window.addEventListener("resize", this.redraw);
+        },
+        redraw() {
+            this.drawSimpleLine();
+            this.fetchData();
         },
         drawSimpleLine() {
             let _this = this;
@@ -95,47 +105,82 @@ export default {
             if (_this.parameters.option) {
                 _this.myChart.setOption(_this.parameters.option);
             }
-            window.addEventListener("resize", _this.myChart.resize);
         },
-        fetchData(requestUrl) {
-            let _this = this;
-            _this.axios.get(requestUrl).then(result => {
-                let { code, data } = result.data;
-                if (code == 200) {
-                    let newData = data.reduce((init, item) => {
-                        return {
-                            xData:
-                                init.xData == undefined
-                                    ? [].concat(item.key)
-                                    : [].concat(init.xData, item.key),
-                            yData:
-                                init.yData == undefined
-                                    ? [].concat(item.val)
-                                    : [].concat(init.yData, item.val)
-                        };
-                    }, {});
-                    if (
-                        JSON.stringify(newData.xData) !=
-                            JSON.stringify(_this.xData) ||
-                        JSON.stringify(newData.yData) !=
-                            JSON.stringify(_this.xData)
-                    ) {
-                        _this.xData = newData.xData;
-                        _this.yData = newData.yData;
-                        _this.myChart.setOption({
-                            xAxis: { data: _this.xData },
-                            series: { data: _this.yData }
-                        });
+        fetchData() {
+            if (this.parameters.params) {
+                this.axios
+                    .post(this.requestUrl, this.parameters.params)
+                    .then(result => {
+                        let { code, data } = result.data;
+                        if (code == 200) {
+                            let newData = data.reduce((init, item) => {
+                                return {
+                                    xData:
+                                        init.xData == undefined
+                                            ? [].concat(
+                                                  new Date(item.key).format(
+                                                      "yyyy-MM-dd"
+                                                  )
+                                              )
+                                            : [].concat(
+                                                  init.xData,
+                                                  new Date(item.key).format(
+                                                      "yyyy-MM-dd"
+                                                  )
+                                              ),
+                                    yData:
+                                        init.yData == undefined
+                                            ? [].concat(item.val)
+                                            : [].concat(init.yData, item.val)
+                                };
+                            }, {});
+                            if (
+                                JSON.stringify(newData.xData) !=
+                                    JSON.stringify(this.xData) ||
+                                JSON.stringify(newData.yData) !=
+                                    JSON.stringify(this.xData)
+                            ) {
+                                this.xData = newData.xData;
+                                this.yData = newData.yData;
+                                this.myChart.setOption({
+                                    xAxis: { data: this.xData },
+                                    series: { data: this.yData }
+                                });
+                            }
+                        }
+                    });
+            } else {
+                this.axios.get(requestUrl).then(result => {
+                    let { code, data } = result.data;
+                    if (code == 200) {
+                        let newData = data.reduce((init, item) => {
+                            return {
+                                xData:
+                                    init.xData == undefined
+                                        ? [].concat(item.key)
+                                        : [].concat(init.xData, item.key),
+                                yData:
+                                    init.yData == undefined
+                                        ? [].concat(item.val)
+                                        : [].concat(init.yData, item.val)
+                            };
+                        }, {});
+                        if (
+                            JSON.stringify(newData.xData) !=
+                                JSON.stringify(this.xData) ||
+                            JSON.stringify(newData.yData) !=
+                                JSON.stringify(this.xData)
+                        ) {
+                            this.xData = newData.xData;
+                            this.yData = newData.yData;
+                            this.myChart.setOption({
+                                xAxis: { data: this.xData },
+                                series: { data: this.yData }
+                            });
+                        }
                     }
-                }
-            });
-        },
-        //定时刷新数据
-        refreshData() {
-            let _this = this;
-            // setInterval(() => {
-            //   _this.fetchData(_this.requestUrl);
-            // }, _this.intervalTime)
+                });
+            }
         }
     }
 };

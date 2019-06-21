@@ -24,8 +24,6 @@
                         style="width: 60%"
                         @on-change="handleStopChanged"
                     >
-                        <Option value="1,0" v-if="defaultOptionFlag == 0">飞行路径1 - 站点1</Option>
-                        <Option value="0" v-if="defaultOptionFlag == 1">站点1</Option>
                         <Option
                             v-for="(item,index) in list.stops"
                             :key="index"
@@ -34,9 +32,9 @@
                     </Select>
                 </Col>
                 <Col span="6" style="text-align: right;margin-top: -0.5vmin;">
-                    <Button type="primary" @click="isManual = false">手动</Button>
-                    <Button type="primary" @click="isManual = true">自动</Button>
-                    <Button type="primary" icon="compose" @click="edit">编辑</Button>
+                    <Button type="primary" @click="isManual = false" class="manual">手动</Button>
+                    <Button type="primary" @click="isManual = true" class="auto">自动</Button>
+                    <Button type="primary" icon="compose" @click="edit" class="edit">编辑</Button>
                 </Col>
             </Row>
         </div>
@@ -130,33 +128,6 @@ export default {
                 storeName: ""
             }
         };
-    },
-    beforeRouteLeave(to, from, next) {
-        if (
-            to.name == "人员定位详情" ||
-            to.name == "巡检计划总览" ||
-            to.name == "设备管理主页" ||
-            to.name == "管廊环境监控列表" ||
-            to.name == "管理安防监控列表" ||
-            from.name == "巡检计划总览" ||
-            from.name == "设备管理主页" ||
-            from.name == "设备详情" ||
-            from.name == "人员定位详情" ||
-            from.name == "管廊安防监控列表" ||
-            from.name == "管廊环境监控列表" ||
-            from.name == "管廊环境监控详情" ||
-            from.name == "管廊安防监控详情"
-        ) {
-            from.meta.keepAlive = true;
-            to.meta.keepAlive = true;
-            this.$destroy();
-            next();
-        } else {
-            from.meta.keepAlive = false;
-            to.meta.keepAlive = false;
-            this.$destroy();
-            next();
-        }
     },
     mounted() {
         let data = this.$refs.smViewer.getRoutes();
@@ -356,5 +327,29 @@ export default {
     font-size: 1vmin;
     width: 20%;
     right: 6%;
+}
+.manual {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+}
+.auto {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+}
+.edit {
+    background-color: -webkit-linear-gradient(left, #bcdca9, #6be421);
+    background: -o-linear-gradient(right, #bcdca9, #6be421);
+    background: -moz-linear-gradient(right, #bcdca9, #6be421);
+    background: linear-gradient(to right, #bcdca9, #6be421);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
 }
 </style>

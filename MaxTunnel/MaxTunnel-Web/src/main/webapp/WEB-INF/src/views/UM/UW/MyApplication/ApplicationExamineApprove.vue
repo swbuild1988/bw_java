@@ -1,9 +1,10 @@
 <template>
     <div class="formBG">
+		<div class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</div>
+		<div class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</div>
+		<div class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</div>  
+		<div class="formHeight">
         <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="140" :rules="ruleValidate" @submit.native.prevent>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</h2>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</h2>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</h2>  
           <FormItem label="申请人：">
             <Input v-model="addEnterGalleryApplication.staff.name" readonly></Input>
           </FormItem>
@@ -51,6 +52,7 @@
             <Button type="gost" @click="goBack()">返回</Button>
           </FormItem>   
         </Form>
+		</div>
     </div>  
 </template>
 <script>
@@ -202,7 +204,7 @@ button {
   cursor: text;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -215,10 +217,32 @@ button {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    margin-top: -3vh;
+}
+.formHeight{
+    height: 75vh;
+    overflow-y: auto;
+}
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
@@ -238,9 +262,6 @@ button {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
     .remark textarea{
         height: 5.5vmin !important;

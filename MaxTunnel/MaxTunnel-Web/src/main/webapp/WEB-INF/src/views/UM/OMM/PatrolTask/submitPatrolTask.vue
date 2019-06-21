@@ -1,8 +1,9 @@
 <template>
     <div class="formBG">
-        <Form :model="task" :label-width="140">
-            <h2 class="formTitle" v-show="this.$route.params.isFinished!=true">提交任务执行结果</h2>
-            <h2 class="formTitle" v-show="this.$route.params.isFinished==true">任务执行结果详情</h2>
+        <div class="formTitle" v-show="this.$route.params.isFinished!=true">提交任务执行结果</div>
+        <div class="formTitle" v-show="this.$route.params.isFinished==true">任务执行结果详情</div>
+        <div class="formHeight">
+        <Form ref="task" :model="task" :rules="taskRules" :label-width="140" ENCTYPE="multipart/form-data">
             <FormItem label="所属计划：">
                 <Input type="text" v-model="task.planName" readonly></Input>
             </FormItem>
@@ -15,10 +16,10 @@
             <FormItem label="是否完成：">
                 <Input type="text" :value="task.isFinished?'完成':'未完成'" readonly></Input>
             </FormItem>
-            <FormItem label="任务开始时间：">
+            <FormItem label="任务开始时间：" prop="startTime" class="required">
                 <DatePicker type="datetime" v-model="task.startTime" placeholder="请输入巡检任务开始时间" style="width: 100%" :readonly="this.$route.params.isFinished==true"></DatePicker>
             </FormItem>
-            <FormItem label="任务结束时间：">
+            <FormItem label="任务结束时间：" prop="endTime">
                 <DatePicker type="datetime" v-model="task.endTime" placeholder="请输入巡检任务结束时间" style="width: 100%" :readonly="this.$route.params.isFinished==true"></DatePicker>
             </FormItem>
             <FormItem label="巡检步骤：">
@@ -33,53 +34,61 @@
             <FormItem label="巡检记录：">
                 <Table :columns="columns10" :data="this.task.records"></Table>
                 <Button type="dashed" long @click="handleAddRecords" icon="plus-round" v-show="this.$route.params.isFinished!=true" style="color: #fff">添加巡检记录</Button>
+                <div class="ivu-form-item-error-tip" v-show="errorTip">巡检记录不能为空</div>
             </FormItem>
             <FormItem label="巡检图片">
-                <div class="demo-upload-list" v-for="item in uploadList" :key="item.id">
-                <template v-if="item.status === 'finished'">
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                    </div>
-                </template>
-                <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-            </div>
-            <Upload
-                ref="upload"
-                :show-upload-list="false"
-                :default-file-list="defaultList"
-                :on-success="handleSuccess"
-                :format="['jpg','jpeg','png','gif']"
-                :max-size="2048"
-                :on-format-error="handleFormatError"
-                :on-exceeded-size="handleMaxSize"
-                :before-upload="handleBeforeUpload"
-                multiple
-                type="drag"
-                action="//jsonplaceholder.typicode.com/posts/"
-                class="uploadBox">
-                <div class="addIconBox">
-                    <Icon type="camera" size="20"></Icon>
+                <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+                    <template v-if="item.status === 'finished'">               
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    </template>
                 </div>
-            </Upload>
-            <Modal title="View Image" v-model="visible">
-                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
-            </Modal>
+                <image-from-url
+                    style="width: 8vmin;height: 8vmin;display: inline-block;"
+                    v-for="(item, index) in imgUrlData" :key="index"
+                    :url="item.url"
+                ></image-from-url>
+                <Upload
+                    v-show="this.$route.params.isFinished!=true" 
+                    ref="upload"
+                    :show-upload-list="false"
+                    :default-file-list="defaultList"
+                    :on-success="handleSuccess"
+                    :format="['jpg','jpeg','png']"
+                    :max-size="2048"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleMaxSize"
+                    :before-upload="handleBeforeUpload"
+                    multiple
+                    type="drag"
+                    :action=action
+                    style="display: inline-block;width:58px;">
+                    <div style="width: 58px;height:58px;line-height: 58px;">
+                        <Icon type="camera" size="20"></Icon>
+                    </div>
+                </Upload>
+                <Modal title="View Image" v-model="visible">
+                    <img :src="imgUrl" v-if="visible" style="width: 100%">
+                </Modal>
             </FormItem>
             <FormItem label="巡检描述：">
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" :readonly="this.$route.params.isFinished==true"></Input>
             </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished!=true">
+            <div style="text-align: center;margin-left: 10vmin" v-show="this.$route.params.isFinished!=true">
                 <Button type="ghost" style="margin-right: 8px"  @click="goBack()">返回 </Button>
-                <Button type="primary" @click="submitTask">提交</Button>
-            </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px" v-show="this.$route.params.isFinished==true">
+                <Button type="primary" @click="submitTask('task')" :disabled="isDisable">提交</Button>
+            </div>
+            <div style="text-align: center;margin-left: 11vmin" v-show="this.$route.params.isFinished==true">
                 <Button type="ghost"  @click="goBack()">返回 </Button>
-            </FormItem>
+            </div>
         </Form>
+        </div>
         <Modal
             v-model="showAddDefect"
             title="添加缺陷"
@@ -181,8 +190,9 @@ import expandRow from '../../../../components/UM/OMM/table-expand.vue';
 import { TunnelService } from '../../../../services/tunnelService'
 import { PatrolService } from '../../../../services/patrolService'
 import { EnumsService } from '../../../../services/enumsService'
+import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
 export default {
-    components: { expandRow },
+    components: { expandRow, ImageFromUrl },
     data(){
         return {
             defectTunnelId: 1,
@@ -290,22 +300,45 @@ export default {
             type: [],
             objs:[],
             defectLevel:[],
+            modalWidth: null,
+            saveRecords: [],
+            taskRules: {
+                startTime: [
+                    { type: 'date', required: true, message: '任务开始时间不能为空', trigger: 'change' }
+                ],
+                endTime: [
+                    { type: 'date', required: true, message: '任务结束时间不能为空', trigger: 'change' }
+                ]
+            },
+            isDisable: false,
+            errorTip: false,
+            action: null,
             defaultList: [
-                {
-                    'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                    'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                },
-                {
-                    'name': 'bc7521e033abdd1e92222d733590f104',
-                    'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                }
+                // {
+                //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
+                //     'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+                // },
+                // {
+                //     'name': 'bc7521e033abdd1e92222d733590f104',
+                //     'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+                // }
             ],
-            imgName: '',
+            imgUrl: '',
             visible: false,
             uploadList: [],
-            modalWidth: null,
-            saveRecords: []
+            imgUrlData: []
         }    
+    },
+    watch: {
+        'task.record': function(newVal, oldVal){
+            if(newVal){
+                if(newVal.length>0){
+                    this.errorTip = false
+                }else{
+                    this.errorTip = true
+                }
+            }
+        }
     },
     mounted(){
         this.task.id =  this.$route.params.id;
@@ -363,8 +396,22 @@ export default {
                 _this.Log.info(error)
             })
         //图片上传   
-        this.uploadList = this.$refs.upload.fileList; 
+        this.action = 'http://localhost:8081/MaxTunnel-Web/multifiles/'+this.task.id+'/files'
+        this.uploadList = this.$refs.upload.fileList;
         this.getModalWidth()
+        // 获取图片列表
+        PatrolService.getImgList(this.task.id).then(
+            result => {
+                result.forEach(item=>{
+                    console.log('item', item)
+                    let multifilesUrl = 'multifiles/'+item.id+'/img'
+                    this.imgUrlData.push({url: multifilesUrl})
+                })
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
     },
     methods: {
         //modal 添加巡检记录 内部+add
@@ -500,30 +547,45 @@ export default {
                     arr.push(b)
                 }
                 this.task.records=arr.concat(this.task.records)
+                if(this.task.records.length>0){
+                    this.errorTip = false
+                }else{
+                    this.errorTip = true
+                }
             })
         },
         //提交巡检任务执行结果
-        submitTask(){ 
-            if(this.task.records.length>0){
-                this.task.records.forEach(item => {
-                    if(item.id){
-
+        submitTask(name){
+            this.isDisable = true
+            setTimeout(()=>{
+                this.isDisable = false
+                this.$refs[name].validate((valid) => {
+                    if(valid&&this.task.records.length>0){
+                        this.task.records.forEach(item => {
+                            if(item.id){
+        
+                            }else{
+                                this.saveRecords.push(item)
+                            }
+                        })
+                        this.errorTip = false
+                        this.task.records = this.saveRecords
+                        this.axios.put('/inspection-tasks',this.task).then(response=>{
+                            if(this.$route.params.isFinished==undefined){
+                                this.$router.push('/UM/myNews/queryMyTask');
+                            }else{
+                                this.$router.push('/UM/myTasks/query');
+                            }
+                            // this.upload()
+                        })
+                        .catch(function(error) {
+                            console.log(error);
+                        });
                     }else{
-                        this.saveRecords.push(item)
+                        this.errorTip = true
                     }
                 })
-            }
-            this.task.records = this.saveRecords
-            this.axios.put('/inspection-tasks',this.task).then(response=>{
-                if(this.$route.params.isFinished==undefined){
-                    this.$router.push('/UM/myNews/queryMyTask');
-                }else{
-                    this.$router.push('/UM/myTasks/query');
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
+            },2000)
         },
         //返回
         goBack(){
@@ -534,16 +596,25 @@ export default {
         },
         //图片上传
         handleView (name) {
-            this.imgName = name;
+            this.imgUrl = name;
             this.visible = true;
         },
         handleRemove (file) {
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            this.$Modal.confirm({
+                title: '删除巡检图片',
+                content: '<p>确定要删除这张巡检图片吗</p>',
+                onOk: () => {
+                    const fileList = this.$refs.upload.fileList;
+                    this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+                },
+                onCancel: () => {}
+            })
         },
         handleSuccess (res, file) {
-            file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-            file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+            file.url = res.data.url
+            file.name = res.data.name
+            console.log('res.data', res.data)
+            console.log('uploadList', this.uploadList)
         },
         handleFormatError (file) {
             this.$Notice.warning({
@@ -554,14 +625,14 @@ export default {
         handleMaxSize (file) {
             this.$Notice.warning({
                 title: 'Exceeding file size limit',
-                desc: '文件' + file.name + ' 太大了，文件大小不能超过2M'
+                desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
         },
         handleBeforeUpload () {
-            const check = this.uploadList.length < 20;
+            const check = this.uploadList.length < 5;
             if (!check) {
                 this.$Notice.warning({
-                    title: '最多只能上传20张图片'
+                    title: 'Up to five pictures can be uploaded.'
                 });
             }
             return check;
@@ -669,10 +740,30 @@ export default {
     right: 3vw;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
+}
+
+.formHeight{
+    height: 77vh;
+    overflow-y: auto;
+}
+
+.formHeight::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formHeight::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 
 .formBG >>> .ivu-form-item-label{
@@ -682,10 +773,15 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    color: #fff;
+    margin-top: -3.2vmin;
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
@@ -693,11 +789,11 @@ export default {
         padding: 1vmin 2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
-        width: 13vmin !important;
+        width: 14vmin !important;
         line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 13vmin !important;
+        margin-left: 14vmin !important;
         line-height: 4.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -721,9 +817,6 @@ export default {
     }
     .ivu-upload-drag {
         border: 0.1vmin dashed #dddee1;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
     .ivu-checkbox >>> .ivu-checkbox-inner{
         width: 1.4vmin !important;

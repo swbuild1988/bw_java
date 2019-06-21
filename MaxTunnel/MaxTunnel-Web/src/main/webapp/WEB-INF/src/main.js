@@ -31,8 +31,6 @@ Vue.use(vueXlsxTable, {
 Vue.prototype.RouterBase = serverconfig.RouterBase;
 
 router.base = Vue.prototype.RouterBase;
-sessionStorage.setItem("refreshAddress", "");
-sessionStorage.setItem("selectedName", "");
 
 Vue.config.productionTip = false;
 

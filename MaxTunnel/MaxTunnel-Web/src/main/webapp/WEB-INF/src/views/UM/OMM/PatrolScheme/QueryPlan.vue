@@ -26,6 +26,7 @@
             </Col>
             <Col span="4">
                 <Button type="primary" icon="ios-search" @click="conditionChange()">查询</Button>
+                <Button type="primary" icon="plus-round" @click="goToMoudle1">制定</Button>
             </Col>
         </Row>
         </div>
@@ -65,10 +66,8 @@
                 </Col>
             </Row>
         </div>
-        <div class="page">
-        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
+        <Page class="page" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             :page-size-opts=[12,24,36] placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
-        </div>
     </div>
 </template>
 <script>
@@ -106,8 +105,8 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '20px',
-                right: '15px'
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             isNullData:false
         };
@@ -184,6 +183,15 @@ export default {
         },
         goToMoudle: function(path) {
             this.$router.push(path);
+        },
+        //添加
+        goToMoudle1: function(){
+            this.$router.push({
+                name: "添加巡检计划",
+                params: {
+                    tunnelId: this.tunnelId
+                }
+            })
         },
         // type 1:查看， 2：编辑
         goToMoudle2: function(index, type) {
@@ -278,7 +286,7 @@ export default {
     padding-top: 1vmin;
 }
 .details-top{
-    font-size: 3.5vmin;
+    font-size: 2.2vmin;
     font-weight: 700;
     text-align: center;
     color: #fff;
@@ -325,7 +333,7 @@ export default {
     font-size: 1.6vmin;
 }
 
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.ivu-select.ivu-select-single >>> .ivu-select-selected-value{
     color: #fff;
 }
 
@@ -366,6 +374,23 @@ export default {
     line-height: 3.5vmin;
 }
 
+.list{
+    overflow-y: auto;
+}
+.list::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.list::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.list::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
 
 @media (min-width: 1921px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

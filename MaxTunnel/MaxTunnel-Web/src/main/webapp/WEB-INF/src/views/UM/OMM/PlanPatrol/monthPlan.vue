@@ -106,8 +106,8 @@ export default {
             },
             pageStyle:{
                 position: 'absolute',
-                bottom: '10px',
-                right: '15px'
+                bottom: '2vmin',
+                right: '2.5vmin'
             },
             tunnels: []
         }

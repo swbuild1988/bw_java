@@ -61,7 +61,7 @@
                             </Col>
                         </Row>
                     </Col>
-                    <Col span="23" offset="1">
+                    <Col span="22" offset="1">
                         <Table
                             size="small"
                             stripe
@@ -144,7 +144,7 @@ h1 {
 .table .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .table .ivu-table-wrapper >>> .ivu-table:before,
 .table .ivu-table-wrapper >>> .ivu-table:after {
@@ -330,7 +330,7 @@ export default {
                 parameters: {
                     option: {
                         title: {
-                            text: "管廊平均能耗",
+                            text: "管廊平均能耗(千瓦时/KM)",
                             textStyle: {
                                 fontWeight: "normal",
                                 color: "#fff"

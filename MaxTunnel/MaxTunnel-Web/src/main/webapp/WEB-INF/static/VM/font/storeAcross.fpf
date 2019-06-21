@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SceneRoute xmlns="http://www.supermap.com.cn/ugc60">
-<route name="飞行路线_1" speed="200" lineType="0" showroutestop="True" showrouteline="True" altitudefree="False" headingfree="False" tiltfree="False" flycircle="False" alongline="False">
+<route name="古城大街虚拟巡检" speed="200" lineType="0" showroutestop="True" showrouteline="True" altitudefree="False" headingfree="False" tiltfree="False" flycircle="False" alongline="False">
 <style>
 <geostyle3d>
 <linecolor>RGBA(147,112,219,255)</linecolor>
@@ -9,7 +9,7 @@
 <bottomAltitude>0.00</bottomAltitude>
 </geostyle3d>
 </style>
-<routestop name="Stop1" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-18区-燃气舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.51658666</longitude>
 <latitude>37.70587508</latitude>
@@ -35,7 +35,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop2" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-19区-燃气舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.51845836</longitude>
 <latitude>37.70533258</latitude>
@@ -61,7 +61,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop3" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-19区-综合舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.51844605</longitude>
 <latitude>37.70530576</latitude>
@@ -87,7 +87,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop4" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-20区-燃气舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52031775</longitude>
 <latitude>37.70476326</latitude>
@@ -113,7 +113,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop5" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-20区-电力舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52030544</longitude>
 <latitude>37.70473644</latitude>
@@ -139,7 +139,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop6" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-21区-电力舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52217714</longitude>
 <latitude>37.70419394</latitude>
@@ -165,7 +165,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="Stop7" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-21区-污水舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52216852</longitude>
 <latitude>37.704175165</latitude>
@@ -190,7 +190,7 @@
 <pauseTime>0</pauseTime>
 <angularSpeed>1</angularSpeed>
 </setting>
-</routestop><routestop name="Stop8" speed="0" excluded="False" viewType="camera">
+</routestop><routestop name="古城大街-22区-污水舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52310427</longitude>
 <latitude>37.70390401</latitude>

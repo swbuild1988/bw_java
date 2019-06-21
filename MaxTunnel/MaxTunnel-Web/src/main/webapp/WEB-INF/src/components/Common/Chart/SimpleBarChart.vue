@@ -90,7 +90,8 @@ export default {
                     textStyle: {
                         fontSize: this.getFontSize('6%'),
                         color: this.titleColor
-                    }
+                    },
+                    top: "2%"
                 },
                 tooltip: {
                     trigger: "axis",
@@ -103,7 +104,7 @@ export default {
                     left: "3%",
                     right: "4%",
                     bottom: "5%",
-                    top: '11%',
+                    top: '15%',
                     containLabel: true
                 },
                 xAxis: [

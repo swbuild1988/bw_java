@@ -97,6 +97,12 @@
                         @on-change="changePage"
                     ></Page>
                 </div>
+                <Modal v-model="planDetail.show" title="预案流程" :mask-closable="false">
+                    <div class="nodesPic">
+                        <image-from-url :url="planDetail.url"></image-from-url>
+                    </div>
+                    <div slot="footer"></div>
+                </Modal>
             </TabPane>
         </Tabs>
         <ShowStartPlan v-bind="showModal"></ShowStartPlan>
@@ -162,7 +168,9 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index);
+                                            this.show(
+                                                params.row.processInstanceId
+                                            );
                                         }
                                     }
                                 },
@@ -198,7 +206,11 @@ export default {
             tableData: [],
             allSteps: [],
             bgImg: null,
-            nodeImgSrc: null
+            nodeImgSrc: null,
+            planDetail: {
+                show: false,
+                url: null
+            }
         };
     },
     mounted() {
@@ -286,10 +298,9 @@ export default {
                     }
                 });
         },
-
-        //手动开启预案
-        startPlan() {
-            this.showModal.modalPrams.state = !this.showModal.modalPrams.state;
+        show(processInstanceId) {
+            this.planDetail.show = true;
+            this.planDetail.url = "emplans/png/" + processInstanceId;
         }
     },
     components: { ShowStartPlan, ImageFromUrl },
@@ -436,7 +447,7 @@ export default {
 .tab .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .tab .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {

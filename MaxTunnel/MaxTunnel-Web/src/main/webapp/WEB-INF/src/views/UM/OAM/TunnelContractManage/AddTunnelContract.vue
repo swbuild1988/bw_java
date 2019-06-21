@@ -184,7 +184,7 @@
                             @loaded="loadPdfHandler"
                             :src="file.src"
                         ></pdf>
-                        <div style="margin-left: 14vmin;">
+                        <div style="margin-left: 14vmin;position: relative;">
                             <Button
                                 type="primary"
                                 @click="changePdfPage(0)"
@@ -192,6 +192,7 @@
                                 class="pageTurner"
                                 v-show="file.src && file.curPage > 1"
                             >上一页</Button>
+                            <div class="pageNote">{{ file.curPage + "-" + file.totalPage}}</div>
                             <Button
                                 type="primary"
                                 @click="changePdfPage(1)"
@@ -909,7 +910,13 @@ export default {
 .form >>> .ivu-date-picker-header-label {
     font-size: 1.66vmin;
 }
-
+.pageNote {
+    font-size: 1.4vmin;
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 42%;
+}
 @media (min-width: 1921px) {
     .form >>> .ivu-date-picker-cells {
         width: 15vmin;

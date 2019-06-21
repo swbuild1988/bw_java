@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<Form class="formBG" ref="uploadPlan" :model="uploadPlan" :label-width="120" :rules="ruleValidate" @submit.native.prevent>
-			<h2 class="formTitle" style="color: white">制定巡检计划</h2>
-			<Row>
+			<div class="formTitle">制定巡检计划</div>
+			<Row class="formHeight">
 				<Col span="12" class="leftForm">
 					<div class="planContainer leftContainer" prop="planId">
 						<FormItem label="计划编号：" prop="planId">
@@ -48,8 +48,8 @@
 							<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
 							<Input v-model="approver.name" readonly></Input>
 						</FormItem>
-						<FormItem label="计划步骤：">
-							<ul style="max-height: 100px;overflow-y: auto;">
+						<FormItem label="计划步骤：" prop="steps">
+							<ul class="stepsBox">
 								<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
 									<span style="color: #fff">{{index+1}}、</span>
 									<input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
@@ -68,13 +68,13 @@
 						<Tabs class="moduleStyle" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
 							<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
 								<FormItem label="巡检年份：">
-									<Input placeholder="请选择巡检年份" style="width: 100%;"></Input>
+									<Input placeholder="请选择巡检日期" style="width: 100%;" v-model="choosedYear"></Input>
 									<yearCalender ref="getYearChild" v-on:getYearChild="getActiveYearText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></yearCalender>
 								</FormItem>
 							</TabPane>
 							<TabPane label="月份" name="name2" style="padding-left: 1vmin;">
 								<FormItem label="巡检月份：">
-									<Input placeholder="请选择巡检月份" style="width: 100%"></Input>
+									<Input placeholder="请选择巡检日期" style="width: 100%" v-model="choosedMonth"></Input>
 									<monthCalender ref="getMonthChild" v-on:getMonthChild="getActiveMonthText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></monthCalender>
 								</FormItem>
 							</TabPane>
@@ -209,6 +209,15 @@ export default {
 				callback()
 			}
 		}
+		const validateSteps = (rule, value, callback) => {
+			value.forEach(item => {
+				if(item.name==''){
+					callback(new Error('计划步骤不能为空'))
+				}else{
+					callback()
+				}
+			})
+		}
 		return {
 			// 页面类型 1：查看 2：编辑 3：新增
 			pageType: 1,
@@ -284,6 +293,9 @@ export default {
 				],
 				inspectionObject: [
 					{ type: 'number', required: true, message: '巡检对象不能为空', trigger: 'change'}
+				],
+				steps: [
+					{ validator: validateSteps, trigger: 'blur' }
 				]
 			},
 			inspectWay: [],
@@ -371,7 +383,9 @@ export default {
 				startArea: null,
 				endArea: null
 			},
-			pathCon: null
+			pathCon: null,
+			choosedMonth: null,
+			choosedYear: null
 		};
     },
     watch: {
@@ -385,10 +399,15 @@ export default {
 					}
 				}
 			}
+		},
+		'$route': function () {
+			//2. $route发生变化时再次赋值planId
+			this.uploadPlan.tunnelId = this.$route.params.tunnelId;
 		}
     },
     mounted() {
-      	this.pageType = this.$route.params.type;
+		this.pageType = this.$route.params.type;
+		this.uploadPlan.tunnelId = this.$route.params.tunnelId
 		//从数据库读取所属管廊select的option选项
 		TunnelService.getTunnels().then(
 			result => {
@@ -535,11 +554,14 @@ export default {
 		//拿到选择的yyyy
 		getActiveYearText(childValue){
 			this.uploadPlan.tasks = [];
+			let str = ''
 			for (var i = 0; i < childValue.length; i++) {
 				this.uploadPlan.tasks.push({
 					taskTime: childValue[i]
 				})
+				str += new Date(childValue[i]).format('yyyy-MM-dd')+'，'
 			}
+			this.choosedYear = str.substring(0, str.length-1)
 		},
 		//拿到选择的yyyy-MM-dd
 		getActiveText(childValue) {
@@ -553,11 +575,14 @@ export default {
 		//拿到选择的yyyy-MM
 		getActiveMonthText(childValue){
 			this.uploadPlan.tasks = [];
+			let str = ''
 			for (var i = 0; i < childValue.length; i++) {
 				this.uploadPlan.tasks.push({
 					taskTime: childValue[i]
 				})
+				str += new Date(childValue[i]).format('yyyy-MM-dd')+'，'
 			}
+			this.choosedMonth = str.substring(0, str.length-1)
 		},
 		getSessionUserName: function () {
 			this.uploadPlan.requestStaffId = sessionStorage.UMUerId
@@ -868,7 +893,7 @@ export default {
 	}
 
 	.formBG{
-		background: url("../../../../assets/UM/infoBox.png") no-repeat;
+		background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
 		background-size: 100% 100%;
 		padding-top: 3vmin;
 		padding-bottom: 3vmin;
@@ -882,10 +907,10 @@ export default {
 		color: #00fff6;
 		content: '★';
 		display: inline-block;
-		margin-right: 4px;
+		margin-right: 0.4vmin;
 		line-height: 1;
 		font-family: SimSun;
-		font-size: 12px;
+		font-size: 1.2vmin;
 	}
 
 	.detailsBtn{
@@ -916,6 +941,9 @@ export default {
 	.moduleStyle>>>.ivu-tabs-nav .ivu-tabs-tab-active{
 		color: #2d8cf0
 	}
+	.moduleStyle>>>.ivu-picker-panel-body{
+		color: rebeccapurple;
+	}
 	.planBtn{
 		display: inline-block;
 		margin-right: 0.8vmin;
@@ -936,19 +964,52 @@ export default {
 	.createBtn{
 		background: linear-gradient(to right, #a7ecd7, #1af6b0)
 	}
+	.formTitle{
+		color: white;
+		width: auto;
+		text-align: center;
+		margin-left: 45%;
+		margin-right: 45%;
+		font-size: 2.2vmin;
+		margin-top: -3.2vmin;
+	}
+	.formHeight{
+		height: 73vh;
+		overflow-y: auto;
+	}
+	.stepsBox{
+		max-height: 100px;
+		overflow-y: auto;
+	}
+	.formHeight::-webkit-scrollbar,.stepsBox::-webkit-scrollbar{
+		width: 4px;
+		height: 4px;
+	}
+	.formHeight::-webkit-scrollbar-thumb,.stepsBox::-webkit-scrollbar-thumb{
+		border-radius: 5px;
+		-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+		background: rgba(0, 0, 0, 0.2)
+	}
+	.formHeight::-webkit-scrollbar-track,.stepsBox::-webkit-scrollbar-track{
+		border-radius: 0;
+		-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+		background: rgba(0, 0, 0, 0.1)
+	}
 
 	@media (min-width: 2200px) {
-		h2 {
-			font-size: 2.4vmin;
+		.formTitle{
+			margin-top: -1.2vmin;
 		}
-
+		.formHeight{
+			height: 76vh;
+		}
 		.ivu-form-item>>>.ivu-form-item-label {
-			/* width: 15vmin !important; */
+			width: 15vmin !important;
 			line-height: 2.5vmin;
 		}
 
 		.ivu-form-item>>>.ivu-form-item-content {
-			/* margin-left: 15vmin !important; */
+			margin-left: 15vmin !important;
 			line-height: 4.5vmin;
 		}
 

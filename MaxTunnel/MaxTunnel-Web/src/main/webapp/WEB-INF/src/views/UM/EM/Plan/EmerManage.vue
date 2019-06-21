@@ -40,7 +40,7 @@
             </Col>
         </Row>
         <div class="list">
-            <Table :columns="emerManageColumn" :data="emerManageData"></Table>
+            <Table :columns="emerManageColumn" :data="emerManageData" :height="tableHeight"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
         placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -205,8 +205,9 @@ export default {
             },
             pageStyle: {
                 position: "absolute",
-                bottom: "20px",
-                right: "15px"
+                bottom: "1vmin",
+                right: "2vmin",
+                color: '#fff'
             },
             isShowAdd: false,
             personInfo: {
@@ -241,10 +242,12 @@ export default {
                     { required: true, message: '联系方式不能为空', trigger: 'blur' },
                     { validator: this.validatePhone, trigger: 'blur' }
                 ]
-            }
+            },
+            tableHeight: 600
         }
     },
     mounted(){
+        this.tableHeight = window.innerHeight/100*65
         EnumsService.getPlanType().then(
             result => {
                 this.plans = result
@@ -314,7 +317,6 @@ export default {
             this.queryMembers()
         },
         edit(id){
-            console.log("111")
             this.isShowAdd = true
             this.modalTitle = '修改人员信息'
             PlanPersonService.getDetailsById(id).then(
@@ -434,6 +436,11 @@ export default {
 </script>
 <style scoped>
 /* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
 .list .ivu-table-wrapper>>>.ivu-table{
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
@@ -443,7 +450,7 @@ export default {
 }
 .list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
@@ -451,6 +458,26 @@ export default {
 }
 .queryConditionWidth{
     width: 60%;
+}
+.list .ivu-table-wrapper>>>.ivu-table-tip table{
+    width: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 </style>
 

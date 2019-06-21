@@ -4,9 +4,8 @@ import { get,put,del,post } from "../utils/http";
 var DataAnalysisService = {
     //查询监测对象数据
 	getMonitorData: function (prams) {
-		prams.requestUrl = "data-analyse/measvalue/datagrid";
 		return new Promise((resolve, reject) => {
-			post(prams.requestUrl, prams).then((res) => {
+			post('data-analyse/measvalue/datagrid', prams).then((res) => {
 				let {code, msg, data} = res.data;
 				if (code == 200) {
 					resolve(data);

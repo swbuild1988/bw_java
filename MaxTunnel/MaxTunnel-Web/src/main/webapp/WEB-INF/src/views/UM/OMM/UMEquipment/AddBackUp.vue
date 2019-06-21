@@ -1,7 +1,7 @@
 <template>
     <div class="formBG">
-        <Form ref="addBackUp" :model="addBackUp" :rules="validateRules" :label-width="120" @submit.native.prevent>
-            <h1 class="formTitle">添加备品备件</h1>
+        <div class="formTitle">添加备品备件</div>
+        <Form class="formHeight" ref="addBackUp" :model="addBackUp" :rules="validateRules" :label-width="120" @submit.native.prevent>
             <FormItem label="备品名称：" prop="name">
                 <Input type="text" v-model="addBackUp.name"></Input>
             </FormItem>
@@ -181,11 +181,35 @@
     bottom: 2vh;
     right: 3vw;
 }
+.formTitle{
+    margin-top: -3.5vh;
+    font-size: 2.2vmin;
+}
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
+}
+
+.formHeight{
+    height: 76vh;
+    overflow-y: auto;
+}
+
+.formBG::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.formBG::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.formBG::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
 }
 
 .formBG >>> .ivu-form-item-label,.formTitle{
@@ -195,35 +219,14 @@
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 @media (min-width: 2200px){
-    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
-    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
-    {
-        height: 4vmin;
-        line-height: 4vmin;
-        font-size: 1.4vmin;
-    }
-    .ivu-form.ivu-form-label-right{
-        width: 50%;
-    }
-    .ivu-form-item >>> .ivu-form-item-label{
-        width: 15vmin !important;
-        line-height: 2.5vmin;
-    }
-    .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 15vmin !important;
-        line-height: 4.5vmin;
-    }
-    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
-        height: 4vmin;
-        line-height: 4vmin;
-        font-size: 1.4vmin;
+        /* font-size: 1.4vmin;
         width: 100%;
-    }
+    } */
 }
 </style>

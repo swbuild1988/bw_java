@@ -21,7 +21,7 @@ html {
 .allDiv {
 	min-height: 100%;
 	position: relative;
-	padding-bottom: 70px;
+	/* padding-bottom: 70px; */
 }
 
 .conditions {
@@ -47,7 +47,7 @@ html {
 .conditions .ivu-input,
 .queryCondition .ivu-input {
 	background: transparent;
-	border-radius: 10px;
+	border-radius: 1vmin;
 	color: #fff;
 }
 
@@ -82,10 +82,11 @@ html {
 
 .list {
 	/* background: #fff; */
-	margin-top: 10px;
-	padding: 10px;
+	margin-top: 1vmin;
+	padding: 1vmin;
 	position: relative;
-	padding-bottom: 50px;
+	/* padding-bottom: 7vmin !important; */
+	height: 70vh;
 }
 
 .containerBox {
@@ -173,11 +174,38 @@ body {
     background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
     border: none
 }
+.ivu-select-dropdown{
+	background: rgba(50, 103, 156);
+	color: #fff;
+	z-index: 1001;
+}
+.ivu-select-dropdown::-webkit-scrollbar {
+    width: 1vmin; 
+    height: 0.2vmin;
+}
+.ivu-select-dropdown::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-select-dropdown::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
+.ivu-select-item,.ivu-picker-confirm-time{
+	color: #fff;
+}
+.ivu-select-item-focus{
+	background: rgba(255, 255, 255, 0.6) !important;
+	color: #333;
+}
+.ivu-select-item:hover{
+	background: rgba(255, 255, 255, 0.8);
+	color: #333;
+}
 
 @media (min-width: 2200px) {
-	.allDiv {
-		padding-bottom: 4vmin;
-	}
 
 	.ivu-date-picker-cells {
 		width: 21vmin !important;
@@ -193,6 +221,8 @@ body {
 	.ivu-date-picker-cells span {
 		width: 2.8vmin !important;
 		height: 2.8vmin !important;
+		font-size: 1.2vmin;
+		color: #495060;
 	}
 
 	.ivu-date-picker-cells span em {
@@ -206,6 +236,8 @@ body {
 	.ivu-date-picker-header {
 		height: 3.2vmin !important;
 		line-height: 3.2vmin !important;
+		font-size: 1.2vmin;
+		color: #495060;
 	}
 
 	.ivu-picker-panel-icon-btn {
@@ -219,6 +251,10 @@ body {
 		font-size: 1.4vmin;
 	}
 
+	/* 时 分 秒 */
+	.ivu-date-picker .ivu-select-dropdown .ivu-btn-small{
+		font-size: 1.5vmin !important;
+	}
 	/* time */
 	.ivu-picker-panel-content .ivu-picker-panel-content .ivu-time-picker-cells-with-seconds {
 		min-width: 21.6vmin;
@@ -417,5 +453,9 @@ body {
 		height: 0.8vmin;
 		top: 0.1vmin;
 		left: 0.4vmin;
+	}
+	/* select */
+	.ivu-select.ivu-select-single >>> .ivu-select-selected-value{
+		color: #fff;
 	}
 }

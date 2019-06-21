@@ -179,7 +179,9 @@
                         }
                     },
                     seriesColor: ['#c23531', '#e5c52f', '#6bade1', '#6fe46c', '#e06ce4', '#e48e6c'],
-                    legendColor: '#ffffff'
+                    legendColor: '#ffffff',
+                    titleSize: '6%',
+                    legendTextSize: '6%'
                 },
                 //本月计划占比
                 currMonthRatio: null,
@@ -192,9 +194,10 @@
                 listHeight: 0,
                 polylineAttr:{
 					viewer:Vue.prototype.$viewer,
-					id:null,
+					ids:[],
 					type:'patrolShemeRoute',
-				}
+                },
+                polylineID:null
             };
         },
         components: {
@@ -314,25 +317,25 @@
                     }
                 });
             },
-            removePolyline(){
+            removePolyline(polylineID){
 				let { polylineAttr } = this;
 				
-				if(!!polylineAttr.id){
-					let entitys  = polylineAttr.viewer.entities.getById(polylineAttr.id);
+				if(!!polylineID){
+					let entitys  = polylineAttr.viewer.entities.getById(polylineID);
 				
 					if( Array.isArray(entitys) && entitys.length ){
-						entitys.forEach(entity => this.removeCommonEntity)
+						entitys.forEach(entity => removeCommonEntity.bind(this,entitys,polylineID))
 					}
                     else{
-						this.removeCommonEntity(entitys)
+						this.removeCommonEntity(entitys,polylineID)
 					}
 					
 				}
 			},
-			removeCommonEntity(entitys){
+			removeCommonEntity(entitys,polylineID){
 				let { polylineAttr } = this;
 
-				return entitys.messageType == polylineAttr.type && polylineAttr.viewer.entities.removeById(polylineAttr.id)
+				return entitys.messageType == polylineAttr.type && polylineAttr.viewer.entities.removeById(polylineID)
             },
             getRouteList(){
                 let params = {}
@@ -374,7 +377,7 @@
                 )
             },
             getCurRoute(routeInfo) {
-
+                console.log('routeInfo',routeInfo)
 				let params = {}
 				params = {
                     polyline:{
@@ -384,11 +387,23 @@
                     }
                 }
 
-				this.removePolyline();
-
+                // this.addPolyline(routeInfo.id,params);
+                this.polylineAttr.ids.push(routeInfo.id); 
+    
 				this.$refs.TestSmViewer.addPolylineEntity({id:routeInfo.id,messageType:this.polylineAttr.type},params)
 				
-            }
+            },
+            // addPolyline(id,params){
+            //     this.polylineID = id
+			// 	this.$refs.TestSmViewer.addPolylineEntity({id:id,messageType:this.polylineAttr.type},params)
+            // }
+        },
+        beforeDestroy(){
+            let { ids } = this.polylineAttr;
+            if(typeof ids !== 'object') return;
+
+            ids.forEach( id => this.removePolyline(id))
+            
         }
     };
 </script>
@@ -495,6 +510,21 @@
         font-size: 2.2vmin;
         color: #fff;
     }
+
+    .card .details::-webkit-scrollbar{
+		width: 4px;
+		height: 4px;
+	}
+	.card .details::-webkit-scrollbar-thumb{
+		border-radius: 5px;
+		-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+		background: rgba(0, 0, 0, 0.2)
+	}
+	.card .details::-webkit-scrollbar-track{
+		border-radius: 0;
+		-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+		background: rgba(0, 0, 0, 0.1)
+	}
 
     @media (min-width: 2200px) {
 

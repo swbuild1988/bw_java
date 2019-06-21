@@ -42,7 +42,7 @@
             </div>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total   
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 20px; right: 15px;"></Page>   
+                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator style="position: absolute;bottom: 1vmin; right: 2vmin;"></Page>   
     </div>    
 </template>
 <script>
@@ -275,6 +275,23 @@ export default {
     }
     .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
         color: #fff;
+    }
+    .list{
+        overflow-y: auto;
+    }
+    .list::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .list::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .list::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
     }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

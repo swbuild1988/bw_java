@@ -74,6 +74,7 @@
         <div class="area_length">
             <strong>里程:</strong>
             {{ areaLeath }}
+            <strong v-if="areaLeath">{{areaLeathUnit}}</strong>
         </div>
         <tabs :tabList="tabs.tabList" :tabIndex="tabsIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="isShowComponent">
@@ -115,7 +116,7 @@
                                         <Icon
                                             class="screens"
                                             type="android-apps"
-                                            @click.native="handleScreensNum(9)"
+                                            @click.native=" (9)"
                                         ></Icon>
                                     </div>
                                 </Poptip>
@@ -268,6 +269,7 @@ export default {
             ],
             objTableDate: [],
             areaLeath: "",
+            areaLeathUnit:"米",
             tabs: {
                 tabList: [
                     {
@@ -826,7 +828,6 @@ export default {
     height: 0.2vmin;
     background-color: rgb(45, 140, 240);
 }
-
 .areas {
     margin-top: 0.5%;
     margin-left: 1%;
@@ -848,20 +849,13 @@ export default {
 }
 
 @media (min-width: 1921px) {
-    .common_spen {
-        font-size: 1.6rem;
-    }
     .area_length {
-        font-size: 1.6rem;
         top: 1.7%;
     }
 }
 @media (max-width: 1920px) {
-    .common_spen {
-        font-size: 0.7rem;
-    }
+
     .area_length {
-        font-size: 0.7rem;
         top: 1.7%;
     }
 }

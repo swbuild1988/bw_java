@@ -213,7 +213,32 @@ let PatrolService = {
                 }
             })
         })
-    }
+    },
+    //获取img列表
+    getImgList(id){
+        return new Promise((resolve, reject) => {
+            get('inspection-tasks/'+id+'/multifiles').then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-tasks/"+id+"/multifiles")
+                }
+            })
+        })
+    },
+    // getImg(id){
+    //     return new Promise((resolve, reject) => {
+    //         get('multifiles/'+id+'/img').then(res=>{
+    //             let{ code, data, msg } = res.data
+    //             if( code == 200 ){
+    //                 resolve(data)
+    //             }else{
+    //                 reject(msg+"地址：multifiles/"+id+"/img")
+    //             }
+    //         })
+    //     })
+    // }
 };
 
 export {

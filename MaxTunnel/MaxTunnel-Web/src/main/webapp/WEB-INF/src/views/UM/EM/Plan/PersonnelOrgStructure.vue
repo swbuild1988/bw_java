@@ -1,6 +1,6 @@
 <template>
-    <Tabs value="通风预案">
-        <TabPane v-for="(item, index) in treeData" :label="item.name" :name="item.name" :key="item.name">
+    <Tabs value="通风预案" class="boxBG">
+        <TabPane v-for="(item, index) in treeData" :label="item.name" :name="item.name" :key="item.name" style="color: #fff;">
             <treeChart :data="item" :id='"treeId"+index'></treeChart>
         </TabPane>
     </Tabs>
@@ -17,25 +17,6 @@ export default {
 	},
     data(){
         return{
-            // treeChartData: {
-                
-            //     data: {
-            //         name: '通风预案',
-            //         level: 1,
-            //         children: [
-            //             { name: '安全小组1-张三-1564112222', level: 2-1, children: [
-            //                 { name: '组员-李四-156442222',  value: 3589 },
-            //                 { name: 'graph', value: 8833 }
-            //             ] },
-            //             { name: "display", level: 2-1, children: [
-            //                 {name: "DirtySprite", value: 8833, level: 2-1-1 },
-            //                 {name: "LineSprite", value: 1732, level: 2-1-2 },
-            //                 {name: "RectSprite", value: 3623, level: 2-1-3 },
-            //                 {name: "TextSprite", value: 10066, level: 2-1-4 }
-            //             ] }
-            //         ]
-            //     },
-            // },
             id: 'treeChart',
             treeData: []
         }
@@ -54,6 +35,18 @@ export default {
 }
 </script>
 <style scoped>
+.boxBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+    height: 84vh;
+}
+.boxBG.ivu-tabs >>> .ivu-tabs-tab{
+    color: #fff;
+}
+.boxBG.ivu-tabs >>> .ivu-tabs-tab:hover {
+    color: #57a3f3;
+}
 .addPersonBtn{
     position: absolute;
     z-index: 999;

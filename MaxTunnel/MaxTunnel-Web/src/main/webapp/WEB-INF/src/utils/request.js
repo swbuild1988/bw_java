@@ -24,7 +24,9 @@ export default async () => {
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
             Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
             Vue.prototype.flyFilePathes = serverconfig.flyFilePathes;
+            Vue.prototype.inspectionFlyFiles = serverconfig.inspectionFlyFiles;
             Vue.prototype.refreshTime = serverconfig.refreshTime;
+            Vue.prototype.pointLinght = serverconfig.pointLinght;
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
             Vue.prototype.RouterBase = serverconfig.RouterBase;
@@ -41,10 +43,12 @@ export default async () => {
             // Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
             Vue.prototype.SuperMapConfig = result_config.data.SuperMapConfig;
             Vue.prototype.flyFilePathes = result_config.data.flyFilePathes;
+            Vue.prototype.inspectionFlyFiles = result_config.data.inspectionFlyFiles;
             Vue.prototype.refreshTime = result_config.data.refreshTime;
             Vue.prototype.VMEntityConfig = result_config.data.VMEntityConfig;
             Vue.prototype.RouterBase = result_config.data.RouterBase;
             Vue.prototype.MQServerAddress = result_config.data.MQServerAddress;
+            Vue.prototype.pointLinght = result_config.data.pointLinght;
             sessionStorage.setItem('ServerConfig', '/dist/static');
 
             // 获取VM的配置页

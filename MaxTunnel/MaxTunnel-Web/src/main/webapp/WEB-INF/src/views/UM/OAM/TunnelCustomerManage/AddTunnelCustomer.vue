@@ -317,6 +317,7 @@
                     <FormItem>
                         <div class="imgReview">
                             <image-from-url
+                                v-if="imgPreview.url.length"
                                 v-show="imgPreview.isInit"
                                 :url="imgPreview.url"
                                 style="width: 100%; height: 100%"
@@ -723,6 +724,9 @@ export default {
     border-radius: 1vmin;
     width: 29.6vmin;
     height: 16vmin;
+}
+.imgReview >>> img {
+    border-radius: 1vmin;
 }
 @media (min-width: 2200px) {
     .ivu-form-item >>> .ivu-form-item-label {

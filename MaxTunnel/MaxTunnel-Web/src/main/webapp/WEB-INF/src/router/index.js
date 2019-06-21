@@ -381,7 +381,7 @@ export const asyncRouterMap = [{
                     //     name: "能耗类别详情"
                     // },
                     {
-                        path: "substation/:id",
+                        path: "substation",
                         component: resolve =>
                             require([
                                 "@/views/UM/OAM/EnergyConsumptionManage/Substation"

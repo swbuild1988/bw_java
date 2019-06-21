@@ -65,10 +65,10 @@
                 </div>
             </div>
         </Col>
-        <Col span="11" class="chartBox">
+        <Col class="chartBox">
             <MultiBarChart v-bind="toolStatic"></MultiBarChart>
         </Col>
-        <Col span="11" offset="2" class="chartBox" style="margin-left: 10vw;">
+        <Col class="chartBox" style="margin-left: 2.5vmin;">
             <MulitBarPosiNega v-bind="inventory"></MulitBarPosiNega>
         </Col>
     </Row>    
@@ -392,9 +392,12 @@ export default {
     margin-right: -1.5em;
 }
 .chartBox{
-    width: 37vw;
+    width: 42vw;
     height: 40vh;
     margin: 5px 5px 5px 0px;
+    background: url("../../../../assets/UM/chartBG.png") no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
 }
 .ivu-table-wrapper{
     border: none;
@@ -408,7 +411,7 @@ export default {
 }
 .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
@@ -418,8 +421,9 @@ export default {
     background-size: 100% 100%;
 }
 .tableBG{
-    background: url("../../../../assets/UM/tableBG.png") no-repeat;
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
 	background-size: 100% 100%;
+    padding: 0 1%;
 }
 .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
     border-right: none;

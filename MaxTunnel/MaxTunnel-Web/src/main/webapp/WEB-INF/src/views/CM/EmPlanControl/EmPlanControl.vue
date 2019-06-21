@@ -235,8 +235,8 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '35px',
-                right: '40px'
+                bottom: '2vmin',
+                right: '2.5vmin'
             }
         }
     },

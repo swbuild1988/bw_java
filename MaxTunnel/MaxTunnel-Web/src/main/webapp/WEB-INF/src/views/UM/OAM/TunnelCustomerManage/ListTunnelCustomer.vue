@@ -29,10 +29,10 @@
                 </Col>
             </Row>
         </div>
-        <div class="list" style="margin-top: 10px;padding: 10px 0;">
+        <div class="list">
             <Tabs value="card">
                 <TabPane label="卡片" name="card">
-                    <Row>
+                    <Row class="cardStyle">
                         <Col span="6" v-for="(item,index) in companyList" :key="index">
                             <div class="infoList">
                                 <div class="company">
@@ -100,7 +100,7 @@
                     </Row>
                 </TabPane>
                 <TabPane label="表格" name="table" class="table">
-                    <Table :columns="companyColumn" :data="companyData"></Table>
+                    <Table :columns="companyColumn" :data="companyData" :height="tableHeight"></Table>
                 </TabPane>
             </Tabs>
         </div>
@@ -141,8 +141,8 @@ export default {
             payType: [],
             pageStyle: {
                 position: "absolute",
-                bottom: "20px",
-                right: "15px",
+                bottom: "1vmin",
+                right: "2.5vmin",
                 color: "#fff"
             },
             companyColumn: [
@@ -244,7 +244,8 @@ export default {
                     }
                 }
             ],
-            companyData: []
+            companyData: [],
+            tableHeight: 600
         };
     },
     computed: {
@@ -261,6 +262,7 @@ export default {
         }
     },
     mounted() {
+        this.tableHeight = (window.innerHeight / 100) * 60;
         this.queryList();
     },
     methods: {
@@ -388,7 +390,7 @@ export default {
     background: linear-gradient(to right, #7c83f2, #2734e1);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.4vmin !important;
+    font-size: 1.2vmin !important;
 }
 .del,
 .table >>> .ivu-btn:last-child {
@@ -398,7 +400,7 @@ export default {
     background: linear-gradient(to right, #e49b9b, #f61a1a);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.4vmin !important;
+    font-size: 1.2vmin !important;
 }
 .read,
 .table >>> .ivu-btn:nth-child(2) {
@@ -408,7 +410,7 @@ export default {
     background: linear-gradient(to right, #dcd77c, #cabf11);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.4vmin !important;
+    font-size: 1.2vmin !important;
 }
 
 .ivu-select,
@@ -425,9 +427,9 @@ export default {
 .ivu-page >>> .ivu-page-options-elevator {
     color: #fff;
 }
-.table {
+/* .table {
     padding-right: 4vmin;
-}
+} */
 .table .ivu-table-wrapper {
     border: none;
 }
@@ -438,7 +440,7 @@ export default {
 .table .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .table .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {
@@ -454,5 +456,40 @@ export default {
 }
 .ivu-table-cell:last-child {
     width: 20vmin;
+}
+.list {
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY {
+    overflow-x: hidden;
+}
+.cardStyle {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 60vh;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar,
+.cardStyle::-webkit-scrollbar {
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar-thumb,
+.cardStyle::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar-track,
+.cardStyle::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
+@media (min-width: 2200px) {
+    .infoList {
+        width: 95%;
+    }
 }
 </style>

@@ -177,7 +177,8 @@ export default {
                     var tmpMax = 0;
                     let newData = [
                         {
-                            value: []
+                            value: [],
+                            name: _this.parameters.option.title.text
                         }
                     ];
                     for (const iterator of data) {

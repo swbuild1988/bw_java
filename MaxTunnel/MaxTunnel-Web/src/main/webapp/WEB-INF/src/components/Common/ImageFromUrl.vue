@@ -1,7 +1,7 @@
 <template>
-    <div class="ImageFromUrl">
-        <img style="width:100%; height:100%;" v-bind:src=imgSrc>
-    </div>                
+    <div class="ImageFromUrl" v-if="imgShowFlag">
+        <img style="width:100%; height:100%;" v-bind:src="imgSrc">
+    </div>
 </template>
 
 <script>
@@ -16,7 +16,8 @@ export default {
     },
     data() {
         return {
-            imgSrc: ""
+            imgSrc: "",
+            imgShowFlag: false
         };
     },
     watch: {
@@ -24,21 +25,29 @@ export default {
             this.loadImage(val);
         }
     },
-    mounted(){
-        this.loadImage(this.url)
+    mounted() {
+        this.loadImage(this.url);
     },
     methods: {
         loadImage(url) {
-            axios.get(url, {responseType: "arraybuffer"}).then(response => {
-                return ("data:image/png;base64," + 
-                    btoa( new Uint8Array(response.data).reduce((data, byte) => 
-                        data + String.fromCharCode(byte),"")
-                    )
-                );
-            })
-            .then(data => {
-                this.imgSrc = data;
-            });
+            axios
+                .get(url, { responseType: "arraybuffer" })
+                .then(response => {
+                    return (
+                        "data:image/png;base64," +
+                        btoa(
+                            new Uint8Array(response.data).reduce(
+                                (data, byte) =>
+                                    data + String.fromCharCode(byte),
+                                ""
+                            )
+                        )
+                    );
+                })
+                .then(data => {
+                    this.imgSrc = data;
+                    this.imgShowFlag = true;
+                });
         }
     }
 };
@@ -46,9 +55,9 @@ export default {
 
 
 <style scoped>
-    .ImageFromUrl {
-      width: 100%;
-      height: 100%;
-    }
+.ImageFromUrl {
+    width: 100%;
+    height: 100%;
+}
 </style>
 

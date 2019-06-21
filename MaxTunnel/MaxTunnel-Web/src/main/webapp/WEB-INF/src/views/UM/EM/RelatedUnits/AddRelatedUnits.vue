@@ -1,5 +1,8 @@
 <template>
     <div class="formBG">
+        <p
+            class="formTitle"
+        >{{pageType==pageTypes.Edit ? '更新相关单位信息' : (pageType == pageTypes.Read ? '相关单位详情' : '添加相关单位')}}</p>
         <Form
             ref="addRelatedUnitsInfo"
             :model="addRelatedUnitsInfo"
@@ -7,9 +10,6 @@
             :rules="ruleValidate"
             @submit.native.prevent
         >
-            <p
-                class="formTitle"
-            >{{pageType==pageTypes.Edit ? '更新相关单位信息' : (pageType == pageTypes.Read ? '相关单位详情' : '添加相关单位')}}</p>
             <FormItem label="单位名称：" prop="name">
                 <Input
                     type="text"
@@ -86,12 +86,12 @@
                 <div class="ivu-form-item-error-tip" v-show="validateSectionName==true">请选择所属仓段</div>
             </FormItem>
             <div style="text-align: center;margin-top: 8vmin;">
+                <Button type="ghost" style="margin-right: 2vmin" @click="goBack()" class="back">返回</Button>
                 <Button
                     type="primary"
                     @click="submit('addRelatedUnitsInfo')"
                     v-show="pageType==pageTypes.Add"
                     :disabled="isDisable"
-                    style="margin-right: 2vmin"
                     class="save"
                 >提交</Button>
                 <Button
@@ -99,10 +99,8 @@
                     @click="update('addRelatedUnitsInfo')"
                     v-show="pageType==pageTypes.Edit"
                     :disabled="isDisable"
-                    style="margin-right: 8px"
                     class="save"
                 >更新</Button>
-                <Button type="ghost" @click="goBack()" class="back">返回</Button>
             </div>
         </Form>
     </div>
@@ -133,7 +131,7 @@ export default {
             isShow: false,
             sectionName: null,
             // 页面类型 1：查看 2：编辑 3：新增
-            pageType: 1,
+            pageType: 3,
             pageTypes: types.pageType,
             isDisable: false,
             ruleValidate: {
@@ -246,8 +244,10 @@ export default {
         });
     },
     mounted() {
-        this.addRelatedUnitsInfo.id = this.$route.params.id;
-        this.pageType = this.$route.params.type;
+        if (this.$route.params.id) {
+            this.addRelatedUnitsInfo.id = this.$route.params.id;
+            this.pageType = this.$route.params.type;
+        }
         let _this = this;
         TunnelService.getTunnelsTree().then(
             function(result) {
@@ -400,16 +400,43 @@ export default {
     padding: 10px 20px;
 }
 .tree {
-    background: #fff;
+    background: rgba(50, 103, 156);
     z-index: 2;
     border: 1px solid #cccccc;
+    height: 18vmin;
+    overflow-y: auto;
+}
+.tree::-webkit-scrollbar {
+    width: 1vmin;
+    height: 0.2vmin;
+}
+.tree::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.tree::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
+.tree >>> .ivu-tree-title,
+.tree >>> .ivu-tree-arrow {
+    color: #fff;
+}
+.tree >>> .ivu-tree-title:hover,
+.tree >>> .ivu-tree-title-selected {
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
 }
 .formTitle {
-    text-align: center;
+    /* text-align: center;
     margin-bottom: 4vmin;
-    margin-top: -1vmin;
-    font-size: 3.2vmin;
+    margin-top: -1vmin; */
+    font-size: 2.2vmin;
     color: #fff;
+    margin-top: -3vh;
+    text-align: center;
 }
 .save {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
@@ -445,7 +472,9 @@ export default {
 }
 
 .ivu-form >>> .ivu-input::-webkit-input-placeholder,
-.ivu-form >>> .ivu-select-selection .ivu-select-placeholder,
+.ivu-form >>> .ivu-select-selection .ivu-select-placeholder {
+    color: #cac0c0;
+}
 .ivu-form >>> .ivu-input-icon {
     color: #fff;
 }
@@ -464,10 +493,11 @@ export default {
     font-size: 1.4vmin;
 }
 .formBG {
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
+    height: 81vmin;
 }
 
 .formBG >>> .ivu-form-item-label {
@@ -481,7 +511,7 @@ export default {
     margin-right: 4px;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 @media (min-width: 2200px) {
     .ivu-input-number,
@@ -495,15 +525,17 @@ export default {
         width: 8vmin;
         font-size: 1.6vmin;
     }
-    .tree.ivu-tree >>> ul.ivu-tree-children {
-        font-size: 1.4vmin !important;
+    .tree >>> .ivu-tree-title {
+        font-size: 1.4vmin;
     }
     .tree.ivu-tree >>> .ivu-checkbox-inner {
         width: 1.4vmin;
         height: 1.4vmin;
         border: 0.1vmin solid #dddee1;
     }
-
+    .tree >>> .ivu-tree-arrow {
+        width: 1.2vmin;
+    }
     .tree.ivu-tree >>> .ivu-checkbox-inner:after {
         width: 0.6vmin;
         height: 0.9vmin;

@@ -1,8 +1,8 @@
 <template>
     <div class="formBG">
+        <div class="formTitle" v-show="this.pageType==4">提交任务执行结果</div>
+        <div class="formTitle" v-show="this.pageType==1">巡检任务详情</div>
         <Form  :model="task" :label-width="140">
-            <h2 class="formTitle" v-show="this.pageType==4">提交任务执行结果</h2>
-            <h2 class="formTitle" v-show="this.pageType==1">巡检任务详情</h2>
             <FormItem label="所属计划：">
                 <Input type="text" v-model="task.planName" readonly></Input>
             </FormItem>
@@ -28,13 +28,13 @@
             <FormItem label="巡检描述：">
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" readonly></Input>
             </FormItem>
-            <FormItem style="text-align: center" v-show="this.pageType==4">
+            <div style="text-align: center" v-show="this.pageType==4">
                 <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
                 <Button type="primary">提交</Button>
-            </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px;" v-show="this.pageType==1">
-                <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
-            </FormItem>
+            </div>
+            <div style="margin-left: 140px;text-align: center" v-show="this.pageType==1">
+                <Button type="ghost" @click="goBack()">返回</Button>
+            </div>
         </Form>
     </div>
 </template>
@@ -274,6 +274,9 @@ export default {
 }
 .formTitle{
     color: #fff;
+    width: auto;
+    margin-top: -3.2vh;
+    font-size: 2.2vmin;   
 }
 .adddefect,.addRecords{
     width: 100%;
@@ -296,7 +299,7 @@ export default {
     margin: 5px;
 }
 .formBG{
-    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
     background-size: 100% 100%;
     padding-top: 3vmin;
     padding-bottom: 3vmin;
@@ -309,16 +312,13 @@ export default {
     color: #00fff6;
     content: '★';
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 0.4vmin;
     line-height: 1;
     font-family: SimSun;
-    font-size: 12px;
+    font-size: 1.2vmin;
 }
 
 @media (min-width: 2200px){
-    .formTitle{
-        font-size: 2.8vmin;
-    }
     .ivu-form.ivu-form-label-right{
         width: 50%;
     }
@@ -335,6 +335,13 @@ export default {
     {
         height: 4vmin;
         line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-cell-with-expand{
+        height: 4.7vmin;
+        line-height: 4.7vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-cell-with-expand .ivu-table-cell-expand i{
         font-size: 1.4vmin;
     }
 }

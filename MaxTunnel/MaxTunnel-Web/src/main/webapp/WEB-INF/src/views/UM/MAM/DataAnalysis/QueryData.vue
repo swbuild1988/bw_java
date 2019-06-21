@@ -3,19 +3,30 @@
     <div>
         <Row class="queryCondition">
             <Col span="6">
-                <span class="conditionTitle">监测对象：</span>
-                <Input v-model="queryPrams.id " @on-blur="queryObject" style="width: 65%;"></Input>
+                <span class="conditionTitle" style="display: inline-block">监测对象：</span>
+                <Input class="objBox" v-model="queryPrams.id" style="width: 65%;">
+                    <Button slot="append" icon="ios-search" @click="queryObject()"></Button>
+                </Input>
             </Col>
             <Col span="6">
                 <span class="conditionTitle">所属管廊：</span>
-                <Select v-model="queryPrams.tunnelId" style="font-size: 18px;width:64%" >
+                <Select v-model="queryPrams.tunnelId" style="width:65%" @on-change="changeTunnelId(queryPrams.tunnelId)">
+                    <Option value=null key="0">所有</Option>
                     <Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                <span class="conditionTitle">数据类型：</span>
-                <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
-                    <Option v-for="item in dataTypeEnum" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                <span class="conditionTitle">所属区域：</span>
+                <Select v-model="queryPrams.areaId" style="width:65%" >
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </Col>
+            <Col span="6">
+                <span class="conditionTitle">所属管舱：</span>
+                <Select v-model="queryPrams.storeId" style="width:65%" >
+                    <Option value=null key="0">所有</Option>
+                    <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
@@ -26,40 +37,44 @@
                     </OptionGroup>
                 </Select>
             </Col>
+            <Col span="6">
+                <span class="conditionTitle">数据类型：</span>
+                <Select v-model="queryPrams.datatypeId" style="width:65%" @on-change="changeDataType">
+                    <Option v-for="item in dataTypeEnum" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                </Select>
+            </Col>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==1">
-                    <Col span="10">
+                    <Col span="6">
                         <span class="conditionTitle">取整范围：</span>
-                        <span style="color: #fff;font-size: 1.6vmin">最小值</span>
-                        <Input v-model="queryPrams.minVal" style="width: 100px"></Input>
-                        <span style="color: #fff; font-size: 1.6vmin">最大值</span>
-                        <Input v-model="queryPrams.maxVal" style="width: 100px"></Input>
+                        <Input v-model="queryPrams.minVal" style="width: 13vmin"></Input>
+                        <span style="color: #fff">~</span>
+                        <Input v-model="queryPrams.maxVal" style="width: 13vmin"></Input>
                     </Col>
                 </div>
             </transition>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==2">
-                    <Col span="10">
-                        <span class="conditionTitle">开关状态:</span>
-                        <CheckboxGroup v-model="queryPrams.dataRangeGroup" style="position: relative;float: left;left:8px;top:6px;"
-                                        size="large">
-                            <Checkbox label="1">开</Checkbox>
-                            <Checkbox label="2">关</Checkbox>
-                        </CheckboxGroup>
+                    <Col span="6">
+                        <span class="conditionTitle">开关状态：</span>
+                        <RadioGroup v-model="queryPrams.cv">
+                            <Radio label=1><span style="color: #fff">开</span></Radio>
+                            <Radio label=0><span style="color: #fff">关</span></Radio>
+                        </RadioGroup>
                     </Col>
                 </div>
             </transition>
             <transition name="slide-fade" mode="in-out">
                 <div v-if="queryPrams.datatypeId==4||queryPrams.datatypeId==5">
-                    <Col span="10">
-                        <span class="conditionTitle">监测位置:</span>
-                        <Input v-model="queryPrams.pleace" style="width: 120px;margin-left: 8px;  "></Input>
-                        （米）
+                    <Col span="6">
+                        <span class="conditionTitle">监测位置：</span>
+                        <Input v-model="queryPrams.pleace" style="width: 24vmin;"></Input>
+                        <span style="color: #fff">（米）</span>
                     </Col>
                 </div>
             </transition>
             <Col span="2">
-                <Button type="primary" size="samll" icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
+                <Button type="primary" icon="ios-search" @click="queryTableData"  v-if="!viewHistory">查询</Button>
             </Col>
             <ShowMonitorObjectSelect v-bind="dataObjectSelect"></ShowMonitorObjectSelect>
         </Row>
@@ -71,11 +86,11 @@
                             <Table :height="tableHeight" :columns="tableColumn" :data="tableData" ref="selection" :loading="tableload" @on-selection-change="selectionClick"></Table>
                         </div>
                         <div class="historyDiv">
-                            <Button type="primary" shape="circle" icon="forward" size="large" title="历史数据"
+                            <Button type="primary" shape="circle" icon="forward" title="历史数据"
                                     @click="viewHistoryData">历史数据</Button>
-                            <Button type="info" shape="circle" icon="ios-cloud-download" size="large" title="导出"
+                            <Button type="info" shape="circle" icon="ios-cloud-download"
                                     @click="exportData">导出</Button>
-                            <Page class="nextPage" :total="queryPrams.total" :current="queryPrams.pageNum" :page-size="queryPrams.pageSize" show-sizer show-total
+                            <Page class="nextPage" :total="page.total" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
                                 placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator></Page>
                         </div>
                     </Col>
@@ -83,37 +98,31 @@
             </div>
         </transition>
         <transition name="fade" mode="out-in">
-            <div v-if="viewHistory">
-                <Row style="padding: 9px;padding-top: 0px">
+            <div  class="boxBG" v-if="viewHistory">
+                <Row>
                     <Col span="24">
                         <div class="chartSize">
                             <MultiLineChart style="width: 100%;" v-bind="curlineChart" ref="multiLine"></MultiLineChart>
                         </div>
-                        <div class="chooseBox">
-                            <div style="position: relative;float: left;font-size: 1.66vmin;line-height: 4vmin;">
-                                <span class="timeTitle">时间周期:</span>
-                                <Select v-model="historyPrams.dateType" style="width:12vw;margin-right: 4px;margin-left: 4px;"
-                                        @on-change="changeAlarmType" placement="top">
-                                    <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
-                                </Select>
-                            </div>
-                            <div style="  position: relative;float: left; font-size: 1.66vmin;line-height: 4vmin;">
-                                <span class="timeTitle">开始时间:</span>
-                                <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间"
-                                            placement="top"
-                                            style="width: 12vw;margin-right: 4px;"></DatePicker>
-                                <span class="timeTitle">结束时间:</span>
-                                <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间"
-                                            placement="top"
-                                            style="width:12vw;margin-right: 14px;"></DatePicker>
-                            </div>
-                            <div class="btnBox">
-                                <Button type="primary" shape="circle" icon="forward" size="large"
-                                   @click="queryHistoryData" v-if="viewHistory">历史数据</Button>
-                                <Button type="info" shape="circle" icon="ios-cloud-download" size="large" title="导出"
-                                    @click="backToCurPage">导出</Button>
-                            </div>
-                        </div>
+                    </Col>
+                    <Col span="6">
+                        <span class="timeTitle">时间周期：</span>
+                        <Select v-model="historyPrams.dateType" style="width:12vw;margin-right: 4px;margin-left: 4px;"
+                                @on-change="changeAlarmType" placement="top">
+                            <Option v-for="item in historyDateType" :value="item.key" :key="item.key">{{ item.value }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="6">
+                        <span class="timeTitle">开始时间：</span>
+                        <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间" placement="top" style="width: 65%"></DatePicker>
+                    </Col>
+                    <Col span="6">
+                        <span class="timeTitle">结束时间：</span>
+                        <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间" placement="top" style="width:65%;"></DatePicker>
+                    </Col>
+                    <Col span="6" class="btnBox">
+                        <Button type="primary" shape="circle" icon="forward" @click="queryHistoryData" v-if="viewHistory">查询</Button>
+                        <Button type="info" shape="circle" icon="ios-cloud-download" @click="backToCurPage">返回</Button>
                     </Col>
                 </Row>
             </div>
@@ -123,7 +132,7 @@
 
 <script>
   import {EnumsService} from '../../../../services/enumsService.js'
-  import {TunnelService} from '../../../../services/tunnelService.js'
+  import { TunnelService } from "../../../../services/tunnelService";
   import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
   import MultiLineChart from '../../../../components/Common/Chart/MultiLineChart'
   import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
@@ -149,16 +158,23 @@
             },
             queryPrams: {
                 tunnelId: null,
+                areaId: null,
+                storeId: null,
                 id: null,
                 objtypeIds: [],
-                datatypeId: null,
+                datatypeId: 1,
+                // 最大值与最小值
                 maxVal: 100,
                 minVal: 0,
-                dataRangeGroup: [],
+                // 开关状态
+                cv: 1,
+                // 监测位置
                 pleace: 0,
+            },
+            page: {
                 total: 0,
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 10
             },
             historyPrams: {
                 startTime: null,
@@ -167,9 +183,9 @@
                 ids: [],
             },
             dataObjectSelect: {
-            show: {state: false},
-            selectObjects: {},
-            selectData: {idList: ""},
+                show: {state: false},
+                selectObjects: {},
+                selectData: {idList: ""}
             },
             historyDateType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {key: 4,value: "自定义"}],
             queryZoneList: [{key: 1, value: "自定义"}, {key: 2, value: "最近一天"}, {key: 3, value: "最近一周"}],
@@ -208,7 +224,7 @@
                     render: (h, params) => {
                         let temp = null
                         if(params.row.obj.section!=null){
-                            temp = params.row.obj.section.name
+                            temp = params.row.obj.name
                         }
                         return h('span', temp)
                     }
@@ -238,8 +254,41 @@
                     }
                 }
             ],
-            tableData: []
+            tableData: [],
+            areas: [],
+            stores: []
         }
+    },
+    components: {
+        MultiLineChart, ShowMonitorObjectSelect
+    },
+    watch: {
+        "dataObjectSelect.selectData.idList": function () {
+            this.queryPrams.id = this.dataObjectSelect.selectData.idList;
+        }
+    },
+    mounted() {
+        // this.inItData();
+        // 设置表格高度
+        this.tableHeight = window.innerHeight * 0.65;
+        //获取数据类型
+        EnumsService.getMonitorType().then(result => {
+            this.objectList = result;
+        });
+        //获取对象类型
+        EnumsService.getDataType().then(result => {
+            result.forEach(item=>{
+                if(item.val==1||item.val==2||item.val==3||item.val==97){
+                    this.dataTypeEnum.push(item)
+                }
+            })
+            this.queryPrams.datatypeId = result[0].val;
+        });
+        // 获取管廊名称
+        TunnelService.getTunnels().then(result => {
+            this.tunnelList = result
+        });
+        this.queryTableData()
     },
     methods: {
         //查询监测对象
@@ -248,56 +297,111 @@
             _this.dataObjectSelect.show.state = !_this.dataObjectSelect.show.state;
         },
 
-        //初始化查询条件下拉列表数据
-        inItData() {
-            var _this = this;
-            const p1= EnumsService.getMonitorType().then((result) => {
-                _this.objectList = result;
-            });
-            const p2 = EnumsService.getDataType().then((result) => {
-                _this.dataTypeEnum = result;
-                this.queryPrams.datatypeId = result[0].val;
-            });
-            const p3 = TunnelService.getTunnels().then((result) => {
-                _this.tunnelList = [{id: -1, name: "全部"}];
-                result.reduce((a,b)=>{
-                    _this.tunnelList.push(b);
-                }, _this.tunnelList)
-            });
-            Promise.all([p1,p2,p3]).then(([a, b,c]) => _this.queryTableData());
-        },
-
         //导出数据
         exportData() {
             this.$refs.selection.exportCsv({
-            filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "导出数据",
-            original: false
+                filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "导出数据",
+                original: false
             });
         },
 
+        //根据TunnelId,获取area和store
+        changeTunnelId(id){
+            if(id!=null){
+                //获取store
+                TunnelService.getStoresByTunnelId(id).then(
+                    result => {
+                        this.stores = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+                //获取area
+                TunnelService.getAreasByTunnelId(id).then(
+                    result => {
+                        this.areas = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
+        },
         queryTableData() {
-            var _this = this;
+            let _this = this;
             _this.tableload=true;
-            var params= _this.queryPrams;
-            DataAnalysisService.getMonitorData(params).then((result) => {
-                _this.tableData = result.list
-                _this.queryPrams.total = result.total;
-                _this.tableload=false;
+            let params = {}
+            if(_this.queryPrams.datatypeId==1){
+                params = {
+                    pageNum: _this.page.pageNum,
+                    pageSize: _this.page.pageSize,
+                    datatypeId: _this.queryPrams.datatypeId,
+                    minVal: _this.queryPrams.minVal,
+                    maxVal: _this.queryPrams.maxVal,
+                    id: _this.queryPrams.id,
+                    tunnelId: _this.queryPrams.tunnelId,
+                    areaId: _this.queryPrams.areaId,
+                    storeId: _this.queryPrams.storeId,
+                    objtypeIds: _this.queryPrams.objtypeIds
+                }
+            }else if(_this.queryPrams.datatypeId==2){ //数据类型--开关量输入
+                params = {
+                    pageNum: _this.page.pageNum,
+                    pageSize: _this.page.pageSize,
+                    datatypeId: _this.queryPrams.datatypeId,
+                    cv: _this.queryPrams.cv,
+                    id: _this.queryPrams.id,
+                    tunnelId: _this.queryPrams.tunnelId,
+                    areaId: _this.queryPrams.areaId,
+                    storeId: _this.queryPrams.storeId,
+                    objtypeIds: _this.queryPrams.objtypeIds
+                }
+            }else if( _this.queryPrams.datatypeId==4|| _this.queryPrams.datatypeId==5){ //数据类型--***||分布式数据
+                params = {
+                    pageNum: _this.page.pageNum,
+                    pageSize: _this.page.pageSize,
+                    datatypeId: _this.queryPrams.datatypeId,
+                    pleace: _this.queryPrams.pleace,
+                    id: _this.queryPrams.id,
+                    tunnelId: _this.queryPrams.tunnelId,
+                    areaId: _this.queryPrams.areaId,
+                    storeId: _this.queryPrams.storeId,
+                    objtypeIds: _this.queryPrams.objtypeIds
+                }
+            }else{
+                params = {
+                    pageNum: _this.page.pageNum,
+                    pageSize: _this.page.pageSize,
+                    datatypeId: _this.queryPrams.datatypeId,
+                    id: _this.queryPrams.id,
+                    tunnelId: _this.queryPrams.tunnelId,
+                    areaId: _this.queryPrams.areaId,
+                    storeId: _this.queryPrams.storeId,
+                    objtypeIds: _this.queryPrams.objtypeIds
+                }
+            }
+            DataAnalysisService.getMonitorData(params).then(result => {
+                if(result!=null){
+                    _this.tableData = result.list
+                    _this.page.total = result.total;
+                    _this.tableload=false;
+                }
             })
         },
 
         viewHistoryData() {
             var _this = this;
             if(!this.selectSelection){
-            this.$Message.warning('请勾选需要查询历史数据的对象');
-            return;
+                this.$Message.warning('请勾选需要查询历史数据的对象');
+                return;
             }
             _this.viewHistory = !_this.viewHistory;
             _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
             _this.changeAlarmType(_this.historyPrams.dateType);
             _this.historyPrams.ids = [];
             this.selectSelection.reduce(function (a, b) {
-            _this.historyPrams.ids.push(b.id);
+                _this.historyPrams.ids.push(b.id);
             }, _this.historyPrams.ids);
             _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
             _this.curlineChart.parameters.queryPram.endTime =new Date(_this.historyPrams.endTime) .getTime();
@@ -321,12 +425,12 @@
             this.selectSelection = arr;
         },
         handlePage(value) {
-            this.queryPrams.pageNum = value;
-            this.inItData()
+            this.page.pageNum = value;
+            this.queryTableData()
         },
         handlePageSize(value) {
-            this.queryPrams.pageSize = value;
-            this.inItData()
+            this.page.pageSize = value;
+            this.queryTableData()
         },
 
         //切换数据类型
@@ -361,20 +465,7 @@
             _this.historyPrams.endTime = "";
             }
         },
-    },
-    components: {
-        MultiLineChart, ShowMonitorObjectSelect
-    },
-    mounted() {
-        this.inItData();
-        // 设置表格高度
-        this.tableHeight = window.innerHeight * 0.65;
-    },
-    watch: {
-        "dataObjectSelect.selectData.idList": function () {
-            this.queryPrams.id = this.dataObjectSelect.selectData.idList;
-        }
-    },
+    }
   }
 
 </script>
@@ -415,13 +506,28 @@
 
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder,
-    .ivu-select-multiple >>> .ivu-select-placeholder
+    .ivu-select-multiple >>> .ivu-select-placeholder,.objBox >>> .ivu-input-group-append .ivu-btn
     {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
         color: #fff;
         background-color: #fffdfd00 !important;
+    }
+    .objBox{
+        display: inline-block;
+    }
+    .objBox.ivu-input-wrapper >>> .ivu-input{
+        width: 80%;
+        border-radius: 1vmin 0px 0px 1vmin;
+    }
+
+    .objBox.ivu-input-wrapper>>>.ivu-input-group-append{
+        border: 0.1vmin solid #fff;
+        border-left: 0;
+        border-radius: 0px 1vmin 1vmin 0px;
+        line-height: 2.4;
+        background: #121a28;
     }
 
     .ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
@@ -446,9 +552,9 @@
     }
     .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
         background-color: #fffdfd00 !important;
-        border-bottom: none;
+        border-bottom: 1px solid #7d7d7d;
     }
-    .nextPage .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.nextPage.ivu-page>>>.ivu-page-total{
+    .nextPage .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.nextPage.ivu-page>>>.ivu-page-total,.queryCondition .ivu-select,.timeTitle{
         color: #fff;
     }
     .boxBG{
@@ -462,27 +568,24 @@
     .ivu-select,.ivu-select >>> .ivu-select-selection {
         background-color: #fffdfd00 !important;
     }
-    .queryCondition .ivu-select{
-        color: #fff;
-    }
-    .btnBox{
-        position:relative;
-        float: right;
-        right: 0px;
-    }
     .btnBox .ivu-btn-primary,.historyDiv .ivu-btn-primary{
         background: linear-gradient(to left, #2734e1, #b195ed)
     }
     .btnBox .ive-btn-info,.historyDiv .ive-btn-info{
         background: linear-gradient(to left, #1af6b0, #a7ecd7)
     }
-    .chooseBox{
-        height: 5.8vh;
-        padding: 0.8vh;
-        margin-top: 1vh;
-        /* color: #fff; */
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
     }
-    .timeTitle{
-        color: #fff;
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
     }
 </style>

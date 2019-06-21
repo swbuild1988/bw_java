@@ -75,7 +75,7 @@
             <Tabs value="card">
                 <TabPane label="卡片" name="card">
                     <div class="nullData" v-show="isNullData">暂无数据</div>
-                    <Row>
+                    <Row class="cardStyle">
                         <Col span="6" v-for="(item,index) in contractList" :key="index">
                             <div class="contracts">
                                 <div
@@ -119,25 +119,25 @@
                     </Row>
                 </TabPane>
                 <TabPane label="表格" name="table" class="table">
-                    <Table :columns="contractColumn" :data="contractData"></Table>
+                    <Table :columns="contractColumn" :data="contractData" :height="tableHeight"></Table>
                 </TabPane>
             </Tabs>
         </div>
-        <div class="page">
-            <Page
-                :total="page.pageTotal"
-                :current="page.pageNum"
-                :page-size-opts="[8,16,24]"
-                :page-size="page.pageSize"
-                show-sizer
-                show-total
-                placement="top"
-                @on-change="handlePage"
-                @on-page-size-change="handlePageSize"
-                show-elevator
-                :style="pageStyle"
-            ></Page>
-        </div>
+        <!-- <div class="page"> -->
+        <Page
+            :total="page.pageTotal"
+            :current="page.pageNum"
+            :page-size-opts="[8,16,24]"
+            :page-size="page.pageSize"
+            show-sizer
+            show-total
+            placement="top"
+            @on-change="handlePage"
+            @on-page-size-change="handlePageSize"
+            show-elevator
+            :style="pageStyle"
+        ></Page>
+        <!-- </div> -->
     </div>
 </template>
 
@@ -172,8 +172,8 @@ export default {
             customerName: "",
             pageStyle: {
                 position: "absolute",
-                bottom: "20px",
-                right: "15px",
+                bottom: "1vmin",
+                right: "2.5vmin",
                 color: "#fff"
             },
             contractIds: [],
@@ -283,7 +283,8 @@ export default {
                     }
                 }
             ],
-            contractData: []
+            contractData: [],
+            tableHeight: 600
         };
     },
     components: { CustomerChoose },
@@ -306,6 +307,7 @@ export default {
         }
     },
     mounted() {
+        this.tableHeight = (window.innerHeight / 100) * 60;
         this.initData();
         this.search();
         this.$nextTick(() => {
@@ -589,7 +591,7 @@ export default {
 .list .ivu-table-wrapper >>> .ivu-table th,
 .ivu-table-wrapper >>> .ivu-table td {
     background-color: #fffdfd00 !important;
-    border-bottom: none;
+    border-bottom: 1px solid #7d7d7d;
 }
 .list .ivu-table-wrapper >>> .ivu-btn-primary,
 .ivu-table-wrapper >>> .ivu-btn-info {
@@ -601,6 +603,38 @@ export default {
 .ivu-page >>> .ivu-page-options-elevator,
 .ivu-tabs {
     color: #fff;
+}
+
+.list {
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY {
+    overflow-x: hidden;
+}
+
+.cardStyle {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 60vh;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar,
+.cardStyle::-webkit-scrollbar {
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar-thumb,
+.cardStyle::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper >>> .ivu-table-overflowY::-webkit-scrollbar-track,
+.cardStyle::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 
 @media (min-width: 1921px) {

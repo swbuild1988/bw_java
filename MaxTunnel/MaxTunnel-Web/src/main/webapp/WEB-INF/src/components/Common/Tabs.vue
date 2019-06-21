@@ -47,6 +47,7 @@ export default {
     background: url("../../assets/UM/detailsTabBg.png") no-repeat;
     background-size: 100% 100%;
     border: none;
+    height: 70vh;
 }
 
 .tabs-bar {

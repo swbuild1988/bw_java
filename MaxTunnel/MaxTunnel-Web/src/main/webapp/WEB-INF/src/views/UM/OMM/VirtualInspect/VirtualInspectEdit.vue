@@ -1,7 +1,7 @@
 <template>
     <div>
         <Row class="body">
-            <Col span="14">
+            <Col span="12">
                 <div class="sm">
                     <div class="heading">
                         <span>{{ direction }}</span>
@@ -9,32 +9,32 @@
                     <vm-select
                         id="list-dropdown"
                         :optionList="optionList"
-                        :selectStyle="{ left:'0',top: '0'}"
+                        :selectStyle="{ left:'1vmin',top: '1vmin'}"
                         @getSelectVal="getAreas"
                     ></vm-select>
                     <vm-select
                         id="area-dropdown"
                         :optionList="areaList"
-                        :selectStyle="{ left:'13.2%',top:'0' }"
+                        :selectStyle="{ left:'14.2%',top:'1vmin' }"
                         @getSelectVal="getStores"
                     ></vm-select>
                     <vm-select
                         id="store-dropdown"
                         :optionList="storeList"
-                        :selectStyle="{ left:'26.4%',top: '0' }"
+                        :selectStyle="{ left:'27.4%',top: '1vmin' }"
                         @getSelectVal="changeStore"
                     ></vm-select>
                     <sm-viewer @refreshCameraPosition="refreshCameraPosition" ref="smViewer"></sm-viewer>
                 </div>
                 <div class="cameraContent">
-                    <video-component v-bind:video="curVideo" v-bind:id="'virtualInspectEdit'"></video-component>
+                    <video-component :video="curVideo" :id="'virtualInspectEdit'+curVideo.id"></video-component>
                 </div>
             </Col>
-            <Col span="10">
+            <Col span="12">
                 <Row class="control">
                     <Col span="8">
                         <div class="cameraList">
-                            <div class="titleCam">摄像头列表</div>
+                            <div class="titles">摄像头列表</div>
                             <br>
                             <ul>
                                 <li
@@ -48,8 +48,9 @@
                     </Col>
                     <Col span="16">
                         <div class="controlContent">
-                            <div class="titleCtr">云台控制</div>
-                            <div style="width:80%;height:80%;margin: 10%;">
+                            <div class="titles">云台控制</div>
+                            <br>
+                            <div class="controlWrapper">
                                 <VideoControl
                                     @startDirectCtrl="start"
                                     @stopDirectCtrl="stop"
@@ -58,32 +59,44 @@
                             </div>
                         </div>
                         <Button type="ghost" @click="back" class="back">返回</Button>
+                    </Col>
+                    <Col span="24">
                         <div class="posBox">
-                            <div class="titlePos">预置位</div>
-                            <Button type="primary" @click="add" class="add">添加</Button>
+                            <div class="titles">预置位</div>
+                            <br>
                             <div class="posContent">
+                                <Button type="primary" @click="add" class="add">添加</Button>
                                 <div
                                     class="positions"
                                     v-for="(pos,index) in perPositions"
                                     :key="index"
                                 >
-                                    <div class="posTag"></div>
                                     <span class="name">{{ pos }}</span>
                                     <div class="options">
-                                        <Button type="primary" size="small" @click="set(pos)">到达预置位</Button>
-                                        <Button type="primary" size="small" @click="match(pos)">匹配</Button>
                                         <Button
                                             type="primary"
                                             size="small"
-                                            icon="edit"
+                                            @click="set(pos)"
+                                            class="set"
+                                        >到达预置位</Button>
+                                        <Button
+                                            type="primary"
+                                            size="small"
+                                            @click="match(pos)"
+                                            class="match"
+                                        >匹配</Button>
+                                        <Button
+                                            type="primary"
+                                            size="small"
+                                            class="edit"
                                             @click="edit(pos)"
-                                        ></Button>
+                                        >编辑</Button>
                                         <Button
                                             type="error"
                                             size="small"
-                                            icon="trash-a"
+                                            class="del"
                                             @click="del(pos)"
-                                        ></Button>
+                                        >删除</Button>
                                     </div>
                                 </div>
                             </div>
@@ -411,7 +424,7 @@ export default {
             let _this = this;
             VideoService.goToPreset(this.curVideo.id, name).then(
                 result => {
-                    _this.Log.info("setted" + res.data);
+                    _this.Log.info("setted" + result);
                 },
                 error => {
                     _this.Log.info(error);
@@ -472,7 +485,10 @@ export default {
             VideoService.getSections(this.cameraPosition).then(
                 result => {
                     _this.Log.info("get section ", result);
-                    if (_this.curSection.id != result.sectionInfo.id) {
+                    if (
+                        result &&
+                        _this.curSection.id != result.sectionInfo.id
+                    ) {
                         // 如果section变了，查找section中的相机
                         _this.curSection = result.sectionInfo;
                         _this.getVideos(_this.curSection.id);
@@ -521,7 +537,7 @@ export default {
             let _this = this;
             VideoService.matchPresetAnd3D(videoPreset).then(
                 result => {
-                    _this.Log.info(result);
+                    _this.$Message.success("匹配成功");
                 },
                 error => {
                     _this.Log.info(error);
@@ -545,30 +561,32 @@ export default {
 }
 .control {
     height: 86vh;
-    border: 1px solid #b3b0b0;
 }
 .camera {
     height: 86vh;
     border: 1px solid #b3b0b0;
 }
 .cameraList {
-    margin: 0 10px;
-    padding: 10px;
-    color: #fff;
+    margin: 0 1vmin;
+    padding: 1vmin;
+    color: #0efcff;
 }
-.titleCam {
-    background-image: url("../../../../assets/UM/title4.png");
+.titles {
+    background-image: url("../../../../assets/UM/title2.png");
     background-size: 100% 100%;
     font-size: 1.8vmin;
     font-weight: bold;
-    padding: 10px;
-    text-align: center;
+    padding: 0.8vmin 0.8vmin 0.8vmin 4vmin;
+    color: #0efcff;
+    width: 24vmin;
 }
 .cameraList ul {
     list-style-type: none;
-    background-image: url("../../../../assets/UM/videoListBody.png");
+    background-image: url("../../../../assets/UM/energyBorder2.png");
     background-size: 100% 100%;
     padding: 10px;
+    overflow-y: auto;
+    height: 21.2vmin;
 }
 .cameraList ul li {
     font-size: 1.66vmin;
@@ -579,68 +597,57 @@ export default {
 .cameraList ul li:hover {
     background-color: rgba(53, 122, 163);
     color: #fff;
+    border-radius: 1vmin;
 }
 .active {
     background-color: rgba(25, 190, 107, 0.4);
+    border-radius: 1vmin;
 }
 .controlContent {
-    margin-top: 20px;
-    padding-left: 20px;
-    width: 82%;
+    margin: 0 1vmin;
+    padding: 1vmin;
+    width: 100%;
     display: inline-block;
-    background-image: url("../../../../assets/UM/videoSettingBody.png");
-    background-size: 100% 100%;
-    height: 24vh;
+    height: 26vmin;
     position: relative;
 }
-.titleCtr {
-    margin-bottom: 10px;
-    font-size: 1.8vmin;
-    font-weight: bold;
-    position: absolute;
-    width: 42%;
-    height: 4vmin;
-    top: -10px;
-    left: 0;
-    background: url("../../../../assets/UM/title.png") no-repeat;
+.controlWrapper {
+    background-image: url("../../../../assets/UM/energyBorder2.png");
     background-size: 100% 100%;
-    color: #fff;
-    text-align: center;
-    padding: 8px 0;
-}
-.titlePos {
-    margin: 10px;
-    font-size: 1.8vmin;
-    font-weight: bold;
-    background: url("../../../../assets/UM/title.png") no-repeat;
-    background-size: 100% 100%;
-    color: #fff;
-    text-align: center;
-    position: absolute;
-    width: 42%;
-    height: 4vmin;
-    top: -10px;
-    left: -6px;
-    padding: 8px 0;
+    width: 100%;
+    height: 88%;
+    padding-left: 20%;
 }
 .add {
     float: right;
-    margin: 6% 4% 0px 0;
+    margin: 1vmin;
+    background: -webkit-linear-gradient(left, #98bee6, #007bfc);
+    background: -o-linear-gradient(right, #98bee6, #007bfc);
+    background: -moz-linear-gradient(right, #98bee6, #007bfc);
+    background: linear-gradient(to right, #98bee6, #007bfc);
+    border-color: #33525a;
+    border-radius: 1vmin;
+    font-size: 1.4vmin;
 }
 .posContent {
-    max-height: 50vh;
     overflow-y: auto;
     width: 100%;
     padding: 10px;
+    background: url("../../../../assets/UM/energyBorder2.png") no-repeat;
+    background-size: 100% 100%;
+    height: 49.2vmin;
 }
 .positions {
-    background-color: rgb(53, 122, 163);
+    background: #0e1c3b;
     padding: 1vmin 1vmin 1vmin 2vmin;
     color: #fff;
     margin: 1vmin;
     position: relative;
     border-radius: 6px;
     line-height: 2.6vmin;
+    min-height: 4vmin;
+    width: 84%;
+    border: 1px solid #345391;
 }
 .name {
     font-size: 1.66vmin;
@@ -661,7 +668,10 @@ export default {
 .cameraContent {
     margin-top: 10px;
     width: 100%;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
     height: 43vh;
+    padding: 1vmin;
 }
 .text {
     width: 90%;
@@ -670,31 +680,65 @@ export default {
 }
 .sm {
     height: 42vh;
+    background: url("../../../../assets/UM/energyBorder1.png") no-repeat;
+    background-size: 100% 100%;
     position: relative;
+    padding: 1vmin;
 }
 .back {
-    float: right;
-    background-color: #f0f0f0;
+    color: #fff;
+    background: -webkit-linear-gradient(left, #98bee6, #007bfc);
+    background: -o-linear-gradient(right, #98bee6, #007bfc);
+    background: -moz-linear-gradient(right, #98bee6, #007bfc);
+    background: linear-gradient(to right, #98bee6, #007bfc);
+    border-color: #33525a;
+    border-radius: 1vmin;
+    font-size: 1.4vmin;
+    position: fixed;
+    top: 10vmin;
+    right: 2vmin;
+}
+.set {
+    background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+}
+.match {
+    background-color: -webkit-linear-gradient(left, #dcd77c, #cabf11);
+    background: -o-linear-gradient(right, #dcd77c, #cabf11);
+    background: -moz-linear-gradient(right, #dcd77c, #cabf11);
+    background: linear-gradient(to right, #dcd77c, #cabf11);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+}
+.edit {
+    background-color: -webkit-linear-gradient(left, #bcdca9, #6be421);
+    background: -o-linear-gradient(right, #bcdca9, #6be421);
+    background: -moz-linear-gradient(right, #bcdca9, #6be421);
+    background: linear-gradient(to right, #bcdca9, #6be421);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
+}
+.del {
+    background-color: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #3e4f61;
+    border-radius: 1vmin;
 }
 .posBox {
-    background: url("../../../../assets/UM/videoSettingBody.png") no-repeat;
-    background-size: 100% 100%;
-    margin-top: 10px;
+    margin: 1vmin 0 1vmin 1vmin;
     height: 58vh;
     position: relative;
-}
-.posTag {
-    position: absolute;
-    background-color: rgb(185, 121, 144);
-    height: 100%;
-    width: 6px;
-    top: 0;
-    left: 0;
-    border-radius: 6px;
+    padding: 0 0 0 1vmin;
 }
 .heading {
     position: absolute;
-    top: 0;
+    top: 1vmin;
     left: 63%;
     font-size: 1.4vmin;
     z-index: 10;
@@ -702,5 +746,9 @@ export default {
     box-shadow: 0 0 1rem #109fb5 inset;
     color: #fff;
     padding: 0.4vmin 2.4vmin;
+    background: #88b0b6;
+}
+.vm-select >>> .cd-dropdown {
+    background: #88b0b6;
 }
 </style>

@@ -7,6 +7,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.*;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,8 @@ public class EnumController {
 
 	@Autowired
 	private StoreTypeService storeTypeService;
+	@Autowired
+	private XMLService xmlService;
 
 
 	/**
@@ -482,7 +485,7 @@ public class EnumController {
 			List<JSONObject> objectTypeList = new ArrayList<>();
 			List<ObjectType> eList = ObjectType.getEnumByMonitorType(e.getValue());
 			// 获取配置文件中所有的objectTypeId
-			List<Integer> objectTypeIds = new XMLController().getXMLAllInfo().getObjectTypeIds();
+			List<Integer> objectTypeIds = xmlService.getXMLAllInfo().getObjectTypeIds();
 			eList = eList.stream().filter(a -> objectTypeIds.contains(a.getValue())).collect(Collectors.toList());
 			
 			for (ObjectType objectType : eList) {
