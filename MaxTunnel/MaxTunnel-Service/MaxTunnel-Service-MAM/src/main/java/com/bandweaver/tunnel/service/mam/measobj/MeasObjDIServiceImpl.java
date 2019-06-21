@@ -36,7 +36,7 @@ public class MeasObjDIServiceImpl implements MeasObjDIService{
     	diVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	diVo.setPageNum(vo.getPageNum());
     	diVo.setPageSize(vo.getPageSize());
-    	diVo.setCv(vo.getCv() == 1 ? true :false);
+    	diVo.setCv((vo.getCv() != null && vo.getCv() == 1) ? true :false);
     	
     	PageHelper.startPage(diVo.getPageNum(), diVo.getPageSize());
     	List<MeasObjDIDto> list = measObjDIMapper.dataGrid(diVo);

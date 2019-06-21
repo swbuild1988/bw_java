@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.CompanyDto;
 import com.bandweaver.tunnel.common.biz.itf.CompanyService;
+import com.bandweaver.tunnel.common.biz.itf.FileInfoService;
 import com.bandweaver.tunnel.common.biz.pojo.Company;
 import com.bandweaver.tunnel.common.biz.pojo.Company_Customer;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Customer;
@@ -31,6 +33,7 @@ import com.bandweaver.tunnel.common.biz.vo.CompanyVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.ContextUtil;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -46,6 +49,10 @@ public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private FileInfoService fileInfoService;
+    
+    private static final String ATTACHMENT_PATH = "file.path.company";
 
     /**
      * 添加公司信息
@@ -167,8 +174,7 @@ public class CompanyController {
      * @param id
      * @param file
      * @return
-     * @throws IllegalStateException
-     * @throws IOException
+     * @throws Exception
      * @author ya.liu
      * @Date 2019年4月16日
      */
@@ -176,21 +182,21 @@ public class CompanyController {
 	  如果想上传多个文件，那么这里就要用MultipartFile[]类型来接收文件，并且还要指定@RequestParam注解 
 	  并且上传多个文件时，前台表单中的所有<input type="file"/>的name都应该是file，否则参数里的file无法获取到所有上传的文件  */
     @RequestMapping(value = "companies/{id}/file", method = {RequestMethod.POST, RequestMethod.GET})
-    public JSONObject uploadFile(@PathVariable("id") Integer id, @RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
+    public JSONObject uploadFile(@PathVariable("id") Integer id, @RequestParam("file") MultipartFile file) throws Exception {
         Company company = new Company();
-
-        String realPath = ContextUtil.getRequest().getServletContext().getRealPath("/upload/company");
-        String originalFilename = file.getOriginalFilename();
-
-        File f = new File(realPath);
-        //如果文件夹不存在就创建
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        file.transferTo(new File(realPath, originalFilename));
-        System.out.println("图片路径：" + realPath + "\\" + originalFilename);
+        
+        // 获取合同保存路径
+        String attachmentPath = PropertiesUtil.getString(ATTACHMENT_PATH);
+        fileInfoService.checkPath(attachmentPath, true);
+        String fileName = file.getOriginalFilename();
+        // 考虑到并发的情况下可能发生文件名称重复，使用uuid表示文件名
+        fileName = UUID.randomUUID() + fileName.substring(fileName.lastIndexOf("."), fileName.length());
+        String path = attachmentPath + File.separator + fileName;
+        file.transferTo(new File(path));
+        // 用fileName表示相对路径，读取文件时，加上配置的attachment路径即可
+        
         company.setId(id);
-        company.setImgUrl("\\" + "upload\\company" + "\\" + originalFilename);
+        company.setImgUrl(fileName);
         companyService.update(company, new ArrayList<>());
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
@@ -217,7 +223,7 @@ public class CompanyController {
                 throw new RuntimeException("没有获取到id=【" + id + "】的设备信息");
             }
             String imgUrl = dto.getImgUrl();
-            String realPath = ContextUtil.getRequest().getServletContext().getRealPath(imgUrl);
+            String realPath = PropertiesUtil.getString(ATTACHMENT_PATH) + File.separator + imgUrl;
             is = new FileInputStream(realPath);
 
             byte[] buffer = new byte[1024];

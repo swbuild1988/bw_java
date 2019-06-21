@@ -5,7 +5,7 @@ import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 import java.util.Date;
 import java.util.List;
 
-public class MeasObjAIVo extends BaseVo {
+public class MeasObjSOVo extends BaseVo {
 
 	/**
 	 * 
@@ -14,9 +14,7 @@ public class MeasObjAIVo extends BaseVo {
 	private Integer id;
 	private List<Integer> ids;
 	private Date refreshTime;
-	private Double cv;
-	private Double maxCv;
-	private Double minCv;
+	private String cv;
 
 	public Integer getId() {
 		return id;
@@ -34,11 +32,11 @@ public class MeasObjAIVo extends BaseVo {
 		this.ids = ids;
 	}
 
-	public Double getCv() {
+	public String getCv() {
 		return cv;
 	}
 
-	public void setCv(Double CV) {
+	public void setCv(String CV) {
 		this.cv = CV;
 	}
 
@@ -48,22 +46,6 @@ public class MeasObjAIVo extends BaseVo {
 
 	public void setRefreshTime(Date refreshTime) {
 		this.refreshTime = refreshTime;
-	}
-
-	public Double getMaxCv() {
-		return maxCv;
-	}
-
-	public void setMaxCv(Double maxCv) {
-		this.maxCv = maxCv;
-	}
-
-	public Double getMinCv() {
-		return minCv;
-	}
-
-	public void setMinCv(Double minCv) {
-		this.minCv = minCv;
 	}
 
 	@Override

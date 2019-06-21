@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
@@ -482,9 +483,12 @@ public class SectionController extends BaseController<Section>{
             double cv = measObjService.getMeasObjCVByIdAndDataType(measObj.getId(), measObj.getDatatypeId());
             JSONObject j = new JSONObject();
             j.put("id", measObj.getId());
+            j.put("name", measObj.getName());
             j.put("dataType", measObj.getDatatypeId());
             j.put("dataTypeName", measObj.getDatatypeName());
             j.put("cv", cv);
+            ObjectType type = ObjectType.getEnum(measObj.getObjtypeId());
+            j.put("unit", type == null ? "" : type.getUnit());
             cvList.add(j);
         }
         result.put("moInfo", cvList);

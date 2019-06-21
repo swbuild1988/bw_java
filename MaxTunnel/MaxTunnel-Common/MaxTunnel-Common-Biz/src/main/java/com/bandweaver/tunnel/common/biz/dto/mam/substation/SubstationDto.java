@@ -8,48 +8,96 @@ public class SubstationDto extends Substation {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private MeasObjAI inv;
-	private MeasObjAI ina;
-	private MeasObjAI outv;
-	private MeasObjAI outa;
+	private MeasObjAI voltage;
+	private MeasObjAI current;
 	private MeasObjAI power;
-	private TunnelSimpleDto tunnel;
+	private MeasObjAI unpower;
+	private MeasObjAI powerFactor;
+	private MeasObjAI powerDay;
+	private MeasObjAI unpowerDay;
+	private MeasObjAI powerEle;
+	private MeasObjAI unpowerEle;
 	
-	public TunnelSimpleDto getTunnel() {
-		return tunnel;
+	private TunnelSimpleDto tunnel;
+
+	public MeasObjAI getVoltage() {
+		return voltage;
 	}
-	public void setTunnel(TunnelSimpleDto tunnel) {
-		this.tunnel = tunnel;
+
+	public void setVoltage(MeasObjAI voltage) {
+		this.voltage = voltage;
 	}
-	public MeasObjAI getInv() {
-		return inv;
+
+	public MeasObjAI getCurrent() {
+		return current;
 	}
-	public void setInv(MeasObjAI inv) {
-		this.inv = inv;
+
+	public void setCurrent(MeasObjAI current) {
+		this.current = current;
 	}
-	public MeasObjAI getIna() {
-		return ina;
-	}
-	public void setIna(MeasObjAI ina) {
-		this.ina = ina;
-	}
-	public MeasObjAI getOutv() {
-		return outv;
-	}
-	public void setOutv(MeasObjAI outv) {
-		this.outv = outv;
-	}
-	public MeasObjAI getOuta() {
-		return outa;
-	}
-	public void setOuta(MeasObjAI outa) {
-		this.outa = outa;
-	}
+
 	public MeasObjAI getPower() {
 		return power;
 	}
+
 	public void setPower(MeasObjAI power) {
 		this.power = power;
+	}
+
+	public MeasObjAI getUnpower() {
+		return unpower;
+	}
+
+	public void setUnpower(MeasObjAI unpower) {
+		this.unpower = unpower;
+	}
+
+	public MeasObjAI getPowerFactor() {
+		return powerFactor;
+	}
+
+	public void setPowerFactor(MeasObjAI powerFactor) {
+		this.powerFactor = powerFactor;
+	}
+
+	public MeasObjAI getPowerDay() {
+		return powerDay;
+	}
+
+	public void setPowerDay(MeasObjAI powerDay) {
+		this.powerDay = powerDay;
+	}
+
+	public MeasObjAI getUnpowerDay() {
+		return unpowerDay;
+	}
+
+	public void setUnpowerDay(MeasObjAI unpowerDay) {
+		this.unpowerDay = unpowerDay;
+	}
+
+	public MeasObjAI getPowerEle() {
+		return powerEle;
+	}
+
+	public void setPowerEle(MeasObjAI powerEle) {
+		this.powerEle = powerEle;
+	}
+
+	public MeasObjAI getUnpowerEle() {
+		return unpowerEle;
+	}
+
+	public void setUnpowerEle(MeasObjAI unpowerEle) {
+		this.unpowerEle = unpowerEle;
+	}
+
+	public TunnelSimpleDto getTunnel() {
+		return tunnel;
+	}
+
+	public void setTunnel(TunnelSimpleDto tunnel) {
+		this.tunnel = tunnel;
 	}
 	
 }

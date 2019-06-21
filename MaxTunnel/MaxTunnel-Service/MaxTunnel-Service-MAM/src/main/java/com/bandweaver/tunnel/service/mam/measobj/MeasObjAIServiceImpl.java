@@ -62,6 +62,8 @@ public class MeasObjAIServiceImpl implements MeasObjAIService{
     	aiVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	aiVo.setPageNum(vo.getPageNum());
     	aiVo.setPageSize(vo.getPageSize());
+    	aiVo.setMaxCv(vo.getMaxVal());
+    	aiVo.setMinCv(vo.getMinVal());
     	
     	PageHelper.startPage(aiVo.getPageNum(), aiVo.getPageSize());
     	List<MeasObjAIDto> list = measObjAIMapper.dataGrid(aiVo);

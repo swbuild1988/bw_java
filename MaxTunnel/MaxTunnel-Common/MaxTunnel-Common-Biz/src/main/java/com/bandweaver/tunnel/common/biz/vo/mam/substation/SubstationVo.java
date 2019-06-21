@@ -15,12 +15,8 @@ public class SubstationVo extends BaseVo {
 
 	private Integer id;
 	private Integer tunnelId;
-	private Integer invId; // 进线电压id
-	private Integer inaId; // 进线电流id
-	private Integer outvId; // 出线电压id
-	private Integer outaId; // 出线电流id
-	private Integer powerId; // 实时功率id
-	private Date time; // 创建时间
+	private String name;
+	private Boolean type;
 	public Integer getId() {
 		return id;
 	}
@@ -33,47 +29,22 @@ public class SubstationVo extends BaseVo {
 	public void setTunnelId(Integer tunnelId) {
 		this.tunnelId = tunnelId;
 	}
-	public Integer getInvId() {
-		return invId;
+	public String getName() {
+		return name;
 	}
-	public void setInvId(Integer invId) {
-		this.invId = invId;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public Integer getInaId() {
-		return inaId;
+	public Boolean getType() {
+		return type;
 	}
-	public void setInaId(Integer inaId) {
-		this.inaId = inaId;
-	}
-	public Integer getOutvId() {
-		return outvId;
-	}
-	public void setOutvId(Integer outvId) {
-		this.outvId = outvId;
-	}
-	public Integer getOutaId() {
-		return outaId;
-	}
-	public void setOutaId(Integer outaId) {
-		this.outaId = outaId;
-	}
-	public Integer getPowerId() {
-		return powerId;
-	}
-	public void setPowerId(Integer powerId) {
-		this.powerId = powerId;
-	}
-	public Date getTime() {
-		return time;
-	}
-	public void setTime(Date time) {
-		this.time = time;
+	public void setType(Boolean type) {
+		this.type = type;
 	}
 	@Override
 	public String toString() {
-		return "SubstationVo [id=" + id + ", tunnelId=" + tunnelId + ", invId="
-				+ invId + ", inaId=" + inaId + ", outvId=" + outvId + ", outaId="
-				+ outaId + ", powerId=" + powerId + ", time=" + time + "]";
+		return "SubstationVo [id=" + id + ", tunnelId=" + tunnelId + ", name="
+				+ name + ", type=" + type + "]";
 	}
 	
 }

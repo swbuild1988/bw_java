@@ -11,7 +11,6 @@ import com.bandweaver.tunnel.common.biz.itf.mam.substation.SubstationService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation;
 import com.bandweaver.tunnel.common.biz.vo.mam.substation.SubstationVo;
 import com.bandweaver.tunnel.dao.mam.SubstationMapper;
-import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -19,11 +18,9 @@ import com.github.pagehelper.PageInfo;
 public class SubstationServiceImpl implements SubstationService {
 	@Autowired
 	private SubstationMapper substationMapper;
-	@Autowired
-	private MeasObjModuleCenter measObjModuleCenter;
 
 	@Override
-	public Substation selectByPrimaryKey(Integer id) {
+	public SubstationDto selectByPrimaryKey(Integer id) {
 		return substationMapper.selectByPrimaryKey(id);
 	}
 
@@ -44,25 +41,19 @@ public class SubstationServiceImpl implements SubstationService {
 	}
 
 	@Override
-	public List<Substation> getListByCondition(SubstationVo vo) {
+	public List<SubstationDto> getListByCondition(SubstationVo vo) {
 		return substationMapper.getListByCondition(vo);
 	}
 
 	@Override
 	public SubstationDto getDtoById(Integer id) {
-		SubstationDto dto = substationMapper.getDtoById(id);
-		dto.setInv(measObjModuleCenter.getMeasObjAI(dto.getInvId()));
-		dto.setIna(measObjModuleCenter.getMeasObjAI(dto.getInaId()));
-		dto.setOutv(measObjModuleCenter.getMeasObjAI(dto.getOutvId()));
-		dto.setOuta(measObjModuleCenter.getMeasObjAI(dto.getOutaId()));
-		dto.setPower(measObjModuleCenter.getMeasObjAI(dto.getPowerId()));
-		return dto;
+		return substationMapper.getDtoById(id);
 	}
 
 	@Override
-	public PageInfo<Substation> dataGrid(SubstationVo vo) {
+	public PageInfo<SubstationDto> dataGrid(SubstationVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-		List<Substation> list = getListByCondition(vo);
+		List<SubstationDto> list = getListByCondition(vo);
 		return new PageInfo<>(list);
 	}
 

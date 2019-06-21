@@ -187,3 +187,21 @@ alter table T_OMM_INSPECTION_PLAN add other_ids varchar2(50);
 alter table T_EM_RELATED_UNIT add unit_level number;
 
 
+---------------------------------------------------------------
+-- ±‰µÁ’æ
+alter table T_MAM_SUBSTATION rename column inv_id to voltage_id;
+alter table T_MAM_SUBSTATION rename column ina_id to current_id;
+alter table T_MAM_SUBSTATION rename column outv_id to unpower_id;
+alter table T_MAM_SUBSTATION rename column outa_id to power_day_id;
+alter table T_MAM_SUBSTATION rename column POWER_FACTOR to power_factor_id;
+
+alter table T_MAM_SUBSTATION add name varchar2(20);
+alter table T_MAM_SUBSTATION add voltage_level varchar2(20);
+alter table T_MAM_SUBSTATION add magnification number;
+
+alter table T_MAM_SUBSTATION add unpower_day_id number;
+alter table T_MAM_SUBSTATION add power_ele_id number;
+alter table T_MAM_SUBSTATION add unpower_ele_id number;
+alter table T_MAM_SUBSTATION add type number;
+
+

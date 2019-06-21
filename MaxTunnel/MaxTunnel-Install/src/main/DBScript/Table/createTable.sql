@@ -256,3 +256,34 @@ begin
 end OMM_INSPECTION_TEMPLATE_TG;
 /
 alter trigger OMM_INSPECTION_TEMPLATE_TG enable;
+
+
+-- 任务多图上传表
+create table T_OMM_MULTI_FILE
+(
+  ID         NUMBER NOT NULL,
+  RELATION_ID NUMBER NOT NULL,
+  IMG_URL    VARCHAR2(200),
+  TYPE			NUMBER,
+  CREATE_TIME   DATE
+);
+alter table T_OMM_MULTI_FILE add constraint OMM_MULTI_FILE_ID primary key(ID);
+
+-- create OMM_MULTI_FILE_SQ
+create sequence OMM_MULTI_FILE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger OMM_MULTI_FILE_TG
+CREATE OR REPLACE TRIGGER OMM_MULTI_FILE_TG
+  BEFORE INSERT ON T_OMM_MULTI_FILE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OMM_MULTI_FILE_SQ.nextval into :new.id from dual;
+end OMM_MULTI_FILE_TG;
+/
+alter trigger OMM_MULTI_FILE_TG enable;

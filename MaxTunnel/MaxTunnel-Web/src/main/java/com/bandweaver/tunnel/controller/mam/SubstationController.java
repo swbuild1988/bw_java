@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.mam.substation.SubstationDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.substation.SubstationService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation;
 import com.bandweaver.tunnel.common.biz.vo.mam.substation.SubstationVo;
@@ -31,13 +32,20 @@ public class SubstationController {
 	/**
 	 * 添加
 	 * @param tunnelId
-	 * @param invId  进线电压id
-	 * @param inaId  进线电流id
-	 * @param outvId  出线电压id
-	 * @param outaId  出线电流id
-	 * @param powerId  实时功率id
-	 * @param eleRadius  供电半径
-	 * @param powerFactor  功率因数
+	 * @param voltageId  电压id
+	 * @param currentId  电流id
+	 * @param name	回路名称
+	 * @param voltageLevel  电压等级
+	 * @param magnification  倍率
+	 * @param powerId  有功功率id
+	 * @param unpowerId  无功功率id
+	 * @param powerFactorId	功率因数id
+	 * @param powerDayId	有功日电量id
+	 * @param unpowerDayId	无功日电量id
+	 * @param powerEleId	有功电量示值id
+	 * @param unpowerEleId	无功电量示值id
+	 * @param type	类型   高压进线:true  低压出线:false
+	 * @param eleRadius	供电半径
 	 * @param compensationFactor  功率补偿因数
 	 * @param position  位置信息
 	 * @param time  创建时间
@@ -56,17 +64,7 @@ public class SubstationController {
 	/**
 	 * 修改
 	 * @param id
-	 * @param tunnelId
-	 * @param invId  进线电压id
-	 * @param inaId  进线电流id
-	 * @param outvId  出线电压id
-	 * @param outaId  出线电流id
-	 * @param powerId  实时功率id
-	 * @param eleRadius  供电半径
-	 * @param powerFactor  功率因数
-	 * @param compensationFactor  功率补偿因数
-	 * @param position  位置信息
-	 * @param time  创建时间
+	 * @param 其他参数参考添加接口
 	 * @return
 	 * @author ya.liu
 	 * @Date 2019年4月18日
@@ -103,7 +101,7 @@ public class SubstationController {
 	 */
 	@RequestMapping(value = "substations/{id}", method = RequestMethod.GET)
 	public JSONObject getSubstationDto(@PathVariable("id") Integer id) {
-		Substation s = substationService.getDtoById(id);
+		SubstationDto s = substationService.getDtoById(id);
 		
 		return CommonUtil.success(s);
 	}
@@ -112,11 +110,8 @@ public class SubstationController {
 	 * 条件获取列表，不分页
 	 * @param id
 	 * @param tunnelId
-	 * @param invId  进线电压id
-	 * @param inaId  进线电流id
-	 * @param outvId  出线电压id
-	 * @param outaId  出线电流id
-	 * @param powerId  实时功率id
+	 * @param name	支持模糊查询
+	 * @param type	类型   高压进线:true  低压出线:false
 	 * @param startTime
 	 * @param endTime
 	 * @return
@@ -124,8 +119,8 @@ public class SubstationController {
 	 * @Date 2019年4月22日
 	 */
 	@RequestMapping(value = "substations/condition", method = RequestMethod.POST)
-	public JSONObject getSubstations(@RequestBody SubstationVo vo) {
-		List<Substation> list = substationService.getListByCondition(vo);
+	public JSONObject getSubstations(@RequestBody(required=false) SubstationVo vo) {
+		List<SubstationDto> list = substationService.getListByCondition(vo);
 		
 		return CommonUtil.success(list);
 	}
@@ -134,11 +129,8 @@ public class SubstationController {
 	 * 条件获取列表，分页
 	 * @param id
 	 * @param tunnelId
-	 * @param invId  进线电压id
-	 * @param inaId  进线电流id
-	 * @param outvId  出线电压id
-	 * @param outaId  出线电流id
-	 * @param powerId  实时功率id
+	 * @param name	支持模糊查询
+	 * @param type	类型   高压进线:true  低压出线:false
 	 * @param startTime
 	 * @param endTime
 	 * @param pageSize
@@ -150,7 +142,7 @@ public class SubstationController {
 	@RequiresPermissions("substations:list")
 	@RequestMapping(value = "substations/datagrid", method = RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody SubstationVo vo) {
-		PageInfo<Substation> list = substationService.dataGrid(vo);
+		PageInfo<SubstationDto> list = substationService.dataGrid(vo);
 		
 		return CommonUtil.success(list);
 	}

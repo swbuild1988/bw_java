@@ -26,7 +26,9 @@ import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjAIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjDIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjDistributeService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSIService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
@@ -61,6 +63,8 @@ public class DataAnalyseController {
     private MeasObjDIService measObjDIService;
     @Autowired
     private MeasObjSIService measObjSIService;
+    @Autowired
+    private MeasObjSOService measObjSOService;
     @Autowired
     private MeasObjDistributeService measObjDistributeService;
     @Autowired
@@ -99,8 +103,11 @@ public class DataAnalyseController {
 		case SI:
 			pageInfo= measObjSIService.getByCondition(vo);
 			break;
-		case DISTRIBUTE:
-			pageInfo= measObjDistributeService.getByCondition(vo);
+//		case DISTRIBUTE:
+//			pageInfo= measObjDistributeService.getByCondition(vo);
+//			break;
+		case SO:
+			pageInfo= measObjSOService.dataGrid(vo);
 			break;
 		default:
 			break;
@@ -266,21 +273,34 @@ public class DataAnalyseController {
          return result;  
 	}
 	
-	
-	
-	
-//	//统计object_id在alarm表中共有多少
-//	int totalCount = alarmService.getCountByObjectIds(objectIdList,vo.getStartTime(),vo.getEndTime());
-//	LogUtil.info("totalCount:" + totalCount);
-//	
-//	//开始分页
-//	PageBean<AlarmDto> pageBean = new PageBean<>(vo.getPageNum(), vo.getPageSize(), totalCount);
-//	LogUtil.info("start:" + pageBean.getStart());
-//	LogUtil.info("end:" + pageBean.getEnd());
-//	
-//	List<AlarmDto> almList = alarmService.startPage(pageBean.getStart(),pageBean.getEnd(),objectIdList,vo.getStartTime(),vo.getEndTime());
-//	pageBean.setList(almList);
-//	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, pageBean);
-  
+	/**查询某一监测对象历史数据 
+     * @param id 监测对象id
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return   
+     * @author ya.liu
+     * @Date 2019年6月20日
+     */
+    @RequestMapping(value = "data-analyse/measvalue/history/object" ,method = RequestMethod.POST)
+    public JSONObject getMoHisDataByObjectId(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "id,startTime,endTime");
+    	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
+    	
+    	MeasObj measObj = measObjModuleCenter.getMeasObj(vo.getId());
+    	DataType dataType = DataType.getEnum( measObj.getDatatypeId());
+    	
+    	List<JSONObject> json = new ArrayList<>();
+    	if(dataType == DataType.AI) {
+    		List<MeasValueAI> list = measValueAIService.getListByObjectAndTime(vo.getId(), vo.getStartTime(), vo.getEndTime());
+    		for (MeasValueAI measValueAI : list) {
+    			JSONObject result = new JSONObject();
+				result.put("key", measValueAI.getTime());
+				result.put("val", measValueAI.getCv());
+				json.add(result);
+			}
+    	}
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
+    }
     
 }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.omm.MultiFileMapper">
+	<cache/>
+	<insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.MultiFile">
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+		    SELECT OMM_MULTI_FILE_SQ.currval from DUAL
+		</selectKey>
+		insert into T_OMM_MULTI_FILE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="relationId != null">
+				RELATION_ID,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="imgUrl != null and imgUrl.trim() != ''">
+				IMG_URL,
+			</if>
+			<if test="crtTime != null">
+				CREATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="relationId != null">
+				#{relationId},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="imgUrl != null and imgUrl.trim() != ''">
+				#{imgUrl},
+			</if>
+			<if test="crtTime != null">
+				#{crtTime},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.MultiFile">
+		update T_OMM_MULTI_FILE
+		<set>
+			<if test="relationId != null">
+				RELATION_ID = #{relationId},
+			</if>
+			<if test="type != null">
+				TYPE = #{type},
+			</if>
+			<if test="imgUrl != null and imgUrl.trim() != ''">
+				IMG_URL = #{imgUrl},
+			</if>
+			<if test="crtTime != null">
+				CREATE_TIME = #{crtTime},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from T_OMM_MULTI_FILE WHERE ID = #{id}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from T_OMM_MULTI_FILE 
+		where relation_id = #{relationId} and type = #{type}
+	</delete>
+	
+	<select id="getMultiFileById" resultMap="BaseMap">
+		select *
+		from T_OMM_MULTI_FILE t
+		where t.id = #{id}
+	</select>
+	
+	<select id="selectByCondition" resultMap="BaseMap">
+		select *
+		from T_OMM_MULTI_FILE t
+		<where>
+			<if test="id != null">
+				and t.id = #{id}
+			</if>
+			<if test="relationId != null">
+				and t.RELATION_ID = #{relationId}
+			</if>
+			<if test="type != null">
+				and t.type = #{type}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap id="BaseMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.MultiFile">
+		<id column="id" property="id"/>
+		<result column="RELATION_ID" property="relationId"/>
+		<result column="type" property="type"/>
+		<result column="img_url" property="imgUrl"/>
+		<result column="create_time" property="crtTime"/>
+	</resultMap>
+</mapper>

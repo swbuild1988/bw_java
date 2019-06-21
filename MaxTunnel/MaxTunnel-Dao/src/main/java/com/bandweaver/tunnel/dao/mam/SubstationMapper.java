@@ -8,7 +8,7 @@ import com.bandweaver.tunnel.common.biz.vo.mam.substation.SubstationVo;
 
 public interface SubstationMapper {
 	
-	Substation selectByPrimaryKey(Integer id);
+	SubstationDto selectByPrimaryKey(Integer id);
 	
 	int deleteByPrimaryKey(Integer id);
 	
@@ -16,7 +16,7 @@ public interface SubstationMapper {
 	
 	int updateByPrimaryKeySelective(Substation substation);
 	
-	List<Substation> getListByCondition(SubstationVo vo);
+	List<SubstationDto> getListByCondition(SubstationVo vo);
 	
 	SubstationDto getDtoById(Integer id);
 }

@@ -42,6 +42,7 @@ public class InstrumentRecordServiceImpl implements InstrumentRecordService {
 	}
 
 	@Override
+	@Transactional
 	public int updateReturnTime(Integer useStatus,InstrumentRecord record, List<Integer> list) {
 		List<Integer> ls = new ArrayList<>();
 		for(Integer i : list) {

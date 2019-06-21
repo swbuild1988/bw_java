@@ -47,6 +47,10 @@ public class MeasObjVo extends BaseVo{
     private String dcv;
     private Double spacePrecision;
     
+    /**模拟量输入查询参数*/
+    private Double minVal;
+    private Double maxVal;
+    
     
     public Integer getId() {
         return id;
@@ -224,6 +228,22 @@ public class MeasObjVo extends BaseVo{
 
 	public void setSpacePrecision(Double spacePrecision) {
 		this.spacePrecision = spacePrecision;
+	}
+
+	public Double getMinVal() {
+		return minVal;
+	}
+
+	public void setMinVal(Double minVal) {
+		this.minVal = minVal;
+	}
+
+	public Double getMaxVal() {
+		return maxVal;
+	}
+
+	public void setMaxVal(Double maxVal) {
+		this.maxVal = maxVal;
 	}
 
 	@Override

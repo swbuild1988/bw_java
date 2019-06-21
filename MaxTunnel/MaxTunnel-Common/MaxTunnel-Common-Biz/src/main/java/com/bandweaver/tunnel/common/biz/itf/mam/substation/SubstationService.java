@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
 
 public interface SubstationService {
 
-	Substation selectByPrimaryKey(Integer id);
+	SubstationDto selectByPrimaryKey(Integer id);
 	
 	int deleteByPrimaryKey(Integer id);
 	
@@ -17,9 +17,9 @@ public interface SubstationService {
 	
 	int updateByPrimaryKeySelective(Substation substation);
 	
-	List<Substation> getListByCondition(SubstationVo vo);
+	List<SubstationDto> getListByCondition(SubstationVo vo);
 	
-	PageInfo<Substation> dataGrid(SubstationVo vo);
+	PageInfo<SubstationDto> dataGrid(SubstationVo vo);
 	
 	SubstationDto getDtoById(Integer id);
 }
