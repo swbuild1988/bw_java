@@ -1,8 +1,8 @@
 <template>
-    <div :style="backStyle">
-        <Form :model="task" :label-width="140">
-            <h2 class="formTitle" v-show="this.pageType==4">提交任务执行结果</h2>
-            <h2 class="formTitle" v-show="this.pageType==1">巡检任务详情</h2>
+    <div class="formBG">
+        <div class="formTitle" v-show="this.pageType==4">提交任务执行结果</div>
+        <div class="formTitle" v-show="this.pageType==1">巡检任务详情</div>
+        <Form  :model="task" :label-width="140">
             <FormItem label="所属计划：">
                 <Input type="text" v-model="task.planName" readonly></Input>
             </FormItem>
@@ -28,13 +28,13 @@
             <FormItem label="巡检描述：">
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" readonly></Input>
             </FormItem>
-            <FormItem style="text-align: center" v-show="this.pageType==4">
+            <div style="text-align: center" v-show="this.pageType==4">
                 <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
                 <Button type="primary">提交</Button>
-            </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px;" v-show="this.pageType==1">
-                <Button type="ghost" style="margin-left: 8px" @click="goBack()">返回</Button>
-            </FormItem>
+            </div>
+            <div style="margin-left: 140px;text-align: center" v-show="this.pageType==1">
+                <Button type="ghost" @click="goBack()">返回</Button>
+            </div>
         </Form>
     </div>
 </template>
@@ -128,34 +128,9 @@ export default {
                     title: '巡检描述',
                     key: 'content'
                 },
-                // {
-                //     title: '操作',
-                //     render: (h,params) => {
-                //         return h('Button',{
-                //             props: {
-                //                 type: 'error',
-                //                 size: 'small'
-                //             },
-                //             on: {
-                //                 click: () => {
-                //                     this.remove(params.index)
-                //                 }
-                //             }
-                //         },'删除')
-                //     }
-                // }
             ],
             areas:[],
-            stores:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                height: '100%',
-                position: 'relative',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%',
-                paddingTop: '30px'
-            }
+            stores:[]
         }    
     },
     mounted(){
@@ -295,8 +270,13 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 780px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
+}
+.formTitle{
+    color: #fff;
+    width: auto;
+    margin-top: -3.2vh;
+    font-size: 2.2vmin;   
 }
 .adddefect,.addRecords{
     width: 100%;
@@ -318,16 +298,33 @@ export default {
 .addRecords{
     margin: 5px;
 }
+.formBG{
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+}
+
 @media (min-width: 2200px){
-    .formTitle{
-        font-size: 2.8vmin;
-    }
     .ivu-form.ivu-form-label-right{
         width: 50%;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
@@ -338,6 +335,13 @@ export default {
     {
         height: 4vmin;
         line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-cell-with-expand{
+        height: 4.7vmin;
+        line-height: 4.7vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-cell-with-expand .ivu-table-cell-expand i{
         font-size: 1.4vmin;
     }
 }

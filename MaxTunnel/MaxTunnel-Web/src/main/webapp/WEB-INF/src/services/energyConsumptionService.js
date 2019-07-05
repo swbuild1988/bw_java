@@ -1,11 +1,21 @@
 import axios from "axios";
+import {
+    get,
+    put,
+    del,
+    post
+} from "../utils/http";
 
 var EnergyConsumptionService = {
     // 根据管廊ID，起始时间获取能耗总值
-    getECTotal: function(params) {
+    getECTotal: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("tunnels/energies-det/total", params).then(res => {
-                let { code, data, msg } = res.data;
+            post("tunnels/energies-det/total", params).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -15,10 +25,14 @@ var EnergyConsumptionService = {
         });
     },
     // 根据管廊ID，起始时间获取各能耗类别值
-    getECCategory: function(params) {
+    getECCategory: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("tunnels/energies-det/ratio", params).then(res => {
-                let { code, data, msg } = res.data;
+            post("tunnels/energies-det/ratio", params).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -28,31 +42,38 @@ var EnergyConsumptionService = {
         });
     },
     // 根据管廊ID和时间周期获取能耗分类详情（曲线表）
-    getECCategoryDetail: function(tunnelId, timeCycle) {
+    getECCategoryDetail: function (tunnelId, timeCycle) {
         return new Promise((resolve, reject) => {
-            axios
-                .get("tunnels/" + tunnelId + "/energies-det/" + timeCycle)
+            get("tunnels/" + tunnelId + "/energies-det/" + timeCycle)
                 .then(res => {
-                    let { code, data, msg } = res.data;
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
                     if (code == 200) {
                         resolve(data);
                     } else {
                         reject(
                             msg +
-                                "地址：tunnels/" +
-                                tunnelId +
-                                "/energies-det/" +
-                                timeCycle
+                            "地址：tunnels/" +
+                            tunnelId +
+                            "/energies-det/" +
+                            timeCycle
                         );
                     }
                 });
         });
     },
     // 管廊能耗分页查询(表格)
-    getECDatagrid: function(params) {
+    getECDatagrid: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/energies/datagrid", params).then(res => {
-                let { code, data, msg } = res.data;
+            post("/tunnels/energies/datagrid", params).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -62,10 +83,14 @@ var EnergyConsumptionService = {
         });
     },
     // 根据管廊ID，起始时间获取能耗信息(曲线表)
-    getECInfo: function(params) {
+    getECInfo: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("tunnels/energies/time/condition", params).then(res => {
-                let { code, data, msg } = res.data;
+            post("tunnels/energies/time/condition", params).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
@@ -75,59 +100,75 @@ var EnergyConsumptionService = {
         });
     },
     // 获取历史总能耗
-    getECHistoryTotal: function() {
+    getECHistoryTotal: function () {
         return new Promise((resolve, reject) => {
-            axios.get("/tunnels/energies/timetype/1").then(res => {
-                let { code, data, msg } = res.data;
+            get("tunnels/consumes/timetype/1").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
-                    reject(msg + "地址：/tunnels/energies/timetype/1");
+                    reject(msg + "地址：/tunnels/consumes/timetype/1");
                 }
             });
         });
     },
     // 获取本年总能耗
-    getECYearTotal: function() {
+    getECYearTotal: function () {
         return new Promise((resolve, reject) => {
-            axios.get("/tunnels/energies/timetype/2").then(res => {
-                let { code, data, msg } = res.data;
+            get("/tunnels/consumes/timetype/2").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
-                    reject(msg + "地址：/tunnels/energies/timetype/2");
+                    reject(msg + "地址：/tunnels/consumes/timetype/2");
                 }
             });
         });
     },
     // 获取本月总能耗
-    getECMonthTotal: function() {
+    getECMonthTotal: function () {
         return new Promise((resolve, reject) => {
-            axios.get("/tunnels/energies/timetype/3").then(res => {
-                let { code, data, msg } = res.data;
+            get("/tunnels/consumes/timetype/3").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
-                    reject(msg + "地址：/tunnels/energies/timetype/3");
+                    reject(msg + "地址：/tunnels/consumes/timetype/3");
                 }
             });
         });
     },
     // 根据起始时间查询表数据
-    getECDetail: function(params) {
+    getECDetail: function (params) {
         return new Promise((resolve, reject) => {
-            axios.post("/tunnels/energies/time", params).then(res => {
-                let { code, data, msg } = res.data;
+            post("tunnels/consume-datas", params).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
                 if (code == 200) {
                     resolve(data);
                 } else {
-                    reject(msg + "地址：/tunnels/energies/time");
+                    reject(msg + "地址：tunnels/consume-datas");
                 }
             });
         });
     },
     // 获得每条管廊每个月的总能耗
-    getTotleEnergyEveryMonthAndTunnel: function() {
+    getTotleEnergyEveryMonthAndTunnel: function () {
         // 地址
         let tunnels = [
             "古城大街",
@@ -151,8 +192,7 @@ var EnergyConsumptionService = {
             res.push(tmp);
         }
         return new Promise((resolve, reject) => {
-            // axios
-            //     .get("energy/totle-everymonth")
+            // get("energy/totle-everymonth")
             //     .then(res => {
             //         let { code, data, msg } = res.data;
             //         if (code == 200) {
@@ -168,7 +208,7 @@ var EnergyConsumptionService = {
         });
     },
     // 获得每条管廊每个月的每公里能耗
-    getOneKmEneryEveryMonthAndTunnel: function() {
+    getOneKmEneryEveryMonthAndTunnel: function () {
         // 地址
         let tunnels = [
             "古城大街",
@@ -193,8 +233,7 @@ var EnergyConsumptionService = {
         }
         return new Promise((resolve, reject) => {
             resolve(res);
-            // axios
-            //     .get("energy/average-everymonth")
+            // get("energy/average-everymonth")
             //     .then(res => {
             //         let { code, data, msg } = res.data;
             //         if (code == 200) {
@@ -210,4 +249,6 @@ var EnergyConsumptionService = {
     }
 };
 
-export { EnergyConsumptionService };
+export {
+    EnergyConsumptionService
+};

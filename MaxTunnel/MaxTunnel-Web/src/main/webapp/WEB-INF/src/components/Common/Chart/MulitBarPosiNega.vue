@@ -25,7 +25,37 @@ export default {
         },
         parameters: {
             type: Object
-        }
+        },
+        leftBarColor: {
+            default: '#25cef3',
+            type: String
+        },
+        rightBarColor: {
+            default: '#d01864',
+            type: String
+        },
+        lineColor: {
+            default: '#25cef3',
+            type: String
+        },
+        textColor:{
+            default: '#fff',
+            type: String
+        },
+        titlePosition: {
+            default: 'left',
+            type: String
+        },
+        chartType: {
+            default: 'bar',
+            type: String
+        },
+        xSplitLine: {
+            default: {
+                show: false
+            },
+            type: Object
+        },
     },
     data() {
         return{
@@ -54,60 +84,60 @@ export default {
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('5%')
+                        fontSize: this.getFontSize('5%'),
+                        color: this.textColor
                     },
+                    x: this.titlePosition,
+                    top: "2%"
                 },
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'shadow',
                         label: {
-                            show: true,
-                            backgroundColor: '#161139'
+                            show: true
                         }
                     }
                 },
                 grid: {
                     left: "3%",
                     right: "3%",
-                    bottom: "2%",
-                    top: '10%',
+                    bottom: "4%",
+                    top: '15%',
                     containLabel: true
                 },
                 calculable: true,
                 legend: {
                     data: this.legendData,
+                    x:'right',
                     textStyle: { 
                         fontSize: _this.getFontSize('5%') ,
-                        align:'center',
-                    }
+                        color: this.textColor
+                    },
+                    padding: _this.getFontSize('6%')
                 },
                 xAxis: [
                     {
                         type: 'category',
                         data: [],
+                        splitLine: this.xSplitLine,
+                        axisLine: {
+                            show: false
+                        },
                         axisTick: {
-                            alignWithLabel: true
-                        },                      
+                            show: false
+                        },
                         axisLabel: {
                             show: true,
-                            align:'center',
-                            color:'#161139',
-                            interval: 0,
                             textStyle: {
-                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
-                            }
+                                fontSize : this.getFontSize('5%'),      //更改坐标轴文字大小
+                                color: this.textColor
+                            },                            
                         },
                     }
                 ],
                 yAxis: [{
                     type: 'value',
-                    splitLine: {
-                        show: true,
-                        lineStyle:{
-                            color:'#161139'
-                        }
-                    },
                     axisLine:{
                         show:false
                     },
@@ -116,10 +146,19 @@ export default {
                         textStyle: {
                             fontSize : _this.getFontSize('4%'),      //更改坐标轴文字大小
                             fontWeight:  this.getFontSize('10%'),
+                            color: this.textColor
                         },                
-                        color:'#161139'
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle:{
+                            type:'dashed',
+                            color: this.lineColor
+                        }
                     }
-                        
                 }],
                 
                 series: []
@@ -141,37 +180,21 @@ export default {
                     let series = [
                         {
                             name: this.option.legend.data[0],
-                            type: 'bar',
-                            stack: '总量',
+                            type: this.chartType,
                             barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
-                                    barBorderRadius: 50,
-                                    color: new this.$echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#BC34BC'},
-                                            {offset: 1, color: '#7F3594'}
-                                        ]
-                                    )
+                                    color: this.leftBarColor
                                 },
                             },
                             data: yData1,
                         },{
                             name: this.option.legend.data[1],
-                            type: 'bar',
-                            stack: '总量',
+                            type: this.chartType,
                             barWidth: this.getFontSize('5%'),
                             itemStyle: {
                                 normal: {
-                                    barBorderRadius: 50,
-                                    color:new this.$echarts.graphic.LinearGradient(
-                                        0, 0, 0, 1,
-                                        [
-                                            {offset: 0, color: '#4740C8'},
-                                            {offset: 1, color: '#EF71FF'}
-                                        ]
-                                    )
+                                    color: this.rightBarColor
                                 }
                             },
                             data: yData2

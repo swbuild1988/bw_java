@@ -23,6 +23,8 @@ public class RelatedUnit implements Serializable {
     private String tel;
     //单位类别：枚举
     private Integer unitType;
+    //单位级别
+    private Integer unitLevel;
     //单位地址
     private String address;
     //经度
@@ -33,8 +35,17 @@ public class RelatedUnit implements Serializable {
     private String sectionIds;
     
     private Date crtTime;
+    
+    public RelatedUnit() {}
 
-    public Integer getId() {
+    public RelatedUnit(Integer id, String longitude, String latitude) {
+		super();
+		this.id = id;
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -112,6 +123,14 @@ public class RelatedUnit implements Serializable {
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public Integer getUnitLevel() {
+		return unitLevel;
+	}
+
+	public void setUnitLevel(Integer unitLevel) {
+		this.unitLevel = unitLevel;
 	}
     
 }

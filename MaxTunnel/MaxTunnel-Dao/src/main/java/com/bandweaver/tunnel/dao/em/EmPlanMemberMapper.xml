@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.em.EmPlanMemberMapper">
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanMember">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="TEL2" jdbcType="VARCHAR" property="tel2" />
+    <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId" />
+    <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.em.EmPlanMemberDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="GROUP_ID" jdbcType="DECIMAL" property="groupId" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="TEL2" jdbcType="VARCHAR" property="tel2" />
+    <result column="STAFF_ID" jdbcType="DECIMAL" property="staffId" />
+    <result column="TIME" jdbcType="TIMESTAMP" property="time" />
+    <association property="staff" javaType="com.bandweaver.tunnel.common.biz.pojo.Staff"
+    	column="STAFF_ID" select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
+    <association property="group" javaType="com.bandweaver.tunnel.common.biz.dto.em.EmPlanGroupDto"
+    	column="GROUP_ID" select="com.bandweaver.tunnel.dao.em.EmPlanGroupMapper.getById"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    ID, GROUP_ID, TEL, TEL2, STAFF_ID, TIME
+  </sql>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_EM_PLAN_Member
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from T_EM_PLAN_Member
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanMember">
+    insert into T_EM_PLAN_Member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        GROUP_ID,
+      </if>
+      <if test="tel != null">
+        TEL,
+      </if>
+      <if test="tel2 != null">
+        TEL2,
+      </if>
+      <if test="staffId != null">
+        STAFF_ID,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="groupId != null">
+        #{groupId},
+      </if>
+      <if test="tel != null">
+        #{tel},
+      </if>
+      <if test="tel2 != null">
+        #{tel2},
+      </if>
+      <if test="staffId != null">
+        #{staffId},
+      </if>
+      <if test="time != null">
+        #{time},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.em.EmPlanMember">
+    update T_EM_PLAN_Member
+    <set>
+      <if test="groupId != null">
+        GROUP_ID = #{groupId},
+      </if>
+      <if test="tel != null">
+        TEL = #{tel},
+      </if>
+      <if test="tel2 != null">
+        TEL2 = #{tel2},
+      </if>
+      <if test="staffId != null">
+        STAFF_ID = #{staffId},
+      </if>
+      <if test="time != null">
+        TIME = #{time},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getById" resultMap="DtoResultMap">
+  	select * from T_EM_PLAN_Member where id = #{id}
+  </select>
+  
+  
+<select id="getByCondition" resultMap="DtoResultMap">
+		select * from T_EM_PLAN_Member
+	<where>
+		<if test="id != null">
+	        AND ID = #{id}
+	    </if>
+		<if test="groupId != null">
+	        AND GROUP_ID = #{groupId}
+	      </if>
+	      <if test="tel != null and tel.trim() != ''">
+	        AND instr(TEL,#{tel}) > 0
+	      </if>
+	      <if test="tel2 != null and tel2.trim() != ''">
+	        AND instr(TEL2,#{tel2}) > 0
+	      </if>
+	      <if test="staffId != null">
+	        AND STAFF_ID = #{staffId}
+	      </if>
+	      <if test="startTime != null">
+	        AND TIME &gt;= #{startTime}
+	      </if>
+	      <if test="endTime != null">
+	        AND TIME &lt;= #{endTime}
+	      </if>
+	</where>
+	order by time desc
+</select>
+  
+</mapper>	

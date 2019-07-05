@@ -12,6 +12,8 @@ public interface VideoMapper {
     int insertVideo(Video video);
 
     int updateVideo(Video video);
+    
+    int deleteVideo(@Param("id") Integer id);
 
     VideoDto getVideoDto(@Param("id") Integer id);
 

@@ -1,72 +1,74 @@
 <template>
     <Row>
         <Col span="24">
-            <Row class="queryConditions" style="line-height: 37px;background: #fff;padding-left: 5px;">
+            <Row class="queryCondition" style="line-height: 37px;padding-left: 5px;">
                 <Col span="4">
-                    <span>仪表工具名称</span><span>：</span>
+                    <span class="conditionTitle">仪表工具名称</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.name" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    仪表工具类型：
+                    <span class="conditionTitle">仪表工具类型：</span>
                     <Select v-model="toolConditions.typeId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span>仪表工具型号</span><span>：</span>
+                    <span class="conditionTitle">仪表工具型号</span><span class="conditionTitle">：</span>
                     <Select v-model="toolConditions.modelId" style="width: 60%">
                         <Option value=null key="0">所有</Option>
                         <Option v-for="item in toolsModel" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span class="word63">借用人</span><span>：</span>
+                    <span class="word63 conditionTitle">借用人</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    <span class="word63">归还人</span><span>：</span>
+                    <span class="word63 conditionTitle">归还人</span><span class="conditionTitle">：</span>
                     <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
-                    <span>使用状态</span><span>：</span>
+                    <span class="conditionTitle">使用状态</span><span class="conditionTitle">：</span>
                     <Select v-model="toolConditions.useStatus" style="width: 60%">
                         <Option value=null key="2">所有</Option>
                         <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                     </Select>
                 </Col>
                 <Col span="4">
-                    <span>借用开始时间</span><span>：</span>
+                    <span class="conditionTitle">借用开始时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.startTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>借用结束时间</span><span>：</span>
+                    <span class="conditionTitle">借用结束时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.endTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>归还开始时间</span><span>：</span>
+                    <span class="conditionTitle">归还开始时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择开始时间" v-model="toolConditions.retStartTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
-                    <span>归还结束时间</span><span>：</span>
+                    <span class="conditionTitle">归还结束时间</span><span class="conditionTitle">：</span>
                     <DatePicker type="datetime" placeholder="请选择结束时间" v-model="toolConditions.retEndTime" style="width: 60%"></DatePicker>
                 </Col>
                 <Col span="4">
                     <Button type="primary" size="small" icon="ios-search" @click="showTable()">查询</Button>
                 </Col>
             </Row>
-            <div>
+            <div class="tableBG">
                 <Table stripe border :height="tableHieght" :columns="toolColums"  :data="toolData"></Table>
                 <div class="pageContainer" ref="pageContainer">
-                    <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
-                    show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    <div class="pageBox">
+                        <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" 
+                        show-elevatorn show-total show-sizer @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
+                    </div>
                 </div>
             </div>
         </Col>
-        <Col span="12" class="chartBox">
+        <Col class="chartBox">
             <MultiBarChart v-bind="toolStatic"></MultiBarChart>
         </Col>
-        <Col span="12" class="chartBox" style="margin-left: 5px;">
+        <Col class="chartBox" style="margin-left: 2vmin;">
             <MulitBarPosiNega v-bind="inventory"></MulitBarPosiNega>
         </Col>
     </Row>    
@@ -206,13 +208,7 @@ export default {
                     }
                 }
             ],
-            toolData: [
-                { id: 1, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 2, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 3, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 4, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' },
-                { id: 5, toolName: '门禁卡', takingTime: '' , takingPerson: '张三', takingNum: '10', expectReturnTime: '', operation: 'admin' }
-            ],
+            toolData: [],
             page:{
                 pageSize: 6,
                 pageTotal: 0,
@@ -241,16 +237,17 @@ export default {
                 title: '仪表工具状态',
                 parameters: {
                     option: {
-                        backgroundColor: '#E8E8FF',
-                        color: ['#006699', '#e5323e'],
+                        color: ['#25cef3', '#d01864'],
                         title: {
                             text: "仪表工具状态",
                             textStyle: {
-                                color: "#161139"
+                                color: "#fff"
                             }
                         }
                     },
-                }
+                },
+                textColor: '#fff',
+                lineColor: '#25cef3'
             },
             inventory: {
                 id: 'inventoryId',
@@ -259,11 +256,10 @@ export default {
                 legendData: ['在库','出库'],
                 parameters: {
                     option: {
-                        backgroundColor: '#FBFBEA',
                         title: {
                             text: '仪表工具库存状态',
                             textStyle: {
-                                color: '#161139'
+                                color: '#fff'
                             }
                         },
                         legend: {
@@ -271,12 +267,22 @@ export default {
                             textStyle: {
                                 color: '#161139'
                             }
-                        },
+                        }
                     },
                     timer: {
                         interval: 5000
                     }
-                }
+                },
+                chartType: 'line',
+                titlePosition: 'center',
+                xSplitLine:{  
+                    show:true,
+                    lineStyle:{
+                        color:'#4b5177',
+                        type:'dashed'
+                    }
+                },
+                lineColor: '#4b5177'
             },
             toolsType: [],
             toolsModel: [],
@@ -367,7 +373,7 @@ export default {
             this.showTable()
         },
         getTableHeight(){
-            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-30
+            this.tableHieght = document.body.offsetHeight-((document.body.offsetHeight/100)*64)-this.$refs.pageContainer.offsetHeight-40
         }
     }
 }
@@ -386,9 +392,65 @@ export default {
     margin-right: -1.5em;
 }
 .chartBox{
-    width: 49.5%;
+    width: 42vw;
     height: 40vh;
     margin: 5px 5px 5px 0px;
+    background: url("../../../../assets/UM/chartBG.png") no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+}
+.ivu-table-wrapper{
+    border: none;
+}
+.ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: 1px solid #7d7d7d;
+}
+.pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
+}
+.tableBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+	background-size: 100% 100%;
+    padding: 1% 1% 0 1%;
+}
+.ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+    border-right: none;
+}
+.ivu-select,.ivu-select >>> .ivu-select-selection {
+    background-color: #fffdfd00 !important;
+}
+.queryCondition .ivu-select{
+    color: #fff;
+}
+.pageBox{
+    padding-right: 1vmin;
+    padding-bottom: 1vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

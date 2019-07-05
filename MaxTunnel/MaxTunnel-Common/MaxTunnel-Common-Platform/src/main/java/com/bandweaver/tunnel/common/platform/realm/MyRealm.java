@@ -1,10 +1,12 @@
 package com.bandweaver.tunnel.common.platform.realm;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
+import com.bandweaver.tunnel.common.platform.util.RedisUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -22,11 +24,14 @@ import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MyRealm extends AuthorizingRealm {
 
 	@Resource
 	private UserService userService;
+	@Autowired
+	private RedisUtil redisUtil;
 
 	/**
 	 * 为当前登录的用户授予角色和权限
@@ -35,13 +40,33 @@ public class MyRealm extends AuthorizingRealm {
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		// 获取用户名
 		String userName = (String) principals.getPrimaryPrincipal();
+		String REDIS_KEY = userName + "." + Constants.SHIRO_PERMISSION_KEY;
+		Set<String> permissionSet = new HashSet<>();
+		if (redisUtil.hasKey(REDIS_KEY)) {
+
+			// 从缓存中获取权限信息
+			permissionSet = redisUtil.sMembers(REDIS_KEY);
+			LogUtil.info("从redis缓存中命中:" + permissionSet);
+		} else {
+
+			// 如果没有，则需要从数据库查询，并同步到redis缓存中
+//			JSONObject permissions = userService.getPermissions(userName);
+//			permissionSet = (Set<String>) permissions.get("permissionList");
+			permissionSet = userService.getUserPermissions(userName);
+			LogUtil.info("从DB查询用户" + userName + "权限为：" + permissionSet);
+			for (String permission : permissionSet) {
+				redisUtil.sAdd(REDIS_KEY, permission);
+				// 设置缓存过期时间
+				redisUtil.expire(REDIS_KEY,30, TimeUnit.MINUTES);
+			}
+		}
+
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		// 进行授权权限
-		JSONObject permissions = userService.getPermissions(userName);
-		LogUtil.info("用户" + userName + "权限为：" + permissions);
-		authorizationInfo.addStringPermissions((Collection<String>) permissions.get("permissionList"));
+		authorizationInfo.addStringPermissions(permissionSet);
 		return authorizationInfo;
 	}
+
+
 
 	/**
 	 * 验证当前登录的用户
@@ -60,10 +85,12 @@ public class MyRealm extends AuthorizingRealm {
 	    //登录验证
 		AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getName(), user.getPassword(), super.getName());
 //		user.setPassword(null);//不保存密码到session中
+
 		// 保存用户信息到session中
+//		JSONObject permissions = userService.getPermissions(token.getUsername());
+//		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_PERMISSION, (Set<String>)permissions.get("permissionList"));
 		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, user);
-		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_PERMISSION,
-				userService.getPermissions(token.getUsername()));
+		SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_PERMISSION, userService.getUserPermissions(token.getUsername()));
 		return authcInfo;
 	}
 }

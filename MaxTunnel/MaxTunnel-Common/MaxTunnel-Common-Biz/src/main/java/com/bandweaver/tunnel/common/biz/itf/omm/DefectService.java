@@ -16,7 +16,7 @@ public interface DefectService {
 
     List<DefectDto> getDefectsOfTunnel(Integer tunnelId);
 
-    int getCountOfDefectByTunnelAndType(Integer tunnelId, Integer typeValue);
+    int getCountByCondition(DefectVo vo);
 
     List<DefectDto> getDefectsByCondition(DefectVo vo);
 
@@ -26,8 +26,6 @@ public interface DefectService {
      * @param maintenanceOrderId
      */
     void maintComplete(int maintenanceOrderId);
-    
-    List<InspectionPlan> getDefectCountByTunnelId();
     
     PageInfo<DefectDto> dataGrid(DefectVo defectVo);
     

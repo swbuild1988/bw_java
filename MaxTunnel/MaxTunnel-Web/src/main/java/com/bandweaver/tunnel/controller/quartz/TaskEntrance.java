@@ -1,15 +1,18 @@
 
 package com.bandweaver.tunnel.controller.quartz;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.sql.Time;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import com.bandweaver.tunnel.service.common.export.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
@@ -25,6 +28,7 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
+import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
 import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
 import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
@@ -37,6 +41,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDistribute;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSO;
+import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
@@ -123,8 +128,52 @@ public class TaskEntrance {
     private ConsumeService consumeService;
     @Autowired
     private ConsumeDataService consumeDataService;
+    @Resource(name = "H5StreamServiceImpl")
+    private OnvifService h5streamService;
     
-   
+    /**
+	 * 录像视频定时拍照
+	 */
+	public void addSnaps() {
+		h5streamService.addSnap();
+	}
+
+	/**
+	 * 月报导出
+	 */
+	public void monthExport(){
+		String classpath = this.getClass().getResource("/").getPath().replaceFirst("/", "");
+		String webappRoot = classpath.replaceAll("WEB-INF/classes/", "");
+		String fileDirPath = webappRoot.replaceAll("//","\\") + "files\\excel\\";
+
+		new Thread(new AlarmTask(fileDirPath, TimeEnum.MONTH.getValue()),"告警线程").start();
+		new Thread(new InspectionTask(fileDirPath, TimeEnum.MONTH.getValue()),"巡检线程").start();
+		new Thread(new MeasObjTask(fileDirPath, TimeEnum.MONTH.getValue()),"监测线程").start();
+		new Thread(new EnergyTask(fileDirPath, TimeEnum.MONTH.getValue()),"能耗线程").start();
+		new Thread(new EquipmentTask(fileDirPath, TimeEnum.MONTH.getValue()),"设备线程").start();
+	}
+
+
+    /**
+     * 周报导出
+     */
+    public void weekExport(){
+        String classpath = this.getClass().getResource("/").getPath().replaceFirst("/", "");
+        String webappRoot = classpath.replaceAll("WEB-INF/classes/", "");
+        String fileDirPath = webappRoot.replaceAll("//","\\") + "files\\excel\\";
+
+		new Thread(new AlarmTask(fileDirPath, TimeEnum.WEEK.getValue()),"告警线程").start();
+		new Thread(new InspectionTask(fileDirPath, TimeEnum.WEEK.getValue()),"巡检线程").start();
+		new Thread(new MeasObjTask(fileDirPath, TimeEnum.WEEK.getValue()),"监测线程").start();
+		new Thread(new EnergyTask(fileDirPath, TimeEnum.WEEK.getValue()),"能耗线程").start();
+		new Thread(new EquipmentTask(fileDirPath, TimeEnum.WEEK.getValue()),"设备线程").start();
+
+    }
+
+
+
+
+
     /**管廊运行时间定时自增
      * @author shaosen
      * @date 2019年1月10日
@@ -143,23 +192,40 @@ public class TaskEntrance {
      * @Date 2018年12月8日
      */
     public void sendTestAlarm() throws Exception {
-//    	int level = (int)(Math.random()*4) + 1;
-    	int level = MathUtil.getRandomInt(1, 2);
-    	MeasAlarm measAlarm = new MeasAlarm();
-    	measAlarm.setTime(DateUtil.setDate2MillisTimestamp(DateUtil.getCurrentDate()));
-    	measAlarm.setAlarmName(AlarmLevelEnum.getEnum(level).getName() + "级别的告警");
-    	measAlarm.setObjectId(203012401);
-    	measAlarm.setAlarmSeverity(level);
-    	measAlarm.setAdditionalText(null);
-    	measAlarm.setAlarmSource(null);
-    	measAlarm.setLongitude(null);
-    	measAlarm.setLatitude(null);
+    	int i = MathUtil.getRandomInt(0, 1);
     	
-    	String host = "http://localhost:8080/MaxTunnel-Web";
+    	List<JSONObject> list = new ArrayList<>();
+    	JSONObject obj2 = new JSONObject();
+    	obj2.put("id", 218214200);
+    	obj2.put("aname", "电动百叶告警");
+    	obj2.put("oname", "电动百叶");list.add(obj2);
+    	JSONObject obj3 = new JSONObject();
+    	obj3.put("id", 218214200);
+    	obj3.put("aname", "排水泵告警");
+    	obj3.put("oname", "排水泵");list.add(obj3);
+			
+		Alarm alarm = new Alarm();
+		alarm.setId((int) ((new Date()).getTime() % 1000000));
+		alarm.setAlarmDate(new Date());
+		
+		int j = MathUtil.getRandomInt(1, 4);
+		alarm.setAlarmLevel(j);
+		alarm.setAlarmName(list.get(i).getString("aname"));
+		alarm.setObjectId(list.get(i).getInteger("id"));
+		alarm.setObjectName(list.get(i).getString("oname"));
+		alarm.setTunnelId(1);
+		alarm.setAlarmSource("");
+		alarm.setCleaned(false);
+		alarm.setIsDistribute(false);
+		alarm.setDescription("");
+		alarm.setLatitude("");
+		alarm.setLongitude("");
+		
+		String host = "http://localhost:8080/MaxTunnel-Web";
 		String path = "/alarms";
 		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, String> querys = new HashMap<String, String>();
-		String body = JSON.toJSONString(measAlarm);
+		String body = JSON.toJSONString(alarm);
 		httpPost(host, path, headers, querys, body);
     }
     
@@ -438,7 +504,7 @@ public class TaskEntrance {
     public void reportMeasObjMonth() {
     	Date startTime = DateUtil.getBeginDayOfMonth(DateUtil.getFrontDay(new Date(),1));
     	Date endTime = DateUtil.getEndDayOfMonth(DateUtil.getFrontDay(new Date(),1));
-    	reportMeasObjArgs(startTime, endTime, TimeEnum.WEEK.getValue(), TimeEnum.MONTH.getValue());
+    	reportMeasObjArgs(startTime, endTime, TimeEnum.DAY.getValue(), TimeEnum.MONTH.getValue());
     	//LogUtil.info("统计每月的最大最小平均值END");
     }
     
@@ -465,9 +531,7 @@ public class TaskEntrance {
     private void reportMeasObjArgs(Date startTime,Date endTime,Integer queryTimeType,Integer insertTimeType) {
     	List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
     	for (MeasObjAI measObjAI : measObjAIs) {
-    		double maxValue = 0.00;
-    		double minValue = 0.00;
-    		double avgValue = 0.00;
+    		double maxValue = 0, minValue = 0, avgValue = 0;
     		List<MeasObjReportDto> list = measObjReportService.getListByObjectIdAndTimeAndTimeType(measObjAI.getId(),startTime,endTime,queryTimeType);
     		if(list != null && list.size() > 0 ) {
     			maxValue = getMaxValue(list);

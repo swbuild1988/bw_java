@@ -25,6 +25,8 @@ public class AlarmVo extends BaseVo{
     private String alarmName;
 
     private Integer alarmLevel;
+    // 告警级别
+    private List<Integer> alarmLevels;
 
     private Integer tunnelId;
 
@@ -86,7 +88,15 @@ public class AlarmVo extends BaseVo{
         this.alarmLevel = alarmLevel;
     }
 
-    public Integer getTunnelId() {
+    public List<Integer> getAlarmLevels() {
+		return alarmLevels;
+	}
+
+	public void setAlarmLevels(List<Integer> alarmLevels) {
+		this.alarmLevels = alarmLevels;
+	}
+
+	public Integer getTunnelId() {
         return tunnelId;
     }
 

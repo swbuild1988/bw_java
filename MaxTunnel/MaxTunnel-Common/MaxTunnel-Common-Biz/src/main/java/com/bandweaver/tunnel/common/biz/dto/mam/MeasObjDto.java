@@ -41,6 +41,52 @@ public class MeasObjDto implements Serializable {
     private Double cv;
     private SectionDto section;
 
+    /**
+     * 关联的应急预案id
+     */
+    private String planIds;
+
+    /**
+     * 关联的视频id
+     */
+    private String videoIds;
+
+    private List<String> plansName;
+
+    private List<String> videosName;
+
+    public List<String> getPlansName() {
+        return plansName;
+    }
+
+    public void setPlansName(List<String> plansName) {
+        this.plansName = plansName;
+    }
+
+    public List<String> getVideosName() {
+        return videosName;
+    }
+
+    public void setVideosName(List<String> videosName) {
+        this.videosName = videosName;
+    }
+
+    public String getPlanIds() {
+        return planIds;
+    }
+
+    public void setPlanIds(String planIds) {
+        this.planIds = planIds;
+    }
+
+    public String getVideoIds() {
+        return videoIds;
+    }
+
+    public void setVideoIds(String videoIds) {
+        this.videoIds = videoIds;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -189,12 +235,31 @@ public class MeasObjDto implements Serializable {
 		this.section = section;
 	}
 
-	@Override
-	public String toString() {
-		return "MeasObjDto [id=" + id + ", tunnelId=" + tunnelId + ", storeId=" + storeId + ", areaId=" + areaId
-				+ ", sectionId=" + sectionId + ", name=" + name + ", datatypeId=" + datatypeId + ", datatypeName="
-				+ datatypeName + ", objtypeId=" + objtypeId + ", objtypeName=" + objtypeName + ", actived=" + actived
-				+ ", description=" + description + ", longitude=" + longitude + ", latitude=" + latitude + ", height="
-				+ height + ", deviation=" + deviation + ", cv=" + cv + ", section=" + section + "]";
-	}
+    @Override
+    public String toString() {
+        return "MeasObjDto{" +
+                "id=" + id +
+                ", tunnelId=" + tunnelId +
+                ", storeId=" + storeId +
+                ", areaId=" + areaId +
+                ", sectionId=" + sectionId +
+                ", name='" + name + '\'' +
+                ", datatypeId=" + datatypeId +
+                ", datatypeName='" + datatypeName + '\'' +
+                ", objtypeId=" + objtypeId +
+                ", objtypeName='" + objtypeName + '\'' +
+                ", actived=" + actived +
+                ", description='" + description + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", height='" + height + '\'' +
+                ", deviation=" + deviation +
+                ", cv=" + cv +
+                ", section=" + section +
+                ", planIds='" + planIds + '\'' +
+                ", videoIds='" + videoIds + '\'' +
+                ", plansName=" + plansName +
+                ", videosName=" + videosName +
+                '}';
+    }
 }

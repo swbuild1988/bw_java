@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { get,post } from "../utils/http";
 const isRealData = require('../../static/serverconfig').isRealData
 
 var SpaceService = {
@@ -6,7 +7,7 @@ var SpaceService = {
 	getCableCount: function(tunnelId) {
 		return new Promise((resolve, reject) => {
 			if (isRealData) {
-				axios.get('tunnels/' + tunnelId + '/stores/cables-count')
+				get('tunnels/' + tunnelId + '/stores/cables-count')
 					.then(res => {
 						let {
 							code,
@@ -51,7 +52,7 @@ var SpaceService = {
 	// 管舱区段分页查询
 	sectionsDatagrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('sections/datagrid', params)
+			post('sections/datagrid', params)
 				.then(res => {
 					let {
 						code,
@@ -72,7 +73,7 @@ var SpaceService = {
 	// 根据sectionIds获取管线数统计
 	getCableCountBysectionIds: function(sectionIds) {
 		return new Promise((resolve, reject) => {
-			axios.get('tunnels/areas/sections/batch/' + sectionIds + '/cables-count')
+			get('tunnels/areas/sections/batch/' + sectionIds + '/cables-count')
 				.then(res => {
 					let {
 						code,
@@ -93,7 +94,7 @@ var SpaceService = {
 	// 根据sectionId获取管线信息
 	getCableInfo: function(sectionId) {
 		return new Promise((resolve, reject) => {
-			axios.get('tunnels/areas/sections/' + sectionId + '/cables')
+			get('tunnels/areas/sections/' + sectionId + '/cables')
 				.then(res => {
 					let {
 						code,
@@ -104,6 +105,27 @@ var SpaceService = {
 						resolve(data)
 					} else {
 						reject(msg + ',地址:tunnels/areas/sections/' + sectionIds + '/cables')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 根据管舱id获取该管舱已布管线信息
+	getCableList(storeId){
+		return new Promise((resolve, reject) => {
+			get('tunnels/stores/'+storeId+'/cables')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ',地址:tunnels/stores/' + storeId + '/cables')
 					}
 				})
 				.catch(error => {

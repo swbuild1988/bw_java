@@ -14,8 +14,10 @@
             <Row>
                 <Col span="20" offset="2">
                 <div class="safeRunText">
-                    <span>管廊安全运营</span>
-                    <span class="safe">{{runMessage.safe}}</span>天
+                    <span style="font-weight: bold">管廊安全运营</span>
+                    <span class="safe">{{runMessage.safe}}</span>
+                    <span style="font-weight: bold">天</span>
+
                 </div>
                 </Col>
                 <Col span="7" offset="1" :key="index" v-for="(item,index) in statusList">
@@ -81,8 +83,8 @@
                     safe: 20
                 },
                 refresh: {
-                    time: 300000,
-                    intervalId: null
+                    tunnelMessageFlag: true,
+                    runMessageFlag: true
                 }
             };
         },
@@ -93,17 +95,16 @@
             ProgressBarChart
         },
         mounted() {
-            this.init();
-            let _this = this;
-            this.refresh.intervalId = setInterval(() => {
-                _this.init();
-            }, this.refresh.time);
+            
+            this.getTunnelMessage();
+            this.getRunMessage();
         },
-        beforeDestory() {
-            clearInterval(this.refresh.intervalId);
+        beforeDestroy() {
+            this.refresh.tunnelMessage = false
+            this.refresh.runMessage = false
         },
         methods: {
-            init() {
+            getTunnelMessage() {
                 this.title = "基本信息";
                 TunnelService.getVmTunnelsMessage().then(
                     result => {
@@ -113,15 +114,25 @@
                             let temp = [];
                             temp.name = tunnel.name;
                             temp.value =
-                                parseInt(tunnel.percent.replace("%", "")).toFixed(0) + "%";
+                                Math.round(tunnel.percent.replace("%", "")) + "%";
                             this.statusList.push(temp);
                         });
                     },
                     error => {
                         this.Log.info(error);
                     }
-                );
-                TunnelService.getVmRunMessage().then(
+                )
+                .finally(()=>{
+                    if(this.tunnelMessageFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getTunnelMessage()
+                        },parseFloat(this.refreshTime))
+                    }
+                });
+            },
+            getRunMessage(){
+                 TunnelService.getVmRunMessage().then(
                     result => {
                         this.runMessage.total = result.total;
                         this.runMessage.safe = result.safe;
@@ -129,7 +140,15 @@
                     error => {
                         this.Log.info(error);
                     }
-                );
+                )
+                .finally(()=>{
+                    if(this.runMessageFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getRunMessage()
+                        },parseFloat(this.refreshTime))
+                    }
+                });
             }
         }
     };
@@ -151,15 +170,17 @@
     .safe {
         font-family: UnidreamLED;
         font-size: 3.4vmin;
-        color: #2af0ff;
+        color: red;
         margin: 0 0.5vmin;
     }
 
     .safeRunText {
         color: #fff;
-        font-size: 1.66vmin;
+        font-size: 1.8vmin;
         line-height: 4vmin;
         margin-left: 1vw;
+        margin-top: -5%;
+        margin-bottom: 5%;
     }
 
     .statusText {

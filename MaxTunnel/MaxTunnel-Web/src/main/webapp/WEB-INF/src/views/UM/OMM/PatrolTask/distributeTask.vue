@@ -1,5 +1,5 @@
 <template>
-    <div :style="backStyle">
+    <div>
         <Form :model="distributeTask" :label-width="100">
             <h2 class="formTitle">分配巡检任务</h2>
             <FormItem label="所属计划：">
@@ -20,8 +20,8 @@
                 <Input v-model="distributeTask.remark" type="textarea" :rows="4" placeholder="请输入备注"></Input>
             </FormItem>
             <FormItem style="text-align: center;">
+                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitTask">提交</Button>
-                <Button type="ghost" style="margin-left: 8px">取消 </Button>
             </FormItem>
         </Form>  
     </div>
@@ -32,7 +32,7 @@ export default {
     data(){
         return{
             distributeTask:{
-                id: 1,
+                // id: 1,
                 planName: '',
                 startTime: null,
                 endTime: null,
@@ -40,48 +40,42 @@ export default {
                 accountId: 1,
                 remark: ''
             },
-            liable:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            }
+            liable:[]
         }
     },
     mounted(){
         this.distributeTask.id =  this.$route.params.id;
         let _this = this
-        PatrolService.getStaffs().then(
-            (result)=>{
-                _this.liable = result
-            },
-            (error)=>{
-                _this.Log.info(error)
-            })
-        // this.axios.get('/staffs').then(response=>{
-        //     let{ code,data } = response.data
-        //     if(code==200){
-        //         this.liable = data
-        //     }
-        // })
+        this.getStaff()
     },
     methods:{
-        submitTask(){
-            let _this = this
-            PatrolService.distributeTask().then(
+        getStaff(){
+            var params = {
+                    outside: 1
+                }
+            PatrolService.getStaffs().then(
                 (result)=>{
-                    _this.Log.info('success')
+                    this.liable = result
                 },
                 (error)=>{
+                    this.Log.info(error)
+                }
+            )
+        },
+        submitTask(){
+            let _this = this
+            PatrolService.distributeTask(this.distributeTask.id, this.distributeTask.accountId).then(
+                result=>{
+                    this.distributeTask = result
+                    _this.Log.info('success')
+                },
+                error=>{
                     _this.Log.info(error)
                 })
-            // this.axios.get('maintenance-order/' + this.distributeTask.id + '/maintenance-person/' + this.distributeTask.accountId).then(response=>{
-            // });
-
+        },
+        //返回
+        goBack(){
+            this.$router.back(-1);
         }
     }
 }
@@ -93,13 +87,32 @@ export default {
         background: #fff;
         padding: 10px 20px;
     }
+    .formBG{
+        background: url("../../../../assets/UM/infoBox.png") no-repeat;
+        background-size: 100% 100%;
+        padding-top: 3vmin;
+        padding-bottom: 3vmin;
+    }
+
+    .formBG >>> .ivu-form-item-label{
+        color: #fff;
+    }
+    .formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+		color: #00fff6;
+		content: '★';
+		display: inline-block;
+		margin-right: 4px;
+		line-height: 1;
+		font-family: SimSun;
+		font-size: 12px;
+	}
     @media (min-width: 2200px){
         .ivu-form.ivu-form-label-right{
             width: 50%;
         }
         .ivu-form-item >>> .ivu-form-item-label{
             width: 15vmin !important;
-            line-height: 4.5vmin;
+            line-height: 2.5vmin;
         }
         .ivu-form-item >>> .ivu-form-item-content{
             margin-left: 15vmin !important;

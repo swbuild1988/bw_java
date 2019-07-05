@@ -96,11 +96,12 @@
               inverse: true,
               data: [],
               axisLabel: {
+                // formatter: '{value}'+_this.unit,
                 textStyle: {
                   fontSize: _this.getFontSize('12%'),
                   color: '#fff',
+                  
                 },
-                formatter: '{value}'+_this.unit,
               },
               axisLine: {
                 show: false
@@ -138,7 +139,7 @@
                   show: true,
                   position: 'inside',
                   formatter: '{c}%' ,
-                  fontSize:_this.getFontSize('12%'),
+                  fontSize:_this.getFontSize('9%'),
                 }
               },
             },
@@ -181,7 +182,7 @@
                 tempData.forEach(line => {
                   _this.yAxis_name.push(line.name);
                   _this.serises_border.push(100);
-                  _this.yAxis_value.push(line.value);
+                  _this.yAxis_value.push(line.value+_this.unit);
                   _this.serises.push(parseInt(line.percent.slice(0, line.percent.length - 1)));
                 })
                 _this.myChart.setOption({

@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var DefectService = {
 	// 根据defectId获取缺陷详情
 	getDetailByDefectId: function(defectId) {
 		return new Promise((resolve, reject) => {
-			axios.get('/defects/' + defectId).then(res => {
+			get('/defects/' + defectId).then(res => {
 				let {
 					code,
 					data,
@@ -21,7 +22,7 @@ var DefectService = {
 	// 根据storeId和areaID获取对象名
 	getObj: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('/section/measobjs', params).then(res => {
+			post('/section/measobjs', params).then(res => {
 				let {
 					code,
 					data,
@@ -38,7 +39,7 @@ var DefectService = {
 	// 添加缺陷
 	addDefect: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('defects', params).then(res => {
+			post('defects', params).then(res => {
 				let {
 					code,
 					data,
@@ -55,7 +56,7 @@ var DefectService = {
 	// 缺陷信息分页查询
 	defectsDatagrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('/defects/datagrid', params).then(res => {
+			post('/defects/datagrid', params).then(res => {
 				let {
 					code,
 					data,
@@ -70,9 +71,9 @@ var DefectService = {
 		})
 	},
 	// 获取员工列表
-	getStaffs: function() {
+	getStaffs: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.get('/staffs').then(res => {
+			post('/staffs/conditions',params).then(res => {
 				let {
 					code,
 					data,
@@ -81,7 +82,7 @@ var DefectService = {
 				if (code == 200) {
 					resolve(data)
 				} else {
-					reject(msg + '地址：/staffs')
+					reject(msg + '地址：/staffs/conditions')
 				}
 			})
 		})
@@ -89,7 +90,7 @@ var DefectService = {
 	// 根据工单Id获取工单详情
 	getDetailsBySheetId: function(sheetId) {
 		return new Promise((resolve, reject) => {
-			axios.get('orders/' + sheetId + '/defect').then(res => {
+			get('orders/' + sheetId + '/defect').then(res => {
 				let {
 					code,
 					data,
@@ -106,7 +107,7 @@ var DefectService = {
 	// 分配缺陷
 	distributeDefect: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.put('/maintenance-orders', params).then(res => {
+			put('/maintenance-orders', params).then(res => {
 				let {
 					code,
 					data,
@@ -123,7 +124,7 @@ var DefectService = {
 	// 获取总缺陷数
 	getDefectsCount: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/tunnel/defect-count').then(res => {
+			get('/tunnel/defect-count').then(res => {
 				let {
 					code,
 					data,
@@ -140,7 +141,7 @@ var DefectService = {
 	// 获取故障信息列表
 	getDefectList: function() {
 		return new Promise((resolve, reject) => {
-			axios.get('/defects/list').then(res => {
+			get('/defects/list').then(res => {
 				let {
 					code,
 					data,

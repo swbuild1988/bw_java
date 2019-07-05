@@ -1131,5 +1131,6 @@ values (1003, 'job11', 'group1', 0, 'com.bandweaver.tunnel.controller.quartz.Tas
 
 insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
 values (1004, 'job12', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'runDaysAutoAdded', '1 0 0 * * ?', '管廊运行时间定时自增');
-
+insert into T_COMMON_SCHEDULE_JOB (JOB_ID, JOB_NAME, JOB_GROUP, JOB_STATUS, JOB_CLASS, JOB_METHOD, CRON_EXPRESSION, DESCRIPTION)
+values (1005, 'job1005', 'group1', 1, 'com.bandweaver.tunnel.controller.quartz.TaskEntrance', 'exportExcel', '0 0 6 ? * MON', '报表导出');
 commit;

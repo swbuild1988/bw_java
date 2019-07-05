@@ -1,11 +1,11 @@
 package com.bandweaver.tunnel.controller.common;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,16 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
-import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.vo.AreaVo;
-import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -48,14 +41,22 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@Override
+	@RequiresPermissions("area:add")
 	@RequestMapping(value="areas",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Area area) {
 		areaService.addArea(area);
 		return success();
 	}
 
+	@Override
+	public JSONObject delete(Integer id) throws Exception {
+		return null;
+	}
+
 	/**添加区域
 	 */
+	@RequiresPermissions("area:add")
 	@RequestMapping(value="areas/multi",method=RequestMethod.POST)
 	public JSONObject addMulti(@RequestBody List<Area> areas) {
 		for (Area area : areas) {
@@ -84,21 +85,11 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @Date 2018年9月19日
 	 */
+	@Override
+	@RequiresPermissions("area:update")
 	@RequestMapping(value="areas",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody Area area) {
 		areaService.update(area);
-		return success();
-	}
-	
-	/**删除 
-	 * @param id
-	 * @return    {"msg":"请求成功","code":"200","data":{}}  
-	 * @author shaosen
-	 * @Date 2018年9月19日
-	 */
-	@RequestMapping(value="areas/{id}",method=RequestMethod.DELETE)
-	public JSONObject delete(@PathVariable Integer id) {
-		areaService.delete(id);
 		return success();
 	}
 	
@@ -108,15 +99,11 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@Override
 	@RequestMapping(value="areas/{id}",method=RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
-		AreaVo areaVo = new AreaVo();
-		areaVo.setId(id);
-		List<AreaDto> list = areaService.getAreasByCondition(areaVo);
-		if(list.size()>0) {
-			return success(list.get(0));
-		}
-		return success();
+		AreaDto dto = areaService.getAreasById(id);
+		return success(dto);
 	}
 	
 	/**根据管廊id查询区域列表
@@ -125,11 +112,10 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@RequiresPermissions("area:list")
 	@RequestMapping(value="tunnels/{id}/areas",method=RequestMethod.GET)
 	public JSONObject getAreasByTunnelId(@PathVariable Integer id) {
-		AreaVo areaVo = new AreaVo();
-		areaVo.setTunnelId(id);
-		List<AreaDto> list = areaService.getAreasByCondition(areaVo);
+		List<AreaDto> list = areaService.getAreasByTunnelId(id);
 		//orderby sn
 		list = list.stream().sorted(Comparator.comparing(AreaDto::getSn)).collect(Collectors.toList());
 		return success(list);
@@ -150,6 +136,7 @@ public class AreaController extends BaseController<Area>{
 	 * @author shaosen
 	 * @date 2018年6月11日
 	 */
+	@RequiresPermissions("area:list")
 	@RequestMapping(value="areas/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody AreaVo areaVo) {
 		PageInfo<AreaDto> pageInfo = areaService.dataGrid(areaVo);
@@ -160,6 +147,7 @@ public class AreaController extends BaseController<Area>{
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("area:delete")
 	@Override
 	@RequestMapping(value="areas/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -168,5 +156,4 @@ public class AreaController extends BaseController<Area>{
 		return success();
 	}
 
-	
 }

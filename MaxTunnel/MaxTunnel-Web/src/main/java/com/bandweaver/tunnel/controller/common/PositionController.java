@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.controller.common;
 
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class PositionController extends BaseController<Position>{
      * @author shaosen
      * @date 2018年6月25日
      */
+    @RequiresPermissions("position:list")
     @RequestMapping(value="positions",method=RequestMethod.GET)
     public JSONObject getPositionList() {
     	List<Position> list = positionService.getList();
@@ -63,6 +65,7 @@ public class PositionController extends BaseController<Position>{
      * @author shaosen
      * @Date 2018年7月26日
      */
+    @RequiresPermissions("position:add")
     @RequestMapping(value="positions",method=RequestMethod.POST)
     public JSONObject add(@RequestBody Position pojo) {
     	positionService.add(pojo);
@@ -76,6 +79,7 @@ public class PositionController extends BaseController<Position>{
      * @author shaosen
      * @Date 2018年7月26日
      */
+    @RequiresPermissions("position:delete")
     @RequestMapping(value="positions/{id}",method=RequestMethod.DELETE)
     public JSONObject delete(@PathVariable Integer id) {
     	positionService.delete(id);
@@ -85,6 +89,7 @@ public class PositionController extends BaseController<Position>{
     /**
      * 批量删除
      */
+    @RequiresPermissions("position:delete")
 	@Override
 	@RequestMapping(value="positions/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -100,6 +105,7 @@ public class PositionController extends BaseController<Position>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("position:update")
     @RequestMapping(value="positions",method=RequestMethod.PUT)
     public JSONObject update(@RequestBody Position position) {
     	positionService.update(position);
@@ -118,6 +124,7 @@ public class PositionController extends BaseController<Position>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("position:list")
     @RequestMapping(value="positions/datagrid",method=RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody PositionVo vo ) {
     	PageInfo<PositionDto> pageInfo = positionService.dataGrid(vo);

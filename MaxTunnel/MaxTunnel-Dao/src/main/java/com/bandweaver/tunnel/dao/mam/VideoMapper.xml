@@ -4,18 +4,110 @@
 <mapper namespace="com.bandweaver.tunnel.dao.mam.VideoMapper">
 
     <insert id="insertVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
-        INSERT INTO T_MAM_VIDEO (ID, SERVER_ID, VIDEO_SCENE_ID, VIDEO_EXTEND_SCENE_ID, CHANNEL_NO)
-        VALUES (#{id}, #{serverId}, #{videoSceneId}, #{videoExtendSceneId}, #{channelNo})
+        INSERT INTO T_MAM_VIDEO 
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null">
+        	ID,
+        	</if>
+        	<if test="serverId != null">
+        	SERVER_ID,
+        	</if>
+        	<if test="videoSceneId != null">
+        	VIDEO_SCENE_ID,
+        	</if>
+        	<if test="videoExtendSceneId != null">
+        	VIDEO_EXTEND_SCENE_ID,
+        	</if>
+        	<if test="channelNo != null">
+        	CHANNEL_NO,
+        	</if>
+        	<if test="vendor != null">
+        	VENDOR,
+        	</if>
+        	<if test="ip != null">
+        	IP,
+        	</if>
+        	<if test="port != null">
+        	PORT,
+        	</if>
+        	<if test="username != null">
+        	USERNAME,
+        	</if>
+        	<if test="password != null">
+        	PASSWORD,
+        	</if>
+       	</trim>
+       	<trim prefix="values (" suffix=")" suffixOverrides=",">
+       		<if test="id != null">
+        	#{id},
+        	</if>
+        	<if test="serverId != null">
+        	#{serverId},
+        	</if>
+        	<if test="videoSceneId != null">
+        	#{videoSceneId},
+        	</if>
+        	<if test="videoExtendSceneId != null">
+        	#{videoExtendSceneId},
+        	</if>
+        	<if test="channelNo != null">
+        	#{channelNo},
+        	</if>
+        	<if test="vendor != null">
+        	#{vendor},
+        	</if>
+        	<if test="ip != null">
+        	#{ip},
+        	</if>
+        	<if test="port != null">
+        	#{port},
+        	</if>
+        	<if test="username != null">
+        	#{username},
+        	</if>
+        	<if test="password != null">
+        	#{password},
+        	</if>
+        </trim>
     </insert>
 
     <update id="updateVideo" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.video.Video">
         UPDATE T_MAM_VIDEO
-        SET SERVER_ID      = #{serverId},
-            VIDEO_SCENE_ID = #{videoSceneId},
-            VIDEO_Extend_SCENE_ID = #{videoExtendSceneId},
-            CHANNEL_NO     = #{channelNo}
+        <set>
+        	<if test="serverId != null">
+        	SERVER_ID = #{serverId},
+        	</if>
+        	<if test="videoSceneId != null">
+        	VIDEO_SCENE_ID = #{videoSceneId},
+        	</if>
+        	<if test="videoExtendSceneId != null">
+        	VIDEO_Extend_SCENE_ID = #{videoExtendSceneId},
+        	</if>
+        	<if test="channelNo != null">
+        	CHANNEL_NO = #{channelNo},
+        	</if>
+        	<if test="vendor != null">
+        	VENDOR = #{vendor},
+        	</if>
+        	<if test="ip != null">
+        	IP = #{ip},
+        	</if>
+        	<if test="port != null">
+        	PORT = #{port},
+        	</if>
+        	<if test="username != null">
+        	USERNAME = #{username},
+        	</if>
+        	<if test="password != null">
+        	PASSWORD = #{password},
+        	</if>
+        </set>
         WHERE id = #{id}
     </update>
+    
+    <delete id="deleteVideo">
+    	DELETE FROM T_MAM_VIDEO WHERE ID = #{id}
+    </delete>
 
     <select id="getVideoDto" resultMap="VideoDtoMap">
         SELECT
@@ -29,10 +121,18 @@
             c.height as preset_height,
             c.pitch as preset_pitch,
             c.roll as preset_roll,
-            c.heading as preset_heading
+            c.heading as preset_heading,
+            d.name as tunnel_name,
+            e.name as area_name,
+            f.name as store_name,
+            g.name as video_scene_name
         FROM t_mam_video a
             LEFT JOIN t_mam_measobj b ON a.id = b.id
             LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+            LEFT JOIN t_common_tunnel d ON b.tunnel_id = d.id
+            LEFT JOIN t_common_area e ON b.area_id = e.id
+            LEFT JOIN t_common_store f ON b.store_id = f.id
+            LEFT JOIN T_MAM_VIDEO_SCENE g ON a.video_scene_id = g.id
         WHERE a.id = #{id}
     </select>
 
@@ -57,10 +157,18 @@
             c.height as preset_height,
             c.pitch as preset_pitch,
             c.roll as preset_roll,
-            c.heading as preset_heading
+            c.heading as preset_heading,
+            d.name as tunnel_name,
+            e.name as area_name,
+            f.name as store_name,
+            g.name as video_scene_name
         FROM t_mam_video a
             LEFT JOIN t_mam_measobj b ON a.id = b.id
             LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+            LEFT JOIN t_common_tunnel d ON b.tunnel_id = d.id
+            LEFT JOIN t_common_area e ON b.area_id = e.id
+            LEFT JOIN t_common_store f ON b.store_id = f.id
+            LEFT JOIN T_MAM_VIDEO_SCENE g ON a.video_scene_id = g.id
     </select>
 
     <select id="getVideoDtosByScene" resultMap="VideoDtoMap">
@@ -75,10 +183,18 @@
             c.height as preset_height,
             c.pitch as preset_pitch,
             c.roll as preset_roll,
-            c.heading as preset_heading
+            c.heading as preset_heading,
+            d.name as tunnel_name,
+            e.name as area_name,
+            f.name as store_name,
+            g.name as video_scene_name
         FROM t_mam_video a
             LEFT JOIN t_mam_measobj b ON a.id = b.id
             LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+            LEFT JOIN t_common_tunnel d ON b.tunnel_id = d.id
+            LEFT JOIN t_common_area e ON b.area_id = e.id
+            LEFT JOIN t_common_store f ON b.store_id = f.id
+            LEFT JOIN T_MAM_VIDEO_SCENE g ON a.video_scene_id = g.id
         WHERE a.video_scene_id = #{sceneId}
     </select>
 
@@ -94,10 +210,18 @@
         c.height as preset_height,
         c.pitch as preset_pitch,
         c.roll as preset_roll,
-        c.heading as preset_heading
+        c.heading as preset_heading,
+            d.name as tunnel_name,
+            e.name as area_name,
+            f.name as store_name,
+            g.name as video_scene_name
         FROM t_mam_video a
-        LEFT JOIN t_mam_measobj b ON a.id = b.id
-        LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+            LEFT JOIN t_mam_measobj b ON a.id = b.id
+            LEFT JOIN t_mam_video_preset c ON a.id = c.video_id
+            LEFT JOIN t_common_tunnel d ON b.tunnel_id = d.id
+            LEFT JOIN t_common_area e ON b.area_id = e.id
+            LEFT JOIN t_common_store f ON b.store_id = f.id
+            LEFT JOIN T_MAM_VIDEO_SCENE g ON a.video_scene_id = g.id
         WHERE a.video_extend_scene_id = #{extendSceneId}
     </select>
 
@@ -108,6 +232,11 @@
         <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
         <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
         <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="VENDOR" jdbcType="VARCHAR" property="vendor"/>
+        <result column="IP" jdbcType="DECIMAL" property="ip"/>
+        <result column="PORT" jdbcType="DECIMAL" property="port"/>
+        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
         <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
         <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
         <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
@@ -127,8 +256,16 @@
         <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
         <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
         <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="tunnel_name" jdbcType="VARCHAR" property="tunnelName"/>
+        <result column="area_name" jdbcType="VARCHAR" property="areaName"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
         <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
         <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="VENDOR" jdbcType="VARCHAR" property="vendor"/>
+        <result column="IP" jdbcType="DECIMAL" property="ip"/>
+        <result column="PORT" jdbcType="DECIMAL" property="port"/>
+        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
         <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
         <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
         <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
@@ -139,6 +276,7 @@
         <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <result column="SERVER_ID" jdbcType="VARCHAR" property="serverId"/>
         <result column="VIDEO_SCENE_ID" jdbcType="VARCHAR" property="videoSceneId"/>
+        <result column="VIDEO_SCENE_NAME" jdbcType="VARCHAR" property="sceneName"/>
         <result column="VIDEO_EXTEND_SCENE_ID" jdbcType="VARCHAR" property="videoExtendSceneId"/>
         <result column="CHANNEL_NO" jdbcType="DECIMAL" property="channelNo"/>
         <association property="videoServerDto" javaType="com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto"

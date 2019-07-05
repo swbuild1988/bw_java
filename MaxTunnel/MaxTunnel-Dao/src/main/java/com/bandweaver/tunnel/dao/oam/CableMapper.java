@@ -44,5 +44,7 @@ public interface CableMapper {
 
 	void deleteByContractId(String id);
 
-	List<Cable> getListByIds(List<String> list);
+	List<CableDto> getListByIds(List<String> list);
+	
+	List<String> getCableIdsBySectionIds(List<Integer> list);
 }

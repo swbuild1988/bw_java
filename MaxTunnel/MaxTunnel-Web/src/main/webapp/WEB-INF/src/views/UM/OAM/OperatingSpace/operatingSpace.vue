@@ -1,49 +1,57 @@
 <template>
-  <div>
-    <ModulePage v-bind="operatingSpace"></ModulePage>
-  </div>
+    <div>
+        <ModulePage v-bind="operatingSpace"></ModulePage>
+    </div>
 </template>
 <style scoped>
 </style>
 <script>
-  import ModulePage from '../../../../components/Common/ModulePage'
-  import { TunnelService } from '../../../../services/tunnelService'
-  
-  export default {
-    name:"OperatingSpaceMain",
-    data() {
-      return {
-        operatingSpace:{
-          moduleName:"空间管理", 
-          leftTree:[],
-          selected:[0,-1]
-        },
-        treeNodeJumpUrl:"/UM/OperatingSpace/tunnel/"
-      };
-    },
-    components: {ModulePage},
-    created() {
-      this.operatingSpace.leftTree = [];
-      let _this = this;
-      TunnelService.getTunnels().then(
-          (result)=>{
-              result.forEach(a=>{
-                  let temp={};
-                  temp.id=a.id;
-                  temp.name=a.name;
-                  temp.url=_this.treeNodeJumpUrl+a.id;
-                  _this.operatingSpace.leftTree.push(temp);
-              })
+import ModulePage from "../../../../components/Common/ModulePage";
+import { TunnelService } from "../../../../services/tunnelService";
 
-              if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/OperatingSpace") < 0) {
-                _this.goToMoudle({path: _this.operatingSpace.leftTree[0].url});
-                sessionStorage.setItem('selectedName','')
-              }
-            sessionStorage.setItem("refreshAddress", "");
-          },
-          (error)=>{
-              _this.Log.info(error)
-      })
+export default {
+    name: "OperatingSpaceMain",
+    data() {
+        return {
+            operatingSpace: {
+                moduleName: "空间管理",
+                leftTree: [],
+                selected: [0, -1]
+            },
+            treeNodeJumpUrl: "/UM/OperatingSpace/tunnel/"
+        };
+    },
+    components: { ModulePage },
+    created() {
+        this.operatingSpace.leftTree = [];
+        let _this = this;
+        TunnelService.getTunnels().then(
+            result => {
+                result.forEach(a => {
+                    let temp = {};
+                    temp.id = a.id;
+                    temp.name = a.name;
+                    temp.url = _this.treeNodeJumpUrl + a.id;
+                    _this.operatingSpace.leftTree.push(temp);
+                });
+
+                if (
+                    !sessionStorage["refreshAddress"] ||
+                    sessionStorage["refreshAddress"].indexOf(
+                        "/UM/OperatingSpace"
+                    ) < 0
+                ) {
+                    _this.goToMoudle({
+                        path: _this.operatingSpace.leftTree[0].url
+                    });
+                    sessionStorage.setItem("selectedName", "");
+                }
+                // sessionStorage.setItem("refreshAddress", "");
+            },
+            error => {
+                _this.Log.info(error);
+            }
+        );
     },
     // mounted() {
     // },
@@ -54,13 +62,12 @@
 
     // },
     methods: {
-      //跳转模块
-      goToMoudle(path) {
-        this.$router.push(path);
-      },
+        //跳转模块
+        goToMoudle(path) {
+            this.$router.push(path);
+        }
     }
-  }
-  ;
+};
 </script>
 
 

@@ -15,15 +15,13 @@ public interface TunnelMapper {
 
 	List<TunnelSimpleDto> getList();
 
-	TunnelSimpleDto getTunnelById(@Param("id") Integer id);
-
 	String getNameById(@Param("id") Integer id);
 
 	TunnelDto getDtoById(Integer id);
 
-	List<TunnelDto> getDtoList();
+	TunnelSimpleDto getSimpleDtoById(Integer id);
 
-	void insert(Tunnel tunnel);
+	List<TunnelDto> getDtoList();
 
 	void insertSelective(Tunnel tunnel);
 
@@ -36,4 +34,6 @@ public interface TunnelMapper {
 	Tunnel getByName(String name);
 
 	Tunnel getBySN(String sn);
+
+    List<Integer> getSubSystemIdList();
 }

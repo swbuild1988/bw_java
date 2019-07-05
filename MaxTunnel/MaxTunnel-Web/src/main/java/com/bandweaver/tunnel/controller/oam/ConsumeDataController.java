@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.constant.oam.EnergyType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
@@ -83,36 +85,6 @@ public class ConsumeDataController {
 	}
 	
 	/**
-	 * vo获取某一电表并统计该电表在某一时间段内的总能耗
-	 * @param vo
-	 * @return
-	 * @author ya.liu
-	 * @Date 2018年11月15日
-	 */
-	private Double getSum(ConsumeDataVo vo) {
-		if(vo.getStoreId() == null) vo.setStoreId(0);
-		if(vo.getAreaId() == null) vo.setAreaId(0);
-		if(vo.getObjectType() == null) vo.setObjectType(0);
-		if(vo.getEnergyType() == null) vo.setEnergyType(0);
-		List<ConsumeDto> consumeDto = consumeService.getConsumesByCondition(vo);
-		if(consumeDto.size() == 0) return null;
-		ConsumeDataVo dataVo = new ConsumeDataVo();
-		dataVo.setId(consumeDto.get(0).getId());
-		dataVo.setEndTime(vo.getEndTime());
-		dataVo.setStartTime(vo.getStartTime());
-		List<ConsumeData> list = consumeDataService.getListByIdAndTime(dataVo);
-		Double sum = 0.0;
-		for(ConsumeData data : list) {
-			
-			Double num = data.getDirect();
-			Double count = data.getIndirect();
-			Double cv = num == null ? (count == null ? 0 : count) : num;
-			sum = MathUtil.add(sum, cv);
-		}
-		return sum;
-	}
-	
-	/**
 	 * 某一电表在某段时间内的总能耗
 	 * @param tunnelId 管廊id
 	 * @param storeId 管舱id
@@ -127,7 +99,7 @@ public class ConsumeDataController {
 	 */
 	@RequestMapping(value = "consume-datas/condition", method = RequestMethod.POST)
 	public JSONObject getConsumeDatasByCondition(@RequestBody ConsumeDataVo vo) {
-		Double sum = getSum(vo);
+		Double sum = consumeService.getSumByCondition(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, sum);
 	}
 	
@@ -142,12 +114,13 @@ public class ConsumeDataController {
      * @Date 2018年11月16日
      */
     @RequestMapping(value = "tunnels/consume-datas", method = RequestMethod.POST)
-    public JSONObject getConsumeDatasByTunnleIds(@RequestBody ConsumeDataVo vo) {
+    public JSONObject getConsumeDatasByTunnleIds(@RequestBody(required = false) ConsumeDataVo vo) {
     	List<TunnelSimpleDto> TunnelList = tunnelService.getList();
     	List<JSONObject> list = new ArrayList<>();
+    	if(vo == null) vo = new ConsumeDataVo();
     	for(TunnelSimpleDto dto : TunnelList) {
     		vo.setTunnelId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("key", dto);
     		obj.put("val", sum);
@@ -174,7 +147,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(StoreDto dto : dtoList) {
     		vo.setStoreId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("name", dto.getName());
     		obj.put("val", sum);
@@ -202,7 +175,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(AreaDto dto : dtoList) {
     		vo.setAreaId(dto.getId());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
     		obj.put("name", dto.getName());
     		obj.put("val", sum);
@@ -237,7 +210,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	for(ObjectType obj : objList) {
     		vo.setObjectType(obj.getValue());
-    		Double sum = getSum(vo);
+    		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject json = new JSONObject();
     		json.put("name", obj.getName());
     		json.put("val", sum);
@@ -282,7 +255,7 @@ public class ConsumeDataController {
         	// 往后循环12个月
     		for(int i=0;i<12;i++) {
     			JSONObject obj = new JSONObject();
-    			String time = now.getYear() % 100 + "." + (now.getMonth() + 1) + "月";
+    			String time = now.getYear() % 100 + "年" + (now.getMonth() + 1) + "月";
     			obj.put("key", time);
     			
     			// 真实数据
@@ -293,7 +266,7 @@ public class ConsumeDataController {
 //				vo.setEndTime(nowEnd);
 //				vo.setTunnelId(dto.getId());
 //				// 一个月的总能耗
-//				Double sum = getSum(vo);
+//				Double sum = consumeService.getSumByCondition(vo);
     			
     			// 假数据
     			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
@@ -324,7 +297,7 @@ public class ConsumeDataController {
 		Date sd = null;
 		Date ed = null;
 		try {
-			sd = sdf.parse("2018-9-1");
+			sd = sdf.parse("2018-6-1");
 			ed = sdf.parse("2019-1-31");
 		} catch (Exception e) {
 			
@@ -340,7 +313,7 @@ public class ConsumeDataController {
 				vo.setEndTime(nowEnd);
 				vo.setTunnelId(dto.getId());
 				// 一个月的总能耗
-				Double sum = getSum(vo);
+				Double sum = consumeService.getSumByCondition(vo);
 				//平均每公里的能耗
 				sum = sum / dto.getLength() * 1000;
 				JSONObject obj = new JSONObject();
@@ -353,6 +326,129 @@ public class ConsumeDataController {
 			sd.setMonth(sd.getMonth() + 1);
     	}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+    }
+	/**
+	 * 各管廊不同时间内的能耗
+	 * @param value
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年5月27日
+	 */
+	@RequestMapping(value = "tunnels/consumes/interval/{value}", method = RequestMethod.GET)
+    public JSONObject getTunnelEngergyConsumptionListByInterval(@PathVariable("value") Integer value) {
+
+        TimeEnum em = TimeEnum.getEnum(value);
+        List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+        List<JSONObject> resultList = new ArrayList<>();
+
+        for (TunnelSimpleDto tunnel : tunnelList) {
+            JSONObject tunnelJson = new JSONObject();
+            tunnelJson.put("key", tunnel.getName());
+
+            List<JSONObject> objList = new ArrayList<>();
+            List<Map<String, Date>> list = DateUtil.getStartTimeAndEndTimeByIntervalvalue(em);
+            for (int i = 0; i < list.size(); i++) {
+
+                JSONObject jsonObj = new JSONObject();
+                Date startTime = list.get(list.size() - 1 - i).get("startDay");
+                Date endTime = list.get(list.size() - 1 - i).get("endDay");
+
+                if (em == TimeEnum.WEEK) {
+                    jsonObj.put("key", "第" + DateUtil.getNowWeek(startTime) + "周");
+                } else if (em == TimeEnum.MONTH) {
+                    jsonObj.put("key", DateUtil.getNowMonth(startTime) + "月");
+                } else if (em == TimeEnum.DAY) {
+                    jsonObj.put("key", DateUtil.getDate2YYYYMMdd(startTime) + "日");
+                }
+                ConsumeDataVo vo = new ConsumeDataVo();
+				vo.setStartTime(startTime);
+				vo.setEndTime(endTime);
+				vo.setTunnelId(tunnel.getId());
+				// 一个月的总能耗
+				Double totalValue = consumeService.getSumByCondition(vo);
+                jsonObj.put("val", totalValue == null ? 0.00 : totalValue);
+                objList.add(jsonObj);
+            }
+            tunnelJson.put("val", objList);
+            resultList.add(tunnelJson);
+
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultList);
+
+    }
+	
+	/**
+	 * 每条管廊的能耗总量或平均值
+	 * @param 总能耗 ：1 ； 平均能耗 ： 2
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年5月27日
+	 */
+	@RequestMapping(value = "tunnels/total-avg/{member}/consume-datas", method = RequestMethod.GET)
+	public JSONObject getTotalConsumesByTunnelId(@PathVariable("member") Integer member) {
+		List<TunnelSimpleDto> tunnelList = tunnelService.getList();
+        List<JSONObject> resultList = new ArrayList<>();
+
+        for (TunnelSimpleDto tunnel : tunnelList) {
+            JSONObject tunnelJson = new JSONObject();
+            tunnelJson.put("key", tunnel.getName());
+            ConsumeDataVo vo = new ConsumeDataVo();
+			vo.setTunnelId(tunnel.getId());
+			// 每条管廊的总能耗
+			Double sum = consumeService.getSumByCondition(vo);
+			Double avg = MathUtil.div(sum, tunnel.getLength());
+			if(2 == member) tunnelJson.put("val", avg);
+			else tunnelJson.put("val", sum);
+			resultList.add(tunnelJson);
+        }
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultList);
+	}
+	
+	/**
+	 * 不同时间的总能耗
+	 * @param value  1：历史总能量；2：本年度能耗；3：本月度能耗；4：本周能耗
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年5月27日
+	 */
+	@RequestMapping(value = "tunnels/consumes/timetype/{value}", method = RequestMethod.GET)
+    public JSONObject getTunnelEnergyByTimeType(@PathVariable Integer value) {
+
+        JSONObject json = new JSONObject();
+
+        ConsumeDataVo vo = new ConsumeDataVo();
+        vo.setEndTime(new Date());
+        switch (value) {
+            case 1:// 历史总能耗
+                Double historyTotalValue = consumeService.getSumByCondition(vo);
+                json.put("key", "历史总能耗");
+                json.put("val", historyTotalValue == null ? 0.00 : historyTotalValue);
+                break;
+            case 2:// 本年度能耗
+            	vo.setStartTime(DateUtil.getBeginDayOfYear());
+                Double yearValue = consumeService.getSumByCondition(vo);
+                json.put("key", "本年度能耗");
+                json.put("val", yearValue == null ? 0.00 : yearValue);
+                break;
+            case 3:// 本月度能耗
+            	vo.setStartTime(DateUtil.getBeginDayOfMonth());
+                Double monthValue = consumeService.getSumByCondition(vo);
+                json.put("key", "本月度能耗");
+                json.put("val", monthValue == null ? 0.00 : monthValue);
+                break;
+            case 4:// 本周能耗
+            	vo.setStartTime(DateUtil.getBeginDayOfWeek());
+                Double weekValue = consumeService.getSumByCondition(vo);
+                json.put("key", "本周能耗");
+                json.put("val", weekValue == null ? 0.00 : weekValue);
+                break;
+
+            default:
+                break;
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
     }
 }
 			

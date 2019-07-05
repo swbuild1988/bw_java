@@ -163,11 +163,7 @@ public class InstrumentController {
 	 */
 	@RequestMapping(value = "instruments/{ids}", method = RequestMethod.DELETE)
 	public JSONObject deleteByIds(@PathVariable("ids") String ids) {
-		String [] strs = ids.split(",");
-		List<Integer> list = new ArrayList<>();
-		for(String str : strs) {
-			list.add(Integer.valueOf(str));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		instrumentService.deleteByIds(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
@@ -267,11 +263,11 @@ public class InstrumentController {
 	@RequestMapping(value = "instrument-records/{ids}", method = RequestMethod.POST)
 	public JSONObject addBatch(@PathVariable("ids") String ids, 
 			@RequestBody InstrumentRecord in) {
-		String [] strs = ids.split(",");
+		List<Integer> strs = CommonUtil.convertStringToList(ids);
 		List<InstrumentRecord> list = new ArrayList<>();
-		for(String str : strs) {
+		for(Integer id : strs) {
 			InstrumentRecord i = new InstrumentRecord();
-			i.setInstrumentId(Integer.valueOf(str));
+			i.setInstrumentId(id);
 			i.setStaffId(in.getStaffId());
 			i.setBorrowTime(in.getBorrowTime());
 			i.setDescribe(in.getDescribe() == null ? "" : in.getDescribe());
@@ -283,7 +279,7 @@ public class InstrumentController {
 	
 	/**
 	 * 添加仪表归还记录
-	 * @param ids 借出id "3,4,5"
+	 * @param ids 仪表id "3,4,5"
 	 * @param returnId 归还人
 	 * @param returnTime 归还时间
 	 * @param remark 备注	可选
@@ -296,11 +292,7 @@ public class InstrumentController {
 	public JSONObject updateReturnTime(@PathVariable("ids") String ids, 
 			@PathVariable("useStatus") Integer useStatus, 
 			@RequestBody InstrumentRecord record) {
-		String [] strs = ids.split(",");
-		List<Integer> list = new ArrayList<>();
-		for(String str : strs) {
-			list.add(Integer.valueOf(str));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		instrumentRecordService.updateReturnTime(useStatus, record, list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
@@ -379,11 +371,7 @@ public class InstrumentController {
 	 */
 	@RequestMapping(value = "instrument-records/{ids}", method = RequestMethod.DELETE)
 	public JSONObject deleteRecordByIds(@PathVariable("ids") String ids) {
-		String [] strs = ids.split(",");
-		List<Integer> list = new ArrayList<>();
-		for(String str : strs) {
-			list.add(Integer.valueOf(str));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		int i = instrumentRecordService.deleteByIds(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,i);
 	}

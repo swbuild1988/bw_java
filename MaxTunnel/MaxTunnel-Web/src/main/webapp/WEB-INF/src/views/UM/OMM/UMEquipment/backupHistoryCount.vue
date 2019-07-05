@@ -1,120 +1,114 @@
 <!--备品历史统计-->
 <template>
     <div style="padding: 5px;">
-        <Row >
-        <Col span="12">
-        <div>
-            <Row >
-            <Col span="12" >
-            <div class="datapanle">
-                <span slot="title" >
-                取用备品备件排行
-                </span>
-                <div class="listUpdate">
-                <a href="#" slot="extra" @click="getBackUpType">
-                    <Icon type="ios-loop-strong"></Icon>
-                    刷新
-                </a>
-                </div>
-                <hr>
+        <Row>
+            <Col span="12">
                 <div>
-                <ul v-for="(item,index) in backupTakeData" :key="index">
-                    <li class="takeBackUpList">
-                        <Icon type="star" color="#ff3c1d"></Icon>
-                        {{item.name}}
-                        <span style="position: relative;float: right;">
-                            {{item.count}}
-                            <span class="orderDetails" @click="showTakingDetails(item.id)">&nbsp;&nbsp;详情</span>
-                        </span>
-                    </li>
-                </ul>
+                    <Row >
+                        <Col span="12" >
+                            <div class="datapanle boxBG">
+                                <span slot="title" >取用备品备件排行</span>
+                                <div class="listUpdate">
+                                <a href="#" slot="extra" @click="getBackUpType">
+                                    <Icon type="ios-loop-strong"></Icon>
+                                    刷新
+                                </a>
+                                </div>
+                                <div>
+                                <ul>
+                                    <li class="takeBackUpList" v-for="(item,index) in backupTakeData" :key="index">
+                                        <Icon type="star" color="#00ffe4"></Icon>
+                                        {{item.name}}
+                                        <span style="position: relative;float: right;">
+                                            {{item.count}}
+                                            <span class="orderDetails" @click="showTakingDetails(item.id)">&nbsp;&nbsp;详情</span>
+                                        </span>
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col span="12" >
+                            <div class="datapanle boxBG">
+                                <span slot="title" >备品取用人排行</span>
+                                <div class="listUpdate">
+                                    <a href="#" slot="extra" @click="getBackUpBorrower">
+                                        <Icon type="ios-loop-strong"></Icon>
+                                        刷新
+                                    </a>
+                                </div>
+                                <div>
+                                    <ul class="takeBackUpUl">
+                                        <li class="takeBackUpList" v-for="(item,index) in takeUserData" :key="index">
+                                            <Icon type="star" color="#15ffe4"></Icon>
+                                            {{item.name}}
+                                            <span style="position: relative;float: right;">
+                                                {{item.count}}
+                                                <span class="orderDetails" @click="showTakingPersonDetails(item.id)">&nbsp;&nbsp;详情</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
                 </div>
-            </div>
             </Col>
-            <Col span="12" >
-            <div class="datapanle">
-                <span slot="title" >
-                备品取用人排行
-                </span>
-                <div class="listUpdate">
-                    <a href="#" slot="extra" @click="getBackUpBorrower">
-                        <Icon type="ios-loop-strong"></Icon>
-                        刷新
-                    </a>
+            <Col span="6" >
+                <div class="boxBG" style="width:21vw;height: 30vh;">
+                    <SimplePieChart v-bind="countTakeData"></SimplePieChart>
                 </div>
-                <hr>
-                <div>
-                    <ul v-for="(item,index) in takeUserData" :key="index">
-                        <li class="takeBackUpList">
-                            <Icon type="reply-all" size="20" color="#15ffe4"></Icon>
-                            {{item.name}}
-                            <span style="position: relative;float: right;">
-                                {{item.count}}
-                                <span class="orderDetails" @click="showTakingPersonDetails(item.id)">&nbsp;&nbsp;详情</span>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             </Col>
-            </Row>
-        </div>
-        </Col>
-        <Col span="6" >
-        <div style="width:21vw;height: 30vh;">
-            <SimplePieChart v-bind="countTakeData"></SimplePieChart>
-        </div>
-        </Col>
-        <Col span="6">
-        <div style="width:21vw;height: 30vh;">
-            <SimplePieChart v-bind="countStoreBackupData"></SimplePieChart>
-        </div>
-        </Col>
-        <Col span="12" style="margin-top: 1.5vh">
-            <div style="width:43vw;height: 52vh;" ref="MultiBarChartBox">
-                <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
-            </div>
-        </Col>
-        <Col span="12" style="margin-top: 1.5vh"  >
-            <Row class="queryCondition">
-                <Col span="8">
-                    备品名称：
-                    <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
-                </Col>
-                <Col span="8">
-                    备品类别：
-                    <Select v-model="outStorageConditions.typeId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    备品型号：
-                    <Select v-model="outStorageConditions.modelId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    开始时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8">
-                    结束时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8">
-                    <Button type="primary" @click="showTable()" icon="ios-search" size="small">查询</Button>
-                </Col>
-            </Row>
-            <Table stripe border :columns="toolColumns"  :height="tableHeight"  :data="toolData"></Table>
-            <div class="pageBox">
-                <Page ref="pageBox" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
-                    placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
-                    :style='pageStyle'></Page>
-            </div>
-        </Col>
-    </Row>
+            <Col span="6">
+                <div class="boxBG" style="width:21vw;height: 30vh;">
+                    <SimplePieChart v-bind="countStoreBackupData"></SimplePieChart>
+                </div>
+            </Col>
+            <Col span="12" style="margin-top: 1.5vh">
+                <div class="boxBG" style="width:42vw;height: 53vh;" ref="MultiBarChartBox">
+                    <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
+                </div>
+            </Col>
+            <Col span="12" class="boxBG backListTable" style="margin-top: 1.5vh; padding: 1vmin;"  >
+                <Row class="queryCondition">
+                    <Col span="8">
+                        <span class="conditionTitle">备品名称：</span>
+                        <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
+                    </Col>
+                    <Col span="8">
+                        <span class="conditionTitle">备品类别：</span>
+                        <Select v-model="outStorageConditions.typeId" style="width: 60%">
+                            <Option value=null key="0">所有</Option>
+                            <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="8">
+                        <span class="conditionTitle">备品型号：</span>
+                        <Select v-model="outStorageConditions.modelId" style="width: 60%">
+                            <Option value=null key="0">所有</Option>
+                            <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        </Select>
+                    </Col>
+                    <Col span="8">
+                        <span class="conditionTitle">开始时间：</span>
+                        <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
+                    </Col>
+                    <Col span="8">
+                        <span class="conditionTitle">结束时间：</span>
+                        <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
+                    </Col>
+                    <Col span="8">
+                        <Button type="primary" @click="showTable()" icon="ios-search" size="small">查询</Button>
+                    </Col>
+                </Row>
+                <Table stripe border :columns="toolColumns"  :height="tableHeight"  :data="toolData"></Table>
+                <div class="pageBox">
+                    <Page ref="pageBox" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
+                        placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
+                        :style='pageStyle'></Page>
+                </div>
+            </Col>
+        </Row>
     <Modal
         v-model="isTaking"
         title="取用备品详情"
@@ -344,19 +338,19 @@ export default {
                 title: '备品备件明细',
                 parameters: {
                     option: {
-                        backgroundColor: '#FCF2EA',
-                        color: ['#CE98AF','#016A9A'],
+                        color: ['#25cef3','#d01864'],
                         title: {
                             text: "备品备件明细",
                             textStyle: {
-                                color: "#8080C0"
+                                color: "#fff",
+                                align: 'center'
                             }
                         }
                     },
-                    // timer: {
-                    //     interval: 5000
-                    // }
-                }
+                },
+                legendData: ['在库','出库'],
+                textColor: '#fff',
+                lineColor: '#25cef3'
             },
             toolColumns: [
                 {
@@ -428,9 +422,8 @@ export default {
                 pageTotal: 0
             },
             pageStyle: {
-                position: "absolute",
-                bottom: "-46px",
-                right: "15px",
+                textAlign: 'right',
+                paddingRight: '1.5vmin'
             },
             outStorageConditions:{
                 name: null,
@@ -643,24 +636,26 @@ export default {
         },
         getModalWidth(){
             this.modalWidth = document.body.offsetWidth *0.55
-            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-document.body.offsetHeight/100*3.2
+            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/100*15
         }
     }
 };
 </script>
 
 <style scoped>
-.datapanle {
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-  border-color: #eee;
-  width: 98%;
-  height: 30vh;
-  margin-right: 10px;
-  padding: 18px;
-  background: #fff;
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
 }
-.orderDetails{
-    color: #2d8cf0;
+.datapanle {
+    width: 98%;
+    height: 30vh;
+    margin-right: 10px;
+    padding: 1.3vmin 2vmin;
+    color: #fff;
+}
+.orderDetails,.listUpdate>>>a:hover,.listUpdate>>>a{
+    color: #00ffe4;
     cursor: pointer;
 }
 .pageContainer{
@@ -668,9 +663,16 @@ export default {
     text-align: right;
 }
 .takeBackUpList{
-    margin-top: 3px;
-    line-height: 24px;
+    line-height: 4.5vmin;
     list-style-type:none;
+}
+.takeBackUpUl{
+    height: 26vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY{
+    overflow-x: hidden;
 }
 .listUpdate{
     position: relative;
@@ -681,6 +683,46 @@ export default {
 }
 .borrowName{
     width: 130px;
+}
+.backListTable .ivu-table-wrapper{
+    border: none;
+}
+.backListTable .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.backListTable .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.backListTable .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: 1px solid #7d7d7d;
+}
+.backListTable .pageBox .ivu-page>>>.ivu-page-total,.backListTable .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+.backListTable .ivu-table-wrapper>>>.ivu-table-border td,.backListTable .ivu-table-wrapper>>>.ivu-table-border th{
+    border-right: none;
+}
+.ivu-select,.ivu-select >>> .ivu-select-selection {
+    background-color: #fffdfd00 !important;
+}
+.queryCondition .ivu-select{
+    color: #fff;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -695,7 +737,6 @@ export default {
     }
     .takeBackUpList{
         font-size: 1.4vmin;
-        line-height: 3.5vmin;
     }
     .datapanle,.listUpdate{
         font-size: 1.5vmin;
@@ -703,9 +744,6 @@ export default {
     }
     .timeWidth,.borrowName{
         width: 17vmin;
-    }
-    .pageBox{
-        margin-top: 1.3vh;
     }
 }
 </style>

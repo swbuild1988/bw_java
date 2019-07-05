@@ -28,6 +28,8 @@ public interface CableService {
 	 */
 	void addBatch(List<Cable> list);
 
-	List<Cable> getListByIds(List<String> cids);
+	List<CableDto> getListByIds(List<String> cids);
+	
+	List<String> getCableIdsBySectionIds(List<Integer> list);
 
 }

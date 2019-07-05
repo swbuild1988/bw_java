@@ -1,8 +1,10 @@
 package com.bandweaver.tunnel.service.mam.video;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +98,7 @@ public class H5StreamServiceImpl implements OnvifService {
                 return session;
             }
         } catch (Exception e) {
-            LogUtil.info("获取server session 出错：" + e.toString());
+            LogUtil.error("获取server session 出错：" + e.toString());
             return null;
         }
 
@@ -167,7 +169,7 @@ public class H5StreamServiceImpl implements OnvifService {
             HttpResponse response = HttpUtil.doGet(server, url, "GET", headers, querys);
 
         } catch (Exception e) {
-            LogUtil.info("start move 出错:" + direction.getName());
+            LogUtil.error("start move 出错:" + direction.getName());
         }
     }
 
@@ -376,7 +378,7 @@ public class H5StreamServiceImpl implements OnvifService {
             HttpEntity entity = response.getEntity();
 
         } catch (Exception e) {
-            LogUtil.info("goto preset 出错：" + presetName);
+            LogUtil.error("goto preset 出错：" + presetName);
         }
     }
 
@@ -387,6 +389,19 @@ public class H5StreamServiceImpl implements OnvifService {
 		return addSrcRTSP&&addSrcONVIF ? true : false;
 	}
 	
+	@Override
+	public void addSnap() {
+		List<VideoDto> list = videoModuleCenter.getVideoDtos();
+		LogUtil.info("视频总数: " + list.size());
+		for(VideoDto dto : list) {
+			try {
+				addSnap(dto);
+			} catch(Exception e) {
+				LogUtil.error("拍照出错： " + e.getMessage());
+			}
+			
+		}
+	}
 	
 	@Override
 	public boolean delSrc(String id) throws Exception {
@@ -415,7 +430,7 @@ public class H5StreamServiceImpl implements OnvifService {
         	String str = EntityUtils.toString(response.getEntity(), "utf-8");
             return JSONObject.parseObject(str, H5StreamHttpResponseDto.class).isbStatus();
         }else {
-        	LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+        	LogUtil.warn("请求出错：" + response.getStatusLine().getStatusCode() );
         }
 		return false;
 	}
@@ -440,7 +455,17 @@ public class H5StreamServiceImpl implements OnvifService {
 	}
 	
 	
-
+	/**
+	 * 添加视频
+	 * @param user
+	 * @param password
+	 * @param ip
+	 * @param id
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 * @Date 2019年3月21日
+	 */
 	private boolean addSrcRTSP(String user, String password, String ip, String id, String url) throws Exception {
 		VideoDto videoDto = videoModuleCenter.getVideoDto(DataTypeUtil.toInteger(id));
 	    VideoServerDto videoServer = videoDto.getVideoServerDto();
@@ -456,6 +481,59 @@ public class H5StreamServiceImpl implements OnvifService {
         querys.put("url", url);
         querys.put("session", videoServer.getSession());
         return httpGet(server, _url, headers, querys);
+	}
+	
+	/**
+	 * 视频录像拍快照
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年3月23日
+	 */
+	private boolean addSnap(VideoDto dto) throws Exception {
+	    VideoServerDto videoServer = dto.getVideoServerDto();
+	    //String name = dto.getName() == null ? "" : dto.getName() + "-";
+	    //String filename = name + dto.getIp();
+	    
+	    String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String url = "/api/v1/Snapshot";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("token", dto.getId().toString());
+        //querys.put("filename", filename);
+        querys.put("session", videoServer.getSession());
+        return httpGet(server, url, headers, querys);
+		
+	}
+	
+	public String httpGetList(String server, String _url, Map<String, String> headers, Map<String, String> querys) throws Exception {
+		
+		HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
+		if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+			return EntityUtils.toString(response.getEntity(), "utf-8");
+             
+        }else {
+        	LogUtil.warn("请求出错：" + response.getStatusLine().getStatusCode() );
+        }
+		return null;
+	}
+	
+	@Override
+	public String getSnapJSON(VideoDto dto, Date start, Date end) throws Exception{
+		VideoServerDto videoServer = dto.getVideoServerDto();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        String s = sdf.format(start);
+        String e = sdf.format(end);
+	    String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String url = "/api/v1/Search";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("token", dto.getId().toString());
+        querys.put("session", videoServer.getSession());
+        querys.put("type", "snapshot");
+        querys.put("start", s);
+        querys.put("end", e);
+        return httpGetList(server, url, headers, querys);
 	}
 
 	@Override

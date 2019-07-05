@@ -1,8 +1,10 @@
 <template>
-    <div class="dataBoxModul" v-bind:style="{width: boxWidth+'%', height: boxHeight+'vh'}">
-        <div class="imageModul" :style="{background: imgBac,display: 'flex',textAlign: 'center'}"><img :style="{width: imgWidth+'%',height: 'auto',margin: 'auto'}" :src="imgSrc"/></div>
-        <div class="valueModul" :style='{background: valBackground,color: valColor}'><p>{{value}}</p></div>
-        <div class="labelModul" :style='{background: labelBackground,color: labelColor}'><p>{{label}}</p></div>
+    <div class="dataBoxModul" v-bind:style="{width: boxWidth+'%', height: boxHeight+'vh', background: 'linear-gradient(to right,'+ boxBGLeft+','+boxBGRight+')'}">
+        <div class="imageModul" :style="{display: 'flex',textAlign: 'center', alignItems: 'center'}">
+            <img :style="{margin: 'auto'}" :src="imgSrc"/>
+        </div>
+        <div class="labelModul"><p>{{label}}</p></div>
+        <div class="valueModul"><p>{{value}}</p></div>
     </div>
 </template>
 
@@ -25,11 +27,8 @@ export default {
         imgSrc:{
             default:"./logo.png"
         },
-        imgBac:{
-            default: '#fff'
-        },
         imgWidth: {
-            default: 100
+            default: 80
         },
         imgBorderLeftTopRadius:{
             default: 10
@@ -37,19 +36,13 @@ export default {
         imgBorderRightTopRadius:{
             default: 10
         },
-        valBackground:{
-            default: '#CC9966'
+        boxBGLeft: {
+            default: '#f68380'
         },
-        valColor:{
-            default: '#fff'
-        },
-        labelColor:{
-            default: '#fff'
-        },
-        labelBackground:{
-            default: '#CC9999'
+        boxBGRight: {
+            default: '#f61a1a'
         }
-    },
+    }
 }
 </script>
 
@@ -66,34 +59,25 @@ export default {
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
     }
-    .valueModul
-    {
+    .valueModul{
         float: left;
         width: 60%;
         height: 6vh;
-        line-height: 6vh;
-        display: table-cell;
         text-align: center;
-        vertical-align: middle;
-        font-size: 1.8vmin;
+        font-size: 2.8vmin;
         font-weight: 700;
         border-top-right-radius: 10px;
+        color: #fff;
     }
-    .labelModul
-    {
-        float: left;
-        width: 60%;
-        height: 6vh;
+    .labelModul{
         line-height: 6vh;
         display: table-cell;
-        text-align: center;
-        vertical-align: middle;
         font-size: 1.6vmin;
-        border-bottom-right-radius: 10px;
+        font-size: 2.5vmin;
+        color: #fff;
     }
     img{
-        width: 90%;
-        height: 80% ;
+        width: 80%;
     }
 </style>
 

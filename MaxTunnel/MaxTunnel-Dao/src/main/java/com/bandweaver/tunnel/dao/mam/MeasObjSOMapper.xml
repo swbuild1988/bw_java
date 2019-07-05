@@ -91,4 +91,28 @@
 <delete id="deleteByPrimaryKey">
 	delete from T_MAM_MEASOBJ_SO where id = #{id}
 </delete>
+
+	<select id="getByCondition" resultMap="dtoResultMap">
+		select * from T_MAM_MEASOBJ_SO
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="ids != null">
+				and id in
+				<foreach collection="ids" item="item" index="index"
+					close=")" open="(" separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		order by refresh_time desc
+	</select>
+	<resultMap id="dtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjSODto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="REFRESH_TIME" jdbcType="VARCHAR" property="refreshTime"/>
+        <result column="cv" jdbcType="DECIMAL" property="cv"/>
+        <association property="obj" javaType="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto" column="id"
+        	select="com.bandweaver.tunnel.dao.mam.MeasObjMapper.getDtoById"/>
+    </resultMap>
 </mapper>

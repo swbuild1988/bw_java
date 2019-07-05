@@ -56,7 +56,7 @@ public class MaintenanceOrderServiceImpl implements MaintenanceOrderService {
         // 默认将分配任务交给管理员
         maintenanceOrder.setProcessInstanceId(activitiService.startProcessInstance(ProcessTypeEnum.MAINTENANCE_ORDER, 1));
         // 将工单添加进数据库
-        int id = maintenanceOrderMapper.add(maintenanceOrder);
+        maintenanceOrderMapper.add(maintenanceOrder);
         // 第一步自动结束
         activitiService.completeTaskByProcessIntance(maintenanceOrder.getProcessInstanceId());
 
@@ -86,6 +86,11 @@ public class MaintenanceOrderServiceImpl implements MaintenanceOrderService {
     @Override
     public List<MaintenanceOrderDto> getMaintenanceOrderDtosByCondition(MaintenanceOrderVo vo) {
         return maintenanceOrderMapper.getMaintenanceOrderDtosByCondition(vo);
+    }
+    
+    @Override
+    public int getCountByCondition(MaintenanceOrderVo vo) {
+        return maintenanceOrderMapper.getCountByCondition(vo);
     }
 
     /**

@@ -29,4 +29,5 @@ public interface RoleMapper {
 
 	List<Role> getRolesByUser(Integer id);
 
+    List<Role> getRoleByUseName(String username);
 }

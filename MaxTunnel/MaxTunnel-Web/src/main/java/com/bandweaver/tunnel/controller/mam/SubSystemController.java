@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.mam;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +81,7 @@ public class SubSystemController {
 	 * @author shaosen
 	 * @Date 2018年11月16日
 	 */
+	@RequiresPermissions("subsys:update")
 	@RequestMapping(value = "sub-sys",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody MaxviewConfig config) {
 		subSystemService.update(config);
@@ -92,6 +94,7 @@ public class SubSystemController {
 	 * @author shaosen
 	 * @Date 2018年11月16日
 	 */
+	@RequiresPermissions("subsys:delete")
 	@RequestMapping(value = "sub-sys/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id) {
 		subSystemService.delete(id);
@@ -104,6 +107,7 @@ public class SubSystemController {
 	 * @author shaosen
 	 * @Date 2018年11月16日
 	 */
+	@RequiresPermissions("subsys:delete")
 	@RequestMapping(value = "sub-sys/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
 		
@@ -139,6 +143,7 @@ public class SubSystemController {
 	 * @author shaosen
 	 * @Date 2018年11月16日
 	 */
+	@RequiresPermissions("subsys:list")
 	@RequestMapping(value = "sub-sys/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody MaxviewConfigVo vo) {
 		PageInfo<MaxviewConfig> pageInfo = subSystemService.dataGrid(vo);

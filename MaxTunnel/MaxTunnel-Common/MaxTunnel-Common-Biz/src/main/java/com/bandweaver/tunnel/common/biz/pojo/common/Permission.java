@@ -1,5 +1,7 @@
 package com.bandweaver.tunnel.common.biz.pojo.common;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +17,8 @@ public class Permission implements Serializable {
     private String permissionCode;
 
     private String permissionName;
+
+    private JSONObject etc;
 
     private Date crtTime;
 
@@ -64,5 +68,13 @@ public class Permission implements Serializable {
 
     public void setCrtTime(Date crtTime) {
         this.crtTime = crtTime;
+    }
+
+    public JSONObject getEtc() {
+        return etc;
+    }
+
+    public void setEtc(JSONObject etc) {
+        this.etc = etc;
     }
 }

@@ -1,30 +1,30 @@
 <template>
-    <Row>
-        <Col span="12" style="height: 42vh;width: 42vw;">
+    <div>
+        <div class="boxBG smallBox">
             <MulitBarPosiNega v-bind="chartData"></MulitBarPosiNega>
-        </Col>
-        <Col span="12" style="height: 41vh;margin-left: 0.5vw;margin-bottom: 1vh">
+        </div>
+        <div class="boxBG smallBox" style="padding: 1vmin;width: 43vw;position: relative">
             <div class="queryCondition">
                 <div class="conWidth">
-                    设备名称：
+                    <span class="conditionTitle">设备名称：</span>
                     <Input v-model="conditions.name" style="width: 60%"></Input>
                 </div>
                 <div class="conWidth">
-                    所属管廊：
+                    <span class="conditionTitle">所属管廊：</span>
                     <Select v-model="conditions.tunnelId" style="width: 60%">
                         <Option value=null>所有</Option>                    
                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </div>
                 <div class="conWidth">
-                    设备类型：
+                    <span class="conditionTitle">设备类型：</span>
                     <Select v-model="conditions.typeId" style="width: 60%">
                         <Option value=null>所有</Option>
                         <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
                     </Select>
                 </div>
                 <div class="conWidth">
-                    设备型号：
+                    <span class="conditionTitle">设备型号：</span>
                     <Select v-model="conditions.modelId" style="width: 60%">
                         <Option value=null>所有</Option>
                         <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -40,11 +40,11 @@
                 <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize"  :style="pageStyle"
                     show-elevatorn show-total @on-change="handlePage" @on-page-size-change='handlePageSize'></Page>
             </div>
-        </Col>
-        <Col span="24" style="height: 40vh;width: 86vw;margin-top: 1vh;">
+        </div>
+        <div class="boxBG" style="height: 40vh;width: 85.5vw;margin-top: 1vh;">
             <ComplexBarChart v-bind="ComplexBar"></ComplexBarChart>
-        </Col>
-    </Row>
+        </div>
+    </div>
 </template>
 <script>
 // import ComparisonBarChart from "../../../../components/Common/Chart/ComparisonBarChart";
@@ -62,13 +62,13 @@ export default {
                 title: '管廊设备状态统计',
                 legendData: ['正常','故障'],
                 parameters: {
-                    option: {
-                        backgroundColor: '#FBFBEA',
-                    },
                     timer: {
                         interval: 5000
                     }
-                }
+                },
+                lineColor: '#25cef3',
+                textColor: '#fff',
+                titlePosition: 'center'
             },
             ComplexBar: {
                 id: "ComplexBarChart",
@@ -76,7 +76,8 @@ export default {
                 requestUrl: "tunnels/equipments/types",
                 title: "管廊设备明细",
                 color: "#21d6ff",
-                gridTop: '15%'
+                gridTop: '15%',
+                // itemStyleList: ['#b945ef', '#f8a42b', '#38db2c', '#45ef8d', '#2734e1', '#ef45d9']
             },
             conditions: {
                 name: null,
@@ -159,9 +160,9 @@ export default {
                 pageSize: 5
             },
             pageStyle: {
-                background: '#fff',
-                textAlign: 'right',
-                lineHeight: '4vh'
+                position: 'absolute',
+                right: '2vmin',
+                bottom: '0.7vmin'
             },
             tableHeight: null
         }
@@ -217,7 +218,7 @@ export default {
         showTable(){
             EquipmentService.equipmentDatagird(this.params).then(
                 result=>{
-                    this.breakData = result.list
+                    this.breakData = result.pagedList
                     this.page.pageTotal = result.total
                 },
                 error => {
@@ -235,7 +236,7 @@ export default {
         },
         goToMoudle1: function(id, type) {
             this.$router.push({
-                name: "UMDetailEquipment",
+                name: "设备详情",
                 params: {
                     id: id,
                     type: type
@@ -246,7 +247,7 @@ export default {
             this.goToMoudle1(id, types.pageType.Read);
         },
         getTableHieght(){
-            this.tableHeight = document.body.offsetHeight/100*28
+            this.tableHeight = document.body.offsetHeight/100*25
         }
     }
 }
@@ -255,6 +256,59 @@ export default {
     .conWidth{
         width: 32%;
         display: inline-block;
+    }
+    .ivu-table-wrapper{
+        border: none;
+    }
+    .ivu-table-wrapper>>>.ivu-table{
+        color: #ffffff !important;
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+        background-color: #fffdfd00 !important;
+    }
+    .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+        background-color: #fffdfd00 !important;
+        border-bottom: 1px solid #7d7d7d;
+    }
+    .pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+        color: #fff;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY{
+        overflow-x: hidden;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
+    }
+    .boxBG{
+        background: url("../../../../assets/UM/chartBG.png") no-repeat;
+        background-size: 100% 100%;
+    }
+    .smallBox{
+        height: 42vh;
+        width: 42vw;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+        border-right: none;
+    }
+    .ivu-select,.ivu-select >>> .ivu-select-selection {
+        background-color: #fffdfd00 !important;
+    }
+    .queryCondition .ivu-select{
+        color: #fff;
     }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

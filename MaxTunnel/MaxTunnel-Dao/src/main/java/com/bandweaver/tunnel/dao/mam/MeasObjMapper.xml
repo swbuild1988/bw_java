@@ -8,36 +8,11 @@
 
     <resultMap id="measObjMap" type="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj">
         <id column="ID" jdbcType="DECIMAL" property="id"/>
-        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
-        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
-        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
-        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
-        <result column="NAME" jdbcType="VARCHAR" property="name"/>
-        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
-        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
-        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
-        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
-        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
-        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
-        <result column="height" jdbcType="VARCHAR" property="height"/>
-        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
     </resultMap>
     
     <resultMap id="dtoMap" type="com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto">
         <id column="ID" jdbcType="DECIMAL" property="id"/>
-        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
-        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
-        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
         <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
-        <result column="NAME" jdbcType="VARCHAR" property="name"/>
-        <result column="DATATYPE_ID" jdbcType="DECIMAL" property="datatypeId"/>
-        <result column="OBJTYPE_ID" jdbcType="DECIMAL" property="objtypeId"/>
-        <result column="ACTIVED" jdbcType="DECIMAL" property="actived"/>
-        <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
-        <result column="LONGITUDE" jdbcType="VARCHAR" property="longitude"/>
-        <result column="LATITUDE" jdbcType="VARCHAR" property="latitude"/>
-        <result column="height" jdbcType="VARCHAR" property="height"/>
-        <result column="DEVIATION" jdbcType="DECIMAL" property="deviation"/>
         <association property="section" javaType="com.bandweaver.tunnel.common.biz.dto.SectionDto" column="section_id"
         	select="com.bandweaver.tunnel.dao.common.SectionMapper.getDtoById"/>
     </resultMap>
@@ -125,6 +100,12 @@
             <if test="deviation != null">
                 deviation,
             </if>
+            <if test="videoIds != null">
+                video_ids,
+            </if>
+            <if test="planIds != null">
+                plan_ids,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -168,6 +149,12 @@
             </if>
             <if test="deviation != null">
                 #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="videoIds != null">
+                #{videoIds,jdbcType=VARCHAR},
+            </if>
+            <if test="planIds != null">
+                #{planIds,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -213,6 +200,12 @@
             </if>
             <if test="deviation != null">
                 deviation = #{deviation,jdbcType=DECIMAL},
+            </if>
+            <if test="videoIds != null">
+                video_ids = #{videoIds,jdbcType=VARCHAR},
+            </if>
+            <if test="planIds != null">
+                plan_ids = #{planIds,jdbcType=VARCHAR},
             </if>
         </set>
         where ID = #{id,jdbcType=DECIMAL}
@@ -362,5 +355,34 @@
     
     <select id="getDtoById" resultMap="dtoMap">
     	select * from T_MAM_MEASOBJ where id = #{id}
+    </select>
+
+    <update id="updatePlanIdsByObjtypeId">
+        update T_MAM_MEASOBJ
+        <set>
+            <if test="planIds != null and planIds.trim() != ''">
+                plan_ids = #{planIds}
+            </if>
+        </set>
+        WHERE objtype_id = #{objtypeId}
+    </update>
+
+    <update id="updateVideoIdsByKeyId">
+        update T_MAM_MEASOBJ
+        <set>
+            <if test="videoIds != null and videoIds.trim() != ''">
+                video_ids = #{videoIds}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <select id="getIdList" resultType="Integer" parameterType="String">
+    	select id from T_MAM_MEASOBJ
+    	<where>
+    		<if test="_parameter != null">
+               instr(id,#{id})>0
+            </if>
+    	</where>
     </select>
 </mapper>

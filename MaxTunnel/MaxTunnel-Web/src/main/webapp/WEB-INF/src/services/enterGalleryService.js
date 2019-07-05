@@ -1,10 +1,11 @@
 import axios from "axios";
+import { get,put,del,post } from "../utils/http";
 
 var EnterGalleryService = {
     // 获取公司列表
     getCompanys: function() {
         return new Promise((resolve, reject) => {
-            axios.get("/companies").then(res => {
+            get("/companies").then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -17,7 +18,7 @@ var EnterGalleryService = {
     // 添加入廊申请
     addEnterGalleryApplication: function(params) {
         return new Promise((resolve, reject) => {
-            axios.post("/req-historys", params).then(res => {
+            post("/req-historys", params).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -30,7 +31,7 @@ var EnterGalleryService = {
     // 根据companyId获取部门
     getDepsByCompanyId: function(companyId) {
         return new Promise((resolve, reject) => {
-            axios.get("/companies/" + companyId + "/departments").then(res => {
+            get("/companies/" + companyId + "/departments").then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -45,8 +46,7 @@ var EnterGalleryService = {
     // 根据companyId和departmentId获取工作人员
     getStaffsByComIdAndDepId: function(companyId, depId) {
         return new Promise((resolve, reject) => {
-            axios
-                .get(
+                get(
                     "/companies/" +
                         companyId +
                         "/departments/" +
@@ -73,7 +73,7 @@ var EnterGalleryService = {
     // 入廊申请信息分页查询
     enterGalleryDatagrid: function(params) {
         return new Promise((resolve, reject) => {
-            axios.post("req-historys/datagrid", params).then(res => {
+            post("req-historys/datagrid", params).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -86,7 +86,7 @@ var EnterGalleryService = {
     // 删除入廊申请信息
     deleteEnterGallery: function(id) {
         return new Promise((resolve, reject) => {
-            axios.delete("/req-historys/" + id).then(res => {
+            del("/req-historys/" + id).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -99,7 +99,7 @@ var EnterGalleryService = {
     // 根据入廊信息ID查询详细信息
     getDetailsById: function(id) {
         return new Promise((resolve, reject) => {
-            axios.get("/req-historys/" + id).then(res => {
+            get("/req-historys/" + id).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -112,7 +112,7 @@ var EnterGalleryService = {
     // 提交入廊人员出廊时间
     putExitTime: function(params) {
         return new Promise((resolve, reject) => {
-            axios.put("users/out/req-historys", params).then(res => {
+            put("users/out/req-historys", params).then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -125,7 +125,7 @@ var EnterGalleryService = {
     //获取关于我们自己公司的信息
     getAboutUsData: function() {
         return new Promise((resolve, reject) => {
-            axios.get("/version").then(res => {
+            get("/version").then(res => {
                 let { code, data, msg } = res.data;
                 if (code == 200) {
                     resolve(data);
@@ -161,8 +161,7 @@ var EnterGalleryService = {
         }
         return new Promise((resolve, reject) => {
             resolve(res)
-            // axios
-            //     .get("tunnels/enter-count-everymonth")
+                // get("tunnels/enter-count-everymonth")
             //     .then(res => {
             //         let { code, data, msg } = res.data;
             //         if (code == 200) {

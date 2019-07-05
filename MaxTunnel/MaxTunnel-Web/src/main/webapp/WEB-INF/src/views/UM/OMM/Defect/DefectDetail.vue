@@ -1,17 +1,18 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
+        <div class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</div>
+        <div class="formTitle" v-show="this.pageType==1">缺陷详情</div>
+        <div class="formTitle" v-show="this.pageType==2">编辑缺陷详情</div>
+        <div class="formHeight">
         <Form ref="defectDetails" :model="defectDetails" :rules="validateRules" :label-width="120" @submit.native.prevent>
-            <h2 class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</h2>
-            <h2 class="formTitle" v-show="this.pageType==1">缺陷详情</h2>
-            <h2 class="formTitle" v-show="this.pageType==2">编辑缺陷详情</h2>
             <FormItem label="所属管廊：" prop="tunnelId">
-                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1">
+                <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1" @on-change="changeTunnel()">
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="所属区段：" prop="area.id" v-show="this.pageType!=1">
                 <Select v-model="defectDetails.area.id" :disabled="this.pageType==1">
-                    <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
+                    <Option v-for="item in areas" :key="item.id" :value="item.id">{{item.name}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="所属区段：" v-show="this.pageType==1" prop="area.id">
@@ -38,10 +39,10 @@
             </FormItem>
             <FormItem label="对象名：" v-if="defectDetails.type==2&&this.pageType!=1" prop="objectId">
                 <Select v-model="defectDetails.objectId" @on-change="getObj()">
-                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
+                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-if="this.pageType==1" prop="objectId">
+            <FormItem label="对象名：" v-show="defectDetails.type==2&&this.pageType==1" prop="objectId">
                 <Input v-model="defectDetails.objName" readonly></Input>
             </FormItem>
             <FormItem label="危险等级：" prop="level">
@@ -57,19 +58,21 @@
             <FormItem label="缺陷描述：" prop="description">
                 <Input v-model="defectDetails.description" type="textarea" :rows="4" placeholder="请输入缺陷描述" :readonly=this.isTrue></Input>
             </FormItem>
-            <div style="text-align: center;" v-show="this.pageType!=1&&this.pageType!=2">
+            <div style="text-align: center;margin-left: 10vmin;" v-show="this.pageType!=1&&this.pageType!=2">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
                 <Button type="primary" @click="submitDefect('defectDetails')" :disabled="isDisable">提交</Button>
             </div>
-            <div style="text-align: center;" v-show="this.pageType==1">
-                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
+            <div style="text-align: center;margin-left: 100px" v-show="this.pageType==1">
+                <Button type="ghost" @click="goBack()">返回</Button>
             </div>
         </Form> 
+        </div>
     </div>   
 </template>
 <script>
 import types from '../../../../../static/Enum.json'
 import { TunnelService } from '../../../../services/tunnelService'
+import { DefectService } from '../../../../services/defectService'
 export default {
     data(){
         return {
@@ -139,15 +142,6 @@ export default {
                 description:[
                     { required: true, message: '请输入缺陷描述', trigger: 'blur' }
                 ]
-            },
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
             }
         }    
     },
@@ -164,20 +158,28 @@ export default {
     },
     watch:{
         tunnelId(curVal,oldVal){
+            // this.defectDetails.area.id = null;
             this.defectDetails.tunnelId = curVal
             this.getAreas()
             this.getStores()
         },
         areaId(curVal,old){
+            // this.defectDetails.store.id = null
             this.defectDetails.area.id = curVal
             this.getObj()
         },
         storeId(curVal,oldVal){
             this.defectDetails.store.id = curVal
             this.getObj()
-        }
+        },
+        '$route': function () {
+			this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
+		}
     },
     mounted(){
+        if(this.$route.params.type==4){
+            this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
+        }
         this.defectDetails.id =  this.$route.params.id;
         this.pageType = this.$route.params.type;
         if(this.pageType == 1){
@@ -229,7 +231,7 @@ export default {
             this.axios.get('/tunnels/'+this.defectDetails.tunnelId+'/areas').then(response=>{
                 let{code,data} = response.data
                 if(code==200){
-                    this.areas=data
+                    this.areas=data 
                 }
             })
             this.getObj()
@@ -268,12 +270,20 @@ export default {
                 this.isDisable = false
                 this.$refs[name].validate((valid)=>{
                     if(valid){
-                        this.axios.post('defects',(this.defectDetails)).then(response=>{
-                            this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
-                        })
-                        .catch(function(error) {
-                            console.log(error);
-                        });
+                        DefectService.addDefect(this.defectDetails).then(
+                            result => {
+                                this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
+                        // this.axios.post('defects',(this.defectDetails)).then(response=>{
+                        //     this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
+                        // })
+                        // .catch(function(error) {
+                        //     console.log(error);
+                        // });
                     }
                 })
             },2000)
@@ -281,6 +291,10 @@ export default {
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        changeTunnel(){
+            this.defectDetails.area.id = null
+            this.defectDetails.store.id = null
         }
 
         //更新缺陷
@@ -297,29 +311,55 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 700px;
-    margin: 10px auto;
-    background: #fff;
-    padding: 10px 20px;
-    margin-top: 30px;
-    border-radius: 4px;
+    width: 33vw;
+    margin: 1vmin auto;
+    padding: 1vmin 2vmin;
+    margin-top: 3vmin;
+    border-radius: 0.4vmin;
 }
 .goBack{
     position: absolute;
     bottom: 2vh;
     right: 3vw;
 }
+.formBG{
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    width: auto;
+    text-align: center;
+    margin-left: 45%;
+    margin-right: 45%;
+    font-size: 2.2vmin;
+    margin-top: -3.2vmin;
+}
+.ivu-form-item{
+    margin-bottom: 2.4vmin;
+}
 @media (min-width: 2200px){
-    .formTitle{
-        font-size: 2.8vmin;
-    }
     .ivu-form.ivu-form-label-right{
         width: 50%;
         padding: 1vmin 2vmin;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;

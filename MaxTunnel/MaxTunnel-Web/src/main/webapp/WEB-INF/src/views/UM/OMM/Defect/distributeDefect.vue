@@ -1,7 +1,8 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
+        <div class="formTitle">指派维修工单</div>
+        <div class="formHeight">
         <Form :model="defectDetails" ref="defectDetails" :label-width="100" :rules="ruleValidate" @submit.native.prevent>
-            <h2 class="formTitle">指派维修工单</h2>
             <FormItem label="所属管廊：">
                 <Select v-model="defectDetails.tunnelId" disabled>
                     <Option v-for="(item,index) in tunnel" :key="index" :value="item.id">{{item.name}}</Option>
@@ -29,8 +30,8 @@
                 </Select>
             </FormItem>
             <FormItem label="对象名：" v-show="defectDetails.type==2">
-                <Select v-model="defectDetails.objId" disabled>
-                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.val}}</Option>
+                <Select v-model="defectDetails.objectId" disabled>
+                    <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="危险等级：">
@@ -59,6 +60,7 @@
                 <Button type="primary" style="margin-left: 8px" @click="submitForm('defectDetails')" :disabled="isSubmit">提交</Button>
             </FormItem>
         </Form> 
+        </div>
     </div>
 </template>
 <script>
@@ -86,7 +88,7 @@ export default {
                 name: '',
                 createTime: null,
                 type: null,
-                objId: null,
+                objectId: null,
                 level: null,
                 status: null,
                 description: null,
@@ -109,15 +111,6 @@ export default {
             objs:[],
             processInstanceId: null,
             typeKey: null,
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             isSubmit: false
         }    
     },
@@ -126,6 +119,7 @@ export default {
             this.processInstanceId=this.$route.params.id;
         }
     },
+
     mounted(){
         this.processInstanceId =  this.$route.params.id;
         this.pageType = this.$route.params.type;
@@ -139,13 +133,7 @@ export default {
                 _this.Log.info(error)
             })
 
-        DefectService.getStaffs().then(
-            (result)=>{
-                _this.liable = result
-            },
-            (error)=>{
-                _this.Log.info(error)
-            })
+        
         //缺陷类型
         EnumsService.getDefectType().then(
             (result)=>{
@@ -177,7 +165,9 @@ export default {
                 _this.defectDetails.createTime = new Date(result.createTime).format('yyyy-MM-dd hh:mm:s')
                 _this.getAreas()
                 _this.getStores()
-            })
+            }
+        )
+        this.getStaff()
     },
     methods: {
         //获取所属区域
@@ -253,6 +243,20 @@ export default {
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        //获取员工列表
+        getStaff(){
+            var params = {
+                outside: 1
+            }
+            DefectService.getStaffs(params).then(
+                (result)=>{
+                    this.liable = result
+                },
+                (error)=>{
+                    this.Log.info(error)
+                }
+            )
         }
     }
 }
@@ -261,7 +265,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 680px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
 }
 .goBack{
@@ -269,13 +272,36 @@ export default {
     bottom: 2vh;
     right: 3vw;
 }
+.formBG{
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    margin-top: -3vh;
+}
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
@@ -287,9 +313,6 @@ export default {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
     textarea.ivu-input{
         height: 5.5vmin !important;

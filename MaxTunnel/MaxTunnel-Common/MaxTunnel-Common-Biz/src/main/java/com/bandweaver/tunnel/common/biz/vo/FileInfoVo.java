@@ -1,5 +1,10 @@
 package com.bandweaver.tunnel.common.biz.vo;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,10 +12,12 @@ import java.util.Date;
  * @author shaosen
  * @date 2018年8月27日
  */
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 public class FileInfoVo extends BaseVo{
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
@@ -21,55 +28,10 @@ public class FileInfoVo extends BaseVo{
 
     private Integer docType;
 
+    private Integer docTypeSon;
+
     private String path;
 
     private Date crtTime;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    public Integer getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(Integer fileType) {
-        this.fileType = fileType;
-    }
-
-    public Integer getDocType() {
-        return docType;
-    }
-
-    public void setDocType(Integer docType) {
-        this.docType = docType;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
-    }
-
-    public Date getCrtTime() {
-        return crtTime;
-    }
-
-    public void setCrtTime(Date crtTime) {
-        this.crtTime = crtTime;
-    }
 }

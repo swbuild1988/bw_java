@@ -1,18 +1,147 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import app from './modules/app';
+import user from './modules/user';
+import permission from './modules/permission';
+import getters from './getters';
 
-import state from './state'
-import getters from './getters'
-import modules from './modules'
-import actions from './actions'
-import mutations from './mutations'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+// 应用初始状态
+const VMstate = {
+    state: {
+        autoplay: true, // 视屏监控浏览模式，默认轮播
+        entity: null, // 缓存告警实体
+        alarm: {
+            alarmEntity: null,
+            alarmObject: [],
+        },
+        planLinkageVideos: { // 预案视屏联动集合
+            videoIds: null,
+            processInstanceId: null,
+        },
+    },
+    mutations: {
+        // 视频轮询
+        closeVideoLoop: (state) => state.autoplay = false,
+        startVideoLoop: (state) => state.autoplay = true,
+        // 修改告警
+        changeAlarm: (state, alarm) => {
+            const stateAlarm = state.alarm;
 
-export default new Vuex.Store({
-    state,
+            stateAlarm.alarmObject.splice(0);
+            stateAlarm.alarmObject.push(alarm.object);
+
+            stateAlarm.alarmEntity = alarm.entity;
+        },
+        // 预案视屏联动
+        addPlanLinkageVideos: ({
+            planLinkageVideos,
+        }, {
+            id,
+            processInstanceId,
+        }) => {
+            planLinkageVideos.videoIds = id;
+            planLinkageVideos.processInstanceId = processInstanceId;
+        },
+        removePlanLinkageVideos: ({
+            planLinkageVideos,
+        }) => {
+            planLinkageVideos.videoIds = null;
+            planLinkageVideos.processInstanceId = null;
+        },
+    },
+};
+
+const UMstate = {
+    // 1. state
+    state: {
+        planData: null,
+        communication: {
+            isLogin: false,
+            token: null,
+            intervalId: null,
+        },
+        tabelCrad:{
+            isShowCardComponent:true,
+            buttomIndex:0
+        },
+        videoDetailParams: {
+            storeId: null,
+            areaId: null,
+            videoNum: 4
+        }
+    },
+    // 2. getters
+    getters: {
+        // 参数列表state指的是state数据
+        getPlanData(state) {
+            return state.planData;
+        },
+    },
+    // 3. actions
+    // 通常跟api接口打交道
+    actions: {
+        // 参数列表：{commit, state}
+        // state指的是state数据
+        // commit调用mutations的方法
+        // plan就是调用此方法时要传的参数
+        setPlanData({
+            commit,
+            state,
+        }, plan) {
+            // 跟后台打交道
+            // 调用mutaions里面的方法
+            commit('setPlanData', plan);
+        },
+    },
+    // 4. mutations
+    mutations: {
+        // state指的是state的数据
+        // plan传递过来的数据
+        setPlanData(state, plan) {
+            state.planData = plan;
+        },
+
+        comLogin(state, data) {
+            state.communication.isLogin = data.isLogin;
+            state.communication.token = data.token;
+        },
+        comLogout(state) {
+            state.communication.isLogin = false;
+            state.communication.token = null;
+        },
+        startInterval(state, id) {
+            state.communication.intervalId = id;
+        },
+        stopInterval(state) {
+            state.communication.intervalId = null;
+        },
+        changeCardStatus(state,{status,index}){
+            
+            state.tabelCrad.isShowCardComponent = status;
+            state.tabelCrad.buttomIndex = index;
+            
+        },
+        setVideoDetailParams(state,data){
+            state.videoDetailParams = {
+                storeId: data.storeId,
+                areaId: data.areaId,
+                videoNum: data.videoNum
+            }
+        }
+    },
+};
+
+const store = new Vuex.Store({
+    modules: {
+        VMstate,
+        UMstate,
+        app,
+        user,
+        permission,
+    },
     getters,
-    mutations,
-    actions,
-    modules
-})
+});
+
+export default store;

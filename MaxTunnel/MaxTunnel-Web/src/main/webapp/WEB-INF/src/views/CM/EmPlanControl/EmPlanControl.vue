@@ -11,11 +11,11 @@
                 </Select>
             </Col>
             <Col span="6">
-                <span>BPMN节点ID</span><span>：</span>
+                <span  class="word64">节点ID</span><span>：</span>
                 <Input v-model="researchInfo.taskKey" placeholder="支持模糊查询" class="inputWidth"/></Input>
             </Col>
             <Col span="6">
-                <span>BPMN节点Name</span><span>：</span>
+                <span>节点名称</span><span>：</span>
                 <Input v-model="researchInfo.taskName" placeholder="支持模糊查询" class="inputWidth"/></Input>
             </Col>
             <Col span="6">
@@ -41,7 +41,7 @@
                 </Select>
             </Col>
             <Col span="6">
-                <span class="word63">应急结束</span><span>：</span>
+                <span>应急结束</span><span>：</span>
                 <Select v-model="researchInfo.finishKey" placeholder="请选择应急结束值" class="inputWidth">
                     <Option value=null>所有</Option>
                     <Option v-for="item in finishEnums" :value="item.val" :key="item.key">{{item.key}}</Option>
@@ -128,12 +128,12 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: 'BPMN节点ID',
+                    title: '节点ID',
                     key: 'taskKey',
                     align: 'center'
                 },
                 {
-                    title: 'BPMN节点Name',
+                    title: '节点名称',
                     key: 'taskName',
                     align: 'center'
                 },
@@ -153,7 +153,7 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '应急行为',
+                    title: '行为所需结果',
                     key: 'actionValue',
                     align: 'center'
                 },
@@ -162,15 +162,19 @@ export default {
                     key: 'finishName',
                     align: 'center'
                 },
-                {
-                    title: '应急结束',
-                    key: 'finishKey',
-                    align: 'center'
-                },
+                // {
+                //     title: '应急结束',
+                //     key: 'finishKey',
+                //     align: 'center'
+                // },
                 {
                     title: '是否结束节点',
                     key: 'isFinished',
-                    align: 'center'
+                    align: 'center',
+                    render: (h,params) => {
+                        let finishFlag = params.row.isFinished ? '是' : '否'
+                        return h('div',finishFlag)
+                    }
                 },
                 {
                     title: '创建时间',
@@ -235,8 +239,8 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '35px',
-                right: '40px'
+                bottom: '2vmin',
+                right: '2.5vmin'
             }
         }
     },
@@ -265,25 +269,19 @@ export default {
     methods:{
         showTable(){
             let _this = this
-            Promise.all([PlanService.emPlansDatagrid(this.researches),EnumsService.getUnitType(),EnumsService.getSwitch()]).then(
+            Promise.all([PlanService.emPlansDatagrid(this.researches),EnumsService.getSwitch()]).then(
                 result=>{
                     let plans = result[0].list
-                    let unitTypeEnums = result[1]
-                    let switchEnums = result[2]
+                    let switchEnums = result[1]
                     _this.data6 = plans
                     _this.data6.forEach(item=>{
-                        if(item.actionKey == 2){
-                            let actionValue = unitTypeEnums.find(a=>{
+                        if(item.actionKey == 3){
+                            let actionValue = switchEnums.find(a=>{
                                 return a.val == item.actionValue
                             })
                             item.actionValue = actionValue.key
                         } else {
-                            if(item.actionKey == 3){
-                                let actionValue = switchEnums.find(a=>{
-                                    return a.val == item.actionValue
-                                })
-                                item.actionValue = actionValue.key
-                            }
+                           item.actionValue = null
                         }
                     })
                     _this.page.pageTotal = result[0].total;

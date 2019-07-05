@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.omm;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +16,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.omm.EquipmentStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.omm.SpareWhitherEnum;
 import com.bandweaver.tunnel.common.biz.dto.CommonDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.BuyDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.SpareOutDto;
-
+import com.bandweaver.tunnel.common.biz.itf.omm.BuyService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InstrumentService;
@@ -25,9 +27,13 @@ import com.bandweaver.tunnel.common.biz.itf.omm.InstrumentService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareOutService;
 import com.bandweaver.tunnel.common.biz.itf.omm.SpareService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Buy;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 import com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Spare_Out;
+import com.bandweaver.tunnel.common.biz.vo.omm.BuyVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.InstrumentVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareOutVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareVo;
@@ -54,6 +60,8 @@ public class SpareController {
 	private EquipmentService equipmentService;
 	@Autowired
 	private InstrumentService instrumentService;
+	@Autowired
+	private BuyService buyService;
 
 	
 	/**
@@ -64,10 +72,16 @@ public class SpareController {
 	 * @param venderId 供应商
 	 * @param status true 入库/false 出库
 	 * @param inTime 入库时间
+	 * @param qaTerm 质保期限
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月26日
 	 */
+	@RequiresPermissions("spare:add")
 	@RequestMapping(value = "spares", method = RequestMethod.POST)
 	public JSONObject insert(@RequestBody Spare spare) {
 		spareService.add(spare);
@@ -83,25 +97,24 @@ public class SpareController {
 	 * @param venderId 供应商
 	 * @param status true 入库/false 出库
 	 * @param inTime 入库时间
+	 * @param qaTerm 质保期限
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月26日
 	 */
+	@RequiresPermissions("spare:add")
 	@RequestMapping(value = "spares/{count}", method = RequestMethod.POST)
 	public JSONObject addBatch(@PathVariable("count") Integer count,
 			@RequestBody Spare spare) {
-		List<Spare> list = new ArrayList<>();
+		String str = spare.getName();
 		for(int i=1;i<=count;i++) {
-			Spare s = new Spare();
-			s.setName(spare.getName() + i);
-			s.setInTime(spare.getInTime());
-			s.setModelId(spare.getModelId());
-			s.setVenderId(spare.getVenderId());
-			s.setStatus(spare.getStatus());
-			s.setTypeId(spare.getTypeId());
-			list.add(s);
+			spare.setName(str + i);
+			spareService.add(spare);
 		}
-		spareService.addBatch(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
@@ -114,10 +127,16 @@ public class SpareController {
 	 * @param venderId 供应商
 	 * @param status true/false
 	 * @param inTime 入库时间
+	 * @param qaTerm 质保期限
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月26日
 	 */
+	@RequiresPermissions("spare:update")
 	@RequestMapping(value = "spares", method = RequestMethod.PUT)
 	public JSONObject update(@RequestBody Spare spare) {
 		spareService.update(spare);
@@ -125,7 +144,7 @@ public class SpareController {
 	}
 	
 	/**
-	 * 查询所有入库的备品
+	 * 查询所有在库的备品
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月26日
@@ -155,6 +174,11 @@ public class SpareController {
 	 * @param typeId 类型
 	 * @param venderId 供应商
 	 * @param status 备品状态
+	 * @param qaTerm 质保期限
+     * @param ratedVoltage 额定电压
+     * @param range 量程
+     * @param factory 厂家
+     * @param brand 品牌
 	 * @param startTime
 	 * @param endTime 
 	 * @param pageSize
@@ -163,6 +187,7 @@ public class SpareController {
 	 * @author ya.liu
 	 * @Date 2018年11月26日
 	 */
+	@RequiresPermissions("spare:list")
 	@RequestMapping(value = "spares/datagrid", method = RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody SpareVo vo) {
 		PageInfo<SpareDto> pageInfo = spareService.dataGrid(vo);
@@ -189,13 +214,10 @@ public class SpareController {
 	 * @author ya.liu
 	 * @Date 2018年11月26日
 	 */
+	@RequiresPermissions("spare:delete")
 	@RequestMapping(value = "spares/{ids}", method = RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable String ids) {
-		String [] ss = ids.split(",");
-		List<Integer> list = new ArrayList<>();
-		for(String s : ss) {
-			list.add(Integer.valueOf(s));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		int i = spareService.deleteByIds(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,i);
 	}
@@ -223,33 +245,36 @@ public class SpareController {
 	/**
 	 * 批量添加备品出库
 	 * @param ids "1,2,3"
-	 * @param tunnelId 所属管廊，选仪表给0
+	 * @param tunnelId 所属管廊
+	 * @param sectionId 所属舱段
+	 * @param runTime 安装时间
+	 * @param assetNo 资产编码
+	 * @param status 设备状态（枚举）
+	 * @param objId 监测对象id
 	 * @param staffId 取用人id
 	 * @param userId 操作员id
 	 * @param outTime 出库时间
-	 * @param whither 备品去向
+	 * @param whither 备品去向，现在默认去到管廊设备
 	 * @param describe 描述
 	 * @return
 	 * @author ya.liu
 	 * @Date 2018年11月28日
 	 */
-	@RequestMapping(value = "spare-outs/{ids}/tunnels/{tunnelId}", method = RequestMethod.POST)
-	public JSONObject addBatch(@PathVariable("ids") String ids,
-			@PathVariable("tunnelId") Integer tunnelId,
-			@RequestBody SpareOut s) {
-		String [] strs = ids.split(",");
+	@RequestMapping(value = "spare-outs/{ids}/equipments", method = RequestMethod.POST)
+	public JSONObject addBatch(@PathVariable("ids") String ids, @RequestBody Spare_Out out) {
+		SpareOut s = out.getSpareOut();
+		Equipment e = out.getEquipment();
+		
+		List<Integer> strs = CommonUtil.convertStringToList(ids);
 		List<SpareOut> list = new ArrayList<>();
-		for(String str : strs) {
-			SpareOut out = new SpareOut();
-			out.setId(Integer.valueOf(str));
-			out.setStaffId(s.getStaffId());
-			out.setOutTime(s.getOutTime());
-			out.setUserId(s.getUserId());
-			out.setWhither(s.getWhither());
-			out.setDescribe(s.getDescribe() == null ? "" : s.getDescribe());
-			list.add(out);
-		}
-		spareOutService.addBatch(list, tunnelId);
+		s.setWhither(SpareWhitherEnum.PIPE.getValue());
+		
+		s.setId(strs.get(0));
+		if(s.getDescribe() == null) s.setDescribe("");
+		list.add(s);
+		
+		if(list != null || list.size() > 0)
+			spareOutService.addBatch(list, e);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
@@ -622,4 +647,107 @@ public class SpareController {
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
+    
+    
+    
+    
+    // ================================= 采购信息 ============================
+    /**
+     * 添加采购记录
+     * @param typeId
+     * @param worker
+     * @param description
+     * @param buyTime
+     * @param crtTime
+     * @param isFinished
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys",method=RequestMethod.POST)
+    public JSONObject addBuy(@RequestBody Buy buy) {
+		buyService.add(buy);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 修改采购记录
+     * @param id
+     * @param typeId
+     * @param worker
+     * @param description
+     * @param buyTime
+     * @param isFinished
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys",method=RequestMethod.PUT)
+    public JSONObject updateBuy(@RequestBody Buy buy) {
+		buyService.update(buy);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 删除
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/{id}",method=RequestMethod.DELETE)
+    public JSONObject addBuy(@PathVariable("id") Integer id) {
+		buyService.delete(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 获取采购详情
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/{id}",method=RequestMethod.GET)
+    public JSONObject getBuyDtoById(@PathVariable("id") Integer id) {
+		BuyDto dto = buyService.getDtoById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 不分页条件查询采购记录
+     * @param typeId
+     * @param worker
+     * @param isFinished
+     * @param startTime
+     * @param endTime
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/condition",method=RequestMethod.POST)
+    public JSONObject getByCondition(@RequestBody(required = false) BuyVo vo) {
+		List<BuyDto> list = buyService.selectByCondition(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 分页条件查询采购记录
+     * @param typeId
+     * @param worker
+     * @param isFinished
+     * @param startTime
+     * @param endTime
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月14日
+     */
+    @RequestMapping(value = "buys/datagrid",method=RequestMethod.POST)
+    public JSONObject dataGrid(@RequestBody BuyVo vo) {
+		ListPageUtil<BuyDto> list = buyService.dataGrid(vo);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
 }

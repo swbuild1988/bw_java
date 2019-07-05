@@ -21,7 +21,7 @@ public class CableContractVo extends BaseVo implements Serializable {
 
     private String name;
 
-    private Integer customerId;
+    private Integer companyId;
 
     private Integer payType;
     
@@ -47,15 +47,15 @@ public class CableContractVo extends BaseVo implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
+    public Integer getCompanyId() {
+		return companyId;
+	}
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
 
-    public Integer getPayType() {
+	public Integer getPayType() {
         return payType;
     }
 

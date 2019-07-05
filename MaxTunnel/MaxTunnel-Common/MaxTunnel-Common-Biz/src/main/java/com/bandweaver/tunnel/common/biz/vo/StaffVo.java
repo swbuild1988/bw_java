@@ -21,6 +21,10 @@ public class StaffVo extends BaseVo {
 
 	private Date crtTime;
 
+	private String identityNO;
+
+	private Integer outside;
+
 	public Integer getId() {
 		return id;
 	}
@@ -92,7 +96,21 @@ public class StaffVo extends BaseVo {
 	public void setHireDate(Date hireDate) {
 		this.hireDate = hireDate;
 	}
-	
-	
+
+	public String getIdentityNO() {
+		return identityNO;
+	}
+
+	public void setIdentityNO(String identityNO) {
+		this.identityNO = identityNO;
+	}
+
+	public Integer getOutside() {
+		return outside;
+	}
+
+	public void setOutside(Integer outside) {
+		this.outside = outside;
+	}
 
 }

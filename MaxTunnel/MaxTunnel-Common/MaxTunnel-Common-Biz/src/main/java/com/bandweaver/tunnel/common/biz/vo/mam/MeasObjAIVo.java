@@ -15,6 +15,8 @@ public class MeasObjAIVo extends BaseVo {
 	private List<Integer> ids;
 	private Date refreshTime;
 	private Double cv;
+	private Double maxCv;
+	private Double minCv;
 
 	public Integer getId() {
 		return id;
@@ -46,6 +48,22 @@ public class MeasObjAIVo extends BaseVo {
 
 	public void setRefreshTime(Date refreshTime) {
 		this.refreshTime = refreshTime;
+	}
+
+	public Double getMaxCv() {
+		return maxCv;
+	}
+
+	public void setMaxCv(Double maxCv) {
+		this.maxCv = maxCv;
+	}
+
+	public Double getMinCv() {
+		return minCv;
+	}
+
+	public void setMinCv(Double minCv) {
+		this.minCv = minCv;
 	}
 
 	@Override

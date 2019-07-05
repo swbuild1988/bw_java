@@ -3426,6 +3426,10 @@ define('Shaders/Builtin/Functions/computeLightColorInFP', function() {
     return Cesium['computeLightColorInFP'];
 });
 
+define('Shaders/Builtin/Functions/computeLightColorInstanceInFP', function() {
+    return Cesium['computeLightColorInstanceInFP'];
+});
+
 define('Shaders/Builtin/Functions/computeNormal', function() {
     return Cesium['computeNormal'];
 });

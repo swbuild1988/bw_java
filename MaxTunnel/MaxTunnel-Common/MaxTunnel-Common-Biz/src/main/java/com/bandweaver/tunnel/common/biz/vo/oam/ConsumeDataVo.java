@@ -9,6 +9,7 @@ import com.bandweaver.tunnel.common.biz.vo.BaseVo;
  */
 public class ConsumeDataVo extends BaseVo {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 能耗id
 	 */

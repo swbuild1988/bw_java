@@ -858,6 +858,7 @@ define(function() {
         'Shaders/Builtin/Functions/clip' : '../Stubs/Cesium',
         'Shaders/Builtin/Functions/columbusViewMorph' : '../Stubs/Cesium',
         'Shaders/Builtin/Functions/computeLightColorInFP' : '../Stubs/Cesium',
+        'Shaders/Builtin/Functions/computeLightColorInstanceInFP' : '../Stubs/Cesium',
         'Shaders/Builtin/Functions/computeNormal' : '../Stubs/Cesium',
         'Shaders/Builtin/Functions/computePosition' : '../Stubs/Cesium',
         'Shaders/Builtin/Functions/cosineAndSine' : '../Stubs/Cesium',

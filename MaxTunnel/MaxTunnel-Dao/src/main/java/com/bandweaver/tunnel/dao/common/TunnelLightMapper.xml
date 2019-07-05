@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.TunnelLightMapper">
+    <cache/>
+
+    <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.common.TunnelLight">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="tunnel_id" jdbcType="DECIMAL" property="tunnelId"/>
+        <result column="area_id" jdbcType="DECIMAL" property="areaId"/>
+        <result column="store_id" jdbcType="DECIMAL" property="storeId"/>
+        <result column="section_id" jdbcType="DECIMAL" property="sectionId"/>
+        <result column="lat" jdbcType="DECIMAL" property="lat"/>
+        <result column="lon" jdbcType="DECIMAL" property="lon"/>
+        <result column="height" jdbcType="DECIMAL" property="height"/>
+        <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+    </resultMap>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM T_COMMON_TUNNEL_LIGHT
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelLight">
+        <!-- 新增的时候，返回主键 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT COMMON_TUNNEL_LIGHT_SEQUENCE.currval from DUAL
+        </selectKey>
+        insert into T_COMMON_TUNNEL_LIGHT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="areaId != null">
+                area_id,
+            </if>
+            <if test="storeId != null">
+                store_id,
+            </if>
+            <if test="sectionId != null">
+                section_id,
+            </if>
+            <if test="lat != null">
+                lat,
+            </if>
+            <if test="lon != null">
+                lon,
+            </if>
+            <if test="height != null">
+                height,
+            </if>
+            <if test="crtTime != null">
+                CRT_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tunnelId != null">
+                #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="sectionId != null">
+                #{sectionId,jdbcType=DECIMAL},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=DECIMAL},
+            </if>
+            <if test="lon != null">
+                #{lon,jdbcType=DECIMAL},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.common.TunnelLight">
+        update T_COMMON_TUNNEL_LIGHT
+        <set>
+            <if test="tunnelId != null">
+                #{tunnelId,jdbcType=DECIMAL},
+            </if>
+            <if test="areaId != null">
+                #{areaId,jdbcType=DECIMAL},
+            </if>
+            <if test="storeId != null">
+                #{storeId,jdbcType=DECIMAL},
+            </if>
+            <if test="sectionId != null">
+                #{sectionId,jdbcType=DECIMAL},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=DECIMAL},
+            </if>
+            <if test="lon != null">
+                #{lon,jdbcType=DECIMAL},
+            </if>
+            <if test="height != null">
+                #{height,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <select id="getTunnelLights" resultMap="BaseResultMap">
+        SELECT * FROM T_COMMON_TUNNEL_LIGHT
+    </select>
+
+
+    <select id="getTunnelLightsBySection" resultMap="BaseResultMap">
+        SELECT * FROM T_COMMON_TUNNEL_LIGHT where section_id = #{sectionId}
+    </select>
+
+</mapper>	

@@ -8,7 +8,7 @@ public class GlobalEventListener implements ActivitiEventListener {
     @Override
     public void onEvent(ActivitiEvent activitiEvent) {
         String eventType = activitiEvent.getType().name();
-//        LogUtil.info("activit onEvent: " + eventType);
+        LogUtil.debug("activit onEvent: " + eventType);
     }
 
     @Override

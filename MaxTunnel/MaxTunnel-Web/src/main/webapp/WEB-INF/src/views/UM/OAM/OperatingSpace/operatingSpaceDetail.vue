@@ -1,103 +1,198 @@
 <template>
-  <div @touchmove.prevent>
-    <h1 class="title">入廊管线详情</h1>
-    <Row>
-        <Col span="12">
-          <div class="infos">
-            <Card v-for="(item,index) in linesInfo" :key="index" class="lineInfo">
-              <h3 class="name">{{ item.cableName }}</h3>
-              <p>管线长度：{{ item.cableLength }}</p>
-              <p>管线状态：{{ item.cableStatusName }}</p>
-              <p>管线位置：{{ item.cableLocation }}</p>
-              <p>客户名称：{{ item.contract.customer.company.name }}</p>
-              <p>联系人：{{ item.contract.customer.contact }}</p>
-              <p>联系电话：{{ item.contract.customer.tel }}</p>
-            </Card>
-          </div>
-        </Col>
-        <Col span="12"><img class="bim" src="../../../../assets/UM/bim.png">
-        </Col>
-    </Row>
-  </div>
+    <div class="detailWrapper">
+        <p class="detailTitle">{{curTunnel.name + curStore.name + '管线详情'}}</p>
+        <Button class="back" type="primary" @click="back">返回</Button>
+        <div class="lineTable">
+            <Table :columns="columns" :data="linesInfo"></Table>
+        </div>
+    </div>
 </template>
 
 <script>
-  export default {
+import { SpaceService } from "../../../../services/spaceService";
+import { TunnelService } from "../../../../services/tunnelService";
+export default {
     name: "operatingSpaceDetail",
     data() {
-      return {
-        sectionId: '',
-        linesInfo:''
-      }
+        return {
+            curStore: {
+                name: null
+            },
+            curTunnel: {
+                id: null,
+                name: ""
+            },
+            linesInfo: [],
+            columns: [
+                {
+                    title: "管线名称",
+                    key: "cableName",
+                    align: "center"
+                },
+                {
+                    title: "企业客户",
+                    key: "contract",
+                    align: "center",
+                    render: (h, params) => {
+                        return h("div", params.row.contract.company.name);
+                    }
+                },
+                {
+                    title: "管线长度",
+                    key: "cableLength",
+                    align: "center"
+                },
+                {
+                    title: "管线状态",
+                    key: "cableStatusName",
+                    align: "center"
+                },
+                {
+                    title: "联系人",
+                    align: "center",
+                    render: (h, params) => {
+                        if (params.row.contract.company.customers.length) {
+                            return h(
+                                "div",
+                                params.row.contract.company.customers[0].contact
+                            );
+                        }
+                    }
+                },
+                {
+                    title: "联系方式",
+                    align: "center",
+                    render: (h, params) => {
+                        if (params.row.contract.company.customers.length) {
+                            return h(
+                                "div",
+                                params.row.contract.company.customers[0].tel
+                            );
+                        }
+                    }
+                },
+                {
+                    title: "操作",
+                    key: "action",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h(
+                            "Button",
+                            {
+                                props: {
+                                    type: "primary",
+                                    size: "small"
+                                },
+                                style: {
+                                    marginRight: "5px"
+                                },
+                                on: {
+                                    click: () => {
+                                        this.turnToContractPage(
+                                            params.row.contract.id
+                                        );
+                                    }
+                                }
+                            },
+                            "查看合同详情"
+                        );
+                    }
+                }
+            ]
+        };
     },
-    // watch: {
-    //   '$route': function () {
-    //     // $route发生变化时再次赋值planId
-    //     this.tunnelId = this.$route.params.id;
-    //     this.tunnelList.forEach(a => {
-    //       if (a.id == this.tunnelId) {
-    //         this.curName = a.name;
-    //         this.init();
-    //         this.queryTable();
-    //       }
-    //     });
-    //   }
-    // },
     mounted() {
-      this.sectionId = this.$route.params.id;
-      console.log(this.sectionId);
-      this.getData();
-      // 获取所有的管廊
-      // this.axios.get("/tunnels ").then(result => {
-      //   let {code, data} = result.data;
-      //   if (code == 200) {
-      //     this.tunnelList = data;
-      //     this.tunnelList.forEach(a => {
-      //       if (a.id == this.tunnelId) {
-      //         this.curName = a.name;
-      //         this.init();
-      //       }
-      //     });
-      //   }
-      // });
-      // this.queryTable();
-
+        this.curTunnel.id = this.$route.params.id;
+        this.curStore = this.$route.params.store;
+        this.getData();
     },
     methods: {
-      getData() {
-        this.axios.get('tunnels/areas/sections/' +this.sectionId + '/cables').then(res =>{
-          let {code,data} = res.data;
-          if(code == 200){
-            this.linesInfo = data;
-          }
-        })
-      }
+        getData() {
+            SpaceService.getCableList(this.curStore.id).then(
+                res => {
+                    this.linesInfo = res;
+                },
+                err => {
+                    this.Log.info(err);
+                }
+            );
+            TunnelService.getTunnels().then(res => {
+                let curTunnel = res.find(tunnel => {
+                    return tunnel.id == this.curTunnel.id;
+                });
+                this.curTunnel.name = curTunnel.name;
+            });
+        },
+        turnToContractPage(contractId) {
+            sessionStorage.setItem(
+                "refreshAddress",
+                "/UM/tunnelContract/detail"
+            );
+            this.$router.push({
+                name: "合同详情",
+                params: {
+                    contractId: contractId,
+                    type: 1
+                }
+            });
+        },
+        back() {
+            this.$router.back(-1);
+        }
     }
-  }
+};
 </script>
 
 <style scoped>
-.body{
-  overflow: hidden;
+.detailWrapper {
+    width: 100%;
+    min-height: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
 }
-  .title {
-    margin: 10px;
-  }
-  .infos{
-    width:400px;
-    color:white;
-    /*overflow-y:scroll;*/
-    margin:10px;
-  }
-  .lineInfo{
-    background-color: rgb(204, 153, 102);
-  }
-  .name{
-    margin:10px;
-  }
-  .bim{
-    margin-top:20px;
-    width:500px;
-    height:520px;
-  }
+.detailTitle {
+    font-size: 2.4vmin;
+    margin: 4vmin;
+    text-align: center;
+}
+.lineTable {
+    margin: 0 2vmin;
+}
+.back {
+    position: absolute;
+    top: 4vmin;
+    right: 4vmin;
+    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
+    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
+    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
+    background: linear-gradient(to right, #e49b9b, #f61a1a);
+    border-color: #61a2b3;
+    border-radius: 1vmin;
+    font-size: 1.4vmin !important;
+    color: #fff;
+}
+.lineTable .ivu-table-wrapper {
+    border: none;
+}
+.lineTable .ivu-table-wrapper >>> .ivu-table:before,
+.lineTable .ivu-table-wrapper >>> .ivu-table:after {
+    background-color: #fffdfd00 !important;
+}
+.lineTable .ivu-table-wrapper >>> .ivu-table {
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.lineTable .ivu-table-wrapper >>> .ivu-table th,
+.ivu-table-wrapper >>> .ivu-table td {
+    background-color: #fffdfd00 !important;
+    border-bottom: 1px solid #7d7d7d;
+}
+.lineTable .ivu-table-wrapper >>> .ivu-btn-primary,
+.ivu-table-wrapper >>> .ivu-btn-info {
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none;
+}
 </style>

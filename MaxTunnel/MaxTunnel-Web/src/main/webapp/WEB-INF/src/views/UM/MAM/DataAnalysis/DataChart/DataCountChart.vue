@@ -1,310 +1,192 @@
 <template>
-  <div>
-    <div class="query">
-      <Col span="6">
-      <Row>
-        <Col span="24">
-        <label class="queryLabel">周期</label>
-        <Select v-model="queryCondition.cycleType" style="width:14.5vw;" @on-change="changeCycle">
-          <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
-        </Select>
-        </Col>
-        <Col span="24" style="margin-top: 10px;">
-        <label class="queryLabel">时间</label>
-        <DatePicker v-model="queryCondition.time" type="datetimerange" placeholder="请选择"
-                    :readonly="queryCondition.readonly" style="width:14.5vw;"></DatePicker>
-        </Col>
-      </Row>
-      </Col>
-      <Col span="6">
-      <Row>
-        <Col span="24">
-        <label class="queryLabel">数据类型</label>
-        <Select v-model="queryCondition.objType" style="width:14.5vw; ">
-          <Option v-for="item in dataType" :value="item.key" :key="item.key">{{ item.val }}</Option>
-        </Select>
-        </Col>
-        <Col span="24" style="margin-top: 10px;">
-        <label class="queryLabel">监测位置</label>
-        <Select v-model="queryCondition.locations" multiple style="width:14.5vw;height: 3vh; ">
-          <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
-        </Select>
-        </Col>
-      </Row>
-      </Col>
-      <Col span="11">
-      <label class="queryLabel">对象</label>
-      <Select v-model="queryCondition.objs" multiple style="width:32vw;height: 3vh; z-index: 10001">
-        <Option v-for="item in sycles" :value="item.key" :key="item.key">{{ item.val }}</Option>
-      </Select>
-      </Col>
-      <Col span="1" style="position: relative;float: right;right: 15px;margin-top: 15px;">
-      <Button type="primary" icon="ios-search" size="small" @click="queryData">查询</Button>
-      </Col>
-      </Row>
-    </div>
-    <div style="margin-top: 10px;position: fixed">
-      <Row :gutter="16">
-        <Col span="13">
-        <Row :gutter="16">
-
-          <Col span="13">
-          <ComplexBar style="width: 46vw;height: 36vh;" v-bind="barChart"></ComplexBar>
-          </Col>
-          <Col span="13">
-          <SimplelineChart style="width: 46vw;height: 36vh;" v-bind="lineChart"></SimplelineChart>
-          </Col>
-        </Row>
-        </Col>
-        <Col span="11">
-        <Row>
-          <Col span="23">
-          <div>
-            <Table border stripe :columns="column" :data="tableData" :height="totalheight*0.72"></Table>
-          </div>
-          <div style="position: absolute; margin-bottom: 10px;float: right;right: 2px;">
-            <Page @on-change="changePage" :total="queryCondition.total"
-                  show-total show-elevator :page-size="queryCondition.pageSize"></Page>
-          </div>
-          </Col>
-        </Row>
-        </Col>
-      </Row>
-    </div>
-  </div>
+	<div>
+		<h2 class="title">监测明细报表</h2>
+		<div>
+			<div class="dateBox">
+				<div class="navigation">
+					<div @click="showWeek()" :class="{'activeWeek': isWeek}">周报</div>
+					<div @click="showMonth()" :class="{'activeMonth': isMonth}">月报</div>
+					<div @click="showYear()" :class="{'activeYear': isYear}">年报</div>
+				</div>
+				<div class="nullDate" v-if="cycleReport.length==undefined">暂无数据</div>
+				<div class="dataBox">
+					<div class="itemBox" v-for="(item,index) in cycleReport" :key="index">
+						<span class="leftBox"></span>
+						<span class="itemContent">{{item.name}}</span>
+						<div class="btnBox">
+							<Button type="primary" size="small" @click="previewCycle(item.id)">预览</Button>
+							<Button type="primary" size="small" @click="downloadCycle(item.id,item.name)">下载</Button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="showReport">
+				<PDF ref="pdf"></PDF>
+			</div>
+		</div>
+	</div>
 </template>
-
 <script>
-import ComplexBar from "../../../../../components/Common/Chart/ComplexBarChart";
-import SimplelineChart from "../../../../../components/Common/Chart/SimpleLineChart";
-
+import PDF from "../../../../../components/UM/MAM/pdfPerviewDownload";
+import { DataAnalysisService } from "../../../../../services/DataAnalysis";
+import Vue from "vue";
 export default {
-    name: "data-count-chart",
-    data() {
-        return {
-            totalheight: document.documentElement.clientHeight,
-            queryCondition: {
-                total: 0,
-                pageSize: 10,
-                cycleType: null,
-                time: null,
-                objs: [],
-                locations: [],
-                objType: null,
-                readonly: false,
-                pageNum: 0
-            },
-            lineChart: {
-                id: "lineChart",
-                requestUrl: "lineChart",
-                parameters: {
-                    option: {
-                        title: {
-                            text: "11",
-                            textStyle: {
-                                color: "#030303"
-                            }
-                        }
-                    },
-                    timer: {
-                        interval: 10000
-                    }
-                }
-            },
-            barChart: {
-                id: "barChart",
-                requestUrl: "barChart",
-                titleName: "",
-                title: "22",
-                titleColor: "#030303",
-                intervalTime: 1000*5*60
-            },
-            column: [
-                {
-                    title: "时间",
-                    key: "time"
-                },
-                {
-                    title: "对象名称",
-                    key: "name"
-                },
-                {
-                    title: "位置",
-                    key: "location"
-                },
-                {
-                    title: "数值",
-                    key: "value"
-                }
-            ],
-            tableData: [
-                {
-                    name: "John Brown",
-                    value: 18,
-                    location: "古城大街电力仓区段1",
-                    time: "2016-10-03"
-                },
-                {
-                    name: " 小明",
-                    value: 13,
-                    location: "古城大街污水仓区段1",
-                    time: "2016-10-02"
-                },
-                {
-                    name: "John Brown",
-                    value: 18,
-                    location: "古城大街电力仓区段1",
-                    time: "2016-10-03"
-                },
-                {
-                    name: " 小明",
-                    value: 13,
-                    location: "古城大街污水仓区段1",
-                    time: "2016-10-02"
-                },
-                {
-                    name: "John Brown",
-                    value: 18,
-                    location: "古城大街电力仓区段1",
-                    time: "2016-10-03"
-                },
-                {
-                    name: " 小明",
-                    value: 13,
-                    location: "古城大街污水仓区段1",
-                    time: "2016-10-02"
-                },
-                {
-                    name: "John Brown",
-                    value: 18,
-                    location: "古城大街电力仓区段1",
-                    time: "2016-10-03"
-                },
-                {
-                    name: " 小明",
-                    value: 13,
-                    location: "古城大街污水仓区段1",
-                    time: "2016-10-02"
-                }
-            ],
-            sycles: [
-                { key: 1, val: "最近一天" },
-                { key: 2, val: "最近一周" },
-                { key: 3, val: "最近一月" },
-                { key: 4, val: "最近一年" },
-                { key: 5, val: "自定义" }
-            ],
-            dataType: [
-                { key: 1, val: "视频流" },
-                { key: 2, val: "温度" },
-                { key: 3, val: "湿度" },
-                { key: 4, val: "甲烷浓度" },
-                { key: 5, val: "应力" },
-                { key: 6, val: "氧气" }
-            ]
-        };
-    },
-    mounted() {
-        this.resize();
-        window.addEventListener("resize", this.resize);
-    },
-    components: {
-        ComplexBar,
-        SimplelineChart
-    },
-    methods: {
-        changeCycle(index) {
-            const date = new Date();
-            switch (index) {
-                case 1: {
-                    this.queryCondition.readonly = true;
-                    let endTime = new Date(
-                        date.valueOf() - 1 * 24 * 60 * 60 * 1000
-                    );
-                    let result =
-                        date.format("yyyy-MM-dd hh:mm:ss") +
-                        " - " +
-                        endTime.format("yyyy-MM-dd hh:mm:ss");
-                    this.queryCondition.time = result;
-                    break;
-                }
-                case 2: {
-                    this.queryCondition.readonly = true;
-                    let endTime = new Date(
-                        date.valueOf() - 7 * 24 * 60 * 60 * 1000
-                    );
-                    let result =
-                        date.format("yyyy-MM-dd hh:mm:ss") +
-                        " - " +
-                        endTime.format("yyyy-MM-dd hh:mm:ss");
-                    this.queryCondition.time = result;
-                    break;
-                }
-                case 3: {
-                    this.queryCondition.readonly = true;
-                    let endTime = new Date(
-                        date.valueOf() - 30 * 24 * 60 * 60 * 1000
-                    );
-                    let result =
-                        date.format("yyyy-MM-dd hh:mm:ss") +
-                        " - " +
-                        endTime.format("yyyy-MM-dd hh:mm:ss");
-                    this.queryCondition.time = result;
-                    break;
-                }
-                case 4: {
-                    this.queryCondition.readonly = true;
-                    let endTime = new Date(
-                        date.valueOf() - 365 * 24 * 60 * 60 * 1000
-                    );
-                    let result =
-                        date.format("yyyy-MM-dd hh:mm:ss") +
-                        " - " +
-                        endTime.format("yyyy-MM-dd hh:mm:ss");
-                    this.queryCondition.time = result;
-                    break;
-                }
-                case 5: {
-                    this.queryCondition.readonly = false;
-                    this.queryCondition.time = null;
-                    break;
-                }
-            }
-        },
-
-        resize() {
-            this.totalheight = document.documentElement.clientHeight;
-        },
-
-        changePage(index) {
-            let _this = this;
-            _this.queryCondition.pageNum = index;
-            _this.queryData();
-        },
-
-        queryData() {
-            let _this = this;
-            let pram = {};
-            pram.pageNum = _this.queryCondition.pageNum;
-            _this.axios.post("", pram).then(response => {
-                let { code, data } = response.data;
-                if (code == 200) {
-                }
-            });
-        }
-    }
+	components: { PDF },
+	data() {
+		return {
+			cycleReport: [],
+			ofType: 5,
+			type: 3,
+			timeContainer: [],
+			isWeek: true,
+			isMonth: false,
+			isYear: false
+		};
+	},
+	mounted() {
+		this.cycleDown();
+		DataAnalysisService.timeEnums().then(res => {
+			this.timeContainer = res.slice(2);
+		});
+	},
+	methods: {
+		showWeek(){
+			this.type = 3
+			this.isWeek = true
+			this.isMonth = false
+			this.isYear = false
+			this.cycleDown()
+		},
+		showMonth(){
+			this.type = 4
+			this.isWeek = false
+			this.isMonth = true
+			this.isYear = false
+			this.cycleDown()
+		},
+		showYear(){
+			this.type = 5
+			this.isWeek = false
+			this.isMonth = false
+			this.isYear = true
+			this.cycleDown()
+		},
+		cycleDown() {
+			var params = {
+				ofType: this.ofType,
+				type: this.type
+			};
+			DataAnalysisService.chooseDown(params).then(res => {
+				this.cycleReport = res;
+			});
+		},
+		//预览
+		previewCycle(id) {
+			let _this = this;
+			this.$refs.pdf.previewPDF(_this.ApiUrl + "/reports/preview/" + id);
+		},
+		//下载
+		downloadCycle(id, fileName) {
+			let _this = this;
+			this.$refs.pdf.downloadPDF(
+				_this.ApiUrl + "/reports/download/" + id,
+				fileName
+			);
+		}
+	}
 };
 </script>
-
 <style scoped>
-.query {
-    padding: 10px;
-    margin-top: 4px;
-    height: 90px;
-    background-color: #fff;
+.title {
+	font-size: 2.8vmin;
+	color: #fff;
+	margin-left: 1vmin;
 }
-
-.queryLabel {
-    margin-right: 10px;
+.dateBox,
+.showReport {
+	padding: 2vmin;
+	float: left;
+	color: #fff;
+}
+.dateBox {
+	width: 27%;
+}
+.showReport {
+	width: 73%;
+}
+.itemBox {
+	line-height: 4vmin;
+	margin: 0.5vmin;
+	padding-right: 0.5vmin;
+	min-height: 25px;
+}
+.leftBox,
+.itemContent {
+	display: inline-block;
+	vertical-align: top;
+}
+.leftBox {
+	width: 0.5vmin;
+	background: #ed3f14d1;
+	height: 4vmin;
+}
+.itemContent {
+	font-size: 1.5vmin;
+	color: #fff;
+}
+.btnBox {
+	float: right;
+	width: 33%;
+}
+.dateBox .ivu-tabs>>>.ivu-tabs-nav{
+	color: #fff;
+}
+.navigation{
+    line-height: 3.5vmin;
+    color: #fff;
+	margin-bottom: 1vmin;
+	border-bottom: 0.2vmin solid #fff;
+}
+.navigation div{
+    display: inline;
+    line-height: 3.5vmin;
+    cursor: pointer;
+    padding: 0.9vmin 3vmin;
+    font-size: 1.5vmin;
+}
+.navigation div:hover,.activeWeek,.activeMonth,.activeYear{
+    border-bottom: 0.4vmin solid #1798e0;
+}
+.nullDate{
+	text-align: center;
+    margin-top: 2vmin;
+    font-size: 2vmin;
+}
+.dataBox{
+	height: 70vh;    
+	overflow-y: auto;
+}
+.dataBox::-webkit-scrollbar{
+    width: 4px;
+    height: 4px;
+}
+.dataBox::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.dataBox::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
+}
+@media (min-width: 2200px) {
+	.ivu-btn,
+	.ivu-btn-small {
+		border-radius: 0.5vmin;
+		padding: 0.5vmin 0.7vmin;
+		font-size: 1.2vmin !important;
+	}
 }
 </style>
+

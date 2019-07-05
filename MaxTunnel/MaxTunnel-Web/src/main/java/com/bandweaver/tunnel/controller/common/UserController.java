@@ -38,59 +38,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	
-	/**重置密码 
-	 * @param id 账号/员工id
-	 * @return   
-	 * @author shaosen
-	 * @Date 2018年12月1日
-	 */
-	@WriteLog(DescEnum.RESET_PW)
-	@RequestMapping(value="users/init-pw/{id}",method=RequestMethod.GET)
-	public JSONObject resetPw(@PathVariable Integer id) {
-		
-		String initPassword = (String) PropertiesUtil.getValue("cm.init.password");
-		User user = new User();
-		user.setId(id);
-		user.setPassword(Sha256.getSHA256StrJava(initPassword));
-		userService.updateByPrimaryKeySelective(user);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}
-	
-	
-	/**修改登录密码 
-	 * @param id 主键id
-	 * @param oldPw 旧密码（sha256加密之后的密码）
-	 * @param newPw 新密码（sha256加密之后的密码）
-	 * @return   
-	 * @author shaosen
-	 * @Date 2018年12月1日
-	 */
-	@WriteLog(DescEnum.CHANGE_PW)
-	@RequestMapping(value="users/pw",method=RequestMethod.POST)
-	public JSONObject changePw(@RequestBody Map<String, String> map) {
-		
-		Integer id = DataTypeUtil.toInteger(map.get("id"));
-		String oldPw = DataTypeUtil.toString(map.get("oldPw"));
-		String newPw = DataTypeUtil.toString(map.get("newPw"));
-//		String reptPw = DataTypeUtil.toString(map.get("reptPw"));//前端做校验
-		
-		User user = userService.selectByPrimaryKey(id);
-		if(user == null)
-//			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20006);//用户名不存在
-			throw new BandWeaverException("用户名不存在");
-		
-		if(!user.getPassword().equals(oldPw))
-//			return CommonUtil.returnStatusJson(StatusCodeEnum.E_20007);//密码错误
-			throw new BandWeaverException("原密码错误");
-		
-		User upt = new User();
-		upt.setId(id);
-		upt.setPassword(newPw);
-		userService.updateByPrimaryKeySelective(upt);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}
-	
 
 	/**
 	 * 获取超级管理员信息

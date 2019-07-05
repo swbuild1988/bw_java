@@ -29,4 +29,5 @@ public interface MeasObjReportMapper {
 
 	List<MeasObjReportDto> getByCondition(MeasObjReportVo vo);
 
+    List<MeasObjReport> getListByTimeAndTimeType(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("type") int type);
 }

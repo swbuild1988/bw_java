@@ -1,37 +1,52 @@
-
 <template>
-    <div class="content"
-         id="simpleGISbox"
-         v-cancellation>
+    <div class="content" id="simpleGISbox" v-cancellation>
     </div>
+
 </template>
 
 <script>
-
     import Cesium from "Cesium";
     import Vue from 'vue'
     import {
         doSqlQuery,
         processFailed,
         getEntitySet,
+        _getFieldValues
     } from "../../../scripts/commonFun.js";
-    import { addBarnLabel } from "./mixins/addBarnLabel";
-    import { TunnelService } from '../../../services/tunnelService'
-    import  viewerBaseConfig  from "./mixins/viewerBase";
+    // import { lookAt } from "../../../scripts/three";
+    import {
+        addBarnLabel
+    } from "./mixins/addBarnLabel";
+    // import { TunnelService } from '../../../services/tunnelService'
+    import viewerBaseConfig from "./mixins/viewerBase";
 
     export default {
-        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',3)],
+        mixins: [addBarnLabel, viewerBaseConfig('simpleGISbox', '$simpleViewer', 'simple3DBox', 1, this
+            .listenPosition)],
         props: {
+            detectionObjInfor: {
+                type: Object,
+                default: function () {
+                    return {
+                        id: null,
+                        dataTypeId: null,
+                    }
+                }
+            },
             openVideoLinkage: {
                 type: Boolean,
                 default: false
             },
-            refreshCameraPosition: {
+            cameraPosition: {
                 type: Object,
-                default: function () {
+                default: () => {
                     return {
-                        enable: false,
-                        interval: 1000
+                        longitude: 112.52407930589152,
+                        latitude: 37.703675232475895,
+                        height: -2.4658494805836857,
+                        roll: 2.5845992013273644e-12,
+                        pitch: -0.3023515684457794,
+                        heading: 1.7164828118850437
                     };
                 }
             },
@@ -39,122 +54,46 @@
         data() {
             return {
                 handler: null,
-                prePosition: null,
+                // prePosition: null,
             };
         },
         watch: {
-            'prePosition': {
-                handler({ longitude, latitude, height }) {
+            'detectionObjInfor': {
 
-                    TunnelService.getStorePosition({ longitude, latitude, height })
-                        .then( storePosition => {
+                handler(newVal, oldVal) {
 
-                            if ( !storePosition ) return;
+                    if (!newVal.id || !newVal.moTypeId) return
+                    if (!!oldVal) this.viewer.entities.remove(oldVal.id)
 
-                            this.$emit("showStorePosition", {
-                                areaName: storePosition.area.name,
-                                storeName: storePosition.name,
-                                tunnelName: storePosition.store.tunnel.name
-                            });
-                        })
+                    this.switchCameraAngle(newVal.id, newVal.moTypeId);
                 },
                 deep: true
-            }
+            },
         },
-        mounted() {
-        },
+        mounted() {},
         methods: {
             // 初始化
             init() {
                 let _this = this;
 
-                _this.initUpdate( _this.viewer,_this.scene );
-
-                //滚轮滑动，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.WHEEL);
-                //鼠标左键松开，获得当前窗口的经纬度，偏移角
-                _this.handler.setInputAction(e => {
-                    this.addLabel(this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed, 1000 / 60);
-                }, Cesium.ScreenSpaceEventType.LEFT_UP)
+                _this.initUpdate(_this.viewer, _this.scene);
 
             },
-            initUpdate( viewer,scene ){
+            initUpdate(viewer, scene) {
                 let _this = this;
 
-                if ( _this.refreshCameraPosition.enable ) {
+                if (_this.refreshCameraPosition.enable) {
                     //开启相机定位
                     this.cameraPositionRefresh();
                 }
+
+                _this.flyManager(1);
 
                 _this.handler = new Cesium.ScreenSpaceEventHandler(
                     scene.canvas
                 );
             },
-            // 开始相机位置刷新
-            startCameraPositionRefresh() {
-                this.refreshCameraPosition.enable = true;
-                this.cameraPositionRefresh();
-            },
-            // 停止相机位置刷新
-            stopCameraPositionRefresh() {
-                this.refreshCameraPosition.enable = false;
-            },
-            // 相机位置刷新
-            cameraPositionRefresh() {
-                let _this = this;
 
-                setTimeout(() => {
-                    try {
-                        // 如果刷新相机位置不可用，则退出
-                        if (!_this.refreshCameraPosition.enable) return;
-
-                        var camera = _this.scene.camera;
-                        var position = camera.position;
-                        //将笛卡尔坐标化为经纬度坐标
-                        var cartographic = Cesium.Cartographic.fromCartesian(
-                            position
-                        );
-                        var longitude = Cesium.Math.toDegrees(
-                            cartographic.longitude
-                        );
-                        var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                        var height = cartographic.height;
-
-                        var cameraPosition = {
-                            longitude: longitude,
-                            latitude: latitude,
-                            height: height,
-                            pitch: camera.pitch,
-                            roll: camera.roll,
-                            heading: camera.heading,
-                            equals: function (o) {
-                                if (o == null) return false;
-                                return (
-                                    Math.abs(o.longitude - this.longitude) <
-                                    0.000001 &&
-                                    Math.abs(o.latitude - this.latitude) <
-                                    0.000001 &&
-                                    Math.abs(o.height - this.height) < 0.000001 &&
-                                    Math.abs(o.pitch - this.pitch) < 0.000001 &&
-                                    Math.abs(o.roll - this.roll) < 0.000001 &&
-                                    Math.abs(o.heading - this.heading) < 0.000001
-                                );
-                            }
-                        };
-                        if (!cameraPosition.equals(_this.prePosition)) {
-                            _this.prePosition = cameraPosition;
-
-                            _this.$emit("refreshCameraPosition", cameraPosition);
-                        }
-                    } catch (error) {
-                        console.warn('error'+ error);
-                    }
-
-                    _this.cameraPositionRefresh();
-                }, _this.refreshCameraPosition.interval);
-            },
             LookAt1(obj, heading, pitch, range) {
                 let target = Cesium.Cartesian3.fromDegrees(
                     obj.longitude,
@@ -169,9 +108,11 @@
                     range
                 );
             },
-            //展示巡检点
+            // 展示巡检点
             showCheckPointEntity() {
-                let { viewer } = this;
+                let {
+                    viewer
+                } = this;
                 getEntitySet.call(this, {
                     viewer: viewer,
                     url: "actived-locators",
@@ -179,12 +120,46 @@
                     typeMode: "checkPointType",
                     messageType: 'checkPoint'
                 })
-            }
+            },
+            switchCameraAngle(id) {
+                let _this = this;
+
+                doSqlQuery.call(_this, _this.viewer, 'MOID in ("' + id + '")', _this.SuperMapConfig.BIM_DATA, _this
+                    .onQueryComplete, _this.processFailed)
+            },
+            onQueryComplete() {
+                let _this = this;
+                return function (queryEventArgs) {
+                    let [selectedFeatures] = queryEventArgs.originResult.features;
+
+                    let entity = _this.viewer.entities.add({
+                        id: _this.detectionObjInfor.id,
+                        position: Cesium.Cartesian3.fromDegrees(parseFloat(_getFieldValues(selectedFeatures,
+                            'X')), parseFloat(_getFieldValues(selectedFeatures, 'Y')), parseFloat(
+                            _getFieldValues(selectedFeatures, 'Z'))),
+                        label: {
+                            text: ''
+                        }
+                    });
+
+                    let offset = _this.detectionObjInfor.dataTypeId != 56 ? new Cesium.HeadingPitchRange(0, 0,
+                        1.5) : new Cesium.HeadingPitchRange(0, -90, 2);
+
+                    _this.viewer.flyTo(entity, {
+                        offset: offset,
+                    })
+                }
+            },
+            processFailed(queryEventArgs) {
+                console.log('查询失败！');
+            },
         },
         beforeDestroy() {
-            let { handler, refreshCameraPosition, timer } = this;
+            let {
+                handler,
+                timer
+            } = this;
 
-            refreshCameraPosition.enable = false;
             clearInterval(timer.timeoutId);
             clearInterval(timer.intervalId);
 
@@ -193,18 +168,17 @@
             }
 
             this.stopCameraPositionRefresh();
-            // this.destory3D();
         },
     };
-
 </script>
 
 <style scoped>
-    .content{
+    .content {
         position: relative;
         width: 100%;
         height: 100%;
     }
+
     .cesium-viewer-bottom {
         display: none;
     }

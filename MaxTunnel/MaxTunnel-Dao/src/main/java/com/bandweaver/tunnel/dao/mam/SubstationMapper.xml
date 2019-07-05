@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.mam.SubstationMapper">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.dto.mam.substation.SubstationDto">
+    <id column="ID" property="id" />
+    <result column="TUNNEL_ID" property="tunnelId" />
+    <result column="VOLTAGE_ID" property="voltageId" />
+    <result column="CURRENT_ID" property="currentId" />
+    <result column="NAME" property="name" />
+    <result column="VOLTAGE_LEVEL" property="voltageLevel" />
+    <result column="MAGNIFICATION" property="magnification" />
+    <result column="POWER_ID" property="powerId" />
+    <result column="UNPOWER_ID" property="unpowerId" />
+    <result column="POWER_FACTOR_ID" property="powerFactorId" />
+    <result column="POWER_DAY_ID" property="powerDayId" />
+    <result column="UNPOWER_DAY_ID" property="unpowerDayId" />
+    <result column="POWER_ELE_ID" property="powerEleId" />
+    <result column="UNPOWER_ELE_ID" property="unpowerEleId" />
+    <result column="TYPE" property="type" />
+    <result column="ELE_RADIUS" property="eleRadius" />
+    <result column="COMPENSATION_FACTOR" property="compensationFactor" />
+    <result column="POSITION" property="position" />
+    <result column="TIME" property="time" />
+    <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
+    	column="TUNNEL_ID" select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+    <association property="voltage" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="VOLTAGE_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="current" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="CURRENT_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="power" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="POWER_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="unpower" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="UNPOWER_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="powerFactor" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="POWER_FACTOR_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="powerDay" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="POWER_DAY_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="unpowerDay" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="UNPOWER_DAY_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="powerEle" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="POWER_ELE_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+    <association property="unpowerEle" javaType="com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI"
+    	column="UNPOWER_ELE_ID" select="com.bandweaver.tunnel.dao.mam.MeasObjAIMapper.getMeasObjAI"/>
+  </resultMap>
+  
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select *
+    from T_MAM_SUBSTATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from T_MAM_SUBSTATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation">
+  		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+            SELECT MAM_SUBSTATION_SQ.currval from DUAL
+        </selectKey>
+    insert into T_MAM_SUBSTATION
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tunnelId != null">
+        TUNNEL_ID,
+      </if>
+      <if test="voltageId != null">
+        VOLTAGE_ID,
+      </if>
+      <if test="currentId != null">
+        CURRENT_ID,
+      </if>
+      <if test="name != null and name.trim() != ''">
+        NAME,
+      </if>
+      <if test="voltageLevel != null">
+        VOLTAGE_LEVEL,
+      </if>
+      <if test="magnification != null">
+        MAGNIFICATION,
+      </if>
+      <if test="powerId != null">
+        POWER_ID,
+      </if>
+      <if test="unpowerId != null">
+        UNPOWER_ID,
+      </if>
+      <if test="powerFactorId != null">
+        POWER_FACTOR_ID,
+      </if>
+      <if test="powerDayId != null">
+        POWER_DAY_ID,
+      </if>
+      <if test="unpowerDayId != null">
+        UNPOWER_DAY_ID,
+      </if>
+      <if test="powerEleId != null">
+        POWER_ELE_ID,
+      </if>
+      <if test="unpowerEleId != null">
+        UNPOWER_ELE_ID,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="eleRadius != null">
+        ELE_RADIUS,
+      </if>
+      <if test="compensationFactor != null">
+        COMPENSATION_FACTOR,
+      </if>
+      <if test="position != null">
+        POSITION,
+      </if>
+      <if test="time != null">
+        TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tunnelId != null">
+        #{tunnelId},
+      </if>
+      <if test="voltageId != null">
+        #{voltageId},
+      </if>
+      <if test="currentId != null">
+        #{currentId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        #{name},
+      </if>
+      <if test="voltageLevel != null">
+        #{voltageLevel},
+      </if>
+      <if test="magnification != null">
+        #{magnification},
+      </if>
+      <if test="powerId != null">
+        #{powerId},
+      </if>
+      <if test="unpowerId != null">
+        #{unpowerId},
+      </if>
+      <if test="powerFactorId != null">
+        #{powerFactorId},
+      </if>
+      <if test="powerDayId != null">
+        #{powerDayId},
+      </if>
+      <if test="unpowerDayId != null">
+        #{unpowerDayId},
+      </if>
+      <if test="powerEleId != null">
+        #{powerEleId},
+      </if>
+      <if test="unpowerEleId != null">
+        #{unpowerEleId},
+      </if>
+      <if test="type != null">
+        #{type},
+      </if>
+      <if test="eleRadius != null">
+        #{eleRadius},
+      </if>
+      <if test="compensationFactor != null">
+        #{compensationFactor},
+      </if>
+      <if test="position != null">
+        #{position},
+      </if>
+      <if test="time != null">
+        #{time},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.mam.substation.Substation">
+    update T_MAM_SUBSTATION
+    <set>
+      <if test="tunnelId != null">
+        TUNNEL_ID = #{tunnelId},
+      </if>
+      <if test="voltageId != null">
+        VOLTAGE_ID = #{voltageId},
+      </if>
+      <if test="currentId != null">
+        CURRENT_ID = #{currentId},
+      </if>
+      <if test="name != null and name.trim() != ''">
+        NAME = #{name},
+      </if>
+      <if test="voltageLevel != null">
+        VOLTAGE_LEVEL = #{voltageLevel},
+      </if>
+      <if test="magnification != null">
+        MAGNIFICATION = #{magnification},
+      </if>
+      <if test="powerId != null">
+        POWER_ID = #{powerId},
+      </if>
+      <if test="unpowerId != null">
+        UNPOWER_ID = #{unpowerId},
+      </if>
+      <if test="powerFactorId != null">
+        POWER_FACTOR_ID = #{powerFactorId},
+      </if>
+      <if test="powerDayId != null">
+        POWER_DAY_ID = #{powerDayId},
+      </if>
+      <if test="unpowerDayId != null">
+        UNPOWER_DAY_ID = #{unpowerDayId},
+      </if>
+      <if test="powerEleId != null">
+        POWER_ELE_ID = #{powerEleId},
+      </if>
+      <if test="unpowerEleId != null">
+        UNPOWER_ELE_ID = #{unpowerEleId},
+      </if>
+      <if test="type != null">
+        TYPE = #{type},
+      </if>
+      <if test="eleRadius != null">
+        ELE_RADIUS = #{eleRadius},
+      </if>
+      <if test="compensationFactor != null">
+        COMPENSATION_FACTOR = #{compensationFactor},
+      </if>
+      <if test="position != null">
+        POSITION = #{position},
+      </if>
+      <if test="time != null">
+        TIME = #{time},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getListByCondition" resultMap="BaseResultMap">
+  	select * from T_MAM_SUBSTATION
+  	<where>
+  		<if test="id != null">
+  			and id = #{id}
+  		</if>
+  		<if test="tunnelId != null">
+  			and tunnel_id = #{tunnelId}
+  		</if>
+  		<if test="name != null and name.trim() != ''">
+  			and instr(name, #{name}) > 0
+  		</if>
+  		<if test="type != null">
+  			and type = #{type}
+  		</if>
+  		<if test="startTime != null">
+	  		and time &gt; = #{startTime}
+	  	</if>
+	  	<if test="endTime != null">
+	  		and time &lt; = #{endTime}
+	  	</if>
+  	</where>
+  </select>
+  
+  <select id="getDtoById" resultMap="BaseResultMap">
+  	select * from T_MAM_SUBSTATION
+  	where id = #{id}
+  </select>
+  
+</mapper> 

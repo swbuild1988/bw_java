@@ -42,13 +42,16 @@ public class MeasObjSIServiceImpl implements MeasObjSIService {
     	List<Integer> moIdList = new ArrayList<>();
     	for (MeasObjDto measObjDto : moList) {
     		moIdList.add(measObjDto.getId());
+    		// in查询列数不能超过1000
+    		if(moIdList.size() > 999) break;
 		}
-    	
+    	LogUtil.info("moIdList.size:" + moIdList.size());
+    	LogUtil.info("moIdList:" + moIdList);
     	MeasObjSIVo siVo = new MeasObjSIVo();
     	siVo.setIds(moIdList.isEmpty() ? null : moIdList);
     	siVo.setPageNum(vo.getPageNum());
     	siVo.setPageSize(vo.getPageSize());
-    	siVo.setCv(vo.getCv().intValue());
+    	if(vo.getCv() != null) siVo.setCv(vo.getCv().intValue());
     	
     	PageHelper.startPage(siVo.getPageNum(), siVo.getPageSize());
     	List<MeasObjSIDto> list = measObjSIMapper.dataGrid(siVo);

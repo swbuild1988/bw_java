@@ -1,29 +1,27 @@
 package com.bandweaver.tunnel.service.omm.inspection;
 
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionGroupService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionTaskService;
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
-import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionGroup;
-import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanSimpleDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionPlanService;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
+import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
 import com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.dao.omm.InspectionPlanMapper;
+import com.bandweaver.tunnel.dao.omm.InspectionStepMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -37,6 +35,8 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
     private ActivitiService activitiService;
     @Autowired
     private InspectionGroupService inspectionGroupService;
+    @Autowired
+    private InspectionStepMapper inspectionStepMapper;
 
     @Override
     @Transactional
@@ -64,8 +64,17 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
         }
         LogUtil.info("inspectionTasks:" + inspectionTasks);
         for (InspectionTask task : inspectionTasks) {
-            inspectionTaskService.add(task);
+            Integer taskId = inspectionTaskService.add(task);
+            // 最后加入计划步骤
+            for(InspectionStep step : inspectionPlanDto.getSteps()) {
+            	InspectionStep s = new InspectionStep();
+            	s.setIsFinished(false);
+            	s.setName(step.getName());
+            	s.setTaskId(taskId);
+            	inspectionStepMapper.add(s);
+            }
         }
+        
 
         // 将申请第一步结束
         activitiService.completeTaskByProcessIntance(inspectionPlanDto.getProcessInstanceId());
@@ -78,7 +87,37 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
         return 0;
     }
 
+    @Transactional
     @Override
+	public int delete(String planId) {
+    	InspectionPlanDto dto = inspectionPlanMapper.getInspectionPlanDto(planId);
+    	if(dto == null || !"审批".equals(dto.getProcessStatus())) return 0;
+    	// 删除巡检计划
+    	int i = inspectionPlanMapper.delete(planId);
+    	// 删除巡检任务
+    	List<Integer> list = new  ArrayList<>();
+    	for(InspectionTaskDto task : dto.getTasks()) {
+    		list.add(task.getId());
+    	}
+    	LogUtil.info(list);
+    	if(list != null && list.size() > 0)
+    		inspectionTaskService.deleteBatch(list);
+    	// 删除计划步骤
+    	List<Integer> ids = new ArrayList<>();
+    	for(Integer taskId : list) {
+    		InspectionStep vo = new InspectionStep();
+    		vo.setTaskId(taskId);
+    		List<InspectionStep> steps = inspectionStepMapper.getInspectionStepsByCondition(vo);
+    		for(InspectionStep step : steps) {
+    			ids.add(step.getId());
+    		}
+    	}
+		if(ids != null && ids.size() > 0)
+			inspectionStepMapper.deleteBatch(ids);
+    	return i;
+	}
+
+	@Override
     public List<InspectionPlanSimpleDto> getInspectionPlans() {
         return inspectionPlanMapper.getInspectionPlans();
     }
@@ -164,25 +203,13 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
     }
 
 	@Override
-	public int getInspectionPlanSumByYear(InspectionVo inspectionVo) {
-		return inspectionPlanMapper.getInspectionPlanSumByYear(inspectionVo);
+	public int getCountByCondition(InspectionVo inspectionVo) {
+		return inspectionPlanMapper.getCountByCondition(inspectionVo);
 	}
     
-	@Override
-	public int getInspectionPlanSumByMonth(InspectionVo inspectionVo) {
-		return inspectionPlanMapper.getInspectionPlanSumByMonth(inspectionVo);
-	}
-
 	@Override
 	public List<InspectionPlan> getAllInspectionPlan() {
 		return inspectionPlanMapper.getAllInspectionPlan();
 	}
-
-	@Override
-	public List<InspectionPlan> getTunnelCountByTunnelId() {
-		return inspectionPlanMapper.getTunnelCountByTunnelId();
-	}
-	
-	
     
 }

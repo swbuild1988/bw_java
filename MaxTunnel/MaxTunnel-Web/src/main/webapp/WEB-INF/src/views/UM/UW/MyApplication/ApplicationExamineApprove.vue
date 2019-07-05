@@ -1,9 +1,10 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
+		<div class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</div>
+		<div class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</div>
+		<div class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</div>  
+		<div class="formHeight">
         <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="140" :rules="ruleValidate" @submit.native.prevent>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==true">入廊申请详细信息</h2>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==false&&this.addEnterGalleryApplication.comment!=null">确认出廊</h2>
-          <h2 class="formTitle" v-show="this.$route.params.isFinished==null">确认出廊</h2>  
           <FormItem label="申请人：">
             <Input v-model="addEnterGalleryApplication.staff.name" readonly></Input>
           </FormItem>
@@ -23,7 +24,7 @@
             <Input v-model="addEnterGalleryApplication.company.name" readonly></Input>
           </FormItem>
           <FormItem label="访客详细信息：">
-            <Table border :columns="columns1" :data="addEnterGalleryApplication.visitorInfo"></Table>
+            <Table border :columns="columns1" :data="addEnterGalleryApplication.list"></Table>
           </FormItem>
           <FormItem label="备注：">
             <Input class="remark" type="textarea" v-model="addEnterGalleryApplication.comment" readonly></Input>
@@ -51,212 +52,146 @@
             <Button type="gost" @click="goBack()">返回</Button>
           </FormItem>   
         </Form>
+		</div>
     </div>  
 </template>
 <script>
 import types from "../../../../../static/Enum.json";
 import { EnterGalleryService } from '../../../../services/enterGalleryService';
 export default {
-  data() {
-    return {
-      backStyle:{
-        backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-        position: 'relative',
-        paddingTop: '20px',
-        paddingBottom: '20px',
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-        minHeight: '100%'
-      },
-      addEnterGalleryApplication: {
-        id: null,
-        staff: {
-          name: null
-        },
-        tunnel: {
-          name: null
-        },
-        actionName: null,
-        preTime: null,
-        enterTime: null,
-        visitorNumber: null,
-        company: {
-          name: null
-        },
-        positionId: null,
-        visitorInfo: [],
-        comment: null,
-        processInstanceId: null,
-        statusName: null,
-        exitTime: null,
-        processStatus: null,
-        processType: null,
-        result: null
-      },
-      columns1: [
-        {
-          title: "姓名",
-          key: "name",
-          align: "center"
-        },
-        {
-          title: "身份证号",
-          key: "idCard",
-          align: "center"
-        },
-        {
-          title: "联系方式",
-          key: "tel",
-          align: "center"
-        }
-      ],
-      ruleValidate: {
-        enterTime: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择进入管廊时间",
-            trigger: "change"
-          }
-        ],
-        exitTime: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择出廊时间",
-            trigger: "change"
-          }
-        ]
-      },
-      examineStatus: 1,
-      examine: types.examineStatus,
-      agree: null
-    };
-  },
-  computed: {
-    params() {
-      let param = {
-        id: this.addEnterGalleryApplication.id,
-        processStatus: this.addEnterGalleryApplication.processStatus,
-        enterTime: this.addEnterGalleryApplication.enterTime,
-        exitTime: this.addEnterGalleryApplication.exitTime,
-        processType: this.addEnterGalleryApplication.processType
-      };
-      return Object.assign({}, param);
-    }
-  },
-  mounted() {
-    //用户-查看审批结果
-    this.examineStatus = this.$route.params.type;
-    let _this = this
-    EnterGalleryService.getDetailsById(this.$route.params.id).then(
-      result=>{
-          _this.addEnterGalleryApplication = result;
-          if(result.enterTime!=null&&result.exitTime!=null){
-            _this.addEnterGalleryApplication.enterTime = new Date(result.enterTime).format('yyyy-MM-dd hh:mm:s')
-            _this.addEnterGalleryApplication.exitTime = new Date(result.exitTime).format('yyyy-MM-dd hh:mm:s')
-          }
-          _this.getAgree()
-          var arr = new Array();
-          for (let index in result.visitorInfo.split(",")) {
-            var str = result.visitorInfo.split(",")[index];
-            arr.push(str);
-          }
-          var arr2 = new Array();
-          for (let k in arr) {
-            var obj = {
-              name: arr[k].split("-")[0],
-              idCard: arr[k].split("-")[1],
-              tel: arr[k].split("-")[2]
-            };
-            arr2.push(obj);
-          }
-          _this.addEnterGalleryApplication.visitorInfo = arr2;
-          _this.addEnterGalleryApplication.preTime = new Date(
-            _this.addEnterGalleryApplication.preTime
-          ).format("yyyy-MM-dd hh:mm:s");
-      })
-    // axios.get("/req-historys/" + this.$route.params.id).then(response => {
-    //     let { code, data } = response.data;
-    //     if ((code = 200)) {
-    //       this.addEnterGalleryApplication = data;
-    //       if(data.enterTime!=null&&data.exitTime!=null){
-    //         this.addEnterGalleryApplication.enterTime = new Date(data.enterTime).format('yyyy-MM-dd hh:mm:s')
-    //         this.addEnterGalleryApplication.exitTime = new Date(data.exitTime).format('yyyy-MM-dd hh:mm:s')
-    //       }
-    //       this.getAgree()
-    //       var arr = new Array();
-    //       for (let index in response.data.data.visitorInfo.split(",")) {
-    //         var str = response.data.data.visitorInfo.split(",")[index];
-    //         arr.push(str);
-    //       }
-    //       var arr2 = new Array();
-    //       for (let k in arr) {
-    //         var obj = {
-    //           name: arr[k].split("-")[0],
-    //           idCard: arr[k].split("-")[1],
-    //           tel: arr[k].split("-")[2]
-    //         };
-    //         arr2.push(obj);
-    //       }
-    //       this.addEnterGalleryApplication.visitorInfo = arr2;
-    //       this.addEnterGalleryApplication.preTime = new Date(
-    //         this.addEnterGalleryApplication.preTime
-    //       ).format("yyyy-MM-dd hh:mm:s");
-    //     }
-    //   });
-  },
-  methods: {
-    submitExitTime(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          let _this = this
-          EnterGalleryService.putExitTime(this.params).then(
-            result=>{
-              if(_this.$route.params.isFinished==null){
-                  _this.$router.push("/UM/myNews/queryMyTask");
-                }else{
-                  _this.$router.push("/UM/myTasks/query");
-                }
-            },
-            error=>{
-              _this.Log.info(error)
-            })
-          // axios
-          //   .put("users/out/req-historys", this.params)
-          //   .then(response => {
-          //     let { code, data } = response.data;
-          //     if (code == 200) {
-          //       if(this.$route.params.isFinished==null){
-          //         this.$router.push("/UM/myNews/queryMyTask");
-          //       }else{
-          //         this.$router.push("/UM/myTasks/query");
-          //       }
-          //     }
-          //   });
-        } else {
-          this.$Message.error("请输入正确的申请信息");
-        }
-      });
-    },
-    getAgree(){
-      if(this.$route.params.isFinished==false&&this.addEnterGalleryApplication.exitTime==null||this.$route.params.isFinished==true&&this.addEnterGalleryApplication.exitTime!=null){
-        this.agree=1
-      }else{
-        this.agree=2
-      }
-    },
-    goBack(){
-      this.$router.back(-1);
-    }
-  }
+	data() {
+		return {
+			addEnterGalleryApplication: {
+				id: null,
+				staff: {
+					name: null
+				},
+				tunnel: {
+					name: null
+				},
+				actionName: null,
+				preTime: null,
+				enterTime: null,
+				visitorNumber: null,
+				company: {
+					name: null
+				},
+				positionId: null,
+				comment: null,
+				processInstanceId: null,
+				statusName: null,
+				exitTime: null,
+				processStatus: null,
+				processType: null,
+				result: null
+			},
+			columns1: [
+				{
+					title: "姓名",
+					key: "name",
+					align: "center"
+				},
+				{
+					title: "身份证号",
+					key: "identityNO",
+					align: "center"
+				},
+				{
+					title: "联系方式",
+					key: "telphone",
+					align: "center"
+				}
+			],
+			ruleValidate: {
+				enterTime: [
+					{ required: true, type: "date", message: "请选择进入管廊时间", trigger: "change" }
+				],
+				exitTime: [
+					{ required: true, type: "date", message: "请选择出廊时间", trigger: "change" },
+					{ validator: this.checkEndTime, trigger: 'change' }
+				]
+			},
+			examineStatus: 1,
+			examine: types.examineStatus,
+			agree: null
+		};
+	},
+	computed: {
+		params() {
+			let param = {
+				id: this.addEnterGalleryApplication.id,
+				processStatus: this.addEnterGalleryApplication.processStatus,
+				enterTime: this.addEnterGalleryApplication.enterTime,
+				exitTime: this.addEnterGalleryApplication.exitTime,
+				processType: this.addEnterGalleryApplication.processType
+			};
+			return Object.assign({}, param);
+		}
+	},
+	mounted() {
+		//用户-查看审批结果
+		this.examineStatus = this.$route.params.type;
+		let _this = this
+		EnterGalleryService.getDetailsById(this.$route.params.id).then(
+		result=>{
+			_this.addEnterGalleryApplication = result;
+			if(result.enterTime!=null&&result.exitTime!=null){
+				_this.addEnterGalleryApplication.enterTime = new Date(result.enterTime).format('yyyy-MM-dd hh:mm:s')
+				_this.addEnterGalleryApplication.exitTime = new Date(result.exitTime).format('yyyy-MM-dd hh:mm:s')
+			}
+			_this.getAgree()
+			_this.addEnterGalleryApplication.preTime = new Date(
+				_this.addEnterGalleryApplication.preTime
+			).format("yyyy-MM-dd hh:mm:s");
+		})
+	},
+	methods: {
+		checkEndTime(rule, value, callback){
+			if(this.addEnterGalleryApplication.enterTime>this.addEnterGalleryApplication.exitTime){
+				callback( new Error("出廊时间不能大于进入管廊时间") )
+			}else if(this.addEnterGalleryApplication.enterTime.getTime()===this.addEnterGalleryApplication.exitTime.getTime()){
+				callback( new Error("进入管廊时间不能等于出廊时间") )
+			}else{
+				callback()
+			}
+		},
+		submitExitTime(name) {
+			this.$refs[name].validate(valid => {
+				if (valid) {
+					let _this = this
+					EnterGalleryService.putExitTime(this.params).then(
+						result=>{
+							if(_this.$route.params.isFinished==null){
+								_this.$router.push("/UM/myNews/queryMyTask");
+							}else{
+								_this.$router.push("/UM/myTasks/query");
+							}
+						},
+						error=>{
+							_this.Log.info(error)
+					})
+				} else {
+					this.$Message.error("请输入正确的申请信息");
+				}
+			});
+		},
+		getAgree(){
+			if(this.$route.params.isFinished==false&&this.addEnterGalleryApplication.exitTime==null||this.$route.params.isFinished==true&&this.addEnterGalleryApplication.exitTime!=null){
+				this.agree=1
+			}else{
+				this.agree=2
+			}
+		},
+		goBack(){
+			this.$router.back(-1);
+		}
+	}
 };
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right {
   width: 740px;
   margin: 20px auto;
-  background: #fff;
   padding: 20px;
 }
 ul li {
@@ -268,13 +203,36 @@ button {
 .btn {
   cursor: text;
 }
+.formBG{
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+}
+.formTitle{
+    font-size: 2.2vmin;
+    margin-top: -3vh;
+}
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{
         width: 50%;
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 2.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
@@ -286,9 +244,6 @@ button {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
-    }
-    .formTitle{
-        font-size: 2.5vmin;
     }
     .remark textarea{
         height: 5.5vmin !important;

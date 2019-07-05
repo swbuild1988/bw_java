@@ -225,7 +225,7 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
         let selectedFeatures = queryEventArgs.originResult.features,
             IM = Vue.prototype.IM,
             entiyParam = null;
-        console.log('selectedFeatures', selectedFeatures);
+
         ['videos'].indexOf(messageTypes) != -1 && IM.deleteInformation(selectedFeatures, messageTypes, 'ID');
 
         for (var i = 0; i < selectedFeatures.length; i++) {
@@ -247,7 +247,7 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
                 messageType: messageTypes,
                 billboard: {
                     image: image.key,
-                    scaleByDistance: new Cesium.NearFarScalar(0, 1, 3500, 0.8),
+                    scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0),
                 },
                 show: showEntity
             }
@@ -282,8 +282,9 @@ export function addEntity(entiyParam) {
         label = entiyParam.label != undefined ? {
             text: entiyParam.label.text,
             font: '20px Helvetica',
-            fillColor: Cesium.Color.WHITE,
-            outlineColor: Cesium.Color.WHITE,
+            showbackground: true,
+            fillColor: Cesium.Color.BLUE,
+            outlineColor: Cesium.Color.BLUE,
             verticalOrigin: entiyParam.label.verticalOrigin != undefined ? entiyParam.label.verticalOrigin : Cesium.VerticalOrigin.CENTER,
             scaleByDistance: entiyParam.label.scaleByDistance != undefined ? entiyParam.label.scaleByDistance : new Cesium.NearFarScalar(0, 1, 25, 0),
         } : undefined;
@@ -352,7 +353,7 @@ export function getEntitySet(setParam) {
                             billboard: {
                                 image: type.key,
                                 height: 30,
-                                scaleByDistance: ['units'].indexOf(setParam.messageType) != -1 ? new Cesium.NearFarScalar(0, 1, 3500, 0.1) : new Cesium.NearFarScalar(0, 1, 3500, 0.8),
+                                scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0),
                                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                             },
                             label: ['units'].indexOf(setParam.messageType) != -1 ? {
@@ -364,6 +365,7 @@ export function getEntitySet(setParam) {
                     }
 
                     if (sqlQueryBIMId.length != 0) {
+
                         doSqlQuery.call(_this, setParam.viewer, 'MOID in ("' + sqlQueryBIMId.toString() + '")', setParam.dataUrl, setParam.onQueryComplete, setParam.processFailed, setParam.typeMode, setParam.messageType, setParam.show)
                     }
 
@@ -390,7 +392,7 @@ export function switchShowEntity(swtichParam) {
         moId = ['videos'].indexOf(swtichParam.messageType) != -1 ? _getFieldValues(currObj, "MOID") :
             IM._getEntityMoId(currObj, swtichParam.messageType);
         let entities = _this.viewer.entities._entities._array.filter(entitie => entitie._moId == moId);
-        console.log('entities', entities)
+
         if (entities) {
 
             entities.forEach(entitie => {
@@ -408,8 +410,6 @@ export function doSqlQuery() {
     if (typeof onQueryComplete != 'function' || typeof processFailed != 'function') {
         return
     }
-
-    console.log('SQL', SQL)
 
     let _this = this,
         queryParam = _this.VMConfig.queryParam,
@@ -439,6 +439,7 @@ export function onQueryComplete(viewer) {
     let _this = this;
 
     return function (queryEventArgs) {
+        this.Log.info("查询成功", queryEventArgs)
         var selectedFeatures = queryEventArgs.originResult.features;
         viewer.entities.removeAll();
 
@@ -534,7 +535,6 @@ export function getEntityProperty() {
         if (Cesium.defined(pickedObject)) {
             // 获取当前点的实体
             let entity = pickedObject.id;
-
             IM.searchInformation(entity, modelProp);
             _monitor(scene, Cesium, scenePosition, dom); //注册监听函数
         }
@@ -599,6 +599,7 @@ export function computeIntersections(coord, startLocation, endLocation) {
  * 添加label实体
  */
 export function addLabel() {
+
     let args = [].slice.call(arguments); //类数组转换成数组
     let [scene, viewer, wait, sqlQuery, dataUrl, onQueryComplete, processFailed, callback] = args; //解析数组内容
     let _this = this;
@@ -620,7 +621,7 @@ export function addLabel() {
 
                     result.moInfo.forEach(label => {
                         labels.push(label);
-                        lablesID.push(label.id)
+                        lablesID.push(changStrLength(label.id, 10));
                     });
 
                     sqlQuery.call(_this, viewer, 'MOID in (' + lablesID.toString() + ')', dataUrl, onQueryComplete, processFailed, result.sectionInfo.startPoint, result.sectionInfo.endPoint, labels)
@@ -784,6 +785,11 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
         }
     }
 
+}
+export function replaceStr(string) {
+    if (typeof string !== 'string') return;
+
+    return string.replace(/(,)/g, '"$1"');
 }
 /**
  * 得到数据集中的值

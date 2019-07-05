@@ -22,6 +22,18 @@ export default {
         },
         parameters: {
             type: Object
+        },
+        textColor: {
+            default:  '#fff',
+            type: String
+        },
+        lineColor: {
+            default: '#fff',
+            type: String
+        },
+        titlePosition: {
+            default: 'center',
+            type: String
         }
     },
     data() {
@@ -50,8 +62,10 @@ export default {
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('5%')
+                        fontSize: this.getFontSize('4%')
                     },
+                    x: this.titlePosition,
+                    padding: 15
                 },
                 tooltip: {
                     trigger: "axis",
@@ -66,28 +80,61 @@ export default {
                     containLabel: true
                 },
                 calculable: true,
+                legend: {
+                    data: this.legendData,
+                    x:'right',
+                    textStyle: { 
+                        fontSize: _this.getFontSize('3%') ,
+                        color: this.textColor
+                    },
+                    padding: _this.getFontSize('6%')
+                },
                 xAxis: [
                     {
                         type: "category",
-                        axisTick: { show: false },
                         data: [],
+                        splitLine: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
                         axisLabel: {
                             show: true,
                             textStyle: {
-                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
-                            }
+                                fontSize : this.getFontSize('3%'),      //更改坐标轴文字大小
+                                color: this.textColor
+                            },                            
                         },
                     }
                 ],
                 yAxis: [
                     {
                         type: "value",
-                        axisLabel: {
-                            show: true,
-                            textStyle: {
-                                fontSize : _this.getFontSize('4%')      //更改坐标轴文字大小
-                            }
+                        axisLine:{
+                            show:false
                         },
+                        axisLabel:{   
+                            show: true, 
+                            textStyle: {
+                                fontSize : _this.getFontSize('3%'),      //更改坐标轴文字大小
+                                fontWeight:  this.getFontSize('10%'),
+                                color: this.textColor
+                            },                
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle:{
+                                type:'dashed',
+                                color: this.lineColor
+                            }
+                        }
                     }
                 ],
                 series: []

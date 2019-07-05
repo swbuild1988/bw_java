@@ -1,6 +1,3 @@
-// let {
-//     flyFilePathes
-// } = require('../../../../../static/VM/js/VMWebConfig')
 
 export const flyManagerMinix = {
     data() {
@@ -9,6 +6,8 @@ export const flyManagerMinix = {
             flyManagerAttr: {
                 flyManager: null,
             },
+            inspectflyPathes: this.flyFilePathes.filter( flyRoute => flyRoute.virtualInspection == "true" ? true : false)
+            // inspectflyPathes: this.inspectionFlyFiles
             // 飞行文件
             // flyFilePath: this.ServerConfig + "/VM/font/flytest.fpf",
 
@@ -24,14 +23,11 @@ export const flyManagerMinix = {
         }
     },
     computed: {
-        // flyFilePathes() {
-        //     return flyFilePathes;
-        // }
     },
     methods: {
         // 飞行管理
         flyManager(id) {
-
+            
             if (!global.Cesium || id == null) return;
 
             let {
@@ -45,6 +41,8 @@ export const flyManagerMinix = {
             let curRoute = this.flyFilePathes.find(route => {
                 return route.id == id
             })
+           
+            if(!curRoute) return;
 
             routes.fromFile(this.ServerConfig + curRoute.path);
 
@@ -82,9 +80,10 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-
+            
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
+                
             }
         },
         // 暂停飞行
@@ -127,25 +126,23 @@ export const flyManagerMinix = {
         },
         // 获取飞行路径
         getRoutes() {
-            return this.flyFilePathes
+            return this.inspectflyPathes
         },
         getStopsList(id) {
             let stops = []
             if (id == 0) {
                 // 获取所有飞行路径的站点
-                for (let i = 1; i <= this.flyFilePathes.length; i++) {
+                for (let i = 1; i <= this.inspectflyPathes.length; i++) {
+                    
                     this.flyManager(i)
                     let flyManager = this.flyManagerAttr.flyManager
                     flyManager.readyPromise.then(() => {
                         let route = flyManager.routes.routes
                         route[0].stopCollection.forEach((stop, index) => {
-                            if (stop.index != 0 || i != 1) {
-                                let temp1 = {}
-                                temp1.stopIndex = i + ',' + stop.index
-                                temp1.stopName = '飞行路线' + i + ' - ' +
-                                    stop.stopName.replace('Stop', '站点')
-                                stops.push(temp1)
-                            }
+                            stops.push({
+                                stopIndex: i + ',' + stop.index,
+                                stopName: stop.stopName
+                            })
                         })
                     })
                 }
@@ -158,12 +155,10 @@ export const flyManagerMinix = {
                 flyManager.readyPromise.then(() => {
                     let route = flyManager.routes.routes
                     route[0].stopCollection.forEach(stop => {
-                        if (stop.index != 0) {
-                            let temp = {}
-                            temp.stopIndex = stop.index
-                            temp.stopName = stop.stopName.replace('Stop', '站点')
-                            stops.push(temp)
-                        }
+                        stops.push({
+                            stopIndex: stop.index,
+                            stopName: stop.stopName
+                        }) 
                     })
                 })
             }
@@ -175,7 +170,7 @@ export const flyManagerMinix = {
             flyManager.readyPromise.then(() => {
                 // 飞行全部路径
                 if (stopInfo.indexOf(',') > -1) {
-                    let curRoute = this.flyFilePathes.find(route => {
+                    let curRoute = this.inspectflyPathes.find(route => {
                         return route.name == flyManager.currentRoute.routeName
                     })
                     let routeId = stopInfo.split(',')[0]
@@ -210,11 +205,11 @@ export const flyManagerMinix = {
             let curStop = flyManager.currentStopIndex
             // 飞行全部路径时结束上一条直接飞行下一条
             if (routeId == 0) {
-                let curRoute = this.flyFilePathes.find(route => {
+                let curRoute = this.inspectflyPathes.find(route => {
                     return route.name == flyManager.currentRoute.routeName
                 })
                 if (curStop == flyManager.currentRoute.stopCollection.length - 1) {
-                    if (curRoute.id < this.flyFilePathes.length) {
+                    if (curRoute.id < this.inspectflyPathes.length) {
                         this.stopFly()
                         this.flyManager(curRoute.id + 1)
                         let flyManager = this.flyManagerAttr.flyManager

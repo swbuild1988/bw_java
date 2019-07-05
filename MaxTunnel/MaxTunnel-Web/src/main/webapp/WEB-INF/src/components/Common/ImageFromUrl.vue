@@ -1,59 +1,63 @@
 <template>
-    <div class="ImageFromUrl">
-        <img style="width:100%; height:100%;" v-bind:src=imgSrc>
-    </div>                
+    <div class="ImageFromUrl" v-if="imgShowFlag">
+        <img style="width:100%; height:100%;" v-bind:src="imgSrc">
+    </div>
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-  name: "ImageFromUrl",
-  props: {
-    url: {
-      default: ""
+    name: "ImageFromUrl",
+    props: {
+        url: {
+            default: ""
+        }
+    },
+    data() {
+        return {
+            imgSrc: "",
+            imgShowFlag: false
+        };
+    },
+    watch: {
+        url: function(val) {
+            this.loadImage(val);
+        }
+    },
+    mounted() {
+        this.loadImage(this.url);
+    },
+    methods: {
+        loadImage(url) {
+            axios
+                .get(url, { responseType: "arraybuffer" })
+                .then(response => {
+                    return (
+                        "data:image/png;base64," +
+                        btoa(
+                            new Uint8Array(response.data).reduce(
+                                (data, byte) =>
+                                    data + String.fromCharCode(byte),
+                                ""
+                            )
+                        )
+                    );
+                })
+                .then(data => {
+                    this.imgSrc = data;
+                    this.imgShowFlag = true;
+                });
+        }
     }
-  },
-  data() {
-    return {
-      imgSrc: ""
-    };
-  },
-  watch: {
-    url: function(val) {
-      this.loadImage(val);
-    }
-  },
-  methods: {
-    loadImage(url) {
-      axios
-        .get(url, {
-          responseType: "arraybuffer"
-        })
-        .then(response => {
-          return (
-            "data:image/png;base64," +
-            btoa(
-              new Uint8Array(response.data).reduce(
-                (data, byte) => data + String.fromCharCode(byte),
-                ""
-              )
-            )
-          );
-        })
-        .then(data => {
-          this.imgSrc = data;
-        });
-    }
-  }
 };
 </script>
 
 
 <style scoped>
 .ImageFromUrl {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 </style>
 

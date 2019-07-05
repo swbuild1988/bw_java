@@ -205,7 +205,7 @@ export default {
         },
         goToMoudle: function(id, type) {
             this.$router.push({
-                name: "UMAddTask",
+                name: "添加巡检任务",
                 params: {
                     id: id,
                     type: type
@@ -370,17 +370,17 @@ ul li{
 .choose-month-c{
     color: #E0AE6E;
     font-weight: 500;
-    font-size: 45px;
+    font-size: 10vmin;
 }
 .choose-month-e{
     color: #64798C;
-    font-size: 75px;
+    font-size: 12vmin;
     font-weight: 600;
 }
 .choose-year{
     font-weight: 600;
     color: #fefffe;
-    font-size: 53px;
+    font-size: 13vmin;
 }
 .daysBox,.weekDaysBox{
     height: 100%;

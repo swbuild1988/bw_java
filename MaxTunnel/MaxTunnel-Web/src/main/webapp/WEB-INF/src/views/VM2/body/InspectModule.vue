@@ -27,7 +27,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日巡检任务</div>
+                        <div class="countTitle">本年巡检任务</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -50,7 +50,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日缺陷</div>
+                        <div class="countTitle">本年缺陷</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -61,7 +61,7 @@
                     </div>
                 </li>
                 <li>
-                    <div ref="circleBox" style="height: 7vh">
+                    <div ref="circleBox">
                         <i-circle 
                             :percent="62"
                             :size=circleWidth
@@ -73,7 +73,7 @@
                         </i-circle>
                     </div>
                     <div>
-                        <div class="countTitle">今日维修</div>
+                        <div class="countTitle">本年维修</div>
                         <div class="iconBox">
                             <span>同比</span>
                             <Icon
@@ -192,8 +192,9 @@ export default {
                 this.maintenanceCount.nowYearOrderCount = res[2].nowYearOrderCount
                 this.maintenanceCount.isRise = res[2].nowYearOrderCount >= res[2].beforeYearOrderCount ? true : false
 
-                //获取维修率
+                //获取维修率 客户需求，模拟假数据，用于展示
                 this.maintenanceRateCount.nowYearOrderPercentage = (orderCount1 / defectCount1 * 100).toFixed(1)
+                // this.maintenanceRateCount.nowYearOrderPercentage = 99.9;
                 this.maintenanceRateCount.isRise = (orderCount1 / defectCount1) >= (orderCount2 / defectCount2) ? true : false;
             })
             //获取今年与去年的每月巡检计划数
@@ -201,6 +202,7 @@ export default {
                 var arr1 = []
                 var arr2 = []
                 for (var i = 0; i < res.length; i++) {
+
                     this.corssBarChartData.xData.push(res[i].key)
                     for (var j = 0; j < res[i].val.length; j++) {
                         if (i == 0) {
@@ -219,13 +221,13 @@ export default {
                 this.corssBarChartData.xData = this.corssBarChartData.xData.reverse()
                 this.corssBarChartData.seriesData.push({ data: arr1 })
                 this.corssBarChartData.seriesData.push({ data: arr2 })
-            });
+            })
             // window.addEventListener('resize',this.getCircleWidth())
         },
         refreshData() {
             setInterval(() => {
                 this.$refs.corssBarChar.drawBar()
-            }, 1000 * 5 * 60)
+            }, parseFloat(this.refreshTime))
         },
         getCircleWidth(){
             this.circleWidth = window.innerHeight/100*6.2

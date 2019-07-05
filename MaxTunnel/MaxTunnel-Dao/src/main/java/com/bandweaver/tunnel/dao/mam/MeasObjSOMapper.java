@@ -1,6 +1,9 @@
 package com.bandweaver.tunnel.dao.mam;
 
+import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjSODto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjSOVo;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,5 +24,5 @@ public interface MeasObjSOMapper {
 
 	void deleteByPrimaryKey(Integer id);
 
-
+	List<MeasObjSODto> getByCondition(MeasObjSOVo vo);
 }

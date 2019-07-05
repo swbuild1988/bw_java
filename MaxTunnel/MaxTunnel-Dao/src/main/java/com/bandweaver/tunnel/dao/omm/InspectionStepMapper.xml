@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionStepMapper">
+<cache/>
+    <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
+        insert into t_omm_inspection_step
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="name != null">
+                name,
+            </if>
+            <if test="taskId != null">
+                task_id,
+            </if>
+            <if test="isFinished != null">
+                is_finished,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="taskId != null">
+                #{taskId},
+            </if>
+            <if test="isFinished != null">
+                #{isFinished},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="update" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
+    	update t_omm_inspection_step
+    	<set>
+    		<if test="name != null and name.trim() != ''">
+    		name = #{name},
+    		</if>
+    		<if test="taskId != null">
+    		task_id = #{taskId},
+    		</if>
+    		<if test="isFinished != null">
+    		is_finished = #{isFinished}
+    		</if>
+    	</set>
+    	where id = #{id}
+    </update>
+    
+    <delete id="deleteBatch">
+    	delete from t_omm_inspection_step where id in
+    	<foreach collection="list" open="(" item="item" separator="," close=")">
+    		#{item}
+    	</foreach>
+    </delete>
+    
+    <select id="getById" resultMap="inspectionStepMap">
+    	select * from t_omm_inspection_step where id = #{id}
+    </select>
+
+    <select id="getInspectionStepsByCondition" resultMap="inspectionStepMap">
+        select * from T_OMM_INSPECTION_Step
+        <where>
+        	<if test="id != null">
+        		and id = #{id}
+        	</if>
+        	<if test="name != null and name.trim() != ''">
+        		instr(name, #{name}) > 0
+        	</if>
+        	<if test="taskId != null">
+        		and task_id = #{taskId}
+        	</if>
+        	<if test="isFinished != null">
+        		and is_finished = #{isFinished}
+        	</if>
+        </where>
+    </select>
+
+    <resultMap id="inspectionStepMap" type="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="task_id" property="taskId" />
+        <result column="is_finished" property="isFinished" />
+    </resultMap>
+
+</mapper>

@@ -1,11 +1,16 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
+import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionObject;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionPath;
+import com.bandweaver.tunnel.common.biz.constant.omm.InspectionWay;
+import com.bandweaver.tunnel.common.biz.pojo.Staff;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan;
+import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class InspectionPlanDto extends InspectionPlan implements Serializable{
@@ -18,8 +23,19 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
     private InspectionGroupDto inspectionGroup;
     private List<InspectionTaskDto> tasks;
     
+    private Staff requestStaff;
+    private Staff approver;
+    
     private String comment;
     private String result;
+    
+    private String inspectionWayName; // 巡检方式
+    private String inspectionObjectName; // 巡检对象
+    private String inspectionPathName; // 巡检路径
+    
+    private List<InspectionStep> steps;
+    
+    private List<JSONObject> others;
 
     public InspectionPlanDto() {
         super();
@@ -73,6 +89,53 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
 		this.result = result;
 	}
 
+	public String getInspectionWayName() {
+		InspectionWay way = InspectionWay.getEnum(super.getInspectionWay());
+		return way == null ? null : way.getName();
+	}
+
+	public String getInspectionObjectName() {
+		InspectionObject obj = InspectionObject.getEnum(super.getInspectionObject());
+		return obj == null ? null : obj.getName();
+	}
+
+	public String getInspectionPathName() {
+		InspectionPath path = InspectionPath.getEnum(super.getInspectionPath());
+		return path == null ? null : path.getName();
+	}
+
+	public List<InspectionStep> getSteps() {
+		return steps;
+	}
+
+	public void setSteps(List<InspectionStep> steps) {
+		this.steps = steps;
+	}
+
+	public Staff getRequestStaff() {
+		return requestStaff;
+	}
+
+	public void setRequestStaff(Staff requestStaff) {
+		this.requestStaff = requestStaff;
+	}
+
+	public Staff getApprover() {
+		return approver;
+	}
+
+	public void setApprover(Staff approver) {
+		this.approver = approver;
+	}
+
+	public List<JSONObject> getOthers() {
+		return others;
+	}
+
+	public void setOthers(List<JSONObject> others) {
+		this.others = others;
+	}
+
 	/**
      * 将其转为原型
      * @return
@@ -102,13 +165,20 @@ public class InspectionPlanDto extends InspectionPlan implements Serializable{
         return inspectionTasks;
     }
 
-    @Override
+	@Override
     public String toString() {
         return "InspectionPlanDto{" +
                 "tunnelName='" + tunnelName + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", inspectionGroup=" + inspectionGroup +
+                ", inspectionWayName=" + inspectionWayName +
+                ", inspectionObjectName=" + inspectionObjectName +
+                ", inspectionPathName=" + inspectionPathName +
+                ", steps=" + steps +
                 ", tasks=" + tasks +
+                ", requestStaff=" + requestStaff +
+                ", approver=" + approver +
+                ", others=" + others +
                 "} " + super.toString();
     }
 }

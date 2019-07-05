@@ -1,13 +1,23 @@
 package com.bandweaver.tunnel.controller.mam;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,35 +26,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
+import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
-import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Obj;
-import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Source;
-import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
+import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
+import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoPreset;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
+import com.bandweaver.tunnel.common.biz.vo.StoreVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoServerVo;
+import com.bandweaver.tunnel.common.biz.vo.mam.video.VideoVo;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
-import com.bandweaver.tunnel.common.platform.util.FileUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.service.mam.video.H5StreamServiceImpl;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
+
+import javafx.geometry.Point2D;
 
 @Controller
 @ResponseBody
@@ -59,7 +76,282 @@ public class VideoController {
     private SectionService sectionService;
     @Resource(name = "H5StreamServiceImpl")
     private OnvifService h5streamService;
+    @Autowired
+    private StoreService storeService;
+
+
+    /**
+     * 对外提供的接口
+     * http://192.168.0.7:8080/MaxTunnel-Web/api/video/snapshot
+     */
+    @RequestMapping(value = "api/video/snapshot", method = RequestMethod.GET)
+    public JSONObject addSnaps() {
+        h5streamService.addSnap();
+        return CommonUtil.success();
+    }
+
     
+    /**
+     * 添加视频
+     * @param id 视频id
+     * @param tunnelId 所属管廊 
+     * @param storeId 所属管舱
+     * @param areaId 所属区域
+     * @param name 视频名称
+     * @param description 描述
+     * @param objtypeId	对象类型
+     * @param datatypeId 数据类型
+     * @param serverId 所属视频服务
+     * @param vendor 所属供应商
+     * @param videoSceneId 所属场景
+     * @param channelNo 通道号
+     * @param actived 是否使用
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月19日
+     */
+    @RequiresPermissions("video:add")
+    @RequestMapping(value = "videos", method = RequestMethod.POST)
+    public JSONObject addVideo(@RequestBody Video video) throws Exception {
+    	// 添加视频到数据库以及缓存
+    	videoModuleCenter.insertVideo(video);
+    	// 添加onvif源
+    	setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    /**
+     * h5添加onvif
+     * @param id
+     * @param user
+     * @param password
+     * @param ip
+     * @param port
+     * @param channelNo
+     * @param vendor
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年2月26日
+     */
+    private void setOnvif(Integer id, String user, String password, String ip,
+    		String port, Integer channelNo, Integer vendor) throws Exception{
+    	String url = "";
+    	VideoVendor videoVendor = VideoVendor.getEnum(vendor);
+		switch (videoVendor) {
+    	case DaKang:
+    		url = "rtsp://" + ip + ":" + port + "/Streaming/Channels/" + channelNo;
+    		break;
+    		
+    	case HoneyWell_HISD:
+    		url = "rtsp://" + ip + ":" + port + "/h264/ch" + channelNo + "/main/av_stream";
+    		break;
+    		
+    	case HoneyWell_HICC:
+    		url = "rtsp://" + ip + ":" + port + "/media?stream=0";
+    		break;
+	
+    	default:
+    		break;
+    	}
+		boolean addFlag = h5streamService.addSrc(user,password,ip,id.toString(),url);
+		LogUtil.info("相机"+ id +"添加结果：" + addFlag);
+    }
+    
+    /**
+     * 更新视频
+     * @param id 视频id
+     * @param tunnelId 所属管廊 
+     * @param storeId 所属管舱
+     * @param areaId 所属区域
+     * @param name 视频名称
+     * @param description 描述
+     * @param objtypeId	对象类型
+     * @param datatypeId 数据类型
+     * @param serverId 所属视频服务
+     * @param vendor 所属供应商
+     * @param videoSceneId 所属场景
+     * @param channelNo 通道号
+     * @param actived 是否使用
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @RequiresPermissions("video:update")
+    @RequestMapping(value = "videos", method = RequestMethod.PUT)
+    public JSONObject updateVideo(@RequestBody Video video) throws Exception {
+    	// 修改视频信息
+    	videoModuleCenter.updateVideo(video);
+    	// 先删除onvif源
+    	h5streamService.delSrc(video.getId().toString());
+    	// 再添加onvif源
+    	setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 分页查询视频列表
+     * @param id
+     * @param tunnelId	管廊
+     * @param storeId	管舱
+     * @param areaId	区域
+     * @param vendor	供应商
+     * @param serverId	服务商
+     * @param actived	是否使用
+     * @param channelNo	通道号
+     * @param videoSceneId 场景
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月22日
+     */
+    @RequiresPermissions("video:list")
+    @RequestMapping(value = "videos/datagrid", method = RequestMethod.POST)
+    public JSONObject getVideoDtos(@RequestBody VideoVo vo) {
+    	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+    	if (vo.getId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getId().intValue() == vo.getId()).collect(Collectors.toList());
+    	if (vo.getTunnelId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == vo.getTunnelId()).collect(Collectors.toList());
+        if (vo.getStoreId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == vo.getStoreId()).collect(Collectors.toList());
+        if (vo.getAreaId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == vo.getAreaId()).collect(Collectors.toList());
+        if (vo.getVendor() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getVendor().intValue() == vo.getVendor()).collect(Collectors.toList());
+        if (vo.getServerId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getServerId().intValue() == vo.getServerId()).collect(Collectors.toList());
+        if (vo.getActived() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.isActived() == vo.getActived()).collect(Collectors.toList());
+        if (vo.getChannelNo() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getChannelNo() == vo.getChannelNo()).collect(Collectors.toList());
+        if (vo.getVideoSceneId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getVideoSceneId() == vo.getVideoSceneId()).collect(Collectors.toList());
+
+    	ListPageUtil<VideoDto> list = new ListPageUtil<>(videoDtos, vo.getPageNum(), vo.getPageSize());
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 通过管舱以及父类、区段获取视频
+     * @param storeId
+     * @param areaId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月23日
+     */
+    @RequiresPermissions("video:list")
+    @RequestMapping(value = "stores/{storeId}/areas/{areaId}/videos", method = RequestMethod.GET)
+    public JSONObject getVideoDtosByStoreIdAndAreaId(@PathVariable("storeId") Integer storeId, @PathVariable("areaId") Integer areaId) {
+    	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+        
+    	if (storeId != null) {
+    		List<Integer> storeIds = new ArrayList<>();
+        	StoreDto store = storeService.getStoreById(storeId);
+        	if(storeId.equals(store.getParentId())) {
+        		StoreVo vo = new StoreVo();
+        		vo.setParentId(storeId);
+        		List<StoreDto> storeList = storeService.getStoresByCondition(vo);
+        		storeList.forEach(a -> storeIds.add(a.getId()));
+        	} else
+        		storeIds.add(storeId);
+        	videoDtos = videoDtos.stream().filter(a -> storeIds.contains(a.getStoreId())).collect(Collectors.toList());
+        }
+        if (areaId != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId).collect(Collectors.toList());
+
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
+    }
+    
+    /**
+     * 通过经纬高获取附近的视频
+     * @param longitude 经度
+     * @param latitude 纬度
+     * @param height 高度
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月7日
+     */
+    @RequestMapping(value = "videos/gps", method = RequestMethod.POST)
+    public JSONObject getVideosByPoint(@RequestBody JSONObject map) {
+        //获取传过来的经纬度高度
+        double longitude = DataTypeUtil.toDouble(map.get("longitude"));
+        double latitude = DataTypeUtil.toDouble(map.get("latitude"));
+        double height = DataTypeUtil.toDouble(map.get("height"));
+    	List<VideoDto> list = new ArrayList<>();
+		// 先获取用户所在的section
+    	SectionDto section = sectionService.getSectionByGPS(longitude, latitude, height);
+		// 再获取该section里的所有视频
+		List<VideoDto> videos = new ArrayList<>();
+		if(section != null) {
+			List<VideoDto> ls = videoServerService.getVideosBySection(section.getId());
+			if(ls != null) videos.addAll(ls);
+		}
+		// 考虑到height为零的情况，即入廊时不确定来访人员的高度
+		if(height == 0) {
+			height = 3;
+			SectionDto section1 = sectionService.getSectionByGPS(longitude, latitude, height);
+			if(section1 != null) {
+				List<VideoDto> ls = videoServerService.getVideosBySection(section1.getId());
+				if(ls != null) videos.addAll(ls);
+			}
+		}
+		// 如果获取到视频就返回，反之获取六十米以内的所有视频
+		if(videos != null && videos.size() > 0)
+			list.addAll(videos);
+		else {
+			List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+			Point2D p = GPSUtil.MillierConvertion(longitude, latitude);
+			for(VideoDto dto : videoDtos) {
+				if(dto.getLongitude() == null || dto.getLatitude() == null) continue;
+				Point2D p1 = GPSUtil.MillierConvertion(Double.parseDouble(dto.getLongitude()), Double.parseDouble(dto.getLatitude()));
+				double l = p.distance(p1);
+				if(60 - l > 0)
+					list.add(dto);
+			}
+		}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * id获取视频信息
+     * @param id
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @RequestMapping(value = "videos/{id}", method = RequestMethod.GET)
+    public JSONObject getVideo(@PathVariable("id") Integer id) {
+    	VideoDto dto = videoModuleCenter.getVideoDto(id);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
+    }
+    
+    /**
+     * 批量删除视频
+     * @param ids 
+     * @return
+     * @author ya.liu
+     * @Date 2019年2月20日
+     */
+    @RequiresPermissions("video:delete")
+    @RequestMapping(value = "videos/{ids}", method = RequestMethod.DELETE)
+    public JSONObject deleteVideo(@PathVariable("ids") String ids) throws Exception {
+    	List<Integer> ins = CommonUtil.convertStringToList(ids);
+    	for(Integer id : ins) {
+    		// 先删除onvif源
+        	h5streamService.delSrc(id.toString());
+        	// 再删除视频信息
+    		videoModuleCenter.deleteVideo(id);
+    	}
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
     
     /**通过sectionId获取视频列表 
      * @param id
@@ -100,27 +392,20 @@ public class VideoController {
 			String channelNo = map.get("channelNo");
 			String id = map.get("id");
 			String vendor = map.get("vendor");
-			String url = "";
 			
-			VideoVendor videoVendor = VideoVendor.getEnum(DataTypeUtil.toInteger(vendor));
-			switch (videoVendor) {
-	    	case DaKang:
-	    		url = "rtsp://" + ip + ":" + port + "/Streaming/Channels/" + channelNo;
-	    		break;
-	    		
-	    	case HoneyWell_HISD:
-	    		url = "rtsp://" + ip + ":" + port + "/h264/ch" + channelNo + "/main/av_stream";
-	    		break;
-	    		
-	    	case HoneyWell_HICC:
-	    		url = "rtsp://" + ip + ":" + port + "/media?stream=0";
-	    		break;
-		
-	    	default:
-	    		break;
-	    	}
-			boolean addFlag = h5streamService.addSrc(user,password,ip,id,url);
-			LogUtil.info("相机"+id+"添加结果：" + addFlag);
+			setOnvif(DataTypeUtil.toInteger(id), user, password, ip,
+	    			port, DataTypeUtil.toInteger(channelNo), DataTypeUtil.toInteger(vendor));
+			
+			// 修改视频表数据，以便后续维护
+			Video video = new Video();
+			video.setId(DataTypeUtil.toInteger(id));
+			video.setUsername(user);
+			video.setPassword(password);
+			video.setIp(ip);
+			video.setPort(DataTypeUtil.toInteger(port));
+			video.setChannelNo(DataTypeUtil.toInt(channelNo));
+			video.setVendor(DataTypeUtil.toInteger(vendor));
+			videoModuleCenter.updateVideo(video);
 		}
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
@@ -295,22 +580,18 @@ public class VideoController {
      * @Date 2018年9月7日
      */
     @RequestMapping(value = "videos/condition", method = RequestMethod.POST)
-    public JSONObject getVideosByParams(@RequestBody JSONObject object) {
+    public JSONObject getVideosByParams(@RequestBody VideoVo vo) {
         List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
-        Integer tunnelId = object.getInteger("tunnelId");
-        Integer storeId = object.getInteger("storeId");
-        Integer areaId = object.getInteger("areaId");
-        Integer sectionId = object.getInteger("sectionId");
 
-        if (tunnelId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
-        if (storeId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
-        if (areaId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
-        if (sectionId != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getSectionId().intValue() == sectionId.intValue()).collect(Collectors.toList());
-
+        if (vo.getSectionId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getSectionId().intValue() == vo.getSectionId()).collect(Collectors.toList());
+    	if (vo.getTunnelId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == vo.getTunnelId()).collect(Collectors.toList());
+        if (vo.getStoreId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == vo.getStoreId()).collect(Collectors.toList());
+        if (vo.getAreaId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == vo.getAreaId()).collect(Collectors.toList());
+        
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
     }
 
@@ -546,6 +827,178 @@ public class VideoController {
         return (tmp_dis - dis) / tmp_dis * 20 + (tmp_rad - rad) / tmp_rad * 80;
     }
 
+    /**
+     * 测试录像拍照功能
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月24日
+     */
+    @RequestMapping(value = "test/snap" ,method = RequestMethod.GET)
+    public JSONObject addSnap() {
+    	h5streamService.addSnap();
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
 
+    /**
+     * 分页查询图片
+     * @param tunnelId
+     * @param areaId
+     * @param storeId
+     * @param id
+     * @param startTime 必传
+     * @param endTime 必传
+     * @param pageSize 必传
+     * @param pageNum 必传
+     * @return
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年3月26日
+     */
+    @RequestMapping(value = "snaps/datagrid" ,method = RequestMethod.POST)
+    public JSONObject getSnaps(@RequestBody VideoVo vo) throws Exception {
+    	List<JSONObject> list = getList(vo);
+        LogUtil.info("snapList.size: " + list.size());
+        ListPageUtil<JSONObject> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
+    }
+    
+    /**
+     * 获取视频截图列表
+     * @param vo
+     * @return
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年3月29日
+     */
+    private List<JSONObject> getList(VideoVo vo) throws Exception {
+    	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+    	if (vo.getId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getId().intValue() == vo.getId()).collect(Collectors.toList());
+    	if (vo.getTunnelId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == vo.getTunnelId()).collect(Collectors.toList());
+        if (vo.getStoreId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == vo.getStoreId()).collect(Collectors.toList());
+        if (vo.getAreaId() != null)
+            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == vo.getAreaId()).collect(Collectors.toList());
+        List<JSONObject> list = new ArrayList<>();
+        for(VideoDto dto : videoDtos) {
+        	String result = h5streamService.getSnapJSON(dto, vo.getStartTime(),vo.getEndTime());
+        	JSONObject obj = JSONObject.parseObject(result);
+        	JSONArray arr = obj.getJSONArray("record");
+        	for(int i=0;i<arr.size();i++) {
+
+        		JSONObject json = arr.getJSONObject(i);
+        		json.put("tunnel", dto.getTunnelName());
+        		json.put("area", dto.getAreaName());
+        		json.put("store", dto.getStoreName());
+        		json.put("name", dto.getName() + dto.getId());
+        		list.add(json);
+        	}
+        }
+        return list;
+    }
+    
+    /**
+     * 不分页查询图片
+     * @param tunnelId
+     * @param areaId
+     * @param storeId
+     * @param id
+     * @param startTime 必传
+     * @param endTime 必传
+     * @return
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年3月26日
+     */
+    @RequestMapping(value = "snaps/condition" ,method = RequestMethod.POST)
+    public JSONObject getSnapList(@RequestBody VideoVo vo) throws Exception {
+    	List<JSONObject> list = getList(vo);
+        LogUtil.info("snapList.size: " + list.size());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**
+     * 下载图片
+     * @param {"path":"/mediastore/.../a.jpg"}
+     * @param response
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年3月27日
+     */
+    @RequestMapping(value = "snaps/download/{path}", method = RequestMethod.GET)
+    public void downloadSnaps(@PathVariable("path") String path, HttpServletResponse response) throws Exception {
+    	String newName = path.replace(",", "\\");
+    	LogUtil.info(newName);
+    	String realPath = getPath(newName) + ".jpg";
+    	
+    	FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(new File(realPath));
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            response.setContentType("image/jpg");
+            response.getOutputStream().write(data);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            LogUtil.error(e);
+        } finally {
+            close(fis);
+        }
+    }
+    
+    /**
+     * 获取图片所在的绝对路径
+     * @param path
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月29日
+     */
+    private String getPath(String path) {
+    	String diskPath = DataTypeUtil.toString(PropertiesUtil.getValue(Constants.PATH_SNAP_H5));
+    	String realPath = diskPath + path;
+    	return realPath;
+    }
+    /**
+     * 查看图片
+     * @param {"path":"/mediastore/.../a.jpg"}
+     * @param response
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年3月27日
+     */
+    @RequestMapping(value = "snaps/tp", method = RequestMethod.POST)
+    public void getPhoto(@RequestBody JSONObject obj, HttpServletResponse response) throws Exception {
+    	String name = obj.getString("path");
+    	LogUtil.info(name);
+    	String newName = name.replace("/", "\\");
+    	String path = getPath(newName);
+    	FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(new File(path));
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            response.setContentType("image/jpg");
+            response.getOutputStream().write(data);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            LogUtil.error(e);
+        } finally {
+            close(fis);
+        }
+    }
+    
+    private void close(FileInputStream fis) {
+        if (fis != null){
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                LogUtil.error(e);
+            }
+        }
+    }
 }
 

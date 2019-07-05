@@ -15,8 +15,10 @@ import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableContractDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.CableDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ContractDto;
+import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ContractService;
+import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Cable;
 import com.bandweaver.tunnel.common.biz.pojo.oam.CableContract;
@@ -34,50 +36,41 @@ public class ContractServiceImpl implements ContractService {
 	@Autowired
 	private CableMapper cableMapper;
 	@Autowired
-	private CableContractMapper CableContractMapper;
+	private CableContractMapper cableContractMapper;
 	@Autowired
 	private CableSectionMapper cableSectionMapper;
 	@Autowired
 	private SectionService sectionService;
+	@Autowired
+	private AreaService areaService;
 	
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void add(ContractVo vo) {
 		
-		//获取合同信息
+		// 获取合同信息
 		CableContract cableContract = vo.toCableContract();
 		cableContract.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		cableContract.setContractStatus(ContractStatusEnum.NORMAL.getValue());
-		CableContractMapper.insert(cableContract);
+		cableContractMapper.insert(cableContract);
 	
-		//获取管线信息
+		// 获取管线信息
 		Cable cable = vo.toCable();
 		cable.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		cable.setCableStatus(CableStatusEnum.RUNNING.getValue());
 		cable.setContractId(cableContract.getId());
 		cableMapper.insert(cable);
 		
-		//获取section信息
-//		List<Integer> sectionIds =vo.getSectionIds();
-//		for (Integer sectionId : sectionIds) {
-//			CableSection cableSection = new CableSection();
-//			cableSection.setSectionId(sectionId);
-//			cableSection.setCableId(cable.getId());
-//			cableSectionMapper.insert(cableSection);
-//		}
+		// 获取section信息
 		Integer storeId = vo.getStoreId();
-		List<Integer> areaIds = vo.getAreaIds();
-		for (Integer areaId : areaIds) {
-			Section section = sectionService.getSectionByStoreAndArea(storeId,areaId);
-			
+		for(Area area : areaService.getList()) {
+			Section section = sectionService.getSectionByStoreAndArea(storeId,area.getId());
+			if(section == null) continue;
 			CableSection cableSection = new CableSection();
 			cableSection.setSectionId(section.getId());
 			cableSection.setCableId(cable.getId());
 			cableSectionMapper.insert(cableSection);
 		}
-		
-		
-		
 		
 	}
 
@@ -110,15 +103,15 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public PageInfo<CableContractDto> dataGrid(CableContractVo vo) {
 		PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-		List<CableContractDto> list = CableContractMapper.getByCondition(vo);
+		List<CableContractDto> list = cableContractMapper.getByCondition(vo);
 		return new PageInfo<>(list);
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void delete(String id) {
 		//删除合同表
-		CableContractMapper.deleteByPrimaryKey(id);
+		cableContractMapper.deleteByPrimaryKey(id);
 		
 		//删除管线section中间表
 		CableDto cableDto = cableMapper.getCableDetByContractId(id);
@@ -129,12 +122,12 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void update(ContractVo vo) {
 	
 		//更新合同表
 		CableContract cableContract = vo.toCableContract();
-		CableContractMapper.updateByPrimaryKeySelective(cableContract);
+		cableContractMapper.updateByPrimaryKeySelective(cableContract);
 		
 		//更新管线表
 		Cable cable = vo.toCable();
@@ -152,15 +145,19 @@ public class ContractServiceImpl implements ContractService {
 		}*/
 		
 		Integer storeId = vo.getStoreId();
-		List<Integer> areaIds = vo.getAreaIds();
-		for (Integer areaId : areaIds) {
-			Section section = sectionService.getSectionByStoreAndArea(storeId,areaId);
-			
+		for(Area area : areaService.getList()) {
+			Section section = sectionService.getSectionByStoreAndArea(storeId,area.getId());
+			if(section == null) continue;
 			CableSection cableSection = new CableSection();
 			cableSection.setSectionId(section.getId());
 			cableSection.setCableId(cable.getId());
 			cableSectionMapper.insert(cableSection);
 		}
+	}
+
+	@Override
+	public CableContract get(String id) {
+		return cableContractMapper.get(id);
 	}
 
 }

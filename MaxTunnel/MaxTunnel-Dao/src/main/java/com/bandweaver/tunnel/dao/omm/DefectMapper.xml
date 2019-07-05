@@ -169,6 +169,34 @@
         </where>
         order by a.create_time desc
     </select>
+    
+    <select id="getCountByCondition" resultType="int">
+        select count(1)
+        from t_omm_defect a
+        <where>
+            <if test="tunnelId != null">
+                and a.tunnel_id = #{tunnelId}
+            </if>
+            <if test="type != null">
+                and a.defect_type = #{type}
+            </if>
+            <if test="objectId != null">
+                and a.object_id = #{objectId}
+            </if>
+            <if test="level != null">
+                and a.defect_level = #{level}
+            </if>
+            <if test="status != null">
+                and a.defect_status = #{status}
+            </if>
+            <if test="startTime != null">
+                and a.create_time <![CDATA[>=]]>#{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.create_time <![CDATA[<=]]>#{endTime}
+            </if>
+        </where>
+    </select>
 
     <select id="getCountOfDefectByTunnelAndType" resultType="int">
         SELECT COUNT(1)
@@ -192,14 +220,6 @@
         <result column="defect_status" property="statusName"/>
         <result column="order_id" property="orderId"/>
     </resultMap>
-    
-    <select id="getDefectCountByTunnelId" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionPlan" >
-		SELECT a.groupId,b.name
-		FROM (SELECT tunnel_id tunnelId,count(1) groupId
-		    FROM t_omm_defect
-		    GROUP BY tunnel_id) a
-		RIGHT JOIN t_common_tunnel b ON a.tunnelId = b.id
-	</select>
 	
 	<select id="getDefects"  resultMap="defectDtoMap">
 		SELECT

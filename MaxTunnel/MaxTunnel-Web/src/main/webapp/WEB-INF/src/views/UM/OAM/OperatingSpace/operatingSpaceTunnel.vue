@@ -1,455 +1,266 @@
 <template>
-    <div class="whole">
-       <Row class="conditions">
-            <Col span="8" offset="3">
-            <span>监测仓:</span>
-                <Select style="width:20vw;" v-model="query.storeId">
-                  <Option value="null">全部</Option>
-                  <Option v-for="item in stores" :value="item.id" :key="item.name">{{ item.name }}
-                  </Option>
-                </Select>
-            </Col>
-            <Col span="8">
-             <span>区域:</span>
-                <Select style="width:20vw;" v-model="query.areaId">
-                  <Option value="null">全部</Option>
-                  <Option v-for="item in areas" :value="item.id" :key="item.name">{{ item.name }}</Option>
-                </Select>
-            </Col>
-            <Col span="2">
-                <Button type="primary" icon="ios-search" @click="search" >查询</Button>
-            </Col>
-            <Col span="2" offset="1" v-if="!init">
-                <Button type="ghost" @click="init = true">返回</Button>
-            </Col>
-        </Row>
-        <Row class="storeInfo" v-if="init">
-            <Col span="12" v-for="(store,index) in stores" :key="index">
-                <div class="storeCard">
-                    <div class="innerCard">
-                        <div class="storeName" @click="chooseStore(store.id)">
-                            <Icon type="cube"></Icon>
-                            <span>{{store.name}}</span>
-                        </div>
-                        <div class="storeLineCount">
-                            <p v-for="(line,i) in store.value" :key="i" class="lines">{{ line.key }}:{{ line.val }}</p>
-                            <!-- <Progress :percent="parseInt(store.value[1].val / store.value[2].val * 100)" class="progress"></Progress> -->
-                        </div>
-                    </div>
-                </div>
-            </Col>
-        </Row>
-        <Row v-if="!init">
-            <Col span="24" class="sectionsInfo">
-                <Row>
-                    <Col span="8" v-for="(cab,index) in cables" :key="index" class="left">
-                    <div class="card">
-                        <div class="title">
-                             <Icon type="ios-keypad" style="font-size: 1.5vmin" color="#ff9b00"></Icon>
-                            <span>{{cab.name}}</span>
-                        </div>
-                        <div class="linesInfo">
-                             <Tooltip placement="bottom">
-                                <i-circle :percent="parseInt(cab.value[1].val / cab.value[0].val * 100)" :size="40">
-                                    <span class="demo-Circle-inner" style="font-size:1.66vmin">{{ cab.value[1].val }}</span>
-                                </i-circle>
-                                <div slot="content">
-                                   <p v-for="(line,i) in cab.value" :key="i" :class="[{'red':line.key === '已用管线数'},{'green':line.key === '可用管线数'}]">{{ line.key }}:{{ line.val }}</p>
-                                </div>
-                            </Tooltip>
-                        </div>
-                        <div class="lineName">
-                            <p v-for="(line,j) in cab.lines" :key="j" @click="isShow = true">{{ line.cableName +' '+ line.contract.customer.company.name}}</p>
+    <div class="whole" v-if="!none">
+        <Row class="storeInfo">
+            <div class="storeItemsWrapper">
+                <Col span="12" v-for="(store,index) in stores" :key="index">
+                    <div class="storeCard">
+                        <div class="innerCard">
+                            <div class="storeName" @click="chooseStore(store)">
+                                <Icon
+                                    type="ios-flag"
+                                    style="font-size: 3.6vmin;margin-right: 0.6vmin;"
+                                ></Icon>
+                                <span>{{store.name}}</span>
+                            </div>
+                            <Row>
+                                <Col span="12">
+                                    <div class="storeLineCount" v-if="store.values[2].val">
+                                        <p
+                                            v-for="(line,i) in store.values"
+                                            :key="i"
+                                            class="lines"
+                                        >{{ line.key }}:{{ line.val }}</p>
+                                    </div>
+                                </Col>
+                                <Col :span="store.values[2].val ? '12' : '24'">
+                                    <div class="utilization" v-if="store.values[2].val">
+                                        <i-circle
+                                            :percent="parseInt(store.values[1].val / store.values[2].val * 100)"
+                                            stroke-color="#1dffe2"
+                                        >
+                                            <span
+                                                class="demo-Circle-inner"
+                                                style="font-size:2.66vmin"
+                                            >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
+                                        </i-circle>
+                                    </div>
+                                    <div
+                                        :class="['equCount',{'noLines': !store.values[2].val}]"
+                                        @click="turnToEquPage(store.id)"
+                                    >
+                                        <span>{{'现存放设备' + store.equCount +'个'}}</span>
+                                    </div>
+                                </Col>
+                            </Row>
                         </div>
                     </div>
-                    <div class="pop" v-if="curDetailId === line.id && curDetailIndex === index" v-for="line in cab.lines" :key="line.id" @mouseover="showDetails(line.id,index)" @mouseout="curDetailId = ''">
-                        <span @click="curDetailId = ''"><Icon type="ios-close" style="font-size: 1.5vmin" class="close"></Icon></span>
-                        <h3 class="name">{{ line.cableName }}</h3>
-                        <p>管线长度：{{ line.cableLength }}</p>
-                        <p>管线状态：{{ line.cableStatusName }}</p>
-                        <!-- <p>管线位置：{{ line.cableLocation }}</p> -->
-                        <p>客户名称：{{ line.contract.customer.company.name }}</p>
-                        <p>联系人：{{ line.contract.customer.contact }}</p>
-                        <p>联系电话：{{ line.contract.customer.tel }}</p>
-                    </div>
-                    <Modal v-model="isShow" :title="line.cableName" v-for="line in cab.lines" :key="line.id" width="300">
-                        <p>管线长度：{{ line.cableLength }}</p>
-                        <p>管线状态：{{ line.cableStatusName }}</p>
-                        <!-- <p>管线位置：{{ line.cableLocation }}</p> -->
-                        <p>客户名称：{{ line.contract.customer.company.name }}</p>
-                        <p>联系人：{{ line.contract.customer.contact }}</p>
-                        <p>联系电话：{{ line.contract.customer.tel }}</p>
-                    </Modal>
-                    </Col>
-                </Row>
-            </Col>
-            <!-- <Col span="8" offset="1" class="bim">
-                <v_3DViewer :id="mapId" @onload="onload">
-                </v_3DViewer>
-            </Col> -->
+                </Col>
+            </div>
         </Row>
-        <Row>
-            <Col span="24" class="page">
-                <Page v-if="!init" :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
-                </Page>
-            </Col>
-        </Row>
+    </div>
+    <div v-else class="noData">
+        <span>建设中</span>
     </div>
 </template>
 <script>
-import { TunnelService } from '../../../../services/tunnelService'
-import { SpaceService } from '../../../../services/spaceService'
+import { TunnelService } from "../../../../services/tunnelService";
+import { SpaceService } from "../../../../services/spaceService";
 import Enum from "../../../../../static/Enum.json";
-import Vue from 'vue';
-import v_3DViewer from '../../../../components/Common/3DViewers'
-import {URL_CONFIG} from "../../../../../static/3DMap/js/3DMapConfig"
- import {
-    setViewAngle,
-    bubble,
-    addLabel,
-    getSection,
-    doSqlQuery,
-    labelSqlCompleted,
-    processFailed
-  } from "../../../../scripts/commonFun.js"
+import { EquipmentService } from "../../../../services/equipmentService";
 
 export default {
-    data(){
-        return{
-           tunnelId:'',
-           stores:[],
-           areas:[],
-           sections:[],
-           query:{
-            storeId:'null',
-            areaId:'null',
-            sectionId:''
-           },
-           page:{
-                pageNum: 1,
-                pageSize: 10,
-                pageTotal: null,
-            },
-            ids:[],
-            cables:[],
-            init: true,
-            curDetailIndex: '',
-            curDetailId: '',
-            pageStyle: {
-                backgroundColor: 'white',
-                textAlign: 'right',
-                padding: '12px'
-            },
-            mapId: "tunnnelMap",
-            isShow: false
-        }
+    data() {
+        return {
+            tunnelId: "",
+            stores: [],
+            curDetailIndex: "",
+            curDetailId: "",
+            isLineShow: false,
+            isEquipShow: false,
+            none: false
+        };
     },
-    components: { v_3DViewer },
     mounted() {
-      this.tunnelId = this.$route.params.id;
-      this.initData();
-    },
-    watch: {
-      '$route': function () {
-        // $route发生变化时再次赋值planId
         this.tunnelId = this.$route.params.id;
         this.initData();
-        this.cables='';
-        this.init = true;
-        this.stores = [];
-        this.query.areaId = 'null';
-        this.query.storeId = 'null'
-        },
-        'page.pageNum': function(){
-            this.page.pageNum = 1
+    },
+    watch: {
+        $route: function() {
+            // $route发生变化时再次赋值planId
+            this.tunnelId = this.$route.params.id;
+            this.initData();
+            this.stores = [];
         }
     },
-    methods:{
+    methods: {
         initData() {
-            let _this = this
-            Promise.all([TunnelService.getStoresByTunnelId(this.tunnelId),SpaceService.getCableCount(this.tunnelId)])
-            .then(result=>{
-                let store = result[0]
-                if(store.length > 0){
-                    // _this.query.storeId = store[0].id;
-                    store.forEach(a=>{
-                        let temp = {};
-                        temp.id = a.id;
-                        temp.name = a.name;
-                        temp.typeId = a.storeTypeId;
-                        temp.value = [];
-                        _this.stores.push(temp);
-                    })
-                    _this.stores.forEach(store=>{
-                        result[1].forEach(name => {
-                            if(store.name == name.key){
-                              for(let item in name){
-                                if(item != 'key'){
-                                    let temp = {};
-                                    temp.key = item.slice(0,5);
-                                    temp.val = name[item];
-                                    store.value.push(temp)
-                                }
-                              }
-                            }
-                        })
-                    })
-                }
-            },
-            error=>{
-                _this.Log.info(error)
-            })
-
-            TunnelService.getAreasByTunnelId(this.tunnelId).then(
-                result=>{
-                    _this.areas = result
-                },
-                error=>{
-                    _this.Log.info(error)
-                })
-        },
-        search(){
-            if(!this.query.storeId && !this.query.areaId){
-               this.$Message.error("请至少选择一个监测仓或区域");
-            }
-            let params = {
-                storeId: this.query.storeId,
-                areaId: this.query.areaId,
-                id: this.query.sectionId,
-                pageNum: this.page.pageNum,
-                pageSize: this.page.pageSize,
-                name:''
-            };
-            let _this = this
-            SpaceService.sectionsDatagrid(params).then(
-                result=>{
-                    _this.init = false;
-                    _this.cables = [];
-                    _this.ids = [];
-                    _this.page.pageTotal = result.total
-                    result.list.forEach(a=>{
-                         _this.ids.push(a.id);
-                         let temp={};
-                         temp.name=a.store.name+a.area.name;
-                         temp.id=a.id;
-                         temp.value=null;
-                         temp.lines=null;
-                         _this.cables.push(temp);
-                    })
-                    SpaceService.getCableCountBysectionIds(_this.ids).then(
-                        result=>{
-                            result.forEach(a=>{
-                                _this.cables.forEach(b=>{
-                                    if(b.id==a.id){
-                                        b.value=a.val;
+            let _this = this;
+            Promise.all([
+                TunnelService.getStoresByTunnelId(this.tunnelId),
+                SpaceService.getCableCount(this.tunnelId),
+                EquipmentService.getEquipmentCount(this.tunnelId)
+            ]).then(
+                result => {
+                    let store = result[0],
+                        lineList = result[1],
+                        equList = result[2];
+                    if (store.length > 0) {
+                        store.forEach(a => {
+                            let lines = [];
+                            let usage = lineList.find(name => {
+                                return name.key === a.name;
+                            });
+                            let equ = equList.find(count => {
+                                return count.id === a.id;
+                            });
+                            for (let item in usage) {
+                                if (item != "key") {
+                                    lines.push({
+                                        key: item.slice(0, 5),
+                                        val: usage[item]
+                                    });
+                                    if (
+                                        lines.length ===
+                                        Object.keys(usage).length - 1
+                                    ) {
+                                        if (lines.length) {
+                                            _this.stores.push({
+                                                id: a.id,
+                                                name: a.name,
+                                                values: lines,
+                                                equCount: equ.val
+                                            });
+                                        }
                                     }
-                                })
-                            })
-
-                            _this.cables.forEach(a=>{
-                                SpaceService.getCableInfo(a.id).then(
-                                    result=>{
-                                        a.lines = result;
-                                    },
-                                    error=>{
-                                        _this.Log.info(error)
-                                    })
-                            })
-                        },
-                        error=>{
-                            _this.Log.info(error)
-                        })
-                })
+                                }
+                            }
+                        });
+                    } else {
+                        _this.none = true;
+                    }
+                },
+                error => {
+                    _this.Log.info(error);
+                }
+            );
         },
-         handlePage(value) {
-            this.page.pageNum = value;
-            this.search();
+        chooseStore(store) {
+            this.$router.push({
+                name: "管廊空间详情",
+                params: {
+                    store
+                }
+            });
         },
-        handlePageSize(value) {
-            this.page.pageSize = value;
-            this.search();
-        },
-        showDetails(id,index) {
-            this.curDetailId = id;
-            this.curDetailIndex = index;
-        },
-        chooseStore(id) {
-            this.query.storeId = id
-            this.search()
+        turnToEquPage(storeId) {
+            sessionStorage.setItem(
+                "refreshAddress",
+                "/UM/equipment/queryequipment"
+            );
+            sessionStorage.setItem("selectedName", "1-1-1");
+            this.$router.push({
+                name: "管廊设备",
+                params: {
+                    storeId,
+                    tunnelId: this.tunnelId
+                }
+            });
         }
     }
-}
+};
 </script>
 <style scoped>
-.whole{
+.whole {
     min-height: 100%;
     position: relative;
 }
-.sectionsInfo{
-    padding: 2vh 0;
-    margin-top: 2vh;
-    background-color: white;
-    height: 74vh;
-    overflow-y: auto;
+
+.innerCard >>> .ivu-chart-circle {
+    width: 12vmin !important;
+    height: 12vmin !important;
 }
-.left{
-    position:relative;
+.storeInfo {
+    padding: 3vmin;
+
+    height: 86vh;
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
 }
-.card{
-    border: 1px solid #dddfe1;
-    width: 80%;
-    margin: 10px 10%;
-    padding: 5px 0px;
-    border-radius: 4px;
-    box-shadow: 5px 6px 4px rgba(0, 0, 0, .2);
-    height: 20vh;
-    overflow:auto;
-}
-.title{
-    padding-left: 14px;
-    font-size: 2vmin;
-    display: inline-block;
-    margin: 4px 0;
-}
-.linesInfo{
-    text-align: center;
-    float: right;
-    width: 40px;
-    height: 40px;
-    font-size: 1.66vmin;
-    margin: 4px 12px;
-}
-.option{
-    float:right;
-    padding: 0px 10px 0px 0px;
-}
-.storeInfo{
-    margin-top: 10px;
-    padding: 30px;
-    background-color: white;
-}
-.storeName{
+.storeName {
     font-size: 3vmin;
-    position: absolute;
     font-weight: bold;
-    top: 36%;
-    left: 14%;
+    cursor: pointer;
+    margin: 3vmin 0 1vmin 0;
+    text-align: center;
+}
+.utilization {
+    margin-top: 2vmin;
+    text-align: center;
+}
+.equCount {
+    font-size: 2.66vmin;
+    margin-top: 2vmin;
+    text-align: center;
     cursor: pointer;
 }
-.conditions span{
-    font-size: 1.66vmin;
+.noLines {
+    margin-top: 8vmin;
+    font-size: 4vmin;
 }
-.storeCard{
-    margin: 10px 7%;
-    height: 28vh;
-    width: 86%;
-    /*background-color: rgb(244,217,164);*/
-   /* border: 1px solid #fff;
-    border-radius: 8px;*/
-    color: #c6cdd2;
+.storeCard {
+    margin: 2.3vmin 10%;
+    height: 36vh;
+    width: 80%;
+    color: #eaeef2;
 }
-.innerCard{
-    background: url('../../../../assets/UM/bodyI.png') no-repeat;
+.innerCard {
+    background: url("../../../../assets/UM/border2.png") no-repeat;
     background-size: 100% 100%;
     width: 100%;
     height: 100%;
     position: relative;
+    margin: 2vmin 0;
+    overflow: hidden;
 }
-.green{
-   /* color:rgb(25,190,107);*/
-}
-.red{
-   /* color:rgb(255, 102, 0);*/
-}
-.lines{
+
+.lines {
     padding: 6px;
-    font-size: 1.66vmin;
+    font-size: 2.4vmin;
+    line-height: 5.4vmin;
 }
-.bim{
-    margin-top: 40px;
-    height: 60vh;
-}
-.lineName{
-    font-size: 1.8vmin;
-    text-align: center;
-    cursor:pointer;
-    margin-top: 10px;
-}
-.pop{
-    position:absolute;
-    left: 10px;
-    top: 0px;
-    width: 200px;
-    height: 230px;
-    background-color: rgb(204, 153, 102);
-    padding: 10px;
-    z-index: 1;
-}
-.name{
-    text-align: center;
-    margin:10px;
-}
-.close{
-    float:right;
-    cursor: pointer;
-}
-.storeLineCount{
-    position: absolute;
-    top: 22%;
-    right: 22%;
+
+.storeLineCount {
     font-size: 17px;
     text-align: center;
-
-}
-.progress{
-    width: 60%;
-    margin-left: 10%;
-    margin-top: 20px;
+    margin-top: 1vmin;
 }
 
-.linesInfo >>> .ivu-tooltip-inner{
+.linesInfo >>> .ivu-tooltip-inner {
     font-size: 1.66vmin;
 }
-
-.conditions >>> .ivu-select-selection{
-    height: 3.2vmin;
+.noData {
+    text-align: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    background: url("../../../../assets/UM/bodyBg.png") no-repeat;
+    background-size: 100% 100%;
 }
-
-.conditions >>> .ivu-select-selected-value{
-    font-size: 1.66vmin;
-    line-height: 3vmin;
-    height: 3vmin;
+.noData span {
+    font-size: 4vmin;
+    color: #fff;
+    align-self: center;
 }
-/*分页样式*/
-.page >>> .ivu-select-selection{
-    height: 3.2vmin;
+.storeItemsWrapper {
+    overflow-y: auto;
+    margin: 0.2vmin;
+    height: 80vh;
 }
-.page >>> .ivu-select-selected-value{
-    font-size: 1.2vmin;
-    height: 3vmin;
-    line-height: 3vmin;
+.storeItemsWrapper::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 1vmin; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 0.2vmin;
 }
-.page >>> .ivu-page-options-elevator input{
-    font-size: 1.2vmin;
-    height: 3vmin;
+.storeItemsWrapper::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
 }
-.page >>> .ivu-page-options-elevator{
-    display: inline-block;
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-}
-.page >>> .ivu-page-next{
-    height: 3.2vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-page-next .ivu-icon{
-    font-size: 1.6vmin;
-}
-.page >>> .ivu-page-prev{
-    height: 3.2vmin;
-    line-height: 3vmin;
-}
-.page >>> .ivu-page-prev .ivu-icon{
-    font-size: 1.6vmin;
+.storeItemsWrapper::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 </style>

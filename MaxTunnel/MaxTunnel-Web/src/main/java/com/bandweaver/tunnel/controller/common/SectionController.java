@@ -1,13 +1,11 @@
 package com.bandweaver.tunnel.controller.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.bandweaver.tunnel.common.biz.pojo.Store;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
@@ -27,23 +25,15 @@ import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.bandweaver.tunnel.common.platform.util.GPSUtil;
-import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
-
-import javafx.geometry.Point2D;
 
 /**
  * 管舱段管理
@@ -58,13 +48,9 @@ public class SectionController extends BaseController<Section>{
     @Autowired
     private SectionService sectionService;
     @Autowired
-    private TunnelService tunnelService;
-    @Autowired
     private AreaService areaService;
     @Autowired
     private StoreService storeService;
-    @Autowired
-    private MeasObjModuleCenter measObjModuleCenter;
     @Autowired
     private MeasObjService measObjService;
     @Autowired
@@ -80,10 +66,11 @@ public class SectionController extends BaseController<Section>{
      * @param camera           相机视角（字符串）
      * @param startPoint		开始坐标 格式：112.494028,37.707195,6.130
      * @param endPoint			结束坐标 格式：112.4994028,37.706120,6.130
-     * @return {"msg":"请求成功","code":"200","data":{}}
+     * @return {"msg":"请求成功","code":"200","data":{}}k
      * @author shaosen
      * @date 2018年7月25日
      */
+    @RequiresPermissions("section:add")
     @Deprecated
     @RequestMapping(value = "sections", method = RequestMethod.POST)
     public JSONObject add(@RequestBody Section section) {
@@ -92,6 +79,7 @@ public class SectionController extends BaseController<Section>{
 
     }
 
+    @RequiresPermissions("section:add")
     @RequestMapping(value = "sections/create", method = RequestMethod.GET)
     public JSONObject create() {
         List<Store> stores = storeService.getList();
@@ -99,7 +87,6 @@ public class SectionController extends BaseController<Section>{
         int i = 0;
         for (Store store : stores){
             for (AreaDto area: areas) {
-                SectionVo vo = new SectionVo();
                 if (sectionService.getSectionByStoreAndArea(store.getId(),area.getId())!=null) continue;
 
                 // 新加section
@@ -128,13 +115,14 @@ public class SectionController extends BaseController<Section>{
      * @author ya.liu
      * @Date 2018年12月25日
      */
+    @RequiresPermissions("section:add")
     @RequestMapping(value = "sections/batch", method = RequestMethod.POST)
     public JSONObject createSections(@RequestBody JSONObject obj) {
     	// 获取集合
-    	List<LinkedHashMap<String, Object>> sections = (List)obj.get("section");
+    	List<JSONObject> sections = (List)obj.get("section");
     	SectionVo vo = new SectionVo();
     	int i = 0;
-        for (LinkedHashMap<String, Object> s : sections){
+        for (JSONObject s : sections){
         	List<Integer> areaIds = (List) s.get("areaIds");
         	Integer storeId = (Integer)s.get("storeId");
         	StoreDto store = storeService.getStoreById(storeId);
@@ -185,6 +173,7 @@ public class SectionController extends BaseController<Section>{
      * @author ya.liu
      * @Date 2018年12月27日
      */
+    @RequiresPermissions("section:update")
     @RequestMapping(value="sections/batch",method=RequestMethod.PUT)
     public JSONObject updateBatch(@RequestBody List<Section> list) {
     	for(Section section : list) {
@@ -213,6 +202,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("section:delete")
     @RequestMapping(value = "sections/{id}", method = RequestMethod.DELETE)
     public JSONObject delete(@PathVariable Integer id) {
     	sectionService.delete(id);
@@ -223,14 +213,11 @@ public class SectionController extends BaseController<Section>{
     /**
      * 批量删除
      */
+    @RequiresPermissions("section:delete")
 	@Override
 	@RequestMapping(value="sections/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
-		List<Integer> list = new ArrayList<>();
-		String[] arr = ids.split(",");
-		for (String str : arr) {
-			list.add(DataTypeUtil.toInteger(str));
-		}
+		List<Integer> list = CommonUtil.convertStringToList(ids);
 		sectionService.deleteBatch(list);
 		  return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
@@ -242,6 +229,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @Date 2018年9月20日
      */
+    @RequiresPermissions("section:update")
     @RequestMapping(value="sections",method=RequestMethod.PUT)
     public JSONObject update(@RequestBody Section section) {
     	sectionService.update(section);
@@ -260,7 +248,7 @@ public class SectionController extends BaseController<Section>{
      * @author shaosen
      * @date 2018年6月21日
      */
-//    @RequestMapping(value = "sections/condition", method = RequestMethod.POST)
+    @Deprecated
     @RequestMapping(value = "tunnels/stores/sections/condition", method = RequestMethod.POST)
     public JSONObject getSectionsByCondition(@RequestBody SectionVo vo) {
         List<SectionDto> list = sectionService.getSectionsByCondition(vo);
@@ -279,6 +267,21 @@ public class SectionController extends BaseController<Section>{
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, dto);
     }
 
+    /**
+     * 通过区域和管舱获取section
+     * @param storeId
+     * @param areaId
+     * @return
+     * @author ya.liu
+     * @Date 2019年4月9日
+     */
+    @RequestMapping(value = "stores/{storeId}/areas/{areaId}/sections", method = RequestMethod.GET)
+    public JSONObject getSectionByAreaAndStore(@PathVariable("storeId") Integer storeId,
+    		@PathVariable("areaId") Integer areaId) {
+        Section section = sectionService.getSectionByStoreAndArea(storeId, areaId);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, section);
+    }
+    
     /**通过ids获取dto列表
      * @param ids 管舱段id字符串，格式：1,2,3,4,.....
      * @return dto集合
@@ -288,11 +291,10 @@ public class SectionController extends BaseController<Section>{
     @RequestMapping(value = "sections/batch/{ids}", method = RequestMethod.GET)
     public JSONObject getDtoListByIds(@PathVariable String ids) {
     	
-        List<SectionDto> list = new ArrayList<>();
-        String[] arr = ids.split(",");
-        for (String id : arr) {
-            Integer sectionId = DataTypeUtil.toInteger(id);
-            SectionDto dto = sectionService.getSectionById(sectionId);
+    	List<SectionDto> list = new ArrayList<>();
+        List<Integer> listInteger = CommonUtil.convertStringToList(ids);
+        for (Integer id : listInteger) {
+            SectionDto dto = sectionService.getSectionById(id);
             list.add(dto);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
@@ -334,7 +336,7 @@ public class SectionController extends BaseController<Section>{
 
             List<SectionDto> valList = new ArrayList<>();
             for (SectionDto sectionDto : list) {
-                if (sectionDto.getStore().getStoreTypeId() == e.getId()) {
+                if (sectionDto.getStore().getStoreTypeId().intValue() == e.getId()) {
                     valList.add(sectionDto);
                 }
             }
@@ -373,6 +375,7 @@ public class SectionController extends BaseController<Section>{
      * @throws Exception 
      * @Date 2018年7月27日
      */
+    @RequiresPermissions("section:list")
     @RequestMapping(value = "sections/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody SectionVo vo) throws Exception {
         /*if (vo.getStoreId() == null && vo.getAreaId() == null) {
@@ -418,7 +421,7 @@ public class SectionController extends BaseController<Section>{
         double latitude = DataTypeUtil.toDouble(map.get("latitude"));
         double height = DataTypeUtil.toDouble(map.get("height"));
 
-        SectionDto resultDto = sectionService.getSectionDtoByGPS(longitude, latitude, height);
+        SectionDto resultDto = sectionService.getSectionByGPS(longitude, latitude, height);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, resultDto);
     }
 
@@ -433,7 +436,7 @@ public class SectionController extends BaseController<Section>{
      * @Date 2018年8月25日
      */
     @RequestMapping(value = "sections/gps", method = RequestMethod.POST)
-    public JSONObject getSectionByPoint(@RequestBody Map<String, Object> map) {
+    public JSONObject getSectionByPoint(@RequestBody JSONObject map) {
 
         //获取传过来的经纬度高度
         double longitude = DataTypeUtil.toDouble(map.get("longitude"));
@@ -480,44 +483,38 @@ public class SectionController extends BaseController<Section>{
             double cv = measObjService.getMeasObjCVByIdAndDataType(measObj.getId(), measObj.getDatatypeId());
             JSONObject j = new JSONObject();
             j.put("id", measObj.getId());
+            j.put("name", measObj.getName());
+            j.put("objectType", measObj.getObjtypeId());
             j.put("dataType", measObj.getDatatypeId());
             j.put("dataTypeName", measObj.getDatatypeName());
             j.put("cv", cv);
+            ObjectType type = ObjectType.getEnum(measObj.getObjtypeId());
+            j.put("unit", type == null ? "" : type.getUnit());
             cvList.add(j);
         }
         result.put("moInfo", cvList);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, result);
     }
 
-
-    private List<Double> getListFromString(String str) {
-        List<String> strList = Arrays.asList(str.split(","));
-        List<Double> dList = new ArrayList<>();
-        for (String s : strList) {
-            Double d = DataTypeUtil.toDouble(s);
-            dList.add(d);
-        }
-        return dList;
-    }
-
+    /**
+	 * 区域、section自动生成起点和终点坐标
+	 * @param tunnelId 管廊id
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年4月1日
+	 */
+    @RequiresPermissions("section:update")
+	@RequestMapping(value = "tunnels/{tunnelId}/auto-cal-area-section", method=RequestMethod.GET)
+	public JSONObject autoStartPointAndEndPoint(@PathVariable("tunnelId") Integer tunnelId) {
+		// 自动生成区域的起点和终点坐标
+		String result = areaService.calAllAreasStartPointAndEndPointByTunnel(tunnelId);
+		if(result != null) throw new RuntimeException(result);
+		
+		result = sectionService.calSectionsStartPointAndEndPointByTunnel(tunnelId);
+		if(result != null) throw new RuntimeException(result);
+		
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+	}
 	
-	/*double dis;
-    double a, b, c;
-
-    a = GPSUtil.GetDistance(startLon, startLat, endLon, endLat);//section length
-    LogUtil.info(" section length : " + a);
-    b = GPSUtil.GetDistance(startLon, startLat, longitude, latitude);//length from start to point
-    c = GPSUtil.GetDistance(endLon, endLat, longitude, latitude);//length from end to point
-	
-    if (c <= 0.000001 || b <= 0.000001) { dis = 0; }
-    if (a <= 0.000001) { dis = b; }
-    if (c * c >= a * a + b * b) { dis = b; }
-    if (b * b >= a * a + c * c) {  dis = c; }
-
-    double p = (a + b + c) / 2;// 半周长
-    double s = Math.sqrt(p * (p - a) * (p - b) * (p - c));// 海伦公式求面积
-    dis = 2 * s / a;// 返回点到线的距离（利用三角形面积公式求高）
-    LogUtil.info(" get distance [" + dis + "] with sectionId [" + sectionDto.getId() + "]" );*/
-
 
 }

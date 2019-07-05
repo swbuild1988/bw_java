@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class ScheduleJob implements Serializable{
     /**
-	 * 
-	 */
+            *
+            */
 	private static final long serialVersionUID = 1L;
 
 	private Integer jobId;
@@ -19,6 +19,8 @@ public class ScheduleJob implements Serializable{
     private String jobClass;
     
     private String jobMethod;
+
+    private Integer jobType;
 
     private String cronExpression;
 
@@ -88,7 +90,15 @@ public class ScheduleJob implements Serializable{
         this.description = description == null ? null : description.trim();
     }
 
-	@Override
+    public Integer getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(Integer jobType) {
+        this.jobType = jobType;
+    }
+
+    @Override
 	public String toString() {
 		return "ScheduleJob [jobId=" + jobId + ", jobName=" + jobName + ", jobGroup=" + jobGroup + ", jobStatus="
 				+ jobStatus + ", jobClass=" + jobClass + ", jobMethod=" + jobMethod + ", cronExpression="

@@ -2,7 +2,7 @@
     <div style="padding: 10px;">
         <div class="queryCondition">
             <Row>
-                <Col span="6">             
+                <Col class="conditionTitle" span="6">             
                     监测仓:
                     <Select v-model="conditions.tunnelId" style="width:60%">
                         <Option value=null key="0">所有</Option>

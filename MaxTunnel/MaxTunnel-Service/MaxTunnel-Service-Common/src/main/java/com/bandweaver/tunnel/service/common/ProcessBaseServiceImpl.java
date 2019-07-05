@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.service.common;
 
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto;
 import com.bandweaver.tunnel.common.biz.itf.ProcessBaseService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqHistoryService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionPlanService;
@@ -19,6 +20,7 @@ import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +71,13 @@ public class ProcessBaseServiceImpl implements ProcessBaseService {
     public Object getProcessByTypeAndProcessInstance(ProcessTypeEnum typeEnum, String processInstanceId) {
         switch (typeEnum) {
             case INPECTION_PLAN:
-                return inspectionPlanService.getInspectionDtoByProcessInstanceId(processInstanceId);
-
+            	InspectionPlanDto inspectionPlanDto = inspectionPlanService.getInspectionDtoByProcessInstanceId(processInstanceId);
+                List<InspectionTaskDto> list = inspectionPlanDto.getTasks();
+                if(list != null && list.size() > 0) {
+                	InspectionTaskDto dto = inspectionTaskService.getTaskDto(list.get(0).getId());
+                	inspectionPlanDto.setSteps(dto.getSteps());
+                };
+                return inspectionPlanDto;
             case INPECTION_TASK:
                 return inspectionTaskService.getTaskByProcessInstance(processInstanceId);
 

@@ -1,7 +1,8 @@
 <template>
-    <div :style="backStyle">
+    <div class="formBG">
+        <div class="formTitle">批量添加仪表工具</div>
+        <div class="formHeight">
         <Form ref="tools" :model="tools" :rules="validateRules" :label-width="140" @submit.native.prevent>
-            <h1 class="formTitle">批量添加仪表工具</h1>
             <FormItem label="仪表工具名称：" prop="name">
                 <Input v-model='tools.name'></Input>
             </FormItem>
@@ -21,7 +22,7 @@
                 </Select>
             </FormItem>
             <FormItem label="添加数量：">
-                <InputNumber v-model="tools.count" :min="1" style="width: 520px;"></InputNumber>
+                <InputNumber v-model="tools.count" :min="1" style="width: 100%;"></InputNumber>
             </FormItem>
             <FormItem label="供应商：" prop="venderId">
                 <Select v-model="tools.venderId">
@@ -31,11 +32,12 @@
             <FormItem label="入库时间：" prop="inTime">
                 <DatePicker type="datetime" v-model="tools.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
             </FormItem> 
-            <div style="text-align: center">
+            <div style="text-align: center;margin-left: 10vmin;">
                 <Button type="default" @click="goBack()" style="margin-right: 10px;" >返回</Button>
                 <Button type="primary" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
             </div>
         </Form>  
+        </div>
     </div>
 </template>
 <script>
@@ -63,15 +65,6 @@ export default {
                 // { val: '损坏', key: 0}
             ],
             toolsModel:[],
-            backStyle:{
-                backgroundImage: "url(" + require("../../../../assets/UM/backImg.jpg") + ")",   
-                position: 'relative',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                backgroundAttachment: 'fixed',
-                backgroundSize: 'cover',
-                minHeight: '100%'
-            },
             validateRules: {
                 name: [
                     { required: true, message: '请输入仪表工具名称', trigger: 'blur'  }
@@ -166,7 +159,6 @@ export default {
 .ivu-form.ivu-form-label-right{
     width: 700px;
     margin: 10px auto;
-    background: #fff;
     padding: 10px 20px;
     margin-top: 30px;
     border-radius: 4px;
@@ -175,6 +167,31 @@ export default {
     position: absolute;
     bottom: 2vh;
     right: 3vw;
+}
+.formTitle{
+    margin-top: -3.5vh;
+    font-size: 2.2vmin;
+}
+.formBG{
+    background: url("../../../../assets/UM/itemPageBg.png") no-repeat;
+    background-size: 100% 100%;
+    padding-top: 3vmin;
+    padding-bottom: 3vmin;
+    height: 83vh;
+    overflow-y: auto;
+}
+
+.formBG >>> .ivu-form-item-label,.formTitle{
+    color: #fff;
+}
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+    color: #00fff6;
+    content: '★';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -193,7 +210,33 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
+    }
+    /*input number*/
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-input-wrap{
+        height: 3.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-wrap{
+        width: 2.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler{
+        height: 1.6vmin;
+    }
+    .ivu-input-number .ivu-input-number-handler-up-inner{
+        top: 1vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-down-inner, .ivu-input-number >>> .ivu-input-number-handler-up-inner{
+        width: 1.2vmin;
+        height: 1.2vmin;
+        line-height: 1.2vmin;
+        font-size: 1.4vmin;
+        right: 0.4vmin;
+        transition: all .2s linear;
     }
 }
 </style>

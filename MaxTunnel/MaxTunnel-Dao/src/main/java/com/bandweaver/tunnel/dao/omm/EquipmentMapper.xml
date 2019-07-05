@@ -11,22 +11,31 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="asset_no" property="assetNo"/>
-        <result column="type" property="typeId"/>
+        <result column="type" property="type"/>
         <result column="type_name" property="typeName"/>
         <result column="crt_time" property="crtTime"/>
         <result column="run_time" property="runTime"/>
         <result column="alarm_no" property="alarmNo"/>
         <result column="status" property="status"/>
-        <result column="tunnel_id" property="tunnelId"/>
+        <result column="section_id" property="sectionId"/>
         <result column="vender_id" property="venderId"/>
         <result column="model_id" property="modelId"/>
         <result column="obj_id" property="objId"/>
         <result column="img_url" property="imgUrl"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="qa_term" property="qaTerm"/>
+        <result column="rated_voltage" property="ratedVoltage"/>
+        <result column="range" property="range"/>
+        <result column="factory" property="factory"/>
+        <result column="brand" property="brand"/>
         <association property="obj" javaType="MeasObj" column="obj_id"
                      select="com.bandweaver.tunnel.dao.mam.MeasObjMapper.selectByPrimaryKey"/>
         <association property="tunnel" javaType="com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto"
                      column="tunnel_id"
                      select="com.bandweaver.tunnel.dao.common.TunnelMapper.getTunnelById"/>
+        <association property="section" javaType="com.bandweaver.tunnel.common.biz.dto.SectionDto"
+                     column="section_id"
+                     select="com.bandweaver.tunnel.dao.common.SectionMapper.getDtoById"/>
         <association property="model" javaType="EquipmentModel" column="model_id"
                      select="com.bandweaver.tunnel.dao.omm.EquipmentModelMapper.selectByPrimaryKey"/>
         <association property="vender" javaType="EquipmentVender" column="vender_id"
@@ -68,8 +77,8 @@
             <if test="objId != null">
                 obj_id,
             </if>
-            <if test="tunnelId != null">
-                tunnel_id,
+            <if test="sectionId != null">
+                section_id,
             </if>
             <if test="venderId != null">
                 vender_id,
@@ -79,6 +88,24 @@
             </if>
             <if test="imgUrl != null and imgUrl.trim() != ''">
                 img_url,
+            </if>
+            <if test="tunnelId != null">
+                tunnel_id,
+            </if>
+            <if test="qaTerm != null">
+                qa_term,
+            </if>
+            <if test="ratedVoltage != null">
+                rated_voltage,
+            </if>
+            <if test="range != null">
+                range,
+            </if>
+            <if test="factory != null">
+                factory,
+            </if>
+            <if test="brand != null">
+                brand,
             </if>
          </trim>
          <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -106,8 +133,8 @@
             <if test="objId != null">
                 #{objId},
             </if>
-            <if test="tunnelId != null">
-                #{tunnelId},
+            <if test="sectionId != null">
+                #{sectionId},
             </if>
             <if test="venderId != null">
                 #{venderId},
@@ -118,6 +145,24 @@
             <if test="imgUrl != null and imgUrl.trim() != ''">
                 #{imgUrl},
             </if>
+            <if test="tunnelId != null">
+                #{tunnelId},
+            </if>
+            <if test="qaTerm != null">
+                #{qaTerm},
+            </if>
+            <if test="ratedVoltage != null">
+                #{ratedVoltage},
+            </if>
+            <if test="range != null">
+                #{range},
+            </if>
+            <if test="factory != null">
+                #{factory},
+            </if>
+            <if test="brand != null">
+                #{brand},
+            </if>
          </trim>
         
     </insert>
@@ -126,7 +171,6 @@
         SELECT *
         FROM t_omm_equipment
     </select>
-
 
     <select id="getListByType" resultMap="equipmentMap">
         SELECT *
@@ -145,11 +189,17 @@
         <result column="run_time" property="runTime"/>
         <result column="alarm_no" property="alarmNo"/>
         <result column="status" property="status"/>
-        <result column="tunnel_id" property="tunnelId"/>
+        <result column="section_id" property="sectionId"/>
         <result column="vender_id" property="venderId"/>
         <result column="model_id" property="modelId"/>
         <result column="obj_id" property="objId"/>
         <result column="img_url" property="imgUrl"/>
+        <result column="tunnel_id" property="tunnelId"/>
+        <result column="qa_term" property="qaTerm"/>
+        <result column="rated_voltage" property="ratedVoltage"/>
+        <result column="range" property="range"/>
+        <result column="factory" property="factory"/>
+        <result column="brand" property="brand"/>
     </resultMap>
 
     <select id="getEquipmentListByCondition" resultMap="DtoResultMap">
@@ -159,8 +209,8 @@
             <if test="name != null and name.trim() != ''">
                 instr(e.name,#{name})>0
             </if>
-            <if test="tunnelId != null">
-                and e.tunnel_id = #{tunnelId}
+            <if test="sectionId != null">
+                and e.section_id = #{sectionId}
             </if>
             <if test="type != null">
                 and e.type = #{type}
@@ -171,11 +221,32 @@
             <if test="assetNo != null">
                 and e.asset_no = #{assetNo}
             </if>
+            <if test="objId != null">
+                and e.obj_id = #{objId}
+            </if>
             <if test="modelId != null">
                 and e.model_id = #{modelId}
             </if>
             <if test="venderId != null">
                 and e.vender_id = #{venderId}
+            </if>
+            <if test="tunnelId != null">
+                and e.tunnel_id = #{tunnelId}
+            </if>
+            <if test="qaTerm != null">
+                and e.qa_term = #{qaTerm}
+            </if>
+            <if test="ratedVoltage != null">
+                and e.rated_voltage = #{ratedVoltage}
+            </if>
+            <if test="range != null">
+                and e.range = #{range}
+            </if>
+            <if test="factory != null">
+                and e.factory = #{factory}
+            </if>
+            <if test="brand != null">
+                and e.brand = #{brand}
             </if>
             <if test="startTime != null">
                 and e.run_time <![CDATA[>=]]>
@@ -213,8 +284,8 @@
             <if test="status != null">
                 t.status = #{status},
             </if>
-            <if test="tunnelId != null">
-                t.tunnel_id = #{tunnelId},
+            <if test="sectionId != null">
+                t.section_id = #{sectionId},
             </if>
             <if test="venderId != null">
                 t.vender_id = #{venderId},
@@ -226,7 +297,25 @@
                 t.model_id = #{modelId},
             </if>
             <if test="imgUrl != null">
-                t.img_url = #{imgUrl}
+                t.img_url = #{imgUrl},
+            </if>
+            <if test="tunnelId != null">
+                t.tunnel_id = #{tunnelId},
+            </if>
+            <if test="qaTerm != null">
+                t.qa_term = #{qaTerm},
+            </if>
+            <if test="ratedVoltage != null">
+                t.rated_voltage = #{ratedVoltage},
+            </if>
+            <if test="range != null">
+                t.range = #{range},
+            </if>
+            <if test="factory != null">
+                t.factory = #{factory},
+            </if>
+            <if test="brand != null">
+                t.brand = #{brand},
             </if>
         </set>
         WHERE t.id = #{id}
@@ -240,61 +329,6 @@
         WHERE e.id = #{id}
     </select>
 
-    <insert id="addEquipmentBatch" useGeneratedKeys="false">
-        insert into t_omm_equipment
-        (id,name,type,crt_time,run_time,status,tunnel_id,vender_id,model_id,alarm_no)
-        select OMM_EQUIPMENT_SEQUENCE.nextval,a.* from (
-        <foreach collection="list" item="item" index="index" close=")"
-                 open="(" separator="union">
-            select
-            #{item.name},
-            #{item.type},
-            #{item.crtTime},
-            #{item.runTime},
-            #{item.status},
-            #{item.tunnelId},
-            #{item.venderId},
-            #{item.modelId},
-            #{item.alarmNo}
-            from dual
-        </foreach>
-        )a
-    </insert>
-
-    <update id="updateEquipmentByModelId">
-        update t_omm_equipment t
-        <set>
-            <if test="name != null and name.trim() != ''">
-                t.name = #{name},
-            </if>
-            <if test="type != null">
-                t.type = #{type},
-            </if>
-            <if test="crtTime != null">
-                t.crt_time = #{crtTime},
-            </if>
-            <if test="serviceLife != null">
-                t.service_life = #{serviceLife},
-            </if>
-            <if test="status != null">
-                t.status = #{status},
-            </if>
-            <if test="tunnelId != null">
-                t.tunnel_id = #{tunnelId},
-            </if>
-            <if test="venderId != null">
-                t.vender_id = #{venderId},
-            </if>
-            <if test="objId != null">
-                t.obj_id = #{objId},
-            </if>
-            <if test="imgUrl != null">
-                t.img_url = #{imgUrl}
-            </if>
-        </set>
-        where t.model_id = #{modelId}
-    </update>
-    
     <update id="updateEquipmentOfObj" >
     	UPDATE t_omm_equipment
         SET
@@ -330,5 +364,10 @@
         left join t_omm_equipment_type a on a.id = e.type
         WHERE
             e.obj_id = #{objId}
+    </select>
+    
+    <select id="getCountBySectionId" resultType="Integer">
+        select count(1) from t_omm_equipment
+        where section_id = #{sectionId}
     </select>
 </mapper>

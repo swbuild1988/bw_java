@@ -1,10 +1,17 @@
 <template>
     <div class="videosContent">
-        <button type="button" class="commonButton left video-arrow-hover" @click="arrowEvent(-1)">
+        <button type="button" class="commonButton left video-arrow-hover" @click="arrowEvent(-videoNumber)">
             <Icon type="ios-arrow-back"></Icon>
         </button>
-        <video-component :video="currVideoObj" :id="'currLoopSceneVideoId'"></video-component>
-        <button type="button" class="commonButton right video-arrow-hover" @click="arrowEvent(1)">
+        <Row style="height: 100%">
+            <Col :span="videoNumber === 1 ? '24' : ( videoNumber === 4 ? '12' : '8')" v-for="(video,index) in curVideoList" 
+            :key="video.id" :style="{height: wrapperHeight}">
+                <div :class="['videoWrapper',{'oneVideo' : videoNumber === 1}]">
+                    <video-component :index="preIndex+index" :video="video" :id="'curLoopSceneVideo'+video.id"></video-component>
+                </div>
+            </Col>
+        </Row>
+        <button type="button" class="commonButton right video-arrow-hover" @click="arrowEvent(+videoNumber)">
             <Icon type="ios-arrow-forward"></Icon>
         </button>
     </div>
@@ -27,6 +34,14 @@ export default {
             type:Number,
             default:10, //默认 s
         },
+        videoNumber: {
+            type: Number,
+            default: 1
+        },
+        preIndex: {
+            type: String,
+            default: ''
+        }
     },
     data(){
         return {
@@ -34,8 +49,9 @@ export default {
                 id: null,
                 url: ''
             },
+            curVideoList: [],
             loopProp:{
-                loopIndex : 0,
+                loopFirstIndex : 0,
                 loopTimer : null
             }
         }
@@ -49,14 +65,26 @@ export default {
                 this.changeVideo();
             },
             deep:true,
+        },
+        'videoNumber': {
+            handler(newValue,oldValue){
+                this.changeVideo();
+            }
         }
     },
-    mounted(){},
+    computed: {
+        wrapperHeight(){
+            return this.videoNumber === 1 ? '100%' : (this.videoNumber === 4 ? '50%' : '33%')
+        }
+    },
+    mounted(){
+        this.changeVideo();
+    },
     methods:{
         changeVideo(){
             let { loopProp } = this;
 
-            this.gainVideo( loopProp.loopIndex );//获取视屏
+            this.gainVideo( loopProp.loopFirstIndex );//获取视屏
             this.loopVideo();//轮询视屏
             
         },
@@ -64,7 +92,9 @@ export default {
             clearInterval( this.loopProp.loopTimer );//清除定时器
 
             if( this.isloop ) {
-                this.loopProp.loopTimer = setInterval( ()=> this.gainVideo(1),this.loopSpeed * 1000 )
+                this.loopProp.loopTimer = setInterval( ()=> 
+                this.gainVideo(this.videoNumber),
+                this.loopSpeed * 1000 )
             }
             
         },
@@ -73,32 +103,45 @@ export default {
             this.gainVideo( offset );//获取视屏
         },
         gainVideo(offset){
-            let newLoopIndex = this.loopProp.loopIndex + offset;
+            let newLoopFirstIndex = this.loopProp.loopFirstIndex + offset;
 
-            this.loopProp.loopIndex = newLoopIndex < 0 
-                ? this.videolist.length - 1 
-                : ( newLoopIndex > this.videolist.length - 1 ? 0 : newLoopIndex )
+            this.loopProp.loopFirstIndex = newLoopFirstIndex < 0 
+                ? this.videolist.length - this.videoNumber 
+                : (newLoopFirstIndex > this.videolist.length - 1
+                ? 0 : newLoopFirstIndex)
+                
+            let newLoopLastIndex = this.loopProp.loopFirstIndex + this.videoNumber > this.videolist.length
+            ? this.videolist.length : this.loopProp.loopFirstIndex + this.videoNumber  
 
-            this.currVideoObj = this.videolist[ this.loopProp.loopIndex ];
+            // this.currVideoObj = this.videolist[ this.loopProp.loopIndex ];
+            this.curVideoList = this.videolist.slice(this.loopProp.loopFirstIndex,newLoopLastIndex)
         }
+    },
+    beforeDestroy(){
+        clearInterval(this.loopProp.loopTimer)
     }
 }
 </script>
 <style scoped>
 .videosContent {
-    widows: 100%;
+    width: 100%;
     height: 100%;
+    overflow: hidden;
+    position: relative;
 }
 .videosContent .commonButton {
     position: absolute;
     z-index: 1001;
     border-radius: 50%;
     top: 50%;
+    -webkit-transition: .2s;
     transition: .2s;
-    color: #fff;
+    color: #252527;
     text-align: center;
     font-family: inherit;
-    line-height: inherit;
+    height: 4vmin;
+    width: 4vmin;
+    margin-top: -2vmin;
 }
 .videosContent .left {
     left: 2%;
@@ -116,22 +159,32 @@ export default {
     background-color: rgba(255, 255, 255, .5);
     opacity: 1;
 }
+.videoWrapper {
+    width: 94%;
+    height: 96%;
+    margin: 0.4vmin auto;
+}
+.oneVideo {
+    height: 100%;
+}
+
+
     /* 小屏幕（显示器，小于等于 1920px） */
-@media (max-width: 1920px) {
+/* @media (max-width: 1920px) {
     .videosContent .commonButton {
         width: 6%;
         height: 8%;
         font-size: 1rem;
     }
-}
+} */
     /* 大屏幕（显示器，大于等于 1920px） */
-@media (min-width: 1921px) {
+/* @media (min-width: 1921px) {
     .videosContent .commonButton {
         width: 10%;
         height: 11%;
         font-size: 3rem;
     }
-}
+} */
 </style>
 
 

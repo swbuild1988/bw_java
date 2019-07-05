@@ -15,7 +15,7 @@
                 Title:'未清除告警总数',
                 NonCleanedCount:0,
                 unit:'条',
-                timer:null,
+                refreshFlag: true
             }
         },
         mounted(){
@@ -26,13 +26,23 @@
                 this.getAllNonCleanedAlarm();
             },
             getAllNonCleanedAlarm(){
-                this.timer = setInterval(()=>{  //每秒轮询未清除告警
-                    DataAnalysisService.NonClearAlarms().then( result =>  this.NonCleanedCount = result.length )
-                },1000)
+                // this.timer = setInterval(()=>{  //每秒轮询未清除告警
+                //     DataAnalysisService.NonClearAlarms().then( result =>  this.NonCleanedCount = result.length )
+                // },1000)
+                DataAnalysisService.NonClearAlarms()
+                .then( result =>  this.NonCleanedCount = result.length )
+                .finally(()=>{
+                    if(this.refreshFlag){
+                        let _this = this
+                        setTimeout(()=>{
+                            _this.getAllNonCleanedAlarm()
+                        },1000)
+                    }
+                })
             }
         },
         beforeDestroy(){
-            clearInterval( this.timer );
+            this.refreshFlag = false
             console.log('nonCleanedCount​',document.getElementsByClassName('nonCleanedCount​'))
         }
     }
@@ -71,10 +81,10 @@
 
         .NonCleanedTitle{
             font-size: 1rem;
-            margin: 1rem 0 0.3rem;
+            margin: .8rem 0 0 0rem;
         }
         .NonCleanedCount {
-            font-size: 1.6rem;
+            font-size: 1.1rem;
         }
         .NonCleanedUnit {
             font-size: .8rem;
@@ -85,11 +95,11 @@
     @media (min-width: 1921px) {
             
         .NonCleanedTitle{
-            font-size: 3rem;
-            margin: 5rem 0 0.3rem;
+            font-size: 2rem;
+            margin: 2rem 0 0.3rem;
         }
         .NonCleanedCount {
-            font-size: 2.6rem;
+            font-size: 2rem;
         }
         .NonCleanedUnit {
             font-size: 1.8rem;

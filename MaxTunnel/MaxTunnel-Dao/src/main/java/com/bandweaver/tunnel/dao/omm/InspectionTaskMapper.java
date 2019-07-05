@@ -15,6 +15,8 @@ public interface InspectionTaskMapper {
     int addWithBulk(List<InspectionTask> inspectionTasks);
 
     int update(InspectionTask inspectionTask);
+    
+    int deleteBatch(List<Integer> list);
 
     InspectionTask getTask(@Param("taskId") int taskId);
 
@@ -26,11 +28,9 @@ public interface InspectionTaskMapper {
 
     List<InspectionTask> getTasksByInspectionPlan2(@Param("planId") String planId);
     
-    int getFinishedInspectionTaskSumByMonth(InspectionVo inspectionVo);
+    int getCountByVo(InspectionVo inspectionVo);
     
-    int getInspectionTaskSumByYear(InspectionVo inspectionVo);
-    
-    int getFinishedInspectionTaskSumByYear(InspectionVo inspectionVo);
+    int getCountByCondition(InspectionVo inspectionVo);
     
     List<InspectionTaskDto> getInspectionTasksByVo(InspectionVo inspectionVo);
     

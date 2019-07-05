@@ -42,19 +42,25 @@ public class InstrumentRecordServiceImpl implements InstrumentRecordService {
 	}
 
 	@Override
+	@Transactional
 	public int updateReturnTime(Integer useStatus,InstrumentRecord record, List<Integer> list) {
+		// 借出的归还记录
 		List<Integer> ls = new ArrayList<>();
 		for(Integer i : list) {
-			InstrumentRecordDto dto = instrumentRecordMapper.getInstrumentRecordDtoById(i);
-			ls.add(dto.getInstrumentId());
+			InstrumentRecordVo vo = new InstrumentRecordVo();
+			vo.setInstrumentId(i);
+			vo.setStatus(false);
+			List<InstrumentRecordDto> listDtos = getInstrumentRecordDtoByCondition(vo);
+			if(listDtos == null || listDtos.size() < 1) continue;
+			ls.add(listDtos.get(0).getId());
 		}
-		//仪表工具入库
+		// 仪表工具入库
 		Instrument in = new Instrument();
 		in.setStatus(true);
 		in.setUseStatus(useStatus);
-		instrumentMapper.updateStatusAndUseStatus(in, ls);
+		instrumentMapper.updateStatusAndUseStatus(in, list);
 		if(record.getRemark() == null) record.setRemark("");
-		return instrumentRecordMapper.updateReturnTime(record, list);
+		return instrumentRecordMapper.updateReturnTime(record, ls);
 	}
 
 	@Override

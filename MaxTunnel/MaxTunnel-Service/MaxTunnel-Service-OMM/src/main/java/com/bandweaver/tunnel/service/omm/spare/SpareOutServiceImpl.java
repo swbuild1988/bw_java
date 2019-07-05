@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.service.omm.spare;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 import com.bandweaver.tunnel.common.biz.pojo.omm.SpareOut;
 import com.bandweaver.tunnel.common.biz.vo.omm.SpareOutVo;
 import com.bandweaver.tunnel.dao.omm.EquipmentMapper;
-import com.bandweaver.tunnel.dao.omm.InstrumentMapper;
 import com.bandweaver.tunnel.dao.omm.SpareMapper;
 import com.bandweaver.tunnel.dao.omm.SpareOutMapper;
 
@@ -32,8 +30,6 @@ public class SpareOutServiceImpl implements SpareOutService {
 	private SpareOutMapper spareOutMapper;
 	@Autowired
 	private SpareMapper spareMapper;
-	@Autowired
-	private InstrumentMapper instrumentMapper;
 	@Autowired
 	private EquipmentMapper equipmentMapper;
 
@@ -54,11 +50,7 @@ public class SpareOutServiceImpl implements SpareOutService {
 
 	@Override
 	@Transactional
-	public int addBatch(List<SpareOut> list, Integer tunnelId) {
-		// 备品去向为仪表工具集合
-		List<Instrument> instrumentList = new ArrayList<>();
-		// 备品去向为管廊设备集合
-		List<Equipment> equipmentList = new ArrayList<>();
+	public int addBatch(List<SpareOut> list, Equipment e) {
 		for(SpareOut out : list) {
 			//修改备品状态
 			Spare spare = new Spare();
@@ -70,17 +62,20 @@ public class SpareOutServiceImpl implements SpareOutService {
 			SpareDto dto = spareMapper.getSpareDtoById(out.getId());
 			
 			if(SpareWhitherEnum.PIPE.getValue() == out.getWhither()) {
-				Equipment eq = new Equipment();
-				eq.setCrtTime(out.getOutTime());
-				eq.setRunTime(out.getOutTime());
-				eq.setModelId(dto.getModelId());
-				eq.setType(dto.getTypeId());
-				eq.setName(dto.getName());
-				eq.setStatus(1);
-				eq.setTunnelId(tunnelId);
-				eq.setVenderId(dto.getVenderId());
-				eq.setAlarmNo(0);
-				equipmentList.add(eq);
+				e.setCrtTime(out.getOutTime());
+				e.setAlarmNo(0);
+				e.setRunTime(out.getOutTime());
+				e.setModelId(dto.getModelId());
+				e.setType(dto.getTypeId());
+				e.setName(dto.getName());
+				e.setStatus(1);
+				e.setVenderId(dto.getVenderId());
+				e.setQaTerm(dto.getQaTerm());
+				e.setRatedVoltage(dto.getRatedVoltage());
+				e.setRange(dto.getRange());
+				e.setBrand(dto.getBrand());
+				e.setFactory(dto.getFactory());
+				equipmentMapper.addEquipment(e);
 			}else if(SpareWhitherEnum.INSTRUMENT.getValue() == out.getWhither()) {
 				Instrument in = new Instrument();
 				in.setSpareId(dto.getId());
@@ -91,16 +86,12 @@ public class SpareOutServiceImpl implements SpareOutService {
 				in.setUseStatus(EquipmentStatusEnum.NORMAL.getValue());
 				in.setStatus(true);
 				in.setInTime(out.getOutTime());
-				instrumentList.add(in);
+				//instrumentMapper.add
 			}
 		}
 		//备品出库
 		int i = spareOutMapper.addBatch(list);
 		
-		// 批量添加仪表工具
-		if(instrumentList.size() > 0) instrumentMapper.addBatchBySpare(instrumentList);
-		// 批量添加管廊设备
-		if(equipmentList.size() > 0) equipmentMapper.addEquipmentBatch(equipmentList);
 		return i;
 	}
 
@@ -111,7 +102,7 @@ public class SpareOutServiceImpl implements SpareOutService {
 
 	@Override
 	public ListPageUtil<SpareOutDto> dataGrid(SpareOutVo vo) {
-		List<SpareOutDto> dto = spareOutMapper.getSpareOutDtoByCondition(vo);
+		List<SpareOutDto> dto = getSpareOutDtoByCondition(vo);
 		ListPageUtil<SpareOutDto> page = new ListPageUtil<>(dto, vo.getPageNum(), vo.getPageSize());
 		return page;
 	}

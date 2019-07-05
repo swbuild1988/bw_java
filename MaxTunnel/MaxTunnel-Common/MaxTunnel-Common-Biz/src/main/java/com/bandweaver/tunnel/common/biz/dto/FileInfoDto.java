@@ -4,99 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.constant.DocTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.DocTypeSonEnum;
 import com.bandweaver.tunnel.common.biz.constant.FileTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-/**文件信息
+/**
+ * 文件信息
+ *
  * @author shaosen
  * @date 2018年8月27日
  */
-public class FileInfoDto implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+public class FileInfoDto implements Serializable {
 
-	private Integer id;
+    private static final long serialVersionUID = 1L;
+
+    private Integer id;
 
     private String name;
 
     @JsonIgnore
     private Integer fileType;
     private String fileTypeName;
-    
+
     @JsonIgnore
     private Integer docType;
     private String docTypeName;
 
     @JsonIgnore
-    private String path;//隐藏路径，防止黑客攻击
+    private Integer docTypeSon;
+    private String docTypeSonName;
+
+    @JsonIgnore
+    private String path;
 
     private Date crtTime;
 
-    public Integer getId() {
-        return id;
+
+    public String getFileTypeName() {
+        FileTypeEnum e = FileTypeEnum.getEnum(this.fileType);
+        return e == null ? "" : e.getName();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFileTypeName(String fileTypeName) {
+        this.fileTypeName = fileTypeName;
     }
 
-    public String getName() {
-        return name;
+    public String getDocTypeName() {
+        DocTypeEnum e = DocTypeEnum.getEnum(this.docType);
+        return e == null ? "" : e.getName();
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setDocTypeName(String docTypeName) {
+        this.docTypeName = docTypeName;
     }
 
-    public Integer getFileType() {
-        return fileType;
+    public String getDocTypeSonName() {
+        DocTypeSonEnum e = DocTypeSonEnum.getEnum(this.docTypeSon);
+        return e == null ? "" : e.getName();
     }
 
-    public void setFileType(Integer fileType) {
-        this.fileType = fileType;
+    public void setDocTypeSonName(String docTypeSonName) {
+        this.docTypeSonName = docTypeSonName;
     }
-
-    public Integer getDocType() {
-        return docType;
-    }
-
-    public void setDocType(Integer docType) {
-        this.docType = docType;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path == null ? null : path.trim();
-    }
-
-    public Date getCrtTime() {
-        return crtTime;
-    }
-
-    public void setCrtTime(Date crtTime) {
-        this.crtTime = crtTime;
-    }
-
-	public String getFileTypeName() {
-		return FileTypeEnum.getEnum(this.fileType).getName();
-	}
-
-	public void setFileTypeName(String fileTypeName) {
-		this.fileTypeName = fileTypeName;
-	}
-
-	public String getDocTypeName() {
-		return DocTypeEnum.getEnum(this.docType).getName();
-	}
-
-	public void setDocTypeName(String docTypeName) {
-		this.docTypeName = docTypeName;
-	}
-    
-    
 }

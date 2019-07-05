@@ -3,7 +3,7 @@ package com.bandweaver.tunnel.common.biz.dto.omm;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Spare;
 
 public class SpareDto extends Spare{
-	
+	private static final long serialVersionUID = 8103815110685756611L;
     private String typeName;
     private String modelName;
     private String venderName;

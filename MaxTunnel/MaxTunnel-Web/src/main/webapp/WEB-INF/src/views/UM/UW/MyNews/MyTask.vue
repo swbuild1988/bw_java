@@ -25,6 +25,7 @@
         <!-- <Table stripe border :columns="columns1" :data="myTasks"></Table> -->
         <div class="list">
             <Row>
+                <div class="nullData" v-show="isNullData">暂无数据</div>
                 <Col span="4" v-for="(item,index) in myTasks" :key='index'>
                     <div class="unitBox" @click="goToMoudle(item)">
                         <div class="title">
@@ -60,6 +61,7 @@ export default {
                 pageSize: 30,
                 pageTotal:null,
             },
+            isNullData: false
         }
     },
     computed:{
@@ -90,8 +92,13 @@ export default {
             axios.post('users/activiti/task/datagrid',(this.params)).then(response=>{
                 let { code, data } = response.data;
                 if (code == 200) {
+                    if(data.pagedList.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     this.myTasks = data.pagedList
-                    this.page.pageTotal = data.length
+                    this.page.pageTotal = data.total
                     for(let index in this.myTasks){
                         this.myTasks[index].crtTime = new Date(this.myTasks[index].crtTime).format('yyyy-MM-dd')
                     }
@@ -106,7 +113,7 @@ export default {
             switch (task.processType){
                 // 巡检计划审批
                 case 1001:
-                    pathParams.name = 'examinPlans'
+                    pathParams.name = '巡检计划审批'
                     pathParams.params = {
                         processInstanceId: task.processInstanceId,
                         status: task.status,
@@ -116,7 +123,7 @@ export default {
 
                 // 巡检任务提交
                 case 1002:
-                    pathParams.name = 'submitPatralTask'
+                    pathParams.name = '提交巡检任务结果'
                     pathParams.params = {
                         id: task.id
                     }
@@ -126,14 +133,15 @@ export default {
                 case 1003:
                     // 指派任务
                     if (task.taskKey == 'allocation') {
-                        pathParams.name = 'newsDistributeDefect'
+                        // pathParams.name = '分配巡检任务消息'
+                        pathParams.name = '分配巡检任务任务'
                         pathParams.params = {
                             id: task.id
                         }
                     }
                     // 结束任务，提交工单 完结工单
                     if (task.taskKey == 'complete') {
-                        pathParams.name = 'UWDetailsOverhaul'
+                        pathParams.name = '工单详情'
                         pathParams.params = {
                             id: task.id,
                             type: 4,
@@ -145,7 +153,7 @@ export default {
                 case 2001:
                     // 入廊审批
                     if(task.taskKey=="approve"){                        
-                        pathParams.name = 'UMExamineApprove'
+                        pathParams.name = '入廊审批'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,
@@ -154,7 +162,7 @@ export default {
                     }
                     // 离开管廊
                     if(task.taskKey=="leave"){         
-                        pathParams.name = 'newsExamineApprove'
+                        pathParams.name = '查看入廊申请进度'
                         pathParams.params = {
                             processInstanceId: task.processInstanceId,
                             processType: task.processType,
@@ -215,6 +223,26 @@ export default {
     .workDetails{
         font-size: 18px;
         margin-top: 5px;
+    }
+    .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+        color: #fff;
+    }
+    .list{
+        overflow-y: auto;
+    }
+    .list::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .list::-webkit-scrollbar-thumb{
+        border-radius: 1vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .list::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
     }
     @media (min-width: 2200px){
         .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

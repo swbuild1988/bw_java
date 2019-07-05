@@ -1,99 +1,95 @@
 <template>
-  <div class="steps-status" :style="{height:defineHeight + 'vmin',}">
-    <!--步骤条间隔线-->
-    <div class="steps-tail" v-if="stepLength!=curIndex" :class="{ 'line-unWork': curStatusVal==3,'line-finish':curStatusVal==1, 'line-working':curStatusVal==2,}">
-    </div>
-    <!--步骤条圆形图标-->
-    <div class="steps-heads">
-      <div class="step-Icon">
-        <div v-if="curStatusVal==1">
-          <Icon type="ios-checkmark-empty" size="38" color="#1289ff" ></Icon>
+    <div class="steps-status" :style="{height:defineHeight + 'vmin',}">
+        <!--步骤条间隔线-->
+        <div class="steps-tail" v-if="stepLength!=curIndex" :class="{ 'line-unWork': curStatusVal==3,'line-finish':curStatusVal==1, 'line-working':curStatusVal==2,}"></div>
+        <!--步骤条圆形图标-->
+        <div class="steps-heads">
+            <div class="step-Icon">
+                <div v-if="curStatusVal==1">
+                <Icon type="ios-checkmark-empty" size="38" color="#1289ff" ></Icon>
+                </div>
+            </div>
+            <div class="setp-head"  :class="{ 'circle_bottom animation head-finish': curStatusVal==2,'head-finish':curStatusVal==1,'head-unWork':curStatusVal==3,}">
+                <span class="step-index"   :class="{ 'main-working': curStatusVal==2, 'main-unWork':curStatusVal==3}"   v-if="curStatusVal!=1">{{curIndex}}</span>
+            </div>
+            <div class="setp-head  circle_bottom2 animation2" v-if="curStatusVal==2"  :class="{ 'head-finish': curStatusVal==2,}"></div>
         </div>
-      </div>
-      <div class="setp-head"  :class="{ 'circle_bottom animation head-finish': curStatusVal==2,'head-finish':curStatusVal==1,'head-unWork':curStatusVal==3,}">
-          <span class="step-index"   :class="{ 'main-working': curStatusVal==2, 'main-unWork':curStatusVal==3}"   v-if="curStatusVal!=1">{{curIndex}}</span>
-      </div>
-      <div  class="setp-head  circle_bottom2 animation2" v-if="curStatusVal==2"  :class="{ 'head-finish': curStatusVal==2,}">
-      </div>
+        <!--步骤条主体文字-->
+        <div class="setp-main">
+            <div class="status" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
+                {{curStatusStr}}
+            </div>
+            <div class="tip" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
+                {{stepName}}&nbsp;
+                <div style="float: right;">
+                    <i-Switch :value="switBtn.status" size="large" @on-change="changeSwitch">
+                        <span slot="open">开</span>
+                        <span slot="close">关</span>
+                    </i-Switch>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--步骤条主体文字-->
-    <div class="setp-main">
-      <div class="status" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
-        {{curStatusStr}}
-      </div>
-      <div class="tip" :class="{'main-finish':curStatusVal==1, 'main-unWork':curStatusVal==3,}">
-        {{stepName}}&nbsp;
-          <div v-if="switBtn.isSwitch" style="float: right;">
-              <i-Switch  :value="switBtn.status" size="large" @on-change="changeSwitch">
-                  <span slot="open">开</span>
-                  <span slot="close">关</span>
-              </i-Switch>
-          </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
   export default {
     name: "custom-step",
     props: {
-      //1已完成，2进行中，3待完成，4失败，
-      curStatusVal: {
-        type: Number,
-        default:1
-      },
-      //当前节点序号
-      curIndex: {
-        type: Number,
-        default:1
-      },
-      curStatusStr: {
-        type: String,
-        default:"已完成"
-      },
-      stepName: {
-        type: String,
-        default:"开启消防预案"
-      },
-      defineWidth: {
-        type: String,
-        default:"250"
-      },
-      defineHeight: {
-        type: String,
-        default:"12"
-      },
-      stepLength:{
-        type: Number,
-        default:3,
-      },
-        switBtn: {
-            type: Object,
-            default: function () {
-                return {
-                    isSwitch: false,
-                    status: false,
-                    mesaObjsId: []
-                }
-            }
+        //当前节点序号
+        curIndex: {
+            type: Number,
+            default:1
         },
+        curStatusStr: {
+            type: String,
+            default:"已完成"
+        },
+        stepName: {
+            type: String,
+            default:"开启消防预案"
+        },
+        defineWidth: {
+            type: String,
+            default:"250"
+        },
+        defineHeight: {
+            type: String,
+            default:"12"
+        },
+        stepLength:{
+            type: Number,
+            default:3,
+        }
     },
-    data: function () {
-      return {
-          switchBtn:false,
-      }
+    data(){
+        return {
+            switchBtn:false,
+            //1已完成，2进行中，3待完成，4失败，
+            curStatusVal: 3,
+            switBtn: {
+                status: false
+            }
+        }
     },
-      mounted(){
-      },
-      methods:{
+    watch: {
+        'curStatusStr': function(newVal, olaVal){
+            this.curStatusStr = newVal
+            if(this.curStatusStr=='已完成'){
+                this.curStatusVal = 1
+                this.changeSwitch()
+            }
+        }
+    },
+    mounted(){},
+    methods:{
         // 切换开关
-          changeSwitch(){
-              let _this=this;
-              let params={status:_this.switBtn.status,mesaObjsId:_this.switBtn.mesaObjsId};
-              this.$emit('getSwitchStatus');
-          }
-      },
+        changeSwitch(){
+            this.switBtn.status = true
+            let temp = this.stepName
+            this.$emit('getSwitchStatus',temp);
+        }
+    },
   }
 </script>
 

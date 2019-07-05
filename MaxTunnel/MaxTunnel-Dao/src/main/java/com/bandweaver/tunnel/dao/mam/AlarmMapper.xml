@@ -263,13 +263,19 @@
   			and id = #{id}
   		</if>
   		<if test="startTime != null">
-  			and alarm_date &gt; #{startTime}
+  			and alarm_date &gt;= #{startTime}
   		</if>
   		<if test="endTime != null">
-  			and alarm_date &lt; #{endTime}
+  			and alarm_date &lt;= #{endTime}
   		</if>
   		<if test="alarmLevel != null">
   			and alarm_level = #{alarmLevel}
+  		</if>
+  		<if test="alarmLevels != null">
+  			and alarm_level in
+  			<foreach collection="alarmLevels" item="item" open="(" separator="," close=")">
+            #{item}
+        	</foreach>
   		</if>
   		<if test="tunnelId != null">
   			and tunnel_id = #{tunnelId}
@@ -353,5 +359,8 @@
   <select id="getCountByTime" resultType="Int">
   	select count(1) from T_MAM_ALARM where alarm_date &gt;= #{date}
   </select>
-  
+
+    <select id="getListByStartTimeAndEndTime" resultMap="DtoResultMap">
+        select * from T_MAM_ALARM where alarm_date &gt;= #{startTime} and alarm_date &lt;= #{endTime}
+    </select>
 </mapper> 

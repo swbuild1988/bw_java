@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.common.biz.itf.omm;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionPlanDto;
@@ -13,6 +12,8 @@ public interface InspectionPlanService {
     int add(InspectionPlanDto inspectionPlanDto);
 
     int update(InspectionPlanDto inspectionPlanDto);
+    
+    int delete(String planId);
 
     List<InspectionPlanSimpleDto> getInspectionPlans();
 
@@ -47,11 +48,7 @@ public interface InspectionPlanService {
      */
 	void complete(String planId);
 	
-	int getInspectionPlanSumByYear(InspectionVo inspectionVo);
-	
-	int getInspectionPlanSumByMonth(InspectionVo inspectionVo);
-	
 	List<InspectionPlan> getAllInspectionPlan();
 	
-	List<InspectionPlan> getTunnelCountByTunnelId();
+	int getCountByCondition(InspectionVo inspectionVo);
 }

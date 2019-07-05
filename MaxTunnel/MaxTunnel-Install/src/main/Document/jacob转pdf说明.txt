@@ -1,0 +1,25 @@
+文件转pdf插件安装说明：
+开发环境：
+1.https://sourceforge.net/projects/jacob-project/ 下载之后解压
+
+2.添加jar包到本地maven仓库：
+	（1） windows cmd打开dos窗口
+	（2） mvn install:install-file -DgroupId=com.jacob -DartifactId=jacob -Dversion=1.19 -Dpackaging=jar -Dfile=下载的jacob.jar的路径/jacob.jar
+说明：
+安装指定文件到本地仓库命令：mvn install:install-file
+-DgroupId=<groupId>       : 设置项目代码的包名(一般用组织名)
+-DartifactId=<artifactId> : 设置项目名或模块名 
+-Dversion=1.0.0           : 版本号
+-Dpackaging=jar           : 什么类型的文件(jar包)
+-Dfile=<myfile.jar>       : 需要添加的jar文件路径与文件名
+
+3.拷贝jacob-1.19-x64.dll到jdk/bin目录下（64位系统就用 x64的dll，32位系统就用x86的dll）
+
+
+
+
+服务器环境：
+jacob-1.19-x64.dll放到C:\Windows\System32下面(64位)
+jacob-1.19-x86.dll 放到C:\Windows\SysWOW64下面（32位）
+
+

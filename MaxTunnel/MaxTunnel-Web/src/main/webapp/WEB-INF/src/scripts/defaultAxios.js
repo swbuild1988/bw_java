@@ -16,7 +16,7 @@ if (process.env.NODE_ENV == "development") {
 //生产环境配置
 else {
   axios.get("dist/static/serverconfig.json").then(result => {
-    console.log("result.data",result.data);
+    console.log("defaultAxios result", result);
     Vue.prototype.ApiUrl = result.data.ApiUrl;
     Vue.prototype.ServerConfig = result.data.ApiUrl + "/dist/static";
     Vue.prototype.SuperMapConfig = result.data.SuperMapConfig;
@@ -25,6 +25,7 @@ else {
     axios.defaults.baseURL = Vue.prototype.ApiUrl;
     sessionStorage.setItem("ServerConfig", Vue.prototype.ServerConfig);
   }).catch(error => {
+    console.log("defaultAxios result error", error);
   });
   // 获取VM的配置页
   axios.get("dist/static/VM/js/VMWebConfig.json").then(result => {
@@ -132,7 +133,7 @@ axios.interceptors.response.use(
         })
       }, 500)
     }
-    return Promise.reject(error.message)   // 返回接口返回的错误信息
+    return Promise.reject(error.message) // 返回接口返回的错误信息
   }
 );
 

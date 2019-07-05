@@ -30,7 +30,7 @@
             </Col>
         </Row>
         <div class="list">
-            <Table  border :columns='columns'  :data="patrolTask"></Table>
+            <Table :columns='columns'  :data="patrolTask" :height="tableHeight"></Table>
         </div>
         <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style='pageStyle'></Page>
@@ -64,8 +64,8 @@ export default {
                 {id: 2, val: 0, key: '进行中'}
             ],
             patrolTask:[
-                {id:1,planName: '7月巡检计划',taskPerson: '张三', startTime: 1529596800000,endTime: null,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
-                {id:2,planName: '7月巡检计划',taskPerson: '张三', startTime: null,endTime: 1529596800000,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
+                // {id:1,planName: '7月巡检计划',taskPerson: '张三', startTime: 1529596800000,endTime: null,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
+                // {id:2,planName: '7月巡检计划',taskPerson: '张三', startTime: null,endTime: 1529596800000,describe: '中旬计划，大家认真执行',patrolStatus: '进行中',},
             ],
             page:{
                 pageSize: 10,
@@ -74,8 +74,8 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                bottom: '10px',
-                right: '15px',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             columns:[
                 {
@@ -194,24 +194,32 @@ export default {
             firstDay: null,
             lastDay: null,
             isTable: true,
-            isSuperCalender: false
+            isSuperCalender: false,
+            tableHeight: 400
         }
     },
     watch:{
         '$route': function () {
-          //2. $route发生变化时再次赋值planId
-          this.tunnelId = this.$route.params.id;
-          this.tunnels.forEach(a => {
-            if (a.id == this.tunnelId) {
-              this.queryConditions();
-              this.isTable = true;
-              this.isSuperCalender = false;
+            //2. $route发生变化时再次赋值planId
+            if(this.$route.params.id){
+                this.tunnelId = this.$route.params.id;
+                this.tunnels.forEach(a => { 
+                    if (a.id == this.tunnelId) {
+                    this.queryConditions();
+                    this.isTable = true;
+                    this.isSuperCalender = false;
+                    }
+                });
             }
-          });
+            this.conditions.finished = this.$route.params.taskStatus
         },
     },
     mounted() {
-        this.tunnelId = this.$route.params.id;
+        this.tableHeight = window.innerHeight/100*67
+        if(this.$route.params.id){
+            this.tunnelId = this.$route.params.id;
+        }
+        this.conditions.finished = this.$route.params.taskStatus
         // 从数据库读取select的option选项
         this.axios.get("/tunnels ").then(response => {
             let { code, data } = response.data;
@@ -263,7 +271,7 @@ export default {
         },
         goToMoudle2: function(index, type) {
             this.$router.push({
-                name: "UMAddTask",
+                name: "添加巡检任务",
                 params: {
                     id: this.patrolTask[index].id,
                     type: type
@@ -312,6 +320,7 @@ export default {
 <style scoped>
 .navigation{
     line-height: 35px;
+    color: #fff;
 }
 .navigation div{
     display: inline;
@@ -322,6 +331,50 @@ export default {
 }
 .navigation div:hover,.activeTable,.activeSuper{
     border-bottom: 2px solid #357aa1;
+}
+/* table style & table-buttom style(.ivu-btn-primary .ivu-btn-info) */
+.list{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 1%;
+}
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: 1px solid #7d7d7d;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator,.ivu-select.ivu-select-single >>> .ivu-select-selected-value{
+    color: #fff;
+}
+.list .ivu-table-wrapper>>>.ivu-table-tip table{
+    width: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

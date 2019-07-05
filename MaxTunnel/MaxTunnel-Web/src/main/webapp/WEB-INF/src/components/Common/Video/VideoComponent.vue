@@ -2,7 +2,7 @@
     <div class="videoContent">
         <!-- <vlc-video :id= 'id' :video=video'></vlc-video> -->
         <!-- <rtmp-video :id= 'id' :video= 'video'></rtmp-video> -->
-        <h5-stream-video :id='id' :video='video' :text="text"></h5-stream-video>
+        <h5-stream-video :id='id' :index='index' :video='video' :text="text"></h5-stream-video>
         <!-- <hsl-video :id= 'id' :video= 'video'></hsl-video> -->
     </div>
 </template>
@@ -25,6 +25,9 @@ export default {
         },
         text: {
             required: false
+        },
+        index: {
+            default: 0
         }
     },
     components: { VlcVideo, RtmpVideo, HslVideo, H5StreamVideo },

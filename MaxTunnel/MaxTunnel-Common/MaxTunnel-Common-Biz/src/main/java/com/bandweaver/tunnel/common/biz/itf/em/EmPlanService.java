@@ -16,43 +16,58 @@ import com.github.pagehelper.PageInfo;
 
 public interface EmPlanService {
 
-	void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity);
+    void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity);
 
-	/**下一个任务 
-	 * @param iid   流程实例id
-	 * @author shaosen
-	 * @Date 2018年10月16日
-	 */
-	void nextTask(String processInstanceId,List<Section> sectionList);
+    /**
+     * 下一个任务
+     *
+     * @param iid 流程实例id
+     * @author shaosen
+     * @Date 2018年10月16日
+     */
+    void nextTask(String processInstanceId, List<Section> sectionList);
 
-	/**发送消息到mq队列 
-	 * @author shaosen
-	 * @Date 2018年10月16日
-	 */
-	void sendMsg(EmPlan emPlan, String processInstanceId,List<Section> sectionList,Set<MeasObj> measObjList);
+    /**
+     * 发送消息到mq队列
+     *
+     * @author shaosen
+     * @Date 2018年10月16日
+     */
+    void sendMsg(String processInstanceId);
 
-	/**启动预案 
-	 * @param sectionId
-	 * @param processValue   
-	 * @author shaosen
-	 * @Date 2018年10月17日
-	 */
-	void start(List<Section> sectionList, Integer processValue);
 
-	void add(EmPlan record);
+    /**
+     * 发送消息和状态到mq
+     *
+     * @param processInstanceId
+     * @param status
+     */
+    void sendMsg(String processInstanceId, String status);
 
-	void delete(Integer id);
+    /**
+     * 启动预案 并返回 流程实例id
+     *
+     * @param sectionId
+     * @param processValue
+     * @author shaosen
+     * @Date 2018年10月17日
+     */
+    String start(List<Section> sectionList, Integer processValue);
 
-	void update(EmPlan record);
+    void add(EmPlan record);
 
-	EmPlanDto getById(Integer id);
+    void delete(Integer id);
 
-	void deleteBatch(List<Integer> list);
+    void update(EmPlan record);
 
-	PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
+    EmPlanDto getById(Integer id);
 
-	List<JSONObject> getNodeListByProcessKeyAndSection(String processKey,List<Section> sectionList);
+    void deleteBatch(List<Integer> list);
 
-	List<EmPlanDto> getListByProcessKey(String processKey);
+    PageInfo<EmPlanDto> dataGrid(EmPlanVo vo);
+
+    List<JSONObject> getNodeListByProcessKeyAndSection(String processKey, List<Section> sectionList);
+
+    List<EmPlanDto> getListByProcessKey(String processKey);
 
 }

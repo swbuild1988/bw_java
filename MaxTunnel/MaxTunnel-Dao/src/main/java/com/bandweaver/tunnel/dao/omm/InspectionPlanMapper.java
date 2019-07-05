@@ -13,6 +13,8 @@ public interface InspectionPlanMapper {
     int add(InspectionPlan inspectionPlan);
 
     int update(InspectionPlan inspectionPlan);
+    
+    int delete(@Param("planId") String planId);
 
     List<InspectionPlanSimpleDto> getInspectionPlans();
 
@@ -26,11 +28,8 @@ public interface InspectionPlanMapper {
 
 	InspectionPlan getInspectionPlanByProcessInstanceId(String processInstanceId);
 
-	int getInspectionPlanSumByYear(InspectionVo inspectionVo);
-	
-	int getInspectionPlanSumByMonth(InspectionVo inspectionVo);
+	int getCountByCondition(InspectionVo inspectionVo);
 	
 	List<InspectionPlan> getAllInspectionPlan();
 	
-	List<InspectionPlan> getTunnelCountByTunnelId();
 }

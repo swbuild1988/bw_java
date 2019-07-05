@@ -10,8 +10,10 @@
         <vm-select id="list-dropdown" :optionList="optionList" @getSelectVal="getAreas"></vm-select>
         <vm-select id="area-dropdown" :optionList="areaList" :selectStyle="{ left:'15.5%' }" @getSelectVal="getStores"></vm-select>
         <vm-select id="store-dropdown" :optionList="storeList" :selectStyle="{ left:'29%' }" @getSelectVal="changeStore"></vm-select>
-        <show-store-position v-bind:currPosition="storePosition"></show-store-position>
-        <move-control v-show="showControlPanel"></move-control>
+        <show-store-position v-bind:currPosition="storePosition" v-show="showPositionPanel"></show-store-position>
+        <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn" :icon="playOrPause.isPlay ? 'pause' : 'play' " @click="playFly"></Button>
+        <Button type="primary" v-show="showControlBtn" class="buttons contorlBtn"  style="right:4vmin" icon="stop" @click="stopFly"></Button>
+    
     </div>
 </template>
 
@@ -20,7 +22,6 @@
     import ModuleTitle from "../../../components/VM2/ModuleTitle";
     import Vue from 'vue'
     import showStorePosition from '../../../components/Common/Modal/showStorePosition'
-    import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
     import {
         TunnelService,
     } from '../../../services/tunnelService'
@@ -57,6 +58,12 @@
                 },
                 showControlPanel: true,
                 screenWidth: 1920,
+                playOrPause: {
+                    isPlay: false,
+                    text: "开始"
+                },
+                showControlBtn:false,
+                showPositionPanel:false
             }
         },
         components: {
@@ -64,12 +71,16 @@
             showStorePosition,
             ModuleTitle,
             vmSelect,
-            MoveControl
         },
         mounted() {
+            let _this =this;
+
             this.init();
-            this.addEvents().addMouseEnter();
-            this.addEvents().addMouseLeave();
+            this.listenerWindowSize();
+            
+            window.onresize = function(){
+                _this.listenerWindowSize();
+            }
         },
         methods: {
             init() {
@@ -125,12 +136,11 @@
             },
             changeStore(storeId) {
                 let _this = this;
-
-                let [curCamera] = _this.location.filter(position => position.id == storeId);
+                let [ curCamera ] = _this.location.filter(position => position.id == storeId);
                 let {
                     camera
                 } = curCamera;
-
+                // return
                 try {
                     let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
 
@@ -154,14 +164,13 @@
                 let _this = this;
 
                 return new Promise((resolve, reject) => {
-                    TunnelService.getStoresByAreaId({
-                            areaId
-                        })
+                    TunnelService.getStoresByAreaId({ areaId })
                         .then(stores => {
                             _this.storeList.splice(0);
                             _this.location.splice(0);
 
                             stores.forEach(store => {
+                                if(!store.store || !store.startPoint) return;
                                 _this.storeList.push({
                                     value: store.store.id,
                                     label: store.store.name
@@ -172,9 +181,9 @@
                                 })
                             })
 
-                            let store = this.getValByArray(stores);
+                            let store = this.getValByArray(_this.storeList);
 
-                            resolve(store.store.id);
+                            resolve(store.value);
                         })
                 })
 
@@ -182,87 +191,33 @@
             getValByArray([firstVal, ...otherVal]) {
                 return firstVal;
             },
-            sendAlarms() {
-
-                setTimeout(() => {
-                    this.axios.post('/alarms', {
-                            time: +new Date(),
-                            alarmName: 'sad',
-                            objectId: 222022501,
-                            latitude: "112.49069725638859",
-                            longitude: "37.71331808517105",
-                            description: 'sad',
-                            alarmSeverity: 1,
-                            additionalText: '',
-                            alarmSource: ''
-                        })
-                        .then(err => console.log(err)).catch(err => console.log('err2', err))
-                }, 1000)
-            },
             showStorePosition(position) {
                 this.storePosition = position;
             },
             playFly() {
-                this.$refs.smViewer.playFly();
+                if (this.playOrPause.isPlay) {
+                    this.$refs.smViewer.pauseFly();
+                } else {
+                    this.$refs.smViewer.playFly();
+                    console.log('ssssssss')
+                }
+                this.playOrPause.isPlay = !this.playOrPause.isPlay;
             },
             stopFly() {
                 this.$refs.smViewer.stopFly();
+                this.playOrPause.isPlay = false;
             },
             destroyViewer() {
                 this.$refs.smViewer.destory3D();
             },
-            addEvents() {
-                let eventListener = {
-                    screenWidth: 1920,
-                    _getDOM(className) {
-                        return document.getElementsByClassName(className)[0];
-                    },
-                    _getClassName(target) {
-                        return true;
-                    },
-                    _showDOM() {
-                        let _this = this;
-
-                        return function (e) {
-                            if (_this._getClassName(e.target) && window.innerWidth > this.screenWidth) {
-                                _this._getDOM('LLPanel').style.display = 'block';
-                            }
-                        }
-                    },
-                    hiddenDOM() {
-                        let _this = this;
-
-                        return function (e) {
-                            if (_this._getClassName(e.target) && window.innerWidth < _this.screenWidth) return;
-                            _this._getDOM('LLPanel').style.display = 'none';
-                        }
-
-                    },
-                    addMouseEnter() {
-                        this._getDOM('ThreeDMain').addEventListener('mousemove', this._showDOM.call(this))
-                    },
-                    addMouseLeave() {
-                        this._getDOM('ThreeDMain').addEventListener('mouseout', this.hiddenDOM.call(this))
-                    },
-                    removeMouseEnter() {
-                        this._getDOM('ThreeDMain').removeEventListener('mousemove', this._showDOM.call(this))
-                    },
-                    removeMouseLeave() {
-                        this._getDOM('ThreeDMain').removeEventListener('mouseout', this.hiddenDOM.call(this))
-                    }
-                };
-
-                return eventListener;
-            },
+            listenerWindowSize(){
+               this.showPositionPanel = this.showControlBtn = window.innerWidth > 1440 ? true : false;
+            }
         },
         beforeDestroy() {
-            console.log("3d module beforedestory")
-            // this.destroyViewer();
-            // this.addEvents().removeMouseEnter();
-            // this.addEvents().removeMouseLeave();
+            this.stopFly();
         },
         destroyed() {
-            console.log("3D module destory")
         },
     }
 </script>
@@ -306,6 +261,15 @@
 
     .Main>>>.moveControlPanel {
         display: none;
+    }
+    .contorlBtn {
+        position: absolute;
+        right: 8vmin;
+        background: transparent;
+        top: 8.5vmin;
+        border: 1px solid rgba(16,159,181,.5);
+        -webkit-box-shadow: 0 0 1rem #109FB5 inset;
+        box-shadow: 0 0 1rem #109FB5 inset;
     }
 </style>
 <style>

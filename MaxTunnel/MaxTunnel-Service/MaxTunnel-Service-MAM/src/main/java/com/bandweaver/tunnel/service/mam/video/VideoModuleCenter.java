@@ -8,22 +8,30 @@ import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
 import com.bandweaver.tunnel.common.biz.itf.ModuleCenterInterface;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
+import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.*;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
+import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
 import com.bandweaver.tunnel.dao.mam.*;
 import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import de.onvif.soap.devices.PtzDevices;
-import net.sf.jsqlparser.schema.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class VideoModuleCenter implements ModuleCenterInterface {
@@ -44,6 +52,8 @@ public class VideoModuleCenter implements ModuleCenterInterface {
     private MeasObjMapper measObjMapper;
     @Autowired
     private TunnelMapper tunnelMapper;
+    @Autowired
+    private SectionService sectionService;
     @Resource(name = "OnvifServiceImpl")
     private OnvifService onvifService;
     @Resource(name = "H5StreamServiceImpl")
@@ -86,6 +96,9 @@ public class VideoModuleCenter implements ModuleCenterInterface {
 
         // 添加进数据库，出现问题回滚
         videoMapper.insertVideo(video);
+        Section section = sectionService.getSectionByStoreAndArea(video.getStoreId(), video.getAreaId());
+        if(section != null) video.setSectionId(section.getId());
+        else video.setSectionId(0);
         measObjMapper.insertSelective((MeasObj) video);
 
         // 添加进缓存
@@ -101,6 +114,28 @@ public class VideoModuleCenter implements ModuleCenterInterface {
             videoPtzDeviceHashMap.put(video.getId(), ptzDevices);
             videoProfileTokenHashMap.put(video.getId(), profileToken);
         }
+    }
+    
+    public void updateVideo(Video video) {
+    	if (!videoDtoHashMap.containsKey(video.getId())) return;
+    	
+    	// 更新视频表
+    	videoMapper.updateVideo(video);
+    	// 更新监测对象表
+    	measObjModuleCenter.updateMeasObj(video);
+    	// 再更新缓存
+        videoDtoHashMap.put(video.getId(), videoMapper.getVideoDto(video.getId().intValue()));
+    }
+    
+    public void deleteVideo(Integer id) {
+    	if (!videoDtoHashMap.containsKey(id)) return;
+    	
+    	// 删除监测对象
+    	measObjModuleCenter.deleteObj(id);
+    	// 删除视频
+    	videoMapper.deleteVideo(id);
+    	// 清除缓存
+    	videoDtoHashMap.remove(id);
     }
 
     public void insertVideo2DB(Video video) {
@@ -318,7 +353,38 @@ public class VideoModuleCenter implements ModuleCenterInterface {
                 // 如果server的session为空，则登录获取，否则将server赋值给video。server
                 if (server.getSession() == null) {
                     // 获取session
-                    String session = h5streamService.getSession(server);
+                	Callable<String> task = new Callable<String>() {
+            			
+            			@Override
+            			public String call() throws Exception {
+            				// 执行可能超时的操作
+            				String session = h5streamService.getSession(server);
+            				return session;
+            			}
+            		};
+            		
+            		ExecutorService executorService = Executors.newSingleThreadExecutor();
+            		Future<String> future = executorService.submit(task);
+            		String session = null;
+            		// 获取超时时间
+            		long s = 60;
+            		try {
+            			try {
+							s = PropertiesUtil.getLongValue(Constants.INIT_TIMEOUT);
+						} catch (Exception e) {
+							
+						}
+            			session = future.get(s, TimeUnit.SECONDS);
+            		} catch(InterruptedException e) {
+            			e.printStackTrace();
+            		} catch(ExecutionException e) {
+            			e.printStackTrace();
+            		}catch(TimeoutException e) {
+            			LogUtil.info("session获取时间已超过预定时间：" + s + "秒！");
+            		}finally {
+            			executorService.shutdown();
+            		}
+                    
                     if (session == null) session = "";
                     LogUtil.info("getSession:" + session);
                     server.setSession(session);
@@ -361,7 +427,6 @@ public class VideoModuleCenter implements ModuleCenterInterface {
 
     @Override
     public void start() {
-        long beginTime = System.currentTimeMillis();
         videoDtoHashMap = new HashMap<>();
         videoSceneOfTunnelHashMap = new HashMap<>();
         videoExtendSceneOfTunnelHashMap = new HashMap<>();
@@ -369,12 +434,6 @@ public class VideoModuleCenter implements ModuleCenterInterface {
         videoProfileTokenHashMap = new HashMap<>();
         videoPtzDeviceHashMap = new HashMap<>();
         initData();
-        long endTime = System.currentTimeMillis();
-
-        LogUtil.info("*********************************\n"
-                + "描述：加载视频信息到缓存\n"
-                + "耗时：" + (endTime - beginTime) + "ms\n"
-                + "*********************************");
     }
 
     @Override

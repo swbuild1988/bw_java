@@ -114,6 +114,12 @@
                  #{item}
              </foreach>
     		</if>
+    		<if test="minCv != null">
+    			and cv &gt; = #{minCv}
+    		</if>
+    		<if test="maxCv != null">
+    			and cv &lt; = #{maxCv}
+    		</if>
     	</where>
     	order by refresh_time desc
     </select>

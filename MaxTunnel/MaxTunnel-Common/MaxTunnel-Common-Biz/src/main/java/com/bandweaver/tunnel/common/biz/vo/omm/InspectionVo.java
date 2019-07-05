@@ -6,6 +6,9 @@ import java.util.Date;
 import com.bandweaver.tunnel.common.biz.vo.BaseVo;
 
 public class InspectionVo extends BaseVo {
+	
+	private static final long serialVersionUID = 1L;
+	
     private String id;
     private String name;
     private Integer requestStaffId;
@@ -19,6 +22,7 @@ public class InspectionVo extends BaseVo {
     private String remark;
     private int value;//agree disagree
     private Boolean isFinished;
+    private Integer leaderId;
 
     public String getId() {
         return id;
@@ -123,4 +127,13 @@ public class InspectionVo extends BaseVo {
     public void setFinished(Boolean finished) {
         isFinished = finished;
     }
+
+	public Integer getLeaderId() {
+		return leaderId;
+	}
+
+	public void setLeaderId(Integer leaderId) {
+		this.leaderId = leaderId;
+	}
+    
 }

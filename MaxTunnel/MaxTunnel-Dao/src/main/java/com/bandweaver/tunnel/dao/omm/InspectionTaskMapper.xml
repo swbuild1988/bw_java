@@ -148,6 +148,14 @@
         WHERE id = #{id}
     </update>
 
+	<delete id="deleteBatch">
+		DELETE FROM t_omm_inspection_task
+		WHERE ID IN
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+        	#{item}
+    	</foreach>
+	</delete>
+
     <select id="getTask" resultMap="inspectionTaskMap">
         SELECT *
         FROM t_omm_inspection_task
@@ -166,11 +174,16 @@
             d.record_time,
             d.content     AS record_content,
             d.defect_id,
-            d.section_id
+            d.section_id,
+            s.id          AS step_id,
+            s.task_id     AS step_task_id,
+            s.name        AS step_name,
+            s.is_finished AS step_is_finished
         FROM t_omm_inspection_task a
             LEFT JOIN t_omm_inspection_plan b ON a.plan_id = b.plan_id
             LEFT JOIN t_security_user c ON a.inspect_man_id = c.id
             LEFT JOIN t_omm_inspection_record d ON a.id = d.task_id
+            LEFT JOIN t_omm_inspection_step s on a.id = s.task_id
         WHERE a.id = #{id}
     </select>
 
@@ -237,28 +250,48 @@
                          column="defect_id"
                          select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>
         </collection>
+        <collection property="steps" ofType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
+            <id column="step_id" property="id"/>
+            <result column="step_name" property="name"/>
+            <result column="step_task_id" property="taskId"/>
+            <result column="step_is_finished" property="isFinished"/>
+        </collection>
     </resultMap>
     
-    <select id="getFinishedInspectionTaskSumByMonth" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE (create_time <![CDATA[ >= ]]> TRUNC(#{createTime}, 'MM') and create_time <![CDATA[ <= ]]> last_day(#{createTime}))
-    	AND is_finished = #{requestStatus}
+    <select id="getCountByVo" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
+    	select count(1) from t_omm_inspection_task a
+    	<where>
+	        <if test="isFinished != null">
+	        	and a.is_finished = #{isFinished}
+	        </if>
+	        <if test="startTime != null">
+                and a.task_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.task_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+    	</where>
     </select>
     
-    <select id="getInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-    	SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
+    <select id="getCountByCondition" resultType="int">
+    	select count(1) from t_omm_inspection_task a
+    	<where>
+	        <if test="isFinished != null">
+	        	and a.is_finished = #{isFinished}
+	        </if>
+	        <if test="startTime != null">
+                and a.end_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.end_time <![CDATA[<=]]>
+                #{endTime}
+            </if>
+    	</where>
     </select>
     
-	<select id="getFinishedInspectionTaskSumByYear" parameterType="com.bandweaver.tunnel.common.biz.vo.omm.InspectionVo" resultType="int">
-		SELECT COUNT(1)
-    	FROM t_omm_inspection_task
-    	WHERE to_char(create_time,'yyyy')=to_char(#{createTime},'yyyy')
-    	AND is_finished = #{requestStatus}
-	</select>
-	
 	<select id="getInspectionTasksByVo" resultType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionTaskDto" >
 		SELECT
 			a.id,

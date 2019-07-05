@@ -24,4 +24,6 @@ public interface MeasObjReportService {
 	List<MeasObjReportDto> getByCondition(MeasObjReportVo vo);
 
 	void updateByPrimaryKeySelective(MeasObjReport report);
+
+	List<MeasObjReport> getListByTimeAndTimeType(Date startTime, Date endTime, int type);
 }

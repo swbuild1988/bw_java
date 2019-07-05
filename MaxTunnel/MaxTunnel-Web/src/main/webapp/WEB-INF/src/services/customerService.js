@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { get,put,del,post } from "../utils/http";
 
 var CustomerService = {
 	// 添加客户信息
 	addCustomer: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('/customers', params).then(res => {
+			post('/customers', params).then(res => {
 				let {
 					code,
 					data,
@@ -21,7 +22,7 @@ var CustomerService = {
 	// 根据customerID获取该客户详细信息
 	getDetailsByCustomerId: function(customerId) {
 		return new Promise((resolve, reject) => {
-			axios.get('/customers/' + customerId).then(res => {
+			get('/customers/' + customerId).then(res => {
 				let {
 					code,
 					data,
@@ -38,7 +39,7 @@ var CustomerService = {
 	// 修改客户信息
 	updateCustomer: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.put('customers', params).then(res => {
+			put('customers', params).then(res => {
 				let {
 					code,
 					data,
@@ -55,7 +56,7 @@ var CustomerService = {
 	// 客户信息分页查询
 	customerDatagrid: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.post('customers/datagrid', params).then(res => {
+			post('customers/datagrid', params).then(res => {
 				let {
 					code,
 					data,
@@ -72,7 +73,7 @@ var CustomerService = {
 	// 删除客户信息
 	deleteCustomer: function(customerId) {
 		return new Promise((resolve, reject) => {
-			axios.delete('/customers/' + customerId).then(res => {
+			del('/customers/' + customerId).then(res => {
 				let {
 					code,
 					data,

@@ -24,6 +24,7 @@
             seriesData: {
                 type: Array
             },
+            yAxisUnit:''
         },
         watch:{
             seriesData: {
@@ -72,7 +73,7 @@
                                 fontSize: _this.getFontSize('6%')
                             },
                         },
-                        xAxis:_this.getCoordinateStyle('#000','4%').xAxis,
+                        xAxis:_this.getCoordinateStyle('#000','4%',0).xAxis,
                         yAxis:_this.getCoordinateStyle('#000','4%',100).yAxis,
                         grid:_this.getGrid('20%','3%','4%','15%')
                     }
@@ -93,7 +94,7 @@
                             },
                             left:'center'
                         },
-                        xAxis:_this.getCoordinateStyle('#ccc','7%').xAxis,
+                        xAxis:_this.getCoordinateStyle('#ccc','7%','auto','月').xAxis,
                         yAxis:_this.getCoordinateStyle('#ccc','7%',5).yAxis,
                         grid:_this.getGrid('30%','3%','4%','3%')
                     }
@@ -113,8 +114,8 @@
                             },
                             left:'center'
                         },
-                        xAxis:_this.getCoordinateStyle('#ccc','7%').xAxis,
-                        yAxis:_this.getCoordinateStyle('#ccc','7%',100).yAxis,
+                        xAxis:_this.getCoordinateStyle('#ccc','7%',0).xAxis,
+                        yAxis:_this.getCoordinateStyle('#ccc','7%',100,' 个').yAxis,
                         grid:_this.getGrid('20%','3%','4%','15%')
                     }
                 }
@@ -211,7 +212,7 @@
 
                 return 0;
             },
-            getCoordinateStyle(lineColor,labelFontSize,interval){
+            getCoordinateStyle(lineColor,labelFontSize,interval,unit){
                 let _this = this;
 
                 let Axis = {
@@ -225,19 +226,19 @@
                         textStyle: {
                             fontSize: _this.getFontSize(labelFontSize)      //更改坐标轴文字大小
                         },
-                        interval:0,
+                        interval:interval,
                     },
                 }
 
                 return {
                     xAxis:Object.assign(
                         Axis,
-                        {}
                     ),
                     yAxis:Object.assign(
                         Axis,
                         {
                             interval:interval,
+                            name: !unit ? '':'单位('+ unit +' )'
                         }
                     ),
 

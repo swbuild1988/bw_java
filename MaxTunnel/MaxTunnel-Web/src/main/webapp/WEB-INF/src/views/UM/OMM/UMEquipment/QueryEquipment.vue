@@ -1,97 +1,125 @@
 <template>
   <div class="allDiv">
     <Row class="queryCondition">
-      <Col span="6">
-        <span>设备名称</span><span>：</span>
-        <Input v-model="conditions.name" style="width:60%"></Input>
-      </Col>
-      <Col span="6">
-        <span>设备类型：</span>
-        <Select v-model="conditions.typeId" style="width: 60%">
-            <Option value=null key=0>所有</Option>
-            <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-      </Col>
-      <Col span="6">
-        <span>设备型号：</span>
-        <Select v-model="conditions.modelId" style="width: 60%">
-            <Option value=null key=0>所有</Option>
-            <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-      </Col>
-      <Col span="6">
-        <span>设备状态：</span>
-        <Select v-model="conditions.status" style="width:60%">
-          <Option value=null key="0">所有</Option>
-          <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
-        </Select>
-      </Col>
-      <Col span="6">
-        <Span class="word43">供应商</Span><span>：</span>
-        <Select v-model="conditions.venderId" style="width:60%">
+        <Col span="6">
+            <span class="conditionTitle">设备名称</span><span class="conditionTitle">：</span>
+            <Input v-model="conditions.name" style="width:60%"></Input>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">设备类型：</span>
+            <Select v-model="conditions.typeId" style="width: 60%">
+                <Option value=null key=0>所有</Option>
+                <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">设备型号：</span>
+            <Select v-model="conditions.modelId" style="width: 60%">
+                <Option value=null key=0>所有</Option>
+                <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">设备状态：</span>
+            <Select v-model="conditions.status" style="width:60%">
             <Option value=null key="0">所有</Option>
-            <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
-        </Select>
-      </Col>
-      <Col span="6">
-        <span>开始时间：</span>
-        <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
-      </Col>
-      <Col span="6">
-        <span>结束时间：</span>
-        <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
-      </Col>
-      <Col span="6">
-        <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
-      </Col>
+            <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <Span class="word43 conditionTitle">供应商</Span><span class="conditionTitle">：</span>
+            <Select v-model="conditions.venderId" style="width:60%">
+                <Option value=null key="0">所有</Option>
+                <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">开始时间：</span>
+            <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">结束时间：</span>
+            <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">所属管廊</span><span class="conditionTitle">：</span>
+            <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
+                <Option value=null key="0">所有</Option>
+                <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <span class="conditionTitle">所属管舱</span><span class="conditionTitle">：</span>
+            <Select v-model="conditions.storeId" style="width:60%">
+                <Option value=null key="0">所有</Option>
+                <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>
+            </Select>
+        </Col>
+        <Col span="6">
+            <Button type="primary"  icon="ios-search" @click="showTable()">查询</Button>
+            <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备
+            </vue-xlsx-table>
+        </Col>
     </Row>
-    <div class="list">
-      <Row>
-        <h1 class="equipmentList">设备列表</h1>
-        <Col span="24">
-          <Button class="addList" @click="add({path: '/UM/equipment/add'})" long>
-            <Icon type="plus-round"></Icon>
-            添加
-          </Button>
-        </Col>
-        <Col span="24">
-        <Row :gutter="16">
-          <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
-            <div :style="backImage" class="backGoundBox">
-              <div class="topBox">
-                <a class="ivu-modal-close" style="right: 8px;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(index)"></i></a>
-                <p class="equipentTitle">{{ item.name }}</p>
-                <div class="imgBox"><img :src="imgUrl"></div>
-              </div>
-            </div>
-            <Row class="detailsBox">
-              <Col span="10">所属管廊：{{item.tunnel.name}}</Col>
-              <Col span="14">设备类型：{{ item.typeName }}</Col>
-              <Col span="10">供应商：{{item.vender.name}}</Col>
-              <Col span="14">所属型号：{{item.model.name}}</Col>
-              <Col span="10">设备状态：{{item.statusName}}</Col>
-              <Col span="14">启用时间：{{ item.crtTime }}</Col>
-            </Row>
-            <div class="operation">
-              <Row>
-                <Col span="8" class="operationSee">
-                <Icon type="eye" size=20></Icon>
-                <p @click="show(index)">查看</p>
-                </Col>
-                <Col span="8" class="operationEdit">
-                <Icon type="edit" size=19></Icon>
-                <p @click="edit(index)">编辑</p>
-                </Col>
-                <Col span="8" class="operationDel">
-                <Icon type="trash-a" size=20></Icon>
-                <p @click="del(index)">删除</p>
-                </Col>
-              </Row>
-            </div>
-          </Col>
+    <div class="list listBG">
+        <Row>
+            <h1 class="equipmentList">设备列表</h1>
+            <Button class="addList" @click="add({path: '/UM/equipment/add'})">
+                <Icon type="plus-round"></Icon>
+                添加
+            </Button>
+            <Tabs :value="chooseEquipmentTabPane" :animated="false" @on-click="chooseTab">
+                <TabPane label="卡片" name="卡片">
+                    <Col class="cardStyle" span="24" :style="{height: cardHeight}" style="overflow-y: auto,overflow-x: hidden">
+                        <div class="nullData" v-show="isNullData">暂无数据</div>
+                        <Row :gutter="16">
+                            <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 1vmin;">
+                                <div  class="infoBox">
+                                    <div class="topBox">
+                                        <!-- <a class="ivu-modal-close" style="right: 2vmin;top:0px;color: #f5650b" ><i class="ivu-icon ivu-icon-ios-close-empty" @click="del(item.id)"></i></a> -->
+                                        <p class="equipentTitle">{{ item.name }}</p>
+                                        <!-- <div class="imgBox"><img :src="imgUrl"></div> -->
+                                    </div>
+                                    <Row class="detailsBox">
+                                        <Col span="12" :title="item.tunnel.name">所属管廊：{{item.tunnel.name}}</Col>
+                                        <Col span="12" :title="item.typeName">设备类型：{{ item.typeName }}</Col>
+                                        <Col span="12" :title="item.vender.name">供应商：{{item.vender.name}}</Col>
+                                        <Col span="12" :title="item.model.name">所属型号：{{item.model.name}}</Col>
+                                        <Col span="12" :title="item.statusName">设备状态：{{item.statusName}}</Col>
+                                        <Col span="12" :title="item.crtTime">启用时间：{{ item.crtTime }}</Col>
+                                    </Row>
+                                    <div class="operation">
+                                    <Row>
+                                        <Col span="8" class="operationSee">
+                                            <div @click="show(index)">
+                                                <Icon type="eye" size=20></Icon>
+                                                <p>查看</p>
+                                            </div>
+                                        </Col>
+                                        <Col span="8" class="operationEdit">
+                                            <div @click="edit(index)">
+                                                <Icon type="edit" size=19></Icon>
+                                                <p>编辑</p>
+                                            </div>
+                                        </Col>
+                                        <Col span="8" class="operationDel">
+                                            <div @click="del(item.id)">
+                                                <Icon type="trash-a" size=20></Icon>
+                                                <p>删除</p>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
+                </TabPane>
+                <TabPane label="表格" name="表格">
+                    <Table :columns='columnsEquipment' :data="equipments" :height="tableHeight"></Table>
+                </TabPane>
+            </Tabs>
         </Row>
-        </Col>
-      </Row>
     </div>
     <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-total show-sizer
           placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
@@ -105,319 +133,548 @@ import { TunnelService } from "../../../../services/tunnelService";
 import { EquipmentService } from "../../../../services/equipmentService";
 import equipemtTunnel from "../../../../assets/UM/equipemtTunnel.jpg";
 export default {
-  name: "queryEquipment",
-  data() {
-    return {
-      imgUrl: equipemtTunnel,
-      showOn: true,
-      equipments: [],
-      tunnels: [],
-      tunnelId: 1,
-      equipmentTypes: [],
-      deleteEquipmentInfo: [], //要删除的设备
-      conditions: {
-        name: null,
-        typeId: null,
-        modelId: null,
-        status: null,
-        venderId: null,
-        startTime: null,
-        endTime: null
-      },
-      equipmentStatus: [],
-      pagingList: [],
-      page: {
-        pageNum: 1,
-        pageSize: 8,
-        pageTotal: 0
-      },
-      pageStyle: {
-        position: "absolute",
-        bottom: "20px",
-        right: "15px"
-      },
-      equipmentType: [],
-      equipmentModel: [],
-      venders: [],
-      backImage: {
-        backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
-      }
-    };
-  },
-  beforeRouteLeave(to, from, next) {
-    if (to.name == "UMDetailEquipment") {
-      to.meta.keepAlive = false;
-      next();
-    } else {
-      from.meta.keepAlive = false;
-      next();
-    }
-  },
-  watch: {
-    $route: function() {
-      //2. $route发生变化时再次赋值planId
-      this.tunnelId = this.$route.params.id;
-      this.tunnels.forEach(a => {
-        if (a.id == this.tunnelId) {
-          this.showTable();
+    name: "queryEquipment",
+    data() {
+        return {
+            imgUrl: equipemtTunnel,
+            showOn: true,
+            equipments: [],
+            tunnels: [],
+            stores: [],
+            tunnelId: 1,
+            equipmentTypes: [],
+            deleteEquipmentInfo: [], //要删除的设备
+            conditions: {
+                name: null,
+                typeId: null,
+                modelId: null,
+                status: null,
+                venderId: null,
+                startTime: null,
+                endTime: null,
+                tunnelId: null,
+                storeId: null
+            },
+            equipmentStatus: [],
+            pagingList: [],
+            page: {
+                pageNum: 1,
+                pageSize: 8,
+                pageTotal: 0
+            },
+            pageStyle: {
+                position: 'absolute',
+                bottom: '1vmin',
+                right: '2.5vmin'
+            },
+            equipmentType: [],
+            equipmentModel: [],
+            venders: [],
+            backImage: {
+                backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
+            },
+            columnsEquipment: [
+                {
+                    type: 'index',
+                    width: 60,
+                    align: 'center'
+                },
+                {
+                    title: '设备名称',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '资产编码',
+                    key: 'assetNo',
+                    align: 'center'
+                },
+                {
+                    title: '所属管廊',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = params.row.tunnel.name
+                        return h('div', temp)
+                    }
+                },
+                {
+                    title: '设备所属系统',
+                    align: 'center',
+                    key: 'typeName'
+                },
+                {
+                    title: '设备状态',
+                    key: 'statusName',
+                    align: 'center'
+                },
+                {
+                    title: '规格型号',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = params.row.model.name
+                        return h('div', temp)
+                    }
+                },
+                {
+                    title: '量程',
+                    key: 'range',
+                    align: 'center'
+                },
+                {
+                    title: '额定电压',
+                    key: 'ratedVoltage',
+                    align: 'center'
+                },
+                {
+                    title: '质保期限',
+                    key: 'qaTerm',
+                    align: 'center'
+                },
+                {
+                    title: '厂家',
+                    key: 'factory',
+                    align: 'center'
+                },
+                {
+                    title: '品牌',
+                    key: 'brand',
+                    align: 'center'
+                },
+                {
+                    title: '供应商',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = params.row.vender.name
+                        return h('div', temp)
+                    }
+                },
+                {
+                    title: '安装时间',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = new Date(params.row.runTime).format('yyyy-MM-dd hh:mm:ss')
+                        return h('div', temp)
+                    }
+                },
+                {
+                    title: '安装位置',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = null
+                        if(params.row.section!=null){
+                            temp = params.row.section.name
+                        }else{
+                            temp = ''
+                        }
+                        return h('div', temp)
+                    }
+                },
+                {
+                    title: '关联设备',
+                    align: 'center',
+                    render: (h, params) => {
+                        let temp = params.row.obj.name
+                        return h('div', temp)
+                    }
+                }
+            ],
+            chooseEquipmentTabPane: '卡片',
+            isNullData: false,
+            cardHeight: 600,
+            tableHeight: 600
+        };
+    },
+    beforeRouteLeave(to, from, next) {
+        if (to.name == "设备详情") {
+            to.meta.keepAlive = false;
+            next();
+        } else {
+            from.meta.keepAlive = false;
+            next();
         }
-      });
-    }
-  },
-  computed: {
-    params() {
-      let param = {
-        name: this.conditions.name,
-        type: this.conditions.typeId,
-        status: this.conditions.status,
-        tunnelId: this.conditions.tunnelId,
-        venderId: this.conditions.venderId,
-        modelId: this.conditions.modelId,
-        startTime: this.conditions.startTime,
-        endTime: this.conditions.endTime,
-        pageNum: this.page.pageNum,
-        pageSize: this.page.pageSize
-      };
-      return Object.assign({}, param);
-    }
-  },
-  mounted() {
-    //从数据库读取select的option选项
-    let _this = this;
-    TunnelService.getTunnels().then(
-      result => {
-        _this.tunnels = result;
-        _this.selectedTunnel = _this.tunnels.length > 0 ? _this.tunnels[0] : {};
-        _this.selectedTunnelName = _this.selectedTunnel.name;
-      },
-      error => {
-        _this.Log.info(error);
-      }
-    );
+    },
+    created(){
+        if(localStorage.getItem('choosedEquipmentTab')){
+            this.chooseEquipmentTabPane = localStorage.getItem('choosedEquipmentTab')
+        }else{
+            this.chooseEquipmentTabPane = '卡片'
+        }
+    },
+    watch: {
+        $route: function() {
+            //2. $route发生变化时再次赋值planId
+            this.tunnelId = this.$route.params.id;
+            this.tunnels.forEach(a => {
+                if (a.id == this.tunnelId) {
+                this.showTable();
+                }
+            });
+        }
+    },
+    computed: {
+        params() {
+            let param = {
+                name: this.conditions.name,
+                type: this.conditions.typeId,
+                status: this.conditions.status,
+                tunnelId: this.conditions.tunnelId,
+                venderId: this.conditions.venderId,
+                modelId: this.conditions.modelId,
+                startTime: this.conditions.startTime,
+                endTime: this.conditions.endTime,
+                storeId: this.conditions.storeId,
+                tunnelId: this.conditions.tunnelId,
+                pageNum: this.page.pageNum,
+                pageSize: this.page.pageSize
+            };
+            return Object.assign({}, param);
+        }
+    },
+    mounted() {
+        //从数据库读取select的option选项
+        let _this = this;
 
-    //获取type
-    EquipmentService.getEquipmentTypes().then(
-        res=>{
-            this.equipmentType = res
-        },
-        error => {
-            this.Log.info(error);
-        },
-    );
+        _this.cardHeight = window.innerHeight/100*50 + 'px'
+        _this.tableHeight = window.innerHeight/100*50
 
-    //获取model
-    EquipmentService.getEquipmentModels().then(
-        res=>{
-            this.equipmentModel = res
-        },
-        error => {
-            this.Log.info(error)
-        }
-    )
-    //获取供应商
-    EquipmentService.getVenders().then(
-        res=>{
-            this.venders = res
-        },
-        error=>{
-            this.Log.info(error)
-        }
-    ),
-    //设备状态
-    EquipmentService.getStatus().then(
-        res=>{
-          console.log("res",res)
-            this.equipmentStatus = res
-        },
-        error=>{
-            this.Log.info(error)
-        }
-    )
-    this.showTable();
-  },
-  methods: {
-    // type 1:查看， 2：编辑
-    goToMoudle: function(index, type) {
-      this.$router.push({
-        name: "UMDetailEquipment",
-        params: {
-          id: this.equipments[index].id,
-          type: type
-        }
-      });
-    },
-    showTable() {
-      let _this = this;
-      if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-        _this.$Message.error('开始时间必须小于结束时间！');
-        return;
-      }
-      EquipmentService.equipmentDatagird(this.params).then(
-        result => {
-          for (let index in result.list) {
-            result.list[index].crtTime = new Date(result.list[index].crtTime).format("yyyy-MM-dd hh:mm:s");
-            // if (result.list[index].imgUrl != null) {
-            //   result.list[index].imgUrl =
-            //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
-            // }
-          }
-          _this.equipments = result.list;
-          _this.page.pageTotal = result.total;
-        },
-        error => {
-          _this.Log.info(error);
-        }
-      );
-    },
-    handlePage(value) {
-      this.page.pageNum = value;
-      this.showTable();
-    },
-    handlePageSize(value) {
-      this.page.pageSize = value;
-      this.showTable();
-    },
-    show(index) {
-      this.goToMoudle(index, types.pageType.Read);
-    },
-    edit(index) {
-      this.goToMoudle(index, types.pageType.Edit);
-    },
-    del(index) {
-      let _this = this;
-      EquipmentService.equipmentDatagird(this.params).then(
-        result => {
-          _this.deleteEquipmentInfo = result.list[index];
-        },
-        error => {
-          _this.Log.info(error);
-        }
-      );
-
-      this.$Modal.confirm({
-        title: "删除",
-        width: '24vw',
-        content: "<p>确认删除吗?</p>",
-        onOk: () => {
-          let _this = this;
-          EquipmentService.deleteEquipment(this.deleteEquipmentInfo.id).then(
-            result => {
-              _this.showTable();
+        //获取type
+        EquipmentService.getEquipmentTypes().then(
+            res=>{
+                this.equipmentType = res
             },
             error => {
-              _this.Log.info(error);
+                this.Log.info(error);
+            },
+        );
+
+        //获取model
+        EquipmentService.getEquipmentModels().then(
+            res=>{
+                this.equipmentModel = res
+            },
+            error => {
+                this.Log.info(error)
             }
-          );
+        )
+        //获取供应商
+        EquipmentService.getVenders().then(
+            res=>{
+                this.venders = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        ),
+        //设备状态
+        EquipmentService.getStatus().then(
+            res=>{
+                this.equipmentStatus = res
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
+
+        TunnelService.getTunnels().then(
+            result => {
+                _this.tunnels = result;
+                if(_this.$route.params.tunnelId){
+                    _this.conditions.tunnelId = +_this.$route.params.tunnelId
+                    // _this.conditions.storeId = +_this.$route.params.storeId
+                    _this.getStores()
+                } else {
+                    _this.showTable();
+                }
+            },
+            error => {
+                _this.Log.info(error);
+            }
+        );
+    },
+    methods: {
+        // type 1:查看， 2：编辑
+        goToMoudle: function(index, type) {
+            this.$router.push({
+                name: "设备详情",
+                params: {
+                    id: this.equipments[index].id,
+                    type: type
+                }
+            });
+        },
+        showTable() {
+            let _this = this;
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
+            EquipmentService.equipmentDatagird(this.params).then(
+                result => {
+                    if(result.pagedList.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
+                    for (let index in result.pagedList) {
+                        result.pagedList[index].crtTime = new Date(result.pagedList[index].crtTime).format("yyyy-MM-dd hh:mm:s");
+                        // if (result.list[index].imgUrl != null) {
+                        //   result.list[index].imgUrl =
+                        //     _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
+                        // }
+                    }
+                    _this.equipments = result.pagedList;
+                    _this.page.pageTotal = result.total;
+                },
+                error => {
+                    _this.Log.info(error);
+                }
+            );
+        },
+        batchAddEquipment(data){
+            let arr = []
+            data.body.forEach(element => {
+                let temp = {
+                    name: element[data.header[0]],
+                    assetNo: element[data.header[1]],
+                    tunnelId: element[data.header[2]],
+                    type: element[data.header[3]],
+                    status: element[data.header[4]],
+                    modelId: element[data.header[5]],
+                    range: element[data.header[6]],
+                    ratedVoltage: element[data.header[7]],
+                    qaTerm: element[data.header[8]],
+                    factory: element[data.header[9]],
+                    brand: element[data.header[10]],
+                    venderId: element[data.header[11]],
+                    runTime: element[data.header[12]],
+                    sectionId: element[data.header[13]],
+                    objId: element[data.header[14]]
+                }
+                arr.push(temp)
+            })
+            EquipmentService.batchAdd(arr).then(
+                result => {
+                    this.$Message.success("批量添加成功！")
+                    this.showTable()
+                },
+                error => {
+                    this.$Message.error("批量添加失败！")
+                    this.Log.info(error)
+                }
+            )
+        },
+        handlePage(value) {
+            this.page.pageNum = value;
+            this.showTable();
+        },
+        handlePageSize(value) {
+            this.page.pageSize = value;
+            this.showTable();
+        },
+        show(index) {
+            this.goToMoudle(index, types.pageType.Read);
+        },
+        edit(index) {
+            this.goToMoudle(index, types.pageType.Edit);
+        },
+        del(id) {
+            let _this = this;
+            // EquipmentService.equipmentDatagird(this.params).then(
+            //     result => {
+            //         _this.deleteEquipmentInfo = result.list[index];
+            //     },
+            //     error => {
+            //         _this.Log.info(error);
+            //     }
+            // );
+
+            this.$Modal.confirm({
+                title: "删除",
+                width: '24vw',
+                content: "<p>确认删除吗?</p>",
+                onOk: () => {
+                    let _this = this;
+                    EquipmentService.deleteEquipment(id).then(
+                        result => {
+                            _this.showTable();
+                        },
+                        error => {
+                            _this.Log.info(error);
+                        }
+                    );
+                }
+            });
+        },
+        add(path) {
+            this.$router.push(path);
+        },
+        pickUp() {
+            this.showOn = !this.showOn;
+        },
+        chooseTab(name){
+            localStorage.setItem("choosedEquipmentTab",name)
+        },
+        getStores(){
+            if(this.conditions.tunnelId){
+                TunnelService.getStoresByTunnelId(this.conditions.tunnelId).then(
+                    res=>{
+                        this.stores = res
+                        if(this.$route.params.storeId && res.length){
+                            this.conditions.storeId = +this.$route.params.storeId
+                            this.showTable()
+                        } else {
+                            this.conditions.storeId = null
+                        }
+                    },
+                    err=>{
+                        this.Log.info(err)
+                    }
+                )
+            } 
         }
-      });
-    },
-    add(path) {
-      this.$router.push(path);
-    },
-    pickUp() {
-      this.showOn = !this.showOn;
     }
-  }
 };
 </script>
 <style scoped>
-
+.queryCondition{
+    height: 14vh;
+}
 .equipmentList {
-  font-size: 17px;
-  font-weight: 700;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
 }
 
 .addList {
-  border: 1px dashed #dfdfdf;
-  text-align: center;
-  line-height: 40px;
-  color: #8b8b8b;
-  margin-top: 20px;
-  border-radius: 10px;
-  background: #fff;
-  z-index: 10001;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(to left, #1af6b0, #a7ecd7);
+    color: #fff
 }
 
 /*new*/
 .equipentTitle {
-  color: #fff;
-  font-size: 20px;
-  text-align: center;
-  line-height: 10vh;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    line-height: 7vh;
 }
 
 .imgBox {
-  text-align: center;
+    text-align: center;
 }
 
 .table li {
-  list-style: none;
-  width: 80%;
-  margin: 10px auto;
-}
-
-.backGoundBox {
-  position: relative;
-  height: 10vh;
-  width: 100%;
+    list-style: none;
+    width: 80%;
+    margin: 10px auto;
 }
 
 .topBox {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.3);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
-.imgBox img {
+/* .imgBox img {
     width: 5vh;
     height: 5vh;
     border-radius: 5vh;
     position: absolute;
     z-index: 5;
-    left: 50%;
-    top: 70%;
-    margin-left: -2.5vh
-}
+    top: 8%;
+    margin-left: -2.5vh;
+} */
 
-.detailsBox {
-  border: 1px solid #ebe8e8;
-  padding-top: 20px;
-  background: #fff;
-}
-
-.detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14 {
-  line-height: 35px;
-  padding-left: 20px;
+.detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
+    line-height: 35px;
+    padding-left: 2vmin;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #fff;
 }
 
 .operationSee,
 .operationEdit,
 .operationDel {
-  text-align: center;
-  background: #fff;
-  padding: 5px 0;
-  border-bottom: 1px solid #ebe8e8;
+    text-align: center;
+    padding: 5px 0;
+    color: #fff;
 }
-
-.operationDel {
-  border-right: 1px solid #ebe8e8;
-}
-
-.operationSee {
-  border-left: 1px solid #ebe8e8;
-}
-
 .operationSee p,
 .operationEdit p,
 .operationDel p {
   cursor: pointer;
 }
 .word43{
-  letter-spacing: 0.5em;
-  margin-right:  -0.5em;
+    letter-spacing: 0.5em;
+    margin-right:  -0.5em;
+}
+.list .ivu-table-wrapper>>>.ivu-table{
+    color: #ffffff !important;
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table:before,.list .ivu-table-wrapper>>>.ivu-table:after{
+    background-color: #fffdfd00 !important;
+}
+.list .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+    background-color: #fffdfd00 !important;
+    border-bottom: 1px solid #7d7d7d;
+}
+.list .ivu-table-wrapper>>>.ivu-btn-primary,.ivu-table-wrapper>>>.ivu-btn-info{
+    background: linear-gradient(to bottom right, #6952dd, #2d0dd3) !important;
+    border: none
+}
+.navigation{
+    color: #fff;
+}
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+.listBG{
+    background: url("../../../../assets/UM/infoBox.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 3vmin;
+    height: 63vh;
+}
+.infoBox{
+    background: url("../../../../assets/UM/cardBG.png") no-repeat;
+    background-size: 100% 100%;
+}
+.list .ivu-tabs>>>.ivu-tabs-nav{
+	color: #fff;
+}
+.vue-xlsx-container>>>.xlsx-button {
+    padding: 0.6vmin 1vmin;
+    font-size: 1.2vmin;
+    border-radius: 0.8vmin;
+    color: #fff;
+    line-height: 1.5;
+    background: linear-gradient(to left, #2734e1, #7c83f2);
+}
+.ivu-table-wrapper>>>.ivu-table-tip{
+    overflow-x: hidden;
+}
+.cardStyle{
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar,.cardStyle::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb,.cardStyle::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track,.cardStyle::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
@@ -433,31 +690,26 @@ export default {
     .equipmentList{
         font-size: 2.5vmin;
     }
-    .addList {
-        border: 0.2min dashed #dfdfdf;
-        text-align: center;
-        line-height: 4min;
-        color: #8b8b8b;
-        margin-top: 20px;
-        border-radius: 10px;
-        background: #fff;
-        z-index: 10001;
-    }
-    .detailsBox{
+    /* .detailsBox{
         padding-top: 2vh;
-    }
+    } */
     .detailsBox .ivu-col-span-10,.detailsBox .ivu-col-span-14{
         line-height: 4vmin;
         font-size: 1.3vmin;
     }
     .operation{
         font-size: 1.4vmin;
+        padding-bottom: 1vmin;
     }
     .equipentTitle{
-      font-size: 2vmin;
+        font-size: 2vmin;
     }
     .ivu-icon{
-      font-size: 2vmin !important;
+        font-size: 2vmin !important;
+    }
+    .detailsBox .ivu-col-span-12,.detailsBox .ivu-col-span-12 {
+        line-height: 3.5vmin;
+        font-size: 1.6vmin !important;
     }
 }
 </style>

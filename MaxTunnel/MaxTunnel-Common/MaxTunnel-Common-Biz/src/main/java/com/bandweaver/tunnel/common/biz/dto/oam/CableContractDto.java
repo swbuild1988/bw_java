@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.constant.oam.ContractStatusEnum;
 import com.bandweaver.tunnel.common.biz.constant.oam.PayTypeEnum;
-import com.bandweaver.tunnel.common.biz.pojo.oam.Customer;
+import com.bandweaver.tunnel.common.biz.dto.CompanyDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -25,8 +25,8 @@ public class CableContractDto implements Serializable {
     private String name;
     
     @JsonIgnore
-    private Integer customerId;
-    private CustomerDto customer;
+    private Integer companyId;
+    private CompanyDto company;
 
     /**付款方式*/
     private Integer payType;
@@ -39,6 +39,9 @@ public class CableContractDto implements Serializable {
     private Date contractStartTime;
     private Date contractEndTime;
     private Date crtTime;
+
+	private String operateUsername;
+	private String path;
 
     public String getId() {
         return id;
@@ -56,14 +59,6 @@ public class CableContractDto implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
     public Integer getPayType() {
         return payType;
     }
@@ -72,12 +67,20 @@ public class CableContractDto implements Serializable {
         this.payType = payType;
     }
 
-	public CustomerDto getCustomer() {
-		return customer;
+	public Integer getCompanyId() {
+		return companyId;
 	}
 
-	public void setCustomer(CustomerDto customer) {
-		this.customer = customer;
+	public void setCompanyId(Integer companyId) {
+		this.companyId = companyId;
+	}
+
+	public CompanyDto getCompany() {
+		return company;
+	}
+
+	public void setCompany(CompanyDto company) {
+		this.company = company;
 	}
 
 	public String getPayTypeName() {
@@ -127,6 +130,20 @@ public class CableContractDto implements Serializable {
 	public void setCrtTime(Date crtTime) {
 		this.crtTime = crtTime;
 	}
-    
-    
+
+	public String getOperateUsername() {
+		return operateUsername;
+	}
+
+	public void setOperateUsername(String operateUsername) {
+		this.operateUsername = operateUsername;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 }

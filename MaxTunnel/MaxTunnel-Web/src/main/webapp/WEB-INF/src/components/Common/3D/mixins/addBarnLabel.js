@@ -2,6 +2,8 @@ import {
     addEntity,
     computeIntersections,
     _getFieldValues,
+    changStrLength,
+    replaceStr
 } from "../../../../scripts/commonFun";
 
 const addBarnLabel = {
@@ -10,7 +12,7 @@ const addBarnLabel = {
             timer:{
                 timeoutId : null,
                 intervalId : null,
-                sectionId : null, //保留上次section
+                // sectionId : null, //保留上次section
             },
             labelsArray : []
         }
@@ -28,29 +30,29 @@ const addBarnLabel = {
             let { viewer } = this;
             let _this = this;
 
-            clearTimeout(_this.timer.timeoutId);
             clearInterval(_this.timer.intervalId);//清除定时更新label集
-            _this.timer.timeoutId = setTimeout(() => {
-                _this._getSection()
-                    .then(result => {
+            
+            _this._getSection()
+                .then(result => {
+                    console.log(result)
+                    if (result.moInfo) {
 
-                        if (result.moInfo) {
+                        _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
+                        _this.labelsArray.splice(0);//清空当前所有展示label
 
-                            _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));
-                            _this.labelsArray.splice(0);//清空当前所有展示label
+                        result.moInfo.forEach(label => _this.labelsArray.push(label));
 
-                            result.moInfo.forEach(label => _this.labelsArray.push(label));
+                        let lablesIDArray = _this.labelsArray.map(obj => changStrLength(obj.id,10));
 
-                            let lablesIDArray = _this.labelsArray.map(obj => obj.id);
-                            let { startPoint,endPoint } = result.sectionInfo;
+                        let { startPoint,endPoint } = result.sectionInfo;
 
-                            sqlQuery.call(_this, viewer, 'MOID in (' + lablesIDArray.toString() + ')', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
+                        sqlQuery.call(_this, viewer, 'MOID in ("' + replaceStr(lablesIDArray.join(",")) + '")', dataUrl, _this._labelSqlCompleted, processFailed, startPoint, endPoint, _this.labelsArray);
 
-                            //更新label值
-                            _this._updateEntityVal();
-                        }
-                    });
-            }, wait)
+                        //更新label值
+                        // _this._updateEntityVal(); 后端接口找不到
+                    }
+                });
+
         },
         //得到当前section
         _getSection() {
@@ -66,24 +68,29 @@ const addBarnLabel = {
                 var latitude = Cesium.Math.toDegrees(cartographic.latitude);
                 var height = cartographic.height;
 
-                if (height < 0) {
-                    height = 0;
-                }
-
                 _this.axios.post('/sections/gps',
                     {longitude, latitude, height})
                     .then(result => {
                         let {code, data} = result.data;
 
-                        if (code == 200
-                            && data != null
-                            && _this.timer.sectionId !== data.sectionInfo.id
-                        ) {
-                            //缓存sectionId用于判断下次取到section是否一致
-                            _this.timer.sectionId = data.sectionInfo.id;
+                        if (code == 200) {
 
-                            resolve(data)
+                            _this.$emit('sendSectionDetails',data);
+
+                            data && resolve(data)
                         }
+
+                        // if (code == 200
+                        //     // && data != null
+                        //     // && _this.timer.sectionId !== data.sectionInfo.id
+                        // ) {
+                        //     //缓存sectionId用于判断下次取到section是否一致
+                        //     // _this.timer.sectionId = data.sectionInfo.id;
+
+                        //     _this.$emit('sendSectionDetails',data);
+
+                        //     resolve(data)
+                        // }
                     })
             })
         },
@@ -105,7 +112,7 @@ const addBarnLabel = {
                                 let {code, data} = result.data;
                                 if (code == 200) {
                                     let [ updateObj ] = data;
-
+                                    console.log('datadata',data)
                                     if (this.detectionObj.analog.indexOf( updateObj.objtypeId ) != -1 &&
                                         updateObj.cv.toFixed(2) != updateLabel._label._text._value) { //模拟量
 
@@ -144,28 +151,29 @@ const addBarnLabel = {
 
             return function (queryEventArgs) {
                 var selectedFeatures = queryEventArgs.originResult.features;
-
+                
                 for(let i=0;i<selectedFeatures.length;i++){
 
                     var geographic=computeIntersections({x:_getFieldValues(selectedFeatures[i],'X'),y:_getFieldValues(selectedFeatures[i],'Y'),z:_getFieldValues(selectedFeatures[i],'Z')},startLocation,endLocation);//得到点到直线的垂直交点经纬度
 
                     let entityProp = _this._judgeEntityType(labels,selectedFeatures[i],geographic);
-
+                  
                     entityProp &&　addEntity( entityProp );
                 }
             }
         },
         //判断实体类型
         _judgeEntityType(labels,selectedFeatures,geographic){
-
+            
             if( !labels.length ) return false;
             let moTypeId = _getFieldValues(selectedFeatures,'MOTYPEID');
 
             if( moTypeId == 7 ) return false; //moTypeId = 7 时，为相机对象
 
             let { viewer } = this;
-            let [ currLabel ] = labels.filter( label => label.id == _getFieldValues(selectedFeatures,'MOID')); //获取当前的label
-
+            let [ currLabel ] = labels.filter( label => changStrLength(label.id,10) == _getFieldValues(selectedFeatures,'MOID')); //获取当前的label
+            if( !currLabel ) return;
+            
             let object = {
                 viewer,
                 id:currLabel.id,

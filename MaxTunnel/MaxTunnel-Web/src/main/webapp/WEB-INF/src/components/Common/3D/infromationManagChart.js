@@ -61,7 +61,21 @@ export const infromationManagDetails =
             ],
         personnelInfromations:
             [
-                {key:'companyName',val:'访客所属公司'},
-                {key:'phoneNum',val:'访客联系方式'},
+                {
+                    key:'owner' ,val: {
+                        key: '访客姓名',val: owner => owner.name,
+                    }
+                },
+                {
+                     key:'owner' ,val: {
+                        key: '访客联系方式',val: owner => owner.telphone,
+                    }
+                }
+            ],
+        unitPlaceInfromations:
+            [
+                {
+                    key:"name",val:'单位'
+                }
             ]
     }

@@ -1,66 +1,75 @@
 <template>
-  <ModulePage v-bind="curModule"></ModulePage>
+    <ModulePage v-bind="curModule"></ModulePage>
 </template>
 
 <script>
-  import ModulePage from '../../../../components/Common/ModulePage'
-  import { TunnelService } from '../../../../services/tunnelService'
+import ModulePage from "../../../../components/Common/ModulePage";
+import { TunnelService } from "../../../../services/tunnelService";
 
-  export default {
+export default {
     name: "tunnel-safety",
     data() {
-      return {
-        curModule: {
-          moduleName: "管廊安防监控",
-          leftTree: [],
-          selected:[0,-1]
-        },
-        treeNodeJumpUrl: "/UM/TunnelSafety/list/",
-      }
+        return {
+            curModule: {
+                moduleName: "管廊安防监控",
+                leftTree: [],
+                selected: [0, -1]
+            }
+        };
     },
     components: {
-      ModulePage
+        ModulePage
     },
     created() {
-      this.curModule.leftTree = [];
-      let _this = this;
-      TunnelService.getTunnels().then(
-          (result)=>{
-              result.forEach(a=>{
-                  let temp={};
-                  temp.id=a.id;
-                  temp.name=a.name;
-                  // temp.url=_this.treeNodeJumpUrl+a.id;
-                temp.childNode=[
-                  {
-                    id: 21,
-                    name: "监测总览",
-                    url: "/UM/TunnelSafety/list/"+a.id,
-                  },
-                  {
-                    id: 22,
-                    name: "监测详情",
-                    url: "/UM/TunnelSafety/details/"+a.id,
-                  }
-                ];
-                  _this.curModule.leftTree.push(temp);
-              })
-            if (sessionStorage["refreshAddress"] == "" || sessionStorage["refreshAddress"].indexOf("/UM/TunnelSafety") < 0) {
-              _this.goToMoudle({path: _this.curModule.leftTree[0].childNode[0].url});
+        
+        this.curModule.leftTree = [];
+        let _this = this;
+        TunnelService.getTunnels().then(
+            result => {
+                result.forEach(a => {
+                    let temp = {};
+                    temp.id = a.id;
+                    temp.name = a.name;
+                    temp.childNode = [
+                        {
+                            id: 21,
+                            name: "监测总览",
+                            url: "/UM/TunnelSafety/list/" + a.id
+                        },
+                        {
+                            id: 22,
+                            name: "监测详情",
+                            url: "/UM/TunnelSafety/details/" + a.id
+                        }
+                    ];
+                    _this.curModule.leftTree.push(temp);
+                });
+                if (
+                    !sessionStorage["refreshAddress"] ||
+                    sessionStorage["refreshAddress"].indexOf(
+                        "/UM/TunnelSafety"
+                    ) < 0
+                ) {
+                    _this.goToMoudle({
+                        path: _this.curModule.leftTree[0].childNode[0].url
+                    });
+
+                    sessionStorage.setItem("selectedName", "");
+                }
+
+                // sessionStorage.setItem("refreshAddress", "");
+            },
+            error => {
+                console.log(error);
             }
-            sessionStorage.setItem("refreshAddress", "");
-          },
-          (error)=>{
-              console.log(error)
-      })
+        );
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
-      goToMoudle(path) {
-        this.$router.push(path);
-      }
+        goToMoudle(path) {
+            this.$router.push(path);
+        }
     }
-  };
+};
 </script>
 

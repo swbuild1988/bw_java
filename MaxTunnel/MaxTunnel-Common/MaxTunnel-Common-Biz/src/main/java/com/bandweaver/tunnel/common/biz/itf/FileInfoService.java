@@ -51,23 +51,24 @@ public interface FileInfoService {
 	/**删除文件
 	 * @param id 文件id
 	 * @param diskPath 硬盘路径，如果为null，则只删除DB数据
-	 * @throws Exception   
+	 * @throws Exception
 	 * @author shaosen
 	 * @Date 2018年8月30日
 	 */
-	void deleteFile(Integer id, String diskPath) throws Exception;
+	boolean deleteFile(Integer id, String diskPath) throws Exception;
 
 	/**上传文件 
 	 * @param uploadPath 文件上传路径
 	 * @param files 文件
 	 * @param fileType 文件类型 1：文档；2：视频；3：图片
 	 * @param docType 资料类型 1：管廊本体资料；2：其他资料
-	 * @param isSaveToDB 是否保存到文件信息表
-	 * @throws Exception   
+	 * @param docTypeSon
+     * @param isSaveToDB 是否保存到文件信息表
+     * @throws Exception
 	 * @author shaosen
 	 * @Date 2018年8月30日
 	 */
-	void upload(String uploadPath, MultipartFile[] files, int fileType, int docType, boolean isSaveToDB)
+	void upload(String uploadPath, MultipartFile[] files, Integer fileType, Integer docType, Integer docTypeSon, boolean isSaveToDB)
 			throws Exception;
 
 	/**保存到数据库 
@@ -80,7 +81,7 @@ public interface FileInfoService {
 	 * @throws Exception 
 	 * @Date 2018年8月30日
 	 */
-	boolean saveToDB(int fileType, int docType, String fileName, String suffix) throws Exception;
+	boolean saveToDB(Integer fileType, Integer docType, Integer docTypeSon, String originalFilename, String newFileName, String suffix) throws Exception;
 
 	/**检验文件格式 
 	 * @param fileType  文件类型 1：文档；2：视频；3：图片
@@ -89,7 +90,7 @@ public interface FileInfoService {
 	 * @author shaosen
 	 * @Date 2018年8月30日
 	 */
-	void checkFileFormat(int fileType, String suffix) throws Exception;
+	void checkFileFormat(Integer fileType, String suffix) throws Exception;
 	
 
 	/**文件下载 

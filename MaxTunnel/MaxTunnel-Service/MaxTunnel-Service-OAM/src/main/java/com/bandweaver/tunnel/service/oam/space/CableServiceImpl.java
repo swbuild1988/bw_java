@@ -28,8 +28,13 @@ public class CableServiceImpl implements CableService {
 	}
 
 	@Override
-	public List<Cable> getListByIds(List<String> cids) {
-		List<Cable> list = cableMapper.getListByIds(cids);
+	public List<CableDto> getListByIds(List<String> cids) {
+		List<CableDto> list = cableMapper.getListByIds(cids);
 		return list == null ? Collections.emptyList() : list;
+	}
+	
+	@Override
+	public List<String> getCableIdsBySectionIds(List<Integer> list){
+		return cableMapper.getCableIdsBySectionIds(list);
 	}
 }

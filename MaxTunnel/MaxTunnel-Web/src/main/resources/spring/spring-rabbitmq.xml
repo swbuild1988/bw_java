@@ -6,44 +6,53 @@
      http://www.springframework.org/schema/beans
      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
      http://www.springframework.org/schema/rabbit
-     http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd">
+     http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd">
     <!--配置connection-factory，指定连接rabbit server参数 -->
-    <rabbit:connection-factory id="connectionFactory" username="${mq.username}" password="${mq.password}" host="${mq.host}" port="${mq.port}" />
+    <rabbit:connection-factory id="connectionFactory" username="${mq.username}" password="${mq.password}"
+                               host="${mq.host}" port="${mq.port}"/>
+
 
     <!--定义rabbit template用于数据的接收和发送 -->
-    <rabbit:template id="amqpTemplate"  connection-factory="connectionFactory"
-                     exchange="${mq.exchange}" />
+    <!-- mandatory必须设置true,return callback才生效 -->
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+                     confirm-callback="confirmCallBackListener"
+                     return-callback="returnCallBackListener"
+                     mandatory="true"
+                     exchange="${mq.exchange}"/>
 
     <!--通过指定下面的admin信息，当前producer中的exchange和queue会在rabbitmq服务器上自动生成 -->
-    <rabbit:admin connection-factory="connectionFactory" />
+    <rabbit:admin connection-factory="connectionFactory"/>
 
-    <!--定义queue -->
-    <rabbit:queue name="QUEUE_ALARM_UM" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="QUEUE_ALARM_VM" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="QUEUE_PLAN_UM" durable="true" auto-delete="false" exclusive="false" />
-    <rabbit:queue name="QUEUE_PLAN_VM" durable="true" auto-delete="false" exclusive="false" />
+    <rabbit:fanout-exchange name="${mq.exchange}" durable="true" auto-delete="false">
+    </rabbit:fanout-exchange>
 
-    <!-- 定义topic exchange，绑定队列 -->
-    <rabbit:topic-exchange name="${mq.exchange}" durable="true" auto-delete="false">
-        <rabbit:bindings>
-            <rabbit:binding queue="QUEUE_ALARM_UM" pattern="alarm.um" />
-            <rabbit:binding queue="QUEUE_ALARM_VM" pattern="alarm.vm" />
-            <rabbit:binding queue="QUEUE_PLAN_UM" pattern="plan.um" />
-            <rabbit:binding queue="QUEUE_PLAN_VM" pattern="plan.vm" />
-        </rabbit:bindings>
-    </rabbit:topic-exchange>
+    <!-- 原来采用topic模式，有问题，改用fanout广播模式 -->
+    <!--&lt;!&ndash;定义queue &ndash;&gt;-->
+    <!--<rabbit:queue name="QUEUE_ALARM_UM"/>-->
+    <!--<rabbit:queue name="QUEUE_ALARM_VM"/>-->
+    <!--<rabbit:queue name="QUEUE_PLAN_UM"/>-->
+    <!--<rabbit:queue name="QUEUE_PLAN_VM"/>-->
 
-    <!-- 消息接收者 -->
-    <bean id="AlarmConsumer" class="com.bandweaver.tunnel.service.mam.alarm.AlarmConsumer"/>
-    <bean id="DataConsumer" class="com.bandweaver.tunnel.service.mam.data.DataConsumer" />
-    <bean id="firePlanConsumer" class="com.bandweaver.tunnel.service.em.fireplan.FirePlanConsumer" />
+    <!--&lt;!&ndash; 定义topic exchange，绑定队列 &ndash;&gt;-->
+    <!--<rabbit:topic-exchange name="${mq.exchange}" durable="true" auto-delete="false">-->
+        <!--<rabbit:bindings>-->
+            <!--<rabbit:binding queue="QUEUE_ALARM_UM" pattern="alarm.um"/>-->
+            <!--<rabbit:binding queue="QUEUE_ALARM_VM" pattern="alarm.vm"/>-->
+            <!--<rabbit:binding queue="QUEUE_PLAN_UM" pattern="plan.um"/>-->
+            <!--<rabbit:binding queue="QUEUE_PLAN_VM" pattern="plan.vm"/>-->
+        <!--</rabbit:bindings>-->
+    <!--</rabbit:topic-exchange>-->
 
-    <!-- queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象-->
-    <rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory">
-       
-        <!-- 关闭后台消费者，由前端消费 -->
-       <!-- <rabbit:listener queues="QUEUE_ALARM_UM" ref="AlarmConsumer"/> -->
-     <!--   <rabbit:listener queues="QUEUE_PLAN_UM" ref="firePlanConsumer" /> -->
-    </rabbit:listener-container>
+    <!--&lt;!&ndash; 消息接收者 &ndash;&gt;-->
+    <!--<bean id="AlarmConsumer" class="com.bandweaver.tunnel.service.mam.alarm.AlarmConsumer"/>-->
+    <!--<bean id="DataConsumer" class="com.bandweaver.tunnel.service.mam.data.DataConsumer"/>-->
+    <!--<bean id="firePlanConsumer" class="com.bandweaver.tunnel.service.em.fireplan.FirePlanConsumer"/>-->
+
+    <!--&lt;!&ndash; queue litener  观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象&ndash;&gt;-->
+    <!--<rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory">-->
+        <!--&lt;!&ndash; 关闭后台消费者，由前端消费 &ndash;&gt;-->
+         <!--<rabbit:listener queues="QUEUE_ALARM_UM" ref="AlarmConsumer"/>-->
+         <!--<rabbit:listener queues="QUEUE_PLAN_UM" ref="firePlanConsumer" /> -->
+    <!--</rabbit:listener-container>-->
 
 </beans>

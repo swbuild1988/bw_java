@@ -66,7 +66,7 @@ export default {
         MeasureModule,
         MotionModule,
         ThreeDimensionsModule,
-        VideoModule
+        VideoModule,
     },
     created() { },
     mounted() { },

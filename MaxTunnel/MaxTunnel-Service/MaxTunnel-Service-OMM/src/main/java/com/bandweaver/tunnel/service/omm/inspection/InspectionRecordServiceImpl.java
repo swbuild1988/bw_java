@@ -2,16 +2,14 @@ package com.bandweaver.tunnel.service.omm.inspection;
 
 import com.bandweaver.tunnel.common.biz.dto.omm.DefectDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto;
-import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.omm.DefectService;
 import com.bandweaver.tunnel.common.biz.itf.omm.InspectionRecordService;
-import com.bandweaver.tunnel.common.biz.pojo.Section;
-import com.bandweaver.tunnel.common.biz.pojo.omm.Defect;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.dao.omm.InspectionRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,8 +20,6 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
     private InspectionRecordMapper inspectionRecordMapper;
     @Autowired
     private DefectService defectService;
-    @Autowired
-    private SectionService sectionService;
 
 
     /**
@@ -34,8 +30,8 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
      */
     @Override
     public int add(InspectionRecord inspectionRecord) {
-        int id = inspectionRecordMapper.add(inspectionRecord);
-        return inspectionRecord.getId().intValue();
+        inspectionRecordMapper.add(inspectionRecord);
+        return inspectionRecord.getId();
     }
 
     /**
@@ -45,10 +41,11 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
      * @return
      */
     @Override
+    @Transactional
     public int add(InspectionRecordDto inspectionRecordDto) {
         LogUtil.info("准备添加记录：" + inspectionRecordDto);
         // 如果有缺陷，先处理缺陷
-        if (inspectionRecordDto.getHasDefect()) {
+        if (Boolean.TRUE.equals(inspectionRecordDto.getHasDefect())) {
             LogUtil.info("有缺陷，添加缺陷:" + inspectionRecordDto.getDefect());
             DefectDto defect = inspectionRecordDto.getDefect();
             //获取管仓段id

@@ -4,7 +4,7 @@
       <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
     </FormItem>
     <FormItem label="头像" prop="userImg">
-      <div class="demo-upload-list" v-for="item in uploadList">
+      <div class="demo-upload-list" v-for="item in uploadList" :key="item">
           <img :src="item.url">
           <div class="demo-upload-list-cover">
             <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>

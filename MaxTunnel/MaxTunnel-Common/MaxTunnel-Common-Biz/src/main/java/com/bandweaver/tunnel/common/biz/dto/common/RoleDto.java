@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.pojo.common.Permission;
 
 public class RoleDto implements Serializable{
@@ -12,8 +13,10 @@ public class RoleDto implements Serializable{
 	private Integer id;
 
     private String roleName;
+
+    private String routList;
     
-    private List<Permission> permissionList;
+    private List<JSONObject> permissionList;
 
     private Date crtTime;
 
@@ -41,13 +44,19 @@ public class RoleDto implements Serializable{
         this.crtTime = crtTime;
     }
 
-	public List<Permission> getPermissionList() {
-		return permissionList;
-	}
+    public List<JSONObject> getPermissionList() {
+        return permissionList;
+    }
 
-	public void setPermissionList(List<Permission> permissionList) {
-		this.permissionList = permissionList;
-	}
-    
-    
+    public void setPermissionList(List<JSONObject> permissionList) {
+        this.permissionList = permissionList;
+    }
+
+    public String getRoutList() {
+        return routList;
+    }
+
+    public void setRoutList(String routList) {
+        this.routList = routList;
+    }
 }

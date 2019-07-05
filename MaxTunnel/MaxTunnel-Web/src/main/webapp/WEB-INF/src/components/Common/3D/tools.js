@@ -6,8 +6,7 @@ import {
   _getFieldValues
 } from "../../../scripts/commonFun";
 import eventBus from "../../../assets/Bus";
-
-// let { VMEntityConfig } = require("../../../../static/serverconfig");
+import { TunnelService } from '../../../services/tunnelService'
 
 export default {
   data() {
@@ -153,10 +152,12 @@ export default {
       if (!(messageType !== undefined && messageType === "events"))
         this.addParticleSystem({ entity, viewer });
     },
-    addIdentifierViewer() {
-      let { entityParam } = this.VMEntityConfig;
+    addIdentifierViewer(entityParam = this.VMEntityConfig.linearEntityParam) {
 
-      entityParam.forEach(entity => {
+      if( !entityParam.length ) return;
+
+        entityParam.forEach(entity => {
+
         let { entityBaseParameters, entityExtendParameters } = entity;
 
         let BaseParameters =
@@ -177,6 +178,13 @@ export default {
         entity
       };
     },
+    addPolylineEntity(baseParams,PolylineParams){
+      
+      let viewerType = this.addViewerType(PolylineParams);
+
+      this.viewer.entities.add(Object.assign({},baseParams, viewerType));
+      
+    },
     parametersFilter(parameters) {
       return [].map.call(parameters, (key, val) => {
         if ([].toString.call(key) === "[object Object]") {
@@ -187,6 +195,7 @@ export default {
       });
     },
     addViewerType({ position, ellipse, billboard, label, point, polyline }) {
+
       let viewerPosition =
         position !== undefined
           ? {
@@ -235,13 +244,13 @@ export default {
               label: {
                 text: label.text,
                 font: label.fontSize + "pt monospace",
-                fillColor: Cesium.Color.RED,
+                fillColor: this.getCesiumColor(label.color),
                 outlineColor: Cesium.Color.BLACK,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 outlineWidth: 1,
                 verticalOrigin: Cesium.VerticalOrigin.TOP,
                 pixelOffset: new Cesium.Cartesian2(0, 9),
-                scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0)
+                scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0)
               }
             }
           : {};
@@ -287,11 +296,15 @@ export default {
         return Cesium.Color.BLACK;
       } else if (color == "blue") {
           return Cesium.Color.BLUE;
+      }else if(color == "yellow"){
+          return Cesium.Color.YELLOW
+      }else if(color == 'green'){
+          return Cesium.Color.GREEN
       }else {
-        return Cesium.Color.RED;
+          return Cesium.Color.RED;
       }
     },
-      lines(lineType,color){
+    lines(lineType,color){
           if( lineType === 'DottedLine' ){
               return new Cesium.PolylineDashMaterialProperty({
                   color:this.getCesiumColor( color )
@@ -299,21 +312,14 @@ export default {
           }
           return this.getCesiumColor(color)
       },
-      getPosition(position){
-          if( Object.keys( position ).length === 4 ){
-              return [
-                  parseFloat(position.startLon), parseFloat(position.startLat), 10,
-                  parseFloat(position.endLon), parseFloat(position.endLat), 10
-              ];
-          }else {
-              return [
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10,
-                  parseFloat(position.northEasternLon), parseFloat(position.northEasternLat), 10,
-                  parseFloat(position.southEasternLon), parseFloat(position.southEasternLat), 10,
-                  parseFloat(position.southWestLon), parseFloat(position.southWestLat), 10,
-                  parseFloat(position.northWestLon), parseFloat(position.northWestLat), 10
-              ];
+    getPosition(position){
+          let positionArray = [];
+
+          for(let i = 0; i< position.length ;i++){
+              positionArray.push( parseFloat(position[i].Lon), parseFloat(position[i].Lat), 10, )
           }
+
+          return positionArray;
 
       },
     addParticleSystem(minxisParticleSystem) {
@@ -548,6 +554,51 @@ export default {
       ctx.translate(-translate.X, -translate.Y);
 
       return canvas;
+    },
+    entityFilter(filterParams){
+        if( typeof filterParams !=='object' ) return;
+        let messageType = filterParams.messageType || 'personnel';
+
+        let entities = filterParams.Id && this.viewer.entities._entities._array.filter(entitie => entitie._moId === filterParams.Id);
+        if( entities.length ){
+
+            entities.forEach(entitie => {
+                if (entitie._messageType === messageType) entitie._show = !entitie._show
+            })
+        }
+    },
+    addRelatedUnits(){
+      
+      TunnelService.getRelatedUnits().then( result => {
+        if( !result.length ) return;
+
+        let IM = Vue.prototype.IM,
+            units = result;
+        
+        IM.deleteInformation(units,'unitPlace', 'id');
+        
+        for(let i=0;i<units.length ;i++){
+
+            IM.addInformation('unitPlace', units[i]); //缓存信息
+            
+            this.addPolylineEntity({
+              messageType: "unitPlace",
+              moId: units[i].id,
+            },{
+              position:{
+                X: units[i].longitude,
+                Y: units[i].latitude,
+                Z: "50"
+              },
+              point: {
+                outlineWidth: "6",
+                pixelSize: "20"
+              },
+            });
+            
+        }
+    })
     }
+
   }
 };

@@ -1,45 +1,49 @@
 package com.bandweaver.tunnel.common.biz.constant.em;
 
-/**应急结束类型枚举
+/**
+ * 应急结束类型枚举
+ *
  * @author shaosen
  * @date 2018年10月9日
  */
 public enum FinishEnum {
 
-	
-	AUTO("自动",1),
-	MANUAL("手动",2);
-	
-	private String name;
-	private int value;
+    /**
+     *
+     */
+    AUTO("自动", 1),
+    MANUAL("手动", 2);
 
-	public String getName() {
-		return name;
-	}
+    private String name;
+    private int value;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setValue(int value) {
-		this.value = value;
-	}
+    public int getValue() {
+        return value;
+    }
 
-	FinishEnum(String name, int value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public static FinishEnum getEnum(int value) {
-		for(FinishEnum e : FinishEnum.values()) {
-			if(value == e.getValue())
-				return e;
-		}
-		return null;
-	}
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    FinishEnum(String name, int value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public static FinishEnum getEnum(int value) {
+        for (FinishEnum e : FinishEnum.values()) {
+            if (value == e.getValue())
+                return e;
+        }
+        return null;
+    }
 
 }

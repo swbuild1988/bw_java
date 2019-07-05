@@ -1,20 +1,30 @@
 package com.bandweaver.tunnel.service.mam.alarm;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
+import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoServerDto;
+import com.bandweaver.tunnel.common.biz.itf.SectionService;
+import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoService;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
+import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
+import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.itf.MqService;
-import com.bandweaver.tunnel.common.biz.itf.em.ObjectBindService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.dao.mam.AlarmMapper;
 import com.github.pagehelper.PageHelper;
@@ -24,31 +34,94 @@ public class AlarmServiceImpl implements AlarmService {
 
 	@Autowired
 	private AlarmMapper alarmMapper;
-//	@Autowired
-//	private AlarmModuleCenter alarmModuleCenter;
 	@Autowired
 	private MqService mqService;
-	@Autowired 
-	private ObjectBindService objectBindService;
-	
+	@Autowired
+	private VideoService videoService;
+	@Autowired
+	private MeasObjModuleCenter measObjModuleCenter;
+	@Autowired
+	private VideoModuleCenter videoModuleCenter;
+	@Autowired
+	private VideoServerService videoServerService;
+	@Autowired
+	private MeasObjService measObjService;
+	@Autowired
+	private SectionService sectionService;
+
 
 	@Override
 	public void add(Alarm alarm) {
-		
-		//save to DB
+
+		JSONObject jsonObject = getJsonByAlarm(alarm);
+		// 将消息广播出去
+		mqService.sendByType("Alarm", jsonObject.toJSONString());
+
+		// save to DB
 		alarm.setCleaned(false);
 		alarmMapper.insertSelective(alarm);
-		LogUtil.debug("返回主键ID：" + alarm.getId() );
-		
-		//save to Cache
-//		alarmModuleCenter.insert(alarm);
-		
-		//send to MQ
-		List<JSONObject> returnData = objectBindService.getPlansByObject(alarm.getObjectId());
-		JSONObject json = (JSONObject) JSONObject.toJSON(alarm);
-		json.put("plans", returnData);
-		mqService.sendToAlarmUMQueue(json.toJSONString());
-		mqService.sendToAlarmVMQueue(json.toJSONString());
+
+	}
+	
+	private JSONObject getJsonByAlarm(Alarm alarm) {
+		MeasObj measObj = measObjModuleCenter.getMeasObj(alarm.getObjectId());
+		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(alarm);
+
+		if (measObj != null) {
+			Integer sectionId = measObj.getSectionId();
+			SectionDto dto = sectionService.getSectionById(sectionId);
+			String location = dto.getStore().getTunnel().getName() + dto.getStore().getName() + dto.getArea().getName();
+
+			List<JSONObject> planList = new ArrayList<>(10);
+			List<VideoDto> videoList = new ArrayList<>(10);
+			List<JSONObject> cvList = new ArrayList<>(10);
+			getPlansAndVideosAndCv(measObj, planList, videoList, cvList);
+			jsonObject.put("plans", planList);
+			jsonObject.put("videos", videoList);
+			jsonObject.put("cvList", cvList);
+			jsonObject.put("sectionId", sectionId);
+			jsonObject.put("location", location);
+		}
+		return jsonObject;
+	}
+	
+
+	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoDto> videoList, List<JSONObject> cvList) {
+		if (measObj != null) {
+			// 获取监测对象绑定的预案
+			String planIds = measObj.getPlanIds();
+			List<Integer> planIdList = CommonUtil.convertStringToList(planIds);
+			for (Integer planId : planIdList) {
+				JSONObject json = new JSONObject();
+				json.put("id", planId);
+				json.put("name", ProcessTypeEnum.getEnum(planId).getName());
+				json.put("processKey", ProcessTypeEnum.getEnum(planId).getProcessKey());
+				planList.add(json);
+			}
+
+			// 获取监测对象绑定的视频
+			String videoIds = measObj.getVideoIds();
+			List<Integer> videoIdList = CommonUtil.convertStringToList(videoIds);
+			// 如果没有关联任何视频，则默认查找监测对象所在section的所有视频
+			if (videoIdList.isEmpty()) {
+				List<VideoDto> videoDtoList = videoModuleCenter.getVideoDtos().stream()
+						.filter(v -> v.getSectionId().intValue() == measObj.getSectionId().intValue()).collect(Collectors.toList());
+				for (VideoDto videoDto : videoDtoList) {
+					videoList.add(videoDto);
+				}
+			} else {
+				// 查找绑定的视频
+				for (Integer videoId : videoIdList) {
+					VideoDto videoServer = videoModuleCenter.getVideoDto(videoId);
+					videoList.add(videoServer);
+				}
+			}
+
+			// 获取监测极值
+			cvList.addAll(measObjService.getMeasObjMaxOrMinValue(measObj.getTunnelId(), measObj.getStoreId(), measObj.getAreaId(), MonitorTypeEnum.ENVIRONMENTAL.getValue()));
+
+		}
+
 	}
 
 
@@ -57,10 +130,12 @@ public class AlarmServiceImpl implements AlarmService {
 		return alarmMapper.getCountByTunnelAndLevel(tunnelId,level);
 	}
 
+
 	@Override
 	public void addBatch(List<Alarm> list) {
 		alarmMapper.addBatch(list);
 	}
+
 
 	@Override
 	public PageInfo<AlarmDto> dataGrid(AlarmVo vo) {
@@ -71,27 +146,27 @@ public class AlarmServiceImpl implements AlarmService {
 
 	@Override
 	public List<AlarmDto> getByCondition(AlarmVo vo) {
-		 List<AlarmDto> list = alarmMapper.getByCondition(vo);
-		 return list == null ? Collections.emptyList() : list ;
+		if(vo.getAlarmLevels() == null || vo.getAlarmLevels().size() < 1)
+			vo.setAlarmLevels(null);
+		List<AlarmDto> list = alarmMapper.getByCondition(vo);
+		return list == null ? Collections.emptyList() : list ;
 	}
 
 
 	@Override
 	public List<AlarmDto> getAllNonCleanedAlarm() {
-//		List<Alarm> alarms = alarmModuleCenter.getAlarms();
 		List<AlarmDto> list = alarmMapper.getAllNonCleanedAlarm();
 		return list == null ? Collections.emptyList() : list ;
 	}
 
 	@Override
-	public Alarm getById(Integer id) {
-//		return alarmModuleCenter.getAlarm(id);
-		return alarmMapper.selectByPrimaryKey(id);
+	public JSONObject getById(Integer id) {
+		Alarm alarm = alarmMapper.selectByPrimaryKey(id);
+		return getJsonByAlarm(alarm);
 	}
 
 	@Override
 	public void cleanAlarm(Alarm alarm) {
-//		Alarm alm = alarmModuleCenter.getAlarm(alarm.getId());
 		Alarm alm = alarmMapper.selectByPrimaryKey(alarm.getId());
 		if(alm == null || alm.getCleaned()) {
 			return;
@@ -105,10 +180,6 @@ public class AlarmServiceImpl implements AlarmService {
 		alm.setCleaned(true);
 		alm.setCleanedDate(DateUtil.getCurrentDate());
 		alarmMapper.updateByPrimaryKeySelective(alm);
-		
-		//清除缓存
-//		alarmModuleCenter.remove(alarm.getId());
-		
 	}
 
 	
@@ -171,6 +242,10 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 
-
+	@Override
+	public List<AlarmDto> getListByStartTimeAndEndTime(Date startTime,Date endTime) {
+		List<AlarmDto> list = alarmMapper.getListByStartTimeAndEndTime(startTime,endTime);
+		return list == null ? Collections.emptyList() : list;
+	}
 }
 

@@ -41,6 +41,10 @@
         xData: [],
         option: {},
         total: 0,
+        refresh: {
+          time: 1000 * 60,
+          flag: true
+        }
       }
     },
     components: {},
@@ -52,7 +56,7 @@
       init() {
         this.drawHollowPie();
         this.fetchData(this.requestUrl);
-        this.refreshData();
+        // this.refreshData();
       },
       resizeChart() {
         let _this = this;
@@ -143,6 +147,13 @@
               error => {
                 this.Log.info(error)
               })
+              .finally(()=>{
+                if(_this.refresh.flag){
+					setTimeout(()=>{
+						_this.fetchData(_this.requestUrl)
+					},parseFloat(_this.refreshTime))
+				}
+              })
           }
         }
         else {
@@ -177,6 +188,13 @@
                 },
               })
             }
+          })
+          .finally(()=>{
+            if(_this.refresh.flag){
+				setTimeout(()=>{
+					_this.fetchData(_this.requestUrl)
+				},parseFloat(_this.refreshTime))
+			}
           })
         }
       },
@@ -214,6 +232,9 @@
         }
         return 0;
       }
+    },
+    beforeDestroy(){
+      this.refresh.flag = false
     }
   }
 

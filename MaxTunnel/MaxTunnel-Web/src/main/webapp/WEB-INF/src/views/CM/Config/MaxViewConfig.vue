@@ -4,7 +4,7 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span>终端名称</span><span>：</span>
-                <Input v-model="condition.name" placeholder="请输入监测对象名称" class="inputWidth"/>
+                <Input v-model="condition.name" placeholder="请输入终端名称" class="inputWidth"/>
             </Col>
             <Col span="6">
                 <span>开始时间</span><span>：</span>
@@ -17,7 +17,7 @@
                 </DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="search">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch">查询</Button>
                 <Button type="error" size="small" @click="add">新增终端</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -127,8 +127,8 @@ export default {
             },
             pageStyle:{
                 position: 'absolute',
-                bottom: '35px',
-                right: '40px'
+                bottom: '2vmin',
+                right: '2.5vmin'
             },
         }
     },
@@ -145,7 +145,7 @@ export default {
         }
     },
     mounted(){
-        this.search()       
+        this.resetPageSearch()       
     },
     methods:{
         search(){
@@ -185,7 +185,7 @@ export default {
                 result=>{
                     _this.$Message.success('添加成功！');
                     _this.config.show.state = !_this.config.show.state
-                    _this.search()
+                    _this.resetPageSearch()
                 },
                 error=>{
                     _this.Log.info(error)
@@ -195,7 +195,7 @@ export default {
                     result=>{
                         _this.$Message.success('更新成功！');
                         _this.config.show.state = !_this.config.show.state
-                        _this.search()
+                        _this.resetPageSearch()
                     },
                     error=>{
                         _this.Log.info(error)
@@ -230,7 +230,7 @@ export default {
                         result=>{
                             _this.$Message.info('已删除')
                             _this.deleteShow = false
-                            _this.search()
+                            _this.resetPageSearch()
                         },
                         error=>{
                             _this.Log.info(error)
@@ -238,9 +238,13 @@ export default {
                 },
                 onCancel: () => {
                     this.$Message.info('已取消操作');
-                    this.search();
+                    this.resetPageSearch();
                 }
             });
+        },
+        resetPageSearch(){
+            this.page.pageNum = 1;
+            this.search()
         }
     },
     components:{

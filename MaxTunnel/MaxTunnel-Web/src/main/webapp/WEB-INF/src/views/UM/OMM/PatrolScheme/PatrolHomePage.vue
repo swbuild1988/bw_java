@@ -1,123 +1,112 @@
 <template>
     <div class="flex-container">
-        <h1 style="font-size: 2.6vmin">巡检计划信息总览</h1>
+        <h1 style="font-size: 1.6vmin; color: #fff">巡检计划信息总览</h1>
         <Row class="item-flex">
             <Col span="16">
             <Row>
-                <Col span="24">
+                <Col span="24" class="GISBG">
                 <div class="GISbox">
                     <TestSmViewer ref="TestSmViewer" :openImageryProvider="true"></TestSmViewer>
-                    <div class="tunnelProfile">
-                        <div>巡检计划执行概况</div>
-                        <div>本月总计划：{{this.monthPlan.value}}</div>
-                        <div>发现缺陷数：{{this.defectCount}}</div>
-                    </div>
                 </div>
                 </Col>
                 <Col span="11" style="margin-top: 1vh">
-                <Card>
-                    <p slot="title">故障信息列表</p>
-                    <p v-for="(item,index) in faultInfoList" value="item" :key="index">
-                        <span class="goDetail" @click="goDefectDetails(item.id)">{{item.name}}</span>
-                        <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
-                    </p>
-                </Card>
+                    <div class="card">
+                        <p class="title">故障信息列表</p>
+                        <div class="details">
+                            <p v-for="(item,index) in faultInfoList" value="item" :key="index">
+                                <span class="goDetail" @click="goDefectDetails(item.id)">{{item.name}}</span>
+                                <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+                            </p>
+                        </div>
+                    </div>
                 </Col>
                 <Col span="11" offset="2" style="margin-top: 1vh;">
-                <Card>
-                    <p slot="title">计划信息列表</p>
-                    <p v-for="(item,index) in tunnelInfoList" value="item" :key="index">
-                        <span class="goDetail" @click="goPatrolPlan(item.planId)">{{item.name}}</span>
-                        <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
-                    </p>
-                </Card>
+                    <div class="card">
+                        <p class="title">计划信息列表</p>
+                        <div class="details">
+                            <p v-for="(item,index) in tunnelInfoList" value="item" :key="index">
+                                <span class="goDetail" @click="goPatrolPlan(item.planId)">{{item.name}}</span>
+                                <span class="defaultListTime">{{new Date(item.createTime).format('yyyy-MM-dd')}}</span>
+                            </p>
+                        </div>
+                    </div>
                 </Col>
             </Row>
             </Col>
             <Col span="8" class="rightBox">
             <Row>
                 <Col span="12">
-                <!-- <div
-          @click="goToMoudle('/UM/planPatrol/queryAnnualPlan')"
-          class="data-box"
-          style="margin-right: 0"
-        > -->
-                <div class="data-box" style="margin-right: 0">
-                    <DataShow v-bind="yearPlan"></DataShow>
-                </div>
+                    <div class="data-box" style="margin-right: 0">
+                        <DataShow v-bind="yearPlan"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <!-- <div @click="goToMoudle('/UM/planPatrol/queryMonthPlan')" class="data-box"> -->
-                <div class="data-box">
-                    <DataShow v-bind="monthPlan"></DataShow>
-                </div>
+                    <div class="data-box">
+                        <DataShow v-bind="monthPlan"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <div class="data-box" style="margin-right: 0">
-                    <DataShow v-bind="finishedTask"></DataShow>
-                </div>
+                    <div class="data-box" style="margin-right: 0">
+                        <DataShow v-bind="finishedTask"></DataShow>
+                    </div>
                 </Col>
                 <Col span="12">
-                <div class="data-box">
-                    <DataShow v-bind="unfinishedTask"></DataShow>
-                </div>
+                    <div class="data-box">
+                        <DataShow v-bind="unfinishedTask"></DataShow>
+                    </div>
                 </Col>
             </Row>
             </Col>
         </Row>
-        <Row>
+        <Row style="margin-top: 1vh;">
             <Col span="7">
-            <div style="width: 24vw; height:22vh;" class="equipmentChartBox">
-                <simple-bar v-bind="equipmentChart"></simple-bar>
-            </div>
+                <div style="width: 24vw; height:22vh;" class="equipmentChartBox boxBG">
+                    <simple-bar v-bind="equipmentChart"></simple-bar>
+                </div>
             </Col>
             <Col span="7">
-            <div style="width:24vw; height:22vh;" class="equipmentChartDoubleColor">
-                <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
-            </div>
+                <div style="width:24vw; height:22vh;" class="equipmentChartDoubleColor boxBG">
+                    <simple-pie v-bind="equipmentChartDoubleColor"></simple-pie>
+                </div>
             </Col>
             <Col span="5">
-            <div class="circleBox" style="background: #2C6A69;">
-                <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="finishedYearPlanRatio"
-                    stroke-linecap="square" stroke-color="#fff" style="margin-top: 5px;">
-                    <p class="demo-Circle-inner" style="font-size:2.2vmin;color: #fff">年度完成任务占比</p>
-                    <p class="demo-Circle-inner" style="font-size:2.2vmin;color: #fff">{{this.finishedYearPlanRatio}}%</p>
-                </i-circle>
-            </div>
+                <div class="circleBox boxBG">
+                    <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="finishedYearPlanRatio"
+                        stroke-linecap="square" stroke-color="#fc9694">
+                        <p class="demo-Circle-inner">年度完成任务占比</p>
+                        <p class="demo-Circle-inner">{{this.finishedYearPlanRatio}}%</p>
+                    </i-circle>
+                </div>
             </Col>
             <Col span="5">
-            <div class="circleBox" style="background: #D5C7E1">
-                <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="currMonthRatio" stroke-linecap="square"
-                    stroke-color="#E5B500" style="margin-top: 5px;">
-                    <p class="demo-Circle-inner" style="font-size:2.2vmin">本月计划占比</p>
-                    <p class="demo-Circle-inner" style="font-size: 2.2vmin">{{this.currMonthRatio}}%</p>
-                </i-circle>
-            </div>
+                <div class="circleBox boxBG">
+                    <i-circle :size="radius" :trail-width="4" :stroke-width="4" :percent="currMonthRatio" 
+                        stroke-linecap="square" stroke-color="#b195ed">
+                        <p class="demo-Circle-inner">本月任务占比</p>
+                        <p class="demo-Circle-inner">{{this.currMonthRatio}}%</p>
+                    </i-circle>
+                </div>
             </Col>
         </Row>
     </div>
 </template>
 
 <script>
-    import DataBox from "../../../../components/Common/Box/DataBox";
-    import DataShow from "../../../../components/Common/DataShow";
-    import SimpleBar from "../../../../components/Common/Chart/SimpleBarChart";
-    import SimplePie from "../../../../components/Common/Chart/SimplePieChart";
-    import Ring from "../../../../components/Common/Chart/RingChart";
-    import TestSmViewer from "../../../../components/Common/3D/overLook3DViewer";
-    import ProcessRing from "../../../../components/Common/ProcessRing";
-    import annualPlan from "../../../../assets/UM/annualPlan.png";
-    import curMonthPlan from "../../../../assets/UM/curMonthPlan.png";
-    import processedPlan from "../../../../assets/UM/processedPlan.png";
-    import pendingPlan from "../../../../assets/UM/pendingPlan.png";
-    import {
-        PatrolService
-    } from "../../../../services/patrolService";
-    import {
-        DefectService
-    } from "../../../../services/defectService";
+    import DataBox from "@/components/Common/Box/DataBox";
+    import DataShow from "@/components/Common/DataShow";
+    import SimpleBar from "@/components/Common/Chart/SimpleBarChart";
+    import SimplePie from "@/components/Common/Chart/SimplePieChart";
+    import Ring from "@/components/Common/Chart/RingChart";
+    import TestSmViewer from "@/components/Common/3D/overLook3DViewer";
+    import ProcessRing from "@/components/Common/ProcessRing";
+    import annualPlan from "@/assets/UM/annualPlan.png";
+    import curMonthPlan from "@/assets/UM/curMonthPlan.png";
+    import processedPlan from "@/assets/UM/processedPlan.png";
+    import pendingPlan from "@/assets/UM/pendingPlan.png";
+    import { PatrolService } from "../../../../services/patrolService";
+    import { DefectService } from "../../../../services/defectService";
     import Enum from "../../../../../static/Enum.json";
-
+    import Vue from 'vue'
     export default {
         name: "equipmentMain",
 
@@ -127,39 +116,57 @@
                     id: "ViewId"
                 },
                 yearPlan: {
-                    label: "年度计划数",
+                    label: "年度任务",
                     value: 365,
                     imgSrc: annualPlan,
-                    imgBac: "#8C91A7"
+                    imgBac: "#8C91A7",
+                    showDataColor: '#249cf9'
                 },
                 monthPlan: {
-                    label: "本月计划",
+                    label: "本月任务",
                     value: 87,
                     imgSrc: curMonthPlan,
-                    imgBac: "#7ca9a9"
+                    imgBac: "#7ca9a9",
+                    showDataColor: '#fdb628'
                 },
                 finishedTask: {
-                    label: "已完成巡检任务数",
+                    label: "已完成巡检任务",
                     value: "5",
                     imgSrc: processedPlan,
-                    imgBac: "#112f6b"
+                    imgBac: "#112f6b",
+                    showDataColor: '#12f9ff'
                 },
                 unfinishedTask: {
                     label: "待巡检任务",
                     value: "82",
                     imgSrc: pendingPlan,
-                    imgBac: "#BD4932"
+                    imgBac: "#BD4932",
+                    showDataColor: '#eb6f49'
                 },
+
                 equipmentChart: {
                     id: "equipmentChartId",
                     requestUrl: "/inspection-plans/tunnelCount",
                     parameters: {
                         option: {
                             title: {
-                                text: "各管廊巡检计划数"
+                                text: "各管廊巡检计划数",
+                                textStyle: {
+                                    color: "#fff"
+                                }
                             }
                         }
-                    }
+                    },
+                    titleColor: '#708acc',
+                    lineColor: '#708acc',
+                    seriesColorList: [
+                        [ '#fed701', '#fc9501' ],
+                        [ '#caa2cc', '#c25dc5' ],
+                        [ '#3ce94c', '#0ee622' ],
+                        [ '#ed4a49', '#eb1818' ],
+                        [ '#61eba5', '#00fc7c' ],
+                        [ '#fe9b1a', '#fe411b' ]
+                    ]
                 },
                 equipmentChartDoubleColor: {
                     id: "equipmentCharDoubleColortId",
@@ -170,39 +177,27 @@
                                 text: "各管廊缺陷占比"
                             }
                         }
-                    }
+                    },
+                    seriesColor: ['#c23531', '#e5c52f', '#6bade1', '#6fe46c', '#e06ce4', '#e48e6c'],
+                    legendColor: '#ffffff',
+                    titleSize: '6%',
+                    legendTextSize: '6%'
                 },
                 //本月计划占比
-                currMonthRatio: 0,
+                currMonthRatio: null,
                 //年度计划占比
-                finishedYearPlanRatio: 0,
+                finishedYearPlanRatio: null,
                 faultInfoList: [],
                 tunnelInfoList: [],
                 radius: 100,
                 defectCount: 0,
-                columns2: [{
-                        type: "index",
-                        width: 60,
-                        align: "center"
-                    },
-                    {
-                        title: "所属管廊",
-                        key: "tunnelName"
-                    },
-                    {
-                        title: "缺陷类型",
-                        key: "typeName"
-                    },
-                    {
-                        title: "对象名",
-                        key: "objName"
-                    },
-                    {
-                        title: "状态",
-                        key: "statusName"
-                    }
-                ],
-                listHeight: 0
+                listHeight: 0,
+                polylineAttr:{
+					viewer:Vue.prototype.$viewer,
+					ids:[],
+					type:'patrolShemeRoute',
+                },
+                polylineID:null
             };
         },
         components: {
@@ -213,7 +208,6 @@
             DataShow,
             TestSmViewer,
             ProcessRing
-            // FeatureSample
         },
         beforeRouteLeave(to, from, next) {
             if (
@@ -241,17 +235,23 @@
         },
         mounted() {
             let _this = this;
-            _this.radius = window.innerHeight * 0.2;
+            _this.radius = window.innerHeight * 0.19;
             PatrolService.getPatrolCounts().then(
                 result => {
-                    _this.yearPlan.value = result.yearPlanCount;
-                    _this.monthPlan.value = result.monthPlanCount;
-                    _this.finishedTask.value = result.finfinfinishTaskCount;
+                    //本年任务数
+                    _this.yearPlan.value = result.yearTaskCount;
+                    //本月任务数
+                    _this.monthPlan.value = result.monthTaskCount;
+                    // 本月已完成任务数
+                    _this.finishedTask.value = result.finishTaskCount;
+                    // 本月未完成任务数
                     _this.unfinishedTask.value = result.unfinishTaskCount;
                     _this.tunnelInfoList = result.listPlan;
-                    _this.currMonthRatio = result.yearPlanCount != 0 ? parseFloat(result.monthPlanCount / result.yearPlanCount *
+                    //本月任务占比
+                    _this.currMonthRatio = result.yearPlanCount != 0 ? parseFloat(result.monthTaskCount / result.yearTaskCount *
                         100).toFixed(2) : 0;
-                    _this.finishedYearPlanRatio = result.yearTaskCount != 0 ? parseFloat(result.finishTaskCount /
+
+                    _this.finishedYearPlanRatio = result.finYearTaskCount != 0 ? parseFloat(result.finYearTaskCount /
                         result.yearTaskCount * 100).toFixed(2) : 0;
                 },
                 error => {
@@ -276,17 +276,32 @@
                     _this.Log.info(error);
                 }
             );
-
-            _this.$refs.TestSmViewer.showCheckPointEntity();
+            _this.getRouteList()
         },
 
         methods: {
             goToMoudle: function (path) {
                 this.$router.push(path);
             },
+            goToPlan: function(name, timeType){
+                this.$router.push({
+                    name: name,
+                    params: {
+                        alarmLevel: 3
+                    }
+                })
+            },
+            goToTask: function(name, taskStatus){
+                this.$router.push({
+                    name: name,
+                    params: {
+                        taskStatus: taskStatus
+                    }
+                })
+            },
             goPatrolPlan(id) {
                 this.$router.push({
-                    name: "UMPatrolDetails",
+                    name: "查看巡检计划详情",
                     params: {
                         id: id,
                         type: Enum.pageType.Read
@@ -295,15 +310,100 @@
             },
             goDefectDetails(id) {
                 this.$router.push({
-                    name: "UMDetailDefect",
+                    name: "缺陷详情",
                     params: {
                         id: id,
                         type: Enum.pageType.Read
                     }
                 });
-            }
-        },
+            },
+            removePolyline(polylineID){
+				let { polylineAttr } = this;
+				
+				if(!!polylineID){
+					let entitys  = polylineAttr.viewer.entities.getById(polylineID);
+				
+					if( Array.isArray(entitys) && entitys.length ){
+						entitys.forEach(entity => removeCommonEntity.bind(this,entitys,polylineID))
+					}
+                    else{
+						this.removeCommonEntity(entitys,polylineID)
+					}
+					
+				}
+			},
+			removeCommonEntity(entitys,polylineID){
+				let { polylineAttr } = this;
 
+				return entitys.messageType == polylineAttr.type && polylineAttr.viewer.entities.removeById(polylineID)
+            },
+            getRouteList(){
+                let params = {}
+                PatrolService.getInspectionPlanPath(params).then(
+                    result => {
+                        result.forEach(item=>{
+                            let temp = {}
+                            temp.id = item.id
+                            temp.name = item. name
+                            temp.positions = []
+                            let arr = item.others
+                            if(arr.length>0){
+                                for(let i = 0; i<arr.length; i++ ){
+                                    let startPointPosition = {}
+                                    let startPointArr = arr[0].startPoint.split(',')
+                                    startPointPosition.Lon = startPointArr[0]
+                                    startPointPosition.Lat = startPointArr[1]
+                                    temp.positions.push(startPointPosition)
+                                    let endPointPosition = {}
+                                    if(arr.length==1){
+                                        let endPointArr = arr[0].endPoint.split(',')
+                                        endPointPosition.Lon = endPointArr[0]
+                                        endPointPosition.Lat = endPointArr[1]
+                                        temp.positions.push(endPointPosition)
+                                    }else{
+                                        let endPointArr = arr[item.others.length-1].endPoint.split(',')
+                                        endPointPosition.Lon = endPointArr[0]
+                                        endPointPosition.Lat = endPointArr[1]
+                                        temp.positions.push(endPointPosition)
+                                    }
+                                }
+                                this.getCurRoute(temp)
+                            }
+                        })
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            },
+            getCurRoute(routeInfo) {
+				let params = {}
+				params = {
+                    polyline:{
+                        position: routeInfo.positions,
+                        width: 5,
+                        color: 'blue'
+                    }
+                }
+
+                // this.addPolyline(routeInfo.id,params);
+                this.polylineAttr.ids.push(routeInfo.id); 
+    
+				this.$refs.TestSmViewer.addPolylineEntity({id:routeInfo.id,messageType:this.polylineAttr.type},params)
+				
+            },
+            // addPolyline(id,params){
+            //     this.polylineID = id
+			// 	this.$refs.TestSmViewer.addPolylineEntity({id:id,messageType:this.polylineAttr.type},params)
+            // }
+        },
+        beforeDestroy(){
+            let { ids } = this.polylineAttr;
+            if(typeof ids !== 'object') return;
+
+            ids.forEach( id => this.removePolyline(id))
+            
+        }
     };
 </script>
 <style scoped>
@@ -311,35 +411,20 @@
         padding: 9px;
     }
 
-    h1,
-    .ivu-card>>>.ivu-card-head p,
-    .GISTitle {
-        color: #2e739b;
-    }
-
-    .ivu-card>>>.ivu-card-head p {
-        font-size: 1.2vmin;
-    }
-
     .GISbox {
         position: relative;
         width: 100%;
         height: 44vh;
-        border: 1px solid #dddee1;
         display: inline-block;
         vertical-align: top;
         border-radius: 4px;
         margin-top: 10px;
     }
 
-    .GISTitle {
-        background-color: #f7f8f9;
-        font-size: 18px;
-        line-height: 35px;
-        padding-left: 5px;
-        z-index: 2;
-        position: absolute;
-        width: 100%;
+    .GISBG{
+        background: url("../../../../assets/UM/boxBGBig.png") no-repeat;
+        background-size: 100% 100%;
+        padding: 0.2vmin 1.5vmin 1vmin 1.5vmin;
     }
 
     .tunnelProfile {
@@ -364,24 +449,21 @@
         text-align: center;
         height: 22vh;
         width: 98%;
-        display: inline-block;
-        vertical-align: middle;
-        border: 1px solid #dddee1;
-        border-radius: 4px;
-        background: #eeeeee;
+        align-items:center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        padding: 2vmin 0px;
+    }
+
+    .boxBG{
+        background: url("../../../../assets/UM/chartBG.png") no-repeat;
+        background-size: 100% 100%;
     }
 
     .equipmentChartBox,
     .equipmentChartDoubleColor {
-        border: 1px solid #dddee1;
         border-radius: 4px;
         height: 22vh;
         width: 99%;
-    }
-
-    .ivu-card>>>.ivu-card-body {
-        height: 7vh;
-        overflow-y: auto;
     }
 
     .cesium-viewer-bottom {
@@ -403,19 +485,58 @@
         color: #9300ff
     }
 
+    .card{
+        background: url("../../../../assets/UM/cardBG.png") no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .card .title{
+        color: #0efcff;
+        line-height: 5.5vh;
+        padding-left: 1vw;
+    }
+
+    .card .details{
+        border-top: 2px solid #1b6ca3;
+        padding: 0 1vw;
+        line-height: 3.5vh;
+        overflow-y: auto;
+        height: 6vh;
+        color: #fff;
+    }
+
+    .demo-Circle-inner{
+        font-size: 2.2vmin;
+        color: #fff;
+    }
+
+    .card .details::-webkit-scrollbar{
+		width: 4px;
+		height: 4px;
+	}
+	.card .details::-webkit-scrollbar-thumb{
+		border-radius: 5px;
+		-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+		background: rgba(0, 0, 0, 0.2)
+	}
+	.card .details::-webkit-scrollbar-track{
+		border-radius: 0;
+		-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+		background: rgba(0, 0, 0, 0.1)
+	}
+
     @media (min-width: 2200px) {
-        .ivu-card>>>.ivu-card-head p {
-            height: 2vmin;
-            line-height: 2vmin;
-            font-size: 1.5vmin
-        }
 
         .goDetail {
-            font-size: 1.4vmin;
+            font-size: 1.6vmin;
         }
 
         .defaultListTime {
-            font-size: 1.2vmin;
+            font-size: 1.4vmin;
+        }
+
+        .card .title{
+            font-size: 1.8vmin;
         }
     }
 </style>

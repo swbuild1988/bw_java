@@ -2,87 +2,84 @@
     <div class="allDiv">
         <Row class="queryCondition">
             <Col span="6">
-                备品名称：
+                <span class="conditionTitle">备品名称：</span>
                 <Input v-model="conditions.name" style="width: 60%"></Input>
             </Col>
             <Col span="6">
-                备品类别：
+                <span class="conditionTitle">备品类别：</span>
                 <Select v-model="conditions.typeId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                备品型号：
+                <span class="conditionTitle">备品型号：</span>
                 <Select v-model="conditions.modelId" style="width: 60%">
-                    <Option value=null key="0">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                备品状态：
+                <span class="conditionTitle">备品状态：</span>
                 <Select style="width: 60%" v-model="conditions.isInStorage">
                     <!-- <Option v-for="item in status" :key="item.id" :value="item.isInStorage">{{item.name}}</Option> -->
-                    <Option v-for="item in status" :key="item.id" :value="item.key">{{item.val}}</Option>
+                    <Option v-for="item in status" :key="item.key" :value="item.key">{{item.val}}</Option>
                 </Select>
             </Col>
             <Col span="6">
-                开始时间：
+                <span class="conditionTitle">开始时间：</span>
                 <DatePicker type="datetime" v-model="conditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                结束时间：
+                <span class="conditionTitle">结束时间：</span>
                 <DatePicker type="datetime" v-model="conditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
             </Col>
             <Col span="6">
-                <Button type="primary" icon="ios-search"  @click="showTable()">查询</Button>
+                <Button type="primary" icon="ios-search"  @click="showTable()" style="margin-right: 2vmin">查询</Button>
+                <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
+                批量入库</Button>
             </Col>
         </Row>
         <div class="list">
-            <div style="text-align: right">
-                <Button type="primary" @click="add({path: '/UM/equipment/addBackUp'})" icon="forward">
-                批量入库</Button>
-                <Button type="error" icon="reply" @click="outStroage">批量出库
-                </Button>
-            </div>
-            <Row :gutter="8">
-                <Col span="6" v-for="(item,index) in equipments" :key="index" style="margin-top: 6px;padding: 5px;">
-                    <div :style="backImage" class="backGoundBox">
-                        <div class="topBox">
-                            <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
-                            <p class="equipentTitle">{{ item.name }}</p>
-                            <div class="imgBox"><img :src="imgUrl"></div>
+            <!-- <div style="text-align: right">
+            </div> -->
+            <div class="nullData" v-show="isNullData">暂无数据</div>
+            <Row :gutter="16">
+                <Col span="6" v-for="item in equipments" :key="item.id" style="margin-top: 6px;padding: 5px;">
+                    <div class="boxBG">
+                        <div class="backGoundBox">
+                            <div class="topBox">
+                                <!-- <a class="ivu-modal-close" style="right: 8px;top:0px;"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a> -->
+                                <p class="equipentTitle">{{ item.name }}</p>
+                                <div class="imgBox"><img :src="imgUrl"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detailsBox">
-                        <div>
-                            <div class="backUpInfo" style="width: 44%">设备类型：{{ item.typeName }}</div>
-                            <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
+                        <div class="detailsBox">
+                            <div>
+                                <div class="backUpInfo" style="width: 44%">设备类型：{{ item.typeName }}</div>
+                                <div class="backUpInfo">设备状态：<span :class="item.status ? 'trueStatus' : 'falseStatus'">{{item.status?'在库':'出库'}}</span></div>
+                            </div>
+                            <div>
+                                <div class="backUpInfo" style="width: 44%">设备型号：{{ item.modelName }}</div>
+                                <div class="backUpInfo">入库时间：{{ item.inTime }}</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="backUpInfo" style="width: 44%">设备型号：{{ item.modelName }}</div>
-                            <div class="backUpInfo">入库时间：{{ item.inTime }}</div>
+                        <div class="operation">
+                            <Row>
+                                <Col span="12" class="operationSee">
+                                    <Icon type="reply" size=20></Icon>
+                                    <div class="borrowBox">
+                                        <Button class="borrowBtn" @click="show(item.id, item.inTime)" :disabled="item.status==false">取用出库</Button>
+                                    </div>
+                                </Col>
+                                <Col span="12" class="operationDel">
+                                    <Icon type="trash-a" size=20></Icon>
+                                    <div class="borrowBox">
+                                        <Button class="borrowBtn" @click="del(item.id)" :disabled="item.status==false">删除</Button>
+                                    </div>
+                                </Col>
+                            </Row>
                         </div>
-                    </div>
-                    <div class="operation">
-                        <Row>
-                            <Col span="12" class="operationSee">
-                                <Icon type="reply" size=20></Icon>
-                                <div class="borrowBox">
-                                    <Button class="borrowBtn" @click="show(item.id)" :disabled="item.status==false">取用出库</Button>
-                                </div>
-                            </Col>
-                            <!-- <Col span="8" class="operationEdit">
-                                <Icon type="edit" size=19></Icon>
-                                <p @click="edit(index)">编辑</p>
-                            </Col> -->
-                            <Col span="12" class="operationDel">
-                                <Icon type="trash-a" size=20></Icon>
-                                <div class="borrowBox">
-                                    <Button class="borrowBtn" @click="del(item.id)" :disabled="item.status==false">删除</Button>
-                                </div>
-                            </Col>
-                        </Row>
                     </div>
                 </col>
             </Row>
@@ -91,116 +88,62 @@
             placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator
             :style='pageStyle'></Page>
         <Modal
-            title="批量出库"
-            v-model="isOutStorage"
-            :width="modalWidth"
-        >
-            <Row class="queryCondition">
-                <Col span="8">
-                    备品名称：
-                    <Input type="text" v-model="outStorageConditions.name" style="width: 60%"></Input>
-                </Col>
-                <Col span="8">
-                    备品类别：
-                    <Select v-model="outStorageConditions.typeId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    备品型号：
-                    <Select v-model="outStorageConditions.modelId" style="width: 60%">
-                        <Option value=null key="0">所有</Option>
-                        <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </Col>
-                <Col span="8">
-                    开始时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.startTime" placeholder="请输入开始时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8">
-                    结束时间：
-                    <DatePicker type="datetime" v-model="outStorageConditions.endTime" placeholder="请输入结束时间" style="width: 60%"></DatePicker>
-                </Col>
-                <Col span="8" style="text-align: right;padding-right: 43px;">
-                    <Button type="primary" @click="showInStorage()" size="small" icon="ios-search">查询</Button>
-                </Col>
-            </Row>
-            <Table stripe border height="330" ref="selection" :columns="outStorageColums"  :data="outStorageData" @on-selection-change="checkTable" @on-selection-all="checkTable"></Table>
-
-            <Page :total="OutStoragePage.pageTotal" :current="OutStoragePage.pageNum" :page-size="OutStoragePage.pageSize" show-total show-sizer
-              placement="top" @on-change="handlePageStorage" @on-page-size-change='handPageSizeStorage' show-elevator style="margin-top: 10px;text-align: right"></Page>
-
-            <Row style="margin-top: 20px;">
-                <Form ref="outStorageSubmitData" :model="outStorageSubmitData" :rules="ruleInline" inline>
-                    <Col span="12">
-                        <FormItem prop="staffId" style="width: 100%" class="borrower" label="取用人：" width="120">
-                            <Select style="width: 60%;" v-model="outStorageSubmitData.staffId">
-                                <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem prop="outTime" class="outTime" style="width: 100%" label="取用时间：">
-                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="outStorageSubmitData.outTime"></DatePicker>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem style="width: 100%" prop="whither" label="备品去向：">
-                            <Select style="width: 60%" v-model="outStorageSubmitData.whither">
-                                <Option v-for="item in whitheres" :key="item.val" :value="item.val">{{item.key}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12">
-                        <FormItem label="所属管廊：" style="width: 100%" prop="tunnelId" v-show="outStorageSubmitData.whither==1">
-                            <Select v-model="outStorageSubmitData.tunnelId" style="width: 60%;">
-                                <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
-                            </Select>
-                        </FormItem>
-                    </Col>
-                    <Col span="12" v-show="outStorageSubmitData.whither!=1">
-                        <FormItem style="width: 100%" label="备注：">
-                            <Input type="textarea" style="width: 60%;" v-model="outStorageSubmitData.describe"></Input>
-                        </FormItem>
-                    </Col>
-                    <Col span="24" v-show="outStorageSubmitData.whither==1">
-                        <FormItem style="width: 100%" label="备注：">
-                            <Input type="textarea" style="width: 80%;" v-model="outStorageSubmitData.describe"></Input>
-                        </FormItem>
-                    </Col>
-                </Form>
-            </Row>
-
-            <div slot="footer">
-                <Button type="text" size="large" @click="cancelBatchOut('outStorageSubmitData')">取消</Button>
-                <Button type="primary" size="large" @click="BatchOut('outStorageSubmitData')" :disabled="isOutStorageSubmit">确定</Button>
-            </div>
-
-        </Modal>
-        <Modal
             title="取用出库信息登记"
             v-model="isBorrow"
-            :width="modalWidth"
+            width="44vw"
         >
             <Form ref="borrow" :model="borrow" :rules="borrowValidateRules" :label-width="120" @submit.native.prevent>
+                <FormItem label="资产编码：" prop="assetNo">
+                    <Input v-model="borrow.assetNo"></Input>
+                </FormItem>
+                <FormItem label="安装位置：" class="location">
+                    <Row :gutter="8">
+                        <Col span="7">  
+                            <FormItem prop="tunnelId">
+                                <Select v-model="borrow.tunnelId" @on-change="changeTunnelId(borrow.tunnelId)">
+                                    <Option v-for="(item, index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
+                                </Select>
+                            </FormItem>  
+                        </Col>
+                        <Col span="7">
+                            <FormItem prop="areaId">
+                                <Select v-model="borrow.areaId" @on-change="changeSection()">
+                                    <Option v-for="(item, index) in areas" :value="item.id" :key="index">{{ item.name }}</Option>
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span="7">
+                            <FormItem prop="storeId">
+                                <Select v-model="borrow.storeId" @on-change="changeSection()">
+                                    <Option v-for="(item, index) in stores" :value="item.id" :key="index">{{ item.name }}</Option>
+                                </Select>
+                            </FormItem>
+                        </Col>
+                        <Col span="5" v-show="false">
+                            <FormItem>
+                                <Input v-model="borrow.sectionId" v-show="false"></Input>
+                                <!-- <Input v-model="borrow.sectionName" readonly></Input> -->
+                            </FormItem>
+                        </Col>
+                    </Row>
+                </FormItem>
+                <FormItem label="关联监测对象：" prop="objId">
+                    <Select v-model="borrow.objId"  @on-change="getObj()">
+                        <Option v-for="(item, index) in objs" :value="item.id" :key="index">{{ item.id }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="对象类型：" v-show="borrow.objId">
+                    <div v-for="(item, index) in objTypes" :key="index">
+                        <Input :value="item.objtypeName" readonly></Input>
+                    </div>
+                </FormItem>
                 <FormItem label="取用人：" prop="borrower">
                     <Select v-model="borrow.borrower">
-                        <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
+                        <Option v-for="(item,index) in staffs" :key="index" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="取用时间：" prop="outTime">
                     <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 100%" v-model="borrow.outTime"></DatePicker>
-                </FormItem>
-                <FormItem label="备品去向：" prop="whither">
-                    <Select v-model="borrow.whither">
-                        <Option v-for="item in whitheres" :key="item.val" :value="item.val">{{item.key}}</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="所属管廊：" prop="tunnelId" v-show="borrow.whither==1">
-                    <Select v-model="borrow.tunnelId">
-                        <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
-                    </Select>
                 </FormItem>
                 <FormItem label="取用目的：">
                     <Input type="textarea" v-model="borrow.borrowPurpose" style="width: 100%"></Input>
@@ -233,67 +176,10 @@ export default {
                 endTime: null,
                 isInStorage: null,
             },
-            backImage: {
-                backgroundImage: "url(" + require("../../../../assets/UM/equipemtTunnel.jpg") + ")",
-            },
             status:[
                 { key: 0, val: '出库' },
                 { key: 1, val: '在库' }
             ],
-            isOutStorage: false,
-            outStorageColums: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },{
-                    type: 'index',
-                    width: 60,
-                    align: 'center'
-                },{
-                    title: '备品名称',
-                    key: 'name',
-                    align: 'center'
-                },{
-                    title: '备品类别',
-                    key: 'typeName',
-                    align: 'center'
-                },{
-                    title: '备品型号',
-                    key: 'modelName',
-                    align: 'center'
-                },{
-                    title: '入库时间',
-                    key: 'inTime',
-                    align: 'center'
-                }
-            ],
-            outStorageData:[
-                { id: 1, backUpName: '温度计1', backUpType: '安全防范类', backUpModel: '温度计', inTime: '2018-11-27 12:30:52',}
-            ],
-            outStorageConditions:{
-                name: null,
-                typeId: null,
-                modelId: null,
-                startTime: null,
-                endTime: null,
-                //批量出库查询是否在库，否
-                status: 1,
-            },
-            OutStoragePage:{
-                pageNum: 1,
-                pageSize: 6,
-                pageTotal: 0
-            },
-            outStorageSubmitData:{
-                ids: null,
-                staffId: null,
-                userId: null,
-                outTime: null,
-                describe: null,
-                whither: null,
-                tunnelId: 0
-            },
             showOn: true,
             equipments: [],
             tunnels: [],
@@ -301,22 +187,27 @@ export default {
             equipmentTypes: [],
             equipmentModels:[],
             page: {
-              pageNum: 1,
-              pageSize: 8,
-              pageTotal: 0
+                pageNum: 1,
+                pageSize: 8,
+                pageTotal: 0
             },
             pageStyle: {
-              position: "absolute",
-              bottom: "20px",
-              right: "15px"
+                position: 'absolute',
+                bottom: '1vmin',
+                right: '2.5vmin'
             },
             staffs:[],
             borrow:{
                 borrower: null,
                 outTime: null,
-                whither: null,
-                tunnelId: 0,
-                borrowPurpose: null
+                objId: null,
+                tunnelId: null,
+                borrowPurpose: null,
+                sectionId: null,
+                assetNo: null,
+                areaId: null,
+                storeId: null,
+                // sectionName: null
             },
             aloneBorrowId: null,
             isBorrow: false,
@@ -325,34 +216,37 @@ export default {
                     { type: 'number', required: true, message: '请选择取用人', trigger: 'change'}
                 ],
                 outTime: [
-                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'}
+                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'},
+                    { validator: this.checkOutTime, trigger: 'change' }
                 ],
-                whither: [
-                    { type: 'number', required: true, message: '请选择备品去向', trigger: 'change' }
-                ],
-                tunnelId: [
-                    { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
-                ]
-            },
-            ruleInline:{
-                staffId:[
-                    { type: 'number', required: true, message: '请选择借用人', trigger: 'change' }
-                ],
-                outTime: [
-                    { type: 'date', required: true, message: '请选择取用时间', trigger: 'change'}
-                ],
-                whither: [
-                    { type: 'number', required: true, message: '请选择备品去向', trigger: 'change' }
+                objId: [
+                    { type: 'number', required: true, message: '请选择关联监测对象', trigger: 'change' }
                 ],
                 tunnelId: [
-                    { type: 'number', required: true, message: '请选择所属管廊', trigger: 'change' }
+                    { type: 'number', required: true, message: '所属管廊不能为空', trigger: 'change' }
+                ],
+                areaId: [
+                    { type: 'number', required: true, message: '所属区域不能为空', trigger: 'change' }
+                ],
+                storeId: [
+                    { type: 'number', required: true, message: '所属管仓不能为空', trigger: 'change' }
+                ],
+                // sectionName: [
+                //     { validator: this.checkSection, trigger: 'change' }
+                // ],
+                assetNo: [
+                    { required: true, message:'资产编码不能为空', trigger: 'blur' }
                 ]
             },
-            isOutStorageSubmit: false,
             isDisabled: false,
             isColor: '#000',
-            whitheres: [],
-            modalWidth: null
+            objs: [],
+            objTypes: [],
+            userId: null,
+            checkIntime: null,
+            areas: null,
+            stores: null,
+            isNullData: false
         };
     },
     watch: {
@@ -364,6 +258,13 @@ export default {
                   this.showTable();
                 }
             });
+        },
+        'borrow.tunnelId': function(newVal, oldVal){
+            this.borrow.areaId = null
+            this.borrow.storeId = null
+            this.borrow.sectionId = null
+            // this.borrow.sectionName = null
+            this.changeTunnelId(newVal)
         }
     },
     computed: {
@@ -393,30 +294,20 @@ export default {
             };
             return Object.assign({},param)
         },
-        outStorageSubmitParams(){
-            let param = {
-                ids: this.outStorageSubmitData.ids,
-                staffId: this.outStorageSubmitData.staffId,
-                userId: this.outStorageSubmitData.userId,
-                outTime: this.outStorageSubmitData.outTime,
-                describe: this.outStorageSubmitData.describe,
-                whither: this.outStorageSubmitData.whither,
-                tunnelId: this.outStorageSubmitData.tunnelId
-            }
-            return Object.assign({},param)
-        },
-        aloneOutStorageParams(){
-            let param = {
-                ids: this.aloneBorrowId,
-                staffId: this.borrow.borrower,
-                outTime: this.borrow.outTime,
-                whither: this.borrow.whither,
-                tunnelId: this.borrow.tunnelId,
-                borrowPurpose: this.borrow.borrowPurpose,
-                userId: this.outStorageSubmitData.userId
-            }
-            return Object.assign({},param)
-        }
+        // aloneOutStorageParams(){
+        //     let param = {
+        //         ids: this.aloneBorrowId,
+        //         staffId: this.borrow.borrower,
+        //         outTime: this.borrow.outTime,
+        //         tunnelId: this.borrow.tunnelId,
+        //         describe: this.borrow.borrowPurpose,
+        //         userId: this.userId,
+        //         sectionId: this.borrow.sectionId,
+        //         assetNo: this.borrow.assetNo,
+        //         objId: this.borrow.objId
+        //     }
+        //     return Object.assign({},param)
+        // }
     },
     mounted() {
         let _this = this;
@@ -459,22 +350,14 @@ export default {
         ),
         this.getSessionUserName()
         this.showTable()
-        //获取备品去向
-        EquipmentService.getWhither().then(
-            result => {
-                this.whitheres = result
-            },
-            error => {
-                this.Log.info(error)
-            }
-        )
-        this.getModalWidth()
+        this.getObj()
+        this.getObjType()
     },
     methods: {
         // type 1:查看， 2：编辑
         goToMoudle: function(index, type) {
             this.$router.push({
-                name: "UMDetailEquipment",
+                name: "设备详情",
                 params: {
                     id: this.equipments[index].id,
                     type: type
@@ -484,25 +367,26 @@ export default {
         //备品备件分页查询
         showTable() {
             let _this = this;
-          if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
-            _this.$Message.error('开始时间必须小于结束时间！');
-            return;
-          }
+            if(new Date(_this.conditions.startTime)>new Date(_this.conditions.endTime)){
+                _this.$Message.error('开始时间必须小于结束时间！');
+                return;
+            }
             EquipmentService.backUpDatagrid(this.params).then(
                 result => {
+                    if(result.list.length==0){
+                        this.isNullData = true
+                    }else{
+                        this.isNullData = false
+                    }
                     for (let index in result.list) {
                         result.list[index].inTime = new Date(result.list[index].inTime).format("yyyy-MM-dd hh:mm:ss");
                         if (result.list[index].imgUrl != null) {
                             result.list[index].imgUrl = _this.ApiUrl + result.list[index].imgUrl.replace(/\\/g, "/");
                         }
                         if(result.list[index].status == false){
-                            // result.list[index].status = '出库'
                             this.isDisabled = true
-                            // this.isColor = 'red'
                         }else{
-                            // result.list[index].status = '在库'
                             this.isDisabled = false;
-                            // this.isColor = 'green'
                         }
                     }
                     _this.equipments = result.list;
@@ -536,10 +420,6 @@ export default {
                 }
             )
         },
-        outStroage() {
-            this.showInStorage()
-            this.isOutStorage = true
-        },
         handlePageStorage(value){
             this.OutStoragePage.pageNum = value;
             this.showInStorage()
@@ -568,34 +448,44 @@ export default {
                 }
             });
         },
-        //全选全不选
-        // handleSelectAll (status) {
-        //     this.$refs.selection.selectAll(status);
-        // },
         add(path) {
             this.$router.push(path);
         },
-        checkTable(selection){
-            this.selection = selection;
-            var str = ''
-            this.selection.forEach(element=>{
-                str += element.id+","
-            })
-            this.outStorageSubmitData.ids = str.substr(0,str.length-1)
-        },
-        show(id){
+        show(id,inTime){
             this.isBorrow = !this.isBorrow
             this.borrow.borrower = null
             this.borrow.operation = null
             this.borrow.borrowPurpose = null
             this.aloneBorrowId = id
+            this.checkIntime = inTime
+        },
+        checkOutTime(rule, value, callback){  
+            if(new Date(value)<=new Date(this.checkIntime)){
+                callback(new Error("备品取用时间不能早于备品入库时间"))
+            }else{
+                callback()
+            }
         },
         //取用出库modal框的“确认”按钮
         confirmBorrow(name){
             this.isBorrow = true
             this.$refs[name].validate((valid) => {
                 if(valid){
-                    EquipmentService.batchOutBound(this.aloneBorrowId,this.borrow.tunnelId,this.aloneOutStorageParams).then(
+                    var param = {
+                        equipment : {
+                            tunnelId: this.borrow.tunnelId,
+                            sectionId: this.borrow.sectionId,
+                            objId: this.borrow.objId,
+                            assetNo: this.borrow.assetNo
+                        },
+                        spareOut : {
+                            describe: this.borrow.borrowPurpose,
+                            userId: this.userId,
+                            staffId: this.borrow.borrower,
+                            outTime: this.borrow.outTime,
+                        }
+                    }
+                    EquipmentService.batchOutBound(this.aloneBorrowId,param).then(
                         result => {
                             this.isBorrow = false
                             this.showTable()
@@ -607,54 +497,98 @@ export default {
                         }
                     )
                 }else{
-                    // this.isBorrow = true
-                    this.$Message.error("请填写取用人姓名")
+                    this.$Message.error("请填写取用信息")
                 }
             })
         },
         //读取cookie
         getSessionUserName:function () {
-            if(sessionStorage.UMUerName!=null||sessionStorage.UMUerName!=undefined||sessionStorage.UMUerName!=''){
-                this.outStorageSubmitData.userId =  parseInt(sessionStorage.UMUerId)
+            if(sessionStorage.UMUerId!=null||sessionStorage.UMUerId!=undefined||sessionStorage.UMUerId!=''){
+                this.userId =  parseInt(sessionStorage.UMUerId)
             }
         },
-        BatchOut(name){
-            this.isOutStorageSubmit = true;
-            setTimeout(()=>{
-                this.isOutStorageSubmit = false;
-                this.$refs[name].validate((valid)=>{
-                    if(valid){
-                        if(this.outStorageSubmitData.ids!=null){
-                            EquipmentService.batchOutBound(this.outStorageSubmitData.ids,this.outStorageSubmitData.tunnelId,this.outStorageSubmitParams).then(
-                                result=>{
-                                    this.isOutStorage = false
-                                    this.showTable()
-                                    this.$refs[name].resetFields()
-                                    this.outStorageSubmitData.describe = null
-                                },
-                                error=>{
-                                    this.Log.info(error)
-                                }
-                            )
-                        }
-                    }else{
-                        this.$Message.error("请填写正确的批量出库信息")
+        //关联监测对象
+        getObj() {
+            EquipmentService.getObj().then(
+                res=> {
+                    this.objs = res
+                    this.getObjType();
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        // 对象类型
+        getObjType() {
+            var info = {
+                id: this.borrow.objId,
+                pageSize: 10,
+                pageNum: 1
+            };
+            EquipmentService.getObjType(info).then(
+                res => {
+                    this.objTypes = res;
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        //根据TunnelId,获取area和store
+        changeTunnelId(id){
+            if(id!=null){
+                //获取store
+                TunnelService.getStoresByTunnelId(id).then(
+                    result => {
+                        this.stores = result
+                    },
+                    error => {
+                        this.Log.info(error)
                     }
-                })
-            },2000)
+                )
+                //获取area
+                TunnelService.getAreasByTunnelId(id).then(
+                    result => {
+                        this.areas = result
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
         },
-        cancelBatchOut(name){
-            this.$refs[name].resetFields()
-            this.isOutStorage = false
+        //根据areaId,storeId获取section
+        changeSection(){
+            if(this.borrow.storeId!=null&&this.borrow.areaId!=null){
+                TunnelService.getSectionByAreaIdStoreId(this.borrow.storeId, this.borrow.areaId).then(
+                    result => {
+                        if(result!=null){
+                            this.borrow.sectionId = result.id
+                            // this.borrow.sectionName = result.name
+                        }
+                    },
+                    error => {
+                        this.Log.info(error)
+                    }
+                )
+            }
         },
-        getModalWidth(){
-            this.modalWidth = document.body.offsetWidth *0.5
-        }
+        // checkSection(rule, value, callback){
+        //     if(value==null){
+        //         callback(new Error("所属区段不能为空"))
+        //     }else{
+        //         callback()
+        //     }
+        // }
     },
 };
 </script>
 <style scoped>
-
+.boxBG{
+    background: url("../../../../assets/UM/boxBGImg.png") no-repeat;
+    background-size: 100% 100%;
+}
 .backGoundBox {
     position: relative;
     height: 10vh;
@@ -663,9 +597,14 @@ export default {
 
 .equipentTitle{
     color: #fff;
-    font-size: 20px;
+    font-size: 2.4vmin;
     text-align: center;
     line-height: 10vh;
+    margin-left: 6vh;
+}
+
+.detailsBox{
+    color: #fff;
 }
 
 .imgBox img {
@@ -673,34 +612,19 @@ export default {
     height: 5vh;
     border-radius: 5vh;
     position: absolute;
-    z-index: 5;
-    left: 50%;
-    top: 70%;
-    margin-left: -2.5vh
-}
-
-.detailsBox {
-    border: 1px solid #ebe8e8;
-    padding-top: 20px;
-    background: #fff;
+    left: 35%;
+    top: 50%;
+    margin-top: -2.5vh;
 }
 
 .operationSee,
 .operationEdit,
 .operationDel {
     text-align: center;
-    background: #fff;
-    padding: 5px 0;
-    border-bottom: 1px solid #ebe8e8;
+    padding: 1vmin 0;
+    color: #fff;
 }
 
-.operationDel {
-    border-right: 1px solid #ebe8e8;
-}
-
-.operationSee {
-    border-left: 1px solid #ebe8e8;
-}
 
 .operationSee p,
 .operationEdit p,
@@ -711,7 +635,7 @@ export default {
 .backUpInfo{
     display: inline-block;
     line-height: 36px;
-    padding-left: 5px;
+    padding-left: 2vmin;
 }
 .purpose{
     display: inline-block;
@@ -735,7 +659,7 @@ export default {
     font-size: 12px !important;
     border: none;
     background: none;
-    color: #495060;
+    color: #fff;
 }
 .trueStatus{
     color: green
@@ -746,6 +670,42 @@ export default {
 .ivu-form .ivu-form-item-label{
     width: 120px;
 }
+.location >>> .ivu-form-item-label:before {
+    content: '*';
+    display: inline-block;
+    margin-right: 0.4vmin;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 1.2vmin;
+    color: #ed3f14;
+}
+
+.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+    color: #fff;
+}
+.list{
+    height: 66vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.list .ivu-btn-primary{
+    background: linear-gradient(to left, #2734e1, #b195ed)
+}
+.list::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.list::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.list::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
+
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -762,18 +722,21 @@ export default {
     }
     .backUpInfo{
         line-height: 4vh;
-        font-size: 1.3vmin;
+        font-size: 1.6vmin;
     }
     .operation,.borrowBtn{
         font-size: 1.4vmin !important;
     }
     .ivu-form-item >>> .ivu-form-item-label{
-        width: 11vmin !important;
+        width: 13vmin !important;
         line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 11vmin !important;
+        margin-left: 13vmin !important;
         line-height: 4.5vmin;
+    }
+    .location >>> .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 0px !important;
     }
     .equipentTitle{
         font-size: 2vmin;

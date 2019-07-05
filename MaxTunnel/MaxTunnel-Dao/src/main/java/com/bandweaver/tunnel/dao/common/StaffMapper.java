@@ -19,8 +19,6 @@ public interface StaffMapper {
 
     int updateByPrimaryKeySelective(Staff record);
 
-    int updateByPrimaryKey(Staff record);
-
 	/**
 	 * @Description: 根据id查询dto
 	 * @param @param id

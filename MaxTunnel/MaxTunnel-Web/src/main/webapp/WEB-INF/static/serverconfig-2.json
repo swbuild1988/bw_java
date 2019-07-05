@@ -1,0 +1,471 @@
+{
+    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
+    "RouterBase": "/",
+    "MQServerAddress": "ws://192.168.0.7:15674/ws",
+    "isRealData": true,
+    "SuperMapConfig": {
+        "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-3Dserver/rest/realspace",
+        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-dataserver/rest/data",
+        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
+    },
+    "VMEntityConfig": {
+        "unitEntityParam": [{
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.49948864664668",
+                        "Y": "37.71034251365869",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "监控中心",
+                        "fontSize": "30"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.49506",
+                        "Y": "37.706148",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "晋源区实验中学",
+                        "fontSize": "30"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.499595",
+                        "Y": "37.704056",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "山西省儿童医院",
+                        "fontSize": "30"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.477914",
+                        "Y": "37.715545",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "晋源区政府",
+                        "fontSize": "40",
+                        "color": "yellow"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.4858731580146",
+                        "Y": "37.72776923822512",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "太原古县城",
+                        "fontSize": "30",
+                        "color": "yellow"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.52207233753701",
+                        "Y": "37.70384793736499",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "管廊东入口",
+                        "fontSize": "30"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.51743415066589",
+                        "Y": "37.69655876626396",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "污水泵站",
+                        "fontSize": "30"
+                    }
+                }
+            },
+            {
+                "entityExtendParameters": {
+                    "position": {
+                        "X": "112.51382289846887",
+                        "Y": "37.69271374038769",
+                        "Z": "10.05671606378695929"
+                    },
+                    "point": {
+                        "outlineWidth": "6",
+                        "pixelSize": "20"
+                    },
+                    "label": {
+                        "text": "雨水泵站",
+                        "fontSize": "30"
+                    }
+                }
+            }
+        ],
+        "linearEntityParam": [{
+                "entityBaseParameters": {
+                    "id": 1,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.484733",
+                                "Lat": "37.715056"
+                            },
+                            {
+                                "Lon": "112.5251257936025",
+                                "Lat": "37.70375614400991"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "black"
+                    }
+                }
+            },
+            {
+
+                "entityBaseParameters": {
+                    "id": 2,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.468313",
+                                "Lat": "37.720247"
+                            },
+                            {
+                                "Lon": "112.48469357685028",
+                                "Lat": "37.715046725374094"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 3,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.520063",
+                                "Lat": "37.700637"
+                            },
+                            {
+                                "Lon": "112.478020",
+                                "Lat": "37.713441"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 4,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.47854790079535",
+                                "Lat": "37.70960497901218"
+                            },
+                            {
+                                "Lon": "112.4649725227166",
+                                "Lat": "37.71379327381019"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 9,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.516801",
+                                "Lat": "37.6972593"
+                            },
+                            {
+                                "Lon": "112.47843",
+                                "Lat": "37.709596"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "black"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 10,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.489179",
+                                "Lat": "37.713805"
+                            },
+                            {
+                                "Lon": "112.483704",
+                                "Lat": "37.702281"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "black"
+                    },
+                    "entityBaseParameters": {
+                        "messageType": "linear"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 11,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.492891",
+                                "Lat": "37.712722"
+                            },
+                            {
+                                "Lon": "112.487448",
+                                "Lat": "37.701182"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "black"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 12,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.500104",
+                                "Lat": "37.710666"
+                            },
+                            {
+                                "Lon": "112.496759",
+                                "Lat": "37.703691"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "black"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 13,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+
+                        "position": [{
+                                "Lon": "112.493083",
+                                "Lat": "37.730319"
+                            },
+                            {
+                                "Lon": "112.480216",
+                                "Lat": "37.732412"
+                            },
+                            {
+                                "Lon": "112.477995",
+                                "Lat": "37.725628"
+                            },
+                            {
+                                "Lon": "112.491123",
+                                "Lat": "37.723368"
+                            },
+                            {
+                                "Lon": "112.493083",
+                                "Lat": "37.730319"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "blue"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 14,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.476576",
+                                "Lat": "37.704388"
+                            },
+                            {
+                                "Lon": "112.481279",
+                                "Lat": "37.716042"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 15,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.463756",
+                                "Lat": "37.708431"
+                            },
+                            {
+                                "Lon": "112.479916",
+                                "Lat": "37.703408"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 16,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.473064",
+                                "Lat": "37.712194"
+                            },
+                            {
+                                "Lon": "112.470590",
+                                "Lat": "37.706263"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            },
+            {
+                "entityBaseParameters": {
+                    "id": 17,
+                    "messageType": "linear"
+                },
+                "entityExtendParameters": {
+                    "polyline": {
+                        "position": [{
+                                "Lon": "112.468896",
+                                "Lat": "37.713302"
+                            },
+                            {
+                                "Lon": "112.466356",
+                                "Lat": "37.707685"
+                            }
+                        ],
+                        "width": 5,
+                        "color": "red",
+                        "lineType": "DottedLine"
+                    }
+                }
+            }
+
+        ]
+    },
+    "flyFilePathes": [{
+        "id": 1,
+        "name": "飞行路线_1",
+        "path": "/VM/font/jump.fpf",
+        "isFlyLoop": "false"
+    }, {
+        "id": 2,
+        "name": "飞行路线_2",
+        "path": "/VM/font/flytest2.fpf",
+        "isFlyLoop": "false",
+        "waitTime": 0
+    }, {
+        "id": 3,
+        "name": "飞行路线_3",
+        "path": "/VM/font/flytest3.fpf",
+        "isFlyLoop": "true",
+        "playRate": "0.05"
+    }],
+    "refreshTime":"60000"
+    
+}

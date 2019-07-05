@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,8 +80,8 @@ public class AlarmController {
 	
 	
 	/**接收告警并发送到MQ队列
-	 * @param alarm
-	 * @return  队列消息格式：{"alarmName":"严重级别的告警","alarmDate":1545278730010,"isDistribute":false,"plans":[{"name":"消防预案","id":4001},{"name":"通风预案","id":4003}],"tunnelId":1,"cleaned":false,"objectName":"监测对象2","alarmLevel":3,"id":10481,"objectId":1}
+	 * @param
+	 * @return
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
@@ -92,7 +93,6 @@ public class AlarmController {
 		if(StringTools.isNullOrEmpty(measObj)) {
 			LogUtil.debug("监测对象[ " + measAlarm.getObjectId() + "]不存在");
 			throw new BandWeaverException("监测对象[ " + measAlarm.getObjectId() + "]不存在");
-			
 		}
 		
 		Alarm alarm = new Alarm();
@@ -151,7 +151,7 @@ public class AlarmController {
 	}
 	
 	
-	/**查询所有未清除的告警 
+	/**查询所有未清除的告警
 	 * @return   
 	 * @author shaosen
 	 * @Date 2018年10月16日
@@ -181,8 +181,8 @@ public class AlarmController {
 	 */
 	@RequestMapping(value = "alarms/{id}",method = RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
-		Alarm alarm = alarmService.getById(id);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, alarm);
+		JSONObject json = alarmService.getById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
 	}
 	
 	/**告警分页查询 
@@ -198,10 +198,30 @@ public class AlarmController {
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
+	@RequiresPermissions("alarm:list")
 	@RequestMapping(value="alarms/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody AlarmVo vo) {
 		PageInfo<AlarmDto> pageInfo = alarmService.dataGrid(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,pageInfo);
+	}
+	
+	/**
+	 * 告警等级为3，4的未清除告警数量
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年6月27日
+	 */
+	@RequestMapping(value="alarms/non-cleaned/alarm-levels",method=RequestMethod.GET)
+	public JSONObject getAlarmCountByAlarmLevel() {
+		AlarmVo vo = new AlarmVo();
+		List<Integer> alarmLevels = new ArrayList<>();
+		alarmLevels.add(3);
+		alarmLevels.add(4);
+		vo.setAlarmLevels(alarmLevels);
+		vo.setCleaned(false);
+		List<AlarmDto> list = alarmService.getByCondition(vo);
+		int count = list.size();
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, count);
 	}
 	
 	

@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,7 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("department:add")
 	@RequestMapping(value="departments",method=RequestMethod.POST)
 	public JSONObject add(@RequestBody Department department ) {
 		departmentService.add(department);
@@ -78,6 +80,7 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("department:list")
 	@RequestMapping(value="departments",method=RequestMethod.GET)
 	public JSONObject getDtoById() {
 		List<DepartmentDto> list = departmentService.getDtoList();
@@ -93,6 +96,7 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("department:delete")
 	@RequestMapping(value="departments/{id}",method=RequestMethod.DELETE)
 	public JSONObject delete(@PathVariable Integer id) {
 		departmentService.deleteById(id);
@@ -102,6 +106,7 @@ public class DepartmentController extends BaseController<Department>{
 	/**
 	 * 批量删除
 	 */
+	@RequiresPermissions("department:delete")
 	@Override
 	@RequestMapping(value="departments/batch/{ids}",method=RequestMethod.DELETE)
 	public JSONObject deleteBatch(@PathVariable String ids) {
@@ -119,6 +124,7 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
+	@RequiresPermissions("department:update")
 	@RequestMapping(value="departments",method=RequestMethod.PUT)
 	public JSONObject update(@RequestBody Department department ) {
 		departmentService.update(department);
@@ -135,9 +141,9 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @date 2018年6月26日
 	 */
-	@RequestMapping(value="companies/{companyId}/departments",method=RequestMethod.GET)
-	public JSONObject getDepartmentsByCompanyId(@PathVariable("companyId") Integer companyId ) {
-		List<DepartmentDto> list = departmentService.getDepartmentsByCompanyId(companyId);
+	@RequestMapping(value="companies/{id}/departments",method=RequestMethod.GET)
+	public JSONObject getDepartmentsByCompanyId(@PathVariable("id") Integer id ) {
+		List<DepartmentDto> list = departmentService.getDepartmentsByCompanyId(id);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
 	
@@ -151,6 +157,7 @@ public class DepartmentController extends BaseController<Department>{
 	 * @author shaosen
 	 * @Date 2018年9月20日
 	 */
+	@RequiresPermissions("department:list")
 	@RequestMapping(value="departments/datagrid",method=RequestMethod.POST)
 	public JSONObject dataGrid(@RequestBody DepartmentVo vo ) {
 		PageInfo<DepartmentDto> pageInfo = departmentService.dataGrid(vo);

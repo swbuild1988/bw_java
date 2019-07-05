@@ -42,7 +42,7 @@ public class LocatorServiceImpl implements LocatorService {
         int a = (int)(Math.random()*100);
         Double lon = MathUtil.add(112.4940279, a*0.0001);
         Double lat = MathUtil.add(37.7062123, a*0.0001);
-        p.setLng(lon);
+        p.setLon(lon);
         p.setLat(lat);
         locator.setPosition(p);
 //---------------------------------------------------------------------

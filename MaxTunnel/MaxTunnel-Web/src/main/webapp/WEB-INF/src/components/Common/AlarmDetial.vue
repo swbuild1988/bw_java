@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="show.state" width="32vw">
+    <Modal v-model="show.state" width="32vw" :mask-closable="false">
       <p slot="header" class="header">
         <Icon type="information-circled"></Icon>
         <span>告警详细信息</span>

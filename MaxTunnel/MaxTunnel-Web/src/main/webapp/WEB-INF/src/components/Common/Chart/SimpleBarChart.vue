@@ -19,8 +19,22 @@ export default {
             type: Object
         },
         xAxisRotate: {
-            default: 0,
+            default: '0',
             type: String
+        },
+        titleColor: {
+            default: '#fff',
+            type: String
+        },
+        lineColor: {
+            default: '#fff',
+            type: String
+        },
+        seriesColorList: {
+            type: Array,
+            default: function(){
+                return []
+            }
         }
     },
     data() {
@@ -51,14 +65,33 @@ export default {
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
             );
+
+            var itemStyle = {
+                normal: {
+                    color: function(params){
+                        var index=params.dataIndex;
+                        if(params.dataIndex >= _this.seriesColorList.length){
+                                index=params.dataIndex-_this.seriesColorList.length;
+                        }
+                        return new _this.$echarts.graphic.LinearGradient(0, 0, 0, 1,
+　　　　　　　　　　　　　[
+                            {offset: 0, color: _this.seriesColorList[index][0]},
+                            {offset: 1, color: _this.seriesColorList[index][1]}
+                        ]);
+                    }
+                }
+            }
+
             // 加载默认参数
             _this.option = {
                 color: ["#61a0a8"],
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('6%')
-                    }
+                        fontSize: this.getFontSize('6%'),
+                        color: this.titleColor
+                    },
+                    top: "2%"
                 },
                 tooltip: {
                     trigger: "axis",
@@ -71,7 +104,7 @@ export default {
                     left: "3%",
                     right: "4%",
                     bottom: "5%",
-                    top: '11%',
+                    top: '15%',
                     containLabel: true
                 },
                 xAxis: [
@@ -84,12 +117,17 @@ export default {
                             rotate: this.xAxisRotate,
                             show: true,
                             textStyle: {
-                                fontSize : this.getFontSize('5%')      //更改坐标轴文字大小
-                            },
-                            
+                                fontSize : this.getFontSize('5%'),      //更改坐标轴文字大小
+                                color: this.lineColor
+                            },                            
                         },
                         axisTick: {
                             alignWithLabel: true
+                        },
+                        axisLine:{
+                            lineStyle:{
+                                color: this.lineColor,
+                            }
                         },
                     }
                 ],
@@ -100,40 +138,21 @@ export default {
                             interval: 0,
                             show: true,
                             textStyle: {
-                                fontSize : this.getFontSize('5%')      //更改坐标轴文字大小
+                                fontSize : this.getFontSize('5%'),      //更改坐标轴文字大小
+                                color: this.lineColor
                             }
-                        }
+                        },
+                        axisLine:{
+                            lineStyle:{
+                                color: this.lineColor
+                            }
+                        }       
                     }
                 ],
                 series: [
                     {
                         type: "bar",
-                        itemStyle: {
-                            normal: {
-                                color: new this.$echarts.graphic.LinearGradient(
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    [
-                                        { offset: 0, color: "#346699" },
-                                        { offset: 1, color: "#70ABE8" }
-                                    ]
-                                )
-                            },
-                            emphasis: {
-                                color: new this.$echarts.graphic.LinearGradient(
-                                    0,
-                                    0,
-                                    0,
-                                    1,
-                                    [
-                                        { offset: 0, color: "#70ABE8" },
-                                        { offset: 1, color: "#346699" }
-                                    ]
-                                )
-                            }
-                        }
+                        itemStyle: itemStyle
                     }
                 ]
             }
@@ -230,7 +249,7 @@ export default {
                 }, intervalTime);
 
             }
-            }
+        }
     }
 };
 </script>

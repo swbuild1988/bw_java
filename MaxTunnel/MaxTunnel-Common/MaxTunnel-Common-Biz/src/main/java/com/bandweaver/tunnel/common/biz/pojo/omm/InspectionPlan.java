@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
-import com.bandweaver.tunnel.common.biz.pojo.Staff;
 
 public class InspectionPlan extends ProcessBase implements Serializable{
     /**
@@ -19,6 +18,11 @@ public class InspectionPlan extends ProcessBase implements Serializable{
     private Integer groupId;
     private Date inspectTime;
     private String remark;
+    
+    private Integer inspectionWay;
+    private Integer inspectionObject;
+    private Integer inspectionPath;
+    private String otherIds;
 
     public InspectionPlan() {
         super();
@@ -89,7 +93,39 @@ public class InspectionPlan extends ProcessBase implements Serializable{
 		this.remark = remark;
 	}
 
-    @Override
+    public Integer getInspectionWay() {
+		return inspectionWay;
+	}
+
+	public void setInspectionWay(Integer inspectionWay) {
+		this.inspectionWay = inspectionWay;
+	}
+
+	public Integer getInspectionObject() {
+		return inspectionObject;
+	}
+
+	public void setInspectionObject(Integer inspectionObject) {
+		this.inspectionObject = inspectionObject;
+	}
+
+	public Integer getInspectionPath() {
+		return inspectionPath;
+	}
+
+	public void setInspectionPath(Integer inspectionPath) {
+		this.inspectionPath = inspectionPath;
+	}
+
+	public String getOtherIds() {
+		return otherIds;
+	}
+
+	public void setOtherIds(String otherIds) {
+		this.otherIds = otherIds;
+	}
+
+	@Override
     public String toString() {
         return "InspectionPlan{" +
                 "planId='" + planId + '\'' +
@@ -100,6 +136,10 @@ public class InspectionPlan extends ProcessBase implements Serializable{
                 ", groupId=" + groupId +
                 ", inspectTime=" + inspectTime +
                 ", remark='" + remark + '\'' +
+                ", inspectionWay=" + inspectionWay +
+                ", inspectionObject=" + inspectionObject +
+                ", inspectionPath=" + inspectionPath +
+                ", otherIds=" + otherIds +
                 "} " + super.toString();
     }
 }

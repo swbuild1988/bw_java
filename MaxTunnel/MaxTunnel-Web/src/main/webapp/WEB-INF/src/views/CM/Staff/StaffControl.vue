@@ -44,7 +44,7 @@
                 </DatePicker>
             </Col>  
             <Col span="6">
-                <Button type="primary" size="small"  icon="ios-search" @click="showTable()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageRearch()">查询</Button>
                 <Button type="error" size="small" @click="addNewStaff()">新增员工</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
@@ -89,8 +89,13 @@
                     <DatePicker type="datetime" placeholder="请选择入职时间" style="width: 100%" v-model="staffInfo.hireDate">
                     </DatePicker>
                 </FormItem>
-                <FormItem label="联系方式" prop="telphone">
+                <FormItem label="联系方式：" prop="telphone">
                     <Input v-model="staffInfo.telphone" placeholder="请输入联系方式"></Input>
+                </FormItem>
+                <FormItem label="角色：" prop="roles" v-if="isEdit">
+                    <Select v-model="staffInfo.roles" multiple>
+                        <Option v-for="item in authModal.roleList" :value="item.id" :key="item.id">{{ item.roleName }}</Option>
+                    </Select>
                 </FormItem>
             </Form>   
             <div slot="footer">
@@ -98,11 +103,29 @@
                 <Button type="primary" @click="submitEidtStaffInfo('staffInfo')" v-if="isEdit==true">确定</Button>
             </div> 
         </Modal>
+        <Modal v-model="authModal.isShow" title="分配角色" @on-cancel="authModal.info.roleIds = []">
+            <Form :model="authModal.info" :label-width="120">
+                <FormItem label="员工姓名：">
+                    <Input v-model="authModal.info.name" readonly />
+                </FormItem>
+                <FormItem label="角色：">
+                    <Select v-model="authModal.info.roleIds" multiple>
+                        <Option v-for="item in authModal.roleList" :value="item.id" :key="item.id">{{ item.roleName }}</Option>
+                    </Select>
+                    <div class="ivu-form-item-error-tip" v-show="authModal.error">请选择角色</div>
+                </FormItem>
+            </Form>   
+            <div slot="footer">
+                <Button type="primary" @click="save">确定</Button>
+            </div> 
+        </Modal>
     </div>
 </template>
 
 <script>
 import { StaffService } from '../../../services/staffService'
+import PermissionConfigService from '../../../services/permissionConfig'
+
 export default {
     name: 'staff-control',
     data(){
@@ -116,7 +139,8 @@ export default {
                 positionId: null,
                 accountId: null,
                 startTime: null,
-                endTime: null
+                endTime: null,
+                outside: 1
             },
             staffInfoColumns:[
                 {
@@ -182,7 +206,7 @@ export default {
                         let temp = params.row.acctInfo.roles
                         if(temp!=undefined&&temp.length>0){
                             temp.forEach(function(element){
-                                roleNameList = element.roleName + ','
+                                roleNameList += element.roleName + ','
                             })
                             roleNameList = roleNameList.substring(0,roleNameList.length-1)
                             return h('div', roleNameList)
@@ -192,34 +216,68 @@ export default {
                 {
                     title: '操作',
                     align: 'center',
+                    width: 200,
                     render: (h,params) => {
-                        return h('div',[
-                            h('Button',{
-                                props: {
-                                    type: "error",
-                                    size: "small"
-                                },
-                                style: {
-                                    marginRight: "5px"
-                                },
-                                on: {
-                                    click: () => {
-                                        this.resetPass(params.row.id);
+                        if(params.row.acctInfo.roles && params.row.acctInfo.roles.length == 0){
+                            return h('div',[
+                                h('Button',{
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "5px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.resetPass(params.row.id);
+                                        }
                                     }
-                                }
-                            },'重置密码'),
-                            h('Button',{
-                                props: {
-                                    type: "primary",
-                                    size: "small"
-                                },
-                                on: {
-                                    click: () => {
-                                        this.editStaffInfo(params.row.id);
+                                },'重置密码'),
+                                h('Button',{
+                                    props: {
+                                        type: "primary",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "5px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.authorize(params.row.id,params.row.name);
+                                        }
                                     }
-                                }
-                            },'修改')
-                        ])
+                                },'分配角色')
+                            ])
+                        } else {
+                            return h('div',[
+                                h('Button',{
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "5px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.resetPass(params.row.id);
+                                        }
+                                    }
+                                },'重置密码'),
+                                h('Button',{
+                                    props: {
+                                        type: "primary",
+                                        size: "small"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.editStaffInfo(params.row.id);
+                                        }
+                                    }
+                                },'修改')
+                            ])
+                        }   
                     }
                 }
             ],
@@ -247,7 +305,9 @@ export default {
                 positionId: null,
                 hireDate: null,
                 sex: null,
-                telphone: null
+                telphone: null,
+                outside: 1,
+                roles: []
             },
             isEdit: false,
             isAccount: false,
@@ -273,7 +333,20 @@ export default {
                 ],
                 sex: [
                     { required: true, message: '性别不能为空', trigger: 'change' }
+                ],
+                roles: [
+                    { type: 'array',required: true, message: '角色不能为空', trigger: 'change' }
                 ]
+            },
+            authModal: {
+                roleList:[],
+                isShow: false,
+                error: false,
+                info: {
+                    userId: null,
+                    name: null,
+                    roleIds: []
+                }
             }
         }
     },
@@ -289,7 +362,8 @@ export default {
                 positionId: this.researchInfo.positionId,
                 accountId: this.researchInfo.accountId,
                 startTime: new Date(this.researchInfo.startTime).getTime(),
-                endTime: new Date(this.researchInfo.endTime).getTime()
+                endTime: new Date(this.researchInfo.endTime).getTime(),
+                outside: this.researchInfo.outside
             };
             return Object.assign({}, research);
         }
@@ -328,12 +402,13 @@ export default {
                         name: this.staffInfo.name,
                         positionId: this.staffInfo.positionId,
                         sex: this.staffInfo.sex,
-                        telphone: this.staffInfo.telphone
+                        telphone: this.staffInfo.telphone,
+                        outside: this.staffInfo.outside
                     }
                     StaffService.addStaffInfo(addStaffInfo).then(res=>{
                         this.$Message.success('新增员工信息成功!')
                         this.isAddStaff = false
-                        this.showTable()
+                        this.resetPageRearch()
                         this.handleReset (name)
                     })
                 }else{
@@ -361,7 +436,7 @@ export default {
                     }
                     this.ids = this.ids.substring(0,this.ids.length-1)
                     StaffService.delStaff(this.ids).then(res=>{
-                        this.showTable()
+                        this.resetPageRearch()
                     })
                 },
                 onCancel: () => {}
@@ -369,6 +444,10 @@ export default {
         },
         handlePage(value) {
             this.page.pageNum = value;
+            this.showTable();
+        },
+        resetPageRearch(){
+            this.page.pageNum = 1;
             this.showTable();
         },
         //check telphone
@@ -402,25 +481,41 @@ export default {
                 this.staffInfo.hireDate = new Date(res.hireDate).format('yyyy-MM-dd hh:mm:s')
                 this.isAddStaff = true
                 this.staffTitle = '修改员工信息'
+                this.staffInfo.roles = []
+                res.acctInfo.roles.forEach(role=>{
+                    this.staffInfo.roles.push(role.id)
+                })
             })
+            // 获取所有角色
+            PermissionConfigService.getAllRoles().then(
+                res=>{
+                    this.authModal.roleList = res
+                }
+            )
         },
         //提交修改的员工信息
         submitEidtStaffInfo(name){
             this.$refs[name].validate((valid)=>{
                 if(valid){
-                    this.axios.put('staffs',this.staffInfo).then(res=>{
-                        let{ code,data,msg } = res.data
-                        if(code==200){
-                            this.$Message.success('修改员工信息成功!');
-                            this.isAddStaff = false
-                            this.showTable()
-                            this.isAccount = false
-                            this.handleReset(name)
+                    let params = {
+                        userId: this.staffInfo.id,
+                        roleIds: this.staffInfo.roles
+                    }
+                    Promise.all([PermissionConfigService.staffAuthorize(params),
+                    this.axios.put('staffs',this.staffInfo)]).then(
+                        res=>{
+                            let { code,data,msg } = res[1].data
+                            if(res[0] && code == 200){
+                                this.$Message.success('修改员工信息成功!');
+                                this.isAddStaff = false
+                                this.resetPageRearch()
+                                this.isAccount = false
+                                this.handleReset(name)
+                            } else{
+                                this.$Message.error('修改失败');
+                            }
                         }
-                        else{
-                            this.$Message.error(msg);
-                        }
-                    })
+                    )
                 }else{
                     this.$Message.error('修改员工信息失败!');
                 }
@@ -428,6 +523,41 @@ export default {
         },
         handleReset (name) {
             this.$refs[name].resetFields();
+        },
+        // 分配角色
+        authorize(id,name){
+            this.authModal.info.userId = id;
+            this.authModal.isShow = true;
+            this.authModal.info.name = name;
+            // 获取所有角色
+            PermissionConfigService.getAllRoles().then(
+                res=>{
+                    this.authModal.roleList = res
+                },
+                error=>{
+                    this.$Message.error('获取角色失败')
+                }
+            )
+        },
+        save(){
+            if(this.authModal.info.roleIds.length == 0){
+                this.authModal.error = true;
+            } else {
+                PermissionConfigService.staffAuthorize(this.authModal.info).then(
+                    res=>{
+                        this.$Message.success('分配角色成功');
+                        this.authModal.isShow = false;
+                        this.authModal.error = false;
+                        this.authModal.info.roleIds = [];
+                        this.$nextTick(()=>{
+                            this.resetPageRearch()
+                        })
+                    },
+                    error=>{
+                        this.$Message.success('分配角色失败');
+                    }
+                )
+            }
         }
     }
 }

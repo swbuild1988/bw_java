@@ -19,11 +19,31 @@
             <FormItem label="责任班组：">
                 <Input v-model="plans.groupName" readonly></Input>
             </FormItem>
+            <FormItem label="巡检方式：">
+                <Input v-model="plans.inspectionWay" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检路径：">
+                <Input v-model="plans.inspectionPath" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检对象：">
+                <Input v-model="plans.inspectObject" readonly></Input>
+            </FormItem>
             <FormItem label="创建时间：">
                 <Input v-model="plans.createTime" readonly></Input>
             </FormItem>
             <FormItem label="巡检时间：">
                 <Input v-model="plans.inspectTime" readonly></Input>
+            </FormItem>
+            <FormItem label="巡检步骤：">
+                <ul>
+                    <li v-for="(item, index) in plans.todolist" :key="index" class="todoLi">
+                        <span>
+                            <Checkbox></Checkbox>
+                        </span>
+                        <span>{{index+1}}、</span>
+                        <input class="todoEidt" :value="item.todoContent" placeholder="请输入要执行的计划步骤" />
+                    </li>
+                </ul>
             </FormItem>
             <FormItem label="巡检计划：">
                 <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
@@ -58,7 +78,14 @@ export default {
                 inspectTime: null,
                 processDefinitionId: null,
                 remark: null,
-                tasks:[]
+                tasks:[],
+                inspectionWay: null,
+                inspectionPath: null,
+                inspectObject: null,
+                todolist: [
+                    { id: 1, todoContent: '111' },
+                    { id: 2, todoContent: '222' }
+                ]
             },
             columns1: [
                 {
@@ -130,6 +157,21 @@ export default {
 }
 </script>
 <style scoped>
+.todoLi{
+    line-height: 3.5vh;
+    height: 3.5vh;
+    margin-right: 0.5vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.5vh;
+}
+.todoLi .todoEidt{
+    border: none;
+    box-shadow: 2px 2px 10px 0px #ccc;
+    flex: 1;
+    margin-right: 0.5vw;
+    padding-left: 0.5vw;
+}
 .ivu-form.ivu-form-label-right{
     width: 780px;
     margin: 20px auto;

@@ -13,13 +13,13 @@
             <div>
                 <span>所属管廊：</span>
                 <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-                    <Option value="null">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
             </div>
             </Col>
             <Col span="10">
-                <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
+                <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch()">查询</Button>
                 <Button type="error" size="small" @click="addNewArea()">新增区域</Button> 
                 <Button type="info" size="small" @click="addMultiArea()">批量新增区域</Button> 
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
@@ -38,27 +38,28 @@
                 </DatePicker>
             </Col>  
         </Row>
-        <Table border ref="selection" :columns="columns7" :data="data6" @on-selection-change="startdelete" style="margin:20px;"></Table>
+        <Table border ref="selection" :columns="areaColums" :data="areaData" @on-selection-change="startdelete" style="margin:20px;"></Table>
         <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top" 
               @on-change="handlePage" show-elevator class="pageStyle"></Page>
-        <div>
-            <area-module v-bind="addAreaInfo" v-on:listenToAdd="saveArea"></area-module>
-        </div>
         <div>
             <area-multi-module v-bind="addMultiAreaInfo" v-on:listenToAddMulti="saveMultiArea"></area-multi-module>
         </div>
         <div>
-            <area-modifiation v-bind="modificationAreaInfo" v-on:listenToChange="saveChangeArea"></area-modifiation>
+            <area-modifiation ref="areaModule" v-bind="modificationAreaInfo" v-on:childIsRefresh="childIsRefresh"></area-modifiation>
         </div>
     </div>
 </template>
 
 <script>
-import AreaModule from "../../../views/CM/AreaControl/AreaModule.vue";
 import AreaMultiModule from "../../../views/CM/AreaControl/AreaMultiModule.vue";
 import AreaModifiation from "../../../views/CM/AreaControl/AreaModification.vue";
+import { AreaService } from '@/services/areaService'
 export default {
     name: "barn-manage",
+    components: {
+        AreaModifiation,
+        AreaMultiModule
+    },
     data() {
         return {
             researchInfo: {
@@ -67,7 +68,7 @@ export default {
                 startTime: null,
                 endTime: null
             },
-            columns7: [
+            areaColums: [
                 {
                     type: "selection",
                     width: 60,
@@ -89,11 +90,6 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "区域位置",
-                    key: "location",
-                    align: "center"
-                },
-                {
                     title: "所属管廊",
                     align: "center",
                     render: (h,params) => {
@@ -101,40 +97,9 @@ export default {
                     }
                 },
                 {
-                    title: "经度",
-                    key: "longitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[0]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
-                    title: "纬度",
-                    key: "latitude",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[1]
-                            return h('div',temp)
-                        }
-                    }
-                },
-                {
-                    title: "高度",
-                    key: "highness",
-                    align: "center",
-                    render: (h,params) => {
-                        if(params.row.camera!=null){
-                            let str = params.row.camera.split(",");
-                            let temp = str[2]
-                            return h('div',temp)
-                        }
-                    }
+                    title: '长度',
+                    align: 'center',
+                    key: 'length'
                 },
                 {
                     title: "创建时间",
@@ -162,7 +127,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.editArea(params.index);
+                                            this.editArea(params.row.id);
                                         }
                                     }
                                 },
@@ -172,7 +137,7 @@ export default {
                     }
                 }
             ],
-            data6: [],
+            areaData: [],
             types: [],
             tunnels: [],
             areas: [],
@@ -181,33 +146,27 @@ export default {
                 pageSize: 10,
                 pageTotal: 0
             },
-            formValidate: {
-                name: "",
-                tunnelId: null,
-                camera: null,
-                sn: null,
-                startPoint: null,
-                endPoint: null
-            },
-            ruleValidate: {},
-            addAreaInfo: {
-                show: { state: false },
-                addInfo: {}
-            },
             addMultiAreaInfo: {
                 show: { state: false },
                 addInfo: {}
             },
             modificationAreaInfo: {
                 show: { state: false },
-                modificationInfo: {}
+                type: null
             },
             deleteShow: false,
             deleteSelect: []
         };
     },
     mounted() {
-        this.gettunnel();
+        AreaService.getTunnel().then(
+            result => {
+                this.tunnels = result
+            },
+            error => {
+                this.$Message.error(error)
+            }
+        )
         this.showTable();
     },
     computed: {
@@ -221,50 +180,19 @@ export default {
                 endTime: this.researchInfo.endTime
             };
             return Object.assign({}, research);
-        },
-        params() {
-            // 新增
-            let param = {
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                camera: this.formValidate.camera,
-                sn: this.formValidate.sn
-            };
-            return Object.assign({}, param);
-        },
-        modifications() {
-            let param = {
-                id: this.formValidate.id,
-                name: this.formValidate.name,
-                tunnelId: this.formValidate.tunnelId,
-                camera: this.formValidate.camera
-            };
-            return Object.assign({}, param);
         }
     },
     methods: {
         showTable() {
-            this.axios.post("/areas/datagrid", this.researches).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.data6 = data.list;
-                    this.page.pageTotal = data.total;
+            AreaService.queryAreas(this.researches).then(
+                result => {
+                    this.areaData = result.list;
+                    this.page.pageTotal = result.total;
+                },
+                error => {
+                    this.$Message.error(error)
                 }
-            });
-        },
-        addNewArea() {
-            this.addAreaInfo.show.state = !this.addAreaInfo.show.state;
-        },
-        addMultiArea() {
-            this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show.state;
-        },
-        gettunnel() {
-            this.axios.get("/tunnels").then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.tunnels = data;
-                }
-            });
+            )
         },
         handlePage(value) {
             this.page.pageNum = value;
@@ -272,53 +200,52 @@ export default {
         },
         handlePageSize(value) {
             this.page.pageSize = value;
-            this.showTable();
+            this.resetPageSearch();
         },
-        saveArea(_data) {
-            //保存新区域
-            this.formValidate = _data;
-            this.axios.post("/areas", this.params).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.$Message.success("添加成功！");
-                    this.addAreaInfo.show.state = !this.addAreaInfo.show.state;
-                    this.showTable();
-                }
-            });
+        //新增modal
+        addNewArea() {
+            this.modificationAreaInfo.show.state = true;
+            this.modificationAreaInfo.type = 1
         },
+        //修改modal
+        editArea(id) {
+            this.modificationAreaInfo.show.state = true;
+            this.modificationAreaInfo.type = 2
+            this.$refs.areaModule.getAreasInfo(id)
+        },
+        childIsRefresh(isRefresh){
+            if(isRefresh==true){
+                this.resetPageSearch()
+                this.modificationAreaInfo.show.state = false;
+            }
+        },
+        //批量新增modal
+        addMultiArea() {
+            this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show.state;
+        },
+        //批量保存新区域
         saveMultiArea(_data) {
-            //保存新区域
             this.axios.post("/areas/multi", _data).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
                     this.page.pageTotal = data.total;
                     this.$Message.success("添加成功！");
-                    this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo
-                        .show.state;
-                    this.showTable();
+                    this.addMultiAreaInfo.show.state = !this.addMultiAreaInfo.show.state;
+                    this.resetPageSearch();
                 }
             });
         },
-        editArea(index) {
-            this.modificationAreaInfo.modificationInfo = this.data6[index];
-            this.formValidate.id = this.data6[index].id;
-            this.modificationAreaInfo.show.state = !this.modificationAreaInfo
-                .show.state;
-        },
+        
+        //保存修改
         saveChangeArea(data) {
-            this.formValidate = data;
-            this.axios.put("/areas", this.modifications).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.page.pageTotal = data.total;
-                    this.showTable();
-                    this.modificationAreaInfo.show.state = !this
-                        .modificationAreaInfo.show.state;
-                    this.$Message.success("修改成功！");
-                }
-            });
+            this.resetPageSearch();
         },
+        getBarn(_data) {
+            //获取所属管仓
+            this.researchInfo.storeId = _data.id;
+            this.barnNameShow = _data.name;
+        },
+        //选中与删除
         startdelete(selection) {
             if (selection.length != 0) {
                 this.deleteShow = true;
@@ -327,11 +254,7 @@ export default {
                 this.deleteShow = false;
             }
         },
-        getBarn(_data) {
-            //获取所属管仓
-            this.researchInfo.storeId = _data.id;
-            this.barnNameShow = _data.name;
-        },
+        //选中与删除
         alldelete() {
             this.$Modal.confirm({
                 title: "删除确认",
@@ -341,29 +264,27 @@ export default {
                     for (let i = 1; i < this.deleteSelect.length; i++) {
                         ids += "," + this.deleteSelect[i].id;
                     }
-                    this.axios.delete("/areas/batch/" + ids).then(res => {
-                        let { code, data } = res.data;
-                        if (code == 200) {
+                    AreaService.bulkDelete(ids).then(
+                        result => {
                             this.$Message.success("已删除");
                             this.deleteShow = false;
-                            this.showTable();
+                            this.resetPageSearch();
+                        },
+                        error => {
+                            this.$Message.error(error)
                         }
-                    });
+                    )
                 },
                 onCancel: () => {
                     this.$Message.info("已取消操作");
-                    this.showTable();
+                    this.resetPageSearch();
                 }
             });
         },
-        research() {
+        resetPageSearch(){
+            this.page.pageNum = 1;
             this.showTable();
         }
-    },
-    components: {
-        AreaModule,
-        AreaModifiation,
-        AreaMultiModule
     }
 };
 </script>

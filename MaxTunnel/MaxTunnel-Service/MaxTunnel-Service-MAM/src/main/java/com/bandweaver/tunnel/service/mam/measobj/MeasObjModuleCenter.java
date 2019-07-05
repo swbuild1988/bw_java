@@ -34,531 +34,539 @@ import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 
 import sun.util.logging.resources.logging;
 
+import javax.annotation.PreDestroy;
+
 @Service
 public class MeasObjModuleCenter implements ModuleCenterInterface {
-	@Autowired
-	private MeasObjMapper measObjMapper;
-	@Autowired
-	private MeasObjAIMapper measObjAIMapper;
-	@Autowired
-	private MeasObjDIMapper measObjDIMapper;
-	@Autowired
-	private MeasObjSIMapper measObjSIMapper;
-	@Autowired
-	private MeasObjSOMapper measObjSOMapper;
-	@Autowired
-	private MeasObjDistributeMapper measObjDistributeMapper;
-	@Autowired
-	private VideoModuleCenter videoModuleCenter;
-	@Autowired
-	private LocatorService locatorService;
-	@Autowired
-	private MeasObjReportService measObjReportService;
-	@Autowired
-	private SectionService sectionService;
+    @Autowired
+    private MeasObjMapper measObjMapper;
+    @Autowired
+    private MeasObjAIMapper measObjAIMapper;
+    @Autowired
+    private MeasObjDIMapper measObjDIMapper;
+    @Autowired
+    private MeasObjSIMapper measObjSIMapper;
+    @Autowired
+    private MeasObjSOMapper measObjSOMapper;
+    @Autowired
+    private MeasObjDistributeMapper measObjDistributeMapper;
+    @Autowired
+    private VideoModuleCenter videoModuleCenter;
+    @Autowired
+    private LocatorService locatorService;
+    @Autowired
+    private MeasObjReportService measObjReportService;
+    @Autowired
+    private SectionService sectionService;
 
-	/**
-	 * value table
-	 */
-	@Autowired
-	private MeasValueAIMapper measValueAIMapper;
-	@Autowired
-	private MeasValueDIMapper measValueDIMapper;
-	@Autowired
-	private MeasValueSIMapper measValueSIMapper;
-	@Autowired
-	private MeasValueSOMapper measValueSOMapper;
-	@Autowired
-	private MeasValueDistributeMapper measValueDistributeMapper;
-	@Autowired
-	private MeasValueDASSpectrumMapper measValueDASSpectrumMapper;
-	@Autowired
-	private MeasValueTabdictMapper measValueTabdictMapper;
+    /**
+     * value table
+     */
+    @Autowired
+    private MeasValueAIMapper measValueAIMapper;
+    @Autowired
+    private MeasValueDIMapper measValueDIMapper;
+    @Autowired
+    private MeasValueSIMapper measValueSIMapper;
+    @Autowired
+    private MeasValueSOMapper measValueSOMapper;
+    @Autowired
+    private MeasValueDistributeMapper measValueDistributeMapper;
+    @Autowired
+    private MeasValueDASSpectrumMapper measValueDASSpectrumMapper;
+    @Autowired
+    private MeasValueTabdictMapper measValueTabdictMapper;
 
-	private HashMap<Integer, MeasObj> measObjHashMap;
-	private HashMap<Integer, MeasObjAI> measObjAIHashMap;
-	private HashMap<Integer, MeasObjDI> measObjDIHashMap;
-	private HashMap<Integer, MeasObjSI> measObjSIHashMap;
-	private HashMap<Integer, MeasObjSO> measObjSOHashMap;
-	private HashMap<Integer, MeasObjDistribute> measObjDistributeHashMap;
+    private HashMap<Integer, MeasObj> measObjHashMap;
+    private HashMap<Integer, MeasObjAI> measObjAIHashMap;
+    private HashMap<Integer, MeasObjDI> measObjDIHashMap;
+    private HashMap<Integer, MeasObjSI> measObjSIHashMap;
+    private HashMap<Integer, MeasObjSO> measObjSOHashMap;
+    private HashMap<Integer, MeasObjDistribute> measObjDistributeHashMap;
 
-	public List<MeasObj> getMeasObjs() {
-		return new ArrayList<MeasObj>(measObjHashMap.values());
-	}
+    public List<MeasObj> getMeasObjs() {
+        return new ArrayList<MeasObj>(measObjHashMap.values());
+    }
 
-	public List<MeasObjAI> getMeasObjAIs() {
-		return new ArrayList<MeasObjAI>(measObjAIHashMap.values());
-	}
+    public List<MeasObjAI> getMeasObjAIs() {
+        return new ArrayList<MeasObjAI>(measObjAIHashMap.values());
+    }
 
-	public List<MeasObjDI> getMeasObjDIs() {
-		return new ArrayList<MeasObjDI>(measObjDIHashMap.values());
-	}
+    public List<MeasObjDI> getMeasObjDIs() {
+        return new ArrayList<MeasObjDI>(measObjDIHashMap.values());
+    }
 
-	public List<MeasObjSI> getMeasObjSIs() {
-		return new ArrayList<MeasObjSI>(measObjSIHashMap.values());
-	}
+    public List<MeasObjSI> getMeasObjSIs() {
+        return new ArrayList<MeasObjSI>(measObjSIHashMap.values());
+    }
 
-	public List<MeasObjSO> getMeasObjSOs() {
-		return new ArrayList<MeasObjSO>(measObjSOHashMap.values());
-	}
+    public List<MeasObjSO> getMeasObjSOs() {
+        return new ArrayList<MeasObjSO>(measObjSOHashMap.values());
+    }
 
-	public List<MeasObjDistribute> getMeasObjDistribute() {
-		return new ArrayList<MeasObjDistribute>(measObjDistributeHashMap.values());
-	}
+    public List<MeasObjDistribute> getMeasObjDistribute() {
+        return new ArrayList<MeasObjDistribute>(measObjDistributeHashMap.values());
+    }
 
-	public MeasObj getMeasObj(int id) {
-		return measObjHashMap.get(id);
-	}
+    public MeasObj getMeasObj(int id) {
+        return measObjHashMap.get(id);
+    }
 
-	public MeasObjAI getMeasObjAI(int id) {
-		return measObjAIHashMap.get(id);
-	}
+    public MeasObjAI getMeasObjAI(int id) {
+        return measObjAIHashMap.get(id);
+    }
 
-	public MeasObjDI getMeasObjDI(int id) {
-		return measObjDIHashMap.get(id);
-	}
+    public MeasObjDI getMeasObjDI(int id) {
+        return measObjDIHashMap.get(id);
+    }
 
-	public MeasObjSI getMeasObjSI(int id) {
-		return measObjSIHashMap.get(id);
-	}
+    public MeasObjSI getMeasObjSI(int id) {
+        return measObjSIHashMap.get(id);
+    }
 
-	public MeasObjSO getMeasObjSO(int id) {
-		return measObjSOHashMap.get(id);
-	}
+    public MeasObjSO getMeasObjSO(int id) {
+        return measObjSOHashMap.get(id);
+    }
 
-	public List<MeasObj> getMeasObjsByIds(List<Integer> ids) {
-		List<MeasObj> results = new ArrayList<>();
-		for (Integer id : ids) {
-			results.add(measObjHashMap.get(id));
-		}
-		return results;
-	}
+    public List<MeasObj> getMeasObjsByIds(List<Integer> ids) {
+        List<MeasObj> results = new ArrayList<>();
+        for (Integer id : ids) {
+            results.add(measObjHashMap.get(id));
+        }
+        return results;
+    }
 
-	public List<MeasObjAI> getMeasObjAIListByIds(List<Integer> ids) {
-		List<MeasObjAI> results = new ArrayList<>();
-		for (Integer id : ids) {
-			MeasObjAI measObjAI = measObjAIHashMap.get(id);
-			if(!StringTools.isNullOrEmpty(measObjAI)) {
-				results.add(measObjAI);
-			}
-		}
-		return results;
-	}
+    public List<MeasObjAI> getMeasObjAIListByIds(List<Integer> ids) {
+        List<MeasObjAI> results = new ArrayList<>();
+        for (Integer id : ids) {
+            MeasObjAI measObjAI = measObjAIHashMap.get(id);
+            if (!StringTools.isNullOrEmpty(measObjAI)) {
+                results.add(measObjAI);
+            }
+        }
+        return results;
+    }
 
-	public List<MeasObjDI> getMeasObjDIListByIds(List<Integer> ids) {
-		List<MeasObjDI> results = new ArrayList<>();
-		for (Integer id : ids) {
-			results.add(measObjDIHashMap.get(id));
-		}
-		return results;
-	}
+    public List<MeasObjDI> getMeasObjDIListByIds(List<Integer> ids) {
+        List<MeasObjDI> results = new ArrayList<>();
+        for (Integer id : ids) {
+            results.add(measObjDIHashMap.get(id));
+        }
+        return results;
+    }
 
-	public Object getMeasObjSIListByIds(List<Integer> ids) {
-		List<MeasObjSI> results = new ArrayList<>();
-		for (Integer id : ids) {
-			results.add(measObjSIHashMap.get(id));
-		}
-		return results;
-	}
+    public Object getMeasObjSIListByIds(List<Integer> ids) {
+        List<MeasObjSI> results = new ArrayList<>();
+        for (Integer id : ids) {
+            results.add(measObjSIHashMap.get(id));
+        }
+        return results;
+    }
 
-	public Object getMeasObjSOListByIds(List<Integer> ids) {
-		List<MeasObjSO> results = new ArrayList<>();
-		for (Integer id : ids) {
-			results.add(measObjSOHashMap.get(id));
-		}
-		return results;
-	}
+    public Object getMeasObjSOListByIds(List<Integer> ids) {
+        List<MeasObjSO> results = new ArrayList<>();
+        for (Integer id : ids) {
+            results.add(measObjSOHashMap.get(id));
+        }
+        return results;
+    }
 
-	public void insertMeasObj(MeasObj measObj) {
+    public void insertMeasObj(MeasObj measObj) {
+        measObj.setActived(true);
 
-		measObj.setDeviation(0.0);
-		measObj.setLatitude("");
-		measObj.setLongitude("");
-		measObj.setActived(true);
-		measObj.setDescription("");
-		measObj.setHeight("");
+        ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
+        measObj.setDatatypeId(objectType.getDataType());
 
-		ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
-		measObj.setDatatypeId(objectType.getDataType());
-		
-		if (measObjHashMap.containsKey(measObj.getId()))
-			return;
+        if (measObjHashMap.containsKey(measObj.getId())) {
+            return;
+        }
 
-		// 根据storeid & areaid查找
-		Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-		if(section != null) measObj.setSectionId(section.getId());
-		else measObj.setSectionId(0);
+        // 根据storeid & areaid查找
+        Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
+        if (section != null) {
+            measObj.setSectionId(section.getId());
+        } else {
+            measObj.setSectionId(-1);
+        }
 
-		// 塞进数据库
-		measObjMapper.insertSelective(measObj);
-		insertObj2OwnDB(measObj);
 
-		// 数据库成功后塞进缓存
-		measObjHashMap.put(measObj.getId(), measObj);
-		insertObj2OwnHashMap(measObj);
-	}
+        // 塞进数据库
+        measObjMapper.insertSelective(measObj);
+        insertObj2OwnDB(measObj);
 
-	public void addMeasObjHashMap(MeasObj measObj) {
-		measObjHashMap.put(measObj.getId(), measObj);
-	}
+        // 数据库成功后塞进缓存
+        measObjHashMap.put(measObj.getId(), measObj);
+        insertObj2OwnHashMap(measObj);
+    }
 
-	public void updateMeasObj(MeasObj measObj) {
-		if (!measObjHashMap.containsKey(measObj.getId())) return;
-		
-		//先更新数据库
-		Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-		if(section == null) return;
-		measObj.setSectionId(section.getId());
-		measObjMapper.updateByPrimaryKeySelective(measObj);
-		
-		//再更新缓存
-		measObjHashMap.put(measObj.getId(), measObj);
-	}
+    public void addMeasObjHashMap(MeasObj measObj) {
+        measObjHashMap.put(measObj.getId(), measObj);
+    }
 
-	/**
-	 * 更新ai缓存
-	 * 
-	 * @param measValueAI
-	 * @author shaosen
-	 * @Date 2018年10月18日
-	 */
-	public void updateMeasObjAIValue(MeasValueAI measValueAI) {
-		if (!measObjAIHashMap.containsKey(measValueAI.getObjectId()))
-			return;
+    public void updateMeasObj(MeasObj measObj) {
+        if (!measObjHashMap.containsKey(measObj.getId())) {return;}
 
-		// 更新缓存
-		MeasObjAI ai = measObjAIHashMap.get(measValueAI.getObjectId());
+        // 先更新数据库
+        if(measObj.getStoreId() != null && measObj != null) {
+        	Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
+            if (section != null) {
+                measObj.setSectionId(section.getId());
+            } else {
+                measObj.setSectionId(-1);
+            }
+        } else measObj.setSectionId(null);
+        measObjMapper.updateByPrimaryKeySelective(measObj);
 
-		if (ai.getRefreshTime() != null && ai.getRefreshTime().getTime() >= measValueAI.getTime().getTime())
-			return;
-		ai.setCv(measValueAI.getCv());
-		ai.setRefreshTime(measValueAI.getTime());
-	}
+        // 再更新缓存
+        measObjHashMap.put(measObj.getId(), measObj);
+    }
 
-	/**
-	 * 更新di缓存
-	 * 
-	 * @param measValueDI
-	 * @author shaosen
-	 * @Date 2018年10月18日
-	 */
-	public void updateMeasObjDIValue(MeasValueDI measValueDI) {
-		if (!measObjDIHashMap.containsKey(measValueDI.getObjectId()))
-			return;
+    /**
+     * 更新ai缓存
+     *
+     * @param measValueAI
+     * @author shaosen
+     * @Date 2018年10月18日
+     */
+    public void updateMeasObjAIValue(MeasValueAI measValueAI) {
+        if (!measObjAIHashMap.containsKey(measValueAI.getObjectId()))
+            return;
 
-		// 更新缓存
-		MeasObjDI di = measObjDIHashMap.get(measValueDI.getObjectId());
-		if (di.getRefreshTime() != null && di.getRefreshTime().getTime() >= measValueDI.getTime().getTime())
-			return;
-		di.setCv(measValueDI.getCv());
-		di.setRefreshTime(measValueDI.getTime());
-	}
+        // 更新缓存
+        MeasObjAI ai = measObjAIHashMap.get(measValueAI.getObjectId());
 
-	/**
-	 * 更新si缓存
-	 * 
-	 * @param measValueSI
-	 * @author shaosen
-	 * @Date 2018年10月18日
-	 */
-	public void updateMeasObjSIValue(MeasValueSI measValueSI) {
-		if (!measObjSIHashMap.containsKey(measValueSI.getObjectId()))
-			return;
+        if (ai.getRefreshTime() != null && ai.getRefreshTime().getTime() >= measValueAI.getTime().getTime())
+            return;
+        ai.setCv(measValueAI.getCv());
+        ai.setRefreshTime(measValueAI.getTime());
+    }
 
-		// 更新缓存
-		MeasObjSI si = measObjSIHashMap.get(measValueSI.getObjectId());
-		if (si.getRefreshTime() != null && si.getRefreshTime().getTime() >= measValueSI.getTime().getTime())
-			return;
-		si.setCv(measValueSI.getCv());
-		si.setRefreshTime(measValueSI.getTime());
-	}
+    /**
+     * 更新di缓存
+     *
+     * @param measValueDI
+     * @author shaosen
+     * @Date 2018年10月18日
+     */
+    public void updateMeasObjDIValue(MeasValueDI measValueDI) {
+        if (!measObjDIHashMap.containsKey(measValueDI.getObjectId()))
+            return;
 
-	/**
-	 * 更新分布式缓存
-	 * 
-	 * @param measValueDistribute
-	 * @author shaosen
-	 * @Date 2018年10月22日
-	 */
-	public void updateMeasObjDistributeValue(MeasValueDistribute measValueDistribute) {
-		if (!measObjDistributeHashMap.containsKey(measValueDistribute.getObjectId()))
-			return;
-		MeasObjDistribute tmp = measObjDistributeHashMap.get(measValueDistribute.getObjectId());
-		if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueDistribute.getTime().getTime())
-			return;
+        // 更新缓存
+        MeasObjDI di = measObjDIHashMap.get(measValueDI.getObjectId());
+        if (di.getRefreshTime() != null && di.getRefreshTime().getTime() >= measValueDI.getTime().getTime())
+            return;
+        di.setCv(measValueDI.getCv());
+        di.setRefreshTime(measValueDI.getTime());
+    }
 
-		tmp.setDcv(measValueDistribute.getDcv());
-		tmp.setRefreshTime(measValueDistribute.getTime());
-		tmp.setSpacePrecision(measValueDistribute.getSpacePrecision());
-	}
+    /**
+     * 更新si缓存
+     *
+     * @param measValueSI
+     * @author shaosen
+     * @Date 2018年10月18日
+     */
+    public void updateMeasObjSIValue(MeasValueSI measValueSI) {
+        if (!measObjSIHashMap.containsKey(measValueSI.getObjectId()))
+            return;
 
-	/**
-	 * 更新so缓存
-	 * 
-	 * @param measValueSO
-	 * @author shaosen
-	 * @Date 2018年10月22日
-	 */
-	public void updateMeasObjSOValue(MeasValueSO measValueSO) {
-		if (!measObjSOHashMap.containsKey(measValueSO.getObjectId()))
-			return;
+        // 更新缓存
+        MeasObjSI si = measObjSIHashMap.get(measValueSI.getObjectId());
+        if (si.getRefreshTime() != null && si.getRefreshTime().getTime() >= measValueSI.getTime().getTime())
+            return;
+        si.setCv(measValueSI.getCv());
+        si.setRefreshTime(measValueSI.getTime());
+    }
 
-		MeasObjSO tmp = measObjSOHashMap.get(measValueSO.getObjectId());
+    /**
+     * 更新分布式缓存
+     *
+     * @param measValueDistribute
+     * @author shaosen
+     * @Date 2018年10月22日
+     */
+    public void updateMeasObjDistributeValue(MeasValueDistribute measValueDistribute) {
+        if (!measObjDistributeHashMap.containsKey(measValueDistribute.getObjectId()))
+            return;
+        MeasObjDistribute tmp = measObjDistributeHashMap.get(measValueDistribute.getObjectId());
+        if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueDistribute.getTime().getTime())
+            return;
 
-		if (!tmp.isActived()) {
-			return;
-		}
-		if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueSO.getTime().getTime())
-			return;
+        tmp.setDcv(measValueDistribute.getDcv());
+        tmp.setRefreshTime(measValueDistribute.getTime());
+        tmp.setSpacePrecision(measValueDistribute.getSpacePrecision());
+    }
 
-		// 如果是定位类型，转换之
-		if (tmp.getObjtypeId() == ObjectType.POSITION.getValue()) {
-			locatorService.update(tmp, measValueSO);
-		} else {
-			tmp.setRefreshTime(measValueSO.getTime());
-			tmp.setCv(measValueSO.getCv());
-		}
-	}
+    /**
+     * 更新so缓存
+     *
+     * @param measValueSO
+     * @author shaosen
+     * @Date 2018年10月22日
+     */
+    public void updateMeasObjSOValue(MeasValueSO measValueSO) {
+        if (!measObjSOHashMap.containsKey(measValueSO.getObjectId()))
+            return;
 
-	public void insertMeasObjSOValue(MeasValueSO measValueSO) {
-		if (!measObjSOHashMap.containsKey(measValueSO.getObjectId()))
-			return;
+        MeasObjSO tmp = measObjSOHashMap.get(measValueSO.getObjectId());
 
-		MeasObjSO tmp = measObjSOHashMap.get(measValueSO.getObjectId());
-		if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueSO.getTime().getTime())
-			return;
+        if (!tmp.isActived()) {
+            return;
+        }
+        if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueSO.getTime().getTime())
+            return;
 
-		tmp.setRefreshTime(measValueSO.getTime());
-		tmp.setCv(measValueSO.getCv());
-		measObjSOMapper.update(tmp);
-		measValueSOMapper.addMeasValueSO(measValueSO);
-		// LogUtil.info("after insert MeasObjSO : " + tmp);
+        // 如果是定位类型，转换之
+        if (tmp.getObjtypeId() == ObjectType.POSITION.getValue()) {
+            locatorService.update(tmp, measValueSO);
+        } else {
+            tmp.setRefreshTime(measValueSO.getTime());
+            tmp.setCv(measValueSO.getCv());
+        }
+    }
 
-	}
+    public void insertMeasObjSOValue(MeasValueSO measValueSO) {
+        if (!measObjSOHashMap.containsKey(measValueSO.getObjectId()))
+            return;
 
-	/**
-	 * 初始化数据
-	 */
-	private void initData() {
+        MeasObjSO tmp = measObjSOHashMap.get(measValueSO.getObjectId());
+        if (tmp.getRefreshTime() != null && tmp.getRefreshTime().getTime() >= measValueSO.getTime().getTime())
+            return;
 
-		measObjHashMap = new HashMap<>();
-		measObjAIHashMap = new HashMap<>();
-		measObjDIHashMap = new HashMap<>();
-		measObjSIHashMap = new HashMap<>();
-		measObjSOHashMap = new HashMap<>();
-		measObjDistributeHashMap = new HashMap<>();
+        tmp.setRefreshTime(measValueSO.getTime());
+        tmp.setCv(measValueSO.getCv());
+        measObjSOMapper.update(tmp);
+        measValueSOMapper.addMeasValueSO(measValueSO);
+        // LogUtil.info("after insert MeasObjSO : " + tmp);
 
-		List<MeasObj> measObjs = measObjMapper.getAllMeasObjList();
-		for (MeasObj measObj : measObjs) {
-			measObjHashMap.put(measObj.getId(), measObj);
-		}
-		List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
-		for (MeasObjAI tmp : measObjAIS) {
-			if (tmp.getCv() == null) tmp.setCv(0.0);
-			measObjAIHashMap.put(tmp.getId(), tmp);
-		}
-		List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();
-		for (MeasObjDI tmp : measObjDIS) {
-			measObjDIHashMap.put(tmp.getId(), tmp);
-		}
-		List<MeasObjSI> measObjSIs = measObjSIMapper.getAllMeasObjSIs();
-		for (MeasObjSI tmp : measObjSIs) {
-			if (tmp.getCv() == null) tmp.setCv(0);
-			measObjSIHashMap.put(tmp.getId(), tmp);
-		}
+    }
 
-		List<MeasObjSO> measObjSOs = measObjSOMapper.getAllMeasObjSOs();
-		for (MeasObjSO tmp : measObjSOs) {
-			measObjSOHashMap.put(tmp.getId(), tmp);
-		}
+    /**
+     * 初始化数据
+     */
+    private void initData() {
 
-		List<MeasObjDistribute> measObjDistributes = measObjDistributeMapper.getAllMeasObjDistributes();
-		for (MeasObjDistribute tmp : measObjDistributes) {
-			measObjDistributeHashMap.put(tmp.getId(), tmp);
-		}
-	}
+        // HashMap在put的时候指定初始化大小，避免put元素时数组扩容，扩容时需要重新计算元素下标并转移到新数组，是个耗时的过程
+        measObjHashMap = new HashMap<>();
+        measObjAIHashMap = new HashMap<>();
+        measObjDIHashMap = new HashMap<>();
+        measObjSIHashMap = new HashMap<>();
+        measObjSOHashMap = new HashMap<>();
+        measObjDistributeHashMap = new HashMap<>();
 
-	private void insertObj2OwnDB(MeasObj measObj) {
-		DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
+        List<MeasObj> measObjs = measObjMapper.getAllMeasObjList();
+        for (MeasObj measObj : measObjs) {
+            measObjHashMap.put(measObj.getId(), measObj);
+        }
+        List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
+        for (MeasObjAI tmp : measObjAIS) {
+            if (tmp.getCv() == null) tmp.setCv(0.0);
+            measObjAIHashMap.put(tmp.getId(), tmp);
+        }
+        List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();
+        for (MeasObjDI tmp : measObjDIS) {
+            measObjDIHashMap.put(tmp.getId(), tmp);
+        }
+        List<MeasObjSI> measObjSIs = measObjSIMapper.getAllMeasObjSIs();
+        for (MeasObjSI tmp : measObjSIs) {
+            if (tmp.getCv() == null) tmp.setCv(0);
+            measObjSIHashMap.put(tmp.getId(), tmp);
+        }
+
+        List<MeasObjSO> measObjSOs = measObjSOMapper.getAllMeasObjSOs();
+        for (MeasObjSO tmp : measObjSOs) {
+            measObjSOHashMap.put(tmp.getId(), tmp);
+        }
+
+        List<MeasObjDistribute> measObjDistributes = measObjDistributeMapper.getAllMeasObjDistributes();
+        for (MeasObjDistribute tmp : measObjDistributes) {
+            measObjDistributeHashMap.put(tmp.getId(), tmp);
+        }
+    }
+
+    private void insertObj2OwnDB(MeasObj measObj) {
+        DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
 //        LogUtil.info(dataType);
-		switch (dataType) {
-		case AI:
-			MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
-			measObjAIMapper.insertSelective(measObjAI);
-			break;
+        switch (dataType) {
+            case AI:
+                MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+                measObjAIMapper.insertSelective(measObjAI);
+                break;
 
-		case DI:
-			MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
-			measObjDIMapper.insertSelective(measObjDI);
-			break;
+            case DI:
+                MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
+                measObjDIMapper.insertSelective(measObjDI);
+                break;
 
-		case SI:
-			MeasObjSI measObjSI = MeasObjSI.fromMeasObj(measObj);
-			measObjSIMapper.insertSelective(measObjSI);
-			break;
+            case SI:
+                MeasObjSI measObjSI = MeasObjSI.fromMeasObj(measObj);
+                measObjSIMapper.insertSelective(measObjSI);
+                break;
 
-		case SO:
-			MeasObjSO measObjSO = MeasObjSO.fromMeasObj(measObj);
-			measObjSOMapper.insertSelective(measObjSO);
-			break;
+            case SO:
+                MeasObjSO measObjSO = MeasObjSO.fromMeasObj(measObj);
+                measObjSOMapper.insertSelective(measObjSO);
+                break;
 
-		case DISTRIBUTE:
-			MeasObjDistribute measObjDistribute = MeasObjDistribute.fromMeasObj(measObj);
-			measObjDistributeMapper.insertSelective(measObjDistribute);
-			break;
+            case DISTRIBUTE:
+                MeasObjDistribute measObjDistribute = MeasObjDistribute.fromMeasObj(measObj);
+                measObjDistributeMapper.insertSelective(measObjDistribute);
+                break;
 
-		case VIDEO:
-			Video video = Video.fromMeasObj(measObj);
-			video.setServerId(1);
-			video.setVideoSceneId(0);
-			video.setVideoExtendSceneId(0);
-			video.setChannelNo(1);
-			videoModuleCenter.insertVideo2DB(video);
-			break;
+            case VIDEO:
+                Video video = Video.fromMeasObj(measObj);
+                video.setServerId(1);
+                video.setVideoSceneId(0);
+                video.setVideoExtendSceneId(0);
+                video.setChannelNo(1);
+                videoModuleCenter.insertVideo2DB(video);
+                break;
 
-		default:
-			break;
-		}
-	}
+            default:
+                break;
+        }
+    }
 
-	private void insertObj2OwnHashMap(MeasObj measObj) {
-		DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
-		switch (dataType) {
-		case AI:
-			MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
-			measObjAIHashMap.put(measObjAI.getId(), measObjAI);
-			break;
+    private void insertObj2OwnHashMap(MeasObj measObj) {
+        DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
+        switch (dataType) {
+            case AI:
+                MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+                measObjAIHashMap.put(measObjAI.getId(), measObjAI);
+                break;
 
-		case DI:
-			MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
-			measObjDIHashMap.put(measObjDI.getId(), measObjDI);
-			break;
+            case DI:
+                MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
+                measObjDIHashMap.put(measObjDI.getId(), measObjDI);
+                break;
 
-		case SI:
-			MeasObjSI measObjSI = MeasObjSI.fromMeasObj(measObj);
-			measObjSIHashMap.put(measObjSI.getId(), measObjSI);
-			break;
+            case SI:
+                MeasObjSI measObjSI = MeasObjSI.fromMeasObj(measObj);
+                measObjSIHashMap.put(measObjSI.getId(), measObjSI);
+                break;
 
-		case SO:
-			MeasObjSO measObjSO = MeasObjSO.fromMeasObj(measObj);
-			measObjSOHashMap.put(measObjSO.getId(), measObjSO);
-			break;
+            case SO:
+                MeasObjSO measObjSO = MeasObjSO.fromMeasObj(measObj);
+                measObjSOHashMap.put(measObjSO.getId(), measObjSO);
+                break;
 
-		case DISTRIBUTE:
-			MeasObjDistribute measObjDistribute = MeasObjDistribute.fromMeasObj(measObj);
-			measObjDistributeHashMap.put(measObjDistribute.getId(), measObjDistribute);
-			break;
+            case DISTRIBUTE:
+                MeasObjDistribute measObjDistribute = MeasObjDistribute.fromMeasObj(measObj);
+                measObjDistributeHashMap.put(measObjDistribute.getId(), measObjDistribute);
+                break;
 
-		case VIDEO:
-			Video video = Video.fromMeasObj(measObj);
-			video.setServerId(1);
-			video.setVideoSceneId(0);
-			video.setVideoExtendSceneId(0);
-			video.setChannelNo(1);
-			videoModuleCenter.insertVideo2HashMap(video);
-			break;
+            case VIDEO:
+                Video video = Video.fromMeasObj(measObj);
+                video.setServerId(1);
+                video.setVideoSceneId(0);
+                video.setVideoExtendSceneId(0);
+                video.setChannelNo(1);
+                videoModuleCenter.insertVideo2HashMap(video);
+                break;
 
-		default:
-			break;
-		}
-	}
+            default:
+                break;
+        }
+    }
 
-	@Override
-	public void start() {
-		long beginTime = System.currentTimeMillis();
-		initData();
-		long endTime = System.currentTimeMillis();
-		LogUtil.info(	"*********************************\n"
-						+ "描述：加载监测对象数据到缓存\n"
-						+ "耗时：" + (endTime - beginTime) + "ms\n"
-						+ "*********************************" 	);
-	}
+    @Override
+    public void start() {
+        initData();
+    }
 
-	@Override
-	public void stop() {
+    @Override
+    public void stop() {
 
-	}
+        // GC垃圾回收
+        measObjHashMap = null;
+        measObjAIHashMap = null;
+        measObjDIHashMap = null;
+        measObjSIHashMap = null;
+        measObjSOHashMap = null;
+        measObjDistributeHashMap = null;
+    }
 
-	public void deleteObj(Integer id) {
+    public void deleteObj(Integer id) {
 
-		// delete Cache
-		MeasObj measObj = measObjHashMap.get(id);
-		if(measObj == null)
-			return;
-		measObjHashMap.remove(id);
-		deleteObjFromOwnHashMap(measObj);
+        // delete Cache
+        MeasObj measObj = measObjHashMap.get(id);
+        if (measObj == null)
+            return;
+        measObjHashMap.remove(id);
+        deleteObjFromOwnHashMap(measObj);
 
-		// delete DB
-		measObjMapper.deleteByPrimaryKey(id);
-		deleteObjFromOwnDB(measObj);
+        // delete DB
+        measObjMapper.deleteByPrimaryKey(id);
+        deleteObjFromOwnDB(measObj);
 
-	}
+    }
 
-	private void deleteObjFromOwnDB(MeasObj measObj) {
-		DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
-		switch (dataType) {
-		case AI:
-			measObjAIMapper.deleteByPrimaryKey(measObj.getId());
-			break;
+    private void deleteObjFromOwnDB(MeasObj measObj) {
+        DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
+        switch (dataType) {
+            case AI:
+                measObjAIMapper.deleteByPrimaryKey(measObj.getId());
+                break;
 
-		case DI:
-			measObjDIMapper.deleteByPrimaryKey(measObj.getId());
-			break;
+            case DI:
+                measObjDIMapper.deleteByPrimaryKey(measObj.getId());
+                break;
 
-		case SI:
-			measObjSIMapper.deleteByPrimaryKey(measObj.getId());
-			break;
+            case SI:
+                measObjSIMapper.deleteByPrimaryKey(measObj.getId());
+                break;
 
-		case SO:
-			measObjSOMapper.deleteByPrimaryKey(measObj.getId());
-			break;
+            case SO:
+                measObjSOMapper.deleteByPrimaryKey(measObj.getId());
+                break;
 
-		case DISTRIBUTE:
-			measObjDistributeMapper.deleteByPrimaryKey(measObj.getId());
-			break;
+            case DISTRIBUTE:
+                measObjDistributeMapper.deleteByPrimaryKey(measObj.getId());
+                break;
 
-		case VIDEO:
-			// TODO
-			break;
+            case VIDEO:
+                // TODO
+                break;
 
-		default:
-			break;
-		}
+            default:
+                break;
+        }
 
-	}
+    }
 
-	private void deleteObjFromOwnHashMap(MeasObj measObj) {
+    private void deleteObjFromOwnHashMap(MeasObj measObj) {
 
-		DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
-		switch (dataType) {
-		case AI:
-			measObjAIHashMap.remove(measObj.getId());
-			break;
+        DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
+        switch (dataType) {
+            case AI:
+                measObjAIHashMap.remove(measObj.getId());
+                break;
 
-		case DI:
-			measObjDIHashMap.remove(measObj.getId());
-			break;
+            case DI:
+                measObjDIHashMap.remove(measObj.getId());
+                break;
 
-		case SI:
-			measObjSIHashMap.remove(measObj.getId());
-			break;
+            case SI:
+                measObjSIHashMap.remove(measObj.getId());
+                break;
 
-		case SO:
-			measObjSOHashMap.remove(measObj.getId());
-			break;
+            case SO:
+                measObjSOHashMap.remove(measObj.getId());
+                break;
 
-		case DISTRIBUTE:
-			measObjDistributeHashMap.remove(measObj.getId());
-			break;
+            case DISTRIBUTE:
+                measObjDistributeHashMap.remove(measObj.getId());
+                break;
 
-		case VIDEO:
-			// TODO
-			break;
+            case VIDEO:
+                // TODO
+                break;
 
-		default:
-			break;
-		}
+            default:
+                break;
+        }
 
-	}
+    }
 
 }

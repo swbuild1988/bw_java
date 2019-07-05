@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.common.biz.dto.omm;
 
 import com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto;
+import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
 
 import java.io.Serializable;
@@ -28,6 +29,10 @@ public class InspectionTaskDto extends InspectionTask implements Serializable{
      * 记录
      */
     private List<InspectionRecordDto> records;
+    /**
+     * 步骤
+     */
+    private List<InspectionStep> steps;
 
     public Integer getTunnelId() {
 		return tunnelId;
@@ -61,12 +66,21 @@ public class InspectionTaskDto extends InspectionTask implements Serializable{
         this.records = records;
     }
 
-    @Override
+    public List<InspectionStep> getSteps() {
+		return steps;
+	}
+
+	public void setSteps(List<InspectionStep> steps) {
+		this.steps = steps;
+	}
+
+	@Override
     public String toString() {
         return "InspectionTaskDto{" +
                 "planName='" + planName + '\'' +
                 ", inspectManName='" + inspectManName + '\'' +
                 ", records=" + records +
+                ", steps=" + steps +
                 "} " + super.toString();
     }
 }

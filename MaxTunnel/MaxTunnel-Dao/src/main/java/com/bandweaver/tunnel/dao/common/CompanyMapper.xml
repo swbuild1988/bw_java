@@ -2,13 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bandweaver.tunnel.dao.common.CompanyMapper">
 <cache/>
-  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.pojo.Company">
+
+  <resultMap id="BaseResultMap" type="com.bandweaver.tunnel.common.biz.dto.CompanyDto">
     <id column="ID" jdbcType="DECIMAL" property="id" />
     <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CREDIT_NO" jdbcType="VARCHAR" property="creditNo" />
+    <result column="BANK" property="bank" />
+    <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="MAIL" jdbcType="VARCHAR" property="mail" />
     <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="inspection_no" jdbcType="VARCHAR" property="inspectionNo" />
+    <result column="inspection_time" jdbcType="VARCHAR" property="inspectionTime" />
+    <result column="inspection_info" jdbcType="VARCHAR" property="inspectionInfo" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+  </resultMap>
+  <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.CompanyDto">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="CREDIT_NO" jdbcType="VARCHAR" property="creditNo" />
+    <result column="BANK" property="bank" />
+    <result column="ACCOUNT" jdbcType="VARCHAR" property="account" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="MAIL" jdbcType="VARCHAR" property="mail" />
+    <result column="CRT_TIME" jdbcType="TIMESTAMP" property="crtTime" />
+    <result column="inspection_no" jdbcType="VARCHAR" property="inspectionNo" />
+    <result column="inspection_time" jdbcType="VARCHAR" property="inspectionTime" />
+    <result column="inspection_info" jdbcType="VARCHAR" property="inspectionInfo" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <collection property="customers" ofType="com.bandweaver.tunnel.common.biz.pojo.oam.Customer">
+            <id column="customer_id" property="id"/>
+            <result column="CONTACT" property="contact"/>
+            <result column="tel" property="tel"/>
+            <result column="duty" property="duty"/>
+            <result column="tel2" property="tel2"/>
+            <result column="cunstomer_mail" property="mail"/>
+            <result column="type" property="type"/>
+            <result column="company_id" property="companyId"/>
+            <result column="cunstomer_time" property="crtTime"/>
+        </collection>
   </resultMap>
   <sql id="Base_Column_List">
-    ID, NAME, CRT_TIME
+    ID, NAME, CRT_TIME, CREDIT_NO, BANK, ACCOUNT, ADDRESS, PHONE, MAIL, inspection_no,
+    inspection_time, inspection_info, img_url
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap">
     select 
@@ -20,53 +58,146 @@
     delete from T_COMMON_COMPANY
     where ID = #{id,jdbcType=DECIMAL}
   </delete>
-  <insert id="insert" parameterType="com.bandweaver.tunnel.common.biz.pojo.Company">
-    insert into T_COMMON_COMPANY (ID, NAME, CRT_TIME
-      )
-    values (#{id,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{crtTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
+  
+  <select id="getDtoById" resultMap="DtoResultMap">
+  	select 	a.*,
+			b.id as customer_id,
+			b.CONTACT,
+			b.TEL,
+			b.duty,
+			b.tel2,
+			b.mail as cunstomer_mail,
+			b.type,
+			b.company_id,
+			b.crt_time as cunstomer_time
+  	from T_COMMON_COMPANY a
+  	left join T_OAM_CUSTOMER b on a.id = b.company_id
+  	where a.id = #{id}
+  </select>
+  
   <insert id="insertSelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Company">
+    <!-- 新增的时候，返回主键 -->
+     <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+         SELECT COMMON_COMPANY_SEQUENCE.currval from DUAL
+     </selectKey>
     insert into T_COMMON_COMPANY
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        ID,
-      </if>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         NAME,
       </if>
       <if test="crtTime != null">
         CRT_TIME,
       </if>
+      <if test="creditNo != null">
+        CREDIT_NO,
+      </if>
+      <if test="bank != null and bank.trim() != ''">
+        BANK,
+      </if>
+      <if test="account != null">
+        ACCOUNT,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="mail != null">
+        MAIL,
+      </if>
+      <if test="inspectionNo != null">
+        inspection_no,
+      </if>
+      <if test="inspectionTime != null">
+        inspection_time,
+      </if>
+      <if test="inspectionInfo != null">
+        inspection_info,
+      </if>
+      <if test="imgUrl != null">
+        img_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=DECIMAL},
-      </if>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="crtTime != null">
         #{crtTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creditNo != null">
+        #{creditNo},
+      </if>
+      <if test="bank != null and bank.trim() != ''">
+        #{bank},
+      </if>
+      <if test="account != null">
+        #{account},
+      </if>
+      <if test="address != null">
+        #{address},
+      </if>
+      <if test="phone != null">
+        #{phone},
+      </if>
+      <if test="mail != null">
+        #{mail},
+      </if>
+      <if test="inspectionNo != null">
+        #{inspectionNo},
+      </if>
+      <if test="inspectionTime != null">
+        #{inspectionTime},
+      </if>
+      <if test="inspectionInfo != null">
+        #{inspectionInfo},
+      </if>
+      <if test="imgUrl != null">
+        #{imgUrl},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bandweaver.tunnel.common.biz.pojo.Company">
     update T_COMMON_COMPANY
     <set>
-      <if test="name != null">
+      <if test="name != null and name.trim() != ''">
         NAME = #{name,jdbcType=VARCHAR},
       </if>
       <if test="crtTime != null">
         CRT_TIME = #{crtTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="creditNo != null">
+        CREDIT_NO = #{creditNo},
+      </if>
+      <if test="bank != null and bank.trim() != ''">
+        BANK = #{bank},
+      </if>
+      <if test="account != null">
+        ACCOUNT = #{account},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address},
+      </if>
+      <if test="phone != null">
+        PHONE = #{phone},
+      </if>
+      <if test="mail != null">
+        MAIL = #{mail},
+      </if>
+      <if test="inspectionNo != null">
+        inspection_no = #{inspectionNo},
+      </if>
+      <if test="inspectionTime != null">
+        inspection_time = #{inspectionTime},
+      </if>
+      <if test="inspectionInfo != null">
+        inspection_info = #{inspectionInfo},
+      </if>
+      <if test="imgUrl != null">
+        img_url = #{imgUrl},
+      </if>
     </set>
-    where ID = #{id,jdbcType=DECIMAL}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Company">
-    update T_COMMON_COMPANY
-    set NAME = #{name,jdbcType=VARCHAR},
-      CRT_TIME = #{crtTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   
@@ -87,14 +218,17 @@
   		<if test="name != null and name.trim() != ''">
   			and instr(name,#{name})>0
   		</if>
+	    <if test="bank != null and bank.trim() != ''">
+	        and instr(bank, #{bank}) > 0
+	    </if>
+	    <if test="startTime != null">
+	        and crt_time &gt;= #{startTime}
+	    </if>
+	    <if test="endTime != null">
+	        and crt_time &lt;= #{endTime}
+	    </if>
   	</where>
   	order by crt_time desc
   </select>
   
-   <delete id="deleteBatch">
-		delete from T_COMMON_COMPANY where id in
-        <foreach collection="list" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-	</delete>
 </mapper>

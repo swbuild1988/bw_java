@@ -1,9 +1,14 @@
 package com.bandweaver.tunnel.service.omm.equipment;
 
+import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
+import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
+import com.bandweaver.tunnel.dao.common.TunnelMapper;
+import com.bandweaver.tunnel.dao.omm.DefectMapper;
 import com.bandweaver.tunnel.dao.omm.EquipmentMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,6 +16,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +24,10 @@ import java.util.List;
 public class EquipmentServiceImpl implements EquipmentService {
 	@Autowired
 	private EquipmentMapper equipmentMapper;
+	@Autowired
+	private TunnelMapper tunnelMapper;
+	@Autowired
+	private DefectMapper defectMapper;
 
 	@Override
 	public Equipment getEquipmentByAssetNo(String AssetNo) {
@@ -42,11 +52,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public List<Equipment> getListByTunnel(Integer tunnelId) {
-		return equipmentMapper.getListByTunnel(tunnelId);
-	}
-
-	@Override
 	public List<EquipmentDto> getEquipmentListByCondition(EquipmentVo equipmentVo) {
 
 		return equipmentMapper.getEquipmentListByCondition(equipmentVo);
@@ -65,16 +70,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public EquipmentDto getEquipmentById(Integer id) {
 		return equipmentMapper.getEquipmentById(id);
-	}
-
-	@Override
-	public void addEquipmentBatch(List<Equipment> list) {
-		equipmentMapper.addEquipmentBatch(list);
-	}
-
-	@Override
-	public void updateEquipmentByModelId(Equipment e) {
-		equipmentMapper.updateEquipmentByModelId(e);
 	}
 
 	@Override
@@ -105,4 +100,36 @@ public class EquipmentServiceImpl implements EquipmentService {
 		equipmentMapper.updateEquipmentOfObj(e);
 	}
 	
+	/**
+	 * 仅用于设备报表
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年3月9日
+	 */
+	public List<JSONObject> getEquipmentExcel(Date startTime, Date endTime){
+		List<TunnelSimpleDto> tunnelList = tunnelMapper.getList();
+		List<JSONObject> list = new ArrayList<>();
+		for (TunnelSimpleDto tunnel : tunnelList) {
+			JSONObject obj = new JSONObject();
+			obj.put("tunnel", tunnel.getName());
+			DefectVo vo = new DefectVo();
+			vo.setTunnelId(tunnel.getId());
+			obj.put("brokenSum", defectMapper.getCountByCondition(vo));
+			obj.put("all", getCountByCondition(tunnel.getId(), null, null));
+			vo.setStartTime(startTime);
+			vo.setEndTime(endTime);
+			int i = defectMapper.getCountByCondition(vo);
+			obj.put("broken", i);
+			list.add(obj);
+		}
+		return list;
+	}
+	
+	@Override
+	public int getCountBySectionId(Integer sectionId) {
+		
+		return equipmentMapper.getCountBySectionId(sectionId);
+	}
 }
