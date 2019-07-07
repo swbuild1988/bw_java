@@ -27,6 +27,33 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_COMMON_TUNNEL'; 
       end   if; 
+
+      
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- prompt dropping sequence
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'COMMON_TUNNEL_LIGHT_SEQUENCE'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  COMMON_TUNNEL_LIGHT_SEQUENCE';   
+      end if;    
+
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'COMMON_TUNNEL_LIGHT_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  COMMON_TUNNEL_LIGHT_TG';   
+      end if; 
+
+-- prompt dropping T_COMMON_TUNNEL_LIGHT
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_COMMON_TUNNEL_LIGHT';
+      if   num=1   then 
+          execute immediate 'drop table T_COMMON_TUNNEL_LIGHT'; 
+      end   if; 
+      
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
       
       -- prompt dropping sequence
       num := 0;
@@ -40,7 +67,6 @@ begin
       if num > 0 then   
          execute immediate 'DROP TRIGGER  COMMON_AREA_TG';   
       end if; 
-
 
 -- prompt dropping T_COMMON_AREA
       num := 0;
@@ -549,7 +575,42 @@ end COMMON_TUNNEL_TG;
 /
 alter trigger COMMON_TUNNEL_TG enable;
 
+-----------------------------------------------------------------------------------------------------------------
+-- prompt Creating T_COMMON_TUNNEL_LIGHT
+create table T_COMMON_TUNNEL_LIGHT
+(
+  id                NUMBER not null,
+  TUNNEL_ID         NUMBER,
+  area_id           NUMBER,
+  store_id          NUMBER,
+  section_id        NUMBER,
+  lon               NUMBER,
+  lat               NUMBER,
+  height            NUMBER,
+  crt_time          date
+);
+alter table T_COMMON_TUNNEL_LIGHT
+  add constraint PK_T_COMMON_TUNNEL_LIGHT_ID primary key (ID);
 
+-- create
+create sequence COMMON_TUNNEL_LIGHT_SEQUENCE
+start with 1000
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER COMMON_TUNNEL_LIGHT_TG
+  BEFORE INSERT ON T_COMMON_TUNNEL_LIGHT
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_TUNNEL_LIGHT_SEQUENCE.nextval into :new.id from dual;
+end COMMON_TUNNEL_LIGHT_TG;
+/
+alter trigger COMMON_TUNNEL_LIGHT_TG enable;
+-------------------------------------------------------------------------------------------------------------------------------
 
 -- prompt Creating T_COMMON_area...
 create table T_COMMON_area

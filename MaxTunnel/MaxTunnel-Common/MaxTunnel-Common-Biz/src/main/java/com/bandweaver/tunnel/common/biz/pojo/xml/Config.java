@@ -18,13 +18,15 @@ public class Config implements Serializable{
 	private List<EquipmentTypeFile> typeFiles;
 	// 大屏地图各点位置
 	private List<RelatedUnit> units;
-
+	// 对象类型参数
 	private List<Integer> objectTypeIds;
 
 	/**
 	 * 管廊内灯光的距离
 	 */
 	private double lightDistance;
+	// 告警时间
+	private List<CommonEnum> alarmTimes;
 	
 	public void init(){
 		if(this.tunnelParam == null)
@@ -85,4 +87,13 @@ public class Config implements Serializable{
 	public void setLightDistance(double lightDistance) {
 		this.lightDistance = lightDistance;
 	}
+
+	public List<CommonEnum> getAlarmTimes() {
+		return alarmTimes;
+	}
+
+	public void setAlarmTimes(List<CommonEnum> alarmTimes) {
+		this.alarmTimes = alarmTimes;
+	}
+
 }

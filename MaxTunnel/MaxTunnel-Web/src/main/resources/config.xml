@@ -1,5 +1,255 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Config>
+    <alarmTimes>
+        <id>1</id>
+        <name>10</name>
+    </alarmTimes>
+    <alarmTimes>
+        <id>2</id>
+        <name>10</name>
+    </alarmTimes>
+    <alarmTimes>
+        <id>3</id>
+        <name>0</name>
+    </alarmTimes>
+    <alarmTimes>
+        <id>4</id>
+        <name>0</name>
+    </alarmTimes>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>open</code>
+            <convertId>1</convertId>
+            <describe>井盖开足</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>2</convertId>
+            <describe>井盖关足</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault1</code>
+            <convertId>5</convertId>
+            <describe>井盖故障</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault2</code>
+            <convertId>6</convertId>
+            <describe>开关失败</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>3</convertId>
+            <describe>开盖</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>4</convertId>
+            <describe>关盖</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>clear</code>
+            <convertId>7</convertId>
+            <describe>清除告警</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <objectName>电子井盖</objectName>
+        <objectType>56</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>remote</code>
+            <convertId>1</convertId>
+            <describe>就地/遥控</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>run</code>
+            <convertId>2</convertId>
+            <describe>运行/停止</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>3</convertId>
+            <describe>故障</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>4</convertId>
+            <describe>开风机</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>5</convertId>
+            <describe>关风机</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <objectName>风机</objectName>
+        <objectType>10</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>open</code>
+            <convertId>1</convertId>
+            <describe>电动百叶开足</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>2</convertId>
+            <describe>电动百叶关足</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>5</convertId>
+            <describe>故障</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>3</convertId>
+            <describe>开电动百叶</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>4</convertId>
+            <describe>关电动百叶</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <objectName>电动百叶</objectName>
+        <objectType>58</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>remote</code>
+            <convertId>1</convertId>
+            <describe>就地/遥控</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>run</code>
+            <convertId>2</convertId>
+            <describe>运行/停止</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>3</convertId>
+            <describe>故障</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>4</convertId>
+            <describe>开泵</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>5</convertId>
+            <describe>关泵</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <objectName>排水泵</objectName>
+        <objectType>59</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>open</code>
+            <convertId>1</convertId>
+            <describe>开/关</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>4</convertId>
+            <describe>开关失败</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>2</convertId>
+            <describe>开灯</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>close</code>
+            <convertId>3</convertId>
+            <describe>关灯</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>clear</code>
+            <convertId>5</convertId>
+            <describe>清除告警</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <objectName>应急照明</objectName>
+        <objectType>12</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>value1</code>
+            <convertId>1</convertId>
+            <describe>电流</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value2</code>
+            <convertId>2</convertId>
+            <describe>电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <objectName>电子仪表</objectName>
+        <objectType>30</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <lightDistance>50.0</lightDistance>
     <objectTypeIds>0</objectTypeIds>
     <objectTypeIds>1</objectTypeIds>
     <objectTypeIds>2</objectTypeIds>
@@ -32,7 +282,10 @@
     <objectTypeIds>60</objectTypeIds>
     <objectTypeIds>61</objectTypeIds>
     <objectTypeIds>62</objectTypeIds>
+    <objectTypeIds>63</objectTypeIds>
+    <objectTypeIds>64</objectTypeIds>
     <lightDistance>50.0</lightDistance>
+    <closeTime>5</closeTime>
     <tunnelParam>
         <areaLength>2</areaLength>
         <areaNumber>2</areaNumber>
@@ -125,50 +378,50 @@
     </typeFiles>
     <units>
         <id>1</id>
-        <name>监控中心</name>
-        <longitude>112.49948864664668</longitude>
         <latitude>37.71034251365869</latitude>
+        <longitude>112.49948864664668</longitude>
+        <name>监控中心</name>
     </units>
     <units>
         <id>2</id>
-        <name>晋源区实验中学</name>
-        <longitude>112.49506</longitude>
         <latitude>37.706148</latitude>
+        <longitude>112.49506</longitude>
+        <name>晋源区实验中学</name>
     </units>
     <units>
         <id>3</id>
-        <name>山西省儿童医院</name>
-        <longitude>112.499595</longitude>
         <latitude>37.704056</latitude>
+        <longitude>112.499595</longitude>
+        <name>山西省儿童医院</name>
     </units>
     <units>
         <id>4</id>
-        <name>晋源区政府</name>
-        <longitude>112.477914</longitude>
         <latitude>37.715545</latitude>
+        <longitude>112.477914</longitude>
+        <name>晋源区政府</name>
     </units>
     <units>
         <id>5</id>
-        <name>太原古县城</name>
-        <longitude>112.4858731580146</longitude>
         <latitude>37.72776923822512</latitude>
+        <longitude>112.4858731580146</longitude>
+        <name>太原古县城</name>
     </units>
     <units>
         <id>6</id>
-        <name>管廊东入口</name>
-        <longitude>112.52207233753701</longitude>
         <latitude>37.70384793736499</latitude>
+        <longitude>112.52207233753701</longitude>
+        <name>管廊东入口</name>
     </units>
     <units>
         <id>7</id>
-        <name>污水泵站</name>
-        <longitude>112.51743415066589</longitude>
         <latitude>37.69655876626396</latitude>
+        <longitude>112.51743415066589</longitude>
+        <name>污水泵站</name>
     </units>
     <units>
         <id>8</id>
-        <name>雨水泵站</name>
-        <longitude>112.51382289846887</longitude>
         <latitude>37.69271374038769</latitude>
+        <longitude>112.51382289846887</longitude>
+        <name>雨水泵站</name>
     </units>
 </Config>

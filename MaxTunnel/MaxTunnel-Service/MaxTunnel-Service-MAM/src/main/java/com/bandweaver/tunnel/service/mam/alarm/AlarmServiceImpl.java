@@ -53,6 +53,17 @@ public class AlarmServiceImpl implements AlarmService {
 	@Override
 	public void add(Alarm alarm) {
 
+		JSONObject jsonObject = getJsonByAlarm(alarm);
+		// 将消息广播出去
+		mqService.sendByType("Alarm", jsonObject.toJSONString());
+
+		// save to DB
+		alarm.setCleaned(false);
+		alarmMapper.insertSelective(alarm);
+
+	}
+	
+	private JSONObject getJsonByAlarm(Alarm alarm) {
 		MeasObj measObj = measObjModuleCenter.getMeasObj(alarm.getObjectId());
 		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(alarm);
 
@@ -70,16 +81,10 @@ public class AlarmServiceImpl implements AlarmService {
 			jsonObject.put("cvList", cvList);
 			jsonObject.put("sectionId", sectionId);
 			jsonObject.put("location", location);
-
-			// 将消息广播出去
-			mqService.sendByType("Alarm", jsonObject.toJSONString());
 		}
-
-		// save to DB
-		alarm.setCleaned(false);
-		alarmMapper.insertSelective(alarm);
-
+		return jsonObject;
 	}
+	
 
 	private void getPlansAndVideosAndCv(MeasObj measObj, List<JSONObject> planList, List<VideoDto> videoList, List<JSONObject> cvList) {
 		if (measObj != null) {
@@ -141,8 +146,10 @@ public class AlarmServiceImpl implements AlarmService {
 
 	@Override
 	public List<AlarmDto> getByCondition(AlarmVo vo) {
-		 List<AlarmDto> list = alarmMapper.getByCondition(vo);
-		 return list == null ? Collections.emptyList() : list ;
+		if(vo.getAlarmLevels() == null || vo.getAlarmLevels().size() < 1)
+			vo.setAlarmLevels(null);
+		List<AlarmDto> list = alarmMapper.getByCondition(vo);
+		return list == null ? Collections.emptyList() : list ;
 	}
 
 
@@ -153,8 +160,9 @@ public class AlarmServiceImpl implements AlarmService {
 	}
 
 	@Override
-	public Alarm getById(Integer id) {
-		return alarmMapper.selectByPrimaryKey(id);
+	public JSONObject getById(Integer id) {
+		Alarm alarm = alarmMapper.selectByPrimaryKey(id);
+		return getJsonByAlarm(alarm);
 	}
 
 	@Override

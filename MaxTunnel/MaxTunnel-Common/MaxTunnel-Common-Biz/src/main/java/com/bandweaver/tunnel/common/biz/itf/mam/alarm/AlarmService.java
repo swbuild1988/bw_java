@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.common.biz.itf.mam.alarm;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.mam.alarm.AlarmDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.vo.mam.alarm.AlarmVo;
@@ -43,7 +44,7 @@ public interface AlarmService {
 	 */
 	List<AlarmDto> getAllNonCleanedAlarm();
 
-	Alarm getById(Integer id);
+	JSONObject getById(Integer id);
 
 	void cleanAlarm(Alarm alarm);
 

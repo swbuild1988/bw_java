@@ -484,6 +484,7 @@ public class SectionController extends BaseController<Section>{
             JSONObject j = new JSONObject();
             j.put("id", measObj.getId());
             j.put("name", measObj.getName());
+            j.put("objectType", measObj.getObjtypeId());
             j.put("dataType", measObj.getDatatypeId());
             j.put("dataTypeName", measObj.getDatatypeName());
             j.put("cv", cv);

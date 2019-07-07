@@ -1,16 +1,19 @@
 package com.bandweaver.tunnel.controller.xml;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit;
+import com.bandweaver.tunnel.common.biz.pojo.xml.CommonEnum;
 import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
 import com.bandweaver.tunnel.common.biz.pojo.xml.EquipmentTypeFile;
 import com.bandweaver.tunnel.common.biz.pojo.xml.TunnelParam;
@@ -60,6 +63,12 @@ public class XMLController {
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, units);
     }
 	
+	/**
+	 * 获取管廊参数以及设备信息
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年6月27日
+	 */
 	@RequestMapping(value = "config/xml/tunnel-param/equipment-info", method = RequestMethod.GET)
     public JSONObject getTunnelParamAndEquipmentInfos() {
 		JSONObject json = new JSONObject();
@@ -70,5 +79,18 @@ public class XMLController {
     	List<EquipmentTypeFile> equipmentInfo = config.getTypeFiles();
     	json.put("equipmentInfo", equipmentInfo);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
+    }
+	
+	/**
+	 * 获取告警级别对应的时间
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年6月27日
+	 */
+	@RequestMapping(value = "config/xml/alarm-time", method = RequestMethod.GET)
+    public JSONObject getAlarmTime() {
+    	Config config = getXMLAllInfo();
+    	List<CommonEnum> levels = config.getAlarmTimes();
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, levels);
     }
 }

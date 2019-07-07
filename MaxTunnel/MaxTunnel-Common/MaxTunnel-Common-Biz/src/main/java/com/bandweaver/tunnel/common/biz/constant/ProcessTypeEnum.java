@@ -35,7 +35,7 @@ public enum ProcessTypeEnum {
     /**
      * 排水预案
      */
-    WATER_PLAN("排水预案", 4002, "WaterPlanProcess", "path.bpmn.activiti.water", "path.png.activiti.water", "", 55.1),
+    WATER_PLAN("排水预案", 4002, "DrainagePlanSOP_KEY", "path.bpmn.activiti.water", "path.png.activiti.water", "", 55.1),
     /**
      * 通风预案
      */

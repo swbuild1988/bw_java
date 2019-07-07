@@ -100,7 +100,8 @@ public class ReqHistoryServiceImpl implements ReqHistoryService {
 		}
         List<StaffDto> staffList = new ArrayList<>();
         for(Integer staffId : staffIds) {
-        	staffList.add(staffMapper.getDtoById(staffId));
+        	StaffDto staff = staffMapper.getDtoById(staffId);
+        	if(staff != null) staffList.add(staff);
         }
         dto.setList(staffList);
         return dto;

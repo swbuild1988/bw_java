@@ -1,4 +1,4 @@
--- ÈëÀÈ¼ÇÂ¼±í
+-- å…¥å»Šè®°å½•è¡¨
 create table T_OAM_REQ_RECORD
 (
   ID         NUMBER NOT NULL,
@@ -31,7 +31,7 @@ end OAM_REQ_RECORD_TG;
 alter trigger OAM_REQ_RECORD_TG enable;
 
 
---ÎÄ¼şµ¼³ö±í
+--æ–‡ä»¶å¯¼å‡ºè¡¨
 CREATE TABLE T_COMMON_EXPORT(
   id    number    not null,
   name    varchar2(100) not null,
@@ -60,11 +60,11 @@ begin
 end COMMON_EXPORT_TG;
 /
 
-update T_OMM_EQUIPMENT_VENDER set name = 'ÉÏº£²¨»ã¿Æ¼¼ÓĞÏŞ¹«Ë¾' where id = 1;
-update T_OMM_EQUIPMENT_VENDER set name = '°²»Õ²¨»ãÖÇÄÜ¿Æ¼¼ÓĞÏŞ¹«Ë¾' where id = 2;
-update T_OMM_EQUIPMENT_VENDER set name = 'É½Î÷²¨»ãĞÅÏ¢¼¼ÊõÓĞÏŞ¹«Ë¾' where id = 3;
+update T_OMM_EQUIPMENT_VENDER set name = 'ä¸Šæµ·æ³¢æ±‡ç§‘æŠ€æœ‰é™å…¬å¸' where id = 1;
+update T_OMM_EQUIPMENT_VENDER set name = 'å®‰å¾½æ³¢æ±‡æ™ºèƒ½ç§‘æŠ€æœ‰é™å…¬å¸' where id = 2;
+update T_OMM_EQUIPMENT_VENDER set name = 'å±±è¥¿æ³¢æ±‡ä¿¡æ¯æŠ€æœ¯æœ‰é™å…¬å¸' where id = 3;
 
--- ±äµçÕ¾±í
+-- å˜ç”µç«™è¡¨
 create table T_MAM_SUBSTATION
 (
   ID         NUMBER NOT NULL,
@@ -101,7 +101,7 @@ end MAM_SUBSTATION_TG;
 /
 alter trigger MAM_SUBSTATION_TG enable;
 
--- Ô¤°¸-×é±í
+-- é¢„æ¡ˆ-ç»„è¡¨
 create table T_EM_PLAN_GROUP
 (
   ID         NUMBER NOT NULL,
@@ -132,7 +132,7 @@ end EM_PLAN_GROUP_TG;
 alter trigger EM_PLAN_GROUP_TG enable;
 
 
--- Ô¤°¸-³ÉÔ±±í
+-- é¢„æ¡ˆ-æˆå‘˜è¡¨
 create table T_EM_PLAN_MEMBER
 (
   ID         NUMBER NOT NULL,
@@ -164,7 +164,7 @@ end EM_PLAN_MEMBER_TG;
 alter trigger EM_PLAN_MEMBER_TG enable;
 
 
--- Ñ²¼ì¼Æ»®²½Öè±í
+-- å·¡æ£€è®¡åˆ’æ­¥éª¤è¡¨
 create table T_OMM_INSPECTION_STEP
 (
   ID         NUMBER NOT NULL,
@@ -194,7 +194,7 @@ end OMM_INSPECTION_STEP_TG;
 alter trigger OMM_INSPECTION_STEP_TG enable;
 
 
--- ²É¹º±í
+-- é‡‡è´­è¡¨
 create table T_OMM_BUY
 (
   ID         NUMBER NOT NULL,
@@ -227,7 +227,7 @@ end OMM_BUY_TG;
 alter trigger OMM_BUY_TG enable;
 
 
--- Ñ²¼ìÄ£°å±í
+-- å·¡æ£€æ¨¡æ¿è¡¨
 create table T_OMM_INSPECTION_TEMPLATE
 (
   ID         NUMBER NOT NULL,
@@ -258,7 +258,7 @@ end OMM_INSPECTION_TEMPLATE_TG;
 alter trigger OMM_INSPECTION_TEMPLATE_TG enable;
 
 
--- ÈÎÎñ¶àÍ¼ÉÏ´«±í
+-- ä»»åŠ¡å¤šå›¾ä¸Šä¼ è¡¨
 create table T_OMM_MULTI_FILE
 (
   ID         NUMBER NOT NULL,
@@ -287,3 +287,41 @@ begin
 end OMM_MULTI_FILE_TG;
 /
 alter trigger OMM_MULTI_FILE_TG enable;
+
+
+-- prompt Creating T_COMMON_TUNNEL_LIGHT
+create table T_COMMON_TUNNEL_LIGHT
+(
+  id                NUMBER not null,
+  TUNNEL_ID         NUMBER,
+  area_id           NUMBER,
+  store_id          NUMBER,
+  section_id        NUMBER,
+  lon               NUMBER,
+  lat               NUMBER,
+  height            NUMBER,
+  crt_time          date
+);
+alter table T_COMMON_TUNNEL_LIGHT
+  add constraint PK_T_COMMON_TUNNEL_LIGHT_ID primary key (ID);
+
+-- create
+create sequence COMMON_TUNNEL_LIGHT_SEQUENCE
+start with 1000
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger
+CREATE OR REPLACE TRIGGER COMMON_TUNNEL_LIGHT_TG
+  BEFORE INSERT ON T_COMMON_TUNNEL_LIGHT
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_TUNNEL_LIGHT_SEQUENCE.nextval into :new.id from dual;
+end COMMON_TUNNEL_LIGHT_TG;
+/
+alter trigger COMMON_TUNNEL_LIGHT_TG enable;
+
+

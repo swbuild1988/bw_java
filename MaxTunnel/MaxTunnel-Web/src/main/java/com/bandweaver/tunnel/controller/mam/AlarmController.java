@@ -151,7 +151,7 @@ public class AlarmController {
 	}
 	
 	
-	/**查询所有未清除的告警 
+	/**查询所有未清除的告警
 	 * @return   
 	 * @author shaosen
 	 * @Date 2018年10月16日
@@ -181,8 +181,8 @@ public class AlarmController {
 	 */
 	@RequestMapping(value = "alarms/{id}",method = RequestMethod.GET)
 	public JSONObject getById(@PathVariable Integer id) {
-		Alarm alarm = alarmService.getById(id);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, alarm);
+		JSONObject json = alarmService.getById(id);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
 	}
 	
 	/**告警分页查询 
@@ -203,6 +203,25 @@ public class AlarmController {
 	public JSONObject dataGrid(@RequestBody AlarmVo vo) {
 		PageInfo<AlarmDto> pageInfo = alarmService.dataGrid(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,pageInfo);
+	}
+	
+	/**
+	 * 告警等级为3，4的未清除告警数量
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年6月27日
+	 */
+	@RequestMapping(value="alarms/non-cleaned/alarm-levels",method=RequestMethod.GET)
+	public JSONObject getAlarmCountByAlarmLevel() {
+		AlarmVo vo = new AlarmVo();
+		List<Integer> alarmLevels = new ArrayList<>();
+		alarmLevels.add(3);
+		alarmLevels.add(4);
+		vo.setAlarmLevels(alarmLevels);
+		vo.setCleaned(false);
+		List<AlarmDto> list = alarmService.getByCondition(vo);
+		int count = list.size();
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, count);
 	}
 	
 	

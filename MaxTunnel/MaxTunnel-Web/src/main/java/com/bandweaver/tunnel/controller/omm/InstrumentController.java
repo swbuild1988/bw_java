@@ -279,7 +279,7 @@ public class InstrumentController {
 	
 	/**
 	 * 添加仪表归还记录
-	 * @param ids 借出id "3,4,5"
+	 * @param ids 仪表id "3,4,5"
 	 * @param returnId 归还人
 	 * @param returnTime 归还时间
 	 * @param remark 备注	可选

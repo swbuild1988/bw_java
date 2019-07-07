@@ -40,7 +40,15 @@ public class MultiFileController {
 	
 	private static final String ATTACHMENT_PATH = "file.path.multi";
 	
-	
+	/**
+	 * 
+	 * @param file 多文件
+	 * @param id 
+	 * @return
+	 * @throws Exception
+	 * @author ya.liu
+	 * @Date 2019年6月18日
+	 */
 	/*如果只是上传一个文件，则只需要MultipartFile类型接收文件即可，而且无需显式指定@RequestParam注解   
 	  如果想上传多个文件，那么这里就要用MultipartFile[]类型来接收文件，并且还要指定@RequestParam注解 
 	  并且上传多个文件时，前台表单中的所有<input type="file"/>的name都应该是file，否则参数里的file无法获取到所有上传的文件  */
@@ -68,7 +76,7 @@ public class MultiFileController {
 	    
 	    JSONObject json = new JSONObject();
 	    json.put("name", strs.get(0));
-	    json.put("url", "http://localhost:8081/MaxTunnel-Web/multifiles/" + multiFile.getId() + "/img");
+	    json.put("url", "/multifiles/" + multiFile.getId() + "/img");
 	    return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
 	}
 	

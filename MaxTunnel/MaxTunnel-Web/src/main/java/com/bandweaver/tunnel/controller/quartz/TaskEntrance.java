@@ -207,7 +207,9 @@ public class TaskEntrance {
 		Alarm alarm = new Alarm();
 		alarm.setId((int) ((new Date()).getTime() % 1000000));
 		alarm.setAlarmDate(new Date());
-		alarm.setAlarmLevel(1);
+		
+		int j = MathUtil.getRandomInt(1, 4);
+		alarm.setAlarmLevel(j);
 		alarm.setAlarmName(list.get(i).getString("aname"));
 		alarm.setObjectId(list.get(i).getInteger("id"));
 		alarm.setObjectName(list.get(i).getString("oname"));

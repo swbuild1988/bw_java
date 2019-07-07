@@ -271,6 +271,12 @@
   		<if test="alarmLevel != null">
   			and alarm_level = #{alarmLevel}
   		</if>
+  		<if test="alarmLevels != null">
+  			and alarm_level in
+  			<foreach collection="alarmLevels" item="item" open="(" separator="," close=")">
+            #{item}
+        	</foreach>
+  		</if>
   		<if test="tunnelId != null">
   			and tunnel_id = #{tunnelId}
   		</if>

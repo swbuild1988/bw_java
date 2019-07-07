@@ -3,7 +3,6 @@ package com.bandweaver.tunnel.common.biz.pojo.oam;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
 
 public class ReqHistory extends ProcessBase implements Serializable {
@@ -136,7 +135,6 @@ public class ReqHistory extends ProcessBase implements Serializable {
 	
 	public ReqHistory() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -26,15 +26,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqHistoryDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ReqRecordDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
-import com.bandweaver.tunnel.common.biz.itf.StaffService;
+import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqHistoryService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ReqRecordService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ReqHistory;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ReqRecord;
 import com.bandweaver.tunnel.common.biz.vo.AuditVo;
@@ -66,9 +66,9 @@ public class ReqHistoryController {
     @Autowired
     private HistoryService historyService;
     @Autowired
-    private StaffService staffService;
-    @Autowired
     private ReqRecordService reqRecordService;
+    @Autowired
+    private LocatorService locatorService;
     
     /**
      * 通过id查询入廊申请记录
@@ -186,12 +186,22 @@ public class ReqHistoryController {
     @RequestMapping(value = "req-historys/{staffId}/staff", method = RequestMethod.GET)
     public JSONObject getReqHistoryByStaffId(@PathVariable("staffId") Integer staffId) {
     	// 获取人员信息以及申请入廊的信息
-    	StaffDto staff = staffService.getDtoById(staffId);
     	ReqHistoryDto reqHistory = getReq(staffId);
-    	List<StaffDto> list = new ArrayList<>();
-    	list.add(staff);
-    	reqHistory.setList(list);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, reqHistory);
+    }
+
+    /**
+     * 返回该用户最新一次的入廊信息
+     * @param id staffId
+     * @return
+     * @author ya.liu
+     * @Date 2019年3月6日
+     */
+    private ReqHistoryDto getReq(Integer id) {
+    	ReqHistoryVo vo = new ReqHistoryVo();
+    	vo.setVisitorInfo(id.toString());
+    	List<ReqHistoryDto> list = reqHistoryService.getDtoListByCondition(vo);
+    	return list.size() > 0 ? list.get(0) : null;
     }
     
     /**
@@ -336,53 +346,114 @@ public class ReqHistoryController {
     @RequestMapping(value = "req-record/condition", method = RequestMethod.POST)
     public JSONObject getReqRecordDtoByCondition(@RequestBody ReqRecordVo vo) {
     	
-    	List<ReqRecord> list = reqRecordService.getListByCondition(vo);
-    	// 时间间隔超过十分钟视为下一次入廊
-    	List<List<ReqRecord>> result = new ArrayList<>();
-    	if(list != null && list.size() > 0) {
-    		List<ReqRecord> mid = new ArrayList<>();
-    		for(ReqRecord req : list) {
-    			if(mid.size() < 1) {
-    				mid.add(req);
-    				continue;
-    			}
-    			Date firstTime = mid.get(mid.size() - 1).getTime();
-    			Date secondTime = req.getTime();
-    			long time = DateUtil.dateDiff(firstTime, secondTime);
-    			if(time - 10 * 60 * 1000 > 0) {
-    				result.add(new ArrayList<>(mid));
-    				mid.clear();
-    				mid.add(req);
-    			}else {
-    				mid.add(req);
-    			}
-    		}
-    		result.add(mid);
-    	}
+    	List<List<ReqRecord>> result = getListByVo(vo);
     	// 处理返回数据
     	List<JSONObject> objs = new ArrayList<>();
     	for(int i=0;i<result.size();i++) {
     		JSONObject obj = new JSONObject();
     		obj.put("list", result.get(i));
-    		obj.put("id", i+1);
+    		obj.put("id", i + 1);
     		objs.add(obj);
     	}
     	
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, objs);
     }
-    
     /**
-     * 返回该用户最新一次的入廊信息
-     * @param id staffId
+     * 条件获取入廊记录信息
+     * @param vo
      * @return
      * @author ya.liu
-     * @Date 2019年3月6日
+     * @Date 2019年6月25日
      */
-    private ReqHistoryDto getReq(Integer id) {
-    	ReqHistoryVo vo = new ReqHistoryVo();
-    	vo.setVisitorInfo(id.toString());
-    	List<ReqHistoryDto> list = reqHistoryService.getDtoListByCondition(vo);
-    	return list.size() > 0 ? list.get(0) : null;
+    private List<List<ReqRecord>> getListByVo(ReqRecordVo vo){
+    	// 获取记录的点
+    	List<ReqRecord> list = reqRecordService.getListByCondition(vo);
+    	
+    	List<List<ReqRecord>> result = new ArrayList<>();
+    	if(list != null && list.size() > 0) {
+    		// 获取所有的定位设备
+    		List<MeasObjSO> measObjSOS = locatorService.getAllLocator();
+    		// 初始化每个定位设备的集合
+    		List<List<ReqRecord>> mids = new ArrayList<>();
+    		int len = measObjSOS.size();
+    		
+    		for(int i = 0;i<len;i++) {
+    			mids.add(new ArrayList<>());
+    		}
+    		for(ReqRecord req : list) {
+    			for(int j = 0;j < len;j++) {
+    				if(!req.getEquipmentId().equals(measObjSOS.get(j).getId())) continue;
+    				
+    				if(mids.get(j).size() < 1) {
+    					mids.get(j).add(req);
+    					continue;
+    				}
+    				// 时间间隔超过十分钟视为下一次入廊
+    				Date firstTime = mids.get(j).get(mids.get(j).size() - 1).getTime();
+    				Date secondTime = req.getTime();
+    				long time = DateUtil.dateDiff(firstTime, secondTime);
+    				if(time - 10 * 60 * 1000 > 0 || !req.getStaffId().equals(mids.get(j).get(mids.get(j).size() - 1).getStaffId())) {
+    					result.add(mids.get(j));
+    					mids.get(j).clear();
+    					mids.get(j).add(req);
+    				}else {
+    					mids.get(j).add(req);
+    				}
+    			}
+    		}
+    		for(int i = 0;i<len;i++) {
+    			if(mids.get(i) == null || mids.get(i).size() < 1) continue;
+    			result.add(mids.get(i));
+    		}
+    	}
+    	return result;
+    }
+    
+    /**
+     * 获取每个定位设备(两天内)最近一次的使用路线
+     * @return
+     * @author ya.liu
+     * @Date 2019年6月25日
+     */
+    @RequestMapping(value = "req-records/new", method = RequestMethod.GET)
+    public JSONObject getNewRecordsByEquipmentId() {
+    	Date endTime = new Date();
+    	Date startTime = new Date();
+    	startTime.setDate(startTime.getDate() - 2);
+    	ReqRecordVo vo = new ReqRecordVo();
+    	vo.setStartTime(startTime);
+    	vo.setEndTime(endTime);
+    	List<List<ReqRecord>> result = getListByVo(vo);
+    	
+    	// 获取所有的定位设备
+		List<MeasObjSO> measObjSOS = locatorService.getAllLocator();
+		int len = result.size() - measObjSOS.size();
+		for(int i = 0; i<len; i++) {
+			result.remove(0);
+		}
+    	
+		// 处理返回数据
+    	List<JSONObject> objs = new ArrayList<>();
+    	for(int j=0;j<measObjSOS.size();j++) {
+    		ReqRecord record = null;
+    		for(int i=0;i<result.size();i++) {
+    			if(!measObjSOS.get(j).getId().equals(result.get(i).get(0).getEquipmentId())) continue;
+    			record = result.get(i).get(result.get(i).size() - 1);
+    		}
+    		if(record != null) {
+    			JSONObject obj = new JSONObject();
+    			obj.put("id", measObjSOS.get(j).getId());
+    			obj.put("name", measObjSOS.get(j).getName());
+    			obj.put("time", record.getTime());
+    			obj.put("longitude", record.getLongitude());
+    			obj.put("latitude", record.getLatitude());
+    			obj.put("height", record.getHeight());
+    			obj.put("type", 0);
+    			objs.add(obj);
+    		}
+    	}
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, objs);
     }
     
     /**
@@ -410,7 +481,7 @@ public class ReqHistoryController {
     	
     	Set<Staff> set = new HashSet<>();
     	for(ReqRecordDto dto : list) {
-    		set.add(dto.getStaff());
+    		if(dto.getStaff() != null) set.add(dto.getStaff());
     	}
     	List<Staff> dtos = new ArrayList<>(set);
     	ListPageUtil<Staff> page = new ListPageUtil<>(dtos, vo.getPageNum(), vo.getPageSize());

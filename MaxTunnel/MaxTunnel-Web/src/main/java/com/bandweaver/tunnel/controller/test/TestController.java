@@ -225,7 +225,9 @@ public class TestController {
         Alarm alarm = new Alarm();
         alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
-        alarm.setAlarmLevel(1);
+        
+        int i = MathUtil.getRandomInt(1, 4);
+        alarm.setAlarmLevel(i);
         alarm.setAlarmName("温度测试告警");
         alarm.setObjectId(222032401);
         alarm.setObjectName("温度检测仪");
