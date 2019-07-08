@@ -1,12 +1,26 @@
 <template>
-    <switchData v-bind:Obj="propList" :curValue="swicthState" :stateProcess="curProcessState" v-on="$listeners">
-       <!-- <template v-slot:title>
+    <switchData
+        v-bind:Obj="propList"
+        :curValue="swicthState"
+        :stateProcess="curProcessState"
+        v-on="$listeners"
+    >
+        <!-- <template v-slot:title>
            111
-       </template> -->
-       <div slot="heard">
-           <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">{{propList.objtypeName}}</p>
-           <img class="heardImg" src="../../../assets/UM/reset.png" v-if="propList.objtypeId == 56 || propList.objtypeId ==10" title="复位" @click.native="reset">
-       </div>
+        </template>-->
+        <div slot="heard">
+            <p
+                class="heard"
+                style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;"
+            >{{propList.objtypeName}}</p>
+            <img
+                class="heardImg"
+                src="../../../../assets/UM/reset.png"
+                v-if="propList.objtypeId == 56 || propList.objtypeId ==10"
+                title="复位"
+                @click.native="reset"
+            >
+        </div>
         <div class="switchBtn">
             <i-switch v-model="swicthState" @on-change="confirm" size="large" v-if="$attrs.control">
                 <span slot="open">开</span>
@@ -137,15 +151,15 @@ export default {
                     ]
                 }
             ],
-            objStateTitle:{
-                'close':'关',
-                'open':'开',
-                'fault1':'故障1',
-                'fault2':'故障2',
-                'far':'远地'
+            objStateTitle: {
+                close: "关",
+                open: "开",
+                fault1: "故障1",
+                fault2: "故障2",
+                far: "远地"
             },
             curObjState: [],
-            curProcessState:{}
+            curProcessState: {}
         };
     },
     computed: {
@@ -196,10 +210,9 @@ export default {
             // (this.imageState[this.propList.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
         },
         replaceImage(curStateVal, key, [curObjState]) {
-
             // 加载对应状态图片
             this.curObjState.push({
-                img: require("../../../assets/UM/" +
+                img: require("../../../../assets/UM/" +
                     curObjState[curStateVal] +
                     ".png"),
                 val: this.objStateTitle[key]
@@ -207,9 +220,9 @@ export default {
 
             // this.equipmentState[replaceStr] = require("../../../assets/UM/" +replceImg +".png");
         },
-        reset(){
+        reset() {
             // this.$emit()
-            alert('1')
+            alert("1");
         },
         confirm(data) {
             this.$nextTick(() => {
@@ -293,7 +306,7 @@ export default {
     left: 2.4vmin;
 }
 .heardImg {
-    position: absolute; 
+    position: absolute;
     top: 2vmin;
     right: 0.5vmin;
     width: 1.7vmin;

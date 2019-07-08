@@ -9,94 +9,94 @@
             </slot>
             <div class="equipment_image">
                 <img
-                    src="../../../assets/UM/lamp-on.png"
+                    src="../../../../assets/UM/lamp-on.png"
                     v-if="Obj.objtypeId==11 && curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/风机gif.gif"
+                    src="../../../../assets/UM/风机gif.gif"
                     v-if="Obj.objtypeId==10 && curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/水泵gif.gif"
+                    src="../../../../assets/UM/水泵gif.gif"
                     v-if="Obj.objtypeId==59 && curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/shutter-open.png"
+                    src="../../../../assets/UM/shutter-open.png"
                     v-if="Obj.objtypeId==58 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/covers-open.png"
+                    src="../../../../assets/UM/covers-open.png"
                     v-if="Obj.objtypeId==56 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/红外正常gif.gif"
+                    src="../../../../assets/UM/红外正常gif.gif"
                     v-if="Obj.objtypeId==57 && curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/门-开.png"
+                    src="../../../../assets/UM/门-开.png"
                     v-if="Obj.objtypeId==55 && curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/报警-红gif.gif"
+                    src="../../../../assets/UM/报警-红gif.gif"
                     v-if="Obj.objtypeId==41 && curValue"
                     class="img"
                 >
 
                 <img
-                    src="../../../assets/UM/lamp-off.png"
+                    src="../../../../assets/UM/lamp-off.png"
                     v-if="Obj.objtypeId==11 && !curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/风机.png"
+                    src="../../../../assets/UM/风机.png"
                     v-if="Obj.objtypeId==10 && !curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/水泵.png"
+                    src="../../../../assets/UM/水泵.png"
                     v-if="Obj.objtypeId==59 && !curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/shutter-close.png"
+                    src="../../../../assets/UM/shutter-close.png"
                     v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/covers-close.png"
+                    src="../../../../assets/UM/covers-close.png"
                     v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/红外.gif"
+                    src="../../../../assets/UM/红外.gif"
                     v-if="Obj.objtypeId==57 && !curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/门-关.png"
+                    src="../../../../assets/UM/门-关.png"
                     v-if="Obj.objtypeId==55 && !curValue"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/报警.png"
+                    src="../../../../assets/UM/报警.png"
                     v-if="Obj.objtypeId==41 && !curValue"
                     class="img"
                 >
                 <!-- 过程 -->
                 <img
-                    src="../../../assets/UM/covers-process.gif"
+                    src="../../../../assets/UM/covers-process.gif"
                     v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/shutter-process.gif"
+                    src="../../../../assets/UM/shutter-process.gif"
                     v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 0)"
                     class="img"
                 >
@@ -110,9 +110,9 @@
 
 <script>
 //灯组件
-import Light from "../../../components/Common/SimulateData/Light";
+import Light from "../../../../components/Common/SimulateData/Light";
 //风机组件
-import Fans from "../../../components/Common/SimulateData/Fans";
+import Fans from "../../../../components/Common/SimulateData/Fans";
 
 export default {
     name: "show-switch-data",
@@ -131,20 +131,20 @@ export default {
                     datatypeId: ""
                     // control:true
                 };
-            },
+            }
         },
         curValue: {
-            type: Boolean
+            required: true
         },
-        stateProcess:{
-                type:Object,
-                default:()=>{
-                    return {
-                        open:0,
-                        close:1
-                    }
-                }
+        stateProcess: {
+            type: Object,
+            default: () => {
+                return {
+                    open: 0,
+                    close: 1
+                };
             }
+        }
     },
     data: function() {
         return {
@@ -278,7 +278,7 @@ export default {
 
 <style scoped>
 .detailContext {
-    background: url("../../../assets/UM/detailsBg.png") no-repeat;
+    background: url("../../../../assets/UM/detailsBg.png") no-repeat;
     background-size: 100% 100%;
 }
 .ivu-switch:after {

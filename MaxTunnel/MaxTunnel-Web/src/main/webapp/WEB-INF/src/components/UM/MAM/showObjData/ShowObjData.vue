@@ -1,14 +1,26 @@
 <template>
     <div>
         <simulated-data v-if="Obj.datatypeId==1" v-bind:Obj="Obj" @changeStatus="changeStatus"></simulated-data>
-        <switch-data v-if="Obj.datatypeId==2" v-bind:Obj="Obj" @changeStatus="changeStatus"></switch-data>
-        <electrictiy-data v-if="Obj.datatypeId==3" v-bind:Obj="Obj"></electrictiy-data>
+        <switch-data
+            v-else-if="Obj.datatypeId==2"
+            v-bind:propList="Obj"
+            @changeStatus="changeStatus"
+            :control="Obj.control"
+        ></switch-data>
+        <analog-channel
+            v-bind:propList="Obj"
+            v-else
+            :control="Obj.control"
+            @changeStatus="changeStatus"
+        ></analog-channel>
+        <!-- <electrictiy-data v-bind:Obj="Obj"></electrictiy-data> -->
     </div>
 </template>
 <script>
-import SimulatedData from "../ShowSimulatedData";
-import SwitchData from "../ShowSwitchData";
-import ElectricityData from "../ShowElectricityData";
+import SimulatedData from "./ShowSimulatedData";
+import SwitchData from "./SwitchTypeData";
+import ElectricityData from "./ShowElectricityData";
+import analogChannel from "./AnalogChannelTypeData";
 export default {
     name: "show-obj-data",
     props: {
@@ -20,7 +32,8 @@ export default {
     components: {
         SimulatedData,
         SwitchData,
-        ElectricityData
+        ElectricityData,
+        analogChannel
     },
     methods: {
         changeStatus(id, ObjVal, datatypeId, clickStatus) {

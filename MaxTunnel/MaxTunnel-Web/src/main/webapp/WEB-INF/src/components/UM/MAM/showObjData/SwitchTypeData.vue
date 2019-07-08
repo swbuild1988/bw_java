@@ -81,7 +81,7 @@ export default {
             );
         },
         replaceImage(replaceStr, replceImg) {
-            this.equipmentState[replaceStr] = require("../../../assets/UM/" +
+            this.equipmentState[replaceStr] = require("../../../../assets/UM/" +
                 replceImg +
                 ".png");
         },

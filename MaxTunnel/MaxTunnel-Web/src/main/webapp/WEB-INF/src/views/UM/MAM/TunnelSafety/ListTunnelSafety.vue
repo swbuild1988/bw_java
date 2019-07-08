@@ -141,8 +141,6 @@ import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import ShowDefence from "../../../../components/Common/Modal/ShowDefence";
 import ShowLinkage from "../../../../components/Common/Modal/ShowLinkage";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
-import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
-import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import { SuperMapSqlQuery, lookAt } from "../../../../scripts/three.js";
@@ -198,8 +196,6 @@ export default {
         //3D加载
     },
     components: {
-        SimulatedData,
-        showSwitchData,
         ShowLinkage,
         Modal,
         ShowDefence,
