@@ -26,6 +26,7 @@ import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -220,14 +221,18 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = "test/add_alarm", method = RequestMethod.GET)
-    public JSONObject sendMQMessage() {
+    /**
+     * 手动添加告警
+     * @param level 告警等级，值为1,2,3,4
+     */
+    @RequestMapping(value = "test/add_alarm/{level}", method = RequestMethod.GET)
+    public JSONObject sendMQMessage(@PathVariable("level") Integer level) {
         Alarm alarm = new Alarm();
         alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
-        
-        int i = MathUtil.getRandomInt(1, 4);
-        alarm.setAlarmLevel(i);
+
+        //int i = MathUtil.getRandomInt(1, 4);
+        alarm.setAlarmLevel(level);
         alarm.setAlarmName("温度测试告警");
         alarm.setObjectId(222032401);
         alarm.setObjectName("温度检测仪");
@@ -244,7 +249,9 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-
+    /*
+     * 添加管廊光源
+     */
     @RequestMapping(value = "test/add_lights", method = RequestMethod.GET)
     public JSONObject createTunnelLights() {
         int tunnelId = 1;
