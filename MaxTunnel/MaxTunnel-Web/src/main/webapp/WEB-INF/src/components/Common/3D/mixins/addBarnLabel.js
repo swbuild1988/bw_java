@@ -112,7 +112,6 @@ const addBarnLabel = {
                                 let {code, data} = result.data;
                                 if (code == 200) {
                                     let [ updateObj ] = data;
-                                    console.log('datadata',data)
                                     if (this.detectionObj.analog.indexOf( updateObj.objtypeId ) != -1 &&
                                         updateObj.cv.toFixed(2) != updateLabel._label._text._value) { //模拟量
 

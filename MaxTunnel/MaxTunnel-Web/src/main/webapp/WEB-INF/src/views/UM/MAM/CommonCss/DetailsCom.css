@@ -40,7 +40,7 @@
     position: absolute;
     left: 70%;
     color: #fff;
-    font-size: 0.7rem;
+    font-size: 1.6vmin;
 }
 .ivu-table-wrapper>>>.ivu-table-tip,
 .ivu-table-wrapper>>>.ivu-table-overflowX {
