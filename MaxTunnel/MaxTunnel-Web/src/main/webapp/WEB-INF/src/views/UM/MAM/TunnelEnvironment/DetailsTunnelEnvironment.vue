@@ -427,7 +427,7 @@ export default {
             //获取监测仓列表
             TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                 result => {
-                    let arr = [
+                    var arr = [
                         {
                             value: 0,
                             label: "全部"
@@ -478,11 +478,9 @@ export default {
                     if (this.$route.query.storeId != undefined) {
                         _this.storeProp.selectObj.selectId = this.$route.query.storeId;
                     } else {
-                        _this.storeProp.selectObj.selectId =
-                            _this.storeProp.dataList[0].value;
+                        _this.storeProp.selectObj.selectId = _this.storeProp.dataList[0].value;
                     }
-                    _this.queryCondition.storeId =
-                        _this.storeProp.selectObj.selectId;
+                    _this.queryCondition.storeId = _this.storeProp.selectObj.selectId;
 
                     _this.getObjDetialData();
                     _this.getvideos();
@@ -507,6 +505,7 @@ export default {
                             label: a.name
                         });
                     });
+                    _this.queryCondition.areaId = _this.areas[0].value;
 
                     _this.getObjDetialData();
                     _this.getvideos();
@@ -580,6 +579,7 @@ export default {
                 result => {
                     _this.objTableDate = result;
                     _this.Obj = [];
+                    // console.log(,result)
                     result.forEach(a => {
                         let temp = {};
                         _this.areaLeath = a.areaLeath;
@@ -634,6 +634,7 @@ export default {
             };
             MonitorDataService.getdataVideos(Params).then(result => {
                 if (result && result.length > 0) {
+                    console.log(Params, result);
                     this.curCarousel.videolist = result;
                 }
             });

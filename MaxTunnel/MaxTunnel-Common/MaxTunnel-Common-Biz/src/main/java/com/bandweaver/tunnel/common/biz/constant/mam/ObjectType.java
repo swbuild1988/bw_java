@@ -21,7 +21,7 @@ public enum ObjectType {
     FAN("风机", 10, 4, 3, "", true),
     LIGHT("照明", 11, 1, 3, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
-    LIQUID("液位仪", 21, 1, 1, ""),
+    LIQUID("液位仪", 21, 1, 1, "mm"),
 
     //普通类电表
     ELECTRICITY_METER1("风机类电表", 31, 6, 1, ""),

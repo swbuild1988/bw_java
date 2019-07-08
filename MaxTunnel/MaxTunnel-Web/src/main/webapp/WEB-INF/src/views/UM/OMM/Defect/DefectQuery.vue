@@ -265,6 +265,7 @@ export default {
             })
 
         this.queryCondition()
+        this.tunnelId = this.$route.params.id;
     },
     methods: {
         queryCondition(){
@@ -310,11 +311,10 @@ export default {
             });
         },
         goToModule3: function(){
-            console.log('this.tunnelId', this.$route.params.id)
             this.$router.push({
                 name: "缺陷详情",
                 params: {
-                    tunnelId: this.$route.params.id,
+                    tunnelId: this.tunnelId,
                     type: 4
                 }
             })

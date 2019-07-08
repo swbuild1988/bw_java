@@ -18,7 +18,7 @@
                         <FormItem label="安装位置：" prop="tunnel.id">
                             <Row :gutter="8">
                                 <Col span="7"> 
-                                    <Select v-model="equipment.tunnel.id" :disabled="pageType==pageTypes.Read">
+                                    <Select v-model="equipment.tunnel.id" :disabled="pageType==pageTypes.Read" @on-change="changeTunnelId">
                                         <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                     </Select>
                                 </Col>
@@ -382,7 +382,7 @@ export default {
                         let info = {
                             id: this.equipment.id,
                             name: this.equipment.name,
-                            type: this.equipment.typeId,
+                            type: this.equipment.type,
                             runTime: this.equipment.runTime,
                             status: this.equipment.status,
                             tunnelId: this.equipment.tunnel.id,
@@ -439,6 +439,7 @@ export default {
             this.equipment.section.name = null
             this.getAarasByTunnelId(id)
             this.getStoresByTunnelId(id)
+            console.log('this.areaId111', this.areaId)
         }
     }
 };

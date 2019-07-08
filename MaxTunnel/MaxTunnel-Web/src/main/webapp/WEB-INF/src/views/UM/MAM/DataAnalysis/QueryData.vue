@@ -100,6 +100,8 @@
         <transition name="fade" mode="out-in">
             <div  class="boxBG" v-if="viewHistory">
                 <Row>
+                    <Button @click="downLoad" class="downloadBtn">下载历史数据</Button>
+                    <Table :columns="downTableColumn" :data="downTableDate" v-show="false" ref="downTable"></Table>
                     <Col span="24">
                         <div class="chartSize">
                             <MultiLineChart style="width: 100%;" v-bind="curlineChart" ref="multiLine"></MultiLineChart>
@@ -123,6 +125,7 @@
                     <Col span="6" class="btnBox">
                         <Button type="primary" shape="circle" icon="forward" @click="queryHistoryData" v-if="viewHistory">查询</Button>
                         <Button type="info" shape="circle" icon="ios-cloud-download" @click="backToCurPage">返回</Button>
+                        <PDF ref="pdf" v-show="false"></PDF>
                     </Col>
                 </Row>
             </div>
@@ -131,12 +134,12 @@
 </template>
 
 <script>
-  import {EnumsService} from '../../../../services/enumsService.js'
-  import { TunnelService } from "../../../../services/tunnelService";
-  import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
-  import MultiLineChart from '../../../../components/Common/Chart/MultiLineChart'
-  import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
-
+    import {EnumsService} from '../../../../services/enumsService.js'
+    import { TunnelService } from "../../../../services/tunnelService";
+    import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
+    import MultiLineChart from '../../../../components/Common/Chart/MultiLineChart'
+    import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
+    import PDF from "@/components/UM/MAM/pdfPerviewDownload";
 
   export default {
     name: "query-data",
@@ -187,8 +190,13 @@
                 selectObjects: {},
                 selectData: {idList: ""}
             },
-            historyDateType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {key: 4,value: "自定义"}],
-            queryZoneList: [{key: 1, value: "自定义"}, {key: 2, value: "最近一天"}, {key: 3, value: "最近一周"}],
+            historyDateType: [
+                {key: 1, value: "最近一天"}, 
+                {key: 2, value: "最近一周"}, 
+                {key: 3, value: "最近一月"},
+                {key: 4, value: '最近一年'},
+                {key: 5,value: "自定义"}
+            ], 
             dataTypeEnum: [],
             selectSelection: null,
             objectList: [],
@@ -256,11 +264,29 @@
             ],
             tableData: [],
             areas: [],
-            stores: []
+            stores: [],
+            downTableDate: [],
+            downTableColumn: [
+                {
+                    title: '对象名称',
+                    key: 'name'
+                },
+                {
+                    title: '数值',
+                    key: 'cv'
+                },
+                {
+                    title: '监测时间',
+                    key: 'time',
+                    render: (h, params) => {
+                        return h('span', new Date(params.row.time).format('yyyy-MM-dd hh:mm:s'))
+                    }
+                }
+            ]
         }
     },
     components: {
-        MultiLineChart, ShowMonitorObjectSelect
+        MultiLineChart, ShowMonitorObjectSelect, PDF
     },
     watch: {
         "dataObjectSelect.selectData.idList": function () {
@@ -268,7 +294,6 @@
         }
     },
     mounted() {
-        // this.inItData();
         // 设置表格高度
         this.tableHeight = window.innerHeight * 0.65;
         //获取数据类型
@@ -288,7 +313,18 @@
         TunnelService.getTunnels().then(result => {
             this.tunnelList = result
         });
-        this.queryTableData()
+        if(this.$route.params.id){
+            this.queryPrams.id = this.$route.params.id
+            this.historyPrams.ids.push(this.$route.params.id)
+            this.selectSelection = [
+                { id: this.$route.params.id }
+            ]
+            this.historyPrams.dateType = 3
+            this.viewHistoryData()
+            this.downLoadData()
+        }else{
+            this.queryTableData()
+        }
     },
     methods: {
         //查询监测对象
@@ -391,7 +427,7 @@
         },
 
         viewHistoryData() {
-            var _this = this;
+            let _this = this;
             if(!this.selectSelection){
                 this.$Message.warning('请勾选需要查询历史数据的对象');
                 return;
@@ -409,15 +445,16 @@
         },
 
         queryHistoryData() {
-            var _this = this;
+            let _this = this;
             _this.curlineChart.parameters.queryPram.startTime = _this.historyPrams.startTime.getTime();
             _this.curlineChart.parameters.queryPram.endTime = _this.historyPrams.endTime.getTime();
             _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
             _this.$refs.multiLine.fetchData();
+            _this.downLoadData()
         },
 
         backToCurPage() {
-            var _this = this;
+            let _this = this;
             _this.viewHistory = !_this.viewHistory;
         },
 
@@ -439,32 +476,61 @@
 
         //更改告警时间类型
         changeAlarmType(index) {
-            var _this = this;
-            var date = new Date();
+            let _this = this;
+            let date = new Date();
             if (index == 1) {
-            date.setTime(date.getTime() - 3600 * 1000 * 24);
-            _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-            _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-            _this.isReady = true;
+                date.setTime(date.getTime() - 3600 * 1000 * 24);
+                _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+                _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+                _this.isReady = true;
             }
             else if (index == 2) {
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-            _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-            _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-            _this.isReady = true;
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+                _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+                _this.isReady = true;
             }
             else if (index == 3) {
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-            _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
-            _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
-            _this.isReady = true;
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+                _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+                _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+                _this.isReady = true;
+            }
+            else if (index == 4) {
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 365);
+                _this.historyPrams.startTime = date.format("yyyy-MM-dd hh:mm:ss");
+                _this.historyPrams.endTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+                _this.isReady = true;
             }
             else {
-            _this.isReady = false;
-            _this.historyPrams.startTime = "";
-            _this.historyPrams.endTime = "";
+                _this.isReady = false;
+                _this.historyPrams.startTime = "";
+                _this.historyPrams.endTime = "";
             }
         },
+
+        downLoadData(){
+            let params = {
+                ids: this.historyPrams.ids,
+                startTime: this.historyPrams.startTime,
+                endTime: this.historyPrams.endTime
+            }
+            DataAnalysisService.downLoadData(params).then(
+                result => {
+                    this.downTableDate = result
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+
+        downLoad(){
+            this.$refs.downTable.exportCsv({
+                filename: new Date().format("yyyy-MM-dd hh:mm:ss") + "设备历史数据",
+                original: false
+            });
+        }
     }
   }
 
@@ -502,6 +568,11 @@
         position: relative;
         line-height: 40px;
         margin-top: 0.5vh;
+    }
+    .downloadBtn{
+        position: absolute;
+        right: 0;
+        z-index: 999;
     }
 
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

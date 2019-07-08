@@ -370,7 +370,7 @@ export default {
     border-radius: 1vmin;
 }
 .section-details-content {
-    left: 2vmin;
+    left: 1vmin;
     top: 1vmin;
 }
 </style>

@@ -103,6 +103,19 @@ var DataAnalysisService = {
 				}
 			})
 		})
+	},
+	//下载
+	downLoadData(params){
+		return new Promise((resolve, reject) => {
+			post('data-analyse/measvalue/history/data', params).then(res=>{
+				let { code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：data-analyse/measvalue/history/data")
+				}
+			})
+		})
 	}
 }
 
