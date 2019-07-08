@@ -321,7 +321,8 @@ export default {
                     "#e06ce4",
                     "#e48e6c",
                     "#c23531"
-                ]
+                ],
+                size: "55%"
             },
             radarChart: {
                 requestUrl: "tunnels/total-avg/2/consume-datas",

@@ -103,12 +103,12 @@ export default (containerId, viewer, domId, route) => ({
                 this.getLayer();
                 this.init();
                 this.initProps();
-                this.flyManager(route);
                 if (this.pointLinght.isOpen) this.getPointLinght();
             })
             .catch(() => {
                 this.initUpdate(Vue.prototype[viewer], Vue.prototype[viewer].scene)
             });
+        this.flyManager(route);
         this.paramUpdate();
 
     },
