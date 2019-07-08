@@ -13,7 +13,12 @@
             ]
     },
     "VMEntityConfig": {
+        "criticalHeight":"30",
         "unitEntityParam": [{
+                "entityBaseParameters": {
+                    "id": 1,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49948864664668",
@@ -31,6 +36,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 2,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49506",
@@ -48,6 +57,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 3,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.499595",
@@ -65,6 +78,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 4,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.477914",
@@ -83,6 +100,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 5,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.4858731580146",
@@ -101,6 +122,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 6,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.52207233753701",
@@ -118,6 +143,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 7,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.51743415066589",
@@ -135,6 +164,10 @@
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 8,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.51382289846887",
