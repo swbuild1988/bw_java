@@ -11,7 +11,7 @@
                     <span class="downBtn">下载</span>
                 </p>
 			</div>-->
-			<div class="PDFBox" style="height: 75vh;overflow-y: auto;overflow-x: hidden;">
+			<div class="PDFBox" style="height: 75vh;width: 61vw;">
 				<!-- <pdf
                     :src="src"
                     :page="currentPage"
@@ -102,12 +102,16 @@ export default {
 };
 </script>
 <style scoped>
+.PDFBox{
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 .PDFBox::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
+    width: 0.4vmin;
+    height: 0.4vmin;
 }
 .PDFBox::-webkit-scrollbar-thumb{
-    border-radius: 5px;
+    border-radius: 0.5vmin;
     -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
     background: rgba(0, 0, 0, 0.2)
 }

@@ -592,7 +592,7 @@ export default {
 }
 
 .main {
-	background-image: url("../../assets/UM/UMMainbg2.png");
+	background-image: url("../../assets/UM/umMainbg2.png");
 	color: #fff;
 	background-size: 100% 100%;
 	-moz-background-size: 100% 100%;
