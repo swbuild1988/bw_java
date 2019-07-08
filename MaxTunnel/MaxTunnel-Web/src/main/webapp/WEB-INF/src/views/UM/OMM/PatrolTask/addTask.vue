@@ -2,6 +2,7 @@
     <div class="formBG">
         <div class="formTitle" v-show="this.pageType==4">提交任务执行结果</div>
         <div class="formTitle" v-show="this.pageType==1">巡检任务详情</div>
+        <div class="formHeight">
         <Form  :model="task" :label-width="140">
             <FormItem label="所属计划：">
                 <Input type="text" v-model="task.planName" readonly></Input>
@@ -36,6 +37,7 @@
                 <Button type="ghost" @click="goBack()">返回</Button>
             </div>
         </Form>
+        </div>
     </div>
 </template>
 <script>
@@ -308,7 +310,7 @@ export default {
 .formBG >>> .ivu-form-item-label{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG .ivu-form>>>.ivu-form-item-label:before {
     color: #00fff6;
     content: '★';
     display: inline-block;
