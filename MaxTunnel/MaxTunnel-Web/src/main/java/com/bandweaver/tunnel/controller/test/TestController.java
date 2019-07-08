@@ -220,14 +220,18 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = "test/add_alarm", method = RequestMethod.GET)
-    public JSONObject sendMQMessage() {
+    /**
+     * 手动添加告警
+     * @param level 告警等级，值为1,2,3,4
+     */
+    @RequestMapping(value = "test/add_alarm/{level}", method = RequestMethod.GET)
+    public JSONObject sendMQMessage(@PathVariable("level") Integer level) {
         Alarm alarm = new Alarm();
         alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
-        
-        int i = MathUtil.getRandomInt(1, 4);
-        alarm.setAlarmLevel(i);
+
+        //int i = MathUtil.getRandomInt(1, 4);
+        alarm.setAlarmLevel(level);
         alarm.setAlarmName("温度测试告警");
         alarm.setObjectId(222032401);
         alarm.setObjectName("温度检测仪");
@@ -244,7 +248,9 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-
+    /*
+     * 添加管廊光源
+     */
     @RequestMapping(value = "test/add_lights", method = RequestMethod.GET)
     public JSONObject createTunnelLights() {
         int tunnelId = 1;
