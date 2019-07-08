@@ -282,7 +282,7 @@ export default {
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;

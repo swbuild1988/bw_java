@@ -141,7 +141,7 @@
             <Row style="margin-top: 20px;">
                 <Form ref="batchLendSubmitData" :model="batchLendSubmitData" :rules="ruleInline" inline>
                     <Col span="8">
-                        <FormItem prop="staffId" class="borrower">
+                        <FormItem prop="staffId" class="borrower" style="width: 100%">
                             借用人：
                             <Select style="width: 60%;" v-model="batchLendSubmitData.staffId">
                                 <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
@@ -149,13 +149,13 @@
                         </FormItem>
                     </Col>
                     <Col span="8">
-                        <FormItem prop="borrowTime" class="borrowTime">
+                        <FormItem prop="borrowTime" class="borrowTime" style="width: 100%">
                             借用时间：
                             <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchLendSubmitData.borrowTime"></DatePicker>
                         </FormItem>
                     </Col>
                     <Col span="8">
-                        <FormItem>
+                        <FormItem style="width: 100%">
                             <span class="purpose">备注：</span>
                             <Input type="textarea" style="width: 70%;" v-model="batchLendSubmitData.describe"></Input>
                         </FormItem>
@@ -381,7 +381,7 @@ export default {
             }
         }
         const checkReturnTime = (rule, value, callback) => {
-            if(new Date(this.borrow.borrowTime)>=new Date(value)){
+            if(this.newBorrowTime>=value){
                 callback(new Error('归还时间不能早于借出时间'))
             }else{
                 callback()
@@ -624,7 +624,7 @@ export default {
                 ],
                 returnTime: [
                     { type: 'date', required: true, message: '请选择归还时间', trigger: 'change' },
-                     { validator: checkReturnTime, trigger: 'change' }
+                    { validator: checkReturnTime, trigger: 'change' }
                 ],
                 usingStatus: [
                     { type: 'number', required: true, message: '请选择仪表使用状态', trigger: 'change' }
@@ -697,7 +697,8 @@ export default {
             },
             modalWidth: null,
             minModalWidth: null,
-            isNullData: false
+            isNullData: false,
+            newBorrowTime: null
         }
     },
     computed: {
@@ -937,7 +938,6 @@ export default {
                 str += element.instrumentId+","
             })
             this.batchReturnSubmitData.ids = str.substr(0,str.length-1)
-            console.log(this.batchReturnSubmitData.ids)
         },
         //确认
         confirmBatchReturn(name){
@@ -980,7 +980,7 @@ export default {
             this.isBorrow = true
             this.isBorrowId = id
             this.inBorrowTime = time
-            console.log('this.inBorrowTime', this.inBorrowTime)
+            // this.showHistory(id)
         },
         confirmBorrow(name){
             this.confirmBorrowBtn = true
@@ -1003,7 +1003,8 @@ export default {
                                 this.Log.info(error)
                             }
                         )
-                        this.$refs[name].resetFields()
+                        this.borrow.staffId = null
+                        this.borrow.borrowTime = null
                         this.borrow.describe = null
                     }else{
                         this.$Message.error("请填写正确的借出信息")
@@ -1019,6 +1020,17 @@ export default {
         returnSubmit(id){
             this.isReturn = true
             this.isReturnId = id
+            EquipmentService.getNewTime(id).then(
+                resolve=>{
+                    console.log('resolve', resolve)
+                    this.newBorrowTime = resolve.borrowTime
+                    console.log('this.newBorrowTime', this.newBorrowTime)
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+            // this.showHistory(id)
         },
         confirmReturn(name){
             this.confirmReturnBtn = true
@@ -1037,6 +1049,10 @@ export default {
                             result => {
                                 this.isReturn = false
                                 this.showTable()
+                                this.toolReturn.staffId = null
+                                this.toolReturn.returnTime = null
+                                this.toolReturn.usingStatus = null
+                                this.toolReturn.remark = null
                             },
                             error => {
                                 this.Log.info(error)

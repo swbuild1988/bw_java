@@ -458,6 +458,7 @@ export default {
                     startTime: this.outStorageConditions.startTime,
                     endTime: this.outStorageConditions.endTime,
                     status: true,
+                    name: this.outStorageConditions.name
                 };
                 return Object.assign({},param)
             },
@@ -663,7 +664,7 @@ export default {
     text-align: right;
 }
 .takeBackUpList{
-    line-height: 4.5vmin;
+    line-height: 4vmin;
     list-style-type:none;
 }
 .takeBackUpUl{

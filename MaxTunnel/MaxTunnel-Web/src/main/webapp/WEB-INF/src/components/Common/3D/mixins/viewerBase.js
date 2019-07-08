@@ -309,7 +309,7 @@ export default (containerId, viewer, domId, route) => ({
                         _this.prePosition = cameraPosition;
 
                         _this.addLabel(_this.SuperMapConfig.IP + _this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
-
+                        _this.showOrHideRelevantUnit(_this.prePosition);
                         _this.$emit("refreshCameraPosition", cameraPosition);
                     }
                 } catch (error) {
@@ -373,6 +373,12 @@ export default (containerId, viewer, domId, route) => ({
             }
 
         },
+        showOrHideRelevantUnit({height}){
+
+            let relevantUnits = this.viewer.entities._entities._array.filter( entity =>entity.messageType == "relevantUnit" );
+
+            relevantUnits.forEach( unit => unit._show = height > this.VMEntityConfig.criticalHeight ? true : false) 
+        }
     },
     beforeDestroy() {
         this.viewer.selectedEntityChanged.removeEventListener(this.operationEntity);

@@ -616,11 +616,7 @@ var EquipmentService = {
         return new Promise((resolve, reject) => {
 			get('tunnels/'+tunnelId+'/stores/equipments/count')
 				.then(res => {
-					let {
-						code,
-						data,
-						msg
-					} = res.data
+					let { code,	data, msg } = res.data
 					if (code == 200) {
 						resolve(data)
 					} else {
@@ -631,6 +627,19 @@ var EquipmentService = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		})
+    },
+    //获取最新一条仪表工具的出库时间
+    getNewTime(id){
+        return new Promise((resolve, reject) => {
+            get('instrument-records/'+id+'/new').then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：instrument-records/"+id+"/new")
+                }
+            })
+        })
     }
 };
 

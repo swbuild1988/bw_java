@@ -472,6 +472,7 @@ export default {
                 //显示右下角提示框
                 this.warningNotice(content);
                 /* 滚动条以及不被遮挡 */
+                document.getElementsByClassName("ivu-notice")[0].style.width=33+'vmin'
                 if (document.getElementsByClassName("ivu-notice-notice")) {
                     let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight + document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
                     if (h > window.innerHeight) {
@@ -530,6 +531,7 @@ export default {
                             document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
                         }
                     }
+                    document.getElementsByClassName("ivu-notice")[0].style.width=33+'vmin'
                 }
             };
             //详情按钮
@@ -540,7 +542,7 @@ export default {
                             "span",
                             {
                                 style: {
-                                    fontSize: "1.6vmin"
+                                    fontSize: "1.4vmin"
                                 }
                             },
                             alarm.location
@@ -771,6 +773,9 @@ export default {
     .select-dropdown >>> .ivu-select-dropdown {
         left: 0vmin !important;
     }
+    .ivu-notice{
+        width: 30vmin !important;
+    }
 }
 </style>
 <style>
@@ -779,16 +784,18 @@ export default {
     overflow-y: auto;
 }
 .ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title {
-    font-size: 1.8vmin !important;
+    font-size: 1.6vmin !important;
+    line-height: 1.8vmin !important;
+    padding-top: 0.5vmin;
 }
 .ivu-notice::-webkit-scrollbar,
 .stepsBox::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 0.4vmin;
+    height: 0.4vmin;
 }
 .ivu-notice::-webkit-scrollbar-thumb,
 .stepsBox::-webkit-scrollbar-thumb {
-    border-radius: 5px;
+    border-radius: 0.5vmin;
     -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
     background: rgba(0, 0, 0, 0.2);
 }

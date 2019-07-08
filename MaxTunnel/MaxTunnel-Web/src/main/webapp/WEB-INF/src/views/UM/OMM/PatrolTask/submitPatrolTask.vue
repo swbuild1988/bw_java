@@ -77,7 +77,7 @@
                 </Modal>
             </FormItem>
             <FormItem label="巡检描述：">
-                <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" readonly></Input>
+                <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" :readonly="this.$route.params.isFinished==true"></Input>
             </FormItem>
             <div style="text-align: center;margin-left: 10vmin" v-show="this.$route.params.isFinished!=true">
                 <Button type="ghost" style="margin-right: 8px"  @click="goBack()">返回 </Button>
@@ -193,6 +193,13 @@ import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
 export default {
     components: { expandRow, ImageFromUrl },
     data(){
+        const checkDenTime = (rule, value, callback) => {
+            if(value!=null&&value<=this.task.startTime){
+                callback(new Error('任务结束时间不能早于任务开始时间'))
+            }else{
+                callback()
+            }
+        }
         return {
             defectTunnelId: 1,
             task:{
@@ -306,7 +313,8 @@ export default {
                     { type: 'date', required: true, message: '任务开始时间不能为空', trigger: 'change' }
                 ],
                 endTime: [
-                    { type: 'date', required: true, message: '任务结束时间不能为空', trigger: 'change' }
+                    { type: 'date', required: true, message: '任务结束时间不能为空', trigger: 'change' },
+                    { validator: checkDenTime, trigger: 'change' }
                 ]
             },
             isDisable: false,
@@ -754,7 +762,7 @@ export default {
 .formBG >>> .ivu-form-item-label{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;
