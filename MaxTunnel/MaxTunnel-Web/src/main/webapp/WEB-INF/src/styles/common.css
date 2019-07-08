@@ -303,6 +303,9 @@ body {
 		padding: 0 0 0 1.6vmin;
 		font-size: 1.2vmin;
 	}
+	.ivu-date-picker-cells-month .ivu-date-picker-cells-cell-focused, .ivu-date-picker-cells-year .ivu-date-picker-cells-cell-focused {
+		background-color: #84a2c1;
+	}
 
 	/* 月份 */
 	.ivu-date-picker-cells-month span {

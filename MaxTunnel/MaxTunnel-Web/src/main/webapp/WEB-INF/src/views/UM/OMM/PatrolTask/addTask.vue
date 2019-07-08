@@ -310,7 +310,7 @@ export default {
 .formBG >>> .ivu-form-item-label{
     color: #fff;
 }
-.formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
     color: #00fff6;
     content: '★';
     display: inline-block;
@@ -326,11 +326,11 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 2.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

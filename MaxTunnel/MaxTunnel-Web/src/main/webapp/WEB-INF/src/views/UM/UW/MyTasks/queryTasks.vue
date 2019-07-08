@@ -75,8 +75,8 @@ export default {
                 pageSize: this.page.pageSize,
                 name:this.conditions.name,
                 processType: this.conditions.processType,
-                startTime: null,
-                endTime: null,
+                startTime: this.conditions.startTime,
+                endTime: this.conditions.endTime,
             };
             return Object.assign({}, param);
         }

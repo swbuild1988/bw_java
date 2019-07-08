@@ -40,15 +40,15 @@
 								<Option v-for="(item, index) in inspectObject" :value="item.val" :key="index">{{item.key}}</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="申请人：">
+						<FormItem label="申请人：" class="ivu-form-item-required">
 							<Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
 							<Input v-model="requestStaffName" readonly></Input>
 						</FormItem>
-						<FormItem label="审批人：">
+						<FormItem label="审批人：" class="ivu-form-item-required">
 							<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
 							<Input v-model="approver.name" readonly></Input>
 						</FormItem>
-						<FormItem label="计划步骤：">
+						<FormItem label="计划步骤：" class="ivu-form-item-required">
 							<ul class="stepsBox">
 								<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
 									<span style="color: #fff">{{index+1}}、</span>
@@ -124,6 +124,7 @@
 		<Modal
 			v-model="isShowCreateTemp"
 			title="模板"
+			:width="modalWidth"
 		>
 			<Form ref="createTemp" :model="createTemp" :rules="ruleTemp" :label-width="100">
 				<FormItem label="模板名称：" prop="name">
@@ -138,6 +139,7 @@
 		<Modal
 			v-model="isImportTemp"
 			title="选择模板"
+			:width="modalWidth"
 		>
 			<Row style="margin-bottom: 2vmin;">
 				<Col span="12">
@@ -157,6 +159,7 @@
 		<Modal
 			v-model="isShowStore"
 			title="选择舱室"
+			:width="modalWidth"
 		>
 			<RadioGroup v-model="choosedStoreId">
 				<Radio v-for="item in stores" :key="item.id" :label="item.id" class="radioBox">{{item.name}}
@@ -170,6 +173,7 @@
 		<Modal
 			v-model="isShowArea"
 			title="选择区间"
+			:width="modalWidth"
 		>
 		<div style="text-align: center;">
 			<Select v-model="choosedArea.startArea" class="choosedAreaId">
@@ -319,7 +323,6 @@ export default {
 					title: '选中',
 					align:'center',
 					key: 'checkBox',
-					width: 60,
 					render:(h,params)=>{
 						return h('div',[
 							h('Checkbox',{
@@ -341,7 +344,6 @@ export default {
 				},
 				{
 					type: 'index',
-					width: 60,
 					align: 'center'
 				},
 				{
@@ -384,7 +386,9 @@ export default {
 			},
 			pathCon: null,
 			choosedMonth: null,
-			choosedYear: null
+			choosedYear: null,
+			modalWidth: null,
+			confirmWidth: null
 		};
     },
     watch: {
@@ -405,6 +409,8 @@ export default {
 		}
     },
     mounted() {
+		this.modalWidth = document.body.offsetWidth*0.4
+		this.confirmWidth = document.body.offsetWidth*0.3
 		this.pageType = this.$route.params.type;
 		this.uploadPlan.tunnelId = this.$route.params.tunnelId
 		this.getInfo(this.uploadPlan.tunnelId)
@@ -615,7 +621,8 @@ export default {
 		//删除todoList
         delList(index){
             this.$Modal.confirm({
-                title: '删除计划步骤',
+				title: '删除计划步骤',
+				width: this.confirmWidth,
                 content: '<p>确定要删除这条计划步骤吗</p>',
                 onOk: () => {
                     this.uploadPlan.steps.splice(index, 1)
@@ -773,7 +780,8 @@ export default {
 		// 删除模板
 		del(id){
 			this.$Modal.confirm({
-                title: '计划模板管理',
+				title: '计划模板管理',
+				width: this.confirmWidth,
                 content: '<p>确定删除该计划模板吗</p>',
                 onOk: () => {
 					PatrolService.delTemplate(id).then(
@@ -863,7 +871,7 @@ export default {
 	}
 
 	.planContainer {
-		width: 80%;
+		width: 93%;
 		padding: 10px 20px;
 		border-radius: 8px;
 	}
@@ -927,7 +935,7 @@ export default {
 		color: #fff;
 	}
 
-	.formBG >>> .ivu-form-item-required .ivu-form-item-label:before, .formBG >>>.ivu-form-item-label:before {
+	.formBG >>> .ivu-form-item-required .ivu-form-item-label:before{
 		color: #00fff6;
 		content: '★';
 		display: inline-block;
@@ -973,7 +981,8 @@ export default {
 		margin-right: 0.8vmin;
 		padding: 0.1vmin 2vmin;
 		color: #fff;
-		border-radius: 4px;
+		line-height: 4vmin;
+		border-radius: 1vmin;
 		cursor: pointer;
 	}
 	.backBtn{
@@ -1029,12 +1038,12 @@ export default {
 		}
 		.ivu-form-item>>>.ivu-form-item-label {
 			width: 15vmin !important;
-			line-height: 2.5vmin;
+			line-height: 4.5vmin;
 		}
 
 		.ivu-form-item>>>.ivu-form-item-content {
 			margin-left: 15vmin !important;
-			line-height: 4.5vmin;
+			line-height: 5.5vmin;
 		}
 
 		.ivu-select,
@@ -1064,8 +1073,8 @@ export default {
 		}
 
 		input[type='number'] {
-			height: 4vmin;
-			width: 8vmin;
+			height: 3vmin;
+			width: 5vmin;
 			font-size: 1.6vmin;
 		}
 
@@ -1099,6 +1108,12 @@ export default {
 		.ivu-date-picker-header {
 			height: 3.2vmin !important;
 			line-height: 3.2vmin !important;
+		}
+		.moduleStyle .ivu-form-item.ivu-form-item-error{
+			margin-bottom: 4.5vmin;
+		}
+		.ivu-date-picker-cells-month span em{
+			width: 3vmin !important;
 		}
 	}
 
