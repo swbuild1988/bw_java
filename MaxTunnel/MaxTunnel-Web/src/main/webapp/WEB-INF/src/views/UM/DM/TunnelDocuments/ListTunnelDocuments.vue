@@ -113,7 +113,7 @@
                 </Col>
             </Row>
         </div>
-        <div class="page">
+        <!-- <div class="page"> -->
             <Page
                 :total="page.pageTotal"
                 :current="page.pageNum"
@@ -126,7 +126,7 @@
                 show-elevator
                 :style="pageStyle"
             ></Page>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
 
