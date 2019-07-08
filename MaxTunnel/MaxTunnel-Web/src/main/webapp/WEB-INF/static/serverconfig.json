@@ -13,7 +13,7 @@
             ]
     },
     "VMEntityConfig": {
-        "criticalHeight":"30",
+        "criticalHeight":"100",
         "unitEntityParam": [{
                 "entityBaseParameters": {
                     "id": 1,

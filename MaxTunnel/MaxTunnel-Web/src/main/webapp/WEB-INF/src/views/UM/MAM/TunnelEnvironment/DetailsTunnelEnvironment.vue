@@ -571,8 +571,8 @@ export default {
             let _this = this;
             let Params = {
                 tunnelId: _this.queryCondition.tunnelId,
-                storeId:  _this.queryCondition.storeId,
-                areaId: _this.queryCondition.areaId,
+                storeId:  _this.queryCondition.storeId == 0 ? null: _this.queryCondition.storeId,
+                areaId: _this.queryCondition.areaId == 0 ? null: _this.queryCondition.areaId,
                 objtypeId: _this.queryCondition.curDataType
             };
             MonitorDataService.objDetailDatagrid(Params).then(
