@@ -65,7 +65,7 @@ export default {
 </script>
 <style scoped>
 .elecDataWrapper {
-    background: url("../../../assets/UM/detailsBg.png") no-repeat;
+    background: url("../../../../assets/UM/detailsBg.png") no-repeat;
     background-size: 100% 100%;
     color: #fff;
     font-size: 1.6vmin;

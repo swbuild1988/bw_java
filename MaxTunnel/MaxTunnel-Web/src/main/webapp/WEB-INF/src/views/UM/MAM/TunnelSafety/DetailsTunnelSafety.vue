@@ -136,18 +136,24 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                     <Row :gutter="16" style="margin-right: 2px;">
                         <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                            <SimulatedData
+                            <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus"></show-obj-data>
+                            <!-- <SimulatedData
                                 v-bind:Obj="item"
                                 v-if="item.datatypeId==1"
                                 @changeStatus="changeStatus"
                             ></SimulatedData>
-                            <switchTypeData 
+                            <switchTypeData
                                 v-bind:propList="item"
                                 :control="item.control"
                                 v-else-if="item.datatypeId==2"
                                 @changeStatus="changeStatus"
                             ></switchTypeData>
-                            <analogChannel v-bind:propList="item" :control="item.control" v-else @changeStatus="changeStatus"></analogChannel>
+                            <analogChannel
+                                v-bind:propList="item"
+                                :control="item.control"
+                                v-else
+                                @changeStatus="changeStatus"
+                            ></analogChannel>-->
                         </Col>
                     </Row>
                 </Col>
@@ -160,10 +166,11 @@
 import videoComponent from "../../../../components/Common/Video/VideoComponent.vue";
 import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
-import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
-import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
-import switchTypeData from '../../../../components/UM/MAM/SwitchTypeData'
-import analogChannel from "../../../../components/UM/MAM/AnalogChannelTypeData";
+import ShowObjData from "../../../../components/UM/MAM/ShowObjData/ShowObjData";
+// import SimulatedData from "../../../../components/UM/MAM/ShowObjData/ShowSimulatedData";
+// import showSwitchData from "../../../../components/UM/MAM/ShowObjData/ShowSwitchData";
+// import switchTypeData from "../../../../components/UM/MAM/ShowObjData/SwitchTypeData";
+// import analogChannel from "../../../../components/UM/MAM/ShowObjData/AnalogChannelTypeData";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
@@ -177,12 +184,12 @@ import tabs from "../../../../components/Common/Tabs.vue";
 
 export default {
     name: "detail-tunnel-environment",
-    computed:{
-        isShowComponent(){
-            return this.$store.state.UMstate.tabelCrad.isShowCardComponent
+    computed: {
+        isShowComponent() {
+            return this.$store.state.UMstate.tabelCrad.isShowCardComponent;
         },
-        tabsIndex(){
-            return this.$store.state.UMstate.tabelCrad.buttomIndex
+        tabsIndex() {
+            return this.$store.state.UMstate.tabelCrad.buttomIndex;
         }
     },
     data() {
@@ -277,7 +284,7 @@ export default {
             ],
             objTableDate: [],
             areaLeath: "",
-            areaLeathUnit:"米",
+            areaLeathUnit: "米",
             tabs: {
                 tabList: [
                     {
@@ -316,8 +323,8 @@ export default {
         }
     },
     components: {
-        SimulatedData,
-        showSwitchData,
+        // SimulatedData,
+        // showSwitchData,
         Modal,
         EnvironmentShow,
         TestSmViewer,
@@ -325,8 +332,9 @@ export default {
         Carousel,
         checkSelect,
         tabs,
-        switchTypeData,
-        analogChannel
+        // switchTypeData,
+        // analogChannel,
+        ShowObjData
     },
     mounted() {
         if (this.$route.query) {
@@ -340,9 +348,9 @@ export default {
     },
     methods: {
         changeTabs(tab) {
-            this.$store.commit("changeCardStatus",{
+            this.$store.commit("changeCardStatus", {
                 status: tab.index == 0 ? true : false,
-                index:tab.index,
+                index: tab.index
             }); //保存当前按钮状态
         },
 
@@ -550,7 +558,6 @@ export default {
 
         //定位设备切换开关量控制
         changeStatus(id, ObjVal, datatypeId, clickStatus) {
-            
             if (clickStatus === null) {
                 let param = {
                     id: id,
@@ -652,11 +659,18 @@ export default {
                                   );
                         if (a.datatypeId == 1) {
                             temp.ObjVal = a.curValue.toFixed(2);
-                        } else if(a.datatypeId == 2) {
+                        } else if (a.datatypeId == 2) {
                             temp.ObjVal = a.curValue;
-                            
-                        }else {
-                            temp.ObjVal = [{'close':0,'open':1,'fault1':1,'fault2':0,'far':0}];
+                        } else {
+                            temp.ObjVal = [
+                                {
+                                    close: 0,
+                                    open: 1,
+                                    fault1: 1,
+                                    fault2: 0,
+                                    far: 0
+                                }
+                            ];
                         }
                         temp.objtypeName =
                             _this.curTunnelName + a.area + a.store;
@@ -706,7 +720,7 @@ export default {
     beforeDestroy() {
         clearInterval(this.dataInterval);
         this.dataInterval = null;
-    },
+    }
 };
 </script>
 
@@ -884,7 +898,7 @@ export default {
     margin-top: 0.5%;
     margin-right: 3%;
 }
-.screenNumChange >>>　.ivu-poptip-inner {
+.screenNumChange >>> 　.ivu-poptip-inner {
     background: transparent;
 }
 
@@ -894,7 +908,6 @@ export default {
     }
 }
 @media (max-width: 1920px) {
-    
     .area_length {
         top: 1.6%;
     }

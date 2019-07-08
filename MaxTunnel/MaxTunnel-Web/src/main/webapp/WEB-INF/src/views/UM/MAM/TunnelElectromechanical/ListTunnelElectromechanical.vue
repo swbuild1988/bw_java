@@ -24,7 +24,11 @@
                 <div class="gis" :style="{height:curHeight+'px'}">
                     <!-- <sm-viewer :id="mapId" ref="smViewer">
                     </sm-viewer>-->
-                    <TestSmViewer ref="smViewer" :openImageryProvider="false"  @sendSectionDetails="getSectionDetails"></TestSmViewer>
+                    <TestSmViewer
+                        ref="smViewer"
+                        :openImageryProvider="false"
+                        @sendSectionDetails="getSectionDetails"
+                    ></TestSmViewer>
                     <div
                         class="positionNote"
                         v-if="note.areaName && note.storeName"
@@ -118,8 +122,6 @@
 <script>
 import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
-import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
-import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 import checkSelect from "../../../../components/Common/CheckSelect.vue";
@@ -160,8 +162,6 @@ export default {
         //3D加载
     },
     components: {
-        SimulatedData,
-        showSwitchData,
         Modal,
         EnvironmentShow,
         // SmViewer
@@ -173,7 +173,7 @@ export default {
         //根据监测类型获取数据
         getMonitorData() {
             let { queryCondition } = this;
-            let areaId = !queryCondition.areaId ? null : queryCondition.areaId ;
+            let areaId = !queryCondition.areaId ? null : queryCondition.areaId;
             !queryCondition.storeId && (queryCondition.storeId = null);
             let parms = {
                 tunnelId: queryCondition.tunnelId,

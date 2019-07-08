@@ -123,8 +123,6 @@
 <script>
 import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
-import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
-import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
 import { MonitorDataService } from "../../../../services/monitorDataService";
 import EnvironmentShow from "../../../../components/Common/TunnelDisplay/EnvironmentShow";
 import checkSelect from "../../../../components/Common/CheckSelect.vue";
@@ -227,8 +225,6 @@ export default {
         // }
     },
     components: {
-        SimulatedData,
-        showSwitchData,
         Modal,
         EnvironmentShow,
         TestSmViewer,
