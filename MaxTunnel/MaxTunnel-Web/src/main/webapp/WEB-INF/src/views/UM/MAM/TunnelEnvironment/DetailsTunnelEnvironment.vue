@@ -320,8 +320,6 @@ export default {
         tabs
     },
     mounted() {
-        console.log('isShowComponent',this.isShowComponent)
-        console.log('tabsIndex',this.tabsIndex)
         if (this.$route.query) {
             this.tunnelId = this.$route.query.tunnelId;
             this.queryCondition.storeId = this.$route.query.storeId;
@@ -429,7 +427,7 @@ export default {
             //获取监测仓列表
             TunnelService.getStoresByTunnelId(_this.tunnelId).then(
                 result => {
-                    var arr = [
+                    let arr = [
                         {
                             value: 0,
                             label: "全部"
@@ -509,13 +507,7 @@ export default {
                             label: a.name
                         });
                     });
-                    _this.queryCondition.areaId = _this.areas[0].value;
 
-                    result.forEach(a => {
-                        if (a.name == "22区") {
-                            _this.queryCondition.areaId = a.id;
-                        }
-                    });
                     _this.getObjDetialData();
                     _this.getvideos();
                 }
@@ -578,23 +570,16 @@ export default {
             if (this.storeProp.dataList.length == 0) return;
             if (this.curDataTypeList.length == 0) return;
             let _this = this;
-            var Params = {
+            let Params = {
                 tunnelId: _this.queryCondition.tunnelId,
-                storeId:
-                    _this.queryCondition.storeId == 0
-                        ? null
-                        : _this.queryCondition.storeId,
-                areaId:
-                    _this.queryCondition.areaId == 0
-                        ? null
-                        : _this.queryCondition.areaId,
+                storeId:  _this.queryCondition.storeId,
+                areaId: _this.queryCondition.areaId,
                 objtypeId: _this.queryCondition.curDataType
             };
             MonitorDataService.objDetailDatagrid(Params).then(
                 result => {
                     _this.objTableDate = result;
                     _this.Obj = [];
-                    // console.log(,result)
                     result.forEach(a => {
                         let temp = {};
                         _this.areaLeath = a.areaLeath;
@@ -649,7 +634,6 @@ export default {
             };
             MonitorDataService.getdataVideos(Params).then(result => {
                 if (result && result.length > 0) {
-                    console.log(Params, result);
                     this.curCarousel.videolist = result;
                 }
             });
