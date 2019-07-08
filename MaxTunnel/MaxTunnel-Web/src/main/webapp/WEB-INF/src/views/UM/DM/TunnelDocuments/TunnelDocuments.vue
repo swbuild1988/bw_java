@@ -66,7 +66,7 @@ export default {
                     });
                     sessionStorage.setItem("selectedName", "");
                 }
-                // sessionStorage.setItem("refreshAddress", "");
+                sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 this.Log.info(error);
