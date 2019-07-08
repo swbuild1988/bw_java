@@ -80,7 +80,7 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-            
+            console.log('flyManagerAttr',flyManagerAttr)
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
                 
