@@ -127,13 +127,13 @@ export default {
                         name: "监测对象映射配置",
                         url: "/CMMain/MeasObjMap"
                     },
+                    // {
+                    //     id: 47,
+                    //     name: "变电所信息配置",
+                    //     url: "/CMMain/PowerSubstation"
+                    // },
                     {
                         id: 47,
-                        name: "变电所信息配置",
-                        url: "/CMMain/PowerSubstation"
-                    },
-                    {
-                        id: 48,
                         name: "预案配置",
                         url: "/CMMain/planControl"
                     }

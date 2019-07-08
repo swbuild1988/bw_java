@@ -885,7 +885,7 @@ export const asyncRouterMap = [{
                         path: "submitPatralTask/:id",
                         component: resolve =>
                             require(["@/views/UM/OMM/PatrolTask/submitPatrolTask"], resolve),
-                        name: "提交巡检任务结果"
+                        name: "提交巡检任务结果1"
                     },
                     // 分配巡检任务
                     {
@@ -1250,14 +1250,14 @@ export const asyncRouterMap = [{
                 component: resolve => require(['@/views/CM/GroupControl/groupControl'], resolve),
                 name: '巡检小组管理'
             },
-             {
+            {
                 path: "operationLog",
                 name: "操作日志管理",
                 component: resolve =>
                     require([
                         "@/views/UM/OAM/OperationLogManage/QueryOperationLog"
                     ], resolve)
-            },
+            }
         ]
     },
     {

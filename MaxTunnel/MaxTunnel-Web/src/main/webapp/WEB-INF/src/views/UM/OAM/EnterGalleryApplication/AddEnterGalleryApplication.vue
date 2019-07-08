@@ -37,7 +37,7 @@
             <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" style="width: 100%"></DatePicker>
         </FormItem>
         <FormItem label="访客总人数：" class="ivu-form-item-required">
-            <InputNumber  :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
+            <InputNumber :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
         </FormItem>
         <FormItem label="访客所属公司" prop="visitorCompany">
             <Select v-model="addEnterGalleryApplication.visitorCompany">
@@ -80,7 +80,7 @@ export default {
                 tunnelId: null,
                 action: null,
                 preTime: null,
-                visitorNumber: null,
+                visitorNumber: 1,
                 visitorCompany: null,
                 visitorInfo: null,
                 visitorInfoNames: null,
@@ -189,9 +189,10 @@ export default {
             this.isDisable = true
             setTimeout(()=>{
                 this.isDisable = false
-                this.$refs[name].validate((valid) => {
-                    if(valid){
-                        if(this.isVisitorNames == false){
+                    console.log("addEnterGalleryApplication.visitorInfoNames", this.addEnterGalleryApplication.visitorInfoNames)
+                    this.checkVisitorInfo()
+                    this.$refs[name].validate((valid) => {
+                        if(valid){
                             let arr = []
                             let formInfo = {
                                 staffId: parseInt(this.addEnterGalleryApplication.staffId),
@@ -212,8 +213,7 @@ export default {
                                 }
                             )
                         }
-                    }
-                })
+                    })
             },2000)
         },
         chooseDeptment(){                                                                             
@@ -299,26 +299,6 @@ ul li{
     padding-bottom: 3vmin;
 }
 
-.formHeight{
-    height: 75vh;
-    overflow-y: auto;
-}
-
-.formHeight::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formHeight::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formHeight::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
-}
-
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
@@ -345,11 +325,11 @@ ul li{
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 16vmin !important;
-        line-height: 6.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 16vmin !important;
-        line-height: 6.5vmin;
+        line-height: 5.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -371,6 +351,23 @@ ul li{
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-input-wrap{
+        height: 3.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-wrap{
+        width: 2.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler{
+        height: 1.6vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-down-inner, .ivu-input-number >>> .ivu-input-number-handler-up-inner{
+        width: 1.2vmin;
+        height: 1.2vmin;
+        line-height: 1.2vmin;
+        font-size: 1.4vmin;
+        right: 0.4vmin;
+        transition: all .2s linear;
     }
 }
 </style>

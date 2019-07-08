@@ -1,12 +1,16 @@
 {
-    "ApiUrl": "http://localhost:8080",
+    "ApiUrl": "http://192.168.6.112:88/MaxTunnel-Web",
     "RouterBase": "/",
     "MQServerAddress": "ws://192.168.6.112:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
-        "BIM_SCP": "http://192.168.6.112:8090/iserver/services/3D-3Dserver/rest/realspace",
-        "BIM_DATA": "http://192.168.6.112:8090/iserver/services/data-dataserver/rest/data",
-        "IMG_MAP": "http://192.168.6.112:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
+        "IP":"http://192.168.6.112:8090/",
+        "BIM_SCP": "iserver/services/3D-3Dserver/rest/realspace",
+        "BIM_DATA": "iserver/services/data-dataserver/rest/data",
+        "IMG_MAP_LIST": ["iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
+            "iserver/services/map-ugcv5-mapserver2/rest/maps/mapserver2",
+            "iserver/services/map-ugcv5-mapserver3/rest/maps/mapserver3"
+            ]
     },
     "VMEntityConfig": {
         "unitEntityParam": [{
@@ -147,42 +151,6 @@
                     }
                 }
             }
-        ],
-        "linearEntityParam": [
-            {
-                "entityBaseParameters": {
-                    "id": 13,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-
-                        "position": [{
-                                "Lon": "112.493083",
-                                "Lat": "37.730319"
-                            },
-                            {
-                                "Lon": "112.480216",
-                                "Lat": "37.732412"
-                            },
-                            {
-                                "Lon": "112.477995",
-                                "Lat": "37.725628"
-                            },
-                            {
-                                "Lon": "112.491123",
-                                "Lat": "37.723368"
-                            },
-                            {
-                                "Lon": "112.493083",
-                                "Lat": "37.730319"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "blue"
-                    }
-                }
-            }
         ]
     },
     "flyFilePathes": [{
@@ -195,8 +163,8 @@
         },
         {
             "id": 2,
-            "name": "飞行路线_2",
-            "path": "/VM/font/flytest2.fpf",
+            "name": "大屏地图飞行路径",
+            "path": "/VM/font/VMMapPath.fpf",
             "isFlyLoop": "false",
             "waitTime": 0,
             "virtualInspection":"false"
@@ -213,6 +181,8 @@
     ],
     "refreshTime": "60000",
     "pointLinght":{
+        "isOpenDescribe": "是否开启灯光效果，默认false，开启的话会增加内存消耗",
+        "isOpen": true,
         "describe":"cutoffDistance：扩散距离 默认值500 ,decay: 衰减因子：默认值1 ,intensity：光源强度 默认值1",
         "cutoffDistance":50,
         "decay":1,

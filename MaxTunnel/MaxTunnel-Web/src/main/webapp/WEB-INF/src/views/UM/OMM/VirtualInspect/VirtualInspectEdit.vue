@@ -479,7 +479,6 @@ export default {
         // 3D相机位置刷新
         refreshCameraPosition(position) {
             this.cameraPosition = position;
-            this.Log.info("get position:", this.cameraPosition);
             // 根据相机位置获得section信息
             let _this = this;
             VideoService.getSections(this.cameraPosition).then(

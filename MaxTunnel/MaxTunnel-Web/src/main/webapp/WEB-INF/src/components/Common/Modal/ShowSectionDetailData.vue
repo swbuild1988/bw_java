@@ -3,7 +3,8 @@
         <div class="panel panel-primary">
             <table class="table table-bordered table-striped text-center">
                 <tbody>
-                    <tr v-for="item in curPageData" :key="item.id">
+                    <tr v-for="(item,index) in curPageData" :key="index">
+                        <td><img class="titleImg" :src="item.img"></td>
                         <td>{{item.name}}</td>
                         <td>{{item.cv}}</td>
                         <td>{{item.unit}}</td>
@@ -15,6 +16,9 @@
 </template>
 
 <script>
+
+import Vue from 'vue';
+
 export default {
     name: "sectionDetails",
     props: {
@@ -40,14 +44,12 @@ export default {
             middleData: []
         };
     },
+    computed:{
+        titleImg(){
+            return Vue.prototype.VMConfig.detectionObjTitleImg;
+        }
+    },
     watch: {
-        // 'dataDetails':{
-        //     handler(newValue, oldValue){
-        //         console.log(newValue,oldValue)
-        //         this.init();
-        //     },
-        //     deep:true
-        // },
         showDetailsModel(val){
             this.curPage = 1;
             val ? this.init() : this.clearTimer();
@@ -75,7 +77,6 @@ export default {
                 startIndex,
                 startIndex + this.pageSize
             );
-            console.log(newPage)
             this.curPage = newPage;
         },
         refresh() {
@@ -92,15 +93,16 @@ export default {
             
             if(!this.dataDetails.length) return;
             this.middleData.splice(0); //清空数组
+            let currData = null;
  
             for (let i = 0, data = this.dataDetails; i < data.length; i++) {
                 switch (data[i].dataType) {
                     case 1:
-                        this.middleData.push(data[i]);
+                        currData = data[i];
                         break;
                     case 2:
                     case 3:
-                        this.middleData.push({
+                        currData = {
                             name: data[i].name,
                             cv: !data[i].cv
                                 ? "关闭"
@@ -108,19 +110,19 @@ export default {
                                 ? "打开"
                                 : "故障",
                             unit: null
-                        });
+                        }
                         break;
                     case 7:
                         if (this.searchLastIndex(this.dataDetails, 7) !== i)
                             break;
-
-                        this.middleData.push({
+                        currData = {
                             name: data[i].name,
                             cv: this.searchDataTypeLenght(this.dataDetails, 7),
                             unit: "个"
-                        });
+                        }
                         break;
                 }
+                this.addTitleImg(currData,data[i].objectType);
             }
         },
         searchDataTypeLenght(array, dataType) {
@@ -130,6 +132,20 @@ export default {
             for (let i = arr.length - 1; i > -1; i--) {
                 if (arr[i].dataType === unit) return i;
             }
+        },
+        addTitleImg(data,id){
+            let [ titleImgObject ] = this.titleImg.filter( item => item.key === id );
+            let currImg = null;
+            try{
+                let imageName = !titleImgObject ? 'methane' : titleImgObject.val;
+                
+                currImg = require(`../../../assets/UM/${ imageName }.png`);
+            }catch(err){
+                console.warn(err)
+            }
+            
+            this.middleData.push(Object.assign(data,{img:currImg}))
+
         }
     },
     beforeDestroy() {
@@ -140,13 +156,13 @@ export default {
 
 <style>
 .section-details-content {
-    padding: 2vmin 2vmin 2vmin 3vmin;
+    padding: 5vmin 2vmin 2vmin 3vmin;
     position: absolute;
     z-index: 900;
     font-size: 1.3vmin;
     /* bottom: 30%; */
     color: #fff;
-    left: 50vmin;
+    right: 1vmin;
     background: url("../../../assets/UM/sectionDataBg.png") no-repeat;
     background-size: 100% 100%;
     /* border-radius: 0.5rem;
@@ -161,7 +177,7 @@ export default {
     box-shadow: 0 0 2rem rgba(0, 180, 220, 0.1) inset; */
     width: 35vmin;
     min-height: 31.4vmin;
-    top: 1vmin;
+    top: 0vmin;
 }
 .panel,
 .panel table {
@@ -174,10 +190,22 @@ export default {
 }
 .panel td:first-child {
     text-align: left;
+    width: 0%;
+}
+.panel td:nth-of-type(2), 
+.panel td:nth-of-type(4){
+    text-align: left;
+}
+.panel td:nth-of-type(3){
+    text-align: right;
 }
 .page {
     position: absolute;
     bottom: 1vmin;
     right: 1vmin;
+}
+.titleImg {
+    width: 1.5vmin;
+    height: 1.5vmin;
 }
 </style>

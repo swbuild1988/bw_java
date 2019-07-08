@@ -401,6 +401,7 @@ export default {
 					String(path.path)
 				) < 0
 			) {
+				sessionStorage.setItem("selectedName", "");
 				if (path.path == "/VMMain") {
 					const { href } = this.$router.resolve({
 						name: "可视化主页"

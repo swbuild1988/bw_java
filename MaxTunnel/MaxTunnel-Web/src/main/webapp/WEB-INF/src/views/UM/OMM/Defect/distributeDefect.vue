@@ -282,7 +282,7 @@ export default {
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;
@@ -294,24 +294,6 @@ export default {
 .formTitle{
     font-size: 2.2vmin;
     margin-top: -3vh;
-}
-.formHeight{
-    height: 75vh;
-    overflow-y: auto;
-}
-.formHeight::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formHeight::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formHeight::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
 }
 @media (min-width: 2200px){
     .ivu-form.ivu-form-label-right{

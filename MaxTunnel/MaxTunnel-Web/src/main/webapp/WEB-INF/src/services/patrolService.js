@@ -227,18 +227,58 @@ let PatrolService = {
             })
         })
     },
-    // getImg(id){
-    //     return new Promise((resolve, reject) => {
-    //         get('multifiles/'+id+'/img').then(res=>{
-    //             let{ code, data, msg } = res.data
-    //             if( code == 200 ){
-    //                 resolve(data)
-    //             }else{
-    //                 reject(msg+"地址：multifiles/"+id+"/img")
-    //             }
-    //         })
-    //     })
-    // }
+    //生成模板
+    submitTemp(params){
+        return new Promise((resolve, reject) => {
+            post('inspection-template',params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-template")
+                }
+            })
+        })
+    },
+    //获取模板详情
+    getTempInfo(id){
+        return new Promise((resolve, reject) => {
+            get('inspection-template/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-template/"+id)
+                }
+            })
+        })
+    },
+    //查询模板
+    importTemp(params){
+        return new Promise((resolve, reject) => {
+            post('inspection-template/condition', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-template/condition")
+                }
+            })
+        })
+    },
+    //删除模板
+    delTemplate(id){
+        return new Promise((resolve, reject) => {
+            del('inspection-template/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-template/condition")
+                }
+            })
+        })
+    }
 };
 
 export {

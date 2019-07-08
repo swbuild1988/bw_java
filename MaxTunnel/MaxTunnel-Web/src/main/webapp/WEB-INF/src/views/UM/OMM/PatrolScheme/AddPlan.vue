@@ -12,7 +12,7 @@
 							<Input v-model="uploadPlan.name" placeholder="请输入计划名称"></Input>
 						</FormItem>
 						<FormItem label="所属管廊：" prop="tunnelId">
-							<Select v-model="uploadPlan.tunnelId" @on-change="getInfo()">
+							<Select v-model="uploadPlan.tunnelId" @on-change="getInfo(uploadPlan.tunnelId)">
 								<Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
 							</Select>
 						</FormItem>
@@ -40,23 +40,24 @@
 								<Option v-for="(item, index) in inspectObject" :value="item.val" :key="index">{{item.key}}</Option>
 							</Select>
 						</FormItem>
-						<FormItem label="申请人：">
+						<FormItem label="申请人：" class="ivu-form-item-required">
 							<Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
 							<Input v-model="requestStaffName" readonly></Input>
 						</FormItem>
-						<FormItem label="审批人：">
+						<FormItem label="审批人：" class="ivu-form-item-required">
 							<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
 							<Input v-model="approver.name" readonly></Input>
 						</FormItem>
-						<FormItem label="计划步骤：" prop="steps">
+						<FormItem label="计划步骤：" class="ivu-form-item-required">
 							<ul class="stepsBox">
 								<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
 									<span style="color: #fff">{{index+1}}、</span>
-									<input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
-									<div class="todoButton delBtn" :disabled="index==0" @click="delList(index)">删除</div>
-									<div class="todoButton showBtn" @click="addList(index)">添加</div>
+									<Input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" @on-blur="tipStep(item.name)"></Input>
+									<Button class="todoButton delBtn" :disabled="index==0" @click="delList(index)">删除</Button>
+									<Button class="todoButton showBtn" @click="addList(index)">添加</Button>
 								</li>
 							</ul>
+							<div class="ivu-form-item-error-tip" v-show="showStepsTip">计划步骤不能为空</div>
 						</FormItem>
 					</div>
 				</Col>
@@ -67,19 +68,19 @@
 						</FormItem>
 						<Tabs class="moduleStyle" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
 							<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
-								<FormItem label="巡检年份：">
-									<Input placeholder="请选择巡检日期" style="width: 100%;" v-model="choosedYear"></Input>
+								<FormItem label="巡检日期：" prop="tasks">
+									<Input placeholder="请选择巡检日期且年份可多选" style="width: 100%;" v-model="choosedYear"></Input>
 									<yearCalender ref="getYearChild" v-on:getYearChild="getActiveYearText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></yearCalender>
 								</FormItem>
 							</TabPane>
 							<TabPane label="月份" name="name2" style="padding-left: 1vmin;">
-								<FormItem label="巡检月份：">
-									<Input placeholder="请选择巡检日期" style="width: 100%" v-model="choosedMonth"></Input>
+								<FormItem label="巡检日期：" prop="tasks">
+									<Input placeholder="请选择巡检日期且月份可多选" style="width: 100%" v-model="choosedMonth"></Input>
 									<monthCalender ref="getMonthChild" v-on:getMonthChild="getActiveMonthText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></monthCalender>
 								</FormItem>
 							</TabPane>
 							<TabPane label="日期" name="name3" style="padding-left: 1vmin;">
-								<FormItem label="巡检月份：">
+								<FormItem label="巡检月份：" prop="tasks">
 									<DatePicker type="month" placeholder="请选择巡检月份" style="width: 100%" v-model="uploadPlan.inspectTime"
 									@on-change="getChooseMonth()"></DatePicker>
 								</FormItem>
@@ -123,6 +124,7 @@
 		<Modal
 			v-model="isShowCreateTemp"
 			title="模板"
+			:width="modalWidth"
 		>
 			<Form ref="createTemp" :model="createTemp" :rules="ruleTemp" :label-width="100">
 				<FormItem label="模板名称：" prop="name">
@@ -137,6 +139,7 @@
 		<Modal
 			v-model="isImportTemp"
 			title="选择模板"
+			:width="modalWidth"
 		>
 			<Row style="margin-bottom: 2vmin;">
 				<Col span="12">
@@ -156,19 +159,21 @@
 		<Modal
 			v-model="isShowStore"
 			title="选择舱室"
+			:width="modalWidth"
 		>
 			<RadioGroup v-model="choosedStoreId">
 				<Radio v-for="item in stores" :key="item.id" :label="item.id" class="radioBox">{{item.name}}
 				</Radio>
 			</RadioGroup>
 			<div slot="footer">
-				<Button type="primary" @click="submitChoosedStore">确定</Button>
+				<Button type="primary" @click="submitChoosedStore(choosedStoreId)">确定</Button>
 			</div>
 		</Modal>
 		<!-- areas -->
 		<Modal
 			v-model="isShowArea"
 			title="选择区间"
+			:width="modalWidth"
 		>
 		<div style="text-align: center;">
 			<Select v-model="choosedArea.startArea" class="choosedAreaId">
@@ -209,14 +214,14 @@ export default {
 				callback()
 			}
 		}
-		const validateSteps = (rule, value, callback) => {
-			value.forEach(item => {
-				if(item.name==''){
-					callback(new Error('计划步骤不能为空'))
+		const validateTasks = (rule, value, callback) => {
+			if(value){
+				if(value.length==0){
+					callback(new Error("巡检日期不能为空"))
 				}else{
 					callback()
 				}
-			})
+			}
 		}
 		return {
 			// 页面类型 1：查看 2：编辑 3：新增
@@ -226,6 +231,7 @@ export default {
 			currYear: '',
 			requestStaffName: '',
 			approver: {},
+			showStepsTip: false,
 			uploadPlan: {
                 planId: new Date().getTime(),
                 name: null,
@@ -281,9 +287,6 @@ export default {
 				],
 				remark: [
 					{ required: true, message: '请输入计划描述', trigger: 'blur'}
-					],
-				inspectTime: [
-					{ type: 'array', required: true, message: '请选择巡检月份', trigger: 'change'}
 				],
 				inspectionWay: [
 					{ type: 'number', required: true, message: '巡检方式不能为空', trigger: 'change'}
@@ -294,8 +297,8 @@ export default {
 				inspectionObject: [
 					{ type: 'number', required: true, message: '巡检对象不能为空', trigger: 'change'}
 				],
-				steps: [
-					{ validator: validateSteps, trigger: 'blur' }
+				tasks: [
+					{ validator: validateTasks, trigger: 'change' }
 				]
 			},
 			inspectWay: [],
@@ -320,7 +323,6 @@ export default {
 					title: '选中',
 					align:'center',
 					key: 'checkBox',
-					width: 60,
 					render:(h,params)=>{
 						return h('div',[
 							h('Checkbox',{
@@ -342,7 +344,6 @@ export default {
 				},
 				{
 					type: 'index',
-					width: 60,
 					align: 'center'
 				},
 				{
@@ -385,7 +386,9 @@ export default {
 			},
 			pathCon: null,
 			choosedMonth: null,
-			choosedYear: null
+			choosedYear: null,
+			modalWidth: null,
+			confirmWidth: null
 		};
     },
     watch: {
@@ -406,8 +409,11 @@ export default {
 		}
     },
     mounted() {
+		this.modalWidth = document.body.offsetWidth*0.4
+		this.confirmWidth = document.body.offsetWidth*0.3
 		this.pageType = this.$route.params.type;
 		this.uploadPlan.tunnelId = this.$route.params.tunnelId
+		this.getInfo(this.uploadPlan.tunnelId)
 		//从数据库读取所属管廊select的option选项
 		TunnelService.getTunnels().then(
 			result => {
@@ -467,6 +473,13 @@ export default {
 		)
     },
     methods: {
+		tipStep(name){
+			if(name==''){
+				this.showStepsTip = true
+			}else{
+				this.showStepsTip = false
+			}
+		},
 		//提交巡检计划
 		submitPlan(name) {
 			this.isDisable = true
@@ -474,40 +487,47 @@ export default {
 			setTimeout(() => {
 				this.isDisable = false
 				this.$refs[name].validate((valid) => {
-					if (valid) {
-						var otherIds = ''
-						if(this.choosedStoreId==null&&this.pathCon!=null){
-							otherIds = this.pathCon
-						}else if(this.choosedStoreId!=null&&this.pathCon==null){
-							otherIds = this.choosedStoreId.toString()
-						}
-						let params = {
-							planId: this.uploadPlan.planId,
-							name: this.uploadPlan.name,
-							groupId: this.uploadPlan.groupId,
-							inspectionWay: this.uploadPlan.inspectionWay,
-							inspectionPath: this.uploadPlan.inspectionPath,
-							inspectionObject: this.uploadPlan.inspectionObject,
-							inspectTime: this.uploadPlan.inspectTime,
-							tasks: this.uploadPlan.tasks,
-							approverId: 1,
-							tunnelId: this.uploadPlan.tunnelId,
-							requestStaffId: this.uploadPlan.requestStaffId,
-							remark: this.uploadPlan.remark,
-							steps: this.uploadPlan.steps,
-							otherIds: otherIds
-						}
-						PatrolService.submitPlan(params).then(
-							result => {
-								this.$router.push("/UM/patrol/query/" + this.uploadPlan.tunnelId);
-							},
-							error => {
-								this.Log.info(error)
+					this.uploadPlan.steps.forEach(item=>{
+						if(item.name==''){
+							this.showStepsTip = true
+						}else{
+							this.showStepsTip = false
+							if (valid) {
+								var otherIds = ''
+								if(this.choosedStoreId==null&&this.pathCon!=null){
+									otherIds = this.pathCon
+								}else if(this.choosedStoreId!=null&&this.pathCon==null){
+									otherIds = this.choosedStoreId.toString()
+								}
+								let params = {
+									planId: this.uploadPlan.planId,
+									name: this.uploadPlan.name,
+									groupId: this.uploadPlan.groupId,
+									inspectionWay: this.uploadPlan.inspectionWay,
+									inspectionPath: this.uploadPlan.inspectionPath,
+									inspectionObject: this.uploadPlan.inspectionObject,
+									inspectTime: this.uploadPlan.inspectTime,
+									tasks: this.uploadPlan.tasks,
+									approverId: 1,
+									tunnelId: this.uploadPlan.tunnelId,
+									requestStaffId: this.uploadPlan.requestStaffId,
+									remark: this.uploadPlan.remark,
+									steps: this.uploadPlan.steps,
+									otherIds: otherIds
+								}
+								PatrolService.submitPlan(params).then(
+									result => {
+										this.$router.push("/UM/patrol/query/" + this.uploadPlan.tunnelId);
+									},
+									error => {
+										this.Log.info(error)
+									}
+								)
+							} else {
+								this.$Message.error("请填写正确的巡检计划信息")
 							}
-						)
-					} else {
-						this.$Message.error("请填写正确的巡检计划信息")
-					}
+						}
+					})
 				})
 			}, 2000)
 		},
@@ -601,7 +621,8 @@ export default {
 		//删除todoList
         delList(index){
             this.$Modal.confirm({
-                title: '删除计划步骤',
+				title: '删除计划步骤',
+				width: this.confirmWidth,
                 content: '<p>确定要删除这条计划步骤吗</p>',
                 onOk: () => {
                     this.uploadPlan.steps.splice(index, 1)
@@ -610,6 +631,8 @@ export default {
             })
 		},
 		clearInput(name){
+			this.choosedYear = null
+			this.choosedMonth = null
 			this.uploadPlan.inspectTime = null
 			this.$refs.calender.cancelActive();
 			this.$refs.getYearChild.cancelActive();
@@ -662,9 +685,18 @@ export default {
 					this.isImportTemp = false
 					this.uploadPlan.planId = new Date().getTime()
 					if(this.uploadPlan.type=='name1'){
+						let str = ''
+						this.uploadPlan.tasks.forEach(item=>{
+							str += new Date(item.taskTime).format('yyyy-MM-dd') + '，'
+						})
+						this.choosedYear = str.substring(0, str.length-1)
 
 					}else if(this.uploadPlan.type == 'name2'){
-						
+						let str = ''
+						this.uploadPlan.tasks.forEach(item=>{
+							str += new Date(item.taskTime).format('yyyy-MM-dd') + '，'
+						})
+						this.choosedMonth = str.substring(0, str.length-1)
 					}else if(this.uploadPlan.type == 'name3'){
 						this.currYear = new Date(this.uploadPlan.inspectTime).getFullYear()
 						this.currMonth = new Date(this.uploadPlan.inspectTime).getMonth()+1
@@ -695,10 +727,10 @@ export default {
 			)
 		},
 		//获取area与store
-		getInfo(){
-			if(this.uploadPlan.tunnelId!=null){
+		getInfo(id){
+			if(id!=null){
 				//获取areas
-				TunnelService.getAreasByTunnelId(this.uploadPlan.tunnelId).then(
+				TunnelService.getAreasByTunnelId(id).then(
 					result => {
 						this.areas = result
 					},
@@ -707,7 +739,7 @@ export default {
 					}
 				)
 				// 获取stores
-				TunnelService.getStoresByTunnelId(this.uploadPlan.tunnelId).then(
+				TunnelService.getStoresByTunnelId(id).then(
 					result => {
 						this.stores = result
 					},
@@ -718,9 +750,9 @@ export default {
 			}
 		},
 		//提交选择store
-		submitChoosedStore(){
+		submitChoosedStore(id){
 			this.isShowStore = false
-			this.getChoosedRadio()
+			this.getChoosedRadio(id)
 		},
 		//提交选择area
 		submitChoosedArea(){
@@ -731,8 +763,8 @@ export default {
 				this.pathCon += temp + ','
 			}	
 			this.pathCon = this.pathCon.substring(0, this.pathCon.length-1)
-			this.isShowArea = false
 			this.getAreasInfo()
+			this.isShowArea = false
 		},
 		chooseInspectionPath(){
 			//按舱室
@@ -748,7 +780,8 @@ export default {
 		// 删除模板
 		del(id){
 			this.$Modal.confirm({
-                title: '计划模板管理',
+				title: '计划模板管理',
+				width: this.confirmWidth,
                 content: '<p>确定删除该计划模板吗</p>',
                 onOk: () => {
 					PatrolService.delTemplate(id).then(
@@ -765,10 +798,10 @@ export default {
             })
 		},
 		//获取选择的舱室名称
-		getChoosedRadio(){
-			TunnelService.getStoreInfo(this.choosedStoreId).then(
+		getChoosedRadio(id){
+			TunnelService.getStoreInfo(id).then(
 				result => {
-					this.choosedStoreName = result.name
+					this.uploadPlan.choosedStoreName = result.name
 				},
 				error => {
 					this.Log.info(error)
@@ -779,7 +812,7 @@ export default {
 		getAreasInfo(){
 			TunnelService.getAreaInfo(this.choosedArea.startArea).then(
 				result => {
-					this.uploadPlan.pathConName = result.name + '至'
+					this.uploadPlan.pathConName = result.name + ' 至 '
 				},
 				error => {
 					this.Log.info(error)
@@ -810,7 +843,6 @@ export default {
     }
     .todoLi .todoEidt{
         border: none;
-        box-shadow: 2px 2px 10px 0px #ccc;
         flex: 1;
         margin-right: 0.5vw;
         padding-left: 0.5vw;
@@ -839,7 +871,7 @@ export default {
 	}
 
 	.planContainer {
-		width: 80%;
+		width: 93%;
 		padding: 10px 20px;
 		border-radius: 8px;
 	}
@@ -903,7 +935,7 @@ export default {
 		color: #fff;
 	}
 
-	.formBG >>> .ivu-form-item-required .ivu-form-item-label:before, .formBG >>>.ivu-form-item-label:before {
+	.formBG >>> .ivu-form-item-required .ivu-form-item-label:before{
 		color: #00fff6;
 		content: '★';
 		display: inline-block;
@@ -921,11 +953,13 @@ export default {
 		width: 5vmin;
 	}
 	.showBtn{
-		background: linear-gradient(to top right, #2734e1, #b195ed)
+		background: linear-gradient(to top right, #2734e1, #b195ed);
+		border-color: #6d65e7;
 	}
 	.delBtn{
 		background: linear-gradient(to top right, #f61a1a, #fa8785);
-		margin-right: 5px;
+		margin-right: 0.5vmin;
+		border-color: #f95f5e;
 	}
 	.todoButton{
 		color: #fff;
@@ -934,6 +968,7 @@ export default {
 		text-align: center;
 		width: 5vmin;
 		cursor: pointer;
+		padding: 0;
 	}
 	.moduleStyle>>>.ivu-tabs-tab,.moduleStyle{
 		color: #fff;
@@ -941,15 +976,13 @@ export default {
 	.moduleStyle>>>.ivu-tabs-nav .ivu-tabs-tab-active{
 		color: #2d8cf0
 	}
-	.moduleStyle>>>.ivu-picker-panel-body{
-		color: rebeccapurple;
-	}
 	.planBtn{
 		display: inline-block;
 		margin-right: 0.8vmin;
 		padding: 0.1vmin 2vmin;
 		color: #fff;
-		border-radius: 4px;
+		line-height: 4vmin;
+		border-radius: 1vmin;
 		cursor: pointer;
 	}
 	.backBtn{
@@ -981,16 +1014,16 @@ export default {
 		max-height: 100px;
 		overflow-y: auto;
 	}
-	.formHeight::-webkit-scrollbar,.stepsBox::-webkit-scrollbar{
-		width: 4px;
-		height: 4px;
+	.stepsBox::-webkit-scrollbar{
+		width: 0.4vmin;
+		height: 0.4vmin;
 	}
-	.formHeight::-webkit-scrollbar-thumb,.stepsBox::-webkit-scrollbar-thumb{
-		border-radius: 5px;
+	.stepsBox::-webkit-scrollbar-thumb{
+		border-radius: 0.5vmin;
 		-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
 		background: rgba(0, 0, 0, 0.2)
 	}
-	.formHeight::-webkit-scrollbar-track,.stepsBox::-webkit-scrollbar-track{
+	.stepsBox::-webkit-scrollbar-track{
 		border-radius: 0;
 		-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
 		background: rgba(0, 0, 0, 0.1)
@@ -1005,12 +1038,12 @@ export default {
 		}
 		.ivu-form-item>>>.ivu-form-item-label {
 			width: 15vmin !important;
-			line-height: 2.5vmin;
+			line-height: 4.5vmin;
 		}
 
 		.ivu-form-item>>>.ivu-form-item-content {
 			margin-left: 15vmin !important;
-			line-height: 4.5vmin;
+			line-height: 5.5vmin;
 		}
 
 		.ivu-select,
@@ -1040,8 +1073,8 @@ export default {
 		}
 
 		input[type='number'] {
-			height: 4vmin;
-			width: 8vmin;
+			height: 3vmin;
+			width: 5vmin;
 			font-size: 1.6vmin;
 		}
 
@@ -1075,6 +1108,12 @@ export default {
 		.ivu-date-picker-header {
 			height: 3.2vmin !important;
 			line-height: 3.2vmin !important;
+		}
+		.moduleStyle .ivu-form-item.ivu-form-item-error{
+			margin-bottom: 4.5vmin;
+		}
+		.ivu-date-picker-cells-month span em{
+			width: 3vmin !important;
 		}
 	}
 

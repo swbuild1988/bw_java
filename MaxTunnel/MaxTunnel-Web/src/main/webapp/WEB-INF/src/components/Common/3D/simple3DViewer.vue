@@ -1,14 +1,10 @@
-
 <template>
-    <div class="content"
-        id="simpleGISbox"
-        v-cancellation>
+    <div class="content" id="simpleGISbox" v-cancellation>
     </div>
-    
+
 </template>
 
 <script>
-
     import Cesium from "Cesium";
     import Vue from 'vue'
     import {
@@ -18,19 +14,22 @@
         _getFieldValues
     } from "../../../scripts/commonFun.js";
     // import { lookAt } from "../../../scripts/three";
-    import { addBarnLabel } from "./mixins/addBarnLabel";
+    import {
+        addBarnLabel
+    } from "./mixins/addBarnLabel";
     // import { TunnelService } from '../../../services/tunnelService'
-    import  viewerBaseConfig  from "./mixins/viewerBase";
+    import viewerBaseConfig from "./mixins/viewerBase";
 
     export default {
-        mixins: [addBarnLabel,viewerBaseConfig('simpleGISbox','$simpleViewer','simple3DBox',1,this.listenPosition)],
+        mixins: [addBarnLabel, viewerBaseConfig('simpleGISbox', '$simpleViewer', 'simple3DBox', 1, this
+            .listenPosition)],
         props: {
-            detectionObjInfor:{
-                type:Object,
-                default:function(){
+            detectionObjInfor: {
+                type: Object,
+                default: function () {
                     return {
-                        id:null,
-                        dataTypeId:null,
+                        id: null,
+                        dataTypeId: null,
                     }
                 }
             },
@@ -59,32 +58,31 @@
             };
         },
         watch: {
-            'detectionObjInfor':{
+            'detectionObjInfor': {
 
-                handler(newVal,oldVal) {
+                handler(newVal, oldVal) {
 
-                    if( !newVal.id || !newVal.moTypeId ) return
-                    if( !!oldVal ) this.viewer.entities.remove(oldVal.id)
+                    if (!newVal.id || !newVal.moTypeId) return
+                    if (!!oldVal) this.viewer.entities.remove(oldVal.id)
 
-                    this.switchCameraAngle(newVal.id,newVal.moTypeId);
+                    this.switchCameraAngle(newVal.id, newVal.moTypeId);
                 },
                 deep: true
             },
         },
-        mounted() {
-        },
+        mounted() {},
         methods: {
             // 初始化
             init() {
                 let _this = this;
 
-                _this.initUpdate( _this.viewer,_this.scene );
+                _this.initUpdate(_this.viewer, _this.scene);
 
             },
-            initUpdate( viewer,scene ){
+            initUpdate(viewer, scene) {
                 let _this = this;
 
-                if ( _this.refreshCameraPosition.enable ) {
+                if (_this.refreshCameraPosition.enable) {
                     //开启相机定位
                     this.cameraPositionRefresh();
                 }
@@ -95,7 +93,7 @@
                     scene.canvas
                 );
             },
-            
+
             LookAt1(obj, heading, pitch, range) {
                 let target = Cesium.Cartesian3.fromDegrees(
                     obj.longitude,
@@ -112,7 +110,9 @@
             },
             // 展示巡检点
             showCheckPointEntity() {
-                let { viewer } = this;
+                let {
+                    viewer
+                } = this;
                 getEntitySet.call(this, {
                     viewer: viewer,
                     url: "actived-locators",
@@ -121,28 +121,32 @@
                     messageType: 'checkPoint'
                 })
             },
-            switchCameraAngle(id){
+            switchCameraAngle(id) {
                 let _this = this;
 
                 doSqlQuery.call(_this, _this.viewer, 'MOID in ("'+ id +'")', _this.SuperMapConfig.BIM_DATA, _this.onQueryComplete,_this.processFailed)
             },
-            onQueryComplete(){
+            onQueryComplete() {
                 let _this = this;
                 return function (queryEventArgs) {
+                    let [selectedFeatures] = queryEventArgs.originResult.features;
 
-                    let [ selectedFeatures ] = queryEventArgs.originResult.features;
+                    // if(!selectedFeatures) return; //
                     let entity = _this.viewer.entities.add({
                         id: _this.detectionObjInfor.id,
-                        position: Cesium.Cartesian3.fromDegrees(parseFloat(_getFieldValues(selectedFeatures,'X')), parseFloat(_getFieldValues(selectedFeatures,'Y')), parseFloat(_getFieldValues(selectedFeatures,'Z'))),
-                        label:{
-                            text:''
+                        position: Cesium.Cartesian3.fromDegrees(parseFloat(_getFieldValues(selectedFeatures,
+                            'X')), parseFloat(_getFieldValues(selectedFeatures, 'Y')), parseFloat(
+                            _getFieldValues(selectedFeatures, 'Z'))),
+                        label: {
+                            text: ''
                         }
                     });
 
-                    let offset = _this.detectionObjInfor.dataTypeId != 56 ? new Cesium.HeadingPitchRange(0, 0, 1.5) : new Cesium.HeadingPitchRange(0, -90, 2);
+                    let offset = _this.detectionObjInfor.dataTypeId != 56 ? new Cesium.HeadingPitchRange(0, 0,
+                        1.5) : new Cesium.HeadingPitchRange(0, -90, 2);
 
-                    _this.viewer.flyTo(entity,{
-                        offset:offset,
+                    _this.viewer.flyTo(entity, {
+                        offset: offset,
                     })
                 }
             },
@@ -151,7 +155,10 @@
             },
         },
         beforeDestroy() {
-            let { handler, timer } = this;
+            let {
+                handler,
+                timer
+            } = this;
 
             clearInterval(timer.timeoutId);
             clearInterval(timer.intervalId);
@@ -163,15 +170,15 @@
             this.stopCameraPositionRefresh();
         },
     };
-
 </script>
 
 <style scoped>
-    .content{
+    .content {
         position: relative;
         width: 100%;
         height: 100%;
     }
+
     .cesium-viewer-bottom {
         display: none;
     }

@@ -73,7 +73,7 @@
                             <p>入库时间：{{item.inTime}}</p>
                         </div>
                         <div class="operations">
-                            <div class="operation" @click="borrowSubmit(item.id)" v-show="item.status">
+                            <div class="operation" @click="borrowSubmit(item.id,item.inTime)" v-show="item.status">
                                 <span class="operationBtn borrow">借出</span>
                             </div>
                             <div class="operation" @click="returnSubmit(item.id)" v-show="!item.status">
@@ -97,7 +97,7 @@
             title="批量借出"
             :width="modalWidth"
         >
-            <Row class="queryConditions">
+            <Row class="queryCondition">
                 <Col span="8">
                     <span>仪表名称</span><span>：</span>
                     <Input v-model="lendModalConditions.name" style="width: 60%" @on-blur="batchLend()"></Input>
@@ -141,7 +141,7 @@
             <Row style="margin-top: 20px;">
                 <Form ref="batchLendSubmitData" :model="batchLendSubmitData" :rules="ruleInline" inline>
                     <Col span="8">
-                        <FormItem prop="staffId" style="width: 100%" class="borrower">
+                        <FormItem prop="staffId" class="borrower" style="width: 100%">
                             借用人：
                             <Select style="width: 60%;" v-model="batchLendSubmitData.staffId">
                                 <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
@@ -149,13 +149,13 @@
                         </FormItem>
                     </Col>
                     <Col span="8">
-                        <FormItem prop="borrowTime" class="borrowTime">
+                        <FormItem prop="borrowTime" class="borrowTime" style="width: 100%">
                             借用时间：
                             <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchLendSubmitData.borrowTime"></DatePicker>
                         </FormItem>
                     </Col>
                     <Col span="8">
-                        <FormItem>
+                        <FormItem style="width: 100%">
                             <span class="purpose">备注：</span>
                             <Input type="textarea" style="width: 70%;" v-model="batchLendSubmitData.describe"></Input>
                         </FormItem>
@@ -174,7 +174,7 @@
             title="批量归还"
            :width="modalWidth"
         >
-            <Row class="queryConditions">
+            <Row class="queryCondition">
                 <Col span="6">
                     <span>仪表名称</span><span>：</span>
                     <Input v-model="returnModalConditions.name" style="width: 60%"></Input>
@@ -237,7 +237,7 @@
                     <Col span="6">
                         <FormItem prop="returnTime">
                             归还时间：
-                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="batchReturnSubmitData.returnTime"></DatePicker>
+                            <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 60%" v-model="batchReturnSubmitData.returnTime"></DatePicker>
                         </FormItem>
                     </Col>
                     <Col span="6">
@@ -279,7 +279,7 @@
                     <DatePicker type="datetime"  placeholder="请输入取用时间" style="width: 70%" v-model="borrow.borrowTime"></DatePicker>
                 </FormItem>
                 <FormItem label="借用备注：">
-                    <Input type="textarea" v-model="borrow.Describe" style="width: 70%"></Input>
+                    <Input type="textarea" v-model="borrow.describe" style="width: 70%"></Input>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -293,7 +293,7 @@
             title="归还信息登记"
             :width="minModalWidth"
         >
-            <Form ref="toolReturn" :model="toolReturn" :rules="returnRules" :label-width="140">
+            <Form ref="toolReturn" :model="toolReturn" :rules="returnRules" :label-width="140" class="returnInfoForm">
                 <FormItem label="归还人：" prop="staffId">
                     <Select v-model="toolReturn.staffId" style="width: 70%">
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
@@ -307,8 +307,8 @@
                         <Option v-for="item in returnUsingStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="借用备注：">
-                    <Input type="textarea" v-model="toolReturn.Describe" style="width: 70%"></Input>
+                <FormItem label="归还备注：">
+                    <Input type="textarea" v-model="toolReturn.remark" style="width: 70%"></Input>
                 </FormItem>
             </Form>
 
@@ -324,37 +324,39 @@
             :width="modalWidth"
         >
             <Row class="queryCondition">
-                <Col span="8">
+                <Col span="7">
                     借用人：
                     <Select style="width: 60%;" v-model="historyConditions.borrowerId">
                         <Option key="0" value=null>所有</Option>
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="8">
+                <Col span="7">
                     借用开始时间：
                     <DatePicker type="datetime"  placeholder="请输入借用开始时间" style="width: 60%" v-model="historyConditions.borrowStartTime"></DatePicker>
                 </Col>
-                <Col span="8">
+                <Col span="7">
                     借用结束时间：
                     <DatePicker type="datetime"  placeholder="借用结束时间" style="width: 60%" v-model="historyConditions.borrowEndTime"></DatePicker>
 
                 </Col>
-                <Col span="8">
+                <Col span="7">
                     归还人：
                     <Select v-model="historyConditions.returnId" style="width: 60%">
                         <Option key="0" value=null>所有</Option>
                         <Option v-for="item in staffs" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </Col>
-                <Col span="8">
+                <Col span="7">
                     归还开始时间：
                     <DatePicker type="datetime"  placeholder="请输入归还开始时间" style="width: 60%" v-model="historyConditions.returnStartTime"></DatePicker>
                 </Col>
-                <Col span="8">
+                <Col span="7">
                     归还结束时间：
                     <DatePicker type="datetime"  placeholder="请输入借用归还时间" style="width: 60%" v-model="historyConditions.returnEndTime"></DatePicker>
-
+                </Col>
+                <Col span="3">
+                    <Button type="primary" @click="showHistory(instrumentHistoryId)">查询</Button>
                 </Col>
             </Row>
             <Table stripe border height="330"  :columns="historyColums"  :data="historyData"></Table>
@@ -371,6 +373,20 @@ import BorrowModal from './borrowModalQT.vue'
 export default {
     components: {BorrowModal},
     data(){
+        const checkBorrowTime = (rule, value, callback) => {
+            if(new Date(this.inBorrowTime)>=new Date(value)){
+                callback(new Error('借用时间不能早于入库时间'))
+            }else{
+                callback()
+            }
+        }
+        const checkReturnTime = (rule, value, callback) => {
+            if(this.newBorrowTime>=value){
+                callback(new Error('归还时间不能早于借出时间'))
+            }else{
+                callback()
+            }
+        }
         return{
             isShow: true,
             toolsType:[],
@@ -586,10 +602,12 @@ export default {
                     { type: 'number', required: true, message: '请选择借用人', trigger: 'change' }
                 ],
                 borrowTime: [
-                    { type: 'date', required: true, message: '请选择借出时间', trigger: 'change' }
+                    { type: 'date', required: true, message: '请选择借出时间', trigger: 'change' },
+                    { validator: checkBorrowTime, trigger: 'change' }
                 ]
             },
             isBorrowId: null,
+            inBorrowTime: null,
             //单出归还
             isReturn: false,
             confirmReturnBtn: false,
@@ -598,14 +616,15 @@ export default {
                 staffId: null,
                 returnTime: null,
                 usingStatus: null,
-                Describe: null
+                remark: null
             },
             returnRules: {
                 staffId: [
                     { type: 'number', required: true, message: '请选择归还人', trigger: 'change' }
                 ],
                 returnTime: [
-                    { type: 'date', required: true, message: '请选择归还时间', trigger: 'change' }
+                    { type: 'date', required: true, message: '请选择归还时间', trigger: 'change' },
+                    { validator: checkReturnTime, trigger: 'change' }
                 ],
                 usingStatus: [
                     { type: 'number', required: true, message: '请选择仪表使用状态', trigger: 'change' }
@@ -622,6 +641,7 @@ export default {
                 returnStartTime: null,
                 returnEndTime: null
             },
+            instrumentHistoryId: null,
             historyColums: [
                 {
                     type: 'index',
@@ -636,7 +656,12 @@ export default {
                 {
                     title: '借出时间',
                     key: 'borrowTime',
-                    align: 'center'
+                    align: 'center',
+                    render: (h, params) => {
+                        if(params.row.borrowTime!=null){
+                            return h('span', new Date(params.row.borrowTime).format('yyyy-MM-dd hh:mm:s'))
+                        }
+                    }
                 },
                 {
                     title: '借出时备注',
@@ -651,7 +676,12 @@ export default {
                 {
                     title: '归还时间',
                     key: 'returnTime',
-                    align: 'center'
+                    align: 'center',
+                    render: (h, params) => {
+                        if(params.row.returnTime!=null){
+                            return h('span', new Date(params.row.returnTime).format('yyyy-MM-dd hh:mm:s'))
+                        }
+                    }
                 },
                 {
                     title: '归还时备注',
@@ -667,7 +697,8 @@ export default {
             },
             modalWidth: null,
             minModalWidth: null,
-            isNullData: false
+            isNullData: false,
+            newBorrowTime: null
         }
     },
     computed: {
@@ -904,10 +935,9 @@ export default {
             this.selection = selection;
             var str = ''
             this.selection.forEach(element=>{
-                str += element.id+","
+                str += element.instrumentId+","
             })
             this.batchReturnSubmitData.ids = str.substr(0,str.length-1)
-            console.log(this.batchReturnSubmitData.ids)
         },
         //确认
         confirmBatchReturn(name){
@@ -946,9 +976,11 @@ export default {
             this.isBatchReturn = false
         },
         //单独借出
-        borrowSubmit(id){
+        borrowSubmit(id,time){
             this.isBorrow = true
             this.isBorrowId = id
+            this.inBorrowTime = time
+            // this.showHistory(id)
         },
         confirmBorrow(name){
             this.confirmBorrowBtn = true
@@ -960,7 +992,7 @@ export default {
                             ids: this.isBorrowId,
                             staffId: this.borrow.staffId,
                             borrowTime: this.borrow.borrowTime,
-                            Describe: this.borrow.describe
+                            describe: this.borrow.describe
                         }
                         EquipmentService.batchLend(this.isBorrowId,lendParams).then(
                             result => {
@@ -971,7 +1003,8 @@ export default {
                                 this.Log.info(error)
                             }
                         )
-                        this.$refs[name].resetFields()
+                        this.borrow.staffId = null
+                        this.borrow.borrowTime = null
                         this.borrow.describe = null
                     }else{
                         this.$Message.error("请填写正确的借出信息")
@@ -987,6 +1020,17 @@ export default {
         returnSubmit(id){
             this.isReturn = true
             this.isReturnId = id
+            EquipmentService.getNewTime(id).then(
+                resolve=>{
+                    console.log('resolve', resolve)
+                    this.newBorrowTime = resolve.borrowTime
+                    console.log('this.newBorrowTime', this.newBorrowTime)
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+            // this.showHistory(id)
         },
         confirmReturn(name){
             this.confirmReturnBtn = true
@@ -999,12 +1043,16 @@ export default {
                             returnId: this.toolReturn.staffId,
                             returnTime: this.toolReturn.returnTime,
                             useStatus: this.toolReturn.usingStatus,
-                            remark: this.toolReturn.describe
+                            remark: this.toolReturn.remark
                         }
                         EquipmentService.batchReturn(this.isReturnId,this.toolReturn.usingStatus,returnParams).then(
                             result => {
                                 this.isReturn = false
                                 this.showTable()
+                                this.toolReturn.staffId = null
+                                this.toolReturn.returnTime = null
+                                this.toolReturn.usingStatus = null
+                                this.toolReturn.remark = null
                             },
                             error => {
                                 this.Log.info(error)
@@ -1029,6 +1077,7 @@ export default {
         },
         showHistory(id){
             this.isSHowHistory = true
+            this.instrumentHistoryId = id
             let hisParams = {
                 instrumentId: id,
                 staffId: this.historyConditions.borrowerId,
@@ -1067,12 +1116,6 @@ export default {
     letter-spacing: 1.5em;
     margin-right: -1.5em;
 }
-.queryConditions{
-    line-height: 40px;
-    background: #ffffff;
-    padding-bottom: 5px;
-    padding-left: 5px;
-}
 .toolBox{
     color: #fff;
 }
@@ -1099,21 +1142,15 @@ export default {
 .operation{
     display: inline-block;
     width: 49%;
-    line-height: 50px;
+    line-height: 3vmin;
     text-align: center;
     cursor: pointer;
     font-size: 14px;
-}
-.operation:hover{
-    color: #357aa1;
-    /* font-size: 15px; */
+    margin-bottom: 1.2vmin;
 }
 .purpose{
     display: inline-block;
     vertical-align: top;
-}
-.queryConditions{
-    line-height: 35px;
 }
 /*在库与否*/
 .trueStatus{
@@ -1148,6 +1185,7 @@ export default {
 .operationBtn{
     padding: 0.7vmin 1vmin;
     border-radius: 1.2vmin;
+    font-size: 1.4vmin;
 }
 .operationBtn.return,.operationBtn.borrow{
     background: linear-gradient(to left, #2734e1, #7c83f2)
@@ -1191,29 +1229,34 @@ export default {
     h2{
         font-size: 2.5vmin;
     }
-    .toolInfo p,.operation{
+    .toolInfo p,.toolInfo div{
         line-height: 4.5vmin;
         font-size: 1.6vmin;
     }
-    /* .operation:hover{
-        font-size: 1.7vmin;
-    } */
     .toolBtn p{
         font-size: 2.5vmin;
     }
     .toolTitle,.toolBtn{
         line-height: 4vmin;
     }
-    .ivu-form-item >>> .ivu-form-item-label{
+    /* .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
         line-height: 2.5vmin;
-    }
+    } */
     .ivu-form-item >>> .ivu-form-item-content{
-        margin-left: 15vmin !important;
+        /* margin-left: 15vmin !important; */
         line-height: 4.5vmin;
     }
     /* .operation:hover{
         font-size: 1.6vmin;
     } */
+    .returnInfoForm .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .returnInfoForm .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 5.5vmin;
+    }
 }
 </style>

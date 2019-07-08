@@ -64,7 +64,7 @@ export default {
     },
     created() {
         if (
-            sessionStorage["refreshAddress"] == "" ||
+            !sessionStorage["refreshAddress"]||
             sessionStorage["refreshAddress"].indexOf("/UM/DataAnalysis") < 0
         ) {
             this.goToMoudle({ path: this.curModule.leftTree[0].url });

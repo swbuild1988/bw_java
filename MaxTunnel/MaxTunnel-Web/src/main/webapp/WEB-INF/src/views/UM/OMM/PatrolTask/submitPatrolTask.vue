@@ -23,11 +23,11 @@
                 <DatePicker type="datetime" v-model="task.endTime" placeholder="请输入巡检任务结束时间" style="width: 100%" :readonly="this.$route.params.isFinished==true"></DatePicker>
             </FormItem>
             <FormItem label="巡检步骤：">
-                <ul style="max-height: 100px;overflow-y: auto;">
+                <ul class="stepsUL">
                     <li v-for="(item, index) in task.steps" :key="index" class="todoLi">
                         <Checkbox v-model="item.isFinished"></Checkbox>
                         <span style="color: #fff">{{index+1}}、</span>
-                        <input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" />
+                        <Input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" readonly></Input>
                     </li>
                 </ul>
             </FormItem>
@@ -50,7 +50,7 @@
                     </template>
                 </div>
                 <image-from-url
-                    style="width: 8vmin;height: 8vmin;display: inline-block;"
+                    class="imageFromUrl"
                     v-for="(item, index) in imgUrlData" :key="index"
                     :url="item.url"
                 ></image-from-url>
@@ -60,11 +60,10 @@
                     :show-upload-list="false"
                     :default-file-list="defaultList"
                     :on-success="handleSuccess"
-                    :format="['jpg','jpeg','png']"
+                    :format="['jpg','jpeg','png','gif']"
                     :max-size="2048"
                     :on-format-error="handleFormatError"
                     :on-exceeded-size="handleMaxSize"
-                    :before-upload="handleBeforeUpload"
                     multiple
                     type="drag"
                     :action=action
@@ -194,6 +193,13 @@ import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
 export default {
     components: { expandRow, ImageFromUrl },
     data(){
+        const checkDenTime = (rule, value, callback) => {
+            if(value!=null&&value<=this.task.startTime){
+                callback(new Error('任务结束时间不能早于任务开始时间'))
+            }else{
+                callback()
+            }
+        }
         return {
             defectTunnelId: 1,
             task:{
@@ -307,7 +313,8 @@ export default {
                     { type: 'date', required: true, message: '任务开始时间不能为空', trigger: 'change' }
                 ],
                 endTime: [
-                    { type: 'date', required: true, message: '任务结束时间不能为空', trigger: 'change' }
+                    { type: 'date', required: true, message: '任务结束时间不能为空', trigger: 'change' },
+                    { validator: checkDenTime, trigger: 'change' }
                 ]
             },
             isDisable: false,
@@ -396,15 +403,14 @@ export default {
                 _this.Log.info(error)
             })
         //图片上传   
-        this.action = 'http://localhost:8081/MaxTunnel-Web/multifiles/'+this.task.id+'/files'
+        this.action = this.ApiUrl+'/multifiles/'+this.task.id+'/files'
         this.uploadList = this.$refs.upload.fileList;
         this.getModalWidth()
         // 获取图片列表
         PatrolService.getImgList(this.task.id).then(
             result => {
                 result.forEach(item=>{
-                    console.log('item', item)
-                    let multifilesUrl = 'multifiles/'+item.id+'/img'
+                    let multifilesUrl = this.ApiUrl+'/multifiles/'+item.id+'/img'
                     this.imgUrlData.push({url: multifilesUrl})
                 })
             },
@@ -611,31 +617,21 @@ export default {
             })
         },
         handleSuccess (res, file) {
-            file.url = res.data.url
+            file.url = this.ApiUrl+"/"+res.data.url
             file.name = res.data.name
-            console.log('res.data', res.data)
-            console.log('uploadList', this.uploadList)
+            this.$Message.success('图片上传成功')
         },
         handleFormatError (file) {
             this.$Notice.warning({
-                title: 'The file format is incorrect',
-                desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+                title: '图片格式错误',
+                desc: file.name + '的格式错误，请选择jpg，jpeg，png，gif格式的图片'
             });
         },
         handleMaxSize (file) {
             this.$Notice.warning({
-                title: 'Exceeding file size limit',
-                desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+                title: '图片超出最大限制',
+                desc: file.name + '太大了，图片最大不能超过2M'
             });
-        },
-        handleBeforeUpload () {
-            const check = this.uploadList.length < 5;
-            if (!check) {
-                this.$Notice.warning({
-                    title: 'Up to five pictures can be uploaded.'
-                });
-            }
-            return check;
         }
     }
 }
@@ -651,7 +647,6 @@ export default {
 }
 .todoLi .todoEidt{
     border: none;
-    box-shadow: 2px 2px 10px 0px #ccc;
     flex: 1;
     margin-right: 0.5vw;
     padding-left: 0.5vw;
@@ -688,20 +683,38 @@ export default {
 .ivu-table-cell{
     font-size: 13px !important;
 }
+.stepsUL{
+    max-height: 10vmin;
+    overflow-y: auto;
+}
+.stepsUL::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.stepsUL::-webkit-scrollbar-thumb{
+    border-radius: 0.5vmin;
+    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    background: rgba(0, 0, 0, 0.2)
+}
+.stepsUL::-webkit-scrollbar-track{
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    background: rgba(0, 0, 0, 0.1)
+}
 /* 图片上传 */
-.demo-upload-list{
+.demo-upload-list, .imageFromUrl{
     display: inline-block;
-    width: 60px;
-    height: 60px;
+    width: 6vmin;
+    height: 6vmin;
     text-align: center;
-    line-height: 60px;
-    border: 1px solid transparent;
-    border-radius: 4px;
+    line-height: 6vmin;
+    border: 0.1vmin solid transparent;
+    border-radius: 0.4vmin;
     overflow: hidden;
     background: #fff;
     position: relative;
     box-shadow: 0 1px 1px rgba(0,0,0,.2);
-    margin-right: 4px;
+    margin-right: 0.4vmin;
 }
 .demo-upload-list img{
     width: 100%;
@@ -746,30 +759,10 @@ export default {
     padding-bottom: 3vmin;
 }
 
-.formHeight{
-    height: 77vh;
-    overflow-y: auto;
-}
-
-.formHeight::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formHeight::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formHeight::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
-}
-
 .formBG >>> .ivu-form-item-label{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before, .formBG .ivu-form>>>.ivu-form-item-label:before {
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;

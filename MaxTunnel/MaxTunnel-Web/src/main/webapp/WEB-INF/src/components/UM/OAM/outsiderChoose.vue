@@ -1,6 +1,6 @@
 <template>
 <div class="outSiderBox">
-    <Row class="conditions">
+    <Row class="personCondition">
         <Col span="6">
             姓名：
             <Input placeholder="请输入访客姓名" v-model="conditions.name" class="conditionsWidth"></Input>
@@ -26,6 +26,7 @@
                     </Checkbox>
                 </Poptip>
             </div>
+            <Button size="small" @click="manageUserInfo">访客信息管理</Button>
         </CheckboxGroup>
         <div class="inlineBox distanceBox">
             <Button type="dashed" long icon="plus-round" @click="addOutsiders()">添加访客信息</Button>
@@ -46,21 +47,24 @@
         <Form ref="outsiders" :model="outsiders" :rules="ruleValidate" @submit.native.prevent class="addInfoForm">
             <FormItem>
                 <Row v-for="(item,index) in items" :key="index" v-if="item.status">
-                    <Col span="6">
+                    <Col span="7">
+                    姓名：
                         <Input type="text" v-model="item.name" placeholder="请输入访客姓名" @on-blur="validateName(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip"  v-show="check[index].checkName">访客姓名不能为空</div>
                     </Col>
-                    <Col span="6">
+                    <Col span="7">
+                    身份证号：
                         <Input type="text" v-model="item.idCard" placeholder="请输入身份证号" @on-blur="validateIdCard(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkidCard">身份证号不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightIdCard">请输入正确的身份证号</div>
                     </Col>
-                    <Col span="6">
+                    <Col span="7">
+                    联系方式：
                         <Input type="text" v-model="item.tel" placeholder="请输入联系方式" @on-blur="validateTel(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkTel">联系方式不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightTel">请输入正确的联系方式</div>
                     </Col>
-                    <Col span="6" >
+                    <Col span="3" style="text-align: right">
                         <Button type="ghost" @click="handleRemove(index)">删除</Button>
                     </Col>
                 </Row>
@@ -74,9 +78,17 @@
         </FormItem>
         </Form>
         <div slot="footer">
-            <Button type="default" @click="cancelReturn('toolReturn')">取消</Button>
-            <Button type="primary" @click="submitOutsiders()">确定</Button>
+            <!-- <Button type="default" @click="cancelReturn('toolReturn')">取消</Button> -->
+            <Button type="primary" @click="submitOutsiders()" :disabled="isDisable">确定</Button>
         </div>
+    </Modal>
+    <Modal
+        title="访客信息管理"
+        width="42vw"
+        v-model="userManage"
+    >
+    
+        <Table ref="selection" :columns="userManageColumns" :data="outSiders"></Table>
     </Modal>
 </div>    
 </template>
@@ -125,7 +137,36 @@ export default {
             ],
             checkStatus: false,
             isDisable:false,
-            content: null
+            content: null,
+            userManage: false,
+            userManageColumns: [
+                {
+                    type: "selection",
+                    width: 60,
+                    align: "center"
+                },
+                {
+                    type: "index",
+                    width: 60,
+                    align: "center"
+                },
+                {
+                    title: '姓名',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '身份证号',
+                    key: 'identityNO',
+                    align: 'center'
+                },
+                {
+                    title: '联系方式',
+                    key: 'telphone',
+                    align: 'center'
+                }
+            ],
+            deleteSelect: []
         }
     },
     mounted(){
@@ -258,13 +299,52 @@ export default {
                     this.content = "手机号："+data.telphone+",身份证号："+data.identityNO
                 }
             })
-        }
+        },
+        //访客信息管理
+        manageUserInfo(){
+            this.userManage = true
+        },
+        handleSelectionChange(val) {
+            this.deleteSelect = val;
+        },
+        startdelete(selection) {
+            if (selection.length != 0) {
+                this.deleteSelect = selection;
+            }
+        },
+        alldelete() {
+            this.$Modal.confirm({
+                title: "删除确认",
+                content: "<p>确认要删除选中的信息吗？</p>",
+                onOk: () => {
+                    let ids = this.deleteSelect[0].id;
+                    for (let i = 1; i < this.deleteSelect.length; i++) {
+                        ids += "," + this.deleteSelect[i].id;
+                    }
+                    PipeService.delTunnels(ids).then(
+                        result => {
+                            this.$Message.info("已删除");
+                            this.deleteShow = false;
+                            this.resetPageSearch();
+                        },
+                        error => {
+                            this.Log.info(error)
+                        }
+                    )
+                },
+                onCancel: () => {
+                    this.$Message.info("已取消操作");
+                    this.resetPageSearch();
+                }
+            });
+        },
     }
 }
 </script>
 <style scoped>
-.conditions{
+.personCondition{
     margin-bottom: 0; 
+    line-height: 4.5vmin;
 }
 .conditionsWidth{
     width: 60%

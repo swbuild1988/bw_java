@@ -266,7 +266,7 @@
 
     .setionBox{
         padding: 1vmin;
-        border: 1px solid #ffffff;
+        border: 1px solid #a19c9c;
         border-radius: 4px;
         position: relative;
         overflow: hidden;
@@ -303,7 +303,21 @@
     }
     .forBG>>>.ivu-modal-header-inner,.forBG>>>.ivu-modal-close .ivu-icon-ios-close-empty{
         color: #ffffff;
-    }    
+    }
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar{
+        width: 0.4vmin;
+        height: 0.4vmin;
+    }
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-thumb{
+        border-radius: 0.5vmin;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #83a6ed;
+    }
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 1vmin;
+        background: #ededed;
+    }   
     /* 图片1轮播 */
     .videoSection{
         height: 40vh;

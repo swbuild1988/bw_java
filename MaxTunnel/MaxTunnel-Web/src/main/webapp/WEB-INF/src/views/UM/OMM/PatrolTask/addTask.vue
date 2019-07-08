@@ -2,6 +2,7 @@
     <div class="formBG">
         <div class="formTitle" v-show="this.pageType==4">提交任务执行结果</div>
         <div class="formTitle" v-show="this.pageType==1">巡检任务详情</div>
+        <div class="formHeight">
         <Form  :model="task" :label-width="140">
             <FormItem label="所属计划：">
                 <Input type="text" v-model="task.planName" readonly></Input>
@@ -36,6 +37,7 @@
                 <Button type="ghost" @click="goBack()">返回</Button>
             </div>
         </Form>
+        </div>
     </div>
 </template>
 <script>
@@ -324,11 +326,11 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 2.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder

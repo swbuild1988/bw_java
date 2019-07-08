@@ -205,6 +205,31 @@ body {
 	color: #333;
 }
 
+/*详情类页面样式*/
+/* formBG */
+/* .formBG{
+	height: 80vh;
+} */
+.formHeight{
+	height: 75vh;
+	overflow-y: auto;
+}
+
+.formHeight::-webkit-scrollbar{
+	width: 0.4vmin;
+	height: 0.4vmin;
+}
+.formHeight::-webkit-scrollbar-thumb{
+	border-radius: 0.5vmin;
+	-webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+	background: rgba(0, 0, 0, 0.2)
+}
+.formHeight::-webkit-scrollbar-track{
+	border-radius: 0;
+	-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+	background: rgba(0, 0, 0, 0.1)
+}
+
 @media (min-width: 2200px) {
 
 	.ivu-date-picker-cells {
@@ -222,7 +247,7 @@ body {
 		width: 2.8vmin !important;
 		height: 2.8vmin !important;
 		font-size: 1.2vmin;
-		color: #495060;
+		/* color: #495060; */
 	}
 
 	.ivu-date-picker-cells span em {
@@ -237,7 +262,7 @@ body {
 		height: 3.2vmin !important;
 		line-height: 3.2vmin !important;
 		font-size: 1.2vmin;
-		color: #495060;
+		/* color: #495060; */
 	}
 
 	.ivu-picker-panel-icon-btn {
@@ -277,6 +302,9 @@ body {
 		line-height: 2.4vmin;
 		padding: 0 0 0 1.6vmin;
 		font-size: 1.2vmin;
+	}
+	.ivu-date-picker-cells-month .ivu-date-picker-cells-cell-focused, .ivu-date-picker-cells-year .ivu-date-picker-cells-cell-focused {
+		background-color: #84a2c1;
 	}
 
 	/* 月份 */

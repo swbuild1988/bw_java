@@ -113,20 +113,18 @@
                 </Col>
             </Row>
         </div>
-        <div class="page">
-            <Page
-                :total="page.pageTotal"
-                :current="page.pageNum"
-                :page-size="page.pageSize"
-                show-sizer
-                show-total
-                placement="top"
-                @on-change="handlePage"
-                @on-page-size-change="handlePageSize"
-                show-elevator
-                :style="pageStyle"
-            ></Page>
-        </div>
+        <Page
+            :total="page.pageTotal"
+            :current="page.pageNum"
+            :page-size="page.pageSize"
+            show-sizer
+            show-total
+            placement="top"
+            @on-change="handlePage"
+            @on-page-size-change="handlePageSize"
+            show-elevator
+            :style="pageStyle"
+        ></Page>
     </div>
 </template>
 

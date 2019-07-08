@@ -16,6 +16,7 @@
                             v-model="companyInfo.company.name"
                             placeholder="请输入企业名称"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -28,6 +29,7 @@
                             v-model="companyInfo.company.creditNo"
                             placeholder="请输入信用代码"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -40,6 +42,7 @@
                             v-model="companyInfo.company.bank"
                             placeholder="请输入开户行"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -52,6 +55,7 @@
                             v-model="companyInfo.company.account"
                             placeholder="请输入账号"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -64,6 +68,7 @@
                             v-model="companyInfo.company.address"
                             placeholder="请输入注册地址信息"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -77,6 +82,7 @@
                             v-model="companyInfo.company.phone"
                             placeholder="请输入注册电话"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -89,6 +95,7 @@
                             v-model="companyInfo.company.mail"
                             placeholder="请输入邮箱"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -104,6 +111,7 @@
                             v-model="companyInfo.list[0].contact"
                             placeholder="请输入一般联系人姓名"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -112,6 +120,7 @@
                             v-model="companyInfo.list[0].duty"
                             placeholder="请输入一般联系人职责"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -124,6 +133,7 @@
                             v-model="companyInfo.list[0].tel"
                             placeholder="请输入一般联系人手机"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -136,6 +146,7 @@
                             v-model="companyInfo.list[0].tel2"
                             placeholder="请输入一般联系人电话"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -144,6 +155,7 @@
                             v-model="companyInfo.list[0].mail"
                             placeholder="请输入一般联系人邮箱"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -157,6 +169,7 @@
                             v-model="companyInfo.list[1].contact"
                             placeholder="请输入紧急联系人姓名"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -165,6 +178,7 @@
                             v-model="companyInfo.list[1].duty"
                             placeholder="请输入紧急联系人职责"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -177,6 +191,7 @@
                             v-model="companyInfo.list[1].tel"
                             placeholder="请输入紧急联系人手机"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -189,6 +204,7 @@
                             v-model="companyInfo.list[1].tel2"
                             placeholder="请输入紧急联系人电话"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -197,6 +213,7 @@
                             v-model="companyInfo.list[1].mail"
                             placeholder="请输入紧急联系人邮箱"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -212,6 +229,7 @@
                             v-model="companyInfo.company.inspectionNo"
                             placeholder="请输入固定巡检周期"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -224,6 +242,7 @@
                             v-model="companyInfo.company.inspectionTime"
                             placeholder="请输入固定巡检时间"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -237,6 +256,7 @@
                             v-model="companyInfo.company.insName"
                             placeholder="请输入固定巡检人员姓名"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -249,6 +269,7 @@
                             v-model="companyInfo.company.insIdentity"
                             placeholder="请输入固定巡检人员身份证号"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -261,6 +282,7 @@
                             v-model="companyInfo.company.insDuty"
                             placeholder="请输入固定巡检人员职责"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -273,6 +295,7 @@
                             v-model="companyInfo.company.insPhone"
                             placeholder="请输入固定巡检人员电话"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -285,6 +308,7 @@
                             v-model="companyInfo.company.insQualification"
                             placeholder="请输入固定巡检人员资格证类型"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -297,6 +321,7 @@
                             v-model="companyInfo.company.qualificationNo"
                             placeholder="请输入资格证编号"
                             class="input"
+                            type="text"
                             :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
@@ -317,7 +342,7 @@
                     <FormItem>
                         <div class="imgReview">
                             <image-from-url
-                                v-if="imgPreview.url.length"
+                                v-if="imgPreview.url"
                                 v-show="imgPreview.isInit"
                                 :url="imgPreview.url"
                                 style="width: 100%; height: 100%"

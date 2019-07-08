@@ -75,8 +75,8 @@ export default {
                 pageSize: this.page.pageSize,
                 name:this.conditions.name,
                 processType: this.conditions.processType,
-                startTime: null,
-                endTime: null,
+                startTime: this.conditions.startTime,
+                endTime: this.conditions.endTime,
             };
             return Object.assign({}, param);
         }
@@ -137,7 +137,7 @@ export default {
 
                 // 巡检任务提交
                 case 1002:
-                    pathParams.name = '提交巡检任务结果'
+                    pathParams.name = '提交巡检任务结果1'
                     pathParams.params = {
                         id: task.id,
                         isFinished: task.isFinished

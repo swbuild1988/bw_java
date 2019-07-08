@@ -33,8 +33,8 @@
                 <span v-show="!flag" class="errorStyle">任务名和任务组需唯一</span>
             </Form>
             <div slot="footer">
-                <Button type="primary" v-if="type==1" size="large" v-on:click="saveAdd('areaFormInfo')">保存1</Button>
-                <Button type="primary" v-if="type==2" size="large" v-on:click="saveEdit('areaFormInfo')">保存2</Button>
+                <Button type="primary" v-if="type==1" size="large" v-on:click="saveAdd('areaFormInfo')">保存</Button>
+                <Button type="primary" v-if="type==2" size="large" v-on:click="saveEdit('areaFormInfo')">保存</Button>
             </div>
         </Modal>
     </div>
@@ -57,6 +57,7 @@ export default {
             tunnels:[],
             flag:true,
             areaFormInfo:{
+                id: null,
                 name:'',
                 tunnelId: null,
                 sn: null,
@@ -161,7 +162,15 @@ export default {
         saveEdit(name){
             this.$refs[name].validate((valid) => {
                 if(valid){
-                    AreaService.editArea(this.params).then(
+                    let param = {
+                        id: this.areaFormInfo.id,
+                        name: this.areaFormInfo.name,
+                        tunnelId: this.areaFormInfo.tunnelId,
+                        camera: this.areaFormInfo.camera,
+                        length: this.areaFormInfo.length,
+                        sn: this.areaFormInfo.sn
+                    }
+                    AreaService.editArea(param).then(
                         result => {
                             this.isRefresh = true
                             this.$emit('childIsRefresh', this.isRefresh)

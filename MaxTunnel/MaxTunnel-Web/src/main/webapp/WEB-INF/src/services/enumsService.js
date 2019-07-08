@@ -524,7 +524,20 @@ var EnumsService = {
             // ]
             // resolve(data)
         })
-    },
+	},
+	//获取告警级别
+	getAlarmLevel(){
+		return new Promise((resolve, reject) => {
+			get('alarmlevel-enums').then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：alarmlevel-enums")
+				}
+			})
+		})
+	}
 }
 export {
 	EnumsService

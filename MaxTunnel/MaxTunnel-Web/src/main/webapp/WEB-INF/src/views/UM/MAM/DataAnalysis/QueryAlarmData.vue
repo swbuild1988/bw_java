@@ -10,14 +10,14 @@
 			</Col>
 			<Col span="6">
 				<span class="conditionTitle">所属管廊：</span>
-				<Select v-model="queryPrams.tunnelId" style="width:64%">
+				<Select v-model="queryPrams.tunnelId" style="width:65%">
 					<Option v-for="item in tunnelList" :value="item.id" :key="item.id">{{ item.name }}</Option>
 				</Select>
 			</Col>
 			<Col span="6">
 				<span class="conditionTitle">告警级别：</span>
-				<Select v-model="queryPrams.alarmLevel" style="width:65%">
-					<Option v-for="item in enumData.alarmLevel" :value="item.key" :key="item.key">{{ item.value }}</Option>
+				<Select v-model="queryPrams.alarmLevels" multiple style="width:65%">
+					<Option v-for="item in enumData.alarmLevel" :value="item.val" :key="item.val">{{ item.key }}</Option>
 				</Select>
 			</Col>
 			<Col span="6">
@@ -82,16 +82,22 @@
 					show-total show-elevator show-sizer placement="top"
 					:page-size="queryPrams.pageSize"></Page>
 		</div>
+		<showAlarm
+            :modalPrams="videoModal.modalPrams"
+            :alarmContainer="videoModal.alarmContainer"
+            ref="video"
+        ></showAlarm>
 	</div>
 </template>
 
 <script>
-	import {EnumsService} from '../../../../services/enumsService.js'
-	import {TunnelService} from '../../../../services/tunnelService.js'
-	import {DataAnalysisService} from '../../../../services/dataAnalysisService.js'
-	import ClearAlarm from '../../../../components/Common/Modal/ClearAlarm'
-	import ShowMonitorObjectSelect from '../../../../components/Common/Modal/ShowMonitorObjectSelect'
+	import {EnumsService} from '@/services/enumsService.js'
+	import {TunnelService} from '@/services/tunnelService.js'
+	import {DataAnalysisService} from '@/services/dataAnalysisService.js'
+	import ClearAlarm from '@/components/Common/Modal/ClearAlarm'
+	import ShowMonitorObjectSelect from '@/components/Common/Modal/ShowMonitorObjectSelect'
 	import iconWarning from "@/assets/UM/tipWarning.png";
+	import showAlarm from "@/components/Common/Modal/showAlarms";
 
 	export default {
 		name: "query-alarm-data",
@@ -121,7 +127,7 @@
 				queryPrams: {
 					cleaned: 0,
 					tunnelId: null,
-					alarmLevel: null,
+					alarmLevels: [],
 					objectId: null,
 					alarmTimeType: 1,
 					monitorZone: null,
@@ -132,8 +138,7 @@
 					pageNum: 1,
 				},
 				enumData: {
-					alarmLevel: [{key: -1, value: "全部"}, {key: 1, value: "提示"}, {key: 2, value: "一般"}, 
-					{key: 3,value: "严重"}, {key: 4, value: "危急"}],
+					alarmLevel: [],
 					timeType: [{key: 1, value: "最近一天"}, {key: 2, value: "最近一周"}, {key: 3, value: "最近一月"}, {key: 4, value: "自定义"}],
 				},
 				dataTypeEnum: [],
@@ -215,26 +220,97 @@
 							h('Button', {
 								props: {
 									type: 'success',
-									size: 'default'
+									size: 'small'
 								},
 								style: {
 									display: (params.row.cleaned == true) ? "none" : "inline-block",
+									'margin-right': '0.5vmin'
 								},
 								on: {
 									click: () => {
 										this.clearAlarms(params.index)
 									}
 								}
-							}, '清除')
+							}, '清除'),
+							h('Button', {
+								props: {
+									type: 'primary',
+									size: 'small'
+								},
+								on: {
+									click: () => {
+										this.showAlarmDetailss(params.row.id)
+									}
+								}
+							}, '详情')
 						]);
 						}
 					},
 				],
 				tableData: [],
-				iconWarning: iconWarning
+				iconWarning: iconWarning,
+				videoModal: {
+                	modalPrams: {
+						state: false
+					},
+					alarmContainer: []
+				}
 			}
 		},
+		components: {
+			ShowMonitorObjectSelect,
+			ClearAlarm,
+			showAlarm
+		},
+		watch: {
+			"dataObjectSelect.selectData.idList": function () {
+				this.queryPrams.objectId = this.dataObjectSelect.selectData.idList;
+			},
+			"alarmsClear.modalPrams.state": function () {
+				if (!this.alarmsClear.modalPrams.state && this.alarmsClear.modalPrams.ids.length > 0) {
+					this.queryAlarmData();
+				}
+
+			}
+		},
+		mounted() {
+			if(this.$route.params){
+				this.queryPrams.alarmLevels = this.$route.params.alarmLevels
+			}
+			this.tableHeight = window.innerHeight * 0.64;
+			this.inItData();
+			this.changeAlarmType(this.queryPrams.alarmTimeType);
+			this.queryAlarmData();
+			EnumsService.getAlarmLevel().then(
+				result => {
+					this.enumData.alarmLevel = result
+				},
+				error => {
+					this.Log.info(error)
+				}
+			)
+		},
 		methods: {
+			showAlarmDetailss(id){
+				this.axios.get('alarms/'+id).then(res=>{
+					let{ code, data, msg } = res.data
+					if(code==200){
+						this.videoModal.modalPrams.state = true
+						this.videoModal.alarmContainer=[]
+						this.videoModal.alarmContainer.unshift(data);
+						this.saveAlarmContainer.unshift(data);
+						// let plans = data.plans; //[{"name":"通风预案","id":4003}]
+						// if (plans && plans.length) {
+							// _this.selectPlan = plans[0].id;
+						// }
+						// _this.alarmLevel.forEach(a => {
+						// 	if (a.val == alarm.alarmLevel) {
+						// 		des = a.key;
+						// 	}
+						// });
+					}
+				})
+			},
 			//查询监测对象
 			queryObject() {
 				let _this = this;
@@ -278,13 +354,12 @@
 					endTime: new Date(_this.queryPrams.endTime),
 					tunnelId: _this.queryPrams.tunnelId,
 					cleaned: _this.queryPrams.cleaned,
-					alarmLevel: _this.queryPrams.alarmLevel,
+					alarmLevels: _this.queryPrams.alarmLevels,
 					pageNum: _this.queryPrams.pageNum,
 					pageSize: _this.queryPrams.pageSize
 				};
 				DataAnalysisService.getAlarmData(prams).then((result) => {
 				if (result) {
-					console.log('result', result)
 					_this.queryPrams.total = result.total;
 					_this.tableData = result.list
 				}
@@ -350,28 +425,7 @@
 				_this.alarmsClear.modalPrams.ids = [_this.tableData[index].id];
 				}
 				_this.alarmsClear.modalPrams.state = !_this.alarmsClear.modalPrams.state;
-			},
-		},
-		components: {
-			ShowMonitorObjectSelect,
-			ClearAlarm
-		},
-		watch: {
-			"dataObjectSelect.selectData.idList": function () {
-				this.queryPrams.objectId = this.dataObjectSelect.selectData.idList;
-			},
-			"alarmsClear.modalPrams.state": function () {
-				if (!this.alarmsClear.modalPrams.state && this.alarmsClear.modalPrams.ids.length > 0) {
-					this.queryAlarmData();
-				}
-
 			}
-		},
-		mounted() {
-			this.tableHeight = window.innerHeight * 0.64;
-			this.inItData();
-			this.changeAlarmType(this.queryPrams.alarmTimeType);
-			this.queryAlarmData();
 		}
 	}
 </script>
@@ -505,5 +559,10 @@
 	.queryCondition .ivu-btn-info{
 		background: linear-gradient(to left, #f61a1a, #f68380)
 	}
+	/* .ivu-select.ivu-select-multiple >>> .ivu-select-selection div:nth-child(0){
+		height: 3.2vmin;
+		overflow-y: auto;
+		background: #f68380;
+	} */
 </style>
 

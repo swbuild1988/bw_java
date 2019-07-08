@@ -41,7 +41,7 @@ export default {
 <style scoped>
 .my-tabs {
     font-size: 14px;
-    color: #444;
+    color: #fff;
 }
 .ivu-table-wrapper {
     background: url("../../assets/UM/detailsTabBg.png") no-repeat;

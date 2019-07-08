@@ -250,7 +250,7 @@ export default {
                 outlineWidth: 1,
                 verticalOrigin: Cesium.VerticalOrigin.TOP,
                 pixelOffset: new Cesium.Cartesian2(0, 9),
-                scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0)
+                scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0)
               }
             }
           : {};

@@ -22,16 +22,16 @@
                 </Col>
                 <Col span="4">
                     <span class="word63 conditionTitle">借用人</span><span class="conditionTitle">：</span>
-                    <Input type="text" v-model="toolConditions.staffId" style="width: 60%"></Input>
+                    <Input type="text" v-model="toolConditions.staffName" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
                     <span class="word63 conditionTitle">归还人</span><span class="conditionTitle">：</span>
-                    <Input type="text" v-model="toolConditions.returnId" style="width: 60%"></Input>
+                    <Input type="text" v-model="toolConditions.returnName" style="width: 60%"></Input>
                 </Col>
                 <Col span="4">
                     <span class="conditionTitle">使用状态</span><span class="conditionTitle">：</span>
                     <Select v-model="toolConditions.useStatus" style="width: 60%">
-                        <Option value=null key="2">所有</Option>
+                        <Option value=null>所有</Option>
                         <Option v-for="item in usingStatus" :key="item.key" :value="item.key">{{item.val}}</Option>
                     </Select>
                 </Col>
@@ -68,7 +68,7 @@
         <Col class="chartBox">
             <MultiBarChart v-bind="toolStatic"></MultiBarChart>
         </Col>
-        <Col class="chartBox" style="margin-left: 2.5vmin;">
+        <Col class="chartBox" style="margin-left: 2vmin;">
             <MulitBarPosiNega v-bind="inventory"></MulitBarPosiNega>
         </Col>
     </Row>    
@@ -183,10 +183,10 @@ export default {
                     align: 'center',
                     render: (h,param) => {
                         let temp = ''
-                        if(param.row.retStartTime==null){
+                        if(param.row.returnTime==null){
                             temp = '暂未归还'
                         }else{
-                            temp = new Date(param.row.borrowTime).format("yyyy-MM-dd hh:mm:s")
+                            temp = new Date(param.row.returnTime).format("yyyy-MM-dd hh:mm:s")
                         }
                         return h('div',temp)
                     }
@@ -216,17 +216,17 @@ export default {
             },
             //仪表工具使用状态
             usingStatus: [
-                { key: 0, val: '损坏' },
-                { key: 1, val: '正常' }
+                { key: 2, val: '故障' },
+                { key: 1, val: '运行' }
             ],
             toolConditions:{
                 name: null,
                 typeId: null,
                 modelId: null,
-                staffId: null,
+                staffName: null,
                 startTime: null,
                 endTime: null,
-                returnId: null,
+                returnName: null,
                 useStatus: null,
                 retStartTime: null,
                 retEndTime: null
@@ -302,11 +302,12 @@ export default {
                 typeId: this.toolConditions.typeId,
                 modelId: this.toolConditions.modelId,
                 venderId: this.toolConditions.venderId,
-                useStatus: this.toolConditions.usingStatusId,
+                useStatus: this.toolConditions.useStatus,
                 startTime: this.toolConditions.startTime,
                 endTime: this.toolConditions.endTime,
-                returnId: this.toolConditions.returnId,
-                retStartTime: this.toolConditions.retStartTime,
+                staffName: this.toolConditions.staffName,
+                returnName: this.toolConditions.returnName,
+                retStaTime: this.toolConditions.retStartTime,
                 retEndTime: this.toolConditions.retEndTime,
                 pageSize: this.page.pageSize,
                 pageNum: this.page.pageNum
@@ -423,7 +424,7 @@ export default {
 .tableBG{
     background: url("../../../../assets/UM/infoBox.png") no-repeat;
 	background-size: 100% 100%;
-    padding: 0 1%;
+    padding: 0.2vmin 1vmin;
 }
 .ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
     border-right: none;
@@ -438,6 +439,23 @@ export default {
     padding-right: 1vmin;
     padding-bottom: 1vmin;
 }
+.ivu-input-wrapper >>> .ivu-table-body{
+    overflow-x: hidden;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
+    width: 0.4vmin;
+    height: 0.4vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
+}
+.ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
+}
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -450,6 +468,9 @@ export default {
         font-size: 1.3vmin;
         height: 8.2vh;
         line-height: 4.1vh; 
+    }
+    .ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+        width: auto;
     }
 }
 </style>

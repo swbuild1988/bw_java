@@ -150,6 +150,27 @@ var PlanService = {
             })
         })
     },
+    // 根据预案获取节点列表
+    getNodeList(processKey){
+        return new Promise((resolve, reject) => {
+			get('activiti/process-key/' + processKey)
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + ',地址:activiti/process-key/' + processKey)
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+    }
 }
 
 export {

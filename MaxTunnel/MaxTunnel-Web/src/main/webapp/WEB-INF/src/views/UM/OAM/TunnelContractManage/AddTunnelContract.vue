@@ -93,7 +93,6 @@
                                 v-model="customerName"
                                 placeholder="请选择企业"
                                 class="inputWidth"
-                                type="text"
                                 readonly
                             />
                             <div class="pop" slot="content" v-show="pageType != pageTypes.Read">
@@ -112,7 +111,6 @@
                                     :disabled="read"
                                     @on-change="tunnelChange"
                                 >
-                                    <!--   <Option disabled value="0">管廊</Option> -->
                                     <Option
                                         v-for="item in cableLocation.tunnels"
                                         :value="item.id"
@@ -165,20 +163,20 @@
                     </FormItem>
                 </Col>
                 <Col span="12">
-                    <FormItem label="合同文件:" prop="file" v-show="!read">
-                        <Input
+                    <FormItem label="合同文件:" v-show="!read">
+                        <input
                             placeholder="暂时只支持pdf格式"
                             type="file"
-                            @on-change="fileChange"
+                            @change="fileChange"
                             class="fileInput"
                             accept="application/pdf"
-                        />
+                        >
                         <div class="ivu-form-item-error-tip" v-show="file.typeFlag">请选择pdf文件</div>
                     </FormItem>
                     <FormItem>
                         <pdf
                             :page="file.curPage"
-                            :class="['pdfContent',{'pdfOverflow': file.src}]"
+                            :class="['pdfContent',{'pdfOverflow': !!file.src}]"
                             @num-pages="file.totalPage=$event"
                             @page-loaded="file.curPage=$event"
                             @loaded="loadPdfHandler"
@@ -192,7 +190,10 @@
                                 class="pageTurner"
                                 v-show="file.src && file.curPage > 1"
                             >上一页</Button>
-                            <div class="pageNote">{{ file.curPage + "-" + file.totalPage}}</div>
+                            <div
+                                class="pageNote"
+                                v-show="file.src && file.totalPage"
+                            >{{ file.curPage + "-" + file.totalPage}}</div>
                             <Button
                                 type="primary"
                                 @click="changePdfPage(1)"
@@ -248,6 +249,7 @@ import { PatrolService } from "../../../../services/patrolService";
 import types from "../../../../../static/Enum.json";
 import CustomerChoose from "../../../../components/UM/OAM/CustomerChoose";
 import pdf from "vue-pdf";
+import PDF from "../../../../components/UM/MAM/pdfPerviewDownload";
 export default {
     data() {
         return {
@@ -332,13 +334,6 @@ export default {
                         message: "请填写管线长度",
                         trigger: "blur"
                     }
-                ],
-                path: [
-                    {
-                        required: true,
-                        message: "请选择合同文件",
-                        trigger: "blur"
-                    }
                 ]
             },
             customerName: "",
@@ -360,14 +355,17 @@ export default {
             read: false,
             curIndex: null,
             contractIds: [],
-            editor: null,
+            editor: {
+                name: null,
+                id: null
+            },
             file: {
                 editInit: false,
                 uploadParam: null,
                 src: null,
                 typeFlag: false,
-                curPage: 1,
-                totalPage: 1
+                curPage: 0,
+                totalPage: 0
             },
             title: null
         };
@@ -533,7 +531,7 @@ export default {
                     "/contracts/" +
                     id +
                     "/view";
-                this.file.src = pdf.createLoadingTask({ url: url });
+                _this.file.src = pdf.createLoadingTask({ url });
                 ContractService.getDetailsByContractId(id).then(
                     result => {
                         _this.file.editInit = true;

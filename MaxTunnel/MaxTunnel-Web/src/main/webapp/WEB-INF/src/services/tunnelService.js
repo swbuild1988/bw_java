@@ -577,8 +577,20 @@ var TunnelService = {
                 } = res.data
                 if (code == 200) {
                     resolve(data)
-                } else {
-                    reject(msg + "地址：")
+                }else{
+                    reject(msg+"地址：areas/"+id)
+                }
+            })
+        })
+    },
+    getStoreInfo(id){
+        return new Promise((resolve, rejresolve, reject) => {
+            get('tunnels/stores/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：tunnels/stores/"+id)
                 }
             })
         })

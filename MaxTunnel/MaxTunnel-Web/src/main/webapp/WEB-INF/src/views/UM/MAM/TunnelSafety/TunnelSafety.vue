@@ -21,7 +21,7 @@ export default {
         ModulePage
     },
     created() {
-        console.log("jici");
+        
         this.curModule.leftTree = [];
         let _this = this;
         TunnelService.getTunnels().then(

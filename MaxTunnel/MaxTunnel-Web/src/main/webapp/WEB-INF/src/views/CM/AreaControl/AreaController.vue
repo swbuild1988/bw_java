@@ -13,7 +13,7 @@
             <div>
                 <span>所属管廊：</span>
                 <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth">
-                    <Option value="null">所有</Option>
+                    <Option value=null>所有</Option>
                     <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
                 </Select>
             </div>

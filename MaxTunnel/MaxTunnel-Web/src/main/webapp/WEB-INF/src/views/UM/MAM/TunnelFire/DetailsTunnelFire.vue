@@ -105,7 +105,13 @@
                                 v-if="item.datatypeId==1"
                                 @changeStatus="changeStatus"
                             ></SimulatedData>
-                            <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                            <switchTypeData 
+                                v-bind:propList="item"
+                                :control="item.control"
+                                v-else-if="item.datatypeId==2"
+                                @changeStatus="changeStatus"
+                            ></switchTypeData>
+                            <analogChannel v-bind:propList="item" :control="item.control" v-else @changeStatus="changeStatus"></analogChannel>
                         </Col>
                     </Row>
                 </Col>
@@ -120,6 +126,8 @@ import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
 import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
+import switchTypeData from '../../../../components/UM/MAM/SwitchTypeData'
+import analogChannel from "../../../../components/UM/MAM/AnalogChannelTypeData";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
@@ -281,7 +289,9 @@ export default {
         videoComponent,
         Carousel,
         checkSelect,
-        tabs
+        tabs,
+        switchTypeData,
+        analogChannel
     },
     mounted() {
         console.log('消防isShowComponent',this.isShowComponent)
@@ -591,6 +601,7 @@ export default {
                         _this.areaLeath = a.areaLeath;
                         temp.ObjName = a.name;
                         temp.id = a.id;
+                        temp.control = a.control;
                         temp.clickStatus = false;
                         temp.ObjVal = false;
                         temp.objtypeId = _this.queryCondition.curDataType;

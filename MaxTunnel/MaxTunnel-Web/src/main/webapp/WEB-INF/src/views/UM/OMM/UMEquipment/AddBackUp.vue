@@ -192,26 +192,6 @@
     padding-bottom: 3vmin;
 }
 
-.formHeight{
-    height: 76vh;
-    overflow-y: auto;
-}
-
-.formBG::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formBG::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formBG::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
-}
-
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
@@ -225,8 +205,49 @@
     font-size: 1.2vmin;
 }
 @media (min-width: 2200px){
-        /* font-size: 1.4vmin;
-        width: 100%;
-    } */
+    .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
+    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
+    {
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-form.ivu-form-label-right{
+        width: 50%;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 5.5vmin;
+    }
+    /*input number*/
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-input-wrap{
+        height: 3.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-wrap{
+        width: 2.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler{
+        height: 1.6vmin;
+    }
+    .ivu-input-number .ivu-input-number-handler-up-inner{
+        top: 1vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-down-inner, .ivu-input-number >>> .ivu-input-number-handler-up-inner{
+        width: 1.2vmin;
+        height: 1.2vmin;
+        line-height: 1.2vmin;
+        font-size: 1.4vmin;
+        right: 0.4vmin;
+        transition: all .2s linear;
+    }
 }
 </style>

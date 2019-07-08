@@ -21,8 +21,8 @@ export default {
         latitude: 37.70768364078975,
         height: 4999.577866952712,
         roll: 0,
-        pitch: -1.5383928532641606,
-        heading: 0.3732143574336426
+        pitch: -1.559829,
+        heading: 0.373219
       },
       entityHeight: 10, //实体高度
       searchEventsDay: "5", //查询几天内时间
@@ -131,6 +131,13 @@ export default {
           val: [1, 2, 4, 7],
           key: "alarm-close" //告警定位
         }
+      ],
+      detectionObjTitleImg:[
+        { key:1,val:'temperature' }, //温度
+        { key:2,val:'humidity'}, //湿度
+        { key:3,val:'oxygen'}, //氧气
+        { key:4,val:'sulfide'}, //硫化氢
+        { key:5,val:'methane' } //甲烷
       ]
     };
   }

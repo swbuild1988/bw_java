@@ -22,7 +22,7 @@
         </div>
         <Row>
             <Col span="18" style="padding-left: 10px;padding-right: 10px;margin-top:0.4vmin;">
-                <div class="gis" :style="{height:curHeight+'px'}">
+                <div class="gis" style="height: 75.2vh">
                     <test-sm-viewer ref="smViewer" @sendSectionDetails="getSectionDetails"></test-sm-viewer>
                     <div
                         class="positionNote"
@@ -35,9 +35,9 @@
                 </div>
             </Col>
             <Col span="6" style="padding-left: 10px;padding-right: 10px;">
-                <div :style="{height:curHeight+'px'}" class="overview-context">
+                <div class="overview-context">
                     <div class="monitor-tunnel-overview">
-                        <div style="margin: 3vmin 10px;">
+                        <div style="margin: 2vmin 10px;">
                             <span class="monitor-tunnel-title">{{curName}}</span>
                             <Row
                                 :gutter="16"
@@ -64,9 +64,9 @@
                     </div>
                     <div
                         class="borde_rhadow monitor-tunnel-number"
-                        style="height:46vh; overflow-y: auto;margin-top: 10px;color: #f9f8f6"
+                        style="height:28vh; overflow-y: auto;margin-top: 1vh;color: #f9f8f6"
                     >
-                        <div style="margin: 3vmin 10px;">
+                        <div style="margin: 2vmin 10px;">
                             <span class="monitor-tunnel-title">
                                 极值数据统计
                                 <Icon type="arrow-graph-up-right" :siez="iconSize*1.5"></Icon>
@@ -92,6 +92,25 @@
                                         {{item.location}}
                                     </Col>
                                 </div>
+                            </Row>
+                        </div>
+                    </div>
+                    <div
+                        class="monitor-tunnel-number"
+                        style="height: 23vh;overflow-y: auto;margin-top: 1vh;color: rgb(249, 248, 246);"
+                    >
+                        <div style="margin: 2vmin 10px">
+                            <span class="monitor-tunnel-title">温湿度显示</span>
+                            <Row style="margin-left: 0; margin-right:0;  padding: 0 2vmin;">
+                                <Col
+                                    span="24"
+                                    v-for="item in tempHumData"
+                                    :key="item.id"
+                                    class="descCol"
+                                >
+                                    <span>{{item.name + '：'}}</span>
+                                    <div style="float: right">{{item.curValue + ' ' + item.unit}}</div>
+                                </Col>
                             </Row>
                         </div>
                     </div>
@@ -147,12 +166,12 @@ export default {
                 ] //属性集
             },
             tunnelProps: [], //管廊统计数据
-            // sectionDetailsData: [],
-            // showDetailsModel: false
+            tempHumData: []
         };
     },
     mounted() {
         this.fentchData();
+        this.getTempHum();
         // this.getMonitorData();
         // 设置表格高度
         this.curHeight = window.innerHeight * 0.75; //将85vh转为数值
@@ -176,6 +195,16 @@ export default {
                 this.tunnelProps = result;
             });
         },
+        getTempHum() {
+            MonitorDataService.getTempHum().then(
+                res => {
+                    this.tempHumData = res;
+                },
+                err => {
+                    this.Log.info(err);
+                }
+            );
+        },
         goToDetails(key, areaId, storeId) {
             this.$router.push({
                 path: "/UM/TunnelEnvironment/details/" + this.$route.params.id,
@@ -186,7 +215,7 @@ export default {
                     tunnelId: this.$route.params.id
                 }
             });
-        },
+        }
         // getSectionDetails(data) {
         //     // this.sectionDetailsData.splice(0);//清空数组
         //     if (data) {
@@ -211,6 +240,7 @@ export default {
             // $route发生变化时再次赋值
             this.queryCondition.tunnelId = this.tunnelId;
             this.fentchData();
+            this.getTempHum();
             this.getMonitorData();
         },
         storeProp: {
@@ -231,12 +261,12 @@ export default {
 }
 
 .MaxValCol {
-    margin-top: 4.5vh;
+    margin-top: 1.5vh;
     font-size: 1.5vmin;
 }
 
 .descCol {
-    margin-top: 1.2vh;
+    margin-top: 1vh;
     font-size: 1.66vmin;
 }
 
@@ -306,7 +336,7 @@ export default {
 }
 
 .monitor-tunnel-overview {
-    height: calc(30vh - 10px);
+    height: 23vh;
     overflow-y: auto;
     color: #f9f8f6;
     background: url("../../../../assets/UM/monitor-tunnel-bg.png") no-repeat;

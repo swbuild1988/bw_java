@@ -4,9 +4,10 @@
             class="clickStatic"
             :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'transparent'}"
         >
-            <p slot="title" style="font-size: 1.6vmin">{{Obj.objtypeName}}</p>
+            <slot name="heard">
+                <!-- <p class="heard">{{Obj.objtypeName}}</p> -->
+            </slot>
             <div class="equipment_image">
-                <!-- 开 -->
                 <img
                     src="../../../assets/UM/lamp-on.png"
                     v-if="Obj.objtypeId==11 && curValue"
@@ -23,13 +24,13 @@
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/blinds-on.png"
-                    v-if="Obj.objtypeId==58 && curValue"
+                    src="../../../assets/UM/shutter-open.png"
+                    v-if="Obj.objtypeId==58 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/井盖开.png"
-                    v-if="Obj.objtypeId==56 && curValue"
+                    src="../../../assets/UM/covers-open.png"
+                    v-if="Obj.objtypeId==56 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
@@ -47,7 +48,7 @@
                     v-if="Obj.objtypeId==41 && curValue"
                     class="img"
                 >
-                <!-- 关 -->
+
                 <img
                     src="../../../assets/UM/lamp-off.png"
                     v-if="Obj.objtypeId==11 && !curValue"
@@ -64,13 +65,13 @@
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/blinds-off.png"
-                    v-if="Obj.objtypeId==58 && !curValue"
+                    src="../../../assets/UM/shutter-close.png"
+                    v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
-                    src="../../../assets/UM/井盖.png"
-                    v-if="Obj.objtypeId==56 && !curValue"
+                    src="../../../assets/UM/covers-close.png"
+                    v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
@@ -88,43 +89,21 @@
                     v-if="Obj.objtypeId==41 && !curValue"
                     class="img"
                 >
+                <!-- 过程 -->
+                <img
+                    src="../../../assets/UM/covers-process.gif"
+                    v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 0)"
+                    class="img"
+                >
+                <img
+                    src="../../../assets/UM/shutter-process.gif"
+                    v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 0)"
+                    class="img"
+                >
             </div>
-
-            <!-- 声光报警 41，红外 57，门禁 55-->
-            <div class="switchContent">
-                <div class="switchBtn">
-                    <i-switch v-model="curValue" @on-change="confirm" size="large" v-if="Obj.control">
-                        <span slot="open">开</span>
-                        <span slot="close">关</span>
-                    </i-switch>
-                </div>
-                <div class="switchImg">
-                    <img
-                        :src="equipmentState.closeImage"
-                        class="equipment_state_image"
-                        :title="equipmentState.closeTitle"
-                    >
-                    <img
-                        :src="equipmentState.openImage"
-                        class="equipment_state_image"
-                        :title="equipmentState.openTitle"
-                    >
-                    <img
-                        :src="equipmentState.faultImage"
-                        class="equipment_state_image"
-                        :title="equipmentState.faultTitle"
-                    >
-                </div>
-                <div class="switchText">
-                    <span>{{equipmentState.closeTitle}}</span>
-                    <span>{{equipmentState.openTitle}}</span>
-                    <span>{{equipmentState.faultTitle}}</span>
-                </div>
-                
-            </div>
-
+            <slot></slot>
             <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
-            <div style="margin-top: -8%;font-size: 1.66vmin">{{Obj.ObjName}}</div>
+            <div style="margin-top: -12%;font-size: 1.66vmin">{{Obj.ObjName}}</div>
         </Card>
     </div>
 </template>
@@ -140,110 +119,129 @@ export default {
     props: {
         Obj: {
             type: Object,
-            default: {
-                id: "",
-                objtypeName: "",
-                ObjName: "",
-                ObjVal: false,
-                imgUrl: "",
-                objtypeId: "",
-                clickStatus: false,
-                datatypeId: "",
-                control:true
+            default: () => {
+                return {
+                    id: "",
+                    objtypeName: "",
+                    ObjName: "",
+                    ObjVal: false,
+                    imgUrl: "",
+                    objtypeId: "",
+                    clickStatus: false,
+                    datatypeId: ""
+                    // control:true
+                };
+            },
+        },
+        curValue: {
+            type: Boolean
+        },
+        stateProcess:{
+                type:Object,
+                default:()=>{
+                    return {
+                        open:0,
+                        close:1
+                    }
+                }
             }
-        }
     },
     data: function() {
         return {
-            curImgUrl: "",
-            confirmFlag: false,
-            curValue: null,
-            isTimeShow: false,
-            equipmentState: {
-                state: null,
-                closeImage: "",
-                openImage:"",
-                faultImage:"",
-                openTitle:'开',
-                closeTitle:'关',
-                faultTitle:'故障' 
+            // curImgUrl: "",
+            // confirmFlag: false,
+            // curValue: null,
+            isTimeShow: false
+            // equipmentState: {
+            //     state: null,
+            //     closeImage: "",
+            //     openImage:"",
+            //     faultImage:"",
+            //     openTitle:'开',
+            //     closeTitle:'关',
+            //     faultTitle:'故障'
 
-            },
-            imageState:[
-                {
-                    key:'closeState',
-                    val:[
-                        {key:'closeImage',val:'close-open-state'},
-                        {key:'openImage',val:'open-close-state'},
-                        {key:'faultImage',val:'fault-close-state'}
-                    ]
-                },
-                {
-                    key:'openState',
-                    val:[
-                        {key:'closeImage',val:'close-close-state'},
-                        {key:'openImage',val:'open-open-state'},
-                        {key:'faultImage',val:'fault-close-state'}
-                    ]
-                },
-                {
-                    key:'faultState',
-                    val:[
-                        {key:'closeImage',val:'close-close-state'},
-                        {key:'openImage',val:'open-close-state'},
-                        {key:'faultImage',val:'fault-open-state'}
-                    ]
-                },
+            // },
+            // imageState:[
+            //     {
+            //         key:'closeState',
+            //         val:[
+            //             {key:'closeImage',val:'close-open-state'},
+            //             {key:'openImage',val:'open-close-state'},
+            //             {key:'faultImage',val:'fault-close-state'}
+            //         ]
+            //     },
+            //     {
+            //         key:'openState',
+            //         val:[
+            //             {key:'closeImage',val:'close-close-state'},
+            //             {key:'openImage',val:'open-open-state'},
+            //             {key:'faultImage',val:'fault-close-state'}
+            //         ]
+            //     },
+            //     {
+            //         key:'faultState',
+            //         val:[
+            //             {key:'closeImage',val:'close-close-state'},
+            //             {key:'openImage',val:'open-close-state'},
+            //             {key:'faultImage',val:'fault-open-state'}
+            //         ]
+            //     },
 
-
-            ],
-            
+            // ],
         };
     },
     components: {
         Light,
         Fans
     },
-    watch: {
-        Obj: {
-            handler(newVal, oldVal) {
-                this.transformStateImage();
-            },
-            deep: true
-        }
-    },
+    // computed:{
+    //     curValue(){
+    //         return this.$attrs.curValue
+    //     }
+    // },
+    // watch: {
+    //     Obj: {
+    //         handler(newVal, oldVal) {
+    //                 // console.log('watch')
+    //                 // console.log('newVal',this.Obj)
+    //             // this.transformStateImage();
+    //         },
+    //         deep: true
+    //     }
+    // },
     methods: {
-        confirm(data) {
-            this.$nextTick(() => {
-                this.curValue = !data;
-            });
-            let text = data
-                ? "确定打开" + this.Obj.objtypeName + this.Obj.ObjName + "吗?"
-                : "确定关闭 " +
-                  this.Obj.objtypeName +
-                  this.Obj.ObjName +
-                  " 吗?";
-            this.$Modal.confirm({
-                render: h => {
-                    return h("span", text);
-                },
-                onOk: () => {
-                    this.equipmentState.state = this.curValue = !this.curValue;
-                    this.change();
-                }
-            });
-        },
-        transformStateImage() {
+        // confirm(data) {
+        //     this.$nextTick(() => {
+        //         this.curValue = !data;
+        //     });
+        //     let text = data
+        //         ? "确定打开" + this.Obj.objtypeName + this.Obj.ObjName + "吗?"
+        //         : "确定关闭 " +
+        //           this.Obj.objtypeName +
+        //           this.Obj.ObjName +
+        //           " 吗?";
+        //     this.$Modal.confirm({
+        //         render: h => {
+        //             return h("span", text);
+        //         },
+        //         onOk: () => {
+        //             // this.equipmentState.state = this.curValue = !this.curValue;
+        //             this.change();
+        //         }
+        //     });
+        // },
+        // transformStateImage() {
 
-            (this.imageState[this.Obj.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
-            
-        },
-        replaceImage(replaceStr,replceImg){
+        //     (this.imageState[this.Obj.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
 
-                this.equipmentState[replaceStr] = require("../../../assets/UM/" +
-                    replceImg +
-                    ".png");
-        },
+        // },
+        // replaceImage(replaceStr,replceImg){
+
+        //         this.equipmentState[replaceStr] = require("../../../assets/UM/" +
+        //             replceImg +
+        //             ".png");
+        // },
         //定位设备
         locationEquimpent() {
             this.Obj.clickStatus = !this.Obj.clickStatus;
@@ -266,13 +264,14 @@ export default {
         }
     },
     mounted() {
+        // console.log('mounted')
+        // console.log('this.obj',this.Obj)
         if (this.Obj.time != "") {
             this.isTimeShow = true;
         }
-        this.equipmentState.state = this.Obj.ObjVal;
-        this.curValue = this.Obj.ObjVal == 1;
-        this.transformStateImage();
-        this.transformStateTtile();
+        // this.equipmentState.state = this.Obj.ObjVal;
+        // this.curValue = this.Obj.ObjVal == 1;
+        // this.transformStateImage();
     }
 };
 </script>
@@ -328,12 +327,12 @@ export default {
     height: 28vh;
 }
 
-.switchContent {
+/* .switchContent {
     width: 50%;
     position: absolute;
     right: 0;
     margin-top: 2vh;
-}
+} */
 
 .img {
     width: 70%;
@@ -363,11 +362,11 @@ export default {
     left: 2%;
 }
 
-.equipment_state_image {
+/* .equipment_state_image {
     width: 3.5vmin;
     height: 3.5vmin;
-    margin-top: 2vmin;
-}
+    margin-top: 2vmin; */
+/* } */
 .ivu-card-bordered >>> .ivu-card-head {
     border-bottom: none;
     padding: 1.4vmin 1.6vmin;
@@ -382,7 +381,7 @@ export default {
     color: #fff;
     padding: 2.6vmin;
 }
-.switchText {
+/* .switchText {
     font-size: 1.4vmin;
     margin-top: .5vmin;
 }
@@ -390,23 +389,28 @@ export default {
     display: inline-block;
     width: 30%;
     text-align: center;
+} */
+.clickStatic .heard {
+    font-size: 1.6vmin;
+    margin-bottom: 2.5vmin;
+    margin-top: -1vmin;
 }
 @media (min-width: 1921px) {
     .equipment_image {
         top: 57%;
         width: 53%;
     }
-    .switchContent {
+    /* .switchContent {
         margin-top: 4vh;
-    }
+    } */
 }
 @media (max-width: 1920px) {
     .equipment_image {
-        top: 65%;
+        top: 58%;
         width: 50%;
     }
-    .switchContent {
+    /* .switchContent {
         margin-top: 3vh;
-    }
+    } */
 }
 </style>

@@ -21,48 +21,9 @@
                         <Option v-for="item in areas" :value="item.id" :key="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="可安装管线数：" prop="totalCableNumber">
+                <FormItem label="可安装管线数：">
                     <Input v-model="formValidate.totalCableNumber" placeholder="请输入可安装管线数："/>
                 </FormItem>
-                <!-- <FormItem label="相机视角：" prop="camera">
-                    <Row>
-                        <Col span="7">
-                            <Input v-model="camera.longitude" placeholder="请输入经度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="camera.latitude" placeholder="请输入纬度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="camera.highness" placeholder="请输入高度"/>
-                        </Col>
-                    </Row>
-                </FormItem>
-                <FormItem label="开始坐标：" prop="startPoint">
-                    <Row>
-                        <Col span="7">
-                            <Input v-model="startPoint.longitude" placeholder="请输入经度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="startPoint.latitude" placeholder="请输入纬度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="startPoint.highness" placeholder="请输入高度"/>
-                        </Col>
-                    </Row>
-                </FormItem>
-                <FormItem label="结束坐标：" prop="endPoint">
-                    <Row>
-                        <Col span="7">
-                            <Input v-model="endPoint.longitude" placeholder="请输入经度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="endPoint.latitude" placeholder="请输入纬度"/>
-                        </Col>
-                        <Col span="7" offset="1">
-                            <Input v-model="endPoint.highness" placeholder="请输入高度"/>
-                        </Col>
-                    </Row>
-                </FormItem> -->
                 <FormItem label="s1：" prop="s1">
                     <Poptip trigger="hover" placement="top-start">
                         <img slot="content" :src="sections1s2" placement="top" alt="管廊方向说明图" style="height: 300px;">
@@ -86,9 +47,18 @@
 </template>
 
 <script>
+import { TunnelService } from '@/services/tunnelService'
 export default {
     name: "section-change",
     data(){
+        // const checkTotalCableNumber = (rule, value, callback) => {
+        //     console.log('value', value)
+        //     if(value==null||value==''||value==undefined){
+        //         callback(new Error('可安装管线数不能为空'))
+        //     }else{
+        //         callback()
+        //     }
+        // }
         return {
             tunnels:[],
             stores:[],
@@ -116,16 +86,16 @@ export default {
                 areaId: [
                     { type: 'number', required: true, message: '所属区域不能为空', trigger: 'blur' }
                 ],
-                totalCableNumber: [
-                    { type: 'number', required: true, message: '可安装管线数不能为空', trigger: 'blur' }
-                ],
+                // totalCableNumber: [
+                //     { required: true, trigger: 'blur', validator: checkTotalCableNumber }
+                // ],
                 s1: [
                     { required: true, message: 's1不能为空', trigger: 'blur' }
                 ],
                 s2: [
                     { required: true, message: 's2不能为空', trigger: 'blur' }
                 ]
-            }
+            } 
         }
     },
     props:{
@@ -157,28 +127,34 @@ export default {
     },
     methods:{
         gettunnel(){            //获取所有管廊的简单列表
-            this.axios.get('/tunnels').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.tunnels = data;
+            TunnelService.getTunnels().then(
+                result => {
+                    this.tunnels = result
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         getstorelist(id){         //根据管廊ID查询管仓列表
-            this.axios.get('/tunnels/'+ id + '/stores').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.stores = data;
+            TunnelService.getStoresByTunnelId(id).then(
+                result => {
+                    this.stores = result
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         getarealist(id){        //根据管廊ID查询区域列表
-            this.axios.get('/tunnels/' + id + '/areas').then(res =>{
-                let {code,data} = res.data;
-                if(code == 200){
-                    this.areas = data;
+            TunnelService.getAreasByTunnelId(id).then(
+                result => {
+                    this.areas = result
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         sendMsgtoManage: function(name){
             this.$refs[name].validate((valid) => {

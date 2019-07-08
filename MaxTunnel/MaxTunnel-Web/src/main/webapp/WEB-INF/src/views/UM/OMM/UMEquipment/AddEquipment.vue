@@ -6,7 +6,7 @@
             <FormItem label="设备名称：" prop="name">
                 <Input v-model='equipment.name'></Input>
             </FormItem>
-            <FormItem label="资产编码：" >
+            <FormItem label="资产编码：" prop="assetNo">
                 <Input v-model='equipment.assetNo'></Input>
             </FormItem>
             <FormItem label="安装位置：" prop="tunnelId">
@@ -45,16 +45,16 @@
                     <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="额定电压：">
+            <FormItem label="额定电压：" prop="ratedVoltage">
                 <Input v-model="equipment.ratedVoltage"></Input>
             </FormItem>
-            <FormItem label="量程：">
+            <FormItem label="量程：" prop="range">
                 <Input v-model="equipment.range"></Input>
             </FormItem>
-            <FormItem label="厂家：">
+            <FormItem label="厂家：" prop="factory">
                 <Input v-model="equipment.factory"></Input>
             </FormItem>
-            <FormItem label="品牌：">
+            <FormItem label="品牌：" prop="brand">
                 <Input v-model="equipment.brand"></Input>
             </FormItem>
             <FormItem label="供应商：" prop="venderId">
@@ -62,7 +62,7 @@
                     <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="质保期限：">
+            <FormItem label="质保期限：" prop="qaTerm">
                 <Input v-model="equipment.qaTerm"></Input>
             </FormItem>
             <FormItem label="设备状态：" prop="status">
@@ -71,12 +71,9 @@
                 </Select>
             </FormItem>
             <FormItem label="关联监测对象：" prop="objId">
-                <!-- <Select v-model="equipment.objId" @on-change="getObjType">
-                    <Option v-for="item in objs" :value="item.id" :key="item.id">{{ item.id }}</Option>
-                </Select> -->
                 <Input v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
                 <ul class="chooseObj" v-show="isShowObjs">
-                    <li v-for="item in objs" :value="item" :key="item" @click="replaceInputValue(item)">{{item}}</li>
+                    <li v-for="item in objs" :value="item" :key="item.id" @click="replaceInputValue(item)">{{item}}</li>
                 </ul>
             </FormItem>
             <FormItem label="对象类型：">
@@ -84,44 +81,6 @@
                     <Input :value="item.objtypeName" readonly></Input>
                 </div>
             </FormItem>
-            <!-- <FormItem label="设备图片：">
-                <div class="demo-upload-list" v-for="item in uploadList" :key="item.url">
-                    <template v-if="item.status === 'finished'">
-                        <img :src="item.url">
-                        <div class="demo-upload-list-cover">
-                            <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                    </template>
-                </div>
-                <Upload
-                    ref="upload"
-                    :show-upload-list="false"
-                    :default-file-list="defaultList"
-                    :on-success="handleSuccess"
-                    :format="['jpg','jpeg','png','gif']"
-                    :max-size="2048"
-                    :on-format-error="handleFormatError"
-                    :on-exceeded-size="handleMaxSize"
-                    :before-upload="handleBeforeUpload"
-                    multiple
-                    type="drag"
-                    action="//jsonplaceholder.typicode.com/posts/"
-                    style="display: inline-block;width:58px;">
-                    <div style="width: 58px;height:58px;line-height: 58px;">
-                        <Icon type="camera" size="20"></Icon>
-                    </div>
-                </Upload>
-                <Modal title="View Image" v-model="visible">
-                    <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
-                </Modal>
-            </FormItem> -->
-            <!-- <FormItem label="相关备品：">
-                <Button type="default" @click="associationsBackUp()">查看相关备品</Button>
-            </FormItem> -->
             <div class="BtnBox">
                 <Button type="default" @click="goBack()" style="margin-right: 8px;">返回</Button>
                 <Button type="primary" @click="submitEquipment('equipment')" :disabled="isDisable">提交</Button>
@@ -170,20 +129,6 @@ export default {
             //监测对象
             objs: [],
             objTypes: [],
-            //图片上传
-            defaultList: [
-                // {
-                //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                //     'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                // },
-                // {
-                //     'name': 'bc7521e033abdd1e92222d733590f104',
-                //     'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                // }
-            ],
-            imgName: '',
-            visible: false,
-            uploadList: [],
             isDisable: false,
             validateRules: {
                 name: [
@@ -210,6 +155,24 @@ export default {
                 objId: [
                     { type: 'number', required: true, message: '请选择关联的监测对象', trigger: 'change' }
                 ],
+                assetNo: [
+                    { required: true, message: '资产编码不能为空', trigger: 'blur' }
+                ],
+                ratedVoltage: [
+                    { required: true, message: '额定电压不能为空', trigger: 'blur' }
+                ],
+                range: [
+                    { required: true, message: '量程不能为空', trigger: 'blur' }
+                ],
+                factory: [
+                    { required: true, message: '厂家不能为空', trigger: 'blur' }
+                ],
+                brand: [
+                    { required: true, message: '品牌不能为空', trigger: 'blur' }
+                ],
+                qaTerm: [
+                    { required: true, message: '质保期限不能为空', trigger: 'blur' }
+                ]
             },
             areas: [],
             stores: [],
@@ -285,7 +248,6 @@ export default {
                 }
             }
         )
-        // this.getObjType()
     },
     methods: {
         submitEquipment(name) {
@@ -356,7 +318,6 @@ export default {
                 TunnelService.getSectionByAreaIdStoreId(this.storeId, this.areaId).then(
                     result => {
                         this.equipment.sectionId = result.id
-                        // this.sectionName = result.name
                     },
                     error => {
                         this.Log.info(error)
@@ -380,40 +341,6 @@ export default {
             this.isShowObjs = false
             this.getObjType()
         }
-        // //上传图片list
-        // handleView (name) {
-        //     this.imgName = name;
-        //     this.visible = true;
-        // },
-        // handleRemove (file) {
-        //     const fileList = this.$refs.upload.fileList;
-        //     this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-        // },
-        // handleSuccess (res, file) {
-        //     file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        //     file.name = '7eb99afb9d5f317c912f08b5212fd69a';
-        // },
-        // handleFormatError (file) {
-        //     this.$Notice.warning({
-        //         title: '图片格式错误',
-        //         desc: '图片 ' + file.name + ' 格式错误, 请选择jpg,jpeg,png,gif格式的图片.'
-        //     });
-        // },
-        // handleMaxSize (file) {
-        //     this.$Notice.warning({
-        //         title: '超过图片大小限制',
-        //         desc: '图片' + file.name + '过大, 图片大小不能超过2M.',
-        //     });
-        // },
-        // handleBeforeUpload () {
-        //     const check = this.uploadList.length < 2;
-        //     if (!check) {
-        //         this.$Notice.warning({
-        //             title: '只能上传一张图片.'
-        //         });
-        //     }
-        //     return check;
-        // }
     }
 };
 </script>
@@ -472,12 +399,13 @@ export default {
     margin: 0 2px;
 }
 .chooseObj{
-    width: 10vw;
-    max-height: 8.1vh;
+    width: 13vw;
+    max-height: 13.1vh;
     position: relative;
-    border: 1px solid #cccccc;
     border-radius: 4px;
     overflow-y: auto;
+    z-index: 999;
+    background: #fff;
 }
 .chooseObj:before, .chooseObj:after{
     width: 0vw;
@@ -513,26 +441,6 @@ export default {
     padding-bottom: 3vmin;
 }
 
-.formHeight{
-    height: 76vh;
-    overflow-y: auto;
-}
-
-.formHeight::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formHeight::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formHeight::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
-}
-
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
@@ -562,11 +470,11 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 2.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
     }
 }
 </style>

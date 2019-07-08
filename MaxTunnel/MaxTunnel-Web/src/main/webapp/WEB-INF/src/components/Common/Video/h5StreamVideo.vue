@@ -45,7 +45,9 @@ export default {
                 let elementChild = [].slice.call(els.children);
                 let [video] = elementChild.filter(el => el.nodeName == "VIDEO");
                 console.info("remove video", video);
-                H5StreamPlugIn.clearVideoElement(video);
+                if(video){
+                    H5StreamPlugIn.clearVideoElement(video);
+                }
             }
         }
     },

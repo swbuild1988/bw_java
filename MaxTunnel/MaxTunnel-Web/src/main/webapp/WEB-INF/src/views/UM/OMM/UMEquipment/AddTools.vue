@@ -1,6 +1,7 @@
 <template>
     <div class="formBG">
         <div class="formTitle">批量添加仪表工具</div>
+        <div class="formHeight">
         <Form ref="tools" :model="tools" :rules="validateRules" :label-width="140" @submit.native.prevent>
             <FormItem label="仪表工具名称：" prop="name">
                 <Input v-model='tools.name'></Input>
@@ -21,7 +22,7 @@
                 </Select>
             </FormItem>
             <FormItem label="添加数量：">
-                <InputNumber v-model="tools.count" :min="1" style="width: 520px;"></InputNumber>
+                <InputNumber v-model="tools.count" :min="1" style="width: 100%;"></InputNumber>
             </FormItem>
             <FormItem label="供应商：" prop="venderId">
                 <Select v-model="tools.venderId">
@@ -36,6 +37,7 @@
                 <Button type="primary" @click="addToolsSubmit('tools')" :disabled="isDisable">提交</Button>
             </div>
         </Form>  
+        </div>
     </div>
 </template>
 <script>
@@ -179,21 +181,6 @@ export default {
     overflow-y: auto;
 }
 
-.formBG::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formBG::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formBG::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
-}
-
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
@@ -219,11 +206,37 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 2.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
+    }
+    /*input number*/
+    .ivu-input-number,.ivu-input-number >>> .ivu-input-number-input{
+        height: 4vmin;
+        line-height: 4vmin;
+        font-size: 1.4vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-input-wrap{
+        height: 3.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-wrap{
+        width: 2.2vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler{
+        height: 1.6vmin;
+    }
+    .ivu-input-number .ivu-input-number-handler-up-inner{
+        top: 1vmin;
+    }
+    .ivu-input-number >>> .ivu-input-number-handler-down-inner, .ivu-input-number >>> .ivu-input-number-handler-up-inner{
+        width: 1.2vmin;
+        height: 1.2vmin;
+        line-height: 1.2vmin;
+        font-size: 1.4vmin;
+        right: 0.4vmin;
+        transition: all .2s linear;
     }
 }
 </style>

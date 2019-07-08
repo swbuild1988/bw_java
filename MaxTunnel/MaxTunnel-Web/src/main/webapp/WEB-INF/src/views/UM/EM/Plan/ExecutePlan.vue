@@ -43,10 +43,10 @@
         </Row>
         <hr class="hr3">
         <Row>
-            <Col span="12" style="position: relative;padding: 10px;">
-                <Card :bordered="false" style="height: 77vmin" class="processCard">
+            <Col span="24" style="position: relative;padding: 10px;">
+                <Card :bordered="false" style="height: 33vmin" class="processCard">
                     <p slot="title" style="font-size: 1.66vmin;color:#fff;">执行日志</p>
-                    <div v-if="nodePicState === 2" style="height:69vmin;max-width:54vmin">
+                    <div v-if="nodePicState === 2" class="processWrapper">
                         <image-from-url :url="processPicSrc"></image-from-url>
                     </div>
                     <span
@@ -56,7 +56,7 @@
                 </Card>
             </Col>
             <Col span="12" style="padding: 10px;">
-                <div style="height: 33vmin" class="coolBox">
+                <div style="height: 41.8vmin" class="coolBox">
                     <Carousel v-bind="curCarousel"></Carousel>
                 </div>
             </Col>
@@ -131,6 +131,10 @@ export default {
     watch: {
         $route: function() {
             this.init();
+            this.condition.areaId = null;
+            this.condition.storeId = null;
+            this.condition.tunnelId = null;
+            this.nodePicState = 0;
         }
     },
 
@@ -375,5 +379,11 @@ export default {
 
 .objName {
     height: 4.4vmin;
+}
+.processWrapper {
+    height: 60vmin;
+    width: 90vmin;
+    position: absolute;
+    top: -32vmin;
 }
 </style>

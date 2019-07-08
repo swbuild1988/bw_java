@@ -1,6 +1,6 @@
 <template>
     <div  class="formBG">
-        <h2 class="formTitle">审批巡检计划</h2> 
+        <div class="formTitle">审批巡检计划</div> 
         <div class="formHeight">
         <Form :model="plans" :label-width="140" @submit.native.prevent>
             <FormItem label="计划编号：">
@@ -61,12 +61,11 @@
                 <Button type="success" class="cancelPoint" v-show="this.plans.result=='agree'">同意</Button>
                 <Button type="error" class="cancelPoint" style="margin-left: 8px" v-show="this.plans.result!='agree'">不同意</Button>
             </FormItem>
-            <FormItem style="text-align: center;margin-left: -140px">
+            <FormItem style="text-align: center;margin-left: -2vmin">
                 <Button @click="goBack()" type="gost">返回</Button>
             </FormItem>
         </Form>
         </div> 
-        <!-- <Icon class="goBack" type="chevron-left" size="30"  title="" color="#fff"></Icon> -->
     </div>
 </template>
 <script>
@@ -195,7 +194,6 @@ export default {
 }
 .todoLi .todoEidt{
     border: none;
-    box-shadow: 2px 2px 10px 0px #ccc;
     flex: 1;
     padding-left: 0.5vw;
 }
@@ -214,24 +212,7 @@ export default {
 }
 .formTitle{
     margin-top: -3.2vmin;
-}
-.formHeight{
-    height: 75vh;
-    overflow-y: auto;
-}
-.formHeight::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.formHeight::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.formHeight::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
+    font-size: 2.2vmin
 }
 .formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
     color: #00fff6;
@@ -249,11 +230,11 @@ export default {
     }
     .ivu-form-item >>> .ivu-form-item-label{
         width: 15vmin !important;
-        line-height: 2.5vmin;
+        line-height: 4.5vmin;
     }
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
-        line-height: 4.5vmin;
+        line-height: 5.5vmin;
     }
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
     .ivu-select.ivu-select-single >>> .ivu-select-selected-value,.ivu-select.ivu-select-single >>> .ivu-select-placeholder
@@ -261,9 +242,6 @@ export default {
         height: 4vmin;
         line-height: 4vmin;
         font-size: 1.4vmin;
-    }
-    .formTitle{
-        font-size: 2.2vmin;
     }
     textarea.ivu-input{
         height: 5.5vmin !important;

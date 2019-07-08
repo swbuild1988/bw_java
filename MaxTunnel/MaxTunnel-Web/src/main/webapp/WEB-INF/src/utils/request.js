@@ -21,7 +21,14 @@ export default async () => {
             // console.log('result_config', result_config)
             axios.defaults.baseURL = "/MaxTunnel-Web";
             Vue.prototype.ServerConfig = '/static';
+            // -----------------------------  更新3D的地址 -------------------------------------------------------------------
             Vue.prototype.SuperMapConfig = serverconfig.SuperMapConfig;
+            Vue.prototype.SuperMapConfig.BIM_SCP = serverconfig.SuperMapConfig.IP + serverconfig.SuperMapConfig.BIM_SCP;
+            Vue.prototype.SuperMapConfig.BIM_DATA = serverconfig.SuperMapConfig.IP + serverconfig.SuperMapConfig.BIM_DATA;
+            for ( let i = 0; i < serverconfig.SuperMapConfig.IMG_MAP_LIST.length; i++ ) {
+                Vue.prototype.SuperMapConfig.IMG_MAP_LIST[i] = serverconfig.SuperMapConfig.IP + serverconfig.SuperMapConfig.IMG_MAP_LIST[i];
+            }
+            // ---------------------------------------------------------------------------------------------------------------
             Vue.prototype.VMEntityConfig = serverconfig.VMEntityConfig;
             Vue.prototype.flyFilePathes = serverconfig.flyFilePathes;
             Vue.prototype.inspectionFlyFiles = serverconfig.inspectionFlyFiles;
@@ -29,6 +36,7 @@ export default async () => {
             Vue.prototype.pointLinght = serverconfig.pointLinght;
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
+            Vue.prototype.isTestModel = serverconfig.isTestModel;
             Vue.prototype.RouterBase = serverconfig.RouterBase;
             Vue.prototype.MQServerAddress = serverconfig.MQServerAddress;
             sessionStorage.setItem('ServerConfig', Vue.prototype.ServerConfig);
@@ -40,8 +48,15 @@ export default async () => {
             let result_config = await axios.get('/dist/static/serverconfig.json');
             console.log('result_config', result_config)
             Vue.prototype.ApiUrl = result_config.data.ApiUrl;
-            // Vue.prototype.ServerConfig = result_config.data.ApiUrl + '/dist/static';
-            Vue.prototype.SuperMapConfig = result_config.data.SuperMapConfig;
+            // -----------------------------  更新3D的地址 -------------------------------------------------------------------
+            let superMapConfig = result_config.data.SuperMapConfig;
+            Vue.prototype.SuperMapConfig = superMapConfig;
+            Vue.prototype.SuperMapConfig.BIM_SCP = superMapConfig.IP + superMapConfig.BIM_SCP;
+            Vue.prototype.SuperMapConfig.BIM_DATA = superMapConfig.IP + superMapConfig.BIM_DATA;
+            for ( let i = 0; i < superMapConfig.IMG_MAP_LIST.length; i++ ) {
+                Vue.prototype.SuperMapConfig.IMG_MAP_LIST[i] = superMapConfig.IP + superMapConfig.IMG_MAP_LIST[i];
+            }
+            // ---------------------------------------------------------------------------------------------------------------
             Vue.prototype.flyFilePathes = result_config.data.flyFilePathes;
             Vue.prototype.inspectionFlyFiles = result_config.data.inspectionFlyFiles;
             Vue.prototype.refreshTime = result_config.data.refreshTime;
@@ -49,6 +64,7 @@ export default async () => {
             Vue.prototype.RouterBase = result_config.data.RouterBase;
             Vue.prototype.MQServerAddress = result_config.data.MQServerAddress;
             Vue.prototype.pointLinght = result_config.data.pointLinght;
+            Vue.prototype.isTestModel = result_config.data.isTestModel;
             sessionStorage.setItem('ServerConfig', '/dist/static');
 
             // 获取VM的配置页

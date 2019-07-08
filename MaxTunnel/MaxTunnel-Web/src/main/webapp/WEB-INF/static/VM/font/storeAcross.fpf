@@ -87,7 +87,7 @@
 <angularSpeed>1</angularSpeed>
 </setting>
 </routestop>
-<routestop name="古城大街-20区-燃气舱" speed="0" excluded="False" viewType="camera">
+<routestop name="古城大街-20区-综合舱" speed="0" excluded="False" viewType="camera">
 <camera>
 <longitude>112.52031775</longitude>
 <latitude>37.70476326</latitude>

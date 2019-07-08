@@ -141,7 +141,13 @@
                                 v-if="item.datatypeId==1"
                                 @changeStatus="changeStatus"
                             ></SimulatedData>
-                            <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                            <switchTypeData 
+                                v-bind:propList="item"
+                                :control="item.control"
+                                v-else-if="item.datatypeId==2"
+                                @changeStatus="changeStatus"
+                            ></switchTypeData>
+                            <analogChannel v-bind:propList="item" :control="item.control" v-else @changeStatus="changeStatus"></analogChannel>
                         </Col>
                     </Row>
                 </Col>
@@ -156,6 +162,8 @@ import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
 import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
+import switchTypeData from '../../../../components/UM/MAM/SwitchTypeData'
+import analogChannel from "../../../../components/UM/MAM/AnalogChannelTypeData";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
@@ -316,7 +324,9 @@ export default {
         videoComponent,
         Carousel,
         checkSelect,
-        tabs
+        tabs,
+        switchTypeData,
+        analogChannel
     },
     mounted() {
         if (this.$route.query) {
@@ -540,6 +550,7 @@ export default {
 
         //定位设备切换开关量控制
         changeStatus(id, ObjVal, datatypeId, clickStatus) {
+            
             if (clickStatus === null) {
                 let param = {
                     id: id,
@@ -625,6 +636,7 @@ export default {
                         _this.areaLeath = a.areaLeath;
                         temp.ObjName = a.name;
                         temp.id = a.id;
+                        temp.control = a.control;
                         temp.clickStatus = false;
                         temp.ObjVal = false;
                         temp.objtypeId = _this.queryCondition.curDataType;
@@ -640,8 +652,11 @@ export default {
                                   );
                         if (a.datatypeId == 1) {
                             temp.ObjVal = a.curValue.toFixed(2);
-                        } else {
+                        } else if(a.datatypeId == 2) {
                             temp.ObjVal = a.curValue;
+                            
+                        }else {
+                            temp.ObjVal = [{'close':0,'open':1,'fault1':1,'fault2':0,'far':0}];
                         }
                         temp.objtypeName =
                             _this.curTunnelName + a.area + a.store;
@@ -868,6 +883,9 @@ export default {
     width: 20%;
     margin-top: 0.5%;
     margin-right: 3%;
+}
+.screenNumChange >>>　.ivu-poptip-inner {
+    background: transparent;
 }
 
 @media (min-width: 1921px) {

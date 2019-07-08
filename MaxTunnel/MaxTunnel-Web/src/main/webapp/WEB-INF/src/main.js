@@ -42,6 +42,11 @@ Vue.prototype.Log = {
     },
     error: function () {
         console.error.apply(console, arguments);
+    },
+    debug: function() {
+        if (Vue.prototype.isTestModel) {
+            console.debug.apply(console, arguments);
+        }
     }
 };
 

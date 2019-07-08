@@ -3,6 +3,7 @@
         <div class="formTitle" v-show="this.pageType!=1&&this.pageType!=2">添加缺陷</div>
         <div class="formTitle" v-show="this.pageType==1">缺陷详情</div>
         <div class="formTitle" v-show="this.pageType==2">编辑缺陷详情</div>
+        <div class="formHeight">
         <Form ref="defectDetails" :model="defectDetails" :rules="validateRules" :label-width="120" @submit.native.prevent>
             <FormItem label="所属管廊：" prop="tunnelId">
                 <Select v-model="defectDetails.tunnelId" :disabled="this.pageType==1" @on-change="changeTunnel()">
@@ -36,14 +37,15 @@
                     <Option v-for="(item,index) in type" :key="index" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-if="defectDetails.type==2&&this.pageType!=1" prop="objectId">
+            <FormItem label="对象名：" v-if="defectDetails.type==2&&this.pageType!=1">
                 <Select v-model="defectDetails.objectId" @on-change="getObj()">
                     <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-show="defectDetails.type==2&&this.pageType==1" prop="objectId">
+            <FormItem label="对象名：" v-show="defectDetails.type==2&&this.pageType==1" >
                 <Input v-model="defectDetails.objName" readonly></Input>
             </FormItem>
+            <div class="ivu-form-item-error-tip" v-show="choosedObjName">对象名不能为空</div>
             <FormItem label="危险等级：" prop="level">
                 <Select v-model="defectDetails.level" :disabled="this.pageType==1">
                     <Option v-for="(item,index) in level" :key="index" :value="item.val">{{item.key}}</Option>
@@ -65,6 +67,7 @@
                 <Button type="ghost" @click="goBack()">返回</Button>
             </div>
         </Form> 
+        </div>
     </div>   
 </template>
 <script>
@@ -128,9 +131,9 @@ export default {
                 type:[
                     { type: 'number', required: true, message: '请选择缺陷类型', trigger: 'change' }
                 ],
-                objectId:[
-                    { type: 'number', required: true, message: '请选择对象名', trigger: 'change' }
-                ],
+                // objectId:[
+                //     { type: 'number', required: true, message: '请选择对象名', trigger: 'change' }
+                // ],
                 level:[
                     { type: 'number', required: true, message: '请选择危险等级',trigger: 'change' }
                 ],
@@ -140,7 +143,8 @@ export default {
                 description:[
                     { required: true, message: '请输入缺陷描述', trigger: 'blur' }
                 ]
-            }
+            },
+            choosedObjName: false
         }    
     },
     computed:{
@@ -175,6 +179,7 @@ export default {
 		}
     },
     mounted(){
+        console.log('this.$route.params', this.$route.params)
         if(this.$route.params.type==4){
             this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
         }
@@ -259,6 +264,11 @@ export default {
                     this.objs = data
                 }
             })
+            if(this.defectDetails.objectId==null){
+                this.choosedObjName = true
+            }else{
+                this.choosedObjName = false
+            }
         },
 
         //提交缺陷
@@ -268,20 +278,26 @@ export default {
                 this.isDisable = false
                 this.$refs[name].validate((valid)=>{
                     if(valid){
-                        DefectService.addDefect(this.defectDetails).then(
-                            result => {
-                                this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
-                            },
-                            error => {
-                                this.Log.info(error)
-                            }
-                        )
-                        // this.axios.post('defects',(this.defectDetails)).then(response=>{
-                        //     this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
-                        // })
-                        // .catch(function(error) {
-                        //     console.log(error);
-                        // });
+                        console.log('this.defectDetails.type', this.defectDetails.type,'this.defectDetails.objectId', this.defectDetails.objectId)
+                        if(this.defectDetails.type==2&&this.defectDetails.objectId==null){
+                            this.choosedObjName=true
+                        }else{
+                            this.choosedObjName = false
+                            DefectService.addDefect(this.defectDetails).then(
+                                result => {
+                                    this.$router.push("/UM/defect/query/"+this.defectDetails.tunnelId);
+                                },
+                                error => {
+                                    this.Log.info(error)
+                                }
+                            ) 
+                        }
+                    }else{
+                        if(this.defectDetails.type==2&&this.defectDetails.objectId==null){
+                            this.choosedObjName = true
+                        }else{
+                            this.choosedObjName = false
+                        }
                     }
                 })
             },2000)

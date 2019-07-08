@@ -1,23 +1,8 @@
 <template>
     <div>
-        <!-- <Row class="conditions">
-            <Col span="9" offset="2">
-                <span>访客姓名:</span>
-                    <Input v-model="query.staffName" placeholder="请输入入廊人员姓名" style="width: 60%"></Input>
-            </Col>
-            <Col span="9">
-                <span>设备名称：</span>
-                    <Input v-model="query.equipmentName" placeholder="请输入设备名称" style="width: 60%"></Input>
-            </Col>
-            <Col span="3">
-                <Button type="primary" @click="search" icon="ios-search">查询</Button>
-            </Col>
-        </Row>-->
         <div class="main">
             <Table :columns="columns" :data="distributionList"></Table>
         </div>
-        <!--  <Page :total="page.pageTotal" :current="page.pageNum" :page-size="page.pageSize" show-sizer show-total placement="top" @on-change="handlePage" @on-page-size-change='handlePageSize' show-elevator :style="pageStyle">
-        </Page>-->
     </div>
 </template>
 <script>
@@ -30,10 +15,6 @@ export default {
             distributionList: [],
             visitorList: [],
             equipmentList: [],
-            // query: {
-            //     staffName: null,
-            //     equipmentName: null
-            // },
             curEquipment: null,
             columns: [
                 {
@@ -415,7 +396,6 @@ export default {
                 };
                 this.addEquipment.push(bind);
             }
-            // console.log(this.addEquipment)
         }
     }
 };
@@ -455,6 +435,13 @@ export default {
 }
 .main .ivu-table-wrapper {
     border: none;
+}
+.main >>> .ivu-select-selection {
+    background: transparent;
+    border-radius: 1vmin;
+}
+.main >>> .ivu-select-selected-value {
+    color: #fff;
 }
 .main .ivu-table-wrapper >>> .ivu-table {
     color: #ffffff !important;

@@ -287,7 +287,7 @@
                 this.$router.push({
                     name: name,
                     params: {
-                        timeType: timeType
+                        alarmLevel: 3
                     }
                 })
             },
@@ -377,7 +377,6 @@
                 )
             },
             getCurRoute(routeInfo) {
-                console.log('routeInfo',routeInfo)
 				let params = {}
 				params = {
                     polyline:{

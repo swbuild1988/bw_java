@@ -90,7 +90,13 @@ export default (containerId, viewer, domId, route) => ({
         },
         scene() {
             return this.viewer.scene;
-        }
+        },
+        // BIM_SCP(){
+        //     return this.SuperMapConfig.IP + this.SuperMapConfig.BIM_SCP;
+        // },
+        // BIM_DATA(){
+        //     return this.SuperMapConfig.IP + this.SuperMapConfig.BIM_DATA;
+        // }
     },
     data() {
         return {
@@ -104,7 +110,7 @@ export default (containerId, viewer, domId, route) => ({
                 this.init();
                 this.initProps();
                 this.flyManager(route);
-                this.getPointLinght();
+                if (this.pointLinght.isOpen) this.getPointLinght();
             })
             .catch(() => {
                 this.initUpdate(Vue.prototype[viewer], Vue.prototype[viewer].scene)
@@ -320,6 +326,9 @@ export default (containerId, viewer, domId, route) => ({
             }, _this.refreshCameraPosition.interval);
         },
         getPointLinght() {
+            this.scene.sun.show = false;
+            this.scene.globe.enableLighting = false;
+
             TunnelService.getPointLinghtData().then(sources => {
                 if (typeof sources != 'object' || !sources.length) return;
 
@@ -342,9 +351,6 @@ export default (containerId, viewer, domId, route) => ({
                 var cartographic = Cesium.Cartographic.fromDegrees(lon, lat, height);
                 var cartesian3 = ellipsoid.cartographicToCartesian(cartographic);
 
-                this.scene.sun.show = false;
-                this.scene.globe.enableLighting = false;
-
                 this.scene.lightSource._ambientLightColor = new Cesium.Color(0.4, 0.4, 0.4, 0.4);
 
                 var position = new Cesium.Cartesian3(cartesian3.x, cartesian3.y, cartesian3.z);
@@ -355,7 +361,8 @@ export default (containerId, viewer, domId, route) => ({
                     point: new Cesium.PointGraphics({
                         color: new Cesium.Color(1, 1, 1),
                         pixelSize: 4,
-                        outlineColor: new Cesium.Color(1, 1, 1)
+                        outlineColor: new Cesium.Color(1, 1, 1),
+                        scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0)
                     }),
                     position: pointPosition
                 }));

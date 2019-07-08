@@ -57,12 +57,17 @@
                             @click="speedUp"
                         ></Button>
                     </div>
-                    <TestSmViewer
+                    <SmViewer
                         @refreshCameraPosition="refreshCameraPosition"
                         ref="smViewer"
                         :openImageryProvider="false"
+                        @sendSectionDetails="getSectionDetails"
                         @showStorePosition="showStorePosition"
-                    ></TestSmViewer>
+                    ></SmViewer>
+                    <ShowSectionDetailData
+                        :showDetailsModel="sectionDetail.showFlag"
+                        :dataDetails="sectionDetail.data"
+                    ></ShowSectionDetailData>
                     <show-store-position v-bind:currPosition="storePosition"></show-store-position>
                 </div>
             </Col>
@@ -85,9 +90,10 @@
 import VideoComponent from "../../../../components/Common/Video/VideoComponent";
 import { VideoService } from "../../../../services/videoService";
 import { TunnelService } from "../../../../services/tunnelService";
-import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
+import SmViewer from "../../../../components/Common/3D/simple3DViewer";
 import { _getFieldValues } from "../../../../scripts/commonFun";
 import showStorePosition from "../../../../components/Common/Modal/showStorePosition";
+import ShowSectionDetailData from "../../../../components/Common/Modal/ShowSectionDetailData.vue";
 export default {
     data() {
         return {
@@ -126,6 +132,10 @@ export default {
                 tunnelName: "",
                 areaName: "",
                 storeName: ""
+            },
+            sectionDetail: {
+                showFlag: false,
+                data: []
             }
         };
     },
@@ -137,8 +147,8 @@ export default {
         this.$refs.smViewer.startCameraPositionRefresh();
     },
     components: {
-        // SmViewer,
-        TestSmViewer,
+        ShowSectionDetailData,
+        SmViewer,
         VideoComponent,
         showStorePosition
     },
@@ -164,7 +174,6 @@ export default {
         // 3D相机位置刷新
         refreshCameraPosition(position) {
             this.cameraPosition = position;
-            this.Log.info("get position:", this.cameraPosition);
             let _this = this;
             VideoService.getVICameras(this.cameraPosition).then(result => {
                 this.Log.info("get camera", result.video);
@@ -243,6 +252,14 @@ export default {
         },
         showStorePosition(position) {
             this.storePosition = position;
+        },
+        getSectionDetails(data) {
+            if (data) {
+                this.sectionDetail.showFlag = true;
+                this.sectionDetail.data = data.moInfo;
+            } else {
+                this.sectionDetail.showFlag = false;
+            }
         }
     },
     beforeDestroy() {
@@ -351,5 +368,8 @@ export default {
     background: linear-gradient(to right, #bcdca9, #6be421);
     border-color: #3e4f61;
     border-radius: 1vmin;
+}
+.section-details-content {
+    left: 30vmin;
 }
 </style>

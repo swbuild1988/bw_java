@@ -135,13 +135,19 @@
                 </Col>
                 <Col span="12" class="data" style="overflow-y:auto ">
                     <Row :gutter="16" style="margin-right: 2px;">
-                        <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
+                        <Col span="8" v-for="item in Obj" :value="item.name" :key="item.id">
                             <SimulatedData
                                 v-bind:Obj="item"
                                 v-if="item.datatypeId==1"
                                 @changeStatus="changeStatus"
                             ></SimulatedData>
-                            <showSwitchData v-bind:Obj="item" v-else @changeStatus="changeStatus"></showSwitchData>
+                            <switchTypeData 
+                                v-bind:propList="item"
+                                :control="item.control"
+                                v-else-if="item.datatypeId==2"
+                                @changeStatus="changeStatus"
+                            ></switchTypeData>
+                            <analogChannel v-bind:propList="item" :control="item.control" v-else @changeStatus="changeStatus"></analogChannel>
                         </Col>
                     </Row>
                 </Col>
@@ -156,6 +162,8 @@ import Modal from "../../../../components/Common/Modal/ShowMapDataModal.vue";
 import TestSmViewer from "../../../../components/Common/3D/simple3DViewer";
 import SimulatedData from "../../../../components/UM/MAM/ShowSimulatedData";
 import showSwitchData from "../../../../components/UM/MAM/ShowSwitchData";
+import switchTypeData from '../../../../components/UM/MAM/SwitchTypeData'
+import analogChannel from "../../../../components/UM/MAM/AnalogChannelTypeData";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EnumsService } from "../../../../services/enumsService";
 import { MonitorDataService } from "../../../../services/monitorDataService";
@@ -317,11 +325,11 @@ export default {
         videoComponent,
         Carousel,
         checkSelect,
-        tabs
+        tabs,
+        switchTypeData,
+        analogChannel
     },
     mounted() {
-        console.log('isShowComponent',this.isShowComponent)
-        console.log('tabsIndex',this.tabsIndex)
         if (this.$route.query) {
             this.tunnelId = this.$route.query.tunnelId;
             this.queryCondition.storeId = this.$route.query.storeId;
@@ -371,7 +379,7 @@ export default {
         //切换数据类型
         changeDataType() {
             this.getObjDetialData();
-        },
+        }, 
         //获取数据
         fentchData() {
             this.tunnelId =
@@ -580,33 +588,31 @@ export default {
             let _this = this;
             var Params = {
                 tunnelId: _this.queryCondition.tunnelId,
-                storeId:
-                    _this.queryCondition.storeId == 0
-                        ? null
-                        : _this.queryCondition.storeId,
-                areaId:
-                    _this.queryCondition.areaId == 0
-                        ? null
-                        : _this.queryCondition.areaId,
+                storeId: _this.queryCondition.storeId == 0 ? null : _this.queryCondition.storeId,
+                areaId: _this.queryCondition.areaId == 0 ? null : _this.queryCondition.areaId,
                 objtypeId: _this.queryCondition.curDataType
             };
             MonitorDataService.objDetailDatagrid(Params).then(
                 result => {
                     _this.objTableDate = result;
                     _this.Obj = [];
-                    // console.log(,result)
                     result.forEach(a => {
                         let temp = {};
                         _this.areaLeath = a.areaLeath;
-                        temp.ObjName = a.name;
-                        temp.id = a.id;
+                        temp = a
+                        // temp.areaId = a.areaId;
+                        // temp.storeId = a.storeId;
+                        // temp.tunnelId = a.tunnelId;
+                        // temp.name = a.name;
+                        // temp.id = a.id;
+                        temp.control = a.control;
                         temp.clickStatus = false;
                         temp.ObjVal = false;
                         temp.objtypeId = _this.queryCondition.curDataType;
-                        temp.datatypeId = a.datatypeId;
-                        temp.maxValue = a.maxValue;
-                        temp.minValue = a.minValue;
-                        temp.unit = a.unit;
+                        // temp.datatypeId = a.datatypeId;
+                        // temp.maxValue = a.maxValue;
+                        // temp.minValue = a.minValue;
+                        // temp.unit = a.unit;
                         temp.time =
                             a.time == undefined || a.time == ""
                                 ? ""
@@ -615,8 +621,11 @@ export default {
                                   );
                         if (a.datatypeId == 1) {
                             temp.ObjVal = a.curValue.toFixed(2);
-                        } else {
+                        } else if(a.datatypeId == 2) {
                             temp.ObjVal = a.curValue;
+                            
+                        }else {
+                            temp.ObjVal = [{'close':0,'open':1,'fault1':1,'fault2':0,'far':0}];
                         }
                         temp.objtypeName =
                             _this.curTunnelName + a.area + a.store;
@@ -648,7 +657,6 @@ export default {
             };
             MonitorDataService.getdataVideos(Params).then(result => {
                 if (result && result.length > 0) {
-                    console.log(Params, result);
                     this.curCarousel.videolist = result;
                 }
             });

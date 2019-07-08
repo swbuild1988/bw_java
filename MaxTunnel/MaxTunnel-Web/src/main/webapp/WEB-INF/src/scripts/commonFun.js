@@ -263,13 +263,12 @@ export function addBillboard(viewer, typeMode, messageTypes, showEntity) {
 export function addEntity(entiyParam) {
 
     if (typeof entiyParam != 'object') return;
-    
+
     let width = entiyParam.billboard.width || 30,
         height = entiyParam.billboard.height || 40,
         moId = entiyParam.moId || '0',
         Z = entiyParam.Z || Vue.prototype.VMConfig.entityHeight,
         show = entiyParam.show || false;
-        // console.log('entiyParam',entiyParam)
 
     let billboard = entiyParam.billboard != undefined ? {
             image: require('../assets/VM/' + entiyParam.billboard.image + '.png'),
@@ -283,7 +282,7 @@ export function addEntity(entiyParam) {
         label = entiyParam.label != undefined ? {
             text: entiyParam.label.text,
             font: '20px Helvetica',
-            showbackground:true,
+            showbackground: true,
             fillColor: Cesium.Color.BLUE,
             outlineColor: Cesium.Color.BLUE,
             verticalOrigin: entiyParam.label.verticalOrigin != undefined ? entiyParam.label.verticalOrigin : Cesium.VerticalOrigin.CENTER,
@@ -301,7 +300,6 @@ export function addEntity(entiyParam) {
         label,
         show
     })
-    // console.log(entiyParam.viewer.entities)
 }
 /**
  * 获取实体集
@@ -409,7 +407,6 @@ export function switchShowEntity(swtichParam) {
 export function doSqlQuery() {
     let args = [].slice.call(arguments); //类数组转换成数组
     let [viewer, SQL, dataUrl, onQueryComplete, processFailed, startLocation, endLocation, labels] = args; //解析数组内容,startLocation,endLocation主要用于section中label location计算
-    console.log(SQL)
     if (typeof onQueryComplete != 'function' || typeof processFailed != 'function') {
         return
     }
@@ -442,6 +439,7 @@ export function onQueryComplete(viewer) {
     let _this = this;
 
     return function (queryEventArgs) {
+        this.Log.info("查询成功", queryEventArgs)
         var selectedFeatures = queryEventArgs.originResult.features;
         viewer.entities.removeAll();
 
@@ -623,7 +621,7 @@ export function addLabel() {
 
                     result.moInfo.forEach(label => {
                         labels.push(label);
-                        lablesID.push( changStrLength(label.id,10) );
+                        lablesID.push(changStrLength(label.id, 10));
                     });
 
                     sqlQuery.call(_this, viewer, 'MOID in (' + lablesID.toString() + ')', dataUrl, onQueryComplete, processFailed, result.sectionInfo.startPoint, result.sectionInfo.endPoint, labels)
@@ -715,7 +713,7 @@ export function getSection(scene, viewer) {
                 ) {
                     //缓存sectionId用于判断下次取到section是否一致
                     _this.timer.sectionId = data.sectionInfo.id;
-                    
+
                     resolve(data)
                 }
             })
@@ -732,7 +730,6 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
             moTypeId = null,
             image = null,
             detectionObj = _this.VMConfig.detectionObj;
-
 
         for (let i = 0; i < selectedFeatures.length; i++) {
 
@@ -790,9 +787,9 @@ export function labelSqlCompleted(viewer, startLocation, endLocation, labels) {
 
 }
 export function replaceStr(string) {
-    if( typeof string !== 'string') return;
+    if (typeof string !== 'string') return;
 
-    return string.replace(/(,)/g,'"$1"');
+    return string.replace(/(,)/g, '"$1"');
 }
 /**
  * 得到数据集中的值

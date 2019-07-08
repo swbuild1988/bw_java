@@ -475,7 +475,7 @@
                         };
                         if (!cameraPosition.equals(_this.prePosition)) {
                             _this.prePosition = cameraPosition;
-
+                            _this.Log.info("current Position", cameraPosition)
                             _this.$emit("refreshCameraPosition", cameraPosition);
                         }
                     } catch (error) {
@@ -511,7 +511,7 @@
 
                     doSqlQuery.call(this,
                         viewer,
-                        'MOLD in ("' + changStrLength(obj.objectId, 10) + '")',
+                        'MOID in ("' + changStrLength(obj.objectId, 10) + '")',
                         this.SuperMapConfig.BIM_DATA,
                         addBillboard,
                         processFailed,

@@ -3,7 +3,7 @@
         <div class="boxBG smallBox">
             <MulitBarPosiNega v-bind="chartData"></MulitBarPosiNega>
         </div>
-        <div class="boxBG smallBox" style="padding: 1vmin;width: 43vw;">
+        <div class="boxBG smallBox" style="padding: 1vmin;width: 43vw;position: relative">
             <div class="queryCondition">
                 <div class="conWidth">
                     <span class="conditionTitle">设备名称：</span>
@@ -161,7 +161,7 @@ export default {
             },
             pageStyle: {
                 position: 'absolute',
-                right: '0.7vmin',
+                right: '2vmin',
                 bottom: '0.7vmin'
             },
             tableHeight: null
@@ -247,7 +247,7 @@ export default {
             this.goToMoudle1(id, types.pageType.Read);
         },
         getTableHieght(){
-            this.tableHeight = document.body.offsetHeight/100*26
+            this.tableHeight = document.body.offsetHeight/100*25
         }
     }
 }

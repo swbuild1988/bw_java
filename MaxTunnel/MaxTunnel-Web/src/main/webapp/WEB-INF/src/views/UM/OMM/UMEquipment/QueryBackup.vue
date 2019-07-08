@@ -99,21 +99,21 @@
                 <FormItem label="安装位置：" class="location">
                     <Row :gutter="8">
                         <Col span="7">  
-                            <FormItem prop="tunnelId">
+                            <FormItem prop="tunnelId" class="locationForm">
                                 <Select v-model="borrow.tunnelId" @on-change="changeTunnelId(borrow.tunnelId)">
                                     <Option v-for="(item, index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
                                 </Select>
                             </FormItem>  
                         </Col>
                         <Col span="7">
-                            <FormItem prop="areaId">
+                            <FormItem prop="areaId" class="locationForm">
                                 <Select v-model="borrow.areaId" @on-change="changeSection()">
                                     <Option v-for="(item, index) in areas" :value="item.id" :key="index">{{ item.name }}</Option>
                                 </Select>
                             </FormItem>
                         </Col>
                         <Col span="7">
-                            <FormItem prop="storeId">
+                            <FormItem prop="storeId" class="locationForm">
                                 <Select v-model="borrow.storeId" @on-change="changeSection()">
                                     <Option v-for="(item, index) in stores" :value="item.id" :key="index">{{ item.name }}</Option>
                                 </Select>
@@ -734,6 +734,9 @@ export default {
     .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 13vmin !important;
         line-height: 4.5vmin;
+    }
+    .locationForm.ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 0px !important;
     }
     .location >>> .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 0px !important;

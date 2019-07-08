@@ -420,8 +420,7 @@ export default {
     font-size: 1.66vmin;
 }
 .nodesPic {
-    width: 20vw;
-    height: 60vh;
+    max-width: 34vw;
     margin: 8vmin auto;
 }
 .tab >>> .ivu-page-next,

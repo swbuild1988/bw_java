@@ -79,6 +79,20 @@ import {PipeService} from '@/services/pipeService'
 export default {
     name: 'pipe-modification',
     data(){
+        const checkLength = (rule, value, callback) => {
+            if(value == '' || value == undefined || value == null){
+                callback(new Error('管廊长度不能为空'))
+            }else{
+                callback()
+            }
+        }
+        const checkDirection = (rule, value, callback) => {
+            if(value == '' || value == undefined || value == null || value == 0){
+                callback(new Error('请选择管廊方向'))
+            }else{
+                callback()
+            }
+        }
         return {
             staffs:[],
             companies:[],
@@ -109,7 +123,7 @@ export default {
                     { required: true, message: '管廊名不能为空', trigger: 'blur' }
                 ],
                 length: [
-                    { type: 'number', required: true, message: '管廊长度不能为空', trigger: 'blur' }
+                    { validator: checkLength, trigger: 'blur' }
                 ],
                 direction: [
                     { type: 'number', required: true, message: '管廊方向不能为空', trigger: 'blur' }
@@ -128,6 +142,7 @@ export default {
                 ]
             },
             tunnelDirection: [
+                { id: 0, direction: '无方向', pic: require('@/assets/CM/close.png'), value: 0 },
                 { id: 1, direction: '东北方向', pic: require('@/assets/CM/en.png') , value: 1 },
                 { id: 2, direction: '西南方向', pic: require('@/assets/CM/ws.png') , value: 2 },
                 { id: 3, direction: '西北方向', pic: require('@/assets/CM/wn.png') , value: 3 },
@@ -171,7 +186,6 @@ export default {
                 if (valid) {
                     this.formValidate.startPoint = this.startPoint.longitude+','+this.startPoint.latitude+','+this.startPoint.highness
                     this.formValidate.endPoint = this.endPoint.longitude+','+this.endPoint.latitude+','+this.endPoint.highness
-                    console.log(this.formValidate)
                     PipeService.saveEditTunnelInfo(this.formValidate).then(
                         result => {
                             this.$emit("sendMsgtoManage")

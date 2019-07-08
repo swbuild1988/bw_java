@@ -35,7 +35,7 @@
                     <!-- 人物圆点 -->
                     <div class="select-dropdown">
                         <Dropdown>
-                            <a href="javascript:void(0)">
+                            <a href="javascript:void(0)" class="outBox">
                                 <Badge :count="countNum">
                                     <Avatar
                                         :style="{background:'#f56a00'}"
@@ -58,7 +58,9 @@
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/personCenter/editPass'})"
                                 >个人中心</DropdownItem>
-                                <DropdownItem @click.native="isShowAlarm">告警</DropdownItem>
+                                <DropdownItem @click.native="isShowAlarm">告警
+                                    <span class="alarmCount">（{{alarmCount}}）</span>
+                                </DropdownItem>
                                 <!--<showUserInfo v-bind="userself"></showUserInfo>-->
                                 <DropdownItem divided @click.native="logout">注销</DropdownItem>
                             </DropdownMenu>
@@ -263,7 +265,7 @@ export default {
                     ]
                 }
             ],
-            countNum: 1,
+            // countNum: 1,
             showalarm: "1",
             alarmQueue: null,
             planQueue: null,
@@ -277,13 +279,27 @@ export default {
             saveAlarmContainer: [],
             alarmRouterList: [],
             alarmLevel: [],
-            tempAlarm: null
+            tempAlarm: null,
+            durations: [],
+            messageCount: 0,
+            alarmCount: 0
         };
     },
     components: {
         showAboutUs,
         showAlarm,
         ShowStartPlan
+    },
+    watch:{
+        'alarmCount': function(newVal, oldVal){
+            if(newVal>0){
+                let dom = document.getElementsByClassName('outBox')[0]
+                dom.setAttribute('class', 'blingbling')
+            }else{
+                let dom = document.getElementsByClassName('blingbling')[0]
+                dom.setAttribute('class', 'outBox')
+            }
+        }
     },
     computed: {
         routers: {
@@ -298,6 +314,10 @@ export default {
             set(value) {
                 this.$store.commit("setPlanData", value);
             }
+        },
+        countNum: function(){
+            let countNum = this.messageCount+this.alarmCount
+            return countNum
         }
     },
     mounted() {
@@ -306,6 +326,14 @@ export default {
         // setInterval(this.getCountInfoNum,1000)
         this.startListenMQ();
         this.noticeTop = window.innerHeight - window.innerHeight * 0.15;
+        UserService.getAlarmLevelTime().then(
+            result => {
+                this.durations = result
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
     },
     methods: {
         setUserself() {
@@ -369,12 +397,20 @@ export default {
             let _this = this;
             UserService.getMessageCount().then(
                 result => {
-                    _this.countNum = result;
+                    _this.messageCount = result
                 },
                 error => {
                     _this.Log.info(error);
                 }
             );
+            UserService.getAlarmCount().then(
+                result => {
+                    _this.alarmCount = result
+                },
+                error => {
+                    _this.Log.info(error);
+                }
+            )
         },
         findPath(url) {
             let tempUrl = url.split("/").filter(a => a != "");
@@ -398,9 +434,6 @@ export default {
                                     .toLowerCase()
                                     .indexOf(tempUrl[index].toLowerCase()) > -1
                         );
-
-                        // console.log(index, tempUrl[index]);
-                        // console.log(temp);
                         if (temp.length > 0) {
                             if (index < len - 1 && temp[0].children) {
                                 curItem = temp[0].children;
@@ -413,7 +446,6 @@ export default {
                     }
                 }
             });
-            // console.log(result);
             return result;
         },
         startListenMQ() {
@@ -441,15 +473,9 @@ export default {
                 this.warningNotice(content);
                 /* 滚动条以及不被遮挡 */
                 if (document.getElementsByClassName("ivu-notice-notice")) {
-                    let h =
-                        document.getElementsByClassName("ivu-notice")[0]
-                            .offsetHeight +
-                        document.getElementsByClassName("ivu-notice-notice")[0]
-                            .offsetHeight;
+                    let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight + document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
                     if (h > window.innerHeight) {
-                        document.getElementsByClassName(
-                            "ivu-notice"
-                        )[0].style.bottom = "2vmin";
+                        document.getElementsByClassName("ivu-notice")[0].style.bottom = "2vmin";
                     }
                 }
             }
@@ -466,6 +492,12 @@ export default {
             this.nodesModal.showFlag = false;
         },
         warningNotice(alarm) {
+            let durationTime = 0
+            this.durations.forEach(item=>{
+                if(alarm.alarmLevel==item.id){
+                    durationTime = Number(item.name)
+                }
+            })
             var _this = this;
             var des = "";
             _this.videoModal.alarmContainer.unshift(alarm);
@@ -482,7 +514,7 @@ export default {
             var config = {
                 title: alarm.alarmName,
                 desc: alarm.objectName + alarm.location,
-                duration: 0,
+                duration: durationTime,
                 onClose: function() {
                     let index = _this.videoModal.alarmContainer.indexOf(alarm);
                     if (index > -1) {
@@ -493,18 +525,9 @@ export default {
                     }
                     /* 滚动条以及不被遮挡 */
                     if (document.getElementsByClassName("ivu-notice-notice")) {
-                        let h =
-                            document.getElementsByClassName(
-                                "ivu-notice-notice"
-                            )[0].offsetHeight *
-                            (document.getElementsByClassName(
-                                "ivu-notice-notice"
-                            ).length -
-                                1);
+                        let h = document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight *(document.getElementsByClassName("ivu-notice-notice").length -1);
                         if (h < window.innerHeight) {
-                            document.getElementsByClassName(
-                                "ivu-notice"
-                            )[0].style.bottom = "";
+                            document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
                         }
                     }
                 }
@@ -579,7 +602,14 @@ export default {
             this.videoModal.modalPrams.state = true;
         },
         isShowAlarm() {
-            this.videoModal.modalPrams.state = true;
+            sessionStorage.setItem("refreshAddress", "/UM/DataAnalysis/QueryAlarmData")
+            sessionStorage.setItem("selectedName", "1-1")
+            this.$router.push({
+                name: '告警查询',
+                params: {
+                    alarmLevels: [3,4]
+                }
+            })
         }
     },
     beforeDestroy() {
@@ -710,6 +740,19 @@ export default {
     position: fixed;
     right: 6vmin;
 }
+.alarmCount{
+    color: red;
+    font-size: 1.8vmin;
+    font-weight: 800;
+}
+
+@-webkit-keyframes scaleout {
+    0% { -webkit-transform: scale(1.0) }
+    100% {-webkit-transform: scale(1.1);opacity: 0;}
+}
+.blingbling{
+    -webkit-animation: scaleout 1.5s infinite ease-in-out;
+  }
 
 /* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {
@@ -736,7 +779,7 @@ export default {
     overflow-y: auto;
 }
 .ivu-notice-with-desc.ivu-notice-with-icon .ivu-notice-title {
-    font-size: 2.1vmin !important;
+    font-size: 1.8vmin !important;
 }
 .ivu-notice::-webkit-scrollbar,
 .stepsBox::-webkit-scrollbar {

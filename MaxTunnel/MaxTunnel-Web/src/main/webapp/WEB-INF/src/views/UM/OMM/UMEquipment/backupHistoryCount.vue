@@ -69,7 +69,7 @@
                     <MultiBarChart v-bind="backupDetailData"></MultiBarChart>
                 </div>
             </Col>
-            <Col span="12" class="boxBG" style="margin-top: 1.5vh; padding: 1vmin;"  >
+            <Col span="12" class="boxBG backListTable" style="margin-top: 1.5vh; padding: 1vmin;"  >
                 <Row class="queryCondition">
                     <Col span="8">
                         <span class="conditionTitle">备品名称：</span>
@@ -458,6 +458,7 @@ export default {
                     startTime: this.outStorageConditions.startTime,
                     endTime: this.outStorageConditions.endTime,
                     status: true,
+                    name: this.outStorageConditions.name
                 };
                 return Object.assign({},param)
             },
@@ -636,7 +637,7 @@ export default {
         },
         getModalWidth(){
             this.modalWidth = document.body.offsetWidth *0.55
-            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/10-document.body.offsetHeight/100*5.5
+            this.tableHeight = this.$refs.MultiBarChartBox.offsetHeight-document.body.offsetHeight/100*15
         }
     }
 };
@@ -663,7 +664,7 @@ export default {
     text-align: right;
 }
 .takeBackUpList{
-    line-height: 4.5vmin;
+    line-height: 4vmin;
     list-style-type:none;
 }
 .takeBackUpUl{
@@ -671,19 +672,8 @@ export default {
     overflow-x: hidden;
     overflow-y: auto;
 }
-.takeBackUpUl::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
-}
-.takeBackUpUl::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
-}
-.takeBackUpUl::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
+.ivu-table-wrapper>>>.ivu-table-overflowY{
+    overflow-x: hidden;
 }
 .listUpdate{
     position: relative;
@@ -695,24 +685,24 @@ export default {
 .borrowName{
     width: 130px;
 }
-.ivu-table-wrapper{
+.backListTable .ivu-table-wrapper{
     border: none;
 }
-.ivu-table-wrapper>>>.ivu-table{
+.backListTable .ivu-table-wrapper>>>.ivu-table{
     color: #ffffff !important;
     background-color: #fffdfd00 !important;
 }
-.ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
+.backListTable .ivu-table-wrapper>>>.ivu-table:before,.ivu-table-wrapper>>>.ivu-table:after{
     background-color: #fffdfd00 !important;
 }
-.ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
+.backListTable .ivu-table-wrapper>>>.ivu-table th,.ivu-table-wrapper>>>.ivu-table td{
     background-color: #fffdfd00 !important;
     border-bottom: 1px solid #7d7d7d;
 }
-.pageBox .ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
+.backListTable .pageBox .ivu-page>>>.ivu-page-total,.backListTable .ivu-page>>>.ivu-page-options-elevator{
     color: #fff;
 }
-.ivu-table-wrapper>>>.ivu-table-border td, .ivu-table-wrapper>>>.ivu-table-border th{
+.backListTable .ivu-table-wrapper>>>.ivu-table-border td,.backListTable .ivu-table-wrapper>>>.ivu-table-border th{
     border-right: none;
 }
 .ivu-select,.ivu-select >>> .ivu-select-selection {
@@ -722,18 +712,18 @@ export default {
     color: #fff;
 }
 .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar{
-    width: 4px;
-    height: 4px;
+    width: 0.4vmin;
+    height: 0.4vmin;
 }
 .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-thumb{
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
-    background: rgba(0, 0, 0, 0.2)
+    border-radius: 1vmin;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #83a6ed;
 }
 .ivu-table-wrapper>>>.ivu-table-overflowY::-webkit-scrollbar-track{
-    border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
-    background: rgba(0, 0, 0, 0.1)
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 1vmin;
+    background: #ededed;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,
