@@ -137,7 +137,17 @@ export default {
         { key:2,val:'humidity'}, //湿度
         { key:3,val:'oxygen'}, //氧气
         { key:4,val:'sulfide'}, //硫化氢
-        { key:5,val:'methane' } //甲烷
+        { key:5,val:'methane' }, //甲烷
+        { key:6,val:'carbon' }, //一氧化碳
+        { key:7,val:'video' }, //视屏
+        { key:10,val:'fan' }, //风机
+        { key:11,val:'light' }, //照明
+        { key:41,val:'alarm_clock' }, //声光报警
+        { key:56,val:'electronic' }, //电子井盖
+        { key:57,val:'infrared' }, //红外
+        { key:58,val:'shutter' }, //百叶
+        { key:60,val:'smoke' }, //烟感
+        { key:61,val:'warm' } //温感
       ]
     };
   }
