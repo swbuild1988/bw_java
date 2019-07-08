@@ -55,7 +55,7 @@ export default {
                     sessionStorage.setItem("selectedName", "");
                     _this.clearStateParams();
                 }
-                // sessionStorage.setItem("refreshAddress", "");
+                sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 console.log(error);
