@@ -109,12 +109,12 @@ export default (containerId, viewer, domId, route) => ({
                 this.getLayer();
                 this.init();
                 this.initProps();
-                this.flyManager(route);
                 if (this.pointLinght.isOpen) this.getPointLinght();
             })
             .catch(() => {
                 this.initUpdate(Vue.prototype[viewer], Vue.prototype[viewer].scene)
             });
+        this.flyManager(route);
         this.paramUpdate();
 
     },
@@ -314,8 +314,8 @@ export default (containerId, viewer, domId, route) => ({
                     if (!cameraPosition.equals(_this.prePosition)) {
                         _this.prePosition = cameraPosition;
 
-                        _this.addLabel(_this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
-
+                        _this.addLabel(_this.SuperMapConfig.IP + _this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
+                        _this.showOrHideRelevantUnit(_this.prePosition);
                         _this.$emit("refreshCameraPosition", cameraPosition);
                     }
                 } catch (error) {
@@ -382,14 +382,8 @@ export default (containerId, viewer, domId, route) => ({
         showOrHideRelevantUnit({height}){
 
             let relevantUnits = this.viewer.entities._entities._array.filter( entity =>entity.messageType == "relevantUnit" );
- 
-            this.changeEntityUnitState(relevantUnits,height <= this.VMEntityConfig.criticalHeight,true) //隐藏实体
-            this.changeEntityUnitState(relevantUnits,height > this.VMEntityConfig.criticalHeight,false) //显示实体
-        },
-        changeEntityUnitState(units,judge,bool){
-            if(judge && units.some( unit =>unit._show == bool )){
-                units.forEach( unit => unit._show = !bool)
-            }
+
+            relevantUnits.forEach( unit => unit._show = height > this.VMEntityConfig.criticalHeight ? true : false) 
         }
     },
     beforeDestroy() {

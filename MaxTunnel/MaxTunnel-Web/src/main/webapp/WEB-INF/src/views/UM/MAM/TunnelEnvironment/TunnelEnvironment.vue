@@ -63,7 +63,7 @@ export default {
 
                     sessionStorage.setItem("selectedName", "");
                 }
-                // sessionStorage.setItem("refreshAddress", "");
+                sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 console.log(error);

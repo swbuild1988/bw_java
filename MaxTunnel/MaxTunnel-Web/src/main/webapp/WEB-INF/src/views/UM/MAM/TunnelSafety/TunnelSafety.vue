@@ -21,7 +21,6 @@ export default {
         ModulePage
     },
     created() {
-        
         this.curModule.leftTree = [];
         let _this = this;
         TunnelService.getTunnels().then(
@@ -57,7 +56,7 @@ export default {
                     sessionStorage.setItem("selectedName", "");
                 }
 
-                // sessionStorage.setItem("refreshAddress", "");
+                sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 console.log(error);

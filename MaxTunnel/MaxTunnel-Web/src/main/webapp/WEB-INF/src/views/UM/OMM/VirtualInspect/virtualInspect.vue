@@ -314,7 +314,7 @@ export default {
     /*overflow: hidden;*/
 }
 .options {
-    z-index: 10;
+    z-index: 901;
     position: absolute;
     top: 0;
     left: 32%;
@@ -368,6 +368,7 @@ export default {
     border-radius: 1vmin;
 }
 .section-details-content {
-    left: 30vmin;
+    left: 1vmin;
+    top: 1vmin;
 }
 </style>

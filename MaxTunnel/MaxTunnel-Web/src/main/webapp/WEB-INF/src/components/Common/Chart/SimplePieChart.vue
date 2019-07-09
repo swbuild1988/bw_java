@@ -46,6 +46,10 @@ export default {
 		legendColor: {
 			default: '#cccc',
 			type: String
+		},
+		size: {
+			default: "65%",
+			type: String
 		}
 	},
 	data() {
@@ -58,7 +62,7 @@ export default {
 			series: [
 				{
 					type: "pie",
-					radius: "65%",
+					radius: this.size,
 					center: ["62%", "58%"],
 					data: [],
 					color: this.seriesColor
@@ -116,12 +120,12 @@ export default {
 							}
 						},
 					},
-					labelLine: {
-						normal: {
-							length: 8,
-							length2: 0	
-						}
-					}
+					// labelLine: {
+					// 	normal: {
+					// 		length: 8,
+					// 		length2: 0	
+					// 	}
+					// }
 				}
 		});
 		// 加载新的参数

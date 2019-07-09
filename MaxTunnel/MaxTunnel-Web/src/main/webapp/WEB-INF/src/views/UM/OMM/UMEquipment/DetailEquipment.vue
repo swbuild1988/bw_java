@@ -126,7 +126,7 @@
             </div>
         </Col>
         <Col span="12" style="height:78vh;" ref="gisBox">
-            <!-- <TestSmViewer ref="smViewer" :openImageryProvider="false"></TestSmViewer> -->
+            <TestSmViewer ref="smViewer" :openImageryProvider="false"></TestSmViewer>
         </Col>
     </Row>
   </div>

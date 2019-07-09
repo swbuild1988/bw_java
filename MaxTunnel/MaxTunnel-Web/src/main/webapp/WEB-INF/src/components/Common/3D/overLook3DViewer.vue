@@ -372,14 +372,6 @@ export default {
                 }, personnelPosition.refreshTime);
             }
         },
-        showSpin() {
-            let { spin } = this;
-
-            spin.spinTimer = setTimeout(
-                () => (spin.spinShow = false),
-                progressTime * 1000
-            );
-        },
         switchCameraAngle() {
             let _this = this;
             let handler = new Cesium.ScreenSpaceEventHandler(
@@ -414,7 +406,8 @@ export default {
             if (entitie.length > 0) {
                 entitie.forEach(item => this.viewer.entities.remove(item));
             }
-        }
+        },
+        
     },
     beforeDestroy() {
         this.deleteEntity();
