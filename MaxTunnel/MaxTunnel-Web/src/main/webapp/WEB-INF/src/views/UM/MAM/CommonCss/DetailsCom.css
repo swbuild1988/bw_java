@@ -1,3 +1,10 @@
+.ivu-table-wrapper>>>.ivu-table{
+    padding-right: 2vmin;
+}
+.ivu-table-wrapper>>>.ivu-table-body{
+    overflow-y: auto;
+    height: 64vmin;
+}
 .ivu-table-wrapper>>>.ivu-table td,
 .ivu-table-wrapper>>>.ivu-table th,
 .ivu-table-wrapper>>>.ivu-table:after,
@@ -39,16 +46,19 @@
 .ivu-table-wrapper>>>.ivu-table-overflowX {
     overflow-x: hidden;
 }
-.data::-webkit-scrollbar {
+.data::-webkit-scrollbar,
+.ivu-table-wrapper>>>.ivu-table-body::-webkit-scrollbar {
     width: 1vmin; 
     height: 0.2vmin;
 }
-.data::-webkit-scrollbar-thumb {
+.data::-webkit-scrollbar-thumb,
+.ivu-table-wrapper>>>.ivu-table-body::-webkit-scrollbar-thumb {
     border-radius: 1vmin;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #83a6ed;
 }
-.data::-webkit-scrollbar-track {
+.data::-webkit-scrollbar-track,
+.ivu-table-wrapper>>>.ivu-table-body::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 1vmin;
     background: #ededed;
