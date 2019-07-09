@@ -376,11 +376,18 @@ export default (containerId, viewer, domId, route) => ({
         showOrHideRelevantUnit({height}){
 
             let relevantUnits = this.viewer.entities._entities._array.filter( entity =>entity.messageType == "relevantUnit" );
-
-            relevantUnits.forEach( unit => unit._show = height > this.VMEntityConfig.criticalHeight ? true : false) 
+ 
+            this.changeEntityUnitState(relevantUnits,height <= this.VMEntityConfig.criticalHeight,true) //隐藏实体
+            this.changeEntityUnitState(relevantUnits,height > this.VMEntityConfig.criticalHeight,false) //显示实体
+        },
+        changeEntityUnitState(units,judge,bool){
+            if(judge && units.some( unit =>unit._show == bool )){
+                units.forEach( unit => unit._show = !bool)
+            }
         }
     },
     beforeDestroy() {
         this.viewer.selectedEntityChanged.removeEventListener(this.operationEntity);
+        this.stopFly();
     },
 })
