@@ -450,7 +450,7 @@
             _this.curlineChart.parameters.queryPram.endTime = _this.historyPrams.endTime.getTime();
             _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
             _this.$refs.multiLine.fetchData();
-            _this.downLoadData()
+            // _this.downLoadData()
         },
 
         backToCurPage() {
@@ -659,4 +659,9 @@
         border-radius: 1vmin;
         background: #ededed;
     }
+    @media (min-width: 2200px){
+		.timeTitle{
+			font-size: 1.6vmin;
+		}
+	}
 </style>

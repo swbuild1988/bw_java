@@ -559,10 +559,5 @@
 	.queryCondition .ivu-btn-info{
 		background: linear-gradient(to left, #f61a1a, #f68380)
 	}
-	/* .ivu-select.ivu-select-multiple >>> .ivu-select-selection div:nth-child(0){
-		height: 3.2vmin;
-		overflow-y: auto;
-		background: #f68380;
-	} */
 </style>
 
