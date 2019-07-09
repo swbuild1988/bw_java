@@ -382,5 +382,6 @@ export default (containerId, viewer, domId, route) => ({
     },
     beforeDestroy() {
         this.viewer.selectedEntityChanged.removeEventListener(this.operationEntity);
+        this.stopFly();
     },
 })

@@ -120,12 +120,12 @@
                                         v-for="(item,index) in showVideosList"
                                         :key="item.id"
                                         :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]"
-                                    >
+                                    >{{index}}/{{item.id}}
                                         <div @click="selectScene(item)">
                                             <div
                                                 :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]"
                                                 v-if="videoStyle.show"
-                                            >
+                                            >{{index}}/{{item.id}}
                                                 <video-component
                                                     :index="index"
                                                     :video="item"
@@ -212,6 +212,9 @@ export default {
             this.isDisabled = true;
             this.conditions.storeId = null;
             this.conditions.areaId = null;
+        },
+        showVideosList(){
+            console.log('sssss',this.showVideosList)
         }
     },
     computed: {
@@ -288,6 +291,7 @@ export default {
         },
         search() {
             let _this = this;
+            console.log('ssss')
             VideoService.getCamerasByConditions(_this.conditions).then(
                 result => {
                     _this.cameraList = [];
