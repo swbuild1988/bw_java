@@ -39,7 +39,7 @@
                                         <Button type="default" @click="cancelPlan()">取消</Button>
                                     </Col>
                                     <Col span="12" v-for="(ele, index) in item.plans" :key="index">
-                                        <Button type="primary" @click="startPlan(item, ele.id, ele.processKey)">{{ele.name}}</Button>
+                                        <Button type="primary" @click="startPlan(item, ele.id, ele.processKey,ele.name)">{{ele.name}}</Button>
                                     </Col>
                                 </Row>
                             </section>
@@ -152,26 +152,34 @@
                 }
             },
             //点击预案名称显示预案步骤
-            startPlan(alarm, processValue, processKey) {
+            startPlan(alarm, processValue, processKey, name) {
+                this.$Modal.confirm({
+                    title: "启动预案",
+                    content: "<p>确定要启动"+name+"吗</p>",
+                    onOk: () => {
+                        let _this = this;
+                        // 启动预案
+                        this.axios.post("/emplans/start", {
+                            sectionId: alarm.sectionId,
+                            processValue: processValue
+                        }).then(res => {
+                            _this.Log.info("收到启动预案结果：", res)
+                            this.$set(alarm,'plan',{
+                                processInstanceId: res.data.data,
+                                status: "预案已启动",
+                                isFinished: false,
+                                processPicSrc: null
+                            })
 
-                let _this = this;
-                // 启动预案
-                this.axios.post("/emplans/start", {
-                    sectionId: alarm.sectionId,
-                    processValue: processValue
-                }).then(res => {
-                    _this.Log.info("收到启动预案结果：", res)
-                    this.$set(alarm,'plan',{
-                        processInstanceId: res.data.data,
-                        status: "预案已启动",
-                        isFinished: false,
-                        processPicSrc: null
-                    })
-
-                    // 启动预案监听
-                    _this.acceptPlanData();
-                    // _this.Log.info("alarmContainer", _this.alarmContainer);
+                            // 启动预案监听
+                            _this.acceptPlanData();
+                        });
+                    },
+                    onCancel: () => {
+                        this.$Message.info('预案已取消')
+                    }
                 });
+
 
             },
             // 连接成功回调函数
