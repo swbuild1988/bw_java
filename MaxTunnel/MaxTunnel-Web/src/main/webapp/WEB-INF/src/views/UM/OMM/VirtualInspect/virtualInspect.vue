@@ -65,7 +65,6 @@
                         @showStorePosition="showStorePosition"
                     ></SmViewer>
                     <ShowSectionDetailData
-                        :showDetailsModel="showDetailsModel"
                         :dataDetails="sectionDetailsData"
                     ></ShowSectionDetailData>
                     <show-store-position v-bind:currPosition="storePosition"></show-store-position>
@@ -133,8 +132,7 @@ export default {
                 areaName: "",
                 storeName: ""
             },
-            sectionDetailsData: [],
-            showDetailsModel: false
+            sectionDetailsData: []
         };
     },
     mounted() {
@@ -252,12 +250,8 @@ export default {
             this.storePosition = position;
         },
         getSectionDetails(data) {
-            if (data) {
-                this.showDetailsModel = true;
-                this.sectionDetailsData = data.moInfo;
-            }else {
-                this.showDetailsModel = false;
-            }
+            
+            this.sectionDetailsData = !data ? null : data.moInfo;
         }
     },
     beforeDestroy() {
