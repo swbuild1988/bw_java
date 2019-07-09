@@ -134,7 +134,7 @@ export default {
             }
         },
         addTitleImg(data,id){
-            console.log('sdsdsd')
+            
             let [ titleImgObject ] = this.titleImg.filter( item => item.key === id );
             let currImg = null;
             try{

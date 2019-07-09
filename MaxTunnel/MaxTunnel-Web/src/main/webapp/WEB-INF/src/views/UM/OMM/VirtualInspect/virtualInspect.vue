@@ -65,8 +65,8 @@
                         @showStorePosition="showStorePosition"
                     ></SmViewer>
                     <ShowSectionDetailData
-                        :showDetailsModel="sectionDetail.showFlag"
-                        :dataDetails="sectionDetail.data"
+                        :showDetailsModel="showDetailsModel"
+                        :dataDetails="sectionDetailsData"
                     ></ShowSectionDetailData>
                     <show-store-position v-bind:currPosition="storePosition"></show-store-position>
                 </div>
@@ -133,10 +133,8 @@ export default {
                 areaName: "",
                 storeName: ""
             },
-            sectionDetail: {
-                showFlag: false,
-                data: []
-            }
+            sectionDetailsData: [],
+            showDetailsModel: false
         };
     },
     mounted() {
@@ -255,10 +253,10 @@ export default {
         },
         getSectionDetails(data) {
             if (data) {
-                this.sectionDetail.showFlag = true;
-                this.sectionDetail.data = data.moInfo;
-            } else {
-                this.sectionDetail.showFlag = false;
+                this.showDetailsModel = true;
+                this.sectionDetailsData = data.moInfo;
+            }else {
+                this.showDetailsModel = false;
             }
         }
     },
