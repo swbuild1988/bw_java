@@ -11,7 +11,7 @@
                     <span class="downBtn">下载</span>
                 </p>
 			</div>-->
-			<div class="PDFBox" :style="{height: pdfHeight}">
+			<div class="PDFBox" style="height: 75vh;width: 61vw;">
 				<!-- <pdf
                     :src="src"
                     :page="currentPage"
@@ -29,11 +29,6 @@
 import pdf from "vue-pdf";
 export default {
 	components: { pdf },
-	props: {
-		pdfHeight: {
-			default: '75vh'
-		}
-	},
 	data() {
 		return {
 			// currentPage: 0, // pdf文件页码

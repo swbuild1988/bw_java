@@ -1,5 +1,5 @@
 <template>
-  	<div class='MultiLine' :id=id></div>
+  	<div ref="element" class='MultiLine' :id=id></div>
 </template>
 
 <script>
@@ -27,18 +27,12 @@
 				series: [],
 				option: {
 					title: {
-						text: ''
+						text: '',
+						padding: 15
 					},
 					tooltip: {
 						trigger: 'axis'
 					},
-					legend: {
-						data: [],
-						textStyle: { 
-							color: '#fff'
-						}
-					},
-					grid: {},
 					toolbox: {
 						show: true,
 						feature: {
@@ -47,26 +41,6 @@
 					},
 					dataZoom: {
 						type: 'inside'
-					},
-					xAxis: {
-						type: 'category',
-						boundaryGap: false,
-						data: [],
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff'
-							},                            
-						}
-					},
-					yAxis: {
-						type: 'value',
-						axisLabel: {
-							show: true,
-							textStyle: {
-								color: '#fff'
-							},                            
-						}
 					},
 					series: []
 				},
@@ -86,6 +60,46 @@
 				_this.myChart = _this.$echarts.init(
 					document.getElementById(_this.id)
 				);
+				_this.option = {
+					grid: {
+						left: "3%",
+						right: "4%",
+						bottom: "5%",
+						top: '10%',
+						containLabel: true
+					},
+					legend: {
+						data: [],
+						textStyle: { 
+							fontSize: _this.getFontSize('3%') ,
+							color: '#fff'
+						},
+						padding: _this.getFontSize('6%')
+					},
+					xAxis: {
+						type: 'category',
+						boundaryGap: false,
+						data: [],
+						axisLabel: {
+							show: true,
+							textStyle: {
+								color: '#fff',
+								fontSize : _this.getFontSize('3%')
+							},                            
+						}
+					},
+					yAxis: {
+						type: 'value',
+						axisLabel: {
+							show: true,
+							textStyle: {
+								color: '#fff',
+								fontSize : _this.getFontSize('3%'),
+								top: 10
+							},                            
+						}
+					},
+				}
 				// 加载默认参数
 				_this.myChart.setOption(_this.option);
 				// 加载新的参数
@@ -131,6 +145,20 @@
 				// setInterval(() => {
 				//   _this.fetchData(_this.requestUrl);
 				// }, _this.intervalTime)
+			},
+			getFontSize(val) {
+				if (typeof (val) == 'number') return val;
+
+				if (typeof (val) == 'string') {
+
+					if (val.indexOf('%') > 0) {
+						var tmp = parseFloat(val.replace('%', '')) / 100;
+						let height = this.$refs.element.offsetHeight;
+						return Math.round(height * tmp);
+					}
+				}
+
+				return 0;
 			}
 		}
 	};
