@@ -18,7 +18,6 @@ public enum ObjectType {
     VIDEO("视频", 7, 6, 7, ""),
     DISTRIBUTET("分布式温度", 8, 1, 1, ""),
     ROBOT("机器人", 9, 6, 97, ""),
-    FAN("风机", 10, 4, 3, "", true),
     LIGHT("照明", 11, 1, 3, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
     LIQUID("液位仪", 21, 1, 1, ""),
@@ -46,6 +45,7 @@ public enum ObjectType {
     INFRARED("红外", 57, 3, 3, ""),
     BLINDS("百叶", 58, 4, 3, "", true),
     PUMP("水泵", 59, 4, 3, "", true),
+    FAN("风机", 10, 4, 3, "", true),
 
     SMOKE_SENSATION("烟感", 60, 5, 1, null),
     WARM_SENSATION("温感", 61, 5, 1, null),
@@ -179,7 +179,7 @@ public enum ObjectType {
                 return dl;
             }
         }
-        return null;
+        return ObjectType.NONE;
     }
 
 

@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.controller.test;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
@@ -12,17 +13,21 @@ import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
+import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentModelService;
+import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +63,10 @@ public class TestController {
     private AlarmService alarmService;
     @Autowired
     private TunnelLightService tunnelLightService;
+    @Autowired
+    private EquipmentService equipmentService;
+    @Autowired
+    private EquipmentModelService equipmentModelService;
 
     /**
      * 测试添加每个管廊的moid和总能耗
@@ -225,7 +234,7 @@ public class TestController {
         Alarm alarm = new Alarm();
         alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
-        
+
         int i = MathUtil.getRandomInt(1, 4);
         alarm.setAlarmLevel(i);
         alarm.setAlarmName("温度测试告警");
@@ -253,6 +262,73 @@ public class TestController {
 
         for (int i = 0; i < storeIds.size(); i++) {
             tunnelLightService.createTunnelLights(tunnelId, null, storeIds.get(i));
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+
+    @RequestMapping(value = "test/add_equipments", method = RequestMethod.GET)
+    public JSONObject addEquipments() {
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+        for (MeasObj measObj : measObjs) {
+            Equipment equipment = new Equipment();
+            equipment.setName(measObj.getName());
+            // 设定设备类型
+            int typeId = 0;
+            int modelId = 0;
+            if (measObj.getObjtypeId() == null) continue;
+            switch (ObjectType.getEnum(measObj.getObjtypeId())) {
+                case CO:
+                case CH4:
+                case H2S:
+                case OXYGEN:
+                case TEMPERATURE:
+                case HUMIDITY:
+                case LIQUID:
+                    typeId = 3;
+                    modelId = 4;
+                    break;
+
+                case ALTEROR:
+                case ENTRANCE_GUARD:
+                case ELECTRONIC_COVERS:
+                case INFRARED:
+                    typeId = 1;
+                    modelId = 1;
+                    break;
+
+                case VIDEO:
+                    typeId = 2;
+                    modelId = 3;
+                    break;
+
+                case BLINDS:
+                case PUMP:
+                case FAN:
+                    typeId = 4;
+                    modelId = 21;
+                    break;
+
+                default:
+                    continue;
+            }
+            equipment.setType(typeId);
+            equipment.setAssetNo("SN_" + measObj.getId().toString());
+            equipment.setCrtTime(new Date());
+            equipment.setRunTime(new Date());
+            equipment.setAlarmNo(0);
+            equipment.setStatus(1);
+            equipment.setTunnelId(measObj.getTunnelId());
+            equipment.setVenderId(3);
+            equipment.setModelId(modelId);
+            equipment.setObjId(measObj.getId());
+            equipment.setSectionId(measObj.getSectionId());
+            equipment.setQaTerm("11");
+            equipment.setRatedVoltage("220V");
+            equipment.setRatedVoltage("11");
+            equipment.setFactory("11");
+            equipment.setBrand("11");
+            equipmentService.addEquipment(equipment);
         }
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
