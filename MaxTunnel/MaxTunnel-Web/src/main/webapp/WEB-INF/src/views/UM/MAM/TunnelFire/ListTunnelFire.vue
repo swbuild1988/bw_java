@@ -28,7 +28,6 @@
                         v-if="note.areaName && note.storeName"
                     >{{note.areaName + " " + note.storeName}}</div>
                     <ShowSectionDetailData
-                        :showDetailsModel="showDetailsModel"
                         :dataDetails="sectionDetailsData"
                     ></ShowSectionDetailData>
                 </div>

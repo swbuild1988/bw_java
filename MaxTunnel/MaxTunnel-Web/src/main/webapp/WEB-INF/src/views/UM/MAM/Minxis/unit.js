@@ -39,7 +39,7 @@ export const commonFlyFn = {
                 storeName: null
             },
             sectionDetailsData: [],
-            showDetailsModel: false
+            // showDetailsModel: false
         }
     },
     methods: {
@@ -184,12 +184,13 @@ export const commonFlyFn = {
         },
         getSectionDetails(data) {
             // this.sectionDetailsData.splice(0);//清空数组
-            if (data) {
-                this.showDetailsModel = true;
-                this.sectionDetailsData = data.moInfo;
-            }else {
-                this.showDetailsModel = false;
-            }
+            // if (data) {
+            //     this.showDetailsModel = true;
+            //     this.sectionDetailsData = data.moInfo;
+            // }else {
+            //     this.showDetailsModel = false;
+            // }
+            this.sectionDetailsData = !data ? null : data.moInfo;
         }
     },
 }

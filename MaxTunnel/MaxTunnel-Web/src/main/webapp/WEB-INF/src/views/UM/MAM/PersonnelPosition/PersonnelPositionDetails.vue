@@ -375,6 +375,7 @@ export default {
     beforeDestroy() {
         clearInterval(this.refresh.id);
         this.refresh.id = null;
+        this.removePolyline()
     }
 };
 </script>

@@ -26,10 +26,6 @@ export default {
             type: Array,
             default: []
         },
-        showDetailsModel: {
-            type: Boolean,
-            default: false
-        },
         pageSize: {
             default: 10
         }
@@ -41,7 +37,8 @@ export default {
             totalPage: 1,
             loopTimerId: null,
             loopTime: 2000,
-            middleData: []
+            middleData: [],
+            showDetailsModel:false
         };
     },
     computed:{
@@ -50,9 +47,10 @@ export default {
         }
     },
     watch: {
-        showDetailsModel(val){
+        dataDetails(val){
             this.curPage = 1;
             val ? this.init() : this.clearTimer();
+            this.showDetailsModel = val ? true : false;
         }
     },
     mounted() {
@@ -99,6 +97,7 @@ export default {
                 switch (data[i].dataType) {
                     case 1:
                         currData = data[i];
+                        this.addTitleImg(currData,data[i].objectType);
                         break;
                     case 2:
                     case 3:
@@ -111,18 +110,21 @@ export default {
                                 : "故障",
                             unit: null
                         }
+                        this.addTitleImg(currData,data[i].objectType);
                         break;
                     case 7:
-                        if (this.searchLastIndex(this.dataDetails, 7) !== i)
+                        if (this.searchLastIndex(this.dataDetails, 7) !== i){
                             break;
+                        }
                         currData = {
                             name: data[i].name,
                             cv: this.searchDataTypeLenght(this.dataDetails, 7),
                             unit: "个"
                         }
+                        this.addTitleImg(currData,data[i].objectType);
                         break;
                 }
-                this.addTitleImg(currData,data[i].objectType);
+                // this.addTitleImg(currData,data[i].objectType);
             }
         },
         searchDataTypeLenght(array, dataType) {
@@ -134,7 +136,7 @@ export default {
             }
         },
         addTitleImg(data,id){
-            console.log('sdsdsd')
+            
             let [ titleImgObject ] = this.titleImg.filter( item => item.key === id );
             let currImg = null;
             try{

@@ -263,7 +263,7 @@ export default {
                 color: this.getCesiumColor(point.color),
                 outlineColor: Cesium.Color.WHITE,
                 outlineWidth: point.outlineWidth,
-                scaleByDistance: new Cesium.NearFarScalar(0, 1, 100000, 0)
+                scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0)
               }
             }
           : {};

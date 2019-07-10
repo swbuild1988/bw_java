@@ -189,7 +189,6 @@ export default {
             this.isDisable = true
             setTimeout(()=>{
                 this.isDisable = false
-                    console.log("addEnterGalleryApplication.visitorInfoNames", this.addEnterGalleryApplication.visitorInfoNames)
                     this.checkVisitorInfo()
                     this.$refs[name].validate((valid) => {
                         if(valid){
@@ -368,6 +367,16 @@ ul li{
         font-size: 1.4vmin;
         right: 0.4vmin;
         transition: all .2s linear;
+    }
+    .outSiderBox{
+        font-size: 1.4vmin;
+    }
+    .ivu-input {
+        border: 0.1vmin solid #dddee1;
+        border-radius: 0.4vmin;
+        height: 3.2vmin;
+        line-height: 3.2vmin;
+        padding: 0.4vmin 0.7vmin;
     }
 }
 </style>

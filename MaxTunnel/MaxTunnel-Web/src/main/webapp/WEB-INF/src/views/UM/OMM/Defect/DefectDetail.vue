@@ -325,7 +325,7 @@ export default {
 </script>
 <style scoped>
 .ivu-form.ivu-form-label-right{
-    width: 33vw;
+    width: 740px;
     margin: 1vmin auto;
     padding: 1vmin 2vmin;
     margin-top: 3vmin;

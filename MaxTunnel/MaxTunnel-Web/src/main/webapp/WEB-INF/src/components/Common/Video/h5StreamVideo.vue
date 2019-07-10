@@ -37,6 +37,8 @@ export default {
             required: true
         }
     },
+    watch:{
+    },
     directives: {
         // 组件销毁前事件
         cancellation: {
@@ -75,8 +77,8 @@ export default {
             };
         }
     },
-    watch: {},
     mounted() {
+        console.log('video00000000')
         this.Log.info("h5stream mounted!");
         this.getVideoDom();
         this.isTextShow = this.text ? true : false;
