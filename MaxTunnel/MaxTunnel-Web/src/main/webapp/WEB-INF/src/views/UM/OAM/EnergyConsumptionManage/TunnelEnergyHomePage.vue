@@ -68,7 +68,7 @@
                             :columns="tableColumn"
                             :data="tableData"
                             ref="table"
-                            :height="tableHeight"
+                            style="height: 28vmin"
                         ></Table>
                     </Col>
                 </Row>
@@ -133,6 +133,8 @@ h1 {
 .table {
     background: url("../../../../assets/UM/energyBorder2.png") no-repeat;
     background-size: 100% 100%;
+    padding: 1vmin;
+    height: 34vmin;
 }
 .table .ivu-table-wrapper {
     border: none;
