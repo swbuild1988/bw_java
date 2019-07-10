@@ -288,7 +288,7 @@ end OMM_MULTI_FILE_TG;
 /
 alter trigger OMM_MULTI_FILE_TG enable;
 
-
+-- 管廊光源表
 -- prompt Creating T_COMMON_TUNNEL_LIGHT
 create table T_COMMON_TUNNEL_LIGHT
 (
@@ -323,5 +323,5 @@ begin
 end COMMON_TUNNEL_LIGHT_TG;
 /
 alter trigger COMMON_TUNNEL_LIGHT_TG enable;
-
+ 
 

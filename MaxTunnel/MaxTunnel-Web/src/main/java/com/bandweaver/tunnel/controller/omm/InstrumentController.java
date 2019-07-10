@@ -308,6 +308,8 @@ public class InstrumentController {
 	 * @param status 备品状态
 	 * @param staffId 借用人id
 	 * @param returnId 归还人id
+	 * @param staffName 借用人,支持模糊查询
+	 * @param returnName 归还人,支持模糊查询
 	 * @param startTime 借用开始时间
 	 * @param endTime 借用结束时间
 	 * @param retStaTime 归还开始时间
@@ -335,6 +337,8 @@ public class InstrumentController {
 	 * @param status 备品状态
 	 * @param staffId 借用人id
 	 * @param returnId 归还人id
+	 * @param staffName 借用人,支持模糊查询
+	 * @param returnName 归还人,支持模糊查询
 	 * @param startTime 借用开始时间
 	 * @param endTime 借用结束时间
 	 * @param retStaTime 归还开始时间
@@ -344,9 +348,26 @@ public class InstrumentController {
 	 * @Date 2018年12月3日
 	 */
 	@RequestMapping(value = "instrument-records", method = RequestMethod.POST)
-	public JSONObject getInstrumentRecordDtoByCondition(@RequestBody InstrumentRecordVo vo) {
+	public JSONObject getInstrumentRecordDtoByCondition(@RequestBody(required = false) InstrumentRecordVo vo) {
 		List<InstrumentRecordDto> list = instrumentRecordService.getInstrumentRecordDtoByCondition(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
+	}
+	
+	/**
+	 * 返回某一仪表工具最新一条出库的信息
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年7月5日
+	 */
+	@RequestMapping(value = "instrument-records/{id}/new", method = RequestMethod.GET)
+	public JSONObject getNewInstrumentRecordDto(@PathVariable("id") Integer id) {
+		InstrumentRecordVo vo = new InstrumentRecordVo();
+		vo.setInstrumentId(id);
+		List<InstrumentRecordDto> list = instrumentRecordService.getInstrumentRecordDtoByCondition(vo);
+		InstrumentRecordDto dto = null;
+		if(list != null && list.size() > 0)
+			dto = list.get(0);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,dto);
 	}
 	
 	/**

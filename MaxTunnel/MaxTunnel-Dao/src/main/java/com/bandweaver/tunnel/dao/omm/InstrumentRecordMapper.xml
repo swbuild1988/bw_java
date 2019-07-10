@@ -104,6 +104,12 @@
             <if test="returnId != null">
                 and a.return_id = #{returnId}
             </if>
+            <if test="staffName != null and staffName.trim() != ''">
+                and instr(e.name,#{staffName})>0
+            </if>
+            <if test="returnName != null and returnName.trim() != ''">
+                and instr(f.name,#{returnName})>0
+            </if>
             <if test="startTime != null">
                 and a.borrow_time <![CDATA[>=]]>#{startTime}
             </if>
@@ -117,6 +123,7 @@
                 and a.return_time <![CDATA[<=]]>#{retEndTime}
             </if>
         </where>
+        order by a.borrow_time desc
     </select>
 
 	<select id="getInstrumentRecordDtoById" resultMap="instrumentRecordDtoMap">

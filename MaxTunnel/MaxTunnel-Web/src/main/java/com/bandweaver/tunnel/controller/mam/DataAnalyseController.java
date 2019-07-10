@@ -302,5 +302,31 @@ public class DataAnalyseController {
     	
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, json);
     }
-    
+    /**
+     * 查询AI的监测对象历史数据
+     * @param ids 监测对象id数组
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月4日
+     */
+    @RequestMapping(value = "data-analyse/measvalue/history/data",method = RequestMethod.POST)
+    public JSONObject downloadExcel(@RequestBody JSONObject reqJson) {
+    	CommonUtil.hasAllRequired(reqJson, "ids,startTime,endTime");
+    	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
+    	
+    	List<MeasValueAI> ais = measValueAIService.getListByMoIdsAndTime(vo.getIds(), vo.getStartTime(), vo.getEndTime());
+    	List<JSONObject> list = new ArrayList<>();
+    	for(MeasValueAI ai : ais) {
+    		JSONObject obj = new JSONObject();
+    		MeasObj measObj = measObjModuleCenter.getMeasObj(ai.getObjectId());
+    		obj.put("name", measObj.getName() + measObj.getId());
+    		obj.put("time", ai.getTime());
+    		obj.put("cv", ai.getCv());
+    		list.add(obj);
+    	}
+    	
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
 }

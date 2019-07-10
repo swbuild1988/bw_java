@@ -227,11 +227,11 @@
                 and a.process_instance_id = #{processInstanceId}
             </if>
             <if test="startTime != null">
-                and a.inspect_time <![CDATA[>=]]>
+                and a.create_time <![CDATA[>=]]>
                 #{startTime}
             </if>
             <if test="endTime != null">
-                and a.inspect_time <![CDATA[<=]]>
+                and a.create_time <![CDATA[<=]]>
                 #{endTime}
             </if>
             <if test="isFinished != null">

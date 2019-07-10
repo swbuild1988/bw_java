@@ -122,6 +122,14 @@ public enum ProcessTypeEnum {
         this.range = range;
     }
 
+    public static ProcessTypeEnum[] getInspectionList() {
+        return new ProcessTypeEnum[]{
+        		INPECTION_PLAN,
+        		INPECTION_TASK,
+        		MAINTENANCE_ORDER,
+        		REQ_HISTORY
+        };
+    }
 
     public static ProcessTypeEnum[] getEmPlanList() {
         return new ProcessTypeEnum[]{
