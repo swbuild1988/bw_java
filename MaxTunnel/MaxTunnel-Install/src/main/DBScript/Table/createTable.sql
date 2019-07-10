@@ -323,5 +323,8 @@ begin
 end COMMON_TUNNEL_LIGHT_TG;
 /
 alter trigger COMMON_TUNNEL_LIGHT_TG enable;
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes

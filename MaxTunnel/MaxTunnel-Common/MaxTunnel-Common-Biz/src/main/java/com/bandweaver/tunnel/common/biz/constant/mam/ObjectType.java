@@ -18,10 +18,20 @@ public enum ObjectType {
     VIDEO("视频", 7, 6, 7, ""),
     DISTRIBUTET("分布式温度", 8, 1, 1, ""),
     ROBOT("机器人", 9, 6, 97, ""),
-    FAN("风机", 10, 4, 3, "", true),
     LIGHT("照明", 11, 1, 3, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
-    LIQUID("液位仪", 21, 1, 1, ""),
+    LIQUID("液位仪", 21, 1, 1, "mm"),
+
+    // 复杂类型
+    FAN("风机", 10, 4, 200, "", true),
+    EMERGENCY_LIGHT("应急照明", 12, 1, 200, "", true),
+    ELECTRONIC_COVERS("电子井盖", 56, 3, 200, "", true),
+    BLINDS("电动百叶", 58, 4, 200, "", true),
+    PUMP("排水泵", 59, 4, 200, "", false),
+    ELECTRICITY_METER0("电子仪表", 30, 1, 200, ""),
+	
+	DEPLOY_DEFENCE("布防", 63, 3, 200, ""),
+	LINKAGE("联动", 64, 3, 200, ""),
 
     //普通类电表
     ELECTRICITY_METER1("风机类电表", 31, 6, 1, ""),
@@ -34,7 +44,7 @@ public enum ObjectType {
     //其他类电表
     ELECTRICITY_METER7("其他类电表", 37, 6, 1, ""),
 
-    ALTEROR("声光报警", 41, 3, 3, ""),
+    ALTEROR("声光报警", 41, 3, 2, ""),
 
     SETTLE("沉降", 51, 2, 97, ""),
     EXPANSION_JOINT("伸缩缝", 52, 2, 97, ""),
@@ -42,10 +52,7 @@ public enum ObjectType {
     EXTERNAL_WATER_PRESSURE("外水压力", 54, 2, 97, ""),
 
     ENTRANCE_GUARD("门禁", 55, 3, 3, ""),
-    ELECTRONIC_COVERS("电子井盖", 56, 3, 3, "", true),
-    INFRARED("红外", 57, 3, 3, ""),
-    BLINDS("百叶", 58, 4, 3, "", true),
-    PUMP("水泵", 59, 4, 3, "", true),
+    INFRARED("红外", 57, 3, 2, ""),
 
     SMOKE_SENSATION("烟感", 60, 5, 1, null),
     WARM_SENSATION("温感", 61, 5, 1, null),
