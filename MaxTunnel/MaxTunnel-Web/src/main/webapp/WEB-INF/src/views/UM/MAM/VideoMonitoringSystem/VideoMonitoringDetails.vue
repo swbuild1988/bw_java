@@ -117,15 +117,15 @@
                                 <Row>
                                     <Col
                                         :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)"
-                                        v-for="(item,index) in showVideosList"
+                                        v-for="(item,index) in tempVideoList"
                                         :key="item.id"
                                         :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]"
-                                    >{{index}}/{{item.id}}
+                                    >
                                         <div @click="selectScene(item)">
                                             <div
                                                 :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]"
                                                 v-if="videoStyle.show"
-                                            >{{index}}/{{item.id}}
+                                            >
                                                 <video-component
                                                     :index="index"
                                                     :video="item"
@@ -198,7 +198,8 @@ export default {
             clicked: {
                 prev: false,
                 next: false
-            }
+            },
+            tempVideoList:[]
         };
     },
     components: { VideoControl, VideoComponent },
@@ -214,7 +215,12 @@ export default {
             this.conditions.areaId = null;
         },
         showVideosList(){
-            console.log('sssss',this.showVideosList)
+            this.tempVideoList = [];
+
+            this.$nextTick(function(){
+                this.tempVideoList = this.showVideosList;
+            })
+            
         }
     },
     computed: {
