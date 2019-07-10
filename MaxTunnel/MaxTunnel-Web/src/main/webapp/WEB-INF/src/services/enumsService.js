@@ -537,6 +537,19 @@ var EnumsService = {
 				}
 			})
 		})
+	},
+	//获取监测对象管理编号等信息
+	getMeasObj(){
+		return new Promise((resolve, reject) => {
+			get('config/xml/tunnel-param/equipment-info').then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：config/xml/tunnel-param/equipment-info")
+				}
+			})
+		})
 	}
 }
 export {

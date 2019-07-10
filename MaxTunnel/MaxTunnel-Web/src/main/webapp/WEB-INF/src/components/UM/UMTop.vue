@@ -261,6 +261,11 @@ export default {
                             name: "可视化平台",
                             url: "/VMMain2",
                             path: "/VMMain2"
+                        },
+                        {
+                            name: '项目概况',
+                            url: '/UM/projectSurvey',
+                            path: '/UM/projectSurvey'
                         }
                     ]
                 }
