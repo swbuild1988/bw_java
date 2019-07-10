@@ -10,7 +10,7 @@
             <div class="equipment_image">
                 <img
                     src="../../../../assets/UM/lamp-on.png"
-                    v-if="Obj.objtypeId==11 && curValue"
+                    v-if="Obj.objtypeId==11 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
@@ -35,23 +35,33 @@
                 >
                 <img
                     src="../../../../assets/UM/红外正常gif.gif"
-                    v-if="Obj.objtypeId==57 && curValue"
+                    v-if="Obj.objtypeId==57 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/门-开.png"
-                    v-if="Obj.objtypeId==55 && curValue"
+                    v-if="Obj.objtypeId==55 && (stateProcess.open == 1 && stateProcess.close == 0)"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/place-troop-open.png"
+                    v-if="Obj.objtypeId==63 && !curValue"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/linkage-status-open.png"
+                    v-if="Obj.objtypeId==64 && !curValue"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/报警-红gif.gif"
-                    v-if="Obj.objtypeId==41 && curValue"
+                    v-if="Obj.objtypeId==41 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
 
                 <img
                     src="../../../../assets/UM/lamp-off.png"
-                    v-if="Obj.objtypeId==11 && !curValue"
+                    v-if="Obj.objtypeId==11 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
@@ -76,22 +86,27 @@
                 >
                 <img
                     src="../../../../assets/UM/红外.gif"
-                    v-if="Obj.objtypeId==57 && !curValue"
+                    v-if="Obj.objtypeId==57 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/门-关.png"
-                    v-if="Obj.objtypeId==55 && !curValue"
+                    v-if="Obj.objtypeId==55 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/报警.png"
-                    v-if="Obj.objtypeId==41 && !curValue"
+                    v-if="Obj.objtypeId==41 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
-                    src="../../../../assets/UM/报警.png"
+                    src="../../../../assets/UM/place-troop-close.png"
                     v-if="Obj.objtypeId==63 && !curValue"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/linkage-status-close.png"
+                    v-if="Obj.objtypeId==64 && !curValue"
                     class="img"
                 >
                 <!-- 过程 -->
