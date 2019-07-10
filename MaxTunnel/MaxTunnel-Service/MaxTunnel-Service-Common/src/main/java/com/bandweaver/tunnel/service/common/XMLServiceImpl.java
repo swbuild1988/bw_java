@@ -16,8 +16,8 @@ public class XMLServiceImpl implements XMLService {
         if(config == null) {
             config = new Config();
         }
-        config.init();
-        XMLUtil.convertToXml(config, path);
+        boolean f = config.init();
+        if (f) XMLUtil.convertToXml(config, path);
         return config;
     }
 

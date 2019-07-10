@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.common;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    @Deprecated
     public void deleteById(Integer id) {
         staffMapper.deleteByPrimaryKey(id);
     }
@@ -78,7 +80,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void add(Staff staff) {
-
+    	staff.setCrtTime(new Date());
         try {
             //判断是否为外来人员，如果是则不生成账号信息
             if (staff.getOutside() != OutsideEnum.STAFF.getValue()) {
@@ -131,8 +133,15 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteBatch(List<Integer> list) {
+    	List<Integer> userIds = new ArrayList<>();
+    	for(Integer id : list) {
+    		StaffDto dto = getDtoById(id);
+    		if(dto.getOutside().equals(OutsideEnum.STAFF.getValue()))
+    			userIds.add(id);
+    	}
         staffMapper.deleteBatch(list);
-        userMapper.deleteBatch(list);
+        if(userIds.size() > 0)
+        	userMapper.deleteBatch(userIds);
     }
 
     @Override

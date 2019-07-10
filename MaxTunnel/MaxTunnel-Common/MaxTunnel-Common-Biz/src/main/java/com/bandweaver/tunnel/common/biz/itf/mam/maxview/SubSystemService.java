@@ -25,6 +25,14 @@ public interface SubSystemService {
 	 */
 	boolean doAction(Integer objectId,Integer inputValue);
 
+	/**
+	 * 控制maxview输出
+	 * @param objectId
+	 * @param code
+	 * @return
+	 */
+	boolean controlOutput(int objectId, String code);
+
 	/**发送心跳 
 	 * @param tunnelId   
 	 * @author shaosen

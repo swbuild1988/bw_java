@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
@@ -14,6 +16,9 @@ import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.*;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.*;
 import com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
+import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import com.bandweaver.tunnel.dao.mam.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,6 +81,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     private MeasValueDASSpectrumMapper measValueDASSpectrumMapper;
     @Autowired
     private MeasValueTabdictMapper measValueTabdictMapper;
+    @Autowired
+    private XMLService xmlService;
 
     private HashMap<Integer, MeasObj> measObjHashMap;
     private HashMap<Integer, MeasObjAI> measObjAIHashMap;
@@ -128,6 +135,49 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         return measObjSOHashMap.get(id);
     }
 
+    /**
+     * 获得复杂类型的值
+     *
+     * @param id
+     * @return
+     */
+    public JSONObject getMeasObjComplexObjectCV(int id) {
+        MeasObj measObj = measObjHashMap.get(id);
+        ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
+        if (complexObjectConvert == null) return null;
+
+        JSONObject jsonObject = new JSONObject();
+
+        for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+            String attribute = convertType.getCode();
+
+            DataType dataType = DataType.getEnum(getDataTypeByConvertType(convertType));
+            int tmpId = getConvertObjectId(measObj, convertType);
+            switch (dataType) {
+                case AI:
+                    jsonObject.put(attribute, measObjAIHashMap.get(tmpId).getCv());
+                    break;
+
+                case SI:
+                    jsonObject.put(attribute, measObjSIHashMap.get(tmpId).getCv());
+                    break;
+
+                case DI:
+                    jsonObject.put(attribute, measObjDIHashMap.get(tmpId).getCv());
+                    break;
+
+                case SO:
+                    jsonObject.put(attribute, measObjSOHashMap.get(tmpId).getCv());
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return jsonObject;
+    }
+
     public List<MeasObj> getMeasObjsByIds(List<Integer> ids) {
         List<MeasObj> results = new ArrayList<>();
         for (Integer id : ids) {
@@ -174,8 +224,10 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     public void insertMeasObj(MeasObj measObj) {
         measObj.setActived(true);
 
-        ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
-        measObj.setDatatypeId(objectType.getDataType());
+        if (measObj.getObjtypeId().intValue() != 0) {
+            ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
+            measObj.setDatatypeId(objectType.getDataType());
+        }
 
         if (measObjHashMap.containsKey(measObj.getId())) {
             return;
@@ -204,11 +256,13 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public void updateMeasObj(MeasObj measObj) {
-        if (!measObjHashMap.containsKey(measObj.getId())) {return;}
+        if (!measObjHashMap.containsKey(measObj.getId())) {
+            return;
+        }
 
         // 先更新数据库
-        if(measObj.getStoreId() != null && measObj != null) {
-        	Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
+        if (measObj.getStoreId() != null && measObj != null) {
+            Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
             if (section != null) {
                 measObj.setSectionId(section.getId());
             } else {
@@ -373,7 +427,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
             if (tmp.getCv() == null) tmp.setCv(0);
             measObjSIHashMap.put(tmp.getId(), tmp);
         }
-
         List<MeasObjSO> measObjSOs = measObjSOMapper.getAllMeasObjSOs();
         for (MeasObjSO tmp : measObjSOs) {
             measObjSOHashMap.put(tmp.getId(), tmp);
@@ -387,7 +440,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
     private void insertObj2OwnDB(MeasObj measObj) {
         DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
-//        LogUtil.info(dataType);
+
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
@@ -421,6 +474,30 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 video.setVideoExtendSceneId(0);
                 video.setChannelNo(1);
                 videoModuleCenter.insertVideo2DB(video);
+                break;
+
+            case ComplexObject:             // 复杂结构，需要将他的孩子存到对应的数据库
+
+                ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
+                if (complexObjectConvert == null) return;
+                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+
+                    MeasObj tmpObj = new MeasObj();
+                    // 将ID换成正常的ID，这里简单处理了下，以后还需正规
+                    tmpObj.setId(getConvertObjectId(measObj, convertType));
+                    tmpObj.setName(measObj.getName() + "_" + convertType.getDescribe());
+                    tmpObj.setActived(true);
+                    tmpObj.setTunnelId(measObj.getTunnelId());
+                    tmpObj.setAreaId(measObj.getAreaId());
+                    tmpObj.setStoreId(measObj.getStoreId());
+                    tmpObj.setSectionId(measObj.getSectionId());
+                    tmpObj.setObjtypeId(ObjectType.NONE.getValue());
+                    tmpObj.setDatatypeId(getDataTypeByConvertType(convertType));
+
+                    // 将tmpObj塞进数据库,DO就不塞了，或者后期加上
+                    insertMeasObj(tmpObj);
+                }
+
                 break;
 
             default:
@@ -465,8 +542,72 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 videoModuleCenter.insertVideo2HashMap(video);
                 break;
 
+
+            case ComplexObject:             // 复杂结构，需要将他的孩子存到对应的缓存中
+//                ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
+//                if (complexObjectConvert == null) return;
+//                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+//
+//                    MeasObj tmpObj = new MeasObj();
+//                    // 将ID换成正常的ID，这里简单处理了下，以后还需正规
+//                    tmpObj.setId(getConvertObjectId(measObj, convertType));
+//                    tmpObj.setName(measObj.getName() + "_" + convertType.getDescribe());
+//                    tmpObj.setActived(true);
+//                    tmpObj.setTunnelId(measObj.getTunnelId());
+//                    tmpObj.setAreaId(measObj.getAreaId());
+//                    tmpObj.setStoreId(measObj.getStoreId());
+//                    tmpObj.setSectionId(measObj.getSectionId());
+//                    tmpObj.setObjtypeId(ObjectType.NONE.getValue());
+//                    tmpObj.setDatatypeId(getDataTypeByConvertType(convertType));
+//
+//                    // 将tmpObj塞进数据库,DO就不塞了，或者后期加上
+//                    insertObj2OwnHashMap(tmpObj);
+//                }
+
+                break;
+
             default:
                 break;
+        }
+    }
+
+    /**
+     * 获取复杂类型的转换内容
+     *
+     * @param measObj
+     * @return
+     */
+    public ComplexObjectConvert getComplexObjectConvertByMeasObj(MeasObj measObj) {
+        if (measObj.getDatatypeId().intValue() != DataType.ComplexObject.getValue()) return null;
+        Config config = xmlService.getXMLAllInfo();
+        List<ComplexObjectConvert> complexObjectConverts = config.getComplexObjectConverts();
+        ComplexObjectConvert complexObjectConvert = complexObjectConverts.stream().filter(a -> a.getObjectType() == measObj.getObjtypeId().intValue()).findFirst().get();
+        return complexObjectConvert;
+    }
+
+    public int getConvertObjectId(MeasObj measObj, ConvertType convertType) {
+        return measObj.getId().intValue() / 100 * 100 + convertType.getConvertId();
+    }
+
+    /**
+     * 根据转换的类型来获取对应的DataType
+     *
+     * @param convertType
+     * @return
+     */
+    private int getDataTypeByConvertType(ConvertType convertType) {
+        switch (convertType.getType()) {
+            case 0:             // 开光量输入DI
+                return DataType.DI.getValue();
+
+            case 1:             // 开光量输出DO
+                return DataType.DO.getValue();
+
+            case 2:             // 模拟量输入AI
+                return DataType.AI.getValue();
+
+            default:
+                return 0;
         }
     }
 
@@ -529,6 +670,23 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 // TODO
                 break;
 
+            case ComplexObject:
+
+                ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
+
+                if (complexObjectConvert == null) return;
+                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+                    MeasObj tmpObj = new MeasObj();
+                    // 将ID换成正常的ID，这里简单处理了下，以后还需正规
+                    tmpObj.setId(getConvertObjectId(measObj, convertType));
+                    tmpObj.setDatatypeId(getDataTypeByConvertType(convertType));
+
+
+                    deleteObjFromOwnDB(tmpObj);
+                }
+
+                break;
+
             default:
                 break;
         }
@@ -561,6 +719,21 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             case VIDEO:
                 // TODO
+                break;
+
+            case ComplexObject:
+                ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
+
+                if (complexObjectConvert == null) return;
+                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+                    MeasObj tmpObj = new MeasObj();
+                    // 将ID换成正常的ID，这里简单处理了下，以后还需正规
+                    tmpObj.setId(getConvertObjectId(measObj, convertType));
+                    tmpObj.setDatatypeId(getDataTypeByConvertType(convertType));
+
+                    deleteObjFromOwnHashMap(tmpObj);
+                }
+
                 break;
 
             default:

@@ -12,6 +12,8 @@ public enum DataType {
     AI("模拟量输入", 1),
     /**开关量输入DigitalInput*/
     DI("开关量输入", 2),
+    /**开关量输出DigitalOutput*/
+    DO("开关量输出", 4),
     /**状态量输入*/
     SI("状态量输入", 3),
     /**分布式Distribute*/
@@ -20,6 +22,8 @@ public enum DataType {
     VIDEO("视频", 7),
     /**StructureObject**/
     SO("结构化对象", 97),
+    /** 复杂对象 **/
+    ComplexObject("复杂对象", 200),
     /**频谱数据*/
     DAS("频谱数据", 103);
 

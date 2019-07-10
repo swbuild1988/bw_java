@@ -28,6 +28,7 @@ public class InstrumentRecordServiceImpl implements InstrumentRecordService {
 	private InstrumentMapper instrumentMapper;
 	
 	@Override
+	@Transactional
 	public int addBatch(List<InstrumentRecord> list) {
 		if(list.size() < 1) return 0;
 		List<Integer> ls = new ArrayList<>();

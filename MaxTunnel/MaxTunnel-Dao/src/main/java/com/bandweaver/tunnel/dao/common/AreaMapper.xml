@@ -186,7 +186,7 @@
             <if test="id != null">
                 and a.id = #{id}
             </if>
-            <if test="name != null">
+            <if test="name != null and name.trim() != ''">
                 and instr(a.name,#{name})>0
             </if>
             <if test="sn != null">

@@ -36,6 +36,18 @@ public class MeasObj implements Serializable {
      */
     private String videoIds;
 
+    public MeasObj(){
+        this.name = "";
+        this.actived = false;
+        this.description = "";
+        this.longitude = "";
+        this.latitude = "";
+        this.height = "";
+        this.deviation = 0.0;
+        this.planIds = "";
+        this.videoIds = "";
+    }
+
     public String getPlanIds() {
         return planIds;
     }

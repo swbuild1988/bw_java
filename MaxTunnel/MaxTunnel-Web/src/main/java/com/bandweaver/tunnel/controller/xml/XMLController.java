@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.pojo.em.RelatedUnit;
 import com.bandweaver.tunnel.common.biz.pojo.xml.CommonEnum;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
 import com.bandweaver.tunnel.common.biz.pojo.xml.EquipmentTypeFile;
 import com.bandweaver.tunnel.common.biz.pojo.xml.TunnelParam;
@@ -91,6 +92,32 @@ public class XMLController {
     public JSONObject getAlarmTime() {
     	Config config = getXMLAllInfo();
     	List<CommonEnum> levels = config.getAlarmTimes();
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, levels);
+    }
+	
+	/**
+	 * 获取入侵延时关闭时间,单位秒
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年7月4日
+	 */
+	@RequestMapping(value = "config/xml/close-time", method = RequestMethod.GET)
+    public JSONObject getCloseTime() {
+    	Config config = getXMLAllInfo();
+    	double s = config.getCloseTime();
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, s);
+    }
+	
+	/**
+	 * 获取监测对象的复杂类型
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年7月9日
+	 */
+	@RequestMapping(value = "config/xml/complex-object-converts", method = RequestMethod.GET)
+    public JSONObject getComplexObjectConverts() {
+    	Config config = getXMLAllInfo();
+    	List<ComplexObjectConvert> levels = config.getComplexObjectConverts();
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, levels);
     }
 }
