@@ -15,12 +15,12 @@
                 >
                 <img
                     src="../../../../assets/UM/风机gif.gif"
-                    v-if="Obj.objtypeId==10 && curValue"
+                    v-if="Obj.objtypeId==10 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/水泵gif.gif"
-                    v-if="Obj.objtypeId==59 && curValue"
+                    v-if="Obj.objtypeId==59 && (stateProcess.open == 1 && stateProcess.close == 0)"
                     class="img"
                 >
                 <img
@@ -56,12 +56,12 @@
                 >
                 <img
                     src="../../../../assets/UM/风机.png"
-                    v-if="Obj.objtypeId==10 && !curValue"
+                    v-if="Obj.objtypeId==10 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/水泵.png"
-                    v-if="Obj.objtypeId==59 && !curValue"
+                    v-if="Obj.objtypeId==59 && (stateProcess.open == 0 && stateProcess.close == 1)"
                     class="img"
                 >
                 <img
@@ -87,6 +87,11 @@
                 <img
                     src="../../../../assets/UM/报警.png"
                     v-if="Obj.objtypeId==41 && !curValue"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/报警.png"
+                    v-if="Obj.objtypeId==63 && !curValue"
                     class="img"
                 >
                 <!-- 过程 -->
@@ -129,7 +134,6 @@ export default {
                     objtypeId: "",
                     clickStatus: false,
                     datatypeId: ""
-                    // control:true
                 };
             }
         },
@@ -148,100 +152,14 @@ export default {
     },
     data: function() {
         return {
-            // curImgUrl: "",
-            // confirmFlag: false,
-            // curValue: null,
             isTimeShow: false
-            // equipmentState: {
-            //     state: null,
-            //     closeImage: "",
-            //     openImage:"",
-            //     faultImage:"",
-            //     openTitle:'开',
-            //     closeTitle:'关',
-            //     faultTitle:'故障'
-
-            // },
-            // imageState:[
-            //     {
-            //         key:'closeState',
-            //         val:[
-            //             {key:'closeImage',val:'close-open-state'},
-            //             {key:'openImage',val:'open-close-state'},
-            //             {key:'faultImage',val:'fault-close-state'}
-            //         ]
-            //     },
-            //     {
-            //         key:'openState',
-            //         val:[
-            //             {key:'closeImage',val:'close-close-state'},
-            //             {key:'openImage',val:'open-open-state'},
-            //             {key:'faultImage',val:'fault-close-state'}
-            //         ]
-            //     },
-            //     {
-            //         key:'faultState',
-            //         val:[
-            //             {key:'closeImage',val:'close-close-state'},
-            //             {key:'openImage',val:'open-close-state'},
-            //             {key:'faultImage',val:'fault-open-state'}
-            //         ]
-            //     },
-
-            // ],
         };
     },
     components: {
         Light,
         Fans
     },
-    // computed:{
-    //     curValue(){
-    //         return this.$attrs.curValue
-    //     }
-    // },
-    // watch: {
-    //     Obj: {
-    //         handler(newVal, oldVal) {
-    //                 // console.log('watch')
-    //                 // console.log('newVal',this.Obj)
-    //             // this.transformStateImage();
-    //         },
-    //         deep: true
-    //     }
-    // },
     methods: {
-        // confirm(data) {
-        //     this.$nextTick(() => {
-        //         this.curValue = !data;
-        //     });
-        //     let text = data
-        //         ? "确定打开" + this.Obj.objtypeName + this.Obj.ObjName + "吗?"
-        //         : "确定关闭 " +
-        //           this.Obj.objtypeName +
-        //           this.Obj.ObjName +
-        //           " 吗?";
-        //     this.$Modal.confirm({
-        //         render: h => {
-        //             return h("span", text);
-        //         },
-        //         onOk: () => {
-        //             // this.equipmentState.state = this.curValue = !this.curValue;
-        //             this.change();
-        //         }
-        //     });
-        // },
-        // transformStateImage() {
-
-        //     (this.imageState[this.Obj.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
-
-        // },
-        // replaceImage(replaceStr,replceImg){
-
-        //         this.equipmentState[replaceStr] = require("../../../assets/UM/" +
-        //             replceImg +
-        //             ".png");
-        // },
         //定位设备
         locationEquimpent() {
             this.Obj.clickStatus = !this.Obj.clickStatus;

@@ -216,7 +216,6 @@ export default {
         },
         showVideosList(){
             this.tempVideoList = [];
-
             this.$nextTick(function(){
                 this.tempVideoList = this.showVideosList;
             })

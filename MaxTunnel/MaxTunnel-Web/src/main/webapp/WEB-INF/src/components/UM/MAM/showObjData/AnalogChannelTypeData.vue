@@ -5,9 +5,6 @@
         :stateProcess="curProcessState"
         v-on="$listeners"
     >
-        <!-- <template v-slot:title>
-           111
-        </template>-->
         <div slot="heard">
             <p
                 class="heard"
@@ -36,29 +33,6 @@
                     </div>
                 </Col>
             </Row>
-            <!-- <div class="switchImg" v-for="item in curObjState">
-                <img
-                    :src="item.img"
-                    class="equipment_state_image"
-                    :title="item.val"
-                > 
-                <span >{{item.val}}</span>  
-                <img
-                    :src="equipmentState.openImage"
-                    class="equipment_state_image"
-                    :title="equipmentState.openTitle"
-                >
-                <img
-                    :src="equipmentState.faultImage"
-                    class="equipment_state_image"
-                    :title="equipmentState.faultTitle"
-                >
-            </div>-->
-            <!-- <div class="switchText">
-                <span v-for="item in curObjState" >{{item.val}}</span>
-                 <span>{{equipmentState.openTitle}}</span>   
-                <span>{{equipmentState.faultTitle}}</span> 
-            </div>-->
         </div>
     </switchData>
 </template>
@@ -68,41 +42,6 @@ import switchData from "./ShowSwitchData";
 export default {
     data() {
         return {
-            // imageState: [
-            //     {
-            //         key: "closeState",
-            //         val: [
-            //             { key: "closeImage", val: "close-open-state" },
-            //             { key: "openImage", val: "open-close-state" },
-            //             { key: "faultImage", val: "fault-close-state" }
-            //         ]
-            //     },
-            //     {
-            //         key: "openState",
-            //         val: [
-            //             { key: "closeImage", val: "close-close-state" },
-            //             { key: "openImage", val: "open-open-state" },
-            //             { key: "faultImage", val: "fault-close-state" }
-            //         ]
-            //     },
-            //     {
-            //         key: "faultState",
-            //         val: [
-            //             { key: "closeImage", val: "close-close-state" },
-            //             { key: "openImage", val: "open-close-state" },
-            //             { key: "faultImage", val: "fault-open-state" }
-            //         ]
-            //     }
-            // ],
-            // equipmentState: {
-            //     // state: null,
-            //     closeImage: "",
-            //     openImage: "",
-            //     faultImage: "",
-            //     openTitle: "开",
-            //     closeTitle: "关",
-            //     faultTitle: "故障"
-            // },
             swicthState: 0,
             objState: [
                 {
@@ -181,7 +120,7 @@ export default {
         switchData
     },
     mounted() {
-        this.swicthState = this.propList.ObjVal == 1;
+        // this.swicthState = this.propList.ObjVal == 1;
         this.transformStateImage();
     },
     methods: {
@@ -206,10 +145,10 @@ export default {
                     }
                 }
             }
-
-            // (this.imageState[this.propList.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
         },
         replaceImage(curStateVal, key, [curObjState]) {
+console.log('sss')
+            // if( key == 'open' )this.swicthState =  curStateVal;
             // 加载对应状态图片
             this.curObjState.push({
                 img: require("../../../../assets/UM/" +
@@ -217,8 +156,6 @@ export default {
                     ".png"),
                 val: this.objStateTitle[key]
             });
-
-            // this.equipmentState[replaceStr] = require("../../../assets/UM/" +replceImg +".png");
         },
         reset() {
             // this.$emit()
