@@ -153,26 +153,32 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             DataType dataType = DataType.getEnum(getDataTypeByConvertType(convertType));
             int tmpId = getConvertObjectId(measObj, convertType);
+
+            JSONObject tmpCV = new JSONObject();
+            tmpCV.put("descript", convertType.getDescribe());
+
             switch (dataType) {
                 case AI:
-                    jsonObject.put(attribute, measObjAIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjAIHashMap.get(tmpId).getCv());
                     break;
 
                 case SI:
-                    jsonObject.put(attribute, measObjSIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjSIHashMap.get(tmpId).getCv());
                     break;
 
                 case DI:
-                    jsonObject.put(attribute, measObjDIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjDIHashMap.get(tmpId).getCv());
                     break;
 
                 case SO:
-                    jsonObject.put(attribute, measObjSOHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjSOHashMap.get(tmpId).getCv());
                     break;
 
                 default:
-                    break;
+                    continue;
             }
+
+            jsonObject.put(attribute, tmpCV);
         }
 
         return jsonObject;

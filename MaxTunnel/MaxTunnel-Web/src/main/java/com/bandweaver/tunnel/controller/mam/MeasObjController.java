@@ -405,7 +405,11 @@ public class MeasObjController {
             json.put("time", measObjModuleCenter.getMeasObjAI(measObjDto.getId()) == null ? System.currentTimeMillis() : measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getRefreshTime());
 
             ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
-            if (objectType != null) json.put("control", objectType.isControl());
+            if (objectType != null) {
+                json.put("control", objectType.isControl());
+                json.put("reset", objectType.isReset());
+                json.put("unit", objectType.getUnit());
+            }
             if (objectType == ObjectType.TEMPERATURE) {
                 json.put("maxValue", temperature_max);
                 json.put("minValue", temperature_min);
@@ -428,7 +432,7 @@ public class MeasObjController {
                 json.put("maxValue", null);
                 json.put("minValue", null);
             }
-            json.put("unit", objectType.getUnit());
+
             returnData.add(json);
         }
         return returnData;
