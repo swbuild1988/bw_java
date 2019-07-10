@@ -1104,6 +1104,12 @@ export const asyncRouterMap = [{
                             ], resolve)
                     }
                 ]
+            },
+            {
+                path: 'projectSurvey',
+                name: '项目概况',
+                component: resolve => 
+                    require(["@/views/UM/DM/ProjectSurvey/projectSurvey"], resolve)
             }
             // {
             //     path: 'Communication',
