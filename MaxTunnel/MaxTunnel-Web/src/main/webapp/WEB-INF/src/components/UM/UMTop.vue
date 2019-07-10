@@ -13,7 +13,7 @@
                 <div class="layout-nav">
                     <div style="position: absolute;right: 18vmin;height:6%">
                         <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
-                            <Dropdown placement="bottom-start">
+                            <Dropdown placement="bottom-start" trigger="click">
                                 <div class="topBtn">
                                     <Icon :type="module.frontIcon"></Icon>
                                     <span>{{module.name}}</span>

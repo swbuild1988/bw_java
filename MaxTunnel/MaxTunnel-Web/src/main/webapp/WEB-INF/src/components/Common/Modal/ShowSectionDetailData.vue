@@ -26,10 +26,6 @@ export default {
             type: Array,
             default: []
         },
-        showDetailsModel: {
-            type: Boolean,
-            default: false
-        },
         pageSize: {
             default: 10
         }
@@ -41,7 +37,8 @@ export default {
             totalPage: 1,
             loopTimerId: null,
             loopTime: 2000,
-            middleData: []
+            middleData: [],
+            showDetailsModel:false
         };
     },
     computed:{
@@ -50,9 +47,10 @@ export default {
         }
     },
     watch: {
-        showDetailsModel(val){
+        dataDetails(val){
             this.curPage = 1;
             val ? this.init() : this.clearTimer();
+            this.showDetailsModel = val ? true : false;
         }
     },
     mounted() {
@@ -138,7 +136,7 @@ export default {
             }
         },
         addTitleImg(data,id){
-            console.log('sdsdsd')
+            
             let [ titleImgObject ] = this.titleImg.filter( item => item.key === id );
             let currImg = null;
             try{

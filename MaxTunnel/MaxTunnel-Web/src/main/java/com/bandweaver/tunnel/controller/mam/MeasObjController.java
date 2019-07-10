@@ -22,6 +22,7 @@ import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
@@ -37,7 +38,9 @@ import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueSI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.biz.vo.StoreVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
@@ -234,7 +237,7 @@ public class MeasObjController {
             // 设置预案显示
             List<String> plansName = new ArrayList<>(10);
             String planIds = measObjDto.getPlanIds();
-            if (planIds != null && planIds.length() >0) {
+            if (planIds != null && planIds.length() > 0) {
                 List<Integer> planIdList = CommonUtil.convertStringToList(planIds);
                 for (Integer planId : planIdList) {
                     String name = ProcessTypeEnum.getEnum(planId).getName();
@@ -246,7 +249,7 @@ public class MeasObjController {
             // 设置视频名称显示
             List<String> videosName = new ArrayList<>(10);
             String videoIds = measObjDto.getVideoIds();
-            if (videoIds != null && videoIds.length() >0) {
+            if (videoIds != null && videoIds.length() > 0) {
                 List<Integer> videoIdList = CommonUtil.convertStringToList(videoIds);
                 for (Integer videoId : videoIdList) {
                     String videoName = measObjModuleCenter.getMeasObj(videoId).getName();
@@ -296,9 +299,10 @@ public class MeasObjController {
         }
         return CommonUtil.success(getMeasObjInfo(measObjs));
     }
-    
+
     /**
      * 通过管舱以及父类、区段获取监测对象
+     *
      * @param storeId
      * @param areaId
      * @return
@@ -307,19 +311,20 @@ public class MeasObjController {
      */
     @RequiresPermissions("measobj:list")
     @RequestMapping(value = "stores/{storeId}/areas/{areaId}/measobjs", method = RequestMethod.GET)
-    public JSONObject getObjectListByStoreIdAndAreaId(@PathVariable("storeId") Integer storeId,@PathVariable("areaId") Integer areaId) {
+    public JSONObject getObjectListByStoreIdAndAreaId(@PathVariable("storeId") Integer storeId, @PathVariable("areaId") Integer areaId) {
         List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
-
+        // 去除相机
+        measObjs = measObjs.stream().filter(a -> !a.getDatatypeId().equals(DataType.VIDEO.getValue())).collect(Collectors.toList());
         if (storeId != null) {
-        	List<Integer> storeIds = new ArrayList<>();
-        	StoreDto store = storeService.getStoreById(storeId);
-        	if(storeId.equals(store.getParentId())) {
-        		StoreVo vo = new StoreVo();
-        		vo.setParentId(storeId);
-        		List<StoreDto> storeList = storeService.getStoresByCondition(vo);
-        		storeList.forEach(a -> storeIds.add(a.getId()));
-        	} else
-        		storeIds.add(storeId);
+            List<Integer> storeIds = new ArrayList<>();
+            StoreDto store = storeService.getStoreById(storeId);
+            if (storeId.equals(store.getParentId())) {
+                StoreVo vo = new StoreVo();
+                vo.setParentId(storeId);
+                List<StoreDto> storeList = storeService.getStoresByCondition(vo);
+                storeList.forEach(a -> storeIds.add(a.getId()));
+            } else
+                storeIds.add(storeId);
             measObjs = measObjs.stream().filter(a -> storeIds.contains(a.getStoreId())).collect(Collectors.toList());
         }
         if (areaId != null) {
@@ -330,7 +335,7 @@ public class MeasObjController {
 
     // 获取监测对象值
     private List<JSONObject> getMeasObjInfo(List<MeasObj> measObjs) {
-    	//获取告警临界值
+        //获取告警临界值
         double temperature_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_MAX));
         double temperature_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_MIN));
         double humidity_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.HUMIDITY_MAX));
@@ -350,22 +355,34 @@ public class MeasObjController {
         List<JSONObject> returnData = new ArrayList<>();
         for (MeasObj measObjDto : measObjs) {
 
-            Double cv = 0.0;
+            Object cv;
             switch (DataType.getEnum(measObjDto.getDatatypeId())) {
                 case AI:
-                    cv = measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getCv();
+                	MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
+                    cv = ai == null ? 0 : ai.getCv();
                     break;
 
                 case DI:
-                    cv = measObjModuleCenter.getMeasObjDI(measObjDto.getId()).getCv() ? 1.0 : 0.0;
+                	MeasObjDI di = measObjModuleCenter.getMeasObjDI(measObjDto.getId());
+                    cv = di == null ? 0 : di.getCv();
                     break;
 
                 case SI:
-                    Integer tmpV = measObjModuleCenter.getMeasObjSI(measObjDto.getId()).getCv();
-                    cv = tmpV == null ? 0 : tmpV.doubleValue();
+                	MeasObjSI si = measObjModuleCenter.getMeasObjSI(measObjDto.getId());
+                    cv = si == null ? 0 : si.getCv();
+                    break;
+
+                case SO:
+                	MeasObjSO so = measObjModuleCenter.getMeasObjSO(measObjDto.getId());
+                    cv = so == null ? 0 : so.getCv();
+                    break;
+
+                case ComplexObject:
+                    cv = measObjModuleCenter.getMeasObjComplexObjectCV(measObjDto.getId());
                     break;
 
                 default:
+                    cv = 0;
                     break;
             }
 
@@ -385,10 +402,10 @@ public class MeasObjController {
             }
             json.put("datatypeId", measObjDto.getDatatypeId());
             json.put("curValue", cv);
-            json.put("time", measObjModuleCenter.getMeasObjAI(measObjDto.getId()) == null ? System.currentTimeMillis() : measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getRefreshTime().getTime());
+            json.put("time", measObjModuleCenter.getMeasObjAI(measObjDto.getId()) == null ? System.currentTimeMillis() : measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getRefreshTime());
 
             ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
-            if(objectType != null) json.put("control", objectType.isControl());
+            if (objectType != null) json.put("control", objectType.isControl());
             if (objectType == ObjectType.TEMPERATURE) {
                 json.put("maxValue", temperature_max);
                 json.put("minValue", temperature_min);
@@ -416,8 +433,10 @@ public class MeasObjController {
         }
         return returnData;
     }
-    
-    /**求管廊环境监测数据极值
+
+    /**
+     * 求管廊环境监测数据极值
+     *
      * @param reqJson
      * @return
      * @author shaosen
@@ -435,7 +454,6 @@ public class MeasObjController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
 
     }
-
 
 
     /**
@@ -544,324 +562,328 @@ public class MeasObjController {
     }
 
 
-
-
-    /**获取缓存中温度，甲烷，含氧量最值
-     * @author shaosen
-     * @date 2019年1月11日
+    /**
+     * 获取缓存中温度，甲烷，含氧量最值
+     *
      * @param
      * @return {"msg":"请求成功","code":"200","data":[{"unit":"℃","name":"最高温度","location":"古城大街-18区-电力舱","value":29.99},{"unit":"ppm","name":"最高甲烷","location":"古城大街-20区-污水舱","value":29.99},{"unit":"%","name":"最低含氧量","location":"古城大街-16区-设备间","value":0.0}]}
+     * @author shaosen
+     * @date 2019年1月11日
      */
-    @RequestMapping(value="extreme-datas",method=RequestMethod.GET)
+    @RequestMapping(value = "extreme-datas", method = RequestMethod.GET)
     public JSONObject getExtremeDatas() {
-    	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
-    	List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
-    	Date currentDate = DateUtil.getCurrentDate();
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+        List<MeasObjAI> measObjAIs = measObjModuleCenter.getMeasObjAIs();
+        Date currentDate = DateUtil.getCurrentDate();
 
-		JSONObject rt1 = getMaxOrMinValueByObjType(currentDate,measObjAIs,measObjs,"max",ObjectType.TEMPERATURE);
-		JSONObject rt2 = getMaxOrMinValueByObjType(currentDate,measObjAIs,measObjs,"max",ObjectType.CH4);
-		JSONObject rt3 = getMaxOrMinValueByObjType(currentDate,measObjAIs,measObjs,"min",ObjectType.OXYGEN);
+        JSONObject rt1 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.TEMPERATURE);
+        JSONObject rt2 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.CH4);
+        JSONObject rt3 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "min", ObjectType.OXYGEN);
 
-		List<JSONObject> rtdata = new ArrayList<>();
-		rtdata.add(rt1);
-		rtdata.add(rt2);
-		rtdata.add(rt3);
+        List<JSONObject> rtdata = new ArrayList<>();
+        rtdata.add(rt1);
+        rtdata.add(rt2);
+        rtdata.add(rt3);
 
-    	return CommonUtil.success(rtdata);
+        return CommonUtil.success(rtdata);
     }
 
 
-	private JSONObject getMaxOrMinValueByObjType(Date currentDate,List<MeasObjAI> measObjAIs,List<MeasObj> measObjs ,String maxOrmin, ObjectType objType) {
+    private JSONObject getMaxOrMinValueByObjType(Date currentDate, List<MeasObjAI> measObjAIs, List<MeasObj> measObjs, String maxOrmin, ObjectType objType) {
 
-		JSONObject rtdata = new JSONObject();
-		double value = 0;
-		String location = "";
+        JSONObject rtdata = new JSONObject();
+        double value = 0;
+        String location = "";
 
-		//获取所有温度检测对象
-    	List<MeasObj> temperatureList = measObjs.stream().filter( x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+        //获取所有温度检测对象
+        List<MeasObj> temperatureList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
 
-    	//获取所有温度检测对象id
-    	List<Integer> ids = temperatureList.stream().map( x -> x.getId()).collect(Collectors.toList());
-    	List<MeasObjAI> collect = measObjAIs.stream().filter(x -> ids.contains(x.getId())).collect(Collectors.toList());
+        //获取所有温度检测对象id
+        List<Integer> ids = temperatureList.stream().map(x -> x.getId()).collect(Collectors.toList());
+        List<MeasObjAI> collect = measObjAIs.stream().filter(x -> ids.contains(x.getId())).collect(Collectors.toList());
 
-    	if(collect.isEmpty()) {
-        	switch (objType) {
-			case TEMPERATURE:
-				JSONObject json_1 = new JSONObject();
-				json_1.put("name", "最高温度");
-				json_1.put("value", value);
-				json_1.put("unit", objType.getUnit());
-				json_1.put("location", "无位置信息");
-				json_1.put("time", currentDate);
-				json_1.put("type", objType.getValue());
-				json_1.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
-				json_1.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
-				return json_1;
-			case CH4:
-				JSONObject json_2 = new JSONObject();
-				json_2.put("name", "最高甲烷");
-				json_2.put("value", value);
-				json_2.put("unit", objType.getUnit());
-				json_2.put("location", "无位置信息");
-				json_2.put("time", currentDate);
-				json_2.put("type", objType.getValue());
-				json_2.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
-				json_2.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
-				return json_2;
-			case OXYGEN:
-				JSONObject json_3 = new JSONObject();
-				json_3.put("name", "最低含氧量");
-				json_3.put("value", value);
-				json_3.put("unit", objType.getUnit());
-				json_3.put("location", "无位置信息");
-				json_3.put("time", currentDate);
-				json_3.put("type", objType.getValue());
-				json_3.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
-				json_3.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
-				return json_3;
+        if (collect.isEmpty()) {
+            switch (objType) {
+                case TEMPERATURE:
+                    JSONObject json_1 = new JSONObject();
+                    json_1.put("name", "最高温度");
+                    json_1.put("value", value);
+                    json_1.put("unit", objType.getUnit());
+                    json_1.put("location", "无位置信息");
+                    json_1.put("time", currentDate);
+                    json_1.put("type", objType.getValue());
+                    json_1.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max"));
+                    json_1.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min"));
+                    return json_1;
+                case CH4:
+                    JSONObject json_2 = new JSONObject();
+                    json_2.put("name", "最高甲烷");
+                    json_2.put("value", value);
+                    json_2.put("unit", objType.getUnit());
+                    json_2.put("location", "无位置信息");
+                    json_2.put("time", currentDate);
+                    json_2.put("type", objType.getValue());
+                    json_2.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max"));
+                    json_2.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min"));
+                    return json_2;
+                case OXYGEN:
+                    JSONObject json_3 = new JSONObject();
+                    json_3.put("name", "最低含氧量");
+                    json_3.put("value", value);
+                    json_3.put("unit", objType.getUnit());
+                    json_3.put("location", "无位置信息");
+                    json_3.put("time", currentDate);
+                    json_3.put("type", objType.getValue());
+                    json_3.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max"));
+                    json_3.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min"));
+                    return json_3;
 
-			default:
-				break;
-			}
-    	}
-
-
-    	if("max".equals(maxOrmin)) {
-    		//获取最大值
-    		MeasObjAI measValueAI = collect.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
-    		//获取位置信息
-        	location = getLocation(location, measValueAI);
-
-        	rtdata.put("name", "最高" + objType.getName());
-        	rtdata.put("value", measValueAI == null ? value : measValueAI.getCv() );
-        	rtdata.put("unit", objType.getUnit());
-        	rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
-
-    	}else if ("min".equals(maxOrmin)) {
-    		//获取最大值
-    		MeasObjAI measValueAI = collect.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
-    		//获取位置信息
-        	location = getLocation(location, measValueAI);
-
-        	rtdata.put("name", "最低含氧量");
-        	rtdata.put("value", measValueAI == null ? value : measValueAI.getCv() );
-        	rtdata.put("unit", objType.getUnit());
-        	rtdata.put("time",  measValueAI == null ? currentDate : measValueAI.getRefreshTime());
-    	}
-    	rtdata.put("location", location);
-    	rtdata.put("type", objType.getValue());
-    	rtdata.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max" ));
-    	rtdata.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min" ));
-
-    	return rtdata;
-
-	}
+                default:
+                    break;
+            }
+        }
 
 
-	public String getLocation(String location, MeasObjAI measValueAI) {
-		if(measValueAI != null) {
-			MeasObj measObj = measObjModuleCenter.getMeasObj(measValueAI.getId());
-			if(measObj != null) {
-				SectionDto section = sectionService.getSectionById(measObj.getSectionId());
-				if(section != null) {
-					location = section.getStore().getTunnel().getName() + section.getName();
-					location = location.replaceAll("-", "");
-				}
-			}
-		}
-		return location;
-	}
+        if ("max".equals(maxOrmin)) {
+            //获取最大值
+            MeasObjAI measValueAI = collect.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
+            //获取位置信息
+            location = getLocation(location, measValueAI);
+
+            rtdata.put("name", "最高" + objType.getName());
+            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv());
+            rtdata.put("unit", objType.getUnit());
+            rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
+
+        } else if ("min".equals(maxOrmin)) {
+            //获取最大值
+            MeasObjAI measValueAI = collect.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
+            //获取位置信息
+            location = getLocation(location, measValueAI);
+
+            rtdata.put("name", "最低含氧量");
+            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv());
+            rtdata.put("unit", objType.getUnit());
+            rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
+        }
+        rtdata.put("location", location);
+        rtdata.put("type", objType.getValue());
+        rtdata.put("max", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".max"));
+        rtdata.put("min", PropertiesUtil.getDoubleValue("ai." + objType.name().toLowerCase() + ".min"));
+
+        return rtdata;
+
+    }
 
 
-
-	/**获取今日监测对象触发次数及与昨日比是否增长
-	 * @author shaosen
-	 * @date 2019年1月11日
-	 * @param
-	 * @return {"msg":"请求成功","code":"200","data":[{"unit":"次","name":"电子井盖触发","isRise":false,"value":0},{"unit":"次","name":"门禁触发","isRise":false,"value":0},{"unit":"次","name":"红外触发","isRise":false,"value":0}]}
-	 */
-	@Deprecated
-	@RequestMapping(value="meas-trigger-counts",method=RequestMethod.GET)
-	public JSONObject getMeasTriggerCounts(){
-
-		Date today = DateUtil.getDayBegin();
-		Date yesterday = DateUtil.getFrontDay(DateUtil.getCurrentDate(), 1);
-    	List<MeasValueSI> dbList = measValueSIService.getListByTime(yesterday);
-    	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
-
-    	JSONObject rt1 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ELECTRONIC_COVERS);
-    	JSONObject rt2 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ENTRANCE_GUARD);
-    	JSONObject rt3 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.INFRARED);
-
-    	List<JSONObject> rtdata = new ArrayList<>();
-    	rtdata.add(rt1);
-    	rtdata.add(rt2);
-    	rtdata.add(rt3);
-		return CommonUtil.success(rtdata);
-	}
+    public String getLocation(String location, MeasObjAI measValueAI) {
+        if (measValueAI != null) {
+            MeasObj measObj = measObjModuleCenter.getMeasObj(measValueAI.getId());
+            if (measObj != null) {
+                SectionDto section = sectionService.getSectionById(measObj.getSectionId());
+                if (section != null) {
+                    location = section.getStore().getTunnel().getName() + section.getName();
+                    location = location.replaceAll("-", "");
+                }
+            }
+        }
+        return location;
+    }
 
 
-	private JSONObject getTriggerCountByObjType(Date today, List<MeasValueSI> dbList, List<MeasObj> measObjs, ObjectType objType) {
-		//获取监测对象
-    	List<MeasObj> filterList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+    /**
+     * 获取今日监测对象触发次数及与昨日比是否增长
+     *
+     * @param
+     * @return {"msg":"请求成功","code":"200","data":[{"unit":"次","name":"电子井盖触发","isRise":false,"value":0},{"unit":"次","name":"门禁触发","isRise":false,"value":0},{"unit":"次","name":"红外触发","isRise":false,"value":0}]}
+     * @author shaosen
+     * @date 2019年1月11日
+     */
+    @Deprecated
+    @RequestMapping(value = "meas-trigger-counts", method = RequestMethod.GET)
+    public JSONObject getMeasTriggerCounts() {
 
-    	//获取监测对象id
-    	List<Integer> ids = filterList.stream().map(x -> x.getId()).collect(Collectors.toList());
+        Date today = DateUtil.getDayBegin();
+        Date yesterday = DateUtil.getFrontDay(DateUtil.getCurrentDate(), 1);
+        List<MeasValueSI> dbList = measValueSIService.getListByTime(yesterday);
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
 
-    	//获取今日数据
-    	long todayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId())
-    			&& x.getTime().getTime() >= today.getTime()
-    			&& x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
+        JSONObject rt1 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ELECTRONIC_COVERS);
+        JSONObject rt2 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.ENTRANCE_GUARD);
+        JSONObject rt3 = getTriggerCountByObjType(today, dbList, measObjs, ObjectType.INFRARED);
 
-    	//获取昨日数据
-    	long yesterdayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId())
-    			&& x.getTime().getTime() < today.getTime()
-    			&& x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
-
-    	JSONObject json = new JSONObject();
-    	json.put("name", objType.getName() + "触发");
-    	json.put("value", todayCt);
-    	json.put("unit", "次");
-    	json.put("isRise", todayCt > yesterdayCt );
-
-    	return json;
-	}
+        List<JSONObject> rtdata = new ArrayList<>();
+        rtdata.add(rt1);
+        rtdata.add(rt2);
+        rtdata.add(rt3);
+        return CommonUtil.success(rtdata);
+    }
 
 
+    private JSONObject getTriggerCountByObjType(Date today, List<MeasValueSI> dbList, List<MeasObj> measObjs, ObjectType objType) {
+        //获取监测对象
+        List<MeasObj> filterList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+
+        //获取监测对象id
+        List<Integer> ids = filterList.stream().map(x -> x.getId()).collect(Collectors.toList());
+
+        //获取今日数据
+        long todayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId())
+                && x.getTime().getTime() >= today.getTime()
+                && x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
+
+        //获取昨日数据
+        long yesterdayCt = dbList.stream().filter(x -> ids.contains(x.getObjectId())
+                && x.getTime().getTime() < today.getTime()
+                && x.getCv().intValue() == SwitchEnum.OPEN.getValue()).count();
+
+        JSONObject json = new JSONObject();
+        json.put("name", objType.getName() + "触发");
+        json.put("value", todayCt);
+        json.put("unit", "次");
+        json.put("isRise", todayCt > yesterdayCt);
+
+        return json;
+    }
 
 
-	/**获取处于“开”状态的监测对象数量以及在廊人数
-	 * @author shaosen
-	 * @Date 2019年1月18日
-	 * @return   {"msg":"请求成功","code":"200","data":[{"name":"已打开电子井盖数","value":0},{"name":"在廊人数","value":2}]}
-	 */
-	@RequestMapping(value="meas-switched-counts",method=RequestMethod.GET)
-	public JSONObject getSwitchedCount() {
+    /**
+     * 获取处于“开”状态的监测对象数量以及在廊人数
+     *
+     * @return {"msg":"请求成功","code":"200","data":[{"name":"已打开电子井盖数","value":0},{"name":"在廊人数","value":2}]}
+     * @author shaosen
+     * @Date 2019年1月18日
+     */
+    @RequestMapping(value = "meas-switched-counts", method = RequestMethod.GET)
+    public JSONObject getSwitchedCount() {
 
-		//获取已打开电子井盖数
-		List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
-		long count = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == ObjectType.ELECTRONIC_COVERS.getValue()
-				&& x.getCv() == SwitchEnum.OPEN.getValue()).count();
+        //获取已打开电子井盖数
+        List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
+        long count = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == ObjectType.ELECTRONIC_COVERS.getValue()
+                && x.getCv() == SwitchEnum.OPEN.getValue()).count();
 
-		JSONObject json_1 = new JSONObject();
-		json_1.put("name", "已打开电子井盖数");
-		json_1.put("value", count);
-		json_1.put("type",1);
+        JSONObject json_1 = new JSONObject();
+        json_1.put("name", "已打开电子井盖数");
+        json_1.put("value", count);
+        json_1.put("type", 1);
 
-		List<JSONObject> rtdata = new ArrayList<>();
-		rtdata.add(json_1);
+        List<JSONObject> rtdata = new ArrayList<>();
+        rtdata.add(json_1);
 
-		//获取当前入廊人数
-		JSONObject json_2 = new JSONObject();
-		json_2.put("name", "在廊人数");
-		json_2.put("value", 2);
-		json_2.put("type", 2);
-		rtdata.add(json_2);
+        //获取当前入廊人数
+        JSONObject json_2 = new JSONObject();
+        json_2.put("name", "在廊人数");
+        json_2.put("value", 2);
+        json_2.put("type", 2);
+        rtdata.add(json_2);
 
-		return CommonUtil.success(rtdata);
-	}
-	
-	/**
-	 * 机电或安防监测下各状态的对象数量
-	 * @param tunnelId
-	 * @param storeId
-	 * @param areaId
-	 * @param monitorType 3：安防；4：机电
-	 * @return
-	 * @author ya.liu
-	 * @Date 2019年5月21日
-	 */
-	@RequestMapping(value="meas-status-counts",method=RequestMethod.POST)
-	public JSONObject getCountBySI(@RequestBody JSONObject object) {
-		Integer tunnelId = object.getInteger("tunnelId");
+        return CommonUtil.success(rtdata);
+    }
+
+    /**
+     * 机电或安防监测下各状态的对象数量
+     *
+     * @param tunnelId
+     * @param storeId
+     * @param areaId
+     * @param monitorType 3：安防；4：机电
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月21日
+     */
+    @RequestMapping(value = "meas-status-counts", method = RequestMethod.POST)
+    public JSONObject getCountBySI(@RequestBody JSONObject object) {
+        Integer tunnelId = object.getInteger("tunnelId");
         Integer storeId = object.getInteger("storeId");
         Integer areaId = object.getInteger("areaId");
         Integer monitorType = object.getInteger("monitorType");
-        
-        List<JSONObject> list = new ArrayList<>();
-        
-        if(monitorType == null) return CommonUtil.success(list);
-		List<ObjectType> eList = ObjectType.getEnumByMonitorType(monitorType);
-		for (ObjectType objectType : eList) {
-			List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
-			measObjSIs = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == objectType.getValue()).collect(Collectors.toList());
-			if (tunnelId != null)
-				measObjSIs = measObjSIs.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
-	        if (storeId != null)
-	        	measObjSIs = measObjSIs.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
-	        if (areaId != null)
-	        	measObjSIs = measObjSIs.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
-			
-			JSONObject json = new JSONObject();
-			json.put("name", objectType.getName());
-			List<JSONObject> jsonList = new ArrayList<>();
-			for(SwitchEnum e : SwitchEnum.values()) {
-				if(monitorType.equals(MonitorTypeEnum.SECURITY.getValue()) && e == SwitchEnum.FAULT) continue;
-				if(monitorType.equals(MonitorTypeEnum.ELECTROMECHANICAL.getValue()) && e == SwitchEnum.ALARM) continue;
-				JSONObject obj = new JSONObject();
-				long count = measObjSIs.stream().filter(x -> x.getCv() == e.getValue()).count();
-				obj.put("key", e.getName());
-				obj.put("val", count);
-				jsonList.add(obj);
-			}
-			
-			json.put("data", jsonList);
-			list.add(json);
-		}
-		
-		return CommonUtil.success(list);
-	}
 
-	 /**
-	 * 消防监测数据
-	 * @param tunnelId
-	 * @param storeId
-	 * @param areaId
-	 * @return
-	 * @author ya.liu
-	 * @Date 2019年5月21日
-	 */
-	@RequestMapping(value="meas-fire-counts",method=RequestMethod.POST)
-	public JSONObject getCountByFire(@RequestBody JSONObject object) {
-		Integer tunnelId = object.getInteger("tunnelId");
+        List<JSONObject> list = new ArrayList<>();
+
+        if (monitorType == null) return CommonUtil.success(list);
+        List<ObjectType> eList = ObjectType.getEnumByMonitorType(monitorType);
+        for (ObjectType objectType : eList) {
+            List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
+            measObjSIs = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == objectType.getValue()).collect(Collectors.toList());
+            if (tunnelId != null)
+                measObjSIs = measObjSIs.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
+            if (storeId != null)
+                measObjSIs = measObjSIs.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
+            if (areaId != null)
+                measObjSIs = measObjSIs.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
+
+            JSONObject json = new JSONObject();
+            json.put("name", objectType.getName());
+            List<JSONObject> jsonList = new ArrayList<>();
+            for (SwitchEnum e : SwitchEnum.values()) {
+                if (monitorType.equals(MonitorTypeEnum.SECURITY.getValue()) && e == SwitchEnum.FAULT) continue;
+                if (monitorType.equals(MonitorTypeEnum.ELECTROMECHANICAL.getValue()) && e == SwitchEnum.ALARM) continue;
+                JSONObject obj = new JSONObject();
+                long count = measObjSIs.stream().filter(x -> x.getCv() == e.getValue()).count();
+                obj.put("key", e.getName());
+                obj.put("val", count);
+                jsonList.add(obj);
+            }
+
+            json.put("data", jsonList);
+            list.add(json);
+        }
+
+        return CommonUtil.success(list);
+    }
+
+    /**
+     * 消防监测数据
+     *
+     * @param tunnelId
+     * @param storeId
+     * @param areaId
+     * @return
+     * @author ya.liu
+     * @Date 2019年5月21日
+     */
+    @RequestMapping(value = "meas-fire-counts", method = RequestMethod.POST)
+    public JSONObject getCountByFire(@RequestBody JSONObject object) {
+        Integer tunnelId = object.getInteger("tunnelId");
         Integer storeId = object.getInteger("storeId");
         Integer areaId = object.getInteger("areaId");
         int monitorType = MonitorTypeEnum.FIRE_CONTROL.getValue();
-        
+
         List<JSONObject> list = measObjService.getMeasObjMaxOrMinValue(tunnelId, storeId, areaId, monitorType);
         ObjectType objType = ObjectType.HAND_REPORT;
-        
-		List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
-		measObjSIs = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
-		if (tunnelId != null)
-			measObjSIs = measObjSIs.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
+
+        List<MeasObjSI> measObjSIs = measObjModuleCenter.getMeasObjSIs();
+        measObjSIs = measObjSIs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+        if (tunnelId != null)
+            measObjSIs = measObjSIs.stream().filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
         if (storeId != null)
-        	measObjSIs = measObjSIs.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
+            measObjSIs = measObjSIs.stream().filter(a -> a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
         if (areaId != null)
-        	measObjSIs = measObjSIs.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
-			
-		JSONObject json = new JSONObject();
-		json.put("key", objType.getName());
-		long open = measObjSIs.stream().filter(x -> x.getCv() == SwitchEnum.OPEN.getValue()).count();
-		json.put("open", open);
-		long close = measObjSIs.stream().filter(x -> x.getCv() == SwitchEnum.CLOSE.getValue()).count();
-		json.put("close", close);
-		list.add(json);
-		
-		return CommonUtil.success(list);
-	}
-	
+            measObjSIs = measObjSIs.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
+
+        JSONObject json = new JSONObject();
+        json.put("key", objType.getName());
+        long open = measObjSIs.stream().filter(x -> x.getCv() == SwitchEnum.OPEN.getValue()).count();
+        json.put("open", open);
+        long close = measObjSIs.stream().filter(x -> x.getCv() == SwitchEnum.CLOSE.getValue()).count();
+        json.put("close", close);
+        list.add(json);
+
+        return CommonUtil.success(list);
+    }
+
     /**
      * 绑定预案
+     *
      * @param reqJson {"objtypeId":1,"planIds":"plan1,plan2,plan3"}
      * @return
      */
-	@RequestMapping(value = "measobjs/conf/plans", method = RequestMethod.POST)
-	public JSONObject setPlanIds(@RequestBody JSONObject reqJson) {
-	    CommonUtil.hasAllRequired(reqJson,"objtypeId,planIds");
+    @RequestMapping(value = "measobjs/conf/plans", method = RequestMethod.POST)
+    public JSONObject setPlanIds(@RequestBody JSONObject reqJson) {
+        CommonUtil.hasAllRequired(reqJson, "objtypeId,planIds");
         Integer objtypeId = reqJson.getInteger("objtypeId");
         String planIds = reqJson.getString("planIds");
-        measObjService.setPlanIds(objtypeId,planIds);
+        measObjService.setPlanIds(objtypeId, planIds);
 
         return CommonUtil.success();
     }
@@ -869,12 +891,13 @@ public class MeasObjController {
 
     /**
      * 绑定视频
+     *
      * @param reqJson {"id":1,"videoIds":"video1,video2,video3"}
      * @return
      */
     @RequestMapping(value = "measobjs/conf/videos", method = RequestMethod.POST)
     public JSONObject setVideos(@RequestBody JSONObject reqJson) {
-        CommonUtil.hasAllRequired(reqJson,"id,videoIds");
+        CommonUtil.hasAllRequired(reqJson, "id,videoIds");
         Integer id = reqJson.getInteger("id");
         String videoIds = reqJson.getString("videoIds");
         measObjService.setVideoIds(id, videoIds);
@@ -885,11 +908,12 @@ public class MeasObjController {
 
     /**
      * 获取监测对象所在section的所有视频
+     *
      * @param storeId
      * @param areaId
      * @return
      */
-    @RequestMapping(value = "measobjs/{storeId}/{areaId}/videos",method = RequestMethod.GET)
+    @RequestMapping(value = "measobjs/{storeId}/{areaId}/videos", method = RequestMethod.GET)
     public JSONObject getLocalSectionVideoList(@PathVariable("storeId") Integer storeId, @PathVariable("areaId") Integer areaId) {
 
         List<VideoDto> videoList = new ArrayList<>(10);
@@ -902,15 +926,119 @@ public class MeasObjController {
 
     /**
      * 监测对象id模糊查询
+     *
      * @param id
      * @return
      * @author ya.liu
      * @Date 2019年4月15日
      */
-    @RequestMapping(value = "measobjs/{id}/condition",method = RequestMethod.GET)
+    @RequestMapping(value = "measobjs/{id}/condition", method = RequestMethod.GET)
     public JSONObject getMeasobjIdList(@PathVariable("id") String id) {
 
         List<Integer> list = measObjService.getIdList(id);
         return CommonUtil.success(list);
+    }
+    
+    /**
+     * 获取布防cv值
+     * @param tunnelId
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月3日
+     */
+    @RequestMapping(value = "tunnels/{tunnelId}/deploy", method = RequestMethod.GET)
+    public JSONObject getDeploy(@PathVariable("tunnelId") Integer tunnelId) {
+    	
+    	TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
+    	List<MeasObjDI> dis = measObjModuleCenter.getMeasObjDIs();
+    	int objTypeId = ObjectType.DEPLOY_DEFENCE.getValue();
+    	dis = dis.stream().filter(a -> a.getObjtypeId() == objTypeId).collect(Collectors.toList());
+    	JSONObject json = new JSONObject();
+    	
+    	List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
+    	List<StoreDto> stores = storeService.getStoresByTunnelId(tunnelId);
+    	json.put("tunnelId", tunnelId);
+    	json.put("tunnelName", tunnel.getName());
+    	List<JSONObject> areaList = new ArrayList<>();
+    	for(AreaDto area :areas) {
+    		JSONObject areaJson = new JSONObject();
+    		areaJson.put("areaId", area.getId());
+    		areaJson.put("areaName", area.getName());
+    		List<JSONObject> storeList = new ArrayList<>();
+    		for(StoreDto store : stores) {
+    			String [] sn = {"01", "02", "03", "04"};
+    			List<String> list = Arrays.asList(sn);
+    			if(!list.contains(store.getSn())) continue;
+    			JSONObject storeJson = new JSONObject();
+    			storeJson.put("storeId", store.getId());
+    			storeJson.put("storeName", store.getName());
+    			
+    			List<MeasObjDI> diValue = dis.stream()
+    					.filter(a -> a.getAreaId().equals(area.getId()) && a.getStoreId().equals(store.getId()))
+    					.collect(Collectors.toList());
+    			MeasObjDI di = null;
+    			if(diValue != null && diValue.size() > 0) di = diValue.get(0);
+    			storeJson.put("id", di == null ? null : di.getId());
+    			storeJson.put("val", di == null ? null : di.getCv());
+    			storeList.add(storeJson);
+    		}
+    		areaJson.put("store", storeList);
+    		areaList.add(areaJson);
+    	}
+    	json.put("area", areaList);
+    	return CommonUtil.success(json);
+    }
+    
+    /**
+     * 获取联动cv值
+     * @param tunnelId
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月3日
+     */
+    @RequestMapping(value = "tunnels/{tunnelId}/linkage", method = RequestMethod.GET)
+    public JSONObject getLinkage(@PathVariable("tunnelId") Integer tunnelId) {
+    	
+    	TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
+    	List<MeasObjDI> dis = measObjModuleCenter.getMeasObjDIs();
+    	int objTypeId = ObjectType.LINKAGE.getValue();
+    	dis = dis.stream().filter(a -> a.getObjtypeId() == objTypeId).collect(Collectors.toList());
+    	JSONObject json = new JSONObject();
+    	
+    	List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
+    	json.put("tunnelId", tunnelId);
+    	json.put("tunnelName", tunnel.getName());
+    	List<JSONObject> areaList = new ArrayList<>();
+    	for(AreaDto area :areas) {
+    		JSONObject areaJson = new JSONObject();
+    		areaJson.put("areaId", area.getId());
+    		areaJson.put("areaName", area.getName());
+			List<MeasObjDI> diValue = dis.stream()
+					.filter(a -> a.getAreaId().equals(area.getId()))
+					.collect(Collectors.toList());
+			MeasObjDI di = null;
+			if(diValue != null && diValue.size() > 0) di = diValue.get(0);
+			areaJson.put("id", di == null ? null : di.getId());
+			areaJson.put("val", di == null ? null : di.getCv());
+    		areaList.add(areaJson);
+    	}
+    	json.put("area", areaList);
+    	return CommonUtil.success(json);
+    }
+    
+    /**
+     * 获取外部/气象台的温度/湿度
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月3日
+     */
+    @RequestMapping(value = "measobjs/outside", method = RequestMethod.GET)
+    public JSONObject getOutside() {
+    	List<MeasObj> list = measObjModuleCenter.getMeasObjs();
+    	list = list.stream().filter(a -> a.getDatatypeId().equals(DataType.AI.getValue())).collect(Collectors.toList());
+    	list = list.stream().filter(a -> a.getTunnelId() == 0).collect(Collectors.toList());
+    	list = list.stream().filter(a -> a.getObjtypeId().equals(ObjectType.TEMPERATURE.getValue()) || a.getObjtypeId().equals(ObjectType.HUMIDITY.getValue())).collect(Collectors.toList());
+    	
+    	return CommonUtil.success(getMeasObjInfo(list));
     }
 }

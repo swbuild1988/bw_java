@@ -380,7 +380,7 @@ public class EnumController {
 	@RequestMapping(value="processtype-enums",method=RequestMethod.GET)
 	public JSONObject getProcessTypeEnumList() {
 		List<JSONObject> list = new ArrayList<>();
-		for (ProcessTypeEnum e : ProcessTypeEnum.values()) {
+		for (ProcessTypeEnum e : ProcessTypeEnum.getInspectionList()) {
 			JSONObject obj = new JSONObject();
 			obj.put("key", e.getName());
 			obj.put("val", e.getValue());

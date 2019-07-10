@@ -22,6 +22,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
@@ -154,10 +155,13 @@ public class MeasObjServiceImpl implements MeasObjService {
                 Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv();
                 return cv == null ? 0 : cv;
             case DI:
-                return measObjModuleCenter.getMeasObjDI(objId).getCv() ? 1 : 0;
+            	MeasObjDI di = measObjModuleCenter.getMeasObjDI(objId);
+                cv = (di != null && di.getCv()) ? 1.0 : 0.0;
+                return cv;
             case SI:
-                Integer cv2 = measObjModuleCenter.getMeasObjSI(objId).getCv();
-                return cv2 == null ? 0 : cv2;
+            	MeasObjSI si = measObjModuleCenter.getMeasObjSI(objId);
+                Integer cv2 = (si != null && si.getCv() != null) ? si.getCv() : 0;
+                return cv2;
             default:
                 break;
         }

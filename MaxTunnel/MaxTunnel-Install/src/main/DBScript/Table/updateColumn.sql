@@ -204,4 +204,5 @@ alter table T_MAM_SUBSTATION add power_ele_id number;
 alter table T_MAM_SUBSTATION add unpower_ele_id number;
 alter table T_MAM_SUBSTATION add type number;
 
+update T_MAM_MEASOBJ set datatype_id = 2 where objtype_id in (41, 57); commit;
 

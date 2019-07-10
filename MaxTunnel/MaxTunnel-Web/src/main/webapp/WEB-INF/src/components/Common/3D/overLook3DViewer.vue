@@ -200,7 +200,6 @@ export default {
             // _this.addRelatedUnits();
             _this.switchCameraAngle();
             _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
-console.log('entities',this.viewer.entities._entities._array.filter( entity =>entity.messageType == "relevantUnit" ))
             // 滚轮滑动，获得当前窗口的经纬度，偏移角
             _this.handler = new Cesium.ScreenSpaceEventHandler(
                 _this.scene.canvas

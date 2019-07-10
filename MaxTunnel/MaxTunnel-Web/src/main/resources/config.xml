@@ -40,29 +40,29 @@
         </convertTypes>
         <convertTypes>
             <code>fault2</code>
-            <convertId>6</convertId>
-            <describe>开关失败</describe>
+            <convertId>8</convertId>
+            <describe>运行故障</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>3</convertId>
+            <convertId>6</convertId>
             <describe>开盖</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>4</convertId>
+            <convertId>7</convertId>
             <describe>关盖</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>clear</code>
-            <convertId>7</convertId>
-            <describe>清除告警</describe>
+            <convertId>9</convertId>
+            <describe>报警清除</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
@@ -94,14 +94,14 @@
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>4</convertId>
+            <convertId>6</convertId>
             <describe>开风机</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>5</convertId>
+            <convertId>7</convertId>
             <describe>关风机</describe>
             <type>1</type>
             <value>1</value>
@@ -113,36 +113,43 @@
     <complexObjectConverts>
         <convertTypes>
             <code>open</code>
-            <convertId>1</convertId>
+            <convertId>3</convertId>
             <describe>电动百叶开足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>2</convertId>
+            <convertId>4</convertId>
             <describe>电动百叶关足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>fault</code>
-            <convertId>5</convertId>
+            <convertId>7</convertId>
             <describe>故障</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>3</convertId>
+            <convertId>5</convertId>
             <describe>开电动百叶</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>4</convertId>
+            <convertId>6</convertId>
             <describe>关电动百叶</describe>
+            <type>1</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>clear</code>
+            <convertId>8</convertId>
+            <describe>报警清除</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
@@ -172,22 +179,60 @@
             <type>0</type>
             <value>1</value>
         </convertTypes>
+        <objectName>排水泵</objectName>
+        <objectType>59</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>1</convertId>
+            <describe>输入值</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>4</convertId>
-            <describe>开泵</describe>
+            <convertId>1</convertId>
+            <describe>布防</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>5</convertId>
-            <describe>关泵</describe>
+            <convertId>1</convertId>
+            <describe>撤防</describe>
+            <type>1</type>
+            <value>0</value>
+        </convertTypes>
+        <objectName>布防/撤防</objectName>
+        <objectType>63</objectType>
+        <originalId>0</originalId>
+    </complexObjectConverts>
+    <complexObjectConverts>
+        <convertTypes>
+            <code>fault</code>
+            <convertId>1</convertId>
+            <describe>输入值</describe>
+            <type>0</type>
+            <value>1</value>
+        </convertTypes>
+        <convertTypes>
+            <code>open</code>
+            <convertId>1</convertId>
+            <describe>投入联动</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
-        <objectName>排水泵</objectName>
-        <objectType>59</objectType>
+        <convertTypes>
+            <code>close</code>
+            <convertId>1</convertId>
+            <describe>解除联动</describe>
+            <type>1</type>
+            <value>0</value>
+        </convertTypes>
+        <objectName>投入/解除联动</objectName>
+        <objectType>64</objectType>
         <originalId>0</originalId>
     </complexObjectConverts>
     <complexObjectConverts>
@@ -200,29 +245,29 @@
         </convertTypes>
         <convertTypes>
             <code>fault</code>
-            <convertId>4</convertId>
-            <describe>开关失败</describe>
+            <convertId>7</convertId>
+            <describe>运行故障</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>2</convertId>
+            <convertId>5</convertId>
             <describe>开灯</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>3</convertId>
+            <convertId>6</convertId>
             <describe>关灯</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>clear</code>
-            <convertId>5</convertId>
-            <describe>清除告警</describe>
+            <convertId>8</convertId>
+            <describe>报警清除</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
@@ -234,14 +279,119 @@
         <convertTypes>
             <code>value1</code>
             <convertId>1</convertId>
-            <describe>电流</describe>
+            <describe>组合有功总电能</describe>
             <type>2</type>
             <value>0</value>
         </convertTypes>
         <convertTypes>
             <code>value2</code>
             <convertId>2</convertId>
-            <describe>电压</describe>
+            <describe>组合无功总电能</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value3</code>
+            <convertId>3</convertId>
+            <describe>A相电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value4</code>
+            <convertId>4</convertId>
+            <describe>B相电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value5</code>
+            <convertId>5</convertId>
+            <describe>C相电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value6</code>
+            <convertId>6</convertId>
+            <describe>AB相线电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value7</code>
+            <convertId>7</convertId>
+            <describe>BC相线电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value8</code>
+            <convertId>8</convertId>
+            <describe>AC相线电压</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value9</code>
+            <convertId>9</convertId>
+            <describe>A相电流</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value10</code>
+            <convertId>10</convertId>
+            <describe>B相电流</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value11</code>
+            <convertId>11</convertId>
+            <describe>C相电流</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value12</code>
+            <convertId>12</convertId>
+            <describe>零线电流</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value13</code>
+            <convertId>13</convertId>
+            <describe>有功总功率</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value14</code>
+            <convertId>14</convertId>
+            <describe>无功总功率</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value15</code>
+            <convertId>15</convertId>
+            <describe>总功率因数</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value16</code>
+            <convertId>16</convertId>
+            <describe>电压不平衡</describe>
+            <type>2</type>
+            <value>0</value>
+        </convertTypes>
+        <convertTypes>
+            <code>value17</code>
+            <convertId>17</convertId>
+            <describe>电流不平衡</describe>
             <type>2</type>
             <value>0</value>
         </convertTypes>
@@ -260,8 +410,10 @@
     <objectTypeIds>9</objectTypeIds>
     <objectTypeIds>10</objectTypeIds>
     <objectTypeIds>11</objectTypeIds>
+    <objectTypeIds>12</objectTypeIds>
     <objectTypeIds>20</objectTypeIds>
     <objectTypeIds>21</objectTypeIds>
+    <objectTypeIds>30</objectTypeIds>
     <objectTypeIds>31</objectTypeIds>
     <objectTypeIds>32</objectTypeIds>
     <objectTypeIds>33</objectTypeIds>
@@ -369,12 +521,32 @@
     <typeFiles>
         <name>应急照明系统</name>
         <sn>44</sn>
-        <typeId>11</typeId>
+        <typeId>12</typeId>
     </typeFiles>
     <typeFiles>
         <name>排水泵</name>
-        <sn>43</sn>
-        <typeId>11</typeId>
+        <sn>45</sn>
+        <typeId>59</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>电力仪表AP</name>
+        <sn>46</sn>
+        <typeId>30</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>电力仪表EP</name>
+        <sn>47</sn>
+        <typeId>30</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>布防/撤防</name>
+        <sn>51</sn>
+        <typeId>63</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>投入/解除联动</name>
+        <sn>52</sn>
+        <typeId>64</typeId>
     </typeFiles>
     <units>
         <id>1</id>

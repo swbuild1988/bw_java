@@ -117,7 +117,7 @@
                                 <Row>
                                     <Col
                                         :span="videoNum == 4 ? 12 : (videoNum == 1 ? 24 : 8)"
-                                        v-for="(item,index) in showVideosList"
+                                        v-for="(item,index) in tempVideoList"
                                         :key="item.id"
                                         :class="['monitors',{'active': curVideo && item.id == curVideo.id},{'oneSBody': videoNum == 1},{'nineSBody': videoNum == 9}]"
                                     >
@@ -198,7 +198,8 @@ export default {
             clicked: {
                 prev: false,
                 next: false
-            }
+            },
+            tempVideoList:[]
         };
     },
     components: { VideoControl, VideoComponent },
@@ -212,6 +213,14 @@ export default {
             this.isDisabled = true;
             this.conditions.storeId = null;
             this.conditions.areaId = null;
+        },
+        showVideosList(){
+            this.tempVideoList = [];
+
+            this.$nextTick(function(){
+                this.tempVideoList = this.showVideosList;
+            })
+            
         }
     },
     computed: {
@@ -288,6 +297,7 @@ export default {
         },
         search() {
             let _this = this;
+            console.log('ssss')
             VideoService.getCamerasByConditions(_this.conditions).then(
                 result => {
                     _this.cameraList = [];

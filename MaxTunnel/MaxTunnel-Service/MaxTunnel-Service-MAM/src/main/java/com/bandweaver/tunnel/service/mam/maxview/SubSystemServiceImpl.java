@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
@@ -159,29 +161,70 @@ public class SubSystemServiceImpl implements SubSystemService {
 		bodys.put("measObjId", String.valueOf(masObjId));
 		bodys.put("measValue", String.valueOf(measValue));
 		bodys.put("sessionID", subSystemModuleCenter.getSessionID(config.getId()));
-		
-		try {
-			HttpResponse response = HttpUtil.doPost(host, path, POST, headers, querys, bodys);
-		    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-			    String resultJson = EntityUtils.toString(response.getEntity(), "utf-8");
-			    LogUtil.info("resultJson:" + resultJson);
-			    //{"Description":null,"SucceedNum":0,"FailedNum":0,"Result":true,"ErrorCode":0}
-			    JSONObject retObj = JSON.parseObject(resultJson);
-			    Boolean result = retObj.getBoolean("Result");
-			    return result;
-			}else {
-				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
-			}
-			
-		} catch (Exception e) {
-			LogUtil.info("HTTP请求失败，错误信息：" + e);
-		}
-		return false;
+
+		return sendMsg(host, path, headers, querys, bodys);
 	
 	}
 
+	@Override
+	public boolean controlOutput(int objectId, String code) {
+		MeasObj measObj = measObjModuleCenter.getMeasObj(objectId);
+		if(StringTools.isNullOrEmpty(measObj))
+			throw new BandWeaverException("监测对象[" + objectId + "]不存在");
 
+		TunnelDto tunnel = tunnelService.getDtoById(measObj.getTunnelId());
+		if(StringTools.isNullOrEmpty(tunnel))
+			throw new BandWeaverException("管廊不存在");
 
+		MaxviewConfig config = maxviewConfigMapper.selectByPrimaryKey(tunnel.getMaxviewConfigId());
+		if(StringTools.isNullOrEmpty(config))
+			throw new BandWeaverException("MaxView终端未配置");
+
+		ComplexObjectConvert complexObjectConvert = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
+		if (StringTools.isNullOrEmpty(complexObjectConvert))
+			throw new BandWeaverException("转换类型为空，不可转换");
+
+		ConvertType convertType = complexObjectConvert.getConvertType(code);
+		if (StringTools.isNullOrEmpty(convertType))
+			throw new BandWeaverException("没有对应的识别码" + code);
+
+		int masObjId = measObjModuleCenter.getConvertObjectId(measObj, convertType);
+		int measValue = convertType.getValue();
+
+		String host = "http://" + config.getIp() + ":"+ config.getPort() +"/Handler/CommonService/CommonServiceHandler.ashx";
+		String path = "";
+		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> querys = new HashMap<String, String>();
+		Map<String, String> bodys = new HashMap<String, String>();
+		bodys.put("type", "updateSwitchMeasValue");
+		bodys.put("measObjId", String.valueOf(masObjId));
+		bodys.put("measValue", String.valueOf(measValue));
+		bodys.put("sessionID", subSystemModuleCenter.getSessionID(config.getId()));
+
+		return sendMsg(host, path, headers, querys, bodys);
+	}
+
+	private boolean sendMsg(String host, String path, Map<String,String> headers, Map<String, String> querys, Map<String, String> bodys){
+
+		try {
+			HttpResponse response = HttpUtil.doPost(host, path, POST, headers, querys, bodys);
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				String resultJson = EntityUtils.toString(response.getEntity(), "utf-8");
+				LogUtil.info("resultJson:" + resultJson);
+				//{"Description":null,"SucceedNum":0,"FailedNum":0,"Result":true,"ErrorCode":0}
+				JSONObject retObj = JSON.parseObject(resultJson);
+				Boolean result = retObj.getBoolean("Result");
+				return result;
+			}else {
+				LogUtil.info("请求出错：" + response.getStatusLine().getStatusCode() );
+			}
+
+		} catch (Exception e) {
+			LogUtil.info("HTTP请求失败，错误信息：" + e);
+		}
+
+		return false;
+	}
 
 	@Override
 	public void add(MaxviewConfig config) {

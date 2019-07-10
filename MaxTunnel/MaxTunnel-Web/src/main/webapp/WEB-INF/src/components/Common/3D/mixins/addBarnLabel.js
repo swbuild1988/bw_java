@@ -34,7 +34,6 @@ const addBarnLabel = {
             
             _this._getSection()
                 .then(result => {
-                    console.log(result)
                     if (result.moInfo) {
 
                         _this.labelsArray.forEach(currEvent => viewer.entities.removeById(currEvent.id));

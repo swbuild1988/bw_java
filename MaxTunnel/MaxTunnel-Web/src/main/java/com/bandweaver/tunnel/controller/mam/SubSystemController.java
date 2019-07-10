@@ -58,6 +58,24 @@ public class SubSystemController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
 	}
 	
+	/**
+	 * 批量控制开关，只限开关量
+	 * @param list[{key : 203006400, val : 1}]
+	 * @return
+	 * @author ya.liu
+	 * @Date 2019年7月3日
+	 */
+	@RequestMapping(value = "sub-sys/action" ,method= RequestMethod.POST)
+	public JSONObject doAction(@RequestBody List<JSONObject> list) {
+		for(JSONObject obj : list) {
+			Integer id = obj.getInteger("key");
+			Integer inputVal = obj.getInteger("val");
+			boolean result = subSystemService.doAction(id, inputVal);
+			obj.put("result", result);
+		}
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+	}
+	
 	/**添加终端 
 	 * @param name 终端名称
 	 * @param ip 终端ip
