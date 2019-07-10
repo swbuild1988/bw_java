@@ -843,7 +843,7 @@ export default {
     color: #fff;
 }
 .fileInput {
-    width: 74%;
+    width: 72%;
 }
 .fileInput >>> .ivu-input {
     border: 0px;

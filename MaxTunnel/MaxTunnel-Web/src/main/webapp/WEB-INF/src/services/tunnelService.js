@@ -180,6 +180,23 @@ var TunnelService = {
             });
         });
     },
+    // 获取所有管廊
+    getTunnelsAll: function () {
+        return new Promise((resolve, reject) => {
+            get("tunnels/all").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
+                if (code == 200) {
+                    resolve(data);
+                } else {
+                    reject(msg + ",地址:tunnels/all");
+                }
+            });
+        });
+    },
     // 根据管舱IDs返回管舱详细信息
     getSectionsByIds: function (ids) {
         return new Promise((resolve, reject) => {

@@ -390,7 +390,7 @@ export default {
     background: linear-gradient(to right, #7c83f2, #2734e1);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.2vmin !important;
+    font-size: 1vmin !important;
 }
 .del,
 .table >>> .ivu-btn:last-child {
@@ -400,7 +400,7 @@ export default {
     background: linear-gradient(to right, #e49b9b, #f61a1a);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.2vmin !important;
+    font-size: 1vmin !important;
 }
 .read,
 .table >>> .ivu-btn:nth-child(2) {
@@ -410,7 +410,7 @@ export default {
     background: linear-gradient(to right, #dcd77c, #cabf11);
     border-color: #3e4f61;
     border-radius: 1vmin;
-    font-size: 1.2vmin !important;
+    font-size: 1vmin !important;
 }
 
 .ivu-select,
