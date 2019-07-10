@@ -2,12 +2,17 @@ package com.bandweaver.tunnel.controller.test;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.dto.AreaDto;
+import com.bandweaver.tunnel.common.biz.dto.StoreDto;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
+import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.oam.ConsumeDto;
 import com.bandweaver.tunnel.common.biz.itf.*;
 import com.bandweaver.tunnel.common.biz.itf.common.TunnelLightService;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.alarm.AlarmService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
@@ -17,6 +22,7 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.pojo.oam.Consume;
 import com.bandweaver.tunnel.common.biz.pojo.oam.ConsumeData;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -24,8 +30,10 @@ import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.dao.mam.MeasValueAIMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,8 +44,10 @@ import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @ResponseBody
@@ -58,6 +68,12 @@ public class TestController {
     private AlarmService alarmService;
     @Autowired
     private TunnelLightService tunnelLightService;
+    @Autowired
+    private AreaService areaService;
+    @Autowired
+    private StoreService storeService;
+    @Autowired
+    private XMLService xmlService;
 
     /**
      * 测试添加每个管廊的moid和总能耗
@@ -220,14 +236,18 @@ public class TestController {
         }
     }
 
-    @RequestMapping(value = "test/add_alarm", method = RequestMethod.GET)
-    public JSONObject sendMQMessage() {
+    /**
+     * 手动添加告警
+     * @param level 告警等级，值为1,2,3,4
+     */
+    @RequestMapping(value = "test/add_alarm/{level}", method = RequestMethod.GET)
+    public JSONObject sendMQMessage(@PathVariable("level") Integer level) {
         Alarm alarm = new Alarm();
         alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
-        
-        int i = MathUtil.getRandomInt(1, 4);
-        alarm.setAlarmLevel(i);
+
+        //int i = MathUtil.getRandomInt(1, 4);
+        alarm.setAlarmLevel(level);
         alarm.setAlarmName("温度测试告警");
         alarm.setObjectId(222032401);
         alarm.setObjectName("温度检测仪");
@@ -244,7 +264,9 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
-
+    /*
+     * 添加管廊光源
+     */
     @RequestMapping(value = "test/add_lights", method = RequestMethod.GET)
     public JSONObject createTunnelLights() {
         int tunnelId = 1;
@@ -253,6 +275,114 @@ public class TestController {
 
         for (int i = 0; i < storeIds.size(); i++) {
             tunnelLightService.createTunnelLights(tunnelId, null, storeIds.get(i));
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+
+    /*
+     * 添加布防、联动监测对象
+     */
+    @RequestMapping(value = "test/add_measobjs", method = RequestMethod.GET)
+    public JSONObject createMeasobj() {
+    	// 获取古城大街下的所有舱和区
+    	List<AreaDto> areas = areaService.getAreasByTunnelId(1);
+    	List<StoreDto> stores = storeService.getStoresByTunnelId(1);
+    	for(AreaDto area : areas) {
+    		// 添加联动监测对象
+    		String linkageId = "02" + area.getSn() + "00" + 6400;
+    		MeasObj measObj = new MeasObj();
+    		measObj.setId(Integer.parseInt(linkageId));
+    		measObj.setTunnelId(1);
+    		measObj.setAreaId(area.getId());
+    		measObj.setStoreId(0);
+    		measObj.setActived(true);
+    		measObj.setObjtypeId(64);
+    		measObj.setDatatypeId(2);
+    		measObj.setName(area.getName() + "联动装置");
+    		LogUtil.info(measObj);
+    		measObjModuleCenter.insertMeasObj(measObj);
+    		
+    		for(StoreDto store : stores) {
+    			String [] sn = {"01", "02", "03", "04"};
+    			List<String> list = Arrays.asList(sn);
+    			if(!list.contains(store.getSn())) continue;
+    			// 添加布防监测对象
+    			String deployId = "02" + area.getSn() + store.getSn() + 6300;
+    			MeasObj measObj1 = new MeasObj();
+        		measObj1.setId(Integer.parseInt(deployId));
+        		measObj1.setTunnelId(1);
+        		measObj1.setAreaId(area.getId());
+        		measObj1.setStoreId(store.getId());
+        		measObj1.setActived(true);
+        		measObj1.setObjtypeId(63);
+        		measObj1.setDatatypeId(2);
+        		measObj1.setName(area.getName() + store.getName() + "布防装置");
+        		LogUtil.info(measObj1);
+        		measObjModuleCenter.insertMeasObj(measObj1);
+    		}
+    	}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 添加外部/气象台的温度/湿度
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月3日
+     */
+    @RequestMapping(value = "test/add_outside", method = RequestMethod.GET)
+    public JSONObject addOutside() {
+    	String [] out = {"100000", "200000"};
+    	String [] th = {"0100", "0200"};
+    	List<String> outs = Arrays.asList(out);
+    	List<String> ths = Arrays.asList(th);
+    	for(int j=0;j<outs.size();j++) {
+    		for(int i=0;i<ths.size();i++) {
+    			// 添加
+    			String id = outs.get(j) + ths.get(i);
+    			MeasObj measObj = new MeasObj();
+        		measObj.setId(Integer.parseInt(id));
+        		measObj.setTunnelId(0);
+        		measObj.setAreaId(0);
+        		measObj.setStoreId(0);
+        		measObj.setActived(true);
+        		measObj.setObjtypeId(1 + i);
+        		measObj.setDatatypeId(1);
+        		String outside = j == 0 ? "外部" : "气象台";
+        		String thval = i == 0 ? "温度" : "湿度";
+        		measObj.setName(outside + thval);
+        		LogUtil.info(measObj);
+        		measObjModuleCenter.insertMeasObj(measObj);
+    		}
+    	}
+    	return CommonUtil.success();
+    }
+    
+    
+    @RequestMapping(value = "test/change_measobjs")
+    public JSONObject changeMeasObj() {
+
+        List<ComplexObjectConvert> complexObjectConverts = xmlService.getXMLAllInfo().getComplexObjectConverts();
+
+        for (ComplexObjectConvert complexObjectConvert : complexObjectConverts) {
+            ObjectType objectType = ObjectType.getEnum(complexObjectConvert.getObjectType());
+
+            // 获取所有的类型为objectType的对象
+            List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream().filter(a -> a.getObjtypeId().intValue() == objectType.getValue()).collect(Collectors.toList());
+            for (MeasObj measObj : measObjs) {
+
+                if (measObj.getDatatypeId() == DataType.ComplexObject.getValue()) continue;
+
+                MeasObj tmpObj = new MeasObj();
+                // 先复制一份备份
+                BeanUtils.copyProperties(measObj, tmpObj);
+                // 设为复杂结构
+                tmpObj.setDatatypeId(DataType.ComplexObject.getValue());
+
+                measObjModuleCenter.deleteObj(measObj.getId());
+                measObjModuleCenter.insertMeasObj(tmpObj);
+            }
         }
 
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);

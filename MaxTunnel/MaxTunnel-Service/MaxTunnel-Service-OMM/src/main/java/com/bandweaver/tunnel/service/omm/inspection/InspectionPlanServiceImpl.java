@@ -150,7 +150,7 @@ public class InspectionPlanServiceImpl implements InspectionPlanService {
     @Override
     public PageInfo<InspectionPlanSimpleDto> dataGrid(InspectionVo vo) {
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-        List<InspectionPlanSimpleDto> list = inspectionPlanMapper.getInspectionPlansByVo(vo);
+        List<InspectionPlanSimpleDto> list = getInspectionPlansByVo(vo);
         return new PageInfo<>(list);
     }
 
