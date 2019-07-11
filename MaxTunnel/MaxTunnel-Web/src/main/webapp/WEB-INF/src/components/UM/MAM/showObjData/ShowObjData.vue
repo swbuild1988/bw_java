@@ -30,7 +30,10 @@
         methods: {
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
                 this.$emit("changeStatus", id, ObjVal, datatypeId, clickStatus);
-            }
+            },
+            // reset(id){
+            //     alert(id)
+            // }
         }
     };
 </script>

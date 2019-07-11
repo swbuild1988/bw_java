@@ -140,7 +140,8 @@
                 });
             },
             reset() {
-                this.$emit('reset',this.propList.id)
+                alert('an')
+                // this.$emit('reset',this.propList.id)
             },
             confirm(data) {
                 this.$nextTick(() => {

@@ -101,7 +101,7 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @reset="reset"></show-obj-data>
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus"></show-obj-data>
                     <!-- <SimulatedData
                                 v-bind:Obj="item"
                                 v-if="item.datatypeId==1"
@@ -664,9 +664,6 @@
             },
             handleScreensNum(num) {
                 this.curCarousel.videoNumber = num;
-            },
-            reset(id){
-                alert(id)
             }
         },
         beforeDestroy() {
