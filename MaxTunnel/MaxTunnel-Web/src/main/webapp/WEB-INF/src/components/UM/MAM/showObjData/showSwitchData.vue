@@ -140,7 +140,9 @@
             changeSwitchState(){
                 let { stateProcess } = this;
 
-                this.$emit('getSwicthState',stateProcess.open.value)
+                if(!stateProcess.run && !stateProcess.open)return;
+            
+                this.$emit('getSwicthState',stateProcess.run ? stateProcess.run.value : stateProcess.open.value)
                 
             }
         },

@@ -37,7 +37,7 @@ import switchData from "./ShowSwitchData";
 export default {
     data() {
         return {
-            swicthState: 0,
+            swicthState: false,
             objState: [
                 {
                     key: "close",
@@ -146,9 +146,6 @@ export default {
             this.$emit("reset", this.propObj.id);
         },
         confirm(data) {
-            // this.$nextTick(() => {
-            //     this.swicthState = !data;
-            // });
             let text = data
                 ? "确定打开" +
                   this.propObj.objtypeName +
@@ -163,7 +160,6 @@ export default {
                     return h("span", text);
                 },
                 onOk: () => {
-                    // this.swicthState = !this.swicthState;
                     this.change();
                 }
             });

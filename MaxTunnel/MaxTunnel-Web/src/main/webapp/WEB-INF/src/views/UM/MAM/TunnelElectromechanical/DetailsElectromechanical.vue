@@ -529,7 +529,7 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            temp.time == undefined || a.time == "" ?
+                            temp.time = a.time == undefined || a.time == "" ?
                                 "" :
                                 new Date(a.time).format(
                                     "yyyy-MM-dd hh:mm:ss"
