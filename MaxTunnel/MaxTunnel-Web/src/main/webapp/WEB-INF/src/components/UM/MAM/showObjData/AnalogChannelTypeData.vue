@@ -112,11 +112,7 @@ export default {
         switchData
     },
     mounted() {
-        this.sort().then(()=>{
-            console.log('this.curObjState',this.curObjState)
-            this.transformStateImage();
-        })
-        
+        this.transformStateImage();
     },
     methods: {
         transformStateImage() {
@@ -138,14 +134,14 @@ export default {
                 }
             }
         },
-        replaceImage(curStateVal, val, descript,item) {
+        replaceImage(curStateVal, val, descript, item) {
             // 加载对应状态图片
             this.curObjState.push({
                 img: require("../../../../assets/UM/" +
                     val[curStateVal] +
                     ".png"),
                 val: descript,
-                index:item
+                index: item
             });
         },
         reset() {
@@ -185,11 +181,14 @@ export default {
         changeView(id, datatypeId) {
             this.$emit("changeView", id, datatypeId);
         },
-        sort(){
-            return new Promise((resolve, reject)=>{
+        sort() {
+            return new Promise((resolve, reject) => {
                 for (var j = 0; j < this.curObjState.length - 1; j++) {
                     for (var i = 0; i < this.curObjState.length - 1; i++) {
-                        if (this.curObjState[i].index > this.curObjState[i + 1].index) {
+                        if (
+                            this.curObjState[i].index >
+                            this.curObjState[i + 1].index
+                        ) {
                             var temp = this.curObjState[i];
                             this.curObjState[i] = this.curObjState[i + 1];
                             this.curObjState[i + 1] = temp;
@@ -197,7 +196,7 @@ export default {
                     }
                 }
                 resolve();
-            })
+            });
         }
     }
 };
