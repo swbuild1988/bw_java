@@ -185,7 +185,7 @@
     </complexObjectConverts>
     <complexObjectConverts>
         <convertTypes>
-            <code>fault</code>
+            <code>open</code>
             <convertId>1</convertId>
             <describe>输入值</describe>
             <type>0</type>
@@ -211,7 +211,7 @@
     </complexObjectConverts>
     <complexObjectConverts>
         <convertTypes>
-            <code>fault</code>
+            <code>open</code>
             <convertId>1</convertId>
             <describe>输入值</describe>
             <type>0</type>

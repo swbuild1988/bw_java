@@ -124,7 +124,6 @@
                                         <div @click="selectScene(item)">
                                             <div
                                                 :class="['monitor',{'oneScreen':videoNum == 1},{'nineScreen': videoNum == 9}]"
-                                                v-if="videoStyle.show"
                                             >
                                                 <video-component
                                                     :index="index"
@@ -187,9 +186,6 @@ export default {
             //     id: null
             // },
             curVideo: null,
-            videoStyle: {
-                show: true
-            },
             curPage: 1,
             nodata: false,
             isDisabled: true,
@@ -199,7 +195,7 @@ export default {
                 prev: false,
                 next: false
             },
-            tempVideoList:[]
+            tempVideoList: []
         };
     },
     components: { VideoControl, VideoComponent },
@@ -214,13 +210,11 @@ export default {
             this.conditions.storeId = null;
             this.conditions.areaId = null;
         },
-        showVideosList(){
+        showVideosList() {
             this.tempVideoList = [];
-
             this.$nextTick(function(){
                 this.tempVideoList = this.showVideosList;
-            })
-            
+            });
         }
     },
     computed: {
@@ -231,19 +225,16 @@ export default {
                         this.curPage - 1,
                         this.curPage
                     );
-                    break;
                 case 4:
                     return this.cameraList.slice(
                         (this.curPage - 1) * 4,
                         this.curPage * 4
                     );
-                    break;
                 case 9:
                     return this.cameraList.slice(
                         (this.curPage - 1) * 9,
                         this.curPage * 9
                     );
-                    break;
             }
         },
         totalPage() {
@@ -297,7 +288,6 @@ export default {
         },
         search() {
             let _this = this;
-            console.log('ssss')
             VideoService.getCamerasByConditions(_this.conditions).then(
                 result => {
                     _this.cameraList = [];
@@ -344,7 +334,6 @@ export default {
         },
         handleScreensNum(num) {
             this.videoNum = num;
-            // this.videoStyle.show = false
             this.curPage = 1;
 
             if (num == 1) {

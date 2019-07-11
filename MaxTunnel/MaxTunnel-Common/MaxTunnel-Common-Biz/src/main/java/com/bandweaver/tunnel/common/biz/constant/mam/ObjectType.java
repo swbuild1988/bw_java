@@ -18,15 +18,15 @@ public enum ObjectType {
     VIDEO("视频", 7, 6, 7, ""),
     DISTRIBUTET("分布式温度", 8, 1, 1, ""),
     ROBOT("机器人", 9, 6, 97, ""),
-    LIGHT("照明", 11, 1, 3, "", true),
+    LIGHT("照明", 11, 1, 2, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
-    LIQUID("液位仪", 21, 1, 1, "mm"),
+    LIQUID("液位仪", 21, 1, 1, "m"),
 
     // 复杂类型
     FAN("风机", 10, 4, 200, "", true),
-    EMERGENCY_LIGHT("应急照明", 12, 1, 200, "", true),
-    ELECTRONIC_COVERS("电子井盖", 56, 3, 200, "", true),
-    BLINDS("电动百叶", 58, 4, 200, "", true),
+    EMERGENCY_LIGHT("应急照明", 12, 1, 200, "", true, true),
+    ELECTRONIC_COVERS("电子井盖", 56, 3, 200, "", true, true),
+    BLINDS("电动百叶", 58, 4, 200, "", true, true),
     PUMP("排水泵", 59, 4, 200, "", false),
     ELECTRICITY_METER0("电子仪表", 30, 1, 200, ""),
 	
@@ -64,10 +64,7 @@ public enum ObjectType {
     private int dataType;
     private String unit;
     private boolean control;
-
-
-    ObjectType() {
-    }
+    private boolean reset;
 
     ObjectType(String name, int value, int monitorType, int dataType, String unit) {
         this.name = name;
@@ -76,6 +73,7 @@ public enum ObjectType {
         this.dataType = dataType;
         this.unit = unit;
         this.control = false;
+        this.reset = false;
     }
 
     ObjectType(String name, int value, int monitorType, int dataType, String unit, boolean control) {
@@ -85,6 +83,17 @@ public enum ObjectType {
         this.dataType = dataType;
         this.unit = unit;
         this.control = control;
+        this.reset = false;
+    }
+
+    ObjectType(String name, int value, int monitorType, int dataType, String unit, boolean control, boolean reset) {
+        this.name = name;
+        this.value = value;
+        this.monitorType = monitorType;
+        this.dataType = dataType;
+        this.unit = unit;
+        this.control = control;
+        this.reset = reset;
     }
 
     /**
@@ -206,7 +215,15 @@ public enum ObjectType {
 		this.control = control;
 	}
 
-	public static List<ObjectType> getEnumByMonitorType(int monitorType) {
+    public boolean isReset() {
+        return reset;
+    }
+
+    public void setReset(boolean reset) {
+        this.reset = reset;
+    }
+
+    public static List<ObjectType> getEnumByMonitorType(int monitorType) {
         List<ObjectType> list = new ArrayList<>();
         for (ObjectType dl : ObjectType.values()) {
             if (dl.getMonitorType() == monitorType) {

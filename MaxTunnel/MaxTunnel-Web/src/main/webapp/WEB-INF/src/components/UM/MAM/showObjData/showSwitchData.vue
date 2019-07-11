@@ -4,100 +4,134 @@
             class="clickStatic"
             :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'transparent'}"
         >
+            <p
+                class="heard"
+                style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;"
+            >{{Obj.objtypeName}}</p>
             <slot name="heard">
                 <!-- <p class="heard">{{Obj.objtypeName}}</p> -->
             </slot>
             <div class="equipment_image">
                 <img
                     src="../../../../assets/UM/lamp-on.png"
-                    v-if="Obj.objtypeId==11 && curValue"
+                    v-if="Obj.objtypeId==11 && stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/lamp-off.png"
+                    v-if="Obj.objtypeId==11 && !stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/lamp-on.png"
+                    v-if="Obj.objtypeId==12 && stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/lamp-off.png"
+                    v-if="Obj.objtypeId==12 && !stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/风机gif.gif"
-                    v-if="Obj.objtypeId==10 && curValue"
+                    v-if="Obj.objtypeId==10 && stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/水泵gif.gif"
-                    v-if="Obj.objtypeId==59 && curValue"
+                    v-if="Obj.objtypeId==59 && stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/shutter-open.png"
-                    v-if="Obj.objtypeId==58 && (stateProcess.open == 1 && stateProcess.close == 0)"
+                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-open.png"
-                    v-if="Obj.objtypeId==56 && (stateProcess.open == 1 && stateProcess.close == 0)"
+                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/红外正常gif.gif"
-                    v-if="Obj.objtypeId==57 && curValue"
+                    v-if="Obj.objtypeId==57 && !stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/门-开.png"
-                    v-if="Obj.objtypeId==55 && curValue"
+                    v-if="Obj.objtypeId==55 && (!stateProcess.open.value && stateProcess.close.value)"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/place-troop-open.png"
+                    v-if="Obj.objtypeId==63 && stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/linkage-status-open.png"
+                    v-if="Obj.objtypeId==64 && stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/报警-红gif.gif"
-                    v-if="Obj.objtypeId==41 && curValue"
+                    v-if="Obj.objtypeId==41 && stateProcess.open.value"
                     class="img"
                 >
 
                 <img
-                    src="../../../../assets/UM/lamp-off.png"
-                    v-if="Obj.objtypeId==11 && !curValue"
-                    class="img"
-                >
-                <img
                     src="../../../../assets/UM/风机.png"
-                    v-if="Obj.objtypeId==10 && !curValue"
+                    v-if="Obj.objtypeId==10 && !stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/水泵.png"
-                    v-if="Obj.objtypeId==59 && !curValue"
+                    v-if="Obj.objtypeId==59 && !stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/shutter-close.png"
-                    v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 1)"
+                    v-if="Obj.objtypeId==58 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-close.png"
-                    v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 1)"
+                    v-if="Obj.objtypeId==56 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/红外.gif"
-                    v-if="Obj.objtypeId==57 && !curValue"
+                    v-if="Obj.objtypeId==57 && stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/门-关.png"
-                    v-if="Obj.objtypeId==55 && !curValue"
+                    v-if="Obj.objtypeId==55 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/报警.png"
-                    v-if="Obj.objtypeId==41 && !curValue"
+                    v-if="Obj.objtypeId==41 && !stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/place-troop-close.png"
+                    v-if="Obj.objtypeId==63 && !stateProcess.open.value"
+                    class="img"
+                >
+                <img
+                    src="../../../../assets/UM/linkage-status-close.png"
+                    v-if="Obj.objtypeId==64 && !stateProcess.open.value"
                     class="img"
                 >
                 <!-- 过程 -->
                 <img
                     src="../../../../assets/UM/covers-process.gif"
-                    v-if="Obj.objtypeId==56 && (stateProcess.open == 0 && stateProcess.close == 0)"
+                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/shutter-process.gif"
-                    v-if="Obj.objtypeId==58 && (stateProcess.open == 0 && stateProcess.close == 0)"
+                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
             </div>
@@ -129,119 +163,39 @@ export default {
                     objtypeId: "",
                     clickStatus: false,
                     datatypeId: ""
-                    // control:true
                 };
             }
-        },
-        curValue: {
-            required: true
         },
         stateProcess: {
             type: Object,
             default: () => {
                 return {
-                    open: 0,
-                    close: 1
+                    open: {
+                        descript: "井盖开足",
+                        value: false
+                    }
                 };
             }
         }
     },
+    watch: {
+        stateProcess: {
+            handler(newVal, oldVal) {
+                this.changeSwitchState();
+            },
+            deep: true
+        }
+    },
     data: function() {
         return {
-            // curImgUrl: "",
-            // confirmFlag: false,
-            // curValue: null,
             isTimeShow: false
-            // equipmentState: {
-            //     state: null,
-            //     closeImage: "",
-            //     openImage:"",
-            //     faultImage:"",
-            //     openTitle:'开',
-            //     closeTitle:'关',
-            //     faultTitle:'故障'
-
-            // },
-            // imageState:[
-            //     {
-            //         key:'closeState',
-            //         val:[
-            //             {key:'closeImage',val:'close-open-state'},
-            //             {key:'openImage',val:'open-close-state'},
-            //             {key:'faultImage',val:'fault-close-state'}
-            //         ]
-            //     },
-            //     {
-            //         key:'openState',
-            //         val:[
-            //             {key:'closeImage',val:'close-close-state'},
-            //             {key:'openImage',val:'open-open-state'},
-            //             {key:'faultImage',val:'fault-close-state'}
-            //         ]
-            //     },
-            //     {
-            //         key:'faultState',
-            //         val:[
-            //             {key:'closeImage',val:'close-close-state'},
-            //             {key:'openImage',val:'open-close-state'},
-            //             {key:'faultImage',val:'fault-open-state'}
-            //         ]
-            //     },
-
-            // ],
         };
     },
     components: {
         Light,
         Fans
     },
-    // computed:{
-    //     curValue(){
-    //         return this.$attrs.curValue
-    //     }
-    // },
-    // watch: {
-    //     Obj: {
-    //         handler(newVal, oldVal) {
-    //                 // console.log('watch')
-    //                 // console.log('newVal',this.Obj)
-    //             // this.transformStateImage();
-    //         },
-    //         deep: true
-    //     }
-    // },
     methods: {
-        // confirm(data) {
-        //     this.$nextTick(() => {
-        //         this.curValue = !data;
-        //     });
-        //     let text = data
-        //         ? "确定打开" + this.Obj.objtypeName + this.Obj.ObjName + "吗?"
-        //         : "确定关闭 " +
-        //           this.Obj.objtypeName +
-        //           this.Obj.ObjName +
-        //           " 吗?";
-        //     this.$Modal.confirm({
-        //         render: h => {
-        //             return h("span", text);
-        //         },
-        //         onOk: () => {
-        //             // this.equipmentState.state = this.curValue = !this.curValue;
-        //             this.change();
-        //         }
-        //     });
-        // },
-        // transformStateImage() {
-
-        //     (this.imageState[this.Obj.ObjVal].val).forEach( state => this.replaceImage(state.key,state.val));
-
-        // },
-        // replaceImage(replaceStr,replceImg){
-
-        //         this.equipmentState[replaceStr] = require("../../../assets/UM/" +
-        //             replceImg +
-        //             ".png");
-        // },
         //定位设备
         locationEquimpent() {
             this.Obj.clickStatus = !this.Obj.clickStatus;
@@ -261,18 +215,22 @@ export default {
                 this.Obj.datatypeId,
                 null
             );
+        },
+        changeSwitchState() {
+            let { stateProcess } = this;
+
+                if(!stateProcess.run && !stateProcess.open)return;
+            
+                this.$emit('getSwicthState',stateProcess.run ? stateProcess.run.value : stateProcess.open.value)
+                
+            }
+        },
+        mounted() {
+            if (this.Obj.time != "") {
+                this.isTimeShow = true;
+            }
+            this.changeSwitchState();
         }
-    },
-    mounted() {
-        // console.log('mounted')
-        // console.log('this.obj',this.Obj)
-        if (this.Obj.time != "") {
-            this.isTimeShow = true;
-        }
-        // this.equipmentState.state = this.Obj.ObjVal;
-        // this.curValue = this.Obj.ObjVal == 1;
-        // this.transformStateImage();
-    }
 };
 </script>
 
@@ -281,6 +239,7 @@ export default {
     background: url("../../../../assets/UM/detailsBg.png") no-repeat;
     background-size: 100% 100%;
 }
+
 .ivu-switch:after {
     width: 2vmin;
     height: 2vmin;
@@ -324,7 +283,7 @@ export default {
     border-radius: 10px;
     margin: 1vh 0;
     text-align: center;
-    height: 28vh;
+    height: 30vmin;
 }
 
 /* .switchContent {
@@ -371,16 +330,20 @@ export default {
     border-bottom: none;
     padding: 1.4vmin 1.6vmin;
 }
+
 .ivu-card-bordered {
     border: none;
 }
+
 .ivu-card-head p {
     color: #fff;
 }
+
 .ivu-card-bordered >>> .ivu-card-body {
     color: #fff;
     padding: 2.6vmin;
 }
+
 /* .switchText {
     font-size: 1.4vmin;
     margin-top: .5vmin;
@@ -395,20 +358,24 @@ export default {
     margin-bottom: 2.5vmin;
     margin-top: -1vmin;
 }
+
 @media (min-width: 1921px) {
     .equipment_image {
         top: 57%;
         width: 53%;
     }
+
     /* .switchContent {
         margin-top: 4vh;
     } */
 }
+
 @media (max-width: 1920px) {
     .equipment_image {
         top: 58%;
         width: 50%;
     }
+
     /* .switchContent {
         margin-top: 3vh;
     } */

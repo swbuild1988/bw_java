@@ -28,6 +28,7 @@ import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjDistributeService
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
@@ -90,24 +91,24 @@ public class DataAnalyseController {
     public JSONObject dataGrid(@RequestBody JSONObject reqJson) {
     	CommonUtil.hasAllRequired(reqJson, "datatypeId,pageNum,pageSize");
     	MeasObjVo vo = CommonUtil.parse2Obj(reqJson, MeasObjVo.class);
-    	
-    	PageInfo<?> pageInfo = null;
+    	if(vo.getObjtypeIds() != null && vo.getObjtypeIds().size() == 0) vo.setObjtypeIds(null);
+    	ListPageUtil<?> pageInfo = null;
     	DataType dataType = DataType.getEnum(vo.getDatatypeId());
     	switch (dataType) {
 		case AI:
-			pageInfo= measObjAIService.getByCondition(vo);
+			pageInfo= measObjAIService.getMeasObjAIByCondition(vo);
 			break;
 		case DI:
-			pageInfo= measObjDIService.getByCondition(vo);
+			pageInfo= measObjDIService.getMeasObjDIByCondition(vo);
 			break;
 		case SI:
-			pageInfo= measObjSIService.getByCondition(vo);
+			pageInfo= measObjSIService.getMeasObjSIByCondition(vo);
 			break;
 //		case DISTRIBUTE:
 //			pageInfo= measObjDistributeService.getByCondition(vo);
 //			break;
 		case SO:
-			pageInfo= measObjSOService.dataGrid(vo);
+			pageInfo= measObjSOService.getMeasObjSOByCondition(vo);
 			break;
 		default:
 			break;

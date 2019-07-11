@@ -153,26 +153,44 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             DataType dataType = DataType.getEnum(getDataTypeByConvertType(convertType));
             int tmpId = getConvertObjectId(measObj, convertType);
+
+            JSONObject tmpCV = new JSONObject();
+            tmpCV.put("descript", convertType.getDescribe());
+            // 插入排序字段
+            int index = 0;
+            if(convertType.getDescribe().indexOf("运行") != -1
+            		|| convertType.getDescribe().indexOf("开") != -1)
+            	index = 1;
+            if(convertType.getDescribe().indexOf("故障") != -1)
+            	index = 2;
+            if(convertType.getDescribe().indexOf("运行故障") != -1)
+            	index = 3;
+            if(convertType.getDescribe().indexOf("就地") != -1)
+            	index = 4;
+            tmpCV.put("index", index);
+
             switch (dataType) {
                 case AI:
-                    jsonObject.put(attribute, measObjAIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjAIHashMap.get(tmpId).getCv());
                     break;
 
                 case SI:
-                    jsonObject.put(attribute, measObjSIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjSIHashMap.get(tmpId).getCv());
                     break;
 
                 case DI:
-                    jsonObject.put(attribute, measObjDIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjDIHashMap.get(tmpId).getCv());
                     break;
 
                 case SO:
-                    jsonObject.put(attribute, measObjSOHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjSOHashMap.get(tmpId).getCv());
                     break;
 
                 default:
-                    break;
+                    continue;
             }
+
+            jsonObject.put(attribute, tmpCV);
         }
 
         return jsonObject;
@@ -444,11 +462,13 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+                measObjAI.setRefreshTime(new Date());
                 measObjAIMapper.insertSelective(measObjAI);
                 break;
 
             case DI:
                 MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
+                measObjDI.setRefreshTime(new Date());
                 measObjDIMapper.insertSelective(measObjDI);
                 break;
 

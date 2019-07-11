@@ -58,7 +58,8 @@
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/personCenter/editPass'})"
                                 >个人中心</DropdownItem>
-                                <DropdownItem @click.native="isShowAlarm">告警
+                                <DropdownItem @click.native="isShowAlarm">
+                                    告警
                                     <span class="alarmCount">（{{alarmCount}}）</span>
                                 </DropdownItem>
                                 <!--<showUserInfo v-bind="userself"></showUserInfo>-->
@@ -263,9 +264,9 @@ export default {
                             path: "/VMMain2"
                         },
                         {
-                            name: '项目概况',
-                            url: '/UM/projectSurvey',
-                            path: '/UM/projectSurvey'
+                            name: "项目概况",
+                            url: "/UM/projectSurvey",
+                            path: "/UM/projectSurvey"
                         }
                     ]
                 }
@@ -295,14 +296,14 @@ export default {
         showAlarm,
         ShowStartPlan
     },
-    watch:{
-        'alarmCount': function(newVal, oldVal){
-            if(newVal>0){
-                let dom = document.getElementsByClassName('outBox')[0]
-                dom.setAttribute('class', 'blingbling')
-            }else{
-                let dom = document.getElementsByClassName('blingbling')[0]
-                dom.setAttribute('class', 'outBox')
+    watch: {
+        alarmCount: function(newVal, oldVal) {
+            if (newVal > 0) {
+                let dom = document.getElementsByClassName("outBox")[0];
+                dom.setAttribute("class", "blingbling");
+            } else {
+                let dom = document.getElementsByClassName("blingbling")[0];
+                dom.setAttribute("class", "outBox");
             }
         }
     },
@@ -320,9 +321,9 @@ export default {
                 this.$store.commit("setPlanData", value);
             }
         },
-        countNum: function(){
-            let countNum = this.messageCount+this.alarmCount
-            return countNum
+        countNum: function() {
+            let countNum = this.messageCount + this.alarmCount;
+            return countNum;
         }
     },
     mounted() {
@@ -333,12 +334,12 @@ export default {
         this.noticeTop = window.innerHeight - window.innerHeight * 0.15;
         UserService.getAlarmLevelTime().then(
             result => {
-                this.durations = result
+                this.durations = result;
             },
             error => {
-                this.Log.info(error)
+                this.Log.info(error);
             }
-        )
+        );
     },
     methods: {
         setUserself() {
@@ -402,7 +403,7 @@ export default {
             let _this = this;
             UserService.getMessageCount().then(
                 result => {
-                    _this.messageCount = result
+                    _this.messageCount = result;
                 },
                 error => {
                     _this.Log.info(error);
@@ -410,12 +411,12 @@ export default {
             );
             UserService.getAlarmCount().then(
                 result => {
-                    _this.alarmCount = result
+                    _this.alarmCount = result;
                 },
                 error => {
                     _this.Log.info(error);
                 }
-            )
+            );
         },
         findPath(url) {
             let tempUrl = url.split("/").filter(a => a != "");
@@ -481,9 +482,15 @@ export default {
                     document.getElementsByClassName("ivu-notice")[0].style.width=32+'vmin'
                 }
                 if (document.getElementsByClassName("ivu-notice-notice")) {
-                    let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight + document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
+                    let h =
+                        document.getElementsByClassName("ivu-notice")[0]
+                            .offsetHeight +
+                        document.getElementsByClassName("ivu-notice-notice")[0]
+                            .offsetHeight;
                     if (h > window.innerHeight) {
-                        document.getElementsByClassName("ivu-notice")[0].style.bottom = "2vmin";
+                        document.getElementsByClassName(
+                            "ivu-notice"
+                        )[0].style.bottom = "2vmin";
                     }
                 }
             }
@@ -500,12 +507,12 @@ export default {
             this.nodesModal.showFlag = false;
         },
         warningNotice(alarm) {
-            let durationTime = 0
-            this.durations.forEach(item=>{
-                if(alarm.alarmLevel==item.id){
-                    durationTime = Number(item.name)
+            let durationTime = 0;
+            this.durations.forEach(item => {
+                if (alarm.alarmLevel == item.id) {
+                    durationTime = Number(item.name);
                 }
-            })
+            });
             var _this = this;
             var des = "";
             _this.videoModal.alarmContainer.unshift(alarm);
@@ -533,9 +540,18 @@ export default {
                     }
                     /* 滚动条以及不被遮挡 */
                     if (document.getElementsByClassName("ivu-notice-notice")) {
-                        let h = document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight *(document.getElementsByClassName("ivu-notice-notice").length -1);
+                        let h =
+                            document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            )[0].offsetHeight *
+                            (document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            ).length -
+                                1);
                         if (h < window.innerHeight) {
-                            document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
+                            document.getElementsByClassName(
+                                "ivu-notice"
+                            )[0].style.bottom = "";
                         }
                     }
                 }
@@ -610,14 +626,17 @@ export default {
             this.videoModal.modalPrams.state = true;
         },
         isShowAlarm() {
-            sessionStorage.setItem("refreshAddress", "/UM/DataAnalysis/QueryAlarmData")
-            sessionStorage.setItem("selectedName", "1-1")
+            sessionStorage.setItem(
+                "refreshAddress",
+                "/UM/DataAnalysis/QueryAlarmData"
+            );
+            sessionStorage.setItem("selectedName", "1-1");
             this.$router.push({
-                name: '告警查询',
+                name: "告警查询",
                 params: {
-                    alarmLevels: [3,4]
+                    alarmLevels: [3, 4]
                 }
-            })
+            });
         }
     },
     beforeDestroy() {
@@ -748,7 +767,7 @@ export default {
     position: fixed;
     right: 6vmin;
 }
-.alarmCount{
+.alarmCount {
     color: red;
     font-size: 1.8vmin;
     font-weight: 800;
@@ -777,9 +796,9 @@ export default {
         left: 2vmin !important;
     }
     .select-dropdown >>> .ivu-select-dropdown {
-        left: 0vmin !important;
+        left: -4vmin !important;
     }
-    .ivu-notice{
+    .ivu-notice {
         width: 30vmin !important;
     }
 }

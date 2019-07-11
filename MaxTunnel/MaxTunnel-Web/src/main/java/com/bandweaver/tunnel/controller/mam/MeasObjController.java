@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,6 +83,8 @@ public class MeasObjController {
     private MeasValueAIService measValueAIService;
     @Autowired
     private MeasValueSIService measValueSIService;
+    @Autowired
+    private XMLService xmlService;
 
 
     /**
@@ -358,22 +363,22 @@ public class MeasObjController {
             Object cv;
             switch (DataType.getEnum(measObjDto.getDatatypeId())) {
                 case AI:
-                	MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
+                    MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
                     cv = ai == null ? 0 : ai.getCv();
                     break;
 
                 case DI:
-                	MeasObjDI di = measObjModuleCenter.getMeasObjDI(measObjDto.getId());
-                    cv = di == null ? 0 : di.getCv();
+                    MeasObjDI di = measObjModuleCenter.getMeasObjDI(measObjDto.getId());
+                    cv = di == null ? 0 : (di.getCv() == true ? 1 : 0);
                     break;
 
                 case SI:
-                	MeasObjSI si = measObjModuleCenter.getMeasObjSI(measObjDto.getId());
+                    MeasObjSI si = measObjModuleCenter.getMeasObjSI(measObjDto.getId());
                     cv = si == null ? 0 : si.getCv();
                     break;
 
                 case SO:
-                	MeasObjSO so = measObjModuleCenter.getMeasObjSO(measObjDto.getId());
+                    MeasObjSO so = measObjModuleCenter.getMeasObjSO(measObjDto.getId());
                     cv = so == null ? 0 : so.getCv();
                     break;
 
@@ -405,7 +410,11 @@ public class MeasObjController {
             json.put("time", measObjModuleCenter.getMeasObjAI(measObjDto.getId()) == null ? System.currentTimeMillis() : measObjModuleCenter.getMeasObjAI(measObjDto.getId()).getRefreshTime());
 
             ObjectType objectType = ObjectType.getEnum(measObjDto.getObjtypeId());
-            if (objectType != null) json.put("control", objectType.isControl());
+            if (objectType != null) {
+                json.put("control", objectType.isControl());
+                json.put("reset", objectType.isReset());
+                json.put("unit", objectType.getUnit());
+            }
             if (objectType == ObjectType.TEMPERATURE) {
                 json.put("maxValue", temperature_max);
                 json.put("minValue", temperature_min);
@@ -428,7 +437,7 @@ public class MeasObjController {
                 json.put("maxValue", null);
                 json.put("minValue", null);
             }
-            json.put("unit", objectType.getUnit());
+
             returnData.add(json);
         }
         return returnData;
@@ -938,9 +947,10 @@ public class MeasObjController {
         List<Integer> list = measObjService.getIdList(id);
         return CommonUtil.success(list);
     }
-    
+
     /**
      * 获取布防cv值
+     *
      * @param tunnelId
      * @return
      * @author ya.liu
@@ -948,49 +958,69 @@ public class MeasObjController {
      */
     @RequestMapping(value = "tunnels/{tunnelId}/deploy", method = RequestMethod.GET)
     public JSONObject getDeploy(@PathVariable("tunnelId") Integer tunnelId) {
-    	
-    	TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
-    	List<MeasObjDI> dis = measObjModuleCenter.getMeasObjDIs();
-    	int objTypeId = ObjectType.DEPLOY_DEFENCE.getValue();
-    	dis = dis.stream().filter(a -> a.getObjtypeId() == objTypeId).collect(Collectors.toList());
-    	JSONObject json = new JSONObject();
-    	
-    	List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
-    	List<StoreDto> stores = storeService.getStoresByTunnelId(tunnelId);
-    	json.put("tunnelId", tunnelId);
-    	json.put("tunnelName", tunnel.getName());
-    	List<JSONObject> areaList = new ArrayList<>();
-    	for(AreaDto area :areas) {
-    		JSONObject areaJson = new JSONObject();
-    		areaJson.put("areaId", area.getId());
-    		areaJson.put("areaName", area.getName());
-    		List<JSONObject> storeList = new ArrayList<>();
-    		for(StoreDto store : stores) {
-    			String [] sn = {"01", "02", "03", "04"};
-    			List<String> list = Arrays.asList(sn);
-    			if(!list.contains(store.getSn())) continue;
-    			JSONObject storeJson = new JSONObject();
-    			storeJson.put("storeId", store.getId());
-    			storeJson.put("storeName", store.getName());
-    			
-    			List<MeasObjDI> diValue = dis.stream()
-    					.filter(a -> a.getAreaId().equals(area.getId()) && a.getStoreId().equals(store.getId()))
-    					.collect(Collectors.toList());
-    			MeasObjDI di = null;
-    			if(diValue != null && diValue.size() > 0) di = diValue.get(0);
-    			storeJson.put("id", di == null ? null : di.getId());
-    			storeJson.put("val", di == null ? null : di.getCv());
-    			storeList.add(storeJson);
-    		}
-    		areaJson.put("store", storeList);
-    		areaList.add(areaJson);
-    	}
-    	json.put("area", areaList);
-    	return CommonUtil.success(json);
+
+        TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
+//        List<MeasObjDI> dis = measObjModuleCenter.getMeasObjDIs();
+        int objTypeId = ObjectType.DEPLOY_DEFENCE.getValue();
+//        dis = dis.stream().filter(a -> a.getObjtypeId() == objTypeId).collect(Collectors.toList());
+
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream()
+                .filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList()).stream()
+                .filter(a -> a.getObjtypeId().intValue() == objTypeId).collect(Collectors.toList());
+
+        List<MeasObjDI> dis = new ArrayList<>();
+
+        for (MeasObj measObj : measObjs) {
+            ComplexObjectConvert complexObjectConvert1 = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
+            ConvertType convertType = complexObjectConvert1.getConvertType("open", 0);
+            int diId = measObjModuleCenter.getConvertObjectId(measObj, convertType);
+
+            MeasObjDI measObjDI = measObjModuleCenter.getMeasObjDI(diId);
+            dis.add(measObjDI);
+        }
+
+        JSONObject json = new JSONObject();
+
+        List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
+        List<StoreDto> stores = storeService.getStoresByTunnelId(tunnelId);
+        json.put("tunnelId", tunnelId);
+        json.put("tunnelName", tunnel.getName());
+        List<JSONObject> areaList = new ArrayList<>();
+        for (AreaDto area : areas) {
+            JSONObject areaJson = new JSONObject();
+            areaJson.put("areaId", area.getId());
+            areaJson.put("areaName", area.getName());
+            List<JSONObject> storeList = new ArrayList<>();
+            for (StoreDto store : stores) {
+                String[] sn = {"01", "02", "03", "04"};
+                List<String> list = Arrays.asList(sn);
+                if (!list.contains(store.getSn())) continue;
+                JSONObject storeJson = new JSONObject();
+                storeJson.put("storeId", store.getId());
+                storeJson.put("storeName", store.getName());
+
+                List<MeasObjDI> diValue = dis.stream()
+                        .filter(a -> a.getAreaId().equals(area.getId()) && a.getStoreId().equals(store.getId()))
+                        .collect(Collectors.toList());
+                MeasObjDI di = null;
+                if (diValue != null && diValue.size() > 0) di = diValue.get(0);
+                List<MeasObj> tmpObjs = measObjs.stream()
+                        .filter(a -> a.getAreaId().equals(area.getId()) && a.getStoreId().equals(store.getId()))
+                        .collect(Collectors.toList());
+                storeJson.put("id", di == null ? null : tmpObjs.get(0).getId());
+                storeJson.put("val", di == null ? null : di.getCv());
+                storeList.add(storeJson);
+            }
+            areaJson.put("store", storeList);
+            areaList.add(areaJson);
+        }
+        json.put("area", areaList);
+        return CommonUtil.success(json);
     }
-    
+
     /**
      * 获取联动cv值
+     *
      * @param tunnelId
      * @return
      * @author ya.liu
@@ -998,47 +1028,63 @@ public class MeasObjController {
      */
     @RequestMapping(value = "tunnels/{tunnelId}/linkage", method = RequestMethod.GET)
     public JSONObject getLinkage(@PathVariable("tunnelId") Integer tunnelId) {
-    	
-    	TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
-    	List<MeasObjDI> dis = measObjModuleCenter.getMeasObjDIs();
-    	int objTypeId = ObjectType.LINKAGE.getValue();
-    	dis = dis.stream().filter(a -> a.getObjtypeId() == objTypeId).collect(Collectors.toList());
-    	JSONObject json = new JSONObject();
-    	
-    	List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
-    	json.put("tunnelId", tunnelId);
-    	json.put("tunnelName", tunnel.getName());
-    	List<JSONObject> areaList = new ArrayList<>();
-    	for(AreaDto area :areas) {
-    		JSONObject areaJson = new JSONObject();
-    		areaJson.put("areaId", area.getId());
-    		areaJson.put("areaName", area.getName());
-			List<MeasObjDI> diValue = dis.stream()
-					.filter(a -> a.getAreaId().equals(area.getId()))
-					.collect(Collectors.toList());
-			MeasObjDI di = null;
-			if(diValue != null && diValue.size() > 0) di = diValue.get(0);
-			areaJson.put("id", di == null ? null : di.getId());
-			areaJson.put("val", di == null ? null : di.getCv());
-    		areaList.add(areaJson);
-    	}
-    	json.put("area", areaList);
-    	return CommonUtil.success(json);
+
+        TunnelSimpleDto tunnel = tunnelService.getSimpleDtoById(tunnelId);
+        int objTypeId = ObjectType.LINKAGE.getValue();
+
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream()
+                .filter(a -> a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList()).stream()
+                .filter(a -> a.getObjtypeId().intValue() == objTypeId).collect(Collectors.toList());
+
+        List<MeasObjDI> dis = new ArrayList<>();
+
+        for (MeasObj measObj : measObjs) {
+            ComplexObjectConvert complexObjectConvert1 = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
+            ConvertType convertType = complexObjectConvert1.getConvertType("open", 0);
+            int diId = measObjModuleCenter.getConvertObjectId(measObj, convertType);
+
+            MeasObjDI measObjDI = measObjModuleCenter.getMeasObjDI(diId);
+            dis.add(measObjDI);
+        }
+
+        JSONObject json = new JSONObject();
+
+        List<AreaDto> areas = areaService.getAreasByTunnelId(tunnelId);
+        json.put("tunnelId", tunnelId);
+        json.put("tunnelName", tunnel.getName());
+        List<JSONObject> areaList = new ArrayList<>();
+        for (AreaDto area : areas) {
+            JSONObject areaJson = new JSONObject();
+            areaJson.put("areaId", area.getId());
+            areaJson.put("areaName", area.getName());
+            List<MeasObjDI> diValue = dis.stream()
+                    .filter(a -> a.getAreaId().equals(area.getId()))
+                    .collect(Collectors.toList());
+            MeasObjDI di = null;
+            if (diValue != null && diValue.size() > 0) di = diValue.get(0);
+            List<MeasObj> tmpObjs = measObjs.stream().filter(a -> a.getAreaId().equals(area.getId())).collect(Collectors.toList());
+            areaJson.put("id", di == null ? null : tmpObjs.get(0).getId());
+            areaJson.put("val", di == null ? null : di.getCv());
+            areaList.add(areaJson);
+        }
+        json.put("area", areaList);
+        return CommonUtil.success(json);
     }
-    
+
     /**
      * 获取外部/气象台的温度/湿度
+     *
      * @return
      * @author ya.liu
      * @Date 2019年7月3日
      */
     @RequestMapping(value = "measobjs/outside", method = RequestMethod.GET)
     public JSONObject getOutside() {
-    	List<MeasObj> list = measObjModuleCenter.getMeasObjs();
-    	list = list.stream().filter(a -> a.getDatatypeId().equals(DataType.AI.getValue())).collect(Collectors.toList());
-    	list = list.stream().filter(a -> a.getTunnelId() == 0).collect(Collectors.toList());
-    	list = list.stream().filter(a -> a.getObjtypeId().equals(ObjectType.TEMPERATURE.getValue()) || a.getObjtypeId().equals(ObjectType.HUMIDITY.getValue())).collect(Collectors.toList());
-    	
-    	return CommonUtil.success(getMeasObjInfo(list));
+        List<MeasObj> list = measObjModuleCenter.getMeasObjs();
+        list = list.stream().filter(a -> a.getDatatypeId().equals(DataType.AI.getValue())).collect(Collectors.toList());
+        list = list.stream().filter(a -> a.getTunnelId() == 0).collect(Collectors.toList());
+        list = list.stream().filter(a -> a.getObjtypeId().equals(ObjectType.TEMPERATURE.getValue()) || a.getObjtypeId().equals(ObjectType.HUMIDITY.getValue())).collect(Collectors.toList());
+
+        return CommonUtil.success(getMeasObjInfo(list));
     }
 }

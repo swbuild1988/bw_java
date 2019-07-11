@@ -57,7 +57,7 @@
                             <div class="videos">
                                 <h1
                                     v-if="cameras.nodata"
-                                    style="text-align: center;margin-top: 2vmin;color:#fff"
+                                    style="text-align: center;margin-top: 2vmin;color:#fff;font-size: 2vmin;"
                                 >暂无视频</h1>
                                 <Row>
                                     <Col
@@ -375,7 +375,7 @@ export default {
     beforeDestroy() {
         clearInterval(this.refresh.id);
         this.refresh.id = null;
-        this.removePolyline()
+        this.removePolyline();
     }
 };
 </script>
@@ -410,7 +410,7 @@ export default {
 }
 .query {
     position: absolute;
-    top: 1vmin;
+    top: 2vmin;
     left: 30%;
     width: 48vmin;
     height: 4vmin;
@@ -523,5 +523,8 @@ export default {
     background-size: 100% 100%;
     width: 96%;
     margin: 0.2vmin auto;
+}
+.query >>> .ivu-select-not-found {
+    font-size: 1.4vmin;
 }
 </style>

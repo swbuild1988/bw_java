@@ -146,14 +146,13 @@
 				alarmLevelCount: [0, 0, 0, 0],
 				tableColumn: [
 					{
-						type: 'selection', 
-						width: 60, 
-						align: 'center'
+						type: 'selection',
+						align: 'center',
+						width: window.innerWidth/100*80/100*5
 					},
 					{
 						title: 'Id',
-						key: 'id', 
-						width: 80,
+						key: 'id',
 						align: 'center'
 					},
 					{
@@ -478,6 +477,7 @@
 		height: 4vmin;
 		line-height: 4vmin;
 		font-size: 1.4vmin;
+		color: #fff;
 	}
 	.ivu-select-multiple >>> .ivu-tag,.ivu-tag-checked{
 		height: 3.2vmin;

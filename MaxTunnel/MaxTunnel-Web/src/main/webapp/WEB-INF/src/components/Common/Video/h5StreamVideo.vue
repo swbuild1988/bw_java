@@ -78,7 +78,6 @@ export default {
         }
     },
     mounted() {
-        console.log('video00000000')
         this.Log.info("h5stream mounted!");
         this.getVideoDom();
         this.isTextShow = this.text ? true : false;

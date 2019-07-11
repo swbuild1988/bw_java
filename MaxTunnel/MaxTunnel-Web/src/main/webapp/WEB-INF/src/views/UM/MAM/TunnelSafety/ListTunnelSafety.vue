@@ -256,12 +256,14 @@ export default {
             );
         },
         saveDefence(data) {
+            this.Log.info("saveDefence", data);
             MonitorDataService.batchControl(data).then(res => {
                 this.$Message.success("布防设置成功");
                 this.defence.show.state = false;
             });
         },
         saveLinkage(data) {
+            this.Log.info("saveLinkage", data);
             MonitorDataService.batchControl(data).then(res => {
                 this.$Message.success("联动设置成功");
                 this.linkage.show.state = false;

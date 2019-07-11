@@ -540,4 +540,12 @@ export default {
 .cameraList >>> .ivu-select-dropdown {
     max-height: 20vmin !important;
 }
+@media (min-width: 2200px) {
+    .titleCtr {
+        top: -0.4vmin;
+    }
+    .titlePos {
+        top: -0.1vmin;
+    }
+}
 </style>

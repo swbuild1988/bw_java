@@ -120,12 +120,12 @@ export default {
 							}
 						},
 					},
-					// labelLine: {
-					// 	normal: {
-					// 		length: 8,
-					// 		length2: 0	
-					// 	}
-					// }
+					labelLine: {
+						normal: {
+							length: _this.getFontSize('5%'),
+							length2: 0	
+						}
+					}
 				}
 		});
 		// 加载新的参数

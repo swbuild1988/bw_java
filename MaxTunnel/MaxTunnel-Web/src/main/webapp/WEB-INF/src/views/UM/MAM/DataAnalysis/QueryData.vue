@@ -203,7 +203,7 @@
             tableColumn: [
                 {
                     type: 'selection',
-                    width: 70,
+                    width: window.innerWidth/100*80/100*5,
                     align: 'center'
                 },
                 {
