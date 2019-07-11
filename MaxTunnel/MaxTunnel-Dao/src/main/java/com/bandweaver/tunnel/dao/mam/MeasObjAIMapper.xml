@@ -100,28 +100,69 @@
     	delete from T_MAM_MEASOBJ_AI where id = #{id}
     </delete>
     
-    
-    <select id="dataGrid" resultMap="dtoResultMap">
-    	select * from T_MAM_MEASOBJ_AI
-    	<where>
-    		<if test="id != null">
-    			and id = #{id}
-    		</if>
-    		<if test="ids != null">
-    			and id in
-    			<foreach collection="ids" item="item" index="index" close=")"
+	<select id="getMeasObjAIByCondition" resultMap="dtoResultMap">
+        select t.* from T_MAM_MEASOBJ_AI t
+        left join T_MAM_MEASOBJ m on t.id = m.id
+        <where>
+            <if test="id != null">
+                and t.id = #{id,jdbcType=DECIMAL}
+            </if>
+            <if test="tunnelId != null">
+                and m.tunnel_id = #{tunnelId,jdbcType=DECIMAL}
+            </if>
+            <if test="storeId != null">
+                and m.store_id = #{storeId,jdbcType=DECIMAL}
+            </if>
+            <if test="areaId != null">
+                and m.area_id = #{areaId,jdbcType=DECIMAL}
+            </if>
+            <if test="sectionId != null">
+                and m.SECTION_ID = #{sectionId,jdbcType=DECIMAL}
+            </if>
+            <if test="name != null and name.trim() != ''">
+               and m.instr(name,#{name})>0
+            </if>
+            <if test="datatypeId != null">
+                and m.DATATYPE_ID = #{datatypeId,jdbcType=DECIMAL}
+            </if>
+            <if test="objtypeId!= null">
+            	and m.OBJTYPE_ID = #{objtypeId,jdbcType=DECIMAL}
+            </if>
+            <if test="objtypeIds != null">
+             and m.OBJTYPE_ID in 
+             <foreach collection="objtypeIds" item="item" index="index" close=")"
                  open="(" separator=",">
                  #{item}
              </foreach>
+            </if>
+            <if test="tunnelIds != null">
+             and m.tunnel_id in 
+             <foreach collection="tunnelIds" item="item" index="index" close=")"
+                 open="(" separator=",">
+                 #{item}
+             </foreach>
+            </if>
+            <if test="storeIds != null">
+             and m.store_id in 
+             <foreach collection="storeIds" item="item" index="index" close=")"
+                 open="(" separator=",">
+                 #{item}
+             </foreach>
+            </if>
+            <if test="sectionIds != null">
+             and m.SECTION_ID in 
+             <foreach collection="sectionIds" item="item" index="index" close=")"
+                 open="(" separator=",">
+                 #{item}
+             </foreach>
+            </if>
+            <if test="minVal != null">
+    			and t.cv &gt; = #{minVal}
     		</if>
-    		<if test="minCv != null">
-    			and cv &gt; = #{minCv}
+    		<if test="maxVal != null">
+    			and t.cv &lt; = #{maxVal}
     		</if>
-    		<if test="maxCv != null">
-    			and cv &lt; = #{maxCv}
-    		</if>
-    	</where>
-    	order by refresh_time desc
+        </where>
+        order by t.refresh_time desc
     </select>
-
 </mapper>

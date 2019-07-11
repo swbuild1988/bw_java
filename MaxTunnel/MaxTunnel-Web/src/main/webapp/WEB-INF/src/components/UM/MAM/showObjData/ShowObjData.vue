@@ -1,7 +1,7 @@
 <template>
     <div>
         <simulated-data v-if="Obj.datatypeId==1" v-bind:Obj="Obj" @changeStatus="changeStatus"></simulated-data>
-        <switch-data v-else-if="Obj.datatypeId==3" v-bind:propObj="Obj" @changeStatus="changeStatus"
+        <switch-data v-else-if="Obj.datatypeId==2" v-bind:propObj="Obj" @changeStatus="changeStatus"
             :control="Obj.control"></switch-data>
         <analog-channel v-bind:propObj="Obj" v-else :control="Obj.control" :reset="Obj.reset"
             @changeStatus="changeStatus"  v-on="$listeners"></analog-channel>

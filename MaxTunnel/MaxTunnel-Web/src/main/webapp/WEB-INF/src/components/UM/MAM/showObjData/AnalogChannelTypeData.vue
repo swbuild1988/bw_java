@@ -24,7 +24,7 @@
                 <Col span="8" v-for="item in curObjState" :key="item.id">
                     <div class="swichImg">
                         <img :src="item.img" class="equipment_state_image" :title="item.val">
-                        <span style="font-size: 1.4vmin">{{item.val}}</span>
+                        <span style="font-size: 1.32vmin">{{item.val}}</span>
                     </div>
                 </Col>
             </Row>
@@ -37,7 +37,7 @@ import switchData from "./ShowSwitchData";
 export default {
     data() {
         return {
-            swicthState: 0,
+            swicthState: false,
             objState: [
                 {
                     key: "close",
@@ -146,9 +146,6 @@ export default {
             this.$emit("reset", this.propObj.id);
         },
         confirm(data) {
-            // this.$nextTick(() => {
-            //     this.swicthState = !data;
-            // });
             let text = data
                 ? "确定打开" +
                   this.propObj.objtypeName +
@@ -163,7 +160,6 @@ export default {
                     return h("span", text);
                 },
                 onOk: () => {
-                    // this.swicthState = !this.swicthState;
                     this.change();
                 }
             });
@@ -177,7 +173,7 @@ export default {
                 null
             );
         },
-        changeSwicthState(state){
+        changeSwicthState(state) {
             this.swicthState = state;
         }
     }
@@ -187,7 +183,7 @@ export default {
 .equipment_state_image {
     width: 3.5vmin;
     height: 3.5vmin;
-    margin-top: 2vmin;
+    margin-top: 1vmin;
 }
 
 .switchContent {
@@ -248,7 +244,10 @@ export default {
 
 @media (min-width: 1921px) {
     .switchContent {
-        margin-top: 0;
+        margin-top: -1vh;
+        height: 18vmin;
+        display: flex;
+        align-items: center;
     }
 
     .switchBtn >>> .ivu-switch-inner {
@@ -259,6 +258,9 @@ export default {
 @media (max-width: 1920px) {
     .switchContent {
         margin-top: -1vh;
+        height: 20vmin;
+        display: flex;
+        align-items: center;
     }
 }
 </style>

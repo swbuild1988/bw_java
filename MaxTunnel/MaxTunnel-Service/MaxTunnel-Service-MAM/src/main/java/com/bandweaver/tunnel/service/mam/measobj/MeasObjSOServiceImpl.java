@@ -4,6 +4,7 @@ import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjSODto;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
+import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSO;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjSOVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
@@ -47,22 +48,9 @@ public class MeasObjSOServiceImpl implements MeasObjSOService {
     }
 
 	@Override
-	public PageInfo<MeasObjSODto> dataGrid(MeasObjVo vo) {
-		List<MeasObjDto> moList = measObjService.getMeasObjByCondition(vo);
-    	List<Integer> moIdList = new ArrayList<>();
-    	for (MeasObjDto measObjDto : moList) {
-    		moIdList.add(measObjDto.getId());
-		}
-    	LogUtil.info("moIdList.size:" + moIdList.size());
-    	LogUtil.info("moIdList:" + moIdList);
-    	MeasObjSOVo soVo = new MeasObjSOVo();
-    	soVo.setIds(moIdList.isEmpty() ? null : moIdList);
-    	soVo.setPageNum(vo.getPageNum());
-    	soVo.setPageSize(vo.getPageSize());
-    	LogUtil.info("soVo:" + soVo);
-    	PageHelper.startPage(soVo.getPageNum(), soVo.getPageSize());
-    	List<MeasObjSODto> list = measObjSOMapper.getByCondition(soVo);
-    	PageInfo<MeasObjSODto> pageInfo = new PageInfo<>(list);
+	public ListPageUtil<MeasObjSODto> getMeasObjSOByCondition(MeasObjVo vo) {
+    	List<MeasObjSODto> list = measObjSOMapper.getMeasObjSOByCondition(vo);
+    	ListPageUtil<MeasObjSODto> pageInfo = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
 		return pageInfo;
 	}
 }

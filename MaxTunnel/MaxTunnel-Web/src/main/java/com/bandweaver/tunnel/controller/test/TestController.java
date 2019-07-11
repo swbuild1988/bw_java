@@ -457,15 +457,18 @@ public class TestController {
             }
         }
         
-        // 修改声光报警和红外的datatypeId 3->2
+        // 修改声光报警、红外、照明的datatypeId 3->2
         // 获取声光报警和红外的监测对象
-        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream().filter(a -> a.getObjtypeId().intValue() == ObjectType.ALTEROR.getValue() || a.getObjtypeId().intValue() == ObjectType.INFRARED.getValue()).collect(Collectors.toList());
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream().filter(a -> a.getObjtypeId().intValue() == ObjectType.ALTEROR.getValue()
+        		|| a.getObjtypeId().intValue() == ObjectType.INFRARED.getValue()
+        		|| a.getObjtypeId().intValue() == ObjectType.LIGHT.getValue()).collect(Collectors.toList());
         for (MeasObj measObj : measObjs) {
 
             MeasObj tmpObj = new MeasObj();
             // 先复制一份备份
             BeanUtils.copyProperties(measObj, tmpObj);
             // 设为复杂结构
+            if(tmpObj.getDatatypeId() == DataType.DI.getValue()) continue;
             tmpObj.setDatatypeId(DataType.DI.getValue());
 
             measObjModuleCenter.deleteObj(measObj.getId());

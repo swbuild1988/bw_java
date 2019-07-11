@@ -700,10 +700,6 @@
                 this.curCarousel.videoNumber = num;
             }
         },
-        beforeDestroy() {
-            clearInterval(this.dataInterval);
-            this.dataInterval = null;
-        }
     };
 </script>
 

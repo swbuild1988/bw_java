@@ -156,6 +156,18 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             JSONObject tmpCV = new JSONObject();
             tmpCV.put("descript", convertType.getDescribe());
+            // 插入排序字段
+            int index = 0;
+            if(convertType.getDescribe().indexOf("运行") != -1
+            		|| convertType.getDescribe().indexOf("开") != -1)
+            	index = 1;
+            if(convertType.getDescribe().indexOf("故障") != -1)
+            	index = 2;
+            if(convertType.getDescribe().indexOf("运行故障") != -1)
+            	index = 3;
+            if(convertType.getDescribe().indexOf("就地") != -1)
+            	index = 4;
+            tmpCV.put("index", index);
 
             switch (dataType) {
                 case AI:
