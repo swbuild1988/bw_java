@@ -336,7 +336,7 @@ var MeasObjServer = {
 	//修改设备状态
 	changeEquimentStatus(params) {
 		return new Promise((resolve, reject) => {
-			get("sub-sys/action/obj/" + params.id + "/inputval/" + params.status)
+			get("sub-sys/output/obj/" + params.id + "/code/" + params.code)
 				.then(res => {
 					let {
 						code,
@@ -346,7 +346,7 @@ var MeasObjServer = {
 					if (code == 200) {
 						resolve(data);
 					} else {
-						reject(msg + ",地址:sub-sys/action/obj/" + params.id + "/inputval/" + params.status);
+						reject(msg + ",地址:sub-sys/output/obj/" + params.id + "/code/" + params.code);
 					}
 				})
 				.catch(error => {

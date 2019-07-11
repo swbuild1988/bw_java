@@ -506,7 +506,7 @@
                 if (clickStatus === null) {
                     let param = {
                         id: id,
-                        status: ObjVal ? 1 : 0
+                        code: ObjVal ? "open" : "close"
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
@@ -518,15 +518,30 @@
                     );
                 }
 
-                if (!!id && !!datatypeId)
+                if (!!id && !!datatypeId) {
                     this.detectionObj = {
                         id: changStrLength(id, 10),
                         moTypeId: datatypeId
                     };
-                // if (datatypeId != 1) {
-                //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
-                // }
+                }
             },
+
+            // 复位按钮
+            reset(id) {
+                let param = {
+                    id: id,
+                    code: "clear"
+                };
+                MeasObjServer.changeEquimentStatus(param).then(
+                    res => {
+                        this.$Message.info("操作成功");
+                    },
+                    error => {
+                        this.$Message.error("操作失败");
+                    }
+                );
+            },
+            
             getStoreId(data) {
                 this.queryCondition.storeId = data;
                 this.getObjDetialData();
