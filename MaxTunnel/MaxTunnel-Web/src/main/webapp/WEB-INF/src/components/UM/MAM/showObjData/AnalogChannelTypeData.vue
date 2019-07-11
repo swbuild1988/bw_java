@@ -24,7 +24,7 @@
                 <Col span="8" v-for="item in curObjState" :key="item.id">
                     <div class="swichImg">
                         <img :src="item.img" class="equipment_state_image" :title="item.val">
-                        <span style="font-size: 1.4vmin">{{item.val}}</span>
+                        <span style="font-size: 1.32vmin">{{item.val}}</span>
                     </div>
                 </Col>
             </Row>
@@ -177,7 +177,7 @@ export default {
                 null
             );
         },
-        changeSwicthState(state){
+        changeSwicthState(state) {
             this.swicthState = state;
         }
     }
@@ -187,7 +187,7 @@ export default {
 .equipment_state_image {
     width: 3.5vmin;
     height: 3.5vmin;
-    margin-top: 2vmin;
+    margin-top: 1vmin;
 }
 
 .switchContent {
@@ -248,7 +248,10 @@ export default {
 
 @media (min-width: 1921px) {
     .switchContent {
-        margin-top: 0;
+        margin-top: -1vh;
+        height: 18vmin;
+        display: flex;
+        align-items: center;
     }
 
     .switchBtn >>> .ivu-switch-inner {
@@ -259,6 +262,9 @@ export default {
 @media (max-width: 1920px) {
     .switchContent {
         margin-top: -1vh;
+        height: 20vmin;
+        display: flex;
+        align-items: center;
     }
 }
 </style>
