@@ -144,9 +144,7 @@
             }
         },
         mounted() {
-            console.log('proObj',this.propObj)
-            // console.log('mounted')
-            // console.log('this.obj',this.Obj)
+            console.log('proObj',this.Obj)
             if (this.Obj.time != "") {
                 this.isTimeShow = true;
             }

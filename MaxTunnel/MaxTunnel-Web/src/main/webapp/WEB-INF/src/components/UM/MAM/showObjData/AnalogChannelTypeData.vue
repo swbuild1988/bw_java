@@ -5,12 +5,6 @@
         :stateProcess="curProcessState"
         v-on="$listeners"
     >
-        <!-- <div slot="heard">
-            <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">
-                {{propObj.objtypeName}}</p>
-            <img class="heardImg" src="../../../../assets/UM/reset.png" v-if="$attrs.reset" title="复位"
-                @click="reset">
-        </div>-->
         <div slot="heard" @click="reset">
             <img
                 class="heardImg"
@@ -118,6 +112,7 @@ export default {
         switchData
     },
     mounted() {
+        console.log('propObjan',this.propObj)
         // this.swicthState = this.propObj.ObjVal == 1;
         this.transformStateImage();
     },
