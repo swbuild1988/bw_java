@@ -710,7 +710,7 @@ export default {
 }
 .layout-nav >>> .ivu-dropdown-item:hover {
     color: #000;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.6); 
 }
 .layout-nav >>> .ivu-dropdown-item:first-child {
     border-top: none;

@@ -419,7 +419,7 @@
             }
             DataAnalysisService.getMonitorData(params).then(result => {
                 if(result!=null){
-                    _this.tableData = result.list
+                    _this.tableData = result.pagedList
                     _this.page.total = result.total;
                     _this.tableload=false;
                 }
