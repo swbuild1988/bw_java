@@ -26,10 +26,10 @@
                     v-if="Obj.objtypeId==57 && !stateProcess.open.value" class="img">
                 <img src="../../../../assets/UM/门-开.png"
                     v-if="Obj.objtypeId==55 && (!stateProcess.open.value && stateProcess.close.value)" class="img">
-                <img src="../../../../assets/UM/place-troop-open.png" v-if="Obj.objtypeId==63 && curValue.open.value"
+                <img src="../../../../assets/UM/place-troop-open.png" v-if="Obj.objtypeId==63 && stateProcess.open.value"
                     class="img">
                 <img src="../../../../assets/UM/linkage-status-open.png"
-                    v-if="Obj.objtypeId==64 && curValue.open.value" class="img">
+                    v-if="Obj.objtypeId==64 && stateProcess.open.value" class="img">
                 <img src="../../../../assets/UM/报警-红gif.gif"
                     v-if="Obj.objtypeId==41 && stateProcess.open.value" class="img">
 
@@ -47,10 +47,10 @@
                     v-if="Obj.objtypeId==55 && (stateProcess.open.value && !stateProcess.close.value)" class="img">
                 <img src="../../../../assets/UM/报警.png"
                     v-if="Obj.objtypeId==41 && !stateProcess.open.value" class="img">
-                <img src="../../../../assets/UM/place-troop-close.png" v-if="Obj.objtypeId==63 && curValue.open.value"
+                <img src="../../../../assets/UM/place-troop-close.png" v-if="Obj.objtypeId==63 && !stateProcess.open.value"
                     class="img">
                 <img src="../../../../assets/UM/linkage-status-close.png"
-                    v-if="Obj.objtypeId==64 && curValue.open.value" class="img">
+                    v-if="Obj.objtypeId==64 && !stateProcess.open.value" class="img">
                 <!-- 过程 -->
                 <img src="../../../../assets/UM/covers-process.gif"
                     v-if="Obj.objtypeId==56 && (!stateProcess.open.value && !stateProcess.close.value)" class="img">
@@ -88,29 +88,24 @@
                     };
                 }
             },
-            curValue: {
-                required: true
-            },
-            // stateProcess: {
-            //     type: Object,
-            //     default: () => {
-            //         return {
-            //             open: {
-            //                 describe: "",
-            //                 value: false
-            //             },
-            //             close: {
-            //                 describe: "",
-            //                 value: true
-            //             },
-            //             run: {
-            //                 describe: "",
-            //                 value: false
-            //             }
-            //         };
-            //     }
-            // }
-            stateProcess: 0
+            stateProcess: {
+                type:Object,
+                default:()=>{
+                    return {
+                        open:{
+                            descript: "井盖开足", 
+                            value: false}
+                    }
+                }
+            }
+        },
+        watch:{
+            stateProcess: {
+                handler(newVal, oldVal) {
+                    this.changeSwitchState();
+                },
+            deep: true
+        }
         },
         data: function () {
             return {
@@ -141,18 +136,19 @@
                     this.Obj.datatypeId,
                     null
                 );
+            },
+            changeSwitchState(){
+                let { stateProcess } = this;
+
+                this.$emit('getSwicthState',stateProcess.open.value)
+                
             }
         },
         mounted() {
-            console.log('proObj',this.propObj)
-            // console.log('mounted')
-            // console.log('this.obj',this.Obj)
             if (this.Obj.time != "") {
                 this.isTimeShow = true;
             }
-            // this.equipmentState.state = this.Obj.ObjVal;
-            // this.curValue = this.Obj.ObjVal == 1;
-            // this.transformStateImage();
+            this.changeSwitchState();
         }
     };
 </script>

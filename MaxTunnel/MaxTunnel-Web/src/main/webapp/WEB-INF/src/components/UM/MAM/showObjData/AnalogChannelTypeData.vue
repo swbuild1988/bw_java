@@ -1,16 +1,10 @@
 <template>
     <switchData
         v-bind:Obj="propObj"
-        :curValue="swicthState"
         :stateProcess="curProcessState"
+        @getSwicthState="changeSwicthState"
         v-on="$listeners"
     >
-        <!-- <div slot="heard">
-            <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">
-                {{propObj.objtypeName}}</p>
-            <img class="heardImg" src="../../../../assets/UM/reset.png" v-if="$attrs.reset" title="复位"
-                @click="reset">
-        </div>-->
         <div slot="heard" @click="reset">
             <img
                 class="heardImg"
@@ -118,7 +112,6 @@ export default {
         switchData
     },
     mounted() {
-        // this.swicthState = this.propObj.ObjVal == 1;
         this.transformStateImage();
     },
     methods: {
@@ -141,7 +134,6 @@ export default {
             }
         },
         replaceImage(curStateVal, val, descript) {
-            // if( key == 'open' )this.swicthState =  curStateVal;
             // 加载对应状态图片
             this.curObjState.push({
                 img: require("../../../../assets/UM/" +
@@ -154,9 +146,9 @@ export default {
             this.$emit("reset", this.propObj.id);
         },
         confirm(data) {
-            this.$nextTick(() => {
-                this.swicthState = !data;
-            });
+            // this.$nextTick(() => {
+            //     this.swicthState = !data;
+            // });
             let text = data
                 ? "确定打开" +
                   this.propObj.objtypeName +
@@ -171,7 +163,7 @@ export default {
                     return h("span", text);
                 },
                 onOk: () => {
-                    this.swicthState = !this.swicthState;
+                    // this.swicthState = !this.swicthState;
                     this.change();
                 }
             });
@@ -184,6 +176,9 @@ export default {
                 this.propObj.datatypeId,
                 null
             );
+        },
+        changeSwicthState(state){
+            this.swicthState = state;
         }
     }
 };

@@ -1,10 +1,6 @@
 <template>
     <switch-data v-bind:obj="propObj" :curValue="swicthState"
         :stateProcess="propObj.ObjVal ? {open: {value:true}} : {open: {value:false}}" v-on="$listeners">
-        <div slot="heard">
-            <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">
-                {{propObj.objtypeName}}</p>
-        </div>
         <div class="switchContent">
             <!-- <div class="switchBtn">
                 <i-switch v-model="swicthState" @on-change="confirm" size="large">
