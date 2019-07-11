@@ -231,7 +231,53 @@ public class TunnelController extends BaseController<Tunnel> {
 
     }
 
-    
+    /**
+     * 获取每条管廊的具体信息
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月10日
+     */
+    @RequestMapping(value = "tunnels/all", method = RequestMethod.GET)
+    public JSONObject getTunnels() {
+
+        List<TunnelDto> dtoList = tunnelService.getDtoList();
+        List<JSONObject> listOne = new ArrayList<>();
+        for (TunnelDto dto : dtoList) {
+            JSONObject jsonOne = new JSONObject();
+            jsonOne.put("name", dto.getName());
+            jsonOne.put("id", dto.getId());
+            jsonOne.put("sn", dto.getSn());
+            // 查询仓信息
+            List<StoreDto> storeList = storeService.getStoresByTunnelId(dto.getId());
+            //查询防火区信息
+            List<AreaDto> areaList = areaService.getAreasByTunnelId(dto.getId());
+
+            List<JSONObject> listTwo = new ArrayList<>();
+            for (AreaDto area : areaList) {
+                JSONObject jsonTwo = new JSONObject();
+                jsonTwo.put("name", area.getName());
+                jsonTwo.put("id", area.getId());
+                jsonTwo.put("sn", area.getSn());
+                
+                listTwo.add(jsonTwo);
+            }
+            jsonOne.put("areas", listTwo);
+            
+            List<JSONObject> list = new ArrayList<>();
+            for (StoreDto store : storeList) {
+                JSONObject jsonTwo = new JSONObject();
+                jsonTwo.put("name", store.getName());
+                jsonTwo.put("id", store.getId());
+                jsonTwo.put("sn", store.getSn());
+                
+                list.add(jsonTwo);
+            }
+            jsonOne.put("stores", list);
+            listOne.add(jsonOne);
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, listOne);
+
+    }
     
     /**获取指定管廊下共有多少管仓
      * @param id 管廊id

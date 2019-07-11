@@ -364,7 +364,7 @@ public class MeasObjController {
 
                 case DI:
                 	MeasObjDI di = measObjModuleCenter.getMeasObjDI(measObjDto.getId());
-                    cv = di == null ? 0 : di.getCv();
+                    cv = di == null ? 0 : (di.getCv() == true ? 1 : 0);
                     break;
 
                 case SI:
