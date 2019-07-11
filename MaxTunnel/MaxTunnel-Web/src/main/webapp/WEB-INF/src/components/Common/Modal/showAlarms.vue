@@ -1,7 +1,7 @@
 <template>
     <Modal class="forBG" v-model="modalPrams.state" :width="modalWidth" title="告警信息">
         <div class="noneData" v-show="alarms&&alarms.length==0">暂无告警信息</div>
-        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1" :id="'sectionId'+index1"> 
+        <section class="setionBox" v-for="(item,index1) in alarms" :key="index1" :id="'sectionId'+index1">
             <Icon type="close" class="closeIcon" @click="closeCurAlarm(index1)"></Icon>
             <!-- title -->
             <section class="titleSection">
@@ -16,7 +16,8 @@
                     <section class="videoSection item">
                         <h4>关联视频</h4>
                         <div style="height: 100%">
-                            <CarouselVideo :videolist="item.videos" :isloop='false' :preIndex="'modal_alamr'+index1+'_video'"></CarouselVideo>
+                            <CarouselVideo :videolist="item.videos" :isloop='false'
+                                :preIndex="'modal_alamr'+index1+'_video'"></CarouselVideo>
                         </div>
                     </section>
                     <div class="item">
@@ -26,8 +27,8 @@
                                 <h4>极值</h4>
                                 <Row :gutter="16">
                                     <Col span="24" v-for="(temp, index) in item.cvList" :key="index">
-                                        <Col span="12">{{temp.key}}：</Col>
-                                        <Col span="12">{{temp.val}}{{temp.unit}}</Col>
+                                    <Col span="12">{{temp.key}}：</Col>
+                                    <Col span="12">{{temp.val}}{{temp.unit}}</Col>
                                     </Col>
                                 </Row>
                             </section>
@@ -36,10 +37,11 @@
                                 <h4>预案</h4>
                                 <Row>
                                     <Col span="12">
-                                        <Button type="default" @click="cancelPlan()">取消</Button>
+                                    <Button type="default" @click="cancelPlan()">取消</Button>
                                     </Col>
                                     <Col span="12" v-for="(ele, index) in item.plans" :key="index">
-                                        <Button type="primary" @click="startPlan(item, ele.id, ele.processKey,ele.name)">{{ele.name}}</Button>
+                                    <Button type="primary"
+                                        @click="startPlan(item, ele.id, ele.processKey,ele.name)">{{ele.name}}</Button>
                                     </Col>
                                 </Row>
                             </section>
@@ -47,24 +49,26 @@
                     </div>
                 </div>
                 <div class="column">
-                    <!-- 执行步骤 --> 
+                    <!-- 执行步骤 -->
                     <section class="item" v-if="item.plan">
                         <h4>预案步骤</h4>
-                        <div class="detailSection"  style="height:69vmin;max-width:54vmin">
+                        <div class="detailSection" style="height:69vmin;max-width:54vmin">
                             <image-from-url :url="item.plan.processPicSrc"></image-from-url>
                         </div>
                     </section>
                 </div>
             </div>
-            <Icon type="chevron-down" class="downIcon" color="#fff" @click="pickUp('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'down'+index1"></Icon> 
-            <Icon type="chevron-up" class="upIcon" color="#fff" @click="pickDown('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'up'+index1"></Icon> 
+            <Icon type="chevron-down" class="downIcon" color="#fff"
+                @click="pickUp('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'down'+index1"></Icon>
+            <Icon type="chevron-up" class="upIcon" color="#fff"
+                @click="pickDown('sectionId'+index1, 'down'+index1, 'up'+index1)" :id="'up'+index1"></Icon>
         </section>
         <div slot="footer">
         </div>
     </Modal>
 </template>
 
-<script> 
+<script>
     import videoComponent from '../Video/VideoComponent.vue'
     import ImageFromUrl from "../../Common/ImageFromUrl"
     import UmLayoutBg from '@/assets/UM/UmLayoutBg.png'
@@ -128,7 +132,7 @@
             'videoNum'() {
                 this.setVideoSpan();
             },
-            'alarmContainer': function(newVal, oldVal){
+            'alarmContainer': function (newVal, oldVal) {
                 this.alarms = newVal
             }
         },
@@ -155,7 +159,7 @@
             startPlan(alarm, processValue, processKey, name) {
                 this.$Modal.confirm({
                     title: "启动预案",
-                    content: "<p>确定要启动"+name+"吗</p>",
+                    content: "<p>确定要启动" + name + "吗</p>",
                     onOk: () => {
                         let _this = this;
                         // 启动预案
@@ -164,7 +168,7 @@
                             processValue: processValue
                         }).then(res => {
                             _this.Log.info("收到启动预案结果：", res)
-                            this.$set(alarm,'plan',{
+                            this.$set(alarm, 'plan', {
                                 processInstanceId: res.data.data,
                                 status: "预案已启动",
                                 isFinished: false,
@@ -197,12 +201,13 @@
                         // 找到收到预案消息对应的告警
                         let curPlan = alarm.plan
                         if (curPlan.processInstanceId == content.processInstanceId) {
-                            this.$set(curPlan,'processPicSrc',null)
+                            this.$set(curPlan, 'processPicSrc', null)
                             curPlan.isFinished = content.status == "finished";
                             curPlan.status = content.status == "finished" ? "预案已完成" : "预案进行中";
                             let _this = this
                             this.$nextTick(() => {
-                                _this.$set(curPlan,'processPicSrc',"/emplans/png/" + content.processInstanceId)
+                                _this.$set(curPlan, 'processPicSrc', "/emplans/png/" + content
+                                    .processInstanceId)
                             });
                         }
                         // this.Log.info("alarmContainer2", this.alarmContainer);
@@ -239,19 +244,19 @@
                 // 关掉这个告警
             },
             //收起
-            pickUp(id, upId, downId){
+            pickUp(id, upId, downId) {
                 document.getElementById(id).style.height = 'auto'
                 document.getElementById(upId).style.display = 'none'
                 document.getElementById(downId).style.display = 'block'
             },
             //展开
-            pickDown(id, upId, downId){
+            pickDown(id, upId, downId) {
                 document.getElementById(id).style.height = '11vh'
                 document.getElementById(upId).style.display = 'block'
                 document.getElementById(downId).style.display = 'none'
             },
             //关闭当前告警
-            closeCurAlarm(index){
+            closeCurAlarm(index) {
                 this.$Modal.confirm({
                     title: '告警管理',
                     content: '<p>确定删除该告警吗</p>',
@@ -267,12 +272,16 @@
 </script>
 
 <style scoped>
-    .setionBox,.videoSection,.extremeSection, .planSection, .detailSection {
+    .setionBox,
+    .videoSection,
+    .extremeSection,
+    .planSection,
+    .detailSection {
         margin-bottom: 2vmin;
         padding: 1vmin;
     }
 
-    .setionBox{
+    .setionBox {
         padding: 1vmin;
         border: 1px solid #a19c9c;
         border-radius: 4px;
@@ -280,7 +289,7 @@
         overflow: hidden;
     }
 
-    .titleSection{
+    .titleSection {
         border: none;
     }
 
@@ -298,48 +307,58 @@
         overflow-y: auto;
     }
 
-    .forBG>>>.ivu-modal-content{
+    .forBG>>>.ivu-modal-content {
         background: url("../../../assets/UM/alarmBG.png") no-repeat;
         background-size: 100% 100%;
         color: #ffffff;
-    } 
-    .forBG>>>.ivu-modal-content .ivu-modal-body{
+    }
+
+    .forBG>>>.ivu-modal-content .ivu-modal-body {
 
         max-height: 70vh;
         overflow-y: auto;
         overflow-x: hidden;
     }
-    .forBG>>>.ivu-modal-header-inner,.forBG>>>.ivu-modal-close .ivu-icon-ios-close-empty{
+
+    .forBG>>>.ivu-modal-header-inner,
+    .forBG>>>.ivu-modal-close .ivu-icon-ios-close-empty {
         color: #ffffff;
     }
-    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar{
+
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar {
         width: 0.4vmin;
         height: 0.4vmin;
     }
-    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-thumb{
+
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-thumb {
         border-radius: 0.5vmin;
         box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         background: #83a6ed;
     }
-    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-track{
+
+    .forBG>>>.ivu-modal-content .ivu-modal-body::-webkit-scrollbar-track {
         box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         border-radius: 1vmin;
         background: #ededed;
-    }   
+    }
+
     /* 图片1轮播 */
-    .videoSection{
+    .videoSection {
         height: 40vh;
         width: 100%;
     }
-    .planSection .ivu-btn-primary{
+
+    .planSection .ivu-btn-primary {
         background: linear-gradient(to left, #2734e1, #b195ed);
         border: none;
     }
-    .planSection .ivu-btn-default{
+
+    .planSection .ivu-btn-default {
         background: linear-gradient(to left, #8241a2, #bb92bae0);
         color: #fff;
         border: none;
     }
+
     .box {
         display: flex;
         flex-wrap: wrap;
@@ -351,39 +370,49 @@
         display: flex;
         justify-content: space-between;
     }
-    .rightBox{
+
+    .rightBox {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: flex-start;
     }
-    .extremeSection,.planSection{
+
+    .extremeSection,
+    .planSection {
         height: 20vh;
         overflow-y: auto;
         overflow-x: hidden;
         width: 100%;
     }
-    .extremeSection .ivu-row .ivu-col.ivu-col-span-24{
+
+    .extremeSection .ivu-row .ivu-col.ivu-col-span-24 {
         line-height: 3.5vmin;
     }
-    .planSection .ivu-row .ivu-col.ivu-col-span-12{
+
+    .planSection .ivu-row .ivu-col.ivu-col-span-12 {
         line-height: 7vmin;
     }
-    .closeIcon{
+
+    .closeIcon {
         font-size: 2vmin;
         position: absolute;
         right: 1vmin;
     }
-    .downIcon,.upIcon{
+
+    .downIcon,
+    .upIcon {
         font-size: 2vmin;
         position: absolute;
         right: 1vmin;
         bottom: 1vmin;
     }
-    .downIcon{
+
+    .downIcon {
         display: none;
     }
-    .noneData{
+
+    .noneData {
         text-align: center;
         font-size: 2vmin;
     }

@@ -149,7 +149,7 @@ public class EmPlanServiceImpl implements EmPlanService {
                 Integer inputValue = TypeUtils.castToInt(emPlan.getActionValue());
                 for (MeasObj measObj : list) {
 //                    boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
-                    boolean flag = true;
+                    boolean flag = subSystemService.controlOutput(measObj.getId(), "openn");
                     LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果[" + flag + "]");
                 }
                 break;
