@@ -18,7 +18,7 @@ public enum ObjectType {
     VIDEO("视频", 7, 6, 7, ""),
     DISTRIBUTET("分布式温度", 8, 1, 1, ""),
     ROBOT("机器人", 9, 6, 97, ""),
-    LIGHT("照明", 11, 1, 3, "", true),
+    LIGHT("照明", 11, 1, 2, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
     LIQUID("液位仪", 21, 1, 1, "m"),
 
