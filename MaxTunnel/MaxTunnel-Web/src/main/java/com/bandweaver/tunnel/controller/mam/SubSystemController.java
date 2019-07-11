@@ -81,8 +81,9 @@ public class SubSystemController {
 	public JSONObject doAction(@RequestBody List<JSONObject> list) {
 		for(JSONObject obj : list) {
 			Integer id = obj.getInteger("key");
-			Integer inputVal = obj.getInteger("val");
-			boolean result = subSystemService.doAction(id, inputVal);
+			boolean val = obj.getBooleanValue("val");
+			String code = val ? "open" : "close";
+			boolean result = subSystemService.controlOutput(id, code);
 			obj.put("result", result);
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);

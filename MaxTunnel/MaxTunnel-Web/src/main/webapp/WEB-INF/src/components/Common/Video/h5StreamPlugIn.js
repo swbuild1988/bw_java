@@ -8,7 +8,6 @@ var H5StreamPlugIn = {
 
         if (videoDom) {
 
-            console.log("获取video Dom " + index, videoDom);
             // 将video从原来的父dom中移除
             let parentDom = videoDom.parentNode;
             parentDom.removeChild(videoDom);
@@ -38,7 +37,6 @@ var H5StreamPlugIn = {
             videoDom.style.top = 0;
             videoDom.style.zIndex = 1;
            
-            console.log("新建video Dom " + index, videoDom);
             return videoDom;
 
         }

@@ -101,7 +101,7 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus"></show-obj-data>
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @reset="reset"></show-obj-data>
                     <!-- <SimulatedData
                                 v-bind:Obj="item"
                                 v-if="item.datatypeId==1"
@@ -532,7 +532,7 @@
                 if (clickStatus === null) {
                     let param = {
                         id: id,
-                        status: ObjVal ? 1 : 0
+                        code: ObjVal ? "open" : "close"
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
@@ -544,44 +544,30 @@
                     );
                 }
 
-                if (!!id && !!datatypeId)
+                if (!!id && !!datatypeId) {
                     this.detectionObj = {
                         id: changStrLength(id, 10),
                         moTypeId: datatypeId
                     };
-                // if (datatypeId != 1) {
-                //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
-                // }
-                if (clickStatus) {
-                    this.Obj.forEach(b => {
-                        if (b.id == id) {
-                            b.clickStatus = clickStatus;
-                            this.Log.info("click " + b.id);
-                            SuperMapSqlQuery(
-                                    this.SuperMapConfig.BIM_DATA,
-                                    this.VMConfig.queryParam,
-                                    "moid = " + b.id
-                                )
-                                .then(res => {
-                                    this.Log.info("查找成功", res);
-                                    if (res.length > 0) {
-                                        this.$refs.smViewer.LookAt1(
-                                            res[0],
-                                            50,
-                                            -10,
-                                            5
-                                        );
-                                    }
-                                })
-                                .then(res => {
-                                    this.Log.info("查找失败", res);
-                                });
-                        } else {
-                            b.clickStatus = !clickStatus;
-                        }
-                    });
                 }
             },
+
+            // 复位按钮
+            reset(id) {
+                let param = {
+                    id: id,
+                    code: "clear"
+                };
+                MeasObjServer.changeEquimentStatus(param).then(
+                    res => {
+                        this.$Message.info("操作成功");
+                    },
+                    error => {
+                        this.$Message.error("操作失败");
+                    }
+                );
+            },
+            
             getStoreId(data) {
                 this.queryCondition.storeId = data;
                 this.getObjDetialData();
@@ -596,9 +582,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId,
+                        null :
+                        _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -621,9 +609,7 @@
                             temp.unit = a.unit;
                             a.time == undefined || a.time == "" ?
                                 "" :
-                                new Date(a.time).format(
-                                    "yyyy-MM-dd hh:mm:ss"
-                                );
+                                new Date(a.time).format("yyyy-MM-dd hh:mm:ss");
                             temp.ObjVal = a.curValue;
                             temp.objtypeName =
                                 _this.curTunnelName + a.area + a.store;
@@ -645,9 +631,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                        null :
+                        _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {

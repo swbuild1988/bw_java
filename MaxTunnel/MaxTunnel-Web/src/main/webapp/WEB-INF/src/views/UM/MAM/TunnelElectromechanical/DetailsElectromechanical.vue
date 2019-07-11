@@ -495,7 +495,18 @@
 
             // 复位按钮
             reset(id) {
-                this.Log.info("复位按钮按下")
+                let param = {
+                    id: id,
+                    code: "clear"
+                };
+                MeasObjServer.changeEquimentStatus(param).then(
+                    res => {
+                        this.$Message.info("操作成功");
+                    },
+                    error => {
+                        this.$Message.error("操作失败");
+                    }
+                );
             },
 
             getStoreId(data) {
@@ -535,7 +546,7 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            a.time == undefined || a.time == "" ?
+                            temp.time == undefined || a.time == "" ?
                                 "" :
                                 new Date(a.time).format(
                                     "yyyy-MM-dd hh:mm:ss"

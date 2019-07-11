@@ -1,6 +1,7 @@
 <template>
     <div @click="locationEquimpent" class="detailContext">
         <Card class="clickStatic" :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'transparent'}">
+            <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">{{Obj.objtypeName}}</p>
             <slot name="heard">
                 <!-- <p class="heard">{{Obj.objtypeName}}</p> -->
             </slot>
@@ -143,6 +144,7 @@
             }
         },
         mounted() {
+            console.log('proObj',this.propObj)
             // console.log('mounted')
             // console.log('this.obj',this.Obj)
             if (this.Obj.time != "") {
