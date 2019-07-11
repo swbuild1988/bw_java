@@ -95,9 +95,7 @@
     import instrumentTool from "../../../../assets/UM/instrumentTool.png";
     import faultyEquipment from "../../../../assets/UM/faultyEquipment.png";
     import spareEquipment from "../../../../assets/UM/spareEquipment.png";
-    import {
-        EquipmentService
-    } from "../../../../services/equipmentService";
+    import { EquipmentService } from "../../../../services/equipmentService";
     import Enum from "../../../../../static/Enum.json";
 
     export default {
@@ -169,20 +167,20 @@
                     seriesColor: ['#c23531', '#e5c52f', '#6bade1', '#6fe46c', '#e06ce4', '#e48e6c'],
                     legendColor: '#fff'
                 },
-                equimentPie: {
-                    id: "equipmentPieId",
-                    requestUrl: "/equipments/type/count",
-                    parameters: {
-                        option: {
-                            title: {
-                                text: "各类型故障占比",
-                                textStyle: {
-                                    color: "#2e739b"
-                                }
-                            }
-                        }
-                    }
-                },
+                // equimentPie: {
+                //     id: "equipmentPieId",
+                //     requestUrl: "/equipments/type/count",
+                //     parameters: {
+                //         option: {
+                //             title: {
+                //                 text: "各类型故障占比",
+                //                 textStyle: {
+                //                     color: "#2e739b"
+                //                 }
+                //             }
+                //         }
+                //     }
+                // },
                 spare: {
                     id: "spare",
                     explain: "管廊设备占比",

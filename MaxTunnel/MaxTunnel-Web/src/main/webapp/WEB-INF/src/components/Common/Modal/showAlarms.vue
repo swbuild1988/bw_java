@@ -6,6 +6,7 @@
             <!-- title -->
             <section class="titleSection">
                 <article>
+                    {{index1}}
                     <h2>{{item.location}}-{{item.objectName}}</h2>
                     <h3>{{item.alarmName}}</h3>
                 </article>
@@ -50,8 +51,8 @@
                     <!-- 执行步骤 --> 
                     <section class="item" v-if="item.plan">
                         <h4>预案步骤</h4>
-                        <div class="detailSection"  style="height:69vmin;max-width:54vmin">
-                            <image-from-url :url="item.plan.processPicSrc"></image-from-url>
+                        <div class="detailSection"  style="height: 30vmin; width: 112vmin;position: relative;">
+                            <image-from-url :url="item.plan.processPicSrc" class="imageBox"></image-from-url>
                         </div>
                     </section>
                 </div>
@@ -130,12 +131,14 @@
             },
             'alarmContainer': function(newVal, oldVal){
                 this.alarms = newVal
+                console.log('newVal', newVal)
             }
         },
         mounted() {
             this.modalWidth = window.innerWidth * 0.58
             this.alarms = this.alarmContainer
             this.setVideoSpan();
+            console.log('this.alarms', this.alarms)
         },
         methods: {
             setVideoSpan() {
@@ -386,5 +389,10 @@
     .noneData{
         text-align: center;
         font-size: 2vmin;
+    }
+    .imageBox{
+        position: absolute;
+        height: 63vmin !important;
+        top: -37vmin;
     }
 </style>

@@ -416,7 +416,8 @@ export default {
             pageStyle: {
                 position: 'absolute',
                 bottom: '1vmin',
-                right: '2.5vmin'
+                right: '2.5vmin',
+                color: '#fff'
             },
             page: {
                 pageTotal: 0,
@@ -1159,9 +1160,6 @@ export default {
 .falseStatus{
     color: red;
 }
-.ivu-page>>>.ivu-page-total, .ivu-page>>>.ivu-page-options-elevator{
-    color: #fff;
-}
 .ivu-btn-primary{
     background: linear-gradient(to left, #2734e1, #b195ed);
     border-color: #2734e1;
@@ -1255,6 +1253,14 @@ export default {
         line-height: 4.5vmin;
     }
     .returnInfoForm .ivu-form-item >>> .ivu-form-item-content{
+        margin-left: 15vmin !important;
+        line-height: 5.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-label{
+        width: 15vmin !important;
+        line-height: 4.5vmin;
+    }
+    .ivu-form-item >>> .ivu-form-item-content{
         margin-left: 15vmin !important;
         line-height: 5.5vmin;
     }

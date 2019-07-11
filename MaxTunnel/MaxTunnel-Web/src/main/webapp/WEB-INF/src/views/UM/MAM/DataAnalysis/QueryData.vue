@@ -100,7 +100,7 @@
         <transition name="fade" mode="out-in">
             <div  class="boxBG" v-if="viewHistory">
                 <Row>
-                    <Button @click="downLoad" class="downloadBtn">下载历史数据</Button>
+                    <Button @click="downLoadData" class="downloadBtn">下载历史数据</Button>
                     <Table :columns="downTableColumn" :data="downTableDate" v-show="false" ref="downTable"></Table>
                     <Col span="24">
                         <div class="chartSize">
@@ -321,7 +321,7 @@
             ]
             this.historyPrams.dateType = 3
             this.viewHistoryData()
-            this.downLoadData()
+            // this.downLoadData()
         }else{
             this.queryTableData()
         }

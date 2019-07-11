@@ -477,7 +477,9 @@ export default {
                 //显示右下角提示框
                 this.warningNotice(content);
                 /* 滚动条以及不被遮挡 */
-                document.getElementsByClassName("ivu-notice")[0].style.width=33+'vmin'
+                if(document.body.offsetWidth>2200){
+                    document.getElementsByClassName("ivu-notice")[0].style.width=32+'vmin'
+                }
                 if (document.getElementsByClassName("ivu-notice-notice")) {
                     let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight + document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
                     if (h > window.innerHeight) {
@@ -536,7 +538,6 @@ export default {
                             document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
                         }
                     }
-                    document.getElementsByClassName("ivu-notice")[0].style.width=33+'vmin'
                 }
             };
             //详情按钮
@@ -753,12 +754,12 @@ export default {
     font-weight: 800;
 }
 
-@-webkit-keyframes scaleout {
+@keyframes scaleout {
     0% { -webkit-transform: scale(1.0) }
     100% {-webkit-transform: scale(1.1);opacity: 0;}
 }
 .blingbling{
-    -webkit-animation: scaleout 1.5s infinite ease-in-out;
+    animation: scaleout 1.5s infinite ease-in-out;
   }
 
 /* 小屏幕（显示器，小于等于 1920px） */
@@ -801,13 +802,13 @@ export default {
 .ivu-notice::-webkit-scrollbar-thumb,
 .stepsBox::-webkit-scrollbar-thumb {
     border-radius: 0.5vmin;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
     background: rgba(0, 0, 0, 0.2);
 }
 .ivu-notice::-webkit-scrollbar-track,
 .stepsBox::-webkit-scrollbar-track {
     border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
     background: rgba(0, 0, 0, 0.1);
 }
 </style>
