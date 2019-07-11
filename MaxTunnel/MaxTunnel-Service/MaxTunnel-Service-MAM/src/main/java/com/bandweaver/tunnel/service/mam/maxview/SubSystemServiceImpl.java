@@ -184,7 +184,8 @@ public class SubSystemServiceImpl implements SubSystemService {
 		if (StringTools.isNullOrEmpty(complexObjectConvert))
 			throw new BandWeaverException("转换类型为空，不可转换");
 
-		ConvertType convertType = complexObjectConvert.getConvertType(code);
+		// 找到对应的开关输出
+		ConvertType convertType = complexObjectConvert.getConvertType(code, 1);
 		if (StringTools.isNullOrEmpty(convertType))
 			throw new BandWeaverException("没有对应的识别码" + code);
 
@@ -200,6 +201,9 @@ public class SubSystemServiceImpl implements SubSystemService {
 		bodys.put("measObjId", String.valueOf(masObjId));
 		bodys.put("measValue", String.valueOf(measValue));
 		bodys.put("sessionID", subSystemModuleCenter.getSessionID(config.getId()));
+
+		LogUtil.info("measObjId: " + String.valueOf(masObjId));
+		LogUtil.info("measValue: " + String.valueOf(measValue));
 
 		return sendMsg(host, path, headers, querys, bodys);
 	}

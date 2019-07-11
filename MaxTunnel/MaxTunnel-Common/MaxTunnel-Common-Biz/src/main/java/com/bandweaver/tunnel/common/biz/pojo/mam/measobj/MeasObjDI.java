@@ -46,8 +46,14 @@ public class MeasObjDI extends MeasObj {
 	public void setObjtypeName(String objtypeName) {
 		this.objtypeName = objtypeName;
 	}
-	
-	
-    
-    
+
+	@Override
+	public String toString() {
+		return "MeasObjDI{" +
+				"datatypeName='" + datatypeName + '\'' +
+				", objtypeName='" + objtypeName + '\'' +
+				", refreshTime=" + refreshTime +
+				", cv=" + cv +
+				"} " + super.toString();
+	}
 }

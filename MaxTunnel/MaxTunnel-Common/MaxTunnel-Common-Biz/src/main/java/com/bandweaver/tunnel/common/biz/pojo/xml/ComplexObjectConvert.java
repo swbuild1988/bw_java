@@ -14,7 +14,7 @@ public class ComplexObjectConvert {
     private String objectName;
     // 原始Id
     private int originalId;
-//    // 原始值起点
+    //    // 原始值起点
 //    private int startPositionOfOriginalValue;
 //    // 原始值长度
 //    private int lenghtOfOriginalValue;
@@ -69,9 +69,9 @@ public class ComplexObjectConvert {
         this.convertTypes = convertTypes;
     }
 
-    public ConvertType getConvertType(String code){
-        for (ConvertType type : this.convertTypes             ) {
-            if (type.getCode().equals(code)) return type;
+    public ConvertType getConvertType(String code, int typeId) {
+        for (ConvertType type : this.convertTypes) {
+            if (type.getCode().equals(code) && type.getType() == typeId) return type;
         }
         return null;
     }
