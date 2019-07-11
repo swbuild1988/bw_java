@@ -2,7 +2,7 @@
     <switchData
         v-bind:Obj="propObj"
         :stateProcess="curProcessState"
-        @getSwicthState="getSwicthState"
+        @getSwicthState="changeSwicthState"
         v-on="$listeners"
     >
         <div slot="heard" @click="reset">
@@ -146,9 +146,9 @@ export default {
             this.$emit("reset", this.propObj.id);
         },
         confirm(data) {
-            this.$nextTick(() => {
-                this.swicthState = !data;
-            });
+            // this.$nextTick(() => {
+            //     this.swicthState = !data;
+            // });
             let text = data
                 ? "确定打开" +
                   this.propObj.objtypeName +
@@ -163,7 +163,7 @@ export default {
                     return h("span", text);
                 },
                 onOk: () => {
-                    this.swicthState = !this.swicthState;
+                    // this.swicthState = !this.swicthState;
                     this.change();
                 }
             });
@@ -177,7 +177,7 @@ export default {
                 null
             );
         },
-        getSwicthState(state){
+        changeSwicthState(state){
             this.swicthState = state;
         }
     }

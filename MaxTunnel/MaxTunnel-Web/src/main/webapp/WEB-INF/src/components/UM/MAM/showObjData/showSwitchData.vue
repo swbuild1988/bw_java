@@ -136,6 +136,12 @@
                     this.Obj.datatypeId,
                     null
                 );
+            },
+            changeSwitchState(){
+                let { stateProcess } = this;
+
+                this.$emit('getSwicthState',stateProcess.open.value)
+                
             }
         },
         mounted() {
@@ -143,14 +149,6 @@
                 this.isTimeShow = true;
             }
             this.changeSwitchState();
-        },
-        methods:{
-            changeSwitchState(){
-                let { stateProcess } = this;
-
-                this.$emit('getSwicthState',stateProcess.open.value)
-                
-            }
         }
     };
 </script>
