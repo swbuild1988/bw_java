@@ -4,7 +4,7 @@
         <switch-data v-else-if="Obj.datatypeId==2" v-bind:propObj="Obj" @changeStatus="changeStatus"
             :control="Obj.control"></switch-data>
         <analog-channel v-bind:propObj="Obj" v-else :control="Obj.control" :reset="Obj.reset"
-            @changeStatus="changeStatus"></analog-channel>
+            @changeStatus="changeStatus" v-on="$listeners"></analog-channel>
         <!-- <electrictiy-data v-bind:Obj="Obj"></electrictiy-data> -->
     </div>
 </template>

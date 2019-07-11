@@ -1,11 +1,14 @@
 <template>
     <switchData v-bind:Obj="propObj" :curValue="swicthState" :stateProcess="curProcessState" v-on="$listeners">
-        <div slot="heard">
+        <!-- <div slot="heard">
             <p class="heard" style="font-size: 1.6vmin;margin-bottom: 2.5vmin;margin-top: -1vmin;">
                 {{propObj.objtypeName}}</p>
             <img class="heardImg" src="../../../../assets/UM/reset.png" v-if="$attrs.reset" title="复位"
-                @click.native="reset">
-        </div>
+                @click="reset">
+        </div> -->
+        <div slot="heard" @click="reset">
+           <img class="heardImg" src="../../../../assets/UM/reset.png" v-if="$attrs.reset" title="复位" >
+       </div>
         <div class="switchBtn">
             <i-switch v-model="swicthState" @on-change="confirm" size="large" v-if="$attrs.control">
                 <span slot="open">开</span>
@@ -137,8 +140,7 @@
                 });
             },
             reset() {
-                // this.$emit()
-                alert("1");
+                this.$emit('reset',this.propList.id)
             },
             confirm(data) {
                 this.$nextTick(() => {
@@ -231,7 +233,7 @@
     }
 
     .heardImg {
-        position: absolute;
+        position: absolute; 
         top: 2vmin;
         right: 0.5vmin;
         width: 1.7vmin;
