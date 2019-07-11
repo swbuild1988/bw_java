@@ -137,8 +137,7 @@
                 });
             },
             reset() {
-                // this.$emit()
-                alert("1");
+                this.$emit("reset", this.propObj.id);
             },
             confirm(data) {
                 this.$nextTick(() => {

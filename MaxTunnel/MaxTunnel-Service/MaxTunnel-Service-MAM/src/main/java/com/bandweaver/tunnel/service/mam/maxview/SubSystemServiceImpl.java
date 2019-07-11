@@ -201,6 +201,9 @@ public class SubSystemServiceImpl implements SubSystemService {
 		bodys.put("measValue", String.valueOf(measValue));
 		bodys.put("sessionID", subSystemModuleCenter.getSessionID(config.getId()));
 
+		LogUtil.info("measObjId:" + String.valueOf(measObj));
+		LogUtil.info("measValue" + String.valueOf(measValue));
+
 		return sendMsg(host, path, headers, querys, bodys);
 	}
 

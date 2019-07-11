@@ -57,6 +57,18 @@ public class SubSystemController {
 		boolean result = subSystemService.doAction(obj, inputVal);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
 	}
+
+	/**
+	 * 根据对应的码来控制对象做什么
+	 * @param id
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping(value = "sub-sys/output/obj/{id}/code/{code}" ,method= RequestMethod.GET)
+	public JSONObject controlOutput(@PathVariable("id")Integer id,@PathVariable("code")String code){
+		boolean result = subSystemService.controlOutput(id, code);
+		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,result);
+	}
 	
 	/**
 	 * 批量控制开关，只限开关量

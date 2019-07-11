@@ -4,7 +4,7 @@
         <switch-data v-else-if="Obj.datatypeId==3" v-bind:propObj="Obj" @changeStatus="changeStatus"
             :control="Obj.control"></switch-data>
         <analog-channel v-bind:propObj="Obj" v-else :control="Obj.control" :reset="Obj.reset"
-            @changeStatus="changeStatus"></analog-channel>
+            @changeStatus="changeStatus" @reset="reset"></analog-channel>
         <!-- <electrictiy-data v-bind:Obj="Obj"></electrictiy-data> -->
     </div>
 </template>
@@ -30,6 +30,9 @@
         methods: {
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
                 this.$emit("changeStatus", id, ObjVal, datatypeId, clickStatus);
+            },
+            reset(id){
+                this.$emit("reset", id);
             }
         }
     };

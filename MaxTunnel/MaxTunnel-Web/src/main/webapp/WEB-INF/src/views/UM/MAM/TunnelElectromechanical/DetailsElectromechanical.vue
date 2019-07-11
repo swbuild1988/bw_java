@@ -65,7 +65,7 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus"></show-obj-data>
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @reset="reset"></show-obj-data>
                     </Col>
                 </Row>
                 </Col>
@@ -473,7 +473,7 @@
                 if (clickStatus === null) {
                     let param = {
                         id: id,
-                        status: ObjVal ? 1 : 0
+                        code: ObjVal ? "open" : "close"
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
@@ -492,6 +492,12 @@
                     };
                 }
             },
+
+            // 复位按钮
+            reset(id) {
+                this.Log.info("复位按钮按下")
+            },
+
             getStoreId(data) {
                 this.queryCondition.storeId = data;
                 this.getObjDetialData();
