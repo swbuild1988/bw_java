@@ -1,8 +1,8 @@
 <template>
     <switchData
         v-bind:Obj="propObj"
-        :curValue="swicthState"
         :stateProcess="curProcessState"
+        @getSwicthState="getSwicthState"
         v-on="$listeners"
     >
         <div slot="heard" @click="reset">
@@ -112,8 +112,6 @@ export default {
         switchData
     },
     mounted() {
-        console.log('propObjan',this.propObj)
-        // this.swicthState = this.propObj.ObjVal == 1;
         this.transformStateImage();
     },
     methods: {
@@ -136,7 +134,6 @@ export default {
             }
         },
         replaceImage(curStateVal, val, descript) {
-            // if( key == 'open' )this.swicthState =  curStateVal;
             // 加载对应状态图片
             this.curObjState.push({
                 img: require("../../../../assets/UM/" +
@@ -179,6 +176,9 @@ export default {
                 this.propObj.datatypeId,
                 null
             );
+        },
+        getSwicthState(state){
+            this.swicthState = state;
         }
     }
 };
