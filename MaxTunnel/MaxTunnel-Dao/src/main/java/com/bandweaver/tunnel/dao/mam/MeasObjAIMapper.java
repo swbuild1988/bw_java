@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjAI;
-import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjAIVo;
+import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 
 public interface MeasObjAIMapper {
 
@@ -24,6 +24,6 @@ public interface MeasObjAIMapper {
 
 	void deleteByPrimaryKey(Integer id);
 
-	List<MeasObjAIDto> dataGrid(MeasObjAIVo aiVo);
+	List<MeasObjAIDto> getMeasObjAIByCondition(MeasObjVo vo);
 
 }

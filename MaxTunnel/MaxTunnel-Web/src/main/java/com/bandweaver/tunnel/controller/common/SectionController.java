@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.common;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.pojo.Store;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
@@ -478,6 +480,8 @@ public class SectionController extends BaseController<Section>{
 
         //根据sectionId查询所有的监测对象
         List<MeasObjDto> moList = measObjService.getMeasObjBySectionId(resultDto.getId());
+        // bim弹窗只返回模拟量输入
+        moList = moList.stream().filter(a -> DataType.AI.getValue() == a.getDatatypeId()).collect(Collectors.toList());
         List<JSONObject> cvList = new ArrayList<>();
         for (MeasObjDto measObj : moList) {
             double cv = measObjService.getMeasObjCVByIdAndDataType(measObj.getId(), measObj.getDatatypeId());
