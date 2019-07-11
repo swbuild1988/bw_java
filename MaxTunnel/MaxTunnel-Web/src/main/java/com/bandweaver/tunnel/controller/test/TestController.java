@@ -456,7 +456,23 @@ public class TestController {
                 measObjModuleCenter.insertMeasObj(tmpObj);
             }
         }
+        
+        // 修改声光报警和红外的datatypeId 3->2
+        // 获取声光报警和红外的监测对象
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs().stream().filter(a -> a.getObjtypeId().intValue() == ObjectType.ALTEROR.getValue() || a.getObjtypeId().intValue() == ObjectType.INFRARED.getValue()).collect(Collectors.toList());
+        for (MeasObj measObj : measObjs) {
 
+            MeasObj tmpObj = new MeasObj();
+            // 先复制一份备份
+            BeanUtils.copyProperties(measObj, tmpObj);
+            // 设为复杂结构
+            tmpObj.setDatatypeId(DataType.DI.getValue());
+
+            measObjModuleCenter.deleteObj(measObj.getId());
+            measObjModuleCenter.insertMeasObj(tmpObj);
+        }
+        
+        
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 

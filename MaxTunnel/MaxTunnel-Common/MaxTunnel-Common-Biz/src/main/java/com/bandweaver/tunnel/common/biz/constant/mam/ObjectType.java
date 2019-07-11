@@ -20,7 +20,7 @@ public enum ObjectType {
     ROBOT("机器人", 9, 6, 97, ""),
     LIGHT("照明", 11, 1, 3, "", true),
     POSITION("定位设备", 20, 6, 97, ""),
-    LIQUID("液位仪", 21, 1, 1, "mm"),
+    LIQUID("液位仪", 21, 1, 1, "m"),
 
     // 复杂类型
     FAN("风机", 10, 4, 200, "", true),

@@ -450,11 +450,13 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+                measObjAI.setRefreshTime(new Date());
                 measObjAIMapper.insertSelective(measObjAI);
                 break;
 
             case DI:
                 MeasObjDI measObjDI = MeasObjDI.fromMeasObj(measObj);
+                measObjDI.setRefreshTime(new Date());
                 measObjDIMapper.insertSelective(measObjDI);
                 break;
 
