@@ -100,7 +100,12 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                     <Row :gutter="16" style="margin-right: 2px;">
                         <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                            <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus"></show-obj-data>
+                            <show-obj-data
+                                v-bind:Obj="item"
+                                :objTypeId="queryCondition.curDataType"
+                                @changeStatus="changeStatus"
+                                @changeView="setView"
+                            ></show-obj-data>
                         </Col>
                     </Row>
                 </Col>
@@ -513,43 +518,14 @@ export default {
                     }
                 );
             }
-
-            if (!!id && !!datatypeId)
+        },
+        setView(id, datatypeId) {
+            console.log("sdsddsd", id, datatypeId);
+            if (!!id && !!datatypeId) {
                 this.detectionObj = {
                     id: changStrLength(id, 10),
                     moTypeId: datatypeId
                 };
-            // if (datatypeId != 1) {
-            //     this.Obj.filter(a => a.id == id)[0].ObjVal = ObjVal;
-            // }
-            if (clickStatus) {
-                this.Obj.forEach(b => {
-                    if (b.id == id) {
-                        b.clickStatus = clickStatus;
-                        this.Log.info("click " + b.id);
-                        SuperMapSqlQuery(
-                            this.SuperMapConfig.BIM_DATA,
-                            this.VMConfig.queryParam,
-                            "moid = " + b.id
-                        )
-                            .then(res => {
-                                this.Log.info("查找成功", res);
-                                if (res.length > 0) {
-                                    this.$refs.smViewer.LookAt1(
-                                        res[0],
-                                        50,
-                                        -10,
-                                        5
-                                    );
-                                }
-                            })
-                            .then(res => {
-                                this.Log.info("查找失败", res);
-                            });
-                    } else {
-                        b.clickStatus = !clickStatus;
-                    }
-                });
             }
         },
         getStoreId(data) {
