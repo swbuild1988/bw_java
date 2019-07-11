@@ -44,12 +44,12 @@
                 >
                 <img
                     src="../../../../assets/UM/shutter-open.png"
-                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="Obj.objtypeId==58 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-open.png"
-                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="Obj.objtypeId==56 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
@@ -59,7 +59,7 @@
                 >
                 <img
                     src="../../../../assets/UM/门-开.png"
-                    v-if="Obj.objtypeId==55 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="Obj.objtypeId==55 && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
@@ -90,12 +90,12 @@
                 >
                 <img
                     src="../../../../assets/UM/shutter-close.png"
-                    v-if="Obj.objtypeId==58 && (stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-close.png"
-                    v-if="Obj.objtypeId==56 && (stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
@@ -105,7 +105,7 @@
                 >
                 <img
                     src="../../../../assets/UM/门-关.png"
-                    v-if="Obj.objtypeId==55 && (stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="Obj.objtypeId==55 && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
@@ -199,38 +199,27 @@ export default {
         //定位设备
         locationEquimpent() {
             this.Obj.clickStatus = !this.Obj.clickStatus;
-            this.$emit(
-                "changeStatus",
-                this.Obj.id,
-                this.Obj.ObjVal,
-                this.Obj.datatypeId,
-                this.Obj.clickStatus
-            );
-        },
-        change() {
-            this.$emit(
-                "changeStatus",
-                this.Obj.id,
-                this.curValue,
-                this.Obj.datatypeId,
-                null
-            );
+            this.$emit("changeView", this.Obj.id, this.Obj.datatypeId);
         },
         changeSwitchState() {
             let { stateProcess } = this;
 
-                if(!stateProcess.run && !stateProcess.open)return;
-            
-                this.$emit('getSwicthState',stateProcess.run ? stateProcess.run.value : stateProcess.open.value)
-                
-            }
-        },
-        mounted() {
-            if (this.Obj.time != "") {
-                this.isTimeShow = true;
-            }
-            this.changeSwitchState();
+            if (!stateProcess.run && !stateProcess.open) return;
+
+            this.$emit(
+                "getSwicthState",
+                stateProcess.run
+                    ? stateProcess.run.value
+                    : stateProcess.open.value
+            );
         }
+    },
+    mounted() {
+        if (this.Obj.time != "") {
+            this.isTimeShow = true;
+        }
+        this.changeSwitchState();
+    }
 };
 </script>
 

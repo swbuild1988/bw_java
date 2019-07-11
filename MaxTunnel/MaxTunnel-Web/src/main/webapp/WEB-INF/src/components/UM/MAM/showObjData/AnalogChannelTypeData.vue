@@ -175,6 +175,9 @@ export default {
         },
         changeSwicthState(state) {
             this.swicthState = state;
+        },
+        changeView(id, datatypeId) {
+            this.$emit("changeView", id, datatypeId);
         }
     }
 };
