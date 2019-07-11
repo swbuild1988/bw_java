@@ -172,6 +172,11 @@
         data() {
             return {
                 tabName: "",
+                refreshData: {
+                    intervalTime: 1,
+                    refreshTime: 30,
+                    curTime: 0
+                },
                 storeProp: {
                     itemLen: 12,
                     dataList: [],
@@ -527,6 +532,44 @@
                 } catch (e) {}
             },
 
+            // 刷新井盖的值
+            refresh(id, target) {
+                let _this = this;
+                setTimeout(() => {
+                    if (_this.refreshData.curTime > _this.refreshData.refreshTime) return;
+                    MeasObjServer.getMeasObjCurValue(id).then(
+                        res => {
+                            for (let a of _this.Obj) {
+                                if (a.id != res.id) {
+                                    continue;
+                                }
+                                a.time = new Date(res.time).format("yyyy-MM-dd hh:mm:ss");
+                                a.ObjVal = res.curValue;
+
+                                // 获得值后判断是否已经打开或者关闭
+                                if (target) { //目标是打开
+                                    if (a.ObjVal.open.value) {
+                                        _this.refreshData.curTime += _this
+                                            .refreshData.refreshTime
+                                    }
+                                } else { //目标是关闭
+                                    if (a.ObjVal.close.value) {
+                                        _this.refreshData.curTime += _this
+                                            .refreshData.refreshTime
+                                    }
+                                }
+                            }
+                        },
+                        error => {
+                            _this.Log.info("获取井盖:" + id + "当前值错误");
+                        }
+                    )
+
+                    _this.refreshData.curTime += _this.refreshData.intervalTime;
+                    _this.refresh(id, target);
+                }, _this.refreshData.intervalTime * 1000);
+            },
+
             //定位设备切换开关量控制
             changeStatus(id, ObjVal, datatypeId, clickStatus) {
                 if (clickStatus === null) {
@@ -536,7 +579,14 @@
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
+                            // 如果是井盖，刷新
+                            this.Log.info("curDataType", this.queryCondition.curDataType)
+                            if (this.queryCondition.curDataType == 56) {
+                                this.refreshData.curTime = 0;
+                                this.refresh(id, ObjVal);
+                            }
                             this.$Message.info("操作成功");
+
                         },
                         error => {
                             this.$Message.error("操作失败");
@@ -567,7 +617,7 @@
                     }
                 );
             },
-            
+
             getStoreId(data) {
                 this.queryCondition.storeId = data;
                 this.getObjDetialData();
@@ -582,11 +632,9 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
+                        null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId,
+                        null : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -631,11 +679,9 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
+                        null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId
+                        null : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
