@@ -65,7 +65,8 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @reset="reset"></show-obj-data>
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @changeView="setView" @reset="reset">
+                    </show-obj-data>
                     </Col>
                 </Row>
                 </Col>
@@ -467,7 +468,6 @@
                     });
                 } catch (e) {}
             },
-
             // 刷新百叶的值
             refresh(id, target) {
                 let _this = this;
@@ -515,20 +515,21 @@
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
-                            this.$Message.info("操作成功");
-
                             // 如果是百叶，刷新
                             if (this.queryCondition.curDataType == 58) {
                                 this.refreshData.curTime = 0;
                                 this.refresh(id, ObjVal);
                             }
+
+                            this.$Message.info("操作成功");
                         },
                         error => {
                             this.$Message.error("操作失败");
                         }
                     );
                 }
-
+            },
+            setView(id, datatypeId) {
                 if (!!id && !!datatypeId) {
                     this.detectionObj = {
                         id: changStrLength(id, 10),
@@ -536,7 +537,6 @@
                     };
                 }
             },
-
             // 复位按钮
             reset(id) {
                 let param = {
@@ -567,9 +567,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId,
+                        null :
+                        _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -590,7 +592,8 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            temp.time = a.time == undefined || a.time == "" ?
+                            temp.time =
+                                a.time == undefined || a.time == "" ?
                                 "" :
                                 new Date(a.time).format(
                                     "yyyy-MM-dd hh:mm:ss"
@@ -616,9 +619,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                        null :
+                        _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {

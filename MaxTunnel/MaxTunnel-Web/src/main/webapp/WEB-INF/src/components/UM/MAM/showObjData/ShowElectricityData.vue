@@ -1,8 +1,8 @@
 <template>
     <article class="elecDataWrapper">
-        <header class="title">{{obj.name}}</header>
+        <header class="title">{{Obj.area + Obj.store + Obj.name}}</header>
         <Row>
-            <Col span="24" v-for="item in obj.data" :key="item.id">
+            <Col span="24" v-for="item in eleList" :key="item.key">
                 <section class="itemCol">
                     <span>{{item.key}}</span>
                     <span class="values">{{item.val}}</span>
@@ -15,50 +15,21 @@
 export default {
     name: "show-electricity-data",
     props: {
-        obj: {
+        Obj: {
             type: Object,
-            default: {
-                id: 1,
-                name: "51号电表",
-                data: [
-                    {
-                        key: "有功电能",
-                        val: 23
-                    },
-                    {
-                        key: "无功电能",
-                        val: 2
-                    },
-                    {
-                        key: "三相线电压",
-                        val: 23
-                    },
-                    {
-                        key: "有功电能",
-                        val: 23
-                    },
-                    {
-                        key: "无功电能",
-                        val: 2
-                    },
-                    {
-                        key: "三相线电压",
-                        val: 23
-                    },
-                    {
-                        key: "有功电能",
-                        val: 23
-                    },
-                    {
-                        key: "无功电能",
-                        val: 2
-                    },
-                    {
-                        key: "三相线电压",
-                        val: 23
-                    }
-                ]
+            required: true
+        }
+    },
+    computed: {
+        eleList() {
+            let data = [];
+            for (let item in this.Obj.curValue) {
+                data.push({
+                    key: this.Obj.curValue[item].descript,
+                    val: this.Obj.curValue[item].value
+                });
             }
+            return data;
         }
     }
 };

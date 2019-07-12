@@ -101,24 +101,8 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @reset="reset"></show-obj-data>
-                    <!-- <SimulatedData
-                                v-bind:Obj="item"
-                                v-if="item.datatypeId==1"
-                                @changeStatus="changeStatus"
-                            ></SimulatedData>
-                            <switchTypeData
-                                v-bind:propList="item"
-                                :control="item.control"
-                                v-else-if="item.datatypeId==2"
-                                @changeStatus="changeStatus"
-                            ></switchTypeData>
-                            <analogChannel
-                                v-bind:propList="item"
-                                :control="item.control"
-                                v-else
-                                @changeStatus="changeStatus"
-                            ></analogChannel>-->
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @changeView="setView" @reset="reset">
+                    </show-obj-data>
                     </Col>
                 </Row>
                 </Col>
@@ -531,7 +515,6 @@
                     });
                 } catch (e) {}
             },
-
             // 刷新井盖的值
             refresh(id, target) {
                 let _this = this;
@@ -593,7 +576,8 @@
                         }
                     );
                 }
-
+            },
+            setView(id, datatypeId) {
                 if (!!id && !!datatypeId) {
                     this.detectionObj = {
                         id: changStrLength(id, 10),
@@ -632,9 +616,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId,
+                        null :
+                        _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -655,9 +641,12 @@
                             temp.maxValue = a.maxValue;
                             temp.minValue = a.minValue;
                             temp.unit = a.unit;
-                            a.time == undefined || a.time == "" ?
+                            temp.time =
+                                a.time == undefined || a.time == "" ?
                                 "" :
-                                new Date(a.time).format("yyyy-MM-dd hh:mm:ss");
+                                new Date(a.time).format(
+                                    "yyyy-MM-dd hh:mm:ss"
+                                );
                             temp.ObjVal = a.curValue;
                             temp.objtypeName =
                                 _this.curTunnelName + a.area + a.store;
@@ -679,9 +668,11 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null : _this.queryCondition.storeId,
+                        null :
+                        _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null : _this.queryCondition.areaId
+                        null :
+                        _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
@@ -699,7 +690,7 @@
             handleScreensNum(num) {
                 this.curCarousel.videoNumber = num;
             }
-        },
+        }
     };
 </script>
 
