@@ -560,6 +560,7 @@ export default {
                 }
             };
             //详情按钮
+            console.log('plans', plans)
             if (plans && plans.length > 0) {
                 config.render = (h, params) => {
                     return h("div", [
