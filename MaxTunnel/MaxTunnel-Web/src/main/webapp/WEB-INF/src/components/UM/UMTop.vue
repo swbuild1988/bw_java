@@ -290,7 +290,8 @@ export default {
             tempAlarm: null,
             durations: [],
             messageCount: 0,
-            alarmCount: 0
+            alarmCount: 0,
+            // visible: false
         };
     },
     components: {
@@ -688,8 +689,9 @@ export default {
 }
 
 .ivu-menu-horizontal {
-    height: 9vh;
-    line-height: 9vh;
+    height: 5vh;
+    line-height: 5vh;
+    margin-top: 1vh;
 }
 
 .mainTitle {
@@ -713,13 +715,14 @@ export default {
 }
 
 .layout-nav .topBtn {
-    padding: 1.7vmin 2.5vmin 0vmin 2.5vmin;
+    margin-top: 1vmin;
     font-size: 1.66vmin;
-    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
-    background-size: contain;
-    top: 15%;
     position: relative;
     width: 100%;
+    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
+    background-size: cover;
+    padding: 1.2vmin 2.5vmin 0vmin 2.5vmin;
+    margin-top: 1vmin;
 }
 
 .layout-nav >>> .ivu-dropdown-item {
@@ -756,7 +759,6 @@ export default {
 .layout-nav >>> .ivu-select-dropdown {
     margin: 0;
     padding: 0;
-    top: 8.2vh !important;
     background-color: rgb(50, 103, 156);
     box-shadow: 0 0px 8px 0 rgba(57, 123, 187, 0.5),
         0 1px 0px 0 rgba(57, 123, 187, 0.6);
