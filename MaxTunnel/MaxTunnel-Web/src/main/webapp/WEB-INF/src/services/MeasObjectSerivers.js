@@ -333,6 +333,27 @@ var MeasObjServer = {
 		});
 	},
 
+	getMeasObjCurValue(id){
+		return new Promise((resolve, reject) => {
+			get("measobjs/" + id + "/curValues")
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data;
+					if (code == 200) {
+						resolve(data);
+					} else {
+						reject(msg + ",地址:measobjs/" + id + "/curValues");
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + "  " + error.response.data);
+				});
+		});
+	},
+
 	//修改设备状态
 	changeEquimentStatus(params) {
 		return new Promise((resolve, reject) => {

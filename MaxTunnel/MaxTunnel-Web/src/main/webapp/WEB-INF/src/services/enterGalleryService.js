@@ -174,6 +174,18 @@ var EnterGalleryService = {
             //         reject(error.response.status + "  " + error.response.data);
             //     });
         });
+    },
+    delInfo(id){
+        return new Promise((resolve, reject) => {
+            del('staffs/batch/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if(code == 200){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：staffs/batch/"+id)
+                }
+            })
+        })
     }
 };
 

@@ -482,6 +482,7 @@ public class SectionController extends BaseController<Section>{
         List<MeasObjDto> moList = measObjService.getMeasObjBySectionId(resultDto.getId());
         // bim弹窗只返回模拟量输入
         moList = moList.stream().filter(a -> DataType.AI.getValue() == a.getDatatypeId()).collect(Collectors.toList());
+        moList = moList.stream().filter(a -> a.getObjtypeId() != 0).collect(Collectors.toList());
         List<JSONObject> cvList = new ArrayList<>();
         for (MeasObjDto measObj : moList) {
             double cv = measObjService.getMeasObjCVByIdAndDataType(measObj.getId(), measObj.getDatatypeId());

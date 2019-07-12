@@ -48,19 +48,9 @@ export default {
             columns1:[
                 {
                     type: 'index',
-                    width: 60,
-                    align: 'center'
+                    align: 'center',
+                    width: window.innerWidth/100*80/100*5
                 },
-                // {
-                //     title: '所属区段',
-                //     key: 'defectName',
-                //     align: 'center'
-                // },
-                // {
-                //     title: '所属管仓',
-                //     key: 'defectName',
-                //     align: 'center'
-                // },
                 {
                     title: '所属缺陷',
                     key: 'defectName',

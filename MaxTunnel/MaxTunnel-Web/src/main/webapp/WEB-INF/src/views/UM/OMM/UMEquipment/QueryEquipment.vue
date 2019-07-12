@@ -176,7 +176,7 @@ export default {
             columnsEquipment: [
                 {
                     type: 'index',
-                    width: 60,
+                    width: window.innerWidth/100*80/100*5,
                     align: 'center'
                 },
                 {

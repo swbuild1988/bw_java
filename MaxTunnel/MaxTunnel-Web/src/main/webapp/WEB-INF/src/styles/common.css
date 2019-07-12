@@ -27,14 +27,12 @@ html {
 .conditions {
 	height: 6vh;
 	line-height: 6vh;
-	/* background: #fff; */
 	padding-left: 10px;
 }
 
 .queryCondition {
 	height: 10vh;
 	line-height: 4.5vh;
-	/* background: #fff; */
 	padding-left: 10px;
 }
 
@@ -81,11 +79,9 @@ html {
 }
 
 .list {
-	/* background: #fff; */
 	margin-top: 1vmin;
 	padding: 1vmin;
 	position: relative;
-	/* padding-bottom: 7vmin !important; */
 	height: 70vh;
 }
 
@@ -431,7 +427,6 @@ body {
 		height: 3.2vmin;
 		line-height: 3vmin;
 		color: #666;
-		border: 0.1vmin solid #dddee1;
 	}
 
 	.ivu-select-single .ivu-select-selection .ivu-select-placeholder,
@@ -441,7 +436,6 @@ body {
 		font-size: 1.2vmin;
 		padding-left: 0.8vmin;
 		padding-right: 2.4vmin;
-		color: #fff;
 	}
 
 	.ivu-page-next a,

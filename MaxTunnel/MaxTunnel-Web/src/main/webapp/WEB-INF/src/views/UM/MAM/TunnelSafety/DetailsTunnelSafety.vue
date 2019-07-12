@@ -184,6 +184,11 @@ export default {
     data() {
         return {
             tabName: "",
+            refreshData: {
+                intervalTime: 1,
+                refreshTime: 30,
+                curTime: 0
+            },
             storeProp: {
                 itemLen: 12,
                 dataList: [],
@@ -544,6 +549,48 @@ export default {
                 });
             } catch (e) {}
         },
+        // 刷新井盖的值
+        refresh(id, target) {
+            let _this = this;
+            setTimeout(() => {
+                if (_this.refreshData.curTime > _this.refreshData.refreshTime)
+                    return;
+                MeasObjServer.getMeasObjCurValue(id).then(
+                    res => {
+                        for (let a of _this.Obj) {
+                            if (a.id != res.id) {
+                                continue;
+                            }
+                            a.time = new Date(res.time).format(
+                                "yyyy-MM-dd hh:mm:ss"
+                            );
+                            a.ObjVal = res.curValue;
+
+                            // 获得值后判断是否已经打开或者关闭
+                            if (target) {
+                                //目标是打开
+                                if (a.ObjVal.open.value) {
+                                    _this.refreshData.curTime +=
+                                        _this.refreshData.refreshTime;
+                                }
+                            } else {
+                                //目标是关闭
+                                if (a.ObjVal.close.value) {
+                                    _this.refreshData.curTime +=
+                                        _this.refreshData.refreshTime;
+                                }
+                            }
+                        }
+                    },
+                    error => {
+                        _this.Log.info("获取井盖:" + id + "当前值错误");
+                    }
+                );
+
+                _this.refreshData.curTime += _this.refreshData.intervalTime;
+                _this.refresh(id, target);
+            }, _this.refreshData.intervalTime * 1000);
+        },
 
         //定位设备切换开关量控制
         changeStatus(id, ObjVal, datatypeId, clickStatus) {
@@ -554,6 +601,15 @@ export default {
                 };
                 MeasObjServer.changeEquimentStatus(param).then(
                     res => {
+                        // 如果是井盖，刷新
+                        this.Log.info(
+                            "curDataType",
+                            this.queryCondition.curDataType
+                        );
+                        if (this.queryCondition.curDataType == 56) {
+                            this.refreshData.curTime = 0;
+                            this.refresh(id, ObjVal);
+                        }
                         this.$Message.info("操作成功");
                     },
                     error => {
@@ -570,8 +626,7 @@ export default {
                 };
             }
         },
-        //操作状态
-        getOperationState(state) {},
+
         // 复位按钮
         reset(id) {
             let param = {
@@ -680,11 +735,26 @@ export default {
         handleScreensNum(num) {
             this.curCarousel.videoNumber = num;
         }
+    },
+    //操作状态
+    getOperationState(state) {},
+    // 复位按钮
+    reset(id) {
+        let param = {
+            id: id,
+            code: "clear"
+        };
+        MeasObjServer.changeEquimentStatus(param).then(
+            res => {
+                this.$Message.info("操作成功");
+            },
+            error => {
+                this.$Message.error("操作失败");
+            }
+        );
     }
 };
 </script>
-
-
 <style scoped>
 @import "../CommonCss/DetailsCom.css";
 

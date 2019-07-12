@@ -100,7 +100,7 @@
         <transition name="fade" mode="out-in">
             <div  class="boxBG" v-if="viewHistory">
                 <Row>
-                    <Button @click="downLoad" class="downloadBtn">下载历史数据</Button>
+                    <Button @click="downLoadData" class="downloadBtn">下载历史数据</Button>
                     <Table :columns="downTableColumn" :data="downTableDate" v-show="false" ref="downTable"></Table>
                     <Col span="24">
                         <div class="chartSize">
@@ -203,7 +203,7 @@
             tableColumn: [
                 {
                     type: 'selection',
-                    width: 70,
+                    width: window.innerWidth/100*80/100*5,
                     align: 'center'
                 },
                 {
@@ -321,7 +321,7 @@
             ]
             this.historyPrams.dateType = 3
             this.viewHistoryData()
-            this.downLoadData()
+            // this.downLoadData()
         }else{
             this.queryTableData()
         }
@@ -419,7 +419,7 @@
             }
             DataAnalysisService.getMonitorData(params).then(result => {
                 if(result!=null){
-                    _this.tableData = result.list
+                    _this.tableData = result.pagedList
                     _this.page.total = result.total;
                     _this.tableload=false;
                 }

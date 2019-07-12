@@ -1,6 +1,6 @@
 <template>
 <div class="outSiderBox">
-    <Row class="conditions">
+    <Row class="personCondition">
         <Col span="7">
             姓名：
             <Input placeholder="请输入访客姓名" v-model="conditions.name" class="conditionsWidth"></Input>
@@ -26,9 +26,10 @@
                     </Checkbox>
                 </Poptip>
             </div>
+            <Button size="small" @click="manageUserInfo">访客信息管理</Button>
         </CheckboxGroup>
         <div class="inlineBox distanceBox">
-            <Button class="addInfo" type="dashed" long icon="plus-round" @click="addOutsiders()">添加访客信息</Button>
+            <Button type="dashed" long icon="plus-round" @click="addOutsiders()">添加访客信息</Button>
         </div>
         <div class="distanceBox" >
             <span class="showChooseOutside" v-for="(item,index) in outsidesChoosed" :key="item">
@@ -41,26 +42,29 @@
     <Modal
         title="添加入廊用户"
         v-model="isOutStorage"
-        width="42vw"
+        width="60vw"
     >
         <Form ref="outsiders" :model="outsiders" :rules="ruleValidate" @submit.native.prevent class="addInfoForm">
             <FormItem>
                 <Row v-for="(item,index) in items" :key="index" v-if="item.status">
                     <Col span="7">
+                    姓名：
                         <Input type="text" v-model="item.name" placeholder="请输入访客姓名" @on-blur="validateName(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip"  v-show="check[index].checkName">访客姓名不能为空</div>
                     </Col>
                     <Col span="7">
+                    身份证号：
                         <Input type="text" v-model="item.idCard" placeholder="请输入身份证号" @on-blur="validateIdCard(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkidCard">身份证号不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightIdCard">请输入正确的身份证号</div>
                     </Col>
                     <Col span="7">
+                    联系方式：
                         <Input type="text" v-model="item.tel" placeholder="请输入联系方式" @on-blur="validateTel(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkTel">联系方式不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightTel">请输入正确的联系方式</div>
                     </Col>
-                    <Col span="3" >
+                    <Col span="3" style="text-align: right">
                         <Button type="ghost" @click="handleRemove(index)">删除</Button>
                     </Col>
                 </Row>
@@ -68,18 +72,28 @@
             <FormItem>
                 <Row>
                     <Col span="12">
-                        <Button class="addInfo" type="dashed" long @click="handleAdd" icon="plus-round">添加访客信息</Button>
+                        <Button type="dashed" long @click="handleAdd" icon="plus-round">添加访客信息</Button>
                     </Col>
                 </Row>
         </FormItem>
         </Form>
         <div slot="footer">
-            <Button type="primary" @click="submitOutsiders()">确定</Button>
+            <!-- <Button type="default" @click="cancelReturn('toolReturn')">取消</Button> -->
+            <Button type="primary" @click="submitOutsiders()" :disabled="isDisable">确定</Button>
         </div>
+    </Modal>
+    <Modal
+        title="访客信息管理"
+        width="60vw"
+        v-model="userManage"
+    >
+    
+        <Table :columns="userManageColumns" :data="outSiders"></Table>
     </Modal>
 </div>    
 </template>
 <script>
+import { EnterGalleryService } from '@/services/enterGalleryService'
 export default {
     data(){
         return{
@@ -124,7 +138,48 @@ export default {
             ],
             checkStatus: false,
             isDisable:false,
-            content: null
+            content: null,
+            userManage: false,
+            userManageColumns: [
+                {
+                    type: "index",
+                    width: 60,
+                    align: "center"
+                },
+                {
+                    title: '姓名',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '身份证号',
+                    key: 'identityNO',
+                    align: 'center'
+                },
+                {
+                    title: '联系方式',
+                    key: 'telphone',
+                    align: 'center'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('Button', {
+                            props: {
+                                size: 'small',
+                                type: 'error'
+                            },
+                            on: {
+                                click: ()=>{
+                                    this.alldelete(params.row.id)
+                                }
+                            }
+                        }, '删除')
+                    }
+                }
+            ],
+            deleteSelect: []
         }
     },
     mounted(){
@@ -257,13 +312,47 @@ export default {
                     this.content = "手机号："+data.telphone+",身份证号："+data.identityNO
                 }
             })
-        }
+        },
+        //访客信息管理
+        manageUserInfo(){
+            this.userManage = true
+        },
+        // handleSelectionChange(val) {
+        //     this.deleteSelect = val;
+        // },
+        // startdelete(selection) {
+        //     if (selection.length != 0) {
+        //         this.deleteSelect = selection;
+        //     }
+        // },
+        alldelete(id) {
+            this.$Modal.confirm({
+                title: "删除确认",
+                content: "<p>确认要删除选中的信息吗？</p>",
+                onOk: () => {
+                    EnterGalleryService.delInfo(id).then(
+                        result => {
+                            this.$Message.info("已删除");
+                            this.searchList();
+                        },
+                        error => {
+                            this.Log.info(error)
+                        }
+                    )
+                },
+                onCancel: () => {
+                    this.$Message.info("已取消操作");
+                    this.searchList();
+                }
+            });
+        },
     }
 }
 </script>
 <style scoped>
-.conditions{
+.personCondition{
     margin-bottom: 0; 
+    line-height: 4.5vmin;
 }
 .conditionsWidth{
     width: 60%
@@ -288,10 +377,10 @@ export default {
     font-size: 3vmin;
 }
 .inputWidth{
-    width: 70%;
+    width: 50%;
     min-width: 140px;
 }
-.addInfoForm .ivu-col-span-6{
+.addInfoForm .ivu-col-span-7{
     margin-bottom: 2vmin;
 }
 .inlineBox{
@@ -303,22 +392,14 @@ export default {
 .distanceBox{
     margin: 0.5vmin;
 }
-.ivu-row{
-    margin-bottom: 3vmin;
-}
 .v-transfer-dom >>> .ivu-modal-wrap{
-    z-index: 2000;
+    z-index: 1999;
 }
-@media (min-width: 2200px) {
-    .inputWidth >>> .ivu-input{
-        font-size: 1.4vmin;
+@media (min-width: 2200px){
+    .ivu-input {
         height: 3.2vmin;
-        line-height: 3.2vmin;
         padding: 0.4vmin 0.7vmin;
-    }
-    .addInfo{
-        border: 0.1vmin solid #ccc;
-        margin-top: 1.2vmin;
+        font-size: 1.2vmin;
     }
 }
 </style>

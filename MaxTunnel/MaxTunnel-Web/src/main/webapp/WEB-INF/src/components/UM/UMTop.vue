@@ -52,7 +52,9 @@
                                 <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
-                                >我的任务</DropdownItem>
+                                >我的任务
+                                    <span class="alarmCount">（{{messageCount}}）</span>
+                                </DropdownItem>
                                 <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
                                 <showAboutUs v-bind="aboutUs"></showAboutUs>
                                 <DropdownItem
@@ -288,7 +290,8 @@ export default {
             tempAlarm: null,
             durations: [],
             messageCount: 0,
-            alarmCount: 0
+            alarmCount: 0,
+            // visible: false
         };
     },
     components: {
@@ -478,8 +481,9 @@ export default {
                 //显示右下角提示框
                 this.warningNotice(content);
                 /* 滚动条以及不被遮挡 */
-                document.getElementsByClassName("ivu-notice")[0].style.width =
-                    33 + "vmin";
+                if(document.body.offsetWidth>2200){
+                    document.getElementsByClassName("ivu-notice")[0].style.width=32+'vmin'
+                }
                 if (document.getElementsByClassName("ivu-notice-notice")) {
                     let h =
                         document.getElementsByClassName("ivu-notice")[0]
@@ -553,9 +557,6 @@ export default {
                             )[0].style.bottom = "";
                         }
                     }
-                    document.getElementsByClassName(
-                        "ivu-notice"
-                    )[0].style.width = 33 + "vmin";
                 }
             };
             //详情按钮
@@ -688,8 +689,9 @@ export default {
 }
 
 .ivu-menu-horizontal {
-    height: 9vh;
-    line-height: 9vh;
+    height: 5vh;
+    line-height: 5vh;
+    margin-top: 1vh;
 }
 
 .mainTitle {
@@ -713,13 +715,14 @@ export default {
 }
 
 .layout-nav .topBtn {
-    padding: 1.7vmin 2.5vmin 0vmin 2.5vmin;
+    margin-top: 1vmin;
     font-size: 1.66vmin;
-    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
-    background-size: contain;
-    top: 15%;
     position: relative;
     width: 100%;
+    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
+    background-size: cover;
+    padding: 1.2vmin 2.5vmin 0vmin 2.5vmin;
+    margin-top: 1vmin;
 }
 
 .layout-nav >>> .ivu-dropdown-item {
@@ -731,7 +734,7 @@ export default {
 }
 .layout-nav >>> .ivu-dropdown-item:hover {
     color: #000;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.6); 
 }
 .layout-nav >>> .ivu-dropdown-item:first-child {
     border-top: none;
@@ -756,7 +759,6 @@ export default {
 .layout-nav >>> .ivu-select-dropdown {
     margin: 0;
     padding: 0;
-    top: 8.2vh !important;
     background-color: rgb(50, 103, 156);
     box-shadow: 0 0px 8px 0 rgba(57, 123, 187, 0.5),
         0 1px 0px 0 rgba(57, 123, 187, 0.6);
@@ -775,18 +777,13 @@ export default {
     font-weight: 800;
 }
 
-@-webkit-keyframes scaleout {
-    0% {
-        -webkit-transform: scale(1);
-    }
-    100% {
-        -webkit-transform: scale(1.1);
-        opacity: 0;
-    }
+@keyframes scaleout {
+    0% { -webkit-transform: scale(1.0) }
+    100% {-webkit-transform: scale(1.1);opacity: 0;}
 }
-.blingbling {
-    -webkit-animation: scaleout 1.5s infinite ease-in-out;
-}
+.blingbling{
+    animation: scaleout 1.5s infinite ease-in-out;
+  }
 
 /* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {
@@ -828,13 +825,13 @@ export default {
 .ivu-notice::-webkit-scrollbar-thumb,
 .stepsBox::-webkit-scrollbar-thumb {
     border-radius: 0.5vmin;
-    -webkit-box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
+    box-shadow: inset 0 0 5px rgba(228, 198, 198, 0.2);
     background: rgba(0, 0, 0, 0.2);
 }
 .ivu-notice::-webkit-scrollbar-track,
 .stepsBox::-webkit-scrollbar-track {
     border-radius: 0;
-    -webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    box-shadow: inset 0 0 5px #ddd0d033;
     background: rgba(0, 0, 0, 0.1);
 }
 </style>

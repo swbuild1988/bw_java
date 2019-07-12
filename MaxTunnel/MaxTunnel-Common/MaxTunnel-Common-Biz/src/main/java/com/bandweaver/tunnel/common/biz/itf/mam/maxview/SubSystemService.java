@@ -33,6 +33,20 @@ public interface SubSystemService {
 	 */
 	boolean controlOutput(int objectId, String code);
 
+	/**
+	 * 刷新开光量输入
+	 * @param id
+	 * @return
+	 */
+	boolean refreshDI(int id);
+
+	/**
+	 * 刷新模拟量输入
+	 * @param id
+	 * @return
+	 */
+	double refreshAI(int id);
+
 	/**发送心跳 
 	 * @param tunnelId   
 	 * @author shaosen
