@@ -465,7 +465,7 @@ export default {
 .menu-item span {
     display: inline-block;
     overflow: hidden;
-    width: 17.4vmin;
+    width: 16vmin;
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: bottom;
@@ -581,7 +581,7 @@ li.ivu-menu-submenu-has-parent-submenu >>> .ivu-menu-submenu-title:hover,
 }
 
 .menuList >>> .ivu-menu-item {
-    font-size: 2vmin;
+    font-size: 2vmin !important;
     padding-left: 0 !important;
     border: 1px solid #938e8e9c;
 }

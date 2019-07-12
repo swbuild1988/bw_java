@@ -140,6 +140,7 @@
                                 v-bind:Obj="item"
                                 @changeStatus="changeStatus"
                                 @changeView="setView"
+                                @getSwicthState="getOperationState"
                                 @reset="reset"
                             ></show-obj-data>
                         </Col>
@@ -569,7 +570,8 @@ export default {
                 };
             }
         },
-
+        //操作状态
+        getOperationState(state) {},
         // 复位按钮
         reset(id) {
             let param = {

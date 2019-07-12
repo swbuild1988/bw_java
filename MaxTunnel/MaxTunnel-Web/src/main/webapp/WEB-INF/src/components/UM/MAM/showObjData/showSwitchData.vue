@@ -34,22 +34,22 @@
                 >
                 <img
                     src="../../../../assets/UM/风机gif.gif"
-                    v-if="Obj.objtypeId==10 && stateProcess.run.value"
+                    v-if="(Obj.objtypeId==10&&stateProcess.run) && stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/水泵gif.gif"
-                    v-if="Obj.objtypeId==59 && stateProcess.run.value"
+                    v-if="(Obj.objtypeId==59&&stateProcess.run) && stateProcess.run.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/shutter-open.png"
-                    v-if="Obj.objtypeId==58 && (stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==58&&stateProcess.open) && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-open.png"
-                    v-if="Obj.objtypeId==56 && (stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==56&&stateProcess.open) && (stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
@@ -90,48 +90,48 @@
                 >
                 <img
                     src="../../../../assets/UM/shutter-close.png"
-                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==58&&stateProcess.open) && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/covers-close.png"
-                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==56&&stateProcess.open) && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/红外.gif"
-                    v-if="Obj.objtypeId==57 && stateProcess.open.value"
+                    v-if="(Obj.objtypeId==57&&stateProcess.open) && stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/门-关.png"
-                    v-if="Obj.objtypeId==55 && (!stateProcess.open.value && stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==55&&stateProcess.open) && (!stateProcess.open.value && stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/报警.png"
-                    v-if="Obj.objtypeId==41 && !stateProcess.open.value"
+                    v-if="(Obj.objtypeId==41&&stateProcess.open) && !stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/place-troop-close.png"
-                    v-if="Obj.objtypeId==63 && !stateProcess.open.value"
+                    v-if="(Obj.objtypeId==63&&stateProcess.open) && !stateProcess.open.value"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/linkage-status-close.png"
-                    v-if="Obj.objtypeId==64 && !stateProcess.open.value"
+                    v-if="(Obj.objtypeId==64&&stateProcess.open) && !stateProcess.open.value"
                     class="img"
                 >
                 <!-- 过程 -->
                 <img
                     src="../../../../assets/UM/covers-process.gif"
-                    v-if="Obj.objtypeId==56 && (!stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==56&&stateProcess.open) && (!stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
                 <img
                     src="../../../../assets/UM/shutter-process.gif"
-                    v-if="Obj.objtypeId==58 && (!stateProcess.open.value && !stateProcess.close.value)"
+                    v-if="(Obj.objtypeId==58&&stateProcess.open) && (!stateProcess.open.value && !stateProcess.close.value)"
                     class="img"
                 >
             </div>
