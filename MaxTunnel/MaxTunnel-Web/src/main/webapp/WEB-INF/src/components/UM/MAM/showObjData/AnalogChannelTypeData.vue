@@ -112,6 +112,9 @@ export default {
         switchData
     },
     mounted() {
+        // this.sort().then(() => this.transformStateImage());
+        // this.stateSort();
+
         this.transformStateImage();
     },
     methods: {
@@ -181,22 +184,25 @@ export default {
         changeView(id, datatypeId) {
             this.$emit("changeView", id, datatypeId);
         },
-        sort() {
-            return new Promise((resolve, reject) => {
-                for (var j = 0; j < this.curObjState.length - 1; j++) {
-                    for (var i = 0; i < this.curObjState.length - 1; i++) {
-                        if (
-                            this.curObjState[i].index >
-                            this.curObjState[i + 1].index
-                        ) {
-                            var temp = this.curObjState[i];
-                            this.curObjState[i] = this.curObjState[i + 1];
-                            this.curObjState[i + 1] = temp;
-                        }
-                    }
-                }
-                resolve();
-            });
+        stateSort() {
+            let _this = this;
+            // console.log("dfgdfg");
+            // return new Promise((resolve, reject) => {
+            // for (var j = 0; j < _this.propObj.ObjVal.length - 1; j++) {
+            //     for (var i = 0; i < _this.propObj.ObjVal.length - j - 1; i++) {
+            //         if (
+            //             _this.propObj.ObjVal[i].index >
+            //             _this.propObj.ObjVal[i + 1].index
+            //         ) {
+            //             var temp = _this.propObj.ObjVal[i];
+            //             _this.propObj.ObjVal[i] = _this.propObj.ObjVal[i + 1];
+            //             _this.propObj.ObjVal[i + 1] = temp;
+            //         }
+            //     }
+            // }
+            console.log(this.curObjState);
+            //     resolve();
+            // });
         }
     }
 };
