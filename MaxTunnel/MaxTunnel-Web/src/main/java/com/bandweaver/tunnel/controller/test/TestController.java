@@ -464,11 +464,12 @@ public class TestController {
         		|| a.getObjtypeId().intValue() == ObjectType.LIGHT.getValue()).collect(Collectors.toList());
         for (MeasObj measObj : measObjs) {
 
-            MeasObj tmpObj = new MeasObj();
+        	if(measObj.getDatatypeId() == DataType.DI.getValue()) continue;
+            
+        	MeasObj tmpObj = new MeasObj();
             // 先复制一份备份
             BeanUtils.copyProperties(measObj, tmpObj);
             // 设为复杂结构
-            if(tmpObj.getDatatypeId() == DataType.DI.getValue()) continue;
             tmpObj.setDatatypeId(DataType.DI.getValue());
 
             measObjModuleCenter.deleteObj(measObj.getId());
@@ -479,4 +480,16 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    @RequestMapping(value = "test/delete_measobjs")
+    public JSONObject deleteMeasObj() {
+    	// 获取所有监测对象
+    	List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+    	
+    	for (MeasObj measObj : measObjs) {
+    		// 去除监控中心的视频以及定位设备
+    		if(measObj.getId().intValue() < 7000000) continue;
+    		measObjModuleCenter.deleteObj(measObj.getId());
+    	}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
 }

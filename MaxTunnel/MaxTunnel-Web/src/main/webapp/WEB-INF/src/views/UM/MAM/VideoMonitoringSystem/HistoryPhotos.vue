@@ -6,7 +6,7 @@
                     <Row style="width: 94%">
                         <Col span="2">
                             <div
-                                style="width:100%;height:3.2vmin;display: flex;justify-content: center;"
+                                style="width:100%;height:6vh;display: flex;justify-content: center;"
                             >
                                 <span class="conditionSpan" style="align-self:center;">摄像头：</span>
                             </div>
@@ -103,21 +103,21 @@
                 </Col>
             </Row>
         </div>
-        <div class="page">
-            <Page
-                :total="page.pageTotal"
-                :current="page.pageNum"
-                :page-size="page.pageSize"
-                show-sizer
-                :page-size-opts="[8,16]"
-                show-total
-                placement="top"
-                @on-change="handlePage"
-                @on-page-size-change="handlePageSize"
-                show-elevator
-                :style="pageStyle"
-            ></Page>
-        </div>
+        <!-- <div class="page"> -->
+        <Page
+            :total="page.pageTotal"
+            :current="page.pageNum"
+            :page-size="page.pageSize"
+            show-sizer
+            :page-size-opts="[8,16]"
+            show-total
+            placement="top"
+            @on-change="handlePage"
+            @on-page-size-change="handlePageSize"
+            show-elevator
+            :style="pageStyle"
+        ></Page>
+        <!-- </div> -->
     </div>
 </template>
 
@@ -571,10 +571,18 @@ export default {
 }
 .conditionSpan {
     color: #fff;
-    font-size: 1.4vmin;
+    font-size: 1.3vmin;
 }
 .conditions >>> .ivu-select-selection {
     border-radius: 1vmin;
+}
+.condition >>> .ivu-input {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.3vmin;
+}
+.conditions .ivu-btn-primary {
+    font-size: 1.2vmin !important;
 }
 .download {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);

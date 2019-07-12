@@ -127,19 +127,21 @@ export default {
                         this.replaceImage(
                             stateObj[stateVal[i]].value ? 1 : 0,
                             this.objState[j].val,
-                            stateObj[stateVal[i]].descript
+                            stateObj[stateVal[i]].descript,
+                            stateObj[stateVal[i]].index
                         );
                     }
                 }
             }
         },
-        replaceImage(curStateVal, val, descript) {
+        replaceImage(curStateVal, val, descript, item) {
             // 加载对应状态图片
             this.curObjState.push({
                 img: require("../../../../assets/UM/" +
                     val[curStateVal] +
                     ".png"),
-                val: descript
+                val: descript,
+                index: item
             });
         },
         reset() {
@@ -178,6 +180,23 @@ export default {
         },
         changeView(id, datatypeId) {
             this.$emit("changeView", id, datatypeId);
+        },
+        sort() {
+            return new Promise((resolve, reject) => {
+                for (var j = 0; j < this.curObjState.length - 1; j++) {
+                    for (var i = 0; i < this.curObjState.length - 1; i++) {
+                        if (
+                            this.curObjState[i].index >
+                            this.curObjState[i + 1].index
+                        ) {
+                            var temp = this.curObjState[i];
+                            this.curObjState[i] = this.curObjState[i + 1];
+                            this.curObjState[i + 1] = temp;
+                        }
+                    }
+                }
+                resolve();
+            });
         }
     }
 };
