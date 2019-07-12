@@ -7,6 +7,9 @@ import com.bandweaver.tunnel.common.biz.constant.MonitorTypeEnum;
 import com.bandweaver.tunnel.common.biz.constant.ProcessTypeEnum;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
+import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -85,6 +88,8 @@ public class MeasObjController {
     private MeasValueSIService measValueSIService;
     @Autowired
     private XMLService xmlService;
+    @Autowired
+    private SubSystemService subSystemService;
 
 
     /**
@@ -305,6 +310,20 @@ public class MeasObjController {
         return CommonUtil.success(getMeasObjInfo(measObjs));
     }
 
+    @RequiresPermissions("measobj:list")
+    @RequestMapping(value = "measobjs/{id}/curValues", method = RequestMethod.GET)
+    public JSONObject getObjectValueById(@PathVariable("id")int id) {
+        MeasObj measObj = measObjModuleCenter.getMeasObj(id);
+
+        // 获取所有孩子的的值并刷新返回
+        refreshMeasObjInfo(measObj);
+
+        List<MeasObj> measObjs = new ArrayList<>();
+        measObjs.add(measObj);
+        List<JSONObject> jsonObjects = getMeasObjInfo(measObjs);
+        return CommonUtil.success(jsonObjects.get(0));
+    }
+
     /**
      * 通过管舱以及父类、区段获取监测对象
      *
@@ -336,6 +355,64 @@ public class MeasObjController {
             measObjs = measObjs.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
         }
         return CommonUtil.success(getMeasObjInfo(measObjs));
+    }
+
+    private boolean refreshMeasObjInfo(MeasObj measObj){
+
+        switch (DataType.getEnum(measObj.getDatatypeId())) {
+            case AI:
+                double cv = subSystemService.refreshAI(measObj.getId().intValue());
+                MeasValueAI measValueAI = new MeasValueAI();
+                measValueAI.setCv(cv);
+                measValueAI.setObjectId(measObj.getId());
+                measValueAI.setTime(new Date());
+                measObjModuleCenter.updateMeasObjAIValue(measValueAI);
+                break;
+
+            case DI:
+
+                boolean cv2 = subSystemService.refreshDI(measObj.getId().intValue());
+                MeasValueDI measValueDI = new MeasValueDI();
+                measValueDI.setCv(cv2);
+                measValueDI.setObjectId(measObj.getId());
+                measValueDI.setTime(new Date());
+                measObjModuleCenter.updateMeasObjDIValue(measValueDI);
+                break;
+
+            case SI:
+
+                break;
+
+            case SO:
+
+                break;
+
+            case ComplexObject:
+                ComplexObjectConvert complexObjectConvert = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
+                for (ConvertType convertType : complexObjectConvert.getConvertTypes()){
+                    if (convertType.getType() == 0){                //开光量输入
+                        MeasObj tmpObj = new MeasObj();
+                        tmpObj.setDatatypeId(DataType.DI.getValue());
+                        tmpObj.setId(measObjModuleCenter.getConvertObjectId(measObj, convertType));
+                        refreshMeasObjInfo(tmpObj);
+
+                    } else if (convertType.getType() == 2){             //模拟量输入
+                        MeasObj tmpObj = new MeasObj();
+                        tmpObj.setDatatypeId(DataType.AI.getValue());
+                        tmpObj.setId(measObjModuleCenter.getConvertObjectId(measObj, convertType));
+                        refreshMeasObjInfo(tmpObj);
+
+                    }
+                }
+                break;
+
+            default:
+
+                break;
+        }
+
+
+        return true;
     }
 
     // 获取监测对象值
