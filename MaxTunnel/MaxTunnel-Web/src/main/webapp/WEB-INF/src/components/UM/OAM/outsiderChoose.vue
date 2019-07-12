@@ -1,19 +1,19 @@
 <template>
 <div class="outSiderBox">
     <Row class="personCondition">
-        <Col span="6">
+        <Col span="7">
             姓名：
             <Input placeholder="请输入访客姓名" v-model="conditions.name" class="conditionsWidth"></Input>
         </Col>
-        <Col span="6">
+        <Col span="7">
             联系方式：
             <Input placeholder="请输入访客联系方式" v-model="conditions.tel" class="conditionsWidth"></Input>
         </Col>
-        <Col span="6">
+        <Col span="7">
             身份证号：
             <Input placeholder="请输入访客身份证号" v-model="conditions.IDCard" class="conditionsWidth"></Input>
         </Col>
-        <Col span="6">
+        <Col span="3">
             <Button size="small" @click="searchList" type="primary">查询</Button>
         </Col>
     </Row>
@@ -42,7 +42,7 @@
     <Modal
         title="添加入廊用户"
         v-model="isOutStorage"
-        width="42vw"
+        width="60vw"
     >
         <Form ref="outsiders" :model="outsiders" :rules="ruleValidate" @submit.native.prevent class="addInfoForm">
             <FormItem>
@@ -84,7 +84,7 @@
     </Modal>
     <Modal
         title="访客信息管理"
-        width="42vw"
+        width="60vw"
         v-model="userManage"
     >
     
@@ -377,10 +377,10 @@ export default {
     font-size: 3vmin;
 }
 .inputWidth{
-    width: 70%;
+    width: 50%;
     min-width: 140px;
 }
-.addInfoForm .ivu-col-span-6{
+.addInfoForm .ivu-col-span-7{
     margin-bottom: 2vmin;
 }
 .inlineBox{
@@ -394,5 +394,12 @@ export default {
 }
 .v-transfer-dom >>> .ivu-modal-wrap{
     z-index: 1999;
+}
+@media (min-width: 2200px){
+    .ivu-input {
+        height: 3.2vmin;
+        padding: 0.4vmin 0.7vmin;
+        font-size: 1.2vmin;
+    }
 }
 </style>

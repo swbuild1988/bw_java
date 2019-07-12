@@ -52,7 +52,9 @@
                                 <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
-                                >我的任务</DropdownItem>
+                                >我的任务
+                                    <span class="alarmCount">（{{messageCount}}）</span>
+                                </DropdownItem>
                                 <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
                                 <showAboutUs v-bind="aboutUs"></showAboutUs>
                                 <DropdownItem
@@ -827,7 +829,7 @@ export default {
 .ivu-notice::-webkit-scrollbar-track,
 .stepsBox::-webkit-scrollbar-track {
     border-radius: 0;
-    box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
+    box-shadow: inset 0 0 5px #ddd0d033;
     background: rgba(0, 0, 0, 0.1);
 }
 </style>
