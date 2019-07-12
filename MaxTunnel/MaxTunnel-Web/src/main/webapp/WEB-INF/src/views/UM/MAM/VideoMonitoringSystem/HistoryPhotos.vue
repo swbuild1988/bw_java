@@ -606,4 +606,7 @@ export default {
 .list >>> .ivu-card-bordered {
     border: none;
 }
+.conditions >>> .ivu-select-selected-value {
+    color: #fff;
+}
 </style>
