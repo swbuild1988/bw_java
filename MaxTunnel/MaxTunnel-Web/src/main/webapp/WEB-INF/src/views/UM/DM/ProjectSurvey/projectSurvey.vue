@@ -111,8 +111,9 @@ export default {
     margin-left: 6vmin;
 }
 .equipmentSection{
-    margin-left: 20vmin;
-    width: 44vmin;
+    position: absolute;
+    right: 0vmin;
+    top: 1vmin;
 }
 .surveyTitle{
     font-size: 9vmin;
@@ -126,15 +127,12 @@ export default {
     font-size: 3vmin;
 }
 @media (min-width: 2100px){
-    .showBG{
-        width: 100%;
-        height: 90%;
-    }
     .surveyTitle{
         margin-left: 18vmin;
     }
     .equipmentSection{
-        margin-left: 11vmin;
+        position: absolute;
+        right: 0vmin;
     }
 }
 @media (width: 1920px){
@@ -144,9 +142,6 @@ export default {
     }
     .surveyTitle{
         margin-left: 18vmin;
-    }
-    .equipmentSection{
-        margin-left: 10vmin;
     }
 }
 </style>
