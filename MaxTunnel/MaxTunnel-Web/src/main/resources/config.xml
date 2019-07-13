@@ -438,6 +438,7 @@
     <objectTypeIds>64</objectTypeIds>
     <lightDistance>50.0</lightDistance>
     <closeTime>5</closeTime>
+    <decimal>2</decimal>
     <tunnelParam>
         <areaLength>2</areaLength>
         <areaNumber>2</areaNumber>
