@@ -30,6 +30,20 @@ public class Constants {
     public static final String CH4_MAX = "ai.ch4.max";
     public static final String CO_MIN = "ai.co.min";
     public static final String CO_MAX = "ai.co.max";
+
+    //环境监测正常值
+    public static final String TEMPERATURE_NORMAL_MIN = "ai.temperature.normal.min";
+    public static final String TEMPERATURE_NORMAL_MAX = "ai.temperature.normal.max";
+    public static final String HUMIDITY_NORMAL_MIN = "ai.humidity.normal.min";
+    public static final String HUMIDITY_NORMAL_MAX = "ai.humidity.normal.max";
+    public static final String OXYGEN_NORMAL_MIN = "ai.oxygen.normal.min";
+    public static final String OXYGEN_NORMAL_MAX = "ai.oxygen.normal.max";
+    public static final String H2S_NORMAL_MIN = "ai.h2s.normal.min";
+    public static final String H2S_NORMAL_MAX = "ai.h2s.normal.max";
+    public static final String CH4_NORMAL_MIN = "ai.ch4.normal.min";
+    public static final String CH4_NORMAL_MAX = "ai.ch4.normal.max";
+    public static final String CO_NORMAL_MIN = "ai.co.normal.min";
+    public static final String CO_NORMAL_MAX = "ai.co.normal.max";
     
     //文件管理上传路径
     public static final String FILE_PATH = "path.file.upload";
