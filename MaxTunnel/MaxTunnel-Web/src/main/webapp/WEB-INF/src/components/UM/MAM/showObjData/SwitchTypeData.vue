@@ -1,13 +1,8 @@
 <template>
     <switch-data v-bind:obj="propObj" :curValue="swicthState"
-        :stateProcess="propObj.ObjVal ? {open: {value:true}} : {open: {value:false}}" v-on="$listeners">
+        :stateProcess="propObj.ObjVal ? {run: {describe : '开', value : true}} : {run: {describe : '关', value : false}}"
+        v-on="$listeners">
         <div class="switchContent">
-            <!-- <div class="switchBtn">
-                <i-switch v-model="swicthState" @on-change="confirm" size="large">
-                    <span slot="open">开</span>
-                    <span slot="close">关</span>
-                </i-switch>
-            </div> -->
             <div class="switchImg">
                 <img :src="equipmentState.closeImage" class="equipment_state_image" :title="equipmentState.closeTitle">
                 <img :src="equipmentState.openImage" class="equipment_state_image" :title="equipmentState.openTitle">

@@ -15,7 +15,7 @@
                     <span>{{item.areaName}}</span>
                 </div>
                 <div v-for="store in item.store" :key="store.storeId" class="defenceItem">
-                    <Checkbox v-model="store.val"></Checkbox>
+                    <Checkbox v-model="store.run.value"></Checkbox>
                 </div>
             </div>
         </div>
