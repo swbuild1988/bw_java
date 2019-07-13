@@ -22,7 +22,8 @@ public class Config implements Serializable{
 	private List<Integer> objectTypeIds;
 	// 需转换的复杂类型
 	private List<ComplexObjectConvert> complexObjectConverts;
-
+	// AI数据获取小数点位数
+	private Integer decimal;
 	/**
 	 * 管廊内灯光的距离
 	 */
@@ -156,5 +157,13 @@ public class Config implements Serializable{
 
 	public void setComplexObjectConverts(List<ComplexObjectConvert> complexObjectConverts) {
 		this.complexObjectConverts = complexObjectConverts;
+	}
+
+	public Integer getDecimal() {
+		return decimal;
+	}
+
+	public void setDecimal(Integer decimal) {
+		this.decimal = decimal;
 	}
 }
