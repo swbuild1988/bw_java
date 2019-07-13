@@ -5,7 +5,7 @@
             <Col span="8" v-for="item in checkData" :key="item.areaId">
                 <div class="item">
                     <span style="width:30%">{{item.areaName}}</span>
-                    <Checkbox v-model="item.val"></Checkbox>
+                    <Checkbox v-model="item.run.value"></Checkbox>
                 </div>
             </Col>
         </Row>

@@ -65,7 +65,8 @@
                 <Col span="12" class="data" style="overflow-y:auto ">
                 <Row :gutter="16" style="margin-right: 2px;">
                     <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
-                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @changeView="setView" @reset="reset">
+                    <show-obj-data v-bind:Obj="item" @changeStatus="changeStatus" @getSwicthState="changeSwicthState"
+                        @changeView="setView" @reset="reset">
                     </show-obj-data>
                     </Col>
                 </Row>
@@ -116,6 +117,11 @@
         data() {
             return {
                 tabName: "",
+                refreshData: {
+                    intervalTime: 1,
+                    refreshTime: 30,
+                    curTime: 0
+                },
                 storeProp: {
                     itemLen: 12,
                     dataList: [],
@@ -468,38 +474,40 @@
                     });
                 } catch (e) {}
             },
-            // 刷新百叶的值
+            // 刷新控制量的值
             refresh(id, target) {
                 let _this = this;
                 setTimeout(() => {
-                    if (_this.refreshData.curTime > _this.refreshData.refreshTime) return;
+                    if (_this.refreshData.curTime > _this.refreshData.refreshTime)
+                        return;
+                    // 判断是否已经达到了目标
+                    for (let o of _this.Obj) {
+                        if (o.id != id) {
+                            continue;
+                        }
+
+                        if (!isNaN(o.curStatus)) {
+                            // 如果打开了且目标为打开
+                            if (target && o.curStatus == 1) return;
+                            if (!target && o.curStatus == 0) return;
+                        }
+                    }
                     MeasObjServer.getMeasObjCurValue(id).then(
                         res => {
                             for (let a of _this.Obj) {
                                 if (a.id != res.id) {
                                     continue;
                                 }
-                                a.time = new Date(res.time).format("yyyy-MM-dd hh:mm:ss");
+                                a.time = new Date(res.time).format(
+                                    "yyyy-MM-dd hh:mm:ss"
+                                );
                                 a.ObjVal = res.curValue;
-
-                                // 获得值后判断是否已经打开或者关闭
-                                if (target) { //目标是打开
-                                    if (a.ObjVal.open.value) {
-                                        _this.refreshData.curTime += _this
-                                            .refreshData.refreshTime
-                                    }
-                                } else { //目标是关闭
-                                    if (a.ObjVal.close.value) {
-                                        _this.refreshData.curTime += _this
-                                            .refreshData.refreshTime
-                                    }
-                                }
                             }
                         },
                         error => {
-                            _this.Log.info("获取井盖:" + id + "当前值错误");
+                            _this.Log.info("获取数据:" + id + "当前值错误");
                         }
-                    )
+                    );
 
                     _this.refreshData.curTime += _this.refreshData.intervalTime;
                     _this.refresh(id, target);
@@ -515,11 +523,9 @@
                     };
                     MeasObjServer.changeEquimentStatus(param).then(
                         res => {
-                            // 如果是百叶，刷新
-                            if (this.queryCondition.curDataType == 58) {
-                                this.refreshData.curTime = 0;
-                                this.refresh(id, ObjVal);
-                            }
+                            // 刷新
+                            this.refreshData.curTime = 0;
+                            this.refresh(id, ObjVal);
 
                             this.$Message.info("操作成功");
                         },
@@ -567,11 +573,9 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
+                        null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId,
+                        null : _this.queryCondition.areaId,
                     objtypeId: _this.queryCondition.curDataType
                 };
                 MonitorDataService.objDetailDatagrid(Params).then(
@@ -619,11 +623,9 @@
                 var Params = {
                     tunnelId: _this.queryCondition.tunnelId,
                     storeId: _this.queryCondition.storeId == 0 ?
-                        null :
-                        _this.queryCondition.storeId,
+                        null : _this.queryCondition.storeId,
                     areaId: _this.queryCondition.areaId == 0 ?
-                        null :
-                        _this.queryCondition.areaId
+                        null : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
                     if (result && result.length > 0) {
@@ -640,7 +642,17 @@
             },
             handleScreensNum(num) {
                 this.curCarousel.videoNumber = num;
-            }
+            },
+            //操作状态
+            changeSwicthState(id, status) {
+                // state --> 0：关；1：开；2：开或关的过程中；3：故障
+                this.Log.info("statusListener", id, status)
+                for (let o of this.Obj) {
+                    if (o.id == id) {
+                        o.curStatus = status;
+                    }
+                }
+            },
         },
         beforeDestroy() {
             clearInterval(this.dataInterval);
