@@ -273,7 +273,7 @@ export default {
                     ]
                 }
             ],
-            countNum: 1,
+            // countNum: 1,
             showalarm: "1",
             alarmQueue: null,
             planQueue: null,
@@ -326,6 +326,7 @@ export default {
         },
         countNum: function() {
             let countNum = this.messageCount + this.alarmCount;
+            console.log('this.messageCount', this.messageCount,'this.alarmCount', this.alarmCount)
             return countNum;
         }
     },
