@@ -13,7 +13,7 @@
                 <div class="layout-nav">
                     <div style="position: absolute;right: 18vmin;height:6%">
                         <MenuItem v-for="module in modules" :key="module.name" :name="module.name">
-                            <Dropdown placement="bottom-start" trigger="click">
+                            <Dropdown placement="bottom-start">
                                 <div class="topBtn">
                                     <Icon :type="module.frontIcon"></Icon>
                                     <span>{{module.name}}</span>
@@ -560,7 +560,6 @@ export default {
                 }
             };
             //详情按钮
-            console.log('plans', plans)
             if (plans && plans.length > 0) {
                 config.render = (h, params) => {
                     return h("div", [
@@ -665,7 +664,6 @@ export default {
 }
 .layoutLeft .layout-logo {
     height: 6vmin;
-    margin-top: 4%;
     width: 6.5vmin;
     background: url("../../assets/UM/Maxview.png") no-repeat;
     background-size: 100% 100%;
@@ -696,7 +694,7 @@ export default {
 }
 
 .mainTitle {
-    margin-top: 3vh;
+    margin-top: 1vh;
     margin-left: 0.8vw;
     height: 4.5vh;
 }
@@ -707,23 +705,24 @@ export default {
     border-radius: 50%;
 }
 
+.ivu-dropdown >>> .ivu-dropdown-rel{
+    margin-top: 1.5vmin;
+}
+
 .layout-nav >>> .ivu-badge-count {
     font-size: 1.4vmin;
-    min-width: 2.2vmin;
-    height: 2.2vmin;
+    min-width: 3.2vmin;
+    height: 3.2vmin;
     border-radius: 50%;
     padding: 0.4vmin 0.6vmin;
 }
 
 .layout-nav .topBtn {
-    margin-top: 1vmin;
     font-size: 1.66vmin;
-    position: relative;
-    width: 100%;
-    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
+     background: url("../../assets/UM/UmTopBg.png") no-repeat center;
     background-size: cover;
     padding: 1.2vmin 2.5vmin 0vmin 2.5vmin;
-    margin-top: 1vmin;
+    margin: 0;
 }
 
 .layout-nav >>> .ivu-dropdown-item {
