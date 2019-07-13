@@ -273,7 +273,7 @@ export default {
                     ]
                 }
             ],
-            // countNum: 1,
+            countNum: 1,
             showalarm: "1",
             alarmQueue: null,
             planQueue: null,
@@ -714,7 +714,7 @@ export default {
     min-width: 3.2vmin;
     height: 3.2vmin;
     border-radius: 50%;
-    padding: 0.4vmin 0.6vmin;
+    line-height: 3.2vmin;
 }
 
 .layout-nav .topBtn {
@@ -770,6 +770,7 @@ export default {
 .select-dropdown {
     position: fixed;
     right: 6vmin;
+    top: 1vmin;
 }
 .alarmCount {
     color: red;
