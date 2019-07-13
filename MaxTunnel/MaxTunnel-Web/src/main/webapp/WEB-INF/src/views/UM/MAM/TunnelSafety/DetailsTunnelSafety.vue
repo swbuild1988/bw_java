@@ -734,24 +734,24 @@ export default {
         },
         handleScreensNum(num) {
             this.curCarousel.videoNumber = num;
+        },
+        //操作状态
+        getOperationState(state) {},
+        // 复位按钮
+        reset(id) {
+            let param = {
+                id: id,
+                code: "clear"
+            };
+            MeasObjServer.changeEquimentStatus(param).then(
+                res => {
+                    this.$Message.info("操作成功");
+                },
+                error => {
+                    this.$Message.error("操作失败");
+                }
+            );
         }
-    },
-    //操作状态
-    getOperationState(state) {},
-    // 复位按钮
-    reset(id) {
-        let param = {
-            id: id,
-            code: "clear"
-        };
-        MeasObjServer.changeEquimentStatus(param).then(
-            res => {
-                this.$Message.info("操作成功");
-            },
-            error => {
-                this.$Message.error("操作失败");
-            }
-        );
     }
 };
 </script>
