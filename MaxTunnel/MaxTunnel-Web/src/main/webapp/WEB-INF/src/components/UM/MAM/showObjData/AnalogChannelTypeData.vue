@@ -102,9 +102,6 @@
             switchData
         },
         mounted() {
-            // this.sort().then(() => this.transformStateImage());
-            // this.stateSort();
-
             this.transformStateImage();
         },
         methods: {
@@ -126,6 +123,7 @@
                         }
                     }
                 }
+                this.stateSort();
             },
             replaceImage(curStateVal, val, descript, item) {
                 // 加载对应状态图片
@@ -172,7 +170,18 @@
                 this.swicthState = state == 1;
             },
             stateSort() {
-                console.log(this.curObjState);
+                for (var j = 0; j < this.curObjState.length - 1; j++) {
+                    for (var i = 0; i < this.curObjState.length - j - 1; i++) {
+                        if (
+                            this.curObjState[i].index >
+                            this.curObjState[i + 1].index
+                        ) {
+                            var temp = this.curObjState[i];
+                            this.curObjState[i] = this.curObjState[i + 1];
+                            this.curObjState[i + 1] = temp;
+                        }
+                    }
+                }
             }
         }
     };

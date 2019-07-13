@@ -82,18 +82,21 @@
                 class="img"
             >
             <p class="value">
-                {{Obj.ObjVal}}
-                <span style="font-size: 2vmin">{{ Obj.unit }}</span>
+                {{ inRange ? Obj.ObjVal : '故障' }}
+                <span
+                    style="font-size: 2vmin"
+                    v-if="inRange"
+                >{{ Obj.unit }}</span>
             </p>
             <p class="time" v-if="isTimeShow">采集时间：{{ Obj.time }}</p>
             <div class="extre">
-                <div class="min" v-if="Obj.minValue != null">
+                <div class="min" v-if="Obj.minNormal != null">
                     <Icon type="arrow-up-c"></Icon>
-                    <span>{{Obj.minValue}}</span>
+                    <span>{{Obj.minNormal}}</span>
                 </div>
-                <div class="max" v-if="Obj.minValue != null">
+                <div class="max" v-if="Obj.maxNormal != null">
                     <Icon type="arrow-down-c"></Icon>
-                    <span>{{Obj.maxValue}}</span>
+                    <span>{{Obj.maxNormal}}</span>
                 </div>
                 <div class="historyData">
                     <button class="historyDataBtn" @click="queryHistoryData(Obj)">历史数据</button>
@@ -134,7 +137,8 @@ export default {
             gasMax: 200,
             gasMin: 0,
             normal: true,
-            isTimeShow: false
+            isTimeShow: false,
+            inRange: true
         };
     },
     components: {
@@ -161,33 +165,31 @@ export default {
                 }
             });
             event.stopPropagation();
-        }
-    },
-    watch: {
-        "Obj.ObjVal": function() {
-            if (
+        },
+        checkValue() {
+            this.normal =
+                this.Obj.minNormal != null &&
+                this.Obj.maxNormal != null &&
+                (this.Obj.ObjVal < this.Obj.minNormal ||
+                    this.Obj.ObjVal > this.Obj.maxNormal)
+                    ? false
+                    : true;
+            this.inRange =
                 this.Obj.minValue != null &&
                 this.Obj.maxValue != null &&
                 (this.Obj.ObjVal < this.Obj.minValue ||
                     this.Obj.ObjVal > this.Obj.maxValue)
-            ) {
-                this.normal = false;
-            } else {
-                this.normal = true;
-            }
+                    ? false
+                    : true;
+        }
+    },
+    watch: {
+        "Obj.ObjVal": function() {
+            this.checkValue();
         }
     },
     mounted() {
-        if (
-            this.Obj.minValue != null &&
-            this.Obj.maxValue != null &&
-            (this.Obj.ObjVal < this.Obj.minValue ||
-                this.Obj.ObjVal > this.Obj.maxValue)
-        ) {
-            this.normal = false;
-        } else {
-            this.normal = true;
-        }
+        this.checkValue();
 
         if (this.Obj.time != "") {
             this.isTimeShow = true;
