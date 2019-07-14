@@ -431,6 +431,19 @@ public class MeasObjController {
         double ch4_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CH4_MIN));
         double co_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_MAX));
         double co_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_MIN));
+        //获取正常临界值
+        double temperature_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_NORMAL_MAX));
+        double temperature_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.TEMPERATURE_NORMAL_MIN));
+        double humidity_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.HUMIDITY_NORMAL_MAX));
+        double humidity_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.HUMIDITY_NORMAL_MIN));
+        double oxygen_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.OXYGEN_NORMAL_MAX));
+        double oxygen_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.OXYGEN_NORMAL_MIN));
+        double h2s_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.H2S_NORMAL_MAX));
+        double h2s_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.H2S_NORMAL_MIN));
+        double ch4_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CH4_NORMAL_MAX));
+        double ch4_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CH4_NORMAL_MIN));
+        double co_normal_max = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_NORMAL_MAX));
+        double co_normal_min = DataTypeUtil.toDouble(PropertiesUtil.getValue(Constants.CO_NORMAL_MIN));
 
         List<AreaDto> areas = areaService.getList();
         List<Store> stores = storeService.getList();
@@ -505,24 +518,38 @@ public class MeasObjController {
             if (objectType == ObjectType.TEMPERATURE) {
                 json.put("maxValue", temperature_max);
                 json.put("minValue", temperature_min);
+                json.put("maxNormal", temperature_normal_max);
+                json.put("minNormal", temperature_normal_min);
             } else if (objectType == ObjectType.HUMIDITY) {
                 json.put("maxValue", humidity_max);
                 json.put("minValue", humidity_min);
+                json.put("maxNormal", humidity_normal_max);
+                json.put("minNormal", humidity_normal_min);
             } else if (objectType == ObjectType.OXYGEN) {
                 json.put("maxValue", oxygen_max);
                 json.put("minValue", oxygen_min);
+                json.put("maxNormal", oxygen_normal_max);
+                json.put("minNormal", oxygen_normal_min);
             } else if (objectType == ObjectType.H2S) {
                 json.put("maxValue", h2s_max);
                 json.put("minValue", h2s_min);
+                json.put("maxNormal", h2s_normal_max);
+                json.put("minNormal", h2s_normal_min);
             } else if (objectType == ObjectType.CH4) {
                 json.put("maxValue", ch4_max);
                 json.put("minValue", ch4_min);
+                json.put("maxNormal", ch4_normal_max);
+                json.put("minNormal", ch4_normal_min);
             } else if (objectType == ObjectType.CO) {
                 json.put("maxValue", co_max);
                 json.put("minValue", co_min);
+                json.put("maxNormal", co_normal_max);
+                json.put("minNormal", co_normal_min);
             } else {
                 json.put("maxValue", null);
                 json.put("minValue", null);
+                json.put("maxNormal", null);
+                json.put("minNormal", null);
             }
 
             returnData.add(json);

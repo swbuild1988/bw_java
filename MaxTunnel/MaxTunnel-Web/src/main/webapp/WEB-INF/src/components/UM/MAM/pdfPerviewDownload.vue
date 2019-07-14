@@ -20,7 +20,7 @@
                     @loaded="loadPdfHandler"
                 >
 				</pdf>-->
-				<pdf :src="src"></pdf>
+				<pdf :src="src" style="width: 100%; height: 100%"></pdf>
 			</div>
 		</div>
 	</div>
@@ -57,8 +57,7 @@ export default {
 				)
 				.catch(
 					function(error) {
-						this.$Message.error("网络请求出错" + error);
-						console.log("error", error);
+						this.$Message.error("下载出错" + error);
 					}.bind(this)
 				);
 		},
