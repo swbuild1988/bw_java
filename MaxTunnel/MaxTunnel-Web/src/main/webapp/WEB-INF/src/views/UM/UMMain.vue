@@ -409,6 +409,7 @@ export default {
                 ) < 0
             ) {
                 sessionStorage.setItem("selectedName", "");
+                sessionStorage.setItem("refreshAddress","")
                 if (path.path == "/VMMain") {
                     const { href } = this.$router.resolve({
                         name: "可视化主页"
