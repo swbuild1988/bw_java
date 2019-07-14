@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MaxviewConfig;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.vo.mam.MaxviewConfigVo;
 import com.github.pagehelper.PageInfo;
 
@@ -38,14 +40,14 @@ public interface SubSystemService {
 	 * @param id
 	 * @return
 	 */
-	boolean refreshDI(int id);
+	MeasValueDI refreshDI(int id);
 
 	/**
 	 * 刷新模拟量输入
 	 * @param id
 	 * @return
 	 */
-	double refreshAI(int id);
+	MeasValueAI refreshAI(int id);
 
 	/**发送心跳 
 	 * @param tunnelId   
