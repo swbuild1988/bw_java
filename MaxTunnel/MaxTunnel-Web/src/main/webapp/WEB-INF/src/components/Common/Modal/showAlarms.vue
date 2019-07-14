@@ -52,8 +52,8 @@
                     <!-- 执行步骤 -->
                     <section class="item" v-if="item.plan">
                         <h4>预案步骤</h4>
-                        <div class="detailSection" style="height:69vmin;max-width:54vmin">
-                            <image-from-url :url="item.plan.processPicSrc"></image-from-url>
+                        <div class="detailSection" style="height:25vmin;">
+                            <image-from-url class="imageBox" :url="item.plan.processPicSrc"></image-from-url>
                         </div>
                     </section>
                 </div>
@@ -415,5 +415,11 @@
     .noneData {
         text-align: center;
         font-size: 2vmin;
+    }
+
+
+    .imageBox{
+        height: 63vmin !important;
+        margin-top: -40vmin;
     }
 </style>
