@@ -153,15 +153,15 @@
                         return h("span", text);
                     },
                     onOk: () => {
-                        this.change();
+                        this.change(data);
                     }
                 });
             },
-            change() {
+            change(state) {
                 this.$emit(
                     "changeStatus",
                     this.propObj.id,
-                    this.swicthState,
+                    state,
                     this.propObj.datatypeId,
                     null
                 );
