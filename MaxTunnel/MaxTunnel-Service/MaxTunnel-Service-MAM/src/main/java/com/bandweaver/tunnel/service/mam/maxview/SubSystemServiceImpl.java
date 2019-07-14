@@ -236,7 +236,6 @@ public class SubSystemServiceImpl implements SubSystemService {
                 String str = EntityUtils.toString(response.getEntity(), "utf-8");
                 return Boolean.parseBoolean(str);
             }
-            return true;
         } catch (Exception e) {
         }
         throw new BandWeaverException("请求开光量输入失败");
