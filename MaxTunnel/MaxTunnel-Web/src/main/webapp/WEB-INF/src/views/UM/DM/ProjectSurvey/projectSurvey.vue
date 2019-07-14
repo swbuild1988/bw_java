@@ -5,7 +5,7 @@
             <section class="tunnelSection">
                 <div class="tunnelSurvey">
                     <img class="icon" :src="tunnelIcon" />
-                        晋原综合管廊一期共有管廊{{tunnelsNum}}条
+                        晋源综合管廊一期共有管廊{{tunnelsNum}}条
                     </div>
                 <div class="tunnelDetail" v-for="item in tunnels" :key="item.id">
                     {{item.name}}长&nbsp;<span class="num">{{item.length}}</span>&nbsp;公里
@@ -18,10 +18,10 @@
             <section class="equipmentSection">
                 <div class="equipmentSurvey">
                     <img class="icon" :src="equipmentIcon" />
-                        晋原综合管廊一期共有设备{{equipmentNum}}个
+                        晋源综合管廊一期共有设备{{equipmentNum}}个
                 </div>
                 <div class="equipmentDetail" v-for="item in equipments" :key="item.id">
-                    {{item.key}}共&nbsp;<span class="num">{{item.val}}</span>&nbsp;个
+                    {{item.key}}：&nbsp;<span class="num">{{item.val}}</span>&nbsp;个
                 </div>
             </section>
         </section>
