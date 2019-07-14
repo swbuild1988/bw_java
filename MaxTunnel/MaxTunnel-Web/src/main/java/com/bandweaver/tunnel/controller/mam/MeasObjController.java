@@ -313,7 +313,7 @@ public class MeasObjController {
 
     @RequiresPermissions("measobj:list")
     @RequestMapping(value = "measobjs/{id}/curValues", method = RequestMethod.GET)
-    public JSONObject getObjectValueById(@PathVariable("id")int id) {
+    public JSONObject getObjectValueById(@PathVariable("id") int id) {
         MeasObj measObj = measObjModuleCenter.getMeasObj(id);
 
         // 获取所有孩子的的值并刷新返回
@@ -358,25 +358,17 @@ public class MeasObjController {
         return CommonUtil.success(getMeasObjInfo(measObjs));
     }
 
-    private boolean refreshMeasObjInfo(MeasObj measObj){
+    private boolean refreshMeasObjInfo(MeasObj measObj) {
 
         switch (DataType.getEnum(measObj.getDatatypeId())) {
             case AI:
-                double cv = subSystemService.refreshAI(measObj.getId().intValue());
-                MeasValueAI measValueAI = new MeasValueAI();
-                measValueAI.setCv(cv);
-                measValueAI.setObjectId(measObj.getId());
-                measValueAI.setTime(new Date());
+                MeasValueAI measValueAI = subSystemService.refreshAI(measObj.getId().intValue());
                 measObjModuleCenter.updateMeasObjAIValue(measValueAI);
                 break;
 
             case DI:
 
-                boolean cv2 = subSystemService.refreshDI(measObj.getId().intValue());
-                MeasValueDI measValueDI = new MeasValueDI();
-                measValueDI.setCv(cv2);
-                measValueDI.setObjectId(measObj.getId());
-                measValueDI.setTime(new Date());
+                MeasValueDI measValueDI = subSystemService.refreshDI(measObj.getId().intValue());
                 measObjModuleCenter.updateMeasObjDIValue(measValueDI);
                 break;
 
@@ -390,14 +382,14 @@ public class MeasObjController {
 
             case ComplexObject:
                 ComplexObjectConvert complexObjectConvert = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
-                for (ConvertType convertType : complexObjectConvert.getConvertTypes()){
-                    if (convertType.getType() == 0){                //开光量输入
+                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
+                    if (convertType.getType() == 0) {                //开光量输入
                         MeasObj tmpObj = new MeasObj();
                         tmpObj.setDatatypeId(DataType.DI.getValue());
                         tmpObj.setId(measObjModuleCenter.getConvertObjectId(measObj, convertType));
                         refreshMeasObjInfo(tmpObj);
 
-                    } else if (convertType.getType() == 2){             //模拟量输入
+                    } else if (convertType.getType() == 2) {             //模拟量输入
                         MeasObj tmpObj = new MeasObj();
                         tmpObj.setDatatypeId(DataType.AI.getValue());
                         tmpObj.setId(measObjModuleCenter.getConvertObjectId(measObj, convertType));
@@ -456,12 +448,12 @@ public class MeasObjController {
                 case AI:
                     MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
                     cv = ai == null ? 0 : ai.getCv();
-                    
+
                     // AI数据保留几位小数
                     Integer num = xmlService.getXMLAllInfo().getDecimal();
                     String s = "#.";
-                    for(int i=0;i<num;i++) {
-                    	s += "#";
+                    for (int i = 0; i < num; i++) {
+                        s += "#";
                     }
                     DecimalFormat df = new DecimalFormat(s);
                     cv = df.format(cv);
