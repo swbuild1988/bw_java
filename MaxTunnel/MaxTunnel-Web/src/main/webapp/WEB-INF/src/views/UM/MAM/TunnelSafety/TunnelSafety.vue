@@ -45,7 +45,7 @@ export default {
                 });
                 if (
                     !sessionStorage["refreshAddress"] ||
-                    sessionStorage["refreshAddress"].indexOf(
+                    sessionStorage["refreshAddress"].indexOf( 
                         "/UM/TunnelSafety"
                     ) < 0
                 ) {
@@ -55,8 +55,6 @@ export default {
 
                     sessionStorage.setItem("selectedName", "");
                 }
-
-                sessionStorage.setItem("refreshAddress", "");
             },
             error => {
                 console.log(error);
