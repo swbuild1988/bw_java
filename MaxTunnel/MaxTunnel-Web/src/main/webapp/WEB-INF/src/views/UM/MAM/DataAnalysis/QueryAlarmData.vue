@@ -129,7 +129,7 @@
 					tunnelId: null,
 					alarmLevels: [],
 					objectId: null,
-					alarmTimeType: 1,
+					alarmTimeType: 3,
 					monitorZone: null,
 					endTime: null,
 					startTime: null,

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.bandweaver.tunnel.common.biz.dto.H5StreamHttpResponseDto;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
+import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueDI;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import org.apache.http.HttpResponse;
@@ -211,7 +213,7 @@ public class SubSystemServiceImpl implements SubSystemService {
     }
 
     @Override
-    public boolean refreshDI(int id) {
+    public MeasValueDI refreshDI(int id) {
 
         MeasObj measObj = measObjModuleCenter.getMeasObj(id);
         if (StringTools.isNullOrEmpty(measObj))
@@ -234,17 +236,18 @@ public class SubSystemServiceImpl implements SubSystemService {
             HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 String str = EntityUtils.toString(response.getEntity(), "utf-8");
-                return Boolean.parseBoolean(str);
+                MeasValueDI measValueDI = (MeasValueDI) JSONObject.parse(str);
+                return measValueDI;
             }
-            return true;
         } catch (Exception e) {
+            LogUtil.info("refreshDI HTTP请求失败，错误信息：" + e);
         }
         throw new BandWeaverException("请求开光量输入失败");
 
     }
 
     @Override
-    public double refreshAI(int id) {
+    public MeasValueAI refreshAI(int id) {
 
         MeasObj measObj = measObjModuleCenter.getMeasObj(id);
         if (StringTools.isNullOrEmpty(measObj))
@@ -267,10 +270,11 @@ public class SubSystemServiceImpl implements SubSystemService {
             HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 String str = EntityUtils.toString(response.getEntity(), "utf-8");
-                return Double.parseDouble(str);
+                MeasValueAI measValueAI = (MeasValueAI) JSONObject.parse(str);
+                return measValueAI;
             }
         } catch (Exception e) {
-
+            LogUtil.info("refreshAI HTTP请求失败，错误信息：" + e);
         }
 
         throw new BandWeaverException("请求模拟量输入失败");
