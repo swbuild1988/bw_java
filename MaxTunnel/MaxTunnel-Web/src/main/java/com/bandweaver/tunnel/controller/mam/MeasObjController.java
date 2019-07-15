@@ -448,15 +448,6 @@ public class MeasObjController {
                 case AI:
                     MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
                     cv = ai == null ? 0 : ai.getCv();
-
-                    // AI数据保留几位小数
-                    Integer num = xmlService.getXMLAllInfo().getDecimal();
-                    String s = "#.";
-                    for (int i = 0; i < num; i++) {
-                        s += "#";
-                    }
-                    DecimalFormat df = new DecimalFormat(s);
-                    cv = df.format(cv);
                     break;
 
                 case DI:
@@ -581,14 +572,7 @@ public class MeasObjController {
      */
     @RequestMapping(value = "/measobjs/ids", method = RequestMethod.POST)
     public JSONObject getObjByIds(@RequestBody Map<String, Object> map) {
-
-        String idsStr = DataTypeUtil.toString(map.get("ids"));
-
-        String[] idsArr = idsStr.split(",");
-        List<Integer> idList = new ArrayList<>();
-        for (String id : idsArr) {
-            idList.add(DataTypeUtil.toInteger(id));
-        }
+        List<Integer> idList = CommonUtil.convertStringToList(DataTypeUtil.toString(map.get("ids")));
         List<MeasObj> list = measObjModuleCenter.getMeasObjsByIds(idList);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }

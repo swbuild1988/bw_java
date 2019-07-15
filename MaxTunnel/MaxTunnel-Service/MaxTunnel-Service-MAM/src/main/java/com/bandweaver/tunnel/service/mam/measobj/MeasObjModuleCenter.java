@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.service.mam.measobj;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -414,6 +415,21 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
     }
 
+    /*
+     * 初始化AI缓存数据，保留小数点后几位
+     */
+    private void initAIHashMap(MeasObjAI measObjAI) {
+    	// AI数据保留几位小数
+        Integer num = xmlService.getXMLAllInfo().getDecimal();
+        String s = "#.";
+        for (int i = 0; i < num; i++) {
+            s += "#";
+        }
+        DecimalFormat df = new DecimalFormat(s);
+        if(measObjAI != null && measObjAI.getCv() != null)
+        	measObjAI.setCv(Double.valueOf(df.format(measObjAI.getCv())));
+    }
+    
     /**
      * 初始化数据
      */
@@ -434,6 +450,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
         for (MeasObjAI tmp : measObjAIS) {
             if (tmp.getCv() == null) tmp.setCv(0.0);
+            initAIHashMap(tmp);
             measObjAIHashMap.put(tmp.getId(), tmp);
         }
         List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();
@@ -530,6 +547,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+				initAIHashMap(measObjAI);
                 measObjAIHashMap.put(measObjAI.getId(), measObjAI);
                 break;
 
