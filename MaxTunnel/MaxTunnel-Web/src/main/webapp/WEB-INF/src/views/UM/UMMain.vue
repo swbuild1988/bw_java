@@ -243,12 +243,12 @@
                         <Button
                             class="normalBtn"
                             type="info"
-                            :disabled="findPath('/UM/patrolTask/query')?false:true"
-                            @click="goToMoudle({ path:'/UM/patrolTask/query'})"
+                            :disabled="findPath('/UM/projectSurvey')?false:true"
+                            @click="goToMoudle({ path:'/UM/projectSurvey'})"
                         >
                             <div>
                                 <img :width="imgWidth" src="../../assets/UM/patrolTask.png">
-                                <div :style="{fontSize:mySize}">巡检任务</div>
+                                <div :style="{fontSize:mySize}">项目概览</div>
                             </div>
                         </Button>
                     </Col>
