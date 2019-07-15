@@ -310,6 +310,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
         if (ai.getRefreshTime() != null && ai.getRefreshTime().getTime() >= measValueAI.getTime().getTime())
             return;
+        initAIHashMap(ai);
         ai.setCv(measValueAI.getCv());
         ai.setRefreshTime(measValueAI.getTime());
     }
