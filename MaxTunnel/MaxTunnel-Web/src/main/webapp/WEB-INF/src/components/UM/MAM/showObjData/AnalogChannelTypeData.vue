@@ -2,7 +2,7 @@
     <switchData v-bind:Obj="propObj" :stateProcess="curProcessState" @getSwicthState="changeSwicthState"
         v-on="$listeners">
         <div slot="heard" @click="reset">
-            <img class="heardImg" src="../../../../assets/UM/reset.png" v-if="$attrs.reset" title="复位">
+            <img class="heardImg" :src="resetBut.Img" v-if="$attrs.reset" title="复位">
         </div>
         <div class="switchBtn">
             <i-switch v-model="swicthState" @on-change="confirm" size="large" v-if="$attrs.control">
@@ -39,48 +39,52 @@
                     {
                         key: "open",
                         val: {
-                            0: "open-close-state",
+                            0: "close-close-state",
                             1: "open-open-state"
                         }
                     },
                     {
                         key: "run",
                         val: {
-                            0: "open-close-state",
+                            0: "close-close-state",
                             1: "open-open-state"
                         }
                     },
                     {
                         key: "fault",
                         val: {
-                            0: "fault-close-state",
+                            0: "close-close-state",
                             1: "fault-open-state"
                         }
                     },
                     {
                         key: "fault1",
                         val: {
-                            0: "fault-close-state",
+                            0: "close-close-state",
                             1: "fault-open-state"
                         }
                     },
                     {
                         key: "fault2",
                         val: {
-                            0: "fault-close-state",
+                            0: "close-close-state",
                             1: "fault-open-state"
                         }
                     },
                     {
                         key: "remote",
                         val: {
-                            0: "far-close-state",
+                            0: "close-close-state",
                             1: "far-open-state"
                         }
                     }
                 ],
                 curObjState: [],
-                curProcessState: {}
+                curProcessState: {},
+                resetBut:{
+                    click:false,
+                    Img:null
+                }
             };
         },
         computed: {
@@ -96,6 +100,12 @@
                     this.transformStateImage();
                 },
                 deep: true
+            },
+            'resetBut.click':{
+                handler(){
+                    this.loadRestStatusImg();
+                },
+                deep:true
             }
         },
         components: {
@@ -103,6 +113,7 @@
         },
         mounted() {
             this.transformStateImage();
+            this.loadRestStatusImg();
         },
         methods: {
             transformStateImage() {
@@ -136,6 +147,8 @@
                 });
             },
             reset() {
+                this.resetBut.click = !this.resetBut.click;
+
                 this.$emit("reset", this.propObj.id);
             },
             confirm(data) {
@@ -182,6 +195,12 @@
                         }
                     }
                 }
+            },
+            loadRestStatusImg(){             
+                let resetState = this.resetBut.click ?'reset-open':'reset';
+                console.log('resetState',resetState)
+                this.resetBut.Img = require("../../../../assets/UM/" + resetState +".png")
+
             }
         }
     };
