@@ -138,7 +138,11 @@ export default {
 }
 @media (min-width: 2100px){
     .surveyTitle{
-        margin-left: 18vmin;
+        margin-left: 8vmin;
+    }
+    .surveyTitle img{
+        width: 70vmin;
+        height: 85vmin;
     }
     .equipmentSection{
         position: absolute;
@@ -151,7 +155,11 @@ export default {
         height: 90%;
     }
     .surveyTitle{
-        margin-left: 18vmin;
+        margin-left: 7vmin;
+    }
+    .surveyTitle img{
+        width: 75vmin;
+        height: 75vmin;
     }
 }
 </style>
