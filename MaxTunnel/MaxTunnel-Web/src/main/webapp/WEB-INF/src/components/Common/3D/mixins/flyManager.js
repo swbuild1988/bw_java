@@ -69,7 +69,7 @@ export const flyManagerMinix = {
                 routeStop => {
                     let stopName = routeStop.stopName;
                     routeStop.waitTime = curRoute.waitTime;
-                    if (!curRoute.isFlyLoop) {
+                    if (curRoute.virtualInspection) {
                         flyManagerAttr.flyManager.currentStopIndex = routeStop.index
                     }
                 }
@@ -80,7 +80,7 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-            console.log('flyManagerAttr',flyManagerAttr)
+           
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
                 
@@ -204,28 +204,28 @@ export const flyManagerMinix = {
             let flyManager = this.flyManagerAttr.flyManager
             let curStop = flyManager.currentStopIndex
             // 飞行全部路径时结束上一条直接飞行下一条
-            if (routeId == 0) {
-                let curRoute = this.inspectflyPathes.find(route => {
-                    return route.name == flyManager.currentRoute.routeName
-                })
-                if (curStop == flyManager.currentRoute.stopCollection.length - 1) {
-                    if (curRoute.id < this.inspectflyPathes.length) {
-                        this.stopFly()
-                        this.flyManager(curRoute.id + 1)
-                        let flyManager = this.flyManagerAttr.flyManager
-                        let _this = this
-                        flyManager.readyPromise.then(() => {
-                            _this.playFly()
-                        })
-                    } else {
-                        return true
-                    }
-                }
-            } else {
+            // if (routeId == 0) {
+            //     let curRoute = this.inspectflyPathes.find(route => {
+            //         return route.name == flyManager.currentRoute.routeName
+            //     })
+            //     if (curStop == flyManager.currentRoute.stopCollection.length - 1) {
+            //         if (curRoute.id < this.inspectflyPathes.length) {
+            //             this.stopFly()
+            //             this.flyManager(curRoute.id + 1)
+            //             let flyManager = this.flyManagerAttr.flyManager
+            //             let _this = this
+            //             flyManager.readyPromise.then(() => {
+            //                 _this.playFly()
+            //             })
+            //         } else {
+            //             return true
+            //         }
+            //     }
+            // } else {
                 if (curStop == flyManager.currentRoute.stopCollection.length - 1) {
                     return true
                 }
-            }
+            // }
 
         }
     },

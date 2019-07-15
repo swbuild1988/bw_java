@@ -20,7 +20,7 @@
                     @loaded="loadPdfHandler"
                 >
 				</pdf>-->
-				<pdf :src="src" style="width: 100%; height: 100%"></pdf>
+				<pdf :src="src" style="width: 100%;"></pdf>
 			</div>
 		</div>
 	</div>

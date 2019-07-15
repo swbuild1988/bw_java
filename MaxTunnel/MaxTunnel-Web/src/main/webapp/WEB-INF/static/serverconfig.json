@@ -190,7 +190,7 @@
             "id": 1,
             "name": "古城大街虚拟巡检",
             "path": "/VM/font/storeAcross.fpf",
-            "isFlyLoop": "true",
+            "isFlyLoop": "false",
             "playRate": "0.05",
             "virtualInspection":"true"
         },
@@ -208,7 +208,7 @@
             "id": 1,
             "name": "古城大街虚拟巡检",
             "path": "/VM/font/storeAcross.fpf",
-            "isFlyLoop": "true",
+            "isFlyLoop": "false",
             "playRate": "0.05"
         }
     ],
