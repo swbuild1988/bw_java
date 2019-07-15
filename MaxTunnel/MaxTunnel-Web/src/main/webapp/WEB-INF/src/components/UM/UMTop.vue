@@ -326,7 +326,6 @@ export default {
         },
         countNum: function() {
             let countNum = this.messageCount + this.alarmCount;
-            console.log('this.messageCount', this.messageCount,'this.alarmCount', this.alarmCount)
             return countNum;
         }
     },

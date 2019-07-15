@@ -12,7 +12,8 @@
                 </div>
             </section>
             <section class="surveyTitle">
-                太原市<br />综合管廊展示
+                <div style="font-size: 9vmin">晋源管廊</div>
+                <div style="font-size: 11vmin">平台展示</div>      
             </section>
             <!-- 设备个数介绍 -->
             <section class="equipmentSection">
@@ -29,16 +30,11 @@
 </template>
 <script>
 import { EquipmentService } from "@/services/equipmentService";
+import { TunnelService } from "@/services/tunnelService"
 export default {
     data(){
         return{
-            tunnels: [
-                { id: 1, name: '古城大街', length: '3.87' },
-                { id: 2, name: '实验路', length: '0.84' },
-                { id: 3, name: '纬三路', length: '3.84' },
-                { id: 4, name: '经二路', length: '0.795' },
-                { id: 5, name: '经三路', length: '0.805' }
-            ],
+            tunnels: [],
             tunnelsNum: null,
             equipments: [],
             equipmentNum: null,
@@ -47,11 +43,23 @@ export default {
         }
     },
     mounted() {
-        this.tunnelsNum = this.tunnels.length
         EquipmentService.getEquTypeAndCount().then(
             result => {
                 this.equipments = result
                 this.getEquipmentNums()
+            },
+            error => {
+                this.Log.info(error)
+            }
+        )
+        TunnelService.getTunnels().then(
+            result => {
+                result.splice(5, 1)
+                this.tunnels = result
+                result.forEach(item=>{
+                    item.length = item.length/1000
+                })
+                this.tunnelsNum = result.length
             },
             error => {
                 this.Log.info(error)
@@ -116,12 +124,12 @@ export default {
     top: 1vmin;
 }
 .surveyTitle{
-    font-size: 9vmin;
+        font-size: 9vmin;
     color: #fff;
     font-weight: 800;
     text-align: center;
-    margin-left: 32vmin;
-    margin-top: 13vmin;
+    margin-left: 38vmin;
+    margin-top: 15vmin;
 }
 .num{
     font-size: 3vmin;

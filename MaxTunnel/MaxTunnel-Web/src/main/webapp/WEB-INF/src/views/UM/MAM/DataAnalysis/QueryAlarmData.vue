@@ -361,6 +361,9 @@
 				if (result) {
 					_this.queryPrams.total = result.total;
 					_this.tableData = result.list
+					if(prams.cleaned==0){
+						this.NumGlobal.alarmNum = result.total
+					}
 				}
 				}).then(() => {
 					_this.tableLoad = false;
