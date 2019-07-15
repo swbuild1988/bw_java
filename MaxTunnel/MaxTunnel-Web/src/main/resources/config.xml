@@ -20,21 +20,21 @@
         <convertTypes>
             <code>open</code>
             <convertId>1</convertId>
-            <describe>井盖开足</describe>
+            <describe>开足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
             <convertId>2</convertId>
-            <describe>井盖关足</describe>
+            <describe>关足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>fault1</code>
             <convertId>5</convertId>
-            <describe>井盖故障</describe>
+            <describe>故障</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
@@ -114,14 +114,14 @@
         <convertTypes>
             <code>open</code>
             <convertId>3</convertId>
-            <describe>电动百叶开足</describe>
+            <describe>开足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
             <convertId>4</convertId>
-            <describe>电动百叶关足</describe>
+            <describe>关足</describe>
             <type>0</type>
             <value>1</value>
         </convertTypes>
@@ -193,14 +193,14 @@
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>1</convertId>
+            <convertId>2</convertId>
             <describe>布防</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>1</convertId>
+            <convertId>2</convertId>
             <describe>撤防</describe>
             <type>1</type>
             <value>0</value>
@@ -219,15 +219,15 @@
         </convertTypes>
         <convertTypes>
             <code>open</code>
-            <convertId>1</convertId>
-            <describe>投入联动</describe>
+            <convertId>2</convertId>
+            <describe>投入</describe>
             <type>1</type>
             <value>1</value>
         </convertTypes>
         <convertTypes>
             <code>close</code>
-            <convertId>1</convertId>
-            <describe>解除联动</describe>
+            <convertId>2</convertId>
+            <describe>解除</describe>
             <type>1</type>
             <value>0</value>
         </convertTypes>

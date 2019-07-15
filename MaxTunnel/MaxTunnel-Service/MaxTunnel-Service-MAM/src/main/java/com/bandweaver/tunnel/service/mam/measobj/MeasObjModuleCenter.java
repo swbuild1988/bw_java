@@ -310,7 +310,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
         if (ai.getRefreshTime() != null && ai.getRefreshTime().getTime() >= measValueAI.getTime().getTime())
             return;
-        initAIHashMap(ai);
         ai.setCv(measValueAI.getCv());
         ai.setRefreshTime(measValueAI.getTime());
     }
@@ -415,21 +414,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         // LogUtil.info("after insert MeasObjSO : " + tmp);
 
     }
-
-    /*
-     * 初始化AI缓存数据，保留小数点后几位
-     */
-    private void initAIHashMap(MeasObjAI measObjAI) {
-    	// AI数据保留几位小数
-        Integer num = xmlService.getXMLAllInfo().getDecimal();
-        String s = "#.";
-        for (int i = 0; i < num; i++) {
-            s += "#";
-        }
-        DecimalFormat df = new DecimalFormat(s);
-        if(measObjAI != null && measObjAI.getCv() != null)
-        	measObjAI.setCv(Double.valueOf(df.format(measObjAI.getCv())));
-    }
     
     /**
      * 初始化数据
@@ -449,9 +433,10 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
             measObjHashMap.put(measObj.getId(), measObj);
         }
         List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
+        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
         for (MeasObjAI tmp : measObjAIS) {
             if (tmp.getCv() == null) tmp.setCv(0.0);
-            initAIHashMap(tmp);
+            if (decimal != null) tmp.setDecimal(decimal.intValue());
             measObjAIHashMap.put(tmp.getId(), tmp);
         }
         List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();
@@ -548,7 +533,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
-				initAIHashMap(measObjAI);
                 measObjAIHashMap.put(measObjAI.getId(), measObjAI);
                 break;
 
@@ -582,27 +566,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 break;
 
 
-            case ComplexObject:             // 复杂结构，需要将他的孩子存到对应的缓存中
-//                ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
-//                if (complexObjectConvert == null) return;
-//                for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
-//
-//                    MeasObj tmpObj = new MeasObj();
-//                    // 将ID换成正常的ID，这里简单处理了下，以后还需正规
-//                    tmpObj.setId(getConvertObjectId(measObj, convertType));
-//                    tmpObj.setName(measObj.getName() + "_" + convertType.getDescribe());
-//                    tmpObj.setActived(true);
-//                    tmpObj.setTunnelId(measObj.getTunnelId());
-//                    tmpObj.setAreaId(measObj.getAreaId());
-//                    tmpObj.setStoreId(measObj.getStoreId());
-//                    tmpObj.setSectionId(measObj.getSectionId());
-//                    tmpObj.setObjtypeId(ObjectType.NONE.getValue());
-//                    tmpObj.setDatatypeId(getDataTypeByConvertType(convertType));
-//
-//                    // 将tmpObj塞进数据库,DO就不塞了，或者后期加上
-//                    insertObj2OwnHashMap(tmpObj);
-//                }
-
+            case ComplexObject:             // 复杂结构
                 break;
 
             default:

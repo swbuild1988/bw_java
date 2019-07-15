@@ -30,8 +30,8 @@ public enum ObjectType {
     PUMP("排水泵", 59, 4, 200, "", false),
     ELECTRICITY_METER0("电子仪表", 30, 1, 200, ""),
 	
-	DEPLOY_DEFENCE("布防", 63, 3, 200, ""),
-	LINKAGE("联动", 64, 3, 200, ""),
+	DEPLOY_DEFENCE("布防", 63, 3, 200, "", true),
+	LINKAGE("联动", 64, 3, 200, "", true),
 
     //普通类电表
     ELECTRICITY_METER1("风机类电表", 31, 6, 1, ""),
