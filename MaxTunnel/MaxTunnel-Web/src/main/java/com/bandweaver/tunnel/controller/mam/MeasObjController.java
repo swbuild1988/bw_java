@@ -448,15 +448,6 @@ public class MeasObjController {
                 case AI:
                     MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
                     cv = ai == null ? 0 : ai.getCv();
-
-                    // AI数据保留几位小数
-                    Integer num = xmlService.getXMLAllInfo().getDecimal();
-                    String s = "#.";
-                    for (int i = 0; i < num; i++) {
-                        s += "#";
-                    }
-                    DecimalFormat df = new DecimalFormat(s);
-                    cv = df.format(cv);
                     break;
 
                 case DI:
