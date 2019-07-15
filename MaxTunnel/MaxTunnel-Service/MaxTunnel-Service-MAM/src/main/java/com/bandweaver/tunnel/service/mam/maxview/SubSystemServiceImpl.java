@@ -236,7 +236,8 @@ public class SubSystemServiceImpl implements SubSystemService {
             HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 String str = EntityUtils.toString(response.getEntity(), "utf-8");
-                MeasValueDI measValueDI = (MeasValueDI) JSONObject.parse(str);
+                JSONObject json = JSONObject.parseObject(str);
+                MeasValueDI measValueDI = JSONObject.parseObject(json.toJSONString(), MeasValueDI.class);
                 return measValueDI;
             }
         } catch (Exception e) {
@@ -270,7 +271,8 @@ public class SubSystemServiceImpl implements SubSystemService {
             HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 String str = EntityUtils.toString(response.getEntity(), "utf-8");
-                MeasValueAI measValueAI = (MeasValueAI) JSONObject.parse(str);
+                JSONObject json = JSONObject.parseObject(str);
+                MeasValueAI measValueAI = JSONObject.parseObject(json.toJSONString(), MeasValueAI.class);
                 return measValueAI;
             }
         } catch (Exception e) {
