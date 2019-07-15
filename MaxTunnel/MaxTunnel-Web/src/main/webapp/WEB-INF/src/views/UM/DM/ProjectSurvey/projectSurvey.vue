@@ -12,8 +12,9 @@
                 </div>
             </section>
             <section class="surveyTitle">
-                <div style="font-size: 9vmin">晋源管廊</div>
-                <div style="font-size: 11vmin">平台展示</div>      
+                <img :src="tunnelLogo" />
+                <!-- <div style="font-size: 9vmin">晋源管廊</div>
+                <div style="font-size: 11vmin">平台展示</div>       -->
             </section>
             <!-- 设备个数介绍 -->
             <section class="equipmentSection">
@@ -39,7 +40,8 @@ export default {
             equipments: [],
             equipmentNum: null,
             tunnelIcon: require('../../../../assets/UM/tunnelIcon.png'),
-            equipmentIcon: require('../../../../assets/UM/equipmentIcon.png')
+            equipmentIcon: require('../../../../assets/UM/equipmentIcon.png'),
+            tunnelLogo: require('../../../../assets/UM/tunnelLogo.png')
         }
     },
     mounted() {
@@ -124,19 +126,23 @@ export default {
     top: 1vmin;
 }
 .surveyTitle{
-        font-size: 9vmin;
-    color: #fff;
-    font-weight: 800;
-    text-align: center;
-    margin-left: 38vmin;
-    margin-top: 15vmin;
+    margin-left: 17vmin;
+    margin-top: 2vmin;
+}
+.surveyTitle img{
+    width: 85vmin;
+    height: 85vmin;
 }
 .num{
     font-size: 3vmin;
 }
 @media (min-width: 2100px){
     .surveyTitle{
-        margin-left: 18vmin;
+        margin-left: 8vmin;
+    }
+    .surveyTitle img{
+        width: 70vmin;
+        height: 85vmin;
     }
     .equipmentSection{
         position: absolute;
@@ -149,7 +155,11 @@ export default {
         height: 90%;
     }
     .surveyTitle{
-        margin-left: 18vmin;
+        margin-left: 7vmin;
+    }
+    .surveyTitle img{
+        width: 75vmin;
+        height: 75vmin;
     }
 }
 </style>

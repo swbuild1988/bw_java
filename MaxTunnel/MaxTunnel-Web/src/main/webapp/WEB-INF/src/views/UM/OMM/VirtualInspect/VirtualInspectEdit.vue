@@ -3,6 +3,9 @@
         <Row class="body">
             <Col span="12">
                 <div class="sm">
+                    <div class="position">
+                        <span>{{ '经度:' + position.longitude + ',纬度:' + position.latitude}}</span>
+                    </div>
                     <div class="heading">
                         <span>{{ direction }}</span>
                     </div>
@@ -159,7 +162,11 @@ export default {
             areaList: [],
             storeList: [],
             location: [],
-            direction: null
+            direction: null,
+            position: {
+                longitude: null,
+                latitude: null
+            }
         };
     },
     components: {
@@ -266,6 +273,8 @@ export default {
                 });
 
                 this.direction = this.getDirection(heading);
+                this.position.longitude = longitude;
+                this.position.latitude = latitude;
             } catch (e) {}
         },
         getDirection(heading) {
@@ -735,6 +744,18 @@ export default {
     position: relative;
     padding: 0 0 0 1vmin;
 }
+.position {
+    position: absolute;
+    top: 1vmin;
+    left: 43%;
+    font-size: 1.4vmin;
+    z-index: 10;
+    border: 1px solid rgba(16, 159, 181, 0.5);
+    box-shadow: 0 0 1rem #109fb5 inset;
+    color: #fff;
+    padding: 0.4vmin 2.4vmin;
+    background: #88b0b6;
+}
 .heading {
     position: absolute;
     top: 1vmin;
@@ -748,8 +769,7 @@ export default {
     background: #88b0b6;
 }
 .vm-select >>> .cd-dropdown > span,
-.vm-select >>> .cd-dropdown ul li{
+.vm-select >>> .cd-dropdown ul li {
     background: #88b0b6;
 }
-
 </style>
