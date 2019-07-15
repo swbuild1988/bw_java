@@ -747,7 +747,9 @@ export default {
     padding: 0.4vmin 2.4vmin;
     background: #88b0b6;
 }
-.vm-select >>> .cd-dropdown {
+.vm-select >>> .cd-dropdown > span,
+.vm-select >>> .cd-dropdown ul li{
     background: #88b0b6;
 }
+
 </style>
