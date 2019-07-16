@@ -1,11 +1,13 @@
 package com.bandweaver.tunnel.common.biz.pojo.xml;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 复杂类型转换
  */
-public class ComplexObjectConvert {
+public class ComplexObjectConvert implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
     // 对象类型

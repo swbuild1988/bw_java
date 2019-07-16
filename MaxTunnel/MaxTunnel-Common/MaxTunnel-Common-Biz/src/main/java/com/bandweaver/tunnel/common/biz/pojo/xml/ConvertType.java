@@ -1,6 +1,10 @@
 package com.bandweaver.tunnel.common.biz.pojo.xml;
 
-public class ConvertType {
+import java.io.Serializable;
+
+public class ConvertType implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
     // 转换后的id
     private int convertId;
     // 转换的类型（0：代表获得，DI；1:代表输出，DO；2：代表模拟量输入）
@@ -11,6 +15,8 @@ public class ConvertType {
     private String code;
     // 对应点位的值
     private int value;
+    // 排序字段
+    private int index;
 
     public int getConvertId() {
         return convertId;
@@ -52,7 +58,15 @@ public class ConvertType {
         this.value = value;
     }
 
-    @Override
+    public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
     public String toString() {
         return "ConvertType{" +
                 "convertId=" + convertId +
@@ -60,6 +74,7 @@ public class ConvertType {
                 ", describe='" + describe + '\'' +
                 ", code='" + code + '\'' +
                 ", value=" + value +
+                ", index=" + index +
                 '}';
     }
 }
