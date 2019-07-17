@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,8 @@ public class MeasObjServiceImpl implements MeasObjService {
 //    private RedisTemplate redisTemplate;
     @Autowired
     private VideoServerService videoServerService;
+    @Autowired
+    private XMLService xmlService;
 
 
     //    @Caching(put = @CachePut(key = "'measObj' + #p0.id"), evict = @CacheEvict())
@@ -150,9 +153,10 @@ public class MeasObjServiceImpl implements MeasObjService {
     @Override
     public double getMeasObjCVByIdAndDataType(Integer objId, Integer datatypeId) {
         DataType dataType = DataType.getEnum(datatypeId);
+        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
         switch (dataType) {
             case AI:
-                Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv();
+                Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv(decimal);
                 return cv == null ? 0 : cv;
             case DI:
             	MeasObjDI di = measObjModuleCenter.getMeasObjDI(objId);

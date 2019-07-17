@@ -147,6 +147,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         ComplexObjectConvert complexObjectConvert = getComplexObjectConvertByMeasObj(measObj);
         if (complexObjectConvert == null) return null;
 
+        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
+
         JSONObject jsonObject = new JSONObject();
 
         for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
@@ -172,7 +174,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             switch (dataType) {
                 case AI:
-                    tmpCV.put("value", measObjAIHashMap.get(tmpId).getCv());
+                    tmpCV.put("value", measObjAIHashMap.get(tmpId).getCv(decimal));
                     break;
 
                 case SI:
@@ -433,10 +435,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
             measObjHashMap.put(measObj.getId(), measObj);
         }
         List<MeasObjAI> measObjAIS = measObjAIMapper.getAllMeasObjAIs();
-        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
         for (MeasObjAI tmp : measObjAIS) {
             if (tmp.getCv() == null) tmp.setCv(0.0);
-            if (decimal != null) tmp.setDecimal(decimal.intValue());
             measObjAIHashMap.put(tmp.getId(), tmp);
         }
         List<MeasObjDI> measObjDIS = measObjDIMapper.getAllMeasObjDIs();

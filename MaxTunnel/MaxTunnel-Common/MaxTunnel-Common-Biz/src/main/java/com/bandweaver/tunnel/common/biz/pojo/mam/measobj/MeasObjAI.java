@@ -7,8 +7,6 @@ import java.util.Date;
 
 public class MeasObjAI extends MeasObj {
 
-    private int decimal;
-
     public static MeasObjAI fromMeasObj(MeasObj obj) {
         MeasObjAI tmp = new MeasObjAI();
         String str = JSONObject.toJSONString(obj);
@@ -19,18 +17,15 @@ public class MeasObjAI extends MeasObj {
     private Date refreshTime;
     private Double cv;
 
-    public MeasObjAI() {
-        this.decimal = 2;
-    }
-
-    public void setDecimal(int decimal) {
-        this.decimal = decimal;
-    }
-
     public Double getCv() {
-        if (cv == null) return 0.0;
+        return this.cv;
+    }
 
-        int num = decimal;
+    public Double getCv(Integer decimal) {
+        if (cv == null) return 0.0;
+        if (decimal == null) return this.cv;
+
+        int num = decimal.intValue();
         String s = "#.";
         for (int i = 0; i < num; i++) {
             s += "#";

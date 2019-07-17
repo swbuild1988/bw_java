@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,6 +71,8 @@ public class DataAnalyseController {
     private MeasObjDistributeService measObjDistributeService;
     @Autowired
 	private AlarmService alarmService;
+    @Autowired
+	private XMLService xmlService;
    
 	
     
@@ -289,7 +292,7 @@ public class DataAnalyseController {
     	
     	MeasObj measObj = measObjModuleCenter.getMeasObj(vo.getId());
     	DataType dataType = DataType.getEnum( measObj.getDatatypeId());
-    	
+
     	List<JSONObject> json = new ArrayList<>();
     	if(dataType == DataType.AI) {
     		List<MeasValueAI> list = measValueAIService.getListByObjectAndTime(vo.getId(), vo.getStartTime(), vo.getEndTime());
@@ -319,6 +322,7 @@ public class DataAnalyseController {
     	
     	List<MeasValueAI> ais = measValueAIService.getListByMoIdsAndTime(vo.getIds(), vo.getStartTime(), vo.getEndTime());
     	List<JSONObject> list = new ArrayList<>();
+
     	for(MeasValueAI ai : ais) {
     		JSONObject obj = new JSONObject();
     		MeasObj measObj = measObjModuleCenter.getMeasObj(ai.getObjectId());

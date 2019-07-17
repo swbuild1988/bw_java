@@ -37,8 +37,6 @@ import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueAIService;
 import com.bandweaver.tunnel.common.biz.itf.mam.MeasValueSIService;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjAIService;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.Store;
@@ -441,13 +439,14 @@ public class MeasObjController {
         List<Store> stores = storeService.getList();
 
         List<JSONObject> returnData = new ArrayList<>();
+        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
         for (MeasObj measObjDto : measObjs) {
 
             Object cv;
             switch (DataType.getEnum(measObjDto.getDatatypeId())) {
                 case AI:
                     MeasObjAI ai = measObjModuleCenter.getMeasObjAI(measObjDto.getId());
-                    cv = ai == null ? 0 : ai.getCv();
+                    cv = ai == null ? 0 : ai.getCv(decimal);
                     break;
 
                 case DI:
@@ -690,6 +689,7 @@ public class MeasObjController {
 
     private JSONObject getMaxOrMinValueByObjType(Date currentDate, List<MeasObjAI> measObjAIs, List<MeasObj> measObjs, String maxOrmin, ObjectType objType) {
 
+        Integer decimal = xmlService.getXMLAllInfo().getDecimal();
         JSONObject rtdata = new JSONObject();
         double value = 0;
         String location = "";
@@ -742,7 +742,6 @@ public class MeasObjController {
             }
         }
 
-
         if ("max".equals(maxOrmin)) {
             //获取最大值
             MeasObjAI measValueAI = collect.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
@@ -750,7 +749,7 @@ public class MeasObjController {
             location = getLocation(location, measValueAI);
 
             rtdata.put("name", "最高" + objType.getName());
-            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv());
+            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv(decimal));
             rtdata.put("unit", objType.getUnit());
             rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
 
@@ -761,7 +760,7 @@ public class MeasObjController {
             location = getLocation(location, measValueAI);
 
             rtdata.put("name", "最低含氧量");
-            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv());
+            rtdata.put("value", measValueAI == null ? value : measValueAI.getCv(decimal));
             rtdata.put("unit", objType.getUnit());
             rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
         }

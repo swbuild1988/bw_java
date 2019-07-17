@@ -477,7 +477,6 @@ public class SectionController extends BaseController<Section>{
         JSONObject result = new JSONObject();
         result.put("sectionInfo", json);
 
-
         //根据sectionId查询所有的监测对象
         List<MeasObjDto> moList = measObjService.getMeasObjBySectionId(resultDto.getId());
         // bim弹窗只返回模拟量输入

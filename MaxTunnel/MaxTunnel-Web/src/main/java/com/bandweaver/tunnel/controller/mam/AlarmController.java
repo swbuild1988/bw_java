@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.itf.MqService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,8 @@ public class AlarmController {
 	private MeasObjModuleCenter measObjModuleCenter;
 	@Autowired
 	private SectionService sectionService;
+	@Autowired
+	private MqService mqService;
 	
 	
 	/**
@@ -133,6 +136,7 @@ public class AlarmController {
 	@RequestMapping(value = "alarms/batch/clean",method = RequestMethod.POST)
 	public JSONObject cleanAlarmBatch(@RequestBody AlarmVo vo) {
 		alarmService.cleanAlarmBatch(vo);
+		mqService.sendByType("personalInfo", "");
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
@@ -147,6 +151,7 @@ public class AlarmController {
 	@RequestMapping(value = "alarms/clean",method = RequestMethod.POST)
 	public JSONObject cleanAlarm(@RequestBody Alarm alarm) {
 		alarmService.cleanAlarm(alarm);
+		mqService.sendByType("personalInfo", "");
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 	
