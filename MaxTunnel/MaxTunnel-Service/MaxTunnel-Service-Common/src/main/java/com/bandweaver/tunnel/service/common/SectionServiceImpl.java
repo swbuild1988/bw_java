@@ -376,7 +376,7 @@ public class SectionServiceImpl implements SectionService {
             Area area = section.getArea();
             StoreDto store = section.getStore();
             if( area == null || store == null) continue;
-
+            section.setLength(area.getLength());
             // 获得区域的起点和终点
             Point3D startP = PointUtil.get3DPoint(area.getStartPoint());
             Point3D endP = PointUtil.get3DPoint(area.getEndPoint());
