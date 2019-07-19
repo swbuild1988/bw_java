@@ -144,4 +144,11 @@ public interface MeasObjService {
 	List<JSONObject> getMeasObjMaxOrMinValue(Integer tunnelId, Integer storeId, Integer areaId, Integer monitorType);
 	
 	List<Integer> getIdList(String id);
+
+	/**
+	 * 检测对象目前是否故障
+	 * @param measObj
+	 * @return
+	 */
+	boolean isMeasObjFault(MeasObj measObj);
 }

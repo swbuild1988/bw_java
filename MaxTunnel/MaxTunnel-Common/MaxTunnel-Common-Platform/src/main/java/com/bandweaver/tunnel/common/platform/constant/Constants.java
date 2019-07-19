@@ -16,35 +16,7 @@ public class Constants {
     public static final String MAXTUNNEL_COMPANY = "maxtunnel.company";
     public static final String MAXTUNNEL_ADDRESS = "maxtunnel.address";
     public static final String INIT_PASSWORD = "maxtunnel.cm.init.password";
-    
-    //环境监测国标值
-    public static final String TEMPERATURE_MIN = "ai.temperature.min";
-    public static final String TEMPERATURE_MAX = "ai.temperature.max";
-    public static final String HUMIDITY_MIN = "ai.humidity.min";
-    public static final String HUMIDITY_MAX = "ai.humidity.max";
-    public static final String OXYGEN_MIN = "ai.oxygen.min";
-    public static final String OXYGEN_MAX = "ai.oxygen.max";
-    public static final String H2S_MIN = "ai.h2s.min";
-    public static final String H2S_MAX = "ai.h2s.max";
-    public static final String CH4_MIN = "ai.ch4.min";
-    public static final String CH4_MAX = "ai.ch4.max";
-    public static final String CO_MIN = "ai.co.min";
-    public static final String CO_MAX = "ai.co.max";
 
-    //环境监测正常值
-    public static final String TEMPERATURE_NORMAL_MIN = "ai.temperature.normal.min";
-    public static final String TEMPERATURE_NORMAL_MAX = "ai.temperature.normal.max";
-    public static final String HUMIDITY_NORMAL_MIN = "ai.humidity.normal.min";
-    public static final String HUMIDITY_NORMAL_MAX = "ai.humidity.normal.max";
-    public static final String OXYGEN_NORMAL_MIN = "ai.oxygen.normal.min";
-    public static final String OXYGEN_NORMAL_MAX = "ai.oxygen.normal.max";
-    public static final String H2S_NORMAL_MIN = "ai.h2s.normal.min";
-    public static final String H2S_NORMAL_MAX = "ai.h2s.normal.max";
-    public static final String CH4_NORMAL_MIN = "ai.ch4.normal.min";
-    public static final String CH4_NORMAL_MAX = "ai.ch4.normal.max";
-    public static final String CO_NORMAL_MIN = "ai.co.normal.min";
-    public static final String CO_NORMAL_MAX = "ai.co.normal.max";
-    
     //文件管理上传路径
     public static final String FILE_PATH = "path.file.upload";
 
@@ -58,7 +30,7 @@ public class Constants {
     public static final String QUEUE_PLAN_UM = "mq.queue.plan.um";
     public static final String QUEUE_PLAN_VM = "mq.queue.plan.vm";
 
-    
+
     //线程
     public static final int THREAD_POOL_SIZE = 5;
     

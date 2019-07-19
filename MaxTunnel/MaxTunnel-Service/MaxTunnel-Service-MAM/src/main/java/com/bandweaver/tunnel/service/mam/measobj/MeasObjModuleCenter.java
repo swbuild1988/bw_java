@@ -150,6 +150,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         Integer decimal = xmlService.getXMLAllInfo().getDecimal();
 
         JSONObject jsonObject = new JSONObject();
+        Date time = new Date();
 
         for (ConvertType convertType : complexObjectConvert.getConvertTypes()) {
             String attribute = convertType.getCode();
@@ -159,24 +160,28 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             JSONObject tmpCV = new JSONObject();
             tmpCV.put("descript", convertType.getDescribe());
-            
+
             tmpCV.put("index", convertType.getIndex());
 
             switch (dataType) {
                 case AI:
                     tmpCV.put("value", measObjAIHashMap.get(tmpId).getCv(decimal));
+                    time = measObjAIHashMap.get(tmpId).getRefreshTime();
                     break;
 
                 case SI:
                     tmpCV.put("value", measObjSIHashMap.get(tmpId).getCv());
+                    time = measObjSIHashMap.get(tmpId).getRefreshTime();
                     break;
 
                 case DI:
                     tmpCV.put("value", measObjDIHashMap.get(tmpId).getCv());
+                    time = measObjDIHashMap.get(tmpId).getRefreshTime();
                     break;
 
                 case SO:
                     tmpCV.put("value", measObjSOHashMap.get(tmpId).getCv());
+                    time = measObjSOHashMap.get(tmpId).getRefreshTime();
                     break;
 
                 default:
@@ -185,6 +190,8 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
             jsonObject.put(attribute, tmpCV);
         }
+
+        jsonObject.put("time", time);
 
         return jsonObject;
     }
@@ -406,7 +413,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         // LogUtil.info("after insert MeasObjSO : " + tmp);
 
     }
-    
+
     /**
      * 初始化数据
      */
@@ -578,8 +585,26 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         return complexObjectConvert;
     }
 
+    /**
+     * 获取转换的id值
+     *
+     * @param measObj
+     * @param convertType
+     * @return
+     */
     public int getConvertObjectId(MeasObj measObj, ConvertType convertType) {
         return measObj.getId().intValue() / 100 * 100 + convertType.getConvertId();
+    }
+
+    /**
+     * 获取转换的id值
+     *
+     * @param measObj
+     * @param id
+     * @return
+     */
+    public int getConvertObjectId(MeasObj measObj, int id) {
+        return measObj.getId().intValue() / 100 * 100 + id;
     }
 
     /**

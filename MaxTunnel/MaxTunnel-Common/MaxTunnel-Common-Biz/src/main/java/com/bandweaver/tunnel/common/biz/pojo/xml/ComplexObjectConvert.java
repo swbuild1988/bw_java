@@ -7,7 +7,7 @@ import java.util.List;
  * 复杂类型转换
  */
 public class ComplexObjectConvert implements Serializable {
-	
+
     private static final long serialVersionUID = 1L;
 
     // 对象类型
@@ -16,12 +16,10 @@ public class ComplexObjectConvert implements Serializable {
     private String objectName;
     // 原始Id
     private int originalId;
-    //    // 原始值起点
-//    private int startPositionOfOriginalValue;
-//    // 原始值长度
-//    private int lenghtOfOriginalValue;
     // 可被转换的量
     private List<ConvertType> convertTypes;
+    // 故障对应的ids
+    private List<Integer> faultIds;
 
     public int getObjectType() {
         return objectType;
@@ -47,22 +45,6 @@ public class ComplexObjectConvert implements Serializable {
         this.originalId = originalId;
     }
 
-//    public int getStartPositionOfOriginalValue() {
-//        return startPositionOfOriginalValue;
-//    }
-//
-//    public void setStartPositionOfOriginalValue(int startPositionOfOriginalValue) {
-//        this.startPositionOfOriginalValue = startPositionOfOriginalValue;
-//    }
-//
-//    public int getLenghtOfOriginalValue() {
-//        return lenghtOfOriginalValue;
-//    }
-//
-//    public void setLenghtOfOriginalValue(int lenghtOfOriginalValue) {
-//        this.lenghtOfOriginalValue = lenghtOfOriginalValue;
-//    }
-
     public List<ConvertType> getConvertTypes() {
         return convertTypes;
     }
@@ -71,6 +53,20 @@ public class ComplexObjectConvert implements Serializable {
         this.convertTypes = convertTypes;
     }
 
+    public List<Integer> getFaultIds() {
+        return faultIds;
+    }
+
+    public void setFaultIds(List<Integer> faultIds) {
+        this.faultIds = faultIds;
+    }
+
+    /**
+     *
+     * @param code
+     * @param typeId
+     * @return
+     */
     public ConvertType getConvertType(String code, int typeId) {
         for (ConvertType type : this.convertTypes) {
             if (type.getCode().equals(code) && type.getType() == typeId) return type;
@@ -85,6 +81,7 @@ public class ComplexObjectConvert implements Serializable {
                 ", objectName='" + objectName + '\'' +
                 ", originalId=" + originalId +
                 ", convertTypes=" + convertTypes +
+                ", faultIds=" + faultIds +
                 '}';
     }
 }

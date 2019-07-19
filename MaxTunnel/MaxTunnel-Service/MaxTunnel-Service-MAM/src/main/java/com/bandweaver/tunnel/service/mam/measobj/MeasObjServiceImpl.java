@@ -8,6 +8,9 @@ import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjAIParam;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.video.VideoServerService;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ObjTypeParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -159,11 +162,11 @@ public class MeasObjServiceImpl implements MeasObjService {
                 Double cv = measObjModuleCenter.getMeasObjAI(objId).getCv(decimal);
                 return cv == null ? 0 : cv;
             case DI:
-            	MeasObjDI di = measObjModuleCenter.getMeasObjDI(objId);
+                MeasObjDI di = measObjModuleCenter.getMeasObjDI(objId);
                 cv = (di != null && di.getCv()) ? 1.0 : 0.0;
                 return cv;
             case SI:
-            	MeasObjSI si = measObjModuleCenter.getMeasObjSI(objId);
+                MeasObjSI si = measObjModuleCenter.getMeasObjSI(objId);
                 Integer cv2 = (si != null && si.getCv() != null) ? si.getCv() : 0;
                 return cv2;
             default:
@@ -202,7 +205,6 @@ public class MeasObjServiceImpl implements MeasObjService {
     }
 
 
-
     @Override
     public void setPlanIds(int objtypeId, String planIds) {
         measObjMapper.updatePlanIdsByObjtypeId(objtypeId, planIds);
@@ -210,9 +212,11 @@ public class MeasObjServiceImpl implements MeasObjService {
         // 更新缓存
         List<MeasObj> collect = measObjModuleCenter.getMeasObjs().stream().filter(a -> a.getObjtypeId() == objtypeId)
                 .collect(Collectors.toList());
-        collect.stream().forEach(b -> {  b.setPlanIds(planIds); measObjModuleCenter.updateMeasObj(b); });
+        collect.stream().forEach(b -> {
+            b.setPlanIds(planIds);
+            measObjModuleCenter.updateMeasObj(b);
+        });
     }
-
 
 
     @Override
@@ -247,10 +251,10 @@ public class MeasObjServiceImpl implements MeasObjService {
             measObjAIList = measObjAIList.stream().filter(a -> a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
         }
         if (monitorType != null) {
-        	List<ObjectType> eList = ObjectType.getEnumByMonitorType(monitorType);
-        	List<Integer> objTypeIds = new ArrayList<>();
-        	eList.forEach(a -> objTypeIds.add(a.getValue()));
-        	measObjAIList = measObjAIList.stream().filter(a -> objTypeIds.contains(a.getObjtypeId())).collect(Collectors.toList());
+            List<ObjectType> eList = ObjectType.getEnumByMonitorType(monitorType);
+            List<Integer> objTypeIds = new ArrayList<>();
+            eList.forEach(a -> objTypeIds.add(a.getValue()));
+            measObjAIList = measObjAIList.stream().filter(a -> objTypeIds.contains(a.getObjtypeId())).collect(Collectors.toList());
         }
 
 
@@ -274,7 +278,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                 switch (objType) {
                     case TEMPERATURE:// 温度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             temperature.setCv(measObjAi.getCv());
                             temperature.setObjId(measObjAi.getId());
@@ -285,7 +289,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case HUMIDITY:// 湿度
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             humidity.setCv(measObjAi.getCv());
                             humidity.setObjId(measObjAi.getId());
@@ -296,7 +300,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case OXYGEN:// 氧气
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().min(Comparator.comparing(MeasObjAI::getCv)).get();
                             oxygen.setCv(measObjAi.getCv());
                             oxygen.setObjId(measObjAi.getId());
@@ -307,7 +311,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case H2S:// 硫化氢
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             h2s.setCv(measObjAi.getCv());
                             h2s.setObjId(measObjAi.getId());
@@ -318,7 +322,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case CH4:// 甲烷
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             ch4.setCv(measObjAi.getCv());
                             ch4.setObjId(measObjAi.getId());
@@ -329,7 +333,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case CO:// 一氧化碳
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             co.setCv(measObjAi.getCv());
                             co.setObjId(measObjAi.getId());
@@ -339,7 +343,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case SMOKE_SENSATION:// 烟感
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             smokeSensation.setCv(measObjAi.getCv());
                             smokeSensation.setObjId(measObjAi.getId());
@@ -349,7 +353,7 @@ public class MeasObjServiceImpl implements MeasObjService {
                         break;
                     case WARM_SENSATION:// 温感
                         tmps = measObjAIList.stream().filter(a -> a.getObjtypeId().intValue() == typeId).collect(Collectors.toList());
-                        if(!tmps.isEmpty()) {
+                        if (!tmps.isEmpty()) {
                             measObjAi = tmps.stream().max(Comparator.comparing(MeasObjAI::getCv)).get();
                             warmSensation.setCv(measObjAi.getCv());
                             warmSensation.setObjId(measObjAi.getId());
@@ -399,14 +403,65 @@ public class MeasObjServiceImpl implements MeasObjService {
             jsonobj.put("storeId", dto == null ? null : dto.getStoreId());
             jsonobj.put("areaId", dto == null ? null : dto.getAreaId());
             jsonobj.put("objId", param.getObjId());
-            jsonobj.put("unit",ObjectType.getEnum(param.getObjTypeName()).getUnit() );
+            jsonobj.put("unit", ObjectType.getEnum(param.getObjTypeName()).getUnit());
             list.add(jsonobj);
         }
         return list;
     }
 
     @Override
-    public List<Integer> getIdList(String id){
-    	return measObjMapper.getIdList(id);
+    public List<Integer> getIdList(String id) {
+        return measObjMapper.getIdList(id);
+    }
+
+    @Override
+    public boolean isMeasObjFault(MeasObj measObj) {
+
+        DataType dataType = DataType.getEnum(measObj.getDatatypeId().intValue());
+
+        switch (dataType) {
+            case AI:
+
+                ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(measObj.getObjtypeId().intValue());
+                if (objTypeParam == null) return false;
+
+                Double tmp_CV = measObjModuleCenter.getMeasObjAI(measObj.getId().intValue()).getCv();
+                double aiCV = tmp_CV == null ? 0 : tmp_CV.doubleValue();
+                return (aiCV < objTypeParam.getMin() || aiCV > objTypeParam.getMax());
+
+
+            case DI:
+
+                break;
+
+            case SI:
+
+                break;
+
+            case SO:
+
+                break;
+
+            case ComplexObject:
+
+                ComplexObjectConvert complexObjectConvert = measObjModuleCenter.getComplexObjectConvertByMeasObj(measObj);
+                List<Integer> faultIds = complexObjectConvert.getFaultIds();
+
+                if (faultIds == null) return false;
+
+                for (int i = 0; i < faultIds.size(); i++) {
+                    // 目前只能判断DI，即故障点
+                    int diId = measObjModuleCenter.getConvertObjectId(measObj, faultIds.get(i).intValue());
+                    MeasObjDI di = measObjModuleCenter.getMeasObjDI(diId);
+                    if (di == null) {
+                        return false;
+                    }
+                    return di.getCv();
+                }
+
+                return false;
+        }
+
+        return false;
     }
 }

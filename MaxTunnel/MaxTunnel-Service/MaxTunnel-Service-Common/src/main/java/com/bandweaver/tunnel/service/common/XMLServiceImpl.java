@@ -8,16 +8,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class XMLServiceImpl implements XMLService {
 
+
+    private Config config = null;
+
     @Override
     public Config getXMLAllInfo() {
-        String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
-        Config config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
 
-        if(config == null) {
-            config = new Config();
+        if (config == null) {
+
+            String path = this.getClass().getClassLoader().getResource("config.xml").getPath();
+            config = (Config) XMLUtil.convertXmlFileToObject(Config.class, path);
+
+            if (config == null) {
+                config = new Config();
+            }
+            boolean f = config.init();
+            if (f) XMLUtil.convertToXml(config, path);
         }
-        boolean f = config.init();
-        if (f) XMLUtil.convertToXml(config, path);
+
         return config;
     }
 

@@ -70,6 +70,8 @@
             <type>1</type>
             <value>1</value>
         </convertTypes>
+        <faultIds>5</faultIds>
+        <faultIds>8</faultIds>
         <objectName>电子井盖</objectName>
         <objectType>56</objectType>
         <originalId>0</originalId>
@@ -113,6 +115,7 @@
             <type>1</type>
             <value>1</value>
         </convertTypes>
+        <faultIds>3</faultIds>
         <objectName>风机</objectName>
         <objectType>10</objectType>
         <originalId>0</originalId>
@@ -163,6 +166,7 @@
             <type>1</type>
             <value>1</value>
         </convertTypes>
+        <faultIds>7</faultIds>
         <objectName>电动百叶</objectName>
         <objectType>58</objectType>
         <originalId>0</originalId>
@@ -192,6 +196,7 @@
             <value>1</value>
             <index>3</index>
         </convertTypes>
+        <faultIds>3</faultIds>
         <objectName>排水泵</objectName>
         <objectType>59</objectType>
         <originalId>0</originalId>
@@ -288,6 +293,7 @@
             <type>1</type>
             <value>1</value>
         </convertTypes>
+        <faultIds>7</faultIds>
         <objectName>应急照明</objectName>
         <objectType>12</objectType>
         <originalId>0</originalId>
@@ -416,34 +422,67 @@
         <objectType>30</objectType>
         <originalId>0</originalId>
     </complexObjectConverts>
+    <objTypeParams>
+        <typeId>1</typeId>
+        <typeName>温度</typeName>
+        <min>-40</min>
+        <max>120</max>
+        <normalMin>-15</normalMin>
+        <normalMax>40</normalMax>
+    </objTypeParams>
+    <objTypeParams>
+        <typeId>2</typeId>
+        <typeName>湿度</typeName>
+        <min>0</min>
+        <max>100</max>
+        <normalMin>5</normalMin>
+        <normalMax>95</normalMax>
+    </objTypeParams>
+    <objTypeParams>
+        <typeId>3</typeId>
+        <typeName>氧气</typeName>
+        <min>0</min>
+        <max>30</max>
+        <normalMin>15</normalMin>
+        <normalMax>28</normalMax>
+    </objTypeParams>
+    <objTypeParams>
+        <typeId>4</typeId>
+        <typeName>硫化氢</typeName>
+        <min>0</min>
+        <max>50</max>
+        <normalMin>0</normalMin>
+        <normalMax>50</normalMax>
+    </objTypeParams>
+    <objTypeParams>
+        <typeId>5</typeId>
+        <typeName>甲烷</typeName>
+        <min>0</min>
+        <max>50</max>
+        <normalMin>0</normalMin>
+        <normalMax>50</normalMax>
+    </objTypeParams>
+    <objTypeParams>
+        <typeId>6</typeId>
+        <typeName>一氧化碳</typeName>
+        <min>0</min>
+        <max>100</max>
+        <normalMin>0</normalMin>
+        <normalMax>100</normalMax>
+    </objTypeParams>
     <lightDistance>50.0</lightDistance>
-    <objectTypeIds>0</objectTypeIds>
     <objectTypeIds>1</objectTypeIds>
     <objectTypeIds>2</objectTypeIds>
     <objectTypeIds>3</objectTypeIds>
     <objectTypeIds>4</objectTypeIds>
     <objectTypeIds>5</objectTypeIds>
     <objectTypeIds>7</objectTypeIds>
-    <objectTypeIds>9</objectTypeIds>
     <objectTypeIds>10</objectTypeIds>
     <objectTypeIds>11</objectTypeIds>
     <objectTypeIds>12</objectTypeIds>
-    <objectTypeIds>20</objectTypeIds>
     <objectTypeIds>21</objectTypeIds>
     <objectTypeIds>30</objectTypeIds>
-    <objectTypeIds>31</objectTypeIds>
-    <objectTypeIds>32</objectTypeIds>
-    <objectTypeIds>33</objectTypeIds>
-    <objectTypeIds>34</objectTypeIds>
-    <objectTypeIds>35</objectTypeIds>
-    <objectTypeIds>36</objectTypeIds>
-    <objectTypeIds>37</objectTypeIds>
     <objectTypeIds>41</objectTypeIds>
-    <objectTypeIds>51</objectTypeIds>
-    <objectTypeIds>52</objectTypeIds>
-    <objectTypeIds>53</objectTypeIds>
-    <objectTypeIds>54</objectTypeIds>
-    <objectTypeIds>55</objectTypeIds>
     <objectTypeIds>56</objectTypeIds>
     <objectTypeIds>57</objectTypeIds>
     <objectTypeIds>58</objectTypeIds>
@@ -451,8 +490,6 @@
     <objectTypeIds>60</objectTypeIds>
     <objectTypeIds>61</objectTypeIds>
     <objectTypeIds>62</objectTypeIds>
-    <objectTypeIds>63</objectTypeIds>
-    <objectTypeIds>64</objectTypeIds>
     <lightDistance>50.0</lightDistance>
     <closeTime>5</closeTime>
     <decimal>2</decimal>
