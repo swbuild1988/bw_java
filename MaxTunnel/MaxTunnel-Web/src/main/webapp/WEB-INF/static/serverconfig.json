@@ -1,10 +1,10 @@
 {
-    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
+    "ApiUrl": "http://192.168.6.112:88/MaxTunnel-Web",
     "RouterBase": "/",
-    "MQServerAddress": "ws://192.168.0.7:15674/ws",
+    "MQServerAddress": "ws://192.168.6.112:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
-        "IP":"http://192.168.0.7:8090/",
+        "IP":"http://192.168.6.112:8090/",
         "BIM_SCP": "iserver/services/3D-3Dserver/rest/realspace",
         "BIM_DATA": "iserver/services/data-dataserver/rest/data",
         "IMG_MAP_LIST": ["iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
@@ -23,15 +23,15 @@
                     "position": {
                         "X": "112.49948864664668",
                         "Y": "37.71034251365869",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "monitorCenter"
                     },
                     "label": {
                         "text": "监控中心",
-                        "fontSize": "30"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
@@ -44,15 +44,15 @@
                     "position": {
                         "X": "112.49506",
                         "Y": "37.706148",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "school"
                     },
                     "label": {
                         "text": "晋源区实验中学",
-                        "fontSize": "30"
+                        "fontSize": "14",
+                        "color": "white"
                     }
                 }
             },
@@ -65,15 +65,15 @@
                     "position": {
                         "X": "112.499595",
                         "Y": "37.704056",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "childrenHospital"
                     },
                     "label": {
                         "text": "山西省儿童医院",
-                        "fontSize": "30"
+                        "fontSize": "14",
+                        "color": "white"
                     }
                 }
             },
@@ -84,18 +84,17 @@
                 },
                 "entityExtendParameters": {
                     "position": {
-                        "X": "112.477914",
-                        "Y": "37.715545",
-                        "Z": "50"
+                        "X": "112.480320",
+                        "Y": "37.716560",
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "government"
                     },
                     "label": {
                         "text": "晋源区政府",
-                        "fontSize": "40",
-                        "color": "yellow"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
@@ -106,18 +105,17 @@
                 },
                 "entityExtendParameters": {
                     "position": {
-                        "X": "112.4858731580146",
-                        "Y": "37.72776923822512",
-                        "Z": "50"
+                        "X": "112.489058",
+                        "Y": "37.729490",
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "countSeat"
                     },
                     "label": {
                         "text": "太原古县城",
-                        "fontSize": "30",
-                        "color": "yellow"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
@@ -130,15 +128,15 @@
                     "position": {
                         "X": "112.52207233753701",
                         "Y": "37.70384793736499",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "pipeGalleryEast"
                     },
                     "label": {
                         "text": "管廊东入口",
-                        "fontSize": "30"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
@@ -151,15 +149,15 @@
                     "position": {
                         "X": "112.51743415066589",
                         "Y": "37.69655876626396",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "sewage"
                     },
                     "label": {
                         "text": "污水泵站",
-                        "fontSize": "30"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
@@ -172,15 +170,15 @@
                     "position": {
                         "X": "112.51382289846887",
                         "Y": "37.69271374038769",
-                        "Z": "50"
+                        "Z": "130"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "rainwater"
                     },
                     "label": {
                         "text": "雨水泵站",
-                        "fontSize": "30"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             }
@@ -192,7 +190,7 @@
             "path": "/VM/font/storeAcross.fpf",
             "isFlyLoop": "false",
             "playRate": "0.05",
-            "virtualInspection":"true"
+            "virtualInspection": true
         },
         {
             "id": 2,
@@ -200,7 +198,7 @@
             "path": "/VM/font/VMMapPath.fpf",
             "isFlyLoop": "false",
             "waitTime": 0,
-            "virtualInspection":"false"
+            "virtualInspection": false
         }
     ],
     "inspectionFlyFiles": [
@@ -220,6 +218,68 @@
         "cutoffDistance":50,
         "decay":1,
         "intensity":1
-    }
+    },
+    "MapAngleLists":[
+        {
+            "id":1,
+            "name":"古城大街角度",
+            "angle":{
+                "longitude": 112.523399,
+                "latitude": 37.693572,
+                "height": 960.836137,
+                "roll": 6.283185,
+                "pitch": -0.437595,
+                "heading": 5.443653
+            }
+        },
+        {
+            "id":2,
+            "name":"实验路角度",
+            "angle":{
+                "longitude": 112.498020,
+                "latitude": 37.707683,
+                "height": 4999.577866,
+                "roll": 0,
+                "pitch": -1.559829,
+                "heading": 0.373219
+            }
+        },
+        {
+            "id":3,
+            "name":"经三路角度",
+            "angle":{
+                "longitude": 112.498020,
+                "latitude": 37.707683,
+                "height": 4999.577866,
+                "roll": 0,
+                "pitch": -1.559829,
+                "heading": 0.373219
+            }
+        },
+        {
+            "id":4,
+            "name":"经二路角度",
+            "angle":{
+                "longitude": 112.475712,
+                "latitude": 37.709012,
+                "height": 384.645933,
+                "roll": 6.283185,
+                "pitch": -0.330056,
+                "heading": 1.590720
+            }
+        },
+        {
+            "id":5,
+            "name":"纬三路角度",
+            "angle":{
+                "longitude": 112.462829,
+                "latitude": 37.707427,
+                "height": 1092.267310,
+                "roll": 0,
+                "pitch": -0.387460,
+                "heading": 1.524559
+            }
+        }
+    ]
 
 }

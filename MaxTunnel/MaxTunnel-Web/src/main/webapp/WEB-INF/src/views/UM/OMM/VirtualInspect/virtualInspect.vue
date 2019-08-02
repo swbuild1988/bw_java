@@ -64,9 +64,7 @@
                         @sendSectionDetails="getSectionDetails"
                         @showStorePosition="showStorePosition"
                     ></SmViewer>
-                    <ShowSectionDetailData
-                        :dataDetails="sectionDetailsData"
-                    ></ShowSectionDetailData>
+                    <ShowSectionDetailData :dataDetails="sectionDetailsData"></ShowSectionDetailData>
                     <show-store-position v-bind:currPosition="storePosition"></show-store-position>
                 </div>
             </Col>
@@ -250,7 +248,6 @@ export default {
             this.storePosition = position;
         },
         getSectionDetails(data) {
-            
             this.sectionDetailsData = !data ? null : data.moInfo;
         }
     },
@@ -335,7 +332,7 @@ export default {
 .coolBox >>> .positionInformation {
     font-size: 1vmin;
     width: 20%;
-    right: 6%;
+    left: 6%;
 }
 .manual {
     background-color: -webkit-linear-gradient(left, #7c83f2, #2734e1);
@@ -362,7 +359,7 @@ export default {
     border-radius: 1vmin;
 }
 .section-details-content {
-    left: 1vmin;
-    top: 1vmin;
+    right: 1vmin;
+    top: 0;
 }
 </style>

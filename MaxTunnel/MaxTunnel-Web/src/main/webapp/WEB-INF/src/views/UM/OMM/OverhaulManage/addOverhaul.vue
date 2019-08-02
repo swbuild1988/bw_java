@@ -26,16 +26,19 @@
             <FormItem label="维修开始时间：" prop="startTime">
                 <DatePicker type="datetime" v-model="submitOverhaulDate.startTime" placeholder="请输入检修时间" style="width: 100%" :readonly="this.pageType==1||this.typeKey=='complete'"></DatePicker>
             </FormItem>
-            <!-- <FormItem label="维修开始时间：" v-show="this.pageType==1||this.typeKey=='complete'">
-                <DatePicker type="datetime" v-model="submitOverhaulDate.startTime" placeholder="请输入检修时间" style="width: 100%" readonly></DatePicker>
-            </FormItem> -->
             <FormItem label="维修结束时间：" prop="endTime">
                 <DatePicker type="datetime" v-model="submitOverhaulDate.endTime" placeholder="请输入检修时间" style="width: 100%" :readonly="this.pageType==1||this.typeKey=='complete'"></DatePicker>
+            </FormItem>
+            <FormItem label="维修结果：" v-if="overhaulData.type==2" class="statusStyle">
+                <Select v-model="submitOverhaulDate.equipmentDto.status" @on-change="changeStatus" :disabled="this.pageType==1">
+                    <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
+                </Select>
+                <div class="ivu-form-item-error-tip" v-if="isChoosedStatus">请选择维修结果</div>
             </FormItem>
             <FormItem label="维修描述：">
                 <Input v-model="submitOverhaulDate.describe" type="textarea" :rows="4" placeholder="请输入检修描述" :readonly="this.pageType==1||this.typeKey=='complete'"></Input>
             </FormItem>
-            <div v-show="this.pageType==4" style="text-align: center;margin-left: -140px;">
+            <div v-show="this.pageType==4" style="text-align: center;margin-left: 8vmin;">
                 <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回 </Button>
                 <Button type="primary" @click="submitOrder('submitOverhaulDate')" :disabled="isDisable">提交</Button>
             </div>
@@ -49,6 +52,9 @@
 <script>
 import types from '../../../../../static/Enum.json'
 import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
+import { EquipmentService } from "../../../../services/equipmentService";
+import { OverhaulService } from "../../../../services/overhaulService"
+import { TunnelService } from "../../../../services/tunnelService"
 export default {
     components: {
         ImageFromUrl
@@ -70,7 +76,7 @@ export default {
                     id: null,
                     name: null
                 },
-                name: '凤岭北路电力故障',
+                name: null,
             },
             submitOverhaulDate:{
                 id: null,
@@ -78,7 +84,11 @@ export default {
                 workerName: null,
                 startTime: null,
                 endTime: null,
-                describe: ''
+                describe: '',
+                equipmentDto: {
+                    statusName: null,
+                    status: null
+                }
             },
             tunnel: [],
             typeKey: null,
@@ -92,42 +102,59 @@ export default {
                     { type: 'date', required: true, message: '维修结束时间不能为空', trigger: 'change' },
                     { validator: this.checkEndTime, trigger: 'change' }
                 ]
-            }
+            },
+            equipmentStatus: [],
+            isChoosedStatus: false
         }    
     },
     mounted(){
         this.overhaulData.id = this.$route.params.id;
         this.pageType = this.$route.params.type;
         this.typeKey = this.$route.params.typeKey
-        this.axios.get('/tunnels').then(response=>{
-            let{code,data} = response.data
-            if(code==200){
-                this.tunnel = data
+        TunnelService.getTunnels().then(
+            result => {
+                this.tunnel = result
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         this.tip = this.$route.params.tip
         // this.getSessionUserName()
         //获取缺陷详情
-        this.axios.get('/orders/'+this.overhaulData.id+'/defect').then(response=>{
-            let{ code,data} = response.data
-            if(code=200){
-                this.overhaulData = data
+        OverhaulService.getDefectByOverhaulId(this.overhaulData.id).then(
+            result => {
+                this.overhaulData = result
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         //获取维修工单详情
-        this.axios.get('/orders/'+this.overhaulData.id).then(response=>{
-            let{ code,data} = response.data
-            if(code=200){
-                this.submitOverhaulDate = data
-                if(data.startTime!=null){
-                    this.submitOverhaulDate.startTime = new Date(data.startTime).format('yyyy-MM-dd hh:mm:s')
+        OverhaulService.getOrderByOverhaulId(this.overhaulData.id).then(
+            result => {
+                this.submitOverhaulDate = result
+                if(result.startTime!=null){
+                    this.submitOverhaulDate.startTime = new Date(result.startTime).format('yyyy-MM-dd hh:mm:s')
                 }
-                if(data.endTime!=null){
-                    this.submitOverhaulDate.endTime = new Date(data.endTime).format('yyyy-MM-dd hh:mm:s')
+                if(result.endTime!=null){
+                    this.submitOverhaulDate.endTime = new Date(result.endTime).format('yyyy-MM-dd hh:mm:s')
                 }
                 this.showPic()
             }
-        })
+        )
+        EquipmentService.getStatus().then(
+            res=>{
+                res.forEach(item=>{
+                    if(item.val==1||item.val==3){
+                        this.equipmentStatus.push(item)
+                    }
+                })
+            },
+            error=>{
+                this.Log.info(error)
+            }
+        )
     },
     methods: {
         showPic() {
@@ -146,34 +173,74 @@ export default {
             this.isDisable = true
             setTimeout(()=>{
                 this.isDisable = false
-                this.$refs[name].validate((valid) => {
-                    if(valid){
-                        var formInfo = {
-                            id: this.submitOverhaulDate.id,
-                            startTime: this.submitOverhaulDate.startTime,
-                            endTime: this.submitOverhaulDate.endTime,
-                            describe: this.submitOverhaulDate.describe
+                if(this.overhaulData.type==2){
+                    this.$refs[name].validate((valid) => {
+                        if(valid&&this.submitOverhaulDate.equipmentDto.status!=null){
+                            this.isChoosedStatus = false
+                            var formInfo = {
+                                id: this.submitOverhaulDate.id,
+                                startTime: this.submitOverhaulDate.startTime,
+                                endTime: this.submitOverhaulDate.endTime,
+                                describe: this.submitOverhaulDate.describe
+                            }
+                            OverhaulService.addOverhaul(this.submitOverhaulDate.equipmentDto.status,formInfo).then(
+                                result => {
+                                    if(this.tip=='tasks'){
+                                        this.$router.push("/UM/myTasks/query");
+                                    }
+                                    if(this.tip=="news"){
+                                        this.$router.push("/UM/myNews/queryMyTask");
+                                    }
+                                },
+                                error => {
+                                    this.Log.info(error)
+                                }
+                            )
+                        }else{
+                            this.isChoosedStatus = true
+                            this.$Message.error("请输入正确的巡检结果信息")
                         }
-                        this.axios.put('/orders',formInfo).then(response=>{
-                            if(this.tip=='tasks'){
-                                this.$router.push("/UM/myTasks/query");
+                    })
+                }else{
+                    this.$refs[name].validate((valid) => {
+                        if(valid){
+                            var formInfo = {
+                                id: this.submitOverhaulDate.id,
+                                startTime: this.submitOverhaulDate.startTime,
+                                endTime: this.submitOverhaulDate.endTime,
+                                describe: this.submitOverhaulDate.describe
                             }
-                            if(this.tip=="news"){
-                                this.$router.push("/UM/myNews/queryMyTask");
-                            }
-                        })
-                        .catch(function(error){
-                            console.log(error)
-                        })
-                    }else{
-                        this.$Message.error("请输入正确的巡检结果信息")
-                    }
-                })
+                            OverhaulService.addOverhaul(0,formInfo).then(
+                                result => {
+                                    if(this.tip=='tasks'){
+                                        this.$router.push("/UM/myTasks/query");
+                                    }
+                                    if(this.tip=="news"){
+                                        this.$router.push("/UM/myNews/queryMyTask");
+                                    }
+                                },
+                                error => {
+                                    this.Log.info(error)
+                                }
+                            )
+                        }else{
+                            this.isChoosedStatus = true
+                            this.$Message.error("请输入正确的巡检结果信息")
+                        }
+                    })
+                }
             },2000)
         },
         //返回
         goBack(){
             this.$router.back(-1);
+        },
+        changeStatus(){
+            if(this.submitOverhaulDate.equipmentDto.status==null){
+                this.isChoosedStatus = true
+            }else{
+                this.isChoosedStatus = false
+            }
         }
     }
 }
@@ -201,7 +268,7 @@ export default {
 .formBG >>> .ivu-form-item-label,.formTitle{
     color: #fff;
 }
-.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before{
+.formBG >>>.ivu-form .ivu-form-item-required .ivu-form-item-label:before,.formBG >>> .ivu-form .statusStyle .ivu-form-item-label:before{
     color: #00fff6;
     content: '★';
     display: inline-block;

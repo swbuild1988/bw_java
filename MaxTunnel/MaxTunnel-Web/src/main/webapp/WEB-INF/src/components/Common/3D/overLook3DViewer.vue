@@ -3,6 +3,11 @@
         <Spin fix size="large" v-if="spin.spinShow"></Spin>
         <show-model v-bind="modelProp" @showDesModel="showDesModel"></show-model>
         <describe-model v-bind="model" @removeByEntityId="removeByEntityId"></describe-model>
+        <!-- <ul style="position: absolute;top: 10%;color: #fff;">
+            <li v-for="item in angleLists" @click="switchAngle(item.id)">
+                {{item.name}}
+            </li>
+        </ul> -->
     </div>
 </template>
 
@@ -179,6 +184,9 @@ export default {
         describeModel
     },
     computed: {
+        // angleLists(){
+        //     return this.MapAngleLists;
+        // }
     },
     beforeMount() {
         Vue.prototype.$viewerComponent = this; // 把当前组件挂载到Vue原型$viewerComponent上
@@ -217,19 +225,19 @@ export default {
             //     console.log('roll'+camera.roll)
             //     console.log('heading'+camera.heading)
             // },10000)
-            //  _this.handler.setInputAction(e=>{
-            //     var position=_this.scene.pickPosition(e.position)
-            //     var camera=_this.viewer.scene.camera;
-            //     var cartographic = Cesium.Cartographic.fromCartesian(position)
-            //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-            //     var height = cartographic.height;
-            //
-            //     console.log(longitude+"/"+latitude+"/"+height);
-            //     console.log('pitch'+camera.pitch)
-            //     console.log('roll'+camera.roll)
-            //     console.log('heading'+camera.heading)
-            // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+             _this.handler.setInputAction(e=>{
+                var position=_this.scene.pickPosition(e.position)
+                var camera=_this.viewer.scene.camera;
+                var cartographic = Cesium.Cartographic.fromCartesian(position)
+                var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                var height = cartographic.height;
+            
+                console.log(longitude+"/"+latitude+"/"+height);
+                console.log('pitch'+camera.pitch)
+                console.log('roll'+camera.roll)
+                console.log('heading'+camera.heading)
+            },Cesium.ScreenSpaceEventType.LEFT_CLICK)
         },
         initUpdate(viewer, scene) {
             let _this = this;
@@ -247,6 +255,7 @@ export default {
                     i < this.SuperMapConfig.IMG_MAP_LIST.length;
                     i++
                 ) {
+                    // console.log('this.SuperMapConfig.IMG_MAP_LIST[i]',this.SuperMapConfig.IMG_MAP_LIST[i])
                     viewer.imageryLayers.addImageryProvider(
                         new Cesium.SuperMapImageryProvider({
                             url: this.SuperMapConfig.IMG_MAP_LIST[i] //墨卡托投影地图服务
@@ -357,6 +366,23 @@ export default {
                 );
             }
         },
+        // switchAngle(id){
+        //     let [ curAngle ] = this.angleLists.filter( angle => angle.id == id );
+        //     this.setViewAngle(curAngle.angle)
+        // },
+        // setViewAngle(angle) {
+
+        //     if (Cesium.defined(this.scene)) {
+        //         this.scene.camera.setView({
+        //             destination: new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height),
+        //             orientation: {
+        //                 heading: cameraPosition.heading,
+        //                 pitch: cameraPosition.pitch,
+        //                 roll: cameraPosition.roll
+        //             }
+        //         });
+        //     }
+        // },
         //人员定位
         refreshPersonnelPosition() {
             let { personnelPosition, viewer } = this;

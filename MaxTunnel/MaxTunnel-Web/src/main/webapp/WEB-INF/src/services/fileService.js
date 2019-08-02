@@ -49,6 +49,57 @@ var FileService = {
 				}
 			})
 		})
+	},
+	// 获取文件类型树结构
+	getDocTypeTree(params){
+		return new Promise((resolve, reject) => {
+			post('doc-types/condition',params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ',地址:doc-types/condition')
+				}
+			})
+		})
+	},
+	// 添加文件类型节点
+	addDocType(params){
+		return new Promise((resolve, reject) => {
+			post('doc-types',params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ',地址:doc-types')
+				}
+			})
+		})
+	},
+	// 删除文件类型节点
+	deleteDocType(id){
+		return new Promise((resolve, reject) => {
+			del('doc-types/'+id).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ',地址:doc-types/'+id)
+				}
+			})
+		})
 	}
 }
 

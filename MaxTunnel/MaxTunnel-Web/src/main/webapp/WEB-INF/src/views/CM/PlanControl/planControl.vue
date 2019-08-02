@@ -32,13 +32,13 @@
                         <Option v-for="item in plans" :key="item.val" :value="item.val">{{item.key}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="职位名称：" prop="name">
+                <FormItem label="小组名称：" prop="name">
                     <Input v-model="positionInfo.name"></Input>
                 </FormItem>
             </Form>
             <div slot="footer">
-                <Button type="primary" @click="addPosition('positionInfo')" v-show="isAdd">确定1</Button>
-                <Button type="primary" @click="editPosition('positionInfo')" v-show="isEdit">确定2</Button>
+                <Button type="primary" @click="addPosition('positionInfo')" v-show="isAdd">确定</Button>
+                <Button type="primary" @click="editPosition('positionInfo')" v-show="isEdit">确定</Button>
             </div>
         </Modal>
     </div>
@@ -65,7 +65,7 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '职位名称',
+                    title: '小组名称',
                     key: 'name',
                     align: 'center'
                 },
@@ -116,7 +116,7 @@ export default {
                 right: "15px"
             },
             isShow: false,
-            modalTitle: '新增预案相关职位',
+            modalTitle: '新增预案小组',
             positionInfo: {
                 planId: null,
                 name: null,
@@ -130,7 +130,7 @@ export default {
                     { type: 'number', required: true, message: '所属预案不能为空', trigger: 'change' }
                 ],
                 name: [
-                    { required: true, message: '预案名称不能为空', trigger: 'blur' }
+                    { required: true, message: '小组名称不能为空', trigger: 'blur' }
                 ]
             }
         }
@@ -183,7 +183,7 @@ export default {
             this.isShow = true
             this.isAdd = true
             this.isEdit = false
-            this.modalTitle = '新增预案相关职位'
+            this.modalTitle = '新增预案相关小组'
         },
         addPosition(name){
             var addInfo = {
@@ -213,7 +213,7 @@ export default {
             this.isShow = true
             this.isAdd = false
             this.isEdit = true
-            this.modalTitle = '修改预案相关职位'
+            this.modalTitle = '修改预案相关小组'
             PlanPersonService.getPositionById(id).then(
                 result => {
                     this.positionInfo = result

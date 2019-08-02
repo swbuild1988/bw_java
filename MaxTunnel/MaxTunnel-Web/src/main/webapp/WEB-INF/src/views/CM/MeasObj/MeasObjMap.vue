@@ -24,7 +24,8 @@
         <Row>
             <Col span="10" offset="14">
                 <Button type="primary" size="small"  icon="ios-search" @click="resetPageSearch">查询</Button>
-                <Button type="error" size="small" @click="add">新增监测对象映射</Button><Button type="primary" size="small" @click="showModal">批量新增监测对象映射</Button>
+                <Button type="error" size="small" @click="add">新增监测对象映射</Button>
+                <Button type="primary" size="small" @click="showModal">批量新增监测对象映射</Button>
                 <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
                 <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
             </Col> 
@@ -311,7 +312,8 @@ export default {
                 },
                 error=>{
                     _this.Log.info(error)
-                })
+                }
+            )
         },
         addMaps(){
             let _this = this

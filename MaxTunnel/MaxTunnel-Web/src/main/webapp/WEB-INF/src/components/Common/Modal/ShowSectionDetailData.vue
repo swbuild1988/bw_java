@@ -4,8 +4,10 @@
             <table class="table table-bordered table-striped text-center">
                 <tbody>
                     <tr v-for="(item,index) in curPageData" :key="index">
-                        <td><img class="titleImg" :src="item.img"></td>
-                        <td>{{item.name}}</td>
+                        <td>
+                            <img class="titleImg" :src="item.img">
+                        </td>
+                        <td>{{item.description ? item.description + item.name : item.name}}</td>
                         <td>{{item.cv}}</td>
                         <td>{{item.unit}}</td>
                     </tr>
@@ -16,8 +18,7 @@
 </template>
 
 <script>
-
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
     name: "sectionDetails",
@@ -38,16 +39,16 @@ export default {
             loopTimerId: null,
             loopTime: 2000,
             middleData: [],
-            showDetailsModel:false
+            showDetailsModel: false
         };
     },
-    computed:{
-        titleImg(){
+    computed: {
+        titleImg() {
             return Vue.prototype.VMConfig.detectionObjTitleImg;
         }
     },
     watch: {
-        dataDetails(val){
+        dataDetails(val) {
             this.curPage = 1;
             val ? this.init() : this.clearTimer();
             this.showDetailsModel = val ? true : false;
@@ -67,9 +68,9 @@ export default {
             let newPage =
                 this.curPage === 1
                     ? this.totalPage
-                    : (this.curPage === this.totalPage
+                    : this.curPage === this.totalPage
                     ? 1
-                    : this.curPage + 1);
+                    : this.curPage + 1;
             let startIndex = (newPage - 1) * this.pageSize;
             this.curPageData = this.middleData.slice(
                 startIndex,
@@ -88,16 +89,15 @@ export default {
             clearInterval(this.loopTimerId);
         },
         transformData() {
-            
-            if(!this.dataDetails.length) return;
+            if (!this.dataDetails.length) return;
             this.middleData.splice(0); //清空数组
             let currData = null;
- 
+
             for (let i = 0, data = this.dataDetails; i < data.length; i++) {
                 switch (data[i].dataType) {
                     case 1:
                         currData = data[i];
-                        this.addTitleImg(currData,data[i].objectType);
+                        this.addTitleImg(currData, data[i].objectType);
                         break;
                     case 2:
                     case 3:
@@ -109,19 +109,19 @@ export default {
                                 ? "打开"
                                 : "故障",
                             unit: null
-                        }
-                        this.addTitleImg(currData,data[i].objectType);
+                        };
+                        this.addTitleImg(currData, data[i].objectType);
                         break;
                     case 7:
-                        if (this.searchLastIndex(this.dataDetails, 7) !== i){
+                        if (this.searchLastIndex(this.dataDetails, 7) !== i) {
                             break;
                         }
                         currData = {
                             name: data[i].name,
                             cv: this.searchDataTypeLenght(this.dataDetails, 7),
                             unit: "个"
-                        }
-                        this.addTitleImg(currData,data[i].objectType);
+                        };
+                        this.addTitleImg(currData, data[i].objectType);
                         break;
                 }
                 // this.addTitleImg(currData,data[i].objectType);
@@ -135,20 +135,22 @@ export default {
                 if (arr[i].dataType === unit) return i;
             }
         },
-        addTitleImg(data,id){
-            
-            let [ titleImgObject ] = this.titleImg.filter( item => item.key === id );
+        addTitleImg(data, id) {
+            let [titleImgObject] = this.titleImg.filter(
+                item => item.key === id
+            );
             let currImg = null;
-            try{
-                let imageName = !titleImgObject ? 'methane' : titleImgObject.val;
-                
-                currImg = require(`../../../assets/UM/${ imageName }.png`);
-            }catch(err){
-                console.warn(err)
-            }
-            
-            this.middleData.push(Object.assign(data,{img:currImg}))
+            try {
+                let imageName = !titleImgObject
+                    ? "methane"
+                    : titleImgObject.val;
 
+                currImg = require(`../../../assets/UM/${imageName}.png`);
+            } catch (err) {
+                console.warn(err);
+            }
+
+            this.middleData.push(Object.assign(data, { img: currImg }));
         }
     },
     beforeDestroy() {
@@ -195,11 +197,11 @@ export default {
     text-align: left;
     width: 0%;
 }
-.panel td:nth-of-type(2), 
-.panel td:nth-of-type(4){
+.panel td:nth-of-type(2),
+.panel td:nth-of-type(4) {
     text-align: left;
 }
-.panel td:nth-of-type(3){
+.panel td:nth-of-type(3) {
     text-align: right;
 }
 .page {

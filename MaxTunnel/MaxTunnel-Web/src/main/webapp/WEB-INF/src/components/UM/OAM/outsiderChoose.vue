@@ -48,18 +48,18 @@
             <FormItem>
                 <Row v-for="(item,index) in items" :key="index" v-if="item.status">
                     <Col span="7">
-                    姓名：
+                    <span class="word42">姓名</span><span>：</span>
                         <Input type="text" v-model="item.name" placeholder="请输入访客姓名" @on-blur="validateName(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip"  v-show="check[index].checkName">访客姓名不能为空</div>
                     </Col>
                     <Col span="7">
-                    身份证号：
+                    <span>身份证号</span><span>：</span>
                         <Input type="text" v-model="item.idCard" placeholder="请输入身份证号" @on-blur="validateIdCard(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkidCard">身份证号不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightIdCard">请输入正确的身份证号</div>
                     </Col>
                     <Col span="7">
-                    联系方式：
+                    <span>联系方式</span><span>：</span>
                         <Input type="text" v-model="item.tel" placeholder="请输入联系方式" @on-blur="validateTel(index)" class="inputWidth"></Input>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkTel">联系方式不能为空</div>
                         <div class="ivu-form-item-error-tip" v-show="check[index].checkRightTel">请输入正确的联系方式</div>
@@ -394,6 +394,13 @@ export default {
 }
 .v-transfer-dom >>> .ivu-modal-wrap{
     z-index: 1999;
+}
+.ivu-form-item-error-tip{
+    left: 7vmin;
+}
+.word42{
+    letter-spacing: 2vmin;
+    margin-right: -2vmin;
 }
 @media (min-width: 2200px){
     .ivu-input {

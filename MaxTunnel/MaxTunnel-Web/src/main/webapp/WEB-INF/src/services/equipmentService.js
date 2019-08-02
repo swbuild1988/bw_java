@@ -640,7 +640,21 @@ var EquipmentService = {
                 }
             })
         })
-    }
+    },
+    //修改设备状态为故障
+    updateEquipmentStatus(params){
+        return new Promise((resolve, reject) => {
+            put('objects/equipments', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：objects/equipments")
+                }
+            })
+        })
+    },
+    
 };
 
 export {

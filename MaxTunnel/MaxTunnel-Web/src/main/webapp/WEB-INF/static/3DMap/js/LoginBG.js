@@ -11,11 +11,11 @@
       x: 30 * canvas.width / 100,
       y: 30 * canvas.height / 100
     };
-
+   
     var dots = {
-      nb: 750,
-      distance: 50,
-      d_radius: 100,
+      nb: canvas.width / 38.4 * 15,
+      distance: canvas.width / 38.4,
+      d_radius: canvas.width / 19.2,
       array: []
     };
 
@@ -56,7 +56,7 @@
       this.vx = -.5 + Math.random();
       this.vy = -.5 + Math.random();
 
-      this.radius = Math.random() * 2;
+      this.radius = Math.random() * 2 * canvas.width / 1920;
 
       this.color = new Color();
     }

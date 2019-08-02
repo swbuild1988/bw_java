@@ -37,9 +37,9 @@ var OverhaulService = {
 		})
 	},
 	// 添加维修工单
-	addOverhaul: function(params) {
+	addOverhaul: function(status,params) {
 		return new Promise((resolve, reject) => {
-			put('/orders', params).then(res => {
+			put('equipment-status/'+status+'/orders', params).then(res => {
 				let {
 					code,
 					data,

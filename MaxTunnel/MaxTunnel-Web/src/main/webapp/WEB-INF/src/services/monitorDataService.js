@@ -397,7 +397,120 @@ var MonitorDataService = {
                 }
             })
         })
-    }
+    },
+    // 根据tunnelId获取故障列表
+    getObjFaultList(tunnelId) {
+        return new Promise((resolve, reject) => {
+            get('tunnels/'+tunnelId+'/fault_measobjs')
+                .then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + '地址：tunnels/'+tunnelId+'/fault_measobjs')
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + '  ' + error.response.data)
+                })
+            // let data = [
+            //     {
+            //         objType: '温度',
+            //         id: 1,
+            //         faults: [
+            //             {
+            //                 area: "22区",
+            //                 areaLeath: 165,
+            //                 control: false,
+            //                 curValue: 0,
+            //                 datatypeId: 1,
+            //                 id: 222022402,
+            //                 maxNormal: 40,
+            //                 maxValue: 120,
+            //                 minNormal: -15,
+            //                 minValue: -40,
+            //                 name: "温度检测仪",
+            //                 reset: false,
+            //                 store: "电力舱",
+            //                 time: 1563177600000,
+            //                 unit: "℃"
+            //             }
+            //         ]
+            //     },
+            //     {
+            //         objType: '电子井盖',
+            //         id: 56,
+            //         faults: [
+            //             {
+            //                 area: "22区",
+            //                 areaLeath: 165,
+            //                 control: true,
+            //                 curValue: {
+            //                     close: {index: 0, descript: "关足", value: false},
+            //                     fault1: {index: 2, descript: "故障", value: false},
+            //                     fault2: {index: 3, descript: "运行故障", value: false},
+            //                     open: {index: 1, descript: "开足", value: false},
+            //                 },
+            //                 datatypeId: 200,
+            //                 id: 222113300,
+            //                 maxNormal: null,
+            //                 maxValue: null,
+            //                 minNormal: null,
+            //                 minValue: null,
+            //                 name: "智能井盖",
+            //                 reset: true,
+            //                 store: "污水舱进风口",
+            //                 time: 1563435165844
+            //             },
+            //             {
+            //                 area: "22区",
+            //                 areaLeath: 165,
+            //                 control: true,
+            //                 curValue: {
+            //                     close: {index: 0, descript: "关足", value: false},
+            //                     fault1: {index: 2, descript: "故障", value: false},
+            //                     fault2: {index: 3, descript: "运行故障", value: false},
+            //                     open: {index: 1, descript: "开足", value: false}
+            //                 },
+            //                 datatypeId: 200,
+            //                 id: 222243300,
+            //                 maxNormal: null,
+            //                 maxValue: null,
+            //                 minNormal: null,
+            //                 minValue: null,
+            //                 name: "智能井盖",
+            //                 reset: true,
+            //                 store: "燃气舱排风口",
+            //                 time: 1563435590664,
+            //                 unit: ""
+            //             }
+            //         ]
+            //     }
+            // ]
+            // resolve(data)
+        })
+    },
+    // 获取故障列表
+    getAllFaultObjs(){
+        return new Promise((resolve, reject) => {
+            get('fault_measobjs').then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject(msg + '地址：fault_measobjs')
+                }
+            })
+        })
+    },
 }
 
 export {

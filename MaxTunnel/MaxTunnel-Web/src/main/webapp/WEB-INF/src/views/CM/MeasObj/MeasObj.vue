@@ -28,6 +28,7 @@
       <Col span="6">
         <Button type="primary" size="small" icon="ios-search" @click="resetAndSearch">查询</Button>
         <Button type="error" size="small" @click="add">新增监测对象</Button>
+        <ExportCSV :header="objsHeader" :data="objsDataCSV" :fileName="objsFileName"></ExportCSV>
       </Col>
     </Row>
     <Row style="marginLeft:25px;marginBottom:10px;">
@@ -64,6 +65,7 @@
       </Col>
       <Col span="6">
         <Button type="info" size="small" @click="addMulti">批量新增监测对象</Button>
+        <Button type="warning" size="small" @click="editMulti">批量修改监测对象</Button>
         <Button v-show="deleteShow" type="error" size="small" @click="alldelete()">批量删除</Button>
         <Button v-show="!deleteShow" disabled type="error" size="small">批量删除</Button>
       </Col>
@@ -90,6 +92,7 @@
     </div>
       <meas-obj-module ref="measObjModule" v-bind="measObjModule"  v-on:addMeasObj="addMeasObj" v-on:ListenUpdateMeasObj="updateMeasObj"></meas-obj-module>
       <meas-obj-multi-module v-bind="measObjMultiModule" v-on:saveMulti="saveMulti"></meas-obj-multi-module>
+      <meas-obj-multi-module v-bind="measObjMultiModule" v-on:editSaveMulti="editSaveMulti"></meas-obj-multi-module>
   </div>
 </template>
 
@@ -101,6 +104,7 @@ import { TunnelService } from "../../../services/tunnelService";
 import { MeasObjServer } from "../../../services/MeasObjectSerivers";
 import storeChoose from "../../../components/CM/MAM/storeChoose";
 import areaChoose from "../../../components/CM/MAM/areaChoose";
+import ExportCSV from "@/components/UM/OMM/exportCSV.vue"
 export default {
   name: "meas-obj",
   data() {
@@ -245,9 +249,17 @@ export default {
         id: null
       },
       measObjMultiModule: {
-        show: { state: false }
+        show: { state: false },
+        type: 'add'
       },
-      objtypeIds: []
+      objtypeIds: [],
+      objsHeader: [
+        { label: '接入设备名称', prop: 'name' },
+        { label: '设备编号', prop: 'id' },
+        { label: '设备安装位置', prop: 'description' }
+      ],
+      objsDataCSV: [],
+      objsFileName: '监测对象'
     };
   },
   computed: {
@@ -279,6 +291,14 @@ export default {
       document.getElementById("store").style.width = width + "px";
       document.getElementById("area").style.width = width + "px";
     };
+    MeasObjServer.getAllMeasObjs().then(
+      result => {
+         this.objsDataCSV = result
+      },
+      error => {
+        this.Log.info(error)
+      }
+    )
   },
   methods: {
     resetAndSearch(){
@@ -354,7 +374,11 @@ export default {
     },
     addMulti() {
       this.measObjMultiModule.show.state = !this.measObjMultiModule.show.state;
-      // this.measObjMultiModule.type = "addMulti";
+      this.measObjMultiModule.type = 'add'
+    },
+    editMulti(){
+      this.measObjMultiModule.show.state = !this.measObjMultiModule.show.state;
+      this.measObjMultiModule.type = 'edit'
     },
     addMeasObj() {
       this.measObjModule.show.state = !this.measObjModule.show.state;
@@ -367,13 +391,28 @@ export default {
       this.resetAndSearch()
     },
     saveMulti(data) {
-      console.log("save multi", data);
       let _this = this;
       data.forEach(element => {
         element.id = parseInt(element.id);
       });
       // 将data上传，接口measobjs/batch，http，有问题找后端
       MeasObjServer.batchPostMeasObjs(data).then(
+        res => {
+          _this.Log.info(res);
+          _this.resetAndSearch()
+        },
+        error => {
+          _this.Log.info(error);
+        }
+      );
+    },
+    editSaveMulti(data){
+      let _this = this;
+      data.forEach(element => {
+        element.id = parseInt(element.id);
+      });
+      // 将data上传，接口measobjs/batch，http，有问题找后端
+      MeasObjServer.batchUpdateMeasObjs(data).then(
         res => {
           _this.Log.info(res);
           _this.resetAndSearch()
@@ -423,7 +462,8 @@ export default {
     MeasObjModule,
     MeasObjMultiModule,
     storeChoose,
-    areaChoose
+    areaChoose,
+    ExportCSV
   }
 };
 </script>

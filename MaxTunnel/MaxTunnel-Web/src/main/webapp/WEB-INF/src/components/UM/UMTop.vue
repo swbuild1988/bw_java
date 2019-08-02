@@ -52,7 +52,8 @@
                                 <!-- <DropdownItem @click.native="goToMoudle({ path: '/UM/myApplication/query'})">我的申请</DropdownItem> -->
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
-                                >我的任务
+                                >
+                                    我的任务
                                     <span class="alarmCount">（{{messageCount}}）</span>
                                 </DropdownItem>
                                 <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
@@ -215,11 +216,6 @@ export default {
                             path: "/UM/TunnelPipeline"
                         },
                         {
-                            name: "数据分析",
-                            url: "/UM/DataAnalysis/QueryData",
-                            path: "/UM/DataAnalysis/QueryData"
-                        },
-                        {
                             name: "视频监控系统",
                             url: "/UM/VideoMonitoring/details/1",
                             path: "/UM/VideoMonitoring/details"
@@ -228,6 +224,16 @@ export default {
                             name: "人员定位",
                             url: "/UM/PersonnelPosition/visitors",
                             path: "/UM/PersonnelPosition/visitors"
+                        },
+                        {
+                            name: "数据分析",
+                            url: "/UM/DataAnalysis/QueryData",
+                            path: "/UM/DataAnalysis/QueryData"
+                        },
+                        {
+                            name: "故障统计",
+                            url: "/UM/FaultStatistics/homePage",
+                            path: "/UM/FaultStatistics/homePage"
                         }
                     ]
                 },
@@ -290,7 +296,7 @@ export default {
             tempAlarm: null,
             durations: [],
             messageCount: 0,
-            alarmCount: 0,
+            alarmCount: 0
             // visible: false
         };
     },
@@ -473,7 +479,7 @@ export default {
             if (result.type && result.type == "Alarm") {
                 let content = JSON.parse(result.content);
                 this.Log.info("ModulePage收到回调:", content);
-
+                this.getCountInfoNum()
                 // 显示alarm modal框
                 // _this.videoModal.modalPrams.state = true;
                 // _this.videoModal.alarmContainer.push(content);
@@ -481,21 +487,20 @@ export default {
                 //显示右下角提示框
                 this.warningNotice(content);
                 /* 滚动条以及不被遮挡 */
-                if(document.body.offsetWidth>2200){
-                    document.getElementsByClassName("ivu-notice")[0].style.width=32+'vmin'
+                if (document.body.offsetWidth > 2200) {
+                    document.getElementsByClassName(
+                        "ivu-notice"
+                    )[0].style.width = 32 + "vmin";
                 }
-                if (document.getElementsByClassName("ivu-notice-notice")) {
-                    let h =
-                        document.getElementsByClassName("ivu-notice")[0]
-                            .offsetHeight +
-                        document.getElementsByClassName("ivu-notice-notice")[0]
-                            .offsetHeight;
+                if (document.getElementsByClassName("ivu-notice-notice")!=undefined) {
+                    let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight +
+                        document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
                     if (h > window.innerHeight) {
-                        document.getElementsByClassName(
-                            "ivu-notice"
-                        )[0].style.bottom = "2vmin";
+                        document.getElementsByClassName("ivu-notice")[0].style.bottom = "2vmin";
                     }
                 }
+            }else if(result.type && result.type == "personalInfo"){
+                this.getCountInfoNum()
             }
         },
         //设置告警面板中分页按钮的显隐
@@ -543,18 +548,9 @@ export default {
                     }
                     /* 滚动条以及不被遮挡 */
                     if (document.getElementsByClassName("ivu-notice-notice")) {
-                        let h =
-                            document.getElementsByClassName(
-                                "ivu-notice-notice"
-                            )[0].offsetHeight *
-                            (document.getElementsByClassName(
-                                "ivu-notice-notice"
-                            ).length -
-                                1);
+                        let h = document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight * (document.getElementsByClassName("ivu-notice-notice").length -1);
                         if (h < window.innerHeight) {
-                            document.getElementsByClassName(
-                                "ivu-notice"
-                            )[0].style.bottom = "";
+                            document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
                         }
                     }
                 }
@@ -705,7 +701,7 @@ export default {
     border-radius: 50%;
 }
 
-.ivu-dropdown >>> .ivu-dropdown-rel{
+.ivu-dropdown >>> .ivu-dropdown-rel {
     margin-top: 1.5vmin;
 }
 
@@ -719,7 +715,7 @@ export default {
 
 .layout-nav .topBtn {
     font-size: 1.66vmin;
-     background: url("../../assets/UM/UmTopBg.png") no-repeat center;
+    background: url("../../assets/UM/UmTopBg.png") no-repeat center;
     background-size: cover;
     padding: 1.2vmin 2.5vmin 0vmin 2.5vmin;
     margin: 0;
@@ -734,7 +730,7 @@ export default {
 }
 .layout-nav >>> .ivu-dropdown-item:hover {
     color: #000;
-    background: rgba(255, 255, 255, 0.6); 
+    background: rgba(255, 255, 255, 0.6);
 }
 .layout-nav >>> .ivu-dropdown-item:first-child {
     border-top: none;
@@ -779,12 +775,17 @@ export default {
 }
 
 @keyframes scaleout {
-    0% { -webkit-transform: scale(1.0) }
-    100% {-webkit-transform: scale(1.1);opacity: 0;}
+    0% {
+        -webkit-transform: scale(1);
+    }
+    100% {
+        -webkit-transform: scale(1.1);
+        opacity: 0;
+    }
 }
-.blingbling{
+.blingbling {
     animation: scaleout 1.5s infinite ease-in-out;
-  }
+}
 
 /* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {

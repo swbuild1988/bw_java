@@ -23,8 +23,7 @@
                 <DatePicker type="datetime" v-model="task.endTime" placeholder="请输入巡检任务结束时间" style="width: 100%" readonly></DatePicker>
             </FormItem>
             <FormItem label="巡检记录：">
-                <Table :columns="columns10" :data="this.task.records"></Table>
-                <!-- <Button type="dashed" long @click="handleAddRecords" icon="plus-round" v-show="this.pageType==4">添加巡检记录</Button> -->
+                <Table :columns="columnsTask" :data="this.task.records"></Table>
             </FormItem>
             <FormItem label="巡检描述：">
                 <Input v-model="task.describe" type="textarea" :rows="4" placeholder="请输入巡检描述" readonly></Input>
@@ -91,10 +90,11 @@ export default {
                 {id: 3, val: 3, key: '进行中'}
             ],
             showAddDefect: false,
-            columns10: [
+            columnsTask: [
                 {
                     type: 'expand',
-                    width: 50,
+                    width: window.innerWidth*0.01,
+                    align: 'center',
                     render: (h, params) => {
                         return h(showDefect, {
                             props: {
@@ -105,12 +105,14 @@ export default {
                 },
                 {
                     title: '所属仓段',
+                    align: 'center',
                     render: (h,params) =>{
                         return h('span',params.row.area.name)
                     }
                 },
                 {
                     title: '所属区段',
+                    align: 'center',
                     render: (h,params) =>{
                         return h('span',params.row.store.name)
                     }
@@ -118,6 +120,8 @@ export default {
                 {
                     title: '巡检时间',
                     key: 'recordTime',
+                    align: 'center',
+                    width: window.innerWidth*0.1,
                     render: (h,params) => {
                         if(params.row.recordTime!=null){
                             return h('span',
@@ -128,6 +132,7 @@ export default {
                 },
                 {
                     title: '巡检描述',
+                    align: 'center',
                     key: 'content'
                 },
             ],
@@ -176,95 +181,12 @@ export default {
             (error)=>{
                 _this.Log.info = error
             })
-
-        //获取所属区域
-        // this.axios.get('/tunnels/'+this.defectTunnelId+'/areas').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.areas=data
-        //     }
-        // })
-
-        //获取所属仓段
-        // this.axios.get('tunnels/1/stores').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.stores = data
-        //     }
-        // })
     },
     methods: {
         //返回
         goBack(){
             this.$router.back(-1);
         }
-        //modal 添加巡检记录
-        // handleAdd(){
-        //     this.addRecords.push({
-        //         place: '',
-        //         recordTime: null,
-        //         createTime: new Date(),
-        //         content: '',
-        //         hasDefect: false,
-        //         status: 1,
-        //         taskId: this.task.id,
-        //         defect:null
-        //     })
-        // },
-        // handleRemove(index){
-        //     if(index!=0){
-        //         this.addRecords[index].status=0;
-        //     }
-        // },
-        //添加缺陷
-        // addDefect(index){
-        //     if(this.addRecords[index].hasDefect){
-        //         this.addRecords[index].defect = {
-        //             id: null,
-        //             tunnelId: 1,
-        //             createTime: '',
-        //             editTime: null,
-        //             status:1,
-        //             type: 2,
-        //             objName: null,
-        //             level: 1,
-        //             description: '',
-        //             objId: null,
-        //         }
-        //     }
-        //     else{
-        //         this.addRecords[index].defect = null
-        //     }
-        // },
-        //添加巡检记录 打开model框
-        // handleAddRecords(){
-        //     this.showAddDefect = true
-        //     // console.log("111")
-        //     this.addRecords = [{
-        //         place: '',
-        //         recordTime: null,
-        //         createTime: new Date(),
-        //         content: '',
-        //         hasDefect: false,
-        //         status: 1,
-        //         taskId: this.task.id,
-        //         defect:[],
-        //     }]
-        // },
-        // ok(){
-        //     this.task.records=this.addRecords.concat(this.task.records)
-        // },
-        //提交巡检任务执行结果
-        // submitTask(){
-        //     this.task.createTime=new Date(this.task.createTime).getTime()
-        //     this.task.taskTime = new Date()
-        //     this.axios.put('/inspection-tasks',this.task).then(response=>{
-        //         this.$router.push('/UM/myNews/queryMyTask');
-        //     })
-        //     .catch(function(error) {
-        //         console.log(error);
-        //     });
-        // }
     }
 }
 </script>

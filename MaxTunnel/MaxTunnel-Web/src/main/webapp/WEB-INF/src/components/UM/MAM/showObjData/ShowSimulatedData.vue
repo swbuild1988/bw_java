@@ -1,9 +1,6 @@
 <template>
     <div @click="locationEquimpent" class="detailContext">
-        <Card
-            class="clickStatic"
-            :style="{backgroundColor:Obj.clickStatus?'#a1cacb':'transparent'}"
-        >
+        <Card class="clickStatic" :style="{backgroundColor:click?'#a1cacb':'transparent'}">
             <p
                 slot="title"
                 style="font-size: 1.66vmin;height: 1.7vmin;line-height: 1.66vmin"
@@ -48,39 +45,40 @@
 
             <img
                 src="../../../../assets/UM/temp-error.png"
-                v-if="Obj.objtypeId==1 && !normal || Obj.objtypeId==8 && !normal"
+                v-if="Obj.objtypeId==1 && inRange  && !normal || Obj.objtypeId==8 && inRange  && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/humidity-error.png"
-                v-if="Obj.objtypeId==2 && !normal"
+                v-if="Obj.objtypeId==2 && inRange && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/O2-error.png"
-                v-if="Obj.objtypeId==3 && !normal"
+                v-if="Obj.objtypeId==3  && inRange && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/H2S-error.png"
-                v-if="Obj.objtypeId==4 && !normal"
+                v-if="Obj.objtypeId==4  && inRange && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/CH4-error.png"
-                v-if="Obj.objtypeId==5 && !normal"
+                v-if="Obj.objtypeId==5  && inRange && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/liquidLevel-error.png"
-                v-if="Obj.objtypeId==21 && !normal"
+                v-if="Obj.objtypeId==21  && inRange && !normal"
                 class="img"
             >
             <img
                 src="../../../../assets/UM/CO-error.png"
-                v-if="Obj.objtypeId==6 && !normal"
+                v-if="Obj.objtypeId==6 && inRange && !normal"
                 class="img"
             >
+            <img src="../../../../assets/UM/fault.png" class="img" v-if="!inRange">
             <p class="value">
                 {{ inRange ? Obj.ObjVal : '故障' }}
                 <span
@@ -138,7 +136,9 @@ export default {
             gasMin: 0,
             normal: true,
             isTimeShow: false,
-            inRange: true
+            inRange: true,
+            click: false,
+            clickTimer: null
         };
     },
     components: {
@@ -149,6 +149,13 @@ export default {
         //定位设备
         locationEquimpent() {
             this.Obj.clickStatus = !this.Obj.clickStatus;
+            this.click = !this.click;
+            if (this.click) {
+                let _this = this;
+                this.clickTimer = setTimeout(() => {
+                    _this.click = false;
+                }, 2000);
+            }
             this.$emit(
                 "changeStatus",
                 this.Obj.id,
@@ -194,6 +201,9 @@ export default {
         if (this.Obj.time != "") {
             this.isTimeShow = true;
         }
+    },
+    beforeDestroy() {
+        clearTimeout(this.clickTimer);
     }
 };
 </script>

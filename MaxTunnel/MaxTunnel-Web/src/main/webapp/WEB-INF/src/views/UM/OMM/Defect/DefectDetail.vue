@@ -179,7 +179,6 @@ export default {
 		}
     },
     mounted(){
-        console.log('this.$route.params', this.$route.params)
         if(this.$route.params.type==4){
             this.defectDetails.tunnelId = Number(this.$route.params.tunnelId)
         }
@@ -198,6 +197,7 @@ export default {
         this.axios.get("/defectType/enum").then(response=>{
             let { code,data } = response.data
             if(code==200){
+                console.log("data", data)
                 this.type = data
             }
         })
@@ -205,6 +205,7 @@ export default {
         this.axios.get("/defectStatus/enum").then(response=>{
             let { code,data } = response.data
             if(code==200){
+                console.log("data", data)
                 this.status = data
             }
         })
@@ -278,7 +279,6 @@ export default {
                 this.isDisable = false
                 this.$refs[name].validate((valid)=>{
                     if(valid){
-                        console.log('this.defectDetails.type', this.defectDetails.type,'this.defectDetails.objectId', this.defectDetails.objectId)
                         if(this.defectDetails.type==2&&this.defectDetails.objectId==null){
                             this.choosedObjName=true
                         }else{

@@ -51,20 +51,20 @@ export default {
   },
   methods: {
     //设置相机视角
-    setViewAngle() {
-      let { scene, cameraPosition } = this;
-
+    setViewAngle(cameraPosition = this.cameraPosition) {
+      let { scene } = this;
+      
       if (Cesium.defined(scene)) {
         scene.camera.setView({
           destination: new Cesium.Cartesian3.fromDegrees(
-            cameraPosition.longitude,
-            cameraPosition.latitude,
-            cameraPosition.height
+            parseFloat(cameraPosition.longitude),
+            parseFloat(cameraPosition.latitude),
+            parseFloat(cameraPosition.height)
           ),
           orientation: {
-            heading: cameraPosition.heading,
-            pitch: cameraPosition.pitch,
-            roll: cameraPosition.roll
+            heading: parseFloat(cameraPosition.heading),
+            pitch: parseFloat(cameraPosition.pitch),
+            roll: parseFloat(cameraPosition.roll)
           }
         });
       }
@@ -153,8 +153,8 @@ export default {
         this.addParticleSystem({ entity, viewer });
     },
     addIdentifierViewer(entityParam = this.VMEntityConfig.linearEntityParam) {
-
-      if( !entityParam.length ) return;
+     
+      if( !entityParam || !entityParam.length ) return;
 
         entityParam.forEach(entity => {
 
@@ -168,11 +168,22 @@ export default {
     },
     addCommonView(baseProp, typePara) {
       let { viewer } = this;
-
+      // let { position } =typePara;
       let viewerType = this.addViewerType(typePara);
 
       let entity = viewer.entities.add(Object.assign({}, baseProp, viewerType));
-
+      // viewer.entities.add(Object.assign({},{position: Cesium.Cartesian3.fromDegrees(
+      //   parseFloat(position.X),
+      //   parseFloat(position.Y),
+      //   parseFloat(position.Z)
+      // )}, {billboard:{ 
+      //   image: require('../../../assets/UM/mapPosition.png'),
+      //   // width:24,
+      //   // height:27,
+      //   scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0),
+      //   verticalOrigin: Cesium.VerticalOrigin.TOP,
+      //   horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+      // }}))
       return {
         viewer,
         entity
@@ -181,7 +192,7 @@ export default {
     addPolylineEntity(baseParams,PolylineParams){
       
       let viewerType = this.addViewerType(PolylineParams);
-
+     
       this.viewer.entities.add(Object.assign({},baseParams, viewerType));
       
     },
@@ -195,7 +206,7 @@ export default {
       });
     },
     addViewerType({ position, ellipse, billboard, label, point, polyline }) {
-
+      
       let viewerPosition =
         position !== undefined
           ? {
@@ -231,9 +242,12 @@ export default {
         billboard !== undefined
           ? {
               billboard: {
-                image: this.drawTextCanvas(billboard.text, billboard.style),
-                scaleByDistance: new Cesium.NearFarScalar(0, 1, 30000, 0),
-                verticalOrigin: Cesium.VerticalOrigin.CENTER
+                image: require('../../../assets/UM/' + billboard.image + '.png'),
+                width:125,
+                height:108,
+                scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0),
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
               }
             }
           : {};
@@ -243,13 +257,13 @@ export default {
           ? {
               label: {
                 text: label.text,
-                font: label.fontSize + "pt monospace",
+                font: label.fontSize + "pt Helvetica",
                 fillColor: this.getCesiumColor(label.color),
                 outlineColor: Cesium.Color.BLACK,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 outlineWidth: 1,
-                verticalOrigin: Cesium.VerticalOrigin.TOP,
-                pixelOffset: new Cesium.Cartesian2(0, 9),
+                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                 scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0)
               }
             }
@@ -300,7 +314,10 @@ export default {
           return Cesium.Color.YELLOW
       }else if(color == 'green'){
           return Cesium.Color.GREEN
-      }else {
+      }else if(color == 'white'){
+          return Cesium.Color.WHITE
+      }
+      else {
           return Cesium.Color.RED;
       }
     },

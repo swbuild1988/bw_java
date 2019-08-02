@@ -16,7 +16,7 @@
         </ul>
         <ul class="month">
             <li class="eveMonth" v-for="(item, index) in monthList" :key="index">
-                <div ref="monthContent" class="monthContent" @click="chooseMonth">{{item.content}}</div>
+                <div ref="monthContentDiv" class="monthContent" @click="chooseMonth">{{item.content}}</div>
             </li>
         </ul>
     </div> 
@@ -67,7 +67,7 @@ export default {
         init(){
             this.currentYear = new Date().getFullYear()
         },
-        //选择年份
+        //选择月份
         chooseMonth(event){
             let current = event.currentTarget
             if(current.getAttribute("class") == "active"){
@@ -75,7 +75,6 @@ export default {
             }else{
                 current.className = "active"
             }
-            // this.outputHeighLight()
         },
         //向下翻页
         getNextMonth(){
@@ -89,7 +88,7 @@ export default {
         },
         //取消所有的active
         cancelActive(){
-            var monthArr = this.$refs.monthContent
+            let monthArr = this.$refs.monthContentDiv
             if(monthArr!=undefined){
                 for (let i = 0; i < monthArr.length; i++) {
                     if (monthArr[i].getAttribute("class") == 'active') {
@@ -106,12 +105,12 @@ export default {
                 }
             }
         },
-        //高亮输出选中的年份
+        //高亮输出选中的月份
         outputHeighLight() {
             this.$nextTick(()=>{
-                var arr = this.$refs.monthContent;
+                let arr = this.$refs.monthContentDiv;
                 let activeText = [];
-                for (var i = 0; i < arr.length; i++) {
+                for (let i = 0; i < arr.length; i++) {
                     if (arr[i].getAttribute("class") == 'active') {
                         let HeighLightDay = new Date(this.currentYear, i);
                         activeText.push(HeighLightDay);
@@ -127,8 +126,8 @@ export default {
                 current.className = "dayContent"
             }else{
                 this.$nextTick(()=>{
-                    var arr = this.$refs.dayContent;
-                    for (var i = 0; i < arr.length; i++) {
+                    let arr = this.$refs.dayContent;
+                    for (let i = 0; i < arr.length; i++) {
                         if (arr[i].getAttribute("class") == 'active') {
                             arr[i].className = "dayContent"
                         }
@@ -140,8 +139,8 @@ export default {
             this.toParent()
         },
         toParent(){
-            var timeContent = []
-            var monthContent = this.$refs.monthContent
+            let timeContent = []
+            let monthContent = this.$refs.monthContentDiv
             for(let i=0; i<monthContent.length; i++){
                 if(monthContent[i].getAttribute("class").indexOf('active')>-1){
                     let day = new Date(this.currentYear, i, this.dayInnerText.currentTarget.innerText)
@@ -169,21 +168,21 @@ export default {
             let timeCon = []
             this.tasks.forEach(item => {
                 this.currentYear = new Date(item.taskTime).getFullYear()
-                var p1 = this.cancelActiveBeforeShow(this.$refs.monthContent, 'monthContent')
+                let p1 = this.cancelActiveBeforeShow(this.$refs.monthContentDiv, 'monthContent')
                 Promise.all([p1]).then(res=>{
-                    this.showActiveMonth(this.$refs.monthContent, new Date(item.taskTime).getMonth())
+                    this.showActiveMonth(this.$refs.monthContentDiv, new Date(item.taskTime).getMonth())
                 })
                 timeCon.push(new Date(item.taskTime).getDate())
             })
             //如果本月最后一天不在所选范围内，按照日期最大显示
             this.cancelActiveBeforeShow(this.$refs.dayContent, 'dayContent')
-            var max = Math.max.apply(null, timeCon);
+            let max = Math.max.apply(null, timeCon);
             this.shwoActiveDate(this.$refs.dayContent, max)
         },
         //回显选中的日期 月份
         showActiveMonth(list, month){
             this.$nextTick(()=>{   
-                for (let i = 1; i <= list.length; i++) {
+                for (let i = 0; i < list.length; i++) {
                     if (i==month) {
                         list[i].setAttribute("class", "active");
                     }

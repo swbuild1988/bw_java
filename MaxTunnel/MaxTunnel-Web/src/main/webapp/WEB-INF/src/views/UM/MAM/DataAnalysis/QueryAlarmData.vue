@@ -361,9 +361,6 @@
 				if (result) {
 					_this.queryPrams.total = result.total;
 					_this.tableData = result.list
-					if(prams.cleaned==0){
-						this.NumGlobal.alarmNum = result.total
-					}
 				}
 				}).then(() => {
 					_this.tableLoad = false;
@@ -424,9 +421,10 @@
 			clearAlarms(index) {
 				var _this = this;
 				if (typeof (index) === "number") {
-				_this.alarmsClear.modalPrams.ids = [_this.tableData[index].id];
+					_this.alarmsClear.modalPrams.ids = [_this.tableData[index].id];
 				}
 				_this.alarmsClear.modalPrams.state = !_this.alarmsClear.modalPrams.state;
+				_this.queryAlarmData()
 			}
 		}
 	}

@@ -99,6 +99,10 @@
 							},                            
 						}
 					},
+					//缩放
+					dataZoom: [{
+						type: "inside"
+					}]
 				}
 				// 加载默认参数
 				_this.myChart.setOption(_this.option);

@@ -102,7 +102,6 @@
                         <Col span="8" v-for="item in Obj" :value="item.ObjName" :key="item.id">
                             <show-obj-data
                                 v-bind:Obj="item"
-                                :objTypeId="queryCondition.curDataType"
                                 @changeStatus="changeStatus"
                                 @changeView="setView"
                             ></show-obj-data>
@@ -177,7 +176,7 @@ export default {
             environmentColums: [
                 {
                     type: "index",
-                    width: window.innerWidth/100*80/100*4,
+                    width: (((window.innerWidth / 100) * 80) / 100) * 4,
                     align: "center"
                 },
                 {

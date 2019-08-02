@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Modal v-model="show.state" title="批量添加监测对象" width=950>
+		<Modal v-model="show.state" :title="title" width=950>
 			<Form :label-width="160">
 				<Row>
 					<Col span="6">
@@ -62,7 +62,8 @@
 			</Row>
 			<hr>
 			<div class="vueXlsxBox">
-				<vue-xlsx-table @on-select-file="measObjsSelectedFile">选择添加的监测对象</vue-xlsx-table>
+				<vue-xlsx-table @on-select-file="measObjsSelectedFile" v-show="type=='add'">选择添加的监测对象</vue-xlsx-table>
+				<vue-xlsx-table @on-select-file="measObjsSelectedFile" v-show="type=='edit'">批量修改监测对象</vue-xlsx-table>
 			</div>
 			<Table stripe border :columns="columns7" :data="page.data"></Table>
 			<div style="text-align: right;margin-top: 10px;">
@@ -70,7 +71,8 @@
 					placement="top" @on-change="onChange" show-elevator></Page>
 			</div>
 			<div slot="footer">
-				<Button type="primary" size="large" v-on:click="sendMsg">保存</Button>
+				<Button type="primary" size="large" v-on:click="sendMsg" v-show="type=='add'">保存1</Button>
+				<Button type="primary" size="large" v-on:click="sendMsgForEidt" v-show="type=='edit'">保存</Button>
 			</div>
 		</Modal>
 	</div>
@@ -117,6 +119,11 @@
 						title: "设备类型",
 						key: "objtypeName",
 						align: 'center'
+					},
+					{
+						title: '设备安装位置',
+						key: 'description',
+						align: 'center'
 					}
 				],
 				spellRule: {
@@ -158,7 +165,8 @@
 					pageNum: 1,
 					pageSize: 10,
 					pageTotal: 0
-				}
+				},
+				title: '批量添加监测对象'
 			};
 		},
 		props: {
@@ -166,33 +174,41 @@
 				state: {
 					default: false
 				}
+			},
+			type: {
+				default: 'add'
 			}
 		},
 		mounted() {
+			if(this.type=='add'){
+				this.title = '批量添加监测对象'
+			}else{
+				this.title = '批量修改监测对象'
+			}
 			this.init();
 		},
 		methods: {
 			init() {
 				var _this = this;
-				EnumsService.getMeasObj().then(
-					result => {
-						this.spellRule.tunnel.start = result.tunnelParam.tunnelNumber
-						this.spellRule.tunnel.length = result.tunnelParam.tunnelLength
-						this.spellRule.area.start = result.tunnelParam.areaNumber
-						this.spellRule.area.length = result.tunnelParam.areaLength
-						this.spellRule.storeType.start = result.tunnelParam.storeNumber
-						this.spellRule.storeType.length = result.tunnelParam.storeLength
-						this.spellRule.objtype.start = result.tunnelParam.typeNumber
-						this.spellRule.objtype.length = result.tunnelParam.typeLength
-						this.equipmentMatches = result.equipmentInfo
-					},
-					error => {
-						_this.Log.info(error)
-					}
-				)
 				EnumsService.getObjType().then(
 					result => {
 						_this.objtypes = result;
+						EnumsService.getMeasObj().then(
+							result => {
+								this.spellRule.tunnel.start = result.tunnelParam.tunnelNumber
+								this.spellRule.tunnel.length = result.tunnelParam.tunnelLength
+								this.spellRule.area.start = result.tunnelParam.areaNumber
+								this.spellRule.area.length = result.tunnelParam.areaLength
+								this.spellRule.storeType.start = result.tunnelParam.storeNumber
+								this.spellRule.storeType.length = result.tunnelParam.storeLength
+								this.spellRule.objtype.start = result.tunnelParam.typeNumber
+								this.spellRule.objtype.length = result.tunnelParam.typeLength
+								this.equipmentMatches = result.equipmentInfo
+							},
+							error => {
+								_this.Log.info(error)
+							}
+						)
 					},
 					error => {
 						_this.Log.info(error);
@@ -227,7 +243,8 @@
 				data.body.forEach(element => {
 					let tmp = {
 						name: element[data.header[0]],
-						id: element[data.header[1]]
+						id: element[data.header[1]],
+						description: element[data.header[2]]
 					};
 					this.importMeasObjs.push(tmp)
 					if (data.body.length <= this.page.pageSize) {
@@ -249,7 +266,6 @@
 			},
 			//转换
 			translate() {
-				console.log('this.importMeasObjs', this.importMeasObjs)
 				this.importMeasObjs.forEach(element => {
 					var tunnel_sn = element.id.substr(
 						this.spellRule.tunnel.start,
@@ -286,6 +302,10 @@
 			},
 			sendMsg() {
 				this.$emit("saveMulti", this.importMeasObjs);
+				this.show.state = false
+			},
+			sendMsgForEidt() {
+				this.$emit("editSaveMulti", this.importMeasObjs);
 				this.show.state = false
 			}
 		}

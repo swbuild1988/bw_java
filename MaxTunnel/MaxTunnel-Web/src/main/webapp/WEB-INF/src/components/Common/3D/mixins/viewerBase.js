@@ -156,7 +156,10 @@ export default (containerId, viewer, domId, route) => ({
                         function (layer) {
                             //设置BIM图层不可选择
                             layer.forEach(
-                                curBIM => (curBIM._selectEnabled = false)
+                                curBIM => {
+                                    curBIM._selectEnabled = false;
+                                    // curBIM.clearMemoryImmediately = true; //是否及时释放内存
+                                }
                             );
                             //设置相机位置、视角，便于观察场景
                             _this.setViewAngle();
@@ -198,19 +201,18 @@ export default (containerId, viewer, domId, route) => ({
             _this.viewer.selectedEntityChanged.addEventListener(this.operationEntity);
 
         },
-        setViewAngle() {
+        setViewAngle(cameraPosition = this.cameraPosition) {
             let {
-                scene,
-                cameraPosition
+                scene
             } = this;
-
+            
             if (Cesium.defined(scene)) {
                 scene.camera.setView({
-                    destination: new Cesium.Cartesian3.fromDegrees(cameraPosition.longitude, cameraPosition.latitude, cameraPosition.height),
+                    destination: new Cesium.Cartesian3.fromDegrees(parseFloat(cameraPosition.longitude), parseFloat(cameraPosition.latitude), parseFloat(cameraPosition.height)),
                     orientation: {
-                        heading: cameraPosition.heading,
-                        pitch: cameraPosition.pitch,
-                        roll: cameraPosition.roll
+                        heading: parseFloat(cameraPosition.heading),
+                        pitch: parseFloat(cameraPosition.pitch),
+                        roll: parseFloat(cameraPosition.roll)
                     }
                 });
             }

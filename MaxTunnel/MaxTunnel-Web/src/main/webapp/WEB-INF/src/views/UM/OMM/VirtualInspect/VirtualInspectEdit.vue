@@ -759,7 +759,7 @@ export default {
 .heading {
     position: absolute;
     top: 1vmin;
-    left: 63%;
+    left: 76%;
     font-size: 1.4vmin;
     z-index: 10;
     border: 1px solid rgba(16, 159, 181, 0.5);

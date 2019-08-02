@@ -141,6 +141,19 @@ var MeasObjServer = {
 				});
 		});
 	},
+	//批量修改监测对象
+	batchUpdateMeasObjs(params){
+		return new Promise((resolve, reject) => {
+			put("measobjs/batch", params).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：measobjs/batch")
+				}
+			})
+		})
+	},
 	// 监测对象ID查重
 	checkObjId: function (objId) {
 		return new Promise((resolve, reject) => {
@@ -468,40 +481,19 @@ var MeasObjServer = {
 				.catch(err => {
 					reject(err.response.status + ' ' + err.response.data)
 				})
-			// let data = [{
-			// 		curValue: 0,
-			// 		datatypeId: 3,
-			// 		id: 222113201,
-			// 		maxValue: null,
-			// 		minValue: null,
-			// 		name: "声光报警器",
-			// 		store: "污水舱进风口",
-			// 		time: 1558602699682,
-			// 		unit: ""
-			// 	},
-			// 	{
-			// 		id: 2,
-			// 		name: '监测对象2',
-			// 		cv: 2,
-			// 		time: '2019-09-12',
-			// 		type: 2
-			// 	},
-			// 	{
-			// 		id: 3,
-			// 		name: '监测对象3',
-			// 		cv: 1,
-			// 		time: '2019-09-12',
-			// 		type: 2
-			// 	},
-			// 	{
-			// 		id: 4,
-			// 		name: '监测对象4',
-			// 		cv: 0,
-			// 		time: '2019-09-12',
-			// 		type: 2
-			// 	},
-			// ]
-			// resolve(data)
+		})
+	},
+	//查询所有监测对象 不分页
+	getAllMeasObjs(){
+		return new Promise((resolve, reject) => {
+			get('measobjs').then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+'地址：measobjs')
+				}
+			})
 		})
 	}
 };

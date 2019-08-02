@@ -708,6 +708,31 @@ export const asyncRouterMap = [{
                 ]
             },
             {
+                path: "FaultStatistics",
+                name: "故障统计",
+                component: resolve =>
+                    require([
+                        "@/views/UM/MAM/FaultStatistics/FaultStatistics"
+                    ], resolve),
+                children: [{
+                        path: "list/:id",
+                        component: resolve =>
+                            require([
+                                "@/views/UM/MAM/FaultStatistics/ListFaultStatistics"
+                            ], resolve),
+                        name: "故障统计列表"
+                    },
+                    {
+                        path: "homePage",
+                        component: resolve =>
+                            require([
+                                "@/views/UM/MAM/FaultStatistics/FaultStaHomePage"
+                            ], resolve),
+                        name: "故障统计总览"
+                    }
+                ]
+            },
+            {
                 path: "OperatingSpace",
                 name: "管廊空间管理",
                 component: resolve =>
@@ -1175,6 +1200,12 @@ export const asyncRouterMap = [{
                 name: "配置管理"
             },
             {
+                path: "doctype",
+                component: resolve =>
+                    require(["@/views/CM/DocTypeManage/DocType"], resolve),
+                name: "文件类型管理"
+            },
+            {
                 path: "schedulejob",
                 component: resolve =>
                     require(["@/views/CM/ScheduleJob/ScheduleJob"], resolve),
@@ -1262,6 +1293,14 @@ export const asyncRouterMap = [{
                 component: resolve =>
                     require([
                         "@/views/UM/OAM/OperationLogManage/QueryOperationLog"
+                    ], resolve)
+            },
+            {
+                path: "planControl",
+                name: '预案小组',
+                component: resolve => 
+                    require([
+                        "@/views/CM/PlanControl/planControl"
                     ], resolve)
             }
         ]

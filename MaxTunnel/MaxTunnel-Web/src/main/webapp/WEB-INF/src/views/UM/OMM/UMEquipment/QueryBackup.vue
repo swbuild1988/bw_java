@@ -122,18 +122,18 @@
                         <Col span="5" v-show="false">
                             <FormItem>
                                 <Input v-model="borrow.sectionId" v-show="false"></Input>
-                                <!-- <Input v-model="borrow.sectionName" readonly></Input> -->
                             </FormItem>
                         </Col>
                     </Row>
                 </FormItem>
                 <FormItem label="关联监测对象：" prop="objId">
-                    <Select v-model="borrow.objId"  @on-change="getObj()">
-                        <Option v-for="(item, index) in objs" :value="item.id" :key="index">{{ item.id }}</Option>
-                    </Select>
+                    <Input v-model="borrow.objId" @on-change="changeObjId(borrow.objId)"></Input>
+                    <ul class="chooseObj" v-show="isShowObjs">
+                        <li v-for="item in objs" :value="item" :key="item.id" @click="replaceInputValue(item)">{{item}}</li>
+                    </ul>
                 </FormItem>
-                <FormItem label="对象类型：" v-show="borrow.objId">
-                    <div v-for="(item, index) in objTypes" :key="index">
+                <FormItem label="对象类型：">
+                    <div v-for="item in objTypes" :key="item.objtypeId">
                         <Input :value="item.objtypeName" readonly></Input>
                     </div>
                 </FormItem>
@@ -246,7 +246,8 @@ export default {
             checkIntime: null,
             areas: null,
             stores: null,
-            isNullData: false
+            isNullData: false,
+            isShowObjs: false
         };
     },
     watch: {
@@ -351,7 +352,6 @@ export default {
         this.getSessionUserName()
         this.showTable()
         this.getObj()
-        this.getObjType()
     },
     methods: {
         // type 1:查看， 2：编辑
@@ -512,7 +512,6 @@ export default {
             EquipmentService.getObj().then(
                 res=> {
                     this.objs = res
-                    this.getObjType();
                 },
                 error => {
                     this.Log.info(error)
@@ -526,12 +525,12 @@ export default {
                 pageSize: 10,
                 pageNum: 1
             };
-            EquipmentService.getObjType(info).then(
-                res => {
-                    this.objTypes = res;
-                },
-                error => {
-                    this.Log.info(error)
+            this.axios.post('measobjs/datagrid',info).then(
+                res=> {
+                    let { code,data,msg } = res.data
+                    if(code==200){
+                        this.objTypes = data.list
+                    }
                 }
             )
         },
@@ -574,13 +573,22 @@ export default {
                 )
             }
         },
-        // checkSection(rule, value, callback){
-        //     if(value==null){
-        //         callback(new Error("所属区段不能为空"))
-        //     }else{
-        //         callback()
-        //     }
-        // }
+        changeObjId(objId){
+            this.isShowObjs = true 
+            EquipmentService.changeObjId(objId).then(
+                result => {
+                    this.objs = result
+                },
+                error => {
+                    this.Log.info(error)
+                }
+            )
+        },
+        replaceInputValue(id){
+            this.borrow.objId = id
+            this.isShowObjs = false
+            this.getObjType()
+        }
     },
 };
 </script>
@@ -704,6 +712,43 @@ export default {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 1vmin;
     background: #ededed;
+}
+
+.chooseObj{
+    width: 13vw;
+    max-height: 13.1vh;
+    position: relative;
+    border-radius: 4px;
+    overflow-y: auto;
+    z-index: 999;
+    background: #fff;
+}
+.chooseObj:before, .chooseObj:after{
+    width: 0vw;
+    height: 0vh;
+    border: transparent solid;
+    position: absolute;
+    bottom: 100%;
+    content: ''
+}
+.chooseObj:before{
+    border-width: 10px;
+    border-bottom-color: #cccccc;
+    left: 20px;
+}
+.chooseObj:after{
+    border-width: 8px;
+    border-bottom-color: #ffffff;
+    left: 22px;
+}
+.chooseObj li{
+    list-style: none;
+    line-height: 2.7vh;
+    padding-left: 1vw;
+    cursor: pointer;
+}
+.chooseObj li:hover{
+    background: #f3f3f3;
 }
 
 @media (min-width: 2200px){

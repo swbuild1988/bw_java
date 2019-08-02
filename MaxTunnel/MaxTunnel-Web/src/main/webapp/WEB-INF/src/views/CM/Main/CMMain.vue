@@ -136,6 +136,11 @@ export default {
                         id: 47,
                         name: "预案配置",
                         url: "/CMMain/planControl"
+                    },
+                    {
+                        id: 48,
+                        name: "文件类型配置",
+                        url: "/CMMain/doctype"
                     }
                 ]
             },

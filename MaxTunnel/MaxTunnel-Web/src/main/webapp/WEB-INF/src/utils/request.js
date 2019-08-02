@@ -34,6 +34,7 @@ export default async () => {
             Vue.prototype.inspectionFlyFiles = serverconfig.inspectionFlyFiles;
             Vue.prototype.refreshTime = serverconfig.refreshTime;
             Vue.prototype.pointLinght = serverconfig.pointLinght;
+            Vue.prototype.MapAngleLists = serverconfig.MapAngleLists;
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
             Vue.prototype.isTestModel = serverconfig.isTestModel;
@@ -64,6 +65,7 @@ export default async () => {
             Vue.prototype.RouterBase = result_config.data.RouterBase;
             Vue.prototype.MQServerAddress = result_config.data.MQServerAddress;
             Vue.prototype.pointLinght = result_config.data.pointLinght;
+            Vue.prototype.MapAngleLists = result_config.data.MapAngleLists;
             Vue.prototype.isTestModel = result_config.data.isTestModel;
             sessionStorage.setItem('ServerConfig', '/dist/static');
 

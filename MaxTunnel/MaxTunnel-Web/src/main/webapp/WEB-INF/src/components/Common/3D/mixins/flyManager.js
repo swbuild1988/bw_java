@@ -6,7 +6,7 @@ export const flyManagerMinix = {
             flyManagerAttr: {
                 flyManager: null,
             },
-            inspectflyPathes: this.flyFilePathes.filter( flyRoute => flyRoute.virtualInspection == "true" ? true : false)
+            inspectflyPathes: this.flyFilePathes.filter( flyRoute => flyRoute.virtualInspection)
             // inspectflyPathes: this.inspectionFlyFiles
             // 飞行文件
             // flyFilePath: this.ServerConfig + "/VM/font/flytest.fpf",
@@ -80,10 +80,9 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-           
+            
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.play();
-                
             }
         },
         // 暂停飞行
@@ -101,7 +100,7 @@ export const flyManagerMinix = {
             let {
                 flyManagerAttr
             } = this;
-
+           
             if (flyManagerAttr.flyManager) {
                 flyManagerAttr.flyManager.stop();
             }

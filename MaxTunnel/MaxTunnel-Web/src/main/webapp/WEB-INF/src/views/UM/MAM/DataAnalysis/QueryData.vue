@@ -454,8 +454,7 @@
         },
 
         backToCurPage() {
-            let _this = this;
-            _this.viewHistory = !_this.viewHistory;
+            this.$router.back(-1);
         },
 
         selectionClick(arr) {
