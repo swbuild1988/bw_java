@@ -163,6 +163,8 @@ export default (containerId, viewer, domId, route) => ({
                             );
                             //设置相机位置、视角，便于观察场景
                             _this.setViewAngle();
+
+                            _this.$store.commit("loadUnits"); //加载单位图片
                         },
                         function (e) {
                             if (widget._showRenderLoopErrors) {

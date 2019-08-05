@@ -1,10 +1,10 @@
 {
-    "ApiUrl": "http://192.168.6.112:88/MaxTunnel-Web",
+    "ApiUrl": "http://192.168.0.7:88/MaxTunnel-Web",
     "RouterBase": "/",
-    "MQServerAddress": "ws://192.168.6.112:15674/ws",
+    "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
     "SuperMapConfig": {
-        "IP":"http://192.168.6.112:8090/",
+        "IP":"http://192.168.0.7:8090/",
         "BIM_SCP": "iserver/services/3D-3Dserver/rest/realspace",
         "BIM_DATA": "iserver/services/data-dataserver/rest/data",
         "IMG_MAP_LIST": ["iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
@@ -224,20 +224,20 @@
             "id":1,
             "name":"古城大街角度",
             "angle":{
-                "longitude": 112.523399,
-                "latitude": 37.693572,
-                "height": 960.836137,
-                "roll": 6.283185,
-                "pitch": -0.437595,
-                "heading": 5.443653
+                "longitude": 112.521031,
+                "latitude": 37.711821,
+                "height": 1247.835,
+                "roll": 0,
+                "pitch": -0.499793,
+                "heading": 5.475600
             }
         },
         {
             "id":2,
             "name":"实验路角度",
             "angle":{
-                "longitude": 112.498020,
-                "latitude": 37.707683,
+                "longitude": 112.521031,
+                "latitude": 37.711821,
                 "height": 4999.577866,
                 "roll": 0,
                 "pitch": -1.559829,
@@ -248,36 +248,36 @@
             "id":3,
             "name":"经三路角度",
             "angle":{
-                "longitude": 112.498020,
-                "latitude": 37.707683,
-                "height": 4999.577866,
+                "longitude": 112.496455,
+                "latitude": 37.721270,
+                "height": 660.951,
                 "roll": 0,
-                "pitch": -1.559829,
-                "heading": 0.373219
+                "pitch": -0.355479,
+                "heading": 3.469337
             }
         },
         {
             "id":4,
             "name":"经二路角度",
             "angle":{
-                "longitude": 112.475712,
-                "latitude": 37.709012,
-                "height": 384.645933,
+                "longitude": 112.492984,
+                "latitude": 37.722374,
+                "height": 571.254,
                 "roll": 6.283185,
-                "pitch": -0.330056,
-                "heading": 1.590720
+                "pitch": -0.285790,
+                "heading": 3.481928
             }
         },
         {
             "id":5,
             "name":"纬三路角度",
             "angle":{
-                "longitude": 112.462829,
-                "latitude": 37.707427,
-                "height": 1092.267310,
-                "roll": 0,
-                "pitch": -0.387460,
-                "heading": 1.524559
+                "longitude": 112.513535,
+                "latitude": 37.696002,
+                "height": 679.791755,
+                "roll": 6.283185,
+                "pitch": -0.194819,
+                "heading": 5.334207
             }
         }
     ]

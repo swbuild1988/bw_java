@@ -177,7 +177,11 @@ export default {
                 events.splice(0);
                 this.modelProp.show.state = false;
             }
+        },
+        isLoadUnits(){
+            this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
         }
+
     },
     components: {
         showModel,
@@ -187,6 +191,9 @@ export default {
         // angleLists(){
         //     return this.MapAngleLists;
         // }
+        isLoadUnits() {
+            return this.$store.state.VMstate.isLoadUnits;
+        }
     },
     beforeMount() {
         Vue.prototype.$viewerComponent = this; // 把当前组件挂载到Vue原型$viewerComponent上
@@ -207,37 +214,37 @@ export default {
             this.initUpdate(_this.viewer, _this.scene);
             // _this.addRelatedUnits();
             _this.switchCameraAngle();
-            _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
+            // _this.addIdentifierViewer(this.VMEntityConfig.unitEntityParam);
             // 滚轮滑动，获得当前窗口的经纬度，偏移角
             _this.handler = new Cesium.ScreenSpaceEventHandler(
                 _this.scene.canvas
             );
-            // setInterval(()=>{
-            //     var camera=_this.viewer.scene.camera;
-            //     var position=camera.position;
-            //     //将笛卡尔坐标化为经纬度坐标
-            //     var cartographic = Cesium.Cartographic.fromCartesian(position);
-            //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-            //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-            //     var height = cartographic.height;
-            //     console.log(longitude+"/"+latitude+"/"+height);
-            //     console.log('pitch'+camera.pitch)
-            //     console.log('roll'+camera.roll)
-            //     console.log('heading'+camera.heading)
-            // },10000)
-             _this.handler.setInputAction(e=>{
-                var position=_this.scene.pickPosition(e.position)
+            setInterval(()=>{
                 var camera=_this.viewer.scene.camera;
-                var cartographic = Cesium.Cartographic.fromCartesian(position)
+                var position=camera.position;
+                //将笛卡尔坐标化为经纬度坐标
+                var cartographic = Cesium.Cartographic.fromCartesian(position);
                 var longitude = Cesium.Math.toDegrees(cartographic.longitude);
                 var latitude = Cesium.Math.toDegrees(cartographic.latitude);
                 var height = cartographic.height;
-            
                 console.log(longitude+"/"+latitude+"/"+height);
                 console.log('pitch'+camera.pitch)
                 console.log('roll'+camera.roll)
                 console.log('heading'+camera.heading)
-            },Cesium.ScreenSpaceEventType.LEFT_CLICK)
+            },10000)
+            //  _this.handler.setInputAction(e=>{
+            //     var position=_this.scene.pickPosition(e.position)
+            //     var camera=_this.viewer.scene.camera;
+            //     var cartographic = Cesium.Cartographic.fromCartesian(position)
+            //     var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+            //     var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+            //     var height = cartographic.height;
+            
+            //     console.log(longitude+"/"+latitude+"/"+height);
+            //     console.log('pitch'+camera.pitch)
+            //     console.log('roll'+camera.roll)
+            //     console.log('heading'+camera.heading)
+            // },Cesium.ScreenSpaceEventType.LEFT_CLICK)
         },
         initUpdate(viewer, scene) {
             let _this = this;

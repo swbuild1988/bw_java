@@ -20,6 +20,7 @@ const VMstate = {
             videoIds: null,
             processInstanceId: null,
         },
+        isLoadUnits:false,
     },
     mutations: {
         // 视频轮询
@@ -50,6 +51,7 @@ const VMstate = {
             planLinkageVideos.videoIds = null;
             planLinkageVideos.processInstanceId = null;
         },
+        loadUnits: (state) => state.isLoadUnits = true,
     },
 };
 
