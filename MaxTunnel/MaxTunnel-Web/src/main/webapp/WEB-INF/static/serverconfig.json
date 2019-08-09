@@ -13,7 +13,7 @@
             ]
     },
     "VMEntityConfig": {
-        "criticalHeight":"100",
+        "criticalHeight":"150",
         "unitEntityParam": [{
                 "entityBaseParameters": {
                     "id": 1,
@@ -23,10 +23,10 @@
                     "position": {
                         "X": "112.49948864664668",
                         "Y": "37.71034251365869",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "monitorCenter"
+                        "image": "monitorCenter-Background"
                     },
                     "label": {
                         "text": "监控中心",
@@ -44,14 +44,14 @@
                     "position": {
                         "X": "112.49506",
                         "Y": "37.706148",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "school"
+                        "image": "school-Background"
                     },
                     "label": {
                         "text": "晋源区实验中学",
-                        "fontSize": "14",
+                        "fontSize": "13",
                         "color": "white"
                     }
                 }
@@ -65,14 +65,14 @@
                     "position": {
                         "X": "112.499595",
                         "Y": "37.704056",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "childrenHospital"
+                        "image": "childrenHospital-Background"
                     },
                     "label": {
                         "text": "山西省儿童医院",
-                        "fontSize": "14",
+                        "fontSize": "13",
                         "color": "white"
                     }
                 }
@@ -86,10 +86,10 @@
                     "position": {
                         "X": "112.480320",
                         "Y": "37.716560",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "government"
+                        "image": "government-Background"
                     },
                     "label": {
                         "text": "晋源区政府",
@@ -107,10 +107,10 @@
                     "position": {
                         "X": "112.489058",
                         "Y": "37.729490",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "countSeat"
+                        "image": "countSeat-Background"
                     },
                     "label": {
                         "text": "太原古县城",
@@ -128,10 +128,10 @@
                     "position": {
                         "X": "112.52207233753701",
                         "Y": "37.70384793736499",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "pipeGalleryEast"
+                        "image": "pipeGalleryEast-Background"
                     },
                     "label": {
                         "text": "管廊东入口",
@@ -149,10 +149,10 @@
                     "position": {
                         "X": "112.51743415066589",
                         "Y": "37.69655876626396",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "sewage"
+                        "image": "sewage-Background"
                     },
                     "label": {
                         "text": "污水泵站",
@@ -170,10 +170,10 @@
                     "position": {
                         "X": "112.51382289846887",
                         "Y": "37.69271374038769",
-                        "Z": "130"
+                        "Z": "13"
                     },
                     "billboard": {
-                        "image": "rainwater"
+                        "image": "rainwater-Background"
                     },
                     "label": {
                         "text": "雨水泵站",
@@ -224,24 +224,24 @@
             "id":1,
             "name":"古城大街角度",
             "angle":{
-                "longitude": 112.521031,
-                "latitude": 37.711821,
-                "height": 1247.835,
+                "longitude": 112.530656,
+                "latitude": 37.708304,
+                "height": 415.47,
                 "roll": 0,
-                "pitch": -0.499793,
-                "heading": 5.475600
+                "pitch": -0.259087,
+                "heading": 4.422353
             }
         },
         {
             "id":2,
             "name":"实验路角度",
             "angle":{
-                "longitude": 112.521031,
-                "latitude": 37.711821,
-                "height": 4999.577866,
-                "roll": 0,
-                "pitch": -1.559829,
-                "heading": 0.373219
+                "longitude": 112.502005,
+                "latitude": 37.716166,
+                "height": 242.056999,
+                "roll": 1.9539925233402755e-14,
+                "pitch": -0.2226201533056995,
+                "heading": 3.4631418047919205
             }
         },
         {

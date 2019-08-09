@@ -14,23 +14,6 @@
                         </a>
                     </Dropdown>
                 </Col>
-                <Col span="1" offset="1" 
-                    v-for="item in angleLists"
-                    :key="item.id">
-                    <Dropdown
-                        divided
-                        @click.native="switchAngle(item.id)"
-                    >
-                        <a>
-                            <img
-                                :class="'angle_'+item.id"
-                                src="../../../assets/VM/angle.png"
-                                height="100%"
-                                width="100%"
-                            >
-                        </a>
-                    </Dropdown>
-                </Col>
                 <Col span="1" offset="1">
                     <Dropdown
                         divided
@@ -46,7 +29,22 @@
                         </a>
                     </Dropdown>
                 </Col>
-                <!-- <Col span="1" offset="1">
+                <Col span="1" offset="1">
+                    <Dropdown
+                        divided
+                        @click.native="searchCamera.openSearch = !searchCamera.openSearch"
+                    >
+                        <a>
+                            <img
+                                class="Camera_query"
+                                src="../../../assets/VM/video.png"
+                                height="100%"
+                                width="100%"
+                            >
+                        </a>
+                    </Dropdown>
+                </Col>
+                <Col span="1" offset="1">
                     <Dropdown divided @click.native="show.ges = !show.ges">
                         <a>
                             <img
@@ -104,7 +102,7 @@
                     </Dropdown>
                 </Col>
                 <Col span="1" offset="1">
-                    <Dropdown divided @click.native="angleSwitchProp.show = !angleSwitchProp.show">
+                    <Dropdown divided @click.native="show.showPlan = !show.showPlan">
                         <a>
                             <img
                                 class="Emergencies"
@@ -126,7 +124,7 @@
                             >
                         </a>
                     </Dropdown>
-                </Col> -->
+                </Col>
                 <Col span="1" offset="1">
                     <Dropdown divided @click.native="jumpUMLogin">
                         <a>
@@ -163,12 +161,11 @@
                     v-for="(item,index) in divAttrList"
                     :class="item.className"
                     :style="{ opacity:item.show }"
-                    :key="index"
+                    
                 >
                     <span>{{ item.text }}</span>
                 </div>
             </div>
-            <angle-select-modal v-if="angleSwitchProp.show"></angle-select-modal>
         </div>
         <div class="test"></div>
         <!--<temperature class="maptemperature"></temperature>-->
@@ -184,6 +181,7 @@
         <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
             <move-control prefixCls="MapLLPanel" v-show="show.showControlPanel"></move-control>
         </transition>
+        
 
         <sm-viewer
             ref="smViewer"
@@ -211,7 +209,6 @@ import AlarmCount from "../../../components/VM/AlarmManage/NonCleanedCount";
 import Vue from "vue";
 import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
 import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
-import AngleSelectModal from "../../../components/Common/Modal/AngleSelectModel";
 export default {
     data() {
         return {
@@ -225,18 +222,14 @@ export default {
             },
             divAttrList: [
                 { className: "To_home", text: "返回主页", show: 0 },
-                { className: "angle_1", text: "古城大街角度", show: 0 },
-                { className: "angle_2", text: "实验路角度", show: 0 },
-                { className: "angle_3", text: "经三路角度", show: 0 },
-                { className: "angle_4", text: "经二路角度", show: 0 },
-                { className: "angle_5", text: "纬三路角度", show: 0 },
-                // { className: "Gas", text: "气体检测", show: 0 },
-                // { className: "Alarm_number", text: "告警总数", show: 0 },
-                // { className: "Flaw_query", text: "缺陷查询", show: 0 },
-                // { className: "Events", text: "重大事件", show: 0 },
-                // { className: "Emergencies", text: "紧急事件", show: 0 },
-                // { className: "Unit_query", text: "单位查询", show: 0 },
                 { className: "Personnel", text: "人员定位", show: 0 },
+                { className: "Camera_query", text: "相机查询", show: 0 },
+                { className: "Gas", text: "气体检测", show: 0 },
+                { className: "Alarm_number", text: "告警总数", show: 0 },
+                { className: "Flaw_query", text: "缺陷查询", show: 0 },
+                { className: "Events", text: "重大事件", show: 0 },
+                { className: "Emergencies", text: "紧急事件", show: 0 },
+                { className: "Unit_query", text: "单位查询", show: 0 },
                 { className: "Management", text: "管理平台", show: 0 },
                 { className: "Fly", text: "飞行功能", show: 0 }
             ],
@@ -260,23 +253,17 @@ export default {
                 openPosition: false,
                 isShow: true
             },
-            openPlanPosition: {
-                openPosition: true
-            },
             eventsPosition: {
                 openPosition: false
             },
-            angleSwitchProp:{
-                show:false
+            openPlanPosition: {
+                openPosition: true
             }
         };
     },
     computed: {
         camera() {
             return this.VMConfig.CAMERA;
-        },
-        angleLists() {
-            return this.MapAngleLists;
         }
     },
     components: {
@@ -285,19 +272,12 @@ export default {
         MapGauges,
         AlarmCount,
         PlanProcess,
-        MoveControl,
-        AngleSelectModal
+        MoveControl
     },
     mounted() {
         this.init();
     },
     methods: {
-        switchAngle(id) {
-            let [curAngle] = this.angleLists.filter(angle => angle.id == id);
-            // this.setViewAngle(curAngle.angle)
-            this.curAngleId = curAngle.id;
-            // alert(curAngle.id);
-        },
         init() {
             let _this = this;
             // Vue.prototype.MQ.openMQ(this.MQCallback);
@@ -398,11 +378,6 @@ export default {
             $navigation_bar.addEventListener("mouseout", () =>
                 this.divAttrList.forEach(item => (item.show = 0))
             );
-        },
-        switchAngle(id){
-
-            let [ curAngle ]  = this.angleLists.filter(angle => angle.id == id);
-            this.$refs.smViewer.setViewAngle(curAngle.angle)
         }
     },
     beforeDestroy() {
@@ -432,11 +407,11 @@ export default {
 
 .tooltip {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(11, 1fr);
     color: #fff;
     text-align: center;
-    margin-left: 12%;
-    margin-right: 12%;
+    margin-left: 4%;
+    margin-right: 4%;
 }
 .tooltip > div {
     transition: all 1s;

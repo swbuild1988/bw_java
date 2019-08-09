@@ -87,7 +87,7 @@ import { UserService } from "../../services/userService";
 import { removeToken } from "@/utils/auth"; // 验权
 import { EnterGalleryService } from "../../services/enterGalleryService.js";
 import showAboutUs from "../../components/Common/Modal/ShowAboutUs";
-import Img from "../../assets/UM/UMIcon.png";
+import Img from "../../assets/UM/tunnelLogo.png";
 import Cookies from "js-cookie";
 import showAlarm from "@/components/Common/Modal/showAlarms";
 import ShowStartPlan from "../Common/Modal/ShowStartPlan";

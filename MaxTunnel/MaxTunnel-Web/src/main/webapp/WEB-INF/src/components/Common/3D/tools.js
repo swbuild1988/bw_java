@@ -168,18 +168,19 @@ export default {
     },
     addCommonView(baseProp, typePara) {
       let { viewer } = this;
-      // let { position } =typePara;
+      let { position,auxiliary } =typePara;
       let viewerType = this.addViewerType(typePara);
 
       let entity = viewer.entities.add(Object.assign({}, baseProp, viewerType));
+
       // viewer.entities.add(Object.assign({},{position: Cesium.Cartesian3.fromDegrees(
       //   parseFloat(position.X),
       //   parseFloat(position.Y),
       //   parseFloat(position.Z)
       // )}, {billboard:{ 
-      //   image: require('../../../assets/UM/mapPosition.png'),
-      //   // width:24,
-      //   // height:27,
+      //   image: require('../../../assets/UM/'+auxiliary.image+'.png'),
+      //   width:52,
+      //   height:33,
       //   scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0),
       //   verticalOrigin: Cesium.VerticalOrigin.TOP,
       //   horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
@@ -226,14 +227,7 @@ export default {
                 semiMajorAxis: ellipse.R,
                 height: ellipse.H,
                 outline: true,
-                outlineColor: Cesium.Color.fromAlpha(
-                  Cesium.Color.fromCssColorString(ellipse.color),
-                  0.8
-                ),
-                material: Cesium.Color.fromAlpha(
-                  Cesium.Color.fromCssColorString(ellipse.color),
-                  0.6
-                )
+                material: '../../../assets/UM/rainwater-disk.png'
               }
             }
           : {};
@@ -243,10 +237,12 @@ export default {
           ? {
               billboard: {
                 image: require('../../../assets/UM/' + billboard.image + '.png'),
-                width:125,
-                height:108,
+                width:124,
+                height:100,
                 scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0),
-                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                // verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                // horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
               }
             }
@@ -262,9 +258,12 @@ export default {
                 outlineColor: Cesium.Color.BLACK,
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 outlineWidth: 1,
-                verticalOrigin: Cesium.VerticalOrigin.CENTER,
+                // verticalOrigin: Cesium.VerticalOrigin.TOP,
+                // horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
-                scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0)
+                scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0),
+                pixelOffset:new Cesium.Cartesian2(0, -18)
               }
             }
           : {};
@@ -274,7 +273,7 @@ export default {
           ? {
               point: {
                 pixelSize: point.pixelSize,
-                color: this.getCesiumColor(point.color),
+                color: this.getCesiumColor(point.color), 
                 outlineColor: Cesium.Color.WHITE,
                 outlineWidth: point.outlineWidth,
                 scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0)
