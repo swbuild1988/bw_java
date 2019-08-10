@@ -221,8 +221,20 @@
     },
     "MapAngleLists":[
         {
+            "id":0,
+            "name":"总览",
+            "angle":{
+                "longitude": 112.498020,
+                "latitude": 37.707683,
+                "height": 4999.577,
+                "roll": 0,
+                "pitch": -1.559829,
+                "heading": 0.373219
+            }
+        },
+        {
             "id":1,
-            "name":"古城大街角度",
+            "name":"古城大街",
             "angle":{
                 "longitude": 112.530656,
                 "latitude": 37.708304,
@@ -234,7 +246,7 @@
         },
         {
             "id":2,
-            "name":"实验路角度",
+            "name":"实验路",
             "angle":{
                 "longitude": 112.502005,
                 "latitude": 37.716166,
@@ -246,7 +258,7 @@
         },
         {
             "id":3,
-            "name":"经三路角度",
+            "name":"经三路",
             "angle":{
                 "longitude": 112.496455,
                 "latitude": 37.721270,
@@ -258,7 +270,7 @@
         },
         {
             "id":4,
-            "name":"经二路角度",
+            "name":"经二路",
             "angle":{
                 "longitude": 112.492984,
                 "latitude": 37.722374,
@@ -270,7 +282,7 @@
         },
         {
             "id":5,
-            "name":"纬三路角度",
+            "name":"纬三路",
             "angle":{
                 "longitude": 112.513535,
                 "latitude": 37.696002,
