@@ -163,7 +163,6 @@ public class LoginController {
         returnData.put("company", PropertiesUtil.getValue(Constants.MAXTUNNEL_COMPANY));
         returnData.put("address", PropertiesUtil.getValue(Constants.MAXTUNNEL_ADDRESS));
         return CommonUtil.success(returnData);
-
     }
 
 
