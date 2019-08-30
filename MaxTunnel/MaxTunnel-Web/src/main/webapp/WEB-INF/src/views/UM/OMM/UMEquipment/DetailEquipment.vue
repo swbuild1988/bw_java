@@ -323,20 +323,22 @@ export default {
         },
     methods: {
         init: function() {
-            this.axios.get("/equipments/" + this.equipment.id).then(res => {
-                let { code, data } = res.data;
-                if (code == 200) {
-                    this.equipment = data;
+            EquipmentService.getEquDetailByEquId(this.equipment.id).then(
+                result => {
+                    this.equipment = result;
                     this.getAarasByTunnelId(this.equipment.tunnel.id)
                     this.getStoresByTunnelId(this.equipment.tunnel.id)
-                    this.equipment.runTime = new Date(data.runTime).format("yyyy-MM-dd hh:mm:s");
+                    this.equipment.runTime = new Date(result.runTime).format("yyyy-MM-dd hh:mm:s");
                     if (this.equipment.objId != null) {
                         this.getObjType();
                     }
-                    this.areaId = data.section.area.id
-                    this.storeId = data.section.store.id
+                    this.areaId = result.section.area.id
+                    this.storeId = result.section.store.id
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            });
+            )
         },
         //关联监测对象
         getObj(objId) {
@@ -397,12 +399,14 @@ export default {
                             assetNo: this.equipment.assetNo,
                             qaTerm: this.equipment.qaTerm
                         };
-                        this.axios.put("/equipments", info).then(res => {
-                            let { code, data } = res.data;
-                            if (code == 200) {
+                        EquipmentService.updateEquipmentInfo(info).then(
+                            result => {
                                 this.$router.push("/UM/equipment/queryequipment");
+                            },
+                            error => {
+                                this.Log.info(error)
                             }
-                        });
+                        )
                     }
                 })
             },2000)            

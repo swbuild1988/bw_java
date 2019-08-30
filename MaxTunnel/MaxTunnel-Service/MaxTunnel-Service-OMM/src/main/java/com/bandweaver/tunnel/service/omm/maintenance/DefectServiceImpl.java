@@ -92,13 +92,13 @@ public class DefectServiceImpl implements DefectService {
     /**
      * 维修完成后，更改缺陷状态
      *
-     * @param maintenanceOrderId
+     * @param defectId
      */
     @Override
-    public void maintComplete(int maintenanceOrderId) {
-        Defect defect = defectMapper.getDefectByOrder(maintenanceOrderId);
+    public void maintComplete(int defectId) {
+        Defect defect = defectMapper.getDefectDto(defectId);
         // 更改状态为维修完毕
-        defect.setStatus(0);
+        defect.setStatus(3);
         defectMapper.update(defect);
     }
 

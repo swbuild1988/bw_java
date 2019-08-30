@@ -73,7 +73,7 @@
             <if test="sectionId != null">
                 SECTION_ID,
             </if>
-            <if test="name != null">
+            <if test="name != null and name.trim() != ''">
                 NAME,
             </if>
             <if test="datatypeId != null">
@@ -123,7 +123,7 @@
             <if test="sectionId != null">
                 #{sectionId,jdbcType=DECIMAL},
             </if>
-            <if test="name != null">
+            <if test="name != null and name.trim() != ''">
                 #{name,jdbcType=VARCHAR},
             </if>
             <if test="datatypeId != null">
@@ -150,10 +150,10 @@
             <if test="deviation != null">
                 #{deviation,jdbcType=DECIMAL},
             </if>
-            <if test="videoIds != null">
+            <if test="videoIds != null and videoIds.trim() != ''">
                 #{videoIds,jdbcType=VARCHAR},
             </if>
-            <if test="planIds != null">
+            <if test="planIds != null and planIds.trim() != ''">
                 #{planIds,jdbcType=VARCHAR},
             </if>
         </trim>
@@ -174,7 +174,7 @@
             <if test="sectionId != null">
                 SECTION_ID = #{sectionId,jdbcType=DECIMAL},
             </if>
-            <if test="name != null">
+            <if test="name != null and name.trim() != ''">
                 NAME = #{name,jdbcType=VARCHAR},
             </if>
             <if test="datatypeId != null">
@@ -201,10 +201,10 @@
             <if test="deviation != null">
                 deviation = #{deviation,jdbcType=DECIMAL},
             </if>
-            <if test="videoIds != null">
+            <if test="videoIds != null and videoIds.trim() != ''">
                 video_ids = #{videoIds,jdbcType=VARCHAR},
             </if>
-            <if test="planIds != null">
+            <if test="planIds != null and planIds.trim() != ''">
                 plan_ids = #{planIds,jdbcType=VARCHAR},
             </if>
         </set>

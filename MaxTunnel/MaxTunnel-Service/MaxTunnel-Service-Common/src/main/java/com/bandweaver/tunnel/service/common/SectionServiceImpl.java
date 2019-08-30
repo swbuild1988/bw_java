@@ -8,8 +8,6 @@ import java.util.List;
 
 import com.bandweaver.tunnel.common.biz.dto.*;
 import com.bandweaver.tunnel.common.biz.dto.mam.Point3D;
-import com.bandweaver.tunnel.common.biz.itf.AreaService;
-import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.pojo.Area;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
@@ -400,12 +398,12 @@ public class SectionServiceImpl implements SectionService {
             section.setStartPoint(startPointString);
             section.setEndPoint(endPointString);
 
-            // 设置相机的camera：pitch为俯仰角，默认为45；heading(yaw)为偏航角，正北方向为0；roll为翻滚角，默认为90
+            // 设置相机的camera：heading(yaw)为偏航角，正北方向为0；pitch为俯仰角，默认为-10；roll为翻滚角，默认为0
             Double cameraLng = MathUtil.div(MathUtil.add(outStartP.getLon(), outEndP.getLon()), 2.0);
             Double cameraLat = MathUtil.div(MathUtil.add(outStartP.getLat(), outEndP.getLat()), 2.0);
             String cameraPointString = PointUtil.get3DPointString(cameraLng, cameraLat, outStartP.getHeight());
             
-            section.setCamera(cameraPointString + ",45," + angle + ",90");
+            section.setCamera(cameraPointString + "," + angle + ",-10,0");
             sectionMapper.updateByPrimaryKeySelective(section);
 
         }
@@ -464,31 +462,31 @@ public class SectionServiceImpl implements SectionService {
     }
     
     /**
-     * 计算相机的偏航角
+     * 计算相机的偏航角 heading
      */
-    private int getAngle(TunnelDto tunnel) {
-    	// 获取管廊起点和终点坐标
-    	Point3D tunnelStart3D = PointUtil.get3DPoint(tunnel.getStartPoint());
-        Point3D tunnelEnd3D = PointUtil.get3DPoint(tunnel.getEndPoint());
-        // 把经纬度转换成平面坐标
-        Point2D tunnelStart2D = GPSUtil.MillierConvertion(tunnelStart3D.getLon(), tunnelStart3D.getLat());
-        Point2D tunnelEnd2D = GPSUtil.MillierConvertion(tunnelEnd3D.getLon(), tunnelEnd3D.getLat());
-        // 斜率
-        double lv = (tunnelEnd2D.getY() - tunnelStart2D.getY()) / (tunnelEnd2D.getX() - tunnelStart2D.getX());
-        // 反正切的角度值
-        int angle = (int) (Math.atan(lv)*180/Math.PI);
-        // 计算偏航角
-        switch(tunnel.getDirection()) {
-        case 1:
-        	angle = 90 - angle; break;
-        case 2:
-        	angle = 270 - angle; break;
-        case 3:
-        	angle = 270 + angle; break;
-        case 4:
-        	angle = 90 + angle; break;
-        }
-        
-        return angle;
-    }
+	private int getAngle(TunnelDto tunnel) {
+		// 获取管廊起点和终点坐标
+		Point3D tunnelStart3D = PointUtil.get3DPoint(tunnel.getStartPoint());
+		Point3D tunnelEnd3D = PointUtil.get3DPoint(tunnel.getEndPoint());
+		// 把经纬度转换成平面坐标
+		Point2D A = GPSUtil.MillierConvertion(tunnelStart3D.getLon(), tunnelStart3D.getLat() + 0.1);
+		Point2D B = GPSUtil.MillierConvertion(tunnelStart3D.getLon(), tunnelStart3D.getLat());
+		Point2D C = GPSUtil.MillierConvertion(tunnelEnd3D.getLon(), tunnelEnd3D.getLat());
+		int angle = trangle(A.getX(), A.getY(), B.getX(), B.getY(), C.getX(), C.getY());
+		if(tunnel.getDirection() == 2 || tunnel.getDirection() == 3)
+			angle = -angle;
+		return angle;
+	}
+    
+    // 三点坐标计算B的夹角
+    private int trangle(double a_x,double a_y,double b_x,double b_y,double c_x,double c_y){
+	    //Math.sqrt(x)表示开根号。Math.pow(x,n)表示x的n次方。
+		double a = Math.sqrt(Math.pow(b_x-c_x, 2) + Math.pow(b_y - c_y, 2));//直线BC=a
+		double b = Math.sqrt(Math.pow(a_x-c_x, 2) + Math.pow(a_y - c_y, 2));//直线AC=b
+	    double c = Math.sqrt(Math.pow(a_x-b_x, 2) + Math.pow(a_y - b_y, 2));//直线AB=c
+	    // 计算cosB的值
+	    double cosB = (Math.pow(a, 2) + Math.pow(c, 2) - Math.pow(b, 2)) / (2*a*c);
+	    double B = Math.acos(cosB)*180/Math.PI;
+	    return (int) B;
+	}
 }

@@ -253,6 +253,8 @@
 
                     _this.finishedYearPlanRatio = result.finYearTaskCount != 0 ? parseFloat(result.finYearTaskCount /
                         result.yearTaskCount * 100).toFixed(2) : 0;
+                    _this.currMonthRatio = Number(_this.currMonthRatio)
+                    _this.finishedYearPlanRatio = Number(_this.finishedYearPlanRatio)
                 },
                 error => {
                     _this.Log.info(error);
@@ -391,11 +393,7 @@
     
 				this.$refs.TestSmViewer.addPolylineEntity({id:routeInfo.id,messageType:this.polylineAttr.type},params)
 				
-            },
-            // addPolyline(id,params){
-            //     this.polylineID = id
-			// 	this.$refs.TestSmViewer.addPolylineEntity({id:id,messageType:this.polylineAttr.type},params)
-            // }
+            }
         },
         beforeDestroy(){
             let { ids } = this.polylineAttr;

@@ -10,13 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface EquipmentService {
-	/**
-	 * 通过资产号获取设备具体信息
-	 * 
-	 * @param AssetNo
-	 * @return
-	 */
-	Equipment getEquipmentByAssetNo(String AssetNo);
 
 	/**
 	 * 新增设备
@@ -114,7 +107,7 @@ public interface EquipmentService {
 	 * @author liuya
 	 * @Date 2018年9月4日
 	 */
-	EquipmentDto getEquipmentListByObj(Integer objId);
+	EquipmentDto getEquipmentByObj(Integer objId);
 	
 	void updateEquipmentOfObj(Equipment e);
 

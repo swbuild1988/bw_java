@@ -1,51 +1,63 @@
 <template>
     <div class="formBG">
         <div class="formTitle">添加备品备件</div>
-        <Form class="formHeight" ref="addBackUp" :model="addBackUp" :rules="validateRules" :label-width="120" @submit.native.prevent>
-            <FormItem label="备品名称：" prop="name">
-                <Input type="text" v-model="addBackUp.name"></Input>
-            </FormItem>
-            <FormItem label="备品所属系统：" prop="typeId">
-                <Select v-model="addBackUp.typeId">
-                    <Option v-for="item in backUpTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="备品规格型号：" prop="modelId">
-                <Select v-model="addBackUp.modelId">
-                    <Option v-for="item in backUpModel" :key="item.id" :value="item.id">{{item.name}}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="额定电压：" prop="ratedVoltage">
-                <Input v-model="addBackUp.ratedVoltage"></Input>
-            </FormItem>
-            <FormItem label="量程：" prop="range">
-                <Input v-model="addBackUp.range"></Input>
-            </FormItem>
-            <FormItem label="厂家：" prop="factory">
-                <Input v-model="addBackUp.factory"></Input>
-            </FormItem>
-            <FormItem label="品牌：" prop="brand">
-                <Input v-model="addBackUp.brand"></Input>
-            </FormItem>
-            <FormItem label="供应商：" prop="venderId">
-                <Select v-model="addBackUp.venderId">
-                    <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="质保期限：" prop="qaTerm">
-                <Input v-model="addBackUp.qaTerm" placeholder="请输入质保期限"></Input>
-            </FormItem>
-            <FormItem label="备品数量：">
-                <InputNumber v-model="addBackUp.count" :min="1" style="width: 100%;"></InputNumber>
-            </FormItem>   
-            <FormItem label="入库时间：" prop="inTime">
-                <DatePicker type="datetime" v-model="addBackUp.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
-            </FormItem> 
-            <div style="text-align: center;">
-                <Button type="ghost" style="margin-right: 8px" @click="goBack()">返回</Button>
-                <Button type="primary" @click="submit('addBackUp')" :disabled="isDisable">提交</Button>
+        <div class="formHeight">
+        <Form  ref="addBackUp" :model="addBackUp" :rules="validateRules" :label-width="120" @submit.native.prevent>
+            <div class="stepsHeight" v-show="isShowAddInfo==1">
+                <FormItem label="备品名称：" prop="name">
+                    <Input type="text" v-model="addBackUp.name"></Input>
+                </FormItem>
+                <FormItem label="备品所属系统：" prop="typeId">
+                    <Select v-model="addBackUp.typeId">
+                        <Option v-for="item in backUpTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="备品规格型号：" prop="modelId">
+                    <Select v-model="addBackUp.modelId">
+                        <Option v-for="item in backUpModel" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="额定电压：" prop="ratedVoltage">
+                    <Input v-model="addBackUp.ratedVoltage"></Input>
+                </FormItem>
             </div>
-        </Form>
+            <div class="stepsHeight" v-show="isShowAddInfo==2">
+                <FormItem label="量程：" prop="range">
+                    <Input v-model="addBackUp.range"></Input>
+                </FormItem>
+                <FormItem label="厂家：" prop="factory">
+                    <Input v-model="addBackUp.factory"></Input>
+                </FormItem>
+                <FormItem label="品牌：" prop="brand">
+                    <Input v-model="addBackUp.brand"></Input>
+                </FormItem>
+                <FormItem label="供应商：" prop="venderId">
+                    <Select v-model="addBackUp.venderId">
+                        <Option v-for="(item) in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                    </Select>
+                </FormItem>
+            </div>
+            <div class="stepsHeight" v-show="isShowAddInfo==3">
+                <FormItem label="质保期限：" prop="qaTerm">
+                    <Input v-model="addBackUp.qaTerm" placeholder="请输入质保期限"></Input>
+                </FormItem>
+                <FormItem label="备品数量：">
+                    <InputNumber v-model="addBackUp.count" :min="1" style="width: 100%;"></InputNumber>
+                </FormItem>   
+                <FormItem label="入库时间：" prop="inTime">
+                    <DatePicker type="datetime" v-model="addBackUp.inTime" placeholder="请输入入库时间" style="width: 100%"></DatePicker>
+                </FormItem> 
+                <div style="text-align: center;">
+                    <Button type="primary" @click="submit('addBackUp')" :disabled="isDisable">提交</Button>
+                </div>
+            </div>
+            <div style="text-align: center;margin-top: 2vmin;">
+                <Button type="warning" @click="goBack()">返回</Button>
+                <Button type="default" v-if="isShowAddInfo!=1" @click="handlePre()">上一步</Button>
+			    <Button type="primary" v-if="isShowAddInfo!=3" @click="handleNext()">下一步</Button>
+            </div>
+            </Form>
+        </div>
     </div>
 </template>
 <script>
@@ -102,7 +114,8 @@
                     qaTerm: [
                         { required: true, message: '质保期限不能为空', trigger: 'blur' }
                     ]
-                }
+                },
+                isShowAddInfo: 1
             }
         },
         mounted(){
@@ -143,14 +156,14 @@
                     this.isDisable = false
                     this.$refs[name].validate((valid) => {
                         if(valid){
-                            this.axios.post('spares/'+this.addBackUp.count,this.addBackUp).then(res=>{
-                                if(res.data.code==200){
+                            EquipmentService.submitBackUp(this.addBackUp.count,this.addBackUp).then(
+                                result => {
                                     this.$router.push('/UM/equipment/querybackup')
+                                },
+                                error => {
+                                    this.Log.info(error)
                                 }
-                            })
-                            .catch(function(error){
-                                console.log(error)
-                            })
+                            )
                         }else{
                             this.$Message.error("请填写正确的备品备件信息")
                         }
@@ -164,6 +177,14 @@
             //返回
             goBack(){
                 this.$router.back(-1);
+            },
+            //上一步
+            handlePre(){
+                this.isShowAddInfo=this.isShowAddInfo-1
+            },
+            //下一步
+            handleNext(){			
+                this.isShowAddInfo = this.isShowAddInfo+1
             }
         }
     }
@@ -203,6 +224,9 @@
     line-height: 1;
     font-family: SimSun;
     font-size: 1.2vmin;
+}
+.stepsHeight{
+    min-height: 20vh;
 }
 @media (min-width: 2200px){
     .ivu-select,.ivu-select >>> .ivu-select-selection,.ivu-input-wrapper >>> .ivu-input,.ivu-date-picker >>> .ivu-input,

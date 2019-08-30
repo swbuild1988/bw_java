@@ -33,6 +33,8 @@ public class TunnelVo extends BaseVo{
     private Integer maxviewConfigId;
 
     private Date crtTime;
+    
+    private Boolean show;
 
     public Integer getId() {
         return id;
@@ -129,4 +131,12 @@ public class TunnelVo extends BaseVo{
     public void setIds(List<Integer> ids) {
         this.ids = ids;
     }
+
+	public Boolean getShow() {
+		return show;
+	}
+
+	public void setShow(Boolean show) {
+		this.show = show;
+	}
 }

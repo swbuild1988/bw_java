@@ -63,7 +63,7 @@
 //		//获取数据源对象
 //		Datasource d = datasources.get(datasource);
 //		if(null == d) {
-//			System.out.println("该数据源不存在！");
+//			System.out.println("该数据源" + datasource + "不存在！");
 //			return;
 //		}
 //		//获取指定数据集
@@ -73,7 +73,7 @@
 //	     dset.open();
 //	     //转换成矢量数据集对象
 //	     DatasetVector dv = (DatasetVector)dset;
-//	     System.out.println(dv.getFieldCount());
+//	     System.out.println("删除前字段总数：" + dv.getFieldCount());
 //	     //获取字段信息集合对象
 //	     FieldInfos fieldinfos = dv.getFieldInfos();
 //
@@ -84,8 +84,9 @@
 //		}
 //		for(int i=0;i<count;i++) {
 //			fieldinfos.remove(fields[i]);
+//			System.out.println("移除" + fields[i] + "字段");
 //		}
-//
+//		System.out.println("删除后字段总数：" + dv.getFieldCount());
 //	}
 //
 //	/** 超图初始化数据
@@ -131,7 +132,7 @@
 //
 //		//查询符合条件的记录集
 //		Recordset recordset = dv.getRecordset(false,CursorType.DYNAMIC);//静态是只读，不能修改
-//        System.out.println(recordset.getRecordCount());
+//        System.out.println("记录数：" + recordset.getRecordCount());
 //
 //        //判断查询结果记录集中是否存在记录集
 //        if(recordset.getRecordCount() <=0) {
@@ -182,7 +183,7 @@
 //        DatasetVector dv = (DatasetVector)dataset;
 //        //获取字段信息集合对象
 //        FieldInfos fieldinfos = dv.getFieldInfos();
-//        System.out.println(fieldinfos.getCount());
+//        System.out.println("添加前属性总数：" + fieldinfos.getCount());
 //        int len = fields.length;
 //		//判断添加的字段数组是否为空
 //		if(len <= 0) {
@@ -216,7 +217,8 @@
 //
 //	     //将数组添加到当前字段信息集合对象中
 //	     fieldinfos.addRange(fieldinfoarray);
-//	     System.out.println(fieldinfos.getCount());
+//	     System.out.println("添加 X Y Z 三个属性");
+//	     System.out.println("添加后属性总数：" + fieldinfos.getCount());
 //	}
 //}
 //

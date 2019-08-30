@@ -190,6 +190,7 @@ import { TunnelService } from '../../../../services/tunnelService'
 import { PatrolService } from '../../../../services/patrolService'
 import { EnumsService } from '../../../../services/enumsService'
 import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
+import { DefectService } from "../../../../services/defectService"
 export default {
     components: { expandRow, ImageFromUrl },
     data(){
@@ -461,12 +462,14 @@ export default {
                     areaId : this.addRecords[index].area.id,
                     storeId : this.addRecords[index].store.id
                 }
-                this.axios.post("/section/measobjs",(mes)).then(response=>{
-                    let { code,data } = response.data
-                    if(code==200){
-                        this.objs = data
+                DefectService.getObj(mes).then(
+                    result => {
+                        this.objs = result
+                    },
+                    error => {
+                        this.Log.info(error)
                     }
-                })
+                )
                 this.addRecords[index].defect = {
                     id: null,
                     area:{
@@ -576,17 +579,18 @@ export default {
                         })
                         this.errorTip = false
                         this.task.records = this.saveRecords
-                        this.axios.put('/inspection-tasks',this.task).then(response=>{
-                            if(this.$route.params.isFinished==undefined){
-                                this.$router.push('/UM/myNews/queryMyTask');
-                            }else{
-                                this.$router.push('/UM/myTasks/query');
+                        PatrolService.submitPatrolTask(this.task).then(
+                            result => {
+                                if(this.$route.params.isFinished==undefined){
+                                    this.$router.push('/UM/myNews/queryMyTask');
+                                }else{
+                                    this.$router.push('/UM/myTasks/query');
+                                }
+                            },
+                            error => {
+                                this.Log.info(error)
                             }
-                            // this.upload()
-                        })
-                        .catch(function(error) {
-                            console.log(error);
-                        });
+                        )
                     }else{
                         this.errorTip = true
                     }

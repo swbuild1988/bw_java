@@ -7,7 +7,7 @@
                         <td>
                             <img class="titleImg" :src="item.img">
                         </td>
-                        <td>{{item.description ? item.description + item.name : item.name}}</td>
+                        <td>{{item.description ? item.name + item.description: item.name}}</td>
                         <td>{{item.cv}}</td>
                         <td>{{item.unit}}</td>
                     </tr>
@@ -192,10 +192,17 @@ export default {
     width: 33.3%;
     text-align: center;
     padding: 0.7vmin 0.3vmin 0;
+    line-height: 2.6vmin;
 }
 .panel td:first-child {
     text-align: left;
     width: 0%;
+}
+.panel td:nth-of-type(2) {
+    width: 43%;
+}
+.panel td:nth-of-type(4) {
+    width: 26%;
 }
 .panel td:nth-of-type(2),
 .panel td:nth-of-type(4) {
@@ -203,6 +210,7 @@ export default {
 }
 .panel td:nth-of-type(3) {
     text-align: right;
+    width: 20%;
 }
 .page {
     position: absolute;

@@ -119,6 +119,7 @@ public class ConsumeDataController {
     	List<JSONObject> list = new ArrayList<>();
     	if(vo == null) vo = new ConsumeDataVo();
     	for(TunnelSimpleDto dto : TunnelList) {
+    		if(!dto.getShow()) continue;
     		vo.setTunnelId(dto.getId());
     		Double sum = consumeService.getSumByCondition(vo);
     		JSONObject obj = new JSONObject();
@@ -245,8 +246,9 @@ public class ConsumeDataController {
     	List<TunnelSimpleDto> tunnelList = tunnelService.getList();
     	List<JSONObject> list = new ArrayList<>();
     	
-		// 遍历，获取每个管廊的能耗
+		// 遍历获取每个管廊的能耗
     	for(TunnelSimpleDto dto : tunnelList) {
+    		if(!dto.getShow()) continue;
     		JSONObject json = new JSONObject();
     		json.put("key", dto.getName());
     		List<JSONObject> energyList = new ArrayList<>();
@@ -306,6 +308,7 @@ public class ConsumeDataController {
 			List<JSONObject> energyList = new ArrayList<>();
 			// 遍历，获取每个管廊的能耗
 			for(TunnelDto dto : tunnelList) {
+				if(!dto.getShow()) continue;
 				ConsumeDataVo vo = new ConsumeDataVo();
 				Date nowStart = DateUtil.getBeginDayOfMonth(sd);
 				Date nowEnd = DateUtil.getEndDayOfMonth(sd);
@@ -329,7 +332,7 @@ public class ConsumeDataController {
     }
 	/**
 	 * 各管廊不同时间内的能耗
-	 * @param value
+	 * @param value 时间枚举
 	 * @return
 	 * @author ya.liu
 	 * @Date 2019年5月27日
@@ -342,6 +345,7 @@ public class ConsumeDataController {
         List<JSONObject> resultList = new ArrayList<>();
 
         for (TunnelSimpleDto tunnel : tunnelList) {
+        	if(!tunnel.getShow()) continue;
             JSONObject tunnelJson = new JSONObject();
             tunnelJson.put("key", tunnel.getName());
 
@@ -391,6 +395,7 @@ public class ConsumeDataController {
         List<JSONObject> resultList = new ArrayList<>();
 
         for (TunnelSimpleDto tunnel : tunnelList) {
+        	if(!tunnel.getShow()) continue;
             JSONObject tunnelJson = new JSONObject();
             tunnelJson.put("key", tunnel.getName());
             ConsumeDataVo vo = new ConsumeDataVo();

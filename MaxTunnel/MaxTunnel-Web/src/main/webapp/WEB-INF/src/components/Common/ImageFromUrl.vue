@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { get } from "@/utils/http";
 
 export default {
     name: "ImageFromUrl",
@@ -30,24 +30,26 @@ export default {
     },
     methods: {
         loadImage(url) {
-            axios
-                .get(url, { responseType: "arraybuffer" })
-                .then(response => {
-                    return (
-                        "data:image/png;base64," +
-                        btoa(
-                            new Uint8Array(response.data).reduce(
-                                (data, byte) =>
-                                    data + String.fromCharCode(byte),
-                                ""
+            return new Promise((resolve, reject) => {
+                get(url, "arraybuffer").then(
+                    response=>{
+                        return (
+                            "data:image/png;base64," +
+                            btoa(
+                                new Uint8Array(response.data).reduce(
+                                    (data, byte) =>
+                                        data + String.fromCharCode(byte),
+                                    ""
+                                )
                             )
-                        )
-                    );
-                })
+                        );
+                    }
+                )
                 .then(data => {
                     this.imgSrc = data;
                     this.imgShowFlag = true;
                 });
+            })
         }
     }
 };

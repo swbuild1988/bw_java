@@ -210,11 +210,11 @@ export default {
                             url: "/UM/TunnelFire",
                             path: "/UM/TunnelFire"
                         },
-                        {
-                            name: "管廊管线监控",
-                            url: "/UM/TunnelPipeline",
-                            path: "/UM/TunnelPipeline"
-                        },
+                        // {
+                        //     name: "管廊管线监控",
+                        //     url: "/UM/TunnelPipeline",
+                        //     path: "/UM/TunnelPipeline"
+                        // },
                         {
                             name: "视频监控系统",
                             url: "/UM/VideoMonitoring/details/1",
@@ -372,7 +372,10 @@ export default {
                         .dispatch("LogOut")
                         .then(() => {
                             sessionStorage.removeItem("UMUser");
-                            Cookies.remove("userName");
+                            // Cookies.remove("userName");
+                            localStorage.removeItem('Authorization')
+                            localStorage.removeItem('userName')
+                            localStorage.removeItem('password')
                             // MQ 退出连接
                             _this.MQ.closeMQ();
                             _this.$router.push("/UMlogin");
@@ -479,7 +482,7 @@ export default {
             if (result.type && result.type == "Alarm") {
                 let content = JSON.parse(result.content);
                 this.Log.info("ModulePage收到回调:", content);
-                this.getCountInfoNum()
+                this.getCountInfoNum();
                 // 显示alarm modal框
                 // _this.videoModal.modalPrams.state = true;
                 // _this.videoModal.alarmContainer.push(content);
@@ -492,15 +495,23 @@ export default {
                         "ivu-notice"
                     )[0].style.width = 32 + "vmin";
                 }
-                if (document.getElementsByClassName("ivu-notice-notice")!=undefined) {
-                    let h = document.getElementsByClassName("ivu-notice")[0].offsetHeight +
-                        document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight;
+                if (
+                    document.getElementsByClassName("ivu-notice-notice") !=
+                    undefined
+                ) {
+                    let h =
+                        document.getElementsByClassName("ivu-notice")[0]
+                            .offsetHeight +
+                        document.getElementsByClassName("ivu-notice-notice")[0]
+                            .offsetHeight;
                     if (h > window.innerHeight) {
-                        document.getElementsByClassName("ivu-notice")[0].style.bottom = "2vmin";
+                        document.getElementsByClassName(
+                            "ivu-notice"
+                        )[0].style.bottom = "2vmin";
                     }
                 }
-            }else if(result.type && result.type == "personalInfo"){
-                this.getCountInfoNum()
+            } else if (result.type && result.type == "personalInfo") {
+                this.getCountInfoNum();
             }
         },
         //设置告警面板中分页按钮的显隐
@@ -548,9 +559,18 @@ export default {
                     }
                     /* 滚动条以及不被遮挡 */
                     if (document.getElementsByClassName("ivu-notice-notice")) {
-                        let h = document.getElementsByClassName("ivu-notice-notice")[0].offsetHeight * (document.getElementsByClassName("ivu-notice-notice").length -1);
+                        let h =
+                            document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            )[0].offsetHeight *
+                            (document.getElementsByClassName(
+                                "ivu-notice-notice"
+                            ).length -
+                                1);
                         if (h < window.innerHeight) {
-                            document.getElementsByClassName("ivu-notice")[0].style.bottom = "";
+                            document.getElementsByClassName(
+                                "ivu-notice"
+                            )[0].style.bottom = "";
                         }
                     }
                 }
@@ -706,11 +726,13 @@ export default {
 }
 
 .layout-nav >>> .ivu-badge-count {
-    font-size: 1.4vmin;
-    min-width: 3.2vmin;
-    height: 3.2vmin;
-    border-radius: 50%;
-    line-height: 3.2vmin;
+    font-size: 1.2vmin;
+    min-width: 2.2vmin;
+    height: 2.2vmin;
+    line-height: 2.2vmin;
+    padding: 0;
+    top: -0.8vmin;
+    right: 0.1vmin;
 }
 
 .layout-nav .topBtn {

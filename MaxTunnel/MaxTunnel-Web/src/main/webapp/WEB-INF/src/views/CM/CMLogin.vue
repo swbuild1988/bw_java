@@ -67,6 +67,7 @@
 
 <script>
 import { LoginService } from "../../services/loginService";
+import { mapMutations } from 'vuex';
 import Cookies from "js-cookie";
 export default {
 	components: {},
@@ -93,6 +94,7 @@ export default {
 		};
 	},
 	methods: {
+		...mapMutations(['changeLogin']),
 		handleSubmit(name) {
 			var _this = this;
 			var sha256 = require("js-sha256").sha256;
@@ -112,10 +114,11 @@ export default {
 					name: _this.formValidate.userName,
 					password: sha256(_this.formValidate.passWord)
 				};
-				Cookies.set("userName", loginParams.name);
-				this.$store
-					.dispatch("Login", loginParams)
-					.then(() => {
+				// Cookies.set("userName", loginParams.name);
+				this.$store.dispatch("Login", loginParams).then(result => {
+						this.changeLogin({ Authorization: result.token});
+						localStorage.setItem("userName", loginParams.name)
+						localStorage.setItem("password", loginParams.password)
 						_this.logining = false;
 						_this.$router.push({ path: "/CMmain" });
 					})

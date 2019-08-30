@@ -14,9 +14,6 @@ export default {
         id: {
             type: String
         },
-        requestUrl: {
-            type: String
-        },
         parameters: {
             type: Object
         },
@@ -27,7 +24,15 @@ export default {
         seriesSize: {
             default: "5%",
             type: String
-        }
+        },
+        radarIndicator: {
+            required: true,
+            type: Array
+        },
+        seriesData:{
+            required: true,
+            type: Array
+        },
     },
     data() {
         return {
@@ -39,10 +44,17 @@ export default {
         this.init();
         this.refreshData();
     },
+    watch:{
+        seriesData(){
+            this.drawRadar()
+        },
+        radarIndicator(){
+            this.drawRadar()
+        }
+    },
     methods: {
         init() {
             this.drawRadar();
-            this.fetchData(this.requestUrl);
         },
 
         drawRadar() {
@@ -75,32 +87,7 @@ export default {
                             padding: [3, 5]
                         }
                     },
-                    indicator: [
-                        {
-                            name: "indicator1",
-                            max: 100
-                        },
-                        {
-                            name: "indicator2",
-                            max: 100
-                        },
-                        {
-                            name: "indicator3",
-                            max: 100
-                        },
-                        {
-                            name: "indicator4",
-                            max: 100
-                        },
-                        {
-                            name: "indicator5",
-                            max: 100
-                        },
-                        {
-                            name: "indicator6",
-                            max: 100
-                        }
-                    ],
+                    indicator: this.radarIndicator,
                     axisLine: {
                         lineStyle: {
                             color: "#449cff"
@@ -143,19 +130,7 @@ export default {
                                 width: 2
                             }
                         },
-                        data: [
-                            {
-                                value: [],
-                                label: {
-                                    normal: {
-                                        show: true
-                                    },
-                                    emphasis: {
-                                        show: true
-                                    }
-                                }
-                            }
-                        ]
+                        data: this.seriesData
                     }
                 ]
             };
@@ -168,45 +143,9 @@ export default {
             }
             window.addEventListener("resize", _this.myChart.resize);
         },
-
-        fetchData(requestUrl) {
-            let _this = this;
-            _this.axios.get(requestUrl).then(result => {
-                let { code, data } = result.data;
-                if (code == 200) {
-                    var tmpMax = 0;
-                    let newData = [
-                        {
-                            value: [],
-                            name: _this.parameters.option.title.text
-                        }
-                    ];
-                    for (const iterator of data) {
-                        newData[0].value.push(iterator.val.toFixed(2));
-                        if (iterator.val > tmpMax) tmpMax = iterator.val;
-                    }
-                    let tmpIndicator = [];
-                    for (const iterator of data) {
-                        tmpIndicator.push({
-                            name: iterator.key,
-                            // 最大值大个10%
-                            max: tmpMax * 1.1
-                        });
-                    }
-
-                    _this.option.radar.indicator = tmpIndicator;
-                    _this.option.series[0].data = newData;
-
-                    _this.myChart.setOption(_this.option);
-                }
-            });
-        },
         //定时刷新数据
         refreshData() {
             let _this = this;
-            // setInterval(() => {
-            //     _this.fetchData(_this.requestUrl);
-            // }, _this.intervalTime);
         },
         sizeFunction(x) {
             var min = Math.min.apply(

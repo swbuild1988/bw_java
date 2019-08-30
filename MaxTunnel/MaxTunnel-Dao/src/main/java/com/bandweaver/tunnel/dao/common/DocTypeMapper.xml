@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bandweaver.tunnel.dao.common.DocTypeMapper">
+    <cache/>
+    <resultMap id="BaseResultMap"
+               type="com.bandweaver.tunnel.common.biz.pojo.DocType">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="PARENT_ID" jdbcType="DECIMAL" property="parentId"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+    </resultMap>
+
+    <resultMap id="DtoResultMap"
+               type="com.bandweaver.tunnel.common.biz.dto.DocTypeDto">
+        <id column="ID" jdbcType="DECIMAL" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="PARENT_ID" jdbcType="DECIMAL" property="parentId"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="crtTime"/>
+        <collection property="children" ofType="com.bandweaver.tunnel.common.biz.pojo.DocType">
+            <id column="type_id" property="id"/>
+            <result column="type_name" property="name"/>
+            <result column="type_parent_id" property="parentId"/>
+            <result column="type_time" property="crtTime"/>
+        </collection>
+    </resultMap>
+	
+	<sql id="Base_Column_List">
+        ID, NAME, parent_id, create_time
+    </sql>
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from T_COMMON_DOC_TYPE
+        where ID = #{id,jdbcType=DECIMAL}
+    </select>
+	
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM T_COMMON_DOC_TYPE
+        WHERE ID = #{id,jdbcType=DECIMAL}
+    </delete>
+    
+    <insert id="insertSelective"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.DocType">
+        <!-- 新增的时候，返回主键 ,insert前打印一遍pojo，insert之后再打印一遍pojo，会发现id从null变为数据库里的id值 -->
+        <selectKey keyProperty="id" resultType="java.lang.Integer"
+                   order="AFTER">
+            SELECT COMMON_DOC_TYPE_SQ.currval from DUAL
+        </selectKey>
+        insert into T_COMMON_DOC_TYPE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="name != null and name.trim() != ''">
+                NAME,
+            </if>
+            <if test="parentId != null">
+                PARENT_ID,
+            </if>
+            <if test="crtTime != null">
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="name != null and name.trim() != ''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.bandweaver.tunnel.common.biz.pojo.DocType">
+        update T_COMMON_DOC_TYPE
+        <set>
+            <if test="name != null and name.trim() != ''">
+                NAME = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=DECIMAL},
+            </if>
+            <if test="crtTime != null">
+                CREATE_TIME = #{crtTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT *
+        FROM T_COMMON_DOC_TYPE where parent_id = 0
+    </select>
+
+    <select id="getDtoByCondition" resultMap="DtoResultMap">
+        select a.*, b.id as type_id, b.name as type_name, b.parent_id as type_parent_id, b.create_time as type_time
+        from T_COMMON_DOC_TYPE a
+        left join T_COMMON_DOC_TYPE b on a.id = b.parent_id
+        <where>
+            <if test="name != null and name.trim() != ''">
+                and instr(a.name,#{name})>0
+            </if>
+            <if test="parentId == null">
+                and a.parent_id = 0
+            </if>
+            <if test="parentId != null">
+                and a.parent_id = #{parentId}
+            </if>
+            <if test="startTime != null">
+                and a.create_time <![CDATA[>=]]>
+                #{startTime}
+            </if>
+            <if test="endTime != null">
+                and a.create_time <![CDATA[>=]]>
+                #{endTime}
+            </if>
+        </where>
+        order by a.create_time desc 
+    </select>
+
+    <select id="getDtoById" resultMap="DtoResultMap">
+        select a.*, b.id as type_id, b.name as type_name, b.parent_id as type_parent_id, b.create_time as type_time
+        from T_COMMON_DOC_TYPE a
+        left join T_COMMON_DOC_TYPE b on a.id = b.parent_id
+        where a.id = #{id}
+    </select>
+
+    <delete id="deleteBatch">
+        delete from T_COMMON_DOC_TYPE where id in
+        <foreach collection="list" item="item" open="(" separator=","
+                 close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

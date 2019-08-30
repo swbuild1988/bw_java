@@ -181,7 +181,7 @@ public class EquipmentController {
      * @date 2019年4月8日
      */
     @RequestMapping(value = "equipments/condition", method = RequestMethod.POST)
-    public JSONObject getEquipmentsByCondition(@RequestBody EquipmentVo vo) {
+    public JSONObject getEquipmentsByCondition(@RequestBody(required = false) EquipmentVo vo) {
         List<EquipmentDto> list = equipmentService.getEquipmentListByCondition(vo);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
@@ -230,6 +230,27 @@ public class EquipmentController {
     @RequestMapping(value = "equipments", method = RequestMethod.PUT)
     public JSONObject updateEquipment(@RequestBody Equipment equipment) {
         equipmentService.updateEquipmentById(equipment);
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**
+     * 通过监测对象id修改设备状态信息
+     * @param objId 对象id
+     * @param status 设备状态
+     * @return
+     * @author ya.liu
+     * @Date 2019年7月22日
+     */
+    @RequiresPermissions("equipment:update")
+    @WriteLog(DescEnum.OMM_UPDATE_EQUIPMENT)
+    @RequestMapping(value = "objects/equipments", method = RequestMethod.PUT)
+    public JSONObject updateEquipmentByObjId(@RequestBody Equipment e) {
+		Equipment equipment = equipmentService.getEquipmentByObj(e.getObjId());
+		// 判断该设备是否处于正常状态，如果不是则跳过
+		if(equipment.getStatus().equals(EquipmentStatusEnum.NORMAL.getValue())) {
+			equipment.setStatus(e.getStatus());
+			equipmentService.updateEquipmentById(equipment);
+		}
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -725,8 +746,8 @@ public class EquipmentController {
      * @Date 2018年9月7日
      */
     @RequestMapping(value = "measobjs/{objId}/equipment", method = RequestMethod.GET)
-    public JSONObject getEquipmentListByObj(@PathVariable("objId") Integer objId) {
-        EquipmentDto equipment = equipmentService.getEquipmentListByObj(objId);
+    public JSONObject getEquipmentByObj(@PathVariable("objId") Integer objId) {
+        EquipmentDto equipment = equipmentService.getEquipmentByObj(objId);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, equipment);
     }
 

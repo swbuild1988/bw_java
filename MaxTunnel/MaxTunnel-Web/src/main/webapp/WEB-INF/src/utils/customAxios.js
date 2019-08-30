@@ -130,7 +130,6 @@ export default {
             if (!Axios.defaults.baseURL) {
                 initDefaultSystem().then(res => {
                     Axios.defaults.baseURL = res;
-                    console.log(res);
                 }).then(() => {
                     Axios({
                         method: 'post',

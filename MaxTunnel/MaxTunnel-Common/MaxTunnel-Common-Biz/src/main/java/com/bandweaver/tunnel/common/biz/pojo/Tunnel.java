@@ -36,6 +36,8 @@ public class Tunnel implements Serializable{
     private String endPoint;
 
     private Integer direction;
+    
+    private Boolean show;
 
     public Integer getId() {
         return id;
@@ -149,7 +151,15 @@ public class Tunnel implements Serializable{
         this.endPoint = endPoint;
     }
 
-    @Override
+	public Boolean getShow() {
+		return show;
+	}
+
+	public void setShow(Boolean show) {
+		this.show = show;
+	}
+
+	@Override
     public String toString() {
         return "Tunnel{" +
                 "id=" + id +
@@ -166,6 +176,7 @@ public class Tunnel implements Serializable{
                 ", startPoint='" + startPoint + '\'' +
                 ", endPoint='" + endPoint + '\'' +
                 ", direction=" + direction +
+                ", show=" + show +
                 '}';
     }
 }

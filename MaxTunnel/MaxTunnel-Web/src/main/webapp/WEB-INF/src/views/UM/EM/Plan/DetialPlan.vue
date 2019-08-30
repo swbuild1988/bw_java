@@ -277,26 +277,26 @@ export default {
                 _this.$Message.error("开始时间必须小于结束时间！");
                 return;
             }
-            _this.axios
-                .post("plans/his-proc-inst/datagrid", prams)
-                .then(result => {
-                    let { code, data } = result.data;
-                    if (code == 200) {
-                        _this.tableData = [];
-                        data.list.forEach(a => {
-                            let temp = {};
-                            temp.startTime = new Date(a.startTime).format(
-                                "YYYY-MM-dd hh:mm:ss"
-                            );
-                            temp.endTime = new Date(a.endTime).format(
-                                "YYYY-MM-dd hh:mm:ss"
-                            );
-                            temp.processInstanceId = a.processInstanceId;
-                            _this.tableData.push(temp);
-                        });
-                        _this.pageTotal = data.totalCount;
-                    }
-                });
+            PlanService.submitPlanDetails(prams).then(
+                result => {
+                    _this.tableData = [];
+                    result.list.forEach(a => {
+                        let temp = {};
+                        temp.startTime = new Date(a.startTime).format(
+                            "YYYY-MM-dd hh:mm:ss"
+                        );
+                        temp.endTime = new Date(a.endTime).format(
+                            "YYYY-MM-dd hh:mm:ss"
+                        );
+                        temp.processInstanceId = a.processInstanceId;
+                        _this.tableData.push(temp);
+                    });
+                    _this.pageTotal = data.totalCount;
+                },
+                error => {
+                    this.Log.info(err)
+                }
+            )
         },
         show(processInstanceId) {
             this.planDetail.show = true;

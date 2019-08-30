@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { ChartService } from '@/services/chartService.js'
 export default {
   	name: "complex-bar-chart",
 	props: {
@@ -186,16 +187,15 @@ export default {
 
     fetchData(requestUrl) {
 		var _this = this
-		_this.axios.get(requestUrl).then(result => {
-			let { code, data } = result.data;
-			let serises = [],
-			xData = [];
-			if (code == 200) {
-				if (JSON.stringify(data) != null) {
-					for (var item in data) {
+		ChartService.getData(requestUrl).then(
+			result => {
+				let serises = [],
+					xData = [];
+				if (JSON.stringify(result) != null) {
+					for (var item in result) {
 						let temp = {};
 						temp.name = item;
-						let tempdata = data[item];
+						let tempdata = result[item];
 						xData = [];
 						let yData = [];
 						tempdata.forEach(a => {
@@ -204,11 +204,6 @@ export default {
 						});
 						temp.data = yData;
 						temp.type = "bar";
-						// temp.itemStyle = {
-						// 	color: function(params){
-						// 		return _this.itemStyleColor[params.dataIndex]
-						// 	}
-						// }
 						serises.push(temp);
 					}
 				}
@@ -219,8 +214,11 @@ export default {
 					xAxis: { data: _this.xData },
 					series: _this.series
 				});
+			},
+			error => {
+				this.Log.info(error)
 			}
-		});
+		)
     },
     //定时刷新数据
     refreshData() {

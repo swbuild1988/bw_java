@@ -142,7 +142,12 @@
                 } = curCamera;
                 // return
                 try {
-                    let [longitude, latitude, height, roll, pitch, heading] = camera.split(',');
+                    let [longitude,
+                        latitude,
+                        height,
+                        heading,
+                        pitch,
+                        roll] = camera.split(',');
 
                     flyToMyLocation({
                         scene: Vue.prototype['$simpleViewer'].scene,
@@ -199,7 +204,6 @@
                     this.$refs.smViewer.pauseFly();
                 } else {
                     this.$refs.smViewer.playFly();
-                    console.log('ssssssss')
                 }
                 this.playOrPause.isPlay = !this.playOrPause.isPlay;
             },

@@ -8,6 +8,9 @@ import com.bandweaver.tunnel.common.biz.constant.em.*;
 import com.bandweaver.tunnel.common.platform.record.ProcessRecord;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.impl.cmd.CompleteTaskCmd;
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -76,104 +79,110 @@ public class EmPlanServiceImpl implements EmPlanService {
     @Override
     public void doBusiness(ActivitiEvent activitiEvent, TaskEntity taskEntity) {
 
-        LogUtil.info("触发doBusiness");
-        String processDefinitionId = activitiEvent.getProcessDefinitionId();
-        ProcessDefinition processDefinition = activitiService.createProcessDefinitionQuery()
-                .processDefinitionId(processDefinitionId)
-                .singleResult();
-        if (processDefinition == null) {
-            throw new BandWeaverException("流程尚未部署");
+        try {
+            LogUtil.info("触发doBusiness");
+            String processDefinitionId = activitiEvent.getProcessDefinitionId();
+            ProcessDefinition processDefinition = activitiService.createProcessDefinitionQuery()
+                    .processDefinitionId(processDefinitionId)
+                    .singleResult();
+
+            if (processDefinition == null) {
+                throw new BandWeaverException("流程尚未部署");
+            }
+            LogUtil.info("Get KEY:" + processDefinition.getKey());
+
+            Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
+            LogUtil.info("Get variables:" + variables);
+            List<Section> sectionList = (List<Section>) variables.get("sectionList");
+
+            // 如果不是应急预案的流程，一般都没有设置任务节点
+            EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
+            LogUtil.info("Get emPlan from DB:" + emPlan);
+            if (StringTools.isNullOrEmpty(emPlan)) {
+                throw new BandWeaverException("流程节点不存在");
+            }
+
+            LogUtil.info("-------------------------------------第一步----------------------------------------");
+            // 第一步：获取目标
+            Collection<MeasObj> list = new ArrayList<>();
+            TargetEnum targetEnum = TargetEnum.getEnum(emPlan.getTargetKey());
+
+            if (TargetEnum.ASSIGN_TO == targetEnum) {
+                list = measObjService.getMeasObjByTargetVal(emPlan.getTargetValue());
+            }
+            if (TargetEnum.TYPE == targetEnum) {
+                list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(), sectionList);
+            }
+            LogUtil.info("-------------------------------------第一步结束，获得list" + list.toString() + "-----------------");
+
+            LogUtil.info("-------------------------------------第二步----------------------------------------");
+            // 第二步：做什么事情
+            String nextTaskValue = "-1";
+            ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
+            LogUtil.info("actionEnum：" + actionEnum.toString());
+
+            switch (actionEnum) {
+                /**
+                 * 不需要结果
+                 */
+                case NONE:
+                    break;
+
+                /**
+                 * 需要结果
+                 */
+                case CHECK:
+                    Integer integer = TypeUtils.castToInt(emPlan.getActionValue());
+                    CheckTypeEnum checkTypeEnum = CheckTypeEnum.getEnum(integer);
+                    switch (checkTypeEnum) {
+                        case CHECK_FAN:
+                            nextTaskValue = checkFanOpen();
+                            break;
+                        case CHECK_VALUE:
+                            nextTaskValue = checkValue();
+                            break;
+                        case CHECK_LOUVER:
+                            nextTaskValue = checkLouverOpen();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+
+                /**
+                 * 自动联动控制
+                 */
+                case SWITCH:
+                    Integer inputValue = TypeUtils.castToInt(emPlan.getActionValue());
+                    for (MeasObj measObj : list) {
+//                    boolean flag = subSystemService.controlOutput(measObj.getId(), "open");
+                        boolean flag = true;
+                        LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果[" + flag + "]");
+                    }
+                    break;
+
+                /**
+                 * 手动联动控制
+                 */
+                case MANNUL_SWITCH:
+                    // 什么都不做，在前端页面控制，但是需要把检测对象id传过去
+                    break;
+
+                default:
+                    break;
+            }
+
+            LogUtil.info("向" + activitiEvent.getProcessInstanceId() + "流程record中添加参数");
+
+            String processInstanceId = activitiEvent.getProcessInstanceId();
+            ProcessRecord processRecord = ProcessRecord.getProcessRecord();
+            processRecord.setEmPlanHashMap(processInstanceId, emPlan);
+            processRecord.setNextTaskValueHashMap(processInstanceId, nextTaskValue);
+            LogUtil.info("---------------存储流程，ID:" + processInstanceId + " " + activitiEvent.getExecutionId());
+
+        } catch (Exception e) {
+            LogUtil.info("do doBusiness Exception：" + e.toString());
         }
-        LogUtil.info("Get KEY:" + processDefinition.getKey());
-
-        Map<String, Object> variables = runtimeService.getVariables(activitiEvent.getExecutionId());
-        LogUtil.info("Get variables:" + variables);
-        List<Section> sectionList = (List<Section>) variables.get("sectionList");
-
-        EmPlan emPlan = getEmPlanByProcessKeyAndTaskKey(processDefinition.getKey(), taskEntity.getTaskDefinitionKey());
-        LogUtil.info("Get emPlan from DB:" + emPlan);
-        if (StringTools.isNullOrEmpty(emPlan)) {
-            throw new BandWeaverException("流程节点不存在");
-        }
-
-        LogUtil.info("第一步");
-        // 第一步：获取目标
-        Collection<MeasObj> list = new ArrayList<>();
-        TargetEnum targetEnum = TargetEnum.getEnum(emPlan.getTargetKey());
-
-        if (TargetEnum.ASSIGN_TO == targetEnum) {
-            list = measObjService.getMeasObjByTargetVal(emPlan.getTargetValue());
-        }
-        if (TargetEnum.TYPE == targetEnum) {
-            list = measObjService.getMeasObjsByTargetValAndSection(emPlan.getTargetValue(), sectionList);
-        }
-        LogUtil.info("第一步结束，获得list" + list.toString());
-
-        LogUtil.info("第2步");
-        // 第二步：做什么事情
-        String nextTaskValue = "-1";
-        ActionEnum actionEnum = ActionEnum.getEnum(emPlan.getActionKey());
-        LogUtil.info("actionEnum：" + actionEnum.toString());
-        /**
-         * 不需要结果
-         */
-        switch (actionEnum) {
-            case NONE:
-                break;
-
-            /**
-             * 需要结果
-             */
-            case CHECK:
-                Integer integer = TypeUtils.castToInt(emPlan.getActionValue());
-                CheckTypeEnum checkTypeEnum = CheckTypeEnum.getEnum(integer);
-                switch (checkTypeEnum) {
-                    case CHECK_FAN:
-                        nextTaskValue = checkFanOpen();
-                        break;
-                    case CHECK_VALUE:
-                        nextTaskValue = checkValue();
-                        break;
-                    case CHECK_LOUVER:
-                        nextTaskValue = checkLouverOpen();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-
-            /**
-             * 自动联动控制
-             */
-            case SWITCH:
-                Integer inputValue = TypeUtils.castToInt(emPlan.getActionValue());
-                for (MeasObj measObj : list) {
-//                    boolean flag = subSystemService.doAction(measObj.getId(), inputValue);
-                    boolean flag = subSystemService.controlOutput(measObj.getId(), "open");
-//                    boolean flag = true;
-                    LogUtil.info("监测对象[" + measObj.getName() + "]执行[ " + SwitchEnum.getEnum(inputValue).getName() + " ]结果[" + flag + "]");
-                }
-                break;
-
-            /**
-             * 手动联动控制
-             */
-            case MANNUL_SWITCH:
-                // 什么都不做，在前端页面控制，但是需要把检测对象id传过去
-                break;
-
-            default:
-                break;
-        }
-
-        LogUtil.info("向" + activitiEvent.getProcessInstanceId() + "流程record中添加参数");
-
-        String processInstanceId = activitiEvent.getProcessInstanceId();
-
-        ProcessRecord processRecord = ProcessRecord.getProcessRecord();
-        processRecord.setEmPlanHashMap(processInstanceId, emPlan);
-        processRecord.setNextTaskValueHashMap(processInstanceId, nextTaskValue);
-        LogUtil.info("---------------存储流程，ID:" + processInstanceId + " " + activitiEvent.getExecutionId());
     }
 
     private String checkValue() {
@@ -274,6 +283,15 @@ public class EmPlanServiceImpl implements EmPlanService {
         }
     }
 
+    @Override
+    public void completeTask(String processInstanceId, Map<String, Object> variables, String remark) {
+        activitiService.completeTask(activitiService.getActiveTaskByProcessIntance(processInstanceId).getId(), variables, remark);
+    }
+
+    @Override
+    public void completeTask(String processInstanceId) {
+        activitiService.completeTask(activitiService.getActiveTaskByProcessIntance(processInstanceId).getId());
+    }
 
     /**
      * 发送消息到MQ队列
@@ -300,9 +318,12 @@ public class EmPlanServiceImpl implements EmPlanService {
     @Override
     public void sendMsg(String processInstanceId, String status) {
 
+        LogUtil.info("---------------------------向MQ发送消息--------------------");
+        LogUtil.info(processInstanceId + " : " + status);
+
         // sleep一段时间为了更好的看到效果
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

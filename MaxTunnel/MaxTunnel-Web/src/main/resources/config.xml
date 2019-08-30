@@ -490,7 +490,11 @@
     <objectTypeIds>60</objectTypeIds>
     <objectTypeIds>61</objectTypeIds>
     <objectTypeIds>62</objectTypeIds>
-    <lightDistance>50.0</lightDistance>
+    <objectTypeIds>63</objectTypeIds>
+    <objectTypeIds>64</objectTypeIds>
+    <objectTypeIds>65</objectTypeIds>
+    <objectTypeIds>70</objectTypeIds>
+    <objectTypeIds>71</objectTypeIds>
     <closeTime>5</closeTime>
     <decimal>2</decimal>
     <tunnelParam>
@@ -512,6 +516,16 @@
         <name>防爆型摄像机</name>
         <sn>02</sn>
         <typeId>7</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>AP</name>
+        <sn>03</sn>
+        <typeId>70</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>交换机</name>
+        <sn>04</sn>
+        <typeId>71</typeId>
     </typeFiles>
     <typeFiles>
         <name>氧气检测仪</name>
@@ -542,6 +556,11 @@
         <name>投入式液位计</name>
         <sn>26</sn>
         <typeId>21</typeId>
+    </typeFiles>
+    <typeFiles>
+        <name>消防可燃气体探测器</name>
+        <sn>27</sn>
+        <typeId>65</typeId>
     </typeFiles>
     <typeFiles>
         <name>微波红外入侵探测器</name>

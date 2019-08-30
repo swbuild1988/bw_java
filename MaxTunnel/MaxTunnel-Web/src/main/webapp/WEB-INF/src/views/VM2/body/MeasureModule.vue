@@ -60,7 +60,6 @@ export default {
 					type: 1, //数据类型为温度的枚举值
 					time: "",
 					id: "temperatureGaugeChart",
-					requestUrl: "",
 					parameters: {
 						option: {
 							title: {
@@ -83,7 +82,6 @@ export default {
 					type: 5, //数据类型为甲烷的枚举值
 					time: "",
 					id: "methaneGaugeChart",
-					requestUrl: "",
 					parameters: {
 						option: {
 							title: {
@@ -106,7 +104,6 @@ export default {
 					type: 3, //数据类型为氧气的枚举值
 					time: "",
 					id: "oxygenGaugeChart",
-					requestUrl: "",
 					parameters: {
 						option: {
 							title: {

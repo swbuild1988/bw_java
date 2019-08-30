@@ -193,6 +193,30 @@ var ChartService = {
 				reject(error.response.status + '  ' + error.response.data)
 			})
 		})
+	},
+	postData(url, params){
+		return new Promise((resolve, reject) => {
+			post(url, params).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址："+url)
+				}
+			})
+		})
+	},
+	getData(url){
+		return new Promise((resolve, reject) => {
+			get(url).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址："+url)
+				}
+			})
+		})
 	}
 
 }

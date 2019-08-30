@@ -8,6 +8,7 @@
 }
 </style>
 <script>
+import { ChartService } from "@/services/chartService"
 export default {
     name: "MultiBar",
     props: {
@@ -24,15 +25,15 @@ export default {
             type: Object
         },
         textColor: {
-            default:  '#fff',
+            default: "#fff",
             type: String
         },
         lineColor: {
-            default: '#fff',
+            default: "#fff",
             type: String
         },
         titlePosition: {
-            default: 'center',
+            default: "center",
             type: String
         }
     },
@@ -62,7 +63,7 @@ export default {
                 title: {
                     text: this.title,
                     textStyle: {
-                        fontSize: this.getFontSize('4%')
+                        fontSize: this.getFontSize("4%")
                     },
                     x: this.titlePosition,
                     padding: 15
@@ -82,12 +83,12 @@ export default {
                 calculable: true,
                 legend: {
                     data: this.legendData,
-                    x:'right',
-                    textStyle: { 
-                        fontSize: _this.getFontSize('3%') ,
+                    x: "right",
+                    textStyle: {
+                        fontSize: _this.getFontSize("3%"),
                         color: this.textColor
                     },
-                    padding: _this.getFontSize('6%')
+                    padding: _this.getFontSize("6%")
                 },
                 xAxis: [
                     {
@@ -105,40 +106,40 @@ export default {
                         axisLabel: {
                             show: true,
                             textStyle: {
-                                fontSize : this.getFontSize('3%'),      //更改坐标轴文字大小
+                                fontSize: this.getFontSize("3%"), //更改坐标轴文字大小
                                 color: this.textColor
-                            },                            
-                        },
+                            }
+                        }
                     }
                 ],
                 yAxis: [
                     {
                         type: "value",
-                        axisLine:{
-                            show:false
+                        axisLine: {
+                            show: false
                         },
-                        axisLabel:{   
-                            show: true, 
+                        axisLabel: {
+                            show: true,
                             textStyle: {
-                                fontSize : _this.getFontSize('3%'),      //更改坐标轴文字大小
-                                fontWeight:  this.getFontSize('10%'),
+                                fontSize: _this.getFontSize("3%"), //更改坐标轴文字大小
+                                fontWeight: this.getFontSize("10%"),
                                 color: this.textColor
-                            },                
+                            }
                         },
                         axisTick: {
                             show: false
                         },
                         splitLine: {
                             show: true,
-                            lineStyle:{
-                                type:'dashed',
+                            lineStyle: {
+                                type: "dashed",
                                 color: this.lineColor
                             }
                         }
                     }
                 ],
                 series: []
-            }
+            };
             _this.myChart.setOption(_this.option);
             // 加载新的参数
             if (_this.parameters.option) {
@@ -211,20 +212,21 @@ export default {
             //             _this.option.series.push(element);
             //         });
             //         _this.myChart.setOption(_this.option);
-            // }
-
-            _this.axios.get(requestUrl).then(result => {
-                let { code, data } = result.data;
-                if (code == 200) {
-                    _this.option.xAxis[0].data = this.getDataX(data);
+            // }\
+            ChartService.getData(requestUrl).then(
+                result => {
+                    _this.option.xAxis[0].data = this.getDataX(result);
                     _this.option.series = [];
-                    let tmp_series = this.getSeries(data);
+                    let tmp_series = this.getSeries(result);
                     tmp_series.forEach(element => {
                         _this.option.series.push(element);
                     });
                     _this.myChart.setOption(_this.option);
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            });
+            )
         },
         getDataX(data) {
             let xData = [];
@@ -259,12 +261,11 @@ export default {
             // }, _this.intervalTime);
         },
         getFontSize(val) {
-            if (typeof (val) == 'number') return val;
+            if (typeof val == "number") return val;
 
-            if (typeof (val) == 'string') {
-
-                if (val.indexOf('%') > 0) {
-                    var tmp = parseFloat(val.replace('%', '')) / 100;
+            if (typeof val == "string") {
+                if (val.indexOf("%") > 0) {
+                    var tmp = parseFloat(val.replace("%", "")) / 100;
                     let height = this.$refs.element.offsetHeight;
                     return Math.round(height * tmp);
                 }

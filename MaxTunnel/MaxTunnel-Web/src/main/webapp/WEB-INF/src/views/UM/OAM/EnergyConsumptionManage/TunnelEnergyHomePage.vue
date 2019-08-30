@@ -297,6 +297,45 @@ export default {
             endTime: "",
             period: 3,
             periodList: [],
+            lineChart: {
+                id: "tunnelEnergyLineChart",
+                series: [],
+                legendData: [],
+                xData: [],
+                parameters: {
+                    option: {
+                        title: {
+                            text: "综合管廊耗电量",
+                            textStyle: {
+                                color: "#fff"
+                            }
+                        },
+                        color: [
+                            "#e5c52f",
+                            "#6bade1",
+                            "#6fe46c",
+                            "#e06ce4",
+                            "#e48e6c",
+                            "#c23531"
+                        ],
+                        xAxis: {
+                            axisLabel: {
+                                color: "#fff"
+                            }
+                        },
+                        yAxis: {
+                            axisLabel: {
+                                color: "#fff"
+                            }
+                        },
+                        legend: {
+                            textStyle: {
+                                color: ["#fff"]
+                            }
+                        }
+                    }
+                }
+            },
             pieChart: {
                 requestUrl: "tunnels/total-avg/1/consume-datas",
                 id: "tunnelEnergyPieChart",
@@ -327,9 +366,10 @@ export default {
                 size: "55%"
             },
             radarChart: {
-                requestUrl: "tunnels/total-avg/2/consume-datas",
                 id: "tunnelEnergyRadarChart",
                 titleSize: "6%",
+                radarIndicator: [],
+                seriesData:[],
                 parameters: {
                     option: {
                         title: {
@@ -375,45 +415,6 @@ export default {
     computed: {
         menuitemClasses: function() {
             return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-        },
-        lineChart: function() {
-            return {
-                id: "tunnelEnergyLineChart",
-                requestUrl: "tunnels/consumes/interval/" + this.period,
-                parameters: {
-                    option: {
-                        title: {
-                            text: "综合管廊耗电量",
-                            textStyle: {
-                                color: "#fff"
-                            }
-                        },
-                        color: [
-                            "#e5c52f",
-                            "#6bade1",
-                            "#6fe46c",
-                            "#e06ce4",
-                            "#e48e6c",
-                            "#c23531"
-                        ],
-                        xAxis: {
-                            axisLabel: {
-                                color: "#fff"
-                            }
-                        },
-                        yAxis: {
-                            axisLabel: {
-                                color: "#fff"
-                            }
-                        },
-                        legend: {
-                            textStyle: {
-                                color: ["#fff"]
-                            }
-                        }
-                    }
-                }
-            };
         }
     },
     methods: {
@@ -429,6 +430,31 @@ export default {
                 _this.curYearData.value = result[1].val;
                 _this.curMonthData.value = result[2].val;
             });
+            EnergyConsumptionService.getTunnelAveEC().then(
+                res=> {
+                    var tmpMax = 0;
+                    let newData = [
+                        {
+                            value: [],
+                            name: this.radarChart.parameters.option.title.text
+                        }
+                    ];
+                    for (const iterator of res) {
+                        newData[0].value.push(iterator.val.toFixed(2));
+                        if (iterator.val > tmpMax) tmpMax = iterator.val;
+                    }
+                    let tmpIndicator = [];
+                    for (const iterator of res) {
+                        tmpIndicator.push({
+                            name: iterator.key,
+                            // 最大值大个10%
+                            max: tmpMax * 1.1
+                        });
+                    }
+                    this.radarChart.radarIndicator = tmpIndicator;
+                    this.radarChart.seriesData = newData;
+                }
+            )
         },
         initTime() {
             let _this = this;
@@ -443,7 +469,36 @@ export default {
         },
         //修改周期
         changePeriod() {
-            this.$refs.childChart.fetchData(this.lineChart.requestUrl);
+            EnergyConsumptionService.getIntervalConsumes(this.period).then(
+                res => {
+                    this.lineChart.series = [];
+                    this.lineChart.xData = [];
+                    res.forEach((tunnel, index) => {
+                        var temp = {};
+                        temp.name = tunnel.key;
+                        temp.type = "line";
+                        temp.smooth = true;
+
+                        this.lineChart.legendData.push({
+                            name: tunnel.key,
+                            textStyle: {
+                                color: this.lineChart.parameters.option.color[
+                                    index
+                                ]
+                            }
+                        });
+                        let tempData = [];
+                        tunnel.val.filter(b =>
+                            tempData.push(parseFloat(b.val.toFixed(2)))
+                        );
+                        temp.data = tempData;
+                        this.lineChart.series.push(temp);
+                    });
+                    res[0].val.filter(time => {
+                        this.lineChart.xData.push(time.key);
+                    });
+                }
+            );
         },
         //导出表数据
         exportData() {

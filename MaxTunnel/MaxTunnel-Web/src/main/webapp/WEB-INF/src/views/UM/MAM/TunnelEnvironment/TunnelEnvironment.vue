@@ -26,13 +26,13 @@ export default {
         ModulePage
     },
     created() {
-        console.log("jici");
+       
         this.curModule.leftTree = [];
         let _this = this;
 
         TunnelService.getTunnels().then(
             result => {
-                console.log("result", result);
+                
                 result.forEach(a => {
                     let temp = {};
                     temp.id = a.id;

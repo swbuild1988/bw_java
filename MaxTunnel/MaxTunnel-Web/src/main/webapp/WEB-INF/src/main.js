@@ -24,6 +24,7 @@ import serverconfig from "../static/serverconfig";
 Vue.prototype.$echarts = echarts;
 Vue.use(VMConfig);
 Vue.use(iView);
+
 Vue.use(vueXlsxTable, {
     rABS: false
 });
@@ -50,6 +51,7 @@ Vue.prototype.Log = {
     }
 };
 
+
 // main 初始化
 async function main_init() {
     console.log("开始初始化")
@@ -68,8 +70,8 @@ async function main_init() {
         // let MQ = Vue.prototype.MQ;
         // MQ.openMQ();
         // console.log("MQ", MQ);
-
         return "success"
+
     } catch (err) {
         throw new Error(err);
     }
@@ -95,5 +97,6 @@ main_init().then(res => {
 }).catch(err => {
     console.log("初始化异常", err)
 })
+
 
 console.log("main.js运行结束")

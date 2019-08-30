@@ -3,7 +3,6 @@ package com.bandweaver.tunnel.controller.constant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.*;
@@ -40,7 +39,6 @@ import com.bandweaver.tunnel.common.biz.pojo.StoreType;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.bandweaver.tunnel.controller.xml.XMLController;
 
 
 /**

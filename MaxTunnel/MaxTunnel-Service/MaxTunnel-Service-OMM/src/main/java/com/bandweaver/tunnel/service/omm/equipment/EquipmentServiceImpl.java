@@ -7,6 +7,7 @@ import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.dao.common.TunnelMapper;
 import com.bandweaver.tunnel.dao.omm.DefectMapper;
 import com.bandweaver.tunnel.dao.omm.EquipmentMapper;
@@ -17,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
@@ -30,14 +33,16 @@ public class EquipmentServiceImpl implements EquipmentService {
 	private DefectMapper defectMapper;
 
 	@Override
-	public Equipment getEquipmentByAssetNo(String AssetNo) {
-		return equipmentMapper.getEquipmentByAssetNo(AssetNo);
-	}
-
-	@Override
 	public Integer addEquipment(Equipment equipment) {
 		equipment.setCrtTime(new Date());
 		equipment.setAlarmNo(0);
+		if(equipment.getObjId() != null) {
+			List<EquipmentDto> list = equipmentMapper.getEquipmentListByObj(equipment.getObjId());
+			if(list != null && list.size() > 0) {
+				LogUtil.info("监测对象【" + equipment.getObjId() + "】已绑定设备！");
+				return 0;
+			}
+		}
 		return equipmentMapper.addEquipment(equipment);
 	}
 
@@ -59,6 +64,16 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public void updateEquipmentById(Equipment equipment) {
+		if(equipment.getObjId() != null) {
+			List<EquipmentDto> list = equipmentMapper.getEquipmentListByObj(equipment.getObjId());
+			if(list != null && list.size() > 0) {
+				list = list.stream().filter(dto -> !dto.getId().equals(equipment.getId())).collect(Collectors.toList());
+				for(Equipment e : list) {
+					e.setObjId(null);
+					updateEquipmentOfObj(e);
+				}
+			}
+		}
 		equipmentMapper.updateEquipmentById(equipment);
 	}
 
@@ -90,7 +105,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public EquipmentDto getEquipmentListByObj(Integer objId) {
+	public EquipmentDto getEquipmentByObj(Integer objId) {
 		List<EquipmentDto> list = equipmentMapper.getEquipmentListByObj(objId);
 		return  list.size() > 0 ? list.get(0) : null ;
 	}

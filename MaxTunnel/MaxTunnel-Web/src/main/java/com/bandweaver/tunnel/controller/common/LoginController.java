@@ -46,11 +46,10 @@ import javax.servlet.http.HttpServletResponse;
 @ResponseBody
 public class LoginController {
 
-
-    @Autowired
-    private Loginservice loginservice;
-    @Autowired
-    private MqService mqService;
+	@Autowired
+	private Loginservice loginservice;
+	@Autowired
+	private MqService mqService;
 
 	/**
 	 * 登录并返回权限列表
@@ -94,47 +93,46 @@ public class LoginController {
 			json.put("queueExpired", new Date(new Date().getTime() + 300 * 1000));
 		}
 
-        return CommonUtil.success(json);
+		return CommonUtil.success(json);
 
-    }
+	}
 
-    /**
-     * 获取登录用户信息
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/login/{username}", method = RequestMethod.GET)
-    public JSONObject getLogInfo(@PathVariable("username") String username) {
+	/**
+	 * 获取登录用户信息
+	 *
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping(value = "/login/{username}", method = RequestMethod.GET)
+	public JSONObject getLogInfo(@PathVariable("username") String username) {
 //		JSONObject result = loginservice.getPermissionListByUserName(username);
-        List<Role> result = loginservice.getUserRoles(username);
-        return CommonUtil.success(result);
-    }
+		List<Role> result = loginservice.getUserRoles(username);
+		return CommonUtil.success(result);
+	}
 
+	/**
+	 * GET方式登陆
+	 *
+	 * @param name
+	 * @param password
+	 * @return
+	 */
+	@WriteLog(DescEnum.LOGIN)
+	@RequestMapping(value = "name/{name}/password/{password}", method = RequestMethod.GET)
+	public JSONObject loginGet(@PathVariable("name") String name, @PathVariable("password") String password) {
 
-    /**
-     * GET方式登陆
-     *
-     * @param name
-     * @param password
-     * @return
-     */
-    @WriteLog(DescEnum.LOGIN)
-    @RequestMapping(value = "name/{name}/password/{password}", method = RequestMethod.GET)
-    public JSONObject loginGet(@PathVariable("name") String name, @PathVariable("password") String password) {
+		Subject subject = SecurityUtils.getSubject();
+		// 密码加密是前端的事情，等前端改好之后，此处代码改回来即可
+		UsernamePasswordToken token = new UsernamePasswordToken(name, password);
+		token.setRememberMe(true);
+		subject.login(token);
 
-        Subject subject = SecurityUtils.getSubject();
-        //密码加密是前端的事情，等前端改好之后，此处代码改回来即可
-        UsernamePasswordToken token = new UsernamePasswordToken(name, password);
-        token.setRememberMe(true);
-        subject.login(token);
-
-        Session session = subject.getSession();
-        User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
-        JSONObject returnData = loginservice.getUserPermission(user.getName());
-        returnData.put("token", token);
-        return CommonUtil.success(returnData);
-    }
+		Session session = subject.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
+		JSONObject returnData = loginservice.getUserPermission(user.getName());
+		returnData.put("token", token);
+		return CommonUtil.success(returnData);
+	}
 
 	@WriteLog(DescEnum.LOGOUT)
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -147,24 +145,22 @@ public class LoginController {
 		return CommonUtil.success();
 	}
 
+	@RequestMapping(value = "/unauthor", method = RequestMethod.GET)
+	public JSONObject unauthor() {
+		return CommonUtil.returnStatusJson(StatusCodeEnum.E_502);
+	}
 
-    @RequestMapping(value = "/unauthor", method = RequestMethod.GET)
-    public JSONObject unauthor() {
-        return CommonUtil.returnStatusJson(StatusCodeEnum.E_502);
-    }
-
-    /**
-     * @param @return
-     * @return JSONObject
-     * @throws
-     * @Description: 未登录执行
-     * @author shaosen
-     * @date 2018年5月22日
-     */
-    @RequestMapping(value = "/503", method = RequestMethod.GET)
-    public JSONObject unlogin() {
-        return CommonUtil.returnStatusJson(StatusCodeEnum.E_503);
-    }
+	/**
+	 * @param @return
+	 * @return JSONObject
+	 * @throws @Description: 未登录执行
+	 * @author shaosen
+	 * @date 2018年5月22日
+	 */
+	@RequestMapping(value = "/503", method = RequestMethod.GET)
+	public JSONObject unlogin() {
+		return CommonUtil.returnStatusJson(StatusCodeEnum.E_503);
+	}
 
     /**
      * 获取项目版本等

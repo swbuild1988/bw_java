@@ -44,7 +44,7 @@
     </div>    
 </template>
 <script>
-import axios from "axios";
+import { PatrolService } from "../../../../services/patrolService";
 export default {
     data(){
         return{
@@ -78,32 +78,36 @@ export default {
         }
     },
     mounted() {
-        axios.get('processtype-enums').then(response=>{
-            let{code,data} = response.data
-            if(code==200){
-                this.processType = data
+        PatrolService.getProcessEnums().then(
+            result=>{
+                this.processType = result
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         this.queryMyTask()
     },
     methods: {
         //获取我的任务
         queryMyTask(){
-            axios.post('users/activiti/task/datagrid',(this.params)).then(response=>{
-                let { code, data } = response.data;
-                if (code == 200) {
-                    if(data.pagedList.length==0){
+            PatrolService.queryMyTask(this.params).then(
+                result => {
+                    if(result.pagedList.length==0){
                         this.isNullData = true
                     }else{
                         this.isNullData = false
                     }
-                    this.myTasks = data.pagedList
-                    this.page.pageTotal = data.total
+                    this.myTasks = result.pagedList
+                    this.page.pageTotal = result.total
                     for(let index in this.myTasks){
                         this.myTasks[index].crtTime = new Date(this.myTasks[index].crtTime).format('yyyy-MM-dd')
                     }
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         goToMoudle: function (task) {
             let pathParams = {

@@ -216,25 +216,26 @@ public class VideoController {
     @RequestMapping(value = "videos/datagrid", method = RequestMethod.POST)
     public JSONObject getVideoDtos(@RequestBody VideoVo vo) {
     	List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
-    	if (vo.getId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getId().intValue() == vo.getId()).collect(Collectors.toList());
-    	if (vo.getTunnelId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getTunnelId().intValue() == vo.getTunnelId()).collect(Collectors.toList());
-        if (vo.getStoreId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getStoreId().intValue() == vo.getStoreId()).collect(Collectors.toList());
-        if (vo.getAreaId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getAreaId().intValue() == vo.getAreaId()).collect(Collectors.toList());
-        if (vo.getVendor() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getVendor().intValue() == vo.getVendor()).collect(Collectors.toList());
-        if (vo.getServerId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getServerId().intValue() == vo.getServerId()).collect(Collectors.toList());
-        if (vo.getActived() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.isActived() == vo.getActived()).collect(Collectors.toList());
-        if (vo.getChannelNo() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getChannelNo() == vo.getChannelNo()).collect(Collectors.toList());
-        if (vo.getVideoSceneId() != null)
-            videoDtos = videoDtos.stream().filter(a -> a.getVideoSceneId() == vo.getVideoSceneId()).collect(Collectors.toList());
-
+    	if(videoDtos != null) {
+	    	if (vo.getId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getId().equals(a.getId())).collect(Collectors.toList());
+	    	if (vo.getTunnelId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getTunnelId().equals(a.getTunnelId())).collect(Collectors.toList());
+	        if (vo.getStoreId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getStoreId().equals(a.getStoreId())).collect(Collectors.toList());
+	        if (vo.getAreaId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getAreaId().equals(a.getAreaId())).collect(Collectors.toList());
+	        if (vo.getVendor() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getVendor().equals(a.getVendor())).collect(Collectors.toList());
+	        if (vo.getServerId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getServerId().equals(a.getServerId())).collect(Collectors.toList());
+	        if (vo.getActived() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getActived().equals(a.isActived())).collect(Collectors.toList());
+	        if (vo.getChannelNo() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getChannelNo().equals(a.getChannelNo())).collect(Collectors.toList());
+	        if (vo.getVideoSceneId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getVideoSceneId().equals(a.getVideoSceneId())).collect(Collectors.toList());
+    	}
     	ListPageUtil<VideoDto> list = new ListPageUtil<>(videoDtos, vo.getPageNum(), vo.getPageSize());
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }

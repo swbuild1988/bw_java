@@ -3,60 +3,68 @@
     <div class="formTitle">添加入廊申请</div>
     <div class="formHeight">
     <Form ref="addEnterGalleryApplication" :model="addEnterGalleryApplication" :label-width="160" :rules="ruleValidate" @submit.native.prevent>
-        <FormItem label="申请人所属公司：" prop="staffCompany">
-            <Select v-model="addEnterGalleryApplication.staffCompany" @on-change="chooseDeptment()">
-                <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="申请人所属部门：" prop="positionId" :disabled="this.addEnterGalleryApplication.staffCompany==null">
-            <Select v-model="addEnterGalleryApplication.positionId" @on-change="chooseStaff()" >
-                <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="申请人：" prop="staffId"  :disabled="this.addEnterGalleryApplication.staffCompany==null||this.addEnterGalleryApplication.positionId==null">
-            <Select v-model="addEnterGalleryApplication.staffId">
-                <Option v-for="(item) in staffs" :value="item.id" :key="item.id">{{item.name}}</Option>
-            </Select>
-            <!-- <Input type="text" v-model="addEnterGalleryApplication.staffId" readonly></Input> -->
-        </FormItem>
-        <FormItem label="审批人：" prop="approverId" class="ivu-form-item-required">
-            <Input v-model="addEnterGalleryApplication.approverId" readonly style="display: none"></Input>
-            <Input v-model="approver.name" readonly></Input>
-        </FormItem>
-        <FormItem label="管廊：" prop="tunnelId">
-            <Select v-model="addEnterGalleryApplication.tunnelId">
-                <Option v-for="(item,index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="入廊目的：" prop="action">
-            <Select v-model="addEnterGalleryApplication.action">
-                <Option v-for="(item,index) in action" :key="index" :value="item.val">{{item.key}}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="计划入廊时间：" prop="preTime">
-            <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" style="width: 100%"></DatePicker>
-        </FormItem>
-        <FormItem label="访客总人数：" class="ivu-form-item-required">
-            <InputNumber :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
-        </FormItem>
-        <FormItem label="访客所属公司" prop="visitorCompany">
-            <Select v-model="addEnterGalleryApplication.visitorCompany">
-                <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
-            </Select>
-        </FormItem>
-        <FormItem label="访客信息：" class="required">
-            <Poptip placement="top" style="width: 100%;">
-                <Input v-model="addEnterGalleryApplication.visitorInfo" v-show="false"></Input>
-                <Input v-model="addEnterGalleryApplication.visitorInfoNames" @on-blur="checkVisitorInfo"></Input>
-                <div class="ivu-form-item-error-tip"  v-show="isVisitorNames">访客不能为空</div>
-                <div class="pop" slot="content">
-                    <outSiders v-on:childByValue="childByValue"></outSiders>
-                </div>    
-            </Poptip>    
-        </FormItem>
-        <div style="text-align: center">
-            <Button type="ghost"  style="margin-right: 8px" @click="goBack()">返回</Button>
-            <Button type="primary" @click="submitEnterGalleryApplication('addEnterGalleryApplication')" :disabled="isDisable">提交</Button>
+        <div class="stepsHeight" v-show="isShowAddInfo==1">
+            <FormItem label="申请人所属公司：" prop="staffCompany">
+                <Select v-model="addEnterGalleryApplication.staffCompany" @on-change="chooseDeptment()">
+                    <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="申请人所属部门：" prop="positionId" :disabled="this.addEnterGalleryApplication.staffCompany==null">
+                <Select v-model="addEnterGalleryApplication.positionId" @on-change="chooseStaff()" >
+                    <Option v-for="item in positions" :value="item.id" :key="item.id">{{item.name}}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="申请人：" prop="staffId"  :disabled="this.addEnterGalleryApplication.staffCompany==null||this.addEnterGalleryApplication.positionId==null">
+                <Select v-model="addEnterGalleryApplication.staffId">
+                    <Option v-for="(item) in staffs" :value="item.id" :key="item.id">{{item.name}}</Option>
+                </Select>
+                <!-- <Input type="text" v-model="addEnterGalleryApplication.staffId" readonly></Input> -->
+            </FormItem>
+            <FormItem label="审批人：" prop="approverId" class="ivu-form-item-required">
+                <Input v-model="addEnterGalleryApplication.approverId" readonly style="display: none"></Input>
+                <Input v-model="approver.name" readonly></Input>
+            </FormItem>
+            <FormItem label="管廊：" prop="tunnelId">
+                <Select v-model="addEnterGalleryApplication.tunnelId">
+                    <Option v-for="(item,index) in tunnels" :key="index" :value="item.id">{{item.name}}</Option>
+                </Select>
+            </FormItem>
+        </div>
+        <div class="stepsHeight" v-show="isShowAddInfo==2">
+            <FormItem label="入廊目的：" prop="action">
+                <Select v-model="addEnterGalleryApplication.action">
+                    <Option v-for="(item,index) in action" :key="index" :value="item.val">{{item.key}}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="计划入廊时间：" prop="preTime">
+                <DatePicker type="datetime" placeholder="请选择计划入廊时间" v-model="addEnterGalleryApplication.preTime" style="width: 100%"></DatePicker>
+            </FormItem>
+            <FormItem label="访客总人数：" class="ivu-form-item-required">
+                <InputNumber :min="1" v-model="addEnterGalleryApplication.visitorNumber" style="width: 100%;"></InputNumber>
+            </FormItem>
+            <FormItem label="访客所属公司" prop="visitorCompany">
+                <Select v-model="addEnterGalleryApplication.visitorCompany">
+                    <Option v-for="item in company" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="访客信息：" class="required">
+                <Poptip placement="top" style="width: 100%;">
+                    <Input v-model="addEnterGalleryApplication.visitorInfo" v-show="false"></Input>
+                    <Input v-model="addEnterGalleryApplication.visitorInfoNames" @on-blur="checkVisitorInfo"></Input>
+                    <div class="ivu-form-item-error-tip"  v-show="isVisitorNames">访客不能为空</div>
+                    <div class="pop" slot="content">
+                        <outSiders v-on:childByValue="childByValue"></outSiders>
+                    </div>    
+                </Poptip>    
+            </FormItem>
+            <div style="text-align: center">
+                <Button type="primary" @click="submitEnterGalleryApplication('addEnterGalleryApplication')" :disabled="isDisable">提交</Button>
+            </div>
+        </div>
+        <div style="text-align: center;margin-top: 2vmin;">
+            <Button type="warning" @click="goBack()">返回</Button>
+            <Button type="default" v-if="isShowAddInfo!=1" @click="handlePre()">上一步</Button>
+            <Button type="primary" v-if="isShowAddInfo!=2" @click="handleNext()">下一步</Button>
         </div>
     </Form>
     </div>
@@ -117,29 +125,9 @@ export default {
             tunnels: [],
             action:[],
             positions:[],
-            // index: 1,
-            // items:[
-            //     {
-            //         index: 1,
-            //         status: 1,
-            //         name: null,
-            //         idCard: null,
-            //         tel: null
-            //     }
-            // ],
-            // check:[
-            //     {
-            //         index: 1,
-            //         status: 1,
-            //         checkName: false,
-            //         checkidCard: false,
-            //         checkRightIdCard: false,
-            //         checkTel: false,
-            //         checkRightTel: false
-            //     }
-            // ],
             isDisable:false,
-            isVisitorNames: false
+            isVisitorNames: false,
+            isShowAddInfo: 1
         }
     },
     watch: {
@@ -176,13 +164,15 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        this.axios.get('roles/users').then(res=>{
-            let{ code,data } = res.data
-            if(code==200){
-                this.approver = data[0]
-                this.addEnterGalleryApplication.approverId = data[0].id
+        EnterGalleryService.getRoles().then(
+            result => {
+                this.approver = result[0]
+                this.addEnterGalleryApplication.approverId = result[0].id
+            },
+            error => {
+                _this.Log.info(error)
             }
-        })
+        )
     },
     methods:{
         submitEnterGalleryApplication(name){
@@ -266,7 +256,16 @@ export default {
             }else{
                 this.isVisitorNames = false
             }
+        },
+        //上一步
+        handlePre(){
+            this.isShowAddInfo=this.isShowAddInfo-1
+        },
+        //下一步
+        handleNext(){			
+            this.isShowAddInfo = this.isShowAddInfo+1
         }
+        
     }
 }
 </script>

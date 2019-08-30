@@ -36,61 +36,40 @@ else {
 }
 
 //http request 拦截器
-// axios.interceptors.request.use(
-//   config => {
-//     const token = sessionStorage.authorization;
-//     if (token) {
-//       // 这里将token设置到headers中
-//       config.headers.Authorization = token;
-//       //这里主要是为了兼容IE9
-//       var browser = navigator.appName;
-//       var b_version = navigator.appVersion;
-//       if (browser == 'Netscape' && b_version.indexOf(';') < 0) {  //火狐
-//       } else {
-//         if (b_version.indexOf(';') < 0) {
-//           return config;
-//         }
-//         var version = b_version.split(";");
-//         var trim_Version = version[1].replace(/[ ]/g, "");
-//         if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE9.0") {
-//           if (config.url.indexOf('?') > 0) {
-//             config.url = config.url + "&AUTHORIZATION=" + token;
-//           }
-//           else {
-//             config.url = config.url + "?AUTHORIZATION=" + token;
-//           }
-//         }
-//       }
-//     } else {
-//       sessionStorage.removeItem('authorization');
-//       localStorage.clear();  //清空缓存
-//       if (router.currentRoute.name && router.currentRoute.name.toLowerCase().indexOf("login")>0) {
-//         //这里需要排除登陆(或第一次请求获取token)的时候的验证
-//       } else {
-//         return null;
-//       }
-//     }
-//     return config
-//   },
-//   error => {
-//     return Promise.reject(error)
-//   }
-// );
+axios.interceptors.request.use(
+  config => {
+    // if (localStorage.getItem('Authorization')) {
+    //   config.headers.Authorization = localStorage.getItem('Authorization');
+    // }
+    if(config.url==='/UMLogin'){  //如果是登录和注册操作，则不需要携带header里面的token
+    }else{
+      if (localStorage.getItem('Authorization')) {
+        config.headers.Authorizatior = localStorage.getItem('Authorization');
+        console.log("2222")
+      }
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+});
+
+
 //http response 拦截器
 axios.interceptors.response.use(
   response => {
     return response;
   },
   error => {
-    if (error.response) {
+    if (error.response) { 
       switch (error.response.status) {
         case 401:
           //返回 401 清除token信息并跳转到登录页面
-          sessionStorage.removeItem('authorization');
-          router.replace({
-            path: '/login',
-            //query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
-          })
+          // localStorage.removeItem('Authorization');
+          // router.replace({
+          //   path: '/UMLogin',
+          //   //query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
+          // })
         case 400:
           error.message = '请求错误'
           break
@@ -136,5 +115,20 @@ axios.interceptors.response.use(
     return Promise.reject(error.message) // 返回接口返回的错误信息
   }
 );
+
+//异步请求前判断请求的连接是否需要token
+router.beforeEach((to, from, next) => {
+  if (to.path === '/') {
+    next();
+  } else {
+    let token = localStorage.getItem('Authorization');
+    console.log("我是浏览器本地缓存的token: "+token);
+    if (token === 'null' || token === '') {
+      next('/UMLogin');
+    } else {
+      next();
+    }
+  }
+});
 
 export default axios;

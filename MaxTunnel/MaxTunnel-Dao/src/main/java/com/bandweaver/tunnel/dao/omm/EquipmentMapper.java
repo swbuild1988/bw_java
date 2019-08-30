@@ -9,13 +9,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface EquipmentMapper {
-	/**
-	 * 通过资产号获取设备具体信息
-	 * 
-	 * @param assetNo
-	 * @return
-	 */
-	Equipment getEquipmentByAssetNo(String assetNo);
 
 	/**
 	 * 新增设备

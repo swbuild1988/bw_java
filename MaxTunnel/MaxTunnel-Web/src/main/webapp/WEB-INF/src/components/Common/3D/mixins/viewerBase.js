@@ -91,12 +91,6 @@ export default (containerId, viewer, domId, route) => ({
         scene() {
             return this.viewer.scene;
         },
-        // BIM_SCP(){
-        //     return this.SuperMapConfig.IP + this.SuperMapConfig.BIM_SCP;
-        // },
-        // BIM_DATA(){
-        //     return this.SuperMapConfig.IP + this.SuperMapConfig.BIM_DATA;
-        // }
     },
     data() {
         return {
@@ -109,7 +103,7 @@ export default (containerId, viewer, domId, route) => ({
                 this.getLayer();
                 this.init();
                 this.initProps();
-                if (this.pointLinght.isOpen) this.getPointLinght();
+                if (this.pointLight.isOpen) this.getPointLinght();
             })
             .catch(() => {
                 this.initUpdate(Vue.prototype[viewer], Vue.prototype[viewer].scene)
@@ -119,9 +113,10 @@ export default (containerId, viewer, domId, route) => ({
 
     },
     methods: {
+        
         createHtml() {
             let _this = this;
-
+            
             return new Promise((resolve, reject) => {
 
                 if (!Vue.prototype[viewer]) {
@@ -138,18 +133,20 @@ export default (containerId, viewer, domId, route) => ({
                     resolve();
                 } else {
                     _this.setGIS();
-
                     reject();
                 }
             });
         },
         getLayer() {
             let _this = this;
+            
             if (Cesium.defined(this.scene)) {
 
                 try {
                     //打开所发布三维服务下的所有图层
                     let promise = this.scene.open(this.SuperMapConfig.BIM_SCP);
+
+                    if(promise && viewer=='$viewer') _this.$store.commit("loadUnits"); // 俯视图加载单位图片
 
                     Cesium.when(
                         promise,
@@ -158,13 +155,13 @@ export default (containerId, viewer, domId, route) => ({
                             layer.forEach(
                                 curBIM => {
                                     curBIM._selectEnabled = false;
-                                    // curBIM.clearMemoryImmediately = true; //是否及时释放内存
                                 }
                             );
                             //设置相机位置、视角，便于观察场景
+                            console.log('this.viewersdsd',_this.viewer)
                             _this.setViewAngle();
 
-                            _this.$store.commit("loadUnits"); //加载单位图片
+                           
                         },
                         function (e) {
                             if (widget._showRenderLoopErrors) {

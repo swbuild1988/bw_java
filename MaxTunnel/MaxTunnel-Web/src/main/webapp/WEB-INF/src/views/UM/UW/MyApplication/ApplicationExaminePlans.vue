@@ -61,8 +61,8 @@
     </div>
 </template>
 <script>
-import axios from "axios";
 import types from '../../../../../static/Enum.json'
+import { PatrolService } from '@/services/patrolService'
 export default {
     data(){
         return{
@@ -139,14 +139,16 @@ export default {
     },
     mounted(){
         this.examineStatus = this.$route.params.type
-        axios.get('/users/activiti/task/detail/'+this.$route.params.processDefinitionId+'/'+this.$route.params.processType).then(response=>{
-            let{ code,data } = response.data
-            if(code=200){
-                this.plans = data
+        PatrolService.addTaskPerson(this.$route.params.processDefinitionId, this.$route.params.processType).then(
+            result => {
+                this.plans = result
                 this.plans.createTime = new Date(this.plans.createTime).format('yyyy-MM-dd hh:mm:s')
                 this.plans.inspectTime = new Date(this.plans.inspectTime).format('yyyy-MM-dd hh:mm:s')
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
     },
     methods:{
         //返回

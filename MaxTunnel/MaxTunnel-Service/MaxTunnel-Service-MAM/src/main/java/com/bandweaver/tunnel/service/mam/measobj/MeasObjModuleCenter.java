@@ -1,6 +1,5 @@
 package com.bandweaver.tunnel.service.mam.measobj;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,39 +7,24 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
-import com.bandweaver.tunnel.common.biz.dto.mam.report.MeasObjReportDto;
 import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.locator.LocatorService;
-import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjSOService;
-import com.bandweaver.tunnel.common.biz.itf.mam.report.MeasObjReportService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.mam.*;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.*;
-import com.bandweaver.tunnel.common.biz.pojo.mam.report.MeasObjReport;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
 import com.bandweaver.tunnel.dao.mam.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.itf.ModuleCenterInterface;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
-import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.Video;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
-import com.bandweaver.tunnel.common.platform.util.DateUtil;
-import com.bandweaver.tunnel.common.platform.util.MathUtil;
-import com.bandweaver.tunnel.common.platform.util.SpringContextHolder;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
-
-import sun.util.logging.resources.logging;
-
-import javax.annotation.PreDestroy;
 
 @Service
 public class MeasObjModuleCenter implements ModuleCenterInterface {
@@ -61,27 +45,13 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     @Autowired
     private LocatorService locatorService;
     @Autowired
-    private MeasObjReportService measObjReportService;
-    @Autowired
     private SectionService sectionService;
 
     /**
      * value table
      */
     @Autowired
-    private MeasValueAIMapper measValueAIMapper;
-    @Autowired
-    private MeasValueDIMapper measValueDIMapper;
-    @Autowired
-    private MeasValueSIMapper measValueSIMapper;
-    @Autowired
     private MeasValueSOMapper measValueSOMapper;
-    @Autowired
-    private MeasValueDistributeMapper measValueDistributeMapper;
-    @Autowired
-    private MeasValueDASSpectrumMapper measValueDASSpectrumMapper;
-    @Autowired
-    private MeasValueTabdictMapper measValueTabdictMapper;
     @Autowired
     private XMLService xmlService;
 
@@ -240,25 +210,23 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public void insertMeasObj(MeasObj measObj) {
+    	// 如果存在该点位就退出
+    	if (measObjHashMap.containsKey(measObj.getId())) {
+    		return;
+    	}
+    	
         measObj.setActived(true);
 
-        if (measObj.getObjtypeId().intValue() != 0) {
+        if (measObj.getObjtypeId() != null) {
             ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
             measObj.setDatatypeId(objectType.getDataType());
         }
 
-        if (measObjHashMap.containsKey(measObj.getId())) {
-            return;
-        }
-
         // 根据storeid & areaid查找
         Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-        if (section != null) {
+        measObj.setSectionId(-1);
+        if (section != null)
             measObj.setSectionId(section.getId());
-        } else {
-            measObj.setSectionId(-1);
-        }
-
 
         // 塞进数据库
         measObjMapper.insertSelective(measObj);
@@ -274,19 +242,15 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public void updateMeasObj(MeasObj measObj) {
-        if (!measObjHashMap.containsKey(measObj.getId())) {
-            return;
-        }
-
+        if (!measObjHashMap.containsKey(measObj.getId())) return;
+        
         // 先更新数据库
-        if (measObj.getStoreId() != null && measObj != null) {
+        measObj.setSectionId(-1);
+        if (measObj.getStoreId() != null && measObj.getAreaId() != null) {
             Section section = sectionService.getSectionByStoreAndArea(measObj.getStoreId(), measObj.getAreaId());
-            if (section != null) {
+            if (section != null)
                 measObj.setSectionId(section.getId());
-            } else {
-                measObj.setSectionId(-1);
-            }
-        } else measObj.setSectionId(null);
+        }
         measObjMapper.updateByPrimaryKeySelective(measObj);
 
         // 再更新缓存
@@ -463,6 +427,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
                 measObjAI.setRefreshTime(new Date());
+                measObjAI.setCv(0.0);
                 measObjAIMapper.insertSelective(measObjAI);
                 break;
 
@@ -685,7 +650,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 break;
 
             case VIDEO:
-                // TODO
                 break;
 
             case ComplexObject:
@@ -736,7 +700,6 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
                 break;
 
             case VIDEO:
-                // TODO
                 break;
 
             case ComplexObject:

@@ -2,123 +2,127 @@
 	<div>
 		<Form class="formBG" ref="uploadPlan" :model="uploadPlan" :label-width="120" :rules="ruleValidate" @submit.native.prevent>
 			<div class="formTitle">制定巡检计划</div>
-			<Row class="formHeight">
-				<Col span="12" class="leftForm">
-					<div class="planContainer leftContainer" prop="planId">
-						<FormItem label="计划编号：" prop="planId">
-							<Input v-model="uploadPlan.planId"></Input>
-						</FormItem>
-						<FormItem label="计划名称：" prop="name">
-							<Input v-model="uploadPlan.name" placeholder="请输入计划名称"></Input>
-						</FormItem>
-						<FormItem label="所属管廊：" prop="tunnelId">
-							<Select v-model="uploadPlan.tunnelId" @on-change="getInfo(uploadPlan.tunnelId)">
-								<Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem label="责任班组：" prop="groupId">
-							<Select v-model="uploadPlan.groupId">
-								<Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
-							</Select>
-						</FormItem>
-						<FormItem label="巡检方式：" prop="inspectionWay">
-							<Select v-model="uploadPlan.inspectionWay">
-								<Option v-for="(item, index) in inspectWay" :value="item.val" :key="index">{{item.key}}</Option>
-							</Select>
-						</FormItem>
-						<FormItem label="巡检路径：" prop="inspectionPath">
-							<Select v-model="uploadPlan.inspectionPath" @on-change="chooseInspectionPath()">
-								<Option v-for="(item, index) in inspectPath" :value="item.val" :key="index">{{item.key}}</Option>
-							</Select>
-						</FormItem>
-						<FormItem label="巡检路径详情：" v-if="uploadPlan.inspectionPath==1||uploadPlan.inspectionPath==2">
-							<Input v-if="uploadPlan.inspectionPath==1" :value="uploadPlan.choosedStoreName" readonly></Input>
-							<Input v-if="uploadPlan.inspectionPath==2" :value="uploadPlan.pathConName" readonly></Input>
-						</FormItem>
-						<FormItem label="巡检对象：" prop="inspectionObject">
-							<Select v-model="uploadPlan.inspectionObject">
-								<Option v-for="(item, index) in inspectObject" :value="item.val" :key="index">{{item.key}}</Option>
-							</Select>
-						</FormItem>
-						<FormItem label="申请人：" class="ivu-form-item-required">
-							<Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
-							<Input v-model="requestStaffName" readonly></Input>
-						</FormItem>
-						<FormItem label="审批人：" class="ivu-form-item-required">
-							<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
-							<Input v-model="approver.name" readonly></Input>
-						</FormItem>
-						<FormItem label="计划步骤：" class="ivu-form-item-required">
-							<ul class="stepsBox">
-								<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
-									<span style="color: #fff">{{index+1}}、</span>
-									<Input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" @on-blur="tipStep(item.name)"></Input>
-									<Button class="todoButton delBtn" :disabled="index==0" @click="delList(index)">删除</Button>
-									<Button class="todoButton showBtn" @click="addList(index)">添加</Button>
-								</li>
-							</ul>
-							<div class="ivu-form-item-error-tip" v-show="showStepsTip">计划步骤不能为空</div>
-						</FormItem>
-					</div>
-				</Col>
-				<Col span="12" class="rightForm">
-					<div class="planContainer rightContainer">
-						<FormItem label="计划描述：" prop="remark">
-							<Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}" placeholder="请输入计划描述"></Input>
-						</FormItem>
-						<Tabs class="moduleStyle" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
-							<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
-								<FormItem label="巡检日期：" prop="tasks">
-									<Input placeholder="请选择巡检日期且年份可多选" style="width: 100%;" v-model="choosedYear"></Input>
-									<yearCalender ref="getYearChild" v-on:getYearChild="getActiveYearText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></yearCalender>
-								</FormItem>
-							</TabPane>
-							<TabPane label="月份" name="name2" style="padding-left: 1vmin;">
-								<FormItem label="巡检日期：" prop="tasks">
-									<Input placeholder="请选择巡检日期且月份可多选" style="width: 100%" v-model="choosedMonth"></Input>
-									<monthCalender ref="getMonthChild" v-on:getMonthChild="getActiveMonthText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></monthCalender>
-								</FormItem>
-							</TabPane>
-							<TabPane label="日期" name="name3" style="padding-left: 1vmin;">
-								<FormItem label="巡检月份：" prop="tasks">
-									<DatePicker type="month" placeholder="请选择巡检月份" style="width: 100%" v-model="uploadPlan.inspectTime"
-									@on-change="getChooseMonth()"></DatePicker>
-								</FormItem>
-								<FormItem label="巡检日期安排：">
-									<Tabs class="moduleStyle" v-model="uploadPlan.dateType" @click="chooseDate">
-										<TabPane label="间隔模式" name="intervalType">
-											<div>
-												开始日期：
-												<input v-model="uploadPlan.intervalMode.startDay" type="number" min="1" max="31">
-												结束日期：<input v-model="uploadPlan.intervalMode.endDay" type="number" min="1" max="31">
-												间隔天数：
-												<input v-model="uploadPlan.intervalMode.interval" type="number" min="1" max="31">
-												<Button type="default" @click="getDay" class="tabBtn">确定</Button>
-												<Button type="default" @click="defaultBtn" class="tabBtn">重置</Button>
-											</div>
-										</TabPane>
-										<TabPane label="星期模式" name="weekType">
-											<Checkbox v-for="(item, index) in weekDay" v-model="item.value" :value='item.value' :key='index'
-											@on-change="getWeek()">{{item.name}}</Checkbox>
-										</TabPane>
-										<TabPane label="自定义" name="customType" style="text-align: center">
-											请根据您的需求自由选择日期
-										</TabPane>
-									</Tabs>
-									<calender ref="calender" :currentMonth="currMonth" :currentYear="currYear" v-on:childByValue="getActiveText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"
-									style="margin: 10px auto;margin-bottom: 0px;"></calender>
-								</FormItem>
-							</TabPane>
-						</Tabs>
-					</div>
-				</Col>
-			</Row>
-			<FormItem style="text-align: center;margin-bottom: 0px">
-				<div class="planBtn backBtn" @click="goBack()">返回</div>
-				<div class="planBtn submitBtn" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</div>
-				<div class="planBtn importantBtn" @click="importTemplate">导入模板</div>
-				<div class="planBtn createBtn" @click="createTemplate">生成模板</div>
-			</FormItem>
+			<div class="formHeight">
+				<div v-show="isShowCurPlan==1" class="stepsHeight">
+					<FormItem label="计划编号：" prop="planId" class="formItemWidth">
+						<Input v-model="uploadPlan.planId"></Input>
+					</FormItem>
+					<FormItem label="计划名称：" prop="name" class="formItemWidth">
+						<Input v-model="uploadPlan.name" placeholder="请输入计划名称"></Input>
+					</FormItem>
+					<FormItem label="所属管廊：" prop="tunnelId" class="formItemWidth">
+						<Select v-model="uploadPlan.tunnelId" @on-change="getInfo(uploadPlan.tunnelId)">
+							<Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="责任班组：" prop="groupId" class="formItemWidth">
+						<Select v-model="uploadPlan.groupId">
+							<Option v-for="item in groups" :value="item.id" :key="item.id">{{ item.name }}</Option>
+						</Select>
+					</FormItem>
+				</div>
+				<div v-show="isShowCurPlan==2" class="stepsHeight">
+					<FormItem label="巡检方式：" prop="inspectionWay" class="formItemWidth">
+						<Select v-model="uploadPlan.inspectionWay">
+							<Option v-for="(item, index) in inspectWay" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="巡检路径：" prop="inspectionPath" class="formItemWidth">
+						<Select v-model="uploadPlan.inspectionPath" @on-change="chooseInspectionPath()">
+							<Option v-for="(item, index) in inspectPath" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+					<FormItem label="巡检路径详情：" v-if="uploadPlan.inspectionPath==1||uploadPlan.inspectionPath==2" class="formItemWidth">
+						<Input v-if="uploadPlan.inspectionPath==1" :value="uploadPlan.choosedStoreName" readonly></Input>
+						<Input v-if="uploadPlan.inspectionPath==2" :value="uploadPlan.pathConName" readonly></Input>
+					</FormItem>
+					<FormItem label="巡检对象：" prop="inspectionObject" class="formItemWidth">
+						<Select v-model="uploadPlan.inspectionObject">
+							<Option v-for="(item, index) in inspectObject" :value="item.val" :key="index">{{item.key}}</Option>
+						</Select>
+					</FormItem>
+				</div>
+				<div v-show="isShowCurPlan==3" class="stepsHeight">
+					<FormItem label="申请人：" class="ivu-form-item-required formItemWidth">
+						<Input v-model="uploadPlan.requestStaffId" readonly v-show="false"></Input>
+						<Input v-model="requestStaffName" readonly></Input>
+					</FormItem>
+					<FormItem label="审批人：" class="ivu-form-item-required formItemWidth">
+						<Input v-model="uploadPlan.approverId" readonly style="display: none"></Input>
+						<Input v-model="approver.name" readonly></Input>
+					</FormItem>
+					<FormItem label="计划步骤：" class="ivu-form-item-required formItemWidth">
+						<ul class="stepsBox">
+							<li v-for="(item, index) in uploadPlan.steps" :key="index" class="todoLi">
+								<span style="color: #fff">{{index+1}}、</span>
+								<Input class="todoEidt" v-model="item.name" placeholder="请输入要执行的计划步骤" @on-blur="tipStep(item.name)"></Input>
+								<Button class="todoButton delBtn" :disabled="index==0" @click="delList(index)">删除</Button>
+								<Button class="todoButton showBtn" @click="addList(index)">添加</Button>
+							</li>
+						</ul>
+						<div class="ivu-form-item-error-tip" v-show="showStepsTip">计划步骤不能为空</div>
+					</FormItem>
+					<FormItem label="计划描述：" prop="remark" class="formItemWidth">
+						<Input v-model="uploadPlan.remark" type="textarea" :autosize="{minRows: 4,maxRows: 4}" placeholder="请输入计划描述"></Input>
+					</FormItem>
+				</div>
+				<div v-show="isShowCurPlan==4" class="stepsHeight">
+					<Tabs class="moduleStyle formItemWidth" v-model="uploadPlan.type" @on-click="clearInput" :animated="false">
+						<TabPane label="年份" name="name1" style="padding-left: 1vmin;">
+							<FormItem label="巡检日期：" prop="tasks">
+								<Input placeholder="请选择巡检日期且年份可多选" style="width: 100%;" v-model="choosedYear"></Input>
+								<yearCalender ref="getYearChild" v-on:getYearChild="getActiveYearText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></yearCalender>
+							</FormItem>
+						</TabPane>
+						<TabPane label="月份" name="name2" style="padding-left: 1vmin;">
+							<FormItem label="巡检日期：" prop="tasks">
+								<Input placeholder="请选择巡检日期且月份可多选" style="width: 100%" v-model="choosedMonth"></Input>
+								<monthCalender ref="getMonthChild" v-on:getMonthChild="getActiveMonthText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"></monthCalender>
+							</FormItem>
+						</TabPane>
+						<TabPane label="日期" name="name3" style="padding-left: 1vmin;">
+							<FormItem label="巡检月份：" prop="tasks">
+								<DatePicker type="month" placeholder="请选择巡检月份" style="width: 100%" v-model="uploadPlan.inspectTime"
+								@on-change="getChooseMonth()"></DatePicker>
+							</FormItem>
+							<FormItem label="巡检日期安排：">
+								<Tabs class="moduleStyle" v-model="uploadPlan.dateType" @click="chooseDate">
+									<TabPane label="间隔模式" name="intervalType">
+										<div>
+											开始日期：
+											<input v-model="uploadPlan.intervalMode.startDay" type="number" min="1" max="31">
+											结束日期：<input v-model="uploadPlan.intervalMode.endDay" type="number" min="1" max="31">
+											间隔天数：
+											<input v-model="uploadPlan.intervalMode.interval" type="number" min="1" max="31">
+											<Button type="default" @click="getDay" class="tabBtn">确定</Button>
+											<Button type="default" @click="defaultBtn" class="tabBtn">重置</Button>
+										</div>
+									</TabPane>
+									<TabPane label="星期模式" name="weekType">
+										<Checkbox v-for="(item, index) in weekDay" v-model="item.value" :value='item.value' :key='index'
+										@on-change="getWeek()">{{item.name}}</Checkbox>
+									</TabPane>
+									<TabPane label="自定义" name="customType" style="text-align: center">
+										请根据您的需求自由选择日期
+									</TabPane>
+								</Tabs>
+								<calender ref="calender" :currentMonth="currMonth" :currentYear="currYear" v-on:childByValue="getActiveText" :tasks="uploadPlan.tasks" :type="uploadPlan.type"
+								style="margin: 10px auto;margin-bottom: 0px;"></calender>
+							</FormItem>
+						</TabPane>
+					</Tabs>
+					<FormItem style="text-align: center;margin-bottom: 0px">
+						<div class="planBtn submitBtn" @click="submitPlan('uploadPlan')" :disabled="isDisable">提交</div>
+						<div class="planBtn importantBtn" @click="importTemplate">导入模板</div>
+						<div class="planBtn createBtn" @click="createTemplate">生成模板</div>
+					</FormItem>
+				</div>
+				<div class="btn">
+					<Button type="warning" @click="goBack()">返回</Button>
+					<Button type="default" v-if="isShowCurPlan!=1" @click="handlePre()">上一步</Button>
+					<Button type="primary" v-if="isShowCurPlan!=4" @click="handleNext()">下一步</Button>
+				</div>
+			</div>
 		</Form>
 		<!-- 模板名称提交 -->
 		<Modal
@@ -224,6 +228,7 @@ export default {
 			}
 		}
 		return {
+			isShowCurPlan: 1,
 			// 页面类型 1：查看 2：编辑 3：新增
 			pageType: 1,
 			pageTypes: types.pageType,
@@ -244,7 +249,8 @@ export default {
                 inspectTime: null,
                 tasks: [],
                 approverId: 1,
-                tunnelId: null,
+				tunnelId: 1 
+				,
                 requestStaffId: null,
                 remark: '',
                 steps: [
@@ -406,6 +412,7 @@ export default {
 		'$route': function () {
 			//2. $route发生变化时再次赋值planId
 			this.uploadPlan.tunnelId = this.$route.params.tunnelId;
+			this.isShowCurPlan = 1
 		}
     },
     mounted() {
@@ -436,7 +443,7 @@ export default {
 			}
 		)
 		//获取责任班组
-		GroupServices.getGroups().then(
+		PatrolService.getGroups().then(
 			result => {
 				this.groups = result
 			},
@@ -826,6 +833,20 @@ export default {
 					this.Log.info(error)
 				}
 			)
+		},
+		//上一步
+		handlePre(){
+			if(this.isShowCurPlan<=1){
+				this.isShowCurPlan = 1
+			}
+			this.isShowCurPlan=this.isShowCurPlan-1
+		},
+		//下一步
+		handleNext(){
+			if(this.isShowCurPlan>=4){
+				this.isShowCurPlan = 4
+			}
+			this.isShowCurPlan = this.isShowCurPlan+1
 		}
     }
 }
@@ -1010,6 +1031,10 @@ export default {
 		height: 73vh;
 		overflow-y: auto;
 	}
+	.formHeight .btn{
+		text-align: center;
+		margin-top: 2vmin
+	}
 	.stepsBox{
 		max-height: 100px;
 		overflow-y: auto;
@@ -1027,6 +1052,13 @@ export default {
 		border-radius: 0;
 		-webkit-box-shadow: inset 0 0 5px rgba(221, 208, 208, 0.2);
 		background: rgba(0, 0, 0, 0.1)
+	}
+	.formItemWidth{
+		width: 35%;
+		margin: 2.4vmin auto;
+	}
+	.stepsHeight{
+		min-height: 20vh;
 	}
 
 	@media (min-width: 2200px) {

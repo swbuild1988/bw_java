@@ -406,7 +406,7 @@ export default {
     height: 2.57vmin !important;
     line-height: 2vmin !important;
     padding-top: 0.64vmin !important;
-    color: #fff;
+    color: #aaa;
 }
 
 .conditions >>> .ivu-select-selection {

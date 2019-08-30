@@ -62,8 +62,7 @@ public class XMLUtil {
 	 * @author ya.liu
 	 * @Date 2019年5月27日
 	 */
-	@SuppressWarnings("unchecked")
-	public static Object convertXmlFileToObject(Class clazz, String xmlPath) {
+	public static Object convertXmlFileToObject(Class<?> clazz, String xmlPath) {
 		Object xmlObject = null;
 		FileInputStream fis = null;
 		try {
@@ -114,8 +113,7 @@ public class XMLUtil {
 	/**
 	 * 将String类型的xml转换成对象
 	 */
-	@SuppressWarnings("unchecked")
-	public static Object convertXmlStrToObject(Class clazz, String xmlStr) {
+	public static Object convertXmlStrToObject(Class<?> clazz, String xmlStr) {
 		Object xmlObject = null;
 		try {
 			JAXBContext context = JAXBContext.newInstance(clazz);

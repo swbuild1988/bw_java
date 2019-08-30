@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { PlanService } from "../../../../services/planService";
 export default {
   name: "text-plan",
   data() {
@@ -53,22 +54,24 @@ export default {
       this.acceptPlanData();
     },
     startMQ() {
-      let _this = this;
-      _this.axios
-        .get("/emplans/start/sections/10/process-type/4001")
-        .then(result => {
-          let { msg, code, data } = result.data;
-          if (code == 200) {
-          }
-        });
+      PlanService.startMQ().then(
+        result => {
+
+        },
+        error => {
+          this.Log.info(error)
+        }
+      )
     },
     openMQ() {
-      let _this = this;
-      _this.axios.get("emplans/deploy/4001").then(result => {
-        let { msg, code, data } = result.data;
-        if (code == 200) {
+      PlanService.endMQ().then(
+        result => {
+
+        },
+        error => {
+          this.Log.info(error)
         }
-      });
+      )
     },
     // 连接成功回调函数
     callback(respond) {

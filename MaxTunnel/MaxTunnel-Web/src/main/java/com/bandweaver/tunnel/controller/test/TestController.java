@@ -3,6 +3,7 @@ package com.bandweaver.tunnel.controller.test;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
+import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
@@ -18,6 +19,7 @@ import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeDataService;
 import com.bandweaver.tunnel.common.biz.itf.oam.ConsumeService;
 import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
+import com.bandweaver.tunnel.common.biz.pojo.Store;
 import com.bandweaver.tunnel.common.biz.pojo.mam.MeasValueAI;
 import com.bandweaver.tunnel.common.biz.pojo.mam.alarm.Alarm;
 import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
@@ -78,6 +80,8 @@ public class TestController {
     private StoreService storeService;
     @Autowired
     private XMLService xmlService;
+    @Autowired
+    private SectionService sectionService;
 
 
     /**
@@ -285,6 +289,9 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /*
+     * 添加设备
+     */
     @RequestMapping(value = "test/add_equipments", method = RequestMethod.GET)
     public JSONObject addEquipments() {
         List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
@@ -352,86 +359,10 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    
     /*
-     * 添加布防、联动监测对象
+     * 
      */
-    @RequestMapping(value = "test/add_measobjs", method = RequestMethod.GET)
-    public JSONObject createMeasobj() {
-    	// 获取古城大街下的所有舱和区
-    	List<AreaDto> areas = areaService.getAreasByTunnelId(1);
-    	List<StoreDto> stores = storeService.getStoresByTunnelId(1);
-    	for(AreaDto area : areas) {
-    		// 添加联动监测对象
-    		String linkageId = "02" + area.getSn() + "00" + 6400;
-    		MeasObj measObj = new MeasObj();
-    		measObj.setId(Integer.parseInt(linkageId));
-    		measObj.setTunnelId(1);
-    		measObj.setAreaId(area.getId());
-    		measObj.setStoreId(0);
-    		measObj.setActived(true);
-    		measObj.setObjtypeId(64);
-    		measObj.setDatatypeId(2);
-    		measObj.setName(area.getName() + "联动装置");
-    		LogUtil.info(measObj);
-    		measObjModuleCenter.insertMeasObj(measObj);
-    		
-    		for(StoreDto store : stores) {
-    			String [] sn = {"01", "02", "03", "04"};
-    			List<String> list = Arrays.asList(sn);
-    			if(!list.contains(store.getSn())) continue;
-    			// 添加布防监测对象
-    			String deployId = "02" + area.getSn() + store.getSn() + 6300;
-    			MeasObj measObj1 = new MeasObj();
-        		measObj1.setId(Integer.parseInt(deployId));
-        		measObj1.setTunnelId(1);
-        		measObj1.setAreaId(area.getId());
-        		measObj1.setStoreId(store.getId());
-        		measObj1.setActived(true);
-        		measObj1.setObjtypeId(63);
-        		measObj1.setDatatypeId(2);
-        		measObj1.setName(area.getName() + store.getName() + "布防装置");
-        		LogUtil.info(measObj1);
-        		measObjModuleCenter.insertMeasObj(measObj1);
-    		}
-    	}
-        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-    }
-    
-    /**
-     * 添加外部/气象台的温度/湿度
-     * @return
-     * @author ya.liu
-     * @Date 2019年7月3日
-     */
-    @RequestMapping(value = "test/add_outside", method = RequestMethod.GET)
-    public JSONObject addOutside() {
-    	String [] out = {"100000", "200000"};
-    	String [] th = {"0100", "0200"};
-    	List<String> outs = Arrays.asList(out);
-    	List<String> ths = Arrays.asList(th);
-    	for(int j=0;j<outs.size();j++) {
-    		for(int i=0;i<ths.size();i++) {
-    			// 添加
-    			String id = outs.get(j) + ths.get(i);
-    			MeasObj measObj = new MeasObj();
-        		measObj.setId(Integer.parseInt(id));
-        		measObj.setTunnelId(0);
-        		measObj.setAreaId(0);
-        		measObj.setStoreId(0);
-        		measObj.setActived(true);
-        		measObj.setObjtypeId(1 + i);
-        		measObj.setDatatypeId(1);
-        		String outside = j == 0 ? "外部" : "气象台";
-        		String thval = i == 0 ? "温度" : "湿度";
-        		measObj.setName(outside + thval);
-        		LogUtil.info(measObj);
-        		measObjModuleCenter.insertMeasObj(measObj);
-    		}
-    	}
-    	return CommonUtil.success();
-    }
-    
-    
     @RequestMapping(value = "test/change_measobjs")
     public JSONObject changeMeasObj() {
 
@@ -480,6 +411,9 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /*
+     * 删除监测对象
+     */
     @RequestMapping(value = "test/delete_measobjs")
     public JSONObject deleteMeasObj() {
     	// 获取所有监测对象
@@ -489,6 +423,36 @@ public class TestController {
     		// 去除监控中心的视频以及定位设备
     		if(measObj.getId().intValue() < 7000000) continue;
     		measObjModuleCenter.deleteObj(measObj.getId());
+    	}
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    // 去除区域和舱室前缀(如：实验路-3区->3区)
+    @RequestMapping(value = "test/update_area_store")
+    public JSONObject updateAreaAndStore() {
+    	// 获取所有区
+    	List<AreaDto> areas = areaService.getList();
+    	for(AreaDto dto : areas) {
+    		String [] strs = dto.getName().split("-");
+    		if(strs.length < 2) continue;
+    		dto.setName(strs[1]);
+    		areaService.update(dto);
+    	}
+    	// 获取所有舱
+    	List<Store> stores = storeService.getList();
+    	for(Store dto : stores) {
+    		String [] strs = dto.getName().split("-");
+    		if(strs.length < 2) continue;
+    		dto.setName(strs[1]);
+    		storeService.update(dto);
+    	}
+    	// 获取所有section
+    	List<SectionDto> sections = sectionService.getAllSections();
+    	for(SectionDto dto : sections) {
+    		String areaName = areaService.getAreasById(dto.getAreaId()).getName();
+    		String storeName = storeService.getStoreById(dto.getStoreId()).getName();
+    		dto.setName(areaName + "-" + storeName);
+    		sectionService.update(dto);
     	}
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }

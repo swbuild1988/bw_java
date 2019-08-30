@@ -1,9 +1,11 @@
 package com.bandweaver.tunnel.common.biz.itf.em;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 
 import com.alibaba.fastjson.JSONObject;
@@ -26,6 +28,10 @@ public interface EmPlanService {
      * @Date 2018年10月16日
      */
     void nextTask(String processInstanceId, List<Section> sectionList);
+
+    void completeTask(String processInstanceId, Map<String, Object> variables, String remark);
+
+    void completeTask(String processInstanceId);
 
     /**
      * 发送消息到mq队列

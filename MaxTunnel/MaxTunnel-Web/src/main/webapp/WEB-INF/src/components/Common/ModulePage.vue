@@ -227,6 +227,8 @@ export default {
         goToMoudle(path, name) {
             sessionStorage.setItem("selectedName", name);
             sessionStorage.setItem("refreshAddress", path.path);
+            sessionStorage.setItem("detailId", null);
+            sessionStorage.setItem("pageType", 3);
             if (path.path == this.$route.path) {
                 this.$router.replace({
                     path: "/refresh",
@@ -286,7 +288,8 @@ export default {
                                     <div
                                         style={{
                                             paddingLeft: `${left}vmin !important`,
-                                            display: "inline-block"
+                                            display: "flex",
+                                            alignItems: "center"
                                         }}
                                     >
                                         <Icon type="ios-paper" class="icons" />
@@ -470,6 +473,12 @@ export default {
     white-space: nowrap;
     vertical-align: bottom;
     transition: width 0.2s ease 0.2s;
+}
+
+.menu-item span:hover {
+    text-overflow: inherit;
+    overflow: visible;
+    white-space: pre-line; /*合并空白符序列，但是保留换行符。*/
 }
 
 .menu-item i {

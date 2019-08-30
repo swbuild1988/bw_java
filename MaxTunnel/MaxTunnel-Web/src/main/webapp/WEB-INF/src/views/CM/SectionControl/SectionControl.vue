@@ -5,13 +5,18 @@
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span>区段名称：</span>
-                <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth" />
+                <Input v-model="researchInfo.name" placeholder="支持模糊查询" class="inputWidth"/>
             </Col>
             <Col span="6">
                 <span>所属管廊：</span>
-                <Select v-model="researchInfo.tunnelId" placeholder="请选择所属管廊" class="inputWidth" @on-change="getstores">
+                <Select
+                    v-model="researchInfo.tunnelId"
+                    placeholder="请选择所属管廊"
+                    class="inputWidth"
+                    @on-change="getstores"
+                >
                     <Option value="null">不限</Option>
-                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>         
+                    <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{item.name}}</Option>
                 </Select>
             </Col>
             <Col span="6">
@@ -24,42 +29,76 @@
                 </Poptip>
             </Col>
             <Col span="6">
-            <div>
-                <span>所属区域：</span>
-                <Select v-model="researchInfo.areaId" placeholder="请选择区域类型" class="inputWidth">
-                    <Option value="null">不限</Option>
-                    <Option v-for="item in areas" :value="item.id" :key="item.id">{{item.name}}</Option>
-                </Select>
-            </div>
+                <div>
+                    <span>所属区域：</span>
+                    <Select v-model="researchInfo.areaId" placeholder="请选择区域类型" class="inputWidth">
+                        <Option value="null">不限</Option>
+                        <Option v-for="item in areas" :value="item.id" :key="item.id">{{item.name}}</Option>
+                    </Select>
+                </div>
             </Col>
         </Row>
         <Row style="marginLeft:25px;marginBottom:10px;">
             <Col span="6">
                 <span>开始时间：</span>
-                <DatePicker type="datetime" placeholder="请选择开始时间" class="inputWidth" v-model="researchInfo.startTime">
-                </DatePicker>
-                </Col>
+                <DatePicker
+                    type="datetime"
+                    placeholder="请选择开始时间"
+                    class="inputWidth"
+                    v-model="researchInfo.startTime"
+                ></DatePicker>
+            </Col>
             <Col span="6">
                 <span>结束时间：</span>
-                <DatePicker type="datetime" placeholder="请选择结束时间" class="inputWidth" v-model="researchInfo.endTime">
-                </DatePicker>
+                <DatePicker
+                    type="datetime"
+                    placeholder="请选择结束时间"
+                    class="inputWidth"
+                    v-model="researchInfo.endTime"
+                ></DatePicker>
             </Col>
             <Col span="10">
-                    <Button type="primary" size="small"  icon="ios-search" @click="research()">查询</Button>
-                    <!-- <Button type="error" size="small" @click="addNewSection()">新增区段</Button>  -->
-                    <Button type="warning" size="small" @click="create()" :enable="canCreate">根据现有区和仓新建区段</Button> 
-                    <vue-xlsx-table @on-select-file="getPositions">导入经纬度</vue-xlsx-table>
-                    <Button type="primary" size="small" @click="savePos">保存经纬度</Button>
-                    <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button> 
-                    <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
-            </Col>    
+                <Button type="primary" size="small" icon="ios-search" @click="research()">查询</Button>
+                <!-- <Button type="error" size="small" @click="addNewSection()">新增区段</Button>  -->
+                <Button
+                    type="warning"
+                    size="small"
+                    @click="create()"
+                    :enable="canCreate"
+                >根据现有区和仓新建区段</Button>
+                <vue-xlsx-table @on-select-file="getPositions">导入经纬度</vue-xlsx-table>
+                <Button type="primary" size="small" @click="savePos">保存经纬度</Button>
+                <Button v-show="deleteShow" type="warning" size="small" @click="alldelete()">批量删除</Button>
+                <Button v-show="!deleteShow" disabled type="warning" size="small">批量删除</Button>
+            </Col>
         </Row>
-        <Table border ref="selection" :columns="columns7" :data="sectionData" @on-selection-change="startdelete" style="margin:20px;"></Table>
-        <Page :total="page.pageTotal" :current="page.pageNum" show-total placement="top"  show-sizer @on-page-size-change='handlePageSize' :page-size="page.pageSize"
-              @on-change="handlePage" show-elevator class="pageStyle"></Page>
+        <Table
+            border
+            ref="selection"
+            :columns="columns7"
+            :data="sectionData"
+            @on-selection-change="startdelete"
+            style="margin:20px;"
+        ></Table>
+        <Page
+            :total="page.pageTotal"
+            :current="page.pageNum"
+            show-total
+            placement="top"
+            show-sizer
+            @on-page-size-change="handlePageSize"
+            :page-size="page.pageSize"
+            @on-change="handlePage"
+            show-elevator
+            class="pageStyle"
+        ></Page>
         <!-- 修改区段信息 -->
         <div>
-            <section-modification ref="sectionModule" v-bind="changeSectionInfo" v-on:listenToChange="saveEditInfo"></section-modification>
+            <section-modification
+                ref="sectionModule"
+                v-bind="changeSectionInfo"
+                v-on:listenToChange="saveEditInfo"
+            ></section-modification>
         </div>
     </div>
 </template>
@@ -68,7 +107,7 @@
 import BarnChoose from "../../../views/CM/Store/BarnChoose";
 import SectionModule from "../../../views/CM/SectionControl/SectionModule";
 import SectionModification from "../../../views/CM/SectionControl/SectionModification";
-import { TunnelService } from '../../../services/tunnelService'
+import { TunnelService } from "../../../services/tunnelService";
 
 export default {
     name: "barn-manage",
@@ -110,8 +149,8 @@ export default {
                     key: "tunnelName",
                     align: "center",
                     render: (h, params) => {
-                        let temp = params.row.store.tunnel.name
-                        return h('span', temp)
+                        let temp = params.row.store.tunnel.name;
+                        return h("span", temp);
                     }
                 },
                 {
@@ -119,8 +158,8 @@ export default {
                     key: "storeName",
                     align: "center",
                     render: (h, params) => {
-                        let temp = params.row.store.name
-                        return h('span', temp)
+                        let temp = params.row.store.name;
+                        return h("span", temp);
                     }
                 },
                 {
@@ -128,27 +167,29 @@ export default {
                     key: "areaName",
                     align: "center",
                     render: (h, params) => {
-                        return h('span', params.row.area.name)
+                        return h("span", params.row.area.name);
                     }
                 },
                 {
-                    title: 'S1',
-                    align: 'center',
-                    key: 's1'
+                    title: "S1",
+                    align: "center",
+                    key: "s1"
                 },
                 {
-                    title: 'S2',
-                    align: 'center',
-                    key: 's2'
+                    title: "S2",
+                    align: "center",
+                    key: "s2"
                 },
                 {
-                    title: '创建时间',
-                    key: 'crtTime',
-                    align: 'center',
+                    title: "创建时间",
+                    key: "crtTime",
+                    align: "center",
                     width: 190,
-                    render: (h,params) => {
-                        let temp = new Date(params.row.crtTime).format('yyyy-MM-dd hh:mm:s')
-                        return h('div',temp)
+                    render: (h, params) => {
+                        let temp = new Date(params.row.crtTime).format(
+                            "yyyy-MM-dd hh:mm:s"
+                        );
+                        return h("div", temp);
                     }
                 },
                 {
@@ -188,16 +229,17 @@ export default {
             },
             ruleValidate: {},
             changeSectionInfo: {
-                show: { 
-                    state: false 
-                }
+                show: {
+                    state: false
+                },
+                sectionId: null
             },
             deleteShow: false,
             deleteSelect: [],
             batchCreate: {
                 isShow: false,
                 tunnelId: null,
-                sectionsInfo: [],  
+                sectionsInfo: [],
                 tabValue: null
             }
         };
@@ -219,14 +261,14 @@ export default {
                 endTime: new Date(this.researchInfo.endTime).getTime()
             };
             return Object.assign({}, research);
-        },
+        }
     },
     methods: {
         showTable() {
             this.axios.post("/sections/datagrid", this.researches).then(res => {
                 let { code, data } = res.data;
                 if (code == 200) {
-                    this.sectionData = data.list
+                    this.sectionData = data.list;
                     this.page.pageTotal = data.total;
                 }
             });
@@ -247,38 +289,39 @@ export default {
             // });
         },
         gettunnel() {
-            let _this = this
-            TunnelService.getTunnels().then(
-                res=>{
-                    let _tunnels = []
-                    for (let i = 0; i < res.length; i++) {
-                        let tunnel = {};
-                        tunnel.id = res[i].id;
-                        tunnel.name = res[i].name;
-                        _tunnels.push(tunnel);
-                    }
-                    _this.tunnels = _tunnels;
-                })
+            let _this = this;
+            TunnelService.getTunnels().then(res => {
+                let _tunnels = [];
+                for (let i = 0; i < res.length; i++) {
+                    let tunnel = {};
+                    tunnel.id = res[i].id;
+                    tunnel.name = res[i].name;
+                    _tunnels.push(tunnel);
+                }
+                _this.tunnels = _tunnels;
+            });
         },
         getstores() {
-            let _this = this
+            let _this = this;
             TunnelService.getAreasByTunnelId(this.researchInfo.tunnelId).then(
-                result=>{
-                    _this.areas = result
+                result => {
+                    _this.areas = result;
                 },
-                error=>{
-                    _this.Log.info(error)
-                })
+                error => {
+                    _this.Log.info(error);
+                }
+            );
         },
         //编辑区段信息
         editSection(id) {
             this.changeSectionInfo.show.state = true;
-            this.$refs.sectionModule.getSectionInfoById(id)
+            // this.$refs.sectionModule.getSectionInfoById(id)
+            this.changeSectionInfo.sectionId = id;
         },
-        saveEditInfo(){
-            this.changeSectionInfo.show.state = false
-            this.$Message.success("修改成功！")
-            this.research()
+        saveEditInfo() {
+            this.changeSectionInfo.show.state = false;
+            this.$Message.success("修改成功！");
+            this.research();
         },
         startdelete(selection) {
             if (selection.length != 0) {
@@ -323,75 +366,102 @@ export default {
             this.showTable();
         },
         showSectionsInfo() {
-            let _this = this
-            if(this.batchCreate.tunnelId){
-                Promise.all([TunnelService.getStoresByTunnelId(this.batchCreate.tunnelId),TunnelService.getAreasByTunnelId(this.batchCreate.tunnelId)]).then(
-                result=>{
-                    _this.batchCreate.sectionsInfo = []
-                    let areas = []
-                    let checkAllGroup = []
-                    result[1].forEach(area=>{
-                        let areaInfo = {}
-                        areaInfo.id = area.id
-                        areaInfo.name = area.name
-                        areas.push(areaInfo)
-                        checkAllGroup.push(area.name)
-                    })
-                    result[0].forEach(store=>{
-                        let temp = {}
-                        temp.storeId = store.id
-                        temp.storeName = store.name
-                        temp.areas = areas
-                        temp.indeterminate = false
-                        temp.checkAll = true
-                        temp.checkAllGroup = checkAllGroup
-                        _this.batchCreate.sectionsInfo.push(temp)
-                    })
-                    _this.batchCreate.tabValue = result[0][0].name
-                },
-                error=>{
-                    _this.Log.info(error)
-                })
+            let _this = this;
+            if (this.batchCreate.tunnelId) {
+                Promise.all([
+                    TunnelService.getStoresByTunnelId(
+                        this.batchCreate.tunnelId
+                    ),
+                    TunnelService.getAreasByTunnelId(this.batchCreate.tunnelId)
+                ]).then(
+                    result => {
+                        _this.batchCreate.sectionsInfo = [];
+                        let areas = [];
+                        let checkAllGroup = [];
+                        result[1].forEach(area => {
+                            let areaInfo = {};
+                            areaInfo.id = area.id;
+                            areaInfo.name = area.name;
+                            areas.push(areaInfo);
+                            checkAllGroup.push(area.name);
+                        });
+                        result[0].forEach(store => {
+                            let temp = {};
+                            temp.storeId = store.id;
+                            temp.storeName = store.name;
+                            temp.areas = areas;
+                            temp.indeterminate = false;
+                            temp.checkAll = true;
+                            temp.checkAllGroup = checkAllGroup;
+                            _this.batchCreate.sectionsInfo.push(temp);
+                        });
+                        _this.batchCreate.tabValue = result[0][0].name;
+                    },
+                    error => {
+                        _this.Log.info(error);
+                    }
+                );
             }
         },
         getPositions(data) {
-            this.sectionData.forEach(section=>{
-                let curPos = data.body.find(pos=>{
-                    return section.id == pos[data.header[0]]
-                })
-                if(curPos != undefined){
-                    let curSection = this.sectionData.find(item=>{
-                        return item.id == curPos.sectionId
-                    })
-                    if(curSection != undefined){
-                        curSection.startPoint = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]]
-                        curSection.endPoint = curPos[data.header[4]] + ',' + curPos[data.header[5]] + ',' + curPos[data.header[6]]
-                        curSection.camera = curPos[data.header[1]] + ',' + curPos[data.header[2]] + ',' + curPos[data.header[3]] + ',' + curPos[data.header[7]] + ',' + curPos[data.header[8]] + ',' + curPos[data.header[9]]
+            this.sectionData.forEach(section => {
+                let curPos = data.body.find(pos => {
+                    return section.id == pos[data.header[0]];
+                });
+                if (curPos != undefined) {
+                    let curSection = this.sectionData.find(item => {
+                        return item.id == curPos.sectionId;
+                    });
+                    if (curSection != undefined) {
+                        curSection.startPoint =
+                            curPos[data.header[1]] +
+                            "," +
+                            curPos[data.header[2]] +
+                            "," +
+                            curPos[data.header[3]];
+                        curSection.endPoint =
+                            curPos[data.header[4]] +
+                            "," +
+                            curPos[data.header[5]] +
+                            "," +
+                            curPos[data.header[6]];
+                        curSection.camera =
+                            curPos[data.header[1]] +
+                            "," +
+                            curPos[data.header[2]] +
+                            "," +
+                            curPos[data.header[3]] +
+                            "," +
+                            curPos[data.header[7]] +
+                            "," +
+                            curPos[data.header[8]] +
+                            "," +
+                            curPos[data.header[9]];
                     }
                 }
-                
-            })
+            });
         },
-        savePos(){
-            let params = []
-            this.sectionData.forEach(data=>{
-                if(data.camera.length != 0){
-                    let temp = {}
-                    temp.id = data.id
-                    temp.camera = data.camera
-                    temp.startPoint = data.startPoint
-                    temp.endPoint = data.endPoint
-                    params.push(temp)
+        savePos() {
+            let params = [];
+            this.sectionData.forEach(data => {
+                if (data.camera.length != 0) {
+                    let temp = {};
+                    temp.id = data.id;
+                    temp.camera = data.camera;
+                    temp.startPoint = data.startPoint;
+                    temp.endPoint = data.endPoint;
+                    params.push(temp);
                 }
-            })
-            let _this = this
+            });
+            let _this = this;
             TunnelService.batchAddPositions(params).then(
-                result=>{
-                    _this.$Message.info("添加成功！")
+                result => {
+                    _this.$Message.info("添加成功！");
                 },
-                error=>{
-                    _this.Log.info(error)
-                })
+                error => {
+                    _this.Log.info(error);
+                }
+            );
         }
     },
     components: {

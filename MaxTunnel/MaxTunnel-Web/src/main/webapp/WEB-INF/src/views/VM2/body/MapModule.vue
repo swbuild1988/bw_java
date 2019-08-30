@@ -551,7 +551,7 @@ export default {
     height: 2vmin;
     z-index: 1001;  
     cursor: pointer;
-    transition: all 2s;
+    transition: all 1.5s;
  }
 /* 滚动条样式 */
 /* ::-webkit-scrollbar {

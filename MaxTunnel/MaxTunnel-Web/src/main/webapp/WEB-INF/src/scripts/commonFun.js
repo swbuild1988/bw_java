@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
+import { get,put,del,post } from "@/utils/http";
 
 /**
  * 判断浏览器版本中是否存在
@@ -197,17 +198,13 @@ export function flyToMyLocation(flyParam) {
         pitch,
         heading
     } = flyParam.position;
-
+    console.log('flyParam',flyParam)
     duration = flyParam.duration || 5;
     maximumHeight = flyParam.maximumHeight || 6;
 
     flyParam.scene.camera.flyTo({
         destination: new Cesium.Cartesian3.fromDegrees(parseFloat(longitude), parseFloat(latitude), parseFloat(height)), // 设置位置
-        orientation: {
-            heading: parseFloat(1.716482618088178),
-            pitch: parseFloat(-0.30235173267000404),
-            roll: parseFloat(2.582822844487964e-12)
-        },
+        orientation: new Cesium.HeadingPitchRoll.fromDegrees(parseFloat(heading),parseFloat(pitch),parseFloat(roll)),
         duration: duration, // 设置飞行持续时间，默认会根据距离来计算
         maximumHeight: maximumHeight, // 相机最大飞行高度
         complete: flyParam.completed, // 到达位置后执行的回调函数
@@ -696,27 +693,44 @@ export function getSection(scene, viewer) {
             height = 0;
         }
 
-        _this.axios.post('/sections/gps', {
+        return new Promise((resolve, reject) => {
+            post('/sections/gps',{
                 longitude,
                 latitude,
                 height
-            })
-            .then(result => {
-                let {
-                    code,
-                    data
-                } = result.data;
-
-                if (code == 200 &&
-                    data != null &&
-                    _this.timer.sectionId !== data.sectionInfo.id
-                ) {
+            }).then(res=>{
+                let{ code, data, msg } = res.data
+                if(code==200 && data != null && _this.timer.sectionId !== data.sectionInfo.id){
                     //缓存sectionId用于判断下次取到section是否一致
                     _this.timer.sectionId = data.sectionInfo.id;
-
                     resolve(data)
+                }else{
+                    reject(msg+"地址：/sections/gps")
                 }
             })
+        })
+
+        // _this.axios.post('/sections/gps', {
+        //         longitude,
+        //         latitude,
+        //         height
+        //     })
+        //     .then(result => {
+        //         let {
+        //             code,
+        //             data
+        //         } = result.data;
+
+        //         if (code == 200 &&
+        //             data != null &&
+        //             _this.timer.sectionId !== data.sectionInfo.id
+        //         ) {
+        //             //缓存sectionId用于判断下次取到section是否一致
+        //             _this.timer.sectionId = data.sectionInfo.id;
+
+        //             resolve(data)
+        //         }
+        //     })
     })
 }
 /**

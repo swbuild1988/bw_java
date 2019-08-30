@@ -391,7 +391,13 @@ export default {
             this.$router.push(path);
         },
         goMoudle(index, type) {
+            sessionStorage.setItem("detailId", this.contractIds[index]);
+            sessionStorage.setItem("pageType", type);
             if (type == 2) {
+                sessionStorage.setItem(
+                    "refreshAddress",
+                    "/UM/tunnelContract/edit"
+                );
                 this.$router.push({
                     name: "编辑合同",
                     params: {
@@ -401,6 +407,10 @@ export default {
                     }
                 });
             } else if (type == 1) {
+                sessionStorage.setItem(
+                    "refreshAddress",
+                    "/UM/tunnelContract/detail"
+                );
                 this.$router.push({
                     name: "合同详情",
                     params: {
@@ -469,7 +479,7 @@ export default {
     margin: 10px auto;
     border-radius: 4px;
     position: relative;
-    background-image: url("../../../../assets/UM/companyBg.png");
+    background-image: url("../../../../assets/UM/border3.png");
     background-size: 100% 100%;
     display: table;
 }

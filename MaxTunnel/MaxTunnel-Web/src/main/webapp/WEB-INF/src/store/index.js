@@ -20,7 +20,7 @@ const VMstate = {
             videoIds: null,
             processInstanceId: null,
         },
-        isLoadUnits:false,
+        isLoadUnits:false
     },
     mutations: {
         // 视频轮询
@@ -63,6 +63,7 @@ const UMstate = {
             isLogin: false,
             token: null,
             intervalId: null,
+            Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : ''
         },
         tabelCrad:{
             isShowCardComponent:true,
@@ -131,6 +132,11 @@ const UMstate = {
                 areaId: data.areaId,
                 videoNum: data.videoNum
             }
+        },
+        changeLogin (state,user) {
+            state.communication.Authorization = user.Authorization;
+            console.log("store/index.js---到这里了!");
+            localStorage.setItem('Authorization', user.Authorization);
         }
     },
 };

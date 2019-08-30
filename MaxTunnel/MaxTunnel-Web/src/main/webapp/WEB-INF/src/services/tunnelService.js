@@ -460,6 +460,46 @@ var TunnelService = {
                 });
         });
     },
+    // 根据sectionID获取详情
+    getSectionById(id){
+        return new Promise((resolve, reject) => {
+            get("sections/" + id).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + ",地址:sections/" + id);
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
+        });
+    },
+    // 修改section信息
+    updateSection(params){
+        return new Promise((resolve, reject) => {
+            put("sections/", params).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + ",地址:sections/");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
+        });
+    },
     // VM中获得管廊的总览信息
     getVmTunnelsMessage() {
         // 地址 tunnels/message
@@ -542,11 +582,6 @@ var TunnelService = {
     },
     // VM中或的管廊运行时间数据
     getVmRunMessage() {
-        // 地址 tunnels/run-message
-        // let res = {
-        //     total: 50,
-        //     safe: 14
-        // };
         return new Promise((resolve, reject) => {
             get("tunnels/run-message").then(res => {
                     let {
@@ -560,10 +595,9 @@ var TunnelService = {
                         reject(msg + ",地址:run/message");
                     }
                 })
-                .catch(error => {
-                    reject(error.response.status + "  " + error.response.data);
-                });
-            // resolve(res)
+                // .catch(error => {
+                //     reject(error.response.status + "  " + error.response.data);
+                // });
         });
     },
     //根据areaId和storeId获取section

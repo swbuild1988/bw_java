@@ -142,6 +142,7 @@ export default {
         { key:7,val:'video' }, //视屏
         { key:10,val:'fan' }, //风机
         { key:11,val:'light' }, //照明
+        { key:21,val:'level' }, //液位仪
         { key:41,val:'alarm_clock' }, //声光报警
         { key:56,val:'electronic' }, //电子井盖
         { key:57,val:'infrared' }, //红外

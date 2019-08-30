@@ -5,6 +5,7 @@ import {
     changStrLength,
     replaceStr
 } from "../../../../scripts/commonFun";
+import { post } from "@/utils/http";
 
 const addBarnLabel = {
     data(){
@@ -67,30 +68,47 @@ const addBarnLabel = {
                 var latitude = Cesium.Math.toDegrees(cartographic.latitude);
                 var height = cartographic.height;
 
-                _this.axios.post('/sections/gps',
-                    {longitude, latitude, height})
-                    .then(result => {
-                        let {code, data} = result.data;
-
-                        if (code == 200) {
-
+                return new Promise((resolve, reject) => {
+                    post('/sections/gps',{
+                        longitude,
+                        latitude,
+                        height
+                    }).then(res=>{
+                        let{ code, data, msg } = res.data
+                        if(code==200){
                             _this.$emit('sendSectionDetails',data);
 
                             data && resolve(data)
+                        }else{
+                            reject(msg+"地址：/sections/gps")
                         }
-
-                        // if (code == 200
-                        //     // && data != null
-                        //     // && _this.timer.sectionId !== data.sectionInfo.id
-                        // ) {
-                        //     //缓存sectionId用于判断下次取到section是否一致
-                        //     // _this.timer.sectionId = data.sectionInfo.id;
-
-                        //     _this.$emit('sendSectionDetails',data);
-
-                        //     resolve(data)
-                        // }
                     })
+                })
+
+                // _this.axios.post('/sections/gps',
+                //     {longitude, latitude, height})
+                //     .then(result => {
+                //         let {code, data} = result.data;
+
+                //         if (code == 200) {
+
+                //             _this.$emit('sendSectionDetails',data);
+
+                //             data && resolve(data)
+                //         }
+
+                //         // if (code == 200
+                //         //     // && data != null
+                //         //     // && _this.timer.sectionId !== data.sectionInfo.id
+                //         // ) {
+                //         //     //缓存sectionId用于判断下次取到section是否一致
+                //         //     // _this.timer.sectionId = data.sectionInfo.id;
+
+                //         //     _this.$emit('sendSectionDetails',data);
+
+                //         //     resolve(data)
+                //         // }
+                //     })
             })
         },
         //更新实体值/状态

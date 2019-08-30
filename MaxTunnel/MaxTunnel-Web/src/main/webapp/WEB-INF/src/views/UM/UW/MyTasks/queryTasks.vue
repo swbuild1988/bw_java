@@ -27,8 +27,8 @@
                 <span class="tabName">{{temp.name}}</span>
                 <div class="nullData" v-show="isNullData">暂无数据</div>
                 <Row>
-                    <Col span="4" v-for="(item,index) in myTasks" :key='index' v-if="temp.id==item.processType">
-                        <div class="unitBox" v-bind:class="{isFinished: item.isFinished,waitStart:item.status=='未开始'}" @click="goToMoudle(item)">
+                    <Col span="4" v-for="(item,index) in myTasks" :key='index'>
+                        <div class="unitBox" v-if="temp.id==item.processType" v-bind:class="{isFinished: item.isFinished,waitStart:item.status=='未开始'}" @click="goToMoudle(item)">
                             <div class="title">
                                 <p>{{item.processTypeName}}</p>
                                 <p class="workDetails">{{item.status}}</p>
@@ -46,7 +46,7 @@
     </div>    
 </template>
 <script>
-import axios from "axios";
+import { PatrolService } from "../../../../services/patrolService";
 export default {
     data(){
         return{
@@ -82,25 +82,26 @@ export default {
         }
     },
     mounted() {
-        axios.get('processtype-enums').then(response=>{
-            let{code,data} = response.data
-            if(code==200){
-                this.processType = data
+        PatrolService.getProcessEnums().then(
+            result=>{
+                this.processType = result
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         this.queryMyTask()
     },  
     methods: {
         queryMyTask(){
-            axios.post('users/activiti/allTask/datagrid',(this.params)).then(response=>{
-                let { code, data } = response.data;
-                if (code == 200) {
-                    if(data.pagedList.length==0){
+            PatrolService.queryMyAllTask(this.params).then(
+                result => {
+                    if(result.pagedList.length==0){
                         this.isNullData = true
                     }else{
                         this.isNullData = false
                     }
-                    this.myTasks = data.pagedList
+                    this.myTasks = result.pagedList
                     for(let index in this.myTasks){
                         this.myTasks[index].crtTime = new Date(this.myTasks[index].crtTime).format('yyyy-MM-dd')
                         var divNameId = this.myTasks[index].processType
@@ -113,12 +114,14 @@ export default {
                             this.divName.push(obj)
                         }
                     }   
-                    this.page.pageTotal = data.total    
+                    this.page.pageTotal = result.total  
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },        
         goToMoudle: function (task) {
-            console.log("task", task)
             let pathParams = {
                 name:'',
                 params:null

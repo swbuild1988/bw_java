@@ -33,7 +33,7 @@ public class OperationLogController extends BaseController<OperationLog> {
 	 * @param  moduleType 模块类型
 	 * @param	reqUser	    请求人姓名,支持模糊查询
 	 * @param	result 	    操作结果 ：成功；失败
-	 * @param	beginTime
+	 * @param	startTime
 	 * @param	endTime
 	 * @param	pageNum
 	 * @param	pageSize				

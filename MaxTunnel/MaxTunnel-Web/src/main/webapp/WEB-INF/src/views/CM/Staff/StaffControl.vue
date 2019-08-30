@@ -152,8 +152,8 @@
                 <FormItem label="员工姓名：">
                     <Input v-model="authModal.info.name" readonly/>
                 </FormItem>
-                <FormItem label="角色：">
-                    <Select v-model="authModal.info.roleIds" multiple>
+                <FormItem label="角色：" class="roles">
+                    <Select v-model="authModal.info.roleIds" multiple @on-change="checkRoles">
                         <Option
                             v-for="item in authModal.roleList"
                             :value="item.id"
@@ -177,6 +177,14 @@ import PermissionConfigService from "../../../services/permissionConfig";
 export default {
     name: "staff-control",
     data() {
+        const validateRoles = (rule, value, callback) => {
+            console.log(value);
+            if (value.length) {
+                callback(new Error("请选择角色"));
+            } else {
+                callback();
+            }
+        };
         return {
             ids: "",
             researchInfo: {
@@ -190,6 +198,7 @@ export default {
                 endTime: null,
                 outside: 1
             },
+            validateRoles: validateRoles,
             staffInfoColumns: [
                 {
                     type: "selection",
@@ -494,6 +503,13 @@ export default {
     },
     methods: {
         showTable() {
+            if (
+                new Date(this.researches.startTime) >
+                new Date(this.researches.endTime)
+            ) {
+                this.$Message.error("开始时间必须小于结束时间！");
+                return;
+            }
             StaffService.getStaffInfo(this.researches).then(res => {
                 this.staffInfoData = res.list;
                 this.page.pageTotal = res.total;
@@ -652,6 +668,13 @@ export default {
                 }
             );
         },
+        checkRoles() {
+            if (this.authModal.info.roleIds.length == 0) {
+                this.authModal.error = true;
+            } else {
+                this.authModal.error = false;
+            }
+        },
         save() {
             if (this.authModal.info.roleIds.length == 0) {
                 this.authModal.error = true;
@@ -688,6 +711,15 @@ export default {
 .word42 {
     letter-spacing: 2em;
     margin-right: -2em;
+}
+.roles >>> .ivu-form-item-label:before {
+    content: "*";
+    display: inline-block;
+    margin-right: 4px;
+    line-height: 1;
+    font-family: SimSun;
+    font-size: 12px;
+    color: #ed3f14;
 }
 </style>
 

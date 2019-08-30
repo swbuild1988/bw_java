@@ -779,12 +779,14 @@ export default {
             }
         )
         //获取借用人列表
-        this.axios.get('staffs').then(res=>{
-            let{ code,data } = res.data
-            if(code==200){
-                this.staffs = data
+        EquipmentService.getStaffs().then(
+            result => {
+                this.staffs = result;
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         //获取tool状态
         EquipmentService.getStatus().then(
             res=>{

@@ -1,7 +1,6 @@
 package com.bandweaver.tunnel.service.common;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import com.bandweaver.tunnel.common.platform.util.Sha256;
 import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.dao.common.StaffMapper;
 import com.bandweaver.tunnel.dao.common.UserMapper;
-import com.github.pagehelper.Constant;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -56,31 +54,31 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void update(Staff staff) {
-
-        //检查修改的登录账号是否被占用
-        String account = staff.getAccount();
-        User u = userMapper.getByName(account);
-        if (!StringTools.isNullOrEmpty(u)) {
-            if (u.getId().intValue() != staff.getId().intValue()) {
-                throw new BandWeaverException(StatusCodeEnum.E_20009);
+    	// 判断是否为内部员工
+        if(staff.getOutside() == OutsideEnum.STAFF.getValue()) {
+        	//检查修改的登录账号是否被占用
+            String account = staff.getAccount();
+            User u = userMapper.getByName(account);
+            if (!StringTools.isNullOrEmpty(u)) {
+                if (u.getId().intValue() != staff.getId().intValue()) {
+                    throw new BandWeaverException(StatusCodeEnum.E_20009);
+                }
             }
+            //修改账号表信息
+            User user = new User();
+            user.setId(staff.getId());
+            user.setName(staff.getAccount());
+            userMapper.updateByPrimaryKeySelective(user);
         }
-
         staffMapper.updateByPrimaryKeySelective(staff);
-
-        //同时修改账号表信息
-        User user = new User();
-        user.setId(staff.getId());
-        user.setName(staff.getAccount());
-        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void add(Staff staff) {
-    	staff.setCrtTime(new Date());
+    	staff.setCrtTime(DateUtil.getCurrentDate());
         try {
             //判断是否为外来人员，如果是则不生成账号信息
             if (staff.getOutside() != OutsideEnum.STAFF.getValue()) {
@@ -98,7 +96,8 @@ public class StaffServiceImpl implements StaffService {
 
             if (list != null && list.size() > 0) {
                 int maxId = staffMapper.getMaxID();
-                account = account + (maxId + 1);
+                // +=与= +的区别主要是+=不需要强制转换，直接把右边的结果与自身加起来
+                account += maxId + 1;
             }
 
             staff.setCrtTime(DateUtil.getCurrentDate());
@@ -131,7 +130,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void deleteBatch(List<Integer> list) {
     	List<Integer> userIds = new ArrayList<>();
     	for(Integer id : list) {
@@ -150,6 +149,4 @@ public class StaffServiceImpl implements StaffService {
         List<StaffDto> list = staffMapper.getDtoListByCondition(vo);
         return new PageInfo<>(list);
     }
-
-
 }

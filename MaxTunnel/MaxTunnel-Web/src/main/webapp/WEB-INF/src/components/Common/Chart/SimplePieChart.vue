@@ -9,6 +9,7 @@
 }
 </style>
 <script>
+import { ChartService } from "@/services/chartService"
 export default {
 	name: "SimplePie",
 	props: {
@@ -138,16 +139,15 @@ export default {
 		fetchData(requestUrl) {
 		let _this = this;
 		if (this.parameters.params) {
-			_this.axios.post(requestUrl, this.parameters.params).then(result => {
-				let { code, data } = result.data;
-				if (code == 200) {
+			ChartService.postData(requestUrl, this.parameters.params).then(
+				result => {
 					_this.option.series[0].data = [];
 					_this.option.legend.data = [];
 					var tempCount = 0;
-					data.filter(function(item) {
+					result.filter(function(item) {
 						tempCount += item.val;
 					});
-					_this.option.series[0].data = data.map(curObj => {
+					_this.option.series[0].data = result.map(curObj => {
 					_this.option.legend.data.push(curObj.key);
 						return {
 							value: ((100 * curObj.val) / tempCount).toFixed(2),
@@ -156,7 +156,7 @@ export default {
 					});
 					_this.myChart.setOption(_this.option);
 				}
-			})
+			)
 			.finally(()=>{
 				if (this.parameters.timer) {
 				setTimeout(() => {
@@ -167,25 +167,27 @@ export default {
 			}
 			});
 		} else {
-			_this.axios.get(requestUrl).then(result => {
-			let { code, data } = result.data;
-			if (code == 200) {
-				_this.option.series[0].data = [];
-				_this.option.legend.data = [];
-				var tempCount = 0;
-				data.filter(function(item) {
-					tempCount += item.val;
-				});
-				_this.option.series[0].data = data.map(curObj => {
-					_this.option.legend.data.push(curObj.key);
-					return {
-						value: ((100 * curObj.val) / tempCount).toFixed(2),
-						name: curObj.key
-					};
-				});
-				_this.myChart.setOption(_this.option);
-			}
-			})
+			ChartService.getData(requestUrl).then(
+				result => {
+					_this.option.series[0].data = [];
+					_this.option.legend.data = [];
+					var tempCount = 0;
+					result.filter(function(item) {
+						tempCount += item.val;
+					});
+					_this.option.series[0].data = result.map(curObj => {
+						_this.option.legend.data.push(curObj.key);
+						return {
+							value: ((100 * curObj.val) / tempCount).toFixed(2),
+							name: curObj.key
+						};
+					});
+					_this.myChart.setOption(_this.option);
+				},
+				error => {
+					this.Log.info(error)
+				}
+			)
 			.finally(()=>{
 				if (this.parameters.timer) {
 					setTimeout(() => {
@@ -201,13 +203,6 @@ export default {
 		refreshData() {
 		let _this = this;
 		if (_this.parameters.timer) {
-			// let { intervalId, intervalTime } = _this.parameters.timer;
-			// console.log("intervalTime",intervalTime)
-			// intervalId = setInterval(() => {
-			// _this.option.series[0].data.forEach(a => (a.val = 1));
-			// _this.myChart.setOption(_this.option);
-			// _this.fetchData(_this.requestUrl);
-			// }, intervalTime);
 			setInterval(() => {
 			_this.option.series[0].data.forEach(a => (a.val = 1));
 			_this.myChart.setOption(_this.option);

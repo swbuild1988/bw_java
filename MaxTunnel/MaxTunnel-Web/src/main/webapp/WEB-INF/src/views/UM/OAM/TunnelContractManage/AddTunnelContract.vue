@@ -252,6 +252,13 @@ import pdf from "vue-pdf";
 import PDF from "../../../../components/UM/MAM/pdfPerviewDownload";
 export default {
     data() {
+        const validateCompany = (rule, value, callback) => {
+            if (value === 0) {
+                callback(new Error("请选择企业客户"));
+            } else {
+                callback();
+            }
+        };
         return {
             backStyle: {
                 background:
@@ -320,7 +327,7 @@ export default {
                         trigger: "change"
                     }
                 ],
-                companyId: [{ required: true, message: "请选择企业" }],
+                companyId: [{ validator: validateCompany, trigger: "blur" }],
                 cableName: [
                     {
                         required: true,
@@ -372,8 +379,10 @@ export default {
     },
     components: { CustomerChoose, pdf },
     mounted() {
-        if (this.$route.params.contractId) {
-            this.contractInfo.id = this.$route.params.contractId;
+        if (this.$route.params.contractId || sessionStorage["detailId"]) {
+            this.contractInfo.id = this.$route.params.contractId
+                ? this.$route.params.contractId
+                : sessionStorage["detailId"];
         } else {
             if (this.$route.params.curIndex != null) {
                 this.curIndex = this.$route.params.curIndex;
@@ -382,7 +391,9 @@ export default {
             }
         }
 
-        this.pageType = this.$route.params.type;
+        this.pageType = this.$route.params.type
+            ? this.$route.params.type
+            : parseInt(sessionStorage["pageType"]);
         switch (this.pageType) {
             case this.pageTypes.Read:
                 this.title = "合同信息详情";
@@ -819,7 +830,10 @@ export default {
     color: #eaeef2;
 }
 .ivu-form >>> .ivu-input::-webkit-input-placeholder {
-    color: #eaeef2;
+    color: #aaa;
+}
+.form >>> .ivu-poptip-inner {
+    background-color: #485463;
 }
 .save,
 .pageTurner {
@@ -872,7 +886,7 @@ export default {
     font-size: 1.26vmin !important;
     padding-top: 0.2vmin !important;
     width: 90% !important;
-    color: #eaeef2;
+    color: #aaa;
 }
 .form >>> .ivu-select-multiple .ivu-select-placeholder {
     line-height: 3.2vmin !important;

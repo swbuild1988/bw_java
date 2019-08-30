@@ -2,10 +2,11 @@ package com.bandweaver.tunnel.common.biz.pojo.omm;
 
 import com.bandweaver.tunnel.common.biz.pojo.ProcessBase;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class MaintenanceOrder extends ProcessBase implements Serializable {
+public class MaintenanceOrder extends ProcessBase {
+	
+	private static final long serialVersionUID = 1L;
     private String orderId;
     private Integer tunnelId;
     private Integer defectId;

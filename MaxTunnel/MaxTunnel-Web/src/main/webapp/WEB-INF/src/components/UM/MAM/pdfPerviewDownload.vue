@@ -27,6 +27,7 @@
 </template>
 <script>
 import pdf from "vue-pdf";
+import { DataAnalysisService } from "@/services/DataAnalysis"
 export default {
 	components: { pdf },
 	data() {
@@ -45,21 +46,15 @@ export default {
 		},
 		//下载PDF
 		downloadPDF(url, fileName) {
-			this.axios({
-				method: "get",
-				responseType: "arraybuffer",
-				url: url
-			})
-				.then(
-					function(res) {
-						this.fileDownload(res.data, fileName);
-					}.bind(this)
-				)
-				.catch(
-					function(error) {
-						this.$Message.error("下载出错" + error);
-					}.bind(this)
-				);
+			DataAnalysisService.downloadPDF(url, "arraybuffer").then(
+				result => {
+					this.fileDownload(result, fileName);
+				},
+				error => {
+					this.Log.info(error)
+					this.$Message.error("下载出错" + error);
+				}
+			)
 		},
 		fileDownload: function(data, fileName) {
 			let blob = new Blob([data], {

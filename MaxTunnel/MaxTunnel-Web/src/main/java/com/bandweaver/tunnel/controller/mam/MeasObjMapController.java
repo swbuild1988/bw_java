@@ -13,21 +13,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.mam.MeasObjDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.mapping.MeasObjMapService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.mapping.MeasObjMap;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObj;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjDI;
-import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.MeasObjSI;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjMapVo;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
-import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.controller.common.BaseController;
-import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import com.github.pagehelper.PageInfo;
 
 /**开关量状态量映射管理
@@ -147,7 +141,7 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 	}
 	
 	/** 批量添加
-	 * @param objectTypeId 
+	 * @param objectTypeId
 	 * @param inputValue
 	 * @param outputValue
 	 * @return
@@ -163,6 +157,8 @@ public class MeasObjMapController extends BaseController<MeasObjMap>{
 		MeasObjVo vo = new MeasObjVo();
 		vo.setObjtypeId(objectTypeId);
 		List<MeasObjDto>  list = measObjService.getMeasObjByCondition(vo);
+		if(list ==null || list.size() < 1)
+			return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,"当前状态量没有监测对象，请选择其他");
 		for(MeasObjDto dto : list) {
 			for (LinkedHashMap<String, Integer> si : sis) {
 				MeasObjMap map = measObjMapService.getByObjectIdAndInputValue(dto.getId(), si.get("key"));

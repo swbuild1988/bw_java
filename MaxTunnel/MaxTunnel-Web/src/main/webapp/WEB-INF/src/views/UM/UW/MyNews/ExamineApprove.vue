@@ -39,7 +39,7 @@
 </div>
 </template>
 <script>
-import axios from "axios";
+import { EnterGalleryService } from '../../../../services/enterGalleryService'
 export default {
     data(){
 		return{
@@ -82,33 +82,35 @@ export default {
 		}
     },
     mounted(){
-      	//管理员审批-入廊
-        axios.get("/req-historys/" + this.$route.params.id).then(response => {
-          let{ code,data } = response.data
-            if(code=200){
-                this.addEnterGalleryApplication  = data
-                this.addEnterGalleryApplication.preTime = new Date(this.addEnterGalleryApplication.preTime).format('yyyy-MM-dd hh:mm:s')
-                this.addEnterGalleryApplication.enterTime = new Date(this.addEnterGalleryApplication.enterTime).format('yyyy-MM-dd hh:mm:s') 
-            }
-        })
+		  //管理员审批-入廊
+		EnterGalleryService.getDetailsById(this.$route.params.id).then(
+			result => {
+				this.addEnterGalleryApplication  = result
+				this.addEnterGalleryApplication.preTime = new Date(this.addEnterGalleryApplication.preTime).format('yyyy-MM-dd hh:mm:s')
+				this.addEnterGalleryApplication.enterTime = new Date(this.addEnterGalleryApplication.enterTime).format('yyyy-MM-dd hh:mm:s') 
+			}
+		)
     },
     methods:{
 		agree(num){
-			axios.post('users/activiti/req-historys/audit',{
+			let params = {
 				remark: this.addEnterGalleryApplication.remark,
 				processInstanceId: this.addEnterGalleryApplication.processInstanceId,
 				value: num
-			}).then(response=>{
-			let{ code,data } = response.data
-			if(code==200){
+			}
+			EnterGalleryService.submitAgree(params).then(
+				result => {
 					if(this.$route.params.isFinished==null){
 						this.$router.push("/UM/myNews/queryMyTask");
 					}else{
 						this.$router.push("/UM/myTasks/query");
 					}
+				},
+				error => {
+					this.Log.info(error)
 				}
-			}
-		)},
+			)
+		},
 		//返回
 		goBack(){
 			this.$router.back(-1);

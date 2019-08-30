@@ -295,8 +295,14 @@ export default {
             this.$router.push(path);
         },
         goMoudle: function(id, type) {
+            sessionStorage.setItem(
+                "refreshAddress",
+                "/UM/tunnelCustomer/detail"
+            );
+            sessionStorage.setItem("detailId", id);
+            sessionStorage.setItem("pageType", type);
             this.$router.push({
-                name: "添加管廊客户",
+                name: "管廊客户详情",
                 params: {
                     id: id,
                     type: type
@@ -347,7 +353,7 @@ export default {
     margin: 10px auto;
     padding: 5px 0px;
     color: #fff;
-    background: url("../../../../assets/UM/companyBg.png") no-repeat;
+    background: url("../../../../assets/UM/border3.png") no-repeat;
     background-size: 100% 100%;
 }
 .company {
@@ -357,7 +363,7 @@ export default {
 }
 .columns {
     line-height: 3.2vmin;
-    font-size: 1.4vmin;
+    font-size: 1.5vmin;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -365,7 +371,7 @@ export default {
 }
 
 .crtTime {
-    font-size: 1.2vmin;
+    font-size: 1.4vmin;
     line-height: 4.4vmin;
 }
 .option {

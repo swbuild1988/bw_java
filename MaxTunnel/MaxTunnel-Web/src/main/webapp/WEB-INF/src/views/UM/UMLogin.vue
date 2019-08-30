@@ -22,6 +22,7 @@
 				>
 					<Icon type="ios-locked-outline" slot="prepend"></Icon>
 				</Input>
+				<div class="ivu-form-item-error-tip">{{errTipMes}}</div>
 			</FormItem>
 			<FormItem>
 				<checkbox v-model="checked" checked class="remember">一周内记住密码</checkbox>
@@ -47,6 +48,7 @@ import LoginBG from "../../components/UM/LoginBackGround.vue";
 import VideoComponent from "../../components/Common/Video/VideoComponent";
 import { LoginService } from "../../services/loginService";
 import Cookies from "js-cookie";
+import { mapMutations } from 'vuex';
 export default {
 	components: {
 		LoginBG,
@@ -77,50 +79,54 @@ export default {
 						trigger: "blur"
 					}
 				]
-			}
+			},
+			errTipMes: null
 		};
 	},
 	methods: {
+		...mapMutations(['changeLogin']),
 		handleSubmit(name) {
 			let _this = this;
 			var sha256 = require("js-sha256").sha256;
 			this.$refs[name].validate(valid => {
 				if (valid) {
 					this.loading = true;
-					this.checked
-						? this.setCookie(
-								this.formValidate.userName,
-								this.formValidate.passWord,
-								7
-						  )
-						: this.clearCookie();
+					this.checked ? this.setCookie( this.formValidate.userName, this.formValidate.passWord, 7 ) : this.clearCookie();
 					var loginParams = {
 						name: _this.formValidate.userName,
-						password: sha256(_this.formValidate.passWord)
+						password: sha256(_this.formValidate.passWord),
+						Authorization: null
 					};
-					Cookies.set("userName", loginParams.name);
-					this.$store
-						.dispatch("Login", loginParams)
-						.then(result => {
-							let sessionUserId = result.userId;
-							sessionStorage.setItem(
-								"UMUerId",
-								JSON.stringify(sessionUserId)
-							);
-							sessionStorage.setItem("UMUerName",result.token.username)
-							_this.logining = false;
-							this.loading = false;
+					this.$store.dispatch("Login", loginParams).then(result => {
 
+						if(Object.keys(result).length===0){
+							this.errTipMes = "用户名或密码错误"
+							this.logining = false;
+						}else{
+							this.errTipMes = null
+							//token 存储 localStorage 
+							this.changeLogin({ Authorization: result.token});
+							let sessionUserId = result.userId;
+							sessionStorage.setItem("UMUerId", JSON.stringify(sessionUserId));
+							sessionStorage.setItem("UMUerName",result.token.username)
+	
+							localStorage.setItem("userName", loginParams.name)
+							localStorage.setItem("password", loginParams.password)
+	
+							this.loading = false;
+	
 							// 获取队列名
 							let queueName = result.queueName;
 							this.MQ.setQueueName(queueName);
 							this.MQ.openMQ();
-
+	
 							_this.$router.push({ path: "/UMmain" });
-						})
-						.catch(() => {
-							this.loading = false;
-						});
+						}
+
+					})
+					.catch(() => { 	
+						this.loading = false;
+					});
 				} else {
 					this.$Message.error("输入不合法!");
 				}

@@ -252,9 +252,6 @@ export default {
             if (code == 200) {
                 resolve(data)
             } 
-            // else {
-            //   reject(msg + '地址:inspection-plans/' + planId)
-            // }
             })
         }).then((result) => {
             this.uploadPlan = result;

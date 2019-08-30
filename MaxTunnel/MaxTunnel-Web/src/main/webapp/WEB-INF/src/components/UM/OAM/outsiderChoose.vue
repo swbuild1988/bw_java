@@ -94,6 +94,7 @@
 </template>
 <script>
 import { EnterGalleryService } from '@/services/enterGalleryService'
+import { DefectService } from '@/services/defectService'
 export default {
     data(){
         return{
@@ -193,12 +194,14 @@ export default {
                 identityNO: this.conditions.IDCard,
                 outside: 2
             }
-            this.axios.post('staffs/conditions',params).then(res=>{
-                let { code,data } = res.data
-                if(code==200){
-                    this.outSiders = data
+            DefectService.getStaffs(params).then(
+                result => {
+                    this.outSiders = result
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         submit(){
             this.$emit('childByValue',this.outsidesChoosed)

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { ChartService } from "@/services/chartService"
 export default {
     name: "SimpleBar",
     props: {
@@ -166,10 +167,9 @@ export default {
 
         fetchData(requestUrl) {
             let _this = this;
-            _this.axios.get(requestUrl).then(result => {
-                let { code, data } = result.data;
-                if (code == 200) {
-                    let newData = data.reduce((init, item) => {
+            ChartService.getData(requestUrl).then(
+                result => {
+                    let newData = result.reduce((init, item) => {
                         return {
                             xData:
                                 init.xData == undefined
@@ -195,26 +195,56 @@ export default {
                         });
                     }
                 }
-                // if ("getToolDetail" == requestUrl) {
-                //     _this.xData = ["借出工具", "损坏工具", "库存工具"];
-                //     _this.series = [
-                //         { name: "仪表盘", type: "bar", data: [22, 3, 10] },
-                //         { name: "扳手", type: "bar", data: [23, 4, 14] },
-                //         { name: "温度计", type: "bar", data: [0, 2, 3] },
-                //         { name: "湿度计", type: "bar", data: [2, 0, 3] },
-                //         { name: "螺丝刀", type: "bar", data: [6, 2, 0] }
-                //     ];
-                //     _this.yData = [145, 40, 334];
-                //     _this.myChart.series = [];
-                //     _this.myChart.setOption({
-                //         series: []
-                //     });
-                //     _this.myChart.setOption({
-                //         xAxis: { data: _this.xData },
-                //         series: _this.series
-                //     });
-                // }
-            });
+            )
+            // _this.axios.get(requestUrl).then(result => {
+            //     let { code, data } = result.data;
+            //     if (code == 200) {
+            //         let newData = data.reduce((init, item) => {
+            //             return {
+            //                 xData:
+            //                     init.xData == undefined
+            //                         ? [].concat(item.key)
+            //                         : [].concat(init.xData, item.key),
+            //                 yData:
+            //                     init.yData == undefined
+            //                         ? [].concat(item.val)
+            //                         : [].concat(init.yData, item.val)
+            //             };
+            //         }, {});
+            //         if (
+            //             JSON.stringify(newData.xData) !=
+            //                 JSON.stringify(_this.xData) ||
+            //             JSON.stringify(newData.yData) !=
+            //                 JSON.stringify(_this.xData)
+            //         ) {
+            //             _this.xData = newData.xData;
+            //             _this.yData = newData.yData;
+            //             _this.myChart.setOption({
+            //                 xAxis: { data: _this.xData },
+            //                 series: { data: _this.yData }
+            //             });
+            //         }
+            //     }
+            //     // if ("getToolDetail" == requestUrl) {
+            //     //     _this.xData = ["借出工具", "损坏工具", "库存工具"];
+            //     //     _this.series = [
+            //     //         { name: "仪表盘", type: "bar", data: [22, 3, 10] },
+            //     //         { name: "扳手", type: "bar", data: [23, 4, 14] },
+            //     //         { name: "温度计", type: "bar", data: [0, 2, 3] },
+            //     //         { name: "湿度计", type: "bar", data: [2, 0, 3] },
+            //     //         { name: "螺丝刀", type: "bar", data: [6, 2, 0] }
+            //     //     ];
+            //     //     _this.yData = [145, 40, 334];
+            //     //     _this.myChart.series = [];
+            //     //     _this.myChart.setOption({
+            //     //         series: []
+            //     //     });
+            //     //     _this.myChart.setOption({
+            //     //         xAxis: { data: _this.xData },
+            //     //         series: _this.series
+            //     //     });
+            //     // }
+            // });
         },
         getFontSize(val) {
             if (typeof (val) == 'number') return val;

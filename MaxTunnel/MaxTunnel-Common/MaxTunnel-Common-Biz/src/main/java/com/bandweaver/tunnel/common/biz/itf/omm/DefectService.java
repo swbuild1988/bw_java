@@ -23,9 +23,9 @@ public interface DefectService {
     /**
      * 维修完成后，更改缺陷状态
      *
-     * @param maintenanceOrderId
+     * @param defectId
      */
-    void maintComplete(int maintenanceOrderId);
+    void maintComplete(int defectId);
     
     PageInfo<DefectDto> dataGrid(DefectVo defectVo);
     

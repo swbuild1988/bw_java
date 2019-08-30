@@ -106,7 +106,6 @@
     </div>
 </template>
 <script>
-import axios from "axios";
 import { TunnelService } from "../../../../services/tunnelService";
 import { EnumsService } from "../../../../services/enumsService";
 import { RelatedUnitService } from "../../../../services/relatedUnitService";
@@ -244,9 +243,11 @@ export default {
         });
     },
     mounted() {
-        if (this.$route.params.id) {
+        if (this.$route.params.id || sessionStorage["detailId"]) {
             this.addRelatedUnitsInfo.id = this.$route.params.id;
-            this.pageType = this.$route.params.type;
+            this.pageType = this.$route.params.type
+                ? this.$route.params.type
+                : sessionStorage["pageType"];
         }
         let _this = this;
         TunnelService.getTunnelsTree().then(
@@ -359,11 +360,14 @@ export default {
                 this.choiceAll();
                 this.$refs[name].validate(valid => {
                     if (valid && this.validateSectionName == false) {
-                        this.axios
-                            .post("/relatedunits", this.addRelatedUnitsInfo)
-                            .then(response => {
+                        RelatedUnitService.addRelatedUnit(this.addRelatedUnitsInfo).then(
+                            result => {
                                 this.$router.push("/UM/relatedUnits/query");
-                            });
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
                     }
                 });
             }, 2000);
@@ -374,11 +378,14 @@ export default {
                 this.isDisable = false;
                 this.$refs[name].validate(valid => {
                     if (valid) {
-                        axios
-                            .put("/relatedunits", this.addRelatedUnitsInfo)
-                            .then(response => {
+                        RelatedUnitService.updateRelatedUnit(this.addRelatedUnitsInfo).then(
+                            result => {
                                 this.$router.push("/UM/relatedUnits/query");
-                            });
+                            },
+                            error => {
+                                this.Log.info(error)
+                            }
+                        )
                     }
                 });
             }, 2000);
@@ -473,7 +480,7 @@ export default {
 
 .ivu-form >>> .ivu-input::-webkit-input-placeholder,
 .ivu-form >>> .ivu-select-selection .ivu-select-placeholder {
-    color: #cac0c0;
+    color: #aaa;
 }
 .ivu-form >>> .ivu-input-icon {
     color: #fff;

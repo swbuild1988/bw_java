@@ -17,6 +17,9 @@ const axios_instance = axios.create({
 // request拦截器
 axios_instance.interceptors.request.use(
     (config) => {
+        if (localStorage.getItem('Authorization')) {
+            config.headers.common['Authorization'] = localStorage.getItem('Authorization');
+        }
         return config;
     },
     (error) => {
@@ -31,9 +34,7 @@ axios_instance.interceptors.response.use(
          * code为非20000是抛错 可结合自己业务进行修改
          */
         const res = response.data;
-        // console.log(response)
         if (response.status !== 200) {
-            console.log('status')
             // Message.error({
             //     content: res.message,
             //     duration: 5,
@@ -57,7 +58,7 @@ axios_instance.interceptors.response.use(
             }
             console.log("调用接口后台返回错误");
             // return Promise.reject(new Error('error'));
-        } else {
+        }else {
              // 503:用户未登录
             if( res.code == 503 ){
                 store.dispatch('FedLogOut').then(() => {
@@ -66,7 +67,8 @@ axios_instance.interceptors.response.use(
                 router.push({
                     path:'/UMLogin'
                 })
-            } else {
+            } 
+            else {
                 return response;
             }
         }
@@ -106,12 +108,25 @@ export default axios_instance;
 //             })
 //     });
 // }
-export function get( url ) {
-    return new Promise((resolve,reject) => {
-        axios_instance.get(url)
-            .then( response => resolve(response) )
+export function get( url, arraybuffer ) {
+    if(arraybuffer){
+        return new Promise((resolve,reject) => {
+            axios_instance({
+                method: 'get',
+                url: url,
+                responseType: arraybuffer
+            }).then(
+                response => resolve(response)
+            )
             .catch(err => reject(err))
-    });
+        });
+    }else{
+        return new Promise((resolve,reject) => {
+            axios_instance.get(url)
+                .then( response => resolve(response) )
+                .catch(err => reject(err))
+        });
+    }
 }
 
 /**

@@ -39,7 +39,7 @@ export const routes = [{
     {
         path: "/",
         redirect: {
-            path: "/UMLogin"
+            path: "/UMMain"
         }
     }
 ];
@@ -412,6 +412,14 @@ export const asyncRouterMap = [{
                                 "@/views/UM/OAM/TunnelCustomerManage/AddTunnelCustomer"
                             ], resolve),
                         name: "添加管廊客户"
+                    },
+                    {
+                        path: "detail",
+                        component: resolve =>
+                            require([
+                                "@/views/UM/OAM/TunnelCustomerManage/DetailTunnelCustomer"
+                            ], resolve),
+                        name: "管廊客户详情"
                     }
                 ]
             },

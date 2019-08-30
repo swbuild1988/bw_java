@@ -1,4 +1,3 @@
-import axios from "axios";
 import { get,put,del,post } from "../utils/http";
 
 var EnterGalleryService = {
@@ -183,6 +182,32 @@ var EnterGalleryService = {
                     resolve(data)
                 }else{
                     reject(msg+"地址：staffs/batch/"+id)
+                }
+            })
+        })
+    },
+    //获取用户角色
+    getRoles(){
+        return new Promise((resolve, reject) => {
+            get('roles/users').then(res=>{
+                let{ code, data, mgs } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：roles/users")
+                }
+            })
+        })
+    },
+    //审批相关
+    submitAgree(params){
+        return new Promise((resolve, reject) => {
+            post('users/activiti/req-historys/audit', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if(code == 200){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：users/activiti/req-historys/audit")
                 }
             })
         })

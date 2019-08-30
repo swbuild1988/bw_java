@@ -15,14 +15,14 @@ const LoginService = {
                             code,
                             data,
                         } = res.data;
-                        if (code == 200) {
+                        if (code == 200 || code == 20007 || code == 20006) {
                             resolve(data);
                         } else {
                             reject(msg);
                         }
                     })
                     .catch((error) => {
-                        reject(new Error(error.response.status + '  ' + error.response.data));
+                        reject(new Error(error));
                     });
             } else {
                 const data = {
@@ -34,25 +34,16 @@ const LoginService = {
         });
     },
     // 获取登录用户权限
-    getInfo: function (params) {
+    getInfo: function () {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                get('/login/' + Cookies.get('userName')).then((res) => {
+                get('/login/' + localStorage.getItem('userName')).then((res) => {
                     const {
                         msg,
                         code,
                         data,
                     } = res.data;
                     if (code == 200) {
-                        // data.pList = [{
-                        //   muneCode: '/UMMain',
-                        //   pCodeList: ['list', 'add', 'update'],
-                        // }, {
-                        //   muneCode: '/VMMain2',
-                        //   pCodeList: ['list', 'add', 'update'],
-                        // }];
-                        // data.rList = ['admin'];
-                        console.log('getInfo',data)
                         resolve(data);
                     } else {
                         reject(new Error(msg + '地址:/login/' + Cookies.get('userName')));

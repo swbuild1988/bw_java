@@ -45,6 +45,7 @@
 <script>
 import { LoginService } from "../../services/loginService";
 import Cookies from "js-cookie";
+import { mapMutations } from 'vuex';
 export default {
 	components: {},
 	name: "VMlogin",
@@ -80,6 +81,7 @@ export default {
 		this.init();
 	},
 	methods: {
+		...mapMutations(['changeLogin']),
 		//初始化函数
 		init() {
 			this.getCookie();
@@ -103,10 +105,14 @@ export default {
 						name: _this.formValidate.userName,
 						password: sha256(_this.formValidate.passWord)
 					};
-					Cookies.set("userName", loginParams.name);
+					// Cookies.set("userName", loginParams.name);
 					this.$store
 						.dispatch("Login", loginParams)
-						.then(() => {
+						.then(result => {
+							this.changeLogin({ Authorization: result.token});
+							localStorage.setItem("userName", loginParams.name)
+							localStorage.setItem("password", loginParams.password)
+
 							_this.logining = false;
 
 							_this.$router.push({ path: "/VMmain" });

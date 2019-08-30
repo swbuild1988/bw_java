@@ -205,3 +205,5 @@ alter table T_MAM_SUBSTATION add unpower_ele_id number;
 alter table T_MAM_SUBSTATION add type number;
 
 
+-------------------------------------------------------------
+alter table T_COMMON_TUNNEL add show number default 1;

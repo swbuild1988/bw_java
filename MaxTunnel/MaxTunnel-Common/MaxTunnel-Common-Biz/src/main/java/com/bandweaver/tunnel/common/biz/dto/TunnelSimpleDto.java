@@ -1,11 +1,6 @@
 package com.bandweaver.tunnel.common.biz.dto;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import com.bandweaver.tunnel.common.biz.pojo.Company;
-import com.bandweaver.tunnel.common.biz.pojo.Staff;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class TunnelSimpleDto implements Serializable {
 
@@ -18,6 +13,8 @@ public class TunnelSimpleDto implements Serializable {
 	private Integer status;
 
 	private Double length;
+	
+	private Boolean show;
 
 	public Integer getId() {
 		return id;
@@ -51,8 +48,16 @@ public class TunnelSimpleDto implements Serializable {
 		this.length = length;
 	}
 
+	public Boolean getShow() {
+		return show;
+	}
+
+	public void setShow(Boolean show) {
+		this.show = show;
+	}
+
 	@Override
 	public String toString() {
-		return "TunnelSimpleDto [id=" + id + ", name=" + name + ", status=" + status + ", length=" + length + "]";
+		return "TunnelSimpleDto [id=" + id + ", name=" + name + ", status=" + status + ", length=" + length + ", show=" + show + "]";
 	}
 }

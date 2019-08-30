@@ -36,7 +36,7 @@ public class MeasValueDistributeController {
 	 * @author shaosen
 	 * @Date 2018年10月19日
 	 */
-	@RequestMapping(value = "measvalue-distribute/batch", method = RequestMethod.POST)
+	@RequestMapping(value = "measvalue-distribute", method = RequestMethod.POST)
 	public JSONObject addMeasValueDisBatch(@RequestBody List<MeasValueDistributeT> list) {
 		String ip = ContextUtil.getRemoteIp();
 		LogUtil.info("来自：" + ip + ",接收从MaxView发送的分布式数据共：" + list.size() + "条" );

@@ -492,6 +492,7 @@ public class SectionController extends BaseController<Section>{
             j.put("dataType", measObj.getDatatypeId());
             j.put("dataTypeName", measObj.getDatatypeName());
             j.put("cv", cv);
+            j.put("description", measObj.getDescription());
             ObjectType type = ObjectType.getEnum(measObj.getObjtypeId());
             j.put("unit", type == null ? "" : type.getUnit());
             cvList.add(j);
@@ -519,6 +520,5 @@ public class SectionController extends BaseController<Section>{
 		
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
-	
 
 }

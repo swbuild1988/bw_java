@@ -6,7 +6,7 @@ package com.bandweaver.tunnel.common.biz.constant.em;
  */
 public enum TargetEnum {
 
-	
+	NONE("无", 0),
 	ASSIGN_TO("指定对象",1),
 	TYPE("类型",2);
 	

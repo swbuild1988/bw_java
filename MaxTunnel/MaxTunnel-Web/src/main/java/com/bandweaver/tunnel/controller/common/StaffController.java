@@ -1,8 +1,6 @@
 package com.bandweaver.tunnel.controller.common;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.StaffDto;
-import com.bandweaver.tunnel.common.biz.itf.CompanyService;
-import com.bandweaver.tunnel.common.biz.itf.DepartmentService;
 import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.common.UserService;
 import com.bandweaver.tunnel.common.biz.pojo.Staff;
@@ -47,10 +43,6 @@ public class StaffController {
 	
 	@Autowired
 	private StaffService staffService;
-	@Autowired
-	private DepartmentService departmentService;
-	@Autowired
-	private CompanyService companyService;
 	@Autowired
 	private UserService userService;
 	
@@ -250,7 +242,7 @@ public class StaffController {
 	 */
 	@WriteLog(DescEnum.CHANGE_PW)
 	@RequestMapping(value="users/pw",method=RequestMethod.POST)
-	public JSONObject changePw(@RequestBody Map<String, String> map) {
+	public JSONObject changePw(@RequestBody JSONObject map) {
 		
 		Integer id = DataTypeUtil.toInteger(map.get("id"));
 		String oldPw = DataTypeUtil.toString(map.get("oldPw"));

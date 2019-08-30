@@ -42,13 +42,6 @@
                      select="com.bandweaver.tunnel.dao.omm.EquipmentVenderMapper.selectByPrimaryKey"/>
     </resultMap>
 
-    <select id="getEquipmentByAssetNo" resultMap="equipmentMap">
-        SELECT *
-        FROM t_omm_equipment
-        WHERE
-            asset_no = #{assetNo}
-    </select>
-
     <insert id="addEquipment"
             parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.Equipment">
         INSERT INTO t_omm_equipment

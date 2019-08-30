@@ -18,6 +18,7 @@
         <result column="start_point" jdbcType="VARCHAR" property="startPoint"/>
         <result column="end_point" jdbcType="VARCHAR" property="endPoint"/>
         <result column="direction" jdbcType="VARCHAR" property="direction"/>
+        <result column="show" jdbcType="DECIMAL" property="show"/>
     </resultMap>
 
     <resultMap id="DtoResultMap" type="com.bandweaver.tunnel.common.biz.dto.TunnelDto">
@@ -35,6 +36,7 @@
         <result column="start_point" jdbcType="VARCHAR" property="startPoint"/>
         <result column="end_point" jdbcType="VARCHAR" property="endPoint"/>
         <result column="direction" jdbcType="VARCHAR" property="direction"/>
+        <result column="show" jdbcType="DECIMAL" property="show"/>
         <association property="responsibility" javaType="Staff" column="RESPONSIBILITY_ID"
                      select="com.bandweaver.tunnel.dao.common.StaffMapper.selectByPrimaryKey"/>
         <association property="construct" javaType="Company" column="CONSTRUCT_ID"
@@ -50,6 +52,7 @@
         <result column="name" property="name"/>
         <result column="status" property="status"/>
         <result column="length" property="length"/>
+        <result column="show" property="show"/>
     </resultMap>
 
     <delete id="deleteByPrimaryKey">
@@ -187,6 +190,9 @@
             <if test="direction != null">
                 direction = #{direction,jdbcType=DECIMAL},
             </if>
+            <if test="show != null">
+                show = #{show,jdbcType=DECIMAL},
+            </if>
         </set>
         where ID = #{id,jdbcType=DECIMAL}
     </update>
@@ -196,7 +202,8 @@
             id,
             name,
             status,
-            length
+            length,
+            show
         FROM t_common_tunnel
     </select>
 
@@ -206,7 +213,8 @@
             id,
             name,
             status,
-            length
+            length,
+            show
         FROM t_common_tunnel
         WHERE id = #{id}
     </select>
@@ -230,7 +238,8 @@
             id,
             name,
             status,
-            length
+            length,
+            show
         FROM t_common_tunnel
         WHERE id = #{id}
     </select>
@@ -274,6 +283,9 @@
             </if>
             <if test="status != null">
                 and status = #{status}
+            </if>
+            <if test="show != null">
+                and show = #{show}
             </if>
         </where>
         order by crt_time DESC

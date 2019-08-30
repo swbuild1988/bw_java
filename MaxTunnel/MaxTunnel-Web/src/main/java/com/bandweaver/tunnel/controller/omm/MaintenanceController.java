@@ -29,6 +29,7 @@ import com.bandweaver.tunnel.common.biz.dto.StaffDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.DefectDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.dto.omm.MaintenanceOrderDto;
 import com.bandweaver.tunnel.common.biz.itf.ActivitiService;
 import com.bandweaver.tunnel.common.biz.itf.AreaService;
@@ -37,8 +38,10 @@ import com.bandweaver.tunnel.common.biz.itf.StaffService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
 import com.bandweaver.tunnel.common.biz.itf.omm.DefectService;
+import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.omm.Defect;
+import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder;
 import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
@@ -67,6 +70,8 @@ public class MaintenanceController {
     private ActivitiService activitiService;
     @Autowired
     private StaffService staffService;
+    @Autowired
+    private EquipmentService equipmentService;
 
     @RequestMapping(value = "defects", method = RequestMethod.POST)
     public JSONObject add(@RequestBody DefectDto defect) {
@@ -204,21 +209,37 @@ public class MaintenanceController {
 
     /**
      * 结束任务，并修改维修工单信息
-     *
+     * @param status 本体缺陷为0;设备缺陷给相应的值
      * @param order
      * @return
      * @author liuya
      * @Date 2018年9月12日
      */
-    @RequestMapping(value = "orders", method = RequestMethod.PUT)
-    public JSONObject updateOrder(@RequestBody MaintenanceOrder order) {
+    @RequestMapping(value = "equipment-status/{status}/orders", method = RequestMethod.PUT)
+    public JSONObject updateOrder(@PathVariable("status") Integer status, @RequestBody MaintenanceOrder order) {
         LogUtil.info("修改维修工单信息");
         maintenanceOrderService.update(order);
         LogUtil.info("结束任务");
         maintenanceOrderService.completeMaintenanceOrder(order.getId());
+        LogUtil.info("修改设备状态");
+        if(status != null && !status.equals(0)) {
+        	Equipment e = getEquipmentByOrderId(order.getId());
+        	e.setStatus(status);
+        	equipmentService.updateEquipmentById(e);
+        }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /*
+     * 根据维修工单id获取设备
+     */
+    private EquipmentDto getEquipmentByOrderId(Integer orderId) {
+    	Integer defectId = maintenanceOrderService.getOrder(orderId).getDefectId();
+    	Integer objId = defectService.getDefectDto(defectId).getObjectId();
+    	if(objId == null) return null;
+    	EquipmentDto e = equipmentService.getEquipmentByObj(objId);
+    	return e;
+    }
     /**
      * @param tunnelId
      * @return
@@ -259,6 +280,8 @@ public class MaintenanceController {
     @RequestMapping(value = "orders/{id}", method = RequestMethod.GET)
     public JSONObject getOrderById(@PathVariable("id") Integer id) {
         MaintenanceOrderDto order = maintenanceOrderService.getOrder(id);
+        EquipmentDto e = getEquipmentByOrderId(order.getId());
+        order.setEquipmentDto(e);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, order);
     }
 

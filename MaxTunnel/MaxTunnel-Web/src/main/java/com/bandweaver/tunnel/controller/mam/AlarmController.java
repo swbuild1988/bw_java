@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.itf.MqService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.joda.time.DateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bandweaver.tunnel.common.biz.constant.TimeEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.AlarmLevelEnum;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
@@ -88,39 +86,45 @@ public class AlarmController {
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
-	@RequestMapping(value = "alarms", method = RequestMethod.POST)
-	public JSONObject add(@RequestBody MeasAlarm measAlarm) {
+	@RequestMapping(value = "new-alarms", method = RequestMethod.POST)
+	public JSONObject add(@RequestBody List<MeasAlarm> measAlarms) {
 		
-		LogUtil.debug("接收到MaxView发送的告警：" + measAlarm );
-		MeasObj measObj = measObjModuleCenter.getMeasObj(measAlarm.getObjectId());
-		if(StringTools.isNullOrEmpty(measObj)) {
-			LogUtil.debug("监测对象[ " + measAlarm.getObjectId() + "]不存在");
-			throw new BandWeaverException("监测对象[ " + measAlarm.getObjectId() + "]不存在");
+		LogUtil.info("接收到MaxView发送的告警：" + measAlarms );
+		for(MeasAlarm measAlarm : measAlarms) {
+			MeasObj measObj = measObjModuleCenter.getMeasObj(measAlarm.getObjectId());
+			if(StringTools.isNullOrEmpty(measObj)) {
+				LogUtil.info("监测对象[ " + measAlarm.getObjectId() + "]不存在");
+				throw new BandWeaverException("监测对象[ " + measAlarm.getObjectId() + "]不存在");
+			}
+			
+			Alarm alarm = new Alarm();
+			alarm.setAlarmDate(measAlarm.getTime());
+			alarm.setAlarmName(measAlarm.getAlarmName());
+			alarm.setAlarmLevel(measAlarm.getAlarmSeverity());
+			alarm.setTunnelId(measObj.getTunnelId());
+			alarm.setObjectId(measAlarm.getObjectId());
+			alarm.setObjectName(measObj.getName());
+			alarm.setIsDistribute(DataType.getEnum(measObj.getDatatypeId()) == DataType.DISTRIBUTE ? true : false );
+			alarm.setAlarmSource(measAlarm.getAlarmSource());
+			alarm.setDescription(measAlarm.getAdditionalText());
+			if(measAlarm.getCleared() == true) {
+				alarm.setCleaned(true);
+				alarm.setAlarmDate(measAlarm.getClearedTime());
+			}
+			
+			if(measAlarm.getLongitude() == null || measAlarm.getLongitude() == 0) {
+				alarm.setLongitude(measObj.getLongitude());
+			}else {
+				alarm.setLongitude(measAlarm.getLongitude().toString());
+			}
+			
+			if(measAlarm.getLatitude() == null || measAlarm.getLatitude() == 0) {
+				alarm.setLatitude(measObj.getLatitude());
+			}else {
+				alarm.setLatitude(measAlarm.getLatitude().toString());
+			}
+			alarmService.add(alarm);
 		}
-		
-		Alarm alarm = new Alarm();
-		alarm.setAlarmDate(DateUtil.setMillisTimestamp2Date(measAlarm.getTime()));
-		alarm.setAlarmName(measAlarm.getAlarmName());
-		alarm.setAlarmLevel(measAlarm.getAlarmSeverity());
-		alarm.setTunnelId(measObj.getTunnelId());
-		alarm.setObjectId(measAlarm.getObjectId());
-		alarm.setObjectName(measObj.getName());
-		alarm.setIsDistribute(DataType.getEnum(measObj.getDatatypeId()) == DataType.DISTRIBUTE ? true : false );
-		alarm.setAlarmSource(measAlarm.getAlarmSource());
-		alarm.setDescription(measAlarm.getAdditionalText());
-		
-		if(measAlarm.getLongitude() == null || measAlarm.getLongitude().trim().length() == 0) {
-			alarm.setLongitude(measObj.getLongitude());
-		}else {
-			alarm.setLongitude(measAlarm.getLongitude());
-		}
-		
-		if(measAlarm.getLatitude() == null || measAlarm.getLatitude().trim().length() == 0) {
-			alarm.setLatitude(measObj.getLatitude());
-		}else {
-			alarm.setLatitude(measAlarm.getLatitude());
-		}
-		alarmService.add(alarm);
 		return CommonUtil.success();
 	}
 	

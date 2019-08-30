@@ -11,21 +11,38 @@ export default {
         id: {
             type: String
         },
-        requestUrl: {
-            type: String
+        legendData: {
+            type: Array,
+            default: () => {
+                return [
+                    "古城大街",
+                    "实验路",
+                    "经三路",
+                    "经二路",
+                    "纬二路",
+                    "监控中心"
+                ];
+            }
+        },
+        series: {
+            type: Array,
+            required: true
+        },
+        xData: {
+            type: Array,
+            default: []
         },
         parameters: {
             type: Object
+        },
+        yMin: {
+            default: 0
         }
     },
     data() {
         return {
             myChart: "",
-            legendData: [],
-            serises: [],
-            xData: [],
             option: {},
-            yMin: 0,
             timerId: null,
             color: [
                 "#C23531",
@@ -44,14 +61,16 @@ export default {
         this.resizeChart();
     },
     watch: {
-        requestUrl() {
+        series() {
+            this.init();
+        },
+        yMin() {
             this.init();
         }
     },
     methods: {
         init() {
             this.drawLine();
-            this.fetchData(this.requestUrl);
             // this.refreshData();
         },
         resizeChart() {
@@ -59,7 +78,6 @@ export default {
             window.addEventListener("resize", function() {
                 _this.drawLine();
                 _this.myChart.resize();
-                _this.fetchData(_this.requestUrl);
             });
         },
         drawLine() {
@@ -90,7 +108,8 @@ export default {
                     textStyle: {
                         // color: '#fff',
                         fontSize: window.innerHeight * 0.014
-                    }
+                    },
+                    data: this.legendData
                 },
                 grid: {
                     top: "15%",
@@ -108,10 +127,11 @@ export default {
                     axisLabel: {
                         fontSize: window.innerHeight * 0.01
                     },
-                    data: []
+                    data: this.xData
                 },
                 yAxis: {
                     type: "value",
+                    min: this.yMin,
                     axisLine: {
                         margin: 2,
                         lineStyle: {
@@ -132,13 +152,7 @@ export default {
                         }
                     }
                 },
-                series: [
-                    {
-                        data: [],
-                        type: "line",
-                        smooth: true
-                    }
-                ]
+                series: this.series
             };
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
@@ -150,71 +164,8 @@ export default {
             }
             window.addEventListener("resize", this.myChart.resize);
         },
-        fetchData(requestUrl) {
-            let _this = this;
-            _this.axios
-                .get(requestUrl)
-                .then(result => {
-                    let { code, data } = result.data;
-
-                    if (code == 200) {
-                        _this.serises = [];
-                        _this.legendData = [];
-                        _this.xData = [];
-
-                        data.forEach((a, index) => {
-                            var temp = {};
-                            temp.name = a.key;
-                            temp.type = "line";
-                            temp.smooth = true;
-
-                            _this.legendData.push({
-                                name: a.key,
-                                textStyle: {
-                                    color: _this.color[index]
-                                }
-                            });
-                            let tempData = [];
-                            a.val.filter(b =>
-                                tempData.push(parseFloat(b.val.toFixed(2)))
-                            );
-                            temp.data = tempData;
-                            _this.yMin =
-                                Math.min.apply(null, tempData) < _this.yMin ||
-                                _this.yMin == 0
-                                    ? Math.min.apply(null, tempData)
-                                    : _this.yMin;
-                            _this.serises.push(temp);
-                        });
-                        data[0].val.filter(a => {
-                            _this.xData.push(a.key);
-                        });
-                        _this.myChart.setOption({
-                            series: _this.serises,
-                            xAxis: {
-                                data: _this.xData
-                            },
-                            yAxis: {
-                                min: _this.yMin
-                            },
-                            legend: {
-                                data: _this.legendData
-                            }
-                        });
-                    }
-                })
-                .finally(() => {
-                    let _this = this;
-                    if (this.refreshFlag) {
-                        this.timerId = setTimeout(() => {
-                            _this.fetchData(_this.requestUrl);
-                        }, 1000 * 60 * 60);
-                    }
-                });
-        },
         // refreshData() {
         //   let _this = this;
-        //   this.timerId = setInterval(() => _this.fetchData(_this.requestUrl), 5000)
         // },
         sizeFunction(x) {
             var min = Math.min.apply(

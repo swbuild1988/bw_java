@@ -3,87 +3,99 @@
         <div class="formTitle">添加管廊设备</div>
         <div class="formHeight">
         <Form ref="equipment" :model="equipment" :label-width="120" :rules="validateRules" @submit.native.prevent>
-            <FormItem label="设备名称：" prop="name">
-                <Input v-model='equipment.name'></Input>
-            </FormItem>
-            <FormItem label="资产编码：" prop="assetNo">
-                <Input v-model='equipment.assetNo'></Input>
-            </FormItem>
-            <FormItem label="安装位置：" prop="tunnelId">
-                <Row :gutter="4">
-                    <Col span="7">    
-                        <Select v-model='equipment.tunnelId' @on-change="changeTunnelId(equipment.tunnelId)">
-                            <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                        </Select>
-                    </Col>
-                    <Col span="7">
-                        <Select v-model="areaId" @on-change="changeSection()">
-                            <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                        </Select>
-                    </Col>
-                    <Col span="7">
-                        <Select v-model="storeId" @on-change="changeSection()">
-                            <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                        </Select>
-                    </Col>
-                    <Col span="5" style="display: none">
-                        <Input v-model="equipment.sectionId" v-show="false"></Input>
-                        <!-- <Input v-model="sectionName" readonly></Input> -->
-                    </Col>
-                </Row>
-            </FormItem>
-            <FormItem label="投运时间：" prop="runTime">
-                <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
-            </FormItem>
-            <FormItem label="设备所属系统：" prop="type">
-                <Select v-model='equipment.type'>
-                    <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="规格型号：" prop="modelId">
-                <Select v-model='equipment.modelId'>
-                    <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="额定电压：" prop="ratedVoltage">
-                <Input v-model="equipment.ratedVoltage"></Input>
-            </FormItem>
-            <FormItem label="量程：" prop="range">
-                <Input v-model="equipment.range"></Input>
-            </FormItem>
-            <FormItem label="厂家：" prop="factory">
-                <Input v-model="equipment.factory"></Input>
-            </FormItem>
-            <FormItem label="品牌：" prop="brand">
-                <Input v-model="equipment.brand"></Input>
-            </FormItem>
-            <FormItem label="供应商：" prop="venderId">
-                <Select v-model='equipment.venderId'>
-                    <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="质保期限：" prop="qaTerm">
-                <Input v-model="equipment.qaTerm"></Input>
-            </FormItem>
-            <FormItem label="设备状态：" prop="status">
-                <Select v-model="equipment.status">
-                    <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="关联监测对象：" prop="objId">
-                <Input v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
-                <ul class="chooseObj" v-show="isShowObjs">
-                    <li v-for="item in objs" :value="item" :key="item.id" @click="replaceInputValue(item)">{{item}}</li>
-                </ul>
-            </FormItem>
-            <FormItem label="对象类型：">
-                <div v-for="item in objTypes" :key="item.objtypeId">
-                    <Input :value="item.objtypeName" readonly></Input>
+            <div class="stepsHeight" v-show="isShowAddInfo==1">
+                <FormItem label="设备名称：" prop="name">
+                    <Input v-model='equipment.name'></Input>
+                </FormItem>
+                <FormItem label="资产编码：" prop="assetNo">
+                    <Input v-model='equipment.assetNo'></Input>
+                </FormItem>
+                <FormItem label="安装位置：" prop="tunnelId">
+                    <Row :gutter="4">
+                        <Col span="7">    
+                            <Select v-model='equipment.tunnelId' @on-change="changeTunnelId(equipment.tunnelId)">
+                                <Option v-for="item in tunnels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                            </Select>
+                        </Col>
+                        <Col span="7">
+                            <Select v-model="areaId" @on-change="changeSection()">
+                                <Option v-for="item in areas" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                            </Select>
+                        </Col>
+                        <Col span="7">
+                            <Select v-model="storeId" @on-change="changeSection()">
+                                <Option v-for="item in stores" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                            </Select>
+                        </Col>
+                        <Col span="5" style="display: none">
+                            <Input v-model="equipment.sectionId" v-show="false"></Input>
+                            <!-- <Input v-model="sectionName" readonly></Input> -->
+                        </Col>
+                    </Row>
+                </FormItem>
+                <FormItem label="投运时间：" prop="runTime">
+                    <DatePicker type="datetime" placeholder="请选择预计投运时间" v-model='equipment.runTime' style="width: 100%;"></DatePicker>
+                </FormItem>
+            </div>
+            <div class="stepsHeight" v-show="isShowAddInfo==2">
+                <FormItem label="设备所属系统：" prop="type">
+                    <Select v-model='equipment.type'>
+                        <Option v-for="item in equipmentTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="规格型号：" prop="modelId">
+                    <Select v-model='equipment.modelId'>
+                        <Option v-for="item in equipmentModels" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="额定电压：" prop="ratedVoltage">
+                    <Input v-model="equipment.ratedVoltage"></Input>
+                </FormItem>
+                <FormItem label="量程：" prop="range">
+                    <Input v-model="equipment.range"></Input>
+                </FormItem>
+            </div>
+            <div class="stepsHeight" v-show="isShowAddInfo==3">
+                <FormItem label="厂家：" prop="factory">
+                    <Input v-model="equipment.factory"></Input>
+                </FormItem>
+                <FormItem label="品牌：" prop="brand">
+                    <Input v-model="equipment.brand"></Input>
+                </FormItem>
+                <FormItem label="供应商：" prop="venderId">
+                    <Select v-model='equipment.venderId'>
+                        <Option v-for="item in venders" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="质保期限：" prop="qaTerm">
+                    <Input v-model="equipment.qaTerm"></Input>
+                </FormItem>
+            </div>
+            <div class="stepsHeight" v-show="isShowAddInfo==4">
+                <FormItem label="设备状态：" prop="status">
+                    <Select v-model="equipment.status">
+                        <Option v-for="item in equipmentStatus" :key="item.val" :value="item.val">{{item.key}}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="关联监测对象：" prop="objId">
+                    <Input v-model="equipment.objId" @on-change="changeObjId(equipment.objId)"></Input>
+                    <ul class="chooseObj" v-show="isShowObjs">
+                        <li v-for="item in objs" :value="item" :key="item.id" @click="replaceInputValue(item)">{{item}}</li>
+                    </ul>
+                </FormItem>
+                <FormItem label="对象类型：">
+                    <div v-for="item in objTypes" :key="item.objtypeId">
+                        <Input :value="item.objtypeName" readonly></Input>
+                    </div>
+                </FormItem>
+                <div class="BtnBox">
+                    <Button type="primary" @click="submitEquipment('equipment')" :disabled="isDisable">提交</Button>
                 </div>
-            </FormItem>
+            </div>
             <div class="BtnBox">
-                <Button type="default" @click="goBack()" style="margin-right: 8px;">返回</Button>
-                <Button type="primary" @click="submitEquipment('equipment')" :disabled="isDisable">提交</Button>
+                <Button type="warning" @click="goBack()">返回</Button>
+				<Button type="default" v-if="isShowAddInfo!=1" @click="handlePre()">上一步</Button>
+				<Button type="primary" v-if="isShowAddInfo!=4" @click="handleNext()">下一步</Button>
             </div>
         </Form>
         </div>
@@ -180,7 +192,8 @@ export default {
             storeId: null,
             // sectionName: null,
             isShowObjs: false,
-            choosedObjId: null
+            choosedObjId: null,
+            isShowAddInfo: 1
         };
     },
     watch: {
@@ -240,12 +253,12 @@ export default {
             }
         )
         //obj
-        this.axios.get('measobjs').then(
-            res=>{
-                let{ code,data } = res.data
-                if(code==200){
-                    this.objs = data
-                }
+        EquipmentService.getObj().then(
+            result => {
+                this.objs = result
+            },
+            error => {
+                this.Log.info(error)
             }
         )
     },
@@ -280,12 +293,12 @@ export default {
                 pageSize: 10,
                 pageNum: 1
             }
-            this.axios.post('measobjs/datagrid',info).then(
-                res=> {
-                    let { code,data,msg } = res.data
-                    if(code==200){
-                        this.objTypes = data.list
-                    }
+            EquipmentService.getObjType().then(
+                result => {
+                    this.objTypes = result.list
+                },
+                error => {
+                    this.Log.info(error)
                 }
             )
         },
@@ -340,7 +353,15 @@ export default {
             this.equipment.objId = id
             this.isShowObjs = false
             this.getObjType()
-        }
+        },
+        //上一步
+		handlePre(){
+			this.isShowAddInfo=this.isShowAddInfo-1
+		},
+		//下一步
+		handleNext(){			
+			this.isShowAddInfo = this.isShowAddInfo+1
+		}
     }
 };
 </script>

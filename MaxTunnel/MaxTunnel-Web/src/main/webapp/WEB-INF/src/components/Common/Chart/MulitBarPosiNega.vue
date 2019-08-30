@@ -8,6 +8,7 @@
 }
 </style>
 <script>
+import { ChartService } from '@/services/chartService.js'
 export default {
     name: "posiNegaBar",
     props: {
@@ -171,12 +172,11 @@ export default {
         },
 
         fetchData(requestUrl) {
-            this.axios.get(requestUrl).then(res=>{
-                let { code, data } = res.data
-                if(code==200){
-                    var xData = this.getDataX(data)
-                    var yData1 = this.getDataY1(data)
-                    var yData2 = this.getDataY2(data)
+            ChartService.getData(requestUrl).then(
+                result => {
+                    var xData = this.getDataX(result)
+                    var yData1 = this.getDataY1(result)
+                    var yData2 = this.getDataY2(result)
                     let series = [
                         {
                             name: this.option.legend.data[0],
@@ -205,8 +205,11 @@ export default {
                         this.option.series.push(element);
                     });
                     this.myChart.setOption(this.option);
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })
+            )
         },
         getDataX(data) {
             let xData = [];

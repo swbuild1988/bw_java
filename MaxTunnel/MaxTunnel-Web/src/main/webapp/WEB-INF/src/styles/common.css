@@ -56,7 +56,7 @@ html {
 
 .conditions .ivu-input::-webkit-input-placeholder,
 .queryCondition .ivu-input::-webkit-input-placeholder {
-	color: #fff;
+	color: #aaa;
 }
 
 .conditions .ivu-btn-primary,
@@ -71,7 +71,7 @@ html {
 
 .queryCondition .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
 .ivu-select-arrow {
-	color: #fff;
+	color: #aaa;
 }
 
 .queryCondition .ivu-select-selection {

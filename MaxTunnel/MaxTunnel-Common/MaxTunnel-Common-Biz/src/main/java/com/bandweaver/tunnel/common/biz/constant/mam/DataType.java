@@ -25,10 +25,9 @@ public enum DataType {
     /** 复杂对象 **/
     ComplexObject("复杂对象", 200),
     /**频谱数据*/
-    DAS("频谱数据", 103);
-
-    DataType() {
-    }
+    DAS("频谱数据", 103),
+    /** 其他 */
+    OTHER("其他", 0);
 
     DataType(String name, int value) {
         this.name = name;

@@ -50,6 +50,18 @@ var DataAnalysisService = {
                 }
             })
         })
+    },
+    downloadPDF: function(url, arraybuffer){
+        return new Promise((resolve, reject) => {
+            get(url, arraybuffer).then(res=>{
+                let{ status, data } = res
+                if(status==200){
+                    resolve(data)
+                }else{
+                    reject("下载出错")
+                }
+            })
+        })
     }
 }
 

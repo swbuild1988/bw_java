@@ -90,6 +90,7 @@ export default {
 		downloadCycle(id, fileName) {
 			let _this = this;
 			this.$refs.pdf.downloadPDF(
+				// "/reports/download/" + id,
 				_this.ApiUrl + "/reports/download/" + id,
 				fileName
 			);

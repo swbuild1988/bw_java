@@ -207,7 +207,6 @@ export default {
                 assetNo: null,
                 areaId: null,
                 storeId: null,
-                // sectionName: null
             },
             aloneBorrowId: null,
             isBorrow: false,
@@ -231,9 +230,6 @@ export default {
                 storeId: [
                     { type: 'number', required: true, message: '所属管仓不能为空', trigger: 'change' }
                 ],
-                // sectionName: [
-                //     { validator: this.checkSection, trigger: 'change' }
-                // ],
                 assetNo: [
                     { required: true, message:'资产编码不能为空', trigger: 'blur' }
                 ]
@@ -294,21 +290,7 @@ export default {
                 status: 1,
             };
             return Object.assign({},param)
-        },
-        // aloneOutStorageParams(){
-        //     let param = {
-        //         ids: this.aloneBorrowId,
-        //         staffId: this.borrow.borrower,
-        //         outTime: this.borrow.outTime,
-        //         tunnelId: this.borrow.tunnelId,
-        //         describe: this.borrow.borrowPurpose,
-        //         userId: this.userId,
-        //         sectionId: this.borrow.sectionId,
-        //         assetNo: this.borrow.assetNo,
-        //         objId: this.borrow.objId
-        //     }
-        //     return Object.assign({},param)
-        // }
+        }
     },
     mounted() {
         let _this = this;
@@ -325,12 +307,14 @@ export default {
         );
         this.showTable();
         //获取借用人列表
-        this.axios.get('staffs').then(res=>{
-            let{ code,data } = res.data
-            if(code==200){
-                this.staffs = data
+        EquipmentService.getStaffs().then(
+            result => {
+                this.staffs = result;
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
         //获取type
         EquipmentService.getEquipmentTypes().then(
             res=>{
@@ -525,12 +509,12 @@ export default {
                 pageSize: 10,
                 pageNum: 1
             };
-            this.axios.post('measobjs/datagrid',info).then(
-                res=> {
-                    let { code,data,msg } = res.data
-                    if(code==200){
-                        this.objTypes = data.list
-                    }
+            EquipmentService.getObjType(info).then(
+                result => {
+                    this.objTypes = result.list
+                },
+                error => {
+                    this.Log.info(error)
                 }
             )
         },

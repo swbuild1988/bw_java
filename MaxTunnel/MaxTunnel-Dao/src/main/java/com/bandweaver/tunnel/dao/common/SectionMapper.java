@@ -18,8 +18,6 @@ public interface SectionMapper {
 
     int updateByPrimaryKeySelective(Section record);
 
-    int updateByPrimaryKey(Section record);
-
 	/**
 	 * @Description: 批量添加
 	 * @param @param list   

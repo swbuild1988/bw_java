@@ -139,6 +139,6 @@ public class MaintenanceOrderServiceImpl implements MaintenanceOrderService {
         activitiService.completeTaskByProcessIntance(maintenanceOrder.getProcessInstanceId());
 
         //更改defect的状态
-        defectService.maintComplete(id);
+        defectService.maintComplete(maintenanceOrder.getDefectId().intValue());
     }
 }

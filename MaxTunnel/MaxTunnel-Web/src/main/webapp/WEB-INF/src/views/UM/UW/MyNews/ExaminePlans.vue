@@ -44,9 +44,6 @@
             <FormItem label="巡检计划描述：">
                 <Input type="textarea" readonly v-model="plans.remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入审批备注"></Input>
             </FormItem>
-            <!-- <FormItem label="巡检时间：">
-                <Input v-model="plans.inspectTime" readonly></Input>
-            </FormItem> -->
             <FormItem label="巡检计划：">
                 <Table border stripe :columns="columns1" :data="plans.tasks" style="margin: 20px auto;"></Table>
             </FormItem>
@@ -69,7 +66,7 @@
     </div>
 </template>
 <script>
-import axios from "axios";
+import { PatrolService } from '@/services/patrolService'
 export default {
     data(){
         return{
@@ -82,7 +79,6 @@ export default {
                 tunnelName: null,
                 groupName: null,
                 createTime: null,
-                // inspectTime: null,
                 processInstanceId: null,
                 remark: '1',
                 tasks:[],
@@ -91,9 +87,7 @@ export default {
                 inspectionWay: null,
                 inspectionPath: null,
                 inspectObject: null,
-                steps: [
-                    { name: null }
-                ]
+                steps: []
             },
             columns1: [
                 {
@@ -138,14 +132,15 @@ export default {
       } 
     },
     mounted(){
-        axios.get('/users/activiti/task/detail/'+this.$route.params.processInstanceId).then(response=>{
-            let{ code,data } = response.data
-            if(code=200){
-                this.plans = data
-                this.plans.createTime = new Date(data.createTime).format('yyyy-MM-dd hh:mm:s')
-                // this.plans.inspectTime = new Date(data.inspectTime).format('yyyy-MM-dd hh:mm:s')
+        PatrolService.getTaskDetails(this.$route.params.processInstanceId).then(
+            result => {
+                this.plans = result
+                this.plans.createTime = new Date(result.createTime).format('yyyy-MM-dd hh:mm:s')
+            },
+            error => {
+                this.Log.info(error)
             }
-        })
+        )
     },
     methods:{
         agree(num){
@@ -155,16 +150,18 @@ export default {
                 processInstanceId: this.plans.processInstanceId,
                 value: num
             }
-            axios.post('inspection-plans/audit',(param)).then(response=>{
-                let{ code,data } = response.data
-                if(code==200){
+            PatrolService.submitTaskAgree(param).then(
+                result => {
                     if(this.$route.params.isFinished==null){
                         this.$router.push("/UM/myNews/queryMyTask");
                     }else{
                         this.$router.push("/UM/myTasks/query");
                     }
+                },
+                error => {
+                    this.Log.info(error)
                 }
-            })  
+            )
         },
         //返回
         goBack(){

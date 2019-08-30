@@ -145,18 +145,24 @@ export const commonFlyFn = {
             this.perspective(info)
         },
         perspective({
-            startPoint,
-            endPoint
+            camera
         }) {
-            if (!startPoint || !endPoint) return
+            if (!camera) return
 
-            let [startLon, startLan, startHeight] = startPoint.split(',');
-            let [endLon, endLan] = endPoint.split(',');
+            let [longitude,
+                latitude,
+                height,
+                heading,
+                pitch,
+                roll] = camera.split(',');
 
             let position = {
-                longitude: (Number(startLon) + Number(endLon)) / 2,
-                latitude: (Number(startLan) + Number(endLan)) / 2,
-                height: Number(startHeight)
+                longitude,
+                latitude,
+                height,
+                roll,
+                pitch,
+                heading
             }
 
             flyToMyLocation({

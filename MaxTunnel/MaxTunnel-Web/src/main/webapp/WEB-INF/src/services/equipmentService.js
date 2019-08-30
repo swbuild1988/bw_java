@@ -612,7 +612,7 @@ var EquipmentService = {
         })
     },
     // 根据管廊id获取各管舱设备总数
-    getEquipmentCount(tunnelId){
+    getEquiCount(tunnelId){
         return new Promise((resolve, reject) => {
 			get('tunnels/'+tunnelId+'/stores/equipments/count')
 				.then(res => {
@@ -654,7 +654,123 @@ var EquipmentService = {
             })
         })
     },
-    
+    // 各类别设备个数
+    getEquTypeCounts(){
+        return new Promise((resolve, reject) => {
+            get('/spares/equipments/instruments/counts/types').then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：/spares/equipments/instruments/counts/types")
+                }
+            })
+        })
+    },
+    //三个出库统计
+    getEquipmentCount(){
+        return new Promise((resolve, reject) => {
+            get("spares/count/status").then(res=>{
+                let{ code,data,msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：spares/count/status")
+                }
+            })
+        })
+    },
+    //三个总计
+    getOutCount(){
+        return new Promise((resolve, reject) => {
+            get("spares/equipments/instruments").then(res=>{
+                let{ code,data,msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：spares/equipments/instruments")
+                }
+            })
+        })
+    },
+    //仪表工具书占比
+    getToolsPrecent(){
+        return new Promise((resolve, reject) => {
+            get("instruments/num").then(res=>{
+                let{ code,data,msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：instruments/num")
+                }
+            })
+        })
+    },
+    //管廊设备数占比
+    getSparePrecent(){
+        return new Promise((resolve, reject) => {
+            get("equipments/num").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：equipments/num")
+                }
+            })
+        })
+    },
+    //设备故障总数
+    getBroken(){
+        return new Promise((resolve, reject) => {
+            get("equipments/instruments/broken-counts").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：equipments/instruments/broken-counts")
+                }
+            })
+        })
+    },
+    //最新一条设备故障信息
+    getDefectEquipment(){
+        return new Promise((resolve, reject) => {
+            get("defects/new-one").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：defects/new-one")
+                }
+            })
+        })
+    },
+    //提交backUp
+    submitBackUp(count, params){
+        return new Promise((resolve, reject) => {
+            post("spares/"+count, params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：spares/"+count)
+                }
+            })
+        })
+    },
+    //获取取用人列表
+    getStaffs(){
+        return new Promise((resolve, reject) => {
+            get("/staffs").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：staffs")
+                }
+            })
+        })
+    }
 };
 
 export {

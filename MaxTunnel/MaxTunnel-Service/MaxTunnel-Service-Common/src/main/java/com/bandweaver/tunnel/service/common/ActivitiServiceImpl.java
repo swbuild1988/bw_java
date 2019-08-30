@@ -7,10 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,6 +93,7 @@ public class ActivitiServiceImpl implements ActivitiService {
 
     /**
      * 获取流程定义id
+     *
      * @param processTypeEnum
      * @return
      * @author ya.liu
@@ -103,21 +101,24 @@ public class ActivitiServiceImpl implements ActivitiService {
      */
     @Override
     public String getProcessDefinition(ProcessTypeEnum processTypeEnum) {
-    	ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(processTypeEnum.getProcessKey()).singleResult();
+        List<ProcessDefinition> processDefinitions = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(processTypeEnum.getProcessKey()).list();
 
         String processDefinitionId = "";
-        if (processDefinition == null) {
+        if (processDefinitions == null || processDefinitions.size() == 0) {
             processDefinitionId = deploy((String) PropertiesUtil.getValue(processTypeEnum.getBpmnPath()),
                     (String) PropertiesUtil.getValue(processTypeEnum.getPngPath()),
                     processTypeEnum.getName());
         } else {
-            processDefinitionId = processDefinition.getId();
+            ProcessDefinition processDefinition = processDefinitions.get(0);
+            for (ProcessDefinition tmp : processDefinitions) {
+                if (tmp.getVersion() >= processDefinition.getVersion()) processDefinitionId = tmp.getId();
+            }
         }
-        
+
         return processDefinitionId;
     }
-    
+
     /**
      * 新的
      *
@@ -138,7 +139,7 @@ public class ActivitiServiceImpl implements ActivitiService {
      */
     @Override
     public String startProcessInstance(ProcessTypeEnum processTypeEnum, int... var) {
-    	String processDefinitionId = getProcessDefinition(processTypeEnum);
+        String processDefinitionId = getProcessDefinition(processTypeEnum);
 
         Map<String, Object> vars = new HashMap<>();
         for (int i = 0; i < var.length; i++) {

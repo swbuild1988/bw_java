@@ -2,19 +2,20 @@ package com.bandweaver.tunnel.controller.em;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.constant.SwitchEnum;
 import com.bandweaver.tunnel.common.biz.itf.mam.maxview.SubSystemService;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.bandweaver.tunnel.common.biz.vo.AuditVo;
 import com.bandweaver.tunnel.common.platform.constant.Constants;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.NativeHistoricProcessInstanceQuery;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -667,5 +668,32 @@ public class EmPlanController extends BaseController<EmPlan> {
             list.add(obj);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+
+
+    /**
+     * 应急预案走下一步
+     *
+     * @param vo
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "emplan/complete", method = RequestMethod.POST)
+    public JSONObject completeTask(@RequestBody AuditVo vo) throws UnsupportedEncodingException {
+        if (vo.getProcessInstanceId() == null) {
+            throw new RuntimeException("processInstanceId 不能为空！");
+        }
+
+        if (vo.getValue() == null) {
+            emPlanService.completeTask(vo.getProcessInstanceId());
+        } else {
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("message", vo.getValue());
+            String remark = vo.getRemark() == null ? "" : vo.getRemark();
+
+            emPlanService.completeTask(vo.getProcessInstanceId(), variables, remark);
+        }
+
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 }

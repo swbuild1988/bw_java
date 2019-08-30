@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { get,del,post } from "../utils/http";
+ import { get,del,post, put } from "../utils/http";
 
 let PatrolService = {
     // 获取责任班组
@@ -122,6 +121,18 @@ let PatrolService = {
                 }
             });
         });
+    },
+    patrolTaskMonth: function(params){
+        return new Promise((resolve, reject) => {
+            post('/inspection-tasks/one-month', params).then((res) => {
+                let{ code, data, msg } = res.data
+                if( code ==200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：inspection-tasks/one-month") 
+                }
+            })
+        })
     },
     //删除巡检任务
     patrolTaskDel(id){
@@ -275,6 +286,92 @@ let PatrolService = {
                     resolve(data)
                 }else{
                     reject(msg+"地址：inspection-template/condition")
+                }
+            })
+        })
+    },
+    //提交巡检任务执行结果
+    submitPatrolTask(params){
+        return new Promise((resolve, reject) => {
+            put('/inspection-tasks',params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：/inspection-tasks")
+                }
+            })
+        })
+    },
+    //审批与之相关
+    getProcessEnums(){
+        return new Promise((resolve, reject) => {
+            get("/processtype-enums").then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：processtype-enums")
+                }
+            })
+        })
+    },
+    queryMyTask(params){
+        return new Promise((resolve, reject) => {
+            post('users/activiti/task/datagrid', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：users/activiti/task/datagrid")
+                }
+            })
+        })
+    },
+    queryMyAllTask(params){
+        return new Promise((resolve, reject) => {
+            post('users/activiti/allTask/datagrid', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：users/activiti/allTask/datagrid")
+                }
+            })
+        })
+    },
+    addTaskPerson(id,type){
+        return new Promise((resolve, reject) => {
+            get('/users/activiti/task/detail/'+id+'/'+type).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：/users/activiti/task/detail/"+id+"/"+type)
+                }
+            })
+        })
+    },
+    getTaskDetails(id){
+        return new Promise((resolve, reject) => {
+            get('/users/activiti/task/detail/'+id).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：'/users/activiti/task/detail/"+id)
+                }
+            })
+        })
+    },
+    submitTaskAgree(params){
+        return new Promise((resolve, reject) => {
+            post('inspection-plans/audit', params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：'inspection-plans/audit")
                 }
             })
         })

@@ -446,7 +446,9 @@ export default {
                         .dispatch("LogOut")
                         .then(() => {
                             sessionStorage.removeItem("UMUser");
-                            Cookies.remove("userName");
+                            localStorage.removeItem('Authorization')
+                            localStorage.removeItem('userName')
+                            localStorage.removeItem('password')
                             _this.$router.push("/UMlogin");
                         })
                         .catch(() => {
@@ -508,8 +510,6 @@ export default {
                                     .toLowerCase()
                                     .indexOf(tempUrl[index].toLowerCase()) > -1
                         );
-                        // console.log(index, tempUrl[index]);
-                        // console.log(temp);
                         if (temp.length > 0) {
                             if (index < len - 1 && temp[0].children) {
                                 curItem = temp[0].children;
@@ -522,7 +522,6 @@ export default {
                     }
                 }
             });
-            // console.log(result);
             return result;
         }
     },
@@ -530,7 +529,6 @@ export default {
         var _this = this;
         _this.updateTime();
         _this.init();
-        // console.log("router", this.routers);
         this.timerChange = setInterval(_this.updateTime, 1000);
     },
     beforeDestroy() {

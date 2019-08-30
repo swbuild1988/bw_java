@@ -324,3 +324,33 @@ end COMMON_TUNNEL_LIGHT_TG;
 /
 alter trigger COMMON_TUNNEL_LIGHT_TG enable;
 
+
+-- 资料类型表
+create table T_COMMON_DOC_TYPE
+(
+  ID         NUMBER NOT NULL,
+  NAME VARCHAR2(50) NOT NULL,
+  PARENT_ID			NUMBER,
+  CREATE_TIME   DATE
+);
+alter table T_COMMON_DOC_TYPE add constraint COMMON_DOC_TYPE_ID primary key(ID);
+
+-- create COMMON_DOC_TYPE_SQ
+create sequence COMMON_DOC_TYPE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+
+-- create trigger COMMON_DOC_TYPE_TG
+CREATE OR REPLACE TRIGGER COMMON_DOC_TYPE_TG
+  BEFORE INSERT ON T_COMMON_DOC_TYPE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select COMMON_DOC_TYPE_SQ.nextval into :new.id from dual;
+end COMMON_DOC_TYPE_TG;
+/
+alter trigger COMMON_DOC_TYPE_TG enable;
+

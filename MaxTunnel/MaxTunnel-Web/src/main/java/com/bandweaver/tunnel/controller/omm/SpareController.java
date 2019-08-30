@@ -331,7 +331,7 @@ public class SpareController {
 	 * @author ya.liu
 	 * @Date 2018年11月28日
 	 */
-	@RequestMapping(value = "spare-outs", method = RequestMethod.GET)
+	@RequestMapping(value = "spare-outs", method = RequestMethod.POST)
 	public JSONObject getSpareOutDtoByCondition(@RequestBody(required = false) SpareOutVo vo) {
 		List<SpareOutDto> list = spareOutService.getSpareOutDtoByCondition(vo);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);

@@ -2,24 +2,23 @@
     <div class="whole" v-if="!none">
         <Row class="storeInfo">
             <div class="storeItemsWrapper">
-                <Col span="12" v-for="(store,index) in stores" :key="index">
+                <Col span="8" v-for="(store,index) in stores" :key="index">
                     <div class="storeCard">
                         <div class="innerCard">
                             <div class="storeName" @click="chooseStore(store)">
-                                <Icon
-                                    type="ios-flag"
-                                    style="font-size: 3.6vmin;margin-right: 0.6vmin;"
-                                ></Icon>
-                                <span>{{store.name}}</span>
+                                <img
+                                    style="vertical-align: middle;width: 2.6vmin;height:2.6vmin;"
+                                    src="../../../../assets/UM/flagIcon.png"
+                                >
+                                <span style="vertical-align: middle;">{{store.name}}</span>
                             </div>
                             <Row>
                                 <Col span="12">
                                     <div class="storeLineCount" v-if="store.values[2].val">
-                                        <p
-                                            v-for="(line,i) in store.values"
-                                            :key="i"
-                                            class="lines"
-                                        >{{ line.key }}:{{ line.val }}</p>
+                                        <p v-for="(line,i) in store.values" :key="i" class="lines">
+                                            {{ line.key }}:
+                                            <span class="num">{{ line.val }}</span>
+                                        </p>
                                     </div>
                                 </Col>
                                 <Col :span="store.values[2].val ? '12' : '24'">
@@ -30,7 +29,7 @@
                                         >
                                             <span
                                                 class="demo-Circle-inner"
-                                                style="font-size:2.66vmin"
+                                                style="font-size:2.66vmin;color:#00fff6;"
                                             >{{ parseInt(store.values[1].val / store.values[2].val * 100) }}%</span>
                                         </i-circle>
                                     </div>
@@ -38,7 +37,10 @@
                                         :class="['equCount',{'noLines': !store.values[2].val}]"
                                         @click="turnToEquPage(store.id)"
                                     >
-                                        <span>{{'现存放设备' + store.equCount +'个'}}</span>
+                                        <span>
+                                            现存放设备
+                                            <span class="num">{{store.equCount}}</span> 个
+                                        </span>
                                     </div>
                                 </Col>
                             </Row>
@@ -88,7 +90,7 @@ export default {
             Promise.all([
                 TunnelService.getStoresByTunnelId(this.tunnelId),
                 SpaceService.getCableCount(this.tunnelId),
-                EquipmentService.getEquipmentCount(this.tunnelId)
+                EquipmentService.getEquiCount(this.tunnelId)
             ]).then(
                 result => {
                     let store = result[0],
@@ -171,13 +173,12 @@ export default {
 }
 .storeInfo {
     padding: 3vmin;
-
     height: 86vh;
     background: url("../../../../assets/UM/infoBox.png") no-repeat;
     background-size: 100% 100%;
 }
 .storeName {
-    font-size: 3vmin;
+    font-size: 2.8vmin;
     font-weight: bold;
     cursor: pointer;
     margin: 3vmin 0 1vmin 0;
@@ -188,23 +189,27 @@ export default {
     text-align: center;
 }
 .equCount {
-    font-size: 2.66vmin;
-    margin-top: 2vmin;
+    font-size: 2.2vmin;
+    margin-top: 1.4vmin;
     text-align: center;
     cursor: pointer;
 }
 .noLines {
     margin-top: 8vmin;
-    font-size: 4vmin;
+    font-size: 3.6vmin;
+}
+.noLines .num {
+    font-size: 4.4vmin;
+    font-weight: bold;
 }
 .storeCard {
-    margin: 2.3vmin 10%;
+    margin: 2.3vmin 6%;
     height: 36vh;
-    width: 80%;
+    width: 88%;
     color: #eaeef2;
 }
 .innerCard {
-    background: url("../../../../assets/UM/border2.png") no-repeat;
+    background: url("../../../../assets/UM/border4.png") no-repeat;
     background-size: 100% 100%;
     width: 100%;
     height: 100%;
@@ -215,12 +220,11 @@ export default {
 
 .lines {
     padding: 6px;
-    font-size: 2.4vmin;
+    font-size: 2vmin;
     line-height: 5.4vmin;
 }
 
 .storeLineCount {
-    font-size: 17px;
     text-align: center;
     margin-top: 1vmin;
 }
@@ -245,6 +249,11 @@ export default {
     overflow-y: auto;
     margin: 0.2vmin;
     height: 80vh;
+}
+.num {
+    font-size: 2.8vmin;
+    color: #00fff6;
+    font-weight: bold;
 }
 .storeItemsWrapper::-webkit-scrollbar {
     /*滚动条整体样式*/

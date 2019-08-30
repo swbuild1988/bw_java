@@ -12,10 +12,20 @@
                     <Input v-model="data.port" placeholder="请输入终端端口号" class="InputWidth"/>
                 </FormItem>
                 <FormItem label="登录账号" :prop="isDisabled ? '' : 'username'">
-                   <Input v-model="data.username" placeholder="请输入登录账号" class="InputWidth" :disabled="isDisabled"/>
+                    <Input
+                        v-model="data.username"
+                        placeholder="请输入登录账号"
+                        class="InputWidth"
+                        :disabled="isDisabled"
+                    />
                 </FormItem>
-                <FormItem label="登录密码" v-if="!isDisabled">
-                    <Input v-model="data.password" placeholder="请输入登录密码" class="InputWidth" type="password"/>
+                <FormItem label="登录密码" v-if="!isDisabled" :prop="isDisabled ? '' : 'password'">
+                    <Input
+                        v-model="data.password"
+                        placeholder="请输入登录密码"
+                        class="InputWidth"
+                        type="password"
+                    />
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -26,13 +36,13 @@
 </template>
 
 <script>
-import { EnumsService } from '../../../services/enumsService'
-import { TunnelService } from '../../../services/tunnelService'
+import { EnumsService } from "../../../services/enumsService";
+import { TunnelService } from "../../../services/tunnelService";
 export default {
-    name: 'MaxViewModule',
-    data(){
+    name: "MaxViewModule",
+    data() {
         return {
-            data:{
+            data: {
                 id: null,
                 name: null,
                 ip: null,
@@ -42,27 +52,47 @@ export default {
             },
             rule: {
                 name: [
-                    { required: true, message: '终端名称不能为空', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: "终端名称不能为空",
+                        trigger: "blur"
+                    }
                 ],
                 ip: [
-                    { required: true, message: '终端IP不能为空', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: "终端IP不能为空",
+                        trigger: "blur"
+                    }
                 ],
                 port: [
-                    { required: true, message: '端口号不能为空', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: "端口号不能为空",
+                        trigger: "blur"
+                    }
                 ],
                 username: [
-                    { required: true, message: '登录账号不能为空', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: "登录账号不能为空",
+                        trigger: "blur"
+                    }
                 ],
                 password: [
-                    { required: true, message: '登录密码不能为空', trigger: 'blur' }
+                    {
+                        required: true,
+                        message: "登录密码不能为空",
+                        trigger: "blur"
+                    }
                 ]
             },
             isDisabled: false
-        }
+        };
     },
-    props:{
-        show:{
-            state:{
+    props: {
+        show: {
+            state: {
                 default: false
             }
         },
@@ -73,33 +103,32 @@ export default {
             required: true
         }
     },
-    watch:{
-        'show.state': function(newValue,oldValue){
-            if(this.type == 'edit'){
-                for(let item in this.editInfo){
-                    for(let info in this.data){
-                        if(item === info && item != 'password'){
-                            this.data[info] = this.editInfo[item]
+    watch: {
+        "show.state": function(newValue, oldValue) {
+            if (this.type == "edit") {
+                for (let item in this.editInfo) {
+                    for (let info in this.data) {
+                        if (item === info && item != "password") {
+                            this.data[info] = this.editInfo[item];
                         }
-
                     }
                 }
-                this.isDisabled = true
-                this.data.id = this.editInfo.id
+                this.isDisabled = true;
+                this.data.id = this.editInfo.id;
             } else {
-                for(let item in this.data){
-                    this.data[item] = null
+                for (let item in this.data) {
+                    this.data[item] = null;
                 }
-                this.isDisabled = false
+                this.isDisabled = false;
             }
         }
     },
-    methods:{
-        sendMsg(name){
-            this.$refs[name].validate((valid) => {
+    methods: {
+        sendMsg(name) {
+            this.$refs[name].validate(valid => {
                 if (valid) {
-                    if(this.type == 'add'){
-                        this.$emit("addOrEdit",this.data)
+                    if (this.type == "add") {
+                        this.$emit("addOrEdit", this.data);
                     } else {
                         let editParams = {
                             id: this.data.id,
@@ -107,21 +136,21 @@ export default {
                             ip: this.data.ip,
                             port: this.data.port,
                             username: this.data.username
-                        }
-                        this.$emit("addOrEdit",editParams)
+                        };
+                        this.$emit("addOrEdit", editParams);
                     }
                     // ;
                 } else {
-                    this.$Message.error('操作失败，请稍后重试');
+                    this.$Message.error("操作失败，请稍后重试");
                 }
             });
-       }
+        }
     }
-}
+};
 </script>
 
 <style scoped>
-.InputWidth{
+.InputWidth {
     width: 85%;
 }
 </style>

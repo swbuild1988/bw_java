@@ -91,8 +91,7 @@
       ></Page>
     </div>
       <meas-obj-module ref="measObjModule" v-bind="measObjModule"  v-on:addMeasObj="addMeasObj" v-on:ListenUpdateMeasObj="updateMeasObj"></meas-obj-module>
-      <meas-obj-multi-module v-bind="measObjMultiModule" v-on:saveMulti="saveMulti"></meas-obj-multi-module>
-      <meas-obj-multi-module v-bind="measObjMultiModule" v-on:editSaveMulti="editSaveMulti"></meas-obj-multi-module>
+      <meas-obj-multi-module v-bind="measObjMultiModule" @saveMulti="saveMultiParent" @editSaveMulti="editSaveMulti"></meas-obj-multi-module>
   </div>
 </template>
 
@@ -390,7 +389,7 @@ export default {
       this.$Message.success('修改成功');
       this.resetAndSearch()
     },
-    saveMulti(data) {
+    saveMultiParent(data) {
       let _this = this;
       data.forEach(element => {
         element.id = parseInt(element.id);

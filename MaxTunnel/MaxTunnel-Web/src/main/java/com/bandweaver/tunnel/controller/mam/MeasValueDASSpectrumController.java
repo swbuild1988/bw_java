@@ -45,7 +45,7 @@ public class MeasValueDASSpectrumController {
      * @author shaosen
      * @date 2018年5月30日
      */
-    @RequestMapping(value = "measvalue-dasspectrum/list", method = RequestMethod.POST)
+    @RequestMapping(value = "measvalue-das", method = RequestMethod.POST)
     public JSONObject addMeasValueDASBatch(@RequestBody List<MeasValueDASSpectrum> list){
 		measValueDASSpectrumService.addMeasValueDASBatch(list);
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list.size());

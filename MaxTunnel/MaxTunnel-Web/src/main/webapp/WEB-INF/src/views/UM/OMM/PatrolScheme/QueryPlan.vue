@@ -189,7 +189,7 @@ export default {
             this.$router.push({
                 name: "添加巡检计划",
                 params: {
-                    tunnelId: this.tunnelId
+                    tunnelId: this.$route.params.id
                 }
             })
         },

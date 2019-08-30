@@ -114,30 +114,6 @@ export default {
           title: "流程状态",
           key: "processStatus",
           align: "center",
-          // render: (h, params) => {
-          //   let tmpStr = "";
-          //   if (params.row.status == 3) {
-          //     tmpStr = "拒绝";
-          //   } else if (params.row.status == 2) {
-          //     tmpStr = "通过";
-          //   } else if(params.row.status == 1){
-          //     tmpStr = "审核中";
-          //   }else{
-          //     tmpStr = "结束";
-          //   }
-          //   return h(
-          //     "span",
-          //     {
-          //       style: {
-          //         color:
-          //           params.row.status == 3 ? "#ff6600"
-          //             : params.row.status == 2 ? "#19be6b"
-          //             : params.row.status == 1 ? "#2d8cf0" : "#a005fdb3"
-          //       }
-          //     },
-          //     tmpStr
-          //   );
-          // }
         },
         {
           title: '是否完成',
@@ -182,18 +158,6 @@ export default {
             ]);
           }
         },
-        // {
-        //   title: "创建时间",
-        //   key: "crtTime",
-        //   align: "center",
-        //   // width: 150,
-        //   render: (h, params) => {
-        //     return h(
-        //       "div",
-        //       new Date(params.row.crtTime).format("yyyy-MM-dd hh:mm:s")
-        //     );
-        //   }
-        // },
         {
           title: "进入管廊时间",
           key: "enterTime",

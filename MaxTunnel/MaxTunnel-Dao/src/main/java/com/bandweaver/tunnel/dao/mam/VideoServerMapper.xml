@@ -103,7 +103,7 @@
     	SELECT * FROM T_MAM_Video_Server
     	<where>
     		<if test="name != null and name.trim() != ''">
-        		and instr(name,#{name})>0
+        		and instr(name,#{name}) > 0
         	</if>
         	<if test="vendor != null">
         		and vendor = #{vendor}
@@ -111,14 +111,14 @@
         	<if test="vendorVersion != null">
         		and vendor_version = #{vendorVersion}
         	</if>
-        	<if test="ip != null">
-        		and ip = #{ip}
+        	<if test="ip != null and ip.trim() != ''">
+        		and instr(ip, #{ip}) > 0
         	</if>
         	<if test="port != null">
         		and port = #{port}
         	</if>
-        	<if test="username != null">
-        		and username = #{username}
+        	<if test="username != null and username.trim() != ''">
+        		and instr(username, #{username}) > 0
         	</if>
         	<if test="password != null">
         		and password = #{password}

@@ -3,51 +3,53 @@ package com.bandweaver.tunnel.common.biz.pojo.mam.alarm;
 import java.io.Serializable;
 import java.util.Date;
 
-/**告警
+/**
+ * 告警
+ * 
  * @author shaosen
  * @date 2018年8月14日
  */
 public class Alarm implements Serializable {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 
-    private Date alarmDate;
-    
-    private String alarmName;
+	private Date alarmDate;
 
-    private Integer alarmLevel;
+	private String alarmName;
 
-    private Integer tunnelId;
+	private Integer alarmLevel;
 
-    private Integer objectId;
-    
-    private String objectName;
-    
-    private Boolean isDistribute;
+	private Integer tunnelId;
 
-    private String description;
+	private Integer objectId;
 
-    private Boolean cleaned;
+	private String objectName;
 
-    private Date cleanedDate;
-    
-    private String alarmSource;
-    private String longitude;
-    private String latitude;
+	private Boolean isDistribute;
 
-    public Integer getId() {
-        return id;
-    }
+	private String description;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Boolean cleaned;
 
-    public String getAlarmName() {
+	private Date cleanedDate;
+
+	private String alarmSource;
+	private String longitude;
+	private String latitude;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getAlarmName() {
 		return alarmName;
 	}
 
@@ -56,38 +58,38 @@ public class Alarm implements Serializable {
 	}
 
 	public Date getAlarmDate() {
-        return alarmDate;
-    }
+		return alarmDate;
+	}
 
-    public void setAlarmDate(Date alarmDate) {
-        this.alarmDate = alarmDate;
-    }
+	public void setAlarmDate(Date alarmDate) {
+		this.alarmDate = alarmDate;
+	}
 
-    public Integer getAlarmLevel() {
-        return alarmLevel;
-    }
+	public Integer getAlarmLevel() {
+		return alarmLevel;
+	}
 
-    public void setAlarmLevel(Integer alarmLevel) {
-        this.alarmLevel = alarmLevel;
-    }
+	public void setAlarmLevel(Integer alarmLevel) {
+		this.alarmLevel = alarmLevel;
+	}
 
-    public Integer getTunnelId() {
-        return tunnelId;
-    }
+	public Integer getTunnelId() {
+		return tunnelId;
+	}
 
-    public void setTunnelId(Integer tunnelId) {
-        this.tunnelId = tunnelId;
-    }
+	public void setTunnelId(Integer tunnelId) {
+		this.tunnelId = tunnelId;
+	}
 
-    public Integer getObjectId() {
-        return objectId;
-    }
+	public Integer getObjectId() {
+		return objectId;
+	}
 
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
-    }
+	public void setObjectId(Integer objectId) {
+		this.objectId = objectId;
+	}
 
-    public String getObjectName() {
+	public String getObjectName() {
 		return objectName;
 	}
 
@@ -104,14 +106,12 @@ public class Alarm implements Serializable {
 	}
 
 	public String getDescription() {
-        return description;
-    }
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
-
-
+	public void setDescription(String description) {
+		this.description = description == null ? null : description.trim();
+	}
 
 	public Boolean getCleaned() {
 		return cleaned;
@@ -162,6 +162,4 @@ public class Alarm implements Serializable {
 				+ ", latitude=" + latitude + "]";
 	}
 
-	
-    
 }

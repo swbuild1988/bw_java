@@ -50,8 +50,7 @@ const user = {
 		return new Promise((resolve, reject) => {
 			LoginService.UmLogin(loginForm).then((data) => {
 				if (data) {
-					// setToken(data);
-                    session.setSession(data);
+					localStorage.setItem('queueName', data.queueName)
 				}
 				// cookie中保存前端登录状态
 				resolve(data);
@@ -68,7 +67,6 @@ const user = {
     }) {
       	return new Promise((resolve, reject) => {
 			LoginService.getInfo().then((data) => {
-
 				// 储存用户信息
 				let roleFlag = data.filter(role=>{
 					return role.roleName.length > 0
@@ -100,12 +98,10 @@ const user = {
 			LoginService.UMLogout().then((data) => {
 				commit('RESET_USER');
                 session.removeSession();
-				// removeToken();
 				resolve(data);
 			}).catch(() => {
 				commit('RESET_USER');
                 session.removeSession();
-				// removeToken();
 			});
 		}).catch(() => {
 			console.log("注销时出错了！");
@@ -119,6 +115,8 @@ const user = {
 			commit('RESET_USER');
             session.removeSession();
 			// removeToken();
+			localStorage.removeItem('Authorization')
+            localStorage.removeItem('userName')
 			resolve();
 		});
     	},

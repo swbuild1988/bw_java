@@ -206,22 +206,6 @@
         </set>
         where ID = #{id,jdbcType=DECIMAL}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.bandweaver.tunnel.common.biz.pojo.Section">
-        UPDATE T_COMMON_SECTION
-        SET NAME               = #{name,jdbcType=VARCHAR},
-            tunnel_id          = #{tunnelId,jdbcType=DECIMAL},
-            STORE_ID           = #{storeId,jdbcType=DECIMAL},
-            AREA_ID            = #{areaId,jdbcType=DECIMAL},
-            total_cable_number = #{totalCableNumber,jdbcType=DECIMAL},
-            length             = #{length,jdbcType=DECIMAL},
-            camera             = #{camera,jdbcType=VARCHAR},
-            start_point        = #{startPoint,jdbcType=VARCHAR},
-            end_point          = #{endPoint,jdbcType=VARCHAR},
-            CRT_TIME           = #{crtTime,jdbcType=TIMESTAMP},
-            s1                = #{s1,jdbcType=DECIMAL},
-            s2                = #{s2,jdbcType=DECIMAL}
-        WHERE ID = #{id,jdbcType=DECIMAL}
-    </update>
 
     <insert id="addBatch" useGeneratedKeys="false">
         insert into T_COMMON_SECTION

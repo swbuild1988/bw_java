@@ -34,7 +34,7 @@ public class MeasValueDIController {
 	 * @author shaosen
 	 * @Date 2018年10月18日
 	 */
-	@RequestMapping(value = "measvalue-di/batch", method = RequestMethod.POST)
+	@RequestMapping(value = "measvalue-di", method = RequestMethod.POST)
 	public JSONObject addMeasValueDIBatch(@RequestBody List<MeasValueDI> list) {
 		LogUtil.info("接收到MaxView发送的DI数据共：" + list.size() + "条" );
 		for (MeasValueDI measValueDI : list) {
@@ -43,10 +43,10 @@ public class MeasValueDIController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
 	}
 
-	@RequestMapping(value = "measvalue-di", method = RequestMethod.POST)
-	public JSONObject addMeasValueDI(@RequestBody MeasValueDI valueDI) {
-		measValueDIService.addMeasValueDI(valueDI);
-		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
-	}
+//	@RequestMapping(value = "measvalue-di", method = RequestMethod.POST)
+//	public JSONObject addMeasValueDI(@RequestBody MeasValueDI valueDI) {
+//		measValueDIService.addMeasValueDI(valueDI);
+//		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+//	}
 
 }

@@ -71,7 +71,7 @@
 					placement="top" @on-change="onChange" show-elevator></Page>
 			</div>
 			<div slot="footer">
-				<Button type="primary" size="large" v-on:click="sendMsg" v-show="type=='add'">保存1</Button>
+				<Button type="primary" size="large" v-on:click="sendMsg" v-show="type=='add'">保存</Button>
 				<Button type="primary" size="large" v-on:click="sendMsgForEidt" v-show="type=='edit'">保存</Button>
 			</div>
 		</Modal>

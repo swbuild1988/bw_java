@@ -1,12 +1,12 @@
 <template>
-    <div :style="backStyle">
-        <Form ref="companyInfo" :model="companyInfo" :label-width="140">
-            <h2
-                class="formTitle"
-            >{{pageType === pageTypes.Edit ? '修改企业客户信息' : (pageType === pageTypes.Read ? '企业客户信息详情' : '添加企业客户信息') }}</h2>
-            <Row>
-                <Col span="7">
-                    <p class="subTitle">企业基本信息：</p>
+    <div>
+        <Steps :current="current" class="steps">
+            <Step v-for="item in titles" :key="item" :title="item"></Step>
+        </Steps>
+        <div class="formWrapper">
+            <p class="formTitle">{{titles[current]}}</p>
+            <Form ref="addCompanyInfo" :model="companyInfo" :label-width="140">
+                <div v-if="!current">
                     <FormItem
                         label="企业名称:"
                         prop="company.name"
@@ -17,7 +17,6 @@
                             placeholder="请输入企业名称"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -30,7 +29,6 @@
                             placeholder="请输入信用代码"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -43,7 +41,6 @@
                             placeholder="请输入开户行"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -56,7 +53,6 @@
                             placeholder="请输入账号"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -69,21 +65,19 @@
                             placeholder="请输入注册地址信息"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
                         label="注册电话:"
                         prop="company.phone"
                         :rules="[{required: true, message: '请输入注册电话', trigger: 'blur'},{ validator: validates.registerTel, trigger: 'blur' },
-                    ]"
+                        ]"
                     >
                         <Input
                             v-model="companyInfo.company.phone"
                             placeholder="请输入注册电话"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -96,12 +90,10 @@
                             placeholder="请输入邮箱"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
-                </Col>
-                <Col span="7" offset="1">
-                    <p class="subTitle">一般联系人信息：</p>
+                </div>
+                <div v-if="current === 1">
                     <FormItem
                         label="姓名:"
                         prop="list[0].contact"
@@ -112,7 +104,6 @@
                             placeholder="请输入一般联系人姓名"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="职责:">
@@ -121,7 +112,6 @@
                             placeholder="请输入一般联系人职责"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -134,7 +124,6 @@
                             placeholder="请输入一般联系人手机"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -147,7 +136,6 @@
                             placeholder="请输入一般联系人电话"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
@@ -156,10 +144,10 @@
                             placeholder="请输入一般联系人邮箱"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
-                    <p class="subTitle">紧急联系人信息：</p>
+                </div>
+                <div v-if="current === 2">
                     <FormItem
                         label="姓名:"
                         prop="list[1].contact"
@@ -170,7 +158,6 @@
                             placeholder="请输入紧急联系人姓名"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="职责:">
@@ -179,7 +166,6 @@
                             placeholder="请输入紧急联系人职责"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -192,7 +178,6 @@
                             placeholder="请输入紧急联系人手机"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -205,7 +190,6 @@
                             placeholder="请输入紧急联系人电话"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem label="邮箱:" :rules="{ validator: validateEmail, trigger: 'blur' }">
@@ -214,12 +198,10 @@
                             placeholder="请输入紧急联系人邮箱"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
-                </Col>
-                <Col span="8" offset="1" class="inspectionItems">
-                    <p class="subTitle">固定巡检信息：</p>
+                </div>
+                <div v-if="current === 3">
                     <FormItem
                         label="周期:"
                         prop="company.inspectionNo"
@@ -230,7 +212,6 @@
                             placeholder="请输入固定巡检周期"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -243,10 +224,10 @@
                             placeholder="请输入固定巡检时间"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
-                    <p class="subTitle">固定巡检人员备案：</p>
+                </div>
+                <div v-if="current === 4" class="inspectionItems">
                     <FormItem
                         label="姓名:"
                         prop="company.insName"
@@ -257,7 +238,6 @@
                             placeholder="请输入固定巡检人员姓名"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -270,7 +250,6 @@
                             placeholder="请输入固定巡检人员身份证号"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -283,7 +262,6 @@
                             placeholder="请输入固定巡检人员职责"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -296,7 +274,6 @@
                             placeholder="请输入固定巡检人员电话"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -309,7 +286,6 @@
                             placeholder="请输入固定巡检人员资格证类型"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -322,7 +298,6 @@
                             placeholder="请输入资格证编号"
                             class="input"
                             type="text"
-                            :readonly="pageType === pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem
@@ -336,7 +311,6 @@
                             @on-change="imgChange"
                             accept="image/png, image/jpeg, image/jpg"
                             class="imgInput"
-                            v-show="pageType != pageTypes.Read"
                         />
                     </FormItem>
                     <FormItem>
@@ -354,26 +328,17 @@
                             >
                         </div>
                     </FormItem>
-                </Col>
-            </Row>
-            <div class="btn">
-                <Button
-                    type="primary"
-                    @click="submitcompanyInfo('companyInfo')"
-                    class="save"
-                    v-show="pageType != pageTypes.Read"
-                >保存</Button>
-                <Button type="ghost" @click="goBack()" class="back">返回</Button>
+                </div>
+            </Form>
+            <div class="options">
+                <Button type="primary" class="prev" @click="prev" v-if="current">上一步</Button>
+                <Button type="primary" class="next" @click="next">{{current === 4 ? '提交' : '下一步'}}</Button>
             </div>
-        </Form>
+        </div>
     </div>
 </template>
 <script>
-import types from "../../../../../static/Enum.json";
-import { EnumsService } from "../../../../services/enumsService";
 import CompanyService from "../../../../services/companyService";
-import ImageFromUrl from "../../../../components/Common/ImageFromUrl";
-
 export default {
     data() {
         const validateEmail = (rule, value, callback) => {
@@ -428,8 +393,14 @@ export default {
             }
         };
         return {
-            pageType: 2,
-            pageTypes: types.pageType,
+            current: 0,
+            titles: [
+                "企业基本信息",
+                "一般联系人信息",
+                "紧急联系人信息",
+                "固定巡检信息",
+                "固定巡检人员备案"
+            ],
             companyInfo: {
                 company: {
                     name: null,
@@ -475,184 +446,59 @@ export default {
                 validateTel,
                 registerTel
             },
-            isDisable: false,
-            backStyle: {
-                background:
-                    "url(" +
-                    require("../../../../assets/UM/itemPageBg.png") +
-                    ") no-repeat",
-                height: "96%",
-                position: "relative",
-                // backgroundAttachment: "fixed",
-                backgroundSize: "100% 100%",
-                minHeight: "96%",
-                marginTop: "2%",
-                color: "#49d9fe"
-            },
-            uploadImageParam: null,
             imgPreview: {
                 url: null,
                 isInit: false
             }
         };
     },
-    computed: {
-        inspectionInfo() {
-            let company = this.companyInfo.company;
-            return (
-                company.insName +
-                "-" +
-                company.insIdentity +
-                "-" +
-                company.insDuty +
-                "-" +
-                company.insPhone +
-                "-" +
-                company.insQualification +
-                "-" +
-                company.qualificationNo
-            );
-        }
-    },
-    mounted() {
-        if (this.$route.params.id) {
-            this.companyInfo.company.id = this.$route.params.id;
-        }
-        this.pageType = this.$route.params.type ? this.$route.params.type : 3;
-        this.getParams();
-    },
-    components: {
-        ImageFromUrl
-    },
     methods: {
-        submitcompanyInfo(name) {
-            this.$refs[name].validate(valid => {
-                if (valid) {
-                    this.companyInfo.company.inspectionInfo = this.inspectionInfo;
-                    let config = {
-                        headers: { "Content-Type": "multipart/form-data" }
-                    }; //添加请求头
-                    switch (this.pageType) {
-                        case this.pageTypes.Add:
-                            CompanyService.addCompany(this.companyInfo).then(
-                                response => {
-                                    if (response.id) {
-                                        CompanyService.uploadQualification(
-                                            response.id,
-                                            this.uploadImageParam,
-                                            config
-                                        ).then(
-                                            res => {
-                                                this.$Message.success(
-                                                    "添加成功"
-                                                );
-                                                this.$nextTick(() => {
-                                                    this.$router.push(
-                                                        "/UM/tunnelCustomer/list"
-                                                    );
-                                                });
-                                            },
-                                            error => {
-                                                this.$Message.error("添加失败");
-                                            }
-                                        );
-                                    }
-                                },
-                                error => {
-                                    this.$Message.error("添加失败");
-                                }
-                            );
-                            break;
-                        case this.pageTypes.Edit:
-                            if (this.uploadImageParam) {
-                                Promise.all([
-                                    CompanyService.editCompany(
-                                        this.companyInfo
-                                    ),
+        next() {
+            if (this.current < 4) {
+                this.current += 1;
+            } else {
+                this.$refs.addCompanyInfo.validate(valid => {
+                    console.log(valid);
+                    console.log(this.companyInfo);
+                    if (valid) {
+                        this.companyInfo.company.inspectionInfo = this.inspectionInfo;
+                        let config = {
+                            headers: { "Content-Type": "multipart/form-data" }
+                        }; //添加请求头
+                        CompanyService.addCompany(this.companyInfo).then(
+                            response => {
+                                if (response.id) {
                                     CompanyService.uploadQualification(
-                                        this.companyInfo.company.id,
+                                        response.id,
                                         this.uploadImageParam,
                                         config
-                                    )
-                                ]).then(
-                                    response => {
-                                        this.$Message.success("修改成功");
-                                        this.$nextTick(() => {
-                                            this.$router.push(
-                                                "/UM/tunnelCustomer/list"
-                                            );
-                                        });
-                                    },
-                                    error => {
-                                        this.Log.info("修改失败");
-                                    }
-                                );
-                            } else {
-                                CompanyService.editCompany(
-                                    this.companyInfo
-                                ).then(res => {
-                                    this.$Message.success("修改成功");
-                                    this.$nextTick(() => {
-                                        this.$router.push(
-                                            "/UM/tunnelCustomer/list"
-                                        );
-                                    });
-                                });
-                            }
-                            break;
-                    }
-                } else {
-                    this.$Message.error("请填写正确的客户信息");
-                }
-            });
-        },
-        getParams() {
-            if (
-                this.pageType == this.pageTypes.Edit ||
-                this.pageType == this.pageTypes.Read
-            ) {
-                CompanyService.getcompanyDetail(
-                    this.companyInfo.company.id
-                ).then(
-                    response => {
-                        this.companyInfo.company = response;
-                        this.imgPreview.url =
-                            "/companies/" +
-                            this.companyInfo.company.id +
-                            "/img";
-                        this.imgPreview.isInit = true;
-                        // let len = response.imgUrl.split('\\').length
-                        // this.companyInfo.company.imgUrl = response.imgUrl.split('\\')[len - 1]
-                        if (response.customers.length) {
-                            this.companyInfo.list = response.customers;
-                        } else {
-                            this.companyInfo.list.map(contact => {
-                                for (let item in contact) {
-                                    contact[item] = null;
+                                    ).then(
+                                        res => {
+                                            this.$Message.success("添加成功");
+                                            this.$nextTick(() => {
+                                                this.$router.push(
+                                                    "/UM/tunnelCustomer/list"
+                                                );
+                                            });
+                                        },
+                                        error => {
+                                            this.$Message.error("添加失败");
+                                        }
+                                    );
                                 }
-                            });
-                        }
-                        this.parseInspectionInfo(response.inspectionInfo);
-                    },
-                    error => {
-                        this.Log.info(error);
+                            },
+                            error => {
+                                this.$Message.error("添加失败");
+                            }
+                        );
+                    } else {
+                        this.$Message.error("请填写正确的客户信息");
                     }
-                );
+                });
             }
         },
-        parseInspectionInfo(inspectionInfo) {
-            let strings = inspectionInfo.split("-");
-            let company = this.companyInfo.company;
-            company.insName = strings[0];
-            company.insIdentity = strings[1];
-            company.insDuty = strings[2];
-            company.insPhone = strings[3];
-            company.insQualification = strings[4];
-            company.qualificationNo = strings[5];
-        },
-        //返回
-        goBack() {
-            this.$router.back(-1);
+        prev() {
+            this.current += -1;
         },
         imgChange(e) {
             this.imgPreview.isInit = false;
@@ -676,10 +522,49 @@ export default {
     }
 };
 </script>
+
 <style scoped>
+.steps {
+    width: 92%;
+    margin-top: 2vmin;
+    margin-left: 10%;
+}
+.steps >>> .ivu-steps-head,
+.steps >>> .ivu-steps-title {
+    background: transparent;
+    color: #fff;
+}
+.steps >>> .ivu-steps-tail {
+    padding: 0px 0.5vmin 0 13vmin;
+}
+.steps >>> .ivu-steps-tail:first-child {
+    padding: 0px 0.5vmin 0 12vmin;
+}
+.steps >>> .ivu-steps-head-inner {
+    width: 2.6vmin;
+    height: 2.6vmin;
+    line-height: 2.4vmin;
+    font-size: 1.4vmin;
+}
+.steps >>> .ivu-steps-title {
+    font-size: 1.4vmin;
+}
+.formWrapper {
+    margin: 4vmin auto;
+    width: 70%;
+    height: 72vmin;
+    position: relative;
+}
 .formTitle {
     font-size: 1.8vmin;
-    margin-top: -1.4vmin;
+    color: #fff;
+    text-align: center;
+    margin: 2vmin;
+}
+.ivu-form-item >>> .ivu-form-item-label {
+    width: 14vmin !important;
+    line-height: 2.2vmin;
+    font-size: 1.4vmin;
 }
 .ivu-form.ivu-form-label-right {
     width: 96%;
@@ -687,18 +572,11 @@ export default {
     border-radius: 4px;
     margin: 0 auto;
 }
-.subTitle {
-    font-size: 1.66vmin;
-    margin-left: 1.6vmin;
-}
 .ivu-form-item {
     margin-bottom: 2.4vmin;
 }
-.ivu-form >>> .ivu-form-item-label {
-    color: #eaeef2;
-}
 .inspectionItems >>> .ivu-form-item {
-    margin-bottom: 2.2vmin;
+    margin-bottom: 1.2vmin;
 }
 .ivu-form >>> .ivu-input {
     background: transparent;
@@ -706,24 +584,37 @@ export default {
     border-radius: 1vmin;
 }
 .ivu-form >>> .ivu-input::-webkit-input-placeholder {
-    color: #eaeef2;
+    color: #aaa;
 }
 .input {
-    width: 76%;
+    width: 86%;
 }
-.imgInput {
-    width: 76%;
+.ivu-form >>> .ivu-form-item-label {
+    color: #eaeef2;
 }
-.imgInput >>> .ivu-input {
-    border: 0px;
+.ivu-select,
+.ivu-select >>> .ivu-select-selection,
+.ivu-input-wrapper >>> .ivu-input,
+.ivu-date-picker >>> .ivu-input,
+.ivu-select.ivu-select-single >>> .ivu-select-selected-value,
+.ivu-select.ivu-select-single >>> .ivu-select-placeholder {
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    font-size: 1.4vmin;
 }
-.btn {
+.ivu-form-item-required .ivu-form-item-label:before {
+    font-size: 1.6vmin !important;
+}
+.formWrapper >>> .ivu-form-item-error-tip {
+    font-size: 1.3vmin;
+}
+.options {
+    width: 40vmin;
     position: absolute;
-    width: 16vmin;
     bottom: 4vmin;
-    left: 44%;
+    left: 40%;
 }
-.save {
+.prev {
     background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
     background: -o-linear-gradient(right, #7c83f2, #2734e1);
     background: -moz-linear-gradient(right, #7c83f2, #2734e1);
@@ -733,15 +624,20 @@ export default {
     font-size: 1.4vmin !important;
     margin-right: 1vmin;
 }
-.back {
-    background: -webkit-linear-gradient(left, #e49b9b, #f61a1a);
-    background: -o-linear-gradient(right, #e49b9b, #f61a1a);
-    background: -moz-linear-gradient(right, #e49b9b, #f61a1a);
-    background: linear-gradient(to right, #e49b9b, #f61a1a);
+.next {
+    background: -webkit-linear-gradient(left, #7c83f2, #2734e1);
+    background: -o-linear-gradient(right, #7c83f2, #2734e1);
+    background: -moz-linear-gradient(right, #7c83f2, #2734e1);
+    background: linear-gradient(to right, #7c83f2, #2734e1);
     border-color: #61a2b3;
     border-radius: 1vmin;
     font-size: 1.4vmin !important;
-    color: #fff;
+}
+.imgInput {
+    width: 90%;
+}
+.imgInput >>> .ivu-input {
+    border: 0px;
 }
 .imgReview {
     background-color: #38569173;
@@ -754,29 +650,11 @@ export default {
     border-radius: 1vmin;
 }
 @media (min-width: 2200px) {
-    .ivu-form-item >>> .ivu-form-item-label {
-        width: 11vmin !important;
-        line-height: 3.2vmin;
+    .formWrapper >>> .ivu-form-item-error-tip {
+        left: 8vmin;
     }
-    .ivu-form-item >>> .ivu-form-item-content {
-        margin-left: 11vmin !important;
-        line-height: 3.2vmin;
-    }
-    .ivu-select,
-    .ivu-select >>> .ivu-select-selection,
-    .ivu-input-wrapper >>> .ivu-input,
-    .ivu-date-picker >>> .ivu-input,
-    .ivu-select.ivu-select-single >>> .ivu-select-selected-value,
-    .ivu-select.ivu-select-single >>> .ivu-select-placeholder {
-        height: 3.6vmin;
-        line-height: 3.6vmin;
-        font-size: 1.4vmin;
-    }
-    .ivu-form-item-required .ivu-form-item-label:before {
-        font-size: 1.6vmin !important;
-    }
-    .ivu-form-item-error-tip {
-        font-size: 1.4vmin;
+    .inspectionItems >>> .ivu-form-item {
+        margin-bottom: 2.2vmin;
     }
 }
 </style>

@@ -160,6 +160,9 @@ export default {
     top: 4.8vmin;
     left: -2vmin;
 }
+.list {
+    height: 30vmin;
+}
 .infoList {
     border: 1px solid #dddfe1;
     width: 24vmin;
@@ -170,6 +173,7 @@ export default {
     position: relative;
     cursor: pointer;
     font-size: 1.66vmin;
+    color: #fff;
 }
 .company {
     padding-left: 1vmin;

@@ -25,7 +25,7 @@
             <div class="MotionModule">
                 <motion-module></motion-module>
             </div>
-            <div class="ThreeDimensionsModule">
+            <div class="ThreeDimensionsModule" v-if="delay">
                 <three-dimensions-module></three-dimensions-module>
             </div>
             <div class="VideoModule">
@@ -53,7 +53,8 @@ export default {
         return {
             VMMainContext: [],
             classNameConfig: [],
-            extendTemplateNumber: 5
+            extendTemplateNumber: 5,
+            delay:false
         };
     },
     components: {
@@ -68,7 +69,11 @@ export default {
         ThreeDimensionsModule,
         VideoModule
     },
-    created() {},
+    created() {
+        setTimeout(()=>{
+            this.delay = true;
+        },3000)
+    },
     mounted() {},
     methods: {}
 };

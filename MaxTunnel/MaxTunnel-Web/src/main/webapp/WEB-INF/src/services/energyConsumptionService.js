@@ -150,6 +150,23 @@ var EnergyConsumptionService = {
             });
         });
     },
+    // 按照周期获取各管廊耗电量
+    getIntervalConsumes(period){
+        return new Promise((resolve, reject) => {
+            get("tunnels/consumes/interval/"+period).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
+                if (code == 200) {
+                    resolve(data);
+                } else {
+                    reject(msg + "地址：tunnels/consumes/interval/" + period);
+                }
+            });
+        });
+    },
     // 根据起始时间查询表数据
     getECDetail: function (params) {
         return new Promise((resolve, reject) => {
@@ -170,41 +187,41 @@ var EnergyConsumptionService = {
     // 获得每条管廊每个月的总能耗
     getTotleEnergyEveryMonthAndTunnel: function () {
         // 地址
-        let tunnels = [
-            "古城大街",
-            "实验路",
-            "纬三路",
-            "经二路",
-            "经三路",
-            "监控中心"
-        ];
-        let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
-        let res = [];
-        for (let i = 0; i < times.length; i++) {
-            let tmp = [];
-            for (let j = 0; j < tunnels.length; j++) {
-                tmp.push({
-                    time: times[i],
-                    tunnel: tunnels[j],
-                    energy: (Math.random() * 1000 + 1000).toFixed(2)
-                });
-            }
-            res.push(tmp);
-        }
+        // let tunnels = [
+        //     "古城大街",
+        //     "实验路",
+        //     "纬三路",
+        //     "经二路",
+        //     "经三路",
+        //     "监控中心"
+        // ];
+        // let times = ["18.09", "18.10", "18.11", "18.12", "19.01"];
+        // let res = [];
+        // for (let i = 0; i < times.length; i++) {
+        //     let tmp = [];
+        //     for (let j = 0; j < tunnels.length; j++) {
+        //         tmp.push({
+        //             time: times[i],
+        //             tunnel: tunnels[j],
+        //             energy: (Math.random() * 1000 + 1000).toFixed(2)
+        //         });
+        //     }
+        //     res.push(tmp);
+        // }
         return new Promise((resolve, reject) => {
-            // get("energy/totle-everymonth")
-            //     .then(res => {
-            //         let { code, data, msg } = res.data;
-            //         if (code == 200) {
-            //             resolve(data);
-            //         } else {
-            //             reject(msg + "地址：energy/totle-everymonth");
-            //         }
-            //     })
-            //     .catch(error => {
-            //         reject(error.response.status + "  " + error.response.data);
-            //     });
-            resolve(res);
+            get("energy/totle-everymonth")
+                .then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：energy/totle-everymonth");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
+            // resolve(res);
         });
     },
     // 获得每条管廊每个月的每公里能耗
@@ -245,6 +262,24 @@ var EnergyConsumptionService = {
             //     .catch(error => {
             //         reject(error.response.status + "  " + error.response.data);
             //     });
+        });
+    },
+    // 各管廊平均能耗
+    getTunnelAveEC(){
+        return new Promise((resolve, reject) => {
+            get("tunnels/total-avg/2/consume-datas")
+                .then(res => {
+                    let { code, data, msg } = res.data;
+                    if (code == 200) {
+                        resolve(data);
+                    } else {
+                        reject(msg + "地址：tunnels/total-avg/2/consume-datas");
+                    }
+                })
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
+            // resolve(res);
         });
     }
 };

@@ -22,11 +22,22 @@
             </Col>
             <Col span="6">
                 <span class="conditionTitle">单位名称：</span>
-                <Input type="text" v-model="conditions.name" id="getW" style="width:60%"></Input>
+                <Input
+                    type="text"
+                    v-model="conditions.name"
+                    id="getW"
+                    style="width:60%"
+                    placeholder="请输入单位名称"
+                />
             </Col>
             <Col span="6">
                 <span class="conditionTitle">联系人：</span>
-                <Input type="text" v-model="conditions.contact" style="width:60%"></Input>
+                <Input
+                    type="text"
+                    v-model="conditions.contact"
+                    style="width:60%"
+                    placeholder="请输入联系人"
+                />
             </Col>
             <Col span="6">
                 <span class="conditionTitle">单位类别：</span>
@@ -446,6 +457,9 @@ export default {
             });
         },
         goToMoudle: function(index, type) {
+            sessionStorage.setItem("detailId", this.unitInfo[index].id);
+            sessionStorage.setItem("pageType", type);
+            sessionStorage.setItem("refreshAddress", "/UM/relatedUnits/add/");
             this.$router.push({
                 name: "编辑相关单位",
                 params: {

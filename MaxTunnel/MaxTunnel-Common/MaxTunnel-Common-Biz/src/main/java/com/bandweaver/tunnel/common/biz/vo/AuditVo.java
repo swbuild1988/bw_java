@@ -16,7 +16,7 @@ public class AuditVo {
     /**
      * 结果
      */
-    private int value;
+    private Integer value;
     /**
      * 批注
      */
@@ -38,7 +38,7 @@ public class AuditVo {
         this.taskId = taskId;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 

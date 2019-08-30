@@ -46,12 +46,6 @@ export default {
             (error)=>{
                 _this.Log.info(error)
             })
-        // this.axios.get('/tunnels').then(response=>{
-        //     let{code,data} = response.data
-        //     if(code==200){
-        //         this.tunnel = data
-        //     }
-        // })
         // this.getSessionUserName()
     },
     methods: {
