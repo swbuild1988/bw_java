@@ -1,8 +1,13 @@
 package com.bandweaver.tunnel.service.common.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bandweaver.tunnel.common.biz.pojo.common.User;
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.rabbitmq.client.Channel;
 import org.activiti.engine.repository.ModelQuery;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import com.bandweaver.tunnel.common.platform.constant.Constants;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -57,7 +63,12 @@ public class MqServiceImpl implements MqService {
     public String createQueue() {
         try {
             Channel channel = mqModuleCenter.getChannel();
-            String queueName = "tunnel-" + (new Date()).getTime();
+            Subject subject = SecurityUtils.getSubject();
+            Session session = subject.getSession();
+            User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
+            //生成队列名   userName-yyyyMMddHHmmss
+            String date = DateUtil.getDate2StringFormat(new Date(),"yyyyMMddHHmmss");
+            String queueName = user.getName() + "-" + date;
             boolean durable = true;
             boolean exclusive = false;
             boolean auto_delete = false;
@@ -92,6 +103,28 @@ public class MqServiceImpl implements MqService {
     public void sendToPlanVMQueue(String msg) {
         LogUtil.info("发送到[VM应急]队列:" + msg);
         amqpTemplate.convertAndSend(PropertiesUtil.getString(Constants.QUEUE_PLAN_VM), msg);
+    }
+
+    @Override
+    public void deleteQueue(String queueName) {
+        LogUtil.info("删除队列queueName:" + queueName);
+        Channel channel = mqModuleCenter.getChannel();
+        try {
+            channel.queueDelete(queueName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteAllQueue() {
+        LogUtil.info("删除所有的队列");
+        Channel channel = mqModuleCenter.getChannel();
+        try {
+            channel.queueDelete("aaa");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -23,4 +23,8 @@ public interface MqService {
 
 	void sendToPlanVMQueue(String msg);
 
+	void deleteQueue(String queueName);
+
+	void deleteAllQueue();
+
 }

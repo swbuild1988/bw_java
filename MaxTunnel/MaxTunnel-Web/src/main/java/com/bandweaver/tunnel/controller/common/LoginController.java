@@ -1,12 +1,15 @@
 package com.bandweaver.tunnel.controller.common;
 
-
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import com.bandweaver.tunnel.common.biz.itf.MqService;
 import com.bandweaver.tunnel.common.biz.pojo.common.Role;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.JwtConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
@@ -27,8 +30,11 @@ import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.DescEnum;
 import com.bandweaver.tunnel.common.platform.log.WriteLog;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
+import com.bandweaver.tunnel.common.platform.util.JwtUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
-import com.bandweaver.tunnel.common.platform.util.Sha256;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 登录管理
@@ -46,37 +52,47 @@ public class LoginController {
     @Autowired
     private MqService mqService;
 
+	/**
+	 * 登录并返回权限列表
+	 *
+	 * @param
+	 * @param
+	 * @return
+	 */
+	@WriteLog(DescEnum.LOGIN)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public JSONObject login(@RequestBody JSONObject requestJson) {
+		CommonUtil.hasAllRequired(requestJson, "name,password");
 
-    /**
-     * 登录并返回权限列表
-     *
-     * @param
-     * @param
-     * @return
-     */
-    @WriteLog(DescEnum.LOGIN)
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public JSONObject login(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "name,password");
+		String name = requestJson.getString("name");
+		String password = requestJson.getString("password");
+		String authorization = requestJson.getString("Authorization");
+		Subject subject = SecurityUtils.getSubject();
 
-        String name = requestJson.getString("name");
-        String password = requestJson.getString("password");
-        Subject subject = SecurityUtils.getSubject();
+		UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(name, password);
+		usernamePasswordToken.setRememberMe(true);
+		subject.login(usernamePasswordToken);
 
-        UsernamePasswordToken token = new UsernamePasswordToken(name, password);
-        token.setRememberMe(true);
-        subject.login(token);
+		Session session = subject.getSession();
+		User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
 
-        Session session = subject.getSession();
-        User user = (User) session.getAttribute(Constants.SESSION_USER_INFO);
+		JSONObject json = new JSONObject();
+		if(StringUtils.isNotBlank(authorization)){
+			json.put("token", authorization);
+			json.put("userId", user.getId());
+		}else{
+			// 登陆的时候创建一个消息队列并将名字返回给前端
+			String queueName = mqService.createQueue();
+			Map<String, Object> map = new HashMap<>();
+			map.put("username", name);
+			map.put("queueName",queueName);
+			String token = JwtUtil.createJwt(map);
 
-        // 登陆的时候创建一个消息队列并将名字返回给前端
-        String queueName = mqService.createQueue();
-
-        JSONObject json = new JSONObject();
-        json.put("token", token);
-        json.put("userId", user.getId());
-        json.put("queueName", queueName);
+			json.put("token", token);
+			json.put("userId", user.getId());
+			json.put("queueName", queueName);
+			json.put("queueExpired", new Date(new Date().getTime() + 300 * 1000));
+		}
 
         return CommonUtil.success(json);
 
@@ -120,13 +136,16 @@ public class LoginController {
         return CommonUtil.success(returnData);
     }
 
-    @WriteLog(DescEnum.LOGOUT)
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public JSONObject Logout() {
-        Subject currentUser = SecurityUtils.getSubject();
-        currentUser.logout();
-        return CommonUtil.success();
-    }
+	@WriteLog(DescEnum.LOGOUT)
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public JSONObject Logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		Subject currentUser = SecurityUtils.getSubject();
+		currentUser.logout();
+		String token = httpServletRequest.getHeader(JwtConstants.AUTH_HEADER);
+		String queueName = JwtUtil.getPrivateClaimsFromToken(token,"queueName");
+		mqService.deleteQueue(queueName);
+		return CommonUtil.success();
+	}
 
 
     @RequestMapping(value = "/unauthor", method = RequestMethod.GET)
@@ -164,6 +183,5 @@ public class LoginController {
         returnData.put("address", PropertiesUtil.getValue(Constants.MAXTUNNEL_ADDRESS));
         return CommonUtil.success(returnData);
     }
-
 
 }
