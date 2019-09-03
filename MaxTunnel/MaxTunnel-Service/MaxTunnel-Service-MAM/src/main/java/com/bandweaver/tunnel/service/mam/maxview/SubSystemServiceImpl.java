@@ -228,7 +228,7 @@ public class SubSystemServiceImpl implements SubSystemService {
             throw new BandWeaverException("MaxView终端未配置");
 
         String server = "http://" + config.getIp() + ":" + config.getPort();
-        String _url = "/api/v1/measvalue-di/" + String.valueOf(id);
+        String _url = "/api/DigitalInput/" + String.valueOf(id);
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
 
@@ -263,7 +263,7 @@ public class SubSystemServiceImpl implements SubSystemService {
             throw new BandWeaverException("MaxView终端未配置");
 
         String server = "http://" + config.getIp() + ":" + config.getPort();
-        String _url = "/api/v1/measvalue-ai/" + String.valueOf(id);
+        String _url = "/api/AnologInput/" + String.valueOf(id);
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
 

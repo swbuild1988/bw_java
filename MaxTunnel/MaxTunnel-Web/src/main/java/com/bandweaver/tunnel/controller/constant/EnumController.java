@@ -315,6 +315,9 @@ public class EnumController {
 
 			List<JSONObject> joList = new ArrayList<>();
 			List<ObjectType> objTypeList = ObjectType.getEnumByDataType(e.getValue());
+			List<Integer> objectTypeIds = xmlService.getXMLAllInfo().getObjectTypeIds();
+			objTypeList = objTypeList.stream().filter(a -> objectTypeIds.contains(a.getValue())).collect(Collectors.toList());
+			
 			for (ObjectType objectType : objTypeList) {
 				JSONObject jo = new JSONObject();
 				jo.put("key", objectType.getName());
@@ -337,6 +340,9 @@ public class EnumController {
 	public JSONObject getDataTypeSIEnumList() {
 		List<JSONObject> list = new ArrayList<>();
 		List<ObjectType> objTypeList = ObjectType.getEnumByDataType(DataType.SI.getValue());
+		List<Integer> objectTypeIds = xmlService.getXMLAllInfo().getObjectTypeIds();
+		objTypeList = objTypeList.stream().filter(a -> objectTypeIds.contains(a.getValue())).collect(Collectors.toList());
+		
 		for (ObjectType objectType : objTypeList) {
 			JSONObject jo = new JSONObject();
 			jo.put("key", objectType.getName());
@@ -356,14 +362,18 @@ public class EnumController {
 	@RequestMapping(value="objecttype-enums",method=RequestMethod.GET)
 	public JSONObject getObjectTypeEnumList() {
 		List<JSONObject> list = new ArrayList<>();
+		List<Integer> objectTypeIds = xmlService.getXMLAllInfo().getObjectTypeIds();
+		
 		for (ObjectType e : ObjectType.values()) {
 			if(e==ObjectType.NONE) {
 				continue;
 			}
-			JSONObject obj = new JSONObject();
-			obj.put("key", e.getName());
-			obj.put("val", e.getValue());
-			list.add(obj);
+			if(objectTypeIds.contains(e.getValue())) {
+				JSONObject obj = new JSONObject();
+				obj.put("key", e.getName());
+				obj.put("val", e.getValue());
+				list.add(obj);
+			}
 		}
 		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200,list);
 	}
