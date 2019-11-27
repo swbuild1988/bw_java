@@ -19,7 +19,7 @@ public class Config implements Serializable {
     private List<EquipmentTypeFile> typeFiles;
     // 大屏地图各点位置
     private List<RelatedUnit> units;
-    // 对象类型参数
+    // 要展示的对象类型
     private List<Integer> objectTypeIds;
     // 需转换的复杂类型
     private List<ComplexObjectConvert> complexObjectConverts;

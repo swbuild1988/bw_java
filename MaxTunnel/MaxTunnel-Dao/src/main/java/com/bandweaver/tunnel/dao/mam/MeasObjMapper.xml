@@ -100,10 +100,10 @@
             <if test="deviation != null">
                 deviation,
             </if>
-            <if test="videoIds != null">
+            <if test="videoIds != null and videoIds.trim() != ''">
                 video_ids,
             </if>
-            <if test="planIds != null">
+            <if test="planIds != null and planIds.trim() != ''">
                 plan_ids,
             </if>
         </trim>
@@ -135,7 +135,7 @@
             <if test="actived != null">
                 #{actived,jdbcType=DECIMAL},
             </if>
-            <if test="description != null">
+            <if test="description != null and description.trim() != ''">
                 #{description,jdbcType=VARCHAR},
             </if>
             <if test="longitude != null">
@@ -385,4 +385,20 @@
             </if>
     	</where>
     </select>
+
+    <update id="updateMeasobjsActived">
+        update T_MAM_MEASOBJ
+        set actived = #{actived}
+        <where>
+            <if test="tunnelId != null">
+                and tunnel_id = #{tunnelId,jdbcType=DECIMAL}
+            </if>
+            <if test="storeId != null">
+                and store_id = #{storeId,jdbcType=DECIMAL}
+            </if>
+            <if test="areaId != null">
+                and area_id = #{areaId,jdbcType=DECIMAL}
+            </if>
+        </where>
+    </update>
 </mapper>

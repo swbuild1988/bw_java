@@ -338,7 +338,6 @@ public class ShiroController {
 		return CommonUtil.success();
 	}
 
-
 	/**批量删除角色
 	 * @param ids 逗号分隔
 	 * @return
@@ -353,7 +352,6 @@ public class ShiroController {
 		deleteRedisCache();
 		return CommonUtil.success();
 	}
-
 
 	/**修改角色
 	 * @param reqJson

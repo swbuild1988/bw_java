@@ -43,7 +43,7 @@ public class MeasValueAIController {
      * @author shaosen
      * @Date 2018年10月18日
      */
-    @RequestMapping(value = "measvalue-ai/batch", method = RequestMethod.POST)
+    @RequestMapping(value = "measvalue-ai", method = RequestMethod.POST)
     public JSONObject addMeasValueAIBatch(@RequestBody List<MeasValueAI> list) {
     	String ip = ContextUtil.getRemoteIp();
     	LogUtil.info("来自:" + ip + ",接收到MaxView发送的AI数据共：" + list.size() + "条" );

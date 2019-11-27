@@ -95,6 +95,8 @@ export default (containerId, viewer, domId, route) => ({
     data() {
         return {
             prePosition: null,
+            boxEntity:null,
+            layers:null
         }
     },
     mounted() {
@@ -103,6 +105,7 @@ export default (containerId, viewer, domId, route) => ({
                 this.getLayer();
                 this.init();
                 this.initProps();
+                this.loadCesiumMan(); 
                 if (this.pointLight.isOpen) this.getPointLinght();
             })
             .catch(() => {
@@ -127,7 +130,8 @@ export default (containerId, viewer, domId, route) => ({
 
                     Vue.prototype[viewer] = new Cesium.Viewer(domId, {
                         navigation: _this.navigation,
-                        infoBox: _this.infoBox
+                        infoBox: _this.infoBox,
+                        // terrainProvider:Cesium.createWorldTerrain()
                     });
 
                     resolve();
@@ -152,14 +156,115 @@ export default (containerId, viewer, domId, route) => ({
                         promise,
                         function (layer) {
                             //设置BIM图层不可选择
+                            // Vue.prototype[viewer].scene.layers.find('Dataset_3Dmax@datasources').style3D.fillForeColor.alpha = 0;
+                           // 112.488253735,37.714005145,-2.45,102,-10,0
+                           _this.layers = layer;
                             layer.forEach(
                                 curBIM => {
                                     curBIM._selectEnabled = false;
                                 }
                             );
                             //设置相机位置、视角，便于观察场景
-                            console.log('this.viewersdsd',_this.viewer)
                             _this.setViewAngle();
+
+                            // let handler = new Cesium.ScreenSpaceEventHandler(
+                            //     _this.scene.canvas
+                            // );
+                            
+                            // var boxEntity;
+                            // handler.setInputAction(function(event) {
+                                
+                            //     var cartesian = Cesium.Cartesian3.fromDegrees(112.48896541,37.71379887,-2.45);
+                                // var cartesian = _this.scene.pickPosition(event.position);
+                                // if(!_this.boxEntity){
+                                //     _this.ClipBoxBIM(cartesian);
+                                // }else {
+                                //     _this.MoveClipBIM(cartesian)
+                                // }
+                                
+                            //     var boxOption = {
+                            //         dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
+                            //         position : cartesian,
+                            //         clipMode : 'clip_behind_all_plane',
+                            //         heading : parseFloat(_this.ClipBIM.rotate)
+                            //     };
+                            //     var hpr = new Cesium.HeadingPitchRoll(parseFloat(_this.ClipBIM.rotate), 0, 0);
+                            //     var orientation = Cesium.Transforms.headingPitchRollQuaternion(cartesian, hpr);
+                            //     boxEntity = _this.viewer.entities.add({
+                            //         box : {
+                            //             dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
+                            //             material : Cesium.Color.fromRandom({alpha : 0.4})
+                            //         },
+                            //         position : cartesian,
+                            //         orientation : orientation
+                            //     });
+                                
+                            //     for (let i=0;i<layer.length ; i++) {
+                            //         layer[i].setCustomClipBox(boxOption);
+                            //     }
+                            // }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+                            
+                            
+                            // handler.setInputAction(function(movement) {
+                            //     if(!boxEntity)return;
+                            //     var cartesian = _this.scene.pickPosition(movement.startPosition);
+                            //     boxEntity.position = cartesian;
+                            //     handler.setInputAction(function(evt) {
+                                    
+                            //         var newDim = boxEntity.box.dimensions.getValue();
+                            //         var position = boxEntity.position.getValue(0);
+                            //         var heading = parseFloat(_this.ClipBIM.rotate)
+                            //         var boxOptions = {
+                            //             dimensions : newDim,
+                            //             position : position,
+                            //             clipMo   e : 'clip_behind_all_plane',
+                            //             heading : heading
+                            //         }
+
+                            //         for (let i=0;i<layer.length ; i++) {
+                            //             layer[i].setCustomClipBox(boxOptions);
+                            //         }
+
+                            //         handler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+                            //     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+                            // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+                             // var handlerPolygon = new Cesium.DrawHandler(_this.viewer,Cesium.DrawMode.Polygon, 0);
+                            // console.log('array')
+                            // handlerPolygon.drawEvt.addEventListener(function(result){
+                        
+                            //     var array = [].concat(result.object.positions);
+                               
+                                
+                            //     var positions = [];
+                            //     for(var i = 0, len = array.length; i < len; i ++){
+                            //         var cartographic = Cesium.Cartographic.fromCartesian(array[i]);
+                            //         var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                            //         var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                            //         var h=cartographic.height;
+                            //         if(positions.indexOf(longitude)==-1&&positions.indexOf(latitude)==-1){
+                            //             positions.push(longitude);
+                            //             positions.push(latitude);
+                            //             positions.push(h);
+                            //         }
+                            //     }
+                            //     var dep = 500;
+                            //     _this.viewer.scene.globe.removeAllExcavationRegion();
+                            //     _this.viewer.scene.globe.addExcavationRegion({
+                            //         name : 'ggg' ,
+                            //         position : positions,
+                            //         height : dep,
+                            //         transparent : true
+                            //     });
+                            //     handlerPolygon.polygon.show = false;
+                            //     handlerPolygon.polyline.show = false;
+                            //     handlerPolygon.deactivate();
+                            //     handlerPolygon.activate();
+                            // });
+                            
+                            // handlerPolygon.activate();  
+                            
 
                            
                         },
@@ -177,6 +282,55 @@ export default (containerId, viewer, domId, route) => ({
                         widget.showErrorPanel(title, undefined, e);
                     }
                 }
+            }
+        },
+        operateBoxBIM(cartesian){
+            !this.boxEntity ?　this.ClipBoxBIM(cartesian) : this.MoveClipBIM(cartesian);
+        },
+        ClipBoxBIM({x,y,z}){
+            let _this = this;
+            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x),parseFloat(y),parseFloat(z));
+                                
+            var boxOption = {
+                dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
+                position : cartesian,
+                clipMode : 'clip_behind_all_plane',
+                heading : parseFloat(_this.ClipBIM.rotate)
+            };
+            var hpr = new Cesium.HeadingPitchRoll(parseFloat(_this.ClipBIM.rotate), 0, 0);
+            var orientation = Cesium.Transforms.headingPitchRollQuaternion(cartesian, hpr);
+            _this.boxEntity = _this.viewer.entities.add({
+                box : {
+                    dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
+                    material : Cesium.Color.fromRandom({alpha : 0.1})
+                },
+                position : cartesian,
+                orientation : orientation
+            });
+            
+            this.setAllLayersClipOptions(boxOption);
+        },
+        MoveClipBIM({x,y,z}){
+            
+            if(!this.boxEntity) return;
+
+            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x),parseFloat(y),parseFloat(z));
+            var newDim = this.boxEntity.box.dimensions.getValue();
+            var heading = parseFloat(this.ClipBIM.rotate)
+            var boxOptions = {
+                dimensions : newDim,
+                position : cartesian,
+                clipMode : 'clip_behind_all_plane',
+                heading : heading
+            }
+            this.setAllLayersClipOptions(boxOptions);
+        },
+        setAllLayersClipOptions(boxOption){
+            
+            if(!this.layers)return;
+
+            for (let i=0;i<this.layers.length ; i++) {
+                this.layers[i].setCustomClipBox(boxOption);
             }
         },
         initProps() {
@@ -218,6 +372,55 @@ export default (containerId, viewer, domId, route) => ({
         },
         compare(id, parentNode) {
             return document.getElementById(id).parentNode.tagName.toLowerCase() === parentNode;
+        },
+        operate(){
+            let startPt = Cesium.Cartesian3.fromDegrees(data_geo[startName][0], data_geo[startName][1], 0);
+            let endPt = Cesium.Cartesian3.fromDegrees(data_geo[destinationName][0], data_geo[destinationName][1], 0);
+            console.log(startPt,endPt)
+            let curLinePointsArr = generateCurve(startPt, endPt);
+            
+            
+            viewer.entities.add({ // 背景线
+                polyline: {
+                    width: 3,
+                    positions: curLinePointsArr,
+                    material: new Cesium.PolylineDashMaterialProperty({
+                        color: new Cesium.Color(255 / 255, 249 / 255, 0, 0.5)
+                    })
+                }
+            });
+            
+            viewer.entities.add({ // 尾迹线
+                
+                polyline: {
+                    width: 5,
+                    positions: curLinePointsArr,
+                    material: new Cesium.PolylineTrailMaterialProperty({ // 尾迹线材质
+                        color: Cesium.Color.fromCssColorString("rgba(118, 233, 241, 1.0)"),
+                        trailLength : 0.2,
+                        period : 5.0
+                    })
+                }
+            });
+        },
+        generateCurve(startPoint, endPoint){
+            let addPointCartesian = new Cesium.Cartesian3();
+            Cesium.Cartesian3.add(startPoint, endPoint, addPointCartesian);
+            let midPointCartesian = new Cesium.Cartesian3();
+            Cesium.Cartesian3.divideByScalar(addPointCartesian, 2, midPointCartesian);
+            let midPointCartographic = Cesium.Cartographic.fromCartesian(midPointCartesian);
+            midPointCartographic.height = Cesium.Cartesian3.distance(startPoint, endPoint) / 10;
+            let midPoint = new Cesium.Cartesian3();
+            Cesium.Ellipsoid.WGS84.cartographicToCartesian(midPointCartographic, midPoint);
+            let spline = new Cesium.CatmullRomSpline({
+                times: [0.0, 0.5, 1.0],
+                points: [startPoint, midPoint, endPoint]
+            });
+            let curvePointsArr = [];
+            for(let i = 0, len = 300; i < len; i++){
+                curvePointsArr.push(spline.evaluate(i / len));
+            }
+            return curvePointsArr;
         },
         operationEntity(feater) {
             let _this = this;
@@ -261,7 +464,7 @@ export default (containerId, viewer, domId, route) => ({
             // 加载视角
             this.setViewAngle();
         },
-        // 开始相机位置刷新
+        // 开始相机位置刷新 
         startCameraPositionRefresh() {
             this.refreshCameraPosition.enable = true;
             this.cameraPositionRefresh();
@@ -393,7 +596,7 @@ export default (containerId, viewer, domId, route) => ({
             }
         }
     },
-    beforeDestroy() {
+    beforeDestroy() { 
         this.viewer.selectedEntityChanged.removeEventListener(this.operationEntity);
         this.stopFly();
     },

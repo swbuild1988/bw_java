@@ -151,4 +151,13 @@ public interface MeasObjService {
 	 * @return
 	 */
 	boolean isMeasObjFault(MeasObj measObj);
+
+	/**
+	 * 根据管廊ID，区域ID，管仓ID修改对象是否使用
+	 * @param tunnelId 为空时不管它
+	 * @param areaId 为空时不管它
+	 * @param storeId 为空时不管它
+	 * @param actived 设置为是否使用
+	 */
+	void updateObjectsActived(Integer tunnelId, Integer areaId, Integer storeId, boolean actived);
 }

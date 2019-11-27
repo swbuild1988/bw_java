@@ -33,6 +33,7 @@ import com.bandweaver.tunnel.common.biz.constant.mam.VideoVendor;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
 import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.dto.TunnelSimpleDto;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoExtendSceneDto;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoSceneDto;
@@ -58,6 +59,7 @@ import com.bandweaver.tunnel.common.platform.util.DataTypeUtil;
 import com.bandweaver.tunnel.common.platform.util.GPSUtil;
 import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.common.platform.util.PropertiesUtil;
+import com.bandweaver.tunnel.common.platform.util.StringTools;
 import com.bandweaver.tunnel.service.mam.video.VideoModuleCenter;
 import com.github.pagehelper.PageInfo;
 
@@ -208,6 +210,8 @@ public class VideoController {
      * @param actived	是否使用
      * @param channelNo	通道号
      * @param videoSceneId 场景
+     * @param pageSize
+     * @param pageNum
      * @return
      * @author ya.liu
      * @Date 2019年2月22日
@@ -366,14 +370,81 @@ public class VideoController {
     	return CommonUtil.success(videoDtos);
     }
     
+    /**
+     * 获取所有onvif源信息
+     * @return
+     * @author ya.liu
+     * @throws Exception 
+     * @Date 2019年9月9日
+     */
+    @RequestMapping(value = "h5/api/src", method = RequestMethod.GET)
+    public JSONObject getAllVideosByIp() throws Exception {
+        List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+        if(videoDtos != null) {
+        	List<H5Src> list = h5streamService.getSrc();
+        	List<Integer> ints = new ArrayList<>();
+        	for(H5Src src : list) {
+        		if(src.getStrName().indexOf("onvif") < 0)
+        			ints.add(Integer.valueOf(src.getStrName()));
+        	}
+        	videoDtos = videoDtos.stream().filter(dto -> ints.contains(dto.getId())).collect(Collectors.toList());
+        }
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, videoDtos);
+    }
     
-    /**通过api添加rtsp和onvif源
-     * @param user 
-     * @param password
+    /**
+     * 分页获取H5stream配置文件信息
+     * @param id
+     * @param vendor	供应商
+     * @param channelNo	通道号
+     * @param pageSize
+     * @param pageNum
+     * @return
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年9月11日
+     */
+    @RequestMapping(value = "h5/api/src/datagrid", method = RequestMethod.POST)
+    public JSONObject getH5DataGrid(@RequestBody VideoVo vo) throws Exception {
+        List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+        if(videoDtos != null) {
+        	List<H5Src> list = h5streamService.getSrc();
+        	List<Integer> ints = new ArrayList<>();
+        	for(H5Src src : list) {
+        		if(src.getStrName().indexOf("onvif") < 0)
+        			ints.add(Integer.valueOf(src.getStrName()));
+        	}
+        	videoDtos = videoDtos.stream().filter(dto -> ints.contains(dto.getId())).collect(Collectors.toList());
+        	if (vo.getId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getId().equals(a.getId())).collect(Collectors.toList());
+	    	if (vo.getTunnelId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getTunnelId().equals(a.getTunnelId())).collect(Collectors.toList());
+	        if (vo.getStoreId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getStoreId().equals(a.getStoreId())).collect(Collectors.toList());
+	        if (vo.getAreaId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getAreaId().equals(a.getAreaId())).collect(Collectors.toList());
+	        if (vo.getVendor() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getVendor().equals(a.getVendor())).collect(Collectors.toList());
+	        if (vo.getServerId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getServerId().equals(a.getServerId())).collect(Collectors.toList());
+	        if (vo.getActived() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getActived().equals(a.isActived())).collect(Collectors.toList());
+	        if (vo.getChannelNo() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getChannelNo().equals(a.getChannelNo())).collect(Collectors.toList());
+	        if (vo.getVideoSceneId() != null)
+	            videoDtos = videoDtos.stream().filter(a -> vo.getVideoSceneId().equals(a.getVideoSceneId())).collect(Collectors.toList());
+        }
+        ListPageUtil<VideoDto> list = new ListPageUtil<>(videoDtos, vo.getPageNum(), vo.getPageSize());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
+    }
+    
+    /**通过api添加rtsp和onvif源，会删除以前的视频源
+     * @param id
      * @param ip
      * @param port
+     * @param username
+     * @param password
      * @param channelNo
-     * @param id
      * @param vendor
      * @return  true or false
      * @author shaosen
@@ -381,37 +452,67 @@ public class VideoController {
      * @Date 2018年12月4日
      */
     @RequestMapping(value="h5/api/addsrc",method=RequestMethod.POST)
-    public JSONObject addH5ConfigByAPI(@RequestBody List<Map<String, String>> list) throws Exception {
+    public JSONObject addH5ConfigByAPIDeleteOther(@RequestBody List<Video> list) throws Exception {
     	//删除所有视频源
     	h5streamService.delSrcList();
-    	
-    	for (Map<String, String> map : list) {
-    		String user = map.get("user");
-			String password = map.get("password");
-			String ip = map.get("ip");
-			String port = "554";
-			String channelNo = map.get("channelNo");
-			String id = map.get("id");
-			String vendor = map.get("vendor");
-			
-			setOnvif(DataTypeUtil.toInteger(id), user, password, ip,
-	    			port, DataTypeUtil.toInteger(channelNo), DataTypeUtil.toInteger(vendor));
-			
-			// 修改视频表数据，以便后续维护
-			Video video = new Video();
-			video.setId(DataTypeUtil.toInteger(id));
-			video.setUsername(user);
-			video.setPassword(password);
-			video.setIp(ip);
-			video.setPort(DataTypeUtil.toInteger(port));
-			video.setChannelNo(DataTypeUtil.toInt(channelNo));
-			video.setVendor(DataTypeUtil.toInteger(vendor));
-			videoModuleCenter.updateVideo(video);
-		}
+    	addBachOnvif(list);
     	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
+    
+    // 批量添加onvif源
+    private void addBachOnvif(List<Video> list) throws Exception{
+    	for (Video video : list) {
+			// 添加onvif源
+			setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+	    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+			// 修改视频表数据，以便后续维护
+			videoModuleCenter.updateVideo(video);
+		}
+    }
 
-      
+    /**通过api添加rtsp和onvif源
+     * @param id
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @param channelNo
+     * @param vendor
+     * @author ya.liu
+     * @throws Exception 
+     * @Date 2019年9月9日
+     */
+    @RequestMapping(value="h5/api/add",method=RequestMethod.POST)
+    public JSONObject addH5ConfigByAPI(@RequestBody List<Video> list) throws Exception {
+    	
+    	addBachOnvif(list);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
+    /**修改rtsp和onvif源
+     * @param id
+     * @param ip
+     * @param port
+     * @param username
+     * @param password
+     * @param channelNo
+     * @param vendor
+     * @return
+     * @throws Exception
+     * @author ya.liu
+     * @Date 2019年9月11日
+     */
+    @RequestMapping(value="h5/api/update",method=RequestMethod.PUT)
+    public JSONObject updateH5ConfigByAPI(@RequestBody Video video) throws Exception {
+    	// 先删除onvif源
+    	h5streamService.delSrc(video.getId().toString());
+    	// 再添加onvif源
+    	setOnvif(video.getId(), video.getUsername(), video.getPassword(), video.getIp(),
+    			video.getPort().toString(), video.getChannelNo(), video.getVendor());
+    	// 更新视频
+    	videoModuleCenter.updateVideo(video);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
 
     /**
      * 添加视频服务

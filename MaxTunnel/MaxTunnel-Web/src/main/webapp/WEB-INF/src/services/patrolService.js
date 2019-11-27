@@ -375,6 +375,23 @@ let PatrolService = {
                 }
             })
         })
+    },
+    // 生成报表
+    createReport(id) {
+        return new Promise((resolve, reject) => {
+            get("inspection-tasks/" + id + "/report").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
+                    resolve(data)
+                } else {
+                    reject(msg + "地址：inspection-tasks/" + id + "/report")
+                }
+            })
+        })
     }
 };
 

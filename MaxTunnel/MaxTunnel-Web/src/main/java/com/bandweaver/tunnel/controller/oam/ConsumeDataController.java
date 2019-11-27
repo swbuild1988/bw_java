@@ -261,17 +261,17 @@ public class ConsumeDataController {
     			obj.put("key", time);
     			
     			// 真实数据
-//				ConsumeDataVo vo = new ConsumeDataVo();
-//				Date nowStart = DateUtil.getBeginDayOfMonth(now);
-//				Date nowEnd = DateUtil.getEndDayOfMonth(now);
-//				vo.setStartTime(nowStart);
-//				vo.setEndTime(nowEnd);
-//				vo.setTunnelId(dto.getId());
-//				// 一个月的总能耗
-//				Double sum = consumeService.getSumByCondition(vo);
+				ConsumeDataVo vo = new ConsumeDataVo();
+				Date nowStart = DateUtil.getBeginDayOfMonth(now);
+				Date nowEnd = DateUtil.getEndDayOfMonth(now);
+				vo.setStartTime(nowStart);
+				vo.setEndTime(nowEnd);
+				vo.setTunnelId(dto.getId());
+				// 一个月的总能耗
+				Double sum = consumeService.getSumByCondition(vo);
     			
     			// 假数据
-    			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
+//    			Double sum = (int)((Math.random() + 1.5) * 100 * dto.getLength()) / 100.0;
 				
     			obj.put("val", sum);
 				energyList.add(obj);

@@ -115,34 +115,41 @@ export const commonFlyFn = {
         },
         //变更区段
         updateArea() {
-            this.changeAreaOrStore();
+            this.changeAreaOrStore('updateArea');
         },
         //变更舱
         updateStores(storeId) {
             this.queryCondition.storeId = storeId;
-            this.changeAreaOrStore();
+            this.changeAreaOrStore('updateStores');
         },
-        changeAreaOrStore() {
+        changeAreaOrStore(type) {
             let {
                 areaId,
                 storeId
             } = this.queryCondition;
             
-            this.change3DPosition(areaId, storeId);
+            this.change3DPosition(areaId, storeId,type);
             this.getMonitorData();
             this.changePositionNote(areaId, storeId);
         },
         // 改变3D的位置
-        change3DPosition(areaId, storeId) {
+        change3DPosition(areaId, storeId,operateType) {
             if (!areaId) areaId = this.areaList[1].id;
             if (!storeId) storeId = this.storeProp.dataList[1].id
 
-            TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result))
+            TunnelService.getSectionByAreaIdStoreId(storeId, areaId).then(result => this.intercept(result,operateType))
         },
         //用于判断返回结果不为undefined
-        intercept(info) {
+        intercept(info,operateType) {
             if (!info || !info.startPoint || !info.endPoint) return
-            this.perspective(info)
+            this.perspective(info);
+            
+            // if(operateType == 'updateArea'){
+            //     let [x,y,z] = info.startPoint.split(',');
+            //     console.log({x,y,z})
+            //     this.$refs.smViewer.operateBoxBIM({x,y,z}); //调用横截面
+            // } 
+            
         },
         perspective({
             camera
@@ -196,7 +203,7 @@ export const commonFlyFn = {
             // }else {
             //     this.showDetailsModel = false;
             // }
-            this.sectionDetailsData = !data ? null : data.moInfo;
+            this.sectionDetailsData = (!data || !data.moInfo.length) ? null : data.moInfo;
         }
     },
 }

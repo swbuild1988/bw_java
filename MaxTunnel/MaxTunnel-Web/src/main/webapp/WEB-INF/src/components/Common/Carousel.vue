@@ -4,7 +4,10 @@
             <Icon type="ios-arrow-back"></Icon>
         </button>
         <Row style="height: 100%">
-            <Col :span="videoNumber === 1 ? '24' : ( videoNumber === 4 ? '12' : '8')" v-for="(video,index) in curVideoList" 
+            <Col v-if="!videosFlag" span="24" class="noVideo">
+                <div>暂无视频</div>
+            </Col>
+            <Col v-else :span="videoNumber === 1 ? '24' : ( videoNumber === 4 ? '12' : '8')" v-for="(video,index) in curVideoList" 
             :key="video.id" :style="{height: wrapperHeight}">
                 <div :class="['videoWrapper',{'oneVideo' : videoNumber === 1}]">
                     <video-component :index="preIndex+index" :video="video" :id="'curLoopSceneVideo'+video.id"></video-component>
@@ -53,7 +56,8 @@ export default {
             loopProp:{
                 loopFirstIndex : 0,
                 loopTimer : null
-            }
+            },
+            videosFlag: true
         }
     },
     components:{
@@ -82,11 +86,15 @@ export default {
     },
     methods:{
         changeVideo(){
-            let { loopProp } = this;
+            if(this.videolist.length){
+                 let { loopProp } = this;
 
-            this.gainVideo( loopProp.loopFirstIndex );//获取视屏
-            this.loopVideo();//轮询视屏
-            
+                this.gainVideo( loopProp.loopFirstIndex );//获取视屏
+                this.loopVideo();//轮询视屏
+                this.videosFlag = true
+            } else {
+                this.videosFlag = false
+            }
         },
         loopVideo(){
             clearInterval( this.loopProp.loopTimer );//清除定时器
@@ -165,6 +173,13 @@ export default {
     margin: 0.4vmin auto;
 }
 .oneVideo {
+    height: 100%;
+}
+.noVideo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3vmin;
     height: 100%;
 }
 

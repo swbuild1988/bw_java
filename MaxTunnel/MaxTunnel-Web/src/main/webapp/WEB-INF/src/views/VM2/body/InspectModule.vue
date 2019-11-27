@@ -151,7 +151,7 @@ export default {
     },
     mounted() {
         this.init();
-        this.refreshData();
+        // this.refreshData();
         this.getCircleWidth();
         window.onresize = () => {
             return (() => {
@@ -211,6 +211,11 @@ export default {
             InspectService.getEveryMonthMaintenance().then(res => {
                 var arr1 = [];
                 var arr2 = [];
+
+                this.corssBarChartData.xData.length && this.corssBarChartData.xData.splice(0);
+                this.corssBarChartData.legendData.length && this.corssBarChartData.legendData.splice(0);
+                this.corssBarChartData.seriesData.length && this.corssBarChartData.seriesData.splice(0);
+
                 for (var i = 0; i < res.length; i++) {
                     this.corssBarChartData.xData.push(res[i].key);
                     for (var j = 0; j < res[i].val.length; j++) {
@@ -229,10 +234,17 @@ export default {
                 }
                 arr1 = arr1.reverse();
                 arr2 = arr2.reverse();
+                console.log('arr122',arr1)
                 this.corssBarChartData.xData = this.corssBarChartData.xData.reverse();
                 this.corssBarChartData.seriesData.push({ data: arr1 });
                 this.corssBarChartData.seriesData.push({ data: arr2 });
-            });
+            })
+                .finally(() => {
+
+                    setTimeout(() => {
+                        this.init();
+                    }, parseFloat(this.refreshTime));
+                });
             // window.addEventListener('resize',this.getCircleWidth())
         },
         refreshData() {

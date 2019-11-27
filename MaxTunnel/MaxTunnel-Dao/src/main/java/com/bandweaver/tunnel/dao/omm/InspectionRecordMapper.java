@@ -1,5 +1,6 @@
 package com.bandweaver.tunnel.dao.omm;
 
+import com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto;
 import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,7 @@ public interface InspectionRecordMapper {
     InspectionRecord get(@Param("id") int id);
 
     List<InspectionRecord> getRecords(@Param("taskId") int taskId);
+
+    List<InspectionRecordDto> getRecordDtos(@Param("taskId") int taskId);
+
 }

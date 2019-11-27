@@ -470,6 +470,14 @@
         <normalMin>0</normalMin>
         <normalMax>100</normalMax>
     </objTypeParams>
+    <objTypeParams>
+        <typeId>65</typeId>
+        <typeName>可燃气体</typeName>
+        <min>0</min>
+        <max>25</max>
+        <normalMin>0</normalMin>
+        <normalMax>10</normalMax>
+    </objTypeParams>
     <lightDistance>50.0</lightDistance>
     <objectTypeIds>1</objectTypeIds>
     <objectTypeIds>2</objectTypeIds>

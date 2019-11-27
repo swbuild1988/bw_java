@@ -75,7 +75,8 @@ public class JwtUtil {
      * @return claim
      */
     public static String getPrivateClaimsFromToken(String token, String key) {
-        return getClaimsFromToken(token).get(key).toString();
+        Object queueName = getClaimsFromToken(token).get(key);
+        return queueName == null ? null : queueName.toString();
     }
 
     /**
@@ -143,5 +144,10 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS512,JwtConstants.SECRET)
                 .compact();
     }
+
+
+
+
+
 
 }

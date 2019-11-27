@@ -2,7 +2,7 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.    和后台分离部署是时配置
 const path = require('path')
-const ApiUrl = require('../static/serverconfig').ApiUrl
+const ApiUrl = require('../static/serverconfig.json').ApiUrl
 module.exports = {
     dev: {
         // Paths

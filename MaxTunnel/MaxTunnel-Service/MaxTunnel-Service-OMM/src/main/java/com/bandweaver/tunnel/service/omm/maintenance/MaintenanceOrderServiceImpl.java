@@ -74,6 +74,11 @@ public class MaintenanceOrderServiceImpl implements MaintenanceOrderService {
     }
 
     @Override
+    public MaintenanceOrderDto getOrderByDefectId(Integer defectId) {
+        return maintenanceOrderMapper.getOrderByDefectId(defectId);
+    }
+
+    @Override
     public MaintenanceOrder getOrderByInstance(String instanceId) {
         return maintenanceOrderMapper.getOrderByInstance(instanceId);
     }

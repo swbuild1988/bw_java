@@ -42,6 +42,11 @@
                 v-if="Obj.objtypeId==6 && normal"
                 class="img"
             >
+            <img
+                src="../../../../assets/UM/LEL-normal.png"
+                v-if="Obj.objtypeId==65 && normal"
+                class="img"
+            >
 
             <img
                 src="../../../../assets/UM/temp-error.png"
@@ -76,6 +81,11 @@
             <img
                 src="../../../../assets/UM/CO-error.png"
                 v-if="Obj.objtypeId==6 && inRange && !normal"
+                class="img"
+            >
+            <img
+                src="../../../../assets/UM/LEL-error.png"
+                v-if="Obj.objtypeId==65 && inRange && !normal"
                 class="img"
             >
             <img src="../../../../assets/UM/fault.png" class="img" v-if="!inRange">

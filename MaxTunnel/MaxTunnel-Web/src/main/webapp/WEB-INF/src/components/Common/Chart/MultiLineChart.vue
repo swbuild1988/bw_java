@@ -68,6 +68,9 @@
 						top: '10%',
 						containLabel: true
 					},
+					tooltip: {
+						trigger: "axis"
+					},
 					legend: {
 						data: [],
 						textStyle: { 
@@ -117,6 +120,11 @@
 				if (_this.parameters.queryPram) {
 					var prams = _this.parameters.queryPram;
 					prams.requestUrl = _this.requestUrl;
+
+					_this.myChart.showLoading({
+						text:'数据正在加载'
+					})
+
 					ChartService.getMulitLineData(prams).then((result) => {
 						if (result) {
 							_this.series = []
@@ -134,11 +142,13 @@
 							result.key.forEach(a=>{
 								_this.xData.push(new Date(a).format("yy-MM-dd hh:mm:ss"))
 							});
+							_this.myChart.hideLoading();
 							_this.myChart.setOption({
 								legend: {data: _this.legendData},
 								xAxis: {data: _this.xData},
 								series: _this.series,
 							})
+
 						}
 					})
 				}

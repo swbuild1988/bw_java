@@ -9,7 +9,7 @@ package com.bandweaver.tunnel.common.biz.constant.mam;
 public enum AlarmLevelEnum {
 	PROMPT("提示", 1),
 	NORMAL("一般", 2),
-	SERIOUS("严重", 3), 
+	SERIOUS("严重", 3),
 	DANGEROUS("危急", 4);
 
 	AlarmLevelEnum() {

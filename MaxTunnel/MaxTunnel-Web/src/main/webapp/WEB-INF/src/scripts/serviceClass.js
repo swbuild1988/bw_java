@@ -288,6 +288,7 @@ var TransferStation = {
     },
 
     addListener: function (key, listener) {
+        console.log("中转站添加新的监听器", key)
         this.listeners.set(key, listener)
     },
 
@@ -315,7 +316,10 @@ class MQ {
     };
 
     setQueueName(_queueName) {
-        this.queueName = "/queue/" + _queueName;
+        console.log("设定队列名", _queueName)
+        if (_queueName) {
+            this.queueName = "/queue/" + _queueName;
+        }
     }
 
     getQueueName() {

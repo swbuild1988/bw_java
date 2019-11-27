@@ -121,6 +121,20 @@
         WHERE a.id = #{id}
     </select>
 
+
+    <select id="getOrderByDefectId" resultMap="maintenanceOrderDtoMap">
+        SELECT
+            a.*,
+            b.name AS tunnel_name,
+            c.name AS worker_name,
+            d.name AS defect_name
+        FROM t_omm_maintenance_order a
+            LEFT JOIN t_common_tunnel b ON a.tunnel_id = b.id
+            LEFT JOIN T_COMMON_STAFF c ON a.worker = c.id
+            LEFT JOIN t_omm_defect d on a.defect_id = d.id
+        WHERE a.defect_id = #{defectId}
+    </select>
+
     <select id="getOrderByInstance" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.MaintenanceOrder">
         SELECT *
         FROM t_omm_maintenance_order

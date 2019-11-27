@@ -6,6 +6,26 @@
 <mapper namespace="com.bandweaver.tunnel.dao.omm.InspectionRecordMapper">
     <cache/>
 
+
+    <resultMap id="inspectionRecordDtoMap" type="com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto">
+        <id column="record_id" property="id"/>
+        <result column="record_create_time" property="createTime"/>
+        <result column="record_time" property="recordTime"/>
+        <result column="task_id" property="taskId"/>
+        <result column="record_content" property="content"/>
+        <result column="defect_id" property="defectId"/>
+        <result column="section_id" property="sectionId"/>
+        <association property="defect" javaType="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto"
+                     column="defect_id"
+                     select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>
+        <association property="area" javaType="com.bandweaver.tunnel.common.biz.dto.AreaDto"
+                     column="area_id"
+                     select="com.bandweaver.tunnel.dao.common.AreaMapper.getAreasById"/>
+        <association property="store" javaType="com.bandweaver.tunnel.common.biz.dto.StoreDto"
+                     column="store_id"
+                     select="com.bandweaver.tunnel.dao.common.StoreMapper.getDtoById"/>
+    </resultMap>
+
     <insert id="add" parameterType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
         <!-- 新增的时候，返回主键 -->
         <selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
@@ -82,7 +102,19 @@
     <select id="getRecords" resultType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionRecord">
         SELECT *
         FROM t_omm_inspection_record
-        WHERE taskId = #{taskId}
+        WHERE task_id = #{taskId}
+    </select>
+
+    <select id="getRecordDtos" resultMap="inspectionRecordDtoMap">
+        SELECT a.*,
+               b.area_id AS area_id,
+               b.store_id AS store_id
+        FROM t_omm_inspection_record a
+        LEFT JOIN t_common_section b on a.section_id = b.id
+        LEFT JOIN t_common_area c on b.area_id = c.id
+        LEFT JOIN t_common_store d on b.store_id = d.id
+        WHERE task_id = #{taskId}
+        order by create_time asc
     </select>
 
 

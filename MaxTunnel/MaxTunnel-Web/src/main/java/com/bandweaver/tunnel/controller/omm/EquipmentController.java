@@ -1,17 +1,27 @@
 package com.bandweaver.tunnel.controller.omm;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bandweaver.tunnel.common.biz.dto.omm.DefectDto;
+import com.bandweaver.tunnel.common.biz.dto.omm.MaintenanceOrderDto;
+import com.bandweaver.tunnel.common.biz.itf.omm.*;
+import com.bandweaver.tunnel.common.biz.pojo.Item;
+import com.bandweaver.tunnel.common.biz.pojo.omm.*;
+import com.bandweaver.tunnel.common.biz.vo.omm.DefectVo;
+import com.bandweaver.tunnel.common.biz.vo.omm.MaintenanceOrderVo;
+import com.bandweaver.tunnel.common.platform.constant.Constants;
+import com.bandweaver.tunnel.common.platform.log.LogUtil;
+import com.bandweaver.tunnel.common.platform.util.*;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,22 +41,12 @@ import com.bandweaver.tunnel.common.biz.dto.omm.EquipmentDto;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.TunnelService;
-import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentModelService;
-import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentService;
-import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentTypeService;
-import com.bandweaver.tunnel.common.biz.itf.omm.EquipmentVenderService;
 import com.bandweaver.tunnel.common.biz.pojo.ListPageUtil;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
-import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
-import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentModel;
-import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentType;
-import com.bandweaver.tunnel.common.biz.pojo.omm.EquipmentVender;
 import com.bandweaver.tunnel.common.biz.vo.omm.EquipmentVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.DescEnum;
 import com.bandweaver.tunnel.common.platform.log.WriteLog;
-import com.bandweaver.tunnel.common.platform.util.CommonUtil;
-import com.bandweaver.tunnel.common.platform.util.ContextUtil;
 
 /**
  * 设备管理
@@ -71,6 +71,10 @@ public class EquipmentController {
     private StoreService storeService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private DefectService defectService;
+    @Autowired
+    private MaintenanceOrderService maintenanceOrderService;
 
 
     /**
@@ -150,12 +154,12 @@ public class EquipmentController {
     @RequiresPermissions("equipment:list")
     @RequestMapping(value = "equipments/datagrid", method = RequestMethod.POST)
     public JSONObject dataGrid(@RequestBody EquipmentVo vo) {
-    	List<EquipmentDto> list = equipmentService.getEquipmentListByCondition(vo);
-    	if(vo.getStoreId() != null)
-    		list = list.stream().filter(a -> vo.getStoreId().equals(a.getSection() == null ? null : a.getSection().getStoreId())).collect(Collectors.toList());
-        
-    	ListPageUtil<EquipmentDto> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
-    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
+        List<EquipmentDto> list = equipmentService.getEquipmentListByCondition(vo);
+        if (vo.getStoreId() != null)
+            list = list.stream().filter(a -> vo.getStoreId().equals(a.getSection() == null ? null : a.getSection().getStoreId())).collect(Collectors.toList());
+
+        ListPageUtil<EquipmentDto> page = new ListPageUtil<>(list, vo.getPageNum(), vo.getPageSize());
+        return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, page);
     }
 
     /**
@@ -232,10 +236,11 @@ public class EquipmentController {
         equipmentService.updateEquipmentById(equipment);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 通过监测对象id修改设备状态信息
-     * @param objId 对象id
+     *
+     * @param objId  对象id
      * @param status 设备状态
      * @return
      * @author ya.liu
@@ -245,12 +250,12 @@ public class EquipmentController {
     @WriteLog(DescEnum.OMM_UPDATE_EQUIPMENT)
     @RequestMapping(value = "objects/equipments", method = RequestMethod.PUT)
     public JSONObject updateEquipmentByObjId(@RequestBody Equipment e) {
-		Equipment equipment = equipmentService.getEquipmentByObj(e.getObjId());
-		// 判断该设备是否处于正常状态，如果不是则跳过
-		if(equipment.getStatus().equals(EquipmentStatusEnum.NORMAL.getValue())) {
-			equipment.setStatus(e.getStatus());
-			equipmentService.updateEquipmentById(equipment);
-		}
+        Equipment equipment = equipmentService.getEquipmentByObj(e.getObjId());
+        // 判断该设备是否处于正常状态，如果不是则跳过
+        if (equipment.getStatus().equals(EquipmentStatusEnum.NORMAL.getValue())) {
+            equipment.setStatus(e.getStatus());
+            equipmentService.updateEquipmentById(equipment);
+        }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -613,12 +618,12 @@ public class EquipmentController {
             o.put("key", equipmentType.getName());
 
             List<JSONObject> typeVals = new ArrayList<>();
-            JSONObject o2 = new JSONObject();
-            o2.put("key", "总数");
-            o2.put("val", equipmentService.getCountByCondition(null, null, equipmentType.getId()));
-            typeVals.add(o2);
+//            JSONObject o2 = new JSONObject();
+//            o2.put("key", "总数");
+//            o2.put("val", equipmentService.getCountByCondition(null, null, equipmentType.getId()));
+//            typeVals.add(o2);
             for (EquipmentStatusEnum statusEnum : EquipmentStatusEnum.values()) {
-                o2 = new JSONObject();
+                JSONObject o2 = new JSONObject();
                 o2.put("key", statusEnum.getName());
                 o2.put("val", equipmentService.getCountByCondition(null, statusEnum.getValue(), equipmentType.getId()));
                 typeVals.add(o2);
@@ -662,7 +667,7 @@ public class EquipmentController {
     /**
      * 每条管廊设备总数
      *
-     * @return    {"msg":"请求成功","code":"200","data":[{"key":"古城大街","val":10},{"key":"金科路","val":12}]}
+     * @return {"msg":"请求成功","code":"200","data":[{"key":"古城大街","val":10},{"key":"金科路","val":12}]}
      * @author liuya
      * @Date 2018年9月1日
      */
@@ -671,7 +676,7 @@ public class EquipmentController {
         List<TunnelSimpleDto> tunnelList = tunnelService.getList();
         List<JSONObject> list = new ArrayList<>();
         for (TunnelSimpleDto tunnel : tunnelList) {
-        	JSONObject map = new JSONObject();
+            JSONObject map = new JSONObject();
             map.put("key", tunnelService.getNameById(tunnel.getId()));
             map.put("val", equipmentService.getCountByCondition(tunnel.getId(), null, null));
             list.add(map);
@@ -682,7 +687,7 @@ public class EquipmentController {
     /**
      * 不同设备类型下，每条管廊的设备数
      *
-     * @return    {"msg":"请求成功","code":"200","data":{"安全防范":[{"key":"古城大街","val":3},{"key":"金科路","val":1}],"火灾报警":[{"key":"古城大街","val":3},{"key":"金科路","val":1}]}
+     * @return {"msg":"请求成功","code":"200","data":{"安全防范":[{"key":"古城大街","val":3},{"key":"金科路","val":1}],"火灾报警":[{"key":"古城大街","val":3},{"key":"金科路","val":1}]}
      * @author liuya
      * @Date 2018年9月3日
      */
@@ -765,9 +770,10 @@ public class EquipmentController {
         equipmentService.updateEquipmentOfObj(equipment);
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
-    
+
     /**
      * 获取某条管廊各舱的设备数目
+     *
      * @param tunnelId
      * @return
      * @author ya.liu
@@ -775,23 +781,269 @@ public class EquipmentController {
      */
     @RequestMapping(value = "tunnels/{tunnelId}/stores/equipments/count", method = RequestMethod.GET)
     public JSONObject getEquipmentCountByStoreId(@PathVariable("tunnelId") Integer tunnelId) {
-    	List<StoreDto> stores =  storeService.getStoresByTunnelId(tunnelId);
+        List<StoreDto> stores = storeService.getStoresByTunnelId(tunnelId);
         List<JSONObject> list = new ArrayList<>();
         for (StoreDto dto : stores) {
-        	JSONObject map = new JSONObject();
+            JSONObject map = new JSONObject();
             map.put("id", dto.getId());
             map.put("name", dto.getName());
             Integer sum = 0;
             List<Integer> storeIds = new ArrayList<>();
             storeIds.add(dto.getId());
             List<Section> sections = sectionService.getSectionsByStoreIds(storeIds);
-            for(Section section : sections) {
-            	int count = equipmentService.getCountBySectionId(section.getId());
-            	sum += count;
+            for (Section section : sections) {
+                int count = equipmentService.getCountBySectionId(section.getId());
+                sum += count;
             }
             map.put("val", sum);
             list.add(map);
         }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, list);
     }
+
+
+    /**
+     * 获取设备的维修报告
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "equipments/{id}/report")
+    public JSONObject createEquipmentReport(@PathVariable("id") int id) {
+        EquipmentDto equipmentDto = equipmentService.getEquipmentById(id);
+
+        List<Item> data = new ArrayList<>();
+
+        int rowIndex = 0;
+        // 标题
+        data.add(new Item("设备维修报告", rowIndex, 0));
+
+        rowIndex++;
+        // 设备类型
+        data.add(new Item("设备类型", rowIndex, 0));
+        data.add(new Item(equipmentDto.getName(), rowIndex, 1));
+        // 检测对象编号
+        data.add(new Item("检测对象", rowIndex, 2));
+        data.add(new Item(equipmentDto.getObjId().toString(), rowIndex, 3));
+        // 资产编码
+        data.add(new Item("资产编码", rowIndex, 4));
+        data.add(new Item(equipmentDto.getAssetNo(), rowIndex, 5));
+
+        rowIndex++;
+        // 所属管廊、区域、管仓
+        data.add(new Item("所属管廊", rowIndex, 0));
+        data.add(new Item(equipmentDto.getTunnel().getName(), rowIndex, 1));
+        data.add(new Item("所属区域", rowIndex, 2));
+        data.add(new Item(equipmentDto.getSection().getArea().getName(), rowIndex, 3));
+        data.add(new Item("所属舱室", rowIndex, 4));
+        data.add(new Item(equipmentDto.getSection().getStore().getName(), rowIndex, 5));
+
+        rowIndex++;
+        // 安装时间、使用时间、厂家
+        data.add(new Item("安装时间", rowIndex, 0));
+        data.add(new Item(DateUtil.getDate2String(equipmentDto.getRunTime()), rowIndex, 1));
+        data.add(new Item("已使用时间", rowIndex, 2));
+        long hour = DateUtil.getDiffHours(equipmentDto.getRunTime(), new Date());
+        data.add(new Item((hour / 24) + "天" + (hour % 24) + "小时", rowIndex, 3));
+        data.add(new Item("厂家", rowIndex, 4));
+        data.add(new Item(equipmentDto.getFactory(), rowIndex, 5));
+
+        rowIndex++;
+        // 维修次数
+        data.add(new Item("维修次数", rowIndex, 0));
+        DefectVo vo = new DefectVo();
+        vo.setObjectId(equipmentDto.getObjId());
+        List<DefectDto> defects = defectService.getDefectsByCondition(vo);
+        int repairNum = defects.size();
+        data.add(new Item(repairNum, rowIndex, 1));
+
+        rowIndex++;
+        // 维修的系列抬头
+        List<String> colNames = Arrays.asList("序号", "维修人", "开始时间", "结束时间", "维修结果", "描述");
+        for (int i = 0; i < colNames.size(); i++) {
+            data.add(new Item(colNames.get(i), rowIndex, i));
+        }
+
+        // 将所有维修记录加入
+        for (int i = 0; i < repairNum; i++) {
+            DefectDto defect = defects.get(i);
+            MaintenanceOrderDto maintenanceOrderDto = maintenanceOrderService.getOrderByDefectId(defect.getId());
+
+            rowIndex++;
+            data.add(new Item(i + 1, rowIndex, 0));
+            data.add(new Item(maintenanceOrderDto.getWorkerName(), rowIndex, 1));
+            data.add(new Item(DateUtil.getDate2String(maintenanceOrderDto.getStartTime()), rowIndex, 2));
+            data.add(new Item(DateUtil.getDate2String(maintenanceOrderDto.getEndTime()), rowIndex, 3));
+            data.add(new Item(maintenanceOrderDto.getProcessStatus(), rowIndex, 4));
+            data.add(new Item(maintenanceOrderDto.getDescribe(), rowIndex, 5));
+        }
+
+        rowIndex += 2;
+        // 加入审核人、时间
+        data.add(new Item("审核人", rowIndex, 4));
+        rowIndex++;
+        data.add(new Item("时间", rowIndex, 4));
+
+        try {
+            String xlsPath = getEquipmentFileName(equipmentDto.getAssetNo()) + ".xls";
+            createExcel(xlsPath, data, rowIndex + 1, 6);
+            String pdfPath = getEquipmentFileName(equipmentDto.getAssetNo()) + ".pdf";
+            PDFUtil.excel2Pdf(xlsPath, pdfPath);
+            LogUtil.info("设备维修报告转化pdf完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.error(e);
+            return CommonUtil.returnStatusJson(StatusCodeEnum.E_400, e);
+        }
+
+        return CommonUtil.success();
+    }
+
+
+    /**
+     * pdf文件预览
+     *
+     * @param id
+     * @param response
+     */
+    @RequestMapping(value = "equipments/{id}/report-view", method = RequestMethod.GET)
+    public void preview(@PathVariable("id") Integer id, HttpServletResponse response) {
+        FileInputStream fis = null;
+        try {
+            Equipment equipment = equipmentService.getEquipmentById(id);
+            String pdfPath = getEquipmentFileName(equipment.getAssetNo()) + ".pdf";
+            fis = new FileInputStream(new File(pdfPath));
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            response.getOutputStream().write(data);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            LogUtil.error(e);
+        } finally {
+            close(fis);
+        }
+    }
+
+
+    /**
+     * excel文件下载
+     *
+     * @param id
+     * @param response
+     * @return
+     */
+    @RequiresPermissions("report:download")
+    @RequestMapping(value = "equipments/{id}/report-download", method = RequestMethod.GET)
+    public void download(@PathVariable("id") Integer id, HttpServletResponse response) {
+        FileInputStream fis = null;
+        try {
+            Equipment equipment = equipmentService.getEquipmentById(id);
+            String excelPath = getEquipmentFileName(equipment.getAssetNo()) + ".xls";
+            fis = new FileInputStream(new File(excelPath));
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            //获取输出文件名
+            String downloadFileName = excelPath.substring(excelPath.lastIndexOf("\\"), excelPath.length());
+            response.setHeader("Content-disposition", "attachment; filename=" + new String(downloadFileName.getBytes("GBK"), "ISO-8859-1") + ""); // 设定输出文件头
+            response.setContentType("application/vnd.ms-excel"); // 定义输出类型
+            response.getOutputStream().write(data);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            LogUtil.error(e);
+        } finally {
+            close(fis);
+        }
+    }
+
+    private void createExcel(String path, List<Item> data, int rowNum, int colNum) throws Exception {
+        //获得Excel文件输出流
+        FileOutputStream out = new FileOutputStream(new File(path));
+
+        try {
+            //创建excel工作簿对象
+            HSSFWorkbook wb = new HSSFWorkbook();
+            //创建excel页
+            HSSFSheet sheet = wb.createSheet("POI导出测试");
+
+            // 设置单元格格式
+            HSSFCellStyle cellStyle = wb.createCellStyle();
+
+            //将所有的单元格创建并加边框
+            cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+            // 自动换行
+            cellStyle.setWrapText(true);
+            for (int i = 0; i < rowNum; i++) {
+                HSSFRow row = sheet.createRow(i);
+                for (int j = 0; j < colNum; j++) {
+                    HSSFCell cell = row.createCell(j);
+                    cell.setCellStyle(cellStyle);
+                }
+            }
+
+            // 将数据存到excel中
+            ExcelUtil.fillExcelData(sheet, data);
+            // 设置列宽
+            int widths[] = {2500, 3000, 3000, 3000, 2500, 7000};
+            for (int i = 0; i < widths.length; i++) {
+                sheet.setColumnWidth(i, widths[i]);
+            }
+
+            // 合并首行
+            ExcelUtil.mergedRegion(sheet, 0, 0, 0, 5);
+
+            // 设置任务标题居中、加粗
+            cellStyle = wb.createCellStyle();
+            cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+            cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+            HSSFFont font = wb.createFont();
+            font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+            font.setFontHeightInPoints((short) 14);
+            cellStyle.setFont(font);
+            HSSFCell cell = sheet.getRow(0).getCell(0);
+            cell.setCellStyle(cellStyle);
+
+
+            wb.write(out);
+
+        } finally {
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    LogUtil.error(e);
+                }
+            }
+        }
+    }
+
+    // 生成文件名
+    private String getEquipmentFileName(String assetNo) {
+        String exportPath = PropertiesUtil.getString(Constants.EQUIPMENT_PATH);
+        if (!FileUtil.isExit(exportPath)) {
+            FileUtil.createPath(exportPath);
+        }
+        String path = exportPath + File.separator + "设备" + assetNo + "维修记录";
+        return path;
+    }
+
+    private void close(FileInputStream fis) {
+        if (fis != null) {
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                LogUtil.error(e);
+            }
+        }
+    }
+
 }

@@ -40,7 +40,7 @@
                 myChart: {},
                 option: {},
                 chartConfig:{},
-                itemStyleColor: ['#00f6fc', '#11c0ff', '#008bfe', '#2562e9', '#edc1a5', '#9dc5c8', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a']
+                itemStyleColor: ['#00f6fc', '#ff2d2d', '#008bfe', '#53ff53', '#949449', '#b766ad', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a']
             }
         },
         mounted() {

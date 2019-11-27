@@ -12,6 +12,7 @@
 <script>
 import videoloop from "../../../components/Common/Carousel";
 import ModuleTitle from "../../../components/VM2/ModuleTitle";
+import {VideoService} from "../../../services/videoService"
 export default {
   data() {
     return {
@@ -157,16 +158,29 @@ export default {
   },
   methods: {
     getLoopScence() {
-      let _this = this;
-      _this
-        .fetchData({ url: "/video_scenes", array: _this.loopScene })
-        .then(() => {
-          _this.getShowVideo();
+      // let _this = this;
+      // _this
+      //   .fetchData({ url: "/video_scenes", array: _this.loopScene })
+      //   .then(() => {
+      //     _this.getShowVideo();
 
-          _this.copyLoopScene(_this.loopScene, _this.virtualLoopScene);
+      //     _this.copyLoopScene(_this.loopScene, _this.virtualLoopScene);
 
-          _this.changeStyle(_this.loopScene[0]);
-        });
+      //     _this.changeStyle(_this.loopScene[0]);
+      //   });
+      VideoService.getSceneVideos().then(
+        res => {
+            this.loopScene.splice(0); //清空数组
+            res.forEach(tunnel =>
+                this.loopScene.push(...tunnel.videos)
+			);
+			this.getShowVideo();
+
+          	this.copyLoopScene(this.loopScene, this.virtualLoopScene);
+
+          	this.changeStyle(this.loopScene[0]);
+        }
+      )
     },
     getShowVideo() {
       this.changeVideo();

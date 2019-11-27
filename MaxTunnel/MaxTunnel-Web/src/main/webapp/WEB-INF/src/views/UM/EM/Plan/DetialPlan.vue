@@ -8,11 +8,11 @@
                     <div style="width: 100%;height: 100%;position:relative;">
                         <Row>
                             <Col span="12">
-                                <div class="nodesPic">
+                                <div class="nodesPic" v-if="nodeImgSrc">
                                     <image-from-url :url="nodeImgSrc"></image-from-url>
                                 </div>
                             </Col>
-                            <Col span="12">
+                            <Col span="12" :offset="nodeImgSrc ? '0' : '12'">
                                 <div>
                                     <img style="margin-top: 4vmin;height: 70vh;" v-bind:src="bgImg">
                                 </div>
@@ -98,7 +98,7 @@
                     ></Page>
                 </div>
                 <Modal v-model="planDetail.show" title="预案流程" :mask-closable="false">
-                    <div class="nodesPic">
+                    <div class="nodesPic" v-if="planDetail.url">
                         <image-from-url :url="planDetail.url"></image-from-url>
                     </div>
                     <div slot="footer"></div>

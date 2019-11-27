@@ -1,6 +1,7 @@
 package com.bandweaver.tunnel.service.mam.video;
 
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.itf.mam.OnvifService;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
@@ -304,6 +305,12 @@ public class OnvifServiceImpl implements OnvifService {
 
 	@Override
 	public String getSnapJSON(VideoDto dto, Date start, Date end) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<H5Src> getSrc() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

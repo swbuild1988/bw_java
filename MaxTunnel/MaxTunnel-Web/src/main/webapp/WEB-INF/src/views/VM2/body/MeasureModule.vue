@@ -4,7 +4,7 @@
 			<module-title :title="title"></module-title>
 		</div>
 
-		<div class="info" :key="key" v-for="(item,key) in countData">
+		<!-- <div class="info" :key="key" v-for="(item,key) in countData">
 			<div class="infoTitle">
 				<div v-if="item.type==1">
 					<div style="float: left;margin-left: 5%;width:30%;margin-top: 6.5%;">
@@ -29,12 +29,12 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
-		<div  v-for="(item,key) in gaugeChart" :key="key" class="myChart">
-			<div class="chartInfo">{{item.name}}</div>
+		<div  v-for="(item,key) in gaugeChart" :key="key" :class="'myChart myChart_item_'+key">
+			<!-- <div class="chartInfo">{{item.name}}</div> -->
 			<Simple-gauge v-bind="item" :ref="item.id"></Simple-gauge>
-			<div class="chartInfo">{{item.time}}</div>
+			<!-- <div class="chartInfo">{{item.time}}</div> -->
 		</div>
 	</div>
 </template>
@@ -60,18 +60,86 @@ export default {
 					type: 1, //数据类型为温度的枚举值
 					time: "",
 					id: "temperatureGaugeChart",
+					gaugeData: [],
 					parameters: {
 						option: {
 							title: {
-								subtext: ""
+								subtext: "",
+								subtextStyle:{
+									fontWeight:'bolder',
+								},
 							},
-							series: [
+							series : [
 								{
-									data: [{ value: 0, name: "最高温度" }],
-									detail: {
-										offsetCenter: [0, "25%"],
-										fontSize: window.innerHeight * 0.015
-									}
+									type:'gauge',
+									min:0,
+									max:220,
+									splitNumber:5,
+									radius: '90%',
+									axisLine: {            // 坐标轴线
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+											width: 1,
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: {            // 坐标轴小标记
+										textStyle: {       // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: {            // 坐标轴小标记
+										length :10,        // 属性length控制线长
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: {           // 分隔线
+										length :15,         // 属性length控制线长
+										lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+											width:2,
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: {           // 分隔线
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										width:5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 20,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail : {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'],       // x, y，单位px
+										textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding:2
+										// formatter:"{value}%"
+									},
+									
+									// data:[{ value: 0, name: "最高温度" }]
 								}
 							]
 						}
@@ -81,19 +149,87 @@ export default {
 					name: "最高甲烷",
 					type: 5, //数据类型为甲烷的枚举值
 					time: "",
+					gaugeData: [],
 					id: "methaneGaugeChart",
 					parameters: {
 						option: {
 							title: {
-								subtext: ""
+								subtext: "",
+								subtextStyle:{
+									fontWeight:'bolder',
+								},
 							},
-							series: [
+							series : [
 								{
-									data: [{ value: 0, name: "最高甲烷" }],
-									detail: {
-										offsetCenter: [0, "25%"],
-										fontSize: window.innerHeight * 0.015
-									}
+									type:'gauge',
+									min:0,
+									max:220,
+									splitNumber:5,
+									radius: '90%',
+									axisLine: {            // 坐标轴线
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+											width: 1,
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: {            // 坐标轴小标记
+										textStyle: {       // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: {            // 坐标轴小标记
+										length :10,        // 属性length控制线长
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: {           // 分隔线
+										length :15,         // 属性length控制线长
+										lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+											width:2,
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: {           // 分隔线
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										width:5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 20,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail : {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'],       // x, y，单位px
+										textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding:2
+										// formatter:"{value}%"
+									},
+									
+									// data:[{ value: 0, name: "最高温度" }]
 								}
 							]
 						}
@@ -104,27 +240,274 @@ export default {
 					type: 3, //数据类型为氧气的枚举值
 					time: "",
 					id: "oxygenGaugeChart",
+					gaugeData: [],
 					parameters: {
 						option: {
 							title: {
-								subtext: ""
+								subtext: "",
+								subtextStyle:{
+									fontWeight:'bolder',
+								},
 							},
-							series: [
+							series : [
 								{
-									data: [{ value: 0, name: "最低含氧量" }],
-									detail: {
-										offsetCenter: [0, "25%"],
-										fontSize: window.innerHeight * 0.015
-									}
+									type:'gauge',
+									min:0,
+									max:220,
+									splitNumber:5,
+									radius: '90%',
+									axisLine: {            // 坐标轴线
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+											width: 1,
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: {            // 坐标轴小标记
+										textStyle: {       // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: {            // 坐标轴小标记
+										length :10,        // 属性length控制线长
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: {           // 分隔线
+										length :15,         // 属性length控制线长
+										lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+											width:2,
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: {           // 分隔线
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										width:5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 20,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail : {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'],       // x, y，单位px
+										textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding:2
+										// formatter:"{value}%"
+									},
+									
+									// data:[{ value: 0, name: "最高温度" }]
 								}
 							]
 						}
 					}
-				}
+				},{
+					name: "最高硫化氢",
+					type: 4, //数据类型为氧气的枚举值
+					time: "",
+					gaugeData: [],
+					id: "hybrothionGaugeChart",
+					parameters: {
+						option: {
+							title: {
+								subtext: "",
+								subtextStyle:{
+									fontWeight:'bolder',
+								},
+							},
+							series : [
+								{
+									type:'gauge',
+									min:0,
+									max:220,
+									splitNumber:5,
+									radius: '90%',
+									axisLine: {            // 坐标轴线
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+											width: 1,
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: {            // 坐标轴小标记
+										textStyle: {       // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: {            // 坐标轴小标记
+										length :10,        // 属性length控制线长
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: {           // 分隔线
+										length :15,         // 属性length控制线长
+										lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+											width:2,
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: {           // 分隔线
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										width:5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 20,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail : {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'],       // x, y，单位px
+										textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding:2
+										// formatter:"{value}%"
+									},
+									
+									// data:[{ value: 0, name: "最高温度" }]
+								}
+							]
+						}
+					}
+				},
+				{
+					name: "最高湿度",
+					type: 2, //数据类型为氧气的枚举值
+					time: "",
+					id: "humidityGaugeChart",
+					gaugeData: [],
+					parameters: {
+						option: {
+							title: {
+								subtext: "",
+								subtextStyle:{
+									fontWeight:'bolder',
+								},
+							},
+							series : [
+								{
+									type:'gauge',
+									min:0,
+									max:220,
+									splitNumber:5,
+									radius: '90%',
+									axisLine: {            // 坐标轴线
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+											width: 1,
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: {            // 坐标轴小标记
+										textStyle: {       // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: {            // 坐标轴小标记
+										length :10,        // 属性length控制线长
+										lineStyle: {       // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: {           // 分隔线
+										length :15,         // 属性length控制线长
+										lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+											width:2,
+											color: '#fff',
+											shadowColor : '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: {           // 分隔线
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										width:5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 15,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail : {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor : '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'],       // x, y，单位px
+										textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding:2
+										// formatter:"{value}%"
+									},
+									
+									// data:[{ value: 0, name: "最高温度" }]
+								}
+							]
+						}
+					}
+				},
 			],
 			dataInterval: null,
 			dataTimeout: {
-				todayExtreFlag: null,
+				todayExtreFlag: true,
 				triggerTimesFlag: null
 			}
 
@@ -190,25 +573,14 @@ export default {
 									b.parameters.option.series.min = min;
 									b.parameters.option.series.max = max;
 
-									// b.parameters.option.series.min=min>0?min:0;
-									// b.parameters.option.series.max=max;
-
-									// if(b.type==5){
-									//   b.parameters.option.series.max=1;
-									// }
-
-									b.parameters.option.series.data = [
-										{ value: a.value, name: a.name }
-									];
+									b.gaugeData = [{ value: a.value, name: a.name.substr(2) }]
+									
 									b.parameters.option.series[0].detail.formatter =
 										"{value}" + a.unit;
+									
 								}
 							});
 						});
-						// 刷新数据
-						_this.$refs.temperatureGaugeChart[0].refreshData();
-						_this.$refs.methaneGaugeChart[0].refreshData();
-						_this.$refs.oxygenGaugeChart[0].refreshData();
 					}
 				},
 				error => {
@@ -267,19 +639,39 @@ export default {
 .myChart {
 	margin-left: 0.1vw;
 	width: 32.8%;
-	height: 16vh;
-	float: left;
+	height: 13.5vh;
+	/* float: left; */
+	position: absolute
+}
+.myChart_item_0{
+	left: 7vmin;
+	top: 3.5vmin;
+}
+.myChart_item_1{
+	right: 7vmin;
+	top: 3.5vmin;
+}
+.myChart_item_2,
+.myChart_item_3,
+.myChart_item_4 {
+	top: 17.5vmin;
+}
+.myChart_item_3 {
+	left: 33%;
+}
+.myChart_item_4 {
+	right: 0
 }
 .chartInfo {
 	font-family: "Microsoft YaHei";
 	text-align: center;
-	font-size: 1.16vmin;
+	font-size: 1.2vmin;
 	color: #fff;
 	background-color: #2562e9;
 	margin-left: 0.2vw;
 	margin-right: 0.2vw;
 	border-radius: 25px;
-	box-shadow: 0.5vh 0.5vh 1vh #000000;
+	box-shadow: 0.5vh 0.5vh .5vh #000000;
 }
 .info {
 	margin: 0.1vmin 2.5% 1vmin 2.5%;

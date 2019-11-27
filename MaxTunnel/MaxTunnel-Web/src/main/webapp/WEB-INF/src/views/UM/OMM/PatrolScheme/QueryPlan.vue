@@ -184,7 +184,7 @@ export default {
         goToMoudle: function(path) {
             this.$router.push(path);
         },
-        //添加
+        //添加 
         goToMoudle1: function(){
             this.$router.push({
                 name: "添加巡检计划",
@@ -284,6 +284,7 @@ export default {
 }
 .details{
     padding-top: 1vmin;
+    padding-bottom: 1vmin;
 }
 .details-top{
     font-size: 2.2vmin;

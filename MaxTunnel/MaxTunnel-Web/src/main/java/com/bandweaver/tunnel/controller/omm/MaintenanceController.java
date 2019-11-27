@@ -490,18 +490,18 @@ public class MaintenanceController {
     public JSONObject getDefectsCountByYear() {
     	JSONObject obj = new JSONObject();
     	// 获取今年的缺陷总数
-    	int nowYearDefectCount = (int)(Math.random() * 50 + 100);
-//    	Date startTime = DateUtil.getBeginDayOfYear();
-//    	Date endTime = DateUtil.getEndDayOfYear();
-//    	DefectVo vo = new DefectVo();
-//    	vo.setStartTime(startTime);
-//    	vo.setEndTime(endTime);
-//    	int nowYearDefectCount = defectService.getCountByCondition(vo);
+//    	int nowYearDefectCount = (int)(Math.random() * 50 + 100);
+    	Date startTime = DateUtil.getBeginDayOfYear();
+    	Date endTime = DateUtil.getEndDayOfYear();
+    	DefectVo vo = new DefectVo();
+    	vo.setStartTime(startTime);
+    	vo.setEndTime(endTime);
+    	int nowYearDefectCount = defectService.getCountByCondition(vo);
     	// 获取去年的缺陷总数
-    	int beforeYearDefectCount = (int)(Math.random() * 50 + 100);
-//    	startTime.setYear(startTime.getYear() - 1);
-//    	endTime.setYear(endTime.getYear() - 1);
-//    	int beforeYearDefectCount = defectService.getCountByCondition(vo);
+//    	int beforeYearDefectCount = (int)(Math.random() * 50 + 100);
+    	startTime.setYear(startTime.getYear() - 1);
+    	endTime.setYear(endTime.getYear() - 1);
+    	int beforeYearDefectCount = defectService.getCountByCondition(vo);
     	
     	obj.put("nowYearDefectCount", nowYearDefectCount);
     	obj.put("beforeYearDefectCount", beforeYearDefectCount);
@@ -519,19 +519,19 @@ public class MaintenanceController {
     public JSONObject getOrdersCountByYear() {
     	JSONObject obj = new JSONObject();
     	// 获取今年的维修总数
-    	int nowYearOrderCount = (int)(Math.random() * 20 + 60);
-//    	Date startTime = DateUtil.getBeginDayOfYear();
-//    	Date endTime = DateUtil.getEndDayOfYear();
-//    	MaintenanceOrderVo vo = new MaintenanceOrderVo();
-//    	vo.setStartTime(startTime);
-//    	vo.setEndTime(endTime);
-//    	int nowYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
+//    	int nowYearOrderCount = (int)(Math.random() * 20 + 60);
+    	Date startTime = DateUtil.getBeginDayOfYear();
+    	Date endTime = DateUtil.getEndDayOfYear();
+    	MaintenanceOrderVo vo = new MaintenanceOrderVo();
+    	vo.setStartTime(startTime);
+    	vo.setEndTime(endTime);
+    	int nowYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	
     	// 获取去年的维修总数
-    	int beforeYearOrderCount = (int)(Math.random() * 20 + 60);
-//    	startTime.setYear(startTime.getYear() - 1);
-//    	endTime.setYear(endTime.getYear() - 1);
-//    	int beforeYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
+//    	int beforeYearOrderCount = (int)(Math.random() * 20 + 60);
+    	startTime.setYear(startTime.getYear() - 1);
+    	endTime.setYear(endTime.getYear() - 1);
+    	int beforeYearOrderCount = maintenanceOrderService.getCountByCondition(vo);
     	obj.put("nowYearOrderCount", nowYearOrderCount);
     	obj.put("beforeYearOrderCount", beforeYearOrderCount);
     	
@@ -612,20 +612,20 @@ public class MaintenanceController {
 			
 			for(JSONObject order : orderList) {
 				// 添加假数据
-				if(order.equals(orderList.get(0)))
-					order.put("val", (int)(Math.random() * 6 + 16));
-				else
-					order.put("val", (int)(Math.random() * 3 + 4));
+//				if(order.equals(orderList.get(0)))
+//					order.put("val", (int)(Math.random() * 6 + 16));
+//				else
+//					order.put("val", (int)(Math.random() * 3 + 4));
 				// 真实数据
-//				vo.setIsFinished(false);
-//				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
-//				int count = 0;
-//				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
-//				for(MaintenanceOrderDto dto : dtoList) {
-//					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
-//					if(defectDto.getObjectId() != null) count++;
-//				}
-//				order.put("val", count);
+				vo.setIsFinished(false);
+				if(order.equals(orderList.get(0))) vo.setIsFinished(true);
+				int count = 0;
+				List<MaintenanceOrderDto> dtoList = maintenanceOrderService.getMaintenanceOrderDtosByCondition(vo);
+				for(MaintenanceOrderDto dto : dtoList) {
+					DefectDto defectDto = defectService.getDefectDto(dto.getDefectId());
+					if(defectDto.getObjectId() != null) count++;
+				}
+				order.put("val", count);
 				
 			}
 			obj.put("val", orderList);

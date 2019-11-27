@@ -87,4 +87,10 @@ public interface MeasObjMapper {
 	void updateVideoIdsByKeyId(@Param("id") int id,@Param("videoIds") String videoIds);
 	
 	List<Integer> getIdList(String id);
+
+	/**
+	 * 根据管廊ID，区域ID，管仓ID，更新是否使用
+	 * @param vo
+	 */
+	void updateMeasobjsActived(@Param("tunnelId") Integer tunnelId, @Param("areaId") Integer areaId, @Param("storeId") Integer storeId,@Param("actived") boolean actived);
 }

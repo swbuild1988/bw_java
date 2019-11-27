@@ -101,7 +101,7 @@ import { asyncRouterMap } from '../../../router'
                             if(params.row.roleName === 'admin'){
                                 return h('div','具有所有权限')
                             } else {
-                                return h('div',params.row.routList)
+                                return h('div',params.row.routList.slice(0,40) + '......')
                             }
                         }
                     },

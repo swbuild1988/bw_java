@@ -53,7 +53,6 @@ public class AlarmTask extends BaseTask implements Runnable {
     }
 
 
-
     public void export(int lastWeekOrMonth, int type, int ofType) {
 
         Date startTime = getStartTime(type, lastWeekOrMonth);
@@ -63,7 +62,7 @@ public class AlarmTask extends BaseTask implements Runnable {
 
         List<Item> data = new ArrayList<>();
         //set title date
-        data.addAll(getTitleYear(startTime,endTime, 0, 10));//把标题日期加入data数组中
+        data.addAll(getTitleYear(startTime, endTime, 0, 10));//把标题日期加入data数组中
 
         ConcurrentHashMap<String, Integer> tunnelMap = new ConcurrentHashMap<>();
         tunnelMap.put("古城大街", 3);//key为管廊名称，value为所在的行数
@@ -91,13 +90,11 @@ public class AlarmTask extends BaseTask implements Runnable {
                     item = getValue(levelMap.get(key2), tunnelMap.get(key), t.getId().intValue(), key2.intValue(), list);
                     data.add(item);
                 }
-                ;
             }
-            ;
         }
 
         LogUtil.info(Thread.currentThread().getName() + ": data.size = " + data.size());
-        doExport(data, getTemplateFilePath(fileDirPath,ofType), type, OfTypeEnum.getEnum(ofType), lastWeekOrMonth);
+        doExport(data, getTemplateFilePath(fileDirPath, ofType), type, OfTypeEnum.getEnum(ofType), lastWeekOrMonth);
 
     }
 

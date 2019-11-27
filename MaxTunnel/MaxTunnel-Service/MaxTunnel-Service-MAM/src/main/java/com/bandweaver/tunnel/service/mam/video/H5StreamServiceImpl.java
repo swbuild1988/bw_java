@@ -160,7 +160,7 @@ public class H5StreamServiceImpl implements OnvifService {
         String url = "/api/v1/Ptz";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("token", "onvif_" + videoDto.getId());
+        querys.put("token", videoDto.getId().toString());
         querys.put("speed", "0.3");
         querys.put("action", action);
         querys.put("session", videoServer.getSession());
@@ -208,7 +208,7 @@ public class H5StreamServiceImpl implements OnvifService {
         String url = "/api/v1/GetPresets";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("token", "onvif_" + videoDto.getId());
+        querys.put("token", videoDto.getId().toString());
         querys.put("session", videoServer.getSession());
 
         try {
@@ -250,7 +250,7 @@ public class H5StreamServiceImpl implements OnvifService {
         String url = "/api/v1/SetPreset";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("token", "onvif_" + videoDto.getId());
+        querys.put("token", videoDto.getId().toString());
         querys.put("presetname", presetName);
         querys.put("presettoken", presetName);
         querys.put("session", videoServer.getSession());
@@ -291,7 +291,7 @@ public class H5StreamServiceImpl implements OnvifService {
         String url = "/api/v1/DelPreset";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("token", "onvif_" + videoDto.getId());
+        querys.put("token", videoDto.getId().toString());
         querys.put("presettoken", presetToken);
         querys.put("session", videoServer.getSession());
 
@@ -367,7 +367,7 @@ public class H5StreamServiceImpl implements OnvifService {
         String url = "/api/v1/Ptz";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("token", "onvif_" + videoDto.getId());
+        querys.put("token", videoDto.getId().toString());
         querys.put("speed", "1");
         querys.put("action", "preset");
         querys.put("session", videoServer.getSession());
@@ -384,9 +384,10 @@ public class H5StreamServiceImpl implements OnvifService {
 
 	@Override
 	public boolean addSrc(String user, String password, String ip, String id, String url) throws Exception {
-		boolean addSrcRTSP = addSrcRTSP(user,password,ip,id,url);
+		//boolean addSrcRTSP = addSrcRTSP(user,password,ip,id,url);
 		boolean addSrcONVIF = addSrcONVIF(user,password,ip,id,url);
-		return addSrcRTSP&&addSrcONVIF ? true : false;
+		//return addSrcRTSP && addSrcONVIF ? true : false;
+		return addSrcONVIF;
 	}
 	
 	@Override
@@ -414,13 +415,14 @@ public class H5StreamServiceImpl implements OnvifService {
         Map<String, String> querys = new HashMap<>();
         querys.put("token",id);
         querys.put("session", videoServer.getSession());
-        Map<String, String> querys2 = new HashMap<>();
-        querys2.put("token","onvif_" +id);
-        querys2.put("session", videoServer.getSession());
+//        Map<String, String> querys2 = new HashMap<>();
+//        querys2.put("token", id);
+//        querys2.put("session", videoServer.getSession());
         
-        boolean delSrcRTSP = httpGet(server, _url, headers, querys);
-        boolean delSrcONVIF = httpGet(server, _url, headers, querys2);
-        return delSrcRTSP&&delSrcONVIF ? true : false ;
+        //boolean delSrcRTSP = httpGet(server, _url, headers, querys);
+        boolean delSrcONVIF = httpGet(server, _url, headers, querys);
+        //return delSrcRTSP&&delSrcONVIF ? true : false ;
+        return delSrcONVIF;
 	}
 
 	public boolean httpGet(String server, String _url, Map<String, String> headers, Map<String, String> querys) throws Exception {
@@ -443,8 +445,8 @@ public class H5StreamServiceImpl implements OnvifService {
         String _url = "/api/v1/AddSrcONVIF";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
-        querys.put("name", "onvif_" + id);
-        querys.put("token","onvif_" +id);
+        querys.put("name", id);
+        querys.put("token", id);
         querys.put("user", user);
         querys.put("password", password);
         querys.put("ip", ip);
@@ -550,28 +552,16 @@ public class H5StreamServiceImpl implements OnvifService {
 		}
 		
 		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
-        String _url = "/api/v1/GetSrc";
+		String delUrl = "/api/v1/DelSrc";
         Map<String, String> headers = new HashMap<>();
         Map<String, String> querys = new HashMap<>();
         querys.put("session", videoServer.getSession());
-        
-        List<String> tokenList = new ArrayList<>();
+		List<String> tokenList = new ArrayList<>();
     	try {
-			HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
-			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-				String resp = EntityUtils.toString(response.getEntity(), "utf-8");
-				JSONObject respJson = (JSONObject) JSONObject.parse(resp);
-				List<H5Src> srcList = JSONObject.parseArray(respJson.getString("src"), H5Src.class);
-				srcList.forEach(src -> tokenList.add(src.getStrToken()));
-			}
-		} catch (Exception e) {
-			throw new BandWeaverException("调用API获取视频源列表失败");
-		}
-        
-    	
-    	try {
+    		List<H5Src> srcList = getSrc();
+    		if(srcList == null) return;
+    		srcList.forEach(src -> tokenList.add(src.getStrToken()));
 			for (String token : tokenList) {
-				String delUrl = "/api/v1/DelSrc";
 				querys.put("token",token);
 				boolean delResult = httpGet(server, delUrl, headers, querys);
 				LogUtil.info("视频源token: " + token + " 删除结果：" + delResult );
@@ -579,6 +569,39 @@ public class H5StreamServiceImpl implements OnvifService {
 		} catch (Exception e) {
 			throw new BandWeaverException("调用API删除视频源失败");
 		}
+	}
+
+	@Override
+	public List<H5Src> getSrc() throws Exception {
+		//Get videoServer
+		List<VideoDto> videoDtos = videoModuleCenter.getVideoDtos();
+		VideoServerDto videoServer = new VideoServerDto() ;
+		for (VideoDto videoDto : videoDtos) {
+			VideoServerDto videoServerDto = videoDto.getVideoServerDto();
+			if(!StringTools.isNullOrEmpty(videoServerDto)) {
+				videoServer = videoServerDto;
+				break;
+			}
+		}
+		
+		String server = "http://" + videoServer.getIp() + ":" + videoServer.getPort();
+        String _url = "/api/v1/GetSrc";
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> querys = new HashMap<>();
+        querys.put("session", videoServer.getSession());
+        
+    	try {
+			HttpResponse response = HttpUtil.doGet(server, _url, "GET", headers, querys);
+			if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+				String resp = EntityUtils.toString(response.getEntity(), "utf-8");
+				JSONObject respJson = (JSONObject) JSONObject.parse(resp);
+				List<H5Src> srcList = JSONObject.parseArray(respJson.getString("src"), H5Src.class);
+				return srcList;
+			}
+		} catch (Exception e) {
+			throw new BandWeaverException("调用API获取视频源列表失败");
+		}
+		return null;
 	}
 
 	

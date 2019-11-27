@@ -34,7 +34,7 @@ public class MeasValueSOController {
 	 * @author shaosen
 	 * @Date 2018年10月22日
 	 */
-	@RequestMapping(value="measvalue-so/batch",method=RequestMethod.POST)
+	@RequestMapping(value="structure-obj",method=RequestMethod.POST)
 	public JSONObject addMeasValueSOBatch(@RequestBody List<MeasValueSO> list) {
 		String ip = ContextUtil.getRemoteIp();
     	LogUtil.info("来自:" + ip + ",接收到MaxView发送的SO数据共：" + list.size() + "条" );

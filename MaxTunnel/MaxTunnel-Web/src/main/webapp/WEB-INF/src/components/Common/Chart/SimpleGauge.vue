@@ -1,5 +1,5 @@
 <template>
-    <div :id="id" class="simpleGauge"></div>
+    <div :id="id" class="simpleGauge" ref="gaugeChart"></div>
 </template>
 
 <script>
@@ -11,6 +11,10 @@ export default {
         },
         parameters: {
             type: Object
+        },
+        gaugeData: {
+            type: Array,
+            required: true
         }
     },
     data() {
@@ -27,6 +31,15 @@ export default {
     mounted() {
         this.init();
         this.resizeChart();
+    },
+    watch:{
+        gaugeData: {
+            handler(newValue, oldValue) {
+                if (newValue.length && newValue.length > 0) this.updateSimpGauge(newValue);
+            },
+            deep: true,
+            immediate: true
+        }
     },
     methods: {
         init() {
@@ -54,8 +67,8 @@ export default {
                         color: "#fff",
                         fontSize: window.innerHeight * 0.013
                     },
-                    bottom: "0",
-                    left: "center"
+                    bottom: "-8",
+                    left: "center",
                 },
                 backgroundColor: null,
                 series: [
@@ -65,19 +78,24 @@ export default {
                         min: 0,
                         max: 100,
                         splitNumber: 5,
-                        radius: "90 %",
-                        title: {
-                            show: false,
-                            textStyle: {
-                                color: "#fff",
-                                fontSize: window.innerHeight * 0.016
-                            }
+                        radius: "90%",
+                        title : {
+                            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder',
+                                fontSize: this.getFontSize('10%'),
+                                color: '#FFFF09',
+                                shadowColor : '#fff', //默认透明
+                                shadowBlur: 3
+                            },
+                            
+                            offsetCenter:[0,'6%']
                         },
                         axisLine: {
                             // 坐标轴线
                             lineStyle: {
                                 // 属性lineStyle控制线条样式
-                                width: 8,
+                                // width: 8,
+                                width: window.innerHeight * 0.007,
                                 shadowBlur: 0,
                                 color: [
                                     [0.2, "#0066FF"],
@@ -94,10 +112,16 @@ export default {
                             }
                         },
                         axisLabel: {
-                            distance: 0
+                            // distance: 0,
+                            fontSize: window.innerHeight * 0.012,
+                            formatter: function(value, index) {
+                                value = parseFloat(value.toFixed(1));
+                                return value;
+                            }
                         },
                         splitLine: {
                             // 分隔线
+                            length: window.innerWidth * 0.0065,
                             lineStyle: {
                                 // 属性lineStyle控制线条样式
                                 color: "auto"
@@ -105,7 +129,7 @@ export default {
                         },
                         detail: {
                             offsetCenter: [0, "25%"],
-                            fontSize: window.innerHeight * 0.015
+                            fontSize: this.getFontSize('10%')
                         },
                         //指针
                         // pointer: {
@@ -117,69 +141,47 @@ export default {
                                 shadowBlur: 6
                             }
                         },
-                        data: [
-                            {
-                                value: 0,
-                                name: ""
-                            }
-                        ]
+                        // data: _this.gaugeData
+                        data: [{ value: 12, name: "最高温度" }]
                     }
                 ]
-            };
-            _this.defaultOption = {
-                axisTick: {
-                    length: window.innerWidth * 0.5
-                },
-                series: {
-                    axisLine: {
-                        lineStyle: {
-                            // 属性lineStyle控制线条样式
-                            width: window.innerHeight * 0.007
-                        }
-                    },
-                    axisTick: {
-                        // 坐标轴小标记
-                        length: window.innerWidth * 0.006 // 属性length控制线长
-                    },
-                    axisLabel: {
-                        fontSize: window.innerHeight * 0.012,
-                        formatter: function(value, index) {
-                            value = parseFloat(value.toFixed(1));
-                            return value;
-                        }
-                    },
-                    splitLine: {
-                        length: window.innerWidth * 0.0065
-                    }
-                }
             };
             _this.myChart = _this.$echarts.init(
                 document.getElementById(_this.id)
             );
             // 加载默认参数
             _this.myChart.setOption(_this.option);
-            // 加载基础配置
-            _this.myChart.setOption(_this.defaultOption);
+
             // 加载新的参数
-            if (_this.parameters.option) {
-                _this.myChart.setOption(_this.parameters.option);
-            }
+            // if (_this.parameters.option) {
+            //     _this.myChart.setOption(_this.parameters.option);
+            // }
+            this.updateSimpGauge(this.gaugeData);
         },
-        //定时刷新数据
-        refreshData() {
-            let _this = this;
-            // 数据以参数的形式传递过来时，用此刷新方法
-            if (_this.parameters.option) {
-                _this.myChart.setOption(_this.parameters.option);
-                let tempOption = _this.parameters.option;
-                _this.myChart.setOption({
+        updateSimpGauge(newValue){
+            if (newValue) {
+                this.myChart.setOption(this.parameters.option);
+                this.myChart.setOption({
                     series: {
-                        data: tempOption.series.data,
-                        min: tempOption.series.min,
-                        max: tempOption.series.max
+                        data: newValue,
+                        min: this.parameters.option.series.min,
+                        max: this.parameters.option.series.max
                     }
                 });
             }
+        },
+         getFontSize(val) {
+            if (typeof val == "number") return val;
+
+            if (typeof val == "string") {
+                if (val.indexOf("%") > 0) {
+                    var tmp = parseFloat(val.replace("%", "")) / 100;
+                    let height = this.$refs.gaugeChart.offsetHeight;
+                    return Math.round(height * tmp);
+                }
+            }
+
+            return 0;
         }
     }
 };

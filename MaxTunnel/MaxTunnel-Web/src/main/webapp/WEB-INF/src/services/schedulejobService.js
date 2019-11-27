@@ -73,6 +73,19 @@ var SchedulejobService = {
                 }
             })
         })
+    },
+    // 启用关闭
+    switchJobStatus(params){
+        return new Promise((resolve, reject) => {
+            get('/schedulejobs/'+ params.jobId +'/jobstatus/'+params.status).then(res => {
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve( data )
+                }else{
+                    reject( msg )
+                }
+            })
+        })
     }
 }
 

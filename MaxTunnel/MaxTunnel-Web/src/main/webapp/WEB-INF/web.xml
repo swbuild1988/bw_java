@@ -130,8 +130,8 @@
         <location>/index.html</location>
     </error-page>
 
-    <!-- session超时时间为24小时 -->
+    <!-- session超时时间为24小时,-1为永不过期，单位：分钟 -->
     <session-config>
-        <session-timeout>1440</session-timeout>
+        <session-timeout>-1</session-timeout>
     </session-config>
 </web-app>

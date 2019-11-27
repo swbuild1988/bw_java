@@ -167,6 +167,7 @@
             a.*,
             b.name        AS plan_name,
             b.tunnel_id,
+            e.name        AS tunnel_name,
             c.name        AS inspect_man_name,
             d.id          AS record_id,
             d.task_id,
@@ -184,6 +185,7 @@
             LEFT JOIN t_security_user c ON a.inspect_man_id = c.id
             LEFT JOIN t_omm_inspection_record d ON a.id = d.task_id
             LEFT JOIN t_omm_inspection_step s on a.id = s.task_id
+            LEFT JOIN t_common_tunnel e on b.tunnel_id = e.id
         WHERE a.id = #{id}
     </select>
 
@@ -226,6 +228,7 @@
         <result column="plan_id" property="planId"/>
         <result column="plan_name" property="planName"/>
         <result column="tunnel_id" property="tunnelId"/>
+        <result column="tunnel_name" property="tunnelName"/>
         <result column="task_name" property="taskTime"/>
         <result column="inspect_time" property="inspectTime"/>
         <result column="inspect_man_id" property="inspectManId"/>
@@ -238,18 +241,20 @@
         <result column="process_type" property="processType"/>
         <result column="process_status" property="processStatus"/>
         <result column="is_finished" property="isFinished"/>
-        <collection property="records" ofType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto">
-            <id column="record_id" property="id"/>
-            <result column="record_create_time" property="createTime"/>
-            <result column="record_time" property="recordTime"/>
-            <result column="task_id" property="taskId"/>
-            <result column="record_content" property="content"/>
-            <result column="defect_id" property="defectId"/>
-            <result column="section_id" property="sectionId"/>
-            <association property="defect" javaType="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto"
-                         column="defect_id"
-                         select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>
-        </collection>
+        <!--<collection property="records" ofType="com.bandweaver.tunnel.common.biz.dto.omm.InspectionRecordDto">-->
+            <!--<id column="record_id" property="id"/>-->
+            <!--<result column="record_create_time" property="createTime"/>-->
+            <!--<result column="record_time" property="recordTime"/>-->
+            <!--<result column="task_id" property="taskId"/>-->
+            <!--<result column="record_content" property="content"/>-->
+            <!--<result column="defect_id" property="defectId"/>-->
+            <!--<result column="section_id" property="sectionId"/>-->
+            <!--<association property="defect" javaType="com.bandweaver.tunnel.common.biz.dto.omm.DefectDto"-->
+                         <!--column="defect_id"-->
+                         <!--select="com.bandweaver.tunnel.dao.omm.DefectMapper.getDefectDto"/>-->
+        <!--</collection>-->
+        <collection property="records" select="com.bandweaver.tunnel.dao.omm.InspectionRecordMapper.getRecordDtos"
+                    column="id" />
         <collection property="steps" ofType="com.bandweaver.tunnel.common.biz.pojo.omm.InspectionStep">
             <id column="step_id" property="id"/>
             <result column="step_name" property="name"/>

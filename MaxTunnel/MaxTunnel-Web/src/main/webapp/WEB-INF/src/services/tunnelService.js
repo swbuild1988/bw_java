@@ -52,7 +52,7 @@ var TunnelService = {
     // 根据tunnelId获取该管廊内的管舱信息
     getStoresByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            if (isRealData) {
+            if (isRealData && tunnelId) {
                 get("tunnels/" + tunnelId + "/stores").then(res => {
                     let {
                         code,
@@ -134,7 +134,7 @@ var TunnelService = {
     // 根据tunnelId获取该管廊内的区域信息
     getAreasByTunnelId: function (tunnelId) {
         return new Promise((resolve, reject) => {
-            if (isRealData) {
+            if (isRealData && tunnelId) {
                 get("tunnels/" + tunnelId + "/areas").then(res => {
                     let {
                         code,
@@ -461,7 +461,7 @@ var TunnelService = {
         });
     },
     // 根据sectionID获取详情
-    getSectionById(id){
+    getSectionById(id) {
         return new Promise((resolve, reject) => {
             get("sections/" + id).then(res => {
                     let {
@@ -481,7 +481,7 @@ var TunnelService = {
         });
     },
     // 修改section信息
-    updateSection(params){
+    updateSection(params) {
         return new Promise((resolve, reject) => {
             put("sections/", params).then(res => {
                     let {
@@ -541,49 +541,28 @@ var TunnelService = {
     // VM中获得管线的总览信息
     getVmLineMessage() {
         // 地址 lines/message
-        let res = [{
-                name: "电力管线",
-                value: 15,
-                unit: "km",
-                percent: "72%"
-            },
-            {
-                name: "通信管线",
-                value: 13,
-                unit: "km",
-                percent: "67.5%"
-            },
-            {
-                name: "燃气管线",
-                value: 12,
-                unit: "km",
-                percent: "64%"
-            }
-        ];
+        // let res = [{
+        //         name: "电力管线",
+        //         value: 15,
+        //         unit: "km",
+        //         percent: "72%"
+        //     },
+        //     {
+        //         name: "通信管线",
+        //         value: 13,
+        //         unit: "km",
+        //         percent: "67.5%"
+        //     },
+        //     {
+        //         name: "燃气管线",
+        //         value: 12,
+        //         unit: "km",
+        //         percent: "64%"
+        //     }
+        // ];
         return new Promise((resolve, reject) => {
-            //     get("lines/message")
-            //     .then(res => {
-            //         let {
-            //             code,
-            //             data,
-            //             msg
-            //         } = res.data;
-            //         if (code == 200) {
-            //             resolve(data);
-            //         } else {
-            //             reject(msg + ",地址:lines/message");
-            //         }
-            //     })
-            //     .catch(error => {
-            //         reject(error.response.status + "  " + error.response.data);
-            //     });
-            resolve(res);
-        });
-    },
-    // VM中或的管廊运行时间数据
-    getVmRunMessage() {
-        return new Promise((resolve, reject) => {
-            get("tunnels/run-message").then(res => {
+            get("cables/message")
+                .then(res => {
                     let {
                         code,
                         data,
@@ -592,12 +571,32 @@ var TunnelService = {
                     if (code == 200) {
                         resolve(data);
                     } else {
-                        reject(msg + ",地址:run/message");
+                        reject(msg + ",地址:lines/message");
                     }
                 })
-                // .catch(error => {
-                //     reject(error.response.status + "  " + error.response.data);
-                // });
+                .catch(error => {
+                    reject(error.response.status + "  " + error.response.data);
+                });
+        });
+    },
+    // VM中或的管廊运行时间数据
+    getVmRunMessage() {
+        return new Promise((resolve, reject) => {
+            get("tunnels/run-message").then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data;
+                if (code == 200) {
+                    resolve(data);
+                } else {
+                    reject(msg + ",地址:run/message");
+                }
+            })
+            // .catch(error => {
+            //     reject(error.response.status + "  " + error.response.data);
+            // });
         });
     },
     //根据areaId和storeId获取section
@@ -628,20 +627,24 @@ var TunnelService = {
                 } = res.data
                 if (code == 200) {
                     resolve(data)
-                }else{
-                    reject(msg+"地址：areas/"+id)
+                } else {
+                    reject(msg + "地址：areas/" + id)
                 }
             })
         })
     },
-    getStoreInfo(id){
+    getStoreInfo(id) {
         return new Promise((resolve, rejresolve, reject) => {
-            get('tunnels/stores/'+id).then(res=>{
-                let{ code, data, msg } = res.data
-                if( code == 200 ){
+            get('tunnels/stores/' + id).then(res => {
+                let {
+                    code,
+                    data,
+                    msg
+                } = res.data
+                if (code == 200) {
                     resolve(data)
-                }else{
-                    reject(msg+"地址：tunnels/stores/"+id)
+                } else {
+                    reject(msg + "地址：tunnels/stores/" + id)
                 }
             })
         })
@@ -692,6 +695,45 @@ var TunnelService = {
                 })
         })
     },
+    // 获取配置文件管廊内灯光距离
+    getTunnelLightDistance() {
+        return new Promise((resolve, reject) => {
+            get('config/xml/light-distance').then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + "config/xml/light-distance")
+                    }
+                })
+                .catch(() => {
+                    reject(error.response.status + "  " + error.response.data);
+                })
+        })
+    },
+    updateTunnelLightDistance(params) {
+        return new Promise((resolve, reject) => {
+            post('config/xml/light-distance', params).then(res => {
+                    let {
+                        code,
+                        data,
+                        msg
+                    } = res.data
+                    if (code == 200) {
+                        resolve(data)
+                    } else {
+                        reject(msg + "config/xml/light-distance")
+                    }
+                })
+                .catch(() => {
+                    reject(error.response.status + "  " + error.response.data);
+                })
+        })
+    }
 };
 export {
     TunnelService

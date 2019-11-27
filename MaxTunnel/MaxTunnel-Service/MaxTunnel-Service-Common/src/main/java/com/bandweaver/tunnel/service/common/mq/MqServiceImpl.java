@@ -5,6 +5,7 @@ import com.bandweaver.tunnel.common.biz.pojo.common.User;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import com.rabbitmq.client.Channel;
 import org.activiti.engine.repository.ModelQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -110,22 +111,15 @@ public class MqServiceImpl implements MqService {
         LogUtil.info("删除队列queueName:" + queueName);
         Channel channel = mqModuleCenter.getChannel();
         try {
-            channel.queueDelete(queueName);
+            if(StringUtils.isNotBlank(queueName)){
+                channel.queueDelete(queueName);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void deleteAllQueue() {
-        LogUtil.info("删除所有的队列");
-        Channel channel = mqModuleCenter.getChannel();
-        try {
-            channel.queueDelete("aaa");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }
 

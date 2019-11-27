@@ -271,6 +271,18 @@ var PlanService = {
                 }
             })
         })
+    },
+    objBindPlan(params){
+        return new Promise((resolve, reject) => {
+            post('measobjs/conf/plans',params).then(res=>{
+                let{ code, data, msg } = res.data
+                if( code == 200 ){
+                    resolve(data)
+                }else{
+                    reject(msg+"地址：measobjs/conf/plans")
+                }
+            })
+        })
     }
 }
 

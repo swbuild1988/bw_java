@@ -144,8 +144,8 @@ public class PDFUtil{
     }
 
     public static void main(String[] args) {
-        String inFilePath = "D:\\MaxTunnel文件\\报表\\template01.xls";
-        String outFilePath = "D:\\MaxTunnel文件\\报表\\template0120190228.pdf";
+        String inFilePath = "E:\\MaxTunnel\\MaxTunnel文件\\巡检任务报表\\巡检任务142.xls";
+        String outFilePath = "E:\\MaxTunnel\\MaxTunnel文件\\巡检任务报表\\巡检任务142.pdf";
         excel2Pdf(inFilePath,outFilePath);
 
     }

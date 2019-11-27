@@ -15,6 +15,8 @@ public interface MaintenanceOrderService {
 
     MaintenanceOrderDto getOrder(Integer id);
 
+    MaintenanceOrderDto getOrderByDefectId(Integer defectId);
+
     MaintenanceOrder getOrderByInstance(String instanceId);
 
     List<MaintenanceOrderDto> getMaintenanceOrderDtosByTunnel(Integer tunnelId);

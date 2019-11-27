@@ -21,6 +21,7 @@
 <script>
 import { TunnelService } from '@/services/tunnelService'
 import { EnumsService } from "@/services/enumsService";
+import { PlanService } from "@/services/planService";
 export default {
     data(){
         return {
@@ -109,13 +110,10 @@ export default {
                         objtypeId: this.objPlanForm.objType,
                         planIds: this.objPlanForm.plandIds 
                     }
-                    this.axios.post("measobjs/conf/plans",params).then(res=>{
-                        let{ code, data } = res.data
-                        if( code == 200 ){
-                            this.$Message.success("提交成功！")
-                            this.objPlanForm.objType = null
-                            this.relaPrePlan = null 
-                        }
+                    PlanService.objBindPlan(params).then(res=>{
+                        this.$Message.success("提交成功！")
+                        this.objPlanForm.objType = null
+                        this.relaPrePlan = null 
                     })
                 }else{
                     this.$Message.error("提交失败！")

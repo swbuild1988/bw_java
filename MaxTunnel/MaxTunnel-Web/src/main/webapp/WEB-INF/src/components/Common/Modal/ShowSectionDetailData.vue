@@ -7,7 +7,13 @@
                         <td>
                             <img class="titleImg" :src="item.img">
                         </td>
-                        <td>{{item.description ? item.name + item.description: item.name}}</td>
+                        <td>
+                            <Tooltip :content="item.description ? item.name + item.description: item.name" 
+                            placement="bottom" 
+                            :disabled="(item.name.length + item.description.length) < 13">
+                                <span>{{item.description ? item.name + item.description: item.name}}</span>
+                            </Tooltip>
+                        </td>
                         <td>{{item.cv}}</td>
                         <td>{{item.unit}}</td>
                     </tr>
@@ -161,7 +167,7 @@ export default {
 
 <style>
 .section-details-content {
-    padding: 5vmin 2vmin 2vmin 3vmin;
+    padding: 2vmin 2vmin 2vmin 3vmin;
     position: absolute;
     z-index: 900;
     font-size: 1.3vmin;
@@ -199,8 +205,18 @@ export default {
     width: 0%;
 }
 .panel td:nth-of-type(2) {
-    width: 43%;
+    width: 50%;
 }
+.panel td:nth-of-type(2) span{
+    display: inline-block;
+    width: 14vmin;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    transition: width 0.2s ease 0.2s;
+}
+
 .panel td:nth-of-type(4) {
     width: 26%;
 }
@@ -220,5 +236,7 @@ export default {
 .titleImg {
     width: 1.5vmin;
     height: 1.5vmin;
+    display: inline-block;
+    vertical-align: middle;
 }
 </style>

@@ -20,6 +20,7 @@ import "./scripts/DateFormat";
 import vueXlsxTable from "vue-xlsx-table";
 import VMConfig from "../static/VM/js/VMGlobalConfig";
 import serverconfig from "../static/serverconfig";
+import "./utils/Audio";
 
 Vue.prototype.$echarts = echarts;
 Vue.use(VMConfig);

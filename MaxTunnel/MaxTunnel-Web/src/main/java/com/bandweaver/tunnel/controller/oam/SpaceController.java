@@ -2,15 +2,20 @@ package com.bandweaver.tunnel.controller.oam;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.bandweaver.tunnel.common.biz.constant.TunnelStatus;
+import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
+import com.bandweaver.tunnel.common.biz.itf.oam.CableTypeService;
+import com.bandweaver.tunnel.common.biz.pojo.Tunnel;
+import com.bandweaver.tunnel.common.biz.pojo.oam.CableType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.activiti.engine.impl.interceptor.CommandContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
@@ -61,6 +66,8 @@ public class SpaceController {
     private TunnelService tunnelService;
     @Autowired
     private StoreTypeService storeTypeService;
+    @Autowired
+    private CableTypeService cableTypeService;
 
 
     /**
@@ -233,62 +240,107 @@ public class SpaceController {
     /**
      * 管线基本信息
      *
-     * @param
-     * @return JSONObject
-     * @author shaosen
-     * @date 2019年1月10日
      */
-    @RequestMapping(value = "lines/message", method = RequestMethod.GET)
+    @RequestMapping(value = "cables/message", method = RequestMethod.GET)
     public JSONObject getLinesMessage() {
 
-        List<JSONObject> returnData = new ArrayList<>();
+        List<CableType> cableTypes = cableTypeService.getAllTypes();
+        List<SectionDto> sections = sectionService.getAllSections();
+        List<TunnelDto> tunnels = tunnelService.getDtoList();
         List<Store> sList = storeService.getList();
         List<StoreType> stList = storeTypeService.getList();
+        List<JSONObject> returnData = new ArrayList<>();
 
-        for (StoreType storeType : stList) {
+
+        // 先初始化每个管仓类型下可放的管线种类
+        HashMap<Integer, List<JSONObject>> storeType_cableMessage = new HashMap<Integer, List<JSONObject>>();
+        for (CableType cableType : cableTypes) {
             JSONObject json = new JSONObject();
-            json.put("name", storeType.getName() + "管线");
+            json.put("id", cableType.getId());
+            json.put("used", 0.0);          // 该类型管线已建长度
+            json.put("total", 0.0);         // 该类型管线的总长度
+            for (int storeTypeId : cableType.getInStoreTypeIds()) {
+                if (!storeType_cableMessage.containsKey(storeTypeId)) {
+                    storeType_cableMessage.put(storeTypeId, new ArrayList<>());
+                }
+                storeType_cableMessage.get(storeTypeId).add(json);
+            }
+        }
 
-            List<Section> sectionList = new ArrayList<>();
+        // 遍历所有的section，将其对应的长度以及是否建设，家到对应的管线类型下
+        for (SectionDto sectionDto : sections) {
+            List<Store> tmp_stores = sList.stream().filter(a-> a.getId().intValue() == sectionDto.getStoreId().intValue()).collect(Collectors.toList());
+            if (tmp_stores.size() < 1) continue;
+            List<TunnelDto> tmp_tunnels = tunnels.stream().filter(a-> a.getId().intValue() == sectionDto.getTunnelId().intValue()).collect(Collectors.toList());
+            if (tmp_tunnels.size() < 1) continue;
 
-            List<CableDto> cableList = new ArrayList<>();
-            List<Store> tmpStoreList = sList.stream().filter(s -> s.getStoreTypeId().intValue() == storeType.getId().intValue()).collect(Collectors.toList());
-            if (tmpStoreList != null && tmpStoreList.size() > 0) {
-                List<Integer> storeIdList = tmpStoreList.stream().map(s -> s.getId()).collect(Collectors.toList());
-                if (storeIdList != null && storeIdList.size() > 0) {
-                    sectionList = sectionService.getSectionsByStoreIds(storeIdList);
-                    if (sectionList.size() > 0) {
-                        List<Integer> sectionIdList = sectionList.stream().map(x -> x.getId()).collect(Collectors.toList());
-                        if (sectionIdList.size() > 0) {
-                            List<String> cids = cableSectionService.getSetBysectionIds(sectionIdList);
-                            if (cids.size() > 0) {
-                                cableList = cableService.getListByIds(cids);
-                            }
-                        }
+            Store tmp_store = tmp_stores.get(0);
+            TunnelDto tmp_tunnel = tmp_tunnels.get(0);
+            // 如果该section所在的管仓类型中可部署某管线
+            if (storeType_cableMessage.containsKey(tmp_store.getStoreTypeId().intValue())) {
+                List<JSONObject> tmp_jsons = storeType_cableMessage.get(tmp_store.getStoreTypeId().intValue());
+                for (JSONObject object : tmp_jsons) {
+                    object.put("total", object.getDoubleValue("total")+ sectionDto.getLength().doubleValue());
+                    if (tmp_tunnel.getStatus().intValue() == TunnelStatus.RUNNING.getValue())
+                        object.put("used", object.getDoubleValue("used")+ sectionDto.getLength().doubleValue());
+                }
+            }
+        }
+
+        // 将所有结果根据管线类型统计下
+        for (CableType cableType : cableTypes) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("name", cableType.getTypeName());
+            double used = 0.0;
+            double total = 0.0;
+            for (int storeTypeId : cableType.getInStoreTypeIds()) {
+                List<JSONObject> tmp_jsons = storeType_cableMessage.get(storeTypeId);
+                for (JSONObject tmp_json : tmp_jsons) {
+                    if (tmp_json.getIntValue("id") == cableType.getId()) {
+                        used += tmp_json.getDoubleValue("used");
+                        total += tmp_json.getDoubleValue("total");
                     }
                 }
             }
+            jsonObject.put("used", used);
+            jsonObject.put("value", total);
+            jsonObject.put("unit", "km");
+            jsonObject.put("percent", total == 0 ? 0: MathUtil.div(used, total, 2));
 
-            //获取总长度
-            Double tl = 0.0;
-            for (Section x : sectionList) {
-                Integer totalCableNumber = x.getTotalCableNumber();
-                Double length = x.getLength();
-                Double mul = MathUtil.mul((double) totalCableNumber, length);
-                tl = MathUtil.add(tl, mul);
-            }
-
-            Double totalLength = 0.00;
-            for (CableDto cable : cableList) {
-                totalLength = MathUtil.add(totalLength, cable.getCableLength());
-            }
-            json.put("value", MathUtil.div(totalLength, (double) 1000.00, 2));
-            json.put("unit", "km");
-            json.put("percent", tl == 0 ? 0.0 : MathUtil.div(totalLength, tl, 4) * 100 + "%");
-            returnData.add(json);
+            returnData.add(jsonObject);
         }
 
         return CommonUtil.success(returnData);
+    }
+
+
+    @RequestMapping(value = "cabletypes", method = RequestMethod.GET)
+    public JSONObject getCableTypes() {
+        List<CableType> cableTypes = cableTypeService.getAllTypes();
+
+        return CommonUtil.success(cableTypes);
+    }
+
+    @RequestMapping(value = "cabletypes", method = RequestMethod.POST)
+    public JSONObject addCableType(@RequestBody CableType cableType){
+        cableTypeService.insertRecord(cableType);
+
+        return CommonUtil.success();
+    }
+
+    @RequestMapping(value = "cabletypes", method = RequestMethod.PUT)
+    public JSONObject updateCableType(@RequestBody CableType cableType){
+        cableTypeService.updateRecord(cableType);
+
+        return CommonUtil.success();
+    }
+
+
+    @RequestMapping(value = "cabletypes/{id}", method = RequestMethod.DELETE)
+    public JSONObject deleteCableType(@PathVariable("id") int id){
+        cableTypeService.deleteRecord(id);
+
+        return CommonUtil.success();
     }
 
 }

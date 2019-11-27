@@ -231,6 +231,7 @@
 						sn: element[data.header[0]],
 						objtype: 0
 					};
+					console.log("sn", sn)
 					if (data.header.length > 2)
 						tmp.objtype = parseInt(element[data.header[2]]);
 					this.equipmentMatches.push(tmp);
@@ -267,6 +268,7 @@
 			//转换
 			translate() {
 				this.importMeasObjs.forEach(element => {
+					console.log("element", element)
 					var tunnel_sn = element.id.substr(
 						this.spellRule.tunnel.start,
 						this.spellRule.tunnel.length

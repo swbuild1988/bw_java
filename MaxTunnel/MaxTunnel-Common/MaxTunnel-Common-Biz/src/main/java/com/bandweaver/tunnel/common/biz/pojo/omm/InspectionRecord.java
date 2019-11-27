@@ -48,8 +48,6 @@ public class InspectionRecord implements Serializable {
     public void setTaskId(Integer taskId) {
         this.taskId = taskId;
     }
-    
-    
 
     public Integer getSectionId() {
 		return sectionId;

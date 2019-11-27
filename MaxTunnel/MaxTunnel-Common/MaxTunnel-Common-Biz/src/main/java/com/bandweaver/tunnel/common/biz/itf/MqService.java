@@ -25,6 +25,5 @@ public interface MqService {
 
 	void deleteQueue(String queueName);
 
-	void deleteAllQueue();
 
 }

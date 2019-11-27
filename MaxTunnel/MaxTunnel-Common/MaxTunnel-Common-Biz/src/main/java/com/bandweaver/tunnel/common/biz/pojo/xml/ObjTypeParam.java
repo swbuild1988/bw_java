@@ -1,9 +1,11 @@
 package com.bandweaver.tunnel.common.biz.pojo.xml;
 
+import java.io.Serializable;
+
 /**
  * 监测类型参数
  */
-public class ObjTypeParam {
+public class ObjTypeParam implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

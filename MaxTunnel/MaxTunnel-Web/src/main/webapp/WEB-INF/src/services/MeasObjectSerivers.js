@@ -5,6 +5,7 @@ import {
 	del,
 	post
 } from "../utils/http";
+import store from "../store";
 
 //监测对象数据服务
 var MeasObjServer = {
@@ -142,14 +143,18 @@ var MeasObjServer = {
 		});
 	},
 	//批量修改监测对象
-	batchUpdateMeasObjs(params){
+	batchUpdateMeasObjs(params) {
 		return new Promise((resolve, reject) => {
-			put("measobjs/batch", params).then(res=>{
-				let{ code, data, msg } = res.data
-				if( code == 200 ){
+			put("measobjs/batch", params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
 					resolve(data)
-				}else{
-					reject(msg+"地址：measobjs/batch")
+				} else {
+					reject(msg + "地址：measobjs/batch")
 				}
 			})
 		})
@@ -346,7 +351,7 @@ var MeasObjServer = {
 		});
 	},
 
-	getMeasObjCurValue(id){
+	getMeasObjCurValue(id) {
 		return new Promise((resolve, reject) => {
 			get("measobjs/" + id + "/curValues")
 				.then(res => {
@@ -407,6 +412,26 @@ var MeasObjServer = {
 					reject(error.response.status + '  ' + error.response.data)
 				})
 		});
+	},
+	// 获取当前复杂对象的值
+	getComplexobjDatas() {
+		return new Promise((resolve, reject) => {
+			get("complexobj-datas").then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data;
+					if (code == 200) {
+						resolve(data);
+					} else {
+						reject(msg + ",地址:complexobj-datas");
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + "  " + error.response.data);
+				});
+		})
 	},
 	//获取今日监测对象触发次数及与昨日比是否增长
 	getMeasTriggerCounts() {
@@ -484,14 +509,223 @@ var MeasObjServer = {
 		})
 	},
 	//查询所有监测对象 不分页
-	getAllMeasObjs(){
+	getAllMeasObjs() {
 		return new Promise((resolve, reject) => {
-			get('measobjs').then(res=>{
-				let{ code, data, msg } = res.data
-				if( code == 200 ){
+			get('measobjs').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
 					resolve(data)
-				}else{
-					reject(msg+'地址：measobjs')
+				} else {
+					reject(msg + '地址：measobjs')
+				}
+			})
+		})
+	},
+	// 获取批量导入监测对象所需参数
+	getBatchAddObjParams() {
+		return new Promise((resolve, reject) => {
+			get('config/xml/tunnel-param/equipment-info').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/tunnel-param/equipment-info')
+				}
+			})
+		})
+	},
+	// 修改批量导入监测对象所需管廊参数
+	updateTunnelParams(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/tunnel-param', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/tunnel-param')
+				}
+			})
+		})
+	},
+	// 修改批量导入监测对象所需设备参数
+	updateEqiuParams(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/equipment-info', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/equipment-info')
+				}
+			})
+		})
+	},
+	// 获取监测对象复杂类型
+	getObjComplexType() {
+		return new Promise((resolve, reject) => {
+			get('config/xml/complex-object-converts').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/complex-object-converts')
+				}
+			})
+		})
+	},
+	// 修改监测对象复杂类型
+	updateObjComplexType(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/complex-object-converts', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/complex-object-converts')
+				}
+			})
+		})
+	},
+	// 获取AI数据小数点位数
+	getAIDataDecimal() {
+		return new Promise((resolve, reject) => {
+			get('config/xml/decimal').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/decimal')
+				}
+			})
+		})
+	},
+	// 修改AI数据小数点位数
+	updateAIDataDecimal(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/decimal', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/decimal')
+				}
+			})
+		})
+	},
+	getMeasObjExtremun() {
+		return new Promise((resolve, reject) => {
+			get('config/xml/objTypeParams').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/objTypeParams')
+				}
+			})
+		})
+	},
+	updateMeasObjExtremun(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/objTypeParams', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/objTypeParams')
+				}
+			})
+		})
+	},
+	getMeasObjTypes() {
+		return new Promise((resolve, reject) => {
+			get('config/xml/objTypes').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/objTypes')
+				}
+			})
+		})
+	},
+	updateMeasObjTypes(params) {
+		return new Promise((resolve, reject) => {
+			post('config/xml/objTypes', params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'config/xml/objTypes')
+				}
+			})
+		})
+	},
+	updateMeasObjsActived(tunnelId, areaId, storeId, actived) {
+		let param = {
+			tunnelId: tunnelId == 0 ? null : tunnelId,
+			areaId: areaId == 0 ? null : areaId,
+			storeId: storeId == 0 ? null : storeId,
+			actived: actived
+		}
+		return new Promise((resolve, reject) => {
+			put('measobjs/update_actived', param).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + 'measobjs/update_actived')
 				}
 			})
 		})

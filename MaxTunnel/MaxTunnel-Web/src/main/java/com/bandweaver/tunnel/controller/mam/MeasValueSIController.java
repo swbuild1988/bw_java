@@ -33,7 +33,7 @@ public class MeasValueSIController {
      * @author shaosen
      * @Date 2018年10月18日
      */
-	@RequestMapping(value = "measvalue-si/batch", method = RequestMethod.POST)
+	@RequestMapping(value = "measvalue-si", method = RequestMethod.POST)
 	public JSONObject addMeasValueSIBatch(@RequestBody List<MeasValueSI> list) {
 		LogUtil.info("接收到MaxView发送的SI数据共：" + list.size() + "条" );
         for (MeasValueSI measValueSI : list) {

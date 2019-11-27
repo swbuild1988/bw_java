@@ -18,7 +18,7 @@ public class MeasObjVo extends BaseVo{
     private String name;
     private Integer datatypeId;
     private Integer objtypeId;
-    private boolean actived;
+    private Boolean actived;
     private String description;
     /** 经度 */
     private String longitude;
@@ -116,15 +116,15 @@ public class MeasObjVo extends BaseVo{
         this.objtypeId = objtypeId;
     }
 
-    public boolean isActived() {
-        return actived;
-    }
+    public Boolean getActived() {
+		return actived;
+	}
 
-    public void setActived(boolean actived) {
-        this.actived = actived;
-    }
+	public void setActived(Boolean actived) {
+		this.actived = actived;
+	}
 
-    public String getDescription() {
+	public String getDescription() {
         return description;
     }
 

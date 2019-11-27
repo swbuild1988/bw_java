@@ -309,4 +309,8 @@
     .ivu-loading-bar {
         height: 0px !important;
     }
+    .coment >>> .ivu-layout-sider-children{
+        height: 100%;
+        overflow-y: auto;
+    }
 </style>

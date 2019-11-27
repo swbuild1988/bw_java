@@ -1,10 +1,12 @@
 import axios from 'axios'
-import { get } from "../utils/http";
+import {
+	get, post, put, del
+} from "../utils/http";
 const isRealData = require('../../static/serverconfig').isRealData
 
 var EnumsService = {
 	// 获取文件类型
-	getFileType: function() {
+	getFileType: function () {
 		return new Promise((resolve, reject) => {
 			get('filetype-enums')
 				.then(res => {
@@ -25,7 +27,7 @@ var EnumsService = {
 		})
 	},
 	// 获取资料类型
-	getDocType: function() {
+	getDocType: function () {
 		return new Promise((resolve, reject) => {
 			get('doctype-enums').then(res => {
 				let {
@@ -42,7 +44,7 @@ var EnumsService = {
 		})
 	},
 	// 获取单位类型
-	getUnitType: function() {
+	getUnitType: function () {
 		return new Promise((resolve, reject) => {
 			get('unittype-enums').then(res => {
 				let {
@@ -59,7 +61,7 @@ var EnumsService = {
 		})
 	},
 	// 获取监测内容
-	getMonitorType: function() {
+	getMonitorType: function () {
 		return new Promise((resolve, reject) => {
 			get('monitortype-enums').then(res => {
 				let {
@@ -76,7 +78,7 @@ var EnumsService = {
 		})
 	},
 	//获取数据类型
-	getDataType: function() {
+	getDataType: function () {
 		return new Promise((resolve, reject) => {
 			get('datatype-enums').then(res => {
 				let {
@@ -93,7 +95,7 @@ var EnumsService = {
 		})
 	},
 	// 获取监测对象类型
-	getObjType: function() {
+	getObjType: function () {
 		return new Promise((resolve, reject) => {
 			get('objecttype-enums').then(res => {
 				let {
@@ -110,7 +112,7 @@ var EnumsService = {
 		})
 	},
 	//获取监测区域（树型数据）
-	getMonitorZone: function() {
+	getMonitorZone: function () {
 		return new Promise((resolve, reject) => {
 			get('tunnels/tree ').then(res => {
 				let {
@@ -127,7 +129,7 @@ var EnumsService = {
 		})
 	},
 	// 获取时间周期
-	getTimeCycle: function() {
+	getTimeCycle: function () {
 		return new Promise((resolve, reject) => {
 			get('time-enums').then(res => {
 				let {
@@ -144,7 +146,7 @@ var EnumsService = {
 		})
 	},
 	// 获取入廊行为
-	getEnterActionType: function() {
+	getEnterActionType: function () {
 		return new Promise((resolve, reject) => {
 			get('action-enums').then(res => {
 				let {
@@ -161,7 +163,7 @@ var EnumsService = {
 		})
 	},
 	// 获取支付方式
-	getPayType: function() {
+	getPayType: function () {
 		return new Promise((resolve, reject) => {
 			get('paytype-enums').then(res => {
 				let {
@@ -178,7 +180,7 @@ var EnumsService = {
 		})
 	},
 	// 获取合同状态
-	getContractStatus: function() {
+	getContractStatus: function () {
 		return new Promise((resolve, reject) => {
 			get('contractstatus-enums').then(res => {
 				let {
@@ -195,7 +197,7 @@ var EnumsService = {
 		})
 	},
 	// 获取管线状态
-	getCableStatus: function() {
+	getCableStatus: function () {
 		return new Promise((resolve, reject) => {
 			get('cablestatus-enums').then(res => {
 				let {
@@ -212,7 +214,7 @@ var EnumsService = {
 		})
 	},
 	// 获取缺陷类型
-	getDefectType: function() {
+	getDefectType: function () {
 		return new Promise((resolve, reject) => {
 			get('/defectType/enum').then(res => {
 				let {
@@ -229,7 +231,7 @@ var EnumsService = {
 		})
 	},
 	// 获取缺陷状态
-	getDefectStatus: function() {
+	getDefectStatus: function () {
 		return new Promise((resolve, reject) => {
 			get('/defectStatus/enum').then(res => {
 				let {
@@ -246,7 +248,7 @@ var EnumsService = {
 		})
 	},
 	// 获取危险等级
-	getDefectLevel: function() {
+	getDefectLevel: function () {
 		return new Promise((resolve, reject) => {
 			get('/defectLevel/enum').then(res => {
 				let {
@@ -263,7 +265,7 @@ var EnumsService = {
 		})
 	},
 	// 获取申请状态
-	getReqStatus: function() {
+	getReqStatus: function () {
 		return new Promise((resolve, reject) => {
 			get('/reqstatus-enums').then(res => {
 				let {
@@ -280,7 +282,7 @@ var EnumsService = {
 		})
 	},
 	// 预案枚举
-	getPlanType: function() {
+	getPlanType: function () {
 		return new Promise((resolve, reject) => {
 			get('/plan-enums').then(res => {
 				let {
@@ -311,7 +313,7 @@ var EnumsService = {
 		})
 	},
 	// 获取开关枚举
-	getSwitch: function() {
+	getSwitch: function () {
 		return new Promise((resolve, reject) => {
 			get('switch-enums')
 				.then(res => {
@@ -332,7 +334,7 @@ var EnumsService = {
 		})
 	},
 	// 获取应急目标对象列表
-	getEmTargetObjs: function() {
+	getEmTargetObjs: function () {
 		return new Promise((resolve, reject) => {
 			get('/em/target-enums')
 				.then(res => {
@@ -353,7 +355,7 @@ var EnumsService = {
 		})
 	},
 	// 获取应急行为
-	getEmAction: function() {
+	getEmAction: function () {
 		return new Promise((resolve, reject) => {
 			get('/em/action-enums')
 				.then(res => {
@@ -374,7 +376,7 @@ var EnumsService = {
 		})
 	},
 	// 获取应急结束类型
-	getEmFinishType: function() {
+	getEmFinishType: function () {
 		return new Promise((resolve, reject) => {
 			get('/em/finish-enums')
 				.then(res => {
@@ -395,7 +397,7 @@ var EnumsService = {
 		})
 	},
 	//获取告警级别
-	getAlarmLevelList: function() {
+	getAlarmLevelList: function () {
 		return new Promise((resolve, reject) => {
 			get('alarmlevel-enums')
 				.then(res => {
@@ -437,7 +439,7 @@ var EnumsService = {
 		})
 	},
 	// 获取银行
-	getBanks(){
+	getBanks() {
 		return new Promise((resolve, reject) => {
 			get('bank-enums')
 				.then(res => {
@@ -457,97 +459,185 @@ var EnumsService = {
 				})
 		})
 	},
-	  // 获取权限模块列表
-	  getModuleList(){
-        return new Promise((resolve,reject)=>{
-            get('shiro/resource-type/enums')
-            .then(res=>{
-                let { msg,data,code } = res.data
-                if(code == 200){
-                    resolve(data)
-                } else {
-                    reject(msg + '地址:shiro/resource-type/enums')
-                }
-            })
-            .catch(error=>{
-                reject(error.response.status + ' ' + error.response.data)
-            })
-            // let data = [
-            //     {
-            //         id: 'user',
-            //         name: '用户管理'
-            //     },
-            //     {
-            //         id: 'energy',
-            //         name: '能耗管理'
-            //     },
-            //     {
-            //         id: 'tunnel',
-            //         name: '管廊管理'
-            //     }
-            // ]
-            // resolve(data)
-        })
-    },
-    // 获取操作列表
-    getActionsList(){
-        return new Promise((resolve,reject)=>{
-            get('shiro/operate-type/enums')
-            .then(res=>{
-                let { msg,data,code } = res.data
-                if(code == 200){
-                    resolve(data)
-                } else {
-                    reject(msg + '地址:shiro/operate-type/enums')
-                }
-            })
-            .catch(error=>{
-                reject(error.response.status + ' ' + error.response.data)
-            })
-            // let data = [
-            //     {
-            //         val: '添加',
-            //         key: 'add'
-            //     },
-            //     {
-            //         val: '列表',
-            //         key: 'list'
-            //     },
-            //     {
-            //         val: '修改',
-            //         key: 'update'
-            //     },
-            //     {
-            //         val: '删除',
-            //         key: 'delete'
-            //     }
-            // ]
-            // resolve(data)
-        })
+	// 获取权限模块列表
+	getModuleList() {
+		return new Promise((resolve, reject) => {
+			get('shiro/resource-type/enums')
+				.then(res => {
+					let {
+						msg,
+						data,
+						code
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址:shiro/resource-type/enums')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + ' ' + error.response.data)
+				})
+			// let data = [
+			//     {
+			//         id: 'user',
+			//         name: '用户管理'
+			//     },
+			//     {
+			//         id: 'energy',
+			//         name: '能耗管理'
+			//     },
+			//     {
+			//         id: 'tunnel',
+			//         name: '管廊管理'
+			//     }
+			// ]
+			// resolve(data)
+		})
+	},
+	// 获取操作列表
+	getActionsList() {
+		return new Promise((resolve, reject) => {
+			get('shiro/operate-type/enums')
+				.then(res => {
+					let {
+						msg,
+						data,
+						code
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址:shiro/operate-type/enums')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + ' ' + error.response.data)
+				})
+			// let data = [
+			//     {
+			//         val: '添加',
+			//         key: 'add'
+			//     },
+			//     {
+			//         val: '列表',
+			//         key: 'list'
+			//     },
+			//     {
+			//         val: '修改',
+			//         key: 'update'
+			//     },
+			//     {
+			//         val: '删除',
+			//         key: 'delete'
+			//     }
+			// ]
+			// resolve(data)
+		})
 	},
 	//获取告警级别
-	getAlarmLevel(){
+	getAlarmLevel() {
 		return new Promise((resolve, reject) => {
-			get('alarmlevel-enums').then(res=>{
-				let{ code, data, msg } = res.data
-				if( code == 200 ){
+			get('alarmlevel-enums').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
 					resolve(data)
-				}else{
-					reject(msg+"地址：alarmlevel-enums")
+				} else {
+					reject(msg + "地址：alarmlevel-enums")
 				}
 			})
 		})
 	},
 	//获取监测对象管理编号等信息
-	getMeasObj(){
+	getMeasObj() {
 		return new Promise((resolve, reject) => {
-			get('config/xml/tunnel-param/equipment-info').then(res=>{
-				let{ code, data, msg } = res.data
-				if( code == 200 ){
+			get('config/xml/tunnel-param/equipment-info').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
 					resolve(data)
-				}else{
-					reject(msg+"地址：config/xml/tunnel-param/equipment-info")
+				} else {
+					reject(msg + "地址：config/xml/tunnel-param/equipment-info")
 				}
+			})
+		})
+	},
+	// 获取管线类型
+	getCableTypes() {
+		return new Promise((resolve, reject) => {
+			get('cabletypes').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + "地址：cabletypes")
+				}
+
+			})
+		})
+	},
+	// 增加管线类型
+	addCableType(type) {
+		return new Promise((resolve, reject) => {
+			post('cabletypes', type).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + "地址：cabletypes")
+				}
+
+			})
+		})
+	},
+	// 编辑管线类型
+	editCableType(type) {
+		return new Promise((resolve, reject) => {
+			put('cabletypes', type).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + "地址：cabletypes")
+				}
+
+			})
+		})
+	},
+	// 删除管线类型
+	deleteCableType(id) {
+		return new Promise((resolve, reject) => {
+			del('cabletypes/' + id).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + "地址：cabletypes/{id}")
+				}
+
 			})
 		})
 	}

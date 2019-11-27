@@ -78,6 +78,25 @@ begin
       if   num=1   then 
           execute immediate 'drop table T_OAM_CABLE'; 
       end   if; 
+--管线类型表
+-- prompt dropping sequence 
+      num := 0;
+      select count(1) into num from user_sequences where sequence_name = 'OAM_CABLE_TYPE_SQ'; 
+      if num > 0 then   
+         execute immediate 'DROP SEQUENCE  OAM_CABLE_TYPE_SQ';   
+      end if;
+-- prompt dropping trigger      
+      num := 0;
+      select count(1) into num from user_triggers where trigger_name = 'OAM_CABLE_TYPE_TG'; 
+      if num > 0 then   
+         execute immediate 'DROP TRIGGER  OAM_CABLE_TYPE_TG';   
+      end if;
+-- prompt Dropping 
+      num := 0;
+      select count(1) into num from user_tables where TABLE_NAME = 'T_OAM_CABLE_TYPE';
+      if   num=1   then 
+          execute immediate 'drop table T_OAM_CABLE_TYPE'; 
+      end   if; 
 --管线 仓段 关联表
 -- prompt dropping sequence 
       num := 0;
@@ -340,7 +359,6 @@ CREATE TABLE T_OAM_CUSTOMER(
   CONSTRAINT PK_T_OAM_CUSTOMER PRIMARY KEY ("ID")
 );
 
-
 --create sequence
 create sequence OAM_CUSTOMER_SEQUENCE
 start with 1
@@ -427,6 +445,35 @@ begin
   select OAM_CABLE_SQ.nextval into :new.id from dual;
 end OAM_CABLE_TG;
 /*/
+
+
+--管线类型表
+CREATE TABLE T_OAM_CABLE_TYPE(
+  id              NUMBER    NOT NULL,
+  type_name       varchar2(100)    not null, --类型名称
+  in_store_type   varchar2(200)    not null, --可放的管仓类型
+  crt_time          DATE,
+   CONSTRAINT PK_T_OAM_CABLE_TYPE PRIMARY KEY ("ID")
+);
+
+--create sequence
+create sequence OAM_CABLE_TYPE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+-- create trigger
+CREATE OR REPLACE TRIGGER OAM_CABLE_TYPE_TG
+  BEFORE INSERT ON T_OAM_CABLE_TYPE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OAM_CABLE_TYPE_SQ.nextval into :new.id from dual;
+end OAM_CABLE_TYPE_TG;
+/
+alter trigger OAM_CABLE_TYPE_TG enable;
+
 
 --管线 仓段 关联表
 CREATE TABLE T_OAM_CABLE_SECTION(

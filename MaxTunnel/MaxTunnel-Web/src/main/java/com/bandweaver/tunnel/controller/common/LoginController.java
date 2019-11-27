@@ -162,22 +162,23 @@ public class LoginController {
 		return CommonUtil.returnStatusJson(StatusCodeEnum.E_503);
 	}
 
-    /**
-     * 获取项目版本等
-     *
-     * @return {"msg":"请求成功","code":"200","data":{"address":"上海市浦东新区张江高科技园区上科路88号","contact":"+86-21-5187 6575","company":"BandWeaver","version":"V100B05","email":"info@bandweaver.cn"}}
-     * @author shaosen
-     * @Date 2018年12月17日
-     */
-    @RequestMapping(value = "/version", method = RequestMethod.GET)
-    public JSONObject getVersionInfo() {
-        JSONObject returnData = new JSONObject();
-        returnData.put("version", PropertiesUtil.getValue(Constants.MAXTUNNEL_VERSION));
-        returnData.put("email", PropertiesUtil.getValue(Constants.MAXTUNNEL_EMAIL));
-        returnData.put("contact", PropertiesUtil.getValue(Constants.MAXTUNNEL_CONTACT));
-        returnData.put("company", PropertiesUtil.getValue(Constants.MAXTUNNEL_COMPANY));
-        returnData.put("address", PropertiesUtil.getValue(Constants.MAXTUNNEL_ADDRESS));
-        return CommonUtil.success(returnData);
-    }
+	/**
+	 * 获取项目版本等
+	 *
+	 * @return {"msg":"请求成功","code":"200","data":{"address":"上海市浦东新区张江高科技园区上科路88号","contact":"+86-21-5187
+	 *         6575","company":"BandWeaver","version":"V100B05","email":"info@bandweaver.cn"}}
+	 * @author shaosen
+	 * @Date 2018年12月17日
+	 */
+	@RequestMapping(value = "/version", method = RequestMethod.GET)
+	public JSONObject getVersionInfo() {
+		JSONObject returnData = new JSONObject();
+		returnData.put("version", PropertiesUtil.getValue(Constants.MAXTUNNEL_VERSION));
+		returnData.put("email", PropertiesUtil.getValue(Constants.MAXTUNNEL_EMAIL));
+		returnData.put("contact", PropertiesUtil.getValue(Constants.MAXTUNNEL_CONTACT));
+		returnData.put("company", PropertiesUtil.getValue(Constants.MAXTUNNEL_COMPANY));
+		returnData.put("address", PropertiesUtil.getValue(Constants.MAXTUNNEL_ADDRESS));
+		return CommonUtil.success(returnData);
+	}
 
 }

@@ -107,6 +107,8 @@ export default {
 .dateBox,
 .showReport {
 	padding: 2vmin;
+	width: 61vw;
+	height: 75vh;
 	float: left;
 	color: #fff;
 }

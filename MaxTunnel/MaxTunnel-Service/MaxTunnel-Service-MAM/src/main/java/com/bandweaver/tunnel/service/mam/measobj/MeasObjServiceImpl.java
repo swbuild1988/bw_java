@@ -464,4 +464,18 @@ public class MeasObjServiceImpl implements MeasObjService {
 
         return false;
     }
+
+    @Override
+    public void updateObjectsActived(Integer tunnelId, Integer areaId, Integer storeId, boolean actived) {
+//        measObjMapper.updateMeasobjsActived(tunnelId,areaId,storeId,actived);
+        List<MeasObj> measobjs = measObjModuleCenter.getMeasObjs();
+        if (tunnelId != null) measobjs = measobjs.stream().filter(a->a.getTunnelId().intValue() == tunnelId.intValue()).collect(Collectors.toList());
+        if (areaId != null) measobjs = measobjs.stream().filter(a->a.getAreaId().intValue() == areaId.intValue()).collect(Collectors.toList());
+        if (storeId != null) measobjs = measobjs.stream().filter(a->a.getStoreId().intValue() == storeId.intValue()).collect(Collectors.toList());
+
+        for (MeasObj measObj : measobjs) {
+            measObj.setActived(actived);
+            measObjModuleCenter.updateMeasObj(measObj);
+        }
+    }
 }

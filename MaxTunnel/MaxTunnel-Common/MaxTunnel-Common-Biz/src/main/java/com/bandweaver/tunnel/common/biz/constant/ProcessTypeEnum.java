@@ -133,7 +133,7 @@ public enum ProcessTypeEnum {
 
     public static ProcessTypeEnum[] getEmPlanList() {
         return new ProcessTypeEnum[]{
-                WATER_PLAN,
+                //WATER_PLAN,
                 WIND_PLAN
         };
     }

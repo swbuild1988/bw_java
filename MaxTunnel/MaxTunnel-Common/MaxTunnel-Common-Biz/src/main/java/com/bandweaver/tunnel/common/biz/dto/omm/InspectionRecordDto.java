@@ -25,7 +25,7 @@ public class InspectionRecordDto extends InspectionRecord{
     }
 
     public Boolean getHasDefect() {
-        return this.hasDefect;
+        return this.defect != null;
     }
 
     public void setHasDefect(Boolean hasDefect) {

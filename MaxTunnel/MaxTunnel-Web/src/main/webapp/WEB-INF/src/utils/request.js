@@ -37,6 +37,7 @@ export default async () => {
             Vue.prototype.MapAngleLists = serverconfig.MapAngleLists;
             Vue.prototype.VMWebConfig = require('../../static/VM/js/VMWebConfig').VMWebConfig;
             Vue.prototype.ApiUrl = serverconfig.ApiUrl;
+            Vue.prototype.ClipBIM = serverconfig.ClipBIM;
             Vue.prototype.isTestModel = serverconfig.isTestModel;
             Vue.prototype.RouterBase = serverconfig.RouterBase;
             Vue.prototype.MQServerAddress = serverconfig.MQServerAddress;
@@ -67,6 +68,7 @@ export default async () => {
             Vue.prototype.pointLinght = result_config.data.pointLinght;
             Vue.prototype.MapAngleLists = result_config.data.MapAngleLists;
             Vue.prototype.isTestModel = result_config.data.isTestModel;
+            Vue.prototype.ClipBIM = result_config.data.ClipBIM;
             sessionStorage.setItem('ServerConfig', '/dist/static');
 
             // 获取VM的配置页

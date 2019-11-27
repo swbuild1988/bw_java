@@ -115,8 +115,8 @@ public class ExportController {
             return CommonUtil.success();
         }
 
-        // 排序
-        list = list.stream().sorted(Comparator.comparing(Export::getName)).collect(Collectors.toList());
+        // 排序，周次降序
+        list = list.stream().sorted(Comparator.comparing(Export::getValue).reversed()).collect(Collectors.toList());
         return CommonUtil.success(list);
     }
 
@@ -143,8 +143,6 @@ public class ExportController {
 
         return CommonUtil.success();
     }
-
-
 
 
 }

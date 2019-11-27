@@ -217,7 +217,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     	
         measObj.setActived(true);
 
-        if (measObj.getObjtypeId() != null) {
+        if (measObj.getObjtypeId() != null && measObj.getObjtypeId() != 0) {
             ObjectType objectType = ObjectType.getEnum(measObj.getObjtypeId());
             measObj.setDatatypeId(objectType.getDataType());
         }
@@ -495,6 +495,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
         switch (dataType) {
             case AI:
                 MeasObjAI measObjAI = MeasObjAI.fromMeasObj(measObj);
+                measObjAI.setRefreshTime(new Date());
                 measObjAIHashMap.put(measObjAI.getId(), measObjAI);
                 break;
 
@@ -613,16 +614,15 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
     public void deleteObj(Integer id) {
 
-        // delete Cache
         MeasObj measObj = measObjHashMap.get(id);
         if (measObj == null)
             return;
-        measObjHashMap.remove(id);
-        deleteObjFromOwnHashMap(measObj);
-
         // delete DB
         measObjMapper.deleteByPrimaryKey(id);
         deleteObjFromOwnDB(measObj);
+        // delete Cache
+        measObjHashMap.remove(id);
+        deleteObjFromOwnHashMap(measObj);
 
     }
 

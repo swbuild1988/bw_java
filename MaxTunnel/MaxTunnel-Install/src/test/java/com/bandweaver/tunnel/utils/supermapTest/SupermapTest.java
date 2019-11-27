@@ -9,12 +9,12 @@
 // */
 //public class SupermapTest {
 //	public static void main(String [] args) {
-//		String url = "F:\\超图发布修剪版\\三维服务\\3Dserver\\3Dserver.sxwu";
-//		String datasource = "datasources";
+//		String url = "E:\\超图发布\\三维服务\\3Dserver\\3Dserver.sxwu";
+//		String datasource = "datasourceSYL";
 //		String dataset = "安全设备";
 //		String [] fields = {"X","Y","Z"};
 //		Supermap supermap = new Supermap();
-//		supermap.addAndUpdateFields(url, datasource, dataset, fields);
-//		//supermap.deleteFieldsByURL(url, datasource, dataset, fields);
+////		supermap.addAndUpdateFields(url, datasource, dataset, fields);
+//		supermap.deleteFieldsByURL(url, datasource, dataset, fields);
 //	}
 //}

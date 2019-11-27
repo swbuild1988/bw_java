@@ -45,7 +45,7 @@
                                     ></Avatar>
                                 </Badge>
                             </a>
-                            <DropdownMenu slot="list">
+                            <DropdownMenu slot="list" class="info-person">
                                 <DropdownItem
                                     @click.native="goToMoudle({ path: '/UM/myNews/queryMyTask'})"
                                 >我的消息</DropdownItem>
@@ -250,7 +250,7 @@ export default {
                         },
                         {
                             name: "预案管理",
-                            url: "/UM/plans/detial/FirePlanProcess",
+                            url: "/UM/plans/detial/VentilationPlanSOP_KEY",
                             path: "/UM/plans/detial"
                         }
                     ]
@@ -815,7 +815,10 @@ export default {
         left: 3.4vmin !important;
     }
     .select-dropdown >>> .ivu-select-dropdown {
-        left: -4vmin !important;
+        left: -6vmin !important;
+    }
+    .layout-nav >>> .info-person .ivu-dropdown-item{
+        padding: 0.7vmin 1.2vmin;
     }
 }
 /* 大屏幕（显示器，大于等于 1920px） */

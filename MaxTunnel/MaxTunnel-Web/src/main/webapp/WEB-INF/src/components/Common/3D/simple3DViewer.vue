@@ -153,6 +153,42 @@
             processFailed(queryEventArgs) {
                 console.log('查询失败！');
             },
+            terrain(){
+                //绘制多边形
+                var handlerPolygon = new Cesium.DrawHandler(viewer,Cesium.DrawMode.Polygon, 0);
+            
+                handlerPolygon.drawEvt.addEventListener(function(result){
+            
+                    var array = [].concat(result.object.positions);
+                    console.log(array)
+                    
+                    var positions = [];
+                    for(var i = 0, len = array.length; i < len; i ++){
+                        var cartographic = Cesium.Cartographic.fromCartesian(array[i]);
+                        var longitude = Cesium.Math.toDegrees(cartographic.longitude);
+                        var latitude = Cesium.Math.toDegrees(cartographic.latitude);
+                        var h=cartographic.height;
+                        if(positions.indexOf(longitude)==-1&&positions.indexOf(latitude)==-1){
+                            positions.push(longitude);
+                            positions.push(latitude);
+                            positions.push(h);
+                        }
+                    }
+                    var dep = 500;
+                    viewer.scene.globe.removeAllExcavationRegion();
+                    viewer.scene.globe.addExcavationRegion({
+                        name : 'ggg' ,
+                        position : positions,
+                        height : dep,
+                        transparent : false
+                    });
+                    handlerPolygon.polygon.show = false;
+                    handlerPolygon.polyline.show = false;
+                    handlerPolygon.deactivate();
+                    handlerPolygon.activate();
+                });
+                handlerPolygon.activate();  
+            }
         },
         beforeDestroy() {
             let {

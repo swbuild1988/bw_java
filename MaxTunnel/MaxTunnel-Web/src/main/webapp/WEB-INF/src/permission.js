@@ -23,6 +23,7 @@ const permission = async () => {
 
         NProgress.start();
 
+        console.log("localStorage", localStorage)
         if (localStorage.getItem('Authorization')) {
             if(from.path.trim()=='/'){
                 var loginParams = {

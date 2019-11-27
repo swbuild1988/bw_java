@@ -89,6 +89,108 @@ var AlarmService = {
 		// }];
 		// resolve(data);
 		});
+	},
+	// 获取告警级别及时间
+	getAlarmTime(){
+		return new Promise((resolve, reject) => {
+			get('config/xml/alarm-time/json')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：config/xml/alarm-time/json')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	// 修改告警延迟时间
+	updateAlarmTime(params){
+		return new Promise((resolve, reject) => {
+			post('config/xml/alarm-time',params)
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：config/xml/alarm-time')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	getCloseTime(){
+		return new Promise((resolve, reject) => {
+			get('config/xml/close-time')
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：config/xml/close-time')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	updateCloseTime(params){
+		return new Promise((resolve, reject) => {
+			post('config/xml/close-time',params)
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：config/xml/close-time')
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
+	},
+	manualAddAlarm(params){
+		return new Promise((resolve, reject) => {
+			post('test/add_alarm/'+ params.level ,params)
+				.then(res => {
+					let {
+						code,
+						data,
+						msg
+					} = res.data
+					if (code == 200) {
+						resolve(data)
+					} else {
+						reject(msg + '地址：test/add_alarm'+params.level)
+					}
+				})
+				.catch(error => {
+					reject(error.response.status + '  ' + error.response.data)
+				})
+		})
 	}
 };
 export {

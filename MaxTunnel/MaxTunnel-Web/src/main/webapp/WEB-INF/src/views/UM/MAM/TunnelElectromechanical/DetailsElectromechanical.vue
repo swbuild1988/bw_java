@@ -628,10 +628,10 @@
                         null : _this.queryCondition.areaId
                 };
                 MonitorDataService.getdataVideos(Params).then(result => {
-                    if (result && result.length > 0) {
-                        console.log(Params, result);
+                    // if (result && result.length > 0) {
+                    //     console.log(Params, result);
                         this.curCarousel.videolist = result;
-                    }
+                    // }
                 });
             },
             chooseModule(val) {

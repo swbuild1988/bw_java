@@ -102,9 +102,7 @@ public class AlarmServiceImpl implements AlarmService {
 				List<VideoDto> videoDtoList = videoModuleCenter.getVideoDtos().stream()
 						.filter(v -> v.getSectionId().intValue() == measObj.getSectionId().intValue())
 						.collect(Collectors.toList());
-				for (VideoDto videoDto : videoDtoList) {
-					videoList.add(videoDto);
-				}
+				videoList.addAll(videoDtoList);
 			} else {
 				// 查找绑定的视频
 				for (Integer videoId : videoIdList) {

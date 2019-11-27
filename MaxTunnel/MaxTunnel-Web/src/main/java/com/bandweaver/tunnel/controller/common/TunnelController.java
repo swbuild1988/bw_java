@@ -2,12 +2,14 @@ package com.bandweaver.tunnel.controller.common;
 
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bandweaver.tunnel.common.biz.dto.*;
 import com.bandweaver.tunnel.common.biz.itf.*;
 
+import com.bandweaver.tunnel.common.platform.util.DateUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.permission.WildcardPermission;
@@ -359,7 +361,7 @@ public class TunnelController extends BaseController<Tunnel> {
     public JSONObject tunnelsMessage() {
     	
     	List<JSONObject> returnData = new ArrayList<>();
-    	List<TunnelSimpleDto> list = tunnelService.getList();
+    	List<TunnelSimpleDto> list = tunnelService.getList().stream().filter(a->a.getShow()).collect(Collectors.toList());
     	
     	//获取各运行状态管廊个数
     	for (TunnelStatus tunnelStatus : TunnelStatus.values()) {
@@ -417,6 +419,7 @@ public class TunnelController extends BaseController<Tunnel> {
     		tunnelService.addTunnelRun(tr);
     	}
     	JSONObject rtData = new JSONObject();
+    	rtData.put("startTime", DateUtil.getFrontDay(new Date(), info.getRunDays()).getTime());
     	rtData.put("total", info.getRunDays());
     	rtData.put("safe", info.getSafeDyas());
     	return CommonUtil.success(rtData);

@@ -147,7 +147,6 @@ public class MeasObjController {
     @RequiresPermissions("measobj:add")
     @RequestMapping(value = "measobjs/batch", method = RequestMethod.POST)
     public JSONObject addObjBatch(@RequestBody List<MeasObj> list) {
-        LogUtil.info(list);
         for (MeasObj obj : list) {
             measObjModuleCenter.insertMeasObj(obj);
         }
@@ -171,6 +170,7 @@ public class MeasObjController {
 
     /**
      * 批量更新obj
+     *
      * @param obj
      * @return
      * @author ya.liu
@@ -179,9 +179,9 @@ public class MeasObjController {
     @RequiresPermissions("measobj:update")
     @RequestMapping(value = "measobjs/batch", method = RequestMethod.PUT)
     public JSONObject editObjBatch(@RequestBody List<MeasObj> list) {
-    	for (MeasObj obj : list) {
-    		measObjModuleCenter.updateMeasObj(obj);
-    	}
+        for (MeasObj obj : list) {
+            measObjModuleCenter.updateMeasObj(obj);
+        }
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
@@ -578,11 +578,73 @@ public class MeasObjController {
         JSONObject rt1 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.TEMPERATURE);
         JSONObject rt2 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.CH4);
         JSONObject rt3 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "min", ObjectType.OXYGEN);
+        JSONObject rt4 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.H2S);
+        JSONObject rt5 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.HUMIDITY);
 
         List<JSONObject> rtdata = new ArrayList<>();
         rtdata.add(rt1);
         rtdata.add(rt2);
         rtdata.add(rt3);
+        rtdata.add(rt4);
+        rtdata.add(rt5);
+
+        return CommonUtil.success(rtdata);
+    }
+
+    /**
+     * 统计复杂对象的情况，供可视化平台
+     *
+     * @return
+     */
+    @RequestMapping(value = "complexobj-datas", method = RequestMethod.GET)
+    public JSONObject getStatisticsDatasOfComplexObject() {
+        // 几种复杂对象ID，包括风机10、井盖56、百叶58、照明12、排水泵
+        List<Integer> objTypeIds = Arrays.asList(10, 56, 58, 12, 59);
+        List<JSONObject> rtdata = new ArrayList<>();
+        List<MeasObj> measObjs = measObjModuleCenter.getMeasObjs();
+
+        for (Integer typeId : objTypeIds) {
+            JSONObject tmp_object = new JSONObject();
+            tmp_object.put("typeId", typeId.intValue());
+
+            List<MeasObj> tmp_objs = measObjs.stream().filter(a -> a.getObjtypeId().intValue() == typeId.intValue() && a.isActived()).collect(Collectors.toList());
+
+            int open_num = 0;
+            int close_num = 0;
+            int fault_num = 0;
+            int other_num = 0;
+            for (MeasObj measObj : tmp_objs) {
+                JSONObject cv = measObjModuleCenter.getMeasObjComplexObjectCV(measObj.getId().intValue());
+                if (cv == null) continue;
+
+                if (cv.containsKey("fault") && cv.getJSONObject("fault").getBooleanValue("value")) {
+                    fault_num += 1;
+                } else if (cv.containsKey("fault1") && cv.getJSONObject("fault1").getBooleanValue("value")) {
+                    fault_num += 1;
+                } else if (cv.containsKey("fault2") && cv.getJSONObject("fault2").getBooleanValue("value")) {
+                    fault_num += 1;
+                } else if (cv.containsKey("fault3") &&  cv.getJSONObject("fault3").getBooleanValue("value")) {
+                    fault_num += 1;
+                } else if (cv.containsKey("run") && cv.getJSONObject("run").getBooleanValue("value")) {
+                    open_num += 1;
+                } else if (cv.containsKey("run") && !cv.getJSONObject("run").getBooleanValue("value")) {
+                    close_num += 1;
+                } else if (cv.containsKey("open") && cv.getJSONObject("open").getBooleanValue("value")) {
+                    open_num += 1;
+                } else if (cv.containsKey("close") &&  cv.getJSONObject("close").getBooleanValue("value")) {
+                    close_num += 1;
+                } else {
+                    other_num += 1;
+                }
+            }
+
+            tmp_object.put("open", open_num);
+            tmp_object.put("close", close_num);
+            tmp_object.put("fault", fault_num);
+            tmp_object.put("other", other_num);
+
+            rtdata.add(tmp_object);
+        }
 
         return CommonUtil.success(rtdata);
     }
@@ -603,8 +665,8 @@ public class MeasObjController {
         double min = objTypeParam.getNormalMin();
 
 
-        //获取所有温度检测对象
-        List<MeasObj> temperatureList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue()).collect(Collectors.toList());
+        //获取所有已在用温度检测对象
+        List<MeasObj> temperatureList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue() && x.isActived()).collect(Collectors.toList());
         //获取所有温度检测对象id
         List<Integer> ids = temperatureList.stream().map(x -> x.getId()).collect(Collectors.toList());
         List<MeasObjAI> collect = measObjAIs.stream().filter(x -> ids.contains(x.getId())).collect(Collectors.toList());
@@ -1117,10 +1179,10 @@ public class MeasObjController {
                 // 返回监测对象关联的设备状态
                 boolean isBroken = false;
                 Integer moid = tmp_res2.getInteger("id");
-                if(moid != null) {
-                	EquipmentDto dto = equipmentService.getEquipmentByObj(moid);
-                	if(!dto.getStatus().equals(EquipmentStatusEnum.NORMAL.getValue()))
-                		isBroken = true;
+                if (moid != null) {
+                    EquipmentDto dto = equipmentService.getEquipmentByObj(moid);
+                    if (!dto.getStatus().equals(EquipmentStatusEnum.NORMAL.getValue()))
+                        isBroken = true;
                 }
                 tmp_res2.put("isBroken", isBroken);
                 faults.add(tmp_res2);
@@ -1216,13 +1278,24 @@ public class MeasObjController {
         }
 
         ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(objectType);
-        json.put("maxValue", objTypeParam != null ? objTypeParam.getMax() : null);
-        json.put("minValue", objTypeParam != null ? objTypeParam.getMin() : null);
-        json.put("maxNormal", objTypeParam != null ? objTypeParam.getNormalMax() : null);
-        json.put("minNormal", objTypeParam != null ? objTypeParam.getNormalMin() : null);
+        json.put("maxValue", objTypeParam != null ? objTypeParam.getMax() : "-");
+        json.put("minValue", objTypeParam != null ? objTypeParam.getMin() : "-");
+        json.put("maxNormal", objTypeParam != null ? objTypeParam.getNormalMax() : "-");
+        json.put("minNormal", objTypeParam != null ? objTypeParam.getNormalMin() : "-");
 
         return json;
     }
 
+    @RequiresPermissions("measobj:update")
+    @RequestMapping(value = "measobjs/update_actived", method = RequestMethod.PUT)
+    public JSONObject updateMeasObjsActived(@RequestBody JSONObject reqJson) {
+        Integer tunnelId = reqJson.getInteger("tunnelId");
+        Integer areaId = reqJson.getInteger("areaId");
+        Integer storeId = reqJson.getInteger("storeId");
+        boolean actived = reqJson.getBooleanValue("actived");
 
+        measObjService.updateObjectsActived(tunnelId, areaId, storeId, actived);
+
+        return CommonUtil.success();
+    }
 }

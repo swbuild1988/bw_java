@@ -97,7 +97,8 @@ export default {
                     render: (h,params)=>{
                         return h(CycleTime,{
                             props:{
-                                displayData: params.row.cronExpression
+                                displayData: params.row.cronExpression,
+                                readOnly: true
                             }
                         })
                     }
@@ -187,12 +188,16 @@ export default {
         switch(job){
             this.Log.info(job)
             let jobStatus = job.jobStatusName == '禁用' ? 0 : 1
-            this.axios.get('/schedulejobs/'+ job.jobId +'/jobstatus/'+ (1-jobStatus)).then(res =>{
-                let{code,data} = res.data;
-                if(code == 200){
-                    this.resetPageSearch();
-                }
-            })
+            let params = {
+                jobId: job.jobId,
+                status: 1 - jobStatus
+            }
+            SchedulejobService.switchJobStatus(params).then(
+                res => {
+                    this.showTable();
+                },
+                error => this.Log.info(error)
+            )
         },
         showTable(){
             SchedulejobService.querySchedule(this.choices).then(

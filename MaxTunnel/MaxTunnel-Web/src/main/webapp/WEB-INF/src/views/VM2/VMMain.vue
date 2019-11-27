@@ -23,7 +23,7 @@
                 <measure-module></measure-module>
             </div>
             <div class="MotionModule">
-                <motion-module></motion-module>
+                <controller-module></controller-module>
             </div>
             <div class="ThreeDimensionsModule" v-if="delay">
                 <three-dimensions-module></three-dimensions-module>
@@ -46,6 +46,7 @@ import MeasureModule from "./body/MeasureModule";
 import MotionModule from "./body/MotionModule";
 import ThreeDimensionsModule from "./body/ThreeDimensionsModule";
 import VideoModule from "./body/VideoModule";
+import ControllerModule from "./body/ControllerModule"
 import Vue from "vue";
 
 export default {
@@ -67,7 +68,8 @@ export default {
         MeasureModule,
         MotionModule,
         ThreeDimensionsModule,
-        VideoModule
+        VideoModule,
+        ControllerModule
     },
     created() {
         setTimeout(()=>{

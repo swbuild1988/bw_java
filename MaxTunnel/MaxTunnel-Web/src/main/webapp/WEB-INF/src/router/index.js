@@ -1141,7 +1141,7 @@ export const asyncRouterMap = [{
             {
                 path: 'projectSurvey',
                 name: '项目概况',
-                component: resolve => 
+                component: resolve =>
                     require(["@/views/UM/DM/ProjectSurvey/projectSurvey"], resolve)
             }
             // {
@@ -1260,10 +1260,40 @@ export const asyncRouterMap = [{
                 name: "监测对象配置"
             },
             {
+                path: "MeasObjComplexType",
+                component: resolve => require(["@/views/CM/MeasObj/MeasObjComplexType"], resolve),
+                name: "监测对象复杂类型配置"
+            },
+            {
                 path: "MeasObjMap",
                 component: resolve =>
                     require(["@/views/CM/MeasObj/MeasObjMap"], resolve),
                 name: "监测对象映射"
+            },
+            {
+                path: "BatchAddObjParams",
+                component: resolve => require(["@/views/CM/MeasObj/BatchAddParams"], resolve),
+                name: "批量添加监测对象参数配置"
+            },
+            {
+                path: "MeasObjExtremum",
+                component: resolve => require(["@/views/CM/MeasObj/MeasObjExtremum"], resolve),
+                name: "监测对象极值配置"
+            },
+            {
+                path: "UsedMeasObj",
+                component: resolve => require(["@/views/CM/MeasObj/UsedMeasObj"], resolve),
+                name: "所需监测对象选择"
+            },
+            {
+                path: "VMUnits",
+                component: resolve => require(["@/views/CM/VMConfig/Units"], resolve),
+                name: "大屏重要点位配置"
+            },
+            {
+                path: "alarmTime",
+                component: resolve => require(["@/views/CM/EmPlanControl/AlarmTime"], resolve),
+                name: "告警时间配置"
             },
             {
                 path: "permissionConfig",
@@ -1281,6 +1311,12 @@ export const asyncRouterMap = [{
                 component: resolve =>
                     require(["@/views/CM/EmPlanControl/ObjPrePlan"], resolve),
                 name: "监测对象与应急预案"
+            },
+            {
+                path: "testAlarm",
+                component: resolve =>
+                    require(["@/views/CM/EmPlanControl/TestAlarm"], resolve),
+                name: "内部测试告警"
             },
             {
                 path: "powerSubstation",
@@ -1306,9 +1342,17 @@ export const asyncRouterMap = [{
             {
                 path: "planControl",
                 name: '预案小组',
-                component: resolve => 
+                component: resolve =>
                     require([
                         "@/views/CM/PlanControl/planControl"
+                    ], resolve)
+            },
+            {
+                path: "cableType",
+                name: '管线类型',
+                component: resolve =>
+                    require([
+                        "@/views/CM/Enumerate/cableType"
                     ], resolve)
             }
         ]

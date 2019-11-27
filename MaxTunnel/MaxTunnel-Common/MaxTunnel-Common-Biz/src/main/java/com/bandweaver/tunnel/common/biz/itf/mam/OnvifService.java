@@ -2,6 +2,7 @@ package com.bandweaver.tunnel.common.biz.itf.mam;
 
 
 import com.bandweaver.tunnel.common.biz.constant.PtzDirectionEnum;
+import com.bandweaver.tunnel.common.biz.dto.mam.h5.H5Src;
 import com.bandweaver.tunnel.common.biz.dto.mam.video.VideoDto;
 import com.bandweaver.tunnel.common.biz.pojo.mam.video.VideoServer;
 import de.onvif.soap.devices.PtzDevices;
@@ -119,6 +120,8 @@ public interface OnvifService {
 	 * @Date 2018年12月4日
 	 */
 	boolean delSrc(String id) throws Exception;
+	
+	List<H5Src> getSrc() throws Exception;
 
 	void delSrcList();
 

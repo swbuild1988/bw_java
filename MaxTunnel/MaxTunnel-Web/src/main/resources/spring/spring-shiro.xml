@@ -59,7 +59,10 @@
                 /emplans/** =anon
                 /new-alarms/** =anon
                 /reports/preview/** = anon
-                /contracts/**/view == anon
+                /contracts/**/view = anon
+                /snaps/tp/** =anon
+                /inspection-tasks/** = anon
+                /equipments/** = anon
 
 
                 <!-- 测试需要，不需要登录，以后改为authc -->

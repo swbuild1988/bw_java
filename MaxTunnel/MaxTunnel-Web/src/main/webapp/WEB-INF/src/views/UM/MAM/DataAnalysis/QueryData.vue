@@ -98,9 +98,9 @@
             </div>
         </transition>
         <transition name="fade" mode="out-in">
-            <div  class="boxBG" v-if="viewHistory">
+            <div class="boxBG" v-if="viewHistory">
                 <Row>
-                    <Button @click="downLoadData" class="downloadBtn">下载历史数据</Button>
+                    <Button @click="downLoad" class="downloadBtn">下载历史数据</Button>
                     <Table :columns="downTableColumn" :data="downTableDate" v-show="false" ref="downTable"></Table>
                     <Col span="24">
                         <div class="chartSize">
@@ -116,11 +116,11 @@
                     </Col>
                     <Col span="6">
                         <span class="timeTitle">开始时间：</span>
-                        <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间" placement="top" style="width: 65%"></DatePicker>
+                        <DatePicker v-model="historyPrams.startTime" :readonly="isReady" type="datetime" placeholder="开始时间" placement="top" @on-ok="queryHistoryData" style="width: 65%"></DatePicker>
                     </Col>
                     <Col span="6">
                         <span class="timeTitle">结束时间：</span>
-                        <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间" placement="top" style="width:65%;"></DatePicker>
+                        <DatePicker v-model="historyPrams.endTime" type="datetime" :readonly="isReady" placeholder="结束时间" placement="top" @on-ok="queryHistoryData" style="width:65%;"></DatePicker>
                     </Col>
                     <Col span="6" class="btnBox">
                         <Button type="primary" shape="circle" icon="forward" @click="queryHistoryData" v-if="viewHistory">查询</Button>
@@ -321,7 +321,7 @@
             ]
             this.historyPrams.dateType = 3
             this.viewHistoryData()
-            // this.downLoadData()
+            this.downLoadData()
         }else{
             this.queryTableData()
         }
@@ -432,29 +432,38 @@
                 this.$Message.warning('请勾选需要查询历史数据的对象');
                 return;
             }
+            
             _this.viewHistory = !_this.viewHistory;
             _this.dataObjectSelect.state = !_this.dataObjectSelect.state;
-            _this.changeAlarmType(_this.historyPrams.dateType);
             _this.historyPrams.ids = [];
             this.selectSelection.reduce(function (a, b) {
                 _this.historyPrams.ids.push(b.id);
             }, _this.historyPrams.ids);
-            _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
-            _this.curlineChart.parameters.queryPram.endTime =new Date(_this.historyPrams.endTime) .getTime();
-            _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
+
+            _this.changeAlarmType(_this.historyPrams.dateType);
+            // _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
+            // _this.curlineChart.parameters.queryPram.endTime =new Date(_this.historyPrams.endTime) .getTime();
+            // _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
         },
 
         queryHistoryData() {
             let _this = this;
-            _this.curlineChart.parameters.queryPram.startTime = _this.historyPrams.startTime.getTime();
-            _this.curlineChart.parameters.queryPram.endTime = _this.historyPrams.endTime.getTime();
+            
+            
+            _this.curlineChart.parameters.queryPram.startTime = new Date(_this.historyPrams.startTime).getTime();
+            _this.curlineChart.parameters.queryPram.endTime = new Date(_this.historyPrams.endTime).getTime();
+
+            if(
+                (!_this.curlineChart.parameters.queryPram.startTime ||!_this.curlineChart.parameters.queryPram.endTime)||
+                (_this.curlineChart.parameters.queryPram.endTime - _this.curlineChart.parameters.queryPram.startTime<0)) return;
+            
             _this.curlineChart.parameters.queryPram.ids = _this.historyPrams.ids;
-            _this.$refs.multiLine.fetchData();
-            // _this.downLoadData()
+            _this.$refs.multiLine &&　_this.$refs.multiLine.fetchData();
+            _this.downLoadData()
         },
 
         backToCurPage() {
-            this.$router.back(-1);
+            this.viewHistory = !this.viewHistory;
         },
 
         selectionClick(arr) {
@@ -476,6 +485,7 @@
         //更改告警时间类型
         changeAlarmType(index) {
             let _this = this;
+            console.log('sdsdsd')
             let date = new Date();
             if (index == 1) {
                 date.setTime(date.getTime() - 3600 * 1000 * 24);
@@ -505,6 +515,9 @@
                 _this.isReady = false;
                 _this.historyPrams.startTime = "";
                 _this.historyPrams.endTime = "";
+            }
+            if(_this.historyPrams.startTime &&　_this.historyPrams.endTime){
+                this.queryHistoryData();
             }
         },
 

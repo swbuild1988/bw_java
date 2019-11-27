@@ -676,6 +676,8 @@ export default {
                             _this.curTunnelName + a.area + a.store;
                         _this.Obj.push(temp);
                     });
+
+                    console.log('result',result)
                 },
                 error => {
                     console.log(error);
@@ -701,9 +703,9 @@ export default {
                         : _this.queryCondition.areaId
             };
             MonitorDataService.getdataVideos(Params).then(result => {
-                if (result && result.length > 0) {
+                // if (result && result.length > 0) {
                     this.curCarousel.videolist = result;
-                }
+                // }
             });
         },
         chooseModule(val) {

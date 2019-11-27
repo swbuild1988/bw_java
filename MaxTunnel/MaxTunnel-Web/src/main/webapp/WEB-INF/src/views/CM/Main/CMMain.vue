@@ -127,20 +127,50 @@ export default {
                         name: "监测对象映射配置",
                         url: "/CMMain/MeasObjMap"
                     },
+                    {
+                        id: 47,
+                        name: "批量添加监测对象所需参数配置",
+                        url: "/CMMain/BatchAddObjParams"
+                    },
+                    {
+                        id: 48,
+                        name: "监测对象复杂类型配置",
+                        url: "/CMMain/MeasObjComplexType"
+                    },
+                    {
+                        id: 49,
+                        name: "监测对象极值配置",
+                        url: "/CMMain/MeasObjExtremum"
+                    },
+                    {
+                        id: 410,
+                        name: "所需监测对象选择",
+                        url: "/CMMain/UsedMeasObj"
+                    },
                     // {
                     //     id: 47,
                     //     name: "变电所信息配置",
                     //     url: "/CMMain/PowerSubstation"
                     // },
                     {
-                        id: 47,
+                        id: 411,
                         name: "预案配置",
                         url: "/CMMain/planControl"
                     },
                     {
-                        id: 48,
+                        id: 412,
                         name: "文件类型配置",
                         url: "/CMMain/doctype"
+                    },
+                    {
+                        id: 413,
+                        name: "大屏重要点位配置",
+                        url: "/CMMain/VMUnits"
+                    },
+                    {
+                        id: 414,
+                        name: "管线类型配置",
+                        url: "/CMMain/cableType"
                     }
                 ]
             },
@@ -170,6 +200,16 @@ export default {
                         id: 62,
                         name: "监测对象与应急预案",
                         url: "/CMMain/objPreplan"
+                    },
+                    {
+                        id: 63,
+                        name: "告警延迟时间配置",
+                        url: "/CMMain/alarmTime"
+                    },
+                    {
+                        id: 65,
+                        name: "内部测试告警",
+                        url: "/CMMain/testAlarm"
                     }
                 ]
             },

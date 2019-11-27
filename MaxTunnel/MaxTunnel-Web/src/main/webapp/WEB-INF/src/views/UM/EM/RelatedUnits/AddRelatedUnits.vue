@@ -232,9 +232,10 @@ export default {
                 e.target.className == "ivu-tree-arrow ivu-tree-arrow-open" ||
                 e.target.className == "ivu-tree-title" ||
                 e.target.className == "tree ivu-tree" ||
-                e.target.className == "ivu-tree-arrow" ||
-                e.target.nodeName == "UL" ||
-                e.target.nodeName == "LI"
+                e.target.className == "ivu-tree-arrow" 
+                // ||
+                // e.target.nodeName == "UL" ||
+                // e.target.nodeName == "LI"
             ) {
                 this.isShow = true;
             } else {

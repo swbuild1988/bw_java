@@ -14,6 +14,8 @@ public interface MaintenanceOrderMapper {
 
     MaintenanceOrderDto getOrder(@Param("id") Integer id);
 
+    MaintenanceOrderDto getOrderByDefectId(@Param("defectId") Integer defectId);
+
     MaintenanceOrder getOrderByInstance(@Param("processInstanceId") String processInstanceId);
 
     List<MaintenanceOrderDto> getMaintenanceOrderDtosByTunnel(@Param("tunnelId") Integer tunnelId);

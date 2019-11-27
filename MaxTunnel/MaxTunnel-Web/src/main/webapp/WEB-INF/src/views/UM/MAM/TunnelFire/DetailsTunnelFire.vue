@@ -566,6 +566,8 @@ export default {
                         temp.datatypeId = a.datatypeId;
                         temp.maxValue = a.maxValue;
                         temp.minValue = a.minValue;
+                        temp.maxNormal = a.maxNormal;
+                        temp.minNormal = a.minNormal;
                         temp.unit = a.unit;
                         temp.time =
                             a.time == undefined || a.time == ""
@@ -607,9 +609,9 @@ export default {
                         : _this.queryCondition.areaId
             };
             MonitorDataService.getdataVideos(Params).then(result => {
-                if (result && result.length > 0) {
+                // if (result && result.length > 0) {
                     this.curCarousel.videolist = result;
-                }
+                // }
             });
         },
         chooseModule(val) {

@@ -58,4 +58,14 @@ public class Item implements Serializable {
     public void setColumn(int column) {
         this.column = column;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "value=" + value +
+                ", stringValue='" + stringValue + '\'' +
+                ", row=" + row +
+                ", column=" + column +
+                '}';
+    }
 }

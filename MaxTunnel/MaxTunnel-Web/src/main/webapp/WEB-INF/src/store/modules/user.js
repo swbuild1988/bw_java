@@ -49,10 +49,6 @@ const user = {
 		}, loginForm) {
 		return new Promise((resolve, reject) => {
 			LoginService.UmLogin(loginForm).then((data) => {
-				if (data) {
-					localStorage.setItem('queueName', data.queueName)
-				}
-				// cookie中保存前端登录状态
 				resolve(data);
 			}).catch((err) => {
 				reject(err);

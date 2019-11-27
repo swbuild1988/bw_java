@@ -354,3 +354,31 @@ end COMMON_DOC_TYPE_TG;
 /
 alter trigger COMMON_DOC_TYPE_TG enable;
 
+--管线类型表
+CREATE TABLE T_OAM_CABLE_TYPE(
+  id              NUMBER    NOT NULL,
+  type_name       varchar2(100)    not null,--类型名称
+  in_store_type   varchar2(200)    not null, --可放的管仓类型
+  crt_time          DATE,
+   CONSTRAINT PK_T_OAM_CABLE_TYPE PRIMARY KEY ("ID")
+);
+alter table T_OAM_CABLE_TYPE
+  add constraint PK_T_OAM_CABLE_TYPE_ID primary key (ID);
+
+--create sequence
+create sequence OAM_CABLE_TYPE_SQ
+start with 1
+increment by 1
+nomaxvalue
+nocycle
+cache 20;
+-- create trigger
+CREATE OR REPLACE TRIGGER OAM_CABLE_TYPE_TG
+  BEFORE INSERT ON T_OAM_CABLE_TYPE
+  FOR EACH ROW
+  WHEN (new.id is null)
+begin
+  select OAM_CABLE_TYPE_SQ.nextval into :new.id from dual;
+end OAM_CABLE_TYPE_TG;
+/
+

@@ -167,7 +167,7 @@
                 </div>
             </div>
         </div>
-        <div class="test"></div>
+        <!-- <div class="test"></div> -->
         <!--<temperature class="maptemperature"></temperature>-->
         <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
             <map-gauges v-show="show.ges"></map-gauges>
@@ -181,7 +181,8 @@
         <transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
             <move-control prefixCls="MapLLPanel" v-show="show.showControlPanel"></move-control>
         </transition>
-        <div class="angle">
+        <angle-select-model :smViewer="viewer"></angle-select-model>
+        <!-- <div class="angle">
             <div class="anglePanel" :class="[angleProp.open ? 'anglePanel-open' : 'anglePanel-close']">
                 <div class="angleTitle">
                     <span>当前角度</span>
@@ -201,7 +202,7 @@
                 @click="switchPanel">
                     <img :src="angleProp.angleButImg" style="height:100%;width:100%;">
             </div>
-        </div>
+        </div> -->
         
 
         <sm-viewer
@@ -230,6 +231,7 @@ import AlarmCount from "../../../components/VM/AlarmManage/NonCleanedCount";
 import Vue from "vue";
 import PlanProcess from "../../../components/VM/VMBodyCenter/PlanProcess";
 import MoveControl from "../../../components/VM/VMBodyCenter/moveControlPanel";
+import AngleSelectModel from '../../../components/Common/Modal/AngleSelectModel.vue';
 export default {
     data() {
         return {
@@ -280,29 +282,33 @@ export default {
             openPlanPosition: {
                 openPosition: true
             },
-            angleProp:{
-                angleButImg:require(`../../../assets/UM/angleButClose.png`),
-                open:true,
-                panelBtnLeft:null,
-                panelBtnTop:null,
-                currLeft:null,
-                currTitle:'总览'
-            }
+            viewer:null
+            // angleProp:{
+            //     angleButImg:require(`../../../assets/UM/angleButClose.png`),
+            //     open:true,
+            //     panelBtnLeft:null,
+            //     panelBtnTop:null,
+            //     currLeft:null,
+            //     currTitle:'总览'
+            // }
         };
     },
     computed: {
         camera() {
             return this.VMConfig.CAMERA;
         },
-        angleLists() {
-            return this.MapAngleLists;
-        },
-        panelStyle(){
-            return {
-                // height: parseFloat(window.getComputedStyle(document.querySelector('.angleUls > li')).height)*11,
-                // height:'40px'
-            }
-        }
+        // viewer(){
+        //     return this.$refs.smViewer;
+        // }
+        // angleLists() {
+        //     return this.MapAngleLists;
+        // },
+        // panelStyle(){
+        //     return {
+        //         // height: parseFloat(window.getComputedStyle(document.querySelector('.angleUls > li')).height)*11,
+        //         // height:'40px'
+        //     }
+        // }
     },
     components: {
         SmViewer,
@@ -310,19 +316,21 @@ export default {
         MapGauges,
         AlarmCount,
         PlanProcess,
-        MoveControl
+        MoveControl,
+        AngleSelectModel
     },
     mounted() {
+        this.viewer = this.$refs.smViewer;
         this.init();
     },
     methods: {
         init() {
             let _this = this;
             // Vue.prototype.MQ.openMQ(this.MQCallback);
-            _this.getVideos(); //调用视屏接口
+            // _this.getVideos(); //调用视屏接口
             _this.eventListener();
             _this.$refs.smViewer.addIdentifierViewer(); //添加路线
-            _this.computedBtnStyle();
+            // _this.computedBtnStyle();
         },
         homeSwitch() {
             let _this = this;
@@ -333,27 +341,27 @@ export default {
             _this.$refs.smViewer.setViewAngle(); //恢复到初始化视角
             _this.$refs.smViewer.hideAllEntitys(); //隐藏所有实体
         },
-        getVideos() {
-            let _this = this;
+        // getVideos() {
+        //     let _this = this;
 
-            _this.axios.get("/videos").then(result => {
-                let { code, data } = result.data;
+        //     _this.axios.get("/videos").then(result => {
+        //         let { code, data } = result.data;
 
-                if (code == 200) {
-                    _this.allVideos.splice(0); //清空当前数组
+        //         if (code == 200) {
+        //             _this.allVideos.splice(0); //清空当前数组
 
-                    data.forEach(video => {
-                        _this.allVideos.push({
-                            MOID: video.id,
-                            latitude: video.latitude,
-                            longitude: video.longitude,
-                            height: video.height,
-                            url: video.url
-                        });
-                    });
-                }
-            });
-        },
+        //             data.forEach(video => {
+        //                 _this.allVideos.push({
+        //                     MOID: video.id,
+        //                     latitude: video.latitude,
+        //                     longitude: video.longitude,
+        //                     height: video.height,
+        //                     url: video.url
+        //                 });
+        //             });
+        //         }
+        //     });
+        // },
         MQCallback(message) {
             let result = JSON.parse(message.body);
 
@@ -418,35 +426,35 @@ export default {
                 this.divAttrList.forEach(item => (item.show = 0))
             );
         },
-        switchAngle(id){
+        // switchAngle(id){
             
-            let [ curAngle ]  = this.angleLists.filter(angle => angle.id == id);
+        //     let [ curAngle ]  = this.angleLists.filter(angle => angle.id == id);
 
-            this.angleProp.currTitle = curAngle.name;
-            this.$refs.smViewer.setViewAngle(curAngle.angle)
-        },
-        switchPanel(){
-            this.angleProp.open = !this.angleProp.open;
+        //     this.angleProp.currTitle = curAngle.name;
+        //     this.$refs.smViewer.setViewAngle(curAngle.angle)
+        // },
+        // switchPanel(){
+        //     this.angleProp.open = !this.angleProp.open;
             
-            this.angleProp.currLeft = this.angleProp.open ? this.angleProp.panelBtnLeft : 0 ;
-            let img = this.angleProp.open ? 'angleButClose' : 'angleButOpen';
+        //     this.angleProp.currLeft = this.angleProp.open ? this.angleProp.panelBtnLeft : 0 ;
+        //     let img = this.angleProp.open ? 'angleButClose' : 'angleButOpen';
             
-            this.angleProp.angleButImg = require(`../../../assets/UM/${ img }.png`)
+        //     this.angleProp.angleButImg = require(`../../../assets/UM/${ img }.png`)
             
-        },
-        computedBtnStyle(){
-            let dom = document.querySelector('.anglePanel');
-            let btn = document.querySelector('.angleBut')
+        // },
+        // computedBtnStyle(){
+        //     let dom = document.querySelector('.anglePanel');
+        //     let btn = document.querySelector('.angleBut')
             
-            if(!dom || !btn) return;
+        //     if(!dom || !btn) return;
             
-            this.angleProp.currLeft = this.angleProp.panelBtnLeft = dom.offsetWidth+'px';
-            this.angleProp.panelBtnTop = (dom.offsetHeight/2 - btn.offsetHeight/2 + dom.offsetTop)+'px'
-            // {
-            //     // left:dom.offsetWidth+'px',
-            //     top:(dom.offsetHeight/2 - btn.offsetHeight/2 + dom.offsetTop)+'px',
-            // }
-        }
+        //     this.angleProp.currLeft = this.angleProp.panelBtnLeft = dom.offsetWidth+'px';
+        //     this.angleProp.panelBtnTop = (dom.offsetHeight/2 - btn.offsetHeight/2 + dom.offsetTop)+'px'
+        //     // {
+        //     //     // left:dom.offsetWidth+'px',
+        //     //     top:(dom.offsetHeight/2 - btn.offsetHeight/2 + dom.offsetTop)+'px',
+        //     // }
+        // }
     },
     beforeDestroy() {
         Vue.prototype.MQ.closeMQ();
@@ -488,7 +496,7 @@ export default {
 .Main >>> .moveControlPanel {
     width: 21%;
 }
-.angle {
+/* .angle {
     overflow: hidden;
     height: 100%;
     position: absolute;
@@ -535,7 +543,7 @@ export default {
 } 
 .anglePanel  .angleUls {
     list-style: none;
-    /* overflow-y:scroll; */
+
     padding-top: .8vmin;
 }
 .angleUls > li{
@@ -552,7 +560,7 @@ export default {
     z-index: 1001;  
     cursor: pointer;
     transition: all 1.5s;
- }
+ } */
 /* 滚动条样式 */
 /* ::-webkit-scrollbar {
     width: 1vmin;  

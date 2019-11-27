@@ -8,7 +8,7 @@
                     icon="arrow-down-b"
                     style="width: 60%"
                     :value="sectionName"
-                    @click="showTree"
+                    @on-click="showTree"
                     readonly
                 ></Input>
                 <Tree
@@ -336,9 +336,10 @@ export default {
                 e.target.className == "ivu-tree-arrow ivu-tree-arrow-open" ||
                 e.target.className == "ivu-tree-title" ||
                 e.target.className == "tree ivu-tree" ||
-                e.target.className == "ivu-tree-arrow" ||
-                e.target.nodeName == "UL" ||
-                e.target.nodeName == "LI"
+                e.target.className == "ivu-tree-arrow" 
+                // ||
+                // e.target.nodeName == "UL" ||
+                // e.target.nodeName == "LI"
             ) {
                 this.isShow = true;
             } else {

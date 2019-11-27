@@ -3,13 +3,13 @@
     <div class="cycle-time-content">
         <div class="cycle-time-top">
             <span class="lf cycle-time-unit" v-show="showBottom">周期时间:</span>
-            <Select v-model="selectData" style="padding: .1rem;box-sizing: border-box" class="lf" on-change="getChangeVal">
+            <Select v-model="selectData" style="padding: .1rem;box-sizing: border-box" class="lf" on-change="getChangeVal" :disabled="readOnly">
                 <Option v-for="option in dataUnits" :key="option.value" :value="option.value">{{ option.text }}</Option>
             </Select>
         </div>
         <div class="cycle-time-body">
             <div v-for="(item,index) in cycleTimeParam" v-show="item.show">
-                <Input v-model="item.number" style="width: 75%" :placeholder="item.placeholder"/><span class="cycle-time-unit bottom-unit">{{ item.unit }}</span>
+                <Input v-model="item.number" style="width: 75%" :placeholder="item.placeholder" :readonly="readOnly"/><span class="cycle-time-unit bottom-unit">{{ item.unit }}</span>
             </div>
         </div>
         <!--<div class="cycle-time-bottom" v-show="showBottom">-->
@@ -65,7 +65,10 @@
                 type: String,
                 default: ''
             },
-
+            readOnly: {
+                type: Boolean,
+                default: false
+            }
         },
         data() {
             return {

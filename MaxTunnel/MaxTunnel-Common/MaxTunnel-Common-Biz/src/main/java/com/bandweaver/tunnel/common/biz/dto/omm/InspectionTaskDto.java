@@ -7,16 +7,18 @@ import com.bandweaver.tunnel.common.biz.pojo.omm.InspectionTask;
 import java.io.Serializable;
 import java.util.List;
 
-public class InspectionTaskDto extends InspectionTask implements Serializable{
+public class InspectionTaskDto extends InspectionTask implements Serializable {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6746258736612487926L;
+     *
+     */
+    private static final long serialVersionUID = -6746258736612487926L;
 
-	/**
-	 * 巡检任务对应的管廊id
-	 */
-	private Integer tunnelId;
+    /**
+     * 巡检任务对应的管廊id
+     */
+    private Integer tunnelId;
+
+    private String tunnelName;
     /**
      * 所属计划名
      */
@@ -35,14 +37,22 @@ public class InspectionTaskDto extends InspectionTask implements Serializable{
     private List<InspectionStep> steps;
 
     public Integer getTunnelId() {
-		return tunnelId;
-	}
+        return tunnelId;
+    }
 
-	public void setTunnelId(Integer tunnelId) {
-		this.tunnelId = tunnelId;
-	}
+    public void setTunnelId(Integer tunnelId) {
+        this.tunnelId = tunnelId;
+    }
 
-	public String getPlanName() {
+    public String getTunnelName() {
+        return tunnelName;
+    }
+
+    public void setTunnelName(String tunnelName) {
+        this.tunnelName = tunnelName;
+    }
+
+    public String getPlanName() {
         return planName;
     }
 
@@ -67,17 +77,19 @@ public class InspectionTaskDto extends InspectionTask implements Serializable{
     }
 
     public List<InspectionStep> getSteps() {
-		return steps;
-	}
+        return steps;
+    }
 
-	public void setSteps(List<InspectionStep> steps) {
-		this.steps = steps;
-	}
+    public void setSteps(List<InspectionStep> steps) {
+        this.steps = steps;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return "InspectionTaskDto{" +
-                "planName='" + planName + '\'' +
+                "tunnelId=" + tunnelId +
+                ", tunnelName='" + tunnelName + '\'' +
+                ", planName='" + planName + '\'' +
                 ", inspectManName='" + inspectManName + '\'' +
                 ", records=" + records +
                 ", steps=" + steps +

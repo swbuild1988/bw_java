@@ -223,6 +223,6 @@
 
 
   <select id="getListByTimeAndTimeType" resultMap="BaseResultMap">
-    select * from T_MAM_MEASOBJ_REPORT WHERE s_time &gt; = #{startTime} and e_time &lt;= #{endTime} and time_type = #{type}
+    select * from T_MAM_MEASOBJ_REPORT WHERE s_time &gt;= #{startTime} and e_time &lt;= #{endTime} and time_type = #{type}
   </select>
 </mapper>

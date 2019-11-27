@@ -4,7 +4,6 @@ package com.bandweaver.tunnel.controller.test;
 import com.alibaba.fastjson.JSONObject;
 import com.bandweaver.tunnel.common.biz.dto.AreaDto;
 import com.bandweaver.tunnel.common.biz.dto.SectionDto;
-import com.bandweaver.tunnel.common.biz.dto.StoreDto;
 import com.bandweaver.tunnel.common.biz.constant.mam.DataType;
 import com.bandweaver.tunnel.common.biz.constant.mam.ObjectType;
 import com.bandweaver.tunnel.common.biz.dto.TunnelDto;
@@ -29,6 +28,7 @@ import com.bandweaver.tunnel.common.biz.pojo.omm.Equipment;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.vo.mam.MeasObjVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
+import com.bandweaver.tunnel.common.platform.exception.BandWeaverException;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
 import com.bandweaver.tunnel.common.platform.util.CommonUtil;
 import com.bandweaver.tunnel.common.platform.util.DateUtil;
@@ -38,6 +38,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,7 +49,6 @@ import com.bandweaver.tunnel.service.mam.measobj.MeasObjModuleCenter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -252,7 +252,6 @@ public class TestController {
     @RequestMapping(value = "test/add_alarm/{level}", method = RequestMethod.GET)
     public JSONObject sendMQMessage(@PathVariable("level") Integer level) {
         Alarm alarm = new Alarm();
-        alarm.setId((int) ((new Date()).getTime() % 1000000));
         alarm.setAlarmDate(new Date());
 
         //int i = MathUtil.getRandomInt(1, 4);
@@ -273,6 +272,41 @@ public class TestController {
         return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
     }
 
+    /**
+     * 手动添加告警
+     * @param level 告警级别
+     * @param tunnelId 管廊
+     * @param areaId 区域
+     * @param storeId 管仓
+     * @param objtypeId 对象类型
+     * @return
+     * @author ya.liu
+     * @Date 2019年9月12日
+     */
+    @RequestMapping(value = "test/add_alarm/{level}", method = RequestMethod.POST)
+    public JSONObject addAlarms(@PathVariable("level") Integer level, @RequestBody MeasObjVo vo) {
+    	List<MeasObjDto> list = measObjService.getMeasObjByCondition(vo);
+    	if(list == null || list.size() < 1)
+    		return CommonUtil.returnStatusJson(StatusCodeEnum.S_200, "该区域下没有符合条件的监测对象！");
+    	// 随机获取
+    	int i = MathUtil.getRandomInt(1, list.size()) - 1;
+    	Alarm alarm = new Alarm();
+        alarm.setAlarmDate(new Date());
+        alarm.setAlarmLevel(level);
+        alarm.setAlarmName(list.get(i).getObjtypeName() + "测试告警");
+        alarm.setObjectId(list.get(i).getId());
+        alarm.setObjectName(list.get(i).getName());
+        alarm.setTunnelId(vo.getTunnelId());
+        alarm.setAlarmSource("");
+        alarm.setCleaned(false);
+        alarm.setIsDistribute(false);
+        alarm.setDescription("");
+        alarm.setLatitude("");
+        alarm.setLongitude("");
+        alarmService.add(alarm);
+    	return CommonUtil.returnStatusJson(StatusCodeEnum.S_200);
+    }
+    
     /*
      * 添加管廊光源
      */

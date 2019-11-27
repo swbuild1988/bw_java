@@ -58,7 +58,7 @@ public enum ObjectType {
     WARM_SENSATION("温感", 61, 5, 1, null),
     HAND_REPORT("手报", 62, 5, 2, null),
     
-    LEL("可燃气体", 65, 5, 1, "%"),
+    LEL("可燃气体", 65, 5, 1, "%LEL"),
 
     WIRELESS_AP("无线AP", 70, 6, 0, null),
     SWITCH("交换机", 71, 6, 0, null);

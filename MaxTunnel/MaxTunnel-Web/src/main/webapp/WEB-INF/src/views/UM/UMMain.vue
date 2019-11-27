@@ -271,7 +271,7 @@
                         <Button
                             class="btn-yonhu normalBtn"
                             :disabled="findPath('/UM/plans/detial')?false:true"
-                            @click="goToMoudle({ path:'/UM/plans/detial/FirePlanProcess'})"
+                            @click="goToMoudle({ path:'/UM/plans/detial/VentilationPlanSOP_KEY'})"
                         >
                             <div>
                                 <img :width="imgWidth" src="../../assets/UM/消防.png">

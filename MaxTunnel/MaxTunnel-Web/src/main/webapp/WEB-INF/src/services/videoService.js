@@ -465,6 +465,92 @@ var VideoService = {
 					reject(error.response.status + ' ' + error.response.data)
 				})
 		})
+	},
+	//插入上传H5配置文件
+	insertH5StreamConfig(params){
+		return new Promise((resolve, reject) => {
+			post('h5/api/add', params).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：h5/api/add")
+				}
+			})
+		})
+	},
+	//获取下载数据不分页
+	getDownloadData(){
+		return new Promise((resolve, reject) => {
+			get('h5/api/src').then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：h5/api/src")
+				}
+			})
+		})
+	},
+	getSceneVideos(){
+		return new Promise((resolve, reject) => {
+			get('/video_scenes')
+				.then(
+					result => {
+						let {
+							code,
+							data
+						} = result.data
+						if (code == 200) {
+							resolve(data)
+						} else {
+							reject('地址：video_scenes')
+						}
+					}
+				)
+				.catch(error => {
+					reject(error.response.status + ' ' + error.response.data)
+				})
+		})
+	},
+	//分页查询
+	getH5Data(params){
+		return new Promise((resolve, reject) => {
+			post('h5/api/src/datagrid', params).then( res=> {
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：h5/api/src/datagrid")
+				}
+			})
+		})
+	},
+	//获取详情
+	getInfo(id){
+		return new Promise((resolve, reject) => {
+			get('videos/'+id).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：videos/"+id)
+				}
+			})
+		})
+	},
+	// 提交修改
+	submitEdit(params){
+		return new Promise((resolve, reject) => {
+			put('h5/api/update', params).then(res=>{
+				let{ code, data, msg } = res.data
+				if( code == 200 ){
+					resolve(data)
+				}else{
+					reject(msg+"地址：h5/api/update")
+				}
+			})
+		})
 	}
 }
 

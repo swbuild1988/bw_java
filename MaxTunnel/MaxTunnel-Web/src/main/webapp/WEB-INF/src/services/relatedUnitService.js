@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { get,del,post } from "../utils/http";
+import { get,del,post,put } from "../utils/http";
 
 var RelatedUnitService = {
 	// 根据ID获取相关单位信息
@@ -39,7 +39,7 @@ var RelatedUnitService = {
 	// 修改相关单位
 	updateRelatedUnit: function(params) {
 		return new Promise((resolve, reject) => {
-			axios.put('relatedunits', params).then(res => {
+			put('relatedunits', params).then(res => {
 				let {
 					code,
 					data,
@@ -83,6 +83,40 @@ var RelatedUnitService = {
 					resolve(data)
 				} else {
 					reject(msg + ",地址:relatedunits/" + id)
+				}
+			})
+		})
+	},
+	// 获取大屏各重要点位置
+	getVMUnits(){
+		return new Promise((resolve, reject) => {
+			get('config/xml/units').then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ",地址:config/xml/units")
+				}
+			})
+		})
+	},
+	// 修改大屏各重要点位置
+	updateVMUnits(params){
+		return new Promise((resolve, reject) => {
+			post('config/xml/units',params).then(res => {
+				let {
+					code,
+					data,
+					msg
+				} = res.data
+				if (code == 200) {
+					resolve(data)
+				} else {
+					reject(msg + ",地址:config/xml/units")
 				}
 			})
 		})

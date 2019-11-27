@@ -86,7 +86,7 @@ public class AlarmController {
 	 * @author shaosen
 	 * @Date 2018年8月14日
 	 */
-	@RequestMapping(value = "alarms", method = RequestMethod.POST)
+	@RequestMapping(value = "new-alarms", method = RequestMethod.POST)
 	public JSONObject add(@RequestBody List<MeasAlarm> measAlarms) {
 		
 		LogUtil.info("接收到MaxView发送的告警：" + measAlarms );
