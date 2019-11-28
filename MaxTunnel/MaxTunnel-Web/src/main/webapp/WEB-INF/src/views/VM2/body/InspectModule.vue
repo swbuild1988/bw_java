@@ -116,7 +116,7 @@ import { converArrayFun } from "../../../scripts/commonFun";
 export default {
     data() {
         return {
-            title: "巡检模块",
+            title: "任务统计",
             taskCount: {
                 nowYearTaskCount: 0,
                 isRise: false

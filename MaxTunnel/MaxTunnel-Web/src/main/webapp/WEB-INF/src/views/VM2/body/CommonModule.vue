@@ -72,7 +72,7 @@
                     parameters: {
                         option: {
                             title: {
-                                text: "管线已建设"
+                                text: "入廊管线信息"
                             }
                         }
                     },
@@ -267,7 +267,7 @@
 
     .statusText {
         color: #fff;
-        font-size: 0.75vw;
+        font-size: 0.7vw;
         line-height: 3vmin;
         margin: 10% 5%;
     }

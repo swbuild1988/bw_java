@@ -79,7 +79,7 @@
                     series: [{
                         name: "",
                         type: "pie",
-                        center: ["50%","60%"],
+                        center: ["50%", "60%"],
                         radius: ["50%", "70%"],
                         hoverAnimation: false,
                         color: [
@@ -166,7 +166,8 @@
 
 <style scoped>
     .hollowPie {
+        margin-top: 10%;
         width: 100%;
-        height: 100%;
+        height: 80%;
     }
 </style>

@@ -16,7 +16,7 @@ import {VideoService} from "../../../services/videoService"
 export default {
   data() {
     return {
-      title: "视频管理",
+      title: "视频轮巡",
       setting: {
         value: 0,
         dots: "outside",

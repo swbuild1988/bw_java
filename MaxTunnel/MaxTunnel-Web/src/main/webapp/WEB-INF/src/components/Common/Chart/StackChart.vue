@@ -1,8 +1,5 @@
 <template>
-  <div
-          class='SimpleBar'
-          ref="element"
-          :id=id></div>
+    <div class='SimpleBar' ref="element" :id=id></div>
 </template>
 
 <script>
@@ -24,9 +21,9 @@
             seriesData: {
                 type: Array
             },
-            yAxisUnit:''
+            yAxisUnit: ''
         },
-        watch:{
+        watch: {
             seriesData: {
                 handler(newValue, oldValue) {
                     if (newValue.length && newValue.length > 0) this.resize();
@@ -39,8 +36,10 @@
             return {
                 myChart: {},
                 option: {},
-                chartConfig:{},
-                itemStyleColor: ['#00f6fc', '#ff2d2d', '#008bfe', '#53ff53', '#949449', '#b766ad', '#e1e8c8', '#7b7c68', '#e5b5b5', '#f0b489', '#928ea8', '#bda29a']
+                chartConfig: {},
+                itemStyleColor: ['#00f6fc', '#ff2d2d', '#008bfe', '#53ff53', '#949449', '#b766ad', '#e1e8c8', '#7b7c68',
+                    '#e5b5b5', '#f0b489', '#928ea8', '#bda29a'
+                ]
             }
         },
         mounted() {
@@ -57,10 +56,10 @@
                 this.drawBar();
                 this.fetchData()
             },
-            templateConfig(){
+            templateConfig() {
                 let _this = this;
-                if(this.id === 'stacChart'){
-                    this.chartConfig ={
+                if (this.id === 'stacChart') {
+                    this.chartConfig = {
                         legend: {
                             textStyle: {
                                 color: '#000',
@@ -73,15 +72,15 @@
                                 fontSize: _this.getFontSize('6%')
                             },
                         },
-                        xAxis:_this.getCoordinateStyle('#000','4%',0).xAxis,
-                        yAxis:_this.getCoordinateStyle('#000','4%',100).yAxis,
-                        grid:_this.getGrid('20%','3%','4%','15%')
+                        xAxis: _this.getCoordinateStyle('#000', '4%', 0).xAxis,
+                        yAxis: _this.getCoordinateStyle('#000', '4%', 100).yAxis,
+                        grid: _this.getGrid('20%', '3%', '4%', '15%')
                     }
-                }else if(this.id === 'corssBarChartID'){
-                    this.chartConfig ={
+                } else if (this.id === 'corssBarChartID') {
+                    this.chartConfig = {
                         legend: {
-                            x:'60%',
-                            y:'15%',
+                            x: '60%',
+                            y: '15%',
                             textStyle: {
                                 color: '#ccc',
                                 fontSize: _this.getFontSize('7%')
@@ -92,16 +91,16 @@
                                 color: '#ccc',
                                 fontSize: _this.getFontSize('10%')
                             },
-                            left:'center'
+                            left: 'center'
                         },
-                        xAxis:_this.getCoordinateStyle('#ccc','7%','auto','月').xAxis,
-                        yAxis:_this.getCoordinateStyle('#ccc','7%',5).yAxis,
-                        grid:_this.getGrid('30%','3%','4%','3%')
+                        xAxis: _this.getCoordinateStyle('#ccc', '7%', 'auto').xAxis,
+                        yAxis: _this.getCoordinateStyle('#ccc', '7%', 5).yAxis,
+                        grid: _this.getGrid('30%', '3%', '4%', '3%')
                     }
-                }else {
-                    this.chartConfig ={
+                } else {
+                    this.chartConfig = {
                         legend: {
-                            y:'bottom',      // 可选为：'top' | 'center'
+                            y: 'bottom', // 可选为：'top' | 'center'
                             textStyle: {
                                 color: '#ccc',
                                 fontSize: _this.getFontSize('7%')
@@ -112,11 +111,11 @@
                                 color: '#ccc',
                                 fontSize: _this.getFontSize('9%')
                             },
-                            left:'center'
+                            left: 'center'
                         },
-                        xAxis:_this.getCoordinateStyle('#ccc','7%',0).xAxis,
-                        yAxis:_this.getCoordinateStyle('#ccc','7%',100,' 个').yAxis,
-                        grid:_this.getGrid('20%','3%','4%','15%')
+                        xAxis: _this.getCoordinateStyle('#ccc', '7%', 0).xAxis,
+                        yAxis: _this.getCoordinateStyle('#ccc', '7%', 100, ' 个').yAxis,
+                        grid: _this.getGrid('20%', '3%', '4%', '15%')
                     }
                 }
 
@@ -133,30 +132,28 @@
                     ),
                     tooltip: {
                         trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
                     legend: Object.assign({
-                            data:this.legendData
+                            data: this.legendData
                         },
                         _this.chartConfig.legend
                     ),
                     grid: _this.chartConfig.grid,
-                    xAxis : [
-                        Object.assign(
-                            {
-                                type : 'category',
-                                data : [],
+                    xAxis: [
+                        Object.assign({
+                                type: 'category',
+                                data: [],
                             },
                             _this.chartConfig.xAxis
                         )
                     ],
-                    yAxis : [
-                        Object.assign(
-                            {
-                                type : 'value',
-                                min:0,
+                    yAxis: [
+                        Object.assign({
+                                type: 'value',
+                                min: 0,
                             },
                             _this.chartConfig.yAxis
                         )
@@ -177,7 +174,7 @@
                         name: this.legendData[i],
                         type: 'bar',
                         data: this.seriesData[i].data,
-                        barWidth:'30%',
+                        barWidth: '30%',
                         itemStyle: {
                             normal: {
                                 color: this.itemStyleColor[i]
@@ -185,11 +182,11 @@
                         }
                     };
 
-                    let seriesDataAll = this.id === 'corssBarChartID'
-                        ? Object.assign({},seriesData)
-                        : Object.assign({
-                              stack: 'total'
-                          },seriesData);
+                    let seriesDataAll = this.id === 'corssBarChartID' ?
+                        Object.assign({}, seriesData) :
+                        Object.assign({
+                            stack: 'total'
+                        }, seriesData);
 
                     this.option.series.push(seriesDataAll);
 
@@ -212,7 +209,7 @@
 
                 return 0;
             },
-            getCoordinateStyle(lineColor,labelFontSize,interval,unit){
+            getCoordinateStyle(lineColor, labelFontSize, interval, unit) {
                 let _this = this;
 
                 let Axis = {
@@ -224,28 +221,34 @@
                     axisLabel: {
                         show: true,
                         textStyle: {
-                            fontSize: _this.getFontSize(labelFontSize)      //更改坐标轴文字大小
+                            fontSize: _this.getFontSize(labelFontSize) //更改坐标轴文字大小
                         },
-                        interval:interval,
+                        interval: interval,
                     },
                 }
 
                 return {
-                    xAxis:Object.assign(
-                        Axis,
+                    xAxis: Object.assign(
+                        Axis, {
+                            interval: interval,
+                            name: ""
+                        }
                     ),
-                    yAxis:Object.assign(
-                        Axis,
-                        {
-                            interval:interval,
-                            name: !unit ? '':'单位('+ unit +' )'
+                    yAxis: Object.assign(
+                        Axis, {
+                            interval: interval,
+                            name: !unit ? '' : '单位(' + unit + ' )',
+                            nameTextStyle: {
+                                fontSize: _this.getFontSize(labelFontSize),
+                                align: 'left'
+                            }
                         }
                     ),
 
                 }
             },
-            getGrid(){
-                let [ top,left,right,bottom ] = [].slice.call(arguments);
+            getGrid() {
+                let [top, left, right, bottom] = [].slice.call(arguments);
 
                 return {
                     top,
@@ -260,8 +263,9 @@
 </script>
 
 <style scoped>
-  .SimpleBar {
-    width: 100%;
-    height: 100%;
-  }
+    .SimpleBar {
+        margin-left: 2.5%;
+        width: 95%;
+        height: 100%;
+    }
 </style>

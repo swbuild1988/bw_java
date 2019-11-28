@@ -48,7 +48,7 @@ import jinGaiImg from "../../../assets/VM/jinGai.png";
 export default {
 	data() {
 		return {
-			title: "管廊监测",
+			title: "环境监测",
 			userUrl: userImg,
 			jinGaiUrl: jinGaiImg,
 			iconSize: window.innerWidth * 0.012,

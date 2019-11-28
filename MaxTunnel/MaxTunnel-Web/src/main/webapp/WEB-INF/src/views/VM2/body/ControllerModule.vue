@@ -132,7 +132,7 @@
 	export default {
 		data() {
 			return {
-				title: "控制类监测",
+				title: "控制状态",
 				iconSize: window.innerWidth * 0.012,
 				freshTime: 60000,
 				isFresh: true,
@@ -320,11 +320,11 @@
 	}
 
 	.openClass {
-		color: gold
+		color: green
 	}
 
 	.closeClass {
-		color: blueviolet
+		color: yellow
 	}
 
 	.faultClass {

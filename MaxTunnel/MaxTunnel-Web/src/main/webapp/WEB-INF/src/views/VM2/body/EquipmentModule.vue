@@ -32,7 +32,7 @@
     export default {
         data() {
             return {
-                title: "廊内设备",
+                title: "设备统计",
                 stackCrossData: {
                     id: "stackCrossID",
                     title: "设备类型状态统计",
