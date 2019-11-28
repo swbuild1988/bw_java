@@ -14,7 +14,7 @@
                         </a>
                     </Dropdown>
                 </Col>
-                <Col span="1" offset="1">
+                <!-- <Col span="1" offset="1">
                     <Dropdown
                         divided
                         @click.native="personnelPosition.isShow = !personnelPosition.isShow"
@@ -124,7 +124,7 @@
                             >
                         </a>
                     </Dropdown>
-                </Col>
+                </Col> -->
                 <Col span="1" offset="1">
                     <Dropdown divided @click.native="jumpUMLogin">
                         <a>
@@ -245,14 +245,14 @@ export default {
             },
             divAttrList: [
                 { className: "To_home", text: "返回主页", show: 0 },
-                { className: "Personnel", text: "人员定位", show: 0 },
-                { className: "Camera_query", text: "相机查询", show: 0 },
-                { className: "Gas", text: "气体检测", show: 0 },
-                { className: "Alarm_number", text: "告警总数", show: 0 },
-                { className: "Flaw_query", text: "缺陷查询", show: 0 },
-                { className: "Events", text: "重大事件", show: 0 },
-                { className: "Emergencies", text: "紧急事件", show: 0 },
-                { className: "Unit_query", text: "单位查询", show: 0 },
+                // { className: "Personnel", text: "人员定位", show: 0 },
+                // { className: "Camera_query", text: "相机查询", show: 0 },
+                // { className: "Gas", text: "气体检测", show: 0 },
+                // { className: "Alarm_number", text: "告警总数", show: 0 },
+                // { className: "Flaw_query", text: "缺陷查询", show: 0 },
+                // { className: "Events", text: "重大事件", show: 0 },
+                // { className: "Emergencies", text: "紧急事件", show: 0 },
+                // { className: "Unit_query", text: "单位查询", show: 0 },
                 { className: "Management", text: "管理平台", show: 0 },
                 { className: "Fly", text: "飞行功能", show: 0 }
             ],
@@ -483,11 +483,11 @@ export default {
 
 .tooltip {
     display: grid;
-    grid-template-columns: repeat(11, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     color: #fff;
     text-align: center;
-    margin-left: 4%;
-    margin-right: 4%;
+    margin-left: 37%;
+    margin-right: 37%;
 }
 .tooltip > div {
     transition: all 1s;

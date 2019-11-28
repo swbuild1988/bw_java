@@ -237,8 +237,8 @@ export default {
           ? {
               billboard: {
                 image: require('../../../assets/UM/' + billboard.image + '.png'),
-                width:124,
-                height:100,
+                width:154,
+                height:130,
                 scaleByDistance: new Cesium.NearFarScalar(0, 1, 50000, 0),
                 // verticalOrigin: Cesium.VerticalOrigin.CENTER,
                 // horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
@@ -263,7 +263,7 @@ export default {
                 verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                 horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
                 scaleByDistance: new Cesium.NearFarScalar(0, 1, 40000, 0),
-                pixelOffset:new Cesium.Cartesian2(0, -18)
+                pixelOffset:new Cesium.Cartesian2(0, -24)
               }
             }
           : {};
