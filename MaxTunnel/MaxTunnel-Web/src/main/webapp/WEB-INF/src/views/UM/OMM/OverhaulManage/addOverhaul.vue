@@ -10,16 +10,16 @@
                 :rules="validateOverhaul"
             >
                 <FormItem label="所属管廊：">
-                    <Input type="text" v-model="overhaulData.tunnelName" readonly></Input>
+                    <Input type="text" v-model="overhaulData.tunnelName" readonly />
                 </FormItem>
                 <FormItem label="所属区段：">
-                    <Input type="text" v-model="overhaulData.area.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.area.name" readonly />
                 </FormItem>
                 <FormItem label="所属管仓：">
-                    <Input type="text" v-model="overhaulData.store.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.store.name" readonly />
                 </FormItem>
                 <FormItem label="所属缺陷：">
-                    <Input type="text" v-model="overhaulData.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.name" readonly />
                 </FormItem>
                 <FormItem label="维修进程：">
                     <Input
@@ -106,8 +106,9 @@ export default {
             pageType: 1,
             pageTypes: types.pageType,
             overhaulData: {
-                id: 1,
-                tunnelId: 1,
+                id: null,
+                tunnelId: null,
+                tunnelName: null,
                 area: {
                     id: null,
                     name: null
@@ -116,7 +117,8 @@ export default {
                     id: null,
                     name: null
                 },
-                name: null
+                name: null,
+                type: null
             },
             submitOverhaulDate: {
                 id: null,
@@ -159,11 +161,8 @@ export default {
     },
     mounted() {
         this.overhaulData.id = this.$route.params.id;
-        this.pageType = this.$route.params.type
-            ? this.$route.params.type
-            : sessionStorage["pageType"];
+        this.pageType = this.$route.params.type ? this.$route.params.type : sessionStorage["pageType"];
         this.typeKey = this.$route.params.typeKey;
-        console.log("this.$route.params.type", this.$route)
         TunnelService.getTunnels().then(
             result => {
                 this.tunnel = result;
@@ -178,6 +177,8 @@ export default {
         OverhaulService.getDefectByOverhaulId(this.overhaulData.id).then(
             result => {
                 this.overhaulData = result;
+                console.log('this.overhaulData', this.overhaulData.tunnelName)
+
             },
             error => {
                 this.Log.info(error);
@@ -187,6 +188,7 @@ export default {
         OverhaulService.getOrderByOverhaulId(this.overhaulData.id).then(
             result => {
                 this.submitOverhaulDate = result;
+                console.log('this.submitOverhaulDate', this.submitOverhaulDate)
                 if (result.startTime != null) {
                     this.submitOverhaulDate.startTime = new Date(
                         result.startTime
