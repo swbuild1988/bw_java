@@ -535,7 +535,7 @@ export default {
 			MeasObjServer.getToDayExtreDatas().then(
 				result => {
 					if (result) {
-
+						_this.Log.info("获取值", result)
 						result.forEach(a => {
 							_this.gaugeChart.forEach(b => {
 								if (b.type === a.type) {

@@ -576,10 +576,11 @@ public class MeasObjController {
         Date currentDate = DateUtil.getCurrentDate();
 
         JSONObject rt1 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.TEMPERATURE);
-        JSONObject rt2 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.CH4);
-        JSONObject rt3 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "min", ObjectType.OXYGEN);
-        JSONObject rt4 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.H2S);
-        JSONObject rt5 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.HUMIDITY);
+        JSONObject rt2 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.HUMIDITY);
+        JSONObject rt3 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.CH4);
+        JSONObject rt4 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "min", ObjectType.OXYGEN);
+        JSONObject rt5 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.H2S);
+        JSONObject rt6 = getMaxOrMinValueByObjType(currentDate, measObjAIs, measObjs, "max", ObjectType.LIQUID);
 
         List<JSONObject> rtdata = new ArrayList<>();
         rtdata.add(rt1);
@@ -587,6 +588,7 @@ public class MeasObjController {
         rtdata.add(rt3);
         rtdata.add(rt4);
         rtdata.add(rt5);
+        rtdata.add(rt6);
 
         return CommonUtil.success(rtdata);
     }
@@ -661,16 +663,13 @@ public class MeasObjController {
         String location = "无位置信息";
         // 获取最大最小值
         ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(objType);
-        double max = objTypeParam.getNormalMax();
-        double min = objTypeParam.getNormalMin();
-
 
         //获取所有已在用温度检测对象
         List<MeasObj> temperatureList = measObjs.stream().filter(x -> x.getObjtypeId().intValue() == objType.getValue() && x.isActived()).collect(Collectors.toList());
         //获取所有温度检测对象id
         List<Integer> ids = temperatureList.stream().map(x -> x.getId()).collect(Collectors.toList());
-        List<MeasObjAI> collect = measObjAIs.stream().filter(x -> ids.contains(x.getId())).collect(Collectors.toList());
-
+        List<MeasObjAI> collect = measObjAIs.stream().filter(x -> ids.contains(x.getId()))
+                .filter(a-> (a.getCv().doubleValue() >= objTypeParam.getMeasMin() && a.getCv().doubleValue() <= objTypeParam.getMeasMax())).collect(Collectors.toList());
 
         if (!collect.isEmpty()) {
 
@@ -687,8 +686,7 @@ public class MeasObjController {
             rtdata.put("time", measValueAI == null ? currentDate : measValueAI.getRefreshTime());
             rtdata.put("location", location);
             rtdata.put("type", objType.getValue());
-            rtdata.put("max", max);
-            rtdata.put("min", min);
+            rtdata.put("objTypeParam", objTypeParam);
         }
 
         return rtdata;
@@ -1278,8 +1276,8 @@ public class MeasObjController {
         }
 
         ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(objectType);
-        json.put("maxValue", objTypeParam != null ? objTypeParam.getMax() : "-");
-        json.put("minValue", objTypeParam != null ? objTypeParam.getMin() : "-");
+        json.put("maxValue", objTypeParam != null ? objTypeParam.getMeasMax() : "-");
+        json.put("minValue", objTypeParam != null ? objTypeParam.getMeasMin() : "-");
         json.put("maxNormal", objTypeParam != null ? objTypeParam.getNormalMax() : "-");
         json.put("minNormal", objTypeParam != null ? objTypeParam.getNormalMin() : "-");
 
