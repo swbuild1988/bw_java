@@ -177,7 +177,6 @@ export default {
                 <Layout class="coment">
                     <Sider
                         width={this.screenWidth}
-                        collapsible
                         collapsed-width={this.minScreenWidth}
                         v-model="isCollapsed"
                         style="background-color: transparent"
