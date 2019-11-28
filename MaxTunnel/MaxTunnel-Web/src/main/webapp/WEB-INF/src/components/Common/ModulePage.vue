@@ -344,7 +344,7 @@ export default {
 }
 
 .ivu-menu >>> .ivu-menu-item {
-    padding-left: 36px !important;
+    padding-left: 4.6vmin !important;
     /* font-size: 1.66vmin !important; */
     /* border-bottom: 1px solid #aaa;*/
 }
@@ -370,6 +370,7 @@ export default {
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item {
     border-right: none;
+    border-left: none;
 }
 
 .unitBox {

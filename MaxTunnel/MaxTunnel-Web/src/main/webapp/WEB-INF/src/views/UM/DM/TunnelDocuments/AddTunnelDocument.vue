@@ -177,7 +177,7 @@ export default {
     color: #49d9fe;
 }
 .form >>> .ivu-form-item-label {
-    width: 14vmin;
+    width: 16vmin;
     color: #fff;
 }
 .inputWidth {
@@ -210,5 +210,10 @@ export default {
 .form >>> .ivu-upload-drag {
     background: transparent;
     color: #fff;
+}
+@media (min-width: 2200px) {
+    .title {
+        margin-top: -1vmin;
+    }
 }
 </style>
