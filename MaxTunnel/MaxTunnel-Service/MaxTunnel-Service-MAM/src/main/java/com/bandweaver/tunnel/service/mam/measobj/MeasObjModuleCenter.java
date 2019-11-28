@@ -15,7 +15,10 @@ import com.bandweaver.tunnel.common.biz.pojo.mam.measobj.*;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ComplexObjectConvert;
 import com.bandweaver.tunnel.common.biz.pojo.xml.Config;
 import com.bandweaver.tunnel.common.biz.pojo.xml.ConvertType;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ObjTypeParam;
+import com.bandweaver.tunnel.common.platform.util.MathUtil;
 import com.bandweaver.tunnel.dao.mam.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +70,45 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public List<MeasObjAI> getMeasObjAIs() {
-        return new ArrayList<MeasObjAI>(measObjAIHashMap.values());
+        List<MeasObjAI> ais = new ArrayList<MeasObjAI>(measObjAIHashMap.values());
+
+        // 将值处理一下
+        for (MeasObjAI ai : ais) {
+            ai.setCv(dealAiValue(ai));
+        }
+
+        return ais;
+    }
+
+    /**
+     * 处理ai的数据
+     *
+     * @param ai
+     * @return
+     */
+    private double dealAiValue(MeasObjAI ai) {
+        // 获取最大最小值
+        ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(ai.getObjtypeId().intValue());
+        if (objTypeParam == null) return ai.getCv().doubleValue();
+
+        // 显示原值
+        if (objTypeParam.getShowType() == 0) {
+            return ai.getCv().doubleValue();
+        }
+        // 超出极限的话，在正常范围内随机个数
+        else if (objTypeParam.getShowType() == 1) {
+            if (ai.getCv() > objTypeParam.getMeasMax() || ai.getCv() < objTypeParam.getMeasMin()) {
+                return MathUtil.getRandomDouble(objTypeParam.getNormalMin(), objTypeParam.getNormalMax(), 2);
+            }
+        }
+        // 超出极限的话，显示特定值
+        else if (objTypeParam.getShowType() == 2) {
+            if (ai.getCv() > objTypeParam.getMeasMax() || ai.getCv() < objTypeParam.getMeasMin()) {
+                return objTypeParam.getShowValue();
+            }
+        }
+
+        return 0;
     }
 
     public List<MeasObjDI> getMeasObjDIs() {
@@ -91,7 +132,10 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public MeasObjAI getMeasObjAI(int id) {
-        return measObjAIHashMap.get(id);
+        MeasObjAI ai = new MeasObjAI();
+        BeanUtils.copyProperties(ai, measObjAIHashMap.get(id));
+        ai.setCv(dealAiValue(ai));
+        return ai;
     }
 
     public MeasObjDI getMeasObjDI(int id) {
@@ -210,11 +254,11 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
     }
 
     public void insertMeasObj(MeasObj measObj) {
-    	// 如果存在该点位就退出
-    	if (measObjHashMap.containsKey(measObj.getId())) {
-    		return;
-    	}
-    	
+        // 如果存在该点位就退出
+        if (measObjHashMap.containsKey(measObj.getId())) {
+            return;
+        }
+
         measObj.setActived(true);
 
         if (measObj.getObjtypeId() != null && measObj.getObjtypeId() != 0) {
@@ -243,7 +287,7 @@ public class MeasObjModuleCenter implements ModuleCenterInterface {
 
     public void updateMeasObj(MeasObj measObj) {
         if (!measObjHashMap.containsKey(measObj.getId())) return;
-        
+
         // 先更新数据库
         measObj.setSectionId(-1);
         if (measObj.getStoreId() != null && measObj.getAreaId() != null) {

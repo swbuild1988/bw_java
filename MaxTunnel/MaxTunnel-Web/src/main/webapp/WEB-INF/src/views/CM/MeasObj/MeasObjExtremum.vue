@@ -16,17 +16,35 @@
                         <Option v-for="item in dataTypes" :key="item.val" :value="item.key">{{item.key}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="可测量最小值：" prop="min">
-                    <Input v-model="modal.info.min" type="text" />
+                <FormItem label="显示类型：0 原值；1 正常范围内随机；2 显示值" prop="showType">
+                    <Input v-model="modal.info.showType" type="text" />
                 </FormItem>
-                <FormItem label="可测量最大值：" prop="max">
-                    <Input v-model="modal.info.max" type="text" />
+                <FormItem label="显示值" prop="showValue">
+                    <Input v-model="modal.info.showValue" type="text" />
                 </FormItem>
-                 <FormItem label="正常值最小值：" prop="normalMin">
+                <FormItem label="可测量最小值：" prop="measMin">
+                    <Input v-model="modal.info.measMin" type="text" />
+                </FormItem>
+                <FormItem label="可测量最大值：" prop="measMax">
+                    <Input v-model="modal.info.measMax" type="text" />
+                </FormItem>
+                 <FormItem label="正常最小值：" prop="normalMin">
                     <Input v-model="modal.info.normalMin" type="text" />
                 </FormItem>
-                <FormItem label="正常值最大值：" prop="normalMax">
+                <FormItem label="正常最大值：" prop="normalMax">
                     <Input v-model="modal.info.normalMax" type="text" />
+                </FormItem>
+                <FormItem label="警告最小值：" prop="warmingMin">
+                    <Input v-model="modal.info.warmingMin" type="text" />
+                </FormItem>
+                <FormItem label="警告最大值：" prop="warmingMax">
+                    <Input v-model="modal.info.warmingMax" type="text" />
+                </FormItem>
+                 <FormItem label="错误最小值：" prop="errorMin">
+                    <Input v-model="modal.info.errorMin" type="text" />
+                </FormItem>
+                <FormItem label="错误最大值：" prop="errorMax">
+                    <Input v-model="modal.info.errorMax" type="text" />
                 </FormItem>
             </Form>   
             <div slot="footer">
@@ -49,24 +67,54 @@ export default {
 					align: 'center'
 				},
 				{
+					title: "显示类型",
+					key: "showType",
+					align: 'center'
+				},
+				{
+					title: "显示值",
+					align: 'center',
+					key: 'showValue',
+                },
+				{
 					title: "可测量最小值",
 					align: 'center',
-					key: 'min',
+					key: 'measMin',
                 },
                 {
 					title: "可测量最大值",
 					align: 'center',
-					key: 'max',
+					key: 'measMax',
                 },
                 {
-					title: "正常值最小值",
+					title: "正常最小值",
 					align: 'center',
 					key: 'normalMin',
                 },
                 {
-					title: "正常值最大值",
+					title: "正常最大值",
 					align: 'center',
 					key: 'normalMax',
+				},
+                {
+					title: "警告最小值",
+					align: 'center',
+					key: 'warmingMin',
+                },
+                {
+					title: "警告最大值",
+					align: 'center',
+					key: 'warmingMax',
+				},
+                {
+					title: "错误最小值",
+					align: 'center',
+					key: 'errorMin',
+                },
+                {
+					title: "错误最大值",
+					align: 'center',
+					key: 'errorMax',
 				},
 				{
 					title: "操作",
@@ -121,27 +169,45 @@ export default {
 				info: {
 					id: null,
 					typeName: null,
-                    min: null,
-                    max: null,
+					showType: null,
+					showValue: null,
+                    measMin: null,
+                    measMax: null,
                     normalMax: null,
-                    normalMin: null
+                    normalMin: null,
+                    warmingMin: null,
+                    warmingMax: null,
+                    errorMin: null,
+                    errorMax: null
 				}
 			},
 			unitParam: {
 				typeName: [
 					{ required: true, message: '请选择名称', trigger: 'change' }
 				],
-				min: [
+				measMin: [
 					{ required: true, message: '请输入可测量最小值', trigger: 'blur' }
                 ],
-                max: [
+                measMax: [
 					{ required: true, message: '请输入可测量最大值', trigger: 'blur' }
                 ],
                 normalMin: [
-					{ required: true, message: '请输入正常值最小值', trigger: 'blur' }
+					{ required: true, message: '请输入正常最小值', trigger: 'blur' }
                 ],
                 normalMax: [
-					{ required: true, message: '请输入正常值最大值', trigger: 'blur' }
+					{ required: true, message: '请输入正常最大值', trigger: 'blur' }
+				],
+                warmingMin: [
+					{ required: true, message: '请输入警告最小值', trigger: 'blur' }
+                ],
+                warmingMax: [
+					{ required: true, message: '请输入警告最大值', trigger: 'blur' }
+				],
+                errorMin: [
+					{ required: true, message: '请输入错误最小值', trigger: 'blur' }
+                ],
+                errorMax: [
+					{ required: true, message: '请输入错误最大值', trigger: 'blur' }
 				]
             },
             dataTypes: []
