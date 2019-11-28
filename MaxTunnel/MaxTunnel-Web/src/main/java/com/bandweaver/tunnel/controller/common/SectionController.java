@@ -27,9 +27,11 @@ import com.bandweaver.tunnel.common.biz.itf.AreaService;
 import com.bandweaver.tunnel.common.biz.itf.SectionService;
 import com.bandweaver.tunnel.common.biz.itf.StoreService;
 import com.bandweaver.tunnel.common.biz.itf.StoreTypeService;
+import com.bandweaver.tunnel.common.biz.itf.common.XMLService;
 import com.bandweaver.tunnel.common.biz.itf.mam.measobj.MeasObjService;
 import com.bandweaver.tunnel.common.biz.pojo.Section;
 import com.bandweaver.tunnel.common.biz.pojo.StoreType;
+import com.bandweaver.tunnel.common.biz.pojo.xml.ObjTypeParam;
 import com.bandweaver.tunnel.common.biz.vo.SectionVo;
 import com.bandweaver.tunnel.common.platform.constant.StatusCodeEnum;
 import com.bandweaver.tunnel.common.platform.log.LogUtil;
@@ -57,6 +59,8 @@ public class SectionController extends BaseController<Section>{
     private MeasObjService measObjService;
     @Autowired
     private StoreTypeService storeTypeService;
+    @Autowired
+    private XMLService xmlService;
 
 
     /**添加
@@ -494,6 +498,12 @@ public class SectionController extends BaseController<Section>{
             j.put("cv", cv);
             j.put("description", measObj.getDescription());
             ObjectType type = ObjectType.getEnum(measObj.getObjtypeId());
+            
+            ObjTypeParam objTypeParam = xmlService.getXMLAllInfo().getObjTypeParam(type);
+            j.put("maxValue", objTypeParam != null ? objTypeParam.getMax() : "-");
+            j.put("minValue", objTypeParam != null ? objTypeParam.getMin() : "-");
+            j.put("maxNormal", objTypeParam != null ? objTypeParam.getNormalMax() : "-");
+            j.put("minNormal", objTypeParam != null ? objTypeParam.getNormalMin() : "-");
             j.put("unit", type == null ? "" : type.getUnit());
             cvList.add(j);
         }
