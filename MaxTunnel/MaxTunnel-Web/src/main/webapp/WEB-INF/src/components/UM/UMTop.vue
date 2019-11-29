@@ -54,7 +54,7 @@
                                     @click.native="goToMoudle({ path: '/UM/myTasks/query'})"
                                 >
                                     我的任务
-                                    <span class="alarmCount">（{{messageCount}}）</span>
+                                    <span>（{{messageCount}}）</span>
                                 </DropdownItem>
                                 <DropdownItem @click.native="showAboutUs">关于我们</DropdownItem>
                                 <showAboutUs v-bind="aboutUs"></showAboutUs>
@@ -63,7 +63,7 @@
                                 >个人中心</DropdownItem>
                                 <DropdownItem @click.native="isShowAlarm">
                                     告警
-                                    <span class="alarmCount">（{{alarmCount}}）</span>
+                                    <span>（{{alarmCount}}）</span>
                                 </DropdownItem>
                                 <!--<showUserInfo v-bind="userself"></showUserInfo>-->
                                 <DropdownItem divided @click.native="logout">注销</DropdownItem>
@@ -733,6 +733,7 @@ export default {
     padding: 0;
     top: -0.8vmin;
     right: 0.1vmin;
+    border-radius: 2.2vmin;
 }
 
 .layout-nav .topBtn {
@@ -809,6 +810,11 @@ export default {
     animation: scaleout 1.5s infinite ease-in-out;
 }
 
+.layout-nav >>> .info-person .ivu-dropdown-item{
+    padding: 0.7vmin 1.2vmin;
+    text-align: left;
+}
+
 /* 小屏幕（显示器，小于等于 1920px） */
 @media (max-width: 1920px) {
     .layout-nav >>> .ivu-select-dropdown {
@@ -831,6 +837,9 @@ export default {
     }
     .ivu-notice {
         width: 30vmin !important;
+    }
+    .layout-nav >>> .info-person .ivu-dropdown-item{
+        text-align: left;
     }
 }
 </style>

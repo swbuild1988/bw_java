@@ -10,16 +10,16 @@
                 :rules="validateOverhaul"
             >
                 <FormItem label="所属管廊：">
-                    <Input type="text" v-model="overhaulData.tunnelName" readonly></Input>
+                    <Input type="text" v-model="overhaulData.tunnelName" readonly />
                 </FormItem>
                 <FormItem label="所属区段：">
-                    <Input type="text" v-model="overhaulData.area.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.area.name" readonly />
                 </FormItem>
                 <FormItem label="所属管仓：">
-                    <Input type="text" v-model="overhaulData.store.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.store.name" readonly />
                 </FormItem>
                 <FormItem label="所属缺陷：">
-                    <Input type="text" v-model="overhaulData.name" readonly></Input>
+                    <Input type="text" v-model="overhaulData.name" readonly />
                 </FormItem>
                 <FormItem label="维修进程：">
                     <Input
@@ -51,7 +51,7 @@
                         :readonly="this.pageType==1||this.typeKey=='complete'"
                     ></DatePicker>
                 </FormItem>
-                <FormItem label="维修结果：" v-if="overhaulData.type==2" class="statusStyle">
+                <FormItem label="维修结果：" v-if="overhaulData.type===2" class="statusStyle">
                     <Select
                         v-model="submitOverhaulDate.equipmentDto.status"
                         @on-change="changeStatus"
@@ -106,8 +106,9 @@ export default {
             pageType: 1,
             pageTypes: types.pageType,
             overhaulData: {
-                id: 1,
-                tunnelId: 1,
+                id: null,
+                tunnelId: null,
+                tunnelName: null,
                 area: {
                     id: null,
                     name: null
@@ -116,7 +117,8 @@ export default {
                     id: null,
                     name: null
                 },
-                name: null
+                name: null,
+                type: null
             },
             submitOverhaulDate: {
                 id: null,
@@ -159,11 +161,8 @@ export default {
     },
     mounted() {
         this.overhaulData.id = this.$route.params.id;
-        this.pageType = this.$route.params.type
-            ? this.$route.params.type
-            : sessionStorage["pageType"];
+        this.pageType = this.$route.params.type ? this.$route.params.type : sessionStorage["pageType"];
         this.typeKey = this.$route.params.typeKey;
-        console.log("this.$route.params.type", this.$route)
         TunnelService.getTunnels().then(
             result => {
                 this.tunnel = result;
@@ -242,7 +241,8 @@ export default {
                 if (this.overhaulData.type == 2) {
                     this.$refs[name].validate(valid => {
                         if (
-                            valid &&
+                            valid 
+                            &&
                             this.submitOverhaulDate.equipmentDto.status != null
                         ) {
                             this.isChoosedStatus = false;
@@ -312,11 +312,11 @@ export default {
             this.$router.back(-1);
         },
         changeStatus() {
-            if (this.submitOverhaulDate.equipmentDto.status == null) {
-                this.isChoosedStatus = true;
-            } else {
-                this.isChoosedStatus = false;
-            }
+            // if (this.submitOverhaulDate.equipmentDto.status == null) {
+            //     this.isChoosedStatus = true;
+            // } else {
+            //     this.isChoosedStatus = false;
+            // }
         }
     }
 };

@@ -32,7 +32,7 @@
             </Col>
             <Col class="conditionTitle" span="4">
                 联系方式：
-                <Input v-model="queryCondition.tel" class="queryConditionWidth"></Input>
+                <Input v-model="queryCondition.tel" class="queryConditionWidth bvInput"></Input>
             </Col>
             <Col span="4">
                 <Button type="primary" icon="ios-search" @click="queryMembers">查询</Button>
@@ -478,6 +478,11 @@ export default {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     border-radius: 1vmin;
     background: #ededed;
+}
+.bvInput >>> .ivu-input{
+    line-height: 3.2vmin;
+    height: 3.2vmin;
+    font-size: 1.4vmin;
 }
 </style>
 

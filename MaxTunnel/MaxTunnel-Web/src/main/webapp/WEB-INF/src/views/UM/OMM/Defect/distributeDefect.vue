@@ -9,14 +9,16 @@
                 </Select>
             </FormItem>
             <FormItem label="所属区段：">
-                <Select v-model="defectDetails.area.id" disabled>
+                <!-- <Select v-model="defectDetails.area.id" disabled>
                     <Option v-for="(item,index) in areas" :key="index" :value="item.id">{{item.name}}</Option>
-                </Select>
+                </Select> -->
+                <Input v-model="defectDetails.area.name" />
             </FormItem>
             <FormItem label="所属管仓：">
-                <Select v-model="defectDetails.store.id" disabled>
+                <!-- <Select v-model="defectDetails.store.id" disabled>
                     <Option v-for="(item,index) in stores" :key="index" :value="item.id">{{item.name}}</Option>
-                </Select>
+                </Select> -->
+                <Input v-model="defectDetails.store.name" />
             </FormItem>
             <FormItem label="缺陷名称：">
                 <Input v-model="defectDetails.name" type="text" placeholder="请输入缺陷名称" readonly></Input>
@@ -163,8 +165,8 @@ export default {
             (result)=>{
                 _this.defectDetails = result
                 _this.defectDetails.createTime = new Date(result.createTime).format('yyyy-MM-dd hh:mm:s')
-                _this.getAreas()
-                _this.getStores()
+                // _this.getAreas()
+                // _this.getStores()
             }
         )
         this.getStaff()

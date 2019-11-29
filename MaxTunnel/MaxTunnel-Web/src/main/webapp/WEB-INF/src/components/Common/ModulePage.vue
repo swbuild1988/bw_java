@@ -177,7 +177,6 @@ export default {
                 <Layout class="coment">
                     <Sider
                         width={this.screenWidth}
-                        collapsible
                         collapsed-width={this.minScreenWidth}
                         v-model="isCollapsed"
                         style="background-color: transparent"
@@ -344,7 +343,7 @@ export default {
 }
 
 .ivu-menu >>> .ivu-menu-item {
-    padding-left: 4.6vmin !important;
+    padding-left: 3.vmin !important;
     /* font-size: 1.66vmin !important; */
     /* border-bottom: 1px solid #aaa;*/
 }
@@ -517,6 +516,10 @@ h1 {
 
 .ivu-layout-sider >>> .ivu-layout-sider-trigger {
     background: transparent;
+}
+
+.ivu-layout-sider {
+    padding-right: 1.6vmin;
 }
 
 .ivu-layout {
