@@ -560,5 +560,11 @@
 	.queryCondition .ivu-btn-info{
 		background: linear-gradient(to left, #f61a1a, #f68380)
 	}
+	.ivu-select-multiple >>> .ivu-select-selection .ivu-select-placeholder {
+		height: 4vmin;
+		line-height: 4vmin;
+		font-size: 1.4vmin;
+		color: #fff;
+	}
 </style>
 

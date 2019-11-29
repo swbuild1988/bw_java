@@ -102,7 +102,15 @@ export default {
             for (let i = 0, data = this.dataDetails; i < data.length; i++) {
                 switch (data[i].dataType) {
                     case 1:
-                        currData = data[i];
+                        currData = {
+                            name: data[i].name,
+                            cv: (data[i].cv > data[i].maxNormal || data[i].cv <data[i].minNormal)
+                                ? '故障'
+                                :  data[i].cv,
+                            unit: (data[i].cv > data[i].maxNormal || data[i].cv <data[i].minNormal)
+                                ? null
+                                :  data[i].unit
+                        };
                         this.addTitleImg(currData, data[i].objectType);
                         break;
                     case 2:
