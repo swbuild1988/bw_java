@@ -7,7 +7,7 @@
             </div>
         </div>
     	<Modal v-model="modal.isShow" :title="modal.title" @on-cancel="handleReset()" :mask-closable="false">
-            <Form ref="unitParam" :model="modal.info" :rules="unitParam" :label-width="120">
+            <Form ref="unitParam" :model="modal.info" :label-width="120">
                 <FormItem label="名称：" prop="typeName" v-if="modal.title === '修改参数'">
                     <Input v-model="modal.info.typeName" type="text" disabled/>
                 </FormItem>
@@ -23,28 +23,28 @@
                     <Input v-model="modal.info.showValue" type="text" />
                 </FormItem>
                 <FormItem label="可测量最小值：" prop="measMin">
-                    <Input v-model="modal.info.measMin" type="text" />
+                    <Input v-model="modal.info.measMin" type="number" />
                 </FormItem>
                 <FormItem label="可测量最大值：" prop="measMax">
-                    <Input v-model="modal.info.measMax" type="text" />
+                    <Input v-model="modal.info.measMax" type="number" />
                 </FormItem>
                  <FormItem label="正常最小值：" prop="normalMin">
-                    <Input v-model="modal.info.normalMin" type="text" />
+                    <Input v-model="modal.info.normalMin" type="number" />
                 </FormItem>
                 <FormItem label="正常最大值：" prop="normalMax">
-                    <Input v-model="modal.info.normalMax" type="text" />
+                    <Input v-model="modal.info.normalMax" type="number" />
                 </FormItem>
                 <FormItem label="警告最小值：" prop="warmingMin">
-                    <Input v-model="modal.info.warmingMin" type="text" />
+                    <Input v-model="modal.info.warmingMin" type="number" />
                 </FormItem>
                 <FormItem label="警告最大值：" prop="warmingMax">
-                    <Input v-model="modal.info.warmingMax" type="text" />
+                    <Input v-model="modal.info.warmingMax" type="number" />
                 </FormItem>
                  <FormItem label="错误最小值：" prop="errorMin">
-                    <Input v-model="modal.info.errorMin" type="text" />
+                    <Input v-model="modal.info.errorMin" type="number" />
                 </FormItem>
                 <FormItem label="错误最大值：" prop="errorMax">
-                    <Input v-model="modal.info.errorMax" type="text" />
+                    <Input v-model="modal.info.errorMax" type="number" />
                 </FormItem>
             </Form>   
             <div slot="footer">
@@ -183,31 +183,31 @@ export default {
 			},
 			unitParam: {
 				typeName: [
-					{ required: true, message: '请选择名称', trigger: 'change' }
+					{ required: false, message: '请选择名称', trigger: 'change' }
 				],
 				measMin: [
-					{ required: true, message: '请输入可测量最小值', trigger: 'blur' }
+					{ required: false, message: '请输入可测量最小值', trigger: 'blur' }
                 ],
                 measMax: [
-					{ required: true, message: '请输入可测量最大值', trigger: 'blur' }
+					{ required: false, message: '请输入可测量最大值', trigger: 'blur' }
                 ],
                 normalMin: [
-					{ required: true, message: '请输入正常最小值', trigger: 'blur' }
+					{ required: false, message: '请输入正常最小值', trigger: 'blur' }
                 ],
                 normalMax: [
-					{ required: true, message: '请输入正常最大值', trigger: 'blur' }
+					{ required: false, message: '请输入正常最大值', trigger: 'blur' }
 				],
                 warmingMin: [
-					{ required: true, message: '请输入警告最小值', trigger: 'blur' }
+					{ required: false, message: '请输入警告最小值', trigger: 'blur' }
                 ],
                 warmingMax: [
-					{ required: true, message: '请输入警告最大值', trigger: 'blur' }
+					{ required: false, message: '请输入警告最大值', trigger: 'blur' }
 				],
                 errorMin: [
-					{ required: true, message: '请输入错误最小值', trigger: 'blur' }
+					{ required: false, message: '请输入错误最小值', trigger: 'blur' }
                 ],
                 errorMax: [
-					{ required: true, message: '请输入错误最大值', trigger: 'blur' }
+					{ required: false, message: '请输入错误最大值', trigger: 'blur' }
 				]
             },
             dataTypes: []

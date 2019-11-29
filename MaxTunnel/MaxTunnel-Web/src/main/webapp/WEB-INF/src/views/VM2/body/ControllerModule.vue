@@ -303,7 +303,7 @@
 		text-align: center;
 		width: 40%;
 		float: left;
-		font-size: 2vh;
+		font-size: 1.5vh;
 	}
 
 	.infoBox2 .infoContent2 {

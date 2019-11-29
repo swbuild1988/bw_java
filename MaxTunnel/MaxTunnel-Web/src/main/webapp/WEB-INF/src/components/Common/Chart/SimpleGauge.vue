@@ -153,9 +153,9 @@ export default {
             _this.myChart.setOption(_this.option);
 
             // 加载新的参数
-            // if (_this.parameters.option) {
-            //     _this.myChart.setOption(_this.parameters.option);
-            // }
+            if (_this.parameters.option) {
+                _this.myChart.setOption(_this.parameters.option);
+            }
             this.updateSimpGauge(this.gaugeData);
         },
         updateSimpGauge(newValue){
