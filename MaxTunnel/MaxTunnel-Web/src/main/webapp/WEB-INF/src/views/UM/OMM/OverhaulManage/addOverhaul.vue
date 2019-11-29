@@ -51,7 +51,7 @@
                         :readonly="this.pageType==1||this.typeKey=='complete'"
                     ></DatePicker>
                 </FormItem>
-                <FormItem label="维修结果：" v-if="overhaulData.type==2" class="statusStyle">
+                <FormItem label="维修结果：" v-if="overhaulData.type===2" class="statusStyle">
                     <Select
                         v-model="submitOverhaulDate.equipmentDto.status"
                         @on-change="changeStatus"
@@ -177,8 +177,6 @@ export default {
         OverhaulService.getDefectByOverhaulId(this.overhaulData.id).then(
             result => {
                 this.overhaulData = result;
-                console.log('this.overhaulData', this.overhaulData.tunnelName)
-
             },
             error => {
                 this.Log.info(error);
@@ -188,7 +186,6 @@ export default {
         OverhaulService.getOrderByOverhaulId(this.overhaulData.id).then(
             result => {
                 this.submitOverhaulDate = result;
-                console.log('this.submitOverhaulDate', this.submitOverhaulDate)
                 if (result.startTime != null) {
                     this.submitOverhaulDate.startTime = new Date(
                         result.startTime
@@ -244,7 +241,8 @@ export default {
                 if (this.overhaulData.type == 2) {
                     this.$refs[name].validate(valid => {
                         if (
-                            valid &&
+                            valid 
+                            &&
                             this.submitOverhaulDate.equipmentDto.status != null
                         ) {
                             this.isChoosedStatus = false;
@@ -314,11 +312,11 @@ export default {
             this.$router.back(-1);
         },
         changeStatus() {
-            if (this.submitOverhaulDate.equipmentDto.status == null) {
-                this.isChoosedStatus = true;
-            } else {
-                this.isChoosedStatus = false;
-            }
+            // if (this.submitOverhaulDate.equipmentDto.status == null) {
+            //     this.isChoosedStatus = true;
+            // } else {
+            //     this.isChoosedStatus = false;
+            // }
         }
     }
 };
