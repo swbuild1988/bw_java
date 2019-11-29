@@ -733,6 +733,7 @@ export default {
     padding: 0;
     top: -0.8vmin;
     right: 0.1vmin;
+    border-radius: 2.2vmin;
 }
 
 .layout-nav .topBtn {

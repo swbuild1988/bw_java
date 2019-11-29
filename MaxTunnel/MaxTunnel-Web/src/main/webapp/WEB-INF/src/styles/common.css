@@ -426,16 +426,15 @@ body {
 		min-width: 3.2vmin;
 		height: 3.2vmin;
 		line-height: 3vmin;
-		color: #666;
+		color: #eee;
 	}
 
 	.ivu-select-single .ivu-select-selection .ivu-select-placeholder,
 	.ivu-select-single .ivu-select-selection .ivu-select-selected-value {
 		height: 3vmin;
 		line-height: 3vmin;
-		font-size: 1.2vmin;
-		padding-left: 0.8vmin;
-		padding-right: 2.4vmin;
+		font-size: 1.4vmin;
+		color: #eee;
 	}
 
 	.ivu-page-next a,

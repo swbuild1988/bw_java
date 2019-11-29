@@ -234,7 +234,6 @@ export default {
                 }
                 arr1 = arr1.reverse();
                 arr2 = arr2.reverse();
-                console.log('arr122',arr1)
                 this.corssBarChartData.xData = this.corssBarChartData.xData.reverse();
                 this.corssBarChartData.seriesData.push({ data: arr1 });
                 this.corssBarChartData.seriesData.push({ data: arr2 });

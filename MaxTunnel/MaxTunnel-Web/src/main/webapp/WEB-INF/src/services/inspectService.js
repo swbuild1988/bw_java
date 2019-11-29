@@ -68,7 +68,6 @@ var InspectService = {
     getEveryMonthMaintenance: function() {
       	return new Promise((resolve, reject) => {
 			get("maintenance-orders/months").then(res => {
-				console.log("res", res);
 				let { code, data, msg } = res.data;
 				if (code == 200) {
 					resolve(data);
