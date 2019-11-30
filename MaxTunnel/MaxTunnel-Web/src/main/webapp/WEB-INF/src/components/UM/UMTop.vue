@@ -739,7 +739,7 @@ export default {
 .layout-nav .topBtn {
     font-size: 1.66vmin;
     background: url("../../assets/UM/UmTopBg.png") no-repeat center;
-    background-size: cover;
+    background-size: contain;
     padding: 1.2vmin 2.5vmin 0vmin 2.5vmin;
     margin: 0;
 }
