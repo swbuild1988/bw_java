@@ -53,7 +53,7 @@
         position: absolute;
         top: 15.5%;
         /*left: 2%;*/
-        z-index: 1000;
+        z-index: 1002;
         color: white;
         text-align: center;
         height: 13%;
