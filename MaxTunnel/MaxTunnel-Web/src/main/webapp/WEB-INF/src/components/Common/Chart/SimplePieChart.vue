@@ -1,6 +1,7 @@
 <template>
   	<div  class="SimplePie" :id="id" ref="simplePieChart"></div>
 </template>
+
 <style scoped>
 .SimplePie {
 	position: relative;
@@ -8,6 +9,7 @@
 	width: 100%;	
 }
 </style>
+
 <script>
 import { ChartService } from "@/services/chartService"
 export default {
@@ -101,8 +103,9 @@ export default {
 				legend: {
 					data: [],
 					margin: _this.getFontSize(1),
-					itemGap: 1,
-					itemWidth: 20,
+					itemGap: 2,
+					itemWidth: _this.getFontSize(this.legendTextSize) * 2,
+					itemHeight: _this.getFontSize(this.legendTextSize),
 					x: "left",
 					y: 'center',
 					orient: "vertical",

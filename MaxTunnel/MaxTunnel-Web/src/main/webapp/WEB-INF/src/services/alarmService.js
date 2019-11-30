@@ -38,7 +38,7 @@ var AlarmService = {
 			// resolve(data);
 		});
 	},
-	// 获取最新告警列表
+	// 获取最新未清除告警列表
 	getNewAlarmsList() {
 		return new Promise((resolve, reject) => {
 			get('alarms/part').then(res => {

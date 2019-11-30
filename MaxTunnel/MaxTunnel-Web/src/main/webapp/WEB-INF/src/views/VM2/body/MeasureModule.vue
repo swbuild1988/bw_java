@@ -239,6 +239,97 @@
 						}
 					},
 					{
+						name: "最高水位",
+						type: 21, //数据类型为氧气的枚举值
+						time: "",
+						gaugeData: [],
+						id: "yeweiyiGaugeChart",
+						parameters: {
+							option: {
+								title: {
+									subtext: "",
+									subtextStyle: {
+										fontWeight: 'bolder',
+									},
+								},
+								series: [{
+									type: 'gauge',
+									min: 0,
+									max: 220,
+									splitNumber: 5,
+									radius: '90%',
+									axisLine: { // 坐标轴线
+										lineStyle: { // 属性lineStyle控制线条样式
+											color: [
+												[0.09, 'lime'],
+												[0.82, '#1e90ff'],
+												[1, '#ff4500']
+											],
+											width: 1,
+											shadowColor: '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisLabel: { // 坐标轴小标记
+										textStyle: { // 属性lineStyle控制线条样式
+											fontWeight: 'bolder',
+											color: '#fff',
+											shadowColor: '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									axisTick: { // 坐标轴小标记
+										length: 10, // 属性length控制线长
+										lineStyle: { // 属性lineStyle控制线条样式
+											color: 'auto',
+											shadowColor: '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									splitLine: { // 分隔线
+										length: 15, // 属性length控制线长
+										lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+											width: 2,
+											color: '#fff',
+											shadowColor: '#fff', //默认透明
+											shadowBlur: 3
+										}
+									},
+									pointer: { // 分隔线
+										shadowColor: '#fff', //默认透明
+										shadowBlur: 5,
+										width: 5,
+									},
+									// title : {
+									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+									// 		fontWeight: 'bolder',
+									// 		fontSize: 20,
+									// 		color: '#FFFF09',
+									// 		shadowColor : '#fff', //默认透明
+									// 		shadowBlur: 3
+									// 	}
+									// },
+									detail: {
+										backgroundColor: 'rgba(30,144,255,0.8)',
+										borderWidth: 1,
+										borderColor: '#fff',
+										shadowColor: '#fff', //默认透明
+										shadowBlur: 5,
+										offsetCenter: ['0', '70%'], // x, y，单位px
+										textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+											fontWeight: 'bolder',
+											color: '#fff'
+										},
+										// fontSize:10,
+										padding: 2
+										// formatter:"{value}%"
+									},
+
+								}]
+							}
+						}
+					},
+					{
 						name: "最高甲烷",
 						type: 5, //数据类型为甲烷的枚举值
 						time: "",
@@ -513,97 +604,6 @@
 								}]
 							}
 						}
-					},
-					{
-						name: "最高水位",
-						type: 21, //数据类型为氧气的枚举值
-						time: "",
-						gaugeData: [],
-						id: "yeweiyiGaugeChart",
-						parameters: {
-							option: {
-								title: {
-									subtext: "",
-									subtextStyle: {
-										fontWeight: 'bolder',
-									},
-								},
-								series: [{
-									type: 'gauge',
-									min: 0,
-									max: 220,
-									splitNumber: 5,
-									radius: '90%',
-									axisLine: { // 坐标轴线
-										lineStyle: { // 属性lineStyle控制线条样式
-											color: [
-												[0.09, 'lime'],
-												[0.82, '#1e90ff'],
-												[1, '#ff4500']
-											],
-											width: 1,
-											shadowColor: '#fff', //默认透明
-											shadowBlur: 3
-										}
-									},
-									axisLabel: { // 坐标轴小标记
-										textStyle: { // 属性lineStyle控制线条样式
-											fontWeight: 'bolder',
-											color: '#fff',
-											shadowColor: '#fff', //默认透明
-											shadowBlur: 3
-										}
-									},
-									axisTick: { // 坐标轴小标记
-										length: 10, // 属性length控制线长
-										lineStyle: { // 属性lineStyle控制线条样式
-											color: 'auto',
-											shadowColor: '#fff', //默认透明
-											shadowBlur: 3
-										}
-									},
-									splitLine: { // 分隔线
-										length: 15, // 属性length控制线长
-										lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
-											width: 2,
-											color: '#fff',
-											shadowColor: '#fff', //默认透明
-											shadowBlur: 3
-										}
-									},
-									pointer: { // 分隔线
-										shadowColor: '#fff', //默认透明
-										shadowBlur: 5,
-										width: 5,
-									},
-									// title : {
-									// 	textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-									// 		fontWeight: 'bolder',
-									// 		fontSize: 20,
-									// 		color: '#FFFF09',
-									// 		shadowColor : '#fff', //默认透明
-									// 		shadowBlur: 3
-									// 	}
-									// },
-									detail: {
-										backgroundColor: 'rgba(30,144,255,0.8)',
-										borderWidth: 1,
-										borderColor: '#fff',
-										shadowColor: '#fff', //默认透明
-										shadowBlur: 5,
-										offsetCenter: ['0', '70%'], // x, y，单位px
-										textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-											fontWeight: 'bolder',
-											color: '#fff'
-										},
-										// fontSize:10,
-										padding: 2
-										// formatter:"{value}%"
-									},
-
-								}]
-							}
-						}
 					}
 				],
 				dataInterval: null,
@@ -636,7 +636,6 @@
 				MeasObjServer.getToDayExtreDatas().then(
 						result => {
 							if (result) {
-								_this.Log.info("获取值", result)
 								result.forEach(a => {
 									_this.gaugeChart.forEach(b => {
 										if (b.type === a.type) {

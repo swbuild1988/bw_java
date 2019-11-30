@@ -114,7 +114,7 @@
                             left: 'center'
                         },
                         xAxis: _this.getCoordinateStyle('#ccc', '7%', 0).xAxis,
-                        yAxis: _this.getCoordinateStyle('#ccc', '7%', 100, ' 个').yAxis,
+                        yAxis: _this.getCoordinateStyle('#ccc', '7%', 300, ' 个').yAxis,
                         grid: _this.getGrid('20%', '3%', '4%', '15%')
                     }
                 }

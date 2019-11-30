@@ -3,469 +3,307 @@
     "RouterBase": "/",
     "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
+    "isTestModel": true,
     "SuperMapConfig": {
-        "BIM_SCP": "http://192.168.0.7:8090/iserver/services/3D-3Dserver/rest/realspace",
-        "BIM_DATA": "http://192.168.0.7:8090/iserver/services/data-dataserver/rest/data",
-        "IMG_MAP": "http://192.168.0.7:8090/iserver/services/map-ugcv5-mapserver/rest/maps/mapserver"
+        "IP": "http://192.168.0.7:8090/",
+        "BIM_SCP": "iserver/services/3D-3Dserver/rest/realspace",
+        "BIM_DATA": "iserver/services/data-dataserver/rest/data",
+        "IMG_MAP_LIST": [
+            "iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
+            "iserver/services/map-ugcv5-mapserver2/rest/maps/mapserver2",
+            "iserver/services/map-ugcv5-mapserver3/rest/maps/mapserver3"
+        ]
     },
     "VMEntityConfig": {
-        "unitEntityParam": [{
+        "criticalHeight": "150",
+        "unitEntityParam": [
+            {
+                "entityBaseParameters": {
+                    "id": 1,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49948864664668",
                         "Y": "37.71034251365869",
-                        "Z": "10.05671606378695929"
+                        "Z": "13"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "monitorCenter-Background"
                     },
                     "label": {
                         "text": "监控中心",
-                        "fontSize": "30"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
+                "entityBaseParameters": {
+                    "id": 2,
+                    "messageType": "relevantUnit"
+                },
                 "entityExtendParameters": {
                     "position": {
                         "X": "112.49506",
                         "Y": "37.706148",
-                        "Z": "10.05671606378695929"
+                        "Z": "13"
                     },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
+                    "billboard": {
+                        "image": "school-Background"
                     },
                     "label": {
                         "text": "晋源区实验中学",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.499595",
-                        "Y": "37.704056",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "山西省儿童医院",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.477914",
-                        "Y": "37.715545",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "晋源区政府",
-                        "fontSize": "40",
-                        "color": "yellow"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.4858731580146",
-                        "Y": "37.72776923822512",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "太原古县城",
-                        "fontSize": "30",
-                        "color": "yellow"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.52207233753701",
-                        "Y": "37.70384793736499",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "管廊东入口",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.51743415066589",
-                        "Y": "37.69655876626396",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "污水泵站",
-                        "fontSize": "30"
-                    }
-                }
-            },
-            {
-                "entityExtendParameters": {
-                    "position": {
-                        "X": "112.51382289846887",
-                        "Y": "37.69271374038769",
-                        "Z": "10.05671606378695929"
-                    },
-                    "point": {
-                        "outlineWidth": "6",
-                        "pixelSize": "20"
-                    },
-                    "label": {
-                        "text": "雨水泵站",
-                        "fontSize": "30"
-                    }
-                }
-            }
-        ],
-        "linearEntityParam": [{
-                "entityBaseParameters": {
-                    "id": 1,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.484733",
-                                "Lat": "37.715056"
-                            },
-                            {
-                                "Lon": "112.5251257936025",
-                                "Lat": "37.70375614400991"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
-            },
-            {
-
-                "entityBaseParameters": {
-                    "id": 2,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.468313",
-                                "Lat": "37.720247"
-                            },
-                            {
-                                "Lon": "112.48469357685028",
-                                "Lat": "37.715046725374094"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
                     "id": 3,
-                    "messageType": "linear"
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.520063",
-                                "Lat": "37.700637"
-                            },
-                            {
-                                "Lon": "112.478020",
-                                "Lat": "37.713441"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
+                    "position": {
+                        "X": "112.499595",
+                        "Y": "37.704056",
+                        "Z": "13"
+                    },
+                    "billboard": {
+                        "image": "childrenHospital-Background"
+                    },
+                    "label": {
+                        "text": "山西省儿童医院",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
                     "id": 4,
-                    "messageType": "linear"
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.47854790079535",
-                                "Lat": "37.70960497901218"
-                            },
-                            {
-                                "Lon": "112.4649725227166",
-                                "Lat": "37.71379327381019"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 9,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.516801",
-                                "Lat": "37.6972593"
-                            },
-                            {
-                                "Lon": "112.47843",
-                                "Lat": "37.709596"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 10,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.489179",
-                                "Lat": "37.713805"
-                            },
-                            {
-                                "Lon": "112.483704",
-                                "Lat": "37.702281"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
+                    "position": {
+                        "X": "112.480320",
+                        "Y": "37.716560",
+                        "Z": "13"
                     },
-                    "entityBaseParameters": {
-                        "messageType": "linear"
+                    "billboard": {
+                        "image": "government-Background"
+                    },
+                    "label": {
+                        "text": "晋源区政府",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
-                    "id": 11,
-                    "messageType": "linear"
+                    "id": 5,
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.492891",
-                                "Lat": "37.712722"
-                            },
-                            {
-                                "Lon": "112.487448",
-                                "Lat": "37.701182"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
+                    "position": {
+                        "X": "112.489058",
+                        "Y": "37.729490",
+                        "Z": "13"
+                    },
+                    "billboard": {
+                        "image": "countSeat-Background"
+                    },
+                    "label": {
+                        "text": "太原古县城",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
-                    "id": 12,
-                    "messageType": "linear"
+                    "id": 6,
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.500104",
-                                "Lat": "37.710666"
-                            },
-                            {
-                                "Lon": "112.496759",
-                                "Lat": "37.703691"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "black"
+                    "position": {
+                        "X": "112.52207233753701",
+                        "Y": "37.70384793736499",
+                        "Z": "13"
+                    },
+                    "billboard": {
+                        "image": "pipeGalleryEast-Background"
+                    },
+                    "label": {
+                        "text": "管廊东入口",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
-                    "id": 13,
-                    "messageType": "linear"
+                    "id": 7,
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-
-                        "position": [{
-                                "Lon": "112.493083",
-                                "Lat": "37.730319"
-                            },
-                            {
-                                "Lon": "112.480216",
-                                "Lat": "37.732412"
-                            },
-                            {
-                                "Lon": "112.477995",
-                                "Lat": "37.725628"
-                            },
-                            {
-                                "Lon": "112.491123",
-                                "Lat": "37.723368"
-                            },
-                            {
-                                "Lon": "112.493083",
-                                "Lat": "37.730319"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "blue"
+                    "position": {
+                        "X": "112.51743415066589",
+                        "Y": "37.69655876626396",
+                        "Z": "13"
+                    },
+                    "billboard": {
+                        "image": "sewage-Background"
+                    },
+                    "label": {
+                        "text": "污水泵站",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             },
             {
                 "entityBaseParameters": {
-                    "id": 14,
-                    "messageType": "linear"
+                    "id": 8,
+                    "messageType": "relevantUnit"
                 },
                 "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.476576",
-                                "Lat": "37.704388"
-                            },
-                            {
-                                "Lon": "112.481279",
-                                "Lat": "37.716042"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 15,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.463756",
-                                "Lat": "37.708431"
-                            },
-                            {
-                                "Lon": "112.479916",
-                                "Lat": "37.703408"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 16,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.473064",
-                                "Lat": "37.712194"
-                            },
-                            {
-                                "Lon": "112.470590",
-                                "Lat": "37.706263"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
-                    }
-                }
-            },
-            {
-                "entityBaseParameters": {
-                    "id": 17,
-                    "messageType": "linear"
-                },
-                "entityExtendParameters": {
-                    "polyline": {
-                        "position": [{
-                                "Lon": "112.468896",
-                                "Lat": "37.713302"
-                            },
-                            {
-                                "Lon": "112.466356",
-                                "Lat": "37.707685"
-                            }
-                        ],
-                        "width": 5,
-                        "color": "red",
-                        "lineType": "DottedLine"
+                    "position": {
+                        "X": "112.51382289846887",
+                        "Y": "37.69271374038769",
+                        "Z": "13"
+                    },
+                    "billboard": {
+                        "image": "rainwater-Background"
+                    },
+                    "label": {
+                        "text": "雨水泵站",
+                        "fontSize": "17",
+                        "color": "white"
                     }
                 }
             }
-
         ]
     },
-    "flyFilePathes": [{
-        "id": 1,
-        "name": "飞行路线_1",
-        "path": "/VM/font/jump.fpf",
-        "isFlyLoop": "false"
-    }, {
-        "id": 2,
-        "name": "飞行路线_2",
-        "path": "/VM/font/flytest2.fpf",
-        "isFlyLoop": "false",
-        "waitTime": 0
-    }, {
-        "id": 3,
-        "name": "飞行路线_3",
-        "path": "/VM/font/flytest3.fpf",
-        "isFlyLoop": "true",
-        "playRate": "0.05"
-    }],
-    "refreshTime":"60000"
-    
+    "flyFilePathes": [
+        {
+            "id": 1,
+            "name": "古城大街虚拟巡检",
+            "path": "/VM/font/storeAcross.fpf",
+            "isFlyLoop": "false",
+            "playRate": "0.05",
+            "virtualInspection": true
+        },
+        {
+            "id": 2,
+            "name": "大屏地图飞行路径",
+            "path": "/VM/font/VMMapPath.fpf",
+            "isFlyLoop": "false",
+            "waitTime": 0,
+            "virtualInspection": false
+        }
+    ],
+    "inspectionFlyFiles": [
+        {
+            "id": 1,
+            "name": "古城大街虚拟巡检",
+            "path": "/VM/font/storeAcross.fpf",
+            "isFlyLoop": "false",
+            "playRate": "0.05"
+        }
+    ],
+    "refreshTime": "60000",
+    "pointLight": {
+        "isOpenDescribe": "是否开启灯光效果，默认false，开启的话会增加内存消耗",
+        "isOpen": false,
+        "describe": "cutoffDistance：扩散距离 默认值500 ,decay: 衰减因子：默认值1 ,intensity：光源强度 默认值1",
+        "cutoffDistance": 50,
+        "decay": 1,
+        "intensity": 1
+    },
+    "MapAngleLists": [
+        {
+            "id": 0,
+            "name": "总览",
+            "angle": {
+                "longitude": 112.498020,
+                "latitude": 37.707683,
+                "height": 4999.577,
+                "roll": 0,
+                "pitch": -1.559829,
+                "heading": 0.373219
+            }
+        },
+        {
+            "id": 1,
+            "name": "古城大街",
+            "angle": {
+                "longitude": 112.530656,
+                "latitude": 37.708304,
+                "height": 415.47,
+                "roll": 0,
+                "pitch": -0.259087,
+                "heading": 4.422353
+            }
+        },
+        {
+            "id": 2,
+            "name": "实验路",
+            "angle": {
+                "longitude": 112.502005,
+                "latitude": 37.716166,
+                "height": 242.056999,
+                "roll": 1.9539925233402755e-14,
+                "pitch": -0.2226201533056995,
+                "heading": 3.4631418047919205
+            }
+        },
+        {
+            "id": 3,
+            "name": "经三路",
+            "angle": {
+                "longitude": 112.496455,
+                "latitude": 37.721270,
+                "height": 660.951,
+                "roll": 0,
+                "pitch": -0.355479,
+                "heading": 3.469337
+            }
+        },
+        {
+            "id": 4,
+            "name": "经二路",
+            "angle": {
+                "longitude": 112.492984,
+                "latitude": 37.722374,
+                "height": 571.254,
+                "roll": 6.283185,
+                "pitch": -0.285790,
+                "heading": 3.481928
+            }
+        },
+        {
+            "id": 5,
+            "name": "纬三路",
+            "angle": {
+                "longitude": 112.513535,
+                "latitude": 37.696002,
+                "height": 679.791755,
+                "roll": 6.283185,
+                "pitch": -0.194819,
+                "heading": 5.334207
+            }
+        }
+    ],
+    "ClipBIM": {
+        "Describe": "rotate 是box旋转角度,boxPorp 是盒子长宽高属性",
+        "rotate": -45,
+        "boxProp": {
+            "length": 25,
+            "widht": 10,
+            "height": 7
+        }
+    }
 }

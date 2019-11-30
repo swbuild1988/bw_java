@@ -126,6 +126,18 @@
                     </Dropdown>
                 </Col> -->
                 <Col span="1" offset="1">
+                    <Dropdown divided @click.native="jumpUMLogin">
+                        <a>
+                            <img
+                                class="Management"
+                                src="../../../assets/VM/pageLinkage.png"
+                                height="100%"
+                                width="100%"
+                            >
+                        </a>
+                    </Dropdown>
+                </Col>
+                <Col span="1" offset="1">
                     <Dropdown
                         divided
                         @click.native="show.showControlPanel = !show.showControlPanel"
@@ -134,18 +146,6 @@
                             <img
                                 class="Fly"
                                 src="../../../assets/VM/controlPanel.png"
-                                height="100%"
-                                width="100%"
-                            >
-                        </a>
-                    </Dropdown>
-                </Col>
-                <Col span="1" offset="1">
-                    <Dropdown divided @click.native="jumpUMLogin">
-                        <a>
-                            <img
-                                class="Management"
-                                src="../../../assets/VM/pageLinkage.png"
                                 height="100%"
                                 width="100%"
                             >

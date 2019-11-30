@@ -25,7 +25,7 @@
             <simplePiechart v-bind="pieChart"></simplePiechart>
         </div>
         <div class="alarms">
-            <span style="margin-left: 1vw;marfont-size: 1.5vmin;line-height: 2.8vmin;color: #fff;">告警信息</span>
+            <span style="margin-left: 1vw;marfont-size: 1.5vmin;line-height: 2.8vmin;color: #fff;font-size: 1.5vmin;">告警信息</span>
             <Icon type="android-volume-up" color="#fff" :size="iconSize"></Icon>
             <div class="play" @click="changeState">
                 <Icon :type="carouselInfo.isCarousel ? 'pause' : 'play'" class="playIcon"></Icon>
@@ -78,14 +78,15 @@
                 pieChart: {
                     requestUrl: "tunnels/alarm-count",
                     id: "tunnelAlarmPieChart",
-                    legendTextSize: "9%",
+                    legendTextSize: "8%",
                     seriesSize: "9%",
                     parameters: {
                         option: {
                             legend: {
                                 textStyle: {
-                                    color: "#fff"
-                                }
+                                    color: "#fff",
+                                },
+                                icon:'circle'
                             }
                         }
                     }
