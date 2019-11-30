@@ -180,7 +180,6 @@ export default {
     font-size: 1.28vmin;
 }
 .queryTitle,
-.conditions >>> .ivu-select-placeholder,
 .conditions >>> .ivu-select-selected-value,
 .list >>> .ivu-select,
 .list >>> .ivu-page-options-elevator input,
@@ -191,6 +190,9 @@ export default {
 .conditions >>> .ivu-select-selection {
     background: transparent;
     border-radius: 1vmin;
+}
+.queryTitle {
+    font-size: 1.4vmin;
 }
 .list >>> .ivu-page-next,
 .list >>> .ivu-page-prev,
