@@ -85,30 +85,6 @@ const addBarnLabel = {
                     })
                 })
 
-                // _this.axios.post('/sections/gps',
-                //     {longitude, latitude, height})
-                //     .then(result => {
-                //         let {code, data} = result.data;
-
-                //         if (code == 200) {
-
-                //             _this.$emit('sendSectionDetails',data);
-
-                //             data && resolve(data)
-                //         }
-
-                //         // if (code == 200
-                //         //     // && data != null
-                //         //     // && _this.timer.sectionId !== data.sectionInfo.id
-                //         // ) {
-                //         //     //缓存sectionId用于判断下次取到section是否一致
-                //         //     // _this.timer.sectionId = data.sectionInfo.id;
-
-                //         //     _this.$emit('sendSectionDetails',data);
-
-                //         //     resolve(data)
-                //         // }
-                //     })
             })
         },
         //更新实体值/状态

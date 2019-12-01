@@ -665,7 +665,6 @@
 											color = _this.getColorArray(color, min, max, a.objTypeParam
 												.errorMin, a.objTypeParam.errorMax, '#FF0000')
 
-											_this.Log.info('color', color)
 											b.parameters.option.series[0].axisLine.lineStyle.color = color
 											b.gaugeData = [{
 												value: a.value,
