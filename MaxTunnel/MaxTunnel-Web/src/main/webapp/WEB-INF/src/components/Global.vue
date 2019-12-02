@@ -96,7 +96,7 @@ setTimeout(function () {
                 layer.forEach(curBIM => {
                     curBIM._selectEnabled = false;
                     curBIM._ignoreNormal = false;
-                    curBIM._clearMemoryImmediately = true;
+                    curBIM._clearMemoryImmediately = false;
                 });
             },
             function (e) {

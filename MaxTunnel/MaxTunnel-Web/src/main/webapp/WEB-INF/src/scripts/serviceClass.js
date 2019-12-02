@@ -317,7 +317,7 @@ class MQ {
 
     setQueueName(_queueName) {
         console.log("设定队列名", _queueName)
-        if (_queueName) {
+        if (_queueName && _queueName != null && _queueName != 'null') {
             this.queueName = "/queue/" + _queueName;
         }
     }

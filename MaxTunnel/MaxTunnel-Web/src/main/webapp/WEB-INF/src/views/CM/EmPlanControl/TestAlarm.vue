@@ -31,6 +31,8 @@
         <div slot="footer" class="footer">
             <Button type="primary" @click="submitForm('testAlarm')">确定</Button>
             <Button type="primary" @click="testSound()">测试声音</Button>
+            <Button type="primary" @click="startAudio()">开始获取音频</Button>
+            <Button type="primary" @click="stopAudio()">结束播放</Button>
         </div>
     </div>
 </template>
@@ -176,6 +178,12 @@
             },
             testSound() {
                 Audio.createAlarmVoice()
+            },
+            startAudio() {
+                Audio.loadAudioFile("http://localhost:8080/audio")
+            },
+            stopAudio() {
+                Audio.stopSound()
             }
         }
     }

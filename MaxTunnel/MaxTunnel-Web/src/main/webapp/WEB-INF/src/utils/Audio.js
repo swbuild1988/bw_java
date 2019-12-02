@@ -2,6 +2,8 @@ import Vue from 'vue'
 
 var Audio = {
     _audioCtx: null,
+    _source: null,
+    _audioBuffer: null,
     // 初始化
     init() {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -38,9 +40,41 @@ var Audio = {
         oscillator.start(audioCtx.currentTime);
         // 音量在磨时间指数变化到某值，下面表示1s内从1以指数曲线的速度降到0.01音量
         // gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
-        gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 15);
+        gainNode.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 1);
         // n秒后，声音关闭
-        oscillator.stop(audioCtx.currentTime + 15);
+        oscillator.stop(audioCtx.currentTime + 1);
+    },
+    // 停止播放
+    stopSound() {
+        if (_source) {
+            _source.noteOff(0); //立即停止
+        }
+    },
+    // 开始播放
+    playSound() {
+        _source = context.createBufferSource();
+        _source.buffer = _audioBuffer;
+        _source.loop = true;
+        _source.connect(context.destination);
+        _source.noteOn(0); //立即播放
+    },
+    initSound(arrayBuffer) {
+        context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
+            _audioBuffer = buffer;
+            playSound();
+        }, function(e) { //解码出错时的回调函数
+            console.log('解码出错', e);
+        });
+    },
+    // 加载音频文件
+    loadAudioFile(url) {
+        var xhr = new XMLHttpRequest(); //通过XHR下载音频文件
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function(e) { //下载完成
+            initSound(this.response);
+        };
+        xhr.send();
     }
 }
 
@@ -59,6 +93,7 @@ export {
 // 收到告警的回调
 function callback(data) {
     console.log("Audio.js 收到MQ消息")
-
-    Audio.createAlarmVoice();
+    if (data.type && data.type == 'Alarm') {
+        Audio.createAlarmVoice();
+    }
 }
