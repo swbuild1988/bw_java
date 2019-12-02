@@ -9,9 +9,8 @@
                         </td>
                         <td>
                             <Tooltip :content="item.description ? item.name + item.description: item.name" 
-                            placement="bottom" 
-                            :disabled="(item.name.length + item.description.length) < 13">
-                                <span>{{item.description ? item.name + item.description: item.name}}</span>
+                            placement="bottom">
+                                <span>{{item.description ? item.name + "  "+ item.description: item.name}}</span>
                             </Tooltip>
                         </td>
                         <td>{{item.cv}}</td>
@@ -67,6 +66,7 @@ export default {
         init() {
             this.transformData();
             this.curPageData = this.middleData.slice(0, this.pageSize);
+            this.Log.info("init", this.curPageData)
             this.totalPage = Math.ceil(this.middleData.length / this.pageSize);
             this.refresh();
         },
@@ -109,7 +109,8 @@ export default {
                                 :  data[i].cv,
                             unit: (data[i].cv > data[i].maxNormal || data[i].cv <data[i].minNormal)
                                 ? null
-                                :  data[i].unit
+                                :  data[i].unit,
+                            description: data[i].description ? data[i].description : ""
                         };
                         this.addTitleImg(currData, data[i].objectType);
                         break;
@@ -122,7 +123,8 @@ export default {
                                 : data[i].cv == 1
                                 ? "打开"
                                 : "故障",
-                            unit: null
+                            unit: null,
+                            description: data[i].description ? data[i].description : ""
                         };
                         this.addTitleImg(currData, data[i].objectType);
                         break;
@@ -133,7 +135,8 @@ export default {
                         currData = {
                             name: data[i].name,
                             cv: this.searchDataTypeLenght(this.dataDetails, 7),
-                            unit: "个"
+                            unit: "个",
+                            description: data[i].description ? data[i].description : ""
                         };
                         this.addTitleImg(currData, data[i].objectType);
                         break;

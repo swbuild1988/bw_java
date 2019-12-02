@@ -134,7 +134,7 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "对象名",
+                    title: "设备名",
                     key: "objName",
                     align: "center",
                     render: (h, params) => {

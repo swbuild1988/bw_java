@@ -249,6 +249,8 @@ export default {
         initUpdate(viewer, scene) {
             let _this = this;
 
+            console.log("initUpdate", viewer, scene)
+
             if (_this.openImageryProvider) {
                 //开启地图服务
 

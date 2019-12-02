@@ -31,7 +31,7 @@
                     <Option v-for="(item,index) in type" :key="index" :value="item.val">{{item.key}}</Option>
                 </Select>
             </FormItem>
-            <FormItem label="对象名：" v-show="defectDetails.type==2">
+            <FormItem label="设备名：" v-show="defectDetails.type==2">
                 <Select v-model="defectDetails.objectId" disabled>
                     <Option v-for="(item,index) in objs" :key="index" :value="item.key">{{item.key}}</Option>
                 </Select>

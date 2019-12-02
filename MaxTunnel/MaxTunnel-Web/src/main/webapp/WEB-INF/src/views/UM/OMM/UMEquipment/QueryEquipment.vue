@@ -567,6 +567,7 @@
                     };
                     arr.push(temp);
                 });
+                this.Log.info("待上传设备数据", arr)
                 EquipmentService.batchAdd(arr).then(
                     result => {
                         this.$Message.success("批量添加成功！");

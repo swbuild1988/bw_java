@@ -425,58 +425,86 @@
     <objTypeParams>
         <typeId>1</typeId>
         <typeName>温度</typeName>
-        <min>-40</min>
-        <max>120</max>
-        <normalMin>-15</normalMin>
-        <normalMax>40</normalMax>
+        <showType>1</showType>
+        <showValue>0</showValue>
+        <measMin>-20</measMin>
+        <measMax>85</measMax>
+        <normalMin>15</normalMin>
+        <normalMax>25</normalMax>
+        <warmingMin>-20</warmingMin>
+        <warmingMax>15</warmingMax>
+        <errorMin>25</errorMin>
+        <errorMax>85</errorMax>
     </objTypeParams>
     <objTypeParams>
         <typeId>2</typeId>
         <typeName>湿度</typeName>
-        <min>0</min>
-        <max>100</max>
-        <normalMin>5</normalMin>
-        <normalMax>95</normalMax>
+        <showType>1</showType>
+        <showValue>0</showValue>
+        <measMin>0</measMin>
+        <measMax>100</measMax>
+        <normalMin>40</normalMin>
+        <normalMax>70</normalMax>
+        <warmingMin>0</warmingMin>
+        <warmingMax>40</warmingMax>
+        <errorMin>70</errorMin>
+        <errorMax>100</errorMax>
     </objTypeParams>
     <objTypeParams>
         <typeId>3</typeId>
         <typeName>氧气</typeName>
-        <min>0</min>
-        <max>30</max>
-        <normalMin>15</normalMin>
-        <normalMax>28</normalMax>
+        <showType>1</showType>
+        <showValue>0</showValue>
+        <measMin>15</measMin>
+        <measMax>25</measMax>
+        <normalMin>19.5</normalMin>
+        <normalMax>22</normalMax>
+        <warmingMin>15</warmingMin>
+        <warmingMax>19.5</warmingMax>
+        <errorMin>22</errorMin>
+        <errorMax>25</errorMax>
     </objTypeParams>
     <objTypeParams>
         <typeId>4</typeId>
         <typeName>硫化氢</typeName>
-        <min>0</min>
-        <max>50</max>
+        <showType>2</showType>
+        <showValue>0</showValue>
+        <measMin>0</measMin>
+        <measMax>100</measMax>
         <normalMin>0</normalMin>
-        <normalMax>50</normalMax>
+        <normalMax>20</normalMax>
+        <warmingMin>20</warmingMin>
+        <warmingMax>50</warmingMax>
+        <errorMin>50</errorMin>
+        <errorMax>100</errorMax>
     </objTypeParams>
     <objTypeParams>
         <typeId>5</typeId>
         <typeName>甲烷</typeName>
-        <min>0</min>
-        <max>50</max>
+        <showType>2</showType>
+        <showValue>0</showValue>
+        <measMin>0</measMin>
+        <measMax>100</measMax>
         <normalMin>0</normalMin>
-        <normalMax>50</normalMax>
+        <normalMax>20</normalMax>
+        <warmingMin>20</warmingMin>
+        <warmingMax>50</warmingMax>
+        <errorMin>50</errorMin>
+        <errorMax>100</errorMax>
     </objTypeParams>
     <objTypeParams>
-        <typeId>6</typeId>
-        <typeName>一氧化碳</typeName>
-        <min>0</min>
-        <max>100</max>
+        <typeId>21</typeId>
+        <typeName>液位仪</typeName>
+        <showType>1</showType>
+        <showValue>0</showValue>
+        <measMin>0</measMin>
+        <measMax>3</measMax>
         <normalMin>0</normalMin>
-        <normalMax>100</normalMax>
-    </objTypeParams>
-    <objTypeParams>
-        <typeId>65</typeId>
-        <typeName>可燃气体</typeName>
-        <min>0</min>
-        <max>25</max>
-        <normalMin>0</normalMin>
-        <normalMax>10</normalMax>
+        <normalMax>0.5</normalMax>
+        <warmingMin>0.5</warmingMin>
+        <warmingMax>1</warmingMax>
+        <errorMin>1</errorMin>
+        <errorMax>3</errorMax>
     </objTypeParams>
     <lightDistance>50.0</lightDistance>
     <objectTypeIds>1</objectTypeIds>

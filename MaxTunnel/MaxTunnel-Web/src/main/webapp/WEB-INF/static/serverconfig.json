@@ -1,21 +1,23 @@
 {
-    "ApiUrl": "http://192.168.6.112:88/MaxTunnel-Web",
+    "ApiUrl": "http://localhost:8080",
     "RouterBase": "/",
-    "MQServerAddress": "ws://192.168.6.112:15674/ws",
+    "MQServerAddress": "ws://192.168.0.7:15674/ws",
     "isRealData": true,
     "isTestModel": true,
     "SuperMapConfig": {
-        "IP":"http://192.168.6.112:8090/",
+        "IP": "http://192.168.0.7:8090/",
         "BIM_SCP": "iserver/services/3D-3Dserver/rest/realspace",
         "BIM_DATA": "iserver/services/data-dataserver/rest/data",
-        "IMG_MAP_LIST": ["iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
+        "IMG_MAP_LIST": [
+            "iserver/services/map-ugcv5-mapserver1/rest/maps/mapserver1",
             "iserver/services/map-ugcv5-mapserver2/rest/maps/mapserver2",
             "iserver/services/map-ugcv5-mapserver3/rest/maps/mapserver3"
-            ]
+        ]
     },
     "VMEntityConfig": {
-        "criticalHeight":"150",
-        "unitEntityParam": [{
+        "criticalHeight": "150",
+        "unitEntityParam": [
+            {
                 "entityBaseParameters": {
                     "id": 1,
                     "messageType": "relevantUnit"
@@ -185,7 +187,8 @@
             }
         ]
     },
-    "flyFilePathes": [{
+    "flyFilePathes": [
+        {
             "id": 1,
             "name": "古城大街虚拟巡检",
             "path": "/VM/font/storeAcross.fpf",
@@ -212,31 +215,31 @@
         }
     ],
     "refreshTime": "60000",
-    "pointLight":{
+    "pointLight": {
         "isOpenDescribe": "是否开启灯光效果，默认false，开启的话会增加内存消耗",
         "isOpen": false,
-        "describe":"cutoffDistance：扩散距离 默认值500 ,decay: 衰减因子：默认值1 ,intensity：光源强度 默认值1",
-        "cutoffDistance":50,
-        "decay":1,
-        "intensity":1
+        "describe": "cutoffDistance：扩散距离 默认值500 ,decay: 衰减因子：默认值1 ,intensity：光源强度 默认值1",
+        "cutoffDistance": 50,
+        "decay": 1,
+        "intensity": 1
     },
-    "MapAngleLists":[
+    "MapAngleLists": [
         {
-            "id":0,
-            "name":"总览",
-            "angle":{
-                "longitude": 112.498020,
-                "latitude": 37.707683,
-                "height": 4999.577,
+            "id": 0,
+            "name": "总览",
+            "angle": {
+                "longitude": 112.52734502926812,
+                "latitude": 37.71219225100679,
+                "height": 665.4891720702884,
                 "roll": 0,
-                "pitch": -1.559829,
-                "heading": 0.373219
+                "pitch": -0.18708664388694407,
+                "heading": 4.433131896089693
             }
         },
         {
-            "id":1,
-            "name":"古城大街",
-            "angle":{
+            "id": 1,
+            "name": "古城大街",
+            "angle": {
                 "longitude": 112.530656,
                 "latitude": 37.708304,
                 "height": 415.47,
@@ -246,9 +249,9 @@
             }
         },
         {
-            "id":2,
-            "name":"实验路",
-            "angle":{
+            "id": 2,
+            "name": "实验路",
+            "angle": {
                 "longitude": 112.502005,
                 "latitude": 37.716166,
                 "height": 242.056999,
@@ -258,9 +261,9 @@
             }
         },
         {
-            "id":3,
-            "name":"经三路",
-            "angle":{
+            "id": 3,
+            "name": "经三路",
+            "angle": {
                 "longitude": 112.496455,
                 "latitude": 37.721270,
                 "height": 660.951,
@@ -270,9 +273,9 @@
             }
         },
         {
-            "id":4,
-            "name":"经二路",
-            "angle":{
+            "id": 4,
+            "name": "经二路",
+            "angle": {
                 "longitude": 112.492984,
                 "latitude": 37.722374,
                 "height": 571.254,
@@ -282,9 +285,9 @@
             }
         },
         {
-            "id":5,
-            "name":"纬三路",
-            "angle":{
+            "id": 5,
+            "name": "纬三路",
+            "angle": {
                 "longitude": 112.513535,
                 "latitude": 37.696002,
                 "height": 679.791755,
@@ -294,15 +297,13 @@
             }
         }
     ],
-    "ClipBIM":{
-        "Describe":"rotate 是box旋转角度,boxPorp 是盒子长宽高属性",
-        "rotate":-45,
-        "boxProp":{
-            "length":25,
-            "widht":10,
-            "height":7
+    "ClipBIM": {
+        "Describe": "rotate 是box旋转角度,boxPorp 是盒子长宽高属性",
+        "rotate": -45,
+        "boxProp": {
+            "length": 25,
+            "widht": 10,
+            "height": 7
         }
     }
-
-
 }

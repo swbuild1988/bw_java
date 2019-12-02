@@ -12,7 +12,7 @@ var TunnelService = {
     getTunnels: function () {
         return new Promise((resolve, reject) => {
             if (isRealData) {
-                get("/tunnels").then(res => {
+                get("/run_tunnels").then(res => {
                         let {
                             code,
                             data,
@@ -22,6 +22,46 @@ var TunnelService = {
                             resolve(data);
                         } else {
                             reject(msg + ",地址:/tunnels");
+                        }
+                    })
+                    .catch(error => {
+                        reject(error.response.status + "  " + error.response.data);
+                    });
+            } else {
+                let data = [{
+                        id: 1,
+                        name: "管廊1"
+                    },
+                    {
+                        id: 2,
+                        name: "管廊2"
+                    },
+                    {
+                        id: 3,
+                        name: "管廊3"
+                    },
+                    {
+                        id: 4,
+                        name: "管廊4"
+                    }
+                ];
+                resolve(data);
+            }
+        });
+    },
+    getAllTunnels: function () {
+        return new Promise((resolve, reject) => {
+            if (isRealData) {
+                get("/tunnels").then(res => {
+                        let {
+                            code,
+                            data,
+                            msg
+                        } = res.data;
+                        if (code == 200) {
+                            resolve(data);
+                        } else {
+                            reject(msg + ",地址:/run_tunnels");
                         }
                     })
                     .catch(error => {

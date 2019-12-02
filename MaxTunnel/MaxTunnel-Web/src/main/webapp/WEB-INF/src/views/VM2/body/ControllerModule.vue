@@ -132,7 +132,7 @@
 	export default {
 		data() {
 			return {
-				title: "控制类监测",
+				title: "控制状态",
 				iconSize: window.innerWidth * 0.012,
 				freshTime: 60000,
 				isFresh: true,
@@ -303,7 +303,7 @@
 		text-align: center;
 		width: 40%;
 		float: left;
-		font-size: 2vh;
+		font-size: 1.5vh;
 	}
 
 	.infoBox2 .infoContent2 {
@@ -320,11 +320,11 @@
 	}
 
 	.openClass {
-		color: gold
+		color: green
 	}
 
 	.closeClass {
-		color: blueviolet
+		color: yellow
 	}
 
 	.faultClass {

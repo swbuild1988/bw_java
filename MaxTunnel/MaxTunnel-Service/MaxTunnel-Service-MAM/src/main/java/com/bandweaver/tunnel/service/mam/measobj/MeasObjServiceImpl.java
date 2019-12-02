@@ -427,7 +427,7 @@ public class MeasObjServiceImpl implements MeasObjService {
 
                 Double tmp_CV = measObjModuleCenter.getMeasObjAI(measObj.getId().intValue()).getCv();
                 double aiCV = tmp_CV == null ? 0 : tmp_CV.doubleValue();
-                return (aiCV < objTypeParam.getMin() || aiCV > objTypeParam.getMax());
+                return (aiCV < objTypeParam.getMeasMin() || aiCV > objTypeParam.getMeasMax());
 
 
             case DI:
