@@ -17,6 +17,9 @@
     import {
         DataAnalysisService
     } from '../../../services/dataAnalysisService.js'
+    import {
+        Audio
+    } from '@/utils/Audio'
 
     export default {
         name: "clrar-alarm",
@@ -44,7 +47,10 @@
                 let pram = {};
                 pram.description = _this.clearAlarmDes;
                 pram.ids = _this.modalPrams.ids;
-                DataAnalysisService.clearAlarms(pram).then((result) => {})
+                DataAnalysisService.clearAlarms(pram).then((result) => {
+                    // 关掉的时候，将告警声清掉
+                    Audio.stopSound()
+                })
             },
 
         },

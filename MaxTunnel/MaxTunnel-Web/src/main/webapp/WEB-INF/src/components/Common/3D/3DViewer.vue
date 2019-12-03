@@ -269,7 +269,8 @@
 
                 if (_this.openDoubleClickView) {
                     //设置是否开始双击视角
-                    _this.viewer.screenSpaceEventHandler.setInputAction(function () {}, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+                    _this.viewer.screenSpaceEventHandler.setInputAction(function () {}, Cesium.ScreenSpaceEventType
+                        .LEFT_DOUBLE_CLICK);
                 }
 
                 if (_this.undergroundMode.enable) {
@@ -342,7 +343,8 @@
                 }
 
 
-                if (_this.searchCamera.openSearch || _this.unitsPosition.openPosition || _this.personnelPosition.openPosition ||
+                if (_this.searchCamera.openSearch || _this.unitsPosition.openPosition || _this.personnelPosition
+                    .openPosition ||
                     _this.defectPosition.openPosition || _this.eventsPosition.openPosition) {
                     //鼠标经过实体时,触发气泡
                     getEntityProperty.call(_this, _this.scene, Cesium, _this.modelProp, 'model-content')
@@ -359,7 +361,11 @@
                         function (layer) {
                             //设置BIM图层不可选择
                             layer.forEach(
-                                curBIM => (curBIM._selectEnabled = false)
+                                curBIM => {
+                                    curBIM._selectEnabled = false;
+                                    curBIM._ignoreNormal = false;
+                                    curBIM._clearMemoryImmediately = false;
+                                }
                             );
                             //设置相机位置、视角，便于观察场景
                             _this.setViewAngle();
@@ -577,7 +583,8 @@
                 if (feater != undefined) {
                     if (feater._dataTypeName == stateQuantity) {
 
-                        let [updateLabel] = viewer.entities._entities._array.filter(label => label._id == feater._id); //获取当前更新的实体
+                        let [updateLabel] = viewer.entities._entities._array.filter(label => label._id == feater
+                        ._id); //获取当前更新的实体
                         var image = !feater.cv ? 'open' : 'close';
 
                         updateLabel.billboard.image = require('../../../assets/VM/' + image + '.png'); //修改告警图片

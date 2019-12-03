@@ -94,6 +94,9 @@
     import {
         DataAnalysisService
     } from '../../services/dataAnalysisService.js'
+    import {
+        Audio
+    } from '@/utils/Audio'
 
     export default {
         name: "UMTop",
@@ -552,6 +555,9 @@
                     duration: durationTime,
                     name: alarm.id,
                     onClose: function () {
+                        // 关掉的时候，将告警声清掉
+                        Audio.stopSound()
+                        
                         let index = _this.videoModal.alarmContainer.indexOf(alarm);
                         if (index > -1) {
                             _this.videoModal.alarmContainer.splice(index, 1);

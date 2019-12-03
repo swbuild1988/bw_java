@@ -43,7 +43,7 @@ export default {
     },
     computed: {
         angleLists() {
-            return this.MapAngleLists.reverse();
+            return this.MapAngleLists;
         },
     },
     mounted(){
@@ -55,7 +55,7 @@ export default {
             let [ curAngle ]  = this.angleLists.filter(angle => angle.id == id);
 
             this.angleProp.currTitle = curAngle.name;
-            this.smViewer.setViewAngle(curAngle.angle)
+            this.smViewer.flyToAngle(curAngle.angle)
         },
         switchPanel(){
             this.angleProp.open = !this.angleProp.open;

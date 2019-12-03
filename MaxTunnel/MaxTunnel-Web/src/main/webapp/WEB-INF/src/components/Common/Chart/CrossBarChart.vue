@@ -100,7 +100,7 @@ export default {
                         textStyle: {
                             fontSize: _this.getFontSize('4%')      //更改坐标轴文字大小
                         }
-                    },
+                    }
                 },
                 yAxis: {
                     type: 'category',

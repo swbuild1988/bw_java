@@ -95,8 +95,8 @@ export default (containerId, viewer, domId, route) => ({
     data() {
         return {
             prePosition: null,
-            boxEntity:null,
-            layers:null
+            boxEntity: null,
+            layers: null
         }
     },
     mounted() {
@@ -105,7 +105,7 @@ export default (containerId, viewer, domId, route) => ({
                 this.getLayer();
                 this.init();
                 this.initProps();
-                this.loadCesiumMan(); 
+                this.loadCesiumMan();
                 if (this.pointLight.isOpen) this.getPointLinght();
             })
             .catch(() => {
@@ -116,10 +116,10 @@ export default (containerId, viewer, domId, route) => ({
 
     },
     methods: {
-        
+
         createHtml() {
             let _this = this;
-            
+
             return new Promise((resolve, reject) => {
 
                 if (!Vue.prototype[viewer]) {
@@ -143,25 +143,27 @@ export default (containerId, viewer, domId, route) => ({
         },
         getLayer() {
             let _this = this;
-            
+
             if (Cesium.defined(this.scene)) {
 
                 try {
                     //打开所发布三维服务下的所有图层
                     let promise = this.scene.open(this.SuperMapConfig.BIM_SCP);
 
-                    if(promise && viewer=='$viewer') _this.$store.commit("loadUnits"); // 俯视图加载单位图片
+                    if (promise && viewer == '$viewer') _this.$store.commit("loadUnits"); // 俯视图加载单位图片
 
                     Cesium.when(
                         promise,
                         function (layer) {
                             //设置BIM图层不可选择
                             // Vue.prototype[viewer].scene.layers.find('Dataset_3Dmax@datasources').style3D.fillForeColor.alpha = 0;
-                           // 112.488253735,37.714005145,-2.45,102,-10,0
-                           _this.layers = layer;
+                            // 112.488253735,37.714005145,-2.45,102,-10,0
+                            _this.layers = layer;
                             layer.forEach(
                                 curBIM => {
                                     curBIM._selectEnabled = false;
+                                    curBIM._ignoreNormal = false;
+                                    curBIM._clearMemoryImmediately = false;
                                 }
                             );
                             //设置相机位置、视角，便于观察场景
@@ -170,18 +172,18 @@ export default (containerId, viewer, domId, route) => ({
                             // let handler = new Cesium.ScreenSpaceEventHandler(
                             //     _this.scene.canvas
                             // );
-                            
+
                             // var boxEntity;
                             // handler.setInputAction(function(event) {
-                                
+
                             //     var cartesian = Cesium.Cartesian3.fromDegrees(112.48896541,37.71379887,-2.45);
-                                // var cartesian = _this.scene.pickPosition(event.position);
-                                // if(!_this.boxEntity){
-                                //     _this.ClipBoxBIM(cartesian);
-                                // }else {
-                                //     _this.MoveClipBIM(cartesian)
-                                // }
-                                
+                            // var cartesian = _this.scene.pickPosition(event.position);
+                            // if(!_this.boxEntity){
+                            //     _this.ClipBoxBIM(cartesian);
+                            // }else {
+                            //     _this.MoveClipBIM(cartesian)
+                            // }
+
                             //     var boxOption = {
                             //         dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
                             //         position : cartesian,
@@ -198,19 +200,19 @@ export default (containerId, viewer, domId, route) => ({
                             //         position : cartesian,
                             //         orientation : orientation
                             //     });
-                                
+
                             //     for (let i=0;i<layer.length ; i++) {
                             //         layer[i].setCustomClipBox(boxOption);
                             //     }
                             // }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-                            
-                            
+
+
                             // handler.setInputAction(function(movement) {
                             //     if(!boxEntity)return;
                             //     var cartesian = _this.scene.pickPosition(movement.startPosition);
                             //     boxEntity.position = cartesian;
                             //     handler.setInputAction(function(evt) {
-                                    
+
                             //         var newDim = boxEntity.box.dimensions.getValue();
                             //         var position = boxEntity.position.getValue(0);
                             //         var heading = parseFloat(_this.ClipBIM.rotate)
@@ -230,13 +232,13 @@ export default (containerId, viewer, domId, route) => ({
 
                             // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
-                             // var handlerPolygon = new Cesium.DrawHandler(_this.viewer,Cesium.DrawMode.Polygon, 0);
+                            // var handlerPolygon = new Cesium.DrawHandler(_this.viewer,Cesium.DrawMode.Polygon, 0);
                             // console.log('array')
                             // handlerPolygon.drawEvt.addEventListener(function(result){
-                        
+
                             //     var array = [].concat(result.object.positions);
-                               
-                                
+
+
                             //     var positions = [];
                             //     for(var i = 0, len = array.length; i < len; i ++){
                             //         var cartographic = Cesium.Cartographic.fromCartesian(array[i]);
@@ -262,11 +264,11 @@ export default (containerId, viewer, domId, route) => ({
                             //     handlerPolygon.deactivate();
                             //     handlerPolygon.activate();
                             // });
-                            
-                            // handlerPolygon.activate();  
-                            
 
-                           
+                            // handlerPolygon.activate();  
+
+
+
                         },
                         function (e) {
                             if (widget._showRenderLoopErrors) {
@@ -284,52 +286,62 @@ export default (containerId, viewer, domId, route) => ({
                 }
             }
         },
-        operateBoxBIM(cartesian){
-            !this.boxEntity ?　this.ClipBoxBIM(cartesian) : this.MoveClipBIM(cartesian);
+        operateBoxBIM(cartesian) {
+            !this.boxEntity ? this.ClipBoxBIM(cartesian) : this.MoveClipBIM(cartesian);
         },
-        ClipBoxBIM({x,y,z}){
+        ClipBoxBIM({
+            x,
+            y,
+            z
+        }) {
             let _this = this;
-            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x),parseFloat(y),parseFloat(z));
-                                
+            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x), parseFloat(y), parseFloat(z));
+
             var boxOption = {
-                dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
-                position : cartesian,
-                clipMode : 'clip_behind_all_plane',
-                heading : parseFloat(_this.ClipBIM.rotate)
+                dimensions: new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length), parseFloat(_this.ClipBIM.boxProp.widht), parseFloat(_this.ClipBIM.boxProp.height)),
+                position: cartesian,
+                clipMode: 'clip_behind_all_plane',
+                heading: parseFloat(_this.ClipBIM.rotate)
             };
             var hpr = new Cesium.HeadingPitchRoll(parseFloat(_this.ClipBIM.rotate), 0, 0);
             var orientation = Cesium.Transforms.headingPitchRollQuaternion(cartesian, hpr);
             _this.boxEntity = _this.viewer.entities.add({
-                box : {
-                    dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
-                    material : Cesium.Color.fromRandom({alpha : 0.1})
+                box: {
+                    dimensions: new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length), parseFloat(_this.ClipBIM.boxProp.widht), parseFloat(_this.ClipBIM.boxProp.height)),
+                    material: Cesium.Color.fromRandom({
+                        alpha: 0.1
+                    })
                 },
-                position : cartesian,
-                orientation : orientation
+                position: cartesian,
+                orientation: orientation
             });
-            
+
             this.setAllLayersClipOptions(boxOption);
         },
-        MoveClipBIM({x,y,z}){
-            
-            if(!this.boxEntity) return;
+        MoveClipBIM({
+            x,
+            y,
+            z
+        }) {
 
-            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x),parseFloat(y),parseFloat(z));
+            if (!this.boxEntity) return;
+
+            var cartesian = Cesium.Cartesian3.fromDegrees(parseFloat(x), parseFloat(y), parseFloat(z));
             var newDim = this.boxEntity.box.dimensions.getValue();
             var heading = parseFloat(this.ClipBIM.rotate)
             var boxOptions = {
-                dimensions : newDim,
-                position : cartesian,
-                clipMode : 'clip_behind_all_plane',
-                heading : heading
+                dimensions: newDim,
+                position: cartesian,
+                clipMode: 'clip_behind_all_plane',
+                heading: heading
             }
             this.setAllLayersClipOptions(boxOptions);
         },
-        setAllLayersClipOptions(boxOption){
-            
-            if(!this.layers)return;
+        setAllLayersClipOptions(boxOption) {
 
-            for (let i=0;i<this.layers.length ; i++) {
+            if (!this.layers) return;
+
+            for (let i = 0; i < this.layers.length; i++) {
                 this.layers[i].setCustomClipBox(boxOption);
             }
         },
@@ -358,10 +370,34 @@ export default (containerId, viewer, domId, route) => ({
             let {
                 scene
             } = this;
-            
+
             if (Cesium.defined(scene)) {
                 scene.camera.setView({
-                    destination: new Cesium.Cartesian3.fromDegrees(parseFloat(cameraPosition.longitude), parseFloat(cameraPosition.latitude), parseFloat(cameraPosition.height)),
+                    destination: new Cesium.Cartesian3.fromDegrees(
+                        parseFloat(cameraPosition.longitude), 
+                        parseFloat(cameraPosition.latitude), 
+                        parseFloat(cameraPosition.height)
+                    ),
+                    orientation: {
+                        heading: parseFloat(cameraPosition.heading),
+                        pitch: parseFloat(cameraPosition.pitch),
+                        roll: parseFloat(cameraPosition.roll)
+                    }
+                });
+            }
+        },
+        flyToAngle(cameraPosition = this.cameraPosition) {
+            let {
+                scene
+            } = this;
+
+            if (Cesium.defined(scene)) {
+                scene.camera.flyTo({
+                    destination: new Cesium.Cartesian3.fromDegrees(
+                        parseFloat(cameraPosition.longitude), 
+                        parseFloat(cameraPosition.latitude), 
+                        parseFloat(cameraPosition.height)
+                    ),
                     orientation: {
                         heading: parseFloat(cameraPosition.heading),
                         pitch: parseFloat(cameraPosition.pitch),
@@ -373,13 +409,13 @@ export default (containerId, viewer, domId, route) => ({
         compare(id, parentNode) {
             return document.getElementById(id).parentNode.tagName.toLowerCase() === parentNode;
         },
-        operate(){
+        operate() {
             let startPt = Cesium.Cartesian3.fromDegrees(data_geo[startName][0], data_geo[startName][1], 0);
             let endPt = Cesium.Cartesian3.fromDegrees(data_geo[destinationName][0], data_geo[destinationName][1], 0);
-            console.log(startPt,endPt)
+            console.log(startPt, endPt)
             let curLinePointsArr = generateCurve(startPt, endPt);
-            
-            
+
+
             viewer.entities.add({ // 背景线
                 polyline: {
                     width: 3,
@@ -389,21 +425,21 @@ export default (containerId, viewer, domId, route) => ({
                     })
                 }
             });
-            
+
             viewer.entities.add({ // 尾迹线
-                
+
                 polyline: {
                     width: 5,
                     positions: curLinePointsArr,
                     material: new Cesium.PolylineTrailMaterialProperty({ // 尾迹线材质
                         color: Cesium.Color.fromCssColorString("rgba(118, 233, 241, 1.0)"),
-                        trailLength : 0.2,
-                        period : 5.0
+                        trailLength: 0.2,
+                        period: 5.0
                     })
                 }
             });
         },
-        generateCurve(startPoint, endPoint){
+        generateCurve(startPoint, endPoint) {
             let addPointCartesian = new Cesium.Cartesian3();
             Cesium.Cartesian3.add(startPoint, endPoint, addPointCartesian);
             let midPointCartesian = new Cesium.Cartesian3();
@@ -417,7 +453,7 @@ export default (containerId, viewer, domId, route) => ({
                 points: [startPoint, midPoint, endPoint]
             });
             let curvePointsArr = [];
-            for(let i = 0, len = 300; i < len; i++){
+            for (let i = 0, len = 300; i < len; i++) {
                 curvePointsArr.push(spline.evaluate(i / len));
             }
             return curvePointsArr;
@@ -583,20 +619,22 @@ export default (containerId, viewer, domId, route) => ({
             }
 
         },
-        showOrHideRelevantUnit({height}){
+        showOrHideRelevantUnit({
+            height
+        }) {
 
-            let relevantUnits = this.viewer.entities._entities._array.filter( entity =>entity.messageType == "relevantUnit" );
- 
-            this.changeEntityUnitState(relevantUnits,height <= this.VMEntityConfig.criticalHeight,true) //隐藏实体
-            this.changeEntityUnitState(relevantUnits,height > this.VMEntityConfig.criticalHeight,false) //显示实体
+            let relevantUnits = this.viewer.entities._entities._array.filter(entity => entity.messageType == "relevantUnit");
+
+            this.changeEntityUnitState(relevantUnits, height <= this.VMEntityConfig.criticalHeight, true) //隐藏实体
+            this.changeEntityUnitState(relevantUnits, height > this.VMEntityConfig.criticalHeight, false) //显示实体
         },
-        changeEntityUnitState(units,judge,bool){
-            if(judge && units.some( unit =>unit._show == bool )){
-                units.forEach( unit => unit._show = !bool)
+        changeEntityUnitState(units, judge, bool) {
+            if (judge && units.some(unit => unit._show == bool)) {
+                units.forEach(unit => unit._show = !bool)
             }
         }
     },
-    beforeDestroy() { 
+    beforeDestroy() {
         this.viewer.selectedEntityChanged.removeEventListener(this.operationEntity);
         this.stopFly();
     },

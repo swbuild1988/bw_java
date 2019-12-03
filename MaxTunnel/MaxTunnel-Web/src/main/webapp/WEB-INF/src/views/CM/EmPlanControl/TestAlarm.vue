@@ -180,7 +180,7 @@
                 Audio.createAlarmVoice()
             },
             startAudio() {
-                Audio.loadAudioFile("http://localhost:8080/audio")
+                Audio.playSound()
             },
             stopAudio() {
                 Audio.stopSound()

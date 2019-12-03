@@ -30,7 +30,7 @@
         </div>
 
         <div class="rightBox">
-            <progress-bar-chart v-bind="barChart"></progress-bar-chart>
+            <MultiBarChartRotate v-bind="barChart"></MultiBarChartRotate>
         </div>
     </div>
 </template>
@@ -42,7 +42,7 @@
         TunnelService
     } from "../../../services/tunnelService";
     import HollowPieChart from "../../../components/Common/Chart/HollowPieChart.vue";
-    import ProgressBarChart from "../../../components/Common/chart/ProgressBarChart2.vue";
+    import MultiBarChartRotate from "../../../components/Common/chart/MultiBarChartRotate";
 
     export default {
         data() {
@@ -76,9 +76,7 @@
                             }
                         }
                     },
-                    finished: [],
-                    total: [],
-                    labels: []
+                    data: []
                 },
                 runMessage: {
                     total: 50,
@@ -96,7 +94,7 @@
             Grid,
             ModuleTitle,
             HollowPieChart,
-            ProgressBarChart
+            MultiBarChartRotate
         },
         mounted() {
             this.getTunnelMessage();
@@ -171,18 +169,7 @@
             getCableMessage() {
                 TunnelService.getVmLineMessage().then(
                     res => {
-                        let types = res;
-                        let _this = this;
-
-                        _this.barChart.finished = []
-                        _this.barChart.total = []
-                        _this.barChart.labels = []
-
-                        types.forEach(type => {
-                            _this.barChart.labels.push(type.name)
-                            _this.barChart.finished.push(type.used)
-                            _this.barChart.total.push(type.value)
-                        })
+                        this.barChart.data = res
                     },
                     err => {
                         this.Log.info(err)

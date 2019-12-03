@@ -16,6 +16,9 @@
                         <Option v-for="item in storeTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
                     </Select>
                 </FormItem>
+                <FormItem label="入廊长度" prop="length">
+                    <Input v-model="modal.info.length" type="number" />
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button type="primary" @click="save()">确定</Button>
@@ -46,6 +49,11 @@
                         title: "可放管仓",
                         align: 'center',
                         key: 'inStoreTypeIds',
+                    },
+                    {
+                        title: "入廊长度",
+                        align: 'center',
+                        key: 'length',
                     },
                     {
                         title: "操作",
@@ -99,6 +107,7 @@
                         id: null,
                         typeName: null,
                         inStoreType: null,
+                        length: 0,
                         inStoreTypeIds: []
                     }
                 },
@@ -172,6 +181,7 @@
                                         id: null,
                                         typeName: null,
                                         inStoreType: null,
+                                        length: 0,
                                         inStoreTypeIds: []
                                     }
                                 },
@@ -181,7 +191,8 @@
                             let editCableType = {
                                 id: this.modal.info.id,
                                 typeName: this.modal.info.typeName,
-                                inStoreType: this.modal.info.inStoreTypeIds.join(',')
+                                inStoreType: this.modal.info.inStoreTypeIds.join(','),
+                                length: this.modal.info.length
                             }
                             EnumsService.editCableType(editCableType).then(
                                 res => {
@@ -192,6 +203,7 @@
                                         id: null,
                                         typeName: null,
                                         inStoreType: null,
+                                        length: 0,
                                         inStoreTypeIds: []
                                     }
                                 }

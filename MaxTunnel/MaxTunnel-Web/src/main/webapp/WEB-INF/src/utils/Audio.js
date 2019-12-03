@@ -4,10 +4,13 @@ var Audio = {
     _audioCtx: null,
     _source: null,
     _audioBuffer: null,
+    _url:"",
+    _isPlay: false,
     // 初始化
     init() {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this._audioCtx = new AudioContext();
+        this._url = "audio"
     },
     // 发出告警声
     createAlarmVoice() {
@@ -46,33 +49,58 @@ var Audio = {
     },
     // 停止播放
     stopSound() {
+        let {
+            _source
+        } = this
+        console.log("停止播放")
+        this._isPlay = false
         if (_source) {
-            _source.noteOff(0); //立即停止
+            _source.stop()
         }
     },
     // 开始播放
     playSound() {
-        _source = context.createBufferSource();
-        _source.buffer = _audioBuffer;
-        _source.loop = true;
-        _source.connect(context.destination);
-        _source.noteOn(0); //立即播放
+        console.log("开始播放")
+        if (this._isPlay) return
+
+        this._loadAudioFile()
+        this._isPlay = true
     },
-    initSound(arrayBuffer) {
-        context.decodeAudioData(arrayBuffer, function(buffer) { //解码成功时的回调函数
-            _audioBuffer = buffer;
-            playSound();
-        }, function(e) { //解码出错时的回调函数
+    _voice() {
+        let {
+            _audioCtx,
+            _audioBuffer
+        } = this
+
+        this._source = _audioCtx.createBufferSource();
+        this._source.buffer = _audioBuffer;
+        this._source.loop = true;
+        this._source.connect(_audioCtx.destination);
+        this._source.start(); //立即播放
+
+    },
+    _initSound(arrayBuffer) {
+        let {
+            _audioCtx
+        } = this
+        let _this = this
+
+        _audioCtx.decodeAudioData(arrayBuffer, function (buffer) { //解码成功时的回调函数
+            _this._audioBuffer = buffer;
+            _this._voice();
+        }, function (e) { //解码出错时的回调函数
             console.log('解码出错', e);
         });
     },
     // 加载音频文件
-    loadAudioFile(url) {
+    _loadAudioFile() {
         var xhr = new XMLHttpRequest(); //通过XHR下载音频文件
+        let _this = this
+        let url = Vue.prototype.ApiUrl + "/" + this._url
         xhr.open('GET', url, true);
         xhr.responseType = 'arraybuffer';
-        xhr.onload = function(e) { //下载完成
-            initSound(this.response);
+        xhr.onload = function (e) { //下载完成
+            _this._initSound(this.response);
         };
         xhr.send();
     }
@@ -92,8 +120,9 @@ export {
 
 // 收到告警的回调
 function callback(data) {
-    console.log("Audio.js 收到MQ消息")
-    if (data.type && data.type == 'Alarm') {
-        Audio.createAlarmVoice();
+    let tmp = JSON.parse(data)
+    console.log("Audio.js 收到MQ消息", tmp)
+    if (tmp.type && tmp.type == 'Alarm') {
+        Audio.playSound();
     }
 }

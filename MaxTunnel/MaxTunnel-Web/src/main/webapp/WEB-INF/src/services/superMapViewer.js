@@ -110,7 +110,11 @@ var SuperMap = {
                 function(layer) {
                     //设置BIM图层不可选择
                     layer.forEach(
-                        curBIM => (curBIM._selectEnabled = false)
+                        curBIM => {
+                            curBIM._selectEnabled = false;
+                            curBIM._ignoreNormal = false;
+                            curBIM._clearMemoryImmediately = false;
+                        }
                     );
                     //设置相机位置、视角，便于观察场景
                     _this.setViewAngle();

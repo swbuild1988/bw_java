@@ -25,8 +25,9 @@
             <simplePiechart v-bind="pieChart"></simplePiechart>
         </div>
         <div class="alarms">
-            <span style="margin-left: 1vw;marfont-size: 1.5vmin;line-height: 2.8vmin;color: #fff;font-size: 1.5vmin;">告警信息</span>
-            <Icon type="android-volume-up" color="#fff" :size="iconSize"></Icon>
+            <span
+                style="margin-left: 1vw;marfont-size: 1.5vmin;line-height: 2.8vmin;color: #fff;font-size: 1.5vmin;">告警信息</span>
+            <Icon type="android-volume-up" color="#fff" :size="iconSize" @click="stopSound"></Icon>
             <div class="play" @click="changeState">
                 <Icon :type="carouselInfo.isCarousel ? 'pause' : 'play'" class="playIcon"></Icon>
             </div>
@@ -61,6 +62,9 @@
     import {
         AlarmService
     } from "../../../services/alarmService";
+    import {
+        Audio
+    } from '@/utils/Audio'
 
     export default {
         data() {
@@ -86,7 +90,7 @@
                                 textStyle: {
                                     color: "#fff",
                                 },
-                                icon:'circle'
+                                icon: 'circle'
                             }
                         }
                     }
@@ -240,6 +244,9 @@
                     clearInterval(this.carouselInfo.intervalId);
                     this.carouselInfo.intervalId = null;
                 }
+            },
+            stopSound() {
+                Audio.stopSound()
             }
         },
         beforeDestroy() {
