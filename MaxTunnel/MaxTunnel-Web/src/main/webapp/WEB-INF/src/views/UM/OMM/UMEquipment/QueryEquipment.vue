@@ -2,68 +2,68 @@
     <div class="allDiv">
         <Row class="queryCondition">
             <Col span="6">
-            <span class="conditionTitle">设备名称</span>
-            <span class="conditionTitle">：</span>
-            <Input v-model="conditions.name" style="width:60%"></Input>
+                <span class="conditionTitle">设备名称</span>
+                <span class="conditionTitle">：</span>
+                <Input v-model="conditions.name" style="width:60%"></Input>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">设备类型：</span>
-            <Select v-model="conditions.typeId" style="width: 60%">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
-            </Select>
+                <span class="conditionTitle">设备类型：</span>
+                <Select v-model="conditions.typeId" style="width: 60%">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in equipmentType" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">设备型号：</span>
-            <Select v-model="conditions.modelId" style="width: 60%">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
-            </Select>
+                <span class="conditionTitle">设备型号：</span>
+                <Select v-model="conditions.modelId" style="width: 60%">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in equipmentModel" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">设备状态：</span>
-            <Select v-model="conditions.status" style="width:60%">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
-            </Select>
+                <span class="conditionTitle">设备状态：</span>
+                <Select v-model="conditions.status" style="width:60%">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in equipmentStatus" :value="item.val" :key="item.val">{{ item.key }}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <Span class="word43 conditionTitle">供应商</Span>
-            <span class="conditionTitle">：</span>
-            <Select v-model="conditions.venderId" style="width:60%">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
-            </Select>
+                <Span class="word43 conditionTitle">供应商</Span>
+                <span class="conditionTitle">：</span>
+                <Select v-model="conditions.venderId" style="width:60%">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in venders" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">开始时间：</span>
-            <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
+                <span class="conditionTitle">开始时间：</span>
+                <DatePicker type="date" placeholder="请选择开始时间" style="width:60%" v-model="conditions.startTime"></DatePicker>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">结束时间：</span>
-            <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
+                <span class="conditionTitle">结束时间：</span>
+                <DatePicker type="date" placeholder="请选择结束时间" style="width:60%" v-model="conditions.endTime"></DatePicker>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">所属管廊</span>
-            <span class="conditionTitle">：</span>
-            <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
-            </Select>
+                <span class="conditionTitle">所属管廊</span>
+                <span class="conditionTitle">：</span>
+                <Select v-model="conditions.tunnelId" style="width:60%" @on-change="getStores">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in tunnels" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <span class="conditionTitle">所属管舱</span>
-            <span class="conditionTitle">：</span>
-            <Select v-model="conditions.storeId" style="width:60%">
-                <Option value="null" key="0">所有</Option>
-                <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>
-            </Select>
+                <span class="conditionTitle">所属管舱</span>
+                <span class="conditionTitle">：</span>
+                <Select v-model="conditions.storeId" style="width:60%">
+                    <Option value="null" key="0">所有</Option>
+                    <Option v-for="item in stores" :key="item.id" :value="item.id">{{item.name}}</Option>
+                </Select>
             </Col>
             <Col span="6">
-            <Button type="primary" icon="ios-search" @click="showTable()">查询</Button>
-            <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
-            <ExportCSV :header="EquipmentHeader" :data="equipmentsCSV" :fileName="EquipmentFileName"></ExportCSV>
-            <Button type="primary" class="back" @click="back">返回</Button>
+                <Button type="primary" icon="ios-search" @click="showTable()">查询</Button>
+                <vue-xlsx-table @on-select-file="batchAddEquipment">批量导入管廊设备</vue-xlsx-table>
+                <ExportCSV :header="EquipmentHeader" :data="equipmentsCSV" :fileName="EquipmentFileName" onClick="downloadEquipment()"></ExportCSV>
+                <Button type="primary" class="back" @click="back">返回</Button>
             </Col>
         </Row>
         <div class="list listBG">
@@ -150,12 +150,8 @@
 
 <script>
     import types from "../../../../../static/Enum.json";
-    import {
-        TunnelService
-    } from "../../../../services/tunnelService";
-    import {
-        EquipmentService
-    } from "../../../../services/equipmentService";
+    import { TunnelService } from "../../../../services/tunnelService";
+    import { EquipmentService } from "../../../../services/equipmentService";
     import equipemtTunnel from "../../../../assets/UM/equipemtTunnel.jpg";
     import ExportCSV from "@/components/UM/OMM/exportCSV.vue"
     import PDF from "../../../../components/UM/MAM/pdfPerviewDownload.vue";
@@ -322,11 +318,11 @@
                     },
                     {
                         label: '设备所属系统',
-                        prop: 'typeName'
+                        prop: 'type'
                     },
                     {
                         label: '设备状态',
-                        prop: 'statusName'
+                        prop: 'status'
                     },
                     {
                         label: '规格型号',
@@ -547,27 +543,50 @@
             },
             batchAddEquipment(data) {
                 let arr = [];
-                data.body.forEach(element => {
-                    let temp = {
-                        name: element[data.header[0]],
-                        assetNo: element[data.header[1]],
-                        tunnelId: element[data.header[2]],
-                        type: element[data.header[3]],
-                        status: element[data.header[4]],
-                        modelId: element[data.header[5]],
-                        range: element[data.header[6]],
-                        ratedVoltage: element[data.header[7]],
-                        qaTerm: element[data.header[8]],
-                        factory: element[data.header[9]],
-                        brand: element[data.header[10]],
-                        venderId: element[data.header[11]],
-                        runTime: element[data.header[12]],
-                        sectionId: element[data.header[13]],
-                        objId: element[data.header[14]]
-                    };
-                    arr.push(temp);
-                });
-                this.Log.info("待上传设备数据", arr)
+                let temp = {}
+                if (data.header.length === 13) {
+                    data.body.forEach(element => {
+                        temp = {
+                            name: element[data.header[0]],
+                            assetNo: element[data.header[1]],
+                            tunnelId: element[data.header[2]],
+                            type: element[data.header[3]],
+                            status: element[data.header[4]],
+                            modelId: element[data.header[5]],
+                            range: '',
+                            ratedVoltage: element[data.header[6]],
+                            qaTerm: element[data.header[7]],
+                            factory: element[data.header[8]],
+                            brand: element[data.header[9]],
+                            venderId: element[data.header[10]],
+                            runTime: element[data.header[11]],
+                            sectionId: element[data.header[12]],
+                            objId: element[data.header[13]]
+                        };
+                        arr.push(temp);
+                    })
+                } else if (data.header.length === 14) {
+                    data.body.forEach(element => {
+                        temp = {
+                            name: element[data.header[0]],
+                            assetNo: element[data.header[1]],
+                            tunnelId: element[data.header[2]],
+                            type: element[data.header[3]],
+                            status: element[data.header[4]],
+                            modelId: element[data.header[5]],
+                            range: element[data.header[6]],
+                            ratedVoltage: element[data.header[7]],
+                            qaTerm: element[data.header[8]],
+                            factory: element[data.header[9]],
+                            brand: element[data.header[10]],
+                            venderId: element[data.header[11]],
+                            runTime: element[data.header[12]],
+                            sectionId: element[data.header[13]],
+                            objId: element[data.header[14]]
+                        };
+                        arr.push(temp);
+                    })
+                }
                 EquipmentService.batchAdd(arr).then(
                     result => {
                         this.$Message.success("批量添加成功！");
