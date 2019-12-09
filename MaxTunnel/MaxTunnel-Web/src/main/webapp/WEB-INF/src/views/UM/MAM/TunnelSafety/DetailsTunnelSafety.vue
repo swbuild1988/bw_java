@@ -362,6 +362,7 @@
                 //获取监测内容
                 EnumsService.getMonitorType().then(result => {
                     if (result) {
+                        _this.curDataTypeList = []
                         result.forEach(a => {
                             if (a.val == _this.queryCondition.monitorType) {
                                 a.objectTypeList.forEach(item =>

@@ -73,10 +73,6 @@
 </template>
 
 <script>
-    //灯组件
-    import Light from "../../../../components/Common/SimulateData/Light";
-    //风机组件
-    import Fans from "../../../../components/Common/SimulateData/Fans";
 
     export default {
         name: "show-switch-data",
@@ -120,10 +116,6 @@
             return {
                 isTimeShow: false
             };
-        },
-        components: {
-            Light,
-            Fans
         },
         methods: {
             //定位设备

@@ -163,111 +163,11 @@ export default (containerId, viewer, domId, route) => ({
                                 curBIM => {
                                     curBIM._selectEnabled = false;
                                     curBIM._ignoreNormal = false;
-                                    curBIM._clearMemoryImmediately = false;
+                                    curBIM._clearMemoryImmediately = _this.SuperMapConfig.isClearMemoryImmediately;
                                 }
                             );
                             //设置相机位置、视角，便于观察场景
                             _this.setViewAngle();
-
-                            // let handler = new Cesium.ScreenSpaceEventHandler(
-                            //     _this.scene.canvas
-                            // );
-
-                            // var boxEntity;
-                            // handler.setInputAction(function(event) {
-
-                            //     var cartesian = Cesium.Cartesian3.fromDegrees(112.48896541,37.71379887,-2.45);
-                            // var cartesian = _this.scene.pickPosition(event.position);
-                            // if(!_this.boxEntity){
-                            //     _this.ClipBoxBIM(cartesian);
-                            // }else {
-                            //     _this.MoveClipBIM(cartesian)
-                            // }
-
-                            //     var boxOption = {
-                            //         dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
-                            //         position : cartesian,
-                            //         clipMode : 'clip_behind_all_plane',
-                            //         heading : parseFloat(_this.ClipBIM.rotate)
-                            //     };
-                            //     var hpr = new Cesium.HeadingPitchRoll(parseFloat(_this.ClipBIM.rotate), 0, 0);
-                            //     var orientation = Cesium.Transforms.headingPitchRollQuaternion(cartesian, hpr);
-                            //     boxEntity = _this.viewer.entities.add({
-                            //         box : {
-                            //             dimensions : new Cesium.Cartesian3(parseFloat(_this.ClipBIM.boxProp.length),parseFloat(_this.ClipBIM.boxProp.widht),parseFloat(_this.ClipBIM.boxProp.height)),
-                            //             material : Cesium.Color.fromRandom({alpha : 0.4})
-                            //         },
-                            //         position : cartesian,
-                            //         orientation : orientation
-                            //     });
-
-                            //     for (let i=0;i<layer.length ; i++) {
-                            //         layer[i].setCustomClipBox(boxOption);
-                            //     }
-                            // }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-
-                            // handler.setInputAction(function(movement) {
-                            //     if(!boxEntity)return;
-                            //     var cartesian = _this.scene.pickPosition(movement.startPosition);
-                            //     boxEntity.position = cartesian;
-                            //     handler.setInputAction(function(evt) {
-
-                            //         var newDim = boxEntity.box.dimensions.getValue();
-                            //         var position = boxEntity.position.getValue(0);
-                            //         var heading = parseFloat(_this.ClipBIM.rotate)
-                            //         var boxOptions = {
-                            //             dimensions : newDim,
-                            //             position : position,
-                            //             clipMo   e : 'clip_behind_all_plane',
-                            //             heading : heading
-                            //         }
-
-                            //         for (let i=0;i<layer.length ; i++) {
-                            //             layer[i].setCustomClipBox(boxOptions);
-                            //         }
-
-                            //         handler.removeInputAction(Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-                            //     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-                            // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-                            // var handlerPolygon = new Cesium.DrawHandler(_this.viewer,Cesium.DrawMode.Polygon, 0);
-                            // console.log('array')
-                            // handlerPolygon.drawEvt.addEventListener(function(result){
-
-                            //     var array = [].concat(result.object.positions);
-
-
-                            //     var positions = [];
-                            //     for(var i = 0, len = array.length; i < len; i ++){
-                            //         var cartographic = Cesium.Cartographic.fromCartesian(array[i]);
-                            //         var longitude = Cesium.Math.toDegrees(cartographic.longitude);
-                            //         var latitude = Cesium.Math.toDegrees(cartographic.latitude);
-                            //         var h=cartographic.height;
-                            //         if(positions.indexOf(longitude)==-1&&positions.indexOf(latitude)==-1){
-                            //             positions.push(longitude);
-                            //             positions.push(latitude);
-                            //             positions.push(h);
-                            //         }
-                            //     }
-                            //     var dep = 500;
-                            //     _this.viewer.scene.globe.removeAllExcavationRegion();
-                            //     _this.viewer.scene.globe.addExcavationRegion({
-                            //         name : 'ggg' ,
-                            //         position : positions,
-                            //         height : dep,
-                            //         transparent : true
-                            //     });
-                            //     handlerPolygon.polygon.show = false;
-                            //     handlerPolygon.polyline.show = false;
-                            //     handlerPolygon.deactivate();
-                            //     handlerPolygon.activate();
-                            // });
-
-                            // handlerPolygon.activate();  
-
-
 
                         },
                         function (e) {
@@ -366,6 +266,7 @@ export default (containerId, viewer, domId, route) => ({
             _this.viewer.selectedEntityChanged.addEventListener(this.operationEntity);
 
         },
+        // 设置视角
         setViewAngle(cameraPosition = this.cameraPosition) {
             let {
                 scene
@@ -374,8 +275,8 @@ export default (containerId, viewer, domId, route) => ({
             if (Cesium.defined(scene)) {
                 scene.camera.setView({
                     destination: new Cesium.Cartesian3.fromDegrees(
-                        parseFloat(cameraPosition.longitude), 
-                        parseFloat(cameraPosition.latitude), 
+                        parseFloat(cameraPosition.longitude),
+                        parseFloat(cameraPosition.latitude),
                         parseFloat(cameraPosition.height)
                     ),
                     orientation: {
@@ -386,6 +287,7 @@ export default (containerId, viewer, domId, route) => ({
                 });
             }
         },
+        // 飞到某视角
         flyToAngle(cameraPosition = this.cameraPosition) {
             let {
                 scene
@@ -394,8 +296,8 @@ export default (containerId, viewer, domId, route) => ({
             if (Cesium.defined(scene)) {
                 scene.camera.flyTo({
                     destination: new Cesium.Cartesian3.fromDegrees(
-                        parseFloat(cameraPosition.longitude), 
-                        parseFloat(cameraPosition.latitude), 
+                        parseFloat(cameraPosition.longitude),
+                        parseFloat(cameraPosition.latitude),
                         parseFloat(cameraPosition.height)
                     ),
                     orientation: {
@@ -556,6 +458,7 @@ export default (containerId, viewer, domId, route) => ({
 
                         _this.addLabel(_this.SuperMapConfig.IP + _this.SuperMapConfig.BIM_DATA, doSqlQuery, processFailed); //调用添加label
                         _this.showOrHideRelevantUnit(_this.prePosition);
+                        _this.showImageryLayer(_this.prePosition.height)
                         _this.$emit("refreshCameraPosition", cameraPosition);
                     }
                 } catch (error) {
@@ -564,6 +467,14 @@ export default (containerId, viewer, domId, route) => ({
 
                 _this.cameraPositionRefresh();
             }, _this.refreshCameraPosition.interval);
+        },
+        showImageryLayer(height) {
+            let isShow = height > 0
+            let layers = this.viewer.imageryLayers._layers
+            layers.forEach(element => {
+                element.show = isShow
+            });
+            this.scene.globe.show = isShow
         },
         getPointLinght() {
             this.scene.sun.show = false;

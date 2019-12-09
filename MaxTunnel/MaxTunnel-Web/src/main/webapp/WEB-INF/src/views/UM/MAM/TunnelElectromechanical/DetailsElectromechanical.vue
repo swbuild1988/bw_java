@@ -24,6 +24,8 @@
             <strong>里程:</strong>
             {{ areaLeath }}
             <strong v-if="areaLeath">{{areaLeathUnit}}</strong>
+            <Button type="primary" style="margin-left: 2vmin" @click="controllAll(true)">全部打开</Button>
+            <Button type="warning" @click="controllAll(false)">全部关闭</Button>
         </div>
         <tabs :tabList="tabs.tabList" :tabIndex="tabsIndex" @changeTab="changeTabs">
             <Row :gutter="16" v-show="isShowComponent">
@@ -155,7 +157,7 @@
                 detectionObj: null,
                 environmentColums: [{
                         type: "index",
-                        width: window.innerWidth/100*80/100*4,
+                        width: window.innerWidth / 100 * 80 / 100 * 4,
                         align: "center"
                     },
                     {
@@ -320,6 +322,7 @@
                 //获取监测内容
                 EnumsService.getMonitorType().then(result => {
                     if (result) {
+                        _this.curDataTypeList = []
                         result.forEach(a => {
                             if (a.val == _this.queryCondition.monitorType) {
                                 a.objectTypeList.forEach(item =>
@@ -535,6 +538,40 @@
                     );
                 }
             },
+            // 所有控制
+            controllAll(state) {
+                let _this = this
+                let text = state ?
+                    "确定全部打开吗?" :
+                    "确定全部关闭吗?";
+                this.$Modal.confirm({
+                    render: h => {
+                        return h("span", text);
+                    },
+                    onOk: () => {
+
+                        let param = []
+                        for (let o of _this.Obj) {
+                            param.push({
+                                key: o.id,
+                                val: state
+                            })
+                        }
+
+
+                        MonitorDataService.batchControl(param).then(
+                            res => {
+                                _this.$Message.info("操作成功");
+                            },
+                            error => {
+                                _this.$Message.error("操作失败");
+                            }
+                        );
+                    }
+                });
+
+            },
+
             setView(id, datatypeId) {
                 if (!!id && !!datatypeId) {
                     this.detectionObj = {
@@ -630,7 +667,7 @@
                 MonitorDataService.getdataVideos(Params).then(result => {
                     // if (result && result.length > 0) {
                     //     console.log(Params, result);
-                        this.curCarousel.videolist = result;
+                    this.curCarousel.videolist = result;
                     // }
                 });
             },

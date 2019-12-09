@@ -77,6 +77,7 @@
             <over-look-sm-viewer
                 :cameraPosition="VMConfig.CAMERA"
                 :personnelPosition="personnelPosition"
+                ref="smViewer"
             ></over-look-sm-viewer>
         </div>
     </div>

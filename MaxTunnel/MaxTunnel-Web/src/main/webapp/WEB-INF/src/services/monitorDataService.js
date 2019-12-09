@@ -176,129 +176,6 @@ var MonitorDataService = {
                     reject(msg + '地址：tunnels/'+tunnelId+'/deploy')
                 }
             })
-            // let data = [
-            //     {
-            //         areaId: 1,
-            //         areaName: "污水舱",
-            //         stores: [
-            //             {
-            //                 storeId: 1,
-            //                 storeName: "1区",
-            //                 id: 1,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 2,
-            //                 storeName: "2区",
-            //                 id: 2,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 3,
-            //                 storeName: "3区",
-            //                 id: 3,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 4,
-            //                 storeName: "4区",
-            //                 id: 4,
-            //                 value: true
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         areaId: 2,
-            //         areaName: "综合舱",
-            //         stores: [
-            //             {
-            //                 storeId: 1,
-            //                 storeName: "1区",
-            //                 id: 5,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 2,
-            //                 storeName: "2区",
-            //                 id: 6,
-            //                 value: true
-            //             },
-            //             {
-            //                 storeId: 3,
-            //                 storeName: "3区",
-            //                 id: 7,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 4,
-            //                 storeName: "4区",
-            //                 id: 8,
-            //                 value: false
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         areaId: 3,
-            //         areaName: "燃气舱",
-            //         stores: [
-            //             {
-            //                 storeId: 1,
-            //                 storeName: "1区",
-            //                 id: 9,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 2,
-            //                 storeName: "2区",
-            //                 id: 10,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 3,
-            //                 storeName: "3区",
-            //                 id: 11,
-            //                 value: true
-            //             },
-            //             {
-            //                 storeId: 4,
-            //                 storeName: "4区",
-            //                 id: 12,
-            //                 value: false
-            //             }
-            //         ]
-            //     },
-            //     {
-            //         areaId: 4,
-            //         areaName: "电力舱",
-            //         stores: [
-            //             {
-            //                 storeId: 1,
-            //                 storeName: "1区",
-            //                 id: 13,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 2,
-            //                 storeName: "2区",
-            //                 id: 14,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 3,
-            //                 storeName: "3区",
-            //                 id: 15,
-            //                 value: false
-            //             },
-            //             {
-            //                 storeId: 4,
-            //                 storeName: "4区",
-            //                 id: 16,
-            //                 value: false
-            //             }
-            //         ]
-            //     }
-            // ]
-            // resolve(data)
         })
     },
     // 批量控制开关
@@ -316,8 +193,6 @@ var MonitorDataService = {
                     reject(msg + '地址：sub-sys/action')
                 }
             })
-            // let data = {}
-            // resolve(data)
         })
     },
     // 获取管廊联动设置

@@ -178,7 +178,7 @@
                         </Col>
                         <Col span="12">
                             <Button type="info" class="normalBtn" :disabled="findPath('/UM/plans/detial')?false:true"
-                                @click="goToMoudle({ path:'/UM/plans/detial'})">
+                                @click="goToMoudle({ path:'/UM/plans/detial/VentilationPlanSOP_KEY'})">
                                 <div>
                                     <img src="../../assets/UM/消防.png" :width="imgWidth">
                                     <div :style="{fontSize:mySize}">预案管理</div>
