@@ -48,7 +48,7 @@
         <taglibs-version>1.1.2</taglibs-version>
         <jackson-version>2.5.4</jackson-version>
         <servlet-version>3.1.0</servlet-version>
-        <quartz-version>2.2.1</quartz-version>
+        <quartz-version>2.3.2</quartz-version>
         <rabbitmq-version>4.1.0</rabbitmq-version>
         <spring-rabbitmq-version>1.7.5.RELEASE</spring-rabbitmq-version>
         <aspectj-version>1.8.9</aspectj-version>
