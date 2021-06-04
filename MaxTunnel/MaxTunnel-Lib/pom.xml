@@ -55,7 +55,7 @@
         <spring-data-redis>1.6.0.RELEASE</spring-data-redis>
         <jedis>2.9.0</jedis>
         <activiti-version>5.22.0</activiti-version>
-        <httpcomponents-version>4.2.1</httpcomponents-version>
+        <httpcomponents-version>4.5.13</httpcomponents-version>
         <javacv>1.4.1</javacv>
         <javacpp.platform.dependencies>windows-x86_64</javacpp.platform.dependencies>
     </properties>
